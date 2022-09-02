@@ -2,204 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE43B5AB4FD
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 17:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFBF95AB4E3
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 17:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236221AbiIBPXf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 11:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46190 "EHLO
+        id S236500AbiIBPTP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 11:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236401AbiIBPXG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 11:23:06 -0400
-X-Greylist: delayed 396 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Sep 2022 07:56:21 PDT
-Received: from sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 134C412E4E8;
-        Fri,  2 Sep 2022 07:56:20 -0700 (PDT)
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id 69f11a6b;
-        Fri, 2 Sep 2022 16:49:37 +0200 (CEST)
-Date:   Fri, 2 Sep 2022 16:49:37 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     linux@armlinux.org.uk, krzysztof.kozlowski@linaro.org,
-        arnd@arndb.de, lee@kernel.org, linus.walleij@linaro.org,
-        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
-        marcan@marcan.st, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, sven@svenpeter.dev,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
-In-Reply-To: <CAL_JsqLXNVdEj3ZCA_Wnirv-7maCZATKmjS8fJYR0uLQ9OTQZQ@mail.gmail.com>
-        (message from Rob Herring on Thu, 1 Sep 2022 17:26:18 -0500)
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
- <426469c1-13cc-178b-4904-09439d7788e8@linaro.org> <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
- <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org> <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org> <YxDWG5dmzErhKIXw@shell.armlinux.org.uk> <CAL_JsqLXNVdEj3ZCA_Wnirv-7maCZATKmjS8fJYR0uLQ9OTQZQ@mail.gmail.com>
-Message-ID: <d3cec35e749f958d@bloch.sibelius.xs4all.nl>
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S236943AbiIBPSt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 11:18:49 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8403147EB0;
+        Fri,  2 Sep 2022 07:51:52 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id jy14so1559103qvb.12;
+        Fri, 02 Sep 2022 07:51:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=CtCUtbyEWpfB5jQ909qB3n/ir4ZwsxY4gByY85AERlg=;
+        b=gPEEKL/tgOHnlyna/FNpmm347tjxzmF1a1IeVz42B6gF2Ujmh40FnFgpR8lzbZowW9
+         phZ5nq5VsyIZ2/mNdOIcqoZSh/WMD7qCfadrBWinnlIjAKGb3meAVAf8jJhQ9IeeH1tI
+         BCyP4+jmuWPI0/AiE3Wk+8xyuzuY1i2fhmGMFevw3w1cVGxmgrucmBxg8lLlhLTxW05c
+         Cdtga+tU25YiC8g24iGNZ4Iv++3FrpmMxybtKtHrj+//3W1GedmPYACqJYmihpZI2cK7
+         +l4PWWotJuCCMZtdXzvT7cSJs7JuWDjAyinnoDgA4R0r2YV0Ez96OC6ey0lJhBDdGwIR
+         5yqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=CtCUtbyEWpfB5jQ909qB3n/ir4ZwsxY4gByY85AERlg=;
+        b=PGPmqRflLlaLsyXy2Y1kyiuglR/WHTN8ZTrWYi1UUlgIniciOeTwnX9mTw6F0LnJcg
+         xvpDCWME6+j0/eQcWTsGfYhDKhnLllxg6yDQiE4xAV89zGjIqTY+dZ35yCl3Z7MAaJ/m
+         vB7/xU8gmmVCCgQ4hWdoz3R112Wnmo68ckqpZqCoRvUZ8DNdrD3pewiQLtEKJRmn24I7
+         /UbLYlQMkKmoHKdLacc/lyThFLYIiHm/D6FUoEy7K4cIea+cJ3qT2XtnMlbMg8748lyC
+         Iyz84xjmy7xBXEHanbMjFrk5aQudnIIogJqP+Pw6VT7kpgannS7jSofWLj98PiJ03pAr
+         TBhw==
+X-Gm-Message-State: ACgBeo1WyICsXosJRhoHXptihLuUDo0EW54hE57NBb1VvaEfKsB23MbO
+        Mub1y5Em+q255+tcIsO6D9PbRfnxtQFkNyAW6EI=
+X-Google-Smtp-Source: AA6agR7nJZO8ZswNlfltRIaeZ+DlNe0yYud3zZb6aTqIBYFpFDbIHe3ZrOAOLBr+6LqOY4mMXWntX61heZvB8ZT1cbg=
+X-Received: by 2002:a05:6214:27ca:b0:499:95f:6379 with SMTP id
+ ge10-20020a05621427ca00b00499095f6379mr20131343qvb.82.1662130310778; Fri, 02
+ Sep 2022 07:51:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220902124354.630826-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20220902124354.630826-1-horatiu.vultur@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 2 Sep 2022 17:51:14 +0300
+Message-ID: <CAHp75Ve7EkE3q3_nOvT_KLmpmnXzMw179nbOxYEYzUeLY0QRnw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ocelot: Fix interrupt controller
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> From: Rob Herring <robh+dt@kernel.org>
-> Date: Thu, 1 Sep 2022 17:26:18 -0500
-> 
-> On Thu, Sep 1, 2022 at 10:56 AM Russell King (Oracle)
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Thu, Sep 01, 2022 at 06:45:52PM +0300, Krzysztof Kozlowski wrote:
-> > > On 01/09/2022 18:24, Russell King (Oracle) wrote:
-> > > > On Thu, Sep 01, 2022 at 06:15:46PM +0300, Krzysztof Kozlowski wrote:
-> > > >> On 01/09/2022 18:12, Russell King (Oracle) wrote:
-> > > >>>>> +  compatible:
-> > > >>>>> +    items:
-> > > >>>>> +      - enum:
-> > > >>>>> +        - apple,t8103-smc
-> > > >>>>
-> > > >>>> You miss two spaces of indentation on this level.
-> > > >>>
-> > > >>> Should that be picked up by the dt checker?
-> 
-> I have a problem that Krzysztof is quicker. ;) Maybe I should stop
-> screening the emails (for the times I break things mostly).
-> 
-> > > >>
-> > > >> I think yamllint complains about it. It is not a hard-dependency, so
-> > > >> maybe you don't have it installed.
-> > > >>
-> > > >>>
-> > > >>>>> +        - apple,t8112-smc
-> > > >>>>> +        - apple,t6000-smc
-> > > >>>>
-> > > >>>> Bring some order here - either alphabetical or by date of release (as in
-> > > >>>> other Apple schemas). I think t6000 was before t8112, so it's none of
-> > > >>>> that orders.
-> > > >>>
-> > > >>> Ok.
-> > > >>>
-> > > >>>>> +      - const: apple,smc
-> > > >>>>> +
-> > > >>>>> +  reg:
-> > > >>>>> +    description: Two regions, one for the SMC area and one for the SRAM area.
-> > > >>>>
-> > > >>>> You need constraints for size/order, so in this context list with
-> > > >>>> described items.
-> > > >>>
-> > > >>> How do I do that? I tried maxItems/minItems set to 2, but the dt checker
-> > > >>> objected to it.
-> > > >>
-> > > >> One way:
-> > > >> reg:
-> > > >>   items:
-> > > >>     - description: SMC area
-> > > >>     - description: SRAM area
-> > > >>
-> > > >> but actually this is very similar what you wrote for reg-names - kind of
-> > > >> obvious, so easier way:
-> > > >>
-> > > >> reg:
-> > > >>   maxItems: 2
-> > > >
-> > > > Doesn't work. With maxItems: 2, the example fails, yet it correctly lists
-> > > > two regs which are 64-bit address and 64-bit size - so in total 8 32-bit
-> > > > ints.
-> > > >
-> > > > Documentation/devicetree/bindings/mfd/apple,smc.example.dtb: smc@23e400000: reg: [[2, 1044381696], [0, 16384], [2, 1071644672], [0, 1048576]] is too long
-> > > >         From schema: /home/rmk/git/linux-rmk/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > > >
-> > > > Hence, I originally had maxItems: 2, and ended up deleting it because of
-> > > > the dt checker.
-> > > >
-> > > > With the two descriptions, it's the same failure.
-> > >
-> > > Yeah, they should create same result.
-> > >
-> > > >
-> > > > I think the problem is that the checker has no knowledge in the example
-> > > > of how big each address and size element of the reg property is. So,
-> > > > it's interpreting it as four entries of 32-bit address,size pairs
-> > > > instead of two entries of 64-bit address,size pairs. Yep, that's it,
-> > > > if I increase the number of "- description" entries to four then it's
-> > > > happy.
-> > > >
-> > > > So, what's the solution?
-> > > >
-> > >
-> > > If you open generated DTS examples (in your
-> > > kbuild-output/Documentation/devicetree/bindings/mfd/) you will see which
-> > > address/size cells are expected. By default it is I think address/size
-> > > cells=1, so you need a bus node setting it to 2.
-> >
-> > Thanks, that works. The patch with all those points addressed now looks
-> > like:
-> >
-> > 8<===
-> > From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-> > Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
-> >  Controller
-> >
-> > Add a DT binding for the Apple Mac System Management Controller.
-> >
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > ---
-> >  .../devicetree/bindings/mfd/apple,smc.yaml    | 61 +++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/apple,smc.yaml b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > new file mode 100644
-> > index 000000000000..168f237c2962
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > @@ -0,0 +1,61 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/mfd/apple,smc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Apple Mac System Management Controller
-> > +
-> > +maintainers:
-> > +  - Hector Martin <marcan@marcan.st>
-> > +
-> > +description:
-> > +  Apple Mac System Management Controller implements various functions
-> > +  such as GPIO, RTC, power, reboot.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - apple,t6000-smc
-> > +          - apple,t8103-smc
-> > +          - apple,t8112-smc
-> > +      - const: apple,smc
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: SMC area
-> > +      - description: SRAM area
-> 
-> Based on the disjoint addresses, is this really one device? Perhaps
-> the SRAM area should use mmio-sram binding? That already supports
-> sub-dividing the sram for different uses. I'll comment more on the
-> full example.
+On Fri, Sep 2, 2022 at 3:40 PM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> When an external device generated a level based interrupt then the
+> interrupt controller could miss the interrupt. The reason is that the
+> interrupt controller can detect only link changes.
+>
+> In the following example, if there is a PHY that generates an interrupt
+> then the following would be happen. The GPIO detected that the interrupt
 
-To me it does look as if the SRAM is part of the SMC coprocessor
-block.  It is probably part of a larger SRAM on the side of the SMC
-coprocessor.  There is a gap, but the addresses are close.  The only
-thing in between is the SMC mailbox, which is represented by a
-separate node.
+would happen
 
-The address of the SRAM can be discovered by sending SMC commands.  I
-believe Hector added it in order to verify the address that the SMC
-firmware provides.  My OpenBSD driver doesn't use it, so in that sense
-changing the binding to use a separate node with a "mmio-sram"
-compatible (and presumably an "apple,sram" property to reference that
-node using a phandle) would work fine.  The extra level of indirection
-obviously would mean more code in the Linux SMC driver though.
+> line changed, and then the 'ocelot_irq_handler' will be called. Here it
+> detects which GPIO line seen the change and for that will call the
+> following:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+>
+> And this works fine for simple cases, but if the PHY generates many
+> interrupts, for example when doing PTP timestamping, then the following
+> could happen. Again the function 'ocelot_irq_handler' will be called
+> and then from here the following could happen:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+>
+> Right before step 3(irq_eoi), the PHY will generate another interrupt.
+> Now the interrupt controller will acknowledge the change in the
+> interrupt line. So we miss the interrupt.
+>
+> A solution will be to use 'handle_level_irq' instead of
+> 'handle_fasteoi_irq', because for this will change routine order of
+> handling the interrupt.
+> 1. irq_mask
+> 2. irq_ack
+> 3. phy interrupt routine
+> 4. irq_unmask
+>
+> And now if the PHY will generate a new interrupt before irq_unmask, the
+> interrupt controller will detect this because it already acknowledge the
+> change in interrupt line at step 2(irq_ack).
+>
+> But this is not the full solution because there is another issue. In
+> case there are 2 PHYs that shared the interrupt line. For example phy1
+
+share
+
+> generates an interruot, then the following can happen:
+
+interrupt
+
+> 1.irq_mask
+> 2.irq_ack
+> 3.phy0 interrupt routine
+> 4.phy1 interrupt routine
+> 5.irq_unmask
+>
+> In case phy0 will generate an interrupt while clearing the interrupt
+> source in phy1, then the interrupt line will be kept down by phy0. So
+> the interrupt controller will not see any changes in the interrupt line.
+> The solution here is to update 'irq_unmask' such that it can detect if
+> the interrupt line is still active or not. And if it is active then call
+> again the procedure to clear the interrupts. But we don't want to do it
+> every time, only if we know that the interrupt controller have not seen
+> already that the interrupt line has changed.
+>
+> While at this, add support also for IRQ_TYPE_LEVEL_LOW.
+
+...
+
+> +       /*
+> +        * It is enough to read only one action because the trigger level is the
+> +        * same for all of them.
+> +        */
+
+Hmm... this is interesting. How is the hardware supposed to work if
+the user asks for two contradictory levels for two different IRQs?
+
+...
+
+> +       /*
+> +        * Check if the interrupt controller has seen any changes in the
+> +        * interrupt line
+
+Missed period.
+
+> +        */
+
+...
+
+> +       /*
+> +        * In case the interrupt line is still active and the interrupt
+> +        * controller has not seen any changes in the interrupt line, then it
+> +        * means that there happen another interrupt while the line was active.
+> +        * So we missed that one, so we need to kick again the interrupt handler
+> +        */
+
+Ditto.
+
+...
+
+> +               struct ocelot_irq_work *work = kmalloc(sizeof(*work), GFP_ATOMIC);
+
+It's more visible what's going on if you split this to definition and
+assignment and move assignment closer to its first user.
+
+> +               if (!work)
+> +                       return;
+
+...
+
+>         type &= IRQ_TYPE_SENSE_MASK;
+
+This seems redundant, see below.
+
+
+> -       if (!(type & (IRQ_TYPE_EDGE_BOTH | IRQ_TYPE_LEVEL_HIGH)))
+> +       if (type == IRQ_TYPE_NONE)
+>                 return -EINVAL;
+
+Is it ever possible? IIRC the IRQ chip code, the set->type won't be
+called at all in such a case. Also type is already limited to the
+sense mask, no?
+
+-- 
+With Best Regards,
+Andy Shevchenko
