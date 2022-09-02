@@ -2,235 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1F4E5AB5BC
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 17:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2904A5AB628
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 18:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237307AbiIBPwr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 11:52:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
+        id S237812AbiIBQC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 12:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237300AbiIBPwV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 11:52:21 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3C13AE857
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 08:44:13 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id cv7so1709820qvb.3
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 08:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=UgXKmXP3qAbjyGzd1JMU499QoF1XyZdD7xyoHrTdAkY=;
-        b=ASxyuBrzGDXI+pkP7OqzqL7mMx9ZSCcQp9GN1bS09N6xZSsVwOTZOUv+QIIGL4l0+n
-         anBhdaehwBP3bF+DY/LIB+MRQC82oUWv9607v4fWBFP8KDMNDUHesmd7U5OEVJPphOEn
-         lab0XreUOYhJOV5sBP7OBLO5wTma4K677BiQB6OtpK7brbss2A3G1FIIPg+yo2A8xPJ+
-         YBbjwl2dHsj1ccLQPvVwO1GbPXf/yZKgQVSDhXD40EZaxYD29dI45qBdijHGje0Ung+t
-         sA19OPe767TnGzUBUIk8OWGNynLio4giXK1CaTUM3NkiV6cOs38D/LmT7gAaAxJ5Muou
-         5cGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=UgXKmXP3qAbjyGzd1JMU499QoF1XyZdD7xyoHrTdAkY=;
-        b=Ae/BlxH9OtjCRUW+vCKr3UjJPTgd1X5r8lv24NDt+LWEEM8VH4Ev8gcLDVKP3HRjTK
-         iqOStxc08fm3/o3rVZ6EziqGuAyYZGj8YIcY8nv+ob3pmNN5l2Cbl+dbtZnYzpeYzKI0
-         1pYLGIZDwpaRVfZBfffDmkW5QNZheJHw+gahlBUuZav3KFmEzLR1a/XUpPh5AjmD4NO9
-         K6G2YexutuhW0KYCGOS2kKVfmYDRPZs5bhjk2GwKeyWRmOGL0Gp6yE6+MCE0TZW8JP5p
-         Tcj1w8oiqpKXMNV8SHXE9FFu/qX3Nc9R7WZk5KL7tHpZmSJlhTAoTrUUNPOA5Za1bIHI
-         QcOg==
-X-Gm-Message-State: ACgBeo1lR7MOque/XwUm8mPC2MxBMG8mMkUn+fsksWGtnR4QpsU1YEyL
-        UCg+z5+W8OFYuBmXxiY7t76xoqyv/uRcxb2eisA=
-X-Google-Smtp-Source: AA6agR6MgeeHESF3KCL7tIuwnR5HEJl0wIhvyQVHmi5qO68ghFAcdXDaH+lE+aTpvVN3Ax95GN4S6RaJ/+wMxkT5PFQ=
-X-Received: by 2002:a05:6214:c26:b0:499:19f1:1a73 with SMTP id
- a6-20020a0562140c2600b0049919f11a73mr13991772qvd.48.1662133452758; Fri, 02
- Sep 2022 08:44:12 -0700 (PDT)
+        with ESMTP id S237502AbiIBQCZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 12:02:25 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2073.outbound.protection.outlook.com [40.107.212.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3BDF7B2C;
+        Fri,  2 Sep 2022 08:56:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AgPrb7ezSHA8Ra2QQcMufbri0w+9U2Gv5ReLrbI3l9lT2gIQX304BAAN/1jzp49yRASr4/CAjdeiWlr8toS0GQh3PGsx2V4wsvP0ZN6iWC3MEzCUboTBJknUfHq7VVrs8PL5GYest20AmXa8eC4of4Fi/xB06IOd1U2Kmjrc8LiPYH980g4bB6+r+41qHdxaO5PducGIdt3Y/MEiPndtnQ6wKnspD0BKDnhAi1R0qlNqm4FOpD960r92t5X9XyCJBwc1ghmPqhZaMxSE4wYGxkFLgMfh7MKc8S5bpxgHHA1eX3qb7qStRf7hmyiO7DTPUd97Z8GeDGtItZnf1VfzTQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=18pIrBJVtDlrwGHri5+4uqnxs9DK852gPYC9HfgPuA0=;
+ b=NkQfomO362sQUNxUFgMd9YzbYPRMx2U6Op0xFWLe/Ye5/uW3vTonTXrEBaF643dLl6cm1MpxubzUE+1K/WE2Mcuwol9vPbOvRFZjF6zJZrp+3nUwURWgoFxqY2Lx8VK4vscyeBhDyR2GPtN3AfLuW+IrUC5FnZEXeED/KNUXFwkUChzR63jrAndmjHvpc85xE88Ibi63LOkWhnNPjSDXyl4JR6RyP+qdclOFQrA1txdIXRTGUqqJpsiC85FooSaifZTZvcA2cZWpKQBfV6oY47kvojmukmWFFn7SXGKh6YoVt1A/+E4lZQqagkjEpKEFg8Aziso6eIO1mRqWVRolcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=18pIrBJVtDlrwGHri5+4uqnxs9DK852gPYC9HfgPuA0=;
+ b=tTGQVWzJgd1c1dZDibrmTrt3O9RCYr9E2hWA141UAlXmcQ/KyDDMb0GcIr0Oz4BUtHH42dzcMmJIwW/3fq6Htr12aVv86x/XURT+cDFRwkqLAyuI2oN1Z/08jyKwGxuYecYSqAEAt8sV3sgwJsgdYGtPq2SP+DZsPdkUr0cA0gmznQuRaPrhXMaH66DlRLDcV2C5Ymib9maIPr/bZI/Zd4Aa36WdbpyTDe3HLb6GI5RfaXzvh0hnXLErg/enCOwzZxrGPRtn+Wf+6Q8l26PVFXnHOHKxwkvtG9V0lD4oPA+tw2z5AXLljyqVKudD5V8iJi4c9Gk4cgyUanQvtPmMhw==
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
+ by DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.12; Fri, 2 Sep
+ 2022 15:54:59 +0000
+Received: from CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::25d3:32f3:4be5:da11]) by CH2PR12MB3895.namprd12.prod.outlook.com
+ ([fe80::25d3:32f3:4be5:da11%7]) with mapi id 15.20.5588.012; Fri, 2 Sep 2022
+ 15:54:59 +0000
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO
+ controller
+Thread-Topic: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO
+ controller
+Thread-Index: AQHYUy6f8PYDEwnjH0GY1hRsyl4qdK0QbjTwgAAQVwCAABikcIALQwgAgAAAjSCAAZckgIAELgbQgAM2cYCAqEdScA==
+Date:   Fri, 2 Sep 2022 15:54:58 +0000
+Message-ID: <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
+References: <20220418141416.27529-1-asmaa@nvidia.com>
+ <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com>
+ <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZhW9XK3opXLLzdMiVLVkGQyJCf7RLZtRQLsmzv-aqwbA@mail.gmail.com>
+ <CH2PR12MB38953FF57D91FA75AB9CB102D7CB9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdbAhMa2CXvQra3E13n8WfiBxyHNqzEp4dW3qo5upr_=gw@mail.gmail.com>
+ <CH2PR12MB38958CD365876A2106712C3CD7CF9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com>
+In-Reply-To: <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9366e236-1728-4192-2649-08da8cfb7d18
+x-ms-traffictypediagnostic: DM4PR12MB6085:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: y10MoCJEAlXCk97JHNrnniDM+d6vuIgEKLzbhEywZf8IdP9jwG8mAnGj0xWOc9qkB5PI2UcJ7/7Ox2Fee020AYJA8Mi4EUKvwBrvglDog1xyQu2JcBnq6ndGxz3BOopNpO3WDML5bxfWyTAUoNq4KTA/yq4aK5tssuB6a6v/s5AkFtJ4Y8KQ0sF4bUDwTqO9luZZNzyOwgbcUWDzRQZLv2hb0YFPUVvLyF7TFezfFyakwbpXUQIweJKVn/A08wLFSWuNG2qrsTrVb/jmfrLId+t0/acfSrpk01pgEXppkPKRhZjZA8C2QKf89hIM2Dy5D/ZAxuIFUctUn2tv4zAEi2YEH4ahOROBcARD1n98ADjRn+wKwrQYo3VZ+ocEiDDiiZHbJRr0+adG01ZtdghzIaps9OIE8soc3ZzWFlD4gocTV7RK484Af2xbaAMT3/75pDaW5DyCCoz+Txi3PDycEVJvkm8PnSAS6GSqnzGFiqoSItWqCmSEz/gl/UfQRhHmXldWKEKYjzE1qYttjV68gpQHx+148vM/Bmf60fiH4G75ePaew0VEM/gTtSxj3NVRtWPSbC7DUftgTb8z1BZXLD/ceWG5hbYP5pqIelZhSmRG4kPX7Jm3vnieA1ncaOhGWEj3bEHGUs+NSslqYSTqI84dDqH8wQSsEqAZ35m1AeQr8vwQVMN3/k/8DpYjG2JL5NJCuuDJD8IY0SGA1kRBqMMRSZbCBijRgLScH6nVYdtoZvbmVYeCJpLSYf0kxZwY2aR3n1Ce6T31LZjQnnlyGTnclNDUW7kEeOt9AhBF+FCaOPTnp+qkhrDAVUSsilMw5ZYk7LPSV5klJU0mmgG10G8CHEIsGjbfBDpjtHC8a6Xrr4ZestaCH9Ft9fnmM1EH2LOlx5XHV4AX7enYZTtfcQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(8936002)(9686003)(122000001)(53546011)(86362001)(26005)(2906002)(478600001)(52536014)(7696005)(33656002)(6506007)(5660300002)(41300700001)(38070700005)(38100700002)(83380400001)(186003)(966005)(55016003)(66476007)(76116006)(66446008)(66946007)(64756008)(316002)(71200400001)(4326008)(66556008)(54906003)(8676002)(6916009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MjYwSnhjUUxxajZMZTdUUG14V2ZINHlnZmpDUkJqTWdxSmNsUVFBSHF3VUJw?=
+ =?utf-8?B?SmgzRjRJMHlvcEpyZ01yLzFnU292UlBIUGNEV2NWU2pKTitONWczRTNSZHV0?=
+ =?utf-8?B?a3hRbWlwWFVXSXFIVzJFMTdrK0hmcDgzZDNXUjhiTkRxZFJNWGpvQ2Y0b2Zk?=
+ =?utf-8?B?WmRwTUdKSmc5bGNjeGUyMThKUmlUd25KU1R1TTFzTVVtd28wNGwzTnBXTmtP?=
+ =?utf-8?B?cThaaHdQRjN5dWZJd2FXMHY4amcwUFYzclI4b1E2Q0VNUDFXMERXbTBhc1VX?=
+ =?utf-8?B?MWg2RVlyYmxVWEk2MWpDeHU4UFpXblIzdHgzTFNNd3NYSm9laTlTK1JmemxW?=
+ =?utf-8?B?NVlTVFFIT3RBZFlLS1llKzNrNVEzeXN1VGhCTmUrV3NnM3lsR3FDcHpkbmpp?=
+ =?utf-8?B?SXZEeHQvaXFkckNvditsTTBuN0RiVWszbjBtSFpyaVQvUnM0WVpXYVYvYlRi?=
+ =?utf-8?B?Z1NXODNQeEp3VGYzc0JlK0c4Wi9MVS9GWk1LNjBvTlVkaDlHS1loQ2ZnSWd1?=
+ =?utf-8?B?MFZGMG90cFFlaEMyQ09mYm1mRmc0V2NKUnI5d1RjSmwrTHdlUUY0cTdyUXM5?=
+ =?utf-8?B?b2NIaDJ0T3FiS250R2tUb2ttTWJrL3V1VU5wNktONURndS9EdVBESmJPaktX?=
+ =?utf-8?B?TDJWZkVyN1FWcU9tR3dZcFJuYnhqTHE5bjBDSlVNNzAvOGFENjd6cTVhbVVB?=
+ =?utf-8?B?RlkveWFSeHovdGI3RERzSytINmgwdFJvTDFJcXg3NDZOWHJadGcrOWlFb3lV?=
+ =?utf-8?B?QldDYk1ndVhmek1WT3BYRjlsV3ltL1ZkaTRlRkJVdmd0aXY2NU04eW1KSjFT?=
+ =?utf-8?B?M3QxVFFDdlBJOWxaZzh1bUFhZitrOWw4R3U2enhSNWRobnhydkhMQUxTUnUw?=
+ =?utf-8?B?cDNsYktTYjNJWEtMOVVMWk82T3krME4yZ3UzdTJzcS9oclVnSU9jMy9RQ0Fs?=
+ =?utf-8?B?UnNDeWlXS3p3ZlVnTmdQWFljRWV4WDFOTUdzckVlbzN5TEVNR1hST2pkM0Zv?=
+ =?utf-8?B?cVBTei9SdjQ3QjQ3aFVlN1lXUkRUTDlHcCs2UkVRYXNxLyt3UkladW9TRlNP?=
+ =?utf-8?B?czcvRkFXckFrbjdndC8wYTBmRDJTRmFYWlNjTmtwNHp1SE14WGNLaFhFRjVa?=
+ =?utf-8?B?YXhLdEUvM2wyMHhPTFNlWjQ4T1p5VytpamtxbkdXcDlVellNbmFxYk9hdG9T?=
+ =?utf-8?B?WEIyaVZiYjkvbytvVUo4UE9zN0tDWXlkNWhDcU1KWUQ3TGdtZVlRem1oT042?=
+ =?utf-8?B?NEN3Q0Y2ZlhCbG9wR3hVVThhMW8zUDc1aUNiNzhXd3JQbmpGd3dCaGNoQ0s1?=
+ =?utf-8?B?SWVYQXZWR09kNG5OUFFVTzZPaE1TY3Q5bmNoYm1Nc3h4NWE5aG9icWhUd1Yr?=
+ =?utf-8?B?cis0MzR0VHZLcUpab0Jwc3RNY0orT25NRHRsaUwvVW5YM0JhM0w1THBHSTIw?=
+ =?utf-8?B?SnpPS01aYnREdkIveWNGTHY0TGpwWm5xckVTYVRuRUp0Y3hacnZoR0VNdkE5?=
+ =?utf-8?B?Mkd3YURITnVNMkV1bUN0WHVsL3YvSnhYQ05tRllvc25VZUZaelNiUk1BdDYy?=
+ =?utf-8?B?M0hpbGVvam85QlBidmFneERtMUViK0pQRGxOQ0VFUEZjaWR4QVNpMm5hSnUz?=
+ =?utf-8?B?SXNJRjd4VEpVT1JFM3F1RkdQaHFLby83ZWR6Rkk5emVTbVE5WmhmaWJySmJm?=
+ =?utf-8?B?NWlFbkFBWHNrY2VrWE9PSEdKMzhacVRzUUhHL09mUFBmNU9DTHJ5cnphVUVB?=
+ =?utf-8?B?TzdZcUdSYVRVeGF2OWNiSzNobzJyOGJzYVlrUG40OFhlMEYvTElKaVF5N0pS?=
+ =?utf-8?B?TytFUERmMUMzNmZLUkkzNThSb3hCeTNmR21VRkpIdWFKc0dQOW5VY2VsWWND?=
+ =?utf-8?B?RmpXY3JXMjhCSFg0SzZYK3dIcEhvNFFWNlZLOGc3UEpaUXI5dk5Vd3B6T1F1?=
+ =?utf-8?B?RkFyQldMR1Q0a3BkaDFqTzIvekhadTJLQjNtMUZPSzZVTW9GRTJ2b0VvaGZL?=
+ =?utf-8?B?TXFxenVHcUJwVXVodFkvcHU0TWt2QU1LMEtQMXdHZkU3T3NxMnFoZ1ErME1T?=
+ =?utf-8?B?YTgvS3p1Yk5hUEIzbmdCdjIwMTIzVTZvZHV6OXFmblRmU2VWVkZCVzJLTlQ3?=
+ =?utf-8?Q?Z/Q4=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
- <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
- <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk> <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
- <YxHp6CNhlQ5Hx1m8@shell.armlinux.org.uk> <CAHp75Vd-hT3Z-TUCG3y872_Y7sPAW2QBGC28S7aimOf3WQHg6A@mail.gmail.com>
- <YxIXPSZlEBcKYulW@shell.armlinux.org.uk> <CAHp75VeTYSn+ODtoH27OB2U+XYVEphonm+QR3Z+NVs-nJ90w9w@mail.gmail.com>
- <YxIifddpeJRCuImc@shell.armlinux.org.uk>
-In-Reply-To: <YxIifddpeJRCuImc@shell.armlinux.org.uk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 2 Sep 2022 18:43:36 +0300
-Message-ID: <CAHp75VddN-cEY3AN=PWO5pR4D6YaDTRQgjbZLS=C5dLBTSVGwA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9366e236-1728-4192-2649-08da8cfb7d18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2022 15:54:58.9448
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +iOuLvfmQNLIegvQh4pGkCIp94OZPsCIej+DAFtjz5b13QyaouvzHdSSADJSStU3muSXt0AuGrBGcv/ga6T9+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6085
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 6:34 PM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
-> On Fri, Sep 02, 2022 at 05:53:25PM +0300, Andy Shevchenko wrote:
-> > On Fri, Sep 2, 2022 at 5:46 PM Russell King (Oracle)
-> > <linux@armlinux.org.uk> wrote:
-> > > On Fri, Sep 02, 2022 at 04:39:16PM +0300, Andy Shevchenko wrote:
-> > > > On Fri, Sep 2, 2022 at 2:33 PM Russell King (Oracle)
-> > > > <linux@armlinux.org.uk> wrote:
-> > > > > On Fri, Sep 02, 2022 at 01:37:14PM +0300, Andy Shevchenko wrote:
-> > > > > > On Fri, Sep 2, 2022 at 1:05 PM Russell King (Oracle)
-> > > > > > <linux@armlinux.org.uk> wrote:
-> > > > > > > On Thu, Sep 01, 2022 at 09:55:23PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > +static int macsmc_gpio_nr(smc_key key)
-> > > > > > > > > +{
-> > > > > > > > > +       int low = hex_to_bin(key & 0xff);
-> > > > > > > > > +       int high = hex_to_bin((key >> 8) & 0xff);
-> > > > > > > > > +
-> > > > > > > > > +       if (low < 0 || high < 0)
-> > > > > > > > > +               return -1;
-> > > > > > > > > +
-> > > > > > > > > +       return low | (high << 4);
-> > > > > > > > > +}
-> > > > > > > >
-> > > > > > > > NIH hex2bin().
-> > > > > > >
-> > > > > > > Is using hex2bin really better?
-> > > > > >
-> > > > > > Yes.
-> > > > > >
-> > > > > > > static int macsmc_gpio_nr(smc_key key)
-> > > > > > > {
-> > > > > > >         char k[2];
-> > > > > > >         u8 result;
-> > > > > > >         int ret;
-> > > > > > >
-> > > > > > >         k[0] = key;
-> > > > > > >         k[1] = key >> 8;
-> > > > > > >
-> > > > > > >         ret = hex2bin(&result, k, 2);
-> > > > > > >         if (ret < 0)
-> > > > > > >                 return ret;
-> > > > > > >
-> > > > > > >         return result;
-> > > > > > > }
-> > > > > > >
-> > > > > > > This looks to me like it consumes more CPU cycles - because we have to
-> > > > > > > write each "character" to the stack, then call a function, only to then
-> > > > > > > call the hex_to_bin() function. One can't just pass "key" into hex2bin
-> > > > > > > because that will bring with it endian issues.
-> > > > > >
-> > > > > > With one detail missed, why do you need all that if you can use
-> > > > > > byteorder helpers()? What's the stack? Just replace this entire
-> > > > > > function with the respectful calls to hex2bin().
-> > > > >
-> > > > > Sorry, I don't understand what you're suggesting, because it doesn't
-> > > > > make sense to me. The byteorder helpers do not give a char array, which
-> > > > > is what hex2bin() wants, so we end up with something like:
-> > > > >
-> > > > >         __le16 foo = cpu_to_le16(key);
-> > > > >         u8 result;
-> > > > >
-> > > > >         ret = hex2bin(&result, (char *)&foo, 1);
-> > > > >         if (ret < 0)
-> > > > >                 return ret;
-> > > > >
-> > > > >         return result;
-> > > > >
-> > > > > This to me looks like yucky code, It still results in "foo" having to
-> > > > > be on the stack, because the out-of-line hex2bin() requires a pointer
-> > > > > to be passed as the second argument.
-> > > > >
-> > > > > Maybe you could provide an example of what you're thinking of, because
-> > > > > I'm at a loss to understand what you're thinking this should look like.
-> > > >
-> > > > So, let's look into the real callers to see, oh wait, it's a single caller!
-> > > > Why can't you simply do
-> > > >
-> > > >          ret = hex2bin(&result, (char *)&cpu_to_le16(key), 1);
-> > > >          if (ret < 0)
-> > > >                  return ret;
-> > > >
-> > > > in-place there?
-> > >
-> > > This is not legal C.
-> >
-> > I acknowledged this, sorry.
-> >
-> > > Please can we back up this discussion, and start
-> > > over with legal C suggestions. Thanks.
-> >
-> > Suggestion was given as well, let's create a helper used by apple
-> > stuff and later on we will consider the separate submission for the
-> > (new) specifier. Would it work for you?
->
-> This sub-thread isn't about the %p4ch specifier. It's about a
-> reasonable implementation of macsmc_gpio_nr().
->
-> Extracting from the context above, the original code was:
->
-> static int macsmc_gpio_nr(smc_key key)
-> {
->        int low = hex_to_bin(key & 0xff);
->        int high = hex_to_bin((key >> 8) & 0xff);
->
->        if (low < 0 || high < 0)
->                return -1;
->
->        return low | (high << 4);
-> }
->
-> I suggested:
->
-> static int macsmc_gpio_nr(smc_key key)
-> {
->          char k[2];
->          u8 result;
->          int ret;
->
->          k[0] = key;
->          k[1] = key >> 8;
->
->          ret = hex2bin(&result, k, 2);
->          if (ret < 0)
->                  return ret;
->
->          return result;
-> }
->
-> You didn't like that, so I then suggested:
->
-> static int macsmc_gpio_nr(smc_key key)
-> {
->          __le16 foo = cpu_to_le16(key);
->          u8 result;
->          int ret;
->
->          ret = hex2bin(&result, (char *)&foo, 1);
->          if (ret < 0)
->                  return ret;
->
->          return result;
-> }
->
-> which you also didn't like,
-
-...based on the wrong suggestion below. That said, the above is fine to me.
-
-> and then you suggested something that isn't
-> legal C. So, I then asked you to backup this discussion...
->
-> As I've made a number of suggestions, and you've essentially rejected
-> them all, I still need to know what you would find acceptable for this,
-> because I'm out of ideas.
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+SGkgTGludXMsDQoNClNvcnJ5IGZvciB0aGUgbG9uZyBkZWxheS4gSSBkaWQgd29yayBvbiBhZGRp
+bmcgdGhlIHBpbmN0cmwgZHJpdmVyIGJlc2lkZXMgdGhlIGdwaW8gZHJpdmVyIGFuZCBJIGFtIHdv
+cmtpbmcgb24gdGVzdGluZyBpdC4NCkkgYWRkZWQgdGhlIGZvbGxvd2luZyB0byB0aGUgZ3BpbyBk
+cml2ZXI6DQpnYy0+c2V0ID0gbWx4YmYzX2dwaW9fc2V0Ow0KZ2MtPmRpcmVjdGlvbl9pbnB1dCA9
+IG1seGJmM19ncGlvX2RpcmVjdGlvbl9pbnB1dDsNCmdjLT5kaXJlY3Rpb25fb3V0cHV0ID0gbWx4
+YmYzX2dwaW9fZGlyZWN0aW9uX291dHB1dDsNCmdjLT5yZXF1ZXN0ID0gZ3Bpb2NoaXBfZ2VuZXJp
+Y19yZXF1ZXN0Ow0KZ2MtPmZyZWUgPSBncGlvY2hpcF9nZW5lcmljX2ZyZWU7DQoNCkluIHRoZSBw
+aW5jdHJsIGRyaXZlciwgSSBkZWZpbmVkIHRoZSBmb2xsb3dpbmc6DQpzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHBpbm11eF9vcHMgbWx4YmZfcG14X29wcyA9IHsNCi5nZXRfZnVuY3Rpb25zX2NvdW50ID0g
+bWx4YmZfcG14X2dldF9mdW5jc19jb3VudCwNCi5nZXRfZnVuY3Rpb25fbmFtZSA9IG1seGJmX3Bt
+eF9nZXRfZnVuY19uYW1lLA0KLmdldF9mdW5jdGlvbl9ncm91cHMgPSBtbHhiZl9wbXhfZ2V0X2dy
+b3VwcywNCi5zZXRfbXV4ID0gbWx4YmZfcG14X3NldCwNCi5ncGlvX3JlcXVlc3RfZW5hYmxlID0g
+bWx4YmZfZ3Bpb19yZXF1ZXN0X2VuYWJsZSwNCi5ncGlvX2Rpc2FibGVfZnJlZSA9IG1seGJmX2dw
+aW9fZGlzYWJsZV9mcmVlLA0KfTsNCg0KRHVyaW5nIHRlc3RpbmcsIEkgdXNlIHRoZSBzeXNmcyB0
+byBjaGFuZ2UgdGhlIGdwaW8gdmFsdWUgYXMgZm9sbG93czoNCkNkIC9zeXMvY2xhc3MvZ3Bpbw0K
+ZWNobyA0ODAgPiBleHBvcnQNCldoZW4gSSBkbyB0aGUgZXhwb3J0LCBJIHNlZSB0aGF0IGdwaW9j
+aGlwX2dlbmVyaWNfcmVxdWVzdCBpcyBiZWluZyBjYWxsZWQgd2hpY2ggY2FsbHMgLmdwaW9fcmVx
+dWVzdF9lbmFibGUgPSBtbHhiZl9ncGlvX3JlcXVlc3RfZW5hYmxlLg0KDQpJcyB0aGlzIGhvdyBp
+dCBhbHNvIHdvcmtzIGluIG90aGVyIGRyaXZlcj8gT3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZz8g
+DQpJIHdhbnRlZCB0byBkaXNhbGxvdyBtdXhpbmcgZnJvbSB1c2VyIHNwYWNlLiBJIHdvdWxkIGxp
+a2UgdGhhdCB0byBiZSBjb250cm9sbGVkIGJ5IHRoZSBBQ1BJIHRhYmxlIG9ubHkuIEZvciBleGFt
+cGxlLCB1c2UgZGV2bV9ncGlvX3JlcXVlc3QgZnJvbSBzb21lIG90aGVyIGRyaXZlciBpZiBuZWVk
+ZWQuDQoNClRoYW5rcy4NCkFzbWFhDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTog
+TGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiANClNlbnQ6IFdlZG5lc2Rh
+eSwgTWF5IDE4LCAyMDIyIDk6NTEgQU0NClRvOiBBc21hYSBNbmViaGkgPGFzbWFhQG52aWRpYS5j
+b20+DQpDYzogYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbTsgYmdvbGFzemV3c2tpQGJheWxpYnJl
+LmNvbTsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwu
+b3JnDQpTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvMV0gQWRkIGRyaXZlciBmb3IgTWVsbGFub3gg
+Qmx1ZUZpZWxkLTMgR1BJTyBjb250cm9sbGVyDQpJbXBvcnRhbmNlOiBIaWdoDQoNCk9uIE1vbiwg
+TWF5IDE2LCAyMDIyIGF0IDM6MDAgUE0gQXNtYWEgTW5lYmhpIDxhc21hYUBudmlkaWEuY29tPiB3
+cm90ZToNCg0KPiBTbyB0aGVzZSBHUElPIHBpbnMgYXJlIGFzc2lnbmVkIG9uZSBzcGVjaWZpYyBI
+VyBmdW5jdGlvbmFsaXR5IG9uIHRoZSANCj4gYm9hcmRzICBhbmQgc29mdHdhcmUgc2hvdWxkIG5l
+dmVyIGNoYW5nZSB0aGVtLg0KPg0KPiBCeSBkZWZhdWx0LCBmb3Igc2VjdXJpdHkgcHVycG9zZXMs
+IEkgdGhpbmsgd2Ugc2hvdWxkbid0IGxldCB0aGUgdXNlciANCj4gaGF2ZSB0aGUgb3B0aW9uIHRv
+IGNvbnRyb2wgdGhlIEdQSU8gcGlucyBzaW5jZSB0aGV5IGhhdmUgYSBzcGVjaWZpYyBIVyBmdW5j
+dGlvbmFsaXR5Lg0KPg0KPiBCdXQgZm9yIGJyaW5ndXAvZGVidWcgcHVycG9zZXMsIHdlIHdvdWxk
+IGxpa2UgdG8gc3VwcG9ydCB0aGUgb3B0aW9uIG9mIA0KPiBzb2Z0d2FyZSBiZWluZyBhYmxlIHRv
+IGNoYW5nZSB0aGVzZSBwaW4gdmFsdWVzLiBXZSBhbHNvIG1pZ2h0IGhhdmUgDQo+IGN1c3RvbWVy
+cyB0aGF0IGNob29zZSB0byBjaGFuZ2UgdGhlIGRlZmF1bHQgSFcgY29ubmVjdGlvbiBvZiBhIGNl
+cnRhaW4gDQo+IEdQSU8gcGluIGFuZCBjb25uZWN0IGl0IHRvIGNvbnRyb2wgdGhlaXIgTEVEcyBm
+b3IgaW5zdGFuY2UuDQoNClRoZSBmYWN0IHRoYXQgdGhlIHVzZWNhc2UgaXMgYnJpbmd1cC9kZWJ1
+ZyBkb2VzIG5vdCBtZWFuIHdlIGN1dCBjb3JuZXJzIGFuZCBkbyAicXVpY2sgZml4ZXMiLiBUaGUg
+cHJvcGVyIEFQSXMgaGF2ZSB0byBiZSBpbXBsZW1lbnRlZCwgdGhlIGFsdGVybmF0aXZlIGlzIHRv
+IG5vdCBzdWJtaXQgdGhlIGRyaXZlciBhdCBhbGwuDQoNCldoYXQgSSBoZWFyIGlzIHRoYXQgdGhl
+c2UgcGlucyBoYXZlIHR3byBtb2RlczoNCg0KMS4gVXNlZCBmb3IgYSBkZXZpY2UgKEkyQyBldGMp
+DQoyLiBVc2VkIGFzIEdQSU8gYnkgc2V0dGluZyBhIGJpdCBpbiBZVV9HUElPX0ZXX0NPTlRST0xf
+U0VUDQoNClRoaXMgaXMgdHdvIHBpbiBjb250cm9sIG11bHRpcGxleGluZyBzdGF0ZXMgYWxyZWFk
+eS4NCg0KU28gdGhpcyBzaG91bGQgaGF2ZSBhIHNpbXBsZSBwaW4gY29udHJvbCBkcml2ZXIgYXMg
+YmFjay1lbmQgd2l0aCB0aGUgR1BJTyBhcyBmcm9udCBlbmQuIEEgc2hvcnRjdXQgdG8gZW5hYmxp
+bmcgcGlucyBpbnRvIEdQSU8gbW9kZSBjYW4gYmUgcHJvdmlkZWQgdXNpbmcgLmdwaW9fcmVxdWVz
+dF9lbmFibGUoKSBmcm9tIHN0cnVjdCBwaW5tdXhfb3BzLg0KDQpQbGVhc2UgcmVmZXIgdG8NCmh0
+dHBzOi8vZG9jcy5rZXJuZWwub3JnL2RyaXZlci1hcGkvcGluLWNvbnRyb2wuaHRtbA0KDQpJIGtu
+b3cgdGhpcyBtZWFucyBtb3JlIHdvcmsgYW5kIGlzIGtpbmQgb2YgY29tcGxleC4gQnV0IGRyaXZl
+cnMvcGluY3RybCBoYXMgYSBsb3Qgb2YgZXhhbXBsZXMgeW91IGNhbiBmb2xsb3csIGZvciBleGFt
+cGxlIGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXN4MTUweC5jIGFuZCBvdGhlciBzaW1wbGUgbXVs
+dGlwdXJwb3NlIGNoaXBzLg0KDQpZb3VycywNCkxpbnVzIFdhbGxlaWoNCg==
