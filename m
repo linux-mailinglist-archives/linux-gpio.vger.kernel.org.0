@@ -2,114 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F28635AB22D
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 15:52:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D1D15AB45B
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 16:55:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237909AbiIBNwl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 09:52:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46796 "EHLO
+        id S236650AbiIBOzp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 10:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237888AbiIBNwO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 09:52:14 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F5912DA24
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 06:26:34 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id fy31so3881260ejc.6
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 06:26:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ZF/uMwTcnfyz2qEE7xRsLAhPm27QsIK3fVdRMITh1go=;
-        b=mtCXZWdp9QgmrYW++Cea2CEB1DgoyAJM1tlVGEe5YBBxfrhzbIOh++mMUvheALAnUJ
-         qglEpw7YAZAqrT0t19/ZFVIhClLwiJuoc+Gc2atWP13qPCL2scgmjjlzWm+XD5L5t84b
-         pDE519WHl1qfcZnXOQxXEsiQfqsGdayCi14KO0qLt1ZVPU7SLwI0KPFrWqryauaiJf19
-         BxwZTV44yNf/DLXwCaIiwcaftVf4ADpFA8ky6TvhyLS5z7cT3imLS15KDFLk04iJvh8i
-         hK8dmoA99XTyG2NO5reAVYM8gTNza6KFWvKuN3AKeOZjjUvJGrGduYP6puiDVkMG6CSe
-         MzCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ZF/uMwTcnfyz2qEE7xRsLAhPm27QsIK3fVdRMITh1go=;
-        b=pg7ivOAfMlloRnRHQB1m4kmdxGKJOWsISGw8valA9MiUO1NEtoyM9ohpJP5UbmthcU
-         9Hjw4N3X3SWyr3hUye23X6sILD9OOt5aUE3UKqmw3lQaROno/D6mYFdQf2hWy7bBo/yG
-         7FyeZYI9ypjeRfZikIDknUrayAhr7aTFzkgz1bmqxpFhn2O+LCZDQbyf+LMu9BPWYSbn
-         LDZpw571HUtIXkwavL8B99d+Ii3Nf0EWIrLiD9dyXrfLMjILn05ILxhVATRHi2UJYPvp
-         Vp28jyOWIqBCNzjzC5cZUj+RV1IlB+3svHD2w+pbHOlV8GJcpuJHcA2KsLEHw54beAhR
-         eaXg==
-X-Gm-Message-State: ACgBeo1eh721lD0TGMxybmX4ZrSqx1Dp1cnP8EbGRWmdiXDv3Z+dp6Kg
-        ZliL8Lwyvld/MY2RhNr7YnT1nfqbbO6YxTidKK+YWw==
-X-Google-Smtp-Source: AA6agR6uVeydIrFZMSXhTDDYS4+Yng+f3hQTQnzA1QcrBi8I6dCnkKtn5QHHr9QNmRCaKQoIFPtEWdFKnqttE3hhFYA=
-X-Received: by 2002:a17:907:1c89:b0:741:4453:75be with SMTP id
- nb9-20020a1709071c8900b00741445375bemr21506072ejc.208.1662125177323; Fri, 02
- Sep 2022 06:26:17 -0700 (PDT)
+        with ESMTP id S236547AbiIBOzU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 10:55:20 -0400
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A103B6;
+        Fri,  2 Sep 2022 07:20:11 -0700 (PDT)
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+        by localhost (Postfix) with ESMTP id 4MJyHV10X2z9slJ;
+        Fri,  2 Sep 2022 14:42:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+        by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id uJ9sQ1iosXZi; Fri,  2 Sep 2022 14:42:46 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase2.c-s.fr (Postfix) with ESMTP id 4MJyHS08Mhz9slX;
+        Fri,  2 Sep 2022 14:42:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E5B4F8B764;
+        Fri,  2 Sep 2022 14:42:43 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VkoA-ZwenvJq; Fri,  2 Sep 2022 14:42:43 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (unknown [192.168.232.39])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C63938B788;
+        Fri,  2 Sep 2022 14:42:42 +0200 (CEST)
+Received: from PO20335.IDSI0.si.c-s.fr (localhost [127.0.0.1])
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.16.1) with ESMTPS id 282CgQAm2141483
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Fri, 2 Sep 2022 14:42:26 +0200
+Received: (from chleroy@localhost)
+        by PO20335.IDSI0.si.c-s.fr (8.17.1/8.17.1/Submit) id 282CgJFl2141476;
+        Fri, 2 Sep 2022 14:42:19 +0200
+X-Authentication-Warning: PO20335.IDSI0.si.c-s.fr: chleroy set sender to christophe.leroy@csgroup.eu using -f
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-doc@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
+Date:   Fri,  2 Sep 2022 14:42:00 +0200
+Message-Id: <cover.1662116601.git.christophe.leroy@csgroup.eu>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-References: <20220901183343.3188903-1-Mr.Bossman075@gmail.com>
- <CACRpkdb25ikL4F499NDCrv1kf2FGvJxqDW2wk9GNQCqrbX9kKQ@mail.gmail.com> <bb4804c0-04d2-6e0c-b9db-1243828ca515@gmail.com>
-In-Reply-To: <bb4804c0-04d2-6e0c-b9db-1243828ca515@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 2 Sep 2022 15:26:06 +0200
-Message-ID: <CACRpkdZwkhvM7JGeisdAyh4Bg2hx5E+dSG89Psb=13hD+wkjoQ@mail.gmail.com>
-Subject: Re: [PATCH v6 00/10] Add support for i.MXRT1170-evk
-To:     Jesse Taube <mr.bossman075@gmail.com>
-Cc:     linux-imx@nxp.com, robh+dt@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, aisheng.dong@nxp.com,
-        stefan@agner.ch, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        arnd@arndb.de, olof@lixom.net, soc@kernel.org,
-        linux@armlinux.org.uk, abel.vesa@nxp.com, dev@lynxeye.de,
-        marcel.ziswiler@toradex.com, tharvey@gateworks.com,
-        leoyang.li@nxp.com, sebastian.reichel@collabora.com,
-        cniedermaier@dh-electronics.com, clin@suse.com,
-        giulio.benetti@benettiengineering.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1662122526; l=2276; s=20211009; h=from:subject:message-id; bh=uF2ugppKcNYhBb40cETiJzZZ4ufilgv7zNMG29uEExY=; b=33bzuRtpXfVzr2aEXMap91dqdq8rFoHVXSNQn/SkOKB1ryRlNRxHqt8Yx5t2n1U1ccy/P1lg70vi YjCIe8m+D5IxW+CS8NJZzd16LvzBRget8pyV9mh8S+ybvKNGluT4
+X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 2, 2022 at 2:57 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
-> On 9/2/22 04:06, Linus Walleij wrote:
-> > On Thu, Sep 1, 2022 at 8:33 PM Jesse Taube <mr.bossman075@gmail.com> wrote:
-> >
-> >> This patch contains:
-> >> - Update to imxrt_defconfig
-> >> - Devicetree
-> >> - Clock driver
-> >> - Pinctrl driver
-> >
-> > No it does not, I already merged that.
-> >
-> > I think you should probably split up your series per-subsystem so the
-> > clock bindings and changes can be merged separately etc.
-> >
-> > Then the DTS files can be added to the ARM SoC tree as a final step.
-> >
-> > When you send everything in one bundle like this subsystem maintainers
-> > don't know if they can merge e.g. just the clock patches separately
-> > and be done with their part (like what I did with pinctrl).
->
-> Do you think its possible to add Docs for Device tree compatibles that
-> aren't added yet?
+Since commit 14e85c0e69d5 ("gpio: remove gpio_descs global array")
+there is no limitation on the number of GPIOs that can be allocated
+in the system since the allocation is fully dynamic.
 
-Bindings and drivers are orthogonal, we only submit them together
-to provide context for reviewers.
+ARCH_NR_GPIOS is today only used in order to provide downwards
+gpiobase allocation from that value, while static allocation is
+performed upwards from 0. However that has the disadvantage of
+limiting the number of GPIOs that can be registered in the system.
 
-It is also possible to submit device trees with compatibles and entire
-nodes without bindings because there essentially is no real police for
-this. Of course it is not recommended.
+To overcome this limitation without requiring each and every
+platform to provide its 'best-guess' maximum number, rework the
+allocation to allocate from 512 upwards, allowing approx 2 millions
+of GPIOs.
 
-If you are confident that bindings and device trees will come in the
-same merge window it is fine to merge them separately through different
-trees.
+In the meantime, add a warning for drivers how are still doing
+static allocation, so that in the future the static allocation gets
+removed completely and dynamic allocation can start at base 0.
 
-Yours,
-Linus Walleij
+Main changes in v2:
+- Adding a patch to remove sta2x11 GPIO driver instead of modifying it
+- Moving the base of dynamic allocation from 256 to 512 because there
+are drivers allocating gpios as high as 400.
+
+Christophe Leroy (8):
+  gpio: aggregator: Stop using ARCH_NR_GPIOS
+  gpio: davinci: Stop using ARCH_NR_GPIOS
+  gpiolib: Warn on drivers still using static gpiobase allocation
+  gpiolib: Get rid of ARCH_NR_GPIOS
+  Documentation: gpio: Remove text about ARCH_NR_GPIOS
+  x86: Remove CONFIG_ARCH_NR_GPIO
+  arm: Remove CONFIG_ARCH_NR_GPIO
+  arm64: Remove CONFIG_ARCH_NR_GPIO
+
+Davide Ciminaghi (1):
+  gpio: Remove sta2x11 GPIO driver
+
+ Documentation/driver-api/gpio/legacy.rst |   5 -
+ arch/arm/Kconfig                         |  21 --
+ arch/arm/include/asm/gpio.h              |   1 -
+ arch/arm64/Kconfig                       |  12 -
+ arch/x86/Kconfig                         |   5 -
+ drivers/gpio/Kconfig                     |   8 -
+ drivers/gpio/Makefile                    |   1 -
+ drivers/gpio/gpio-aggregator.c           |   7 +-
+ drivers/gpio/gpio-davinci.c              |   3 -
+ drivers/gpio/gpio-sta2x11.c              | 411 -----------------------
+ drivers/gpio/gpiolib.c                   |  13 +-
+ include/asm-generic/gpio.h               |  55 ++-
+ 12 files changed, 33 insertions(+), 509 deletions(-)
+ delete mode 100644 drivers/gpio/gpio-sta2x11.c
+
+-- 
+2.37.1
+
