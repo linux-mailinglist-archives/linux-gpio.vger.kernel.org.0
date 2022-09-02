@@ -2,67 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10E0F5ABA3C
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 23:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D012C5AB9D4
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 23:05:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231204AbiIBVkc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 17:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46290 "EHLO
+        id S229750AbiIBVF1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 17:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231232AbiIBVka (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 17:40:30 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7ADC31DD4
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 14:40:22 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id s22so2766846qkj.3
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 14:40:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=a/6y1tnbijdXc5qSMdd4IK5j90OSsiP2sEjvKMKEBTI=;
-        b=K6w/ph2YvbrAoqqGMdDTbzaJxkU/GCskA/gO5HYUyptfDzMuD/PCZN1AbjYE3Gz7kp
-         4qog5itKarci+dzN0DwAog50b8cVEWazuo1qmQbyjZzx4E7UdlnoZWRUB/dwB5pHj3v8
-         dqf50X1ggz6hSRBfL7zG0xJ6GyDhVmlADQKfkdiJUXCX4J4Wu51qxWaHi5XmELZEqF+3
-         KOdG549A38ufAzxL+PHq59/SFtS3W4i9tr9FaiKwl7dyXHUpYW7EXoBAoKMWyWLMRs0r
-         X2dref2ucuJ9yK/mW1v3ZguZpL9hmvpWKa64EWt++3TyJTjV0/wCRB8Ef5MH1ai19vZh
-         txcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=a/6y1tnbijdXc5qSMdd4IK5j90OSsiP2sEjvKMKEBTI=;
-        b=RyxEBgX/eXughjZ6Au68G3fuM94P3YTqDqLhQGqF07NFr/1evE90O2Ln9D9vuruRvz
-         dqxQscfFgT0rw7+ZxeFOGnmNBLiuGH9oiy5LNCYqQxa1HF7a8Ya5b7W20vACqv2wDhRf
-         TgSXo8sAwhIfe2NJ4/UONbOY5kPkOVz0X2Wce8Ifi9avToh6Xd2lwqhB1fgNcHmFUnCU
-         tlcbECLA7Jw4d2H3Wg/l9r+qYwBvLZvpxpv0B0bYIhrhDdYL2Z46pdKlgTAdwzZeoag8
-         LTeex1lNqFS6H/JZ03T50hRF0Vo3N8kStA4ajOWwRThVUeQ+62jvhPTw0eWXNjWOcrnR
-         ZePQ==
-X-Gm-Message-State: ACgBeo05mzhaEnYHbhdHO8yj/k/jw1H908SDUPojd/KAnB2/rEPK9+cZ
-        Et1K2qxEh0lXz10Mdu8eVXZB61WDnlmxcw==
-X-Google-Smtp-Source: AA6agR6OyuWkqksbnk9o2odwFhmHjE3fR48VDFM11LQr6zwHpcQ+2cXpaK5b2lZ0sKIUAtzPPBNrgA==
-X-Received: by 2002:ae9:e841:0:b0:6b9:c69e:ac99 with SMTP id a62-20020ae9e841000000b006b9c69eac99mr24436570qkg.450.1662154821173;
-        Fri, 02 Sep 2022 14:40:21 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id 15-20020ac84e8f000000b0031f0b43629dsm1819533qtp.23.2022.09.02.14.40.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Sep 2022 14:40:20 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     brgl@bgdev.pl, linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 4/4] gpio: ws16c48: Make irq_chip immutable
-Date:   Fri,  2 Sep 2022 13:45:26 -0400
-Message-Id: <f4a75e8784f04247e0ef1b7af64d93e68cc373b0.1662140119.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <cover.1662140119.git.william.gray@linaro.org>
-References: <cover.1662140119.git.william.gray@linaro.org>
+        with ESMTP id S229507AbiIBVF0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 17:05:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5127A4D14C;
+        Fri,  2 Sep 2022 14:05:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B79DBB82D99;
+        Fri,  2 Sep 2022 21:05:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767AAC43470;
+        Fri,  2 Sep 2022 21:05:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662152722;
+        bh=qsStvP91ihR00dZ3kRmIXS3gp2oRIvI8e0UNRUUK9iU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=vAJhH9VGjiTcp8aOmKgoX2qbddBxsvkgr2d6lCX/VRYDIE/oguVxxJOd/jijB7cQF
+         oR1O8LNuncj7abV5/XBJTKfieox1lMWGsI4VgTwLCk61T6RyTHGKFSAdlyRe+NmM5Q
+         8y/plzRcnodjc6wckvFYL7q7uVdcxp8a6rgoK1CkjIcc28UYmtWjhstYbQV0ITlAEJ
+         cCZgrPPU+uhjhtmmVTBSr9inXHgSEuyjT1LGrWcQbsHgKrK9GHqUcKmvPYbyT1M2CX
+         0FYRj4AdT3XVfPT28xY31lCgROOpPV+b135QkLsI7nvUmrqeMJyR9kQzdyeoEtytFy
+         SXLZzXUUZOPNw==
+Received: by mail-vk1-f175.google.com with SMTP id w129so1530060vkg.10;
+        Fri, 02 Sep 2022 14:05:22 -0700 (PDT)
+X-Gm-Message-State: ACgBeo2BotIQAl79rXzuSu+ZcKAyVCd8qVaP66kPtQX6err0JlbJ2gH2
+        prJnySBekYggTuOS+tgwzNDnctPNWi2ce89DYQ==
+X-Google-Smtp-Source: AA6agR79pK/SefjTsDIGybHBwpAL12OW8gkE42VozV7uuODUesaBGzPfzSjt1j5VQri5uu5iiMGzNCMQcvSX6NfVS3U=
+X-Received: by 2002:a1f:d241:0:b0:398:3e25:d2dd with SMTP id
+ j62-20020a1fd241000000b003983e25d2ddmr359225vkg.15.1662152721285; Fri, 02 Sep
+ 2022 14:05:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+References: <20220902060426.2980951-1-jay.xu@rock-chips.com> <20220902060426.2980951-2-jay.xu@rock-chips.com>
+In-Reply-To: <20220902060426.2980951-2-jay.xu@rock-chips.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Fri, 2 Sep 2022 16:05:10 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ4vXG5b5m5631Jb0ESbjn5z0u2sgKOrXf1BR-qOgeV_w@mail.gmail.com>
+Message-ID: <CAL_JsqJ4vXG5b5m5631Jb0ESbjn5z0u2sgKOrXf1BR-qOgeV_w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: rockchip: add clock-names
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "heiko@sntech.de" <heiko@sntech.de>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,64 +65,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Kernel warns about mutable irq_chips:
+On Fri, Sep 2, 2022 at 1:04 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+>
+> Add 'clock-names' to the gpio dt node. so the driver could get clocks by
+> a const char id, this patch names the clock-names as
+>   - 'bus': the apb clock for cpu to access the gpio controller
+>   - 'db': the debounce clock for cpu to set debounce clock rate
+>
+> Since the old dt nodes may have no clock-names, this patch not make them
+> as part of 'required properties'.
+>
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> ---
+>  .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml        | 6 ++++++
+>  1 file changed, 6 insertions(+)
 
-    "not an immutable chip, please consider fixing!"
+Can Rockchip please address DT binding header licensing:
 
-Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
-new helper functions, and call the appropriate gpiolib functions.
-
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/gpio-ws16c48.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpio/gpio-ws16c48.c b/drivers/gpio/gpio-ws16c48.c
-index b098f2dc196b..59fb10641598 100644
---- a/drivers/gpio/gpio-ws16c48.c
-+++ b/drivers/gpio/gpio-ws16c48.c
-@@ -265,6 +265,7 @@ static void ws16c48_irq_mask(struct irq_data *data)
- 	raw_spin_lock_irqsave(&ws16c48gpio->lock, flags);
- 
- 	ws16c48gpio->irq_mask &= ~mask;
-+	gpiochip_disable_irq(chip, offset);
- 	port_state = ws16c48gpio->irq_mask >> (8 * port);
- 
- 	/* Select Register Page 2; Unlock all I/O ports */
-@@ -295,6 +296,7 @@ static void ws16c48_irq_unmask(struct irq_data *data)
- 
- 	raw_spin_lock_irqsave(&ws16c48gpio->lock, flags);
- 
-+	gpiochip_enable_irq(chip, offset);
- 	ws16c48gpio->irq_mask |= mask;
- 	port_state = ws16c48gpio->irq_mask >> (8 * port);
- 
-@@ -356,12 +358,14 @@ static int ws16c48_irq_set_type(struct irq_data *data, unsigned flow_type)
- 	return 0;
- }
- 
--static struct irq_chip ws16c48_irqchip = {
-+static const struct irq_chip ws16c48_irqchip = {
- 	.name = "ws16c48",
- 	.irq_ack = ws16c48_irq_ack,
- 	.irq_mask = ws16c48_irq_mask,
- 	.irq_unmask = ws16c48_irq_unmask,
--	.irq_set_type = ws16c48_irq_set_type
-+	.irq_set_type = ws16c48_irq_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static irqreturn_t ws16c48_irq_handler(int irq, void *dev_id)
-@@ -463,7 +467,7 @@ static int ws16c48_probe(struct device *dev, unsigned int id)
- 	ws16c48gpio->chip.set_multiple = ws16c48_gpio_set_multiple;
- 
- 	girq = &ws16c48gpio->chip.irq;
--	girq->chip = &ws16c48_irqchip;
-+	gpio_irq_chip_set_chip(girq, &ws16c48_irqchip);
- 	/* This will let us handle the parent IRQ in the driver */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
--- 
-2.37.2
-
+https://lore.kernel.org/all/20220630220409.GA3396626-robh@kernel.org/
+https://lore.kernel.org/all/20220902210141.GA403234-robh@kernel.org/
