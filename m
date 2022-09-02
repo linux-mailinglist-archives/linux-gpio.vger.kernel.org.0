@@ -2,67 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FDD15ABAA1
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Sep 2022 00:06:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F6B5ABAB0
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Sep 2022 00:10:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230206AbiIBWG2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 18:06:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42122 "EHLO
+        id S229777AbiIBWKh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 18:10:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbiIBWG1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 18:06:27 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4FAF8FC1
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 15:06:25 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id bn9so3559457ljb.6
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 15:06:25 -0700 (PDT)
+        with ESMTP id S231278AbiIBWKd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 18:10:33 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A297782761
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 15:10:31 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id t5so4345615edc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Sep 2022 15:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=fEs1ZNTvqBOFiNaauD6/pokJy+n/Izie5bhXhLxN7MQ=;
-        b=viSMpK2H7CcEgw5Jz/YZtxG+8PC2mGS7fY2gx60Me/v5sEXY+cEeoMqq7fYwBxiATf
-         i/UxavUXTDHllgGHu99LcnTDx0qDSuTy4yqfys90tX9ksyH96GUSQEHucZLLl6RonaOQ
-         BBAqpPPmxW39n1J5ZXMctt2EYng+7xR9GhPQmxBvsNfAyVi4ZEaekqU9h4ePKb1RJ2hx
-         tOvwfd1faRP4QczHcVGty34ki6naF5CPG0GswqfdAWX0Uxbb20YmQel3gr7mEAERApCr
-         eFSB05Uyyrj/9wM30QmXu67RpepGOt7BSnVzpHl9w1kXwoFVz21gmdw2vPxqlH4ES3jo
-         psmg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=LuG0HhaXO/mnUnmBsR7TF7VmUI6ubxmEMFXRNYAxXaI=;
+        b=YSE7dUNvIuRM+tay7UsfWbSZLHNH+UXs4670DKC2KMng2Oi3EySput1A2F2Bmsbp6Z
+         P10q0uS4GY8ezpLHcKuUs/c8DWbIPtDZ/SMZCfulkp91r1JYcg+wiaQX59Z/NnCZNCJg
+         WDXxJhMdZsui0FaLmc3dExIMkIR+uxu5+SDVsCsUUsI8kHL9TARdkqcrUJV4gXWb5mTi
+         sBJKrXv7ONzw6XCwAZLPlBvS2HFwfh/OQ/qB8eqEsNL52Hh65LutyqGe7EOjaMZIDABE
+         8j+rMoU2BjqEBaYnmoIiSswO7Co3HTBViC445AAACE1ohXbkxLRogSGm8dXvNFtCHIhy
+         mZ1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=fEs1ZNTvqBOFiNaauD6/pokJy+n/Izie5bhXhLxN7MQ=;
-        b=dSGBhAT7E20SiCwMMDzSDwPYrfMQK9Zcr/c/yNETIlRhrVJn+EUFzVrexfepOQGBAQ
-         pdggQgq1S+o4ggJmrpBl35FFozhDgxksZMBnyOQiYt/yU5p8mghjm793ECKGCGDnYI33
-         pL0XXzGw+/VhVesX5MMRK+2e6WF8OMQE4v+NX6dB0lgrzmnvojqvoN6E6UEBExEAx6Np
-         XHQ8/iLGhVQywE90GNlAC0V4NTo6fVgVHnhXWWr717HDh4wrr9kAf+19fvU+47QcGvMy
-         xF+ktg7PpxtQHQWvQHAMokpgT/wrwcU9Ybs3JsV477jFCaeZfnTcpJhP//tbL2ul8vO6
-         ZPRA==
-X-Gm-Message-State: ACgBeo1ESRYmtvlrc3iPPaJJhbLYsb3gLzhqWMlBD/RxzuMkSp7+u22g
-        pxXPHbkXFHz09hyJ0lCDoY6bcZEEQz157w==
-X-Google-Smtp-Source: AA6agR6K3RP/rSl9bwKgrRo0ZS8F2c+rv+cc7Q0CaAV7NKXGEwwfVVE8EkTXyo2PKkD/94BhyHZcfA==
-X-Received: by 2002:a2e:83c9:0:b0:24d:a95d:7b7a with SMTP id s9-20020a2e83c9000000b0024da95d7b7amr11487720ljh.254.1662156384324;
-        Fri, 02 Sep 2022 15:06:24 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id b19-20020ac247f3000000b00492e6642937sm364152lfp.200.2022.09.02.15.06.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Sep 2022 15:06:23 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nikita Shubin <nikita.shubin@maquefel.me>,
-        Lukasz Majewski <lukma@denx.de>
-Subject: [PATCH v2] ARM: ep93xx: Convert to use descriptors for GPIO LEDs
-Date:   Sat,  3 Sep 2022 00:04:21 +0200
-Message-Id: <20220902220421.604516-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.2
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=LuG0HhaXO/mnUnmBsR7TF7VmUI6ubxmEMFXRNYAxXaI=;
+        b=ETG9UlX9LyvwEJcbJtnWiXAXl4/FIFy558oRlGBu6AQP0lXyESN/ZjzWeJyyOioQAv
+         Jq52K/1i9r+WH9spy/UTLWm9U9WKPpyM85wpsky+R8KKS0rqCvPgPxCSWJklidOYfXeD
+         n9peIwZFszJiVxhETQOGZKsJhZ/E2tdwGmWCf8CN7GNbs/G21jab4eShjM9JDgpDI/W+
+         hcz+mpm26Tq5U/xGxdje/MOGfQe5i/G17OJyQyfUsC/9YVFeIHeLJC1nJivrW1xqu7Hr
+         BfL2Kw6FRMpaDt9i+xYqNPaGfeIdWgbi9LIA25SBB7jnu1g97nlcCG8zeoCXWGgCMl2W
+         dRwA==
+X-Gm-Message-State: ACgBeo1yHgaI8RdFW5JbugdvK4PKfuvgFwE8PO+dEX1VsLvHZ2q6TCbv
+        HKlvbHzU55TeLaqmx/zYG2xXumzcEzgqrrPINVr2rA==
+X-Google-Smtp-Source: AA6agR5It9DR1aK6tIptCZTq0NmejqzAG+8p2xoZsfpwTs0USKKpeHrl8ga+AMUTA97jK45hLonISq10jnbSitbuDNo=
+X-Received: by 2002:a05:6402:2691:b0:43d:ba10:854b with SMTP id
+ w17-20020a056402269100b0043dba10854bmr33171421edd.158.1662156630171; Fri, 02
+ Sep 2022 15:10:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1662112087.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1662112087.git.geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 3 Sep 2022 00:10:18 +0200
+Message-ID: <CACRpkdY51qLqDDzi+N4yDwANkmrpp-mtQwDO-A_ithSALNUhRg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.1
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,61 +64,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This converts the EP93xx to use GPIO descriptors for the
-LEDs.
+On Fri, Sep 2, 2022 at 11:50 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-Cc: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>
-Cc: Lukasz Majewski <lukma@denx.de>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Fix syntax error (doubled left parens)
----
- arch/arm/mach-ep93xx/core.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+>
+>   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.1-tag1
 
-diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
-index 2d58e273c96d..318c09ee4723 100644
---- a/arch/arm/mach-ep93xx/core.c
-+++ b/arch/arm/mach-ep93xx/core.c
-@@ -425,10 +425,8 @@ void __init ep93xx_register_spi(struct ep93xx_spi_info *info,
- static const struct gpio_led ep93xx_led_pins[] __initconst = {
- 	{
- 		.name	= "platform:grled",
--		.gpio	= EP93XX_GPIO_LINE_GRLED,
- 	}, {
- 		.name	= "platform:rdled",
--		.gpio	= EP93XX_GPIO_LINE_RDLED,
- 	},
- };
- 
-@@ -437,6 +435,16 @@ static const struct gpio_led_platform_data ep93xx_led_data __initconst = {
- 	.leds		= ep93xx_led_pins,
- };
- 
-+static struct gpiod_lookup_table ep93xx_leds_gpio_table = {
-+	.dev_id = "leds-gpio",
-+	.table = {
-+		/* Use local offsets on gpiochip/port "E" */
-+		GPIO_LOOKUP_IDX("E", 0, NULL, 0, GPIO_ACTIVE_HIGH),
-+		GPIO_LOOKUP_IDX("E", 1,	NULL, 1, GPIO_ACTIVE_HIGH),
-+		{ }
-+	},
-+};
-+
- /*************************************************************************
-  * EP93xx pwm peripheral handling
-  *************************************************************************/
-@@ -989,6 +997,7 @@ struct device __init *ep93xx_init_devices(void)
- 	platform_device_register(&ep93xx_ohci_device);
- 	platform_device_register(&ep93xx_wdt_device);
- 
-+	gpiod_add_lookup_table(&ep93xx_leds_gpio_table);
- 	gpio_led_register_device(-1, &ep93xx_led_data);
- 
- 	return parent;
--- 
-2.37.2
+Pulled in, thanks!
 
+Yours,
+Linus Walleij
