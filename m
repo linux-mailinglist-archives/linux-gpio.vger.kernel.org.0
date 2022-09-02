@@ -2,193 +2,231 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2904A5AB628
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 18:03:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74B855AB720
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 19:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237812AbiIBQC5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 12:02:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41142 "EHLO
+        id S236008AbiIBREz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 13:04:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237502AbiIBQCZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 12:02:25 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2073.outbound.protection.outlook.com [40.107.212.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3BDF7B2C;
-        Fri,  2 Sep 2022 08:56:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AgPrb7ezSHA8Ra2QQcMufbri0w+9U2Gv5ReLrbI3l9lT2gIQX304BAAN/1jzp49yRASr4/CAjdeiWlr8toS0GQh3PGsx2V4wsvP0ZN6iWC3MEzCUboTBJknUfHq7VVrs8PL5GYest20AmXa8eC4of4Fi/xB06IOd1U2Kmjrc8LiPYH980g4bB6+r+41qHdxaO5PducGIdt3Y/MEiPndtnQ6wKnspD0BKDnhAi1R0qlNqm4FOpD960r92t5X9XyCJBwc1ghmPqhZaMxSE4wYGxkFLgMfh7MKc8S5bpxgHHA1eX3qb7qStRf7hmyiO7DTPUd97Z8GeDGtItZnf1VfzTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=18pIrBJVtDlrwGHri5+4uqnxs9DK852gPYC9HfgPuA0=;
- b=NkQfomO362sQUNxUFgMd9YzbYPRMx2U6Op0xFWLe/Ye5/uW3vTonTXrEBaF643dLl6cm1MpxubzUE+1K/WE2Mcuwol9vPbOvRFZjF6zJZrp+3nUwURWgoFxqY2Lx8VK4vscyeBhDyR2GPtN3AfLuW+IrUC5FnZEXeED/KNUXFwkUChzR63jrAndmjHvpc85xE88Ibi63LOkWhnNPjSDXyl4JR6RyP+qdclOFQrA1txdIXRTGUqqJpsiC85FooSaifZTZvcA2cZWpKQBfV6oY47kvojmukmWFFn7SXGKh6YoVt1A/+E4lZQqagkjEpKEFg8Aziso6eIO1mRqWVRolcg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=18pIrBJVtDlrwGHri5+4uqnxs9DK852gPYC9HfgPuA0=;
- b=tTGQVWzJgd1c1dZDibrmTrt3O9RCYr9E2hWA141UAlXmcQ/KyDDMb0GcIr0Oz4BUtHH42dzcMmJIwW/3fq6Htr12aVv86x/XURT+cDFRwkqLAyuI2oN1Z/08jyKwGxuYecYSqAEAt8sV3sgwJsgdYGtPq2SP+DZsPdkUr0cA0gmznQuRaPrhXMaH66DlRLDcV2C5Ymib9maIPr/bZI/Zd4Aa36WdbpyTDe3HLb6GI5RfaXzvh0hnXLErg/enCOwzZxrGPRtn+Wf+6Q8l26PVFXnHOHKxwkvtG9V0lD4oPA+tw2z5AXLljyqVKudD5V8iJi4c9Gk4cgyUanQvtPmMhw==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by DM4PR12MB6085.namprd12.prod.outlook.com (2603:10b6:8:b3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.12; Fri, 2 Sep
- 2022 15:54:59 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::25d3:32f3:4be5:da11]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::25d3:32f3:4be5:da11%7]) with mapi id 15.20.5588.012; Fri, 2 Sep 2022
- 15:54:59 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO
- controller
-Thread-Topic: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO
- controller
-Thread-Index: AQHYUy6f8PYDEwnjH0GY1hRsyl4qdK0QbjTwgAAQVwCAABikcIALQwgAgAAAjSCAAZckgIAELgbQgAM2cYCAqEdScA==
-Date:   Fri, 2 Sep 2022 15:54:58 +0000
-Message-ID: <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20220418141416.27529-1-asmaa@nvidia.com>
- <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com>
- <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdZhW9XK3opXLLzdMiVLVkGQyJCf7RLZtRQLsmzv-aqwbA@mail.gmail.com>
- <CH2PR12MB38953FF57D91FA75AB9CB102D7CB9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdbAhMa2CXvQra3E13n8WfiBxyHNqzEp4dW3qo5upr_=gw@mail.gmail.com>
- <CH2PR12MB38958CD365876A2106712C3CD7CF9@CH2PR12MB3895.namprd12.prod.outlook.com>
- <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com>
-In-Reply-To: <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9366e236-1728-4192-2649-08da8cfb7d18
-x-ms-traffictypediagnostic: DM4PR12MB6085:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: y10MoCJEAlXCk97JHNrnniDM+d6vuIgEKLzbhEywZf8IdP9jwG8mAnGj0xWOc9qkB5PI2UcJ7/7Ox2Fee020AYJA8Mi4EUKvwBrvglDog1xyQu2JcBnq6ndGxz3BOopNpO3WDML5bxfWyTAUoNq4KTA/yq4aK5tssuB6a6v/s5AkFtJ4Y8KQ0sF4bUDwTqO9luZZNzyOwgbcUWDzRQZLv2hb0YFPUVvLyF7TFezfFyakwbpXUQIweJKVn/A08wLFSWuNG2qrsTrVb/jmfrLId+t0/acfSrpk01pgEXppkPKRhZjZA8C2QKf89hIM2Dy5D/ZAxuIFUctUn2tv4zAEi2YEH4ahOROBcARD1n98ADjRn+wKwrQYo3VZ+ocEiDDiiZHbJRr0+adG01ZtdghzIaps9OIE8soc3ZzWFlD4gocTV7RK484Af2xbaAMT3/75pDaW5DyCCoz+Txi3PDycEVJvkm8PnSAS6GSqnzGFiqoSItWqCmSEz/gl/UfQRhHmXldWKEKYjzE1qYttjV68gpQHx+148vM/Bmf60fiH4G75ePaew0VEM/gTtSxj3NVRtWPSbC7DUftgTb8z1BZXLD/ceWG5hbYP5pqIelZhSmRG4kPX7Jm3vnieA1ncaOhGWEj3bEHGUs+NSslqYSTqI84dDqH8wQSsEqAZ35m1AeQr8vwQVMN3/k/8DpYjG2JL5NJCuuDJD8IY0SGA1kRBqMMRSZbCBijRgLScH6nVYdtoZvbmVYeCJpLSYf0kxZwY2aR3n1Ce6T31LZjQnnlyGTnclNDUW7kEeOt9AhBF+FCaOPTnp+qkhrDAVUSsilMw5ZYk7LPSV5klJU0mmgG10G8CHEIsGjbfBDpjtHC8a6Xrr4ZestaCH9Ft9fnmM1EH2LOlx5XHV4AX7enYZTtfcQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(366004)(39860400002)(376002)(396003)(346002)(8936002)(9686003)(122000001)(53546011)(86362001)(26005)(2906002)(478600001)(52536014)(7696005)(33656002)(6506007)(5660300002)(41300700001)(38070700005)(38100700002)(83380400001)(186003)(966005)(55016003)(66476007)(76116006)(66446008)(66946007)(64756008)(316002)(71200400001)(4326008)(66556008)(54906003)(8676002)(6916009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MjYwSnhjUUxxajZMZTdUUG14V2ZINHlnZmpDUkJqTWdxSmNsUVFBSHF3VUJw?=
- =?utf-8?B?SmgzRjRJMHlvcEpyZ01yLzFnU292UlBIUGNEV2NWU2pKTitONWczRTNSZHV0?=
- =?utf-8?B?a3hRbWlwWFVXSXFIVzJFMTdrK0hmcDgzZDNXUjhiTkRxZFJNWGpvQ2Y0b2Zk?=
- =?utf-8?B?WmRwTUdKSmc5bGNjeGUyMThKUmlUd25KU1R1TTFzTVVtd28wNGwzTnBXTmtP?=
- =?utf-8?B?cThaaHdQRjN5dWZJd2FXMHY4amcwUFYzclI4b1E2Q0VNUDFXMERXbTBhc1VX?=
- =?utf-8?B?MWg2RVlyYmxVWEk2MWpDeHU4UFpXblIzdHgzTFNNd3NYSm9laTlTK1JmemxW?=
- =?utf-8?B?NVlTVFFIT3RBZFlLS1llKzNrNVEzeXN1VGhCTmUrV3NnM3lsR3FDcHpkbmpp?=
- =?utf-8?B?SXZEeHQvaXFkckNvditsTTBuN0RiVWszbjBtSFpyaVQvUnM0WVpXYVYvYlRi?=
- =?utf-8?B?Z1NXODNQeEp3VGYzc0JlK0c4Wi9MVS9GWk1LNjBvTlVkaDlHS1loQ2ZnSWd1?=
- =?utf-8?B?MFZGMG90cFFlaEMyQ09mYm1mRmc0V2NKUnI5d1RjSmwrTHdlUUY0cTdyUXM5?=
- =?utf-8?B?b2NIaDJ0T3FiS250R2tUb2ttTWJrL3V1VU5wNktONURndS9EdVBESmJPaktX?=
- =?utf-8?B?TDJWZkVyN1FWcU9tR3dZcFJuYnhqTHE5bjBDSlVNNzAvOGFENjd6cTVhbVVB?=
- =?utf-8?B?RlkveWFSeHovdGI3RERzSytINmgwdFJvTDFJcXg3NDZOWHJadGcrOWlFb3lV?=
- =?utf-8?B?QldDYk1ndVhmek1WT3BYRjlsV3ltL1ZkaTRlRkJVdmd0aXY2NU04eW1KSjFT?=
- =?utf-8?B?M3QxVFFDdlBJOWxaZzh1bUFhZitrOWw4R3U2enhSNWRobnhydkhMQUxTUnUw?=
- =?utf-8?B?cDNsYktTYjNJWEtMOVVMWk82T3krME4yZ3UzdTJzcS9oclVnSU9jMy9RQ0Fs?=
- =?utf-8?B?UnNDeWlXS3p3ZlVnTmdQWFljRWV4WDFOTUdzckVlbzN5TEVNR1hST2pkM0Zv?=
- =?utf-8?B?cVBTei9SdjQ3QjQ3aFVlN1lXUkRUTDlHcCs2UkVRYXNxLyt3UkladW9TRlNP?=
- =?utf-8?B?czcvRkFXckFrbjdndC8wYTBmRDJTRmFYWlNjTmtwNHp1SE14WGNLaFhFRjVa?=
- =?utf-8?B?YXhLdEUvM2wyMHhPTFNlWjQ4T1p5VytpamtxbkdXcDlVellNbmFxYk9hdG9T?=
- =?utf-8?B?WEIyaVZiYjkvbytvVUo4UE9zN0tDWXlkNWhDcU1KWUQ3TGdtZVlRem1oT042?=
- =?utf-8?B?NEN3Q0Y2ZlhCbG9wR3hVVThhMW8zUDc1aUNiNzhXd3JQbmpGd3dCaGNoQ0s1?=
- =?utf-8?B?SWVYQXZWR09kNG5OUFFVTzZPaE1TY3Q5bmNoYm1Nc3h4NWE5aG9icWhUd1Yr?=
- =?utf-8?B?cis0MzR0VHZLcUpab0Jwc3RNY0orT25NRHRsaUwvVW5YM0JhM0w1THBHSTIw?=
- =?utf-8?B?SnpPS01aYnREdkIveWNGTHY0TGpwWm5xckVTYVRuRUp0Y3hacnZoR0VNdkE5?=
- =?utf-8?B?Mkd3YURITnVNMkV1bUN0WHVsL3YvSnhYQ05tRllvc25VZUZaelNiUk1BdDYy?=
- =?utf-8?B?M0hpbGVvam85QlBidmFneERtMUViK0pQRGxOQ0VFUEZjaWR4QVNpMm5hSnUz?=
- =?utf-8?B?SXNJRjd4VEpVT1JFM3F1RkdQaHFLby83ZWR6Rkk5emVTbVE5WmhmaWJySmJm?=
- =?utf-8?B?NWlFbkFBWHNrY2VrWE9PSEdKMzhacVRzUUhHL09mUFBmNU9DTHJ5cnphVUVB?=
- =?utf-8?B?TzdZcUdSYVRVeGF2OWNiSzNobzJyOGJzYVlrUG40OFhlMEYvTElKaVF5N0pS?=
- =?utf-8?B?TytFUERmMUMzNmZLUkkzNThSb3hCeTNmR21VRkpIdWFKc0dQOW5VY2VsWWND?=
- =?utf-8?B?RmpXY3JXMjhCSFg0SzZYK3dIcEhvNFFWNlZLOGc3UEpaUXI5dk5Vd3B6T1F1?=
- =?utf-8?B?RkFyQldMR1Q0a3BkaDFqTzIvekhadTJLQjNtMUZPSzZVTW9GRTJ2b0VvaGZL?=
- =?utf-8?B?TXFxenVHcUJwVXVodFkvcHU0TWt2QU1LMEtQMXdHZkU3T3NxMnFoZ1ErME1T?=
- =?utf-8?B?YTgvS3p1Yk5hUEIzbmdCdjIwMTIzVTZvZHV6OXFmblRmU2VWVkZCVzJLTlQ3?=
- =?utf-8?Q?Z/Q4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S236673AbiIBREw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 13:04:52 -0400
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFDDC4;
+        Fri,  2 Sep 2022 10:04:44 -0700 (PDT)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-11e7e0a63e2so6220355fac.4;
+        Fri, 02 Sep 2022 10:04:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=wYZ6v+E+gcaj843yCuPCzJk2EjReC7fODq6r4wpL8VU=;
+        b=PGA0lnCh2n0qpZQHnEy47yQ/1KXBXtQeBYMj/OJmBbdFr7rjcKKdwP3DfBUp9oROo5
+         ajMRNrYWkigGPUaJ7odRgCPa5QaFMcDivkO41KfcU8ZJm0YTZgaXcnp7+jXmm5C+NZII
+         MHQs6Yf55JRhN92QW4rgSukd5oDaiKQqSUMVSdL/OUxpkkVjfhPdxzP9YZfuGuVUD5Wo
+         Qn9odt4NSErN1jxxJSSBiCYe11mWw6CItR1/B8zjPIxD26t6ZLZkXbAoFzUT4ssf2wW1
+         umsDo9Q0xFtllthQkMs7YTSBhh/1PbNuL6dHYoSAW/E3aRSIGsJbsIVCxXyKSrZDtpZ0
+         pACg==
+X-Gm-Message-State: ACgBeo2gjHJ0hm2sryQDzJmEZdopnxES2raTTQld27c/Alx/ZpObmrkV
+        TYprkjnjXPEJZbptIzuMag==
+X-Google-Smtp-Source: AA6agR5twtq/Ml4e+nWk6xzMYxvoXTHjEt3iX+fMN5f/iS/3OQ73FAuUMZH1R2VzVkLajJW6pr/Jng==
+X-Received: by 2002:a05:6870:c696:b0:125:691b:d212 with SMTP id cv22-20020a056870c69600b00125691bd212mr1033954oab.26.1662138282953;
+        Fri, 02 Sep 2022 10:04:42 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id 34-20020a9d0c25000000b006370abdc976sm1194995otr.58.2022.09.02.10.04.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Sep 2022 10:04:42 -0700 (PDT)
+Received: (nullmailer pid 58129 invoked by uid 1000);
+        Fri, 02 Sep 2022 17:04:41 -0000
+Date:   Fri, 2 Sep 2022 12:04:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Mark Kettenis <mark.kettenis@xs4all.nl>
+Cc:     linux@armlinux.org.uk, krzysztof.kozlowski@linaro.org,
+        arnd@arndb.de, lee@kernel.org, linus.walleij@linaro.org,
+        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
+        marcan@marcan.st, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, sven@svenpeter.dev,
+        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+Message-ID: <20220902170441.GA52527-robh@kernel.org>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeH-003t9A-3K@rmk-PC.armlinux.org.uk>
+ <426469c1-13cc-178b-4904-09439d7788e8@linaro.org>
+ <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
+ <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
+ <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
+ <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
+ <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
+ <CAL_JsqLXNVdEj3ZCA_Wnirv-7maCZATKmjS8fJYR0uLQ9OTQZQ@mail.gmail.com>
+ <d3cec35e749f958d@bloch.sibelius.xs4all.nl>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9366e236-1728-4192-2649-08da8cfb7d18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2022 15:54:58.9448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +iOuLvfmQNLIegvQh4pGkCIp94OZPsCIej+DAFtjz5b13QyaouvzHdSSADJSStU3muSXt0AuGrBGcv/ga6T9+g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6085
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d3cec35e749f958d@bloch.sibelius.xs4all.nl>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SGkgTGludXMsDQoNClNvcnJ5IGZvciB0aGUgbG9uZyBkZWxheS4gSSBkaWQgd29yayBvbiBhZGRp
-bmcgdGhlIHBpbmN0cmwgZHJpdmVyIGJlc2lkZXMgdGhlIGdwaW8gZHJpdmVyIGFuZCBJIGFtIHdv
-cmtpbmcgb24gdGVzdGluZyBpdC4NCkkgYWRkZWQgdGhlIGZvbGxvd2luZyB0byB0aGUgZ3BpbyBk
-cml2ZXI6DQpnYy0+c2V0ID0gbWx4YmYzX2dwaW9fc2V0Ow0KZ2MtPmRpcmVjdGlvbl9pbnB1dCA9
-IG1seGJmM19ncGlvX2RpcmVjdGlvbl9pbnB1dDsNCmdjLT5kaXJlY3Rpb25fb3V0cHV0ID0gbWx4
-YmYzX2dwaW9fZGlyZWN0aW9uX291dHB1dDsNCmdjLT5yZXF1ZXN0ID0gZ3Bpb2NoaXBfZ2VuZXJp
-Y19yZXF1ZXN0Ow0KZ2MtPmZyZWUgPSBncGlvY2hpcF9nZW5lcmljX2ZyZWU7DQoNCkluIHRoZSBw
-aW5jdHJsIGRyaXZlciwgSSBkZWZpbmVkIHRoZSBmb2xsb3dpbmc6DQpzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHBpbm11eF9vcHMgbWx4YmZfcG14X29wcyA9IHsNCi5nZXRfZnVuY3Rpb25zX2NvdW50ID0g
-bWx4YmZfcG14X2dldF9mdW5jc19jb3VudCwNCi5nZXRfZnVuY3Rpb25fbmFtZSA9IG1seGJmX3Bt
-eF9nZXRfZnVuY19uYW1lLA0KLmdldF9mdW5jdGlvbl9ncm91cHMgPSBtbHhiZl9wbXhfZ2V0X2dy
-b3VwcywNCi5zZXRfbXV4ID0gbWx4YmZfcG14X3NldCwNCi5ncGlvX3JlcXVlc3RfZW5hYmxlID0g
-bWx4YmZfZ3Bpb19yZXF1ZXN0X2VuYWJsZSwNCi5ncGlvX2Rpc2FibGVfZnJlZSA9IG1seGJmX2dw
-aW9fZGlzYWJsZV9mcmVlLA0KfTsNCg0KRHVyaW5nIHRlc3RpbmcsIEkgdXNlIHRoZSBzeXNmcyB0
-byBjaGFuZ2UgdGhlIGdwaW8gdmFsdWUgYXMgZm9sbG93czoNCkNkIC9zeXMvY2xhc3MvZ3Bpbw0K
-ZWNobyA0ODAgPiBleHBvcnQNCldoZW4gSSBkbyB0aGUgZXhwb3J0LCBJIHNlZSB0aGF0IGdwaW9j
-aGlwX2dlbmVyaWNfcmVxdWVzdCBpcyBiZWluZyBjYWxsZWQgd2hpY2ggY2FsbHMgLmdwaW9fcmVx
-dWVzdF9lbmFibGUgPSBtbHhiZl9ncGlvX3JlcXVlc3RfZW5hYmxlLg0KDQpJcyB0aGlzIGhvdyBp
-dCBhbHNvIHdvcmtzIGluIG90aGVyIGRyaXZlcj8gT3IgYW0gSSBtaXNzaW5nIHNvbWV0aGluZz8g
-DQpJIHdhbnRlZCB0byBkaXNhbGxvdyBtdXhpbmcgZnJvbSB1c2VyIHNwYWNlLiBJIHdvdWxkIGxp
-a2UgdGhhdCB0byBiZSBjb250cm9sbGVkIGJ5IHRoZSBBQ1BJIHRhYmxlIG9ubHkuIEZvciBleGFt
-cGxlLCB1c2UgZGV2bV9ncGlvX3JlcXVlc3QgZnJvbSBzb21lIG90aGVyIGRyaXZlciBpZiBuZWVk
-ZWQuDQoNClRoYW5rcy4NCkFzbWFhDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTog
-TGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPiANClNlbnQ6IFdlZG5lc2Rh
-eSwgTWF5IDE4LCAyMDIyIDk6NTEgQU0NClRvOiBBc21hYSBNbmViaGkgPGFzbWFhQG52aWRpYS5j
-b20+DQpDYzogYW5keS5zaGV2Y2hlbmtvQGdtYWlsLmNvbTsgYmdvbGFzemV3c2tpQGJheWxpYnJl
-LmNvbTsgbGludXgtZ3Bpb0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFjcGlAdmdlci5rZXJuZWwu
-b3JnDQpTdWJqZWN0OiBSZTogW1BBVENIIHYxIDEvMV0gQWRkIGRyaXZlciBmb3IgTWVsbGFub3gg
-Qmx1ZUZpZWxkLTMgR1BJTyBjb250cm9sbGVyDQpJbXBvcnRhbmNlOiBIaWdoDQoNCk9uIE1vbiwg
-TWF5IDE2LCAyMDIyIGF0IDM6MDAgUE0gQXNtYWEgTW5lYmhpIDxhc21hYUBudmlkaWEuY29tPiB3
-cm90ZToNCg0KPiBTbyB0aGVzZSBHUElPIHBpbnMgYXJlIGFzc2lnbmVkIG9uZSBzcGVjaWZpYyBI
-VyBmdW5jdGlvbmFsaXR5IG9uIHRoZSANCj4gYm9hcmRzICBhbmQgc29mdHdhcmUgc2hvdWxkIG5l
-dmVyIGNoYW5nZSB0aGVtLg0KPg0KPiBCeSBkZWZhdWx0LCBmb3Igc2VjdXJpdHkgcHVycG9zZXMs
-IEkgdGhpbmsgd2Ugc2hvdWxkbid0IGxldCB0aGUgdXNlciANCj4gaGF2ZSB0aGUgb3B0aW9uIHRv
-IGNvbnRyb2wgdGhlIEdQSU8gcGlucyBzaW5jZSB0aGV5IGhhdmUgYSBzcGVjaWZpYyBIVyBmdW5j
-dGlvbmFsaXR5Lg0KPg0KPiBCdXQgZm9yIGJyaW5ndXAvZGVidWcgcHVycG9zZXMsIHdlIHdvdWxk
-IGxpa2UgdG8gc3VwcG9ydCB0aGUgb3B0aW9uIG9mIA0KPiBzb2Z0d2FyZSBiZWluZyBhYmxlIHRv
-IGNoYW5nZSB0aGVzZSBwaW4gdmFsdWVzLiBXZSBhbHNvIG1pZ2h0IGhhdmUgDQo+IGN1c3RvbWVy
-cyB0aGF0IGNob29zZSB0byBjaGFuZ2UgdGhlIGRlZmF1bHQgSFcgY29ubmVjdGlvbiBvZiBhIGNl
-cnRhaW4gDQo+IEdQSU8gcGluIGFuZCBjb25uZWN0IGl0IHRvIGNvbnRyb2wgdGhlaXIgTEVEcyBm
-b3IgaW5zdGFuY2UuDQoNClRoZSBmYWN0IHRoYXQgdGhlIHVzZWNhc2UgaXMgYnJpbmd1cC9kZWJ1
-ZyBkb2VzIG5vdCBtZWFuIHdlIGN1dCBjb3JuZXJzIGFuZCBkbyAicXVpY2sgZml4ZXMiLiBUaGUg
-cHJvcGVyIEFQSXMgaGF2ZSB0byBiZSBpbXBsZW1lbnRlZCwgdGhlIGFsdGVybmF0aXZlIGlzIHRv
-IG5vdCBzdWJtaXQgdGhlIGRyaXZlciBhdCBhbGwuDQoNCldoYXQgSSBoZWFyIGlzIHRoYXQgdGhl
-c2UgcGlucyBoYXZlIHR3byBtb2RlczoNCg0KMS4gVXNlZCBmb3IgYSBkZXZpY2UgKEkyQyBldGMp
-DQoyLiBVc2VkIGFzIEdQSU8gYnkgc2V0dGluZyBhIGJpdCBpbiBZVV9HUElPX0ZXX0NPTlRST0xf
-U0VUDQoNClRoaXMgaXMgdHdvIHBpbiBjb250cm9sIG11bHRpcGxleGluZyBzdGF0ZXMgYWxyZWFk
-eS4NCg0KU28gdGhpcyBzaG91bGQgaGF2ZSBhIHNpbXBsZSBwaW4gY29udHJvbCBkcml2ZXIgYXMg
-YmFjay1lbmQgd2l0aCB0aGUgR1BJTyBhcyBmcm9udCBlbmQuIEEgc2hvcnRjdXQgdG8gZW5hYmxp
-bmcgcGlucyBpbnRvIEdQSU8gbW9kZSBjYW4gYmUgcHJvdmlkZWQgdXNpbmcgLmdwaW9fcmVxdWVz
-dF9lbmFibGUoKSBmcm9tIHN0cnVjdCBwaW5tdXhfb3BzLg0KDQpQbGVhc2UgcmVmZXIgdG8NCmh0
-dHBzOi8vZG9jcy5rZXJuZWwub3JnL2RyaXZlci1hcGkvcGluLWNvbnRyb2wuaHRtbA0KDQpJIGtu
-b3cgdGhpcyBtZWFucyBtb3JlIHdvcmsgYW5kIGlzIGtpbmQgb2YgY29tcGxleC4gQnV0IGRyaXZl
-cnMvcGluY3RybCBoYXMgYSBsb3Qgb2YgZXhhbXBsZXMgeW91IGNhbiBmb2xsb3csIGZvciBleGFt
-cGxlIGRyaXZlcnMvcGluY3RybC9waW5jdHJsLXN4MTUweC5jIGFuZCBvdGhlciBzaW1wbGUgbXVs
-dGlwdXJwb3NlIGNoaXBzLg0KDQpZb3VycywNCkxpbnVzIFdhbGxlaWoNCg==
+On Fri, Sep 02, 2022 at 04:49:37PM +0200, Mark Kettenis wrote:
+> > From: Rob Herring <robh+dt@kernel.org>
+> > Date: Thu, 1 Sep 2022 17:26:18 -0500
+> > 
+> > On Thu, Sep 1, 2022 at 10:56 AM Russell King (Oracle)
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Thu, Sep 01, 2022 at 06:45:52PM +0300, Krzysztof Kozlowski wrote:
+> > > > On 01/09/2022 18:24, Russell King (Oracle) wrote:
+> > > > > On Thu, Sep 01, 2022 at 06:15:46PM +0300, Krzysztof Kozlowski wrote:
+> > > > >> On 01/09/2022 18:12, Russell King (Oracle) wrote:
+> > > > >>>>> +  compatible:
+> > > > >>>>> +    items:
+> > > > >>>>> +      - enum:
+> > > > >>>>> +        - apple,t8103-smc
+> > > > >>>>
+> > > > >>>> You miss two spaces of indentation on this level.
+> > > > >>>
+> > > > >>> Should that be picked up by the dt checker?
+> > 
+> > I have a problem that Krzysztof is quicker. ;) Maybe I should stop
+> > screening the emails (for the times I break things mostly).
+> > 
+> > > > >>
+> > > > >> I think yamllint complains about it. It is not a hard-dependency, so
+> > > > >> maybe you don't have it installed.
+> > > > >>
+> > > > >>>
+> > > > >>>>> +        - apple,t8112-smc
+> > > > >>>>> +        - apple,t6000-smc
+> > > > >>>>
+> > > > >>>> Bring some order here - either alphabetical or by date of release (as in
+> > > > >>>> other Apple schemas). I think t6000 was before t8112, so it's none of
+> > > > >>>> that orders.
+> > > > >>>
+> > > > >>> Ok.
+> > > > >>>
+> > > > >>>>> +      - const: apple,smc
+> > > > >>>>> +
+> > > > >>>>> +  reg:
+> > > > >>>>> +    description: Two regions, one for the SMC area and one for the SRAM area.
+> > > > >>>>
+> > > > >>>> You need constraints for size/order, so in this context list with
+> > > > >>>> described items.
+> > > > >>>
+> > > > >>> How do I do that? I tried maxItems/minItems set to 2, but the dt checker
+> > > > >>> objected to it.
+> > > > >>
+> > > > >> One way:
+> > > > >> reg:
+> > > > >>   items:
+> > > > >>     - description: SMC area
+> > > > >>     - description: SRAM area
+> > > > >>
+> > > > >> but actually this is very similar what you wrote for reg-names - kind of
+> > > > >> obvious, so easier way:
+> > > > >>
+> > > > >> reg:
+> > > > >>   maxItems: 2
+> > > > >
+> > > > > Doesn't work. With maxItems: 2, the example fails, yet it correctly lists
+> > > > > two regs which are 64-bit address and 64-bit size - so in total 8 32-bit
+> > > > > ints.
+> > > > >
+> > > > > Documentation/devicetree/bindings/mfd/apple,smc.example.dtb: smc@23e400000: reg: [[2, 1044381696], [0, 16384], [2, 1071644672], [0, 1048576]] is too long
+> > > > >         From schema: /home/rmk/git/linux-rmk/Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> > > > >
+> > > > > Hence, I originally had maxItems: 2, and ended up deleting it because of
+> > > > > the dt checker.
+> > > > >
+> > > > > With the two descriptions, it's the same failure.
+> > > >
+> > > > Yeah, they should create same result.
+> > > >
+> > > > >
+> > > > > I think the problem is that the checker has no knowledge in the example
+> > > > > of how big each address and size element of the reg property is. So,
+> > > > > it's interpreting it as four entries of 32-bit address,size pairs
+> > > > > instead of two entries of 64-bit address,size pairs. Yep, that's it,
+> > > > > if I increase the number of "- description" entries to four then it's
+> > > > > happy.
+> > > > >
+> > > > > So, what's the solution?
+> > > > >
+> > > >
+> > > > If you open generated DTS examples (in your
+> > > > kbuild-output/Documentation/devicetree/bindings/mfd/) you will see which
+> > > > address/size cells are expected. By default it is I think address/size
+> > > > cells=1, so you need a bus node setting it to 2.
+> > >
+> > > Thanks, that works. The patch with all those points addressed now looks
+> > > like:
+> > >
+> > > 8<===
+> > > From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+> > > Subject: [PATCH] dt-bindings: mfd: add binding for Apple Mac System Management
+> > >  Controller
+> > >
+> > > Add a DT binding for the Apple Mac System Management Controller.
+> > >
+> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > > ---
+> > >  .../devicetree/bindings/mfd/apple,smc.yaml    | 61 +++++++++++++++++++
+> > >  1 file changed, 61 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/apple,smc.yaml b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> > > new file mode 100644
+> > > index 000000000000..168f237c2962
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
+> > > @@ -0,0 +1,61 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mfd/apple,smc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Apple Mac System Management Controller
+> > > +
+> > > +maintainers:
+> > > +  - Hector Martin <marcan@marcan.st>
+> > > +
+> > > +description:
+> > > +  Apple Mac System Management Controller implements various functions
+> > > +  such as GPIO, RTC, power, reboot.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    items:
+> > > +      - enum:
+> > > +          - apple,t6000-smc
+> > > +          - apple,t8103-smc
+> > > +          - apple,t8112-smc
+> > > +      - const: apple,smc
+> > > +
+> > > +  reg:
+> > > +    items:
+> > > +      - description: SMC area
+> > > +      - description: SRAM area
+> > 
+> > Based on the disjoint addresses, is this really one device? Perhaps
+> > the SRAM area should use mmio-sram binding? That already supports
+> > sub-dividing the sram for different uses. I'll comment more on the
+> > full example.
+> 
+> To me it does look as if the SRAM is part of the SMC coprocessor
+> block.  It is probably part of a larger SRAM on the side of the SMC
+> coprocessor.  There is a gap, but the addresses are close.  The only
+> thing in between is the SMC mailbox, which is represented by a
+> separate node.
+
+Okay, fair enough. Let's keep them together.
+
+Rob
