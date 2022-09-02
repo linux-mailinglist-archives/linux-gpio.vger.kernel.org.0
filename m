@@ -2,161 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4EDF5AAD3F
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 13:14:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE58E5AADC2
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 13:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235851AbiIBLNw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Sep 2022 07:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35342 "EHLO
+        id S235376AbiIBLeX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Sep 2022 07:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235866AbiIBLNh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 07:13:37 -0400
-X-Greylist: delayed 48036 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Sep 2022 04:12:45 PDT
-Received: from hutie.ust.cz (unknown [IPv6:2a03:3b40:fe:f0::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BBBD3EDC
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 04:12:44 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cutebit.org; s=mail;
-        t=1662117159; bh=x1kEKVlTjSC6IylVTcVkCTwfg80qtjjZ7WXtR9JWdS8=;
-        h=Subject:From:In-Reply-To:Date:Cc:References:To;
-        b=qrD6wX6wjMFK9Am1zP+e7JIO8EjdeYdVOWcPv+BG3OSQJTUTEc6nHsZPp9HGRJt+/
-         +yxIZHLM6qqXc57zv3CHDyPdNKuOoaE0QnmNILGACFkBtcqx7Eojv1pCQOhiNw9nc2
-         Dc+kZ/QToo8kvELOz8gANHoHvn6Yx+UF9nUcgDbY=
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.80.82.1.1\))
-Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
-From:   =?utf-8?Q?Martin_Povi=C5=A1er?= <povik@cutebit.org>
-In-Reply-To: <CAHp75VeB3_sZ2vsSxMSsLeJSkyemDh9iOPHXJCN1mhodA13LNQ@mail.gmail.com>
-Date:   Fri, 2 Sep 2022 13:12:37 +0200
-Cc:     Lee Jones <lee@kernel.org>,
+        with ESMTP id S232239AbiIBLeC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Sep 2022 07:34:02 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D8BD3E44
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Sep 2022 04:33:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Hq0LX13LwQpV6w1/cAA1LP3HNXbiwzvAT6ANsep3nts=; b=CJbiH0xvYlcm2D83VOgLMaNtJH
+        X/OfH+1YthtASPbyovJkUAw+MF6bzRW5I259qQxqFDn5pEYQMZdAxdLJtxoXziCbauLDEZFhISoYd
+        G+DyCIvJSD6UQ2AbEDUqhZyTSV67QjxRwnPmeahLCdMUfImC+c1HvjY55GW9TnoLyk96ZMkLKz7Lw
+        jUfu8/voWV761fziifwu7f8haQI9Ie9t5gExvQj3ddcyOfAK1F9JWPfu6hXqu1pPVFyS9YSPySIo0
+        +EgHUsuPGf9jzvUAiVoIwWlPMz1RauG5s7M8CoOTuNZtTiznycHB194Yq3p2yFxEQOcs4S1/nHku8
+        Gqrpn3jw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34062)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oU4uy-0007OL-3s; Fri, 02 Sep 2022 12:33:00 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oU4uv-0004Oa-0H; Fri, 02 Sep 2022 12:32:57 +0100
+Date:   Fri, 2 Sep 2022 12:32:56 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
         Hector Martin <marcan@marcan.st>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Sven Peter <sven@svenpeter.dev>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E753B391-D2CB-4213-AF82-678ADD5A7644@cutebit.org>
+Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
+Message-ID: <YxHp6CNhlQ5Hx1m8@shell.armlinux.org.uk>
 References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
  <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
  <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
- <FEE9F7AE-B324-4426-AB26-17BDF30CFC91@cutebit.org>
- <CAHp75Vd8-mOuJvr=PRKjVKbz0SM9hPe39rEcraOMJFYtrwHjng@mail.gmail.com>
- <3B649A66-8116-432D-B88A-B5CE493EF930@cutebit.org>
- <CAHp75VeB3_sZ2vsSxMSsLeJSkyemDh9iOPHXJCN1mhodA13LNQ@mail.gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+ <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk>
+ <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeO3gxypRTUc9Subvh+NZ7X4_RR=eFUZpPNwBeWk+_ipg@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_FAIL,SPF_HELO_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Pardon, I lost the CC list in my earlier reply. Adding it back now.
+On Fri, Sep 02, 2022 at 01:37:14PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 2, 2022 at 1:05 PM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> > On Thu, Sep 01, 2022 at 09:55:23PM +0300, Andy Shevchenko wrote:
+> > > > +static int macsmc_gpio_nr(smc_key key)
+> > > > +{
+> > > > +       int low = hex_to_bin(key & 0xff);
+> > > > +       int high = hex_to_bin((key >> 8) & 0xff);
+> > > > +
+> > > > +       if (low < 0 || high < 0)
+> > > > +               return -1;
+> > > > +
+> > > > +       return low | (high << 4);
+> > > > +}
+> > >
+> > > NIH hex2bin().
+> >
+> > Is using hex2bin really better?
+> 
+> Yes.
+> 
+> > static int macsmc_gpio_nr(smc_key key)
+> > {
+> >         char k[2];
+> >         u8 result;
+> >         int ret;
+> >
+> >         k[0] = key;
+> >         k[1] = key >> 8;
+> >
+> >         ret = hex2bin(&result, k, 2);
+> >         if (ret < 0)
+> >                 return ret;
+> >
+> >         return result;
+> > }
+> >
+> > This looks to me like it consumes more CPU cycles - because we have to
+> > write each "character" to the stack, then call a function, only to then
+> > call the hex_to_bin() function. One can't just pass "key" into hex2bin
+> > because that will bring with it endian issues.
+> 
+> With one detail missed, why do you need all that if you can use
+> byteorder helpers()? What's the stack? Just replace this entire
+> function with the respectful calls to hex2bin().
 
-> On 2. 9. 2022, at 12:23, Andy Shevchenko <andy.shevchenko@gmail.com> =
-wrote:
->=20
-> On Fri, Sep 2, 2022 at 12:47 PM Martin Povi=C5=A1er =
-<povik@cutebit.org> wrote:
->>> On 2. 9. 2022, at 8:31, Andy Shevchenko <andy.shevchenko@gmail.com> =
-wrote:
->>> On Fri, Sep 2, 2022 at 12:52 AM Martin Povi=C5=A1er =
-<povik@cutebit.org> wrote:
->>>>> On 1. 9. 2022, at 20:55, Andy Shevchenko =
-<andy.shevchenko@gmail.com> wrote:
->>>>> On Thu, Sep 1, 2022 at 5:17 PM Russell King =
-<rmk+kernel@armlinux.org.uk> wrote:
->>>>=20
->>>>>> + ret =3D apple_smc_write_u32(smcgp->smc, key, CMD_OUTPUT | =
-value);
->>>>>> + if (ret < 0)
->>>>>> + dev_err(smcgp->dev, "GPIO set failed %p4ch =3D 0x%x\n", &key, =
-value);
->>>>>=20
->>>>> Strange specifier... It seems like a hashed pointer with added (or
->>>>> skipped? I don't remember) '4ch'. Perhaps you meant one of '%pE',
->>>>> '%p4cc'?
->>>>> Ditto for other cases.
->>>>=20
->>>> As was pointed out by Sven elsewhere in the thread, this is an
->>>> unupstreamed specifier (that was missed as a dependency of this
->>>> code).
->>>>=20
->>>> =
-https://github.com/AsahiLinux/linux/blob/f8c0d18173a7b649999ee27515393f7aa=
-e40310c/Documentation/core-api/printk-formats.rst#generic-fourcc-code
->>>=20
->>> I don't see why we need that. The %.4s (0x%08x) is repeating that =
-with
->>> the existing codebase. (I do understand why v4l2/drm have it). =
-Ideally
->>> the first should use %4pE, but it might not be suitable in some =
-cases.
->>=20
->> Just from a superficial understanding of things: %p4ch on =
-little-endian
->> will print in a reversed order to %.4s. As I see it the handling of
->> endianness is the value proposition of the new specifiers.
->=20
-> So, what prevents you from adding this to %pE?
-> The preferred way is not adding a specifier for a single user with a
-> particular case, esp. when it's covered by the existing ones.
+Sorry, I don't understand what you're suggesting, because it doesn't
+make sense to me. The byteorder helpers do not give a char array, which
+is what hex2bin() wants, so we end up with something like:
 
-Adding the endianness conversion into %pE as, ehm, an =E2=80=98escaping =
-flag=E2=80=99?
-If you think that would be accepted...
+	__le16 foo = cpu_to_le16(key);
+	u8 result;
 
-I guess this was added on the assumption that keys like this will
-be a common occurrence in interaction with Apple firmware. Though
-greping the =E2=80=98asahi=E2=80=99 staging tree for =E2=80=98%p4ch=E2=80=99=
- I only see it in the
-SMC code (9 times):
+	ret = hex2bin(&result, (char *)&foo, 1);
+	if (ret < 0)
+		return ret;
 
-./drivers/power/reset/macsmc-reboot.c
-./drivers/platform/apple/smc_core.c
-./drivers/gpio/gpio-macsmc.c
+	return result;
 
->> So
->>=20
->> %p4ch - interpret as an u32, print the character in most significant =
-byte first
->=20
-> %.4s + be32_to_cpu()
+This to me looks like yucky code, It still results in "foo" having to
+be on the stack, because the out-of-line hex2bin() requires a pointer
+to be passed as the second argument.
 
-Well, AIUI instead of
+Maybe you could provide an example of what you're thinking of, because
+I'm at a loss to understand what you're thinking this should look like.
 
-  printk(=E2=80=9C%p4ch =3D ...\n=E2=80=9D, &key);
+> > > > +       /* First try reading the explicit pin mode register */
+> > > > +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_PINMODE, &val);
+> > > > +       if (!ret)
+> > > > +               return (val & MODE_OUTPUT) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+> > > > +
+> > > > +       /*
+> > > > +        * Less common IRQ configs cause CMD_PINMODE to fail, and so does open drain mode.
+> > > > +        * Fall back to reading IRQ mode, which will only succeed for inputs.
+> > > > +        */
+> > > > +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_IRQ_MODE, &val);
+> > > > +       return (!ret) ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+> > >
+> > > What is the meaning of val in this case?
+> >
+> > Reading the comment, it seems that "val" is irrelevant. I'm not sure that
+> > needs explaining given there's a comment that's already explaining what
+> > is going on here.
+> 
+> OK.
+> Just convert then (!ret) --> ret.
 
-you need to do
+Already done, thanks.
 
-  u32 key_be =3D cpu_to_be32(key);
-  printk(=E2=80=9C%.4s =3D ...\n=E2=80=9D, &key_be);
+> > > > +       pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "gpio");
+> > >
+> > > Can we use fwnode APIs instead?
+> > > Or do you really need this?
+> >
+> > Ouch, that's not nice. I can change this to:
+> 
+> (Some background on why my eye caught this. We as GPIO SIG in the
+> kernel want to move the library to be fwnode one without looking into
+> the underneath property provider. This kind of lines makes driver look
+> a bit ugly from that perspective)
 
-in at least 9 places now, the number of which will probably grow.
-Just to make the case for *some* printk helper.
+I agree, I'd prefer it not to be there.
 
->=20
->> %p4cb - the same as %.4s
->=20
->> %p4cl - reversed to %.4s
->=20
-> %.4s + swab32()
+> >         fwnode = device_get_named_child_node(pdev->dev.parent, "gpio");
+> >         device_set_node(&pdev->dev, fwnode);
+> >
+> > but even that isn't _that_ nice. I'd like to hear comments from the Asahi
+> > folk about whether these sub-blocks of the SMC can have compatibles, so
+> > that the MFD layer can automatically fill in the firmware nodes on the
+> > struct device before the probe function gets called.
+> 
+> > If not, then I think it would be reasonable to have a discussion with
+> > Lee about extending MFD to be able to have mfd cells name a child, so
+> > that MFD can do the above instead of having it littered amongst drivers.
+> 
+> MFD cells can be matched by compatible strings.
 
-Sure, these two are uninteresting, probably added for completeness.
+Yes, that's what I meant in my preceeding paragraph above, but it needs
+involvement and decisions from the Asahi maintainers.
 
->=20
-> So?
-
-Well, so nothing. I am primarily explaining how that strange specifier
-came to be.
-
-Martin
-
-> --=20
-> With Best Regards,
-> Andy Shevchenko
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
