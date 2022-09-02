@@ -2,68 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4913D5AA3E7
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 01:50:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 688455AA60A
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Sep 2022 04:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbiIAXue (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Sep 2022 19:50:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34716 "EHLO
+        id S232810AbiIBCrv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Sep 2022 22:47:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbiIAXub (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 19:50:31 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D882E68B;
-        Thu,  1 Sep 2022 16:50:29 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id r69so535012pgr.2;
-        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=w+DshR9yepFpBry9u7KXIFJ4eQkMqSk2K4thHoZXeSA=;
-        b=HkDAkuUjMRW1B5jk9Q3aOy8RCiHru8chEuvGCT1GQGJ5zK+KfUdVLWhAagu3uEKvWS
-         F5WHRk9jooOw8E2wmKCu4QyqfzEqkTVSLbvbnwOzDuO4sjxDucuWnQkRDZfQfTCpBONj
-         SbLDuRgfY2cc7+mLIS8gBvnzZP9hJO4x2+OBUzb6lmut+6FmfvvHZFWPRs8/88S2hH2w
-         TSgkYWfHy3A/NDfBJk3cG8DhLTzWw9BvaEtCFsEeuKG4nYc0MtGwz/YZDCfKuyQg9b2e
-         DIL7pe4I4mX3umqxFqQr4W4X5jPeQj359ZrYwxUUUkpHVkDytuHLEyDL1xUtkFsMRVs7
-         8w4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=w+DshR9yepFpBry9u7KXIFJ4eQkMqSk2K4thHoZXeSA=;
-        b=aTRj/oq/nBwc/LuQcu3P5ObWsrDSzqogBSLzolOVYpRT8cBSyW8iE15qwnDTxziU+t
-         tPWNxxgERfBAjS1hXGWlY9Xh2PtMbEgVT/Qq8wRYUWC2dIE1dmVsN9LH8WEY9r550Thb
-         1uawXPtDIdEJ2T3TuB5aWIAfiU927AEcLFwAna4XOr6/IPLufkA/qaaAw01vtnbrQIO/
-         HuOE3gkUmwZqdU7XdY4fc5Xbp7SqzNYido+q1uQ810nKkJfIHXyVeK7XtvpyU9yeR+xZ
-         U9QuqFt4iokTCULt94YKwOXtlW6m9aZG33qIAt0WGe7QvM2J+XKFGkZsUHR4HcyA9doU
-         qmHg==
-X-Gm-Message-State: ACgBeo2jDDArJZc5YKecWK3DyGPqjvtstedNG6FiXLft6mlVwdHF3rBZ
-        E4bNXF7FAA1y6YAHgaCqR18V9oxNzOngLg==
-X-Google-Smtp-Source: AA6agR4v91E9yc7a0UFqbDHnV7G/N2Zl5iQfl+SmbVZipNO7GfMpD1RqIHt2tThkG6+ceMCXHD8VPg==
-X-Received: by 2002:aa7:8393:0:b0:537:701d:e7f3 with SMTP id u19-20020aa78393000000b00537701de7f3mr33847297pfm.50.1662076229425;
-        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
-Received: from harry-home.bne.opengear.com (193-116-109-190.tpgi.com.au. [193.116.109.190])
-        by smtp.gmail.com with ESMTPSA id e16-20020aa798d0000000b005360da6b26bsm169986pfm.159.2022.09.01.16.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 16:50:29 -0700 (PDT)
-From:   Qingtao Cao <qingtao.cao.au@gmail.com>
-X-Google-Original-From: Qingtao Cao <qingtao.cao@digi.com>
-To:     andy.shevchenko@gmail.com
-Cc:     qingtao.cao.au@gmail.com, nathan@nathanrossi.com,
-        Qingtao Cao <qingtao.cao@digi.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [v2 PATCH 1/1] gpio: exar: access MPIO registers on slave chips
-Date:   Fri,  2 Sep 2022 09:50:03 +1000
-Message-Id: <20220901235003.20520-1-qingtao.cao@digi.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S233862AbiIBCrq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Sep 2022 22:47:46 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 205768B2D1;
+        Thu,  1 Sep 2022 19:47:40 -0700 (PDT)
+X-UUID: f45aec5084ab40b9b480241bb804d156-20220902
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=U4+PCOuj/w68gWRNwzxwm8S+vumfYGUtGnRflHT686s=;
+        b=ehMnkfjcij7u1jux4cFeoGztBNVH1LRx+psZ5w0Hz1xcxjTEZQePWMa1nSDhv7oXx1QvDQXqlIFdbVnasduM32+HmwNhw0P6B2X/bAVcoZgwMQ22/LtN/dfQNozjihyFo1P0Wa/1L8phLCUyFPycorW5HULnvK9YRCAktIwjHPE=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.10,REQID:8ee17838-d6a5-4323-8d80-f2c282a9e1d1,OB:0,L
+        OB:0,IP:0,URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:100,FILE:0,BULK:0,RULE:Rele
+        ase_Ham,ACTION:release,TS:75
+X-CID-INFO: VERSION:1.1.10,REQID:8ee17838-d6a5-4323-8d80-f2c282a9e1d1,OB:0,LOB
+        :0,IP:0,URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:100,FILE:0,BULK:0,RULE:Spam_G
+        S981B3D,ACTION:quarantine,TS:75
+X-CID-META: VersionHash:84eae18,CLOUDID:3f5564d0-20bd-4e5e-ace8-00692b7ab380,C
+        OID:5314e87aacaa,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: f45aec5084ab40b9b480241bb804d156-20220902
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw01.mediatek.com
+        (envelope-from <chui-hao.chiu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1336084836; Fri, 02 Sep 2022 10:47:35 +0800
+Received: from mtkcas10.mediatek.inc (172.21.101.39) by
+ mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.792.15; Fri, 2 Sep 2022 10:47:34 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas10.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Fri, 2 Sep 2022 10:47:34 +0800
+From:   Peter Chiu <chui-hao.chiu@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Ryder Lee <ryder.Lee@mediatek.com>,
+        Evelyn Tsai <evelyn.tsai@mediatek.com>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Peter Chiu <chui-hao.chiu@mediatek.com>
+Subject: [PATCH] dt-bindings: pinctrl: update bindings for MT7986 SoC
+Date:   Fri, 2 Sep 2022 10:47:19 +0800
+Message-ID: <20220902024719.31943-1-chui-hao.chiu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,UNPARSEABLE_RELAY,URIBL_CSS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,95 +70,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-When EXAR xr17v35x chips are cascaded in order to access the MPIO registers
-(part of the Device Configuration Registers) of the slave chips, an offset
-needs to be applied based on the number of master chip's UART channels.
+Add wifi pins in the description and set groups to string-array to support
+multiple groups in a node.
 
-Signed-off-by: Qingtao Cao <qingtao.cao@digi.com>
+Reviewed-by: Sam Shih <sam.shih@mediatek.com>
+Signed-off-by: Peter Chiu <chui-hao.chiu@mediatek.com>
 ---
- drivers/gpio/gpio-exar.c | 40 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 35 insertions(+), 5 deletions(-)
+ .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 48 +++++++++++--------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index d37de78247a6..d2ed2897fabb 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -21,6 +21,12 @@
- #define EXAR_OFFSET_MPIOLVL_HI 0x96
- #define EXAR_OFFSET_MPIOSEL_HI 0x99
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+index 4eadea55df10..b08a0a8076e0 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+@@ -117,6 +117,10 @@ patternProperties:
+           "i2s"             "audio"     62, 63, 64, 65
+           "switch_int"      "eth"       66
+           "mdc_mdio"        "eth"       67
++          "wf_2g"           "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83
++          "wf_5g"           "wifi"      91, 92, 93, 94, 95, 96, 97, 98, 99, 100
++          "wf_dbdc"         "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
++                                        84, 85
  
-+/*
-+ * The Device Configuration and UART Configuration Registers
-+ * for each UART channel take 1KB of memory address space.
-+ */
-+#define EXAR_UART_CHANNEL_SIZE 0x400
-+
- #define DRIVER_NAME "gpio_exar"
+         $ref: "/schemas/pinctrl/pinmux-node.yaml"
+         properties:
+@@ -234,7 +238,9 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [wf_2g, wf_5g, wf_dbdc]
++                  $ref: /schemas/types.yaml#/definitions/string-array
++                  items:
++                    enum: [wf_2g, wf_5g, wf_dbdc]
+       '.*conf.*':
+         type: object
+         additionalProperties: false
+@@ -248,25 +254,27 @@ patternProperties:
+               An array of strings. Each string contains the name of a pin.
+               There is no PIN 41 to PIN 65 above on mt7686b, you can only use
+               those pins on mt7986a.
+-            enum: [SYS_WATCHDOG, WF2G_LED, WF5G_LED, I2C_SCL, I2C_SDA, GPIO_0,
+-                   GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5, GPIO_6, GPIO_7,
+-                   GPIO_8, GPIO_9, GPIO_10, GPIO_11, GPIO_12, GPIO_13, GPIO_14,
+-                   GPIO_15, PWM0, PWM1, SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CS,
+-                   SPI0_HOLD, SPI0_WP, SPI1_CLK, SPI1_MOSI, SPI1_MISO, SPI1_CS,
+-                   SPI2_CLK, SPI2_MOSI, SPI2_MISO, SPI2_CS, SPI2_HOLD, SPI2_WP,
+-                   UART0_RXD, UART0_TXD, PCIE_PERESET_N, UART1_RXD, UART1_TXD,
+-                   UART1_CTS, UART1_RTS, UART2_RXD, UART2_TXD, UART2_CTS,
+-                   UART2_RTS, EMMC_DATA_0, EMMC_DATA_1, EMMC_DATA_2,
+-                   EMMC_DATA_3, EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6,
+-                   EMMC_DATA_7, EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX,
+-                   PCM_DRX, PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
+-                   WF0_DIG_RESETB, WF0_CBA_RESETB, WF0_XO_REQ, WF0_TOP_CLK,
+-                   WF0_TOP_DATA, WF0_HB1, WF0_HB2, WF0_HB3, WF0_HB4, WF0_HB0,
+-                   WF0_HB0_B, WF0_HB5, WF0_HB6, WF0_HB7, WF0_HB8, WF0_HB9,
+-                   WF0_HB10, WF1_DIG_RESETB, WF1_CBA_RESETB, WF1_XO_REQ,
+-                   WF1_TOP_CLK, WF1_TOP_DATA, WF1_HB1, WF1_HB2, WF1_HB3,
+-                   WF1_HB4, WF1_HB0, WF1_HB0_B, WF1_HB5, WF1_HB6, WF1_HB7,
+-                   WF1_HB8]
++            $ref: /schemas/types.yaml#/definitions/string-array
++            items:
++              enum: [SYS_WATCHDOG, WF2G_LED, WF5G_LED, I2C_SCL, I2C_SDA, GPIO_0,
++                     GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5, GPIO_6, GPIO_7,
++                     GPIO_8, GPIO_9, GPIO_10, GPIO_11, GPIO_12, GPIO_13, GPIO_14,
++                     GPIO_15, PWM0, PWM1, SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CS,
++                     SPI0_HOLD, SPI0_WP, SPI1_CLK, SPI1_MOSI, SPI1_MISO, SPI1_CS,
++                     SPI2_CLK, SPI2_MOSI, SPI2_MISO, SPI2_CS, SPI2_HOLD, SPI2_WP,
++                     UART0_RXD, UART0_TXD, PCIE_PERESET_N, UART1_RXD, UART1_TXD,
++                     UART1_CTS, UART1_RTS, UART2_RXD, UART2_TXD, UART2_CTS,
++                     UART2_RTS, EMMC_DATA_0, EMMC_DATA_1, EMMC_DATA_2,
++                     EMMC_DATA_3, EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6,
++                     EMMC_DATA_7, EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX,
++                     PCM_DRX, PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
++                     WF0_DIG_RESETB, WF0_CBA_RESETB, WF0_XO_REQ, WF0_TOP_CLK,
++                     WF0_TOP_DATA, WF0_HB1, WF0_HB2, WF0_HB3, WF0_HB4, WF0_HB0,
++                     WF0_HB0_B, WF0_HB5, WF0_HB6, WF0_HB7, WF0_HB8, WF0_HB9,
++                     WF0_HB10, WF1_DIG_RESETB, WF1_CBA_RESETB, WF1_XO_REQ,
++                     WF1_TOP_CLK, WF1_TOP_DATA, WF1_HB1, WF1_HB2, WF1_HB3,
++                     WF1_HB4, WF1_HB0, WF1_HB0_B, WF1_HB5, WF1_HB6, WF1_HB7,
++                     WF1_HB8]
  
- static DEFINE_IDA(ida_index);
-@@ -31,26 +37,39 @@ struct exar_gpio_chip {
- 	int index;
- 	char name[20];
- 	unsigned int first_pin;
-+	/*
-+	 * The offset to the slave device's (if existing)
-+	 * Device Configuration Registers.
-+	 */
-+	unsigned int slave_offset;
- };
+           bias-disable: true
  
- static unsigned int
- exar_offset_to_sel_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOSEL_HI
--						   : EXAR_OFFSET_MPIOSEL_LO;
-+	unsigned int pin = exar_gpio->first_pin + (offset % 16);
-+	unsigned int slave = offset / 16;
-+	unsigned int addr = pin / 8 ? EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
-+
-+	return addr + (slave ? exar_gpio->slave_offset : 0);
- }
- 
- static unsigned int
- exar_offset_to_lvl_addr(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) / 8 ? EXAR_OFFSET_MPIOLVL_HI
--						   : EXAR_OFFSET_MPIOLVL_LO;
-+	unsigned int pin = exar_gpio->first_pin + (offset % 16);
-+	unsigned int slave = offset / 16;
-+	unsigned int addr = pin / 8 ? EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
-+
-+	return addr + (slave ? exar_gpio->slave_offset : 0);
- }
- 
- static unsigned int
- exar_offset_to_bit(struct exar_gpio_chip *exar_gpio, unsigned int offset)
- {
--	return (offset + exar_gpio->first_pin) % 8;
-+	unsigned int pin = exar_gpio->first_pin + (offset % 16);
-+
-+	return pin % 8;
- }
- 
- static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
-@@ -153,6 +172,17 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	if (!exar_gpio)
- 		return -ENOMEM;
- 
-+	/*
-+	 * If cascaded, xr17v354 or xr17v358 slaves have the same amount
-+	 * of MPIOs as their masters and the last 4 bits of the master's
-+	 * PCI Device ID is the number of its UART channels.
-+	 */
-+	if (pcidev->device & GENMASK(15, 12)) {
-+		ngpios += ngpios;
-+		exar_gpio->slave_offset = (pcidev->device & GENMASK(3, 0)) *
-+				EXAR_UART_CHANNEL_SIZE;
-+	}
-+
- 	/*
- 	 * We don't need to check the return values of mmio regmap operations (unless
- 	 * the regmap has a clock attached which is not the case here).
 -- 
-2.34.1
+2.18.0
 
