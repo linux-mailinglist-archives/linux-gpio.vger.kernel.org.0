@@ -2,91 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B095AC0FB
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Sep 2022 20:59:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D5575AC169
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Sep 2022 23:10:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232956AbiICS7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Sep 2022 14:59:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58090 "EHLO
+        id S229677AbiICVKG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Sep 2022 17:10:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232800AbiICS7S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Sep 2022 14:59:18 -0400
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A00257253
-        for <linux-gpio@vger.kernel.org>; Sat,  3 Sep 2022 11:59:17 -0700 (PDT)
-Date:   Sat, 03 Sep 2022 18:59:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=connolly.tech;
-        s=protonmail; t=1662231554; x=1662490754;
-        bh=9L+ya5D+HHVzJ5A4w7jqzlee5Frl26BuJPqFAGtXACA=;
-        h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-         References:Feedback-ID:From:To:Cc:Date:Subject:Reply-To:
-         Feedback-ID:Message-ID;
-        b=NImseukOYaGDkkChPfsbZ4Kqoa97NI/NWK49vmHM9uAxS5X1KB2OPK6TbxUz3TgYX
-         fjvn8+Q5jrpGuACFMEwmBkfKUqVYdV9RjbMrJ/IW7twkJF3yGSmR+hs1DikYvRMWvT
-         le3aZvPNKaEi7IjfqBdhAZIT6KflURlnT+P7W4Ec=
-To:     Iskren Chernev <iskren.chernev@gmail.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-From:   Caleb Connolly <caleb@connolly.tech>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        with ESMTP id S229525AbiICVKE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Sep 2022 17:10:04 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEFB43E775
+        for <linux-gpio@vger.kernel.org>; Sat,  3 Sep 2022 14:10:01 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id t7so1483223wrm.10
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Sep 2022 14:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=hUIxq73xHC/NSP+mtX2SJrGVr9RNYXnpazSPUw7uS04=;
+        b=HrfsBNpzcWnf0eUgqZMdG12DHWiSKM+S0oyJTgea2q0BSKeos2rlyJsTIPFqLxKTJn
+         wqeFIicVastzH6wc/PFCkdWZCFB4OVIL+CHNst39dF7PxZ1l/MSvrdTK1GYaA+HLCdKA
+         V1G2HDenA615+3TZzZGyM3ql0IPR7OD+MytNH8M0/aTE3O+yuDMkmOc8wo4VnAnasVxd
+         6StlbYsAsqdInL1Ogotcglp5wMyvWr7NkDiSyPiOwWGB1xsSjTpceVvjoNyIez1GBJV6
+         35WwaVh1zgTxTjjjzHpcuS7T/TrwOR6g6/3ITtT1RAVutEjpeTQ/w8xqGk449sdNZzeG
+         MdJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=hUIxq73xHC/NSP+mtX2SJrGVr9RNYXnpazSPUw7uS04=;
+        b=yOmlhVI07Xx/QZ5GlaRoSc1rDCJF/6WVp+DRqHLOCPAsuZVTCO8UAV0KWSa2fmNASK
+         IcU175xbONKHq8FlfZqD4S5ETuSIrSKRPk8WR4JE2+/TBTrPO3Th6jovp/d5Nb+EeMEf
+         QKPFGwcYEDBoXWZmorvmSndap6KmY4bPQqhto6QSEqCm90AWSGPka9AH2Opl2GiCu6ME
+         8Nwt8KW60eVDXFan300CsaAUkgThvPBnFFY0rzAlWsGbjt74m5DpfbO5XxjS3AG+V1sJ
+         qXJuSCzp9qMl6mAx3EcqnOcBMzC+Wu831JUuMbwcd26KTrtWVWwO81sQe6e8VPVwtwzu
+         eLjA==
+X-Gm-Message-State: ACgBeo2U4Ebmip1A/1MkUvQw28P1OLuzIbByat0uYMpkjSP7ZHwd/FFu
+        9B+t14n6t9W3/rQppUbx1v3+QQ==
+X-Google-Smtp-Source: AA6agR7hdw5g6zg1fdg/fKAgZxyUaBkqrHb7pAuipZkiMB6l9ISuoDLR+dFk8Q6ng+pfdDLx9QUw6w==
+X-Received: by 2002:a5d:54c2:0:b0:225:8841:551c with SMTP id x2-20020a5d54c2000000b002258841551cmr21193099wrv.134.1662239400433;
+        Sat, 03 Sep 2022 14:10:00 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:216e:c311:337a:8942])
+        by smtp.gmail.com with ESMTPSA id y2-20020adfd082000000b0021d6924b777sm4574762wrh.115.2022.09.03.14.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 03 Sep 2022 14:09:59 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Reply-To: Caleb Connolly <caleb@connolly.tech>
-Subject: Re: [PATCH v2 4/9] dt-bindings: pinctrl: qcom: sm6115: Add reserved ranges
-Message-ID: <c54bf940-a9f2-44a3-b327-b9e4d779a910@connolly.tech>
-In-Reply-To: <20220903174150.3566935-5-iskren.chernev@gmail.com>
-References: <20220903174150.3566935-1-iskren.chernev@gmail.com> <20220903174150.3566935-5-iskren.chernev@gmail.com>
-Feedback-ID: 10753939:user:proton
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: fixes for v6.0-rc4
+Date:   Sat,  3 Sep 2022 23:09:56 +0200
+Message-Id: <20220903210956.6008-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Linus,
 
+Here's a set of fixes from the GPIO subsystem for the next RC. Most are small
+driver fixes except the realtek-otto driver patch which is pretty big but
+addresses a significant flaw that can cause the CPU to stay infinitely busy
+on uncleared ISR on some platforms.
 
-On 03/09/2022 18:41, Iskren Chernev wrote:
-> Ideally this and similar common properties will be inherited so you
-> won't need to paste them in every pinctrl binding.
->
-> Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
+Please pull!
+Bartosz Golaszewski
 
-Reviewed-by: Caleb Connolly <caleb@connolly.tech>
-> ---
->   .../devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml        | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctr=
-l.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
-> index a7a2bb8bff46..d8443811767d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
-> @@ -49,6 +49,8 @@ properties:
->     gpio-ranges:
->       maxItems: 1
->
-> +  gpio-reserved-ranges: true
-> +
->     wakeup-parent: true
->
->   #PIN CONFIGURATION NODES
-> --
-> 2.37.2
->
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
 
---
-Kind Regards,
-Caleb
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.0-rc4
+
+for you to fetch changes up to 6890381720b27a41f2d9e68cce241336342ea3b7:
+
+  gpio: ws16c48: Make irq_chip immutable (2022-09-03 22:56:34 +0200)
+
+----------------------------------------------------------------
+gpio fixes for v6.0-rc4
+
+- MAINTAINERS update
+- fix resource leaks in gpio-mockup and gpio-pxa
+- add missing locking in gpio-pca953x
+- use 32-bit I/O in gpio-realtek-otto
+- make irq_chip structures immutable in four more drivers
+
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      gpio: pxa: use devres for the clock struct
+
+Haibo Chen (1):
+      gpio: pca953x: Add mutex_lock for regcache sync in PM
+
+Lukas Bulwahn (1):
+      MAINTAINERS: rectify entry for XILINX GPIO DRIVER
+
+Sander Vanheule (1):
+      gpio: realtek-otto: switch to 32-bit I/O
+
+Wei Yongjun (1):
+      gpio: mockup: remove gpio debugfs when remove device
+
+William Breathitt Gray (4):
+      gpio: 104-dio-48e: Make irq_chip immutable
+      gpio: 104-idi-48: Make irq_chip immutable
+      gpio: 104-idio-16: Make irq_chip immutable
+      gpio: ws16c48: Make irq_chip immutable
+
+ MAINTAINERS                      |   2 +-
+ drivers/gpio/gpio-104-dio-48e.c  |  10 ++-
+ drivers/gpio/gpio-104-idi-48.c   |  10 ++-
+ drivers/gpio/gpio-104-idio-16.c  |  18 +++--
+ drivers/gpio/gpio-mockup.c       |   9 ++-
+ drivers/gpio/gpio-pca953x.c      |   8 +-
+ drivers/gpio/gpio-pxa.c          |  11 +--
+ drivers/gpio/gpio-realtek-otto.c | 166 ++++++++++++++++++++-------------------
+ drivers/gpio/gpio-ws16c48.c      |  10 ++-
+ 9 files changed, 135 insertions(+), 109 deletions(-)
