@@ -2,172 +2,277 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CD165AC3A5
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Sep 2022 11:36:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9527D5AC5F6
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Sep 2022 21:01:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbiIDJgs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Sep 2022 05:36:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48208 "EHLO
+        id S231339AbiIDTBx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Sep 2022 15:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiIDJgr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Sep 2022 05:36:47 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1013FA1F
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Sep 2022 02:36:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662284207; x=1693820207;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5o05SOyojSLsPwP0ZXkVMfrJafnZYbXbCUfCpPYmquQ=;
-  b=a7E3kp5znwMWlpLrcRvZqThCbEx65RsykQLIamA5l90URUxIZsif/od9
-   CrqFBRo936igp65k+cFNHaOn7kGklH9nIPZjmyUCYjSHNe7htTI4o0BFX
-   X/QpZkO4j8XrtHwmnj6W/O3ik0zntbeh5lxt5AFZJNuFAFtMVbk+5xBN+
-   kms2D9FZcjsLLL44kr5HdPx53O4CNdOrHZU7NoLAp6vf0U45BpK8MWdlW
-   fbnFxRPVe5eBtzs6Jwj0hsHKxvKU3rYsRnRSCA8mPf5ik3UscpEZVxPCo
-   63huaO5o1m6SD4cJdV10dLDy6xRcB3K3l+pPKJJ9r7C46XduKYX0h8HJR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10459"; a="275970454"
-X-IronPort-AV: E=Sophos;i="5.93,289,1654585200"; 
-   d="scan'208";a="275970454"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2022 02:36:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,289,1654585200"; 
-   d="scan'208";a="941772245"
-Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 04 Sep 2022 02:36:45 -0700
-Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oUm3Z-0002tN-09;
-        Sun, 04 Sep 2022 09:36:45 +0000
-Date:   Sun, 04 Sep 2022 17:36:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS WITH WARNING
- 6890381720b27a41f2d9e68cce241336342ea3b7
-Message-ID: <6314718e.SJJd43cKBkhRjAd3%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229702AbiIDTBv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Sep 2022 15:01:51 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516952B27C;
+        Sun,  4 Sep 2022 12:01:50 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id cr9so4919602qtb.13;
+        Sun, 04 Sep 2022 12:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=jhA2At4C7gUGBD7kmr3qzQXQCJawda4OYdGrtHLP8ok=;
+        b=C3eaIRj9zJvT1EDOvv5L5DlbNybYy/M/Qfd/Egb3o+on7xrHrenj3L6FKjXzIYxUl8
+         RbRHQT8KThJ+uxIGHy8CIS4kQiBTJJKOC1B+MmOaessoUlyC3/8kxOA/slS0joWDOBJ7
+         XTTAS+Ml4SfC+oFJmmWUQEXowbB8JcclEDKdiYkOwHC4Mry+H0uBxm3v2fRzpwa6WkDo
+         idzyXB0/lOSHM3TTiP9QhSlBs/gbxiv8k1roVpS2VBmHaiEpnu4ecWHU0tqP2kz5foRo
+         FmOa6lJCq1MmvFUP6HXTVCp3pkU/c1OnUd5SVc8BzEC5yLjz4UpOL9bpJjxMcnEY3ch4
+         pMHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=jhA2At4C7gUGBD7kmr3qzQXQCJawda4OYdGrtHLP8ok=;
+        b=IwZcd9AYysv3MBH0VLyTRHaYn7qH+n9p4hXq0RSnytfBLQZ6ucSibxHgGtFM/68T/9
+         ANFiNuVqmePaSQVFZszKwVdSzw5H9S6FzTIR78DeeetjHh9DKzkyS864eRyPoSgtJzJQ
+         Z7jFGYKiVXKZ1SSuOuZvhK24650tcYopD3FojdspMG1tNSF1rqVT84AYGPhUj/w87dS6
+         iqrJQkdM2NvYLuus6niNXREHHiMOrp4tQVGej1haLFzMf9P5vPFZaR9NMw0KwnMf/kC7
+         ahtRBQqSN58+TnLhEEvb+QKTK/QL0da0lQV51vooJtK7hm0SfakvpSkUyvVtFwPUajdn
+         /AqA==
+X-Gm-Message-State: ACgBeo3YloWnI52/tSOifDWLlcCu+Gmnx2IutjTRRdUd8PZdUgEkeTd/
+        898se6QToe+v/myGaEKpWwTj5cgTtLmAPUAxUSo=
+X-Google-Smtp-Source: AA6agR4VeKdJiqnlLU3JcWBx5HlhbyUjWUEG2xUZoTO4ruVy6+ZpZ8/ZAPSeM4ftEWszMH4Qyeaoj1cLjRtYPmqO7Z4=
+X-Received: by 2002:a05:622a:40a:b0:343:77ba:727f with SMTP id
+ n10-20020a05622a040a00b0034377ba727fmr37215624qtx.481.1662318108713; Sun, 04
+ Sep 2022 12:01:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <YxRDRx3oubAISIB0@google.com>
+In-Reply-To: <YxRDRx3oubAISIB0@google.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 4 Sep 2022 22:01:12 +0300
+Message-ID: <CAHp75Ve=nrqLfbj2wNEez8s4=DLJnGT1pp=VpY=U0xDoh-LV0Q@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: make fwnode_get_named_gpiod() static
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 6890381720b27a41f2d9e68cce241336342ea3b7  gpio: ws16c48: Make irq_chip immutable
+On Sun, Sep 4, 2022 at 9:22 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> There are no external users of fwnode_get_named_gpiod() anymore, so
+> let's stop exporting it and mark it as static.
 
-Warning reports:
+Agree.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-https://lore.kernel.org/linux-doc/202208211933.F50Nni98-lkp@intel.com
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/gpio/gpiolib.c        | 132 +++++++++++++++++-----------------
+>  include/linux/gpio/consumer.h |  13 ----
+>  2 files changed, 66 insertions(+), 79 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index cc9c0a12259e..4756ea08894f 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -3798,6 +3798,72 @@ static int platform_gpio_count(struct device *dev, const char *con_id)
+>         return count;
+>  }
+>
+> +/**
+> + * fwnode_get_named_gpiod - obtain a GPIO from firmware node
+> + * @fwnode:    handle of the firmware node
+> + * @propname:  name of the firmware property representing the GPIO
+> + * @index:     index of the GPIO to obtain for the consumer
+> + * @dflags:    GPIO initialization flags
+> + * @label:     label to attach to the requested GPIO
+> + *
+> + * This function can be used for drivers that get their configuration
+> + * from opaque firmware.
+> + *
+> + * The function properly finds the corresponding GPIO using whatever is the
+> + * underlying firmware interface and then makes sure that the GPIO
+> + * descriptor is requested before it is returned to the caller.
+> + *
+> + * Returns:
+> + * On successful request the GPIO pin is configured in accordance with
+> + * provided @dflags.
+> + *
+> + * In case of error an ERR_PTR() is returned.
+> + */
+> +static struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+> +                                               const char *propname, int index,
+> +                                               enum gpiod_flags dflags,
+> +                                               const char *label)
+> +{
+> +       unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+> +       struct gpio_desc *desc = ERR_PTR(-ENODEV);
+> +       int ret;
+> +
+> +       if (is_of_node(fwnode)) {
+> +               desc = gpiod_get_from_of_node(to_of_node(fwnode),
+> +                                             propname, index,
+> +                                             dflags,
+> +                                             label);
+> +               return desc;
+> +       } else if (is_acpi_node(fwnode)) {
+> +               struct acpi_gpio_info info;
+> +
+> +               desc = acpi_node_get_gpiod(fwnode, propname, index, &info);
+> +               if (IS_ERR(desc))
+> +                       return desc;
+> +
+> +               acpi_gpio_update_gpiod_flags(&dflags, &info);
+> +               acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
+> +       } else {
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       /* Currently only ACPI takes this path */
+> +       ret = gpiod_request(desc, label);
+> +       if (ret)
+> +               return ERR_PTR(ret);
+> +
+> +       ret = gpiod_configure_flags(desc, propname, lflags, dflags);
+> +       if (ret < 0) {
+> +               gpiod_put(desc);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       blocking_notifier_call_chain(&desc->gdev->notifier,
+> +                                    GPIOLINE_CHANGED_REQUESTED, desc);
+> +
+> +       return desc;
+> +}
+> +
+>  /**
+>   * fwnode_gpiod_get_index - obtain a GPIO from firmware node
+>   * @fwnode:    handle of the firmware node
+> @@ -4063,72 +4129,6 @@ struct gpio_desc *__must_check gpiod_get_index(struct device *dev,
+>  }
+>  EXPORT_SYMBOL_GPL(gpiod_get_index);
+>
+> -/**
+> - * fwnode_get_named_gpiod - obtain a GPIO from firmware node
+> - * @fwnode:    handle of the firmware node
+> - * @propname:  name of the firmware property representing the GPIO
+> - * @index:     index of the GPIO to obtain for the consumer
+> - * @dflags:    GPIO initialization flags
+> - * @label:     label to attach to the requested GPIO
+> - *
+> - * This function can be used for drivers that get their configuration
+> - * from opaque firmware.
+> - *
+> - * The function properly finds the corresponding GPIO using whatever is the
+> - * underlying firmware interface and then makes sure that the GPIO
+> - * descriptor is requested before it is returned to the caller.
+> - *
+> - * Returns:
+> - * On successful request the GPIO pin is configured in accordance with
+> - * provided @dflags.
+> - *
+> - * In case of error an ERR_PTR() is returned.
+> - */
+> -struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+> -                                        const char *propname, int index,
+> -                                        enum gpiod_flags dflags,
+> -                                        const char *label)
+> -{
+> -       unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+> -       struct gpio_desc *desc = ERR_PTR(-ENODEV);
+> -       int ret;
+> -
+> -       if (is_of_node(fwnode)) {
+> -               desc = gpiod_get_from_of_node(to_of_node(fwnode),
+> -                                             propname, index,
+> -                                             dflags,
+> -                                             label);
+> -               return desc;
+> -       } else if (is_acpi_node(fwnode)) {
+> -               struct acpi_gpio_info info;
+> -
+> -               desc = acpi_node_get_gpiod(fwnode, propname, index, &info);
+> -               if (IS_ERR(desc))
+> -                       return desc;
+> -
+> -               acpi_gpio_update_gpiod_flags(&dflags, &info);
+> -               acpi_gpio_update_gpiod_lookup_flags(&lflags, &info);
+> -       } else
+> -               return ERR_PTR(-EINVAL);
+> -
+> -       /* Currently only ACPI takes this path */
+> -       ret = gpiod_request(desc, label);
+> -       if (ret)
+> -               return ERR_PTR(ret);
+> -
+> -       ret = gpiod_configure_flags(desc, propname, lflags, dflags);
+> -       if (ret < 0) {
+> -               gpiod_put(desc);
+> -               return ERR_PTR(ret);
+> -       }
+> -
+> -       blocking_notifier_call_chain(&desc->gdev->notifier,
+> -                                    GPIOLINE_CHANGED_REQUESTED, desc);
+> -
+> -       return desc;
+> -}
+> -EXPORT_SYMBOL_GPL(fwnode_get_named_gpiod);
+> -
+>  /**
+>   * gpiod_get_index_optional - obtain an optional GPIO from a multi-index GPIO
+>   *                            function
+> diff --git a/include/linux/gpio/consumer.h b/include/linux/gpio/consumer.h
+> index 37448ee17e81..cf7d64b0ced3 100644
+> --- a/include/linux/gpio/consumer.h
+> +++ b/include/linux/gpio/consumer.h
+> @@ -174,10 +174,6 @@ int desc_to_gpio(const struct gpio_desc *desc);
+>  /* Child properties interface */
+>  struct fwnode_handle;
+>
+> -struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+> -                                        const char *propname, int index,
+> -                                        enum gpiod_flags dflags,
+> -                                        const char *label);
+>  struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+>                                          const char *con_id, int index,
+>                                          enum gpiod_flags flags,
+> @@ -553,15 +549,6 @@ static inline int desc_to_gpio(const struct gpio_desc *desc)
+>  /* Child properties interface */
+>  struct fwnode_handle;
+>
+> -static inline
+> -struct gpio_desc *fwnode_get_named_gpiod(struct fwnode_handle *fwnode,
+> -                                        const char *propname, int index,
+> -                                        enum gpiod_flags dflags,
+> -                                        const char *label)
+> -{
+> -       return ERR_PTR(-ENOSYS);
+> -}
+> -
+>  static inline
+>  struct gpio_desc *fwnode_gpiod_get_index(struct fwnode_handle *fwnode,
+>                                          const char *con_id, int index,
+> --
+> 2.37.2.789.g6183377224-goog
+>
+>
+> --
+> Dmitry
 
-Warning: (recently discovered and may have been fixed)
 
-Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-
-Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-`-- x86_64-allnoconfig
-    `-- Warning:MAINTAINERS-references-a-file-that-doesn-t-exist:Documentation-devicetree-bindings-gpio-xlnx-gpio-xilinx.yaml
-
-elapsed time: 721m
-
-configs tested: 80
-configs skipped: 3
-
-gcc tested configs:
-arc                  randconfig-r043-20220904
-riscv                randconfig-r042-20220904
-s390                 randconfig-r044-20220904
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                                 defconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                               rhel-8.3
-ia64                             allmodconfig
-arc                              allyesconfig
-arm                              allyesconfig
-powerpc                           allnoconfig
-x86_64                        randconfig-a006
-i386                                defconfig
-powerpc                          allmodconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-i386                          randconfig-a014
-sh                               allmodconfig
-mips                             allyesconfig
-arm64                            allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                        randconfig-a013
-i386                          randconfig-a003
-x86_64                        randconfig-a011
-x86_64                    rhel-8.3-kselftests
-i386                          randconfig-a005
-x86_64                          rhel-8.3-func
-x86_64                        randconfig-a015
-i386                             allyesconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-microblaze                      mmu_defconfig
-sh                           se7712_defconfig
-arm                         lpc18xx_defconfig
-sparc                               defconfig
-arc                               allnoconfig
-alpha                             allnoconfig
-riscv                             allnoconfig
-csky                              allnoconfig
-m68k                        m5272c3_defconfig
-sh                               j2_defconfig
-arc                         haps_hs_defconfig
-mips                        bcm47xx_defconfig
-s390                       zfcpdump_defconfig
-arm                      integrator_defconfig
-parisc64                         alldefconfig
-ia64                      gensparse_defconfig
-sh                            shmin_defconfig
-i386                          randconfig-c001
-arm                         assabet_defconfig
-mips                       bmips_be_defconfig
-m68k                             alldefconfig
-sh                          sdk7780_defconfig
-mips                      fuloong2e_defconfig
-
-clang tested configs:
-hexagon              randconfig-r045-20220904
-hexagon              randconfig-r041-20220904
-x86_64                        randconfig-a005
-i386                          randconfig-a013
-x86_64                        randconfig-a001
-i386                          randconfig-a015
-x86_64                        randconfig-a003
-i386                          randconfig-a011
-i386                          randconfig-a002
-x86_64                        randconfig-a012
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a006
-powerpc                 mpc8272_ads_defconfig
-mips                      malta_kvm_defconfig
-riscv                          rv32_defconfig
-x86_64                        randconfig-k001
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+With Best Regards,
+Andy Shevchenko
