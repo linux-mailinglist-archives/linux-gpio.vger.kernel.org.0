@@ -2,121 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D45D35AD598
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 16:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1051E5AD5AA
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:01:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238456AbiIEO5W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 10:57:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43680 "EHLO
+        id S230038AbiIEPBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 11:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbiIEO5V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 10:57:21 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C165466B
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 07:57:20 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id fc24so8608238ejc.3
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 07:57:20 -0700 (PDT)
+        with ESMTP id S238344AbiIEPBc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:01:32 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF815018E
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 08:01:31 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id g21so6443371qka.5
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 08:01:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=N9N6i/JaW8L2HS1S7tkq5MsZgz3zWObqpMqhnVjMCA4=;
-        b=oOf7kZ3eJL1A3ghRC8Z39sa7spwW2OoJrASvqNY9D7hDycwOmzEb7kxZlN1miT0Fi7
-         BO3zg0mrUGr+vb+wwkods1dw3CEdowWUoKdvP79XGNGvt+4LlLQlfgPvzvBacZ1R0eBn
-         pB3L1tDyJ64yzuI0OUKP8b8MhFhnHzK9yk8DiF53DkPm+zwPXXxJ5S73MU7oXTL1DPxx
-         v0R+BpKWmkh2RtIyWsbPkkAamCJMexFbeFhboyHTMNmgoriqRjbukUrDXm8vTE4SXkn3
-         EOFEHdqODXg3WRz6hrDM0LzJGisPWPG4+SafefT0nSju+M6mE/KXX9R9Pwtx8dJdh8pf
-         7CjQ==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=pZWC1H0WRkhRCjv9BDpPVFJARK9SyE80gpwJCZgud4M=;
+        b=BBGj82V2TczLpiRO5dd4Tiqb87w52xNP5e4u5Gr2j3otvBMR9DqfP6GwayIBpTpvri
+         V1MO1eQ6/H1RSegcPxFfgJfRnMchoT2OosFXudFcjFecO5QGzYlW7SNLS6Fiyg50qi0N
+         hq/6ZqE8oXM5R6h+meBzDusU8a1hzXCzL1jhX20lzIBuuIqMzTvwedNCBRu10fLVQbLj
+         NN4Keee3qpZ/0bkD4JY+S/fQ21Zh53nfsv9u7osGBDGZNfh0VQoAujyBnmOLRH5sulms
+         JyCm4DN9syy950Poe70aGOPoRqauzTE3hJuzHEmKAxLR9gNj/3Ggs+kCPDoDijxTNPbt
+         mscg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=N9N6i/JaW8L2HS1S7tkq5MsZgz3zWObqpMqhnVjMCA4=;
-        b=hvkXYq9eIsKAIUPEg6x5XrTzoVH9rDUVx2W9GalsQfPZlX/mPeyeEVNia26yQF2VE9
-         YgROjQw1GjnOhlJcjWeRSUEJ8bUZaAOPGc799/YL8idXTQOFPKPw/Id+Y6juHkmp8xI3
-         JKyYGCbwhkFG3oNPOAv9jf91SFNuL94mTmuUff4Fbr6BnIBUxnbLhZUoFqjs+3kmM6H/
-         aeWHrf3wJH+3mhkWDNNH31S/MXQMWVJdbao9Vl5AzvwYSaqDrd/FGwNFmSaRSt27jMAR
-         IjGTjkH/lTIrqBiuW/QChyRCbDjrkemL+3btQM4524ZnK3g3fQQG9QBEtOMMgLk+aITc
-         ARIQ==
-X-Gm-Message-State: ACgBeo2Sio6+8ER6freRfNMPPXoVPXglnbvBbncQPnAFolxi2FLJLERn
-        yIOBg46dit6iZN9hYPBRA5Xb8JCdtUmFWPGn
-X-Google-Smtp-Source: AA6agR72dOyEGeR4y8CYngmamOIUnzWC8RWDNcnfKBBkevgb8mUu4g0p0t4H2pIRV7lXVhlnR2ZMuw==
-X-Received: by 2002:a17:907:2724:b0:741:4a1f:6159 with SMTP id d4-20020a170907272400b007414a1f6159mr28511807ejl.542.1662389838957;
-        Mon, 05 Sep 2022 07:57:18 -0700 (PDT)
-Received: from lmecxl1178.lme.st.com ([2a04:cec0:104a:337b:6b7c:3b36:dcfa:d968])
-        by smtp.gmail.com with ESMTPSA id ch29-20020a0564021bdd00b0044657ecfbb5sm6572244edb.13.2022.09.05.07.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Sep 2022 07:57:18 -0700 (PDT)
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Etienne Carriere <etienne.carriere@linaro.org>,
-        Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
-Date:   Mon,  5 Sep 2022 16:55:55 +0200
-Message-Id: <20220905145555.674800-1-etienne.carriere@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=pZWC1H0WRkhRCjv9BDpPVFJARK9SyE80gpwJCZgud4M=;
+        b=DlzIPDSOeAQ23zoEqXjT3MgGgZNJDuzbrx1+4+/jRS8HfH49ukOH2vxmVpNc3wFFV6
+         S+4cR1R1lz3hwAqjhSJiJryPOkmHIJ1pxFmXIcmmbrlxp+8E1z3aWMj5ET0vgG0M8O+Y
+         U6qEHdmMY7drBv0jnmb1zC6SpPk/GNyRnxV7ABPpwxlpQW6Gz/ykLqaRI/LqZ5S+NCa3
+         bAO7uk2qhgG0KntMfheVY/ChCRt4F4MG/i0Bpcxs6V1cUupbG8fpB+fb1brWBjv4Mp4g
+         dQ8/7pBTuHP8YSSzvSBrL7KxqilXYng2s+yVanHu6DTpELWTs0/wrL0SMMEjU5Jk8Pby
+         d1Lg==
+X-Gm-Message-State: ACgBeo0sCdAtv62zHcjETI6CU9OBf7XTFkk9abpQXONEOHe04XPRbQ7Q
+        2BLZGfJmgycTyx4g5zBAzbWJqvmMO3H4KNAj/CM=
+X-Google-Smtp-Source: AA6agR62F2MQpI3xuf0uJbOxKJR8qhHj40PD/Xifr6TPFOael1V1jBsitUPEMphr+JiDSmUzty4eFWgSTO8li5KUncM=
+X-Received: by 2002:a05:620a:410e:b0:6bc:5cdc:88ec with SMTP id
+ j14-20020a05620a410e00b006bc5cdc88ecmr33097183qko.734.1662390090769; Mon, 05
+ Sep 2022 08:01:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
+ <CAHp75Ve1ackTCOAkVar00OyDW-+BOPbRmsJRH3-z1bdNaukC+Q@mail.gmail.com> <7f20d473-7bbc-b0b3-3daf-dfc935ca3151@marcan.st>
+In-Reply-To: <7f20d473-7bbc-b0b3-3daf-dfc935ca3151@marcan.st>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 5 Sep 2022 18:00:54 +0300
+Message-ID: <CAHp75Vd3O35mHEqA-iR=Fm47y1R2dPu_Jk7wcutvSmUxf6zpCg@mail.gmail.com>
+Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sven Peter <sven@svenpeter.dev>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Changes gpio.h DT binding header file to be published under GPLv2 or
-BSD-2-Clause license terms. This change allows this GPIO generic
-bindings header file to be used in software components as bootloaders
-and OSes that are not published under GPLv2 terms.
+On Mon, Sep 5, 2022 at 5:45 PM Hector Martin <marcan@marcan.st> wrote:
+> On 02/09/2022 04.26, Andy Shevchenko wrote:
 
-All contributors to gpio.h file in copy.
+...
 
-Cc: Stephen Warren <swarren@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Nuno Sá <nuno.sa@analog.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> Andy, no offense, but you drive-by everything I try to upstream (or
+> author in this case) and half of your suggestions are wrong and I have
+> to waste my time explaining why, and most of the rest are negligible
+> style nitpicks. Every now and then you point out some useful kernel
+> function that I didn't know about, but your signal to noise rate is
+> terrible. Please put some effort into your reviews. It feels like you're
+> on some kind of quest to review as much code as possible, without the
+> slightest care for quality.
 
-Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
----
-Changes since v2:
-- Fix commit log.
+Okay, if I ever review your code in the future, I'll try my best.
 
-Changes since v1:
-- Publish under BSD-2-Clause instead of BSD-3-Clause.
-- Remove Charles Keepax from CC list.
-
----
- include/dt-bindings/gpio/gpio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
-index 5566e58196a2..b5d531237448 100644
---- a/include/dt-bindings/gpio/gpio.h
-+++ b/include/dt-bindings/gpio/gpio.h
-@@ -1,4 +1,4 @@
--/* SPDX-License-Identifier: GPL-2.0 */
-+/* SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) */
- /*
-  * This header provides constants for most GPIO bindings.
-  *
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
