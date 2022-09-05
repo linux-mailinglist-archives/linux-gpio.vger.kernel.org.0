@@ -2,80 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7F165ACC60
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 09:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C2B35ACC2F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 09:28:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236064AbiIEHPC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 03:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
+        id S236437AbiIEHTU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 03:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237050AbiIEHNQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 03:13:16 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3DA841D3A;
-        Mon,  5 Sep 2022 00:08:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 19EB0B80ED0;
-        Mon,  5 Sep 2022 07:08:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45CEBC433C1;
-        Mon,  5 Sep 2022 07:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1662361714;
-        bh=vYHfuWjCZoXX0Gw8KXiBoC4i4HN/XJ+fPiLchONGM5c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wG3gzO9Psb2hRlSqZ1vx7n8hLkY1e6xNNY+SQYmTOvVmGmyNNVsjd54+dCpyMs7aP
-         yCKVlkHm9E1H7UtjcmrvRGcwIgnm62t0dEEmNfrytaZ+Zuyi6+jguZ/KBOqPZ3dukT
-         anoJx+666aasH5ZH3x3yAeZCXbRYJumJ2nucWUpc=
-Date:   Mon, 5 Sep 2022 09:08:31 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 00/11] Get rid of [devm_]gpiod_get_from_of_node()
- public APIs
-Message-ID: <YxWgb7wCzQBvEW2h@kroah.com>
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+        with ESMTP id S235590AbiIEHSu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 03:18:50 -0400
+Received: from mail-m975.mail.163.com (mail-m975.mail.163.com [123.126.97.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4880B4DF15;
+        Mon,  5 Sep 2022 00:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=lZG7u
+        e68WEc89C4m/LVUaUvO0VxOuyeAxv74XOAZBKM=; b=oV7zsC8XUNyJaAtesIJY9
+        HHeYhwFrVo5fiY02fSQvlmIx2XBmBzVA5KVIi+rZFqfC7EJ7rZGhiK1wozhJaMy9
+        fSgLIekVsAOX6XNoYGDAxHyzz/HV0baW4n5Fgg2wxpXB8A38Fl4WMW/siRVshJva
+        Samk/mVvTu6oC6P8rtBuDA=
+Received: from localhost.localdomain (unknown [116.128.244.169])
+        by smtp5 (Coremail) with SMTP id HdxpCgD3YgOKoRVjtkjJZw--.29861S2;
+        Mon, 05 Sep 2022 15:13:15 +0800 (CST)
+From:   Jiangshan Yi <13667453960@163.com>
+To:     linus.walleij@linaro.org
+Cc:     tangmeng@uniontech.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiangshan Yi <yijiangshan@kylinos.cn>,
+        k2ci <kernel-bot@kylinos.cn>
+Subject: [PATCH] pinctrl: berlin: fix spelling typo in comment
+Date:   Mon,  5 Sep 2022 15:13:00 +0800
+Message-Id: <20220905071300.1832105-1-13667453960@163.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: HdxpCgD3YgOKoRVjtkjJZw--.29861S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrury7Jr47ZFy5Jw1xWr18uFg_yoWfZFg_Ca
+        48A3s7XrWjkFn3Zr1Yga9YqFWFvan0gr1fJF1qvFs8Ca4UWw4DJ34kXrZI93sak347GF9x
+        Zry7Wrnaya9rJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUby8B5UUUUU==
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: bprtllyxuvjmiwq6il2tof0z/xtbBtgNz+11uQWRUlgAAsp
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FROM_LOCAL_DIGITS,FROM_LOCAL_HEX,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,18 +53,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 04, 2022 at 11:30:52PM -0700, Dmitry Torokhov wrote:
-> I would like to stop exporting OF-specific [devm_]gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit. We can do that by switching drivers
-> to use generic fwnode API ([devm_]fwnode_gpiod_get()). By doing so we open
-> the door to augmenting device tree and ACPI information through secondary
-> software properties (once we teach gpiolib how to handle those).
-> 
-> I hope that relevant maintainers will take patches through their trees and
-> then we could merge the last one some time after -rc1.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Jiangshan Yi <yijiangshan@kylinos.cn>
 
-Nice work, I'll go add the USB ones to my tree now, thanks!
+Fix spelling typo in comment.
 
-greg k-h
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
+---
+ drivers/pinctrl/berlin/berlin.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/berlin/berlin.c b/drivers/pinctrl/berlin/berlin.c
+index a073eedd71aa..1e427ea4d31b 100644
+--- a/drivers/pinctrl/berlin/berlin.c
++++ b/drivers/pinctrl/berlin/berlin.c
+@@ -209,7 +209,7 @@ static int berlin_pinctrl_build_state(struct platform_device *pdev)
+ 
+ 	for (i = 0; i < pctrl->desc->ngroups; i++) {
+ 		desc_group = pctrl->desc->groups + i;
+-		/* compute the maxiumum number of functions a group can have */
++		/* compute the maximum number of functions a group can have */
+ 		max_functions += 1 << (desc_group->bit_width + 1);
+ 	}
+ 
+-- 
+2.27.0
+
+
+No virus found
+		Checked by Hillstone Network AntiVirus
+
