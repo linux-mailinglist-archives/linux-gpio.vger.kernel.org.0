@@ -2,112 +2,319 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 307255ADAEF
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 23:40:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E47F95ADAF1
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 23:43:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbiIEVk3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 17:40:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        id S231482AbiIEVnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 17:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230415AbiIEVk2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 17:40:28 -0400
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9AA043E69
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 14:40:26 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.west.internal (Postfix) with ESMTP id C17272B05AFF;
-        Mon,  5 Sep 2022 17:40:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 05 Sep 2022 17:40:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1662414025; x=1662417625; bh=Vgo0AtXrQ8
-        j8CwRv9hCXFvG4cPRHv9K1Ip+Kzzkibik=; b=B2flso5YbibdySPYZ20z8jWqJu
-        Wy1U19c80n3tL4M0yo/fm7QphbzzVFpUSgSN19BUG8f8qvypY/fLMIr8UQjpgy4V
-        /tAXwxSjguCWLjGr8z8hBOZNvtihy/DF7sC3Cdv1s+tEtXiJskQ3KNmXt2oeVSG5
-        sYzcuozQXiAuCBaMJtbTLd0tft/l0twJFN43whqW0c4dfbtoLnrJdtWzAer+OCit
-        XW/2SUSR161Q3oEbqnUKTjk4i4dtbA2AOGLwV3yyuKU8FN0eRB1OfGzTLOd6RtfC
-        L2DrnB8bB2tYWJ+sQ0DiB7Htc0vvNx+mIjBM8k44AbUyluO7yUk5JYsx0gNw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1662414025; x=1662417625; bh=Vgo0AtXrQ8j8CwRv9hCXFvG4cPRH
-        v9K1Ip+Kzzkibik=; b=c/WDrRpMvfg5XSyVhZNTXKioBMYq2eIJC2j2EomWseOo
-        DQXUpzCbcw/cLGVj3h3lbIKc3XwGhHryasZmpnY1zj7GTrBGFxuR+gvreIBa5ut4
-        UyGQw8c41Orsixq0zywMg3iLYMif6CAhujVUptVvIThOWXQmFKFn9IFLYhqGhqEB
-        l/bxGvxNdMSM4XMH4mBgXYKjp2JH1TCc0Mn2OjsaLYKVBI0Aea7qBXVzM2kU2GLo
-        fQQDjZheOKbqruDg8fq6xTdkQHdXhV8UEEhPOJd0C17AtlKjCNWNmIavj2Bs5dHU
-        kI7sWzO37ddV2PB+sLBSRJCWAsUCanflrIt+GBn08Q==
-X-ME-Sender: <xms:yGwWY1rXBk2K54dup7RbAu-S9f4IzHlCfphCsvoZo8CJK6DwqRCDdQ>
-    <xme:yGwWY3qpUswQjhjSb3BuLesPCOw1541-qP3arnMRGtCbxRKrME9n46qDMjnwPoRlb
-    AgS1Zv54qdqxE3ntdg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdeljecutefuodetggdotefrodftvfcurf
-    hrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhnugcu
-    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
-    hnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeetffen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
-    esrghrnhgusgdruggv
-X-ME-Proxy: <xmx:yGwWYyMdTkOonkMxDsZ1ovqpAKJEantIvH-vMo1qV-rhe1MeXOVkPA>
-    <xmx:yGwWYw5Gl1EWGdpoYInT8OuUvn-vqwG-LrEX2A4KZITlhb7GK0uDjQ>
-    <xmx:yGwWY04shZvTBEfbIt_NZy-pEXNMfLKvBYG6q18b8s2WWdIXOy5chQ>
-    <xmx:yWwWY_1ySjkctc83QLbuiJmW6NTBfbTmmaFB-iISfGt67UpFgKkSFWPjtkA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3391FB60083; Mon,  5 Sep 2022 17:40:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-927-gf4c98c8499-fm-20220826.002-gf4c98c84
-Mime-Version: 1.0
-Message-Id: <4f5ca7a1-b472-4bc6-aab9-58fae036db5c@www.fastmail.com>
-In-Reply-To: <CACRpkdYGHMMD5ti0m9nyk6VV_sNsyptgpULPDzQcV3A9aRd5Jg@mail.gmail.com>
-References: <202209050605.fezJUgFH-lkp@intel.com>
- <CACRpkdbfHG3r1wtN3Gne-XX0Zg2qyFSgH4yR3ctauABY4u-XJw@mail.gmail.com>
- <20220905133040.GB6496@francesco-nb.int.toradex.com>
- <CACRpkdYKQt8fJ5FaTQgoNgGH73xnC877pQhek5Df1zdSE_c3=w@mail.gmail.com>
- <9be88d9b-8531-46f4-8cca-c276b4a741e1@www.fastmail.com>
- <CACRpkdYGHMMD5ti0m9nyk6VV_sNsyptgpULPDzQcV3A9aRd5Jg@mail.gmail.com>
-Date:   Mon, 05 Sep 2022 23:40:01 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Francesco Dolcini" <francesco.dolcini@toradex.com>,
-        "kernel test robot" <lkp@intel.com>, llvm@lists.linux.dev,
-        kbuild-all@lists.01.org,
+        with ESMTP id S230415AbiIEVnj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 17:43:39 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885395EDF8
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 14:43:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=1zKS5ua+yvxWE5YWOQzRUvWwLrnZXJWBBgO/+KEVOL8=; b=PU0EZgZBly6Ir+awPV/JIyMyLS
+        OkJzr7Kqt0ePtLYu1reJsW/1nzbOoTxtNkyWr5YWIVhoyB5153tsgUk9ZY7PaX/7w829HXeud5OAA
+        VU3f8jzqc7u/IEiBjCVB3cHTW3R6pPPMj7ijq1Ba1cxfW2IxMhZAkPeWRrnOf0kUz5glCzpF3MXwa
+        1rj5Xn7s14SAArjiFyr846MFAn2LzcmTWohqDy4+45nftMc+0XJAH5mi3g8zFPglrQQdD1pIsq3cD
+        CuNBMLBNNJbq+b6DwGurJplUlNYvrEzLUiQoZgPwPzBlr3I9nuQF5jDPEWdm826YwvbohGqnpNUOM
+        vw/YMJdA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34132)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oVJsL-000352-T8; Mon, 05 Sep 2022 22:43:25 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oVJsI-0007dk-Hd; Mon, 05 Sep 2022 22:43:22 +0100
+Date:   Mon, 5 Sep 2022 22:43:22 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Fabio Estevam" <festevam@gmail.com>
-Subject: Re: [linusw-pinctrl:devel 26/32]
- drivers/pinctrl/freescale/pinctrl-imx.c:260:9: error: call to undeclared
- function 'pinmux_generic_get_function'; ISO C99 and later do not support
- implicit function declarations
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: Fwd: [PATCH 6/6] gpio: macsmc: Add IRQ support
+Message-ID: <YxZtegWyDV27yg22@shell.armlinux.org.uk>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
+ <CACRpkdaR9rBdPC_OBKx5e+=EtbR-Jn3GzrvGRYHMJmXwRxPhyg@mail.gmail.com>
+ <YxXv5vL6XrlkK+K0@shell.armlinux.org.uk>
+ <CAHp75VcSqjRDB+D6tzdXwYK5whyhCySWgw=6ses95F4C2sxD0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcSqjRDB+D6tzdXwYK5whyhCySWgw=6ses95F4C2sxD0Q@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Sep 05, 2022 at 04:19:22PM +0300, Andy Shevchenko wrote:
+> (Replied privately to Russell by a mistake)
 
-On Mon, Sep 5, 2022, at 11:20 PM, Linus Walleij wrote:
-> On Mon, Sep 5, 2022 at 3:53 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> I have a kismet warning that sometimes this selecting PINCTRL_IMX
-> is inconsistens since it depends on OF and apparently there are
-> now non-OF configs compiling it. So could the real problem be
-> that everything selecting PINCTRL_IMX should depend on OF
-> too?
+What are you doing? This email you've forwarded is not your own email
+that you sent to me privately but my reply to LinusW that was on the
+list.
 
-Ah right, that sounds the like the root cause. Yes, you either
-have to make sure it's possible to build PINCTRL_IMX without
-CONFIG_OF, or have everything that selects it have an OF dependency.
+Are you okay, or is this a result of you rushing and not making sure
+that you're doing what you intend to do? Maybe you need to slow down a
+bit?
 
-If a select statement in Kconfig hits a missing dependency, it
-does not follow the indirect 'select' statements from that.
+> ---------- Forwarded message ---------
+> From: Russell King (Oracle) <linux@armlinux.org.uk>
+> Date: Mon, Sep 5, 2022 at 3:50 PM
+> Subject: Re: [PATCH 6/6] gpio: macsmc: Add IRQ support
+> To: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>, Alyssa
+> Rosenzweig <alyssa@rosenzweig.io>, <asahi@lists.linux.dev>, Bartosz
+> Golaszewski <brgl@bgdev.pl>, Hector Martin <marcan@marcan.st>,
+> <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+> Sven Peter <sven@svenpeter.dev>
+> 
+> 
+> On Fri, Sep 02, 2022 at 03:21:31PM +0200, Linus Walleij wrote:
+> > On Thu, Sep 1, 2022 at 3:54 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+> > > +       DECLARE_BITMAP(irq_enable_shadow, MAX_GPIO);
+> >
+> > Please rename irq_unmasked_shadow as it is tracking
+> > this and not what the irqchip core calls enabled/disabled.
+> >
+> > > +       DECLARE_BITMAP(irq_enable, MAX_GPIO);
+> >
+> > I think this state should be possible to set/get from the irqchip
+> > core. !irqd_irq_masked(d) on the descriptor, correct me if I'm wrong.
+> 
+> I think you're getting the two mixed up. irq_enable_shadow
+> (irq_unmasked_shadow) is updated from the ->irq_mask and ->irq_unmask
+> callbacaks, and will track !irqd_irq_masked(d) state. So, I think we
+> can get rid of irq_enable_shadow and just use !irqd_irq_masked(d).
+> 
+> The irq_enable bit array tracks the state on the SMC, and is used to
+> indicate whether we need to update that state when we unlock the bus
+> (which is when the driver talks to the SMC to reconfigure it.)
+> 
+> So, I think killing irq_enable_shadow and replacing irq_enable with
+> irq_unmasked would be correct - and going a bit further,
+> irq_smc_unmasked to show that it's the SMC's status.
+> 
+> > > +static int macsmc_gpio_event(struct notifier_block *nb, unsigned long event, void *data)
+> > > +{
+> > > +       struct macsmc_gpio *smcgp = container_of(nb, struct macsmc_gpio, nb);
+> > > +       u16 type = event >> 16;
+> > > +       u8 offset = (event >> 8) & 0xff;
+> > > +       smc_key key = macsmc_gpio_key(offset);
+> > > +       unsigned long flags;
+> > > +        int ret;
+> > > +
+> > > +       if (type != SMC_EV_GPIO)
+> > > +               return NOTIFY_DONE;
+> > > +
+> > > +       if (offset > MAX_GPIO) {
+> > > +               dev_err(smcgp->dev, "GPIO event index %d out of range\n", offset);
+> > > +               return NOTIFY_BAD;
+> > > +       }
+> > > +
+> > > +       local_irq_save(flags);
+> > > +       ret = generic_handle_domain_irq(smcgp->gc.irq.domain, offset);
+> > > +       local_irq_restore(flags);
+> >
+> > Isn't irq_bus_lock/unlock protecting us here already?
+> > (I might be getting it wrong...)
+> 
+> Hmm, where does irq_bus_lock get called? Given this function is called
+> while running a blocking notifier chain, interrupts will not be
+> disabled on entry to this function. I haven't found a place in the maze
+> of irq handling code that generic_handle_domain_irq() would end up using
+> the bus lock/unlock functions - and if they did, with the above IRQ
+> saving, the kernel would WARN() about calling mutex_lock() with IRQs
+> disabled. So it doesn't.
+> 
+> This actually entirely negates any benefit of the kernel trying to mask
+> or unmask an interrupt in "hardware" while running the handler - since
+> macsmc_gpio_irq_bus_sync_unlock() won't be called, the state on the SMC
+> won't get touched.
+> 
+> > Since this is coming from a notifier and not an IRQ or threaded
+> > IRQ I actually am a bit puzzled on how to handle it... you probably
+> > know it better than me, maybe ask Marc Z if anything is
+> > unclear.
+> 
+> It's been years since I did any real platform porting work, so deep
+> knowledge of the IRQ subsystem has evaporated.
+> 
+> > > +       if (apple_smc_write_u32(smcgp->smc, key, CMD_IRQ_ACK | 1) < 0)
+> > > +               dev_err(smcgp->dev, "GPIO IRQ ack failed for %p4ch\n", &key);
+> >
+> > isn't this one of those cases where we should implement the
+> > irqchip callback .irq_ack() specifically for this?
+> >
+> > That callback will only be used by edge triggered IRQs but
+> > I guess that would realistically be all we support anyway?
+> > (See comment below on .set_type)
+> 
+> I would imagine it depends on how the SMC GPIO interrupt works -
+> whether the ACK is ACK as we know it in Linux (x86 PIC) or whether
+> it's ACK as in a notification to the SMC that we have finished
+> handling the interrupt and it can send us the next interrupt.
+> 
+> I suspect we don't know that level of detail of the platform, so
+> given that this is what the Asahi kernel does, that's the best we
+> have.
+> 
+> > > +static int macsmc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+> > > +{
+> > > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
+> > > +       int offset = irqd_to_hwirq(d);
+> > > +       u32 mode;
+> > > +
+> > > +       if (!test_bit(offset, smcgp->irq_supported))
+> > > +               return -EINVAL;
+> > > +
+> > > +       switch (type & IRQ_TYPE_SENSE_MASK) {
+> > > +       case IRQ_TYPE_LEVEL_HIGH:
+> > > +               mode = IRQ_MODE_HIGH;
+> > > +               break;
+> > > +       case IRQ_TYPE_LEVEL_LOW:
+> > > +               mode = IRQ_MODE_LOW;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_RISING:
+> > > +               mode = IRQ_MODE_RISING;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_FALLING:
+> > > +               mode = IRQ_MODE_FALLING;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_BOTH:
+> > > +               mode = IRQ_MODE_BOTH;
+> > > +               break;
+> > > +       default:
+> > > +               return -EINVAL;
+> >
+> > I don't know how level IRQs would work on this essentially
+> > message-passing process context interrupt. Maybe I am getting
+> > it all wrong, but for level the line should be held low/high until
+> > the IRQ is serviced, it would be possible to test if this actually
+> > works by *not* servicing an IRQ and see if the SMC then sends
+> > another message notifier for the same IRQ.
+> 
+> If level IRQs are not supported, then it's strange that the Asahi
+> folk have been able to reverse engineer the CMD_IRQ_MODE codes for
+> these states.
+> 
+> Maybe the SMC issues another message for a level IRQ after it receives
+> a CMD_IRQ_ACK message if the level interrupt is still asserted?
+> 
+> > I strongly suspect that actually only edges are supported, but
+> > there might be semantics I don't understand here.
+> >
+> > >         }
+> > >
+> > > +       smcgp->irq_mode_shadow[offset] = mode;
+> >
+> > Hm yeah I guess this shadow mode is necessary for the sync
+> > to work.
+> 
+> Ineed.
+> 
+> > > +static void macsmc_gpio_irq_bus_sync_unlock(struct irq_data *d)
+> > > +{
+> > > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
+> > > +       smc_key key = macsmc_gpio_key(irqd_to_hwirq(d));
+> > > +       int offset = irqd_to_hwirq(d);
+> > > +       bool val;
+> > > +
+> > > +       if (smcgp->irq_mode_shadow[offset] != smcgp->irq_mode[offset]) {
+> > > +               u32 cmd = CMD_IRQ_MODE | smcgp->irq_mode_shadow[offset];
+> > > +               if (apple_smc_write_u32(smcgp->smc, key, cmd) < 0)
+> > > +                       dev_err(smcgp->dev, "GPIO IRQ config failed for %p4ch = 0x%x\n", &key, cmd);
+> > > +               else
+> > > +                       smcgp->irq_mode_shadow[offset] = smcgp->irq_mode[offset];
+> > > +       }
+> > > +
+> > > +       val = test_bit(offset, smcgp->irq_enable_shadow);
+> > > +       if (test_bit(offset, smcgp->irq_enable) != val) {
+> >
+> > So what you want to know for each line is (correct me if I'm wrong):
+> > - Is it enabled (unmasked) or not?
+> > - Did it get changed enabled->disabled, disabled->enabled since
+> >   macsmc_gpio_irq_bus_lock()?
+> 
+> I think you mean here "did the 'enable' state change between
+> macsmc_gpio_irq_bus_lock() and macsmc_gpio_irq_bus_unlock".
+> 
+> > Doesn't the irqchip core track the first part of this for you?
+> > irqd_irq_masked(d) should tell you the same thing as
+> > irq_enable, just inverted.
+> >
+> > irq_enable_shadow is a bit tricker, I guess you might need that since
+> > the irqchip doesn't track state changes.
+> 
+> Yep, which is what I've said above in this reply where these bitmaps
+> are declared.
+> 
+> > >  static int macsmc_gpio_probe(struct platform_device *pdev)
+> > >  {
+> > >         struct macsmc_gpio *smcgp;
+> > > @@ -221,6 +365,18 @@ static int macsmc_gpio_probe(struct platform_device *pdev)
+> > >         smcgp->gc.base = -1;
+> > >         smcgp->gc.parent = &pdev->dev;
+> > >
+> > > +       gpio_irq_chip_set_chip(&smcgp->gc.irq, &macsmc_gpio_irqchip);
+> > > +       smcgp->gc.irq.parent_handler = NULL;
+> > > +       smcgp->gc.irq.num_parents = 0;
+> > > +       smcgp->gc.irq.parents = NULL;
+> > > +       smcgp->gc.irq.default_type = IRQ_TYPE_NONE;
+> > > +       smcgp->gc.irq.handler = handle_simple_irq;
+> >
+> > I would consider setting this to handle_edge_irq() and implement
+> > .irq_ack(). I might be wrong.
+> 
+> I don't think that's suitable, because then we'll be calling irq_ack()
+> before the handler has run - and we won't be notifying the SMC that
+> the interrupt has been masked. So it could send another notification
+> for the same IRQ while it's still being handled. Then there's the
+> question about level IRQs as well.
+> 
+> I think, given that I don't know how the SMC works (presumably the
+> Asahi folk have a bit more of an idea, but that will be based on
+> reverse engineering effort) that I am not going to modify this driver's
+> behaviour drastically by changing the flow handler to the edge flow
+> handler from the simple flow. To me, that could well be a disaster
+> for this driver. That would be something for the Asahi folk to look
+> at.
+> 
+> --
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-      Arnd
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
