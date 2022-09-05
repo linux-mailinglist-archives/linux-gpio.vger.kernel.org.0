@@ -2,85 +2,172 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 355305AD5F6
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:17:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8548B5AD63F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:25:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237156AbiIEPQ2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 11:16:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        id S238921AbiIEPWt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 11:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236825AbiIEPQ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:16:26 -0400
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3F6B4C
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 08:16:25 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id 4BCB541E2F;
-        Mon,  5 Sep 2022 15:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-        t=1662390983; bh=SnH+V+R2GJ662ezyRKhqvJs4sp4YS/auEDgqtiyNbXY=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To;
-        b=vfVRk4l1phRl5WI5mhxMh2gc7IloxwsMuJfGw7RRIJB4AjB2TJL490OULhTi2+Llo
-         sYxBS5EV0vx5Z3JJ21Hy8hERURHoayJAV52IwP5bg7SbnQt4yL7F3EoOAv+UL/MVk4
-         mgcLeRIxIgQMUjOcCQJuorWGVgJcMY1z2nJ/naUV92D0R0mCtcTt3vigMyIgbDJ+nP
-         +DXpei6EMEtqLNxOyT2OUimKckpIRPjBgOmrZHK3gzS+xyxkD8E4sQlmpYDssRjZJr
-         Y3uW9IFIDCvwT5AUTFskMJxW1rWuLh66JzdvbfUFaVODlaaVIYOCZxOIxdHQ79gkSz
-         MRH+8qyzn0VFQ==
-Message-ID: <92f95d06-c02b-2173-90ad-71f7d365d56f@marcan.st>
-Date:   Tue, 6 Sep 2022 00:16:18 +0900
+        with ESMTP id S238810AbiIEPW0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:22:26 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E5F5E65A;
+        Mon,  5 Sep 2022 08:22:19 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id s22so6492937qkj.3;
+        Mon, 05 Sep 2022 08:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=+ZiqcY4iwW4z7/E7mCAKrjs2qkOwesFoeuU+408Ac8o=;
+        b=VFmGFDTElC9gVBP4IH125hq51A7FGr51vQ9KGLGqsDH5FAEMbMbUXIVHi85ww+a0fI
+         GziSfVv/AV96vVMyihm0a9WLMAOVaqURD6Z6C0QYsgp+rD6u9b5XKuySpRwB9/4ukD5r
+         ntRcngBKUZIdj1p7dnKxVpS61IIJC70YsoWsdaYgU3yQ1OeaPC6Dp8pG57kfBWmOL/93
+         L/IFFf00dHT3zgOp5UKnif6AxMU2wmHM+SIXzgJwfA+idsrUzSPhTV0Cy8bk19HNDekI
+         +ldaJp7J0Y+v4fVjKkwUglDoR826zDL6l5uW2KrYqW3xGquKc2bpuTp1y4lh/YVJ6mAK
+         GUTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=+ZiqcY4iwW4z7/E7mCAKrjs2qkOwesFoeuU+408Ac8o=;
+        b=X6vXErVPMJY7d1KHJ77+zIPQCFI0nwzh7fnLnnmSbuQktl5hH9FtjLRDtYuOI0WmG6
+         Kz7kh8TDh2HB3DV5mlOrGD2uV8vB4EWEZrp4W0faBhfTjKk3giHYFE1KfO4Xvd24RhM6
+         aGp5qEDIxfTWy6MfSwEpxi4bDypI5y4zEcgpC3G94j1LW3ESHj1f0BbMKhwwxMN4sv4E
+         vFgzPkpOJsMXgVTHijBSspw7sYMW878mYTkjqwPrSXHqe1MQBOTAGhMogWGD3hUipc0a
+         kVNiJsvM6x1bBO4kvgBNpqQZsEMHHMN20n3o/yiYOtxdZ5IGI3dOsp6NSzUj5IjgEv5J
+         8YYQ==
+X-Gm-Message-State: ACgBeo35E66bskPTI7omOBhSkr9TDFyyrrO6OkACMhX9OBlca8TALC2y
+        un8UsY7S4/gZYKkpzPLRtYb2NQaXKfBvEVr6xv4=
+X-Google-Smtp-Source: AA6agR6eqDleGJQNbmaUKo+DXkG0Owzp6XfxQg6gg92/7A34V7uBDxuh7YdkC5fcKcuRE7T6e8KsWIJlWSuvkZ2TzuU=
+X-Received: by 2002:a05:620a:410e:b0:6bc:5cdc:88ec with SMTP id
+ j14-20020a05620a410e00b006bc5cdc88ecmr33187504qko.734.1662391338268; Mon, 05
+ Sep 2022 08:22:18 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Content-Language: es-ES
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
+ <CAHp75Vd35EOy=mP25=9fmYfqQnbafgotHw1fxk-TdGk6Oc8g8Q@mail.gmail.com> <75e60144-9fa2-d6ba-bc92-edd23f7e7189@roeck-us.net>
+In-Reply-To: <75e60144-9fa2-d6ba-bc92-edd23f7e7189@roeck-us.net>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 5 Sep 2022 18:21:42 +0300
+Message-ID: <CAHp75VcisCTYoRp-=713YKtwi7BQyPKGiUhF4DkpfAFtvDXCiQ@mail.gmail.com>
+Subject: Re: [PATCH v1 10/11] watchdog: bd9576_wdt: switch to using devm_fwnode_gpiod_get()
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Rob Herring <robh+dt@kernel.org>
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
- <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
- <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
-In-Reply-To: <YxHVdjYPlIINZ/Wc@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 02/09/2022 19.05, Russell King (Oracle) wrote:
-> but even that isn't _that_ nice. I'd like to hear comments from the Asahi
-> folk about whether these sub-blocks of the SMC can have compatibles, so
-> that the MFD layer can automatically fill in the firmware nodes on the
-> struct device before the probe function gets called.
+On Mon, Sep 5, 2022 at 6:13 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> On 9/5/22 04:09, Andy Shevchenko wrote:
+> > On Mon, Sep 5, 2022 at 9:33 AM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
 
-I'm fine with adding compatibles if this makes the of/fwnode handling
-simpler. However, keep in mind these aren't hardware, they're
-effectively software services implemented in a coprocessor. The idea
-behind not having compatibles was that the SMC stuff should be
-self-discovering enough that it can decide what's available and not at
-runtime, and that the SMC core needs to probe before the child devices
-anyway, so it's not like this can be a simple-bus. But I'm new to the
-MFD subsystem, so if compatibles make life easier, sure.
+...
 
-Personally, I'd defer to Rob's opinon on this (CC'ed), since he has the
-last word on DT bindings :).
+> >> +       count = device_property_count_u32(dev->parent, "rohm,hw-timeout-ms");
+> >> +       if (count < 0 && count != -EINVAL)
+> >> +               return count;
+> >> +
+> >> +       if (count > 0) {
+> >
+> >> +               if (count > ARRAY_SIZE(hw_margin))
+> >> +                       return -EINVAL;
+> >
+> > Why double check? You may move it out of the (count > 0).
+>
+> Two checks will always be needed, so I don't entirely see
+> how that would be better.
 
-- Hector
+But not nested. That's my point:
+
+if (count > ARRAY_SIZE())
+  return ...
+if (count > 0)
+  ...
+
+> >> -       if (ret == 1)
+> >> -               hw_margin_max = hw_margin[0];
+> >
+> >> +               ret = device_property_read_u32_array(dev->parent,
+> >> +                                                    "rohm,hw-timeout-ms",
+> >> +                                                    hw_margin, count);
+> >> +               if (ret < 0)
+> >> +                       return ret;
+> >
+> > So, only this needs the count > 0 check since below already has it implicitly.
+> >
+> Sorry, I don't understand this comment.
+
+if (count > 0) {
+  ret = device_property_read_u32_array(...);
+  ...
+}
+if (count == 1)
+ ...
+if (count == 2)
+ ...
+
+But here it might be better to have the nested conditionals.
+
+> >> -       if (ret == 2) {
+> >> -               hw_margin_max = hw_margin[1];
+> >> -               hw_margin_min = hw_margin[0];
+> >> +               if (count == 1)
+> >> +                       hw_margin_max = hw_margin[0];
+> >> +
+> >> +               if (count == 2) {
+> >> +                       hw_margin_max = hw_margin[1];
+> >> +                       hw_margin_min = hw_margin[0];
+> >> +               }
+> >>          }
+
+-- 
+With Best Regards,
+Andy Shevchenko
