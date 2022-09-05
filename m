@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D552C5ADAB2
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 23:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FB6E5ADAD8
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 23:20:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231739AbiIEVJ3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 17:09:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
+        id S229818AbiIEVUt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 17:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237816AbiIEVIk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 17:08:40 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 683806744B
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 14:08:25 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id fc24so10190743ejc.3
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 14:08:24 -0700 (PDT)
+        with ESMTP id S230204AbiIEVUs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 17:20:48 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69E352460
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 14:20:47 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id bj12so19177771ejb.13
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 14:20:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=j2DqM/8hgkfiAr31ueIS9a3oRbjRe0mVpYtwXdqsEp8=;
-        b=V2Z5XISr45XJcb9dcJaRR2oK4C88Hef0QSmVHknlGECt38JSjr/TZkcQySYUIrPO9J
-         //M3VD3dJElEfTVRabQ+d9Ecu1tRnblT/fiShvbu/oiLoTKn4s+JqTfl96TM+hAVL8HU
-         u2Vd8G+BUORKp7KsP+ICPmrfKxco6HQhw5COV1FmafRX/ajzh7p1SoyWNXPJO4irgIS1
-         xlbeGydsG+xRJUZ3sngYkdeed+1+7UUU7LxshpYbkv7c03QlMkyfAFrdsdekA4pTs8uP
-         bUCtVX0aRVIkVw59cYH6adaXhIbJC5ZgGnQAWttvEncfqZqz5b3pmlnmlZ4dm+zKHOOQ
-         tOsg==
+        bh=LrFK3sv1yLWXXRop9N9W2BNtE+QQcBNo40/879n1p7g=;
+        b=gVYUCaCZZZ8vc932Ks3Yj2eV4y60SOf5pUjwI29d7txH4bOCZeoKxYMlfpIrfuaAY2
+         kpmxPba01Tf/B1neU76n1/vD+9GzeyVUDxVxl54VnzZFEF4kZKSNoJNIJ4FBXthxPSY6
+         TyM6kROi9CPMiFdOTw/ZJnO1J4s9HQj7jEcUPBFr30IXnZ4sVvZEAt7ddGIxMBbJ5S41
+         ILVXUjNEly4vSAs3PJ0DIJvMGVV2LZe6FRWJUEkMVZNNN8vr1aI+1wnMGc26LVOZ40/B
+         6DeWjNmRiZr5vJi5Qwvp98VDnyMyxpZ82Vi1doQS4wvbxaNjTao43402KjtpBflc+E01
+         bZLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=j2DqM/8hgkfiAr31ueIS9a3oRbjRe0mVpYtwXdqsEp8=;
-        b=Ap39hXFoD7EyvcsHILHeiJFYFYKr9/XZFGi2xNYQO9uwl3WgnUhVk5aHqb6HyY/3aa
-         52iVckJYaPhlmLaM0hRwcoHndOsGhZaEDSUF84g5EfrAS1V3wRRFWodX9Q0qtJnaFNnU
-         e4J6YrseaRI33OdDBo3eZGCDllOoasxrHodvcLSYvLQATEYF4GraLWbJMOYYVbkGpJuI
-         xPy/UjDYU8/mwd0HQK7yTGjqQwHw5T9JG81GMY0fcz2lYg3/JuJMBDzHz9iCjUyo4h9m
-         PzssMnjek4p131EjfkV7b6/Q4XJeeIjq5b7ci/aQQ5yQLxMe4zEmHUqRnUqtIRJ/pz9v
-         /7Mw==
-X-Gm-Message-State: ACgBeo2QT7mZs3yZwF9yzk7toYgxpl+xqt4dNV9KNC5nrU0oCpmSh9cx
-        GK1cWe94k+ZIfs8q7JIQeWzsL4AbiK1SC9BRdEpH2A==
-X-Google-Smtp-Source: AA6agR41fS5FZpFLpIIl7PuQKQ+C/EaKhtCFHZJrMPq6shnH5BpEhlt+An7+V7zB21RHoWvvXM2pomBmboX8OH+dj3M=
+        bh=LrFK3sv1yLWXXRop9N9W2BNtE+QQcBNo40/879n1p7g=;
+        b=N6G/qVy1KjKXxrvk3HZKTi+meNC47XePjPgVhr7mOoyA/WReIFli76FYIuEMhVX4js
+         Ouv/GlK6+qPm4xPqmcAwfWU3bN1I9ges+G+0rlIbIscbuMRa6f0SKJ3mO/kkvggVRY56
+         4GtnNFwU4qOUi1X2ey1h5BMhv4rkzQtvhlpKiOIF1kVkaVgQVudi8T7IH4ctJskkbd1e
+         GZ2y5wsn0tahbWC3+tDUtl4+t7uRhzHvgPtKIlVqulpOb9XZNruSJL300n0zsRq/PHFG
+         iDklLbbWuWiFjB9c9q7KmkY74Mv7FcxmTUrph8E+fV7n9RCl4TfxekREccPtLdP3eakr
+         nmow==
+X-Gm-Message-State: ACgBeo2OsdBO+bmygeQ/T7jmWTaAoBuDl9nLMKsk89w5yCIjnzW2YOmO
+        kMLchQd9Bmjvr9ImpE8qnot011hjG7SFHcPYtgURsZrXCG8b7g==
+X-Google-Smtp-Source: AA6agR5JKr56AZfrz3ucB42qH+KkybOStT4MADJpu40ui59bLa2C5SluhHQ3ad8/pSUnRhcHmbrXoiuIlIJSeW15xvM=
 X-Received: by 2002:a17:907:2707:b0:741:7c18:4e76 with SMTP id
- w7-20020a170907270700b007417c184e76mr25618867ejk.690.1662412103213; Mon, 05
- Sep 2022 14:08:23 -0700 (PDT)
+ w7-20020a170907270700b007417c184e76mr25646345ejk.690.1662412846354; Mon, 05
+ Sep 2022 14:20:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <202209050952.vfkohsRg-lkp@intel.com>
-In-Reply-To: <202209050952.vfkohsRg-lkp@intel.com>
+References: <202209050605.fezJUgFH-lkp@intel.com> <CACRpkdbfHG3r1wtN3Gne-XX0Zg2qyFSgH4yR3ctauABY4u-XJw@mail.gmail.com>
+ <20220905133040.GB6496@francesco-nb.int.toradex.com> <CACRpkdYKQt8fJ5FaTQgoNgGH73xnC877pQhek5Df1zdSE_c3=w@mail.gmail.com>
+ <9be88d9b-8531-46f4-8cca-c276b4a741e1@www.fastmail.com>
+In-Reply-To: <9be88d9b-8531-46f4-8cca-c276b4a741e1@www.fastmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Sep 2022 23:08:11 +0200
-Message-ID: <CACRpkdaLQ68VfYCfv40hGuGnpaMKchiTOSTJy9rnDKnBOQnFDw@mail.gmail.com>
-Subject: Re: [linusw-pinctrl:devel 26/32] kismet: WARNING: unmet direct
- dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
-To:     kernel test robot <lkp@intel.com>
+Date:   Mon, 5 Sep 2022 23:20:35 +0200
+Message-ID: <CACRpkdYGHMMD5ti0m9nyk6VV_sNsyptgpULPDzQcV3A9aRd5Jg@mail.gmail.com>
+Subject: Re: [linusw-pinctrl:devel 26/32] drivers/pinctrl/freescale/pinctrl-imx.c:260:9:
+ error: call to undeclared function 'pinmux_generic_get_function'; ISO C99 and
+ later do not support implicit function declarations
+To:     Arnd Bergmann <arnd@arndb.de>
 Cc:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Paul Gazzillo <paul@pgazz.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+        kbuild-all@lists.01.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Fabio Estevam <festevam@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,19 +72,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 3:55 AM kernel test robot <lkp@intel.com> wrote:
+On Mon, Sep 5, 2022 at 3:53 PM Arnd Bergmann <arnd@arndb.de> wrote:
 
-> kismet warnings: (new ones prefixed by >>)
-> >> kismet: WARNING: unmet direct dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
->
->    WARNING: unmet direct dependencies detected for PINCTRL_IMX
->      Depends on [n]: PINCTRL [=y] && OF [=n]
->      Selected by [y]:
->      - PINCTRL_IMX8MM [=y] && PINCTRL [=y] && SOC_IMX8M [=y]
+> so s390 should work both with and without IOMEM here, as long
+> as drivers do the usual 'depends on ARCH_MXC || COMPILE_TEST'
+> dance.
 
-I have a hard time to understand these warnings at times, but I suspect
-you need a
-depends on OF
+Hm OK
+
+> The only problem I see is a missing 'select GENERIC_PINMUX_FUNCTIONS'.
+> There may be other drivers that have the same issue. Would it
+> make sense to just always build these into the pinctrl
+> subsystem?
+
+That's the thing:
+drivers/pinctrl/freescale/Kconfig:
+
+config PINCTRL_IMX
+        tristate
+        depends on OF
+        select GENERIC_PINCTRL_GROUPS
+        select GENERIC_PINMUX_FUNCTIONS
+        select GENERIC_PINCONF
+        select REGMAP
+
+So that is selected, and what we changed was e.g.:
+
+ config PINCTRL_IMX8MM
+        tristate "IMX8MM pinctrl driver"
+-       depends on ARCH_MXC
++       depends on SOC_IMX8M
+        select PINCTRL_IMX
+        help
+          Say Y here to enable the imx8mm pinctrl driver
+
+so it selects PINCTRL_IMX and that selects GENERIC_PINMUX_FUNCTIONS.
+
+I have a kismet warning that sometimes this selecting PINCTRL_IMX
+is inconsistens since it depends on OF and apparently there are
+now non-OF configs compiling it. So could the real problem be
+that everything selecting PINCTRL_IMX should depend on OF
+too?
 
 Yours,
 Linus Walleij
