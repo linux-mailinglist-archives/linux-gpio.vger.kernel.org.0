@@ -2,100 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CDE65ACE2D
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 10:55:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B8D45ACEF8
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 11:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231656AbiIEIof (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 04:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35126 "EHLO
+        id S234333AbiIEJhM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 05:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237012AbiIEIoe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 04:44:34 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297EE6569
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 01:44:33 -0700 (PDT)
+        with ESMTP id S235312AbiIEJhL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 05:37:11 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7F54AD6D
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 02:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662367473; x=1693903473;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=BH3oiLjqkW0jU2XePtcePb2GTCSxy3WkbyaN5LS29Uw=;
-  b=B1GKq2md3tzx53EcICQKK0KG4T+UUgl+VGR0IFaBqI3CE7TD+kZujtyE
-   VXBB1qpQMCjRZHm1j47a1GOK1qJP19Ylt+bWiEc8V+WL5MsbMC8nK0LOo
-   6w5lKGC+OG/77AKCMjk/ffWCKdESeFdKK57kFlLkC0yrp7Ffgb0PuVv9X
-   XhPvg6nlc+KfzfU+0gcRSRbUsezAXmBtDvHl/KVN65tsbTp+7Ku39xY12
-   8WN+rJyuIj7/irWf/NgbHhKI/4+tG46U/2GZF3n7sbGAw6W9PPeMV9+dR
-   EEWMsBAjj7mxI8UNdbnKd7MWT3q5NL4ksPR2w30Z+tl/urTxZG/7mkvMr
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="322509100"
+  t=1662370630; x=1693906630;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=8ZdLbbDEtee6wWLp7oVk4M2hVEM6B/5Bv4lZU/94T3Q=;
+  b=JFCxUgAZ8fWF4tSVQdE2q334EnGS15jaHVPtbKL/iVhe6fdviph+Hapa
+   OgU/HKFKW5lCttYyhkdXHzpbmdSJtUsQ0bNgrM9CEVkbWfYV2v8s4HdzH
+   +ntg36T6twsaPtT3XxCWifEZMX/BSbEBiKRZGqMCGWtv9hy4HRF1rlaK6
+   T1q87LbfnEWrlimcN2iKbH6SYRLUEHbPddVyGe/Vt2b7wJHl0gQGbZHXP
+   UaS8fDVnxjxQqY7HxiLA6Ak7VL/qZAdOAP5T1cZG1w0rXri6A5FVdqjJ1
+   Ujuj8SwNEraLaq5l91F1JDLNonEvf5OosafpjTm3RGsAbvtaBfrf+uxD2
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="279366585"
 X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="322509100"
+   d="scan'208";a="279366585"
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 01:44:30 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2022 02:37:10 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="942024930"
+   d="scan'208";a="942042690"
 Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2022 01:44:28 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 05 Sep 2022 02:37:08 -0700
 Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oV7iV-0003zF-2R;
-        Mon, 05 Sep 2022 08:44:27 +0000
-Date:   Mon, 5 Sep 2022 16:43:50 +0800
+        id 1oV8XU-00040o-0I;
+        Mon, 05 Sep 2022 09:37:08 +0000
+Date:   Mon, 05 Sep 2022 17:36:22 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Francesco Dolcini <francesco.dolcini@toradex.com>
-Cc:     Paul Gazzillo <paul@pgazz.com>,
-        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [linusw-pinctrl:devel 26/32] kismet: WARNING: unmet direct
- dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
-Message-ID: <202209051658.U9ttAH6z-lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 5134272f9f3f71d4e1f3aa15cb09321af49b3646
+Message-ID: <6315c316.g7kHgzq1EEqZlLce%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-head:   1074e1d23a5c201b6558878a09f1d2b7c9506835
-commit: 87c2a29a6bf1a078d82427d42a2480a61814f8e3 [26/32] pinctrl: imx8m: kconfig: Depends on SOC_IMX8M
-config: x86_64-kismet-CONFIG_PINCTRL_IMX-CONFIG_PINCTRL_IMX8MM-0-0 (https://download.01.org/0day-ci/archive/20220905/202209051658.U9ttAH6z-lkp@intel.com/config)
-reproduce:
-        # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=87c2a29a6bf1a078d82427d42a2480a61814f8e3
-        git remote add linusw-pinctrl https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-        git fetch --no-tags linusw-pinctrl devel
-        git checkout 87c2a29a6bf1a078d82427d42a2480a61814f8e3
-        # 1. reproduce by kismet
-           # install kmax per https://github.com/paulgazz/kmax/blob/master/README.md
-           kismet --linux-ksrc=linux --selectees CONFIG_PINCTRL_IMX --selectors CONFIG_PINCTRL_IMX8MM -a=x86_64
-        # 2. reproduce by make
-           # save the config file to linux source tree
-           cd linux
-           make ARCH=x86_64 olddefconfig
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 5134272f9f3f71d4e1f3aa15cb09321af49b3646  gpio: exar: access MPIO registers on cascaded chips
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+elapsed time: 727m
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
-   
-   WARNING: unmet direct dependencies detected for PINCTRL_IMX
-     Depends on [n]: PINCTRL [=y] && OF [=n]
-     Selected by [y]:
-     - PINCTRL_IMX8MM [=y] && PINCTRL [=y] && SOC_IMX8M [=y]
-   
-   WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS_OF
-     Depends on [n]: PM_GENERIC_DOMAINS [=y] && OF [=n]
-     Selected by [y]:
-     - QCOM_RPMPD [=y] && PM [=y] && QCOM_SMD_RPM [=y]
+configs tested: 102
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                                defconfig
+x86_64                              defconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                 randconfig-a003-20220905
+i386                 randconfig-a004-20220905
+i386                 randconfig-a001-20220905
+i386                 randconfig-a002-20220905
+arc                  randconfig-r043-20220905
+arc                  randconfig-r043-20220904
+arm                                 defconfig
+i386                 randconfig-a005-20220905
+x86_64                               rhel-8.3
+i386                 randconfig-a006-20220905
+x86_64                           rhel-8.3-kvm
+riscv                randconfig-r042-20220904
+x86_64                          rhel-8.3-func
+m68k                             allmodconfig
+x86_64               randconfig-a003-20220905
+x86_64               randconfig-a002-20220905
+arc                              allyesconfig
+i386                             allyesconfig
+powerpc                           allnoconfig
+x86_64                         rhel-8.3-kunit
+x86_64               randconfig-a006-20220905
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+powerpc                          allmodconfig
+x86_64                           rhel-8.3-syz
+s390                 randconfig-r044-20220904
+x86_64               randconfig-a004-20220905
+alpha                            allyesconfig
+arm64                            allyesconfig
+sh                               allmodconfig
+x86_64               randconfig-a005-20220905
+mips                             allyesconfig
+x86_64               randconfig-a001-20220905
+m68k                             allyesconfig
+arm                              allyesconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+i386                             alldefconfig
+ia64                          tiger_defconfig
+sh                         apsh4a3a_defconfig
+ia64                             allmodconfig
+mips                           jazz_defconfig
+arm                        realview_defconfig
+powerpc                mpc7448_hpc2_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                           se7712_defconfig
+powerpc                      makalu_defconfig
+sh                          sdk7786_defconfig
+sh                         microdev_defconfig
+openrisc                       virt_defconfig
+powerpc                     ep8248e_defconfig
+powerpc                      ep88xc_defconfig
+sh                   sh7770_generic_defconfig
+sh                   secureedge5410_defconfig
+powerpc                  iss476-smp_defconfig
+mips                         db1xxx_defconfig
+sh                           se7780_defconfig
+xtensa                    xip_kc705_defconfig
+arc                     nsimosci_hs_defconfig
+arc                          axs101_defconfig
+m68k                             alldefconfig
+loongarch                         allnoconfig
+arm                           viper_defconfig
+i386                          randconfig-c001
+sparc                               defconfig
+arm                     eseries_pxa_defconfig
+powerpc                      mgcoge_defconfig
+sh                           se7751_defconfig
+nios2                            allyesconfig
+arm                           corgi_defconfig
+m68k                         apollo_defconfig
+powerpc                        warp_defconfig
+riscv                    nommu_k210_defconfig
+i386                 randconfig-c001-20220905
+
+clang tested configs:
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+hexagon              randconfig-r045-20220905
+hexagon              randconfig-r045-20220904
+riscv                randconfig-r042-20220905
+hexagon              randconfig-r041-20220904
+x86_64               randconfig-a014-20220905
+hexagon              randconfig-r041-20220905
+x86_64               randconfig-a013-20220905
+s390                 randconfig-r044-20220905
+x86_64               randconfig-a011-20220905
+x86_64               randconfig-a012-20220905
+x86_64               randconfig-a016-20220905
+x86_64               randconfig-a015-20220905
+powerpc                        fsp2_defconfig
+arm                              alldefconfig
+hexagon                             defconfig
+x86_64                        randconfig-k001
 
 -- 
 0-DAY CI Kernel Test Service
