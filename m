@@ -2,74 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 073B05AD96A
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 21:10:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 537425AD96E
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 21:12:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231349AbiIETKU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 15:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
+        id S231893AbiIETMS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 15:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230202AbiIETKT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 15:10:19 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B5618B
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 12:10:17 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id u9so18770838ejy.5
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 12:10:17 -0700 (PDT)
+        with ESMTP id S231710AbiIETMR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 15:12:17 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 475CC38453
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 12:12:12 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id u9so18778438ejy.5
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 12:12:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=R22dyG0yqcuhYb9YD9cYalho8rvzbosoNRaxUmrXNSU=;
-        b=VBhrJH426IPPB0Alau62UZZryc6Mi8bDJNT72dFyop/+n3ishXd5jhozrDodyzAQne
-         uGpnu3a5FS02mgYQULUfRL5ZtQjw/xomrosSs+RhPD9MIU3Dw0PqjewlawTPKSvLWw+j
-         3goMg04q/6Sc1M08aCYPWjkhB4WBl2fbvumciwxFZsAoMxIE5nz+3bbLMoLJIFWxobQP
-         0ckdXuWisvg1QPNi7EWJf9deHTgCZKMMfL1KwZexl+Eb4bcmbzwFgEWDWrGIFIIfAAzG
-         GXKB7jXQmq7AzmNkdPOSQmGUisbovaHTAgo0OiuTkuPmhvlvBcYeaWrZMGgxNw/9O3eo
-         Xcug==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=HRjuZtuMgKp7NhrWfk1BUsEhuHPCRNHn+t7EnNCzXzc=;
+        b=o1GvstCYhBwaqTnwarfmJZWzq7E0OrdSPD/yTcpWd6KDjdNulAbJ4iOt3u7+nYDYWS
+         83btvf6MX7y6CVPO7M6oK0OhbUYZNjwkkLzLgk6LRwv/JrT5bgxrpPGk+NFlnmISaONL
+         03evkj+eKJuQekvXI8ya+u9g2emJwuFpJNv4Wg7emg5eYPOSmX9iZUGQvp1Fb0Zg7C68
+         AoXyzt+0kVvMjCzCFAmXonoo+A9LK7CC9PPWeHAgOSigkXD6fNXGDYNS5DxeoXgP8YmG
+         s+Usw3gma2dEgtbpC5PU+MBILVsE1Xv4hjy/Vh9FCjmE1tD2kzqVonIn8h+rWi9txBbs
+         pppw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=R22dyG0yqcuhYb9YD9cYalho8rvzbosoNRaxUmrXNSU=;
-        b=0h9SDjbykTCN6TYJTFWYjjbB9WVAX8HhiF4QrTwX50+OuQnkcPbj30/4qx8KknWNDV
-         Xu5esTv4BRsaH7wtP4yndgBWexPLaRAGbplxeZG5tO/msXhv1lxStdWpkXaCw15ucKYX
-         jMuhUNUVXJQJeMoCeSi6o6iscst44238aXzuyIpDlJQoD2SA+1HfTQ63uGJV9b1J6CHw
-         9H6IVx6mB3XJsr8re7XGj8Ysks9uFliDoPfh65drBtl33kV7TD3LX0YQEgur1HeC+hcv
-         d7rirmPQ+yfiJk0XF2nfk7HkIV9/0lD2WndB1taBVbsZJgOGQ2z2bEGUN+BnIBTWCtem
-         EOQg==
-X-Gm-Message-State: ACgBeo1H8wpdl1UxXN0VpKvkDbj/P2Zok+58EYYbcpckJ5sIWzR+OGQ9
-        CYgKu31m6s7fTtWke1jT8F4TQSGERxjI4bbEUv/q5IkIDdc=
-X-Google-Smtp-Source: AA6agR51Gz8yHkbQoGBNHqvtBQu6detP0ZUT0cLmLi6LZ322J95iaEXCADFjTwZknsq3JisTHUa6t8e8EIAKHJF6Cl4=
-X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
- ds2-20020a170907724200b00741770bdfc6mr27954518ejc.203.1662405016470; Mon, 05
- Sep 2022 12:10:16 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=HRjuZtuMgKp7NhrWfk1BUsEhuHPCRNHn+t7EnNCzXzc=;
+        b=rzyLkrhQhDcx9mVACR4aC+CtvxFjjD3XnZgqlCwRm2DSdN4jTNdu5gHYUTFYTUMocI
+         UI5w7cqdEZw0LvlltEJfSMquacuSiYtRa3NSQa+nFpyyp+IK1TI8f2AylHyppACPIR9K
+         /BR2wHIBDuzbIu1l35QAPv8JyJHpgAER0reHkW0JZtPg06UHSxcOqWN4m00wqqS8hMTO
+         NNClE38rVxKSoh9WIQxU2TC/3oW7uDEj7kd7TK3wmltEhGASIAVqAu8pgHrJDHQA+FzR
+         5zHDbl5zlPgH5W1AjjK6aK4PivwxK4UVy8IRs4KyXRu84HmaYXvfNIEl7PAbCsezVm04
+         iqRA==
+X-Gm-Message-State: ACgBeo00NkFPi92WETywhGKEcTkROUrL75nhvGFZdWgBoufONUdH+WfU
+        yUqvGqVOJtSLyi86efjP7eAJWGsFjCjHcmFRXGkxhA==
+X-Google-Smtp-Source: AA6agR6eAAORIyGUxq3s3Gl6wgrXo9i1iMAgrBbKU/MEyUUIoIjNyxNX/ShkqeOs6H0OyV+0rkatY+P9u6YwamzLEfo=
+X-Received: by 2002:a17:906:cc5a:b0:741:5240:d91a with SMTP id
+ mm26-20020a170906cc5a00b007415240d91amr30475075ejb.500.1662405130857; Mon, 05
+ Sep 2022 12:12:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHp75VeTYSn+ODtoH27OB2U+XYVEphonm+QR3Z+NVs-nJ90w9w@mail.gmail.com>
- <YxIifddpeJRCuImc@shell.armlinux.org.uk> <CAHp75VddN-cEY3AN=PWO5pR4D6YaDTRQgjbZLS=C5dLBTSVGwA@mail.gmail.com>
- <YxXNZzeBRiiS6FNk@shell.armlinux.org.uk> <CAHp75Vcq4LVRmgELvLJ8fNk3xdSfGikyLDL_7LGvKg4a4L4J=A@mail.gmail.com>
- <YxX1Lp7ClRSBhbno@shell.armlinux.org.uk> <CAHp75VfcTzbhOGr=0YH+nfpgcfDg8mhF1b5tZF3wudPiKhp7Qw@mail.gmail.com>
- <YxYWdDUBNOV+DaU0@shell.armlinux.org.uk> <FD0C690B-DFA6-4CF0-8C54-8D829F0ABE2B@cutebit.org>
- <57c02bdd-4f98-40f7-22a9-4f39508159e8@marcan.st> <YxYgL+MAJ7oUmLQd@shell.armlinux.org.uk>
-In-Reply-To: <YxYgL+MAJ7oUmLQd@shell.armlinux.org.uk>
+References: <20220905145555.674800-1-etienne.carriere@linaro.org>
+In-Reply-To: <20220905145555.674800-1-etienne.carriere@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 5 Sep 2022 21:10:04 +0200
-Message-ID: <CACRpkdYEQGobV30EDVd_ZYJ=PYE9nqyKhNT_W9xEjM3Grwrb5g@mail.gmail.com>
-Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Hector Martin <marcan@marcan.st>,
-        =?UTF-8?Q?Martin_Povi=C5=A1er?= <povik@cutebit.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
+Date:   Mon, 5 Sep 2022 21:11:59 +0200
+Message-ID: <CACRpkdYMc2BAHgGa-uPL8za=UO_Buz04TNPbmhUvXen8H13Gkg@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,19 +74,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 6:13 PM Russell King (Oracle)
-<linux@armlinux.org.uk> wrote:
+On Mon, Sep 5, 2022 at 4:57 PM Etienne Carriere
+<etienne.carriere@linaro.org> wrote:
 
-> I suggest that I try resubmitting the series with IRQ support dropped,
-> and with the %p4ch support in it and we'll see what happens.
+> Changes gpio.h DT binding header file to be published under GPLv2 or
+> BSD-2-Clause license terms. This change allows this GPIO generic
+> bindings header file to be used in software components as bootloaders
+> and OSes that are not published under GPLv2 terms.
+>
+> All contributors to gpio.h file in copy.
+>
+> Cc: Stephen Warren <swarren@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Laxman Dewangan <ldewangan@nvidia.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+>
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
 
-You can add my
+Fine by me.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-on the result, and the code should go in when Hector & you are
-happy with it. I surely trust you to fix the final polish.
-
-I don't mind the IRQ patch either, but I understand it's a bit
-annoying if you can't test it on anything.
 
 Yours,
 Linus Walleij
