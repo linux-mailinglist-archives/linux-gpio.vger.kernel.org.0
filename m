@@ -2,92 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1051E5AD5AA
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:01:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E0A5AD5B4
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:04:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230038AbiIEPBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 11:01:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49184 "EHLO
+        id S229635AbiIEPEg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 11:04:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238344AbiIEPBc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:01:32 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABF815018E
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 08:01:31 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id g21so6443371qka.5
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 08:01:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=pZWC1H0WRkhRCjv9BDpPVFJARK9SyE80gpwJCZgud4M=;
-        b=BBGj82V2TczLpiRO5dd4Tiqb87w52xNP5e4u5Gr2j3otvBMR9DqfP6GwayIBpTpvri
-         V1MO1eQ6/H1RSegcPxFfgJfRnMchoT2OosFXudFcjFecO5QGzYlW7SNLS6Fiyg50qi0N
-         hq/6ZqE8oXM5R6h+meBzDusU8a1hzXCzL1jhX20lzIBuuIqMzTvwedNCBRu10fLVQbLj
-         NN4Keee3qpZ/0bkD4JY+S/fQ21Zh53nfsv9u7osGBDGZNfh0VQoAujyBnmOLRH5sulms
-         JyCm4DN9syy950Poe70aGOPoRqauzTE3hJuzHEmKAxLR9gNj/3Ggs+kCPDoDijxTNPbt
-         mscg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=pZWC1H0WRkhRCjv9BDpPVFJARK9SyE80gpwJCZgud4M=;
-        b=DlzIPDSOeAQ23zoEqXjT3MgGgZNJDuzbrx1+4+/jRS8HfH49ukOH2vxmVpNc3wFFV6
-         S+4cR1R1lz3hwAqjhSJiJryPOkmHIJ1pxFmXIcmmbrlxp+8E1z3aWMj5ET0vgG0M8O+Y
-         U6qEHdmMY7drBv0jnmb1zC6SpPk/GNyRnxV7ABPpwxlpQW6Gz/ykLqaRI/LqZ5S+NCa3
-         bAO7uk2qhgG0KntMfheVY/ChCRt4F4MG/i0Bpcxs6V1cUupbG8fpB+fb1brWBjv4Mp4g
-         dQ8/7pBTuHP8YSSzvSBrL7KxqilXYng2s+yVanHu6DTpELWTs0/wrL0SMMEjU5Jk8Pby
-         d1Lg==
-X-Gm-Message-State: ACgBeo0sCdAtv62zHcjETI6CU9OBf7XTFkk9abpQXONEOHe04XPRbQ7Q
-        2BLZGfJmgycTyx4g5zBAzbWJqvmMO3H4KNAj/CM=
-X-Google-Smtp-Source: AA6agR62F2MQpI3xuf0uJbOxKJR8qhHj40PD/Xifr6TPFOael1V1jBsitUPEMphr+JiDSmUzty4eFWgSTO8li5KUncM=
-X-Received: by 2002:a05:620a:410e:b0:6bc:5cdc:88ec with SMTP id
- j14-20020a05620a410e00b006bc5cdc88ecmr33097183qko.734.1662390090769; Mon, 05
- Sep 2022 08:01:30 -0700 (PDT)
+        with ESMTP id S230527AbiIEPEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:04:34 -0400
+Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57FD5A19A
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 08:04:33 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: marcan@marcan.st)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 98B9C41E2F;
+        Mon,  5 Sep 2022 15:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
+        t=1662390271; bh=4j1NwuJDwtPSknMdpbNcwHIk+7R9crA14Er54hayAmg=;
+        h=Date:To:Cc:References:From:Subject:In-Reply-To;
+        b=I5VcZBYXt3ZaZQpcD8IdttqV8k884pqbr1WQDrVIvEHu6PGd/8x70cMoqmvpBYqCx
+         BGrwrYfkmkOKCfwV4Xj6jUTSfbcDeplzBDvn0GSxEVDxWdnlkKOQocN6JqclNTIaxT
+         tZG/WElU58UgtsNGxbJwjaK9KwUcc7z1S59BY+fXX6470msQ83/GuzW0s3GUxCriCt
+         wkuHtnMW7luB4iGULy/443JOd1oJIHp9JMoD94DGfn6U29AN8ca8zsYjCBoMnxOWBW
+         wIFPFzVKHcDBqtp+GCnZ+idaGsQ/xiMqSK5/t6BvNgkDu7Q/A96tO+oMzmipQa4QM1
+         6U+qKZPYUnlHQ==
+Message-ID: <2126f1db-1904-0be3-3c7d-eee1c2060b4d@marcan.st>
+Date:   Tue, 6 Sep 2022 00:04:26 +0900
 MIME-Version: 1.0
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
- <CAHp75Ve1ackTCOAkVar00OyDW-+BOPbRmsJRH3-z1bdNaukC+Q@mail.gmail.com> <7f20d473-7bbc-b0b3-3daf-dfc935ca3151@marcan.st>
-In-Reply-To: <7f20d473-7bbc-b0b3-3daf-dfc935ca3151@marcan.st>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 18:00:54 +0300
-Message-ID: <CAHp75Vd3O35mHEqA-iR=Fm47y1R2dPu_Jk7wcutvSmUxf6zpCg@mail.gmail.com>
-Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-To:     Hector Martin <marcan@marcan.st>
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Content-Language: es-ES
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Sven Peter <sven@svenpeter.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeb-003t9e-Iy@rmk-PC.armlinux.org.uk>
+ <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
+From:   Hector Martin <marcan@marcan.st>
+Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
+In-Reply-To: <CAHp75VcG5E+yTH2hG2CbnArsm+ZJ-sWRMmM-wLks0xUJkwSgcg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 5:45 PM Hector Martin <marcan@marcan.st> wrote:
-> On 02/09/2022 04.26, Andy Shevchenko wrote:
+On 02/09/2022 03.55, Andy Shevchenko wrote:
+>> +struct macsmc_gpio {
+>> +       struct device *dev;
+>> +       struct apple_smc *smc;
+>> +       struct gpio_chip gc;
+> 
+> You might save some CPU cycles / code by shuffling members around.
+> Usually we put gpio_chip as a first one, so pointer arithmetics to get
+> it becomes a bit simpler, but it needs to be checked by the tool and
+> also paying attention to what is used in critical paths (so
+> performance-wise).
 
-...
+This is a GPIO chip accessed via a remote CPU. Saving two cycles on
+pointer arithmetic is the very definition of premature optimization.
 
-> Andy, no offense, but you drive-by everything I try to upstream (or
-> author in this case) and half of your suggestions are wrong and I have
-> to waste my time explaining why, and most of the rest are negligible
-> style nitpicks. Every now and then you point out some useful kernel
-> function that I didn't know about, but your signal to noise rate is
-> terrible. Please put some effort into your reviews. It feels like you're
-> on some kind of quest to review as much code as possible, without the
-> slightest care for quality.
+> 
+>> +       int first_index;
+>> +};
+> 
+> ...
+> 
+>> +static int macsmc_gpio_nr(smc_key key)
+>> +{
+>> +       int low = hex_to_bin(key & 0xff);
+>> +       int high = hex_to_bin((key >> 8) & 0xff);
+>> +
+>> +       if (low < 0 || high < 0)
+>> +               return -1;
+>> +
+>> +       return low | (high << 4);
+>> +}
+> 
+> NIH hex2bin().
 
-Okay, if I ever review your code in the future, I'll try my best.
+No. hex2bin() works on string buffers. This works on an integer
+containing packed characters. They are not the same, and do not have the
+same semantics endian-wise. Integer represent numbers abstractly, byte
+buffers represent bytes in memory in sequence.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>> +static int macsmc_gpio_key(unsigned int offset)
+>> +{
+>> +       return _SMC_KEY("gP\0\0") | (hex_asc_hi(offset) << 8) | hex_asc_lo(offset);
+>> +}
+> 
+> NIH hex_byte_pack().
+
+Same comment as above.
+
+>> +       /* First try reading the explicit pin mode register */
+>> +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_PINMODE, &val);
+>> +       if (!ret)
+>> +               return (val & MODE_OUTPUT) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+>> +
+>> +       /*
+>> +        * Less common IRQ configs cause CMD_PINMODE to fail, and so does open drain mode.
+>> +        * Fall back to reading IRQ mode, which will only succeed for inputs.
+>> +        */
+>> +       ret = apple_smc_rw_u32(smcgp->smc, key, CMD_IRQ_MODE, &val);
+>> +       return (!ret) ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
+> 
+> What is the meaning of val in this case?
+
+Have you tried reading the comment above the code?
+
+When I write code doing something unintuitive and put a comment on top,
+I expect reviewers to *read* it. If you're not going to do that, I might
+as well stop writing comments.
+
+> Strange specifier... It seems like a hashed pointer with added (or
+> skipped? I don't remember) '4ch'. Perhaps you meant one of '%pE',
+> '%p4cc'?
+> Ditto for other cases.
+
+As mentioned in the other thread, there was a missed dependency that
+added this specifier.
+
+> 
+>> +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
+>> +       int count = apple_smc_get_key_count(smcgp->smc) - smcgp->first_index;
+> 
+> I would split this assignment and move it closer to the first user.
+
+It is one line away from the first user.
+
+> 
+>> +       int i;
+>> +
+>> +       if (count > MAX_GPIO)
+>> +               count = MAX_GPIO;
+> 
+> Hmm... When can it be the case?
+
+Let's find out! Two lines above:
+
++	int count = apple_smc_get_key_count(smcgp->smc) - smcgp->first_index;
+
+So I get the toal SMC key count, which is probably 1000 or so, then
+subtract the index of the first GPIO key, to get an upper bound on the
+last GPIO key just to make sure we don't run off the end of the key list.
+
+In other words, pretty much always.
+
+But you didn't read two lines prior, did you.
+
+> 
+>> +       bitmap_zero(valid_mask, ngpios);
+>> +
+>> +       for (i = 0; i < count; i++) {
+>> +               smc_key key;
+>> +               int gpio_nr;
+> 
+>> +               int ret = apple_smc_get_key_by_index(smcgp->smc, smcgp->first_index + i, &key);
+> 
+> Ditto.
+
+This is zero lines away from the first user.
+
+> 
+>> +
+>> +               if (ret < 0)
+>> +                       return ret;
+>> +
+>> +               if (key > SMC_KEY(gPff))
+>> +                       break;
+>> +
+>> +               gpio_nr = macsmc_gpio_nr(key);
+>> +               if (gpio_nr < 0 || gpio_nr > MAX_GPIO) {
+>> +                       dev_err(smcgp->dev, "Bad GPIO key %p4ch\n", &key);
+> 
+> Yeah, according to the code it will print something you didn't want.
+
+What?
+
+>> +       pdev->dev.of_node = of_get_child_by_name(pdev->dev.parent->of_node, "gpio");
+> 
+> Can we use fwnode APIs instead?
+> Or do you really need this?
+
+This is a producer, not a consumer. It needs to set the of_node so there
+is something for consumers to target in the device tree. The consumers
+may well use fwnode APIs.
+
+- Hector
