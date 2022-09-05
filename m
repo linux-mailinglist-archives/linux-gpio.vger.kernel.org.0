@@ -2,121 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E5865AD16B
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 13:18:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CEEF5AD1E8
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 13:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238185AbiIELNu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 07:13:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
+        id S237309AbiIELzH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 07:55:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236467AbiIELNr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 07:13:47 -0400
-Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 821C05A832;
-        Mon,  5 Sep 2022 04:13:45 -0700 (PDT)
-Received: by mail-qv1-xf2c.google.com with SMTP id d1so6244264qvs.0;
-        Mon, 05 Sep 2022 04:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=7iAktJHc3w6rPsnzClYi6h63eWPfDzaVzHqTBIckRp4=;
-        b=R7t2Qcp1lBflY1vcWSAvFGDpL1wm70fCepnWH+zrAbiof4E0R0r6MaodmK99KC/uqU
-         lkRNi47VWEdS1Mh0Cq7rMIeuWmncJJ2cOty+OFE/rSCBYVUer1tDhNIt1xJajNoN+pha
-         9hYFjgcUDhUv9vg4Rsjx4Td0f/j+c8XAElCdXPkz1XbyGCnZFSRjvecB8Dt/V/2ytwns
-         pr0+QJCk5ml5PiGLXoq+OBMZT8nSbzyKkmBD4jlfWYYC6/a2AVD44sThrAdLIlOLbLDI
-         BjJuCJ4ppbMAAjAsrBVEK+NW8M6uu3+DQvsU1sl/6kNwDh7BxhDa793GpPoaKD+rDvK/
-         /Y2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7iAktJHc3w6rPsnzClYi6h63eWPfDzaVzHqTBIckRp4=;
-        b=0NK01ckdL5j08V3YQTtYIo+1OBWkYlmtcmdswdYO+H7A5QSouGw0BokAEpXPvOHI/j
-         9UR9Hu15qKJstZLHr0/Nw4/hSgsRwZLzaXeE/zi76ph9hAAna5w9VWLslzkw5gmqkeQJ
-         bM2Z+MPrDcDeUPQ0HefwQ0EZ1t1zsyJ8gnOtqEmgTpOa125/bf/JQiYwYY8vM/rIXY3T
-         SxTZhKLCs6m+pVM81zZfnzruyNJUogTqaYa21kzWlVxBiTwev3n9PVT+373wABUO4k44
-         kgVjMuMHVKqk2d6IdogMm2gjevbFOZ+ZIH0/u4N9ZJL+dHrlC//y7g3S1eUQ8ljKZiQI
-         MJDQ==
-X-Gm-Message-State: ACgBeo0u/g86km4ZaPLA5q6xuhhjOs7ZlRawnPW+dndLmH6gbLVU8ddI
-        OJHwG50ko/PlU8FAOLy7Sn7XcrZnsTAEe2jQtMY=
-X-Google-Smtp-Source: AA6agR7NrRmeK1sjqt1ZjgVXwez7kxeuRCTCLwTPPcAUxaHLOiRLXkVvjX6xUtf8npwaMKmSjSHhnRIt4pJmIe7SA1s=
-X-Received: by 2002:a05:6214:19cf:b0:4a9:4241:2399 with SMTP id
- j15-20020a05621419cf00b004a942412399mr1093930qvc.64.1662376424240; Mon, 05
- Sep 2022 04:13:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 14:13:08 +0300
-Message-ID: <CAHp75Vc5cEs6mPSL1fkHBT2hw-CbmbELFwkEGvwxkrdEVF2K_Q@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] Get rid of [devm_]gpiod_get_from_of_node()
- public APIs
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        with ESMTP id S237882AbiIELzG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 07:55:06 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0211A81C
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 04:55:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tMfQDlYvzFyFrUvYU5MebTEg/joFiQu8bqTpr1XujAw=; b=04vYN5g0hl4+pGbqsYuRhl/Mp4
+        HBpYa+AHyQSSe+1ZoHG7g33gNm33rMi/lJcLzNdLmz7Q6nmgP9kaTOSoGBQWvKZ0tAluvSRGskeAE
+        6D5+NbBkqEj9tEqNQlocq8J7lzNuY7lLv3dRVfCqOhAaJyor2i72wEvnkFrLC5NWKYHgiX9GUKKpD
+        F6cGUeg7+Zg7g2WDqu9rq8KDo2Dgu4PjeW1fhnFCVa4fmTQg8fLixzXknMTUNEmh2Xr5mun2Jswws
+        PGjLGDYjXAyo3Hqa4a+ebXPgL+7OhCu24UhdCbhHmfKKdc1fIHl4FFBjVJkn0vHvsCp8hYKZ4VQja
+        35sY2EGQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34104)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oVAgn-0002IC-5O; Mon, 05 Sep 2022 12:54:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oVAgk-0007Fm-IG; Mon, 05 Sep 2022 12:54:50 +0100
+Date:   Mon, 5 Sep 2022 12:54:50 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH 6/6] gpio: macsmc: Add IRQ support
+Message-ID: <YxXjimYiR+cxasgE@shell.armlinux.org.uk>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
+ <CAHp75VfW7uj=+vwGRLsUJEjF-bQLL2EdVNfAnF6iDUqryksC+w@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfW7uj=+vwGRLsUJEjF-bQLL2EdVNfAnF6iDUqryksC+w@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> I would like to stop exporting OF-specific [devm_]gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit. We can do that by switching drivers
-> to use generic fwnode API ([devm_]fwnode_gpiod_get()). By doing so we open
-> the door to augmenting device tree and ACPI information through secondary
-> software properties (once we teach gpiolib how to handle those).
->
-> I hope that relevant maintainers will take patches through their trees and
-> then we could merge the last one some time after -rc1.
+On Thu, Sep 01, 2022 at 09:03:49PM +0300, Andy Shevchenko wrote:
+> On Thu, Sep 1, 2022 at 5:18 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
+> > From: Hector Martin <marcan@marcan.st>
+> >
+> > Add IRQ support to the macsmc driver. This patch has updates from Joey
+> > Gouly and Russell King.
+> 
+> ...
+> 
+> > +       u16 type = event >> 16;
+> > +       u8 offset = (event >> 8) & 0xff;
+> 
+> The ' & 0xff' part is redundant.
 
-I'm in favour of the series, but some comments would be good to be addressed.
+It's probably also more logical to call this "hwirq".
+
+> > +static int macsmc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+> > +{
+> > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
+...
+> > +       if (!test_bit(offset, smcgp->irq_supported))
+> > +               return -EINVAL;
+> 
+> We have a valid mask for IRQs. Can it be used here instead?
+
+Looks like we can, thanks for the suggestion.
+
+> > +       smcgp->irq_mode_shadow[offset] = mode;
+> 
+> Usually we want to have handle_bad_irq() handler by default and in
+> ->set_type() we lock a handler depending on the flags. Why is this not
+> the case in this driver?
+
+"lock a handler" ? I guess you mean select a handler.
+
+I don't see a reason why we couldn't switch between handle_bad_irq()
+and handle_simple_irq(). I would guess (I don't know the implementation
+details of the Apple platform) that the SMC forwards a message when the
+IRQ happens, but I'm guessing that this is well tested on the platform
+with the simple flow handler. Changing it to something else would need
+discussion with the Asahi Linux folk.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
