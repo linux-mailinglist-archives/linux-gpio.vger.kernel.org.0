@@ -2,62 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E47F95ADAF1
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 23:43:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57BF15ADB15
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 00:08:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbiIEVnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 17:43:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
+        id S231958AbiIEWIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 18:08:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230415AbiIEVnj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 17:43:39 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 885395EDF8
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 14:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1zKS5ua+yvxWE5YWOQzRUvWwLrnZXJWBBgO/+KEVOL8=; b=PU0EZgZBly6Ir+awPV/JIyMyLS
-        OkJzr7Kqt0ePtLYu1reJsW/1nzbOoTxtNkyWr5YWIVhoyB5153tsgUk9ZY7PaX/7w829HXeud5OAA
-        VU3f8jzqc7u/IEiBjCVB3cHTW3R6pPPMj7ijq1Ba1cxfW2IxMhZAkPeWRrnOf0kUz5glCzpF3MXwa
-        1rj5Xn7s14SAArjiFyr846MFAn2LzcmTWohqDy4+45nftMc+0XJAH5mi3g8zFPglrQQdD1pIsq3cD
-        CuNBMLBNNJbq+b6DwGurJplUlNYvrEzLUiQoZgPwPzBlr3I9nuQF5jDPEWdm826YwvbohGqnpNUOM
-        vw/YMJdA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34132)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oVJsL-000352-T8; Mon, 05 Sep 2022 22:43:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oVJsI-0007dk-Hd; Mon, 05 Sep 2022 22:43:22 +0100
-Date:   Mon, 5 Sep 2022 22:43:22 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: Fwd: [PATCH 6/6] gpio: macsmc: Add IRQ support
-Message-ID: <YxZtegWyDV27yg22@shell.armlinux.org.uk>
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
- <CACRpkdaR9rBdPC_OBKx5e+=EtbR-Jn3GzrvGRYHMJmXwRxPhyg@mail.gmail.com>
- <YxXv5vL6XrlkK+K0@shell.armlinux.org.uk>
- <CAHp75VcSqjRDB+D6tzdXwYK5whyhCySWgw=6ses95F4C2sxD0Q@mail.gmail.com>
+        with ESMTP id S231331AbiIEWH6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 18:07:58 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30ADF51A0D;
+        Mon,  5 Sep 2022 15:07:53 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id h188so8956130pgc.12;
+        Mon, 05 Sep 2022 15:07:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
+         :from:to:cc:subject:date;
+        bh=DI+EGf5Iiw4yLnQOM0iLSEUhYarB1qtVETYwX3ATTlI=;
+        b=KDxaSPeOmIAHodHZoxO7+rPppr+0nc84E7WjJr09aHXf0y70VUqQeiGwM4ZbMT1+IG
+         aswpW6qIia4RuP0oy/zixSqOkdUMGcBdQBZ+zCXrSbs5gzJjxQbyCJKm+qaEmHP0fbLr
+         p+VnLtgDb/UqRnZ5jH6rY49caFH+X+TV7pDArSwV7zY/jQ9Qvi10MQT7HP3yHqCz6Ymq
+         3ER0a2FyOYkl9+aJiUSNvNKZnQFKEXdO6qjVPIArqiSCS2eFf74FcrePSlFKeiFjZiPh
+         a3swNk1c3KCQbDFwBwgMcHrg1CM/Xc0KnXfSUNi2LqKeA1gvQb715UJnDwV5eFIZMn4E
+         JSRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:sender
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=DI+EGf5Iiw4yLnQOM0iLSEUhYarB1qtVETYwX3ATTlI=;
+        b=vBmhdeYALxw43twfMlS5Zd7LvvqaHOdzCCq/lo+5jKZWE+Sa/TE24Gbh9H3DLAnKXp
+         oiwpsuUHxJTxrtSdu+KB+CeZWkAwbMcjsHb5/4yo/gAt81l5XpmV5S2YaM6sG7G+oPpE
+         A48KR2KrVNuA3/DPyI35cAGYZzJHKGpNe8IJeKIT8FX8DnjfyOz7gDJ89OSEDg92BtRx
+         cSjTMKU9U1Nu4M9zfXzNQ0vMqTfLlwPCCYPVMnR18ZVxPID6wV2IQJCoc6d8tXFBfnXV
+         PCixZPH99k4zVdsSaVEcdPiKSFhRMOvzuWXHaPTbzsMRq5SODm7hgm5sfrrQHi3W+2TA
+         n3sA==
+X-Gm-Message-State: ACgBeo35q2vU7tTZkaJAOy4bwpZbvFRIudGhEALraggx/oIpYvzHLqHu
+        PXR2iKdPaPfzXAk8gFasguY=
+X-Google-Smtp-Source: AA6agR5VFvTDdUbzbYgkiV1tQs8QlnywRsbF0wBwVMI81k5tziGUND19h0NyYI/NQTVei/R57vjcgw==
+X-Received: by 2002:a63:2cc2:0:b0:41c:681d:60d2 with SMTP id s185-20020a632cc2000000b0041c681d60d2mr41816293pgs.502.1662415672598;
+        Mon, 05 Sep 2022 15:07:52 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m16-20020a170902db1000b00172dd10f64fsm8157821plx.263.2022.09.05.15.07.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Sep 2022 15:07:51 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
+Date:   Mon, 5 Sep 2022 15:07:48 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcSqjRDB+D6tzdXwYK5whyhCySWgw=6ses95F4C2sxD0Q@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
+ <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
+ <YxZQj8bwJCx5rqDv@google.com>
+ <CAHp75VdHJS4YgrTK15OuY5sxodxKObUtzturL+YPXFQ3_wpxig@mail.gmail.com>
+ <YxZTS3Nl1YaMGoBC@google.com>
+ <CAHp75VeNajcf-Y6xvDDVwZijg6U53ggg1HQox1AZ74=wRut+1Q@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using
+ devm_gpiod_get()
+In-Reply-To: <CAHp75VeNajcf-Y6xvDDVwZijg6U53ggg1HQox1AZ74=wRut+1Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,256 +120,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 04:19:22PM +0300, Andy Shevchenko wrote:
-> (Replied privately to Russell by a mistake)
-
-What are you doing? This email you've forwarded is not your own email
-that you sent to me privately but my reply to LinusW that was on the
-list.
-
-Are you okay, or is this a result of you rushing and not making sure
-that you're doing what you intend to do? Maybe you need to slow down a
-bit?
-
-> ---------- Forwarded message ---------
-> From: Russell King (Oracle) <linux@armlinux.org.uk>
-> Date: Mon, Sep 5, 2022 at 3:50 PM
-> Subject: Re: [PATCH 6/6] gpio: macsmc: Add IRQ support
-> To: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>, Alyssa
-> Rosenzweig <alyssa@rosenzweig.io>, <asahi@lists.linux.dev>, Bartosz
-> Golaszewski <brgl@bgdev.pl>, Hector Martin <marcan@marcan.st>,
-> <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-> Sven Peter <sven@svenpeter.dev>
+On 9/5/22 12:55, Andy Shevchenko wrote:
+> On Mon, Sep 5, 2022 at 10:51 PM Dmitry Torokhov
+> <dmitry.torokhov@gmail.com> wrote:
+>> On Mon, Sep 05, 2022 at 10:41:40PM +0300, Andy Shevchenko wrote:
+>>> On Mon, Sep 5, 2022 at 10:40 PM Dmitry Torokhov
+>>> <dmitry.torokhov@gmail.com> wrote:
+>>>> On Mon, Sep 05, 2022 at 01:59:44PM +0300, Andy Shevchenko wrote:
+>>>>> On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
+>>>>> <dmitry.torokhov@gmail.com> wrote:
 > 
+> ...
 > 
-> On Fri, Sep 02, 2022 at 03:21:31PM +0200, Linus Walleij wrote:
-> > On Thu, Sep 1, 2022 at 3:54 PM Russell King <rmk+kernel@armlinux.org.uk> wrote:
-> > > +       DECLARE_BITMAP(irq_enable_shadow, MAX_GPIO);
-> >
-> > Please rename irq_unmasked_shadow as it is tracking
-> > this and not what the irqchip core calls enabled/disabled.
-> >
-> > > +       DECLARE_BITMAP(irq_enable, MAX_GPIO);
-> >
-> > I think this state should be possible to set/get from the irqchip
-> > core. !irqd_irq_masked(d) on the descriptor, correct me if I'm wrong.
+>>>>>> -               gpiod = devm_gpiod_get_from_of_node(&pdev->dev, np,
+>>>>>> -                                                   "nvidia,phy-reset-gpio",
+>>>>>> -                                                   0, GPIOD_OUT_HIGH,
+>>>>>> -                                                   "ulpi_phy_reset_b");
+>>>>>> +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
+>>>>>> +                                      GPIOD_OUT_HIGH);
+>>>>>>                  err = PTR_ERR_OR_ZERO(gpiod);
+>>>>>
+>>>>> What does _OR_ZERO mean now?
+>>>>
+>>>> This converts a pointer to an error code if a pointer represents
+>>>> ERR_PTR() encoded error, or 0 to indicate success.
+>>>
+>>> Yes, I know that. My point is, how is it useful now (or even before)?
+>>> I mean that devm_gpio_get() never returns NULL, right?
+>>
+>> What does returning NULL have to do with anything.
 > 
-> I think you're getting the two mixed up. irq_enable_shadow
-> (irq_unmasked_shadow) is updated from the ->irq_mask and ->irq_unmask
-> callbacaks, and will track !irqd_irq_masked(d) state. So, I think we
-> can get rid of irq_enable_shadow and just use !irqd_irq_masked(d).
-> 
-> The irq_enable bit array tracks the state on the SMC, and is used to
-> indicate whether we need to update that state when we unlock the bus
-> (which is when the driver talks to the SMC to reconfigure it.)
-> 
-> So, I think killing irq_enable_shadow and replacing irq_enable with
-> irq_unmasked would be correct - and going a bit further,
-> irq_smc_unmasked to show that it's the SMC's status.
-> 
-> > > +static int macsmc_gpio_event(struct notifier_block *nb, unsigned long event, void *data)
-> > > +{
-> > > +       struct macsmc_gpio *smcgp = container_of(nb, struct macsmc_gpio, nb);
-> > > +       u16 type = event >> 16;
-> > > +       u8 offset = (event >> 8) & 0xff;
-> > > +       smc_key key = macsmc_gpio_key(offset);
-> > > +       unsigned long flags;
-> > > +        int ret;
-> > > +
-> > > +       if (type != SMC_EV_GPIO)
-> > > +               return NOTIFY_DONE;
-> > > +
-> > > +       if (offset > MAX_GPIO) {
-> > > +               dev_err(smcgp->dev, "GPIO event index %d out of range\n", offset);
-> > > +               return NOTIFY_BAD;
-> > > +       }
-> > > +
-> > > +       local_irq_save(flags);
-> > > +       ret = generic_handle_domain_irq(smcgp->gc.irq.domain, offset);
-> > > +       local_irq_restore(flags);
-> >
-> > Isn't irq_bus_lock/unlock protecting us here already?
-> > (I might be getting it wrong...)
-> 
-> Hmm, where does irq_bus_lock get called? Given this function is called
-> while running a blocking notifier chain, interrupts will not be
-> disabled on entry to this function. I haven't found a place in the maze
-> of irq handling code that generic_handle_domain_irq() would end up using
-> the bus lock/unlock functions - and if they did, with the above IRQ
-> saving, the kernel would WARN() about calling mutex_lock() with IRQs
-> disabled. So it doesn't.
-> 
-> This actually entirely negates any benefit of the kernel trying to mask
-> or unmask an interrupt in "hardware" while running the handler - since
-> macsmc_gpio_irq_bus_sync_unlock() won't be called, the state on the SMC
-> won't get touched.
-> 
-> > Since this is coming from a notifier and not an IRQ or threaded
-> > IRQ I actually am a bit puzzled on how to handle it... you probably
-> > know it better than me, maybe ask Marc Z if anything is
-> > unclear.
-> 
-> It's been years since I did any real platform porting work, so deep
-> knowledge of the IRQ subsystem has evaporated.
-> 
-> > > +       if (apple_smc_write_u32(smcgp->smc, key, CMD_IRQ_ACK | 1) < 0)
-> > > +               dev_err(smcgp->dev, "GPIO IRQ ack failed for %p4ch\n", &key);
-> >
-> > isn't this one of those cases where we should implement the
-> > irqchip callback .irq_ack() specifically for this?
-> >
-> > That callback will only be used by edge triggered IRQs but
-> > I guess that would realistically be all we support anyway?
-> > (See comment below on .set_type)
-> 
-> I would imagine it depends on how the SMC GPIO interrupt works -
-> whether the ACK is ACK as we know it in Linux (x86 PIC) or whether
-> it's ACK as in a notification to the SMC that we have finished
-> handling the interrupt and it can send us the next interrupt.
-> 
-> I suspect we don't know that level of detail of the platform, so
-> given that this is what the Asahi kernel does, that's the best we
-> have.
-> 
-> > > +static int macsmc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> > > +{
-> > > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-> > > +       int offset = irqd_to_hwirq(d);
-> > > +       u32 mode;
-> > > +
-> > > +       if (!test_bit(offset, smcgp->irq_supported))
-> > > +               return -EINVAL;
-> > > +
-> > > +       switch (type & IRQ_TYPE_SENSE_MASK) {
-> > > +       case IRQ_TYPE_LEVEL_HIGH:
-> > > +               mode = IRQ_MODE_HIGH;
-> > > +               break;
-> > > +       case IRQ_TYPE_LEVEL_LOW:
-> > > +               mode = IRQ_MODE_LOW;
-> > > +               break;
-> > > +       case IRQ_TYPE_EDGE_RISING:
-> > > +               mode = IRQ_MODE_RISING;
-> > > +               break;
-> > > +       case IRQ_TYPE_EDGE_FALLING:
-> > > +               mode = IRQ_MODE_FALLING;
-> > > +               break;
-> > > +       case IRQ_TYPE_EDGE_BOTH:
-> > > +               mode = IRQ_MODE_BOTH;
-> > > +               break;
-> > > +       default:
-> > > +               return -EINVAL;
-> >
-> > I don't know how level IRQs would work on this essentially
-> > message-passing process context interrupt. Maybe I am getting
-> > it all wrong, but for level the line should be held low/high until
-> > the IRQ is serviced, it would be possible to test if this actually
-> > works by *not* servicing an IRQ and see if the SMC then sends
-> > another message notifier for the same IRQ.
-> 
-> If level IRQs are not supported, then it's strange that the Asahi
-> folk have been able to reverse engineer the CMD_IRQ_MODE codes for
-> these states.
-> 
-> Maybe the SMC issues another message for a level IRQ after it receives
-> a CMD_IRQ_ACK message if the level interrupt is still asserted?
-> 
-> > I strongly suspect that actually only edges are supported, but
-> > there might be semantics I don't understand here.
-> >
-> > >         }
-> > >
-> > > +       smcgp->irq_mode_shadow[offset] = mode;
-> >
-> > Hm yeah I guess this shadow mode is necessary for the sync
-> > to work.
-> 
-> Ineed.
-> 
-> > > +static void macsmc_gpio_irq_bus_sync_unlock(struct irq_data *d)
-> > > +{
-> > > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> > > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-> > > +       smc_key key = macsmc_gpio_key(irqd_to_hwirq(d));
-> > > +       int offset = irqd_to_hwirq(d);
-> > > +       bool val;
-> > > +
-> > > +       if (smcgp->irq_mode_shadow[offset] != smcgp->irq_mode[offset]) {
-> > > +               u32 cmd = CMD_IRQ_MODE | smcgp->irq_mode_shadow[offset];
-> > > +               if (apple_smc_write_u32(smcgp->smc, key, cmd) < 0)
-> > > +                       dev_err(smcgp->dev, "GPIO IRQ config failed for %p4ch = 0x%x\n", &key, cmd);
-> > > +               else
-> > > +                       smcgp->irq_mode_shadow[offset] = smcgp->irq_mode[offset];
-> > > +       }
-> > > +
-> > > +       val = test_bit(offset, smcgp->irq_enable_shadow);
-> > > +       if (test_bit(offset, smcgp->irq_enable) != val) {
-> >
-> > So what you want to know for each line is (correct me if I'm wrong):
-> > - Is it enabled (unmasked) or not?
-> > - Did it get changed enabled->disabled, disabled->enabled since
-> >   macsmc_gpio_irq_bus_lock()?
-> 
-> I think you mean here "did the 'enable' state change between
-> macsmc_gpio_irq_bus_lock() and macsmc_gpio_irq_bus_unlock".
-> 
-> > Doesn't the irqchip core track the first part of this for you?
-> > irqd_irq_masked(d) should tell you the same thing as
-> > irq_enable, just inverted.
-> >
-> > irq_enable_shadow is a bit tricker, I guess you might need that since
-> > the irqchip doesn't track state changes.
-> 
-> Yep, which is what I've said above in this reply where these bitmaps
-> are declared.
-> 
-> > >  static int macsmc_gpio_probe(struct platform_device *pdev)
-> > >  {
-> > >         struct macsmc_gpio *smcgp;
-> > > @@ -221,6 +365,18 @@ static int macsmc_gpio_probe(struct platform_device *pdev)
-> > >         smcgp->gc.base = -1;
-> > >         smcgp->gc.parent = &pdev->dev;
-> > >
-> > > +       gpio_irq_chip_set_chip(&smcgp->gc.irq, &macsmc_gpio_irqchip);
-> > > +       smcgp->gc.irq.parent_handler = NULL;
-> > > +       smcgp->gc.irq.num_parents = 0;
-> > > +       smcgp->gc.irq.parents = NULL;
-> > > +       smcgp->gc.irq.default_type = IRQ_TYPE_NONE;
-> > > +       smcgp->gc.irq.handler = handle_simple_irq;
-> >
-> > I would consider setting this to handle_edge_irq() and implement
-> > .irq_ack(). I might be wrong.
-> 
-> I don't think that's suitable, because then we'll be calling irq_ack()
-> before the handler has run - and we won't be notifying the SMC that
-> the interrupt has been masked. So it could send another notification
-> for the same IRQ while it's still being handled. Then there's the
-> question about level IRQs as well.
-> 
-> I think, given that I don't know how the SMC works (presumably the
-> Asahi folk have a bit more of an idea, but that will be based on
-> reverse engineering effort) that I am not going to modify this driver's
-> behaviour drastically by changing the flow handler to the edge flow
-> handler from the simple flow. To me, that could well be a disaster
-> for this driver. That would be something for the Asahi folk to look
-> at.
-> 
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> It has to do with a dead code. If defm_gpiod_get() does not return
+> NULL, then why do we even bother to check?
 > 
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+PTR_ERR_OR_ZERO() converts into an error code (if the pointer is an
+ERR_PTR) or 0 if it is a real pointer. Its purpose is not to convert
+NULL into 0, its purpose is to convert a pointer either into an error
+code or 0. That is what is done here, and it is done all over the place
+in the kernel. I don't see your problem with it. Care to explain ?
+
+>> It converts a pointer
+>> to a "classic" return code, with negative errors and 0 on success.
+>>
+>> It allows to not use multiple IS_ERR/PTR_ERR in the code (I'd need 1
+>> IS_ERR and 2 PTR_ERR, one in dev_err() and another to return).
+> 
+> I don't see how this is relevant.
+> 
+
+You lost me. Really, please explain your problem with PTR_ERR_OR_ZERO().
+
+Thanks,
+Guenter
