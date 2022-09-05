@@ -2,102 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1AD5AD583
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 16:52:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2A125AD589
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 16:53:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238275AbiIEOwW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 10:52:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36956 "EHLO
+        id S237058AbiIEOx0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 10:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237567AbiIEOwV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 10:52:21 -0400
-Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2DD4F196
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 07:52:19 -0700 (PDT)
-Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-11f34610d4aso21875362fac.9
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 07:52:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=XrNDuvqnz3x270QOXuQAy33WOfsjqmapFJE52YTqUpg=;
-        b=oi0qo425zBcquVHa/oI5gkLbXELi1BsH6dzR42ve7xZRJTU1mlRXz3CKccQmvvhzNC
-         8kYxj/xNIIOdUVQx7HlbAEDNwuodLPeQULYjSWMnW8GcgTD7kvsOQ/DhKSuRULyU+cxf
-         QqFD9A+E4DNWLECHniDiDXPE/m/QpAdFlsnmmQ+pYGPqqaNx6WMSIrC3jLPNjGcvSpaH
-         R+Kg01Mf58/k3Yzunzcex5+ojNpgkh/AhprFkscuFf4p4BRsHSz5F3vdvE6npCh0ylf8
-         TdIQZyV9mTtkkH1I22X19SJYxbW+2Rynm4IATdRL8P7+IEd4+P2UqxJhY+0ieArjYcRr
-         hlyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=XrNDuvqnz3x270QOXuQAy33WOfsjqmapFJE52YTqUpg=;
-        b=Vjhotp29Sw3gNFnSHgZ0ET5EgQopt6Rr1awdWubFncDFfUV+jX5f2FJghl9RYZ8Oyo
-         9w77v7/aq41DJ2u3skIkHuXJIsvqmFhZGcIxveNkgV5eJv3+85hRlxprfvty1hMMRM/x
-         b0cH/A+b25dZJpfXeI2q0Nk/zeup+B35Yw7t7NYXSTHvAISJBGf2RKlEo8F5ejcz+Cb/
-         HJlrbnzpva1Ce1ZQpjxagZeit6PURC/PnC5rZoEXzxbAqrUKWFstr02I/eD00YnGN1kJ
-         4hwo53+Zyh/fEjDhto2Ppo83toz97ZPkm2d9Q8pKdD3BGSlDj6QUwoZw6WaSYARE5FBH
-         cw9A==
-X-Gm-Message-State: ACgBeo0hCwNn8c4PNRdHxP18eHSnfTo+sPh+L+Ih+FT/+14IdzPOCx3G
-        VXmKoFUbVkVbm9mWMPw0kfxyQAHr2XXdor282Tt/hg==
-X-Google-Smtp-Source: AA6agR5XQUV2VFxWcuM62kuNaafeXbxhNazlckf1d5VBFFbyKHMUNJCqXIM0PYh7ggmBLyvsCEc5yw47m9o8L3gW7jc=
-X-Received: by 2002:a05:6871:725:b0:127:96e8:21c with SMTP id
- f37-20020a056871072500b0012796e8021cmr1039779oap.104.1662389538822; Mon, 05
- Sep 2022 07:52:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220901163636.3930634-1-etienne.carriere@linaro.org> <20220905085929.38c737fc@windsurf>
-In-Reply-To: <20220905085929.38c737fc@windsurf>
-From:   Etienne Carriere <etienne.carriere@linaro.org>
-Date:   Mon, 5 Sep 2022 16:52:08 +0200
-Message-ID: <CAN5uoS8v0Hq0U4-4LUvrcQRATTpTa7unH8_h_xTX4Rdxn12tRQ@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-binding: gpio: publish binding IDs under dual license
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        with ESMTP id S236851AbiIEOx0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 10:53:26 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5FC4F19A
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 07:53:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lohxd6KoW6VP7FqXBwIx639duA5+/bjY4xwpjIPppB8=; b=JkKQj+XZzyWPMsdiTZzaKXfAww
+        S/ghG8GoAym+sj6oIUn0M4TRrcHOauNjJTAZhg8jScjUFQV2Ryti32g293RciCpayETjPXKfJVVW+
+        j7F8zqrOFZFUEVGzbYDnuPYse/dgqvJBA3F8zGFylqpQ5oTkVqxigxI8kswKEjpuWJskRkQrujrJi
+        Xc2NhjXEoMpvkFPB1hJbrO3V6lAaIqS/2zF33hPc4jFHlHeetseNd4Kyh/do4WBCs0zIMc96VgwXa
+        kWz8u3wDKPc0qR/X3lcHzeSU4+gnkV+w/ybYalN+5BZOye+RFBuKyvZEIn3yzdFCrmf+rZlsx1QDR
+        RcY1cxZw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34118)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oVDTR-0002V3-5Z; Mon, 05 Sep 2022 15:53:17 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oVDTP-0007N9-Ey; Mon, 05 Sep 2022 15:53:15 +0100
+Date:   Mon, 5 Sep 2022 15:53:15 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
+Message-ID: <YxYNW5xITCTAO9iJ@shell.armlinux.org.uk>
+References: <CAHp75VeTYSn+ODtoH27OB2U+XYVEphonm+QR3Z+NVs-nJ90w9w@mail.gmail.com>
+ <YxIifddpeJRCuImc@shell.armlinux.org.uk>
+ <CAHp75VddN-cEY3AN=PWO5pR4D6YaDTRQgjbZLS=C5dLBTSVGwA@mail.gmail.com>
+ <YxXNZzeBRiiS6FNk@shell.armlinux.org.uk>
+ <CAHp75Vcq4LVRmgELvLJ8fNk3xdSfGikyLDL_7LGvKg4a4L4J=A@mail.gmail.com>
+ <YxX1Lp7ClRSBhbno@shell.armlinux.org.uk>
+ <CAHp75VfcTzbhOGr=0YH+nfpgcfDg8mhF1b5tZF3wudPiKhp7Qw@mail.gmail.com>
+ <YxYBJcRGCOlcSZH8@shell.armlinux.org.uk>
+ <YxYBeMz8nIIA+1P/@shell.armlinux.org.uk>
+ <CAHp75VdYevopN673hqg7Tau4Fouythq7OAeDDJP4C4fh7KgYyw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdYevopN673hqg7Tau4Fouythq7OAeDDJP4C4fh7KgYyw@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Thomas,
+On Mon, Sep 05, 2022 at 05:42:46PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 5, 2022 at 5:02 PM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> > On Mon, Sep 05, 2022 at 03:01:09PM +0100, Russell King (Oracle) wrote:
+> 
+> ...
+> 
+> > Oh, and another thing. Your behaviour on this is making me regret
+> > trying to get involved in improving the upstream support for this
+> > platform.
+> 
+> Taking into account that technical aspects quite likely are not the
+> cause, what did you expect to be different?
 
-On Mon, 5 Sept 2022 at 08:59, Thomas Petazzoni
-<thomas.petazzoni@bootlin.com> wrote:
->
-> On Thu,  1 Sep 2022 18:36:36 +0200
-> Etienne Carriere <etienne.carriere@linaro.org> wrote:
->
-> > Changes gpio.h DT binding header file to be published under GPLv2 or
-> > BSD-3-Clause license terms. This change allows these GPIO generic
->
-> You're actually changing to BSD-2-Clause. Your v1 changed to
-> BSD-3-Clause, but following feedback, you change the SPDX code to
-> BSD-2-Clause but forgot to update the commit log.
+How about the decency to wait for the Asahi developers to respond,
+which they now have - but I haven't read it yet. How about some
+understanding that I might not have all the answers. How about some
+understanding that the issue with the SMC Keys is bigger than just
+the one driver, and that cpu_to_whatever may not be appropriate.
+How about some understanding and patience on your part?
 
-Right, my apologies.
-I'll fix in v3.
-
-Br,
-etienne
-
->
-> Best regards,
->
-> Thomas
-> --
-> Thomas Petazzoni, co-owner and CEO, Bootlin
-> Embedded Linux and Kernel engineering and training
-> https://bootlin.com
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
