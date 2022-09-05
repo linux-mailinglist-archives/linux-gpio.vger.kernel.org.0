@@ -2,172 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8548B5AD63F
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:25:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 938815AD6A4
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 17:37:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238921AbiIEPWt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 11:22:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
+        id S239039AbiIEPd0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 11:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238810AbiIEPW0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:22:26 -0400
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E5F5E65A;
-        Mon,  5 Sep 2022 08:22:19 -0700 (PDT)
-Received: by mail-qk1-x72b.google.com with SMTP id s22so6492937qkj.3;
-        Mon, 05 Sep 2022 08:22:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=+ZiqcY4iwW4z7/E7mCAKrjs2qkOwesFoeuU+408Ac8o=;
-        b=VFmGFDTElC9gVBP4IH125hq51A7FGr51vQ9KGLGqsDH5FAEMbMbUXIVHi85ww+a0fI
-         GziSfVv/AV96vVMyihm0a9WLMAOVaqURD6Z6C0QYsgp+rD6u9b5XKuySpRwB9/4ukD5r
-         ntRcngBKUZIdj1p7dnKxVpS61IIJC70YsoWsdaYgU3yQ1OeaPC6Dp8pG57kfBWmOL/93
-         L/IFFf00dHT3zgOp5UKnif6AxMU2wmHM+SIXzgJwfA+idsrUzSPhTV0Cy8bk19HNDekI
-         +ldaJp7J0Y+v4fVjKkwUglDoR826zDL6l5uW2KrYqW3xGquKc2bpuTp1y4lh/YVJ6mAK
-         GUTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=+ZiqcY4iwW4z7/E7mCAKrjs2qkOwesFoeuU+408Ac8o=;
-        b=X6vXErVPMJY7d1KHJ77+zIPQCFI0nwzh7fnLnnmSbuQktl5hH9FtjLRDtYuOI0WmG6
-         Kz7kh8TDh2HB3DV5mlOrGD2uV8vB4EWEZrp4W0faBhfTjKk3giHYFE1KfO4Xvd24RhM6
-         aGp5qEDIxfTWy6MfSwEpxi4bDypI5y4zEcgpC3G94j1LW3ESHj1f0BbMKhwwxMN4sv4E
-         vFgzPkpOJsMXgVTHijBSspw7sYMW878mYTkjqwPrSXHqe1MQBOTAGhMogWGD3hUipc0a
-         kVNiJsvM6x1bBO4kvgBNpqQZsEMHHMN20n3o/yiYOtxdZ5IGI3dOsp6NSzUj5IjgEv5J
-         8YYQ==
-X-Gm-Message-State: ACgBeo35E66bskPTI7omOBhSkr9TDFyyrrO6OkACMhX9OBlca8TALC2y
-        un8UsY7S4/gZYKkpzPLRtYb2NQaXKfBvEVr6xv4=
-X-Google-Smtp-Source: AA6agR6eqDleGJQNbmaUKo+DXkG0Owzp6XfxQg6gg92/7A34V7uBDxuh7YdkC5fcKcuRE7T6e8KsWIJlWSuvkZ2TzuU=
-X-Received: by 2002:a05:620a:410e:b0:6bc:5cdc:88ec with SMTP id
- j14-20020a05620a410e00b006bc5cdc88ecmr33187504qko.734.1662391338268; Mon, 05
- Sep 2022 08:22:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
- <CAHp75Vd35EOy=mP25=9fmYfqQnbafgotHw1fxk-TdGk6Oc8g8Q@mail.gmail.com> <75e60144-9fa2-d6ba-bc92-edd23f7e7189@roeck-us.net>
-In-Reply-To: <75e60144-9fa2-d6ba-bc92-edd23f7e7189@roeck-us.net>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 18:21:42 +0300
-Message-ID: <CAHp75VcisCTYoRp-=713YKtwi7BQyPKGiUhF4DkpfAFtvDXCiQ@mail.gmail.com>
-Subject: Re: [PATCH v1 10/11] watchdog: bd9576_wdt: switch to using devm_fwnode_gpiod_get()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
+        with ESMTP id S238588AbiIEPdH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 11:33:07 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29BB6111E
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 08:32:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Pkv4WXNm7iE9vE05byre09zXOKz07p8cKrQykZtredI=; b=iFsIJjjSIt/lIDARm53CfftMma
+        eLRKd3yzY0kSj9Mn2teC71wa+dCiE+wZ6l6XtUeKsdVhKMePTmuuAY+0vjJPzLi1D0uKB6gmrvBE1
+        W89fZsyvBlwxsuSnhRv2TFR22hzSONJ8yc1Tih7XBolErF9kA+TUE0a8wkkeHAq1iUK0b1kI7XLYd
+        KYSkjNPC4j6v2mDH3W07cXNj9ItUq3hFT12c5clkUvXI3gKQd8otKdxa4onDCiv4bbHX9mdo1Z428
+        ycu+ULGq1TulWNzRPtUqECshbBEZZLmhIn7wA0pIsutCqRePJfS5U3u32LmpTkrLek0t2Z9O7yfAv
+        +E1F74/A==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34122)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oVE50-0002Yf-DN; Mon, 05 Sep 2022 16:32:06 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oVE4y-0007OT-PL; Mon, 05 Sep 2022 16:32:04 +0100
+Date:   Mon, 5 Sep 2022 16:32:04 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH 5/6] gpio: Add new gpio-macsmc driver for Apple Macs
+Message-ID: <YxYWdDUBNOV+DaU0@shell.armlinux.org.uk>
+References: <YxHp6CNhlQ5Hx1m8@shell.armlinux.org.uk>
+ <CAHp75Vd-hT3Z-TUCG3y872_Y7sPAW2QBGC28S7aimOf3WQHg6A@mail.gmail.com>
+ <YxIXPSZlEBcKYulW@shell.armlinux.org.uk>
+ <CAHp75VeTYSn+ODtoH27OB2U+XYVEphonm+QR3Z+NVs-nJ90w9w@mail.gmail.com>
+ <YxIifddpeJRCuImc@shell.armlinux.org.uk>
+ <CAHp75VddN-cEY3AN=PWO5pR4D6YaDTRQgjbZLS=C5dLBTSVGwA@mail.gmail.com>
+ <YxXNZzeBRiiS6FNk@shell.armlinux.org.uk>
+ <CAHp75Vcq4LVRmgELvLJ8fNk3xdSfGikyLDL_7LGvKg4a4L4J=A@mail.gmail.com>
+ <YxX1Lp7ClRSBhbno@shell.armlinux.org.uk>
+ <CAHp75VfcTzbhOGr=0YH+nfpgcfDg8mhF1b5tZF3wudPiKhp7Qw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfcTzbhOGr=0YH+nfpgcfDg8mhF1b5tZF3wudPiKhp7Qw@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 6:13 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On 9/5/22 04:09, Andy Shevchenko wrote:
-> > On Mon, Sep 5, 2022 at 9:33 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
+On Mon, Sep 05, 2022 at 04:16:27PM +0300, Andy Shevchenko wrote:
+> On Mon, Sep 5, 2022 at 4:10 PM Russell King (Oracle)
+> <linux@armlinux.org.uk> wrote:
+> > On Mon, Sep 05, 2022 at 01:32:29PM +0300, Andy Shevchenko wrote:
+> 
+> ...
+> 
+> > Let me say again: I am not changing this. That's for Asahi people to
+> > do if they wish. I am the just middle-man here.
+> 
+> While I agree on technical aspects, this mythical "they" is
+> frustrating me. They haven't participated in this discussion (yet?) so
+> they do not care, why should we (as a community of upstream)?
+> 
+> P.S. Do you have a platform to test all these?
 
-...
+Right, having addressed as many review comments as I possibly can, I've
+rebuilt and booted it on the platform - and the good news is, it still
+works _but_ I don't have enough support in the "mainline" kernel that
+I'm testing for anything to make use of any of the interrupt support in
+this patch set - so I can't actually test those changes.
 
-> >> +       count = device_property_count_u32(dev->parent, "rohm,hw-timeout-ms");
-> >> +       if (count < 0 && count != -EINVAL)
-> >> +               return count;
-> >> +
-> >> +       if (count > 0) {
-> >
-> >> +               if (count > ARRAY_SIZE(hw_margin))
-> >> +                       return -EINVAL;
-> >
-> > Why double check? You may move it out of the (count > 0).
->
-> Two checks will always be needed, so I don't entirely see
-> how that would be better.
+I'm going to drop the interrupt patch temporarily as it's unnecessary
+for what I want to do, which will be one less patch to worry about.
 
-But not nested. That's my point:
+I still need a resolution between you and Hector over the smc_key
+issue - specifically, do I pick up the patch that adds support for
+%p4ch, or do we re-architect the smc_key thing and also in doing so
+get rid of the need for your "endian conversion" thing.
 
-if (count > ARRAY_SIZE())
-  return ...
-if (count > 0)
-  ...
-
-> >> -       if (ret == 1)
-> >> -               hw_margin_max = hw_margin[0];
-> >
-> >> +               ret = device_property_read_u32_array(dev->parent,
-> >> +                                                    "rohm,hw-timeout-ms",
-> >> +                                                    hw_margin, count);
-> >> +               if (ret < 0)
-> >> +                       return ret;
-> >
-> > So, only this needs the count > 0 check since below already has it implicitly.
-> >
-> Sorry, I don't understand this comment.
-
-if (count > 0) {
-  ret = device_property_read_u32_array(...);
-  ...
-}
-if (count == 1)
- ...
-if (count == 2)
- ...
-
-But here it might be better to have the nested conditionals.
-
-> >> -       if (ret == 2) {
-> >> -               hw_margin_max = hw_margin[1];
-> >> -               hw_margin_min = hw_margin[0];
-> >> +               if (count == 1)
-> >> +                       hw_margin_max = hw_margin[0];
-> >> +
-> >> +               if (count == 2) {
-> >> +                       hw_margin_max = hw_margin[1];
-> >> +                       hw_margin_min = hw_margin[0];
-> >> +               }
-> >>          }
+Given that Hector has rejected some of your comments, I now need to
+back out those changes that resulted from your NIH comments.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
