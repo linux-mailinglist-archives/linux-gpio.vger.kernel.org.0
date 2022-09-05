@@ -2,114 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A801B5AD41C
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 15:39:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D9335AD419
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 15:38:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237988AbiIENiN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 09:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
+        id S238010AbiIENiG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 09:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238133AbiIENiF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 09:38:05 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC904D811;
-        Mon,  5 Sep 2022 06:37:55 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id i9so358287qka.0;
-        Mon, 05 Sep 2022 06:37:55 -0700 (PDT)
+        with ESMTP id S238030AbiIENh7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 09:37:59 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26CC4F193
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 06:37:48 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id se27so17152888ejb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 06:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=Y+KBK6xhZs559H3MgneEVbpSntlTH5gyHXvs8az7EvI=;
-        b=I+FYPiMu0YegkQdnnyoV9RHVpH5IFzPD8tdowmtGi6qcwtGpOJc9BAHZMbWFb0LE/p
-         mEhQZWj6ITZBPDnLYJMfv4ouclOrF1OhwhWvUr9YxvXsB4CMpPhPxM5muqGTkdePbjeL
-         6gzTB4ZE6xLdK+DpXtGYM+08x6WeGMdc2H5ivtbPZFvcOaNIQ/q+TSgBgyujEbhI7Omy
-         SBzagyWkvKfrieBF5m1gBncPrDQcBSwBVUVnMLijiIf4PdKn3wVWuYFWSUvJtJhkPjE1
-         y4NUaDr5FggZ/Z93kPZ8D+LrsIO75QcGpbWBqMgFHkuGBoVpq4PXY5cWsWP6kvSL7XId
-         siJw==
+        bh=jUSHPPZJyk4AqbZfhLsRsVlNREiAJwnY+UFqpbkWYQk=;
+        b=bVwbhl4DGDsrKPcHLrlN+Y+zRp/Q4iW5APcmRJzf2hTU3EiUU1S6afBLdb+FJTIheC
+         koBCr5QO8AFpzm0BgmnJZ7eI1mdAghJts5Na6GIDZIgVtG8l6UzaYFQpHw4pnZAwiSZI
+         DcGtbNV8dVu/pgExmrqxZLNrwA1r6q6AWpqLks1RvrGFkz7tX4EoUGgEce0UtzjgpSiH
+         QFDl7VfHezx4IPIDrHhAU41NmTeYVAB3ZvrOFNGYIYI+AUHG5qJBOkQfK9b6f1Ca9h0g
+         k8I1hoMhOQygJDtFcozJx5rv2KjwyxTnNgAbDzK5fIjBhhtHBowMRXq6f2vXBQBuKC1M
+         b0XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Y+KBK6xhZs559H3MgneEVbpSntlTH5gyHXvs8az7EvI=;
-        b=YB+K9dEZQwX+HOiKbf9biNvFo8g6Yl3jWeHWSVgtePmXzBeQu3FhVQesoJuo9V8USr
-         RVw664ocsBh1Zsr0o+elRIBKy7exvZsqmpFbxyuB0C9z/prRsUe/IdWC/HqFhQl9YBLl
-         wKYtldz2wcxuB9IU7xIBDqt6woQOLktnx5tN0B5TkrqDGcm6SwsRRlv8HYMfzFeD95Q8
-         oJoMS7/E1jHkNp9Mse836lIVWOn4J7n/6cDROFBqhgYheGanhYHExO5NQ5SIVZAHKS2i
-         3A8MFzsPUdQvYDa4/zeBcAmidAOGp7OrOuQltfsf37KizsrN/7MilPmX5oreN6JRkjjn
-         mmaw==
-X-Gm-Message-State: ACgBeo1d1JBijYnV8mcTBb6V32PtESwlvgUiqO7TFDzdBEEg0ApXf9vh
-        GkstTNG6d9fBwFNep4InfYDFmCyM1lCXtHWn0RJ92A/eShw=
-X-Google-Smtp-Source: AA6agR6q36mc5BlhueksftcZiElaRMf1LqXvGugwSjBcFVdztilDasrj9TjqrJ0/D323fTBWLhNZZXiESljkQyZM9VM=
-X-Received: by 2002:a05:620a:288a:b0:6b8:fcfe:db02 with SMTP id
- j10-20020a05620a288a00b006b8fcfedb02mr33278028qkp.504.1662385073762; Mon, 05
- Sep 2022 06:37:53 -0700 (PDT)
+        bh=jUSHPPZJyk4AqbZfhLsRsVlNREiAJwnY+UFqpbkWYQk=;
+        b=rtJt2241FyNRLthfuOZ2x+DquUFE9R+qq8IYdEnInFC/1ukkLN8zagD4HDyxc6sGue
+         eLTRJx8aU6GD9qf4p0sWV4/PRbEre9Z5VF0hF+IaCZMmrIXqKpY8gJxtTTcOQXp0qLiK
+         dCADFarMrKXG05ZrIhUr8Bfvcwi+OzBHD0zH1gQyLWc5K3ZBBbHEwtgdUxarY/piwXvX
+         6Zn6NlG13tYmi+e7lzDyimbaL/ye+SZVwZ7FJxUHB2TrXieqiSOonq5CFhnDRjSi/yA5
+         nF/bEgW/sc6hGxq4aIVJzIC8QV08GpGdpJCL2ueKdRSVrg+MSceAGwf2kaCzP2Pbccw0
+         2VhA==
+X-Gm-Message-State: ACgBeo3iUsioSRhbfHRFLfwPI2W3j88/tRv5b/cxrxMrJA7EhnnrNOY1
+        cQgd+YjeP6Ma4pJ8kfrGyzWL6DQWrkhulSMEFartohfYlu6QGg==
+X-Google-Smtp-Source: AA6agR6gu4r2UyRb5PCcSdXUxaMjxKAvdrgNrYAWn2hGazZH0RPMoygCTKbJZmw2RBlM0CjOnpaOUH22adSQrOJGOL4=
+X-Received: by 2002:a17:907:a420:b0:765:70a4:c101 with SMTP id
+ sg32-20020a170907a42000b0076570a4c101mr5495789ejc.526.1662385066002; Mon, 05
+ Sep 2022 06:37:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220902182650.83098-1-andriy.shevchenko@linux.intel.com>
- <20220902182650.83098-3-andriy.shevchenko@linux.intel.com>
- <CAHp75VcNGEVRnkWeVThaq4zNYoiZGSY-+KfbV5_9zG_5XoriMg@mail.gmail.com>
- <YxXyTCSKzL42PF1D@smile.fi.intel.com> <CACRpkdY4nJuXAxM7tYviWSPeqmCc6o4D--Vq0CZRPNjWNj+E_A@mail.gmail.com>
-In-Reply-To: <CACRpkdY4nJuXAxM7tYviWSPeqmCc6o4D--Vq0CZRPNjWNj+E_A@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 16:37:17 +0300
-Message-ID: <CAHp75VcbucZ_3+bvJCsLk78D6egwckN=rMAdttmVwt8H9MfCSw@mail.gmail.com>
-Subject: Re: [PATCH v1 03/17] pinctrl: cy8c95x0: Allow most of the registers
- to be cached
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <202209050605.fezJUgFH-lkp@intel.com> <CACRpkdbfHG3r1wtN3Gne-XX0Zg2qyFSgH4yR3ctauABY4u-XJw@mail.gmail.com>
+ <20220905133040.GB6496@francesco-nb.int.toradex.com>
+In-Reply-To: <20220905133040.GB6496@francesco-nb.int.toradex.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Sep 2022 15:37:33 +0200
+Message-ID: <CACRpkdYKQt8fJ5FaTQgoNgGH73xnC877pQhek5Df1zdSE_c3=w@mail.gmail.com>
+Subject: Re: [linusw-pinctrl:devel 26/32] drivers/pinctrl/freescale/pinctrl-imx.c:260:9:
+ error: call to undeclared function 'pinmux_generic_get_function'; ISO C99 and
+ later do not support implicit function declarations
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc:     kernel test robot <lkp@intel.com>, llvm@lists.linux.dev,
+        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 4:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Sep 5, 2022 at 2:57 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Sep 02, 2022 at 09:42:00PM +0300, Andy Shevchenko wrote:
-> > > On Fri, Sep 2, 2022 at 9:36 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > It's unclear why many of static registers were marked as volatile.
-> > >
-> > > the static (yeah, forgot it)
-> > >
-> > > > They are pretty much bidirectional and static in a sense that
-> > > > written value is kept there until a new write or chip reset.
-> > > > Drop those registers from the list to allow them to be cached.
-> > >
-> > > This patch is not correct due to indexing access. It's sneaked since I
-> > > forgot I added it into my main repo. The proper approach should be to
-> > > create virtual registers and decode them before use. This allows to
-> > > cache all ports and as a benefit to debug print all port actual
-> > > statuses.
+On Mon, Sep 5, 2022 at 3:30 PM Francesco Dolcini
+<francesco.dolcini@toradex.com> wrote:
+> On Mon, Sep 05, 2022 at 02:36:21PM +0200, Linus Walleij wrote:
+> > On Mon, Sep 5, 2022 at 12:25 AM kernel test robot <lkp@intel.com> wrote:
+> > > >> drivers/pinctrl/freescale/pinctrl-imx.c:288:23: error: use of undeclared identifier 'pinmux_generic_get_function_name'; did you mean 'pinmux_generic_free_functions'?
+> > >            .get_function_name = pinmux_generic_get_function_name,
+> > >                                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > >                                 pinmux_generic_free_functions
 > >
-> > To be clear: With this one removed from the bunch the rest can be applied w.o.
-> > any change.
+> > I don't understand this at all, tried to look at it.
+> >
+> > Francesco, do you have ideas?
 >
-> I'll give Patrick a day or two to test/review and then I'll just apply
-> them all except this one, they are all pretty self-evident
+> Maybe the reason is that before my change the dependency was on
+> ARCH_MXC that cannot be compiled in test, while SOC_IMX8M dependency is
+> `depends on ARCH_MXC || COMPILE_TEST` leading to all of these.
+>
+> The trivial fix would be to have the pinctrl dependency on SOC_IMX8M &&
+> ARCH_MXC. I'm not convinced is the smartest way but I think it will
+> work. What do you think? Should I send a patch or you have a better
+> idea?
 
-Sure!
+Hm:
+config: s390-buildonly-randconfig-r001-20220905
 
-> except ACPI
-> things which have obviously been tested on hardware
+S390? Yeah that is indeed the problem.
 
-Yes, I have a Galileo Gen 1 board which has been used for testing.
+But I suspect it is because S390 doesn't have HAS_IOMEM.
 
->  so from my
-> point of view it's good to merge.
+I would add a depends on HAS_IOMEM to something under
+Freescale.
 
-Thanks!
+What annoys me is that the core pinmux/pinctrl part should not
+depend on HAS_IOMEM... :(
 
--- 
-With Best Regards,
-Andy Shevchenko
+Yours,
+Linus Walleij
