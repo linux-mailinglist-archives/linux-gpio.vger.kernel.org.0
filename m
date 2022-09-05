@@ -2,133 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D4575AD3C9
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 15:24:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E63AB5AD3E1
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Sep 2022 15:28:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229947AbiIENXs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 09:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45830 "EHLO
+        id S235444AbiIEN2o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 09:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237774AbiIENXn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 09:23:43 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0C043E6C;
-        Mon,  5 Sep 2022 06:23:42 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id a10so6256336qkl.13;
-        Mon, 05 Sep 2022 06:23:42 -0700 (PDT)
+        with ESMTP id S237738AbiIEN2Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 09:28:16 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF9049B67
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 06:27:58 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id x73so4394192ede.10
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Sep 2022 06:27:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=xqnaWRmSxWCHIXi5Qlq2gni2AdAVZeps2ahh12VkulY=;
-        b=nOletpYDW/GRPvkaWSlAC0rzt34URfVHbiUKwVMsxFl09VUwy8XOqhWqRsptamq/Dg
-         II+253/l3T6DgJP066py1bWTdICT2vRCXvzy2Ur+pO4VC493+7Sqn84yvDmlJFGAVdYl
-         5PZSVDMi1QDxBMQa2pV/FSXYTAwvX/lFVcFPmgHoO3U8MnbkwA9h7jonAO1nFwBsGmoW
-         q5f2ZglIOVt/xEgJLA6EBKdc3gOuFnoMDDVILIKTeoTg7qTOPypEYwVwaO1cq1N6YfbI
-         me+dt6lOnpM5B3FzI09ooPbgjOvgXIow30OcLwUv/NaL/eE7AkZh0zMQ2HIMHBfa4q7S
-         WwgA==
+        bh=o5uz0+1b+tleOdgt/bBRFfYVa92RsetSFS3/8UmSb1s=;
+        b=UYWNNhxvg2FOWmWpQ4B14rCyaWA23b8L3uc/MSGed2VHlQ8oUu/4HzXk6LKbEI1hou
+         RTE9y2uRJI6womglJ6OLpkm2bYBjRW+FYj6a5Dw390nQS4ugCcgwm6SQhj0togfrRY2f
+         FzfHcQCI1f+KtvwEW2QwHnrvf62E2H4c7RMFF/GJo8etM6xthQi8fvutQYco7Hj73gZh
+         03/J9DvJ5l5eEGvc2KMfK9qzmJzdpOV8BB59AXnBmAN59Lf3ff+rtplHq2zFhM6E7VAR
+         x8sU5MX0Onx9VYe6jBiKXfrDcuLYudxo6aFw8+myt5Ze1S4dQcV/iEHn1bQotwkHB5q8
+         Jt8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=xqnaWRmSxWCHIXi5Qlq2gni2AdAVZeps2ahh12VkulY=;
-        b=jqQdg8BxLosraqQCfd9lNYRj44R8VGOYDLtQkmJNyGTN8C81d2BO20UqvTzU0j0DYw
-         BAvksOa1oZjPRPIRA0sMTE3lnFJn4W76aeFW0sjQjGBpVNc6kENdK8cQwt0XTjjXhOcg
-         8n5iw7mkFHa9+CWmh36xGFjnXZqL94zHzcOYOd8XnyZaQmk99bZkXe0Rrn6+kZjTZBvC
-         fDKp18Cr9zomFfwHfuXOsIximcIF9ivWpfT32vyyn8JMzrIpZ4e5l/+mm8xnA989rTJV
-         sPjGWdI1ACS4MLN9SUCQcVdVvz26obXpPILihd3g2tiVFTWHYyV9AwQDdQAduLvS7CB/
-         vNwg==
-X-Gm-Message-State: ACgBeo07YvOXT2oBdHAvPvRlA1VRBDOTiB4LAt5/lj3sVstnukwhjeaq
-        4yEwJtBNPotuAkXmBQlNv4STLWjSTV98ZECDKn4=
-X-Google-Smtp-Source: AA6agR5sttgUX/02ygd4oRH8E7CwuO10nDnWttnl6PSpdnCic7gOwb1KDafibQkxIBgdBbgVXC2AwvPX08spe4Hyycw=
-X-Received: by 2002:a05:620a:288a:b0:6b8:fcfe:db02 with SMTP id
- j10-20020a05620a288a00b006b8fcfedb02mr33223900qkp.504.1662384221554; Mon, 05
- Sep 2022 06:23:41 -0700 (PDT)
+        bh=o5uz0+1b+tleOdgt/bBRFfYVa92RsetSFS3/8UmSb1s=;
+        b=Okw0nUd8n8fSnnpjlWnHH6Jz1h3layrhpCtGmrgnRx6CUhxdJbWYjPV2AKSMPNxyZc
+         apC5utpa7VkY5gtwDQZi1zn1rNoZ89EnjMWmehFPYTP7J2J/g4zT6SnQnm0tl3KydnLE
+         qncd/+nzX5NbtV8M338L5XiAhe5F5tjCCZyOx7NYy0evFsb9RFoohOElX1+prI95Ak/Y
+         PB+5b54NzI4PEslvO4Q/JriGMybn6Yr97hbl7ZuMMKCDajIS6knyi/YhBBjKmcJct37a
+         6vNWsPjSA3wFIT+OBwE28vnzQ31w4V5OSrdSNZSmBqFh3KjHCn5Ef0r6fVXukwH6/F2J
+         9Haw==
+X-Gm-Message-State: ACgBeo0meUtZhVkPEFrDtXRkk2U3hV+8otzu2olQsjAcu0HrSjzRUoTs
+        JGqo3xU67OsU/WQoZ09JS953oXrwuh+DcceXVsWfvQ==
+X-Google-Smtp-Source: AA6agR6Eduh0IyGZQF+98euSNKv0laUXFWepcREMm5/ZEmrOk321e5GLw7GwtQA9c+o1mV/WxQi/wM36lDXPV4wbm7g=
+X-Received: by 2002:a05:6402:2691:b0:43d:ba10:854b with SMTP id
+ w17-20020a056402269100b0043dba10854bmr41806434edd.158.1662384477440; Mon, 05
+ Sep 2022 06:27:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-9-b29adfb27a6c@gmail.com>
- <CAHp75VeA+oVPmsEOg+y0cvRcTU5qA+Y+9=Byp0C982EB7SAArQ@mail.gmail.com> <0fa0c09f-c801-a0c7-1f6e-b6cc8b45d961@gmail.com>
-In-Reply-To: <0fa0c09f-c801-a0c7-1f6e-b6cc8b45d961@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 5 Sep 2022 16:23:05 +0300
-Message-ID: <CAHp75Vek1WOyEdkfCgrcH2FL6GA5gTtxXaV5Qy9aJMCQ3qGxyg@mail.gmail.com>
-Subject: Re: [PATCH v1 09/11] regulator: bd9576: switch to using devm_fwnode_gpiod_get()
-To:     Matti Vaittinen <mazziesaccount@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk> <E1oTkeg-003t9k-Mc@rmk-PC.armlinux.org.uk>
+ <CACRpkdaR9rBdPC_OBKx5e+=EtbR-Jn3GzrvGRYHMJmXwRxPhyg@mail.gmail.com> <YxXv5vL6XrlkK+K0@shell.armlinux.org.uk>
+In-Reply-To: <YxXv5vL6XrlkK+K0@shell.armlinux.org.uk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 5 Sep 2022 15:27:45 +0200
+Message-ID: <CACRpkdacRUxaGmdx4hqD4X=hJ6wv-qr_udxkdS0WYXBkM08eeA@mail.gmail.com>
+Subject: Re: [PATCH 6/6] gpio: macsmc: Add IRQ support
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Sven Peter <sven@svenpeter.dev>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 4:19 PM Matti Vaittinen <mazziesaccount@gmail.com> wrote:
-> On 9/5/22 13:40, Andy Shevchenko wrote:
-> > On Mon, Sep 5, 2022 at 9:33 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
+On Mon, Sep 5, 2022 at 2:47 PM Russell King (Oracle)
+<linux@armlinux.org.uk> wrote:
+> On Fri, Sep 02, 2022 at 03:21:31PM +0200, Linus Walleij wrote:
 
-...
-
-> >> +       vout_mode = device_property_read_bool(pdev->dev.parent,
-> >> +                                             "rohm,vout1-en-low");
+> > > +       local_irq_save(flags);
+> > > +       ret = generic_handle_domain_irq(smcgp->gc.irq.domain, offset);
+> > > +       local_irq_restore(flags);
 > >
-> > They all using parent device and you may make code neater by adding
+> > Isn't irq_bus_lock/unlock protecting us here already?
+> > (I might be getting it wrong...)
+>
+> Hmm, where does irq_bus_lock get called? Given this function is called
+> while running a blocking notifier chain, interrupts will not be
+> disabled on entry to this function. I haven't found a place in the maze
+> of irq handling code that generic_handle_domain_irq() would end up using
+> the bus lock/unlock functions - and if they did, with the above IRQ
+> saving, the kernel would WARN() about calling mutex_lock() with IRQs
+> disabled. So it doesn't.
+
+Ah I get it now, the notification mechanism goes entirely orthogonal
+to the irqchip, that's what got me confused. You're right, keep this.
+
+> > That callback will only be used by edge triggered IRQs but
+> > I guess that would realistically be all we support anyway?
+> > (See comment below on .set_type)
+>
+> I would imagine it depends on how the SMC GPIO interrupt works -
+> whether the ACK is ACK as we know it in Linux (x86 PIC) or whether
+> it's ACK as in a notification to the SMC that we have finished
+> handling the interrupt and it can send us the next interrupt.
+>
+> I suspect we don't know that level of detail of the platform, so
+> given that this is what the Asahi kernel does, that's the best we
+> have.
+
+OK
+
+> > > +static int macsmc_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+> > > +{
+> > > +       struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> > > +       struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
+> > > +       int offset = irqd_to_hwirq(d);
+> > > +       u32 mode;
+> > > +
+> > > +       if (!test_bit(offset, smcgp->irq_supported))
+> > > +               return -EINVAL;
+> > > +
+> > > +       switch (type & IRQ_TYPE_SENSE_MASK) {
+> > > +       case IRQ_TYPE_LEVEL_HIGH:
+> > > +               mode = IRQ_MODE_HIGH;
+> > > +               break;
+> > > +       case IRQ_TYPE_LEVEL_LOW:
+> > > +               mode = IRQ_MODE_LOW;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_RISING:
+> > > +               mode = IRQ_MODE_RISING;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_FALLING:
+> > > +               mode = IRQ_MODE_FALLING;
+> > > +               break;
+> > > +       case IRQ_TYPE_EDGE_BOTH:
+> > > +               mode = IRQ_MODE_BOTH;
+> > > +               break;
+> > > +       default:
+> > > +               return -EINVAL;
 > >
-> >    struct device *parent = pdev->dev.parent;
+> > I don't know how level IRQs would work on this essentially
+> > message-passing process context interrupt. Maybe I am getting
+> > it all wrong, but for level the line should be held low/high until
+> > the IRQ is serviced, it would be possible to test if this actually
+> > works by *not* servicing an IRQ and see if the SMC then sends
+> > another message notifier for the same IRQ.
 >
-> This is a matter of personal preference. I prefer seeing
-> pdev->dev.parent - as it is more obvious (to me) what the 'pdev' is than
-> what 'parent' would be.
+> If level IRQs are not supported, then it's strange that the Asahi
+> folk have been able to reverse engineer the CMD_IRQ_MODE codes for
+> these states.
 >
-> I'd use the local variable only when it shortens at least one of the
-> lines so that we avoid splitting it. After that being said - I'm not
-> going to argue over this change either if one who is improving the
-> driver wants to use the "helper" variable here.
+> Maybe the SMC issues another message for a level IRQ after it receives
+> a CMD_IRQ_ACK message if the level interrupt is still asserted?
+(...)
+> > > +       gpio_irq_chip_set_chip(&smcgp->gc.irq, &macsmc_gpio_irqchip);
+> > > +       smcgp->gc.irq.parent_handler = NULL;
+> > > +       smcgp->gc.irq.num_parents = 0;
+> > > +       smcgp->gc.irq.parents = NULL;
+> > > +       smcgp->gc.irq.default_type = IRQ_TYPE_NONE;
+> > > +       smcgp->gc.irq.handler = handle_simple_irq;
+> >
+> > I would consider setting this to handle_edge_irq() and implement
+> > .irq_ack(). I might be wrong.
+>
+> I don't think that's suitable, because then we'll be calling irq_ack()
+> before the handler has run - and we won't be notifying the SMC that
+> the interrupt has been masked. So it could send another notification
+> for the same IRQ while it's still being handled. Then there's the
+> question about level IRQs as well.
+>
+> I think, given that I don't know how the SMC works (presumably the
+> Asahi folk have a bit more of an idea, but that will be based on
+> reverse engineering effort) that I am not going to modify this driver's
+> behaviour drastically by changing the flow handler to the edge flow
+> handler from the simple flow. To me, that could well be a disaster
+> for this driver. That would be something for the Asahi folk to look
+> at.
 
-And I believe the quoted one is exactly the case of what you are saying above.
+Fair enough. From my end this will be fine to merge after you considered
+the things brought up and it is certainly not necessary to have any
+"perfect" solution, to me it is clear that what we need to do is enable the
+target so that people can use it and then we/Asahi can comb through it
+and reexamine things like this once the whole system is usable as a whole.
 
--- 
-With Best Regards,
-Andy Shevchenko
+I've seen that Konrad has even started using the M1 infrastructure
+to kickstart a few iPhone/iPad devices, so given how much hardware this
+is (in absolute units) I think it's pretty important we get to usable ASAP.
+
+Yours,
+Linus Walleij
