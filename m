@@ -2,72 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE3C5AEAC0
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 15:56:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 164775AED03
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 16:30:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238804AbiIFNuq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 09:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42992 "EHLO
+        id S240718AbiIFN6O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 09:58:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239707AbiIFNtv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 09:49:51 -0400
+        with ESMTP id S239839AbiIFN4N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 09:56:13 -0400
 Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74276B7E6;
-        Tue,  6 Sep 2022 06:40:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD6082769;
+        Tue,  6 Sep 2022 06:42:06 -0700 (PDT)
 Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1C1F85C015A;
-        Tue,  6 Sep 2022 09:39:32 -0400 (EDT)
+        by mailout.nyi.internal (Postfix) with ESMTP id AC4CF5C00E9;
+        Tue,  6 Sep 2022 09:40:59 -0400 (EDT)
 Received: from imap47 ([10.202.2.97])
-  by compute2.internal (MEProxy); Tue, 06 Sep 2022 09:39:32 -0400
+  by compute2.internal (MEProxy); Tue, 06 Sep 2022 09:40:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
          h=cc:cc:content-type:date:date:from:from:in-reply-to
         :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1662471572; x=1662557972; bh=d3
-        HdEUqOxRr2NiqMbqhCIYCoCrUQqQyaV7J3bTAdtKQ=; b=srbEmYpKatpJZaqV+u
-        EFOsbgo7m2H/U8VWxATh+56Yut4FnULRHAAxEWYKjbWvkDwI9/PkdFPV7sImol/v
-        SiF0APg8HpeutY6HX0NEL40SUOZTpDU01fFWNDZunzpyQOD030nV4sjtziblw0B9
-        tlA+Q+OegM1YuaZisrMnjn6gqj930t/XB7KzVC4VFKGjnZFSqMmgkEZHdyjY6VBS
-        3gd4d95nxsTRwY+u2lqcQHDeFD3pIEz5kvlZGg4jMb8OQQNcmaFy5Swi5VyfzIi5
-        EBgGRHlhYPWGOECzQYngj7kkpY7MxKG9Z83Kr7lhE83isBKJErxsV3scJEU21Y7E
-        duag==
+        :subject:subject:to:to; s=fm2; t=1662471659; x=1662558059; bh=hm
+        ETg07QBgLYqlBFCF6cd3D9OyAgefzmdWPH2ymqdXY=; b=lV8m4FUPjwTcqUKp3U
+        l4KWUYHpKC6ES/Oq0YirqpysOvejJZfD3Wz6DxDIUOKxPiwEDhP7a+pXVlmawgsT
+        J860vB57TaSym/SyTxU7BGLieTzgT0pELqeIXR0VWPnSmYHOKfhmznAlmgnRNpd/
+        Buitv9ZOp8kBwnKJNmNqO04QS8aEEm/nZ8+4akq03Rvg4w4GPmx9RsxGUQjDptEc
+        8x/gEUJHYNQGEt+7EkAQFt7DB6XrGSb1QGheBUVd0R67O7BrulvTIVdssF6k4I9O
+        i+6sp1vHLoVWoLg2CDeFzrSWOiuRy/YSsVSSt2x4miXhFOfCoQHGYZscuy2dl2O7
+        3Eyg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
         :feedback-id:from:from:in-reply-to:in-reply-to:message-id
         :mime-version:references:reply-to:sender:subject:subject:to:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; t=1662471572; x=1662557972; bh=d3HdEUqOxRr2NiqMbqhCIYCoCrUQ
-        qQyaV7J3bTAdtKQ=; b=AVeNnzBS2wOwJ8jOObc8OzW9MrE6rIpFOOEZudovSkIg
-        gXyp523yoJlctVcPCuC0jxNGyUGKyKskj0SxVZtGvgn8YK9BwI6aXuLEIi97echU
-        4LxN5ih9IdSgsxigVApgk+EIu1mdXh0oph+ID7ptdJnbwz2szKsvXpeb1BlVZwGL
-        pQvHBPSaSM6i8MTsYHPfsHwlRUc8c2xT4kQokfkWNSCq6M8sUfUMqqmPBzCSafvZ
-        z4g9Wlr+/d1JSYxSpkf7B4nFV9ptPWU/s07PzJ5ET/jzSeixSv3coKRAzpWtoiJu
-        YhKoJAIYsh+z+uG+WsbIxJPjiy7RKLbMAas+RN6XeQ==
-X-ME-Sender: <xms:kk0XY4LOzPgtMTvlKqACchgNEFQm91YkDoudwpR8hIjSAmTsI40zcQ>
-    <xme:kk0XY4LVilRS99ISsh7NlSJZJU_p5xxzATkJXoe5GgZD7FpbZLLkN5sy0N2zixqoV
-    R291fItZnNtTHnf7T8>
+        fm2; t=1662471659; x=1662558059; bh=hmETg07QBgLYqlBFCF6cd3D9OyAg
+        efzmdWPH2ymqdXY=; b=AP/PvmR3Hdlpkt/At17981fk8jOoa6E73FsspiH7v6vo
+        4qkBw4lsatebD/D0axYsVgysWva+U351FElef+B+0lvZ9zw65HIYdOr3lBYqe84s
+        Cmk5ShwkBoTCyQsxcqgNzg5FFdCuzKqoz355xUGvURYHC+RfA5cQ+vuLg5tJzG8w
+        oq66yEVNgXeHLKKKAGnCAs4pXYYukWW5+0N6yB2uD8R8ePfc9shLlOHXF/sFS9nk
+        MPgu8wSxlFiATBfvKMU/Vd3EARiHJiNpDrNkFgY4pXJITOgVfOWABUBDoQuenJo0
+        59qds2cS9HnqF3Kicm62f+8wZqhDO94SrXF7kodOkQ==
+X-ME-Sender: <xms:600XY5-2t4VhvHbbK-jL20auEqw4s-9BztI79RxZ4Mb94iGGhU4zNQ>
+    <xme:600XY9u31YFVNHkOvvFh_07MWWDVVmSaZrSCB55JMamV8q-InFfK_dyeJppwk2hIZ
+    Nch5KgjG8q5jubfjKc>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdelkedgieekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufhv
     vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
     grthhtvghrnhepleevgfegffehvedtieevhfekheeftedtjeetudevieehveevieelgffh
-    ieevieeunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    ieevieeunecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilhhfrhhomh
     epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
-X-ME-Proxy: <xmx:kk0XY4sMKELIgCnJnG6KJOAoy6toy0qrwrq8X04HJu7EbtfuMaqctQ>
-    <xmx:kk0XY1alWYXnwYjshCKzrURRYMwjj2vwRWhmghVrRLGELGBPWvK5Yw>
-    <xmx:kk0XY_ZtQo18xKyhXM_sZMHg1hBD9E308rf5u03m0l9kzA5eTsiMlg>
-    <xmx:lE0XY1sdm1gr4cGAzqgYFHeHCNGWprrLbE-xfAuiQhAEliTDT7Z76A>
+X-ME-Proxy: <xmx:600XY3BicqoeZyVc9qTSYqAGeF_PziCDHlOw2iS7hBBxkTzDckTxBw>
+    <xmx:600XY9f1R3tvPMaV6cAIE4W-0z5tAMmUr3NI8-91VEuo1-_kDFi-pw>
+    <xmx:600XY-Oa-nQtFytXvomr4NCsU2QDWL8_n1bOtKl7z52zg2zShgzJWA>
+    <xmx:600XYzzHSxkVE1hzNCd5y4jppskJFR8oXv2KyvyGMkeX9YYvJjUWIg>
 Feedback-ID: i51094778:Fastmail
 Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id CAC2BA6007C; Tue,  6 Sep 2022 09:39:30 -0400 (EDT)
+        id 70B06A6007C; Tue,  6 Sep 2022 09:40:59 -0400 (EDT)
 X-Mailer: MessagingEngine.com Webmail Interface
 User-Agent: Cyrus-JMAP/3.7.0-alpha0-927-gf4c98c8499-fm-20220826.002-gf4c98c84
 Mime-Version: 1.0
-Message-Id: <99fb8d30-a75d-4709-a4e7-47d2f700ffb8@www.fastmail.com>
-In-Reply-To: <E1oVYUX-005CmY-Mr@rmk-PC.armlinux.org.uk>
+Message-Id: <a6e62126-46cb-4c83-8a50-5c57e67b49eb@www.fastmail.com>
+In-Reply-To: <E1oVYUc-005Cme-SM@rmk-PC.armlinux.org.uk>
 References: <YxdInl2qzQWM+3bs@shell.armlinux.org.uk>
- <E1oVYUX-005CmY-Mr@rmk-PC.armlinux.org.uk>
-Date:   Tue, 06 Sep 2022 15:39:10 +0200
+ <E1oVYUc-005Cme-SM@rmk-PC.armlinux.org.uk>
+Date:   Tue, 06 Sep 2022 15:40:38 +0200
 From:   "Sven Peter" <sven@svenpeter.dev>
 To:     "Russell King" <rmk+kernel@armlinux.org.uk>,
         "Arnd Bergmann" <arnd@arndb.de>, "Lee Jones" <lee@kernel.org>,
@@ -85,7 +85,7 @@ Cc:     "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
         "Rob Herring" <robh+dt@kernel.org>,
         "Sergey Senozhatsky" <senozhatsky@chromium.org>,
         "Steven Rostedt" <rostedt@goodmis.org>
-Subject: Re: [PATCH 5/7] platform/apple: Add new Apple Mac SMC driver
+Subject: Re: [PATCH 6/7] gpio: Add new gpio-macsmc driver for Apple Macs
 Content-Type: text/plain
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
@@ -97,22 +97,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+
+
 On Tue, Sep 6, 2022, at 15:19, Russell King wrote:
 > From: Hector Martin <marcan@marcan.st>
 >
-> This driver implements support for the SMC (System Management
-> Controller) in Apple Macs. In contrast to the existing applesmc driver,
-> it uses pluggable backends that allow it to support different SMC
-> implementations, and uses the MFD subsystem to expose the core SMC
-> functionality so that specific features (gpio, hwmon, battery, etc.) can
-> be implemented by separate drivers in their respective downstream
-> subsystems.
+> This driver implements the GPIO service on top of the SMC framework
+> on Apple Mac machines. In particular, these are the GPIOs present in the
+> PMU IC which are used to control power to certain on-board devices.
 >
-> The initial RTKit backend adds support for Apple Silicon Macs (M1 et
-> al). We hope a backend for T2 Macs will be written in the future
-> (since those are not supported by applesmc), and eventually an x86
-> backend would allow us to fully deprecate applesmc in favor of this
-> driver.
+> Although the underlying hardware supports various pin config settings
+> (input/output, open drain, etc.), this driver does not implement that
+> functionality and leaves it up to the firmware to configure things
+> properly. We also don't yet support interrupts/events. This is
+> sufficient for device power control, which is the only thing we need to
+> support at this point. More features will be implemented when needed.
+>
+> To our knowledge, only Apple Silicon Macs implement this SMC feature.
 >
 > Signed-off-by: Hector Martin <marcan@marcan.st>
 > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
