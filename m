@@ -2,106 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1DD5AEBA4
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 16:27:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D03015AEC96
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 16:28:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239227AbiIFN5e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 09:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57028 "EHLO
+        id S239480AbiIFOGS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 10:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240421AbiIFNyo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 09:54:44 -0400
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59A980F53;
-        Tue,  6 Sep 2022 06:41:33 -0700 (PDT)
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-127a0d798bdso7735548fac.4;
-        Tue, 06 Sep 2022 06:41:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:references:in-reply-to:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=U7KMCwyPUAeyOkS8LvXUFPy4Xy4KgDM/4fM2ZNJCPo4=;
-        b=bfki+yWcXz98D9qBYIwI1d8sJlDKhefVdfDQcuXhOwEYm0xuBoxYoVIp1S1kuCEn//
-         5V5bGvQ82RMexka8VMwwF3hObbdwU3Dps5FNyZWQJ8oP+OPdlTibi8jfBm8PXYfeGc6Q
-         +E64dHA62bADt4sZ7nxdlxYmt1kxckDrIsZQi8nZE8gkm0lTTmXGcqL5RHjCKVYcy7bm
-         tuiiwNHKNJPgJzBfHFnZkIPZZi/VyxBddp9CIoBbsLqcbvvXzoZupy0WS2vPW9SZxWxO
-         UrEQ7bxlYEVDA2TUKr+3ixqBq9PabTqfHpRE56v0jYBoL22ta1V3JKxopXNqGsxeaxQU
-         trrg==
-X-Gm-Message-State: ACgBeo16+Ep15vr9UPjCELRdAgoNVQk57oDEcmCrbGb9u5I9m3lsHel8
-        uWLtW7GUmhXFsz+eDVhdHw==
-X-Google-Smtp-Source: AA6agR4VFYt4Q6uqaviz/cWYZjZnXg/9Uo8qUBasuYk+y+0PkxJ2esvoAyfunvvkKBZRtHtdKfWDnQ==
-X-Received: by 2002:a05:6870:831d:b0:10d:a96f:8bc with SMTP id p29-20020a056870831d00b0010da96f08bcmr11029950oae.143.1662471647776;
-        Tue, 06 Sep 2022 06:40:47 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id y2-20020a056808060200b003450abf4404sm5315654oih.21.2022.09.06.06.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 06:40:47 -0700 (PDT)
-Received: (nullmailer pid 360956 invoked by uid 1000);
-        Tue, 06 Sep 2022 13:40:45 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     Martyn Welch <martyn.welch@collabora.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <20220906082820.4030401-2-martyn.welch@collabora.co.uk>
-References: <20220906082820.4030401-1-martyn.welch@collabora.co.uk> <20220906082820.4030401-2-martyn.welch@collabora.co.uk>
-Subject: Re: [PATCH v2 2/5] dt-bindings: gpio: pca95xx: add entry for pcal6534 and PI4IOE5V6534Q
-Date:   Tue, 06 Sep 2022 08:40:45 -0500
-Message-Id: <1662471645.313702.360955.nullmailer@robh.at.kernel.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S241627AbiIFOFD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 10:05:03 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C02D844C1;
+        Tue,  6 Sep 2022 06:45:18 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 035155C012B;
+        Tue,  6 Sep 2022 09:43:16 -0400 (EDT)
+Received: from imap47 ([10.202.2.97])
+  by compute2.internal (MEProxy); Tue, 06 Sep 2022 09:43:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1662471795; x=1662558195; bh=77
+        5C0tvEJHto5QjpXnW0h0+sCP1phI8skW6l0uy8ijE=; b=1RasTfLFA8jsQaZAo0
+        7wHn7aRXszDUU4x9QbcJY9nauAiJ9VpPKNS+3dd2u7K8Sr77oD/ZGV47uR+mlEku
+        rZEJ0q6NWxaqeUlPM6CWp3TqjHnvySr5HztZZGATVeC98QKnohWz9rYllC6nCOG3
+        1HPn8w4r7JsBG1SqqOTZrf2yH0wBKe6mtVXjD5oQUm8dDzCSQ0AvQl9G0TFB9wW8
+        lcbir0IK4cJzR5LSerdGN2cT6pqeotOt5kr+Mhy5q+y2DM4sJ778wvZpOSZkNEN4
+        mqapKDCzcmBMoj7KvKk526ObJ+2ZvGlBQq18KPanDUumiI6brERAJbdop8x96owN
+        hT0g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1662471795; x=1662558195; bh=775C0tvEJHto5QjpXnW0h0+sCP1p
+        hI8skW6l0uy8ijE=; b=WpvTjDS/fCP3NS/RRBGHtOS2Gt38vXUS9AqShHRIcZio
+        JYvDXMDvBfP956imD/5fDg2/EohH2uV/MUNHXbZsozC1jBE6vhX8mM0hEPnZND5q
+        igDu6atYIPlpyDbBJEo4lvGfgPrspDmxAvIigjuiLoIruyEObxLNOIAR4qyA8fsu
+        YJp1Qp9IBOK79VBYHkGnLdSDKaVWdF1SbH1L+zs8f29AOxhJ08u4E4Day1UUvypV
+        D18bD06kcj+lEup5Qje/boSsZvHvMUGTOjW6q7cjqs6IrsaSFbkXHLYw4S4MiZPq
+        3ko9Pg2OkpWNWg6W+XPGQdoZjQ9NXKECzdFdxmM/yQ==
+X-ME-Sender: <xms:c04XY5pRlaKJ5R0-Lo1m8r1KarvO7nm3qJ6OB8m201Hd_1_LV1zQfQ>
+    <xme:c04XY7o20m6-o6unPCGaqMfNReTzJt2G7pSfH4GOab0jdN9lOZ7a_C1fS0sspZH-G
+    MyunyavNm3oyJbrUTQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdelkedgieekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufhv
+    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
+    grthhtvghrnhepleevgfegffehvedtieevhfekheeftedtjeetudevieehveevieelgffh
+    ieevieeunecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
+X-ME-Proxy: <xmx:c04XY2PBhMOjeEiZekKrHSbhpOwtjrwMHEY9HmRMrXBPQk42pD8bfw>
+    <xmx:c04XY061bOu8AeuTyIO8NNPrcfh2P5z40zczHtvXX0qD4q1CLUIdrw>
+    <xmx:c04XY44KWezZD-mHFdys3K6wRR4_jwNZ-E3vKqu0eg3NlHGK3BEQ7g>
+    <xmx:c04XY1PiZhV0TFhxvajAv0_BYchuqTSXmRqaOBuhSbZW_GHA5xfgWA>
+Feedback-ID: i51094778:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id A6F3BA6007C; Tue,  6 Sep 2022 09:43:15 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-927-gf4c98c8499-fm-20220826.002-gf4c98c84
+Mime-Version: 1.0
+Message-Id: <8a94f2e6-f537-4e29-8375-e79b84524582@www.fastmail.com>
+In-Reply-To: <E1oVYUi-005Cmk-0R@rmk-PC.armlinux.org.uk>
+References: <YxdInl2qzQWM+3bs@shell.armlinux.org.uk>
+ <E1oVYUi-005Cmk-0R@rmk-PC.armlinux.org.uk>
+Date:   Tue, 06 Sep 2022 15:42:47 +0200
+From:   "Sven Peter" <sven@svenpeter.dev>
+To:     "Russell King" <rmk+kernel@armlinux.org.uk>,
+        "Arnd Bergmann" <arnd@arndb.de>, "Lee Jones" <lee@kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        devicetree@vger.kernel.org, "Hector Martin" <marcan@marcan.st>,
+        "Jonathan Corbet" <corbet@lwn.net>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Petr Mladek" <pmladek@suse.com>,
+        "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Sergey Senozhatsky" <senozhatsky@chromium.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>
+Subject: Re: [PATCH 7/7] arm64: dts: apple: Add SMC node to t8103/t6001 devicetrees
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 06 Sep 2022 09:28:16 +0100, Martyn Welch wrote:
-> From: Martyn Welch <martyn.welch@collabora.com>
-> 
-> The NXP PCAL6534 is a 34-bit I2C I/O expander similar to the PCAL6524. The
-> Diodes PI4IOE5V6534Q is a functionally identical chip provided by Diodes
-> Inc.
-> 
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+
+
+On Tue, Sep 6, 2022, at 15:20, Russell King wrote:
+> From: Hector Martin <marcan@marcan.st>
+>
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > ---
+>  arch/arm64/boot/dts/apple/t8103.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi 
+> b/arch/arm64/boot/dts/apple/t8103.dtsi
+> index 51a63b29d404..15c6023cf612 100644
+> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
+> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
+> @@ -336,6 +336,32 @@ wdt: watchdog@23d2b0000 {
+>  			interrupts = <AIC_IRQ 338 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
 > 
-> Changes in v2:
->  - Enumerate pi4ioe5v6534q as requiring pcal6534 fallback
-> 
->  .../bindings/gpio/gpio-pca95xx.yaml           | 98 ++++++++++---------
->  1 file changed, 52 insertions(+), 46 deletions(-)
-> 
+> +		smc_mbox: mbox@23e408000 {
+> +			compatible = "apple,t8103-asc-mailbox", "apple,asc-mailbox-v4";
+> +			reg = <0x2 0x3e408000 0x0 0x4000>;
+> +			interrupt-parent = <&aic>;
+> +			interrupts = <AIC_IRQ 400 IRQ_TYPE_LEVEL_HIGH>,
+> +				<AIC_IRQ 401 IRQ_TYPE_LEVEL_HIGH>,
+> +				<AIC_IRQ 402 IRQ_TYPE_LEVEL_HIGH>,
+> +				<AIC_IRQ 403 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "send-empty", "send-not-empty",
+> +				"recv-empty", "recv-not-empty";
+> +			#mbox-cells = <0>;
+> +		};
+> +
+> +		smc: smc@23e400000 {
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Usually we sort these nodes by their address to prevent merge conflicts.
+I guess it doesn't really matter here though since nothing will be between
+these two nodes.
+Either way,
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml:20:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml:23:9: [warning] wrong indentation: expected 10 but found 8 (indentation)
-./Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml:24:11: [warning] wrong indentation: expected 12 but found 10 (indentation)
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
 
-dtschema/dtc warnings/errors:
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+> +			compatible = "apple,t8103-smc", "apple,smc";
+> +			reg = <0x2 0x3e400000 0x0 0x4000>,
+> +				<0x2 0x3fe00000 0x0 0x100000>;
+> +			reg-names = "smc", "sram";
+> +			mboxes = <&smc_mbox>;
+> +
+> +			smc_gpio: gpio {
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +			};
+> +		};
+> +
+>  		pinctrl_smc: pinctrl@23e820000 {
+>  			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
+>  			reg = <0x2 0x3e820000 0x0 0x4000>;
+> -- 
+> 2.30.2
