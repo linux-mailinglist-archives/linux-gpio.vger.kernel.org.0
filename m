@@ -2,118 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD1E5AE6B2
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 13:36:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A945AE6D6
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 13:47:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232925AbiIFLgj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 07:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
+        id S232203AbiIFLrR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 07:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233020AbiIFLgg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 07:36:36 -0400
-Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0F47645F;
-        Tue,  6 Sep 2022 04:36:33 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id D82EB41F12;
-        Tue,  6 Sep 2022 11:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-        t=1662464191; bh=iZaovA3utTa1MRTvB6tlYyIRYCuVcLY9Hsc4sBAEXHA=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To;
-        b=gaJghwidE54NgcQlYlv0xIM81NWChh/4fnOJRbbzs/VRr8HNzQ+WaJtZkHSV1tH8u
-         81Vth9//yauZpcTBB4TgSuAuAo09pCRsJvYfzYsJiDD6Guai6KQ0tp/452hyfGdi3/
-         /cbMpAKzpFLy58hDgpKnppEl7OT58u11d6/2pVPtXgP6RbhvMQQgeIO+c4XiseVZu5
-         a8hgRWBghjlRPgcLXpaeJT6nwkrmbdBxcUVIIacVl3z5JEPQplCbjV13euzaopq+Gc
-         xDs3MqsdVMSni2cvqh2cKVoTWllkCHOrgCDQNVGxohTU5YDF0lZWqi3/RGqFhq/Ck3
-         d8zQBxImKX+wQ==
-Message-ID: <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
-Date:   Tue, 6 Sep 2022 20:36:25 +0900
+        with ESMTP id S230307AbiIFLrP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 07:47:15 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74F73E74E
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Sep 2022 04:47:11 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id m1so14758639edb.7
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Sep 2022 04:47:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=ngBAVCxWIlH8IqYdCuJaPRZX+NvS5qeJJgCq9JPi1ac=;
+        b=i61C4OstlNuj2Z1KBA3wKr8d00GO3ZCWwyyQYAAwqwNH7lCR0Poxa2XeF/vihRVqZI
+         SMtutL6hXnuzsKNTnD4TCWWvwsAX7eDPI52N8kj+WwwBqGDH9a5K+WnY8TTosIKqFhtd
+         9ArJd0/3jDdGooE+QQtbRT35Jyype0hobR71ge6Rl1V+6YlO0mkh8CIF5o0Q2JQwZ6mn
+         UZuyO4TG7ZXO3s0ZsnChocF08riZRO54ukvwn9mqkE2pRftPZbLumW3xN9VCgZDVMRiz
+         sPoOLMaxkfarCAQkjQuzf+VyG+Kgmgs+3aF5hVX+ApL7xR9YSvevU/DXKsGz6uP1tZtk
+         7CGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ngBAVCxWIlH8IqYdCuJaPRZX+NvS5qeJJgCq9JPi1ac=;
+        b=Y/OZT57tRFgTzHgNr5+ZZ6eHnAJJE6QcU2++9vUdIEQGScc96MFN7PdM5bbVvOM6qS
+         THYv2bcKxld87+encnz8guVgomXOMXqz61cQMyiYqwVyRnrIB5jgEUwDN+INOHR5GRQF
+         VOB1H0oaXdEkgZ9yvMQRzuQNL1pGz8AVo+1Wp9XuhuL/dysrj/BIBb+uwf8sqO7JQN/A
+         sAG8+bjMQiX+S21UM2FYMwzsj8ixIOe8MOEIEieZck0esJrqTcIQvyF458MhR+GZQIuC
+         NUyFS0sM3AGohV31/Kbj/Ea7H1c0AWiSe4sSzNLpd1QvlJo+11trOlLSHyTPuuToGTkL
+         jAoA==
+X-Gm-Message-State: ACgBeo2RS/p2dU6kWcktpG0XIjgmWKF2FTuLxBMtqXanoulX6v91FgHz
+        ylRGtgOkAc05v3jzPWDnMnNKXtiBy77TZQEChiwxAg==
+X-Google-Smtp-Source: AA6agR60go4ZlOyalFyzE2h6wepgnbqL+cKvO+3GR8QFGqpNNV+my65VHjpQncabwZoMqG4ntKYKNeWh3k//IAJyNEY=
+X-Received: by 2002:a05:6402:5384:b0:431:6d84:b451 with SMTP id
+ ew4-20020a056402538400b004316d84b451mr46828996edb.46.1662464830544; Tue, 06
+ Sep 2022 04:47:10 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Content-Language: es-ES
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>, robh@kernel.org,
-        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
-        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org
-References: <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
- <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
- <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
- <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
- <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
- <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
- <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
- <20220902172808.GB52527-robh@kernel.org>
- <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
- <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
- <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
-From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-In-Reply-To: <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <202209050952.vfkohsRg-lkp@intel.com> <CACRpkdaLQ68VfYCfv40hGuGnpaMKchiTOSTJy9rnDKnBOQnFDw@mail.gmail.com>
+ <20220905212156.GB6180@francesco-nb.int.toradex.com>
+In-Reply-To: <20220905212156.GB6180@francesco-nb.int.toradex.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 6 Sep 2022 13:46:59 +0200
+Message-ID: <CACRpkdZDYVu5x=fv5ZvtH3S1OxMDqVP1yBB61WtFkV2LwdrJEA@mail.gmail.com>
+Subject: Re: [linusw-pinctrl:devel 26/32] kismet: WARNING: unmet direct
+ dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
+To:     Francesco Dolcini <francesco.dolcini@toradex.com>
+Cc:     kernel test robot <lkp@intel.com>, Paul Gazzillo <paul@pgazz.com>,
+        Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+        kbuild-all@lists.01.org, linux-gpio@vger.kernel.org,
+        Fabio Estevam <festevam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/09/2022 20.22, Linus Walleij wrote:
-> On Tue, Sep 6, 2022 at 11:31 AM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> 
->> Another argument for having sub-nodes is that the firmware actually
->> exposes *two* GPIO controllers.  For now we only support the "master"
->> PMU GPIOs, but there also is a "slave" PMU GPIO controller that uses a
->> separate set of SMC "keys".  We currently don't need any of the pins
->> on the "slave", so we don't expose it in the DT yet.
-> 
-> That sounds backward, like we don't expose device X as DT node
-> because $OS doesn't use it yet. DT should just expose (by nodes or
-> other ways) all hardware that exist or at least all hardware we know
-> about no matter what $OS is using.
+On Mon, Sep 5, 2022 at 11:22 PM Francesco Dolcini
+<francesco.dolcini@toradex.com> wrote:
+> On Mon, Sep 05, 2022 at 11:08:11PM +0200, Linus Walleij wrote:
+> > On Mon, Sep 5, 2022 at 3:55 AM kernel test robot <lkp@intel.com> wrote:
+> >
+> > > kismet warnings: (new ones prefixed by >>)
+> > > >> kismet: WARNING: unmet direct dependencies detected for PINCTRL_IMX when selected by PINCTRL_IMX8MM
+> > >
+> > >    WARNING: unmet direct dependencies detected for PINCTRL_IMX
+> > >      Depends on [n]: PINCTRL [=y] && OF [=n]
+> > >      Selected by [y]:
+> > >      - PINCTRL_IMX8MM [=y] && PINCTRL [=y] && SOC_IMX8M [=y]
+> >
+> > I have a hard time to understand these warnings at times, but I suspect
+> > you need a
+> > depends on OF
+>
+> I'll have a look, however while the recent build errors in pinctrl-imx.c
+> are because after my change for the first time it is build without
+> ARCH_MXC and with COMPILE_TEST, this to me seems not a regression.
+>
+> Am I wrong?
 
-How so? The are piles and piles of unused hardware not exposed in the
-DT, and piles and piles of hardware that will be used but we haven't
-figured out how to do it yet, so it's not exposed. For example, we know
-there are like 8 or so UARTs, but we don't define them in the DT because
-they are not connected to anything on any existing device and we don't
-need them. Apple does the same thing in their DTs (only used hardware is
-defined).
+It's not a regression but it's nice to have COMPILE_TEST working.
 
-I don't really see the point of exposing a GPIO controller when we don't
-actually do anything with the pins yet, and might never do so. Having
-drivers bind and stay unused just increases the amount of code running
-without any ultimate purpose, so why do it? It's not like any other OS
-would use the hardware either - GPIOs are only useful if they are
-referenced in the DT for something, and we don't have anything that
-would reference these.
+For me as a subsystem maintainer it's nice to have COMPILE_TEST
+working because otherwise the bots keep pestering me with this
+kind of stuff until it is fixed.
 
-For SMC in particular, there's a huge amount of functionality we don't
-have drivers for yet, and I don't see the point of trying to conjure up
-DT bindings for it until someone writes a driver (and has a reason to do
-so) :)
-
-> FWIW I think nodes makes most sense because no doubt for example
-> the RTC is a separate hardware unit somewhere, and so is the
-> GPIO. The fact that it is hidden behind a software abstraction doesn't
-> change the fact that the HW definitely has these discrete units.
-
-The RTC and the GPIO happen to be part of the same physical IC (PMU),
-but yes, I agree.
-
-- Hector
+Yours,
+Linus Walleij
