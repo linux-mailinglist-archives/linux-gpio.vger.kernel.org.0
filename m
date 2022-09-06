@@ -2,148 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F9B5AEF2E
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 17:45:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB6B75AEFF9
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 18:10:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232778AbiIFPpD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 11:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60110 "EHLO
+        id S234839AbiIFQK3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 12:10:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232757AbiIFPop (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 11:44:45 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9527C7C18F;
-        Tue,  6 Sep 2022 07:55:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=IxHPfBCP2CpLZRT9ntq72Ese30Gg1dkwTLZfDlMlcIw=; b=bAmile2FOqrXZWl7fHvXhgVaHs
-        C8U1pA4+5gO+0yuIioGju5Ac4kbxX8+Quj1lq/PnkiwI55Vz82xk7NOzk2NnS3OX0p95gPLBgJBM5
-        KlgGZCyK74cUtREq06P4PNdcyRM9O3UmY3fXm28A8yr5ekMYLWCaQPzX4XluRaQtbIqV56kFGhshR
-        FRJrO6DqWjCWctO+hU5jM6T/fTZ547B92OVD4y958QPbG/ykzXJsfkTm2ESiqbJFw2i+QRDfk/kre
-        7hrJF1AeNufpFscy5pQDPwh4sfvZE0h9K09FuAn1kg3RIryx692gV0efECX1MwzjvVzaA7Pwo6CAP
-        tz36xgJw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34150)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1oVZyX-00043I-MF; Tue, 06 Sep 2022 15:54:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1oVZyU-0008LZ-M4; Tue, 06 Sep 2022 15:54:50 +0100
-Date:   Tue, 6 Sep 2022 15:54:50 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Mark Kettenis <mark.kettenis@xs4all.nl>
-Cc:     Hector Martin <marcan@marcan.st>, linus.walleij@linaro.org,
-        robh@kernel.org, krzysztof.kozlowski@linaro.org, arnd@arndb.de,
-        lee@kernel.org, alyssa@rosenzweig.io, asahi@lists.linux.dev,
-        brgl@bgdev.pl, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, sven@svenpeter.dev,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org
+        with ESMTP id S231812AbiIFQKO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 12:10:14 -0400
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D6683F38;
+        Tue,  6 Sep 2022 08:34:47 -0700 (PDT)
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-127ba06d03fso5507546fac.3;
+        Tue, 06 Sep 2022 08:34:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=l7uSke96ZhFxge6iy3UtQtr/iInY2wiHvxBC9B8pAes=;
+        b=6y2L6q2T8FkjmKLxKnnD6gTba34VVQ24yU/jRZhtdfLN5WZ2AiKAtxs6UnK7Pa8cTw
+         TPkZFAvp6rwkcJPg9UF4Z0GuNsjiEWm41EqxiSudiHrqUtQ6a6jGPfvE4lVmjsrXMcal
+         gp3Vc/ccLd50+IU7SNJgChTVFU6ADzNJJfPCWer73R0FKUuPG41zKU6cMfDckozxgiFn
+         xRp9NAK/zjy7XLzJCP3z4LNmY7vdA2lTLqCohTvXtHbOMK9OiHfqvyksIzIrBAzzh/bo
+         jciJRwqs+k7klhkD7ZXQiJpnQYdKWqhFQ+xg3E0xFf0i+Iz+bJKVMAC+vawAvSljzhPA
+         PbmA==
+X-Gm-Message-State: ACgBeo1Afywu2SlyJ075QY6ISeUBpyfwfOwc8Y/nxViHDJK003FN5u6g
+        yhge4T7FqHM3LzKHcIrWDw==
+X-Google-Smtp-Source: AA6agR4bRLs6qUCZD96wFxze0xCdaCbw+EDzXwyV0jACkyYccl7rlpXBjFm9cJoGrQ3oFJxa7v/7LA==
+X-Received: by 2002:a05:6808:21a5:b0:345:81a8:ab6 with SMTP id be37-20020a05680821a500b0034581a80ab6mr9587695oib.91.1662478486008;
+        Tue, 06 Sep 2022 08:34:46 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g12-20020a056870c14c00b0012644cc4feasm4520251oad.55.2022.09.06.08.34.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 08:34:43 -0700 (PDT)
+Received: (nullmailer pid 558222 invoked by uid 1000);
+        Tue, 06 Sep 2022 15:34:42 -0000
+Date:   Tue, 6 Sep 2022 10:34:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
+        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org
 Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
  Management Controller
-Message-ID: <YxdfOr6WCZiR3W1c@shell.armlinux.org.uk>
-References: <20220902172808.GB52527-robh@kernel.org>
+Message-ID: <20220906153442.GA534217-robh@kernel.org>
+References: <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
+ <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
+ <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+ <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
+ <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
+ <20220902172808.GB52527-robh@kernel.org>
  <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
  <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
  <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
  <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
- <CACRpkdajhjpMzjMooDduu0jxrp0uDNJ90VfBPpHx+P14cFfskA@mail.gmail.com>
- <5b75dc7e-5337-73eb-450f-b72f479793c4@marcan.st>
- <YxdOafCWnDUNourH@shell.armlinux.org.uk>
- <f5bef359-3abe-311c-3521-136eb5b54c4b@marcan.st>
- <d3ced0ffaec45e3c@bloch.sibelius.xs4all.nl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d3ced0ffaec45e3c@bloch.sibelius.xs4all.nl>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 04:25:49PM +0200, Mark Kettenis wrote:
-> > Date: Tue, 6 Sep 2022 22:53:47 +0900
-> > From: Hector Martin <marcan@marcan.st>
+On Tue, Sep 06, 2022 at 08:36:25PM +0900, Hector Martin wrote:
+> On 06/09/2022 20.22, Linus Walleij wrote:
+> > On Tue, Sep 6, 2022 at 11:31 AM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
 > > 
-> > I agree that this is something to think about (I was about to reply on
-> > the subject).
+> >> Another argument for having sub-nodes is that the firmware actually
+> >> exposes *two* GPIO controllers.  For now we only support the "master"
+> >> PMU GPIOs, but there also is a "slave" PMU GPIO controller that uses a
+> >> separate set of SMC "keys".  We currently don't need any of the pins
+> >> on the "slave", so we don't expose it in the DT yet.
 > > 
-> > I can think of two ways: using `reg` for the key name, but that feels
-> > icky since it's ASCII and not *really* a register number/address, or
-> > something like this:
-> > 
-> > gpio@0 {
-> > 	apple,smc-key-base = "gP00";
-> > 	...
-> > }
-> > 
-> > gpio@1 {
-> > 	apple,smc-key-base = "gp00";
-> > 	...
-> > }
+> > That sounds backward, like we don't expose device X as DT node
+> > because $OS doesn't use it yet. DT should just expose (by nodes or
+> > other ways) all hardware that exist or at least all hardware we know
+> > about no matter what $OS is using.
 > 
-> This would still require us to add a (one-cell) "reg" property and
-> would require adding the appropriate "#address-cells" and
-> "#size-cells" properties to the SMC node.
-
-Yes, and at that point, as I suggested, it probably would be better
-to use:
-
-	#address-cells = <1>;
-	#size-cells = <0>;
-
-	gpio@67503030 {
-		reg = <0x67503030>;
-	};
-
-	gpio@67703030 {
-		reg = <0x67703030>;
-	};
-
-Then the "reg" has a meaning that is directly related to the SMC.
-
-> > But this ties back to the device enumeration too, since right now the DT
-> > does not drive that (we'd have to add the subdevice to the mfd subdevice
-> > list somehow anyway, if we don't switch to compatibles).
-> > 
-> > I'd love to hear Rob's opinion on this one, and also whether the
-> > existing Linux and OpenBSD code would currently find gpio@0 {} instead
-> > of gpio {} for backwards compat.
+> How so? The are piles and piles of unused hardware not exposed in the
+> DT, and piles and piles of hardware that will be used but we haven't
+> figured out how to do it yet, so it's not exposed. For example, we know
+> there are like 8 or so UARTs, but we don't define them in the DT because
+> they are not connected to anything on any existing device and we don't
+> need them. Apple does the same thing in their DTs (only used hardware is
+> defined).
 > 
-> The OpenBSD driver does a lookup by name and the "@0" is part of that
-> name.  So that would break backwards compat.
+> I don't really see the point of exposing a GPIO controller when we don't
+> actually do anything with the pins yet, and might never do so. Having
+> drivers bind and stay unused just increases the amount of code running
+> without any ultimate purpose, so why do it? It's not like any other OS
+> would use the hardware either - GPIOs are only useful if they are
+> referenced in the DT for something, and we don't have anything that
+> would reference these.
+> 
+> For SMC in particular, there's a huge amount of functionality we don't
+> have drivers for yet, and I don't see the point of trying to conjure up
+> DT bindings for it until someone writes a driver (and has a reason to do
+> so) :)
 
-Oh, that's annoying - and is a different behaviour to Linux.
+Exposing in a DT is one thing. Defining in the binding is another. Even 
+if it's not complete bindings, but just a fuller description of what 
+functionality the MFD contains is. For example, just knowing there 
+are 2 instances of GPIO, I'm much more inclined to agree GPIO should be 
+a subnode.
 
-On Linux, we only look at the node name up to the @ when matching (see
-of_node_name_eq() in drivers/of/base.c, so it doesn't matter to Linux
-what follows the @ when you try to look up a node named "gpio" - you'll
-find gpio@anythingyoulike.
-
-> Maybe just name the slave GPIO controller "gpio-slave"?  If we add
-> compatibles, the compatibles for the nodes should propbably be
-> different such that we can switch to do a lookup by compatible?
-
-I don't think the DT folk would be happy with "gpio-slave" because
-node names are supposed to be generic. Also, "slave" probably isn't
-a good choice of name in this modern era given past history.
-
-Rather than the above, we could use "reg" to indicate which GPIO
-controller we're talking about, and lookup the reg value in a table
-to give the key. So gpio@0, reg=<0> => gP00, gpio@1, reg=<1> => gp00.
-gpio@2, reg=<2> => whatever next.
-
-That sounds like it won't break the existing OpenBSD.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Rob
