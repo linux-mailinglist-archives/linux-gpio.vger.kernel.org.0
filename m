@@ -2,94 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D03015AEC96
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 16:28:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 179785AED32
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 16:30:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239480AbiIFOGS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 10:06:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59958 "EHLO
+        id S240373AbiIFODQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 10:03:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241627AbiIFOFD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 10:05:03 -0400
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C02D844C1;
-        Tue,  6 Sep 2022 06:45:18 -0700 (PDT)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 035155C012B;
-        Tue,  6 Sep 2022 09:43:16 -0400 (EDT)
-Received: from imap47 ([10.202.2.97])
-  by compute2.internal (MEProxy); Tue, 06 Sep 2022 09:43:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
-         h=cc:cc:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm2; t=1662471795; x=1662558195; bh=77
-        5C0tvEJHto5QjpXnW0h0+sCP1phI8skW6l0uy8ijE=; b=1RasTfLFA8jsQaZAo0
-        7wHn7aRXszDUU4x9QbcJY9nauAiJ9VpPKNS+3dd2u7K8Sr77oD/ZGV47uR+mlEku
-        rZEJ0q6NWxaqeUlPM6CWp3TqjHnvySr5HztZZGATVeC98QKnohWz9rYllC6nCOG3
-        1HPn8w4r7JsBG1SqqOTZrf2yH0wBKe6mtVXjD5oQUm8dDzCSQ0AvQl9G0TFB9wW8
-        lcbir0IK4cJzR5LSerdGN2cT6pqeotOt5kr+Mhy5q+y2DM4sJ778wvZpOSZkNEN4
-        mqapKDCzcmBMoj7KvKk526ObJ+2ZvGlBQq18KPanDUumiI6brERAJbdop8x96owN
-        hT0g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; t=1662471795; x=1662558195; bh=775C0tvEJHto5QjpXnW0h0+sCP1p
-        hI8skW6l0uy8ijE=; b=WpvTjDS/fCP3NS/RRBGHtOS2Gt38vXUS9AqShHRIcZio
-        JYvDXMDvBfP956imD/5fDg2/EohH2uV/MUNHXbZsozC1jBE6vhX8mM0hEPnZND5q
-        igDu6atYIPlpyDbBJEo4lvGfgPrspDmxAvIigjuiLoIruyEObxLNOIAR4qyA8fsu
-        YJp1Qp9IBOK79VBYHkGnLdSDKaVWdF1SbH1L+zs8f29AOxhJ08u4E4Day1UUvypV
-        D18bD06kcj+lEup5Qje/boSsZvHvMUGTOjW6q7cjqs6IrsaSFbkXHLYw4S4MiZPq
-        3ko9Pg2OkpWNWg6W+XPGQdoZjQ9NXKECzdFdxmM/yQ==
-X-ME-Sender: <xms:c04XY5pRlaKJ5R0-Lo1m8r1KarvO7nm3qJ6OB8m201Hd_1_LV1zQfQ>
-    <xme:c04XY7o20m6-o6unPCGaqMfNReTzJt2G7pSfH4GOab0jdN9lOZ7a_C1fS0sspZH-G
-    MyunyavNm3oyJbrUTQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdelkedgieekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedfufhv
-    vghnucfrvghtvghrfdcuoehsvhgvnhesshhvvghnphgvthgvrhdruggvvheqnecuggftrf
-    grthhtvghrnhepleevgfegffehvedtieevhfekheeftedtjeetudevieehveevieelgffh
-    ieevieeunecuvehluhhsthgvrhfuihiivgepvdenucfrrghrrghmpehmrghilhhfrhhomh
-    epshhvvghnsehsvhgvnhhpvghtvghrrdguvghv
-X-ME-Proxy: <xmx:c04XY2PBhMOjeEiZekKrHSbhpOwtjrwMHEY9HmRMrXBPQk42pD8bfw>
-    <xmx:c04XY061bOu8AeuTyIO8NNPrcfh2P5z40zczHtvXX0qD4q1CLUIdrw>
-    <xmx:c04XY44KWezZD-mHFdys3K6wRR4_jwNZ-E3vKqu0eg3NlHGK3BEQ7g>
-    <xmx:c04XY1PiZhV0TFhxvajAv0_BYchuqTSXmRqaOBuhSbZW_GHA5xfgWA>
-Feedback-ID: i51094778:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id A6F3BA6007C; Tue,  6 Sep 2022 09:43:15 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-927-gf4c98c8499-fm-20220826.002-gf4c98c84
-Mime-Version: 1.0
-Message-Id: <8a94f2e6-f537-4e29-8375-e79b84524582@www.fastmail.com>
-In-Reply-To: <E1oVYUi-005Cmk-0R@rmk-PC.armlinux.org.uk>
-References: <YxdInl2qzQWM+3bs@shell.armlinux.org.uk>
- <E1oVYUi-005Cmk-0R@rmk-PC.armlinux.org.uk>
-Date:   Tue, 06 Sep 2022 15:42:47 +0200
-From:   "Sven Peter" <sven@svenpeter.dev>
-To:     "Russell King" <rmk+kernel@armlinux.org.uk>,
-        "Arnd Bergmann" <arnd@arndb.de>, "Lee Jones" <lee@kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>
-Cc:     "Alyssa Rosenzweig" <alyssa@rosenzweig.io>,
-        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        devicetree@vger.kernel.org, "Hector Martin" <marcan@marcan.st>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Petr Mladek" <pmladek@suse.com>,
-        "Rasmus Villemoes" <linux@rasmusvillemoes.dk>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Sergey Senozhatsky" <senozhatsky@chromium.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>
-Subject: Re: [PATCH 7/7] arm64: dts: apple: Add SMC node to t8103/t6001 devicetrees
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        with ESMTP id S240963AbiIFOBg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 10:01:36 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F803BD3;
+        Tue,  6 Sep 2022 06:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=McYIwfZBgzxgmWc7SJ1PwQ2CQF+LE/MZfa5qx6kR+VM=; b=IRwNSVo7beJEwiaueneipvg8OW
+        sc0pBQ+v4aJUiYMQuzwldNkAcqfIMZOR0F7acW2Y/i6mWl/TXDM5FCFhpOJFnxORqUMbmVS1JKf4U
+        jWq3gDA9sg9jWlrGKeIfgQazckRZw08jXrgfxBFLSAyUPfDUHZEarii9XzNha1u2pNgRLbzOqa7Ye
+        WLU6WHq4ePhcmkC2WtMjOSk85yKetdMvvM4W8xeFBwDoCGNtofv6UTn+CbmW6D55izeI5+ZswDQ2v
+        UySB0zn8nrdvT2s364JHK9eJJk9j8X2M78VrA4oBgzuJhCwDcSHyon86+F6YadO24urPuhhN4pUpD
+        Pg0KFlMQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34148)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1oVYr4-0003vl-1Z; Tue, 06 Sep 2022 14:43:06 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1oVYr3-0008JM-2I; Tue, 06 Sep 2022 14:43:05 +0100
+Date:   Tue, 6 Sep 2022 14:43:05 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Mark Kettenis <mark.kettenis@xs4all.nl>, robh@kernel.org,
+        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
+        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+Message-ID: <YxdOafCWnDUNourH@shell.armlinux.org.uk>
+References: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+ <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
+ <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
+ <20220902172808.GB52527-robh@kernel.org>
+ <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
+ <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
+ <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
+ <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
+ <CACRpkdajhjpMzjMooDduu0jxrp0uDNJ90VfBPpHx+P14cFfskA@mail.gmail.com>
+ <5b75dc7e-5337-73eb-450f-b72f479793c4@marcan.st>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b75dc7e-5337-73eb-450f-b72f479793c4@marcan.st>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -97,62 +71,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Sep 06, 2022 at 10:28:25PM +0900, Hector Martin wrote:
+> Ultimately, we're working with a reverse engineered platform here, and
+> DTs will inevitaby be incremental. But in this particular case, of
+> hardware that has no known useful purpose to an OS, I don't see the
+> point in gratuitously describing it. And besides, the way we set things
+> up, forward-compatible DT upgrades are trivial, and no actual user on
+> this platform is going to be stuck with an old DT and newer software (if
+> their software supports the platform properly, and that takes more than
+> the relatively trivial DT upgrade stuff anyway). I'm a lot more
+> interested in getting bindings upstreamed ASAP (so we can start
+> guaranteeing no backwards-compat breaks, which is important to avoid
+> outright breakage) than I am in trying to be exhaustive up front with
+> device instances. It's perfectly fine to say that users have to upgrade
+> both their DTs and kernels to get newer hardware support, on these
+> platforms.
 
+It's also a very common process for SoCs - almost no one writes the
+DT first and then writes the drivers. You always see on the mailing
+list series of patches that add a driver for some bit of hardware,
+along with patches adding the DT binding and the DT description.
 
-On Tue, Sep 6, 2022, at 15:20, Russell King wrote:
-> From: Hector Martin <marcan@marcan.st>
->
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->  arch/arm64/boot/dts/apple/t8103.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/apple/t8103.dtsi 
-> b/arch/arm64/boot/dts/apple/t8103.dtsi
-> index 51a63b29d404..15c6023cf612 100644
-> --- a/arch/arm64/boot/dts/apple/t8103.dtsi
-> +++ b/arch/arm64/boot/dts/apple/t8103.dtsi
-> @@ -336,6 +336,32 @@ wdt: watchdog@23d2b0000 {
->  			interrupts = <AIC_IRQ 338 IRQ_TYPE_LEVEL_HIGH>;
->  		};
-> 
-> +		smc_mbox: mbox@23e408000 {
-> +			compatible = "apple,t8103-asc-mailbox", "apple,asc-mailbox-v4";
-> +			reg = <0x2 0x3e408000 0x0 0x4000>;
-> +			interrupt-parent = <&aic>;
-> +			interrupts = <AIC_IRQ 400 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 401 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 402 IRQ_TYPE_LEVEL_HIGH>,
-> +				<AIC_IRQ 403 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "send-empty", "send-not-empty",
-> +				"recv-empty", "recv-not-empty";
-> +			#mbox-cells = <0>;
-> +		};
-> +
-> +		smc: smc@23e400000 {
+I don't think you're doing anything different here to what is common
+practice within the mainline kernel community with this approach.
 
-Usually we sort these nodes by their address to prevent merge conflicts.
-I guess it doesn't really matter here though since nothing will be between
-these two nodes.
-Either way,
+The exception to that is when adding a driver for feature X in a SoC,
+it's common to add all instances of X to the dtsi with ``status =
+"disabled"'' and only enable the appropriate blocks on platforms that
+need it.
 
-Reviewed-by: Sven Peter <sven@svenpeter.dev>
+So, for example, if a SoC has three network interfaces, all of them
+identical, when adding a network driver and the bindings for the
+network hardware, one would add all three to the SoC description
+whether or not the platform one was working with makes use of them.
 
-> +			compatible = "apple,t8103-smc", "apple,smc";
-> +			reg = <0x2 0x3e400000 0x0 0x4000>,
-> +				<0x2 0x3fe00000 0x0 0x100000>;
-> +			reg-names = "smc", "sram";
-> +			mboxes = <&smc_mbox>;
-> +
-> +			smc_gpio: gpio {
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +			};
-> +		};
-> +
->  		pinctrl_smc: pinctrl@23e820000 {
->  			compatible = "apple,t8103-pinctrl", "apple,pinctrl";
->  			reg = <0x2 0x3e820000 0x0 0x4000>;
-> -- 
-> 2.30.2
+It means that one has to think about how to support all instances
+of the hardware on the platform and design the binding to allow
+that flexibility, rather than having to augment the binding later.
+
+In the case of gpio-macsmc, how would we later add support for the
+slave PMU GPIOs, given that these use keys "gpXX" rather than "gPxx"?
+How do we tell the gpio-macsmc code to use a different set of keys?
+Should DT describe the key "prefix" (in other words "gp" vs "gP"),
+or should it describe it some other way. What if Apple decides to
+instantiate another GPIO controller in a later platform with a
+different prefix, could that be accomodated without breaking any
+solution we come up today?
+
+Maybe the solution to this would be to describe the key prefix in DT
+as that's effectively its "reg". Or maybe we use "reg" to describe
+it somehow (which is value of the key, which seems to have an
+"address" like quality to it?)
+
+We don't have to implement code for this now, we just need to get a
+reasonably correct DT binding for the gpio controller.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
