@@ -2,201 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 166C85AE819
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 14:29:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2159C5AE82B
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 14:31:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232753AbiIFM3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 08:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60158 "EHLO
+        id S239915AbiIFMbM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 08:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240221AbiIFM2i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 08:28:38 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 485E924951;
-        Tue,  6 Sep 2022 05:25:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662467104; x=1694003104;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=VLnflIlhNOSKlv+K+sGMeC6Yi4HRSkPtWSqjX4XDHWo=;
-  b=U9N+FlkdS0sYsBDdatUc3mzlVKsE6YvuLzFvuz94vnUau0EGpqfl813Y
-   UBYWIblQvchfLB0b8JYx2LEqMITfM3qdXCfrSBaGv7ImPOphFXEEsuS8Z
-   TuXDbIYa5hrrjmtnKjR+0AIsowMyrIpVNz/UMzbraunUi6jk9dC0ZP0L9
-   9Qzq3aMrQ7QpW6ijGSd1xeLdE7ltHrAmjA+1tIByZ05odJBRKypVCn6G0
-   oPo2FoaWsoc79QDncKXpe0uXUFOs51YnWJU22GYfXxsgvrH0s9T0+0sUN
-   WQmGQRgSVKJpoipIXTX5gZBKSHDnR8I1hhUhDFRv3YAmHmVSn1s30Uy27
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10461"; a="279592183"
+        with ESMTP id S239968AbiIFMaz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 08:30:55 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E144E275C2;
+        Tue,  6 Sep 2022 05:27:46 -0700 (PDT)
+X-IronPort-AV: E=McAfee;i="6500,9779,10461"; a="296579839"
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="279592183"
+   d="scan'208";a="296579839"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:25:03 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:45 -0700
 X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="565073686"
+   d="scan'208";a="565074197"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:25:01 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:36 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1oVXdS-00970o-2G;
-        Tue, 06 Sep 2022 15:24:58 +0300
-Date:   Tue, 6 Sep 2022 15:24:58 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Martyn Welch <martyn.welch@collabora.co.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1oVXfv-00975d-2X;
+        Tue, 06 Sep 2022 15:27:31 +0300
+Date:   Tue, 6 Sep 2022 15:27:31 +0300
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] gpio: pca953x: Add support for PCAL6534
-Message-ID: <Yxc8GgUnHOuMIn4p@smile.fi.intel.com>
-References: <20220906082820.4030401-1-martyn.welch@collabora.co.uk>
- <20220906082820.4030401-5-martyn.welch@collabora.co.uk>
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
+        USB <linux-usb@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using
+ devm_gpiod_get()
+Message-ID: <Yxc8s8IfzElm/mjS@smile.fi.intel.com>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
+ <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
+ <YxZQj8bwJCx5rqDv@google.com>
+ <CAHp75VdHJS4YgrTK15OuY5sxodxKObUtzturL+YPXFQ3_wpxig@mail.gmail.com>
+ <YxZTS3Nl1YaMGoBC@google.com>
+ <CAHp75VeNajcf-Y6xvDDVwZijg6U53ggg1HQox1AZ74=wRut+1Q@mail.gmail.com>
+ <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220906082820.4030401-5-martyn.welch@collabora.co.uk>
+In-Reply-To: <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 09:28:19AM +0100, Martyn Welch wrote:
-> From: Martyn Welch <martyn.welch@collabora.com>
+On Mon, Sep 05, 2022 at 03:07:48PM -0700, Guenter Roeck wrote:
+> On 9/5/22 12:55, Andy Shevchenko wrote:
+> > On Mon, Sep 5, 2022 at 10:51 PM Dmitry Torokhov
+> > <dmitry.torokhov@gmail.com> wrote:
+> > > On Mon, Sep 05, 2022 at 10:41:40PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Sep 5, 2022 at 10:40 PM Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > > On Mon, Sep 05, 2022 at 01:59:44PM +0300, Andy Shevchenko wrote:
+> > > > > > On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
+> > > > > > <dmitry.torokhov@gmail.com> wrote:
+
+...
+
+> > > > > > > +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
+> > > > > > > +                                      GPIOD_OUT_HIGH);
+> > > > > > >                  err = PTR_ERR_OR_ZERO(gpiod);
+> > > > > > 
+> > > > > > What does _OR_ZERO mean now?
+> > > > > 
+> > > > > This converts a pointer to an error code if a pointer represents
+> > > > > ERR_PTR() encoded error, or 0 to indicate success.
+> > > > 
+> > > > Yes, I know that. My point is, how is it useful now (or even before)?
+> > > > I mean that devm_gpio_get() never returns NULL, right?
+> > > 
+> > > What does returning NULL have to do with anything.
+> > 
+> > It has to do with a dead code. If defm_gpiod_get() does not return
+> > NULL, then why do we even bother to check?
 > 
-> Add support for the NXP PCAL6534. This device is broadly a 34-bit version
-> of the PCAL6524. However, whilst the registers are broadly what you'd
-> expect for a 34-bit version of the PCAL6524, the spacing of the registers
-> has been compacted. This has the unfortunate effect of breaking the bit
-> shift based mechanism that is employed to work out register locations used
-> by the other chips supported by this driver. To accommodate ths, callback
-> functions have been added to allow alterate implementations of
-> pca953x_recalc_addr() and pca953x_check_register() for the PCAL6534.
+> PTR_ERR_OR_ZERO() converts into an error code (if the pointer is an
+> ERR_PTR) or 0 if it is a real pointer. Its purpose is not to convert
+> NULL into 0, its purpose is to convert a pointer either into an error
+> code or 0. That is what is done here, and it is done all over the place
+> in the kernel. I don't see your problem with it. Care to explain ?
+> 
+> > > It converts a pointer
+> > > to a "classic" return code, with negative errors and 0 on success.
+> > > 
+> > > It allows to not use multiple IS_ERR/PTR_ERR in the code (I'd need 1
+> > > IS_ERR and 2 PTR_ERR, one in dev_err() and another to return).
+> > 
+> > I don't see how this is relevant.
+> 
+> You lost me. Really, please explain your problem with PTR_ERR_OR_ZERO().
 
-
-This looks much cleaner!
-
-...
-
-> @@ -107,6 +109,7 @@ static const struct i2c_device_id pca953x_id[] = {
->  	{ "tca9539", 16 | PCA953X_TYPE | PCA_INT, },
->  	{ "tca9554", 8  | PCA953X_TYPE | PCA_INT, },
->  	{ "xra1202", 8  | PCA953X_TYPE },
-> +
->  	{ }
-
-Missed Diodes?
-
->  };
->  MODULE_DEVICE_TABLE(i2c, pca953x_id);
-
-...
-
-> +	u8 (*recalc_addr)(struct pca953x_chip *chip, int reg , int off);
-> +	bool (*check_reg)(struct pca953x_chip *chip, unsigned int reg,
-> +		          u32 checkbank);
-
-I would think of splitting this change. Like in a separate patch you simply
-create this interface and only add what you need in the next one.
-
-...
-
-> +static bool pcal6534_check_register(struct pca953x_chip *chip, unsigned int reg,
-> +				    u32 checkbank)
-> +{
-> +	int bank;
-> +	int offset;
-> +
-> +	if (reg > 0x2f) {
-
-I guess code read and generation wise the
-
-	if (reg >= 0x30) {
-
-is slightly better.
-
-> +		/*
-> +		 * Reserved block between 14h and 2Fh does not align on
-> +		 * expected bank boundaries like other devices.
-> +		 */
-> +		int temp = reg - 0x30;
-> +
-> +		bank = temp / NBANK(chip);
-> +		offset = temp - (bank * NBANK(chip));
-
-Parentheses are not needed fur multiplication, but if you insist...
-
-> +		bank += 8;
-
-> +	} else if (reg > 0x53) {
-
-In the similar way...
-
-> +		/* Handle lack of reserved registers after output port
-> +		 * configuration register to form a bank.
-> +		 */
-
-Comment style
-
-/*
- * Handle...
- */
-
-> +		int temp = reg - 0x54;
-> +
-> +		bank = temp / NBANK(chip);
-> +		offset = temp - (bank * NBANK(chip));
-> +		bank += 16;
-> +	} else {
-> +		bank = reg / NBANK(chip);
-> +		offset = reg - (bank * NBANK(chip));
-> +	}
-> +
-> +	/* Register is not in the matching bank. */
-> +	if (!(BIT(bank) & checkbank))
-> +		return false;
-> +
-> +	/* Register is not within allowed range of bank. */
-> +	if (offset >= NBANK(chip))
-> +		return false;
-> +
-> +	return true;
-> +}
-
-...
-
-> -	u8 regaddr = pinctrl | addr | (off / BANK_SZ);
->  
-> -	return regaddr;
-> +	return pinctrl | addr | (off / BANK_SZ);
-
-Stray change, or anything I have missed?
-
-...
-
-> +/* The PCAL6534 and compatible chips have altered bank alignment that doesn't
-> + * fit within the bit shifting scheme used for other devices.
-> + */
-
-Comment style.
-
-...
-
-> @@ -1240,6 +1335,7 @@ static const struct of_device_id pca953x_dt_ids[] = {
->  
->  	{ .compatible = "nxp,pcal6416", .data = OF_953X(16, PCA_LATCH_INT), },
->  	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_LATCH_INT), },
-> +	{ .compatible = "nxp,pcal6534", .data = OF_653X(34, PCA_LATCH_INT), },
->  	{ .compatible = "nxp,pcal9535", .data = OF_953X(16, PCA_LATCH_INT), },
->  	{ .compatible = "nxp,pcal9554b", .data = OF_953X( 8, PCA_LATCH_INT), },
->  	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_LATCH_INT), },
-
-Do you decide to drop Diodes compatible from the code?
+I don't know what I was thinking about... You, guys, are right, sorry for
+my noise.
 
 -- 
 With Best Regards,
