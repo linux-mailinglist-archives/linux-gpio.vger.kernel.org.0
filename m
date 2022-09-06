@@ -2,93 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 997A25AEE62
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 17:11:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F9F65AEE92
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 17:22:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233193AbiIFPLo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 11:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50424 "EHLO
+        id S239122AbiIFPWB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 11:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232688AbiIFPLX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 11:11:23 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC948E0C9;
-        Tue,  6 Sep 2022 07:25:05 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id b5so15726468wrr.5;
-        Tue, 06 Sep 2022 07:25:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date;
-        bh=SgtOK7Fn4Mn363pk9vnglySkFAC3yWrEKhbc32lNaz8=;
-        b=YlVnWF4LgR3y6Snjsvnp04yzajW/gwUKlwo2+XX/q0Ea7VAIevZwQ8sFDh4ZHiwvUc
-         kHvEagoYzB36/BpNKOLar8DqVaw3THj8NmY0MaxFnnR7FTiZKpy/8NCMPwWuQ6cnXHi8
-         xa7I7l9fS8K/S8NvDmRTsndMZpp2SI0IUJgYRzsqgBbOz6mi/j4TGt/0FixOeuQ8NaBk
-         OvUxJ/J1lNJMdjCsfpWRvxvwrx+uH7WpSerL41we3LUv09QAZKx5X9sm9Y55XCxgUWet
-         hz5mAbIdp3j/varJBXAR/OVSRBVVcBZ7ckAgLAG+Ad+VGW9zaw/iU5HzriZhOdU8m/ER
-         wqLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=SgtOK7Fn4Mn363pk9vnglySkFAC3yWrEKhbc32lNaz8=;
-        b=v6taoyKq9fKoypYtrH9Eax7smQU59ARcJVaYef+04++0A30Ypl4oof/MsmzopiLJdN
-         +f5Dox/LGEyNo3Rtl1/YELKnWA30m+q0Pam2wc3IDVBln4foXTSUT6igNsfbjONqQWnr
-         yHH4ssIEANyyJzp2sosHMocTn8NUZl3dtqsnJginxpsT9fjnJPYb1+Kbbd7J4f+XYMdP
-         OYTHin3Yq08ODSMpW5nsIqzZW/qfQ5KmT83rKnm0Zhfd9cPrpZdL0ryxcMgo5tq1OmsT
-         HRGNqMVdXXT6Q8U8FSBTnSjqdf8XxIxQC5HQolhydZ76h275+ZMg6j940SwXbmzhupDZ
-         KwSw==
-X-Gm-Message-State: ACgBeo2lQZgvCvVRDkonWkZZLWiJTNjVeOECwpaupjLuS5o9VZSMUQ+Q
-        lVrp829LcnVfJAFR+B3o8rA=
-X-Google-Smtp-Source: AA6agR7gHjucsKxwTur3SuarsEltaanUAYG1Nve9kz4+jV7e28o9DzXbkUmxKJcJWkQtvBwr7hMTpA==
-X-Received: by 2002:a5d:6484:0:b0:226:dd0e:b09c with SMTP id o4-20020a5d6484000000b00226dd0eb09cmr23452887wri.388.1662474204810;
-        Tue, 06 Sep 2022 07:23:24 -0700 (PDT)
-Received: from debian (host-78-150-37-98.as13285.net. [78.150.37.98])
-        by smtp.gmail.com with ESMTPSA id l27-20020a05600c2cdb00b003a5c7a942edsm22880578wmc.28.2022.09.06.07.23.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 07:23:24 -0700 (PDT)
-Date:   Tue, 6 Sep 2022 15:23:22 +0100
-From:   "Sudip Mukherjee (Codethink)" <sudipm.mukherjee@gmail.com>
-To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-next@vger.kernel.org
-Subject: build failure of next-20220906 due to 4ec7ac90ff39 ("misc:
- microchip: pci1xxxx: Add power management functions - suspend & resume
- handlers.")
-Message-ID: <YxdX2l88PSFGe1r4@debian>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234950AbiIFPVh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 11:21:37 -0400
+Received: from sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E4E98370;
+        Tue,  6 Sep 2022 07:33:36 -0700 (PDT)
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id c29ccd8f;
+        Tue, 6 Sep 2022 16:25:49 +0200 (CEST)
+Date:   Tue, 6 Sep 2022 16:25:49 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     Hector Martin <marcan@marcan.st>
+Cc:     linux@armlinux.org.uk, linus.walleij@linaro.org, robh@kernel.org,
+        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
+        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <f5bef359-3abe-311c-3521-136eb5b54c4b@marcan.st> (message from
+        Hector Martin on Tue, 6 Sep 2022 22:53:47 +0900)
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+References: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+ <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
+ <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
+ <20220902172808.GB52527-robh@kernel.org>
+ <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
+ <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
+ <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
+ <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
+ <CACRpkdajhjpMzjMooDduu0jxrp0uDNJ90VfBPpHx+P14cFfskA@mail.gmail.com>
+ <5b75dc7e-5337-73eb-450f-b72f479793c4@marcan.st>
+ <YxdOafCWnDUNourH@shell.armlinux.org.uk> <f5bef359-3abe-311c-3521-136eb5b54c4b@marcan.st>
+Message-ID: <d3ced0ffaec45e3c@bloch.sibelius.xs4all.nl>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi All,
+> Date: Tue, 6 Sep 2022 22:53:47 +0900
+> From: Hector Martin <marcan@marcan.st>
+> 
+> On 06/09/2022 22.43, Russell King (Oracle) wrote:
+> > In the case of gpio-macsmc, how would we later add support for the
+> > slave PMU GPIOs, given that these use keys "gpXX" rather than "gPxx"?
+> > How do we tell the gpio-macsmc code to use a different set of keys?
+> > Should DT describe the key "prefix" (in other words "gp" vs "gP"),
+> > or should it describe it some other way. What if Apple decides to
+> > instantiate another GPIO controller in a later platform with a
+> > different prefix, could that be accomodated without breaking any
+> > solution we come up today?
+> > 
+> > Maybe the solution to this would be to describe the key prefix in DT
+> > as that's effectively its "reg". Or maybe we use "reg" to describe
+> > it somehow (which is value of the key, which seems to have an
+> > "address" like quality to it?)
+> > 
+> > We don't have to implement code for this now, we just need to get a
+> > reasonably correct DT binding for the gpio controller.
+> 
+> I agree that this is something to think about (I was about to reply on
+> the subject).
+> 
+> I can think of two ways: using `reg` for the key name, but that feels
+> icky since it's ASCII and not *really* a register number/address, or
+> something like this:
+> 
+> gpio@0 {
+> 	apple,smc-key-base = "gP00";
+> 	...
+> }
+> 
+> gpio@1 {
+> 	apple,smc-key-base = "gp00";
+> 	...
+> }
 
-The builds of riscv, s390, csky, alpha and loongarch allmodconfig have
-failed to build next-20220906 with the error:
+This would still require us to add a (one-cell) "reg" property and
+would require adding the appropriate "#address-cells" and
+"#size-cells" properties to the SMC node.
 
+> But this ties back to the device enumeration too, since right now the DT
+> does not drive that (we'd have to add the subdevice to the mfd subdevice
+> list somehow anyway, if we don't switch to compatibles).
+> 
+> I'd love to hear Rob's opinion on this one, and also whether the
+> existing Linux and OpenBSD code would currently find gpio@0 {} instead
+> of gpio {} for backwards compat.
 
-drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error: 'pci1xxxx_gpio_resume' defined but not used [-Werror=unused-function]
-  311 | static int pci1xxxx_gpio_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~
-drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error: 'pci1xxxx_gpio_suspend' defined but not used [-Werror=unused-function]
-  295 | static int pci1xxxx_gpio_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~~~~~
+The OpenBSD driver does a lookup by name and the "@0" is part of that
+name.  So that would break backwards compat.
 
-
-git bisect pointed to 4ec7ac90ff39 ("misc: microchip: pci1xxxx: Add power management functions - suspend & resume handlers.").
-
-I will be happy to test any patch or provide any extra log if needed.
-
-
--- 
-Regards
-Sudip
+Maybe just name the slave GPIO controller "gpio-slave"?  If we add
+compatibles, the compatibles for the nodes should propbably be
+different such that we can switch to do a lookup by compatible?
