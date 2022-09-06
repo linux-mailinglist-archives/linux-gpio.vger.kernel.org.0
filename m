@@ -2,171 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4461B5AF081
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 18:35:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A1DD5AF0D7
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 18:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238880AbiIFQf2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 12:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35126 "EHLO
+        id S232063AbiIFQkn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 12:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238824AbiIFQfC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 12:35:02 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09083DE4;
-        Tue,  6 Sep 2022 09:10:52 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-127d10b4f19so3571296fac.9;
-        Tue, 06 Sep 2022 09:10:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=0UoPNDaC8NCrfq0xjsW8qx2SIU/bt2Qiddj8DCUAP+M=;
-        b=W3n2LHsDE58CAohESlZpMYooRETwI6VQU//debaLyVg6Rglzjd/zT98NHclbTvwpEQ
-         7NasgJuaoWNsQAcKy8mzjC7M4AGPNzs31k7Dk5ZHf7J7lFAgnBXLVhcCaSdH+ZZddfE7
-         NF77tApbBVisw8bXTIcDmZuAy6vMNXcXaXj/OoBMMUlxHrPdVSwyBuq1hYBB9gKjdVE7
-         mdtwmsYjFLCuo1LvNbCQvQVCHZIIlGoHufroxdSZRyPd0osvHftYbsJHcjATrmyuc3cf
-         5F0MnLYeTw3ioY6OGOjkjBs4TSO5ZuIg7if7PH+ehhvmMGskSEqSfiNiw0NxsObE8WrW
-         BKxQ==
-X-Gm-Message-State: ACgBeo1r5vhrwcjqkdlr87QvO2t4rAqWwR5nJ3FkejxGTHHgj83yV0Jh
-        XzQ1xTsTsqKLDb+nR/CCXg==
-X-Google-Smtp-Source: AA6agR5Jt/pp6V/0cSJbLG/uZ3wRLl3rUFetLiWmtRsQju4iEwOlY/LWBZGhv3u72wd7Ebj6Z31rKA==
-X-Received: by 2002:a05:6870:d354:b0:126:6b86:449d with SMTP id h20-20020a056870d35400b001266b86449dmr8005579oag.107.1662480651214;
-        Tue, 06 Sep 2022 09:10:51 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id h6-20020a9d6406000000b00636f7059b27sm6062359otl.5.2022.09.06.09.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 09:10:50 -0700 (PDT)
-Received: (nullmailer pid 618747 invoked by uid 1000);
-        Tue, 06 Sep 2022 16:10:49 -0000
-Date:   Tue, 6 Sep 2022 11:10:49 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Mark Kettenis <mark.kettenis@xs4all.nl>,
-        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
-        linus.walleij@linaro.org, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, brgl@bgdev.pl, marcan@marcan.st,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-Message-ID: <20220906161049.GC534217-robh@kernel.org>
-References: <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
- <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
- <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
- <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
- <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
- <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
- <20220902172808.GB52527-robh@kernel.org>
- <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
+        with ESMTP id S234168AbiIFQkR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 12:40:17 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C4185AA0
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Sep 2022 09:18:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662481107; x=1694017107;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ss+4F9J/CaZwcdY2cXJmGtJLU9XMyJzPA/NDr04u5pk=;
+  b=Y28V0tOce0P7ir8AJtc8WN84pzaeXrQ+/R/+E4HjbFvLp0r/wq/bbCqZ
+   JMuIWmFqC4cEpd7fbrEahG+vuCZxjNK5RZBx9JWDTFGBlKOn4PICCTgUO
+   6E0kI9V5d3HhFGZ9uwYlAJpRv6PidVVxhbhyPTt4x51u2aCb1zwqFkstS
+   h1WoB85nmgs0Pqva5KAESmNPbYymkeDBHPz6RiQP9+3e9yqLgEa0gyjv/
+   WccAtTFTwtr63Hj3JyICqQ2VBn9z6BX8gHbpDDNDnEafvVxYS6IfAGaYd
+   PsFeRweTdi7I+mA82WLqfl6NK94r70BjykLlvHyf0XTCvrsqDGMpfsdo/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="358353075"
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="358353075"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 09:18:27 -0700
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="565153728"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 09:18:25 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oVbHK-009BpZ-0c;
+        Tue, 06 Sep 2022 19:18:22 +0300
+Date:   Tue, 6 Sep 2022 19:18:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     heiko@sntech.de, linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.or, huangtao@rock-chips.com
+Subject: Re: [PATCH v2] gpio: rockchip: support acpi
+Message-ID: <YxdyzRWDi+jwW2iN@smile.fi.intel.com>
+References: <20220906013025.3302530-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20220906013025.3302530-1-jay.xu@rock-chips.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 10:04:45AM +0100, Russell King (Oracle) wrote:
-> On Fri, Sep 02, 2022 at 12:28:08PM -0500, Rob Herring wrote:
-> > This one is actually pretty odd in that the child nodes don't have a 
-> > compatible string which breaks the automagical probing.
-> 
-> I don't think that is necessarily true, and I don't think it's true in
-> this case.
+On Tue, Sep 06, 2022 at 09:30:25AM +0800, Jianqun Xu wrote:
+> This patch fix driver to support acpi by following changes:
+>  * support get gpio bank number from uid of acpi
+>  * try to get clocks for dt nodes but for acpi
+>  * try to get clocks by a char id first, if a dt patch applied
 
-It is, because you are creating the devices in the driver rather than 
-creating devices based on child nodes that exist.
+...
 
-> 
-> The SMC core driver instructs the MFD core to create devices for the
-> individual functional items:
-> 
-> static const struct mfd_cell apple_smc_devs[] = {
->         {
->                 .name = "macsmc-gpio",
->         },
->         {
->                 .name = "macsmc-hid",
->         },
->         {
->                 .name = "macsmc-power",
->         },
->         {
->                 .name = "macsmc-reboot",
->         },
->         {
->                 .name = "macsmc-rtc",
->         },
-> };
-> 
-> Since MFD uses platform devices for these, they get all the normal
-> functionality that these devices have, which include matching by
-> device name ot the driver name, and udev events being appropriately
-> triggered. As long as the platform drivers for these devices have the
-> correct modalias lines, autoloading of the modules will work and the
-> drivers will be correctly matched and probed.
+> -	bank->domain = irq_domain_add_linear(bank->of_node, 32,
+> +	bank->domain = irq_domain_create_linear(dev_fwnode(bank->dev), 32,
+>  					&irq_generic_chip_ops, NULL);
 
-Yes, and that's how MFD devices with no child nodes work. The difference 
-is those get any DT info out of the parent node. Here you are presumably 
-manually getting the child DT node you want for each driver.
+Should it be converted to use GPIO_MAX_PINS at the same time?
+
+...
+
+> +static int rockchip_gpio_of_get_bank_id(struct device *dev)
+> +{
+> +	static int gpio;
+> +	int bank_id = -1;
+
+> +	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
+
+Can't is_of_node() be sufficient check?
+
+> +		bank_id = of_alias_get_id(dev->of_node, "gpio");
+> +		if (bank_id < 0)
+> +			bank_id = gpio++;
+> +	}
+> +
+> +	return bank_id;
+> +}
+
+...
+
+> +#ifdef CONFIG_ACPI
+
+Why?
+
+> +static int rockchip_gpio_acpi_get_bank_id(struct device *dev)
+> +{
+> +	struct acpi_device *adev;
+> +	unsigned long bank_id = -1;
+> +	const char *uid;
+> +	int ret;
+> +
+> +	adev = ACPI_COMPANION(dev);
+> +	if (!adev)
+> +		return -ENXIO;
+> +
+> +	uid = acpi_device_uid(adev);
+> +	if (!uid || !(*uid)) {
+> +		dev_err(dev, "Cannot retrieve UID\n");
+> +		return -ENODEV;
+
+Why is it a fatal error? Can't be the same approach as for OF be used?
+
+> +	}
+> +
+> +	ret = kstrtoul(uid, 0, &bank_id);
+> +
+> +	return !ret ? bank_id : -ERANGE;
+
+Use standard pattern, i.e.
+
+	if (ret)
+		return ret;
+
+> +}
+> +#else
+> +static int rockchip_gpio_acpi_get_bank_id(struct device *dev)
+> +{
+> +	return -ENOENT;
+> +}
+> +#endif /* CONFIG_ACPI */
+
+...
+
+> +	int bank_id = 0;
+
+Redundant assignment.
+
+...
+
+> +	if (!ACPI_COMPANION(dev)) {
+
+One of:
+
+	is_of_node()
+	!is_acpi_node()
+
+?
+
+...
+
+> +	if (!ACPI_COMPANION(dev)) {
+
+Ditto.
+
+But looking how this disrupts the code, just leave OF and ACPI parts separate,
+don't mix them.
+
+...
+
+> +	if (!device_property_read_bool(bank->dev, "gpio-ranges") && pctldev) {
+> +		struct gpio_chip *gc = &bank->gpio_chip;
+> +
+> +		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
+> +					     gc->base, gc->ngpio);
+> +		if (ret) {
+> +			dev_err(bank->dev, "Failed to add pin range\n");
+> +			goto err_unlock;
+> +		}
+>  	}
+
+Why? What's wrong with GPIO library doing this for all chips?
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-> The Asahi kernel builds most of the platform support as modules,
-> including these, so we know it works (if it didn't, then lots of
-> module autoloading would be broken on non-DT platforms.)
-> 
-> > > Again the separate nodes are there because the RTC and the reboot
-> > > functionality are logically separate and handled by different MFD
-> > > sub-drivers in Linux.
-> > 
-> > It's really a question of whether the subset of functionality is going 
-> > to get reused on its own or has its own resources in DT. MFD bindings 
-> > are done both ways.
-> 
-> I think the current position on what to do about these is that everyone
-> is looking for someone else to make a decision, and no one wants to!
-
-I'm just looking for more information first.
-
-> Firstly, I don't think that the number of properties in a node should
-> have a bearing on the design of the DT binding - what should have a
-> bearing is the logical partitioning of functionality.
-
-It's not strictly about number of properties. Though nodes with only a 
-compatible string is generally a red flag for me.
-
-> Mark suggests that it would take six months for OpenBSD to transition to
-> some other description - for example, if we merged the nodes.
-
-The risk you take when using undocumented bindings...
-
-> Hector says that MacOS's firmware description has the nodes merged, but
-> their description is a mess.
-> 
-> The overall preference seems to be to keep the sub-nodes unless there
-> is a strong technical reason not to.
-> 
-> The feeling I am getting from the review is that there doesn't seem to
-> be a strong technical reason to merge the nodes - there are desires and
-> preferences, but nothing concrete.
-> 
-> So at this point, I think it would make sense if I post a v2 with all
-> the updates so far (sorry, given the long drawn out discussions on
-> this, I've lost track of what changes have been made to the code, so
-> I won't include a detailed change log.)
-
-As I said elsewhere, sub-nodes is probably the right choice here. I 
-think they need compatible strings in the child nodes, and addressing 
-has to be sorted out which it seems may also break OpenBSD.
-
-Rob
