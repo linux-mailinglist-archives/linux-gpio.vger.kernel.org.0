@@ -2,48 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F9F65AEE92
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 17:22:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86AD45AEE77
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 17:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239122AbiIFPWB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 11:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39106 "EHLO
+        id S232944AbiIFPRd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 11:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234950AbiIFPVh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 11:21:37 -0400
-Received: from sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E4E98370;
-        Tue,  6 Sep 2022 07:33:36 -0700 (PDT)
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id c29ccd8f;
-        Tue, 6 Sep 2022 16:25:49 +0200 (CEST)
-Date:   Tue, 6 Sep 2022 16:25:49 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     Hector Martin <marcan@marcan.st>
-Cc:     linux@armlinux.org.uk, linus.walleij@linaro.org, robh@kernel.org,
-        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
-        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <f5bef359-3abe-311c-3521-136eb5b54c4b@marcan.st> (message from
-        Hector Martin on Tue, 6 Sep 2022 22:53:47 +0900)
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-References: <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
- <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
- <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
- <20220902172808.GB52527-robh@kernel.org>
- <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
- <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
- <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
- <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
- <CACRpkdajhjpMzjMooDduu0jxrp0uDNJ90VfBPpHx+P14cFfskA@mail.gmail.com>
- <5b75dc7e-5337-73eb-450f-b72f479793c4@marcan.st>
- <YxdOafCWnDUNourH@shell.armlinux.org.uk> <f5bef359-3abe-311c-3521-136eb5b54c4b@marcan.st>
-Message-ID: <d3ced0ffaec45e3c@bloch.sibelius.xs4all.nl>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S232640AbiIFPRQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 11:17:16 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA8C91D25;
+        Tue,  6 Sep 2022 07:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662474607; x=1694010607;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=qYqPp+SqKYB0kW1r5YRu9Qox/5WN1GPuqBVB5ntM/wE=;
+  b=dKeVmEtpwaffUB+WogSSGgHeSd+Uo7lK/3LUnJkCbVeBr+JebU4FB2p6
+   q2O33FN1G8aSygHiT2HV7/tTxe0xRtUSSaRQI+iK4VzHehN1Fs+cIOZS+
+   FcyXiVp9tlDWFA/0CF+EWNNN/kRldVZKY6555cGJt+gNQsSsaywtK32GY
+   xtHzg5Xvi3KDNtKA67dmJvSDeC/EEVtohBJXnFSMmTBi4Qy1hKXyDdpxq
+   K3j0VDpFf3gZGYogI3lAQkAk1AV3edshat7XRHBgQqqaJyvwXyVT4Gd23
+   ko9pmz+3GOv27Ze+0vLNJVu1o1fBctGKbzPncJovQk4uj0h/yaozQzprJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10462"; a="360554915"
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="360554915"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 07:28:41 -0700
+X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
+   d="scan'208";a="565113463"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 07:28:40 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1oVZZ7-0099gK-1n;
+        Tue, 06 Sep 2022 17:28:37 +0300
+Date:   Tue, 6 Sep 2022 17:28:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Martyn Welch <martyn.welch@collabora.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/5] gpio: pca953x: Add support for PCAL6534
+Message-ID: <YxdZFRyv5E0qvXgS@smile.fi.intel.com>
+References: <20220906082820.4030401-1-martyn.welch@collabora.co.uk>
+ <20220906082820.4030401-5-martyn.welch@collabora.co.uk>
+ <Yxc8GgUnHOuMIn4p@smile.fi.intel.com>
+ <a71dec127a2e188b1eb7df1e385f71410051acca.camel@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a71dec127a2e188b1eb7df1e385f71410051acca.camel@collabora.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,59 +68,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Date: Tue, 6 Sep 2022 22:53:47 +0900
-> From: Hector Martin <marcan@marcan.st>
-> 
-> On 06/09/2022 22.43, Russell King (Oracle) wrote:
-> > In the case of gpio-macsmc, how would we later add support for the
-> > slave PMU GPIOs, given that these use keys "gpXX" rather than "gPxx"?
-> > How do we tell the gpio-macsmc code to use a different set of keys?
-> > Should DT describe the key "prefix" (in other words "gp" vs "gP"),
-> > or should it describe it some other way. What if Apple decides to
-> > instantiate another GPIO controller in a later platform with a
-> > different prefix, could that be accomodated without breaking any
-> > solution we come up today?
+On Tue, Sep 06, 2022 at 03:01:51PM +0100, Martyn Welch wrote:
+> On Tue, 2022-09-06 at 15:24 +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 06, 2022 at 09:28:19AM +0100, Martyn Welch wrote:
+
+...
+
+> > > +       u8 (*recalc_addr)(struct pca953x_chip *chip, int reg , int
+> > > off);
+> > > +       bool (*check_reg)(struct pca953x_chip *chip, unsigned int
+> > > reg,
+> > > +                         u32 checkbank);
 > > 
-> > Maybe the solution to this would be to describe the key prefix in DT
-> > as that's effectively its "reg". Or maybe we use "reg" to describe
-> > it somehow (which is value of the key, which seems to have an
-> > "address" like quality to it?)
-> > 
-> > We don't have to implement code for this now, we just need to get a
-> > reasonably correct DT binding for the gpio controller.
+> > I would think of splitting this change. Like in a separate patch you
+> > simply
+> > create this interface and only add what you need in the next one.
 > 
-> I agree that this is something to think about (I was about to reply on
-> the subject).
-> 
-> I can think of two ways: using `reg` for the key name, but that feels
-> icky since it's ASCII and not *really* a register number/address, or
-> something like this:
-> 
-> gpio@0 {
-> 	apple,smc-key-base = "gP00";
-> 	...
-> }
-> 
-> gpio@1 {
-> 	apple,smc-key-base = "gp00";
-> 	...
-> }
+> Can do, though I didn't feel you were particularly fussed about me
+> having split that out...
 
-This would still require us to add a (one-cell) "reg" property and
-would require adding the appropriate "#address-cells" and
-"#size-cells" properties to the SMC node.
+Oh, it just would be cleaner to see what you have done for a new chip support.
+Up to you and maintainers.
 
-> But this ties back to the device enumeration too, since right now the DT
-> does not drive that (we'd have to add the subdevice to the mfd subdevice
-> list somehow anyway, if we don't switch to compatibles).
-> 
-> I'd love to hear Rob's opinion on this one, and also whether the
-> existing Linux and OpenBSD code would currently find gpio@0 {} instead
-> of gpio {} for backwards compat.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The OpenBSD driver does a lookup by name and the "@0" is part of that
-name.  So that would break backwards compat.
 
-Maybe just name the slave GPIO controller "gpio-slave"?  If we add
-compatibles, the compatibles for the nodes should propbably be
-different such that we can switch to do a lookup by compatible?
