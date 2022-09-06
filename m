@@ -2,147 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D5F55AE3D5
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 11:07:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCB075AE447
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 11:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239569AbiIFJHS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 05:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41254 "EHLO
+        id S233419AbiIFJbY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 05:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239393AbiIFJHR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 05:07:17 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35FB24C614
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Sep 2022 02:07:10 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id e13so14432777wrm.1
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Sep 2022 02:07:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date;
-        bh=mPKulpM1VmePhCn9NGeORJeSVx0ds/dPcNDxI2woRLQ=;
-        b=OnHReX1D+oWmtqnZ/eFIfyCAVGEYKicV1nUmVMnE1mq0ZW5TQo+VrwL3LMDXAnzThh
-         PgsTdHm9zm/bb7llMOIcm0mtien4mSyFLB5tYIzK6YkwWNWKz7yEGvSfRHugyPOMfBXV
-         Rwt8GR7JXHfGD3sqSn1ZU/Jn8vmyWiZEuJdxBodcD2mq1gkeGnw3bq7R90r7KJvGbj08
-         G2frli139Xk75iDvNHb6a6pm+sC6JCwwFXCyWKaVwkIgtHVobIBV3C/z6b2TQNWvyEtm
-         8KxxsliBUqVXyyuGmSxUjgtz7uKO2Uhgy3fQKEvUPxq8Gi00lSsB9rwqR4TvDGO3caCt
-         8/IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date;
-        bh=mPKulpM1VmePhCn9NGeORJeSVx0ds/dPcNDxI2woRLQ=;
-        b=zfsJxewkRZSyG5BfHVqMMqMLDkNNeoSoWhJgi82W4SftM7txxqMCxnMDvD2jMjEq1P
-         doUOROzGfBMGvi3RUMME+ZQtkEIvqxxSc12W36OZlAk1ADTgdNLQHRTjMfWswXfgWT0J
-         4CGVU62/YP26bHwht9u0gzZ5Ic4i0gmK/h77PvOpIIgoNhQ+15CnXnQKSeQCBWvRtpbX
-         Vm/zPGCsCOCXwgw9s1NWPOjhkbD7rQ9Sku0PLTaH6GsqooqwNEK3tq9/qG/+AklgOp9r
-         jZDBldUjReHib2LW3S/m98zBh/NtUUJuKWmwlpD+BKz+zG7VFY/7UwrPf6bBAOmgKXRD
-         J2JQ==
-X-Gm-Message-State: ACgBeo1Qp9DI1NSDVhlGRZM8+ciEhnwWOyvm7HWy9A3YPhnKqDKAWCQV
-        z3sErsz2v+/yLlxG7zZcC8y08g==
-X-Google-Smtp-Source: AA6agR5YFhKwTFveLQ1zRnD0V87OI95Pez8WScCVXHUXaL7rQSxXDThAljQ2vlZ/LsGOpe9j9yPxfA==
-X-Received: by 2002:a05:6000:1f83:b0:228:6278:796b with SMTP id bw3-20020a0560001f8300b002286278796bmr7167060wrb.520.1662455228586;
-        Tue, 06 Sep 2022 02:07:08 -0700 (PDT)
-Received: from [10.1.3.188] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id k27-20020a05600c1c9b00b003a845fa1edfsm33016456wms.3.2022.09.06.02.07.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Sep 2022 02:07:08 -0700 (PDT)
-Message-ID: <b0d45e18-c92d-d187-2eac-851d975fbb7e@baylibre.com>
-Date:   Tue, 6 Sep 2022 11:07:07 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v1 1/1] pinctrl: meson: Switch to use fwnode instead of
- of_node
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-References: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Organization: Baylibre
-In-Reply-To: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233100AbiIFJbY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 05:31:24 -0400
+Received: from sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5CDE2AE3A;
+        Tue,  6 Sep 2022 02:31:21 -0700 (PDT)
+Received: from localhost (bloch.sibelius.xs4all.nl [local])
+        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id f3fee70a;
+        Tue, 6 Sep 2022 11:31:17 +0200 (CEST)
+Date:   Tue, 6 Sep 2022 11:31:17 +0200 (CEST)
+From:   Mark Kettenis <mark.kettenis@xs4all.nl>
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     robh@kernel.org, krzysztof.kozlowski@linaro.org, arnd@arndb.de,
+        lee@kernel.org, linus.walleij@linaro.org, alyssa@rosenzweig.io,
+        asahi@lists.linux.dev, brgl@bgdev.pl, marcan@marcan.st,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+References: <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
+ <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
+ <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
+ <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
+ <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
+ <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
+ <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
+ <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
+ <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
+ <20220902172808.GB52527-robh@kernel.org> <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
+Message-ID: <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05/09/2022 20:00, Andy Shevchenko wrote:
-> GPIO library now accepts fwnode as a firmware node, so
-> switch the driver to use it.
+> Date: Tue, 6 Sep 2022 10:04:45 +0100
+> From: "Russell King (Oracle)" <linux@armlinux.org.uk>
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->   drivers/pinctrl/meson/pinctrl-meson.c | 7 +++----
->   drivers/pinctrl/meson/pinctrl-meson.h | 4 +++-
->   2 files changed, 6 insertions(+), 5 deletions(-)
+> On Fri, Sep 02, 2022 at 12:28:08PM -0500, Rob Herring wrote:
+> > This one is actually pretty odd in that the child nodes don't have a 
+> > compatible string which breaks the automagical probing.
 > 
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
-> index cc2cd73ff8f9..530f3f934e19 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> @@ -608,6 +608,7 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
->   
->   	pc->chip.label = pc->data->name;
->   	pc->chip.parent = pc->dev;
-> +	pc->chip.fwnode = pc->fwnode;
->   	pc->chip.request = gpiochip_generic_request;
->   	pc->chip.free = gpiochip_generic_free;
->   	pc->chip.set_config = gpiochip_generic_config;
-> @@ -619,8 +620,6 @@ static int meson_gpiolib_register(struct meson_pinctrl *pc)
->   	pc->chip.base = -1;
->   	pc->chip.ngpio = pc->data->num_pins;
->   	pc->chip.can_sleep = false;
-> -	pc->chip.of_node = pc->of_node;
-> -	pc->chip.of_gpio_n_cells = 2;
->   
->   	ret = gpiochip_add_data(&pc->chip, pc);
->   	if (ret) {
-> @@ -678,8 +677,8 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc)
->   		return -EINVAL;
->   	}
->   
-> -	gpio_np = to_of_node(gpiochip_node_get_first(pc->dev));
-> -	pc->of_node = gpio_np;
-> +	pc->fwnode = gpiochip_node_get_first(pc->dev);
-> +	gpio_np = to_of_node(pc->fwnode);
->   
->   	pc->reg_mux = meson_map_resource(pc, gpio_np, "mux");
->   	if (IS_ERR_OR_NULL(pc->reg_mux)) {
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
-> index b197827027bd..34fc4e8612e4 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson.h
-> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
-> @@ -12,6 +12,8 @@
->   #include <linux/types.h>
->   #include <linux/module.h>
->   
-> +struct fwnode_handle;
-> +
->   struct meson_pinctrl;
->   
->   /**
-> @@ -131,7 +133,7 @@ struct meson_pinctrl {
->   	struct regmap *reg_gpio;
->   	struct regmap *reg_ds;
->   	struct gpio_chip chip;
-> -	struct device_node *of_node;
-> +	struct fwnode_handle *fwnode;
->   };
->   
->   #define FUNCTION(fn)							\
+> I don't think that is necessarily true, and I don't think it's true in
+> this case.
+> 
+> The SMC core driver instructs the MFD core to create devices for the
+> individual functional items:
+> 
+> static const struct mfd_cell apple_smc_devs[] = {
+>         {
+>                 .name = "macsmc-gpio",
+>         },
+>         {
+>                 .name = "macsmc-hid",
+>         },
+>         {
+>                 .name = "macsmc-power",
+>         },
+>         {
+>                 .name = "macsmc-reboot",
+>         },
+>         {
+>                 .name = "macsmc-rtc",
+>         },
+> };
+> 
+> Since MFD uses platform devices for these, they get all the normal
+> functionality that these devices have, which include matching by
+> device name ot the driver name, and udev events being appropriately
+> triggered. As long as the platform drivers for these devices have the
+> correct modalias lines, autoloading of the modules will work and the
+> drivers will be correctly matched and probed.
+> 
+> The Asahi kernel builds most of the platform support as modules,
+> including these, so we know it works (if it didn't, then lots of
+> module autoloading would be broken on non-DT platforms.)
+> 
+> > > Again the separate nodes are there because the RTC and the reboot
+> > > functionality are logically separate and handled by different MFD
+> > > sub-drivers in Linux.
+> > 
+> > It's really a question of whether the subset of functionality is going 
+> > to get reused on its own or has its own resources in DT. MFD bindings 
+> > are done both ways.
+> 
+> I think the current position on what to do about these is that everyone
+> is looking for someone else to make a decision, and no one wants to!
+> 
+> Firstly, I don't think that the number of properties in a node should
+> have a bearing on the design of the DT binding - what should have a
+> bearing is the logical partitioning of functionality.
+> 
+> Mark suggests that it would take six months for OpenBSD to transition to
+> some other description - for example, if we merged the nodes.
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Note that we're totally willing to do that if there is a good
+technical reason for changes to the binding.  We just have to find a
+way to upgrade existing installations of OpenBSD 7.1 which is a bit of
+a challenge as the SMC GPIOs are essential for wifi which on the
+laptops is the only network connection available.
+
+> Hector says that MacOS's firmware description has the nodes merged, but
+> their description is a mess.
+
+To elaborate on that a bit more, the use of sub-nodes provides a nice
+separation between the SMC hardware interface (the main node) and the
+functionality offered by the firmware running on the SMC (the sub-nodes).
+
+Another argument for having sub-nodes is that the firmware actually
+exposes *two* GPIO controllers.  For now we only support the "master"
+PMU GPIOs, but there also is a "slave" PMU GPIO controller that uses a
+separate set of SMC "keys".  We currently don't need any of the pins
+on the "slave", so we don't expose it in the DT yet.
+
+> The overall preference seems to be to keep the sub-nodes unless there
+> is a strong technical reason not to.
+> 
+> The feeling I am getting from the review is that there doesn't seem to
+> be a strong technical reason to merge the nodes - there are desires and
+> preferences, but nothing concrete.
+> 
+> So at this point, I think it would make sense if I post a v2 with all
+> the updates so far (sorry, given the long drawn out discussions on
+> this, I've lost track of what changes have been made to the code, so
+> I won't include a detailed change log.)
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+> 
+> 
