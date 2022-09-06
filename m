@@ -2,57 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 735365ADBCF
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 01:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA3E05ADC46
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 02:19:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbiIEXSw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 19:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47006 "EHLO
+        id S232299AbiIFATZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 20:19:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbiIEXSv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 19:18:51 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C3A757240;
-        Mon,  5 Sep 2022 16:18:50 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id io18so928989plb.10;
-        Mon, 05 Sep 2022 16:18:50 -0700 (PDT)
+        with ESMTP id S231781AbiIFATX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 20:19:23 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56745C14;
+        Mon,  5 Sep 2022 17:19:22 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id o126so782510pfb.6;
+        Mon, 05 Sep 2022 17:19:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date;
-        bh=/jqGrlOkEmBNjfkgs8nQW3ROS8ZrNR4/ALxdUn5IrPk=;
-        b=ilcjNtA9e+sPl0lsYgQkDwLCllTb2CiNUB5lHZ6JeNqUXFPhLppke4bm+tXK6piFK1
-         OXX3EAUgJSmDrfpfXWx/gxfIHEm2Ll5i3Co8kZmFkD+xJ+3h2g4/t3iiwcCHTb2nJzBQ
-         lbOD/k+fLbzcC8HBgysilDjSnQ1ZbXkHWL+70V9Wt9ed7HVcmNaLtsVWn3S7QudoyNrm
-         Tq2TeNuUosg71GwV6fxG+rz0aEcyELSi2RShJByRv/vyFIdszNuT6j8i8+cZEV+vX59E
-         NXtPK9gzYwxXVVePAldhDwWgJuboRZn5lOgdBc1/dRtrt2Cv4uHi9z8kuWuYzv1zT79p
-         tLxg==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=v4JA0M0hCIbFC7NXFN+IygsKVK4ZMU4qWYqYqoR4tJc=;
+        b=fHHlrsomzS5RX1w3UIei5qFtxTClmy9iSQEvGb1yFamLQYZo+o6zDJ8zJUVbJLL82Y
+         pkr7UJu0RGPOf+0J7r9ut0astM8MHGg1EaaL+qlGu/ue2aBOikrSmX+DoJq6OVnfYCTQ
+         FMcozHAuaegI9kVFEFk5BCS8NUELgRVLurFlc4zQR+4mEluidRXNcvb1Uq6r9730CALq
+         i+o2Z457eW9sgjxUmvKSOZs27VXpd+EYrVSuTXtKTDhoWiowlHQASX22DQpd3afScQaO
+         NjyzcFcZoXy1i9cNJaiHRj8JaHrrDq+3JIoFmZc3azTXuJLuoblV3/wMiYnfYqdVD2x3
+         dUTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=/jqGrlOkEmBNjfkgs8nQW3ROS8ZrNR4/ALxdUn5IrPk=;
-        b=ySBRpTA1b6JusI8Kf1A1FM6IEFoTWFhZY6G5kgeFcRL7UBeDHQJJcFX8c9MmJcs2kd
-         dSkOG1uotE8lKE44mHr1JobvKEr0u/m8ZNXUBskC1TfgkC8VKh8ceuZyfPPLeRj3MF17
-         8XSOoGmhyybrNAweazD7FCxelViI9mzWO1jrSTYqoUNypXGWBUBCRFZkl3ExUM5FFqA1
-         Wpg9JFKoKUF1oLOnp+kzesv9MkrfP/VNDlXRZA3OxvSEOCyoF1HlQuFTkRcZTRmm/U16
-         88EuCxt/kD77VUficdHX24T0DixriJNgl/kwpTig5tUNRm3U/1Cte7OV3Ct2ieo35o0x
-         nHEw==
-X-Gm-Message-State: ACgBeo03OzI0xUivlsh0Kb1bJ2FuarEpn2M5sWHlgIvk2CEIK240Ajoa
-        VbN87eYRl+F0cLYnZPCEcZU=
-X-Google-Smtp-Source: AA6agR7SONkgr8pjyY4NZ8VXkSKoPY330/BgoAO00Ts+AQQkwdonx5V0WIHgyPBEPyBYuNfJLCJm0Q==
-X-Received: by 2002:a17:903:186:b0:176:6615:cb8d with SMTP id z6-20020a170903018600b001766615cb8dmr19721305plg.135.1662419929430;
-        Mon, 05 Sep 2022 16:18:49 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=v4JA0M0hCIbFC7NXFN+IygsKVK4ZMU4qWYqYqoR4tJc=;
+        b=1+/5jNNCtN2Fcbg7pa+Qn/ASzRvEJrQL10qk+VIX4yxA73AmUf3kGFqwy67432klT+
+         xI8H0pD7o2ehXiLaGzu1EbGJDhLIOVJa+pgCjPROUcBeAn5O6xhx2lfpjdWBK6tjUp8X
+         96WY+LDvoHHWl1avLrqsFV79rW8Cdx2ZVmgmCEe852dzNaaKUUdfMH/bMfcPBeyibutS
+         JVb2DPHW0NkXJq/hdYPVFDm0/oUWgZt+j9ceBnY/9sTXmfOib7HBi4/4WQci5KFVRK4f
+         QCl8bdsvVAV2uvVTXbNAZKydZesxAdqYCx7hDCA5YCSMS3Fy5wneVBEhLblQISGolQeu
+         d7+w==
+X-Gm-Message-State: ACgBeo18iFOHzHPbVoCq6ZcjBkFQfj/7YMbXiSussqZwsqA2g7flFT3a
+        8iaXhHR3W2O+9ens/wL9qkQ=
+X-Google-Smtp-Source: AA6agR6BSwkY2FCM/mxUqmLHetzPYwEnkn1n9g0P2sCyTVfQpw3+hUsDHc+Gpjiwldy8UpbPbUcIag==
+X-Received: by 2002:aa7:88c8:0:b0:536:926:700f with SMTP id k8-20020aa788c8000000b005360926700fmr53349294pff.72.1662423561657;
+        Mon, 05 Sep 2022 17:19:21 -0700 (PDT)
 Received: from google.com ([2620:15c:202:201:1190:fbfa:ae95:111c])
-        by smtp.gmail.com with ESMTPSA id 5-20020a17090a190500b001fe444b2245sm7375447pjg.25.2022.09.05.16.18.47
+        by smtp.gmail.com with ESMTPSA id c10-20020a624e0a000000b0053e156e9475sm431528pfb.182.2022.09.05.17.19.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Sep 2022 16:18:48 -0700 (PDT)
-Date:   Mon, 5 Sep 2022 16:18:44 -0700
+        Mon, 05 Sep 2022 17:19:21 -0700 (PDT)
+Date:   Mon, 5 Sep 2022 17:19:17 -0700
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+To:     Thierry Reding <thierry.reding@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Matti Vaittinen <mazziesaccount@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -80,25 +77,22 @@ Cc:     Thierry Reding <thierry.reding@gmail.com>,
         Rob Herring <robh@kernel.org>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Cc:     linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 06/11] PCI: aardvark: switch to using
- devm_gpiod_get_optional()
-Message-ID: <YxaD1Luja4T/osP5@google.com>
+Subject: Re: [PATCH v1 07/11] PCI: apple: switch to using
+ fwnode_gpiod_get_index()
+Message-ID: <YxaSBRkAG/hKjFol@google.com>
 References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-6-b29adfb27a6c@gmail.com>
- <20220905070046.46nlhczkck2ufr4x@pali>
- <YxZ+PSDRYZnVKfFO@google.com>
- <20220905231010.ojl4i4ph27qtebiy@pali>
+ <20220903-gpiod_get_from_of_node-remove-v1-7-b29adfb27a6c@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220905231010.ojl4i4ph27qtebiy@pali>
+In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-7-b29adfb27a6c@gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -109,54 +103,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 01:10:10AM +0200, Pali Rohár wrote:
-> On Monday 05 September 2022 15:54:53 Dmitry Torokhov wrote:
-> > On Mon, Sep 05, 2022 at 09:00:46AM +0200, Pali Rohár wrote:
-> > > On Sunday 04 September 2022 23:30:58 Dmitry Torokhov wrote:
-> > > > I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
-> > > > so that gpiolib can be cleaned a bit, so let's switch to the generic
-> > > > device property API.
-> > > > 
-> > > > I believe that the only reason the driver, instead of the standard
-> > > > devm_gpiod_get_optional(), used devm_gpiod_get_from_of_node() is
-> > > > because it wanted to set up a pretty consumer name for the GPIO,
-> > > 
-> > > IIRC consumer name is not used at all.
-> > > 
-> > > The reason was to specify full name of DTS property, for easier
-> > > identification of the code. DTS property is "reset-gpios" but API
-> > > specify only "reset".
-> > 
-> > I see. Do you want me to reset the patch with updated desctiption as to
-> > the reason devm_gpiod_get_from_of_node() was used?
+On Sun, Sep 04, 2022 at 11:30:59PM -0700, Dmitry Torokhov wrote:
+> I would like to stop exporting OF-specific gpiod_get_from_of_node()
+> so that gpiolib can be cleaned a bit, so let's switch to the generic
+> fwnode property API.
 > 
-> I think it is fine. So add my:
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 > 
-> Acked-by: Pali Rohár <pali@kernel.org>
-> 
-> Anyway as another improvement for future I would suggest some API
-> function with _optional_ logic, so it could be used for more PCIe
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index a2c3c207a04b..d83817d3ff86 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -516,8 +516,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
+>  	u32 stat, idx;
+>  	int ret, i;
+>  
+> -	reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
+> -				       GPIOD_OUT_LOW, "PERST#");
+> +	reset = fwnode_gpiod_get_index(of_fwnode_handle(np),
+> +				       "reset", 0, GPIOD_OUT_LOW, "PERST#");
 
-I think we need to see how many are attaching reset lines to subnodes.
-If there are multiple then I agree we could add _optional. So far I see:
+Hmm, I am looking at the driver and it leaks the reset gpio on
+unbind/unload. I guess it does not matter in practice, but still nice
+not to leak. Thankfully it is easy to cure by switching to devm option:
+devm_fwnode_gpiod_get().
 
-dtor@dtor-ws:~/kernel/linux-next (gpiod_get_from_of_node-remove)$ git grep '"reset"' -- drivers/pci/controller/
-drivers/pci/controller/cadence/pci-j721e.c:             gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-drivers/pci/controller/dwc/pci-keystone.c:      gpiod = devm_gpiod_get_optional(dev, "reset",
-drivers/pci/controller/dwc/pci-meson.c: mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-drivers/pci/controller/dwc/pcie-dw-rockchip.c:  rockchip->rst_gpio = devm_gpiod_get_optional(&pdev->dev, "reset",
-drivers/pci/controller/dwc/pcie-fu740.c:        afp->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-drivers/pci/controller/dwc/pcie-intel-gw.c:     pcie->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-drivers/pci/controller/dwc/pcie-keembay.c:      pcie->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
-drivers/pci/controller/dwc/pcie-qcom-ep.c:      pcie_ep->reset = devm_gpiod_get(dev, "reset", GPIOD_IN);
-drivers/pci/controller/dwc/pcie-tegra194.c:     pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
-drivers/pci/controller/pci-aardvark.c:  pcie->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-drivers/pci/controller/pci-tegra.c:                                                    "reset",
-drivers/pci/controller/pcie-apple.c:                                   "reset", 0, GPIOD_OUT_LOW, "PERST#");
-drivers/pci/controller/pcie-mt7621.c:   port->gpio_rst = devm_gpiod_get_index_optional(dev, "reset", slot,
-
-So majority have reset lines attached to the "main" node and thus can use
-devm_gpiod_get_optional().
+I'll send and updated patch with a new justification.
 
 Thanks.
 
