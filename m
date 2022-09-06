@@ -2,146 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB075AE447
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 11:31:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE155AE555
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 12:27:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233419AbiIFJbY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 05:31:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
+        id S238818AbiIFK1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 06:27:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233100AbiIFJbY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 05:31:24 -0400
-Received: from sibelius.xs4all.nl (80-61-163-207.fixed.kpn.net [80.61.163.207])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5CDE2AE3A;
-        Tue,  6 Sep 2022 02:31:21 -0700 (PDT)
-Received: from localhost (bloch.sibelius.xs4all.nl [local])
-        by bloch.sibelius.xs4all.nl (OpenSMTPD) with ESMTPA id f3fee70a;
-        Tue, 6 Sep 2022 11:31:17 +0200 (CEST)
-Date:   Tue, 6 Sep 2022 11:31:17 +0200 (CEST)
-From:   Mark Kettenis <mark.kettenis@xs4all.nl>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     robh@kernel.org, krzysztof.kozlowski@linaro.org, arnd@arndb.de,
-        lee@kernel.org, linus.walleij@linaro.org, alyssa@rosenzweig.io,
-        asahi@lists.linux.dev, brgl@bgdev.pl, marcan@marcan.st,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org
-In-Reply-To: <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-References: <YxDL+cAx9kkZRL8K@shell.armlinux.org.uk>
- <928ddeff-efac-920c-7bbf-dda35a942b93@linaro.org>
- <YxDOpCq0vIlt4VNa@shell.armlinux.org.uk>
- <2fedff34-6a20-f1ce-a756-2bd8671fcd52@linaro.org>
- <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
- <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
- <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
- <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
- <20220902172808.GB52527-robh@kernel.org> <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
-Message-ID: <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233472AbiIFK1P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 06:27:15 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DF3108B;
+        Tue,  6 Sep 2022 03:26:33 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id y9so4999402qvo.4;
+        Tue, 06 Sep 2022 03:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=tXv008SlH69T3a4TyUho92ufuuVkbM9XizBJ17tqxYs=;
+        b=n35iD03EAO+a8Q5l+GH4wZqoZrhn7FYOOn2f2vh8Wei5XaEnrSk7Uv1QLK9spM+xw7
+         gf8EL6yv2GKuT6zyh2PLtG9GScSynjvAlM99ZTehNwZgj3NzXFAy65cIicUUXOAfCjw1
+         ihJ9PFPRImhmX8sWdmdxOThluyBjXDqk+yIRI9+XxzvGMsUMPtHIZUNEbs+J0GM3BqCU
+         5R1fyhfeQxM0QXriLj1pOY+Vv0JImZS3babiiFInRC0vXeTO6MWXq8rygy6248MpwEcC
+         plC6gfyUNADgJY5bJsgTMLgzwjQ5zN9oDsK2walnglio9zr3EstEab+kJj3U2qOFaEhW
+         23Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=tXv008SlH69T3a4TyUho92ufuuVkbM9XizBJ17tqxYs=;
+        b=jNUPqRlUMiQ9R77Z/d9hgml7bz3r+Z6H19D4K0gvfGxkBwkKNXeWdA3L2I6HmGpRk+
+         hvPSTM0/lj6mByYN9cM8CT7nk+EQUEJxhKopx15i2jYCrHiQ0eKbEjQnG9pMmXaiOHbn
+         ZUs1KVDQG/oCxyBmpQ+FEYMHAuAtm+Y10GO9PQLzlJBtJ/ogLnIel/hdc9hquvbUELUC
+         2xbCx5UYZbthD6stWztfK9bxMeB1C+e7ipqEBa303a/LjTDhJYIzTMoyHVWwdVIXA7o+
+         Zh9SZ/zqJP4QMGCH9yiVWUhU6Z+f66ErmxOUE6epgJRfDH0kR9Urhj7yXHt3x8eijAj1
+         LZTQ==
+X-Gm-Message-State: ACgBeo0LMcWOCystJz9Wv46llSoEd5+4KNtQHE2ZuHEsNvanq04te4Fl
+        qR+hoN3+NlOnzoGqKSHVJ/YZAdwOXZpk9SWSAgQ=
+X-Google-Smtp-Source: AA6agR465qTH7nx1ElzS/70y3gN16WMCoUHxnwsPzWxhikcrzS4pRgVIzt/mCjCA6j19DPHKH1Sj8kkP7SJbGPIkRME=
+X-Received: by 2002:a05:6214:c8f:b0:499:21eb:ba3b with SMTP id
+ r15-20020a0562140c8f00b0049921ebba3bmr25343673qvr.97.1662459992865; Tue, 06
+ Sep 2022 03:26:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220902182650.83098-1-andriy.shevchenko@linux.intel.com>
+ <20220902182650.83098-3-andriy.shevchenko@linux.intel.com>
+ <CAHp75VcNGEVRnkWeVThaq4zNYoiZGSY-+KfbV5_9zG_5XoriMg@mail.gmail.com>
+ <YxXyTCSKzL42PF1D@smile.fi.intel.com> <CACRpkdY4nJuXAxM7tYviWSPeqmCc6o4D--Vq0CZRPNjWNj+E_A@mail.gmail.com>
+ <CAHp75VcbucZ_3+bvJCsLk78D6egwckN=rMAdttmVwt8H9MfCSw@mail.gmail.com> <CALNFmy0Hu-BUH8DLMk+5L=5OW46pM_dP47Jy8iKJeixDUW815w@mail.gmail.com>
+In-Reply-To: <CALNFmy0Hu-BUH8DLMk+5L=5OW46pM_dP47Jy8iKJeixDUW815w@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 6 Sep 2022 13:25:56 +0300
+Message-ID: <CAHp75VcP6yMKQJ87Fq5ZYDGMF_39pg_qcKCa4EOz0PQEZ4A0rQ@mail.gmail.com>
+Subject: Re: [PATCH v1 03/17] pinctrl: cy8c95x0: Allow most of the registers
+ to be cached
+To:     Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Date: Tue, 6 Sep 2022 10:04:45 +0100
-> From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-> 
-> On Fri, Sep 02, 2022 at 12:28:08PM -0500, Rob Herring wrote:
-> > This one is actually pretty odd in that the child nodes don't have a 
-> > compatible string which breaks the automagical probing.
-> 
-> I don't think that is necessarily true, and I don't think it's true in
-> this case.
-> 
-> The SMC core driver instructs the MFD core to create devices for the
-> individual functional items:
-> 
-> static const struct mfd_cell apple_smc_devs[] = {
->         {
->                 .name = "macsmc-gpio",
->         },
->         {
->                 .name = "macsmc-hid",
->         },
->         {
->                 .name = "macsmc-power",
->         },
->         {
->                 .name = "macsmc-reboot",
->         },
->         {
->                 .name = "macsmc-rtc",
->         },
-> };
-> 
-> Since MFD uses platform devices for these, they get all the normal
-> functionality that these devices have, which include matching by
-> device name ot the driver name, and udev events being appropriately
-> triggered. As long as the platform drivers for these devices have the
-> correct modalias lines, autoloading of the modules will work and the
-> drivers will be correctly matched and probed.
-> 
-> The Asahi kernel builds most of the platform support as modules,
-> including these, so we know it works (if it didn't, then lots of
-> module autoloading would be broken on non-DT platforms.)
-> 
-> > > Again the separate nodes are there because the RTC and the reboot
-> > > functionality are logically separate and handled by different MFD
-> > > sub-drivers in Linux.
-> > 
-> > It's really a question of whether the subset of functionality is going 
-> > to get reused on its own or has its own resources in DT. MFD bindings 
-> > are done both ways.
-> 
-> I think the current position on what to do about these is that everyone
-> is looking for someone else to make a decision, and no one wants to!
-> 
-> Firstly, I don't think that the number of properties in a node should
-> have a bearing on the design of the DT binding - what should have a
-> bearing is the logical partitioning of functionality.
-> 
-> Mark suggests that it would take six months for OpenBSD to transition to
-> some other description - for example, if we merged the nodes.
+On Tue, Sep 6, 2022 at 11:36 AM Patrick Rudolph
+<patrick.rudolph@9elements.com> wrote:
+>
+> Hi,
+> I've tested the patch series on my OpenBMC platform and it works fine.
 
-Note that we're totally willing to do that if there is a good
-technical reason for changes to the binding.  We just have to find a
-way to upgrade existing installations of OpenBSD 7.1 which is a bit of
-a challenge as the SMC GPIOs are essential for wifi which on the
-laptops is the only network connection available.
+Thank you!
+I guess we may consider this as an equivalent to the formal Tested-by tag?
 
-> Hector says that MacOS's firmware description has the nodes merged, but
-> their description is a mess.
+> I don't think it's worth the effort to implement virtual registers for
+> the muxed pin configuration,
+> but I won't stop you.
 
-To elaborate on that a bit more, the use of sub-nodes provides a nice
-separation between the SMC hardware interface (the main node) and the
-functionality offered by the firmware running on the SMC (the sub-nodes).
+It's not a high priority to me anyway, but it is a good feature to
+have since regmap allows us to dump registers. Moreover the listing
+files in debugfs currently take a lot of time, that's how I come up
+with this.
 
-Another argument for having sub-nodes is that the firmware actually
-exposes *two* GPIO controllers.  For now we only support the "master"
-PMU GPIOs, but there also is a "slave" PMU GPIO controller that uses a
-separate set of SMC "keys".  We currently don't need any of the pins
-on the "slave", so we don't expose it in the DT yet.
+> On Mon, Sep 5, 2022 at 3:37 PM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> >
+> > On Mon, Sep 5, 2022 at 4:34 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Mon, Sep 5, 2022 at 2:57 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Fri, Sep 02, 2022 at 09:42:00PM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Sep 2, 2022 at 9:36 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > >
+> > > > > > It's unclear why many of static registers were marked as volatile.
+> > > > >
+> > > > > the static (yeah, forgot it)
+> > > > >
+> > > > > > They are pretty much bidirectional and static in a sense that
+> > > > > > written value is kept there until a new write or chip reset.
+> > > > > > Drop those registers from the list to allow them to be cached.
+> > > > >
+> > > > > This patch is not correct due to indexing access. It's sneaked since I
+> > > > > forgot I added it into my main repo. The proper approach should be to
+> > > > > create virtual registers and decode them before use. This allows to
+> > > > > cache all ports and as a benefit to debug print all port actual
+> > > > > statuses.
+> > > >
+> > > > To be clear: With this one removed from the bunch the rest can be applied w.o.
+> > > > any change.
+> > >
+> > > I'll give Patrick a day or two to test/review and then I'll just apply
+> > > them all except this one, they are all pretty self-evident
+> >
+> > Sure!
+> >
+> > > except ACPI
+> > > things which have obviously been tested on hardware
+> >
+> > Yes, I have a Galileo Gen 1 board which has been used for testing.
+> >
+> > >  so from my
+> > > point of view it's good to merge.
+> >
+> > Thanks!
 
-> The overall preference seems to be to keep the sub-nodes unless there
-> is a strong technical reason not to.
-> 
-> The feeling I am getting from the review is that there doesn't seem to
-> be a strong technical reason to merge the nodes - there are desires and
-> preferences, but nothing concrete.
-> 
-> So at this point, I think it would make sense if I post a v2 with all
-> the updates so far (sorry, given the long drawn out discussions on
-> this, I've lost track of what changes have been made to the code, so
-> I won't include a detailed change log.)
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
-> 
-> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
