@@ -2,189 +2,416 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0ADC5ADCD7
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 03:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 339F05ADCE5
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 03:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231146AbiIFBQl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Sep 2022 21:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50658 "EHLO
+        id S229619AbiIFBak (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Sep 2022 21:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiIFBQk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 21:16:40 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60041.outbound.protection.outlook.com [40.107.6.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F9067141;
-        Mon,  5 Sep 2022 18:16:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GcM7xqtI2CYCwppx0vvWnzO2UWf7j0U83DFr8g58JJy/rG9i51WKzkqFaHX5DPaSo/Ox8K1DvcNkO5BBnzPzzu2hONmAJ34GGPSU+pZ7TrX6ipUHlTHBEZiYEiz7tCCD2uAvG7uFSnlzTL8ZxU78/JEHaUsWwdrkBR5nBCB3XwTq8BwGpEIBeJfixbkHv5mzjJrH0msS6XEBapXbH/au/wY8jIuh6JTBPPEJht0ommjlkmTJQHEFdIwZd+LMW6H7MKgPSc/FbqBI6r7PHEEqDypyiBpsG7lfFl6gfzeAVuJMIyL64bCqc5dxybznhvn1VNd8Z2y2JuZutQjfoESYNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c/EiDc2sTe07/CNC74bvPQfmJFMgdY+RrVxkwzaMsoM=;
- b=mJnqMKIpkHtrZ0MzYvTjVheb8lMT6OL+Q0KBfdq5LlPA5trpcjwk+JuRMiGvaULOEv0JqJ8AtYcl3uhF2/QzkLPrGvMXL0Q4nfTRO3//KhuP4eDh2JmW1xFtxcT3S3HN+HRpirtnVlNbYxkAsWgwVZQYhNaQKbM1T/sbwRi6t49I9DhO2zEZyHxsREfH014Lss37przCkFcwbKUXnxwWmjgh0DNUxa7BXEr3AVk8KkgGlqE3XsPMKRLzCeQgEpsgAUY6W/21A8cb7WWGjSOz3WbJl/lNWg8HWc/wE9pu05ab/NmsyqRK1+zKIpHauRcC10wKwwI//gazcsjk0sGNtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c/EiDc2sTe07/CNC74bvPQfmJFMgdY+RrVxkwzaMsoM=;
- b=MaHAPLUBiCd9VDa58bNTV+DhN2LxNFFThQc6V0RH99crBX+rOJ5Z9iJga3QmL1QPzuqphLNK5qz3hpj3bwGIQIWnyJFyAGRzOs3vOqwph/cHTaun5Zziul3t78YJ6AE4ejv1Vf0Ilv5A4UzSROptaCHw0bbiyKhF2PFY1/fNZbE=
-Received: from DB9PR04MB8412.eurprd04.prod.outlook.com (2603:10a6:10:24d::9)
- by PAXPR04MB8526.eurprd04.prod.outlook.com (2603:10a6:102:211::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.18; Tue, 6 Sep
- 2022 01:16:30 +0000
-Received: from DB9PR04MB8412.eurprd04.prod.outlook.com
- ([fe80::38fa:c0c7:75b2:39fb]) by DB9PR04MB8412.eurprd04.prod.outlook.com
- ([fe80::38fa:c0c7:75b2:39fb%8]) with mapi id 15.20.5588.018; Tue, 6 Sep 2022
- 01:16:30 +0000
-From:   Jacky Bai <ping.bai@nxp.com>
-To:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-CC:     Francesco Dolcini <francesco.dolcini@toradex.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        kernel test robot <lkp@intel.com>
-Subject: RE: [PATCH] pinctrl: imx8m: kconfig: Fix build error on test compile
-Thread-Topic: [PATCH] pinctrl: imx8m: kconfig: Fix build error on test compile
-Thread-Index: AQHYwXkGSXqbDG3mdkqwLumVr+JmKa3RlgEQ
-Date:   Tue, 6 Sep 2022 01:16:30 +0000
-Message-ID: <DB9PR04MB8412C5E5640C8119FC5FD742877E9@DB9PR04MB8412.eurprd04.prod.outlook.com>
-References: <20220905224408.346425-1-francesco.dolcini@toradex.com>
-In-Reply-To: <20220905224408.346425-1-francesco.dolcini@toradex.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b07e790-9f33-46fa-d87c-08da8fa56e0c
-x-ms-traffictypediagnostic: PAXPR04MB8526:EE_
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cz3SEKTw6xNlvZeA+tqYlC8F8N/0GAl6iKK1Ze7F/RWhiYb1jiZD028DfD18oPI6J/7i0YdJBThnih1EuqRD9YzNuJ8WvzGYDbHJEZ+TBfg9l4t/zxMqhsZYPOdfRdSbnmccKB1TcXn6/eUZXOlbyz25PzIVL7vXL/9u0BygGW6MKhLFTlrijsmDyy+vjy8b7xRCVddgQFK0OmEA6mGholD8BUc/DPfr9iKuSWgDAmVHBr1s12WIXhoJK+WixhJS6vErpHkyto3+OkcLGKzyKdnmGAVqI0gUlR5qUk42gODKxAW84QdfwAqgWSQwAJ+Ma47AQjj21fegjzySeEhiSySySPoaH7jgKM3BJ8+aYqcsgGHolFLL/yM/Z715nlSQBhcyCzAhd9A4Htb/uvEAThnOmBvkOruloxxDUzZ5ZNuz282dajMUg3pzBxjQYGKsk5aSQiZEfM2MnTNBIlzSNKc9PNWnUsmLP2OuoEe2lBSNEpijYDFtvML0zLAlfqGO6uo0npk6c2doieIkUQUIATw9mb9J8CneOQemWSsG+1d2eLJDuW/bfkRcZBAc0NdCCo/FucAlm90C6sf8YoEfxYDW0djRd2853swMsz1ns4hTtFZpQaE8yzps19gB2+1rI1wgt0vMMvL9Go7fUiGBINW6qN7Ex+o5loqezOyN/F5t0ilGsPaeMJFDPNCn6w6RWC7K2R4VIdSsC6jlNMSgDdUUi3T8VvB281c6DGXUEugU2cOKB49BFvOheLcW7D1POH++mR11JKqtDyx5h+qK7WGhB4wenXVzMx4ZXkDWhDE=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR04MB8412.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(33656002)(76116006)(38070700005)(478600001)(66446008)(66476007)(66556008)(64756008)(66946007)(8676002)(4326008)(26005)(2906002)(9686003)(8936002)(5660300002)(186003)(52536014)(41300700001)(6506007)(7696005)(122000001)(86362001)(71200400001)(110136005)(54906003)(316002)(38100700002)(55016003)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pZeNHvRm6qOKKC5f0M1Di/kS3b7oPoyi4IYB13nEpEjbv0JJpfOGxmAVRXwv?=
- =?us-ascii?Q?jCj92X5glQcBdNQuMejsBAIaFVn/H93X5CDRggd8YGpnE2QJDeSki7/J6eoe?=
- =?us-ascii?Q?vz0cJaeYGkE1P2CZPcokejDC6P5HCQZR3opinC/4U/lENjTZL5l0km+7nQ7c?=
- =?us-ascii?Q?qI9LCHj8V8UU/l/w1Rfint2X6cFonA2JlXEGUb1RLQJJZwcKcHrabJVrLysq?=
- =?us-ascii?Q?3FC0CqzOXxUyXYIoBNKiVx5QQ4z4lgyD2X63218W/vylE4yU7dVBTGwSSKJc?=
- =?us-ascii?Q?tUZNcJDopfVJRmBLfzaQdFcl3nmvaeYpIaApnPoVrOGcXIu6edjy2uHLKESw?=
- =?us-ascii?Q?urSdXnOMvAj0YHwkmdZ7IQg/JnIUo9xJddxy+wwTp1FZ2u+ROUqg05tno1MI?=
- =?us-ascii?Q?XxAK8Z5lfTdKye0RCPKat5TGi7mM1qlvte94tYS/QXApnVA1amhj2FGzFuCp?=
- =?us-ascii?Q?5/X05sUtq6hOdaFbZyetTIO64ljP+kWi5EohQg95KieJiL7vKNfm2BvsuGBN?=
- =?us-ascii?Q?U5lCldM9/edLuHUfJhsDlCbdRZ1L/tRTqoTLGP5tHCm7zJK5sYcvAXAZPeiz?=
- =?us-ascii?Q?urJSFA0yxE/ghlW9TOUV0QncQ0LZZkY0Ik9euK/Pccwbto+toCAnEGEvWVMK?=
- =?us-ascii?Q?0VYqdMf5g66qA3wHVtMDlOMX4kULS0v4/KsM5SrnojqNhb2RFk623KgKhwNj?=
- =?us-ascii?Q?4Aa1JmfWhq6KJtsPZ8McjXybKyJh/ROLH84BiIuYbJ6mADnX+lIzBJJ1sS85?=
- =?us-ascii?Q?p/yMoK3gl1P2kQCsGWWAkTNCUnUG/h4zhkoRpNhOICFucizaDLCtVyLjdjW0?=
- =?us-ascii?Q?DCGMcbSdi8iNSQQh1QX/58/X34fDBhVoEAoTl2xUd+FdZGV3UGGdB/ZgpOGf?=
- =?us-ascii?Q?0ICzupQIuW95I6lRj20jZCB5TY32VSNMNQwPPlFjiDTCFo5CitqopZkTAgK2?=
- =?us-ascii?Q?txffgAdGq84o3qk7k6irP5BEvhuGfAQeoaVCdm8ITAOQNMOOIdPHsmNbl0+J?=
- =?us-ascii?Q?P25tm6X8Al8ZZf1KC4WR0pUHNcmmmS3s17B/PgP5XC1Kn2Oc52LZJ9stpJaA?=
- =?us-ascii?Q?hEgPXBVKFGMmxtEin2WuOdKrecSUkBZBbeZwX13obRgy11RejuW3+ECy221j?=
- =?us-ascii?Q?Loexto1ushF00ElHJPseTTez9AoUWvGIvXJ/nx/iSGD7msZmWqmoGszLERQ1?=
- =?us-ascii?Q?sqbLiQW0YWnu1Ohpj0IVoO5/lPpCwuTVLswlc2kGbZA0rzQ2VCBkkYzuG/ol?=
- =?us-ascii?Q?A+2bfSvCdbK7xEehAZjPUXdllaT6WaRdXeoBkUQ4wQTMq06KW/k9MApT1H7L?=
- =?us-ascii?Q?9QuAyryVImZiWFKD6xk8J+sXAwCev2/IfZ521T+g0/ChTk2EEj+M5VTPKy08?=
- =?us-ascii?Q?FnOE2lbuSLytl7dUeZVgkW4IlUJZNdYLubfMvqM+8JhsunK+BBrevtholPoU?=
- =?us-ascii?Q?ziKsUZBU7qY7S4gcgdUoKKE0FSJgsvUMrZSmdLMOos8Rcixhf/V/w4dz5V3O?=
- =?us-ascii?Q?lcuqX3sIPDiDo9Seugxzi0JOVW15Iz4HOmpdhXC2CFIeaIBLGLXxaHQGHHOr?=
- =?us-ascii?Q?PgFJDRmyNvKCl+IABrc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232836AbiIFBah (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Sep 2022 21:30:37 -0400
+Received: from mail-m11873.qiye.163.com (mail-m11873.qiye.163.com [115.236.118.73])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976DF647C0
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Sep 2022 18:30:31 -0700 (PDT)
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by mail-m11873.qiye.163.com (Hmail) with ESMTPA id 2D443900467;
+        Tue,  6 Sep 2022 09:30:27 +0800 (CST)
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     heiko@sntech.de, linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.or,
+        huangtao@rock-chips.com, Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v2] gpio: rockchip: support acpi
+Date:   Tue,  6 Sep 2022 09:30:25 +0800
+Message-Id: <20220906013025.3302530-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR04MB8412.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b07e790-9f33-46fa-d87c-08da8fa56e0c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Sep 2022 01:16:30.4433
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c6xMH+Mno+t2iT22b5vVFdrc3S6w0x1pPpTN0n2i6oYX6ehIJFB+bDH2JR5kzA+ZPVGtGEw5fVCxXYn5QoDSnQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8526
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGB4ZVk5LHUwdGEtNGU0eTVUTARMWGhIXJB
+        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITkhVSktLWQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NBQ6Fxw5Qz0aMj02A0wuSiMB
+        NEwKCjVVSlVKTU1JT0lMQ0lMQk9OVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
+        WU5DVUlJVUxVSkpPWVdZCAFZQUpKT0NPNwY+
+X-HM-Tid: 0a83106b8ce32eafkusn2d443900467
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> Subject: [PATCH] pinctrl: imx8m: kconfig: Fix build error on test compile
->=20
-> PINCTRL_IMX depends on OF, however the dependency is missed when
-> selected by PINCTRL_IMX8M* (it does not follow the indirect 'select'
-> statements), select it explicitly.
->=20
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-...
-> Fixes: 87c2a29a6bf1 ("pinctrl: imx8m: kconfig: Depends on SOC_IMX8M")
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+This patch fix driver to support acpi by following changes:
+ * support get gpio bank number from uid of acpi
+ * try to get clocks for dt nodes but for acpi
+ * try to get clocks by a char id first, if a dt patch applied
 
-Reviewed-by: Jacky Bai <ping.bai@nxp.com>
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+v2:
+ - fix rockchip_pin_output_deferred to rockchip_pin_deferred
 
-BR
+ drivers/gpio/gpio-rockchip.c | 233 ++++++++++++++++++++++-------------
+ 1 file changed, 144 insertions(+), 89 deletions(-)
 
-> ---
-> Linus: I did test on s390 and it's fine, but the topic is tricky for me .=
-..
-> ---
->  drivers/pinctrl/freescale/Kconfig | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescal=
-e/Kconfig
-> index 365fcff8e470..7a32f77792d9 100644
-> --- a/drivers/pinctrl/freescale/Kconfig
-> +++ b/drivers/pinctrl/freescale/Kconfig
-> @@ -119,6 +119,7 @@ config PINCTRL_IMX7ULP
->=20
->  config PINCTRL_IMX8MM
->  	tristate "IMX8MM pinctrl driver"
-> +	depends on OF
->  	depends on SOC_IMX8M
->  	select PINCTRL_IMX
->  	help
-> @@ -126,6 +127,7 @@ config PINCTRL_IMX8MM
->=20
->  config PINCTRL_IMX8MN
->  	tristate "IMX8MN pinctrl driver"
-> +	depends on OF
->  	depends on SOC_IMX8M
->  	select PINCTRL_IMX
->  	help
-> @@ -133,6 +135,7 @@ config PINCTRL_IMX8MN
->=20
->  config PINCTRL_IMX8MP
->  	tristate "IMX8MP pinctrl driver"
-> +	depends on OF
->  	depends on SOC_IMX8M
->  	select PINCTRL_IMX
->  	help
-> @@ -140,6 +143,7 @@ config PINCTRL_IMX8MP
->=20
->  config PINCTRL_IMX8MQ
->  	tristate "IMX8MQ pinctrl driver"
-> +	depends on OF
->  	depends on SOC_IMX8M
->  	select PINCTRL_IMX
->  	help
-> --
-> 2.25.1
+diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+index ebb50c25a461..05c5b2a80260 100644
+--- a/drivers/gpio/gpio-rockchip.c
++++ b/drivers/gpio/gpio-rockchip.c
+@@ -6,9 +6,9 @@
+  * Copyright (c) 2021 Rockchip Electronics Co. Ltd.
+  */
+ 
++#include <linux/acpi.h>
+ #include <linux/bitops.h>
+ #include <linux/clk.h>
+-#include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/init.h>
+@@ -16,10 +16,9 @@
+ #include <linux/io.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+-#include <linux/of_address.h>
+-#include <linux/of_device.h>
+-#include <linux/of_irq.h>
++#include <linux/platform_device.h>
+ #include <linux/pinctrl/pinconf-generic.h>
++#include <linux/property.h>
+ #include <linux/regmap.h>
+ 
+ #include "../pinctrl/core.h"
+@@ -29,6 +28,8 @@
+ #define GPIO_TYPE_V2		(0x01000C2B)  /* GPIO Version ID 0x01000C2B */
+ #define GPIO_TYPE_V2_1		(0x0101157C)  /* GPIO Version ID 0x0101157C */
+ 
++#define GPIO_MAX_PINS	(32)
++
+ static const struct rockchip_gpio_regs gpio_regs_v1 = {
+ 	.port_dr = 0x00,
+ 	.port_ddr = 0x04,
+@@ -200,6 +201,9 @@ static int rockchip_gpio_set_debounce(struct gpio_chip *gc,
+ 	if (bank->gpio_type == GPIO_TYPE_V2 && !IS_ERR(bank->db_clk)) {
+ 		div_debounce_support = true;
+ 		freq = clk_get_rate(bank->db_clk);
++		if (!freq)
++			return -EINVAL;
++
+ 		max_debounce = (GENMASK(23, 0) + 1) * 2 * 1000000 / freq;
+ 		if (debounce > max_debounce)
+ 			return -EINVAL;
+@@ -507,7 +511,7 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
+ 	struct irq_chip_generic *gc;
+ 	int ret;
+ 
+-	bank->domain = irq_domain_add_linear(bank->of_node, 32,
++	bank->domain = irq_domain_create_linear(dev_fwnode(bank->dev), 32,
+ 					&irq_generic_chip_ops, NULL);
+ 	if (!bank->domain) {
+ 		dev_warn(bank->dev, "could not init irq domain for bank %s\n",
+@@ -578,6 +582,16 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ 	gc->label = bank->name;
+ 	gc->parent = bank->dev;
+ 
++	if (!gc->base)
++		gc->base = GPIO_MAX_PINS * bank->bank_num;
++	if (!gc->ngpio)
++		gc->ngpio = GPIO_MAX_PINS;
++	if (!gc->label) {
++		gc->label = kasprintf(GFP_KERNEL, "gpio%d", bank->bank_num);
++		if (!gc->label)
++			return -ENOMEM;
++	}
++
+ 	ret = gpiochip_add_data(gc, bank);
+ 	if (ret) {
+ 		dev_err(bank->dev, "failed to add gpiochip %s, %d\n",
+@@ -585,35 +599,6 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ 		return ret;
+ 	}
+ 
+-	/*
+-	 * For DeviceTree-supported systems, the gpio core checks the
+-	 * pinctrl's device node for the "gpio-ranges" property.
+-	 * If it is present, it takes care of adding the pin ranges
+-	 * for the driver. In this case the driver can skip ahead.
+-	 *
+-	 * In order to remain compatible with older, existing DeviceTree
+-	 * files which don't set the "gpio-ranges" property or systems that
+-	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
+-	 */
+-	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
+-		struct device_node *pctlnp = of_get_parent(bank->of_node);
+-		struct pinctrl_dev *pctldev = NULL;
+-
+-		if (!pctlnp)
+-			return -ENODATA;
+-
+-		pctldev = of_pinctrl_get(pctlnp);
+-		if (!pctldev)
+-			return -ENODEV;
+-
+-		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
+-					     gc->base, gc->ngpio);
+-		if (ret) {
+-			dev_err(bank->dev, "Failed to add pin range\n");
+-			goto fail;
+-		}
+-	}
+-
+ 	ret = rockchip_interrupts_register(bank);
+ 	if (ret) {
+ 		dev_err(bank->dev, "failed to register interrupt, %d\n", ret);
+@@ -628,47 +613,18 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
+ 	return ret;
+ }
+ 
+-static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
++static void rockchip_gpio_get_ver(struct rockchip_pin_bank *bank)
+ {
+-	struct resource res;
+-	int id = 0;
+-
+-	if (of_address_to_resource(bank->of_node, 0, &res)) {
+-		dev_err(bank->dev, "cannot find IO resource for bank\n");
+-		return -ENOENT;
+-	}
+-
+-	bank->reg_base = devm_ioremap_resource(bank->dev, &res);
+-	if (IS_ERR(bank->reg_base))
+-		return PTR_ERR(bank->reg_base);
+-
+-	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
+-	if (!bank->irq)
+-		return -EINVAL;
+-
+-	bank->clk = of_clk_get(bank->of_node, 0);
+-	if (IS_ERR(bank->clk))
+-		return PTR_ERR(bank->clk);
+-
+-	clk_prepare_enable(bank->clk);
+-	id = readl(bank->reg_base + gpio_regs_v2.version_id);
++	int id = readl(bank->reg_base + gpio_regs_v2.version_id);
+ 
+ 	/* If not gpio v2, that is default to v1. */
+ 	if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
+ 		bank->gpio_regs = &gpio_regs_v2;
+ 		bank->gpio_type = GPIO_TYPE_V2;
+-		bank->db_clk = of_clk_get(bank->of_node, 1);
+-		if (IS_ERR(bank->db_clk)) {
+-			dev_err(bank->dev, "cannot find debounce clk\n");
+-			clk_disable_unprepare(bank->clk);
+-			return -EINVAL;
+-		}
+ 	} else {
+ 		bank->gpio_regs = &gpio_regs_v1;
+ 		bank->gpio_type = GPIO_TYPE_V1;
+ 	}
+-
+-	return 0;
+ }
+ 
+ static struct rockchip_pin_bank *
+@@ -690,40 +646,117 @@ rockchip_gpio_find_bank(struct pinctrl_dev *pctldev, int id)
+ 	return found ? bank : NULL;
+ }
+ 
++static int rockchip_gpio_of_get_bank_id(struct device *dev)
++{
++	static int gpio;
++	int bank_id = -1;
++
++	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
++		bank_id = of_alias_get_id(dev->of_node, "gpio");
++		if (bank_id < 0)
++			bank_id = gpio++;
++	}
++
++	return bank_id;
++}
++
++#ifdef CONFIG_ACPI
++static int rockchip_gpio_acpi_get_bank_id(struct device *dev)
++{
++	struct acpi_device *adev;
++	unsigned long bank_id = -1;
++	const char *uid;
++	int ret;
++
++	adev = ACPI_COMPANION(dev);
++	if (!adev)
++		return -ENXIO;
++
++	uid = acpi_device_uid(adev);
++	if (!uid || !(*uid)) {
++		dev_err(dev, "Cannot retrieve UID\n");
++		return -ENODEV;
++	}
++
++	ret = kstrtoul(uid, 0, &bank_id);
++
++	return !ret ? bank_id : -ERANGE;
++}
++#else
++static int rockchip_gpio_acpi_get_bank_id(struct device *dev)
++{
++	return -ENOENT;
++}
++#endif /* CONFIG_ACPI */
++
+ static int rockchip_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+-	struct device_node *pctlnp = of_get_parent(np);
+ 	struct pinctrl_dev *pctldev = NULL;
+ 	struct rockchip_pin_bank *bank = NULL;
+-	struct rockchip_pin_deferred *cfg;
+-	static int gpio;
+-	int id, ret;
++	int bank_id = 0;
++	int ret;
+ 
+-	if (!np || !pctlnp)
+-		return -ENODEV;
++	bank_id = rockchip_gpio_acpi_get_bank_id(dev);
++	if (bank_id < 0) {
++		bank_id = rockchip_gpio_of_get_bank_id(dev);
++		if (bank_id < 0)
++			return bank_id;
++	}
++
++	if (!ACPI_COMPANION(dev)) {
++		struct device_node *pctlnp = of_get_parent(dev->of_node);
+ 
+-	pctldev = of_pinctrl_get(pctlnp);
+-	if (!pctldev)
+-		return -EPROBE_DEFER;
++		pctldev = of_pinctrl_get(pctlnp);
++		if (!pctldev)
++			return -EPROBE_DEFER;
+ 
+-	id = of_alias_get_id(np, "gpio");
+-	if (id < 0)
+-		id = gpio++;
++		bank = rockchip_gpio_find_bank(pctldev, bank_id);
++		if (!bank)
++			return -ENODEV;
++	}
+ 
+-	bank = rockchip_gpio_find_bank(pctldev, id);
+-	if (!bank)
+-		return -EINVAL;
++	if (!bank) {
++		bank = devm_kzalloc(dev, sizeof(*bank), GFP_KERNEL);
++		if (!bank)
++			return -ENOMEM;
++	}
+ 
++	bank->bank_num = bank_id;
+ 	bank->dev = dev;
+-	bank->of_node = np;
++
++	bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(bank->reg_base))
++		return PTR_ERR(bank->reg_base);
++
++	bank->irq = platform_get_irq(pdev, 0);
++	if (bank->irq < 0)
++		return bank->irq;
+ 
+ 	raw_spin_lock_init(&bank->slock);
+ 
+-	ret = rockchip_get_bank_data(bank);
+-	if (ret)
+-		return ret;
++	if (!ACPI_COMPANION(dev)) {
++		bank->clk = devm_clk_get(dev, "bus");
++		if (IS_ERR(bank->clk)) {
++			bank->clk = of_clk_get(dev->of_node, 0);
++			if (IS_ERR(bank->clk)) {
++				dev_err(dev, "fail to get apb clock\n");
++				return PTR_ERR(bank->clk);
++			}
++		}
++
++		bank->db_clk = devm_clk_get(dev, "db");
++		if (IS_ERR(bank->db_clk)) {
++			bank->db_clk = of_clk_get(dev->of_node, 1);
++			if (IS_ERR(bank->db_clk))
++				bank->db_clk = NULL;
++		}
++	}
++
++	clk_prepare_enable(bank->clk);
++	clk_prepare_enable(bank->db_clk);
++
++	rockchip_gpio_get_ver(bank);
+ 
+ 	/*
+ 	 * Prevent clashes with a deferred output setting
+@@ -733,14 +766,29 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
+ 
+ 	ret = rockchip_gpiolib_register(bank);
+ 	if (ret) {
+-		clk_disable_unprepare(bank->clk);
+-		mutex_unlock(&bank->deferred_lock);
+-		return ret;
++		dev_err(bank->dev, "Failed to register gpio %d\n", ret);
++		goto err_unlock;
++	}
++
++	if (!device_property_read_bool(bank->dev, "gpio-ranges") && pctldev) {
++		struct gpio_chip *gc = &bank->gpio_chip;
++
++		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
++					     gc->base, gc->ngpio);
++		if (ret) {
++			dev_err(bank->dev, "Failed to add pin range\n");
++			goto err_unlock;
++		}
+ 	}
+ 
+ 	while (!list_empty(&bank->deferred_pins)) {
++		struct rockchip_pin_deferred *cfg;
++
+ 		cfg = list_first_entry(&bank->deferred_pins,
+ 				       struct rockchip_pin_deferred, head);
++		if (!cfg)
++			break;
++
+ 		list_del(&cfg->head);
+ 
+ 		switch (cfg->param) {
+@@ -765,9 +813,15 @@ static int rockchip_gpio_probe(struct platform_device *pdev)
+ 	mutex_unlock(&bank->deferred_lock);
+ 
+ 	platform_set_drvdata(pdev, bank);
+-	dev_info(dev, "probed %pOF\n", np);
++	dev_info(dev, "probed %pfw\n", dev_fwnode(dev));
+ 
+ 	return 0;
++err_unlock:
++	mutex_unlock(&bank->deferred_lock);
++	clk_disable_unprepare(bank->clk);
++	clk_disable_unprepare(bank->db_clk);
++
++	return ret;
+ }
+ 
+ static int rockchip_gpio_remove(struct platform_device *pdev)
+@@ -775,6 +829,7 @@ static int rockchip_gpio_remove(struct platform_device *pdev)
+ 	struct rockchip_pin_bank *bank = platform_get_drvdata(pdev);
+ 
+ 	clk_disable_unprepare(bank->clk);
++	clk_disable_unprepare(bank->db_clk);
+ 	gpiochip_remove(&bank->gpio_chip);
+ 
+ 	return 0;
+-- 
+2.25.1
 
