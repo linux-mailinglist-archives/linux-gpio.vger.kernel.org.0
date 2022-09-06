@@ -2,121 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB6B75AEFF9
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 18:10:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5752D5AEFFC
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 18:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234839AbiIFQK3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 12:10:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
+        id S233802AbiIFQLd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 12:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231812AbiIFQKO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 12:10:14 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76D6683F38;
-        Tue,  6 Sep 2022 08:34:47 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-127ba06d03fso5507546fac.3;
-        Tue, 06 Sep 2022 08:34:47 -0700 (PDT)
+        with ESMTP id S233857AbiIFQLJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 12:11:09 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52FF69D67D;
+        Tue,  6 Sep 2022 08:35:46 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id m5so8442108qkk.1;
+        Tue, 06 Sep 2022 08:35:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=B1nLx7OoVE2iJLBf662NA/6uPa0hL0tfjj0xV5A5JwE=;
+        b=KyLnvCFNtl1vS7lqTBYFzyVn96UTNw1UtCJfRvlvxChOCyk4ViH1zG2N9gJRUETjva
+         NB2Kh6yZuisVcrBeOwEIwA+3FzGOXwmDT7qDFwsP2aGXSc00qDMkHY0Xtc/w5xMxpHkc
+         Qx+CZtvh1lDMe5u9Jm/h3ANbysNk8PnfkgapTmoWEFuyi0O/MoPKOAzhKbBNd1QtKll+
+         9E5sUiVe5wWREqQrl5giXgCs1NjJHiO59F+H8SGeEvbj5wEc+MtVp2l5fUr7X21gXq+j
+         CK35MP9iMfJq75J4FH4wPKmsJwKvwqQ1nVT1zT2Q+sLfOwzCVapv3R3kRT4A8JspKjtP
+         8A0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=l7uSke96ZhFxge6iy3UtQtr/iInY2wiHvxBC9B8pAes=;
-        b=6y2L6q2T8FkjmKLxKnnD6gTba34VVQ24yU/jRZhtdfLN5WZ2AiKAtxs6UnK7Pa8cTw
-         TPkZFAvp6rwkcJPg9UF4Z0GuNsjiEWm41EqxiSudiHrqUtQ6a6jGPfvE4lVmjsrXMcal
-         gp3Vc/ccLd50+IU7SNJgChTVFU6ADzNJJfPCWer73R0FKUuPG41zKU6cMfDckozxgiFn
-         xRp9NAK/zjy7XLzJCP3z4LNmY7vdA2lTLqCohTvXtHbOMK9OiHfqvyksIzIrBAzzh/bo
-         jciJRwqs+k7klhkD7ZXQiJpnQYdKWqhFQ+xg3E0xFf0i+Iz+bJKVMAC+vawAvSljzhPA
-         PbmA==
-X-Gm-Message-State: ACgBeo1Afywu2SlyJ075QY6ISeUBpyfwfOwc8Y/nxViHDJK003FN5u6g
-        yhge4T7FqHM3LzKHcIrWDw==
-X-Google-Smtp-Source: AA6agR4bRLs6qUCZD96wFxze0xCdaCbw+EDzXwyV0jACkyYccl7rlpXBjFm9cJoGrQ3oFJxa7v/7LA==
-X-Received: by 2002:a05:6808:21a5:b0:345:81a8:ab6 with SMTP id be37-20020a05680821a500b0034581a80ab6mr9587695oib.91.1662478486008;
-        Tue, 06 Sep 2022 08:34:46 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id g12-20020a056870c14c00b0012644cc4feasm4520251oad.55.2022.09.06.08.34.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Sep 2022 08:34:43 -0700 (PDT)
-Received: (nullmailer pid 558222 invoked by uid 1000);
-        Tue, 06 Sep 2022 15:34:42 -0000
-Date:   Tue, 6 Sep 2022 10:34:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Hector Martin <marcan@marcan.st>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mark Kettenis <mark.kettenis@xs4all.nl>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        krzysztof.kozlowski@linaro.org, arnd@arndb.de, lee@kernel.org,
-        alyssa@rosenzweig.io, asahi@lists.linux.dev, brgl@bgdev.pl,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        sven@svenpeter.dev, krzysztof.kozlowski+dt@linaro.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: add binding for Apple Mac System
- Management Controller
-Message-ID: <20220906153442.GA534217-robh@kernel.org>
-References: <YxDWG5dmzErhKIXw@shell.armlinux.org.uk>
- <ef6c7248-1efa-5366-6bcd-900c5f10ccb2@linaro.org>
- <YxDiBFIn6artUOZm@shell.armlinux.org.uk>
- <CAL_Jsq+GCKisAVA0AfE=yWJYy18mAGQ7rY1sKGYraXv-berNSg@mail.gmail.com>
- <d3cec3d22e464fa8@bloch.sibelius.xs4all.nl>
- <20220902172808.GB52527-robh@kernel.org>
- <YxcNLU+KGEolrdfT@shell.armlinux.org.uk>
- <d3cecee5edd24f67@bloch.sibelius.xs4all.nl>
- <CACRpkdaSRcczEF8QZ4aO+-HDVS+n-8MXvn6ysnjJfUEabwUJ=w@mail.gmail.com>
- <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=B1nLx7OoVE2iJLBf662NA/6uPa0hL0tfjj0xV5A5JwE=;
+        b=fTo4e+P1HNqbvd1QfYjKx+KIYuD6dIXPALTb/KN8teEMb0b1QlmZuOZObFfeeUVlm/
+         wESS4RduMStaz68RyMUrgwaoprluzmNAgvK5hDjz5NzbaO8birJNGhD2yg+qknFBeV+5
+         lv+WfyC78r8uC15Ai/0vNDEvHA+hMTzMibmLr4yXm4MssgApddhH5zVRMyM1eFjBqbnw
+         UHYixMFJ8a0ceNeALn52Y6pHlRS/zOl8Xf/tCGiLQHRg92vEB5H9x5ijoFs55yHNt9qB
+         8NgOlqtKZMCubLZ+wbzoaaPrFoZ9FCxoJPuCXPibvuZrpalp8r0dnfbSOTBMrymN0nZG
+         SkPQ==
+X-Gm-Message-State: ACgBeo3pI5Qh1UWiwRMPC8fpClT69RrLfBzC1bIvOLdPmHQFwdskPnXn
+        /mkzxy5fxXErDW2G8+xp+iqukSzGdcTAp3GpyYY=
+X-Google-Smtp-Source: AA6agR5s5OyR/c7EiS1x6fQLfWbXYhQQDXm62DJk5gxHUpMPj4rHxmkXnxHBEa0JbQeSdtKgEIFgl52/pZK84yIcEas=
+X-Received: by 2002:ae9:e311:0:b0:6ba:e711:fb27 with SMTP id
+ v17-20020ae9e311000000b006bae711fb27mr36442218qkf.320.1662478545225; Tue, 06
+ Sep 2022 08:35:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <909bb4e7-5bd2-2903-5bba-87ae37f3448a@marcan.st>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20220418141416.27529-1-asmaa@nvidia.com> <CH2PR12MB3895A1FB2977B725ED92AB57D7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdY1uK=73zpEM5zUyXacm5xaUUFYkuKMxi_q6vwmOPy6tw@mail.gmail.com>
+ <CH2PR12MB389560A1873030472A7A371DD7C29@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZhW9XK3opXLLzdMiVLVkGQyJCf7RLZtRQLsmzv-aqwbA@mail.gmail.com>
+ <CH2PR12MB38953FF57D91FA75AB9CB102D7CB9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdbAhMa2CXvQra3E13n8WfiBxyHNqzEp4dW3qo5upr_=gw@mail.gmail.com>
+ <CH2PR12MB38958CD365876A2106712C3CD7CF9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdZp9hx2SHxsmjBm2oj7m3UT-4S+MKw5qqNME0PLjPNV2A@mail.gmail.com>
+ <CH2PR12MB3895B4E89237E6D6F635F252D77A9@CH2PR12MB3895.namprd12.prod.outlook.com>
+ <CACRpkdaHuQhzqqQbayGaRqYAcnyv2rmocX7YhcR_qj0HRVHkgQ@mail.gmail.com> <CH2PR12MB3895981F3DBB2F551DA6AE95D77E9@CH2PR12MB3895.namprd12.prod.outlook.com>
+In-Reply-To: <CH2PR12MB3895981F3DBB2F551DA6AE95D77E9@CH2PR12MB3895.namprd12.prod.outlook.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 6 Sep 2022 18:35:09 +0300
+Message-ID: <CAHp75VfLjvEVsFqw2+fu8M60uU4LEbsirg7vBKdHd7WsxWN5Rw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller
+To:     Asmaa Mnebhi <asmaa@nvidia.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 06, 2022 at 08:36:25PM +0900, Hector Martin wrote:
-> On 06/09/2022 20.22, Linus Walleij wrote:
-> > On Tue, Sep 6, 2022 at 11:31 AM Mark Kettenis <mark.kettenis@xs4all.nl> wrote:
-> > 
-> >> Another argument for having sub-nodes is that the firmware actually
-> >> exposes *two* GPIO controllers.  For now we only support the "master"
-> >> PMU GPIOs, but there also is a "slave" PMU GPIO controller that uses a
-> >> separate set of SMC "keys".  We currently don't need any of the pins
-> >> on the "slave", so we don't expose it in the DT yet.
-> > 
-> > That sounds backward, like we don't expose device X as DT node
-> > because $OS doesn't use it yet. DT should just expose (by nodes or
-> > other ways) all hardware that exist or at least all hardware we know
-> > about no matter what $OS is using.
-> 
-> How so? The are piles and piles of unused hardware not exposed in the
-> DT, and piles and piles of hardware that will be used but we haven't
-> figured out how to do it yet, so it's not exposed. For example, we know
-> there are like 8 or so UARTs, but we don't define them in the DT because
-> they are not connected to anything on any existing device and we don't
-> need them. Apple does the same thing in their DTs (only used hardware is
-> defined).
-> 
-> I don't really see the point of exposing a GPIO controller when we don't
-> actually do anything with the pins yet, and might never do so. Having
-> drivers bind and stay unused just increases the amount of code running
-> without any ultimate purpose, so why do it? It's not like any other OS
-> would use the hardware either - GPIOs are only useful if they are
-> referenced in the DT for something, and we don't have anything that
-> would reference these.
-> 
-> For SMC in particular, there's a huge amount of functionality we don't
-> have drivers for yet, and I don't see the point of trying to conjure up
-> DT bindings for it until someone writes a driver (and has a reason to do
-> so) :)
+On Tue, Sep 6, 2022 at 5:08 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
+> -----Original Message-----
+> From: Linus Walleij <linus.walleij@linaro.org>
+> Sent: Friday, September 2, 2022 5:55 PM
+> On Fri, Sep 2, 2022 at 5:55 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
 
-Exposing in a DT is one thing. Defining in the binding is another. Even 
-if it's not complete bindings, but just a fuller description of what 
-functionality the MFD contains is. For example, just knowing there 
-are 2 instances of GPIO, I'm much more inclined to agree GPIO should be 
-a subnode.
+...
 
-Rob
+> > I would like that to be controlled by the ACPI table only.
+>
+> I don't know if it is possible to restrict GPIOs to just be used from ACPI.
+
+On Intel platforms that's done with HW assistance, i.e. firmware
+configures special registers inside pin control / GPIO address space
+that reflect ownership. The driver rejects any attempts to request
+such GPIOs. As a workaround one may simply disable all user space
+interfaces (as you already discussed in this thread).
+
+-- 
+With Best Regards,
+Andy Shevchenko
