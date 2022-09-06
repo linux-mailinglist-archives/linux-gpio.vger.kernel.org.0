@@ -2,92 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2159C5AE82B
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 14:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C0F95AE909
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Sep 2022 15:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239915AbiIFMbM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Sep 2022 08:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60196 "EHLO
+        id S240265AbiIFNFb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Sep 2022 09:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239968AbiIFMaz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 08:30:55 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E144E275C2;
-        Tue,  6 Sep 2022 05:27:46 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6500,9779,10461"; a="296579839"
-X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="296579839"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:45 -0700
-X-IronPort-AV: E=Sophos;i="5.93,294,1654585200"; 
-   d="scan'208";a="565074197"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2022 05:27:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy.shevchenko@gmail.com>)
-        id 1oVXfv-00975d-2X;
-        Tue, 06 Sep 2022 15:27:31 +0300
-Date:   Tue, 6 Sep 2022 15:27:31 +0300
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        USB <linux-usb@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v1 04/11] usb: phy: tegra: switch to using
- devm_gpiod_get()
-Message-ID: <Yxc8s8IfzElm/mjS@smile.fi.intel.com>
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-4-b29adfb27a6c@gmail.com>
- <CAHp75VdMr7wru-2hD1HH3OS5JTNdzt6VRqB6OFoCp2JkiuiTjw@mail.gmail.com>
- <YxZQj8bwJCx5rqDv@google.com>
- <CAHp75VdHJS4YgrTK15OuY5sxodxKObUtzturL+YPXFQ3_wpxig@mail.gmail.com>
- <YxZTS3Nl1YaMGoBC@google.com>
- <CAHp75VeNajcf-Y6xvDDVwZijg6U53ggg1HQox1AZ74=wRut+1Q@mail.gmail.com>
- <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
+        with ESMTP id S240253AbiIFNF0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Sep 2022 09:05:26 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA15256BA9
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Sep 2022 06:05:23 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id e18so15072628edj.3
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Sep 2022 06:05:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=ltZ8BwCHA90N0xCiPXsqAnq/msG5Ej+1muFCDaHgJe4=;
+        b=b9b7dMVsDGRCa+Dg2UBLc5bOvgetSb0j8960xT/NsMM40+4MfpDHoagn4aPCP3yI8C
+         kiUmp4b8bSzpIBX6SqCr0v3ybBepUFBpMVlhMe3RbFlEFdArF/k58Hb9eA8BvPkyrSQQ
+         nyBB0XwLtdPvKvlC1mv4WUW615OKPoDYEtYrWC1tT+U71Kla37e4FH5MbrCp9fGOHSnb
+         o3/LKqlVUCZdcB9sHkWkYL00CYu0puPQbneHkR8ZoPuzE0y/k5AXdjksB/jG25cosVPh
+         l4OexWY+mIOq4QRvjtEQYl+tOe1JLYbMCQuUX9hyenNsZg/mEfXc9cXY+6fuY9Fb+Gb8
+         R4Aw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ltZ8BwCHA90N0xCiPXsqAnq/msG5Ej+1muFCDaHgJe4=;
+        b=RnzEpdTQOQj3d2vS2TpDHahtlVvyB23zcvAvp206lC62o8w83yPVK7Ax9nyfsxiST0
+         1vGt+2tIjayFtJBcc5EG+Pa2XNDrMLmZ/a7wRhyZtCdCDWiMQ08BUtCPyX7KIVX9WPyZ
+         WK6bMoUtcE3NGrf293gBnZOEvwjuy85g5rbBtuM7NGdpPfn4rleEmrE9vgwBjc9saq2g
+         kdO+PeE6vsnt+v+SpCgFj+niresOdgZsV/wRGF4l1Nn/zy0UEaMCuFAwK7oE2eXk1JHy
+         LlDw1Sa3hQcskyXIOfC8gY0ZA2oo8kTxfVJjh4FWmMjBmZn6D4Y7p9hzRKg5zlHuHQXs
+         xVCA==
+X-Gm-Message-State: ACgBeo08oMYwujfGi7oV46JoRA5xr84Mjhu8Q0yN5wCD5048m3JY4kam
+        kmCxV9ya5ryZpXrFrfX9MBEgnNsDWJP46TN5j8f6Qit/xXxxgQ==
+X-Google-Smtp-Source: AA6agR5Y0OQbpE8LPvwngeTpVjo1MXu0GVzRm5PijsMKSHrtxR2t4yXmEa2b/2REUUx40TXBMu6O34BmLuOm2H17LGo=
+X-Received: by 2002:a05:6402:51d1:b0:448:bed1:269c with SMTP id
+ r17-20020a05640251d100b00448bed1269cmr30094274edd.205.1662469522275; Tue, 06
+ Sep 2022 06:05:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a0d089d-6ac6-b92e-6ac7-3d3de0144b4b@roeck-us.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        FORGED_GMAIL_RCVD,FREEMAIL_FROM,NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20220906082820.4030401-1-martyn.welch@collabora.co.uk> <20220906082820.4030401-2-martyn.welch@collabora.co.uk>
+In-Reply-To: <20220906082820.4030401-2-martyn.welch@collabora.co.uk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 6 Sep 2022 15:05:09 +0200
+Message-ID: <CACRpkdbw2vq0QHjihWeiFBpUXGKaL2nB9rD16gcmsgEw0nuSqg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: gpio: pca95xx: add entry for pcal6534
+ and PI4IOE5V6534Q
+To:     Martyn Welch <martyn.welch@collabora.co.uk>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Martyn Welch <martyn.welch@collabora.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -95,57 +71,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 05, 2022 at 03:07:48PM -0700, Guenter Roeck wrote:
-> On 9/5/22 12:55, Andy Shevchenko wrote:
-> > On Mon, Sep 5, 2022 at 10:51 PM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > > On Mon, Sep 05, 2022 at 10:41:40PM +0300, Andy Shevchenko wrote:
-> > > > On Mon, Sep 5, 2022 at 10:40 PM Dmitry Torokhov
-> > > > <dmitry.torokhov@gmail.com> wrote:
-> > > > > On Mon, Sep 05, 2022 at 01:59:44PM +0300, Andy Shevchenko wrote:
-> > > > > > On Mon, Sep 5, 2022 at 9:32 AM Dmitry Torokhov
-> > > > > > <dmitry.torokhov@gmail.com> wrote:
+On Tue, Sep 6, 2022 at 10:28 AM Martyn Welch
+<martyn.welch@collabora.co.uk> wrote:
 
-...
+> From: Martyn Welch <martyn.welch@collabora.com>
+>
+> The NXP PCAL6534 is a 34-bit I2C I/O expander similar to the PCAL6524. The
+> Diodes PI4IOE5V6534Q is a functionally identical chip provided by Diodes
+> Inc.
+>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> ---
+>
+> Changes in v2:
+>  - Enumerate pi4ioe5v6534q as requiring pcal6534 fallback
 
-> > > > > > > +               gpiod = devm_gpiod_get(&pdev->dev, "nvidia,phy-reset",
-> > > > > > > +                                      GPIOD_OUT_HIGH);
-> > > > > > >                  err = PTR_ERR_OR_ZERO(gpiod);
-> > > > > > 
-> > > > > > What does _OR_ZERO mean now?
-> > > > > 
-> > > > > This converts a pointer to an error code if a pointer represents
-> > > > > ERR_PTR() encoded error, or 0 to indicate success.
-> > > > 
-> > > > Yes, I know that. My point is, how is it useful now (or even before)?
-> > > > I mean that devm_gpio_get() never returns NULL, right?
-> > > 
-> > > What does returning NULL have to do with anything.
-> > 
-> > It has to do with a dead code. If defm_gpiod_get() does not return
-> > NULL, then why do we even bother to check?
-> 
-> PTR_ERR_OR_ZERO() converts into an error code (if the pointer is an
-> ERR_PTR) or 0 if it is a real pointer. Its purpose is not to convert
-> NULL into 0, its purpose is to convert a pointer either into an error
-> code or 0. That is what is done here, and it is done all over the place
-> in the kernel. I don't see your problem with it. Care to explain ?
-> 
-> > > It converts a pointer
-> > > to a "classic" return code, with negative errors and 0 on success.
-> > > 
-> > > It allows to not use multiple IS_ERR/PTR_ERR in the code (I'd need 1
-> > > IS_ERR and 2 PTR_ERR, one in dev_err() and another to return).
-> > 
-> > I don't see how this is relevant.
-> 
-> You lost me. Really, please explain your problem with PTR_ERR_OR_ZERO().
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I don't know what I was thinking about... You, guys, are right, sorry for
-my noise.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
