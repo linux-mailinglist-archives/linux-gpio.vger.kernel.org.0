@@ -2,120 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 587FF5B0E0F
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 22:23:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D24B55B0E4F
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 22:40:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229850AbiIGUW6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Sep 2022 16:22:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38450 "EHLO
+        id S230139AbiIGUk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Sep 2022 16:40:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbiIGUW4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 16:22:56 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9AA0A344F;
-        Wed,  7 Sep 2022 13:22:55 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 287Jp78t025015;
-        Wed, 7 Sep 2022 20:22:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=96CoWXBNWFyHqb0OoMX1vjLm7LmH0Hb9+T6/5a/VshU=;
- b=RYVm/2jSEpAR5WQBCkaGO5L2JVsB/Qg4dk5MfXFE517lkueINkZWcJC+BBkYsL9+pI6B
- IXqoeT2i2olB89I34elGWgSuFOaiGdG/ui1VuSWbiZ5fDOoeCyMLMD99YpnvhIpZyuOU
- LP5++hmdL6IwtsiP15E6b8llIL5wkqA30NUV3gNOF13TnxNfANVAqlNw+3f4ph3vnKMO
- RAyI+vfDBrYuTDB8la11OnQ6VNCQ3JAGoNEZvumC7J+Bn/EvX5O9eyS0DL7sMVh1NeoP
- qBB4ueEeJqdzwRDoMqbQ67cQbT0Hp1VKstPdVCcGhiWqfJTdSZBnWB2ddI1Une++mr7L UA== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jf1swr20u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 07 Sep 2022 20:22:50 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 287KHn3n027424
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 7 Sep 2022 20:17:49 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.29; Wed, 7 Sep 2022 13:17:48 -0700
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
-To:     <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC:     <konrad.dybcio@somainline.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Subject: [PATCH 4/4] dt-bindings: qcom-pmic-gpio: Add PM7250B and PM8450 bindings
-Date:   Wed, 7 Sep 2022 13:15:33 -0700
-Message-ID: <20220907201528.9351-5-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220907201528.9351-1-quic_amelende@quicinc.com>
-References: <20220907201528.9351-1-quic_amelende@quicinc.com>
+        with ESMTP id S230019AbiIGUkz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 16:40:55 -0400
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FE3BFAB2;
+        Wed,  7 Sep 2022 13:40:51 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso11043906otb.6;
+        Wed, 07 Sep 2022 13:40:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=x1B4jSIY/AQnnqw7XKJJPKGfC9EkoKcXHp71AXl8YYY=;
+        b=YjokQUk76dLQvIwJHHQdMeUJ5TaN+Mk/dKrsgpHT3VqBfEyggk+PxZs9XLYETRMw8J
+         bGR4ceIxwYznyQBJ1AaoJTBZu+XvNQOOcMwZuwYrddTshBzR6FXeQdnFrRtrpOA5lLq1
+         HS56L0cAaN+kgF5aVvn4aC8lAMybrrRRPSSSBoSr6K3e6bjB6WCPkYHkpYnbtMRl0RNP
+         TU2NWKMC9+z7eUSRT7+4ypuo9bPjHKDp5Q6F6yRhV6JF/XWihd3N2pTpWlzl2xhZTRZX
+         Lucz4qJuw75Qqms4JZ+cK+52LDC2Z2S1MToHZJHvJFncxyIpf35QFaPwjS3fIm3r2rOG
+         QGOw==
+X-Gm-Message-State: ACgBeo3X0xhoA+Za/NfPRoMDALlM3UyJhutF96U/+jNXPAZseN0R3sQx
+        XxAoljN8idppJncKyfmmfw==
+X-Google-Smtp-Source: AA6agR63OkJ3F/uzwYlGi8A95/gNftwSE50ItUVMi2nuE2W+J16i0uqZ0trOVlUr7p/55EjQDXWc4A==
+X-Received: by 2002:a05:6830:18d8:b0:638:969c:1eef with SMTP id v24-20020a05683018d800b00638969c1eefmr2257128ote.49.1662583250853;
+        Wed, 07 Sep 2022 13:40:50 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id b10-20020a05687051ca00b0011e73536301sm8677585oaj.52.2022.09.07.13.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Sep 2022 13:40:50 -0700 (PDT)
+Received: (nullmailer pid 303564 invoked by uid 1000);
+        Wed, 07 Sep 2022 20:40:49 -0000
+Date:   Wed, 7 Sep 2022 15:40:49 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Tero Kristo <kristo@kernel.org>, linux-kernel@vger.kernel.org,
+        Nishanth Menon <nm@ti.com>, Bryan Brattlof <bb@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] dt-bindings: arm: ti: Rearrange IOPAD macros
+ alphabetically
+Message-ID: <20220907204049.GA303529-robh@kernel.org>
+References: <20220901141328.899100-1-vigneshr@ti.com>
+ <20220901141328.899100-2-vigneshr@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: xEaKE2eJJeGJicnRwH58VHB423nh4ghv
-X-Proofpoint-ORIG-GUID: xEaKE2eJJeGJicnRwH58VHB423nh4ghv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-07_10,2022-09-07_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 impostorscore=0 adultscore=0 priorityscore=1501
- mlxscore=0 spamscore=0 malwarescore=0 clxscore=1015 mlxlogscore=809
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209070076
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220901141328.899100-2-vigneshr@ti.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
-to include compatible strings for PM7250B and PM8450 PMICs.
+On Thu, 01 Sep 2022 19:43:24 +0530, Vignesh Raghavendra wrote:
+> Rearrange SOC specific IOPAD macros alphabetically, so that its easier
+> to read. No functional change intended.
+> 
+> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+>  include/dt-bindings/pinctrl/k3.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 694898f382be..a548323e54f1 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -24,6 +24,7 @@ properties:
-           - qcom,pm6150-gpio
-           - qcom,pm6150l-gpio
-           - qcom,pm6350-gpio
-+          - qcom,pm7250b-gpio
-           - qcom,pm7325-gpio
-           - qcom,pm8005-gpio
-           - qcom,pm8008-gpio
-@@ -392,6 +393,7 @@ $defs:
-                  - gpio1-gpio10 for pm6150
-                  - gpio1-gpio12 for pm6150l
-                  - gpio1-gpio9 for pm6350
-+                 - gpio1-gpio12 for pm7250b
-                  - gpio1-gpio10 for pm7325
-                  - gpio1-gpio4 for pm8005
-                  - gpio1-gpio2 for pm8008
-@@ -407,6 +409,7 @@ $defs:
-                  - gpio1-gpio10 for pm8350
-                  - gpio1-gpio8 for pm8350b
-                  - gpio1-gpio9 for pm8350c
-+                 - gpio1-gpio4 for pm8450
-                  - gpio1-gpio38 for pm8917
-                  - gpio1-gpio44 for pm8921
-                  - gpio1-gpio36 for pm8941
--- 
-2.35.1
-
+Acked-by: Rob Herring <robh@kernel.org>
