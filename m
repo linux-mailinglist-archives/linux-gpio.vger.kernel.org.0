@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D24B55B0E4F
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 22:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99475B0E54
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 22:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbiIGUk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Sep 2022 16:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39246 "EHLO
+        id S229931AbiIGUlb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Sep 2022 16:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230019AbiIGUkz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 16:40:55 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2FE3BFAB2;
-        Wed,  7 Sep 2022 13:40:51 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso11043906otb.6;
-        Wed, 07 Sep 2022 13:40:51 -0700 (PDT)
+        with ESMTP id S230130AbiIGUl3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 16:41:29 -0400
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8330AC2284;
+        Wed,  7 Sep 2022 13:41:26 -0700 (PDT)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-127dca21a7dso11708578fac.12;
+        Wed, 07 Sep 2022 13:41:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=x1B4jSIY/AQnnqw7XKJJPKGfC9EkoKcXHp71AXl8YYY=;
-        b=YjokQUk76dLQvIwJHHQdMeUJ5TaN+Mk/dKrsgpHT3VqBfEyggk+PxZs9XLYETRMw8J
-         bGR4ceIxwYznyQBJ1AaoJTBZu+XvNQOOcMwZuwYrddTshBzR6FXeQdnFrRtrpOA5lLq1
-         HS56L0cAaN+kgF5aVvn4aC8lAMybrrRRPSSSBoSr6K3e6bjB6WCPkYHkpYnbtMRl0RNP
-         TU2NWKMC9+z7eUSRT7+4ypuo9bPjHKDp5Q6F6yRhV6JF/XWihd3N2pTpWlzl2xhZTRZX
-         Lucz4qJuw75Qqms4JZ+cK+52LDC2Z2S1MToHZJHvJFncxyIpf35QFaPwjS3fIm3r2rOG
-         QGOw==
-X-Gm-Message-State: ACgBeo3X0xhoA+Za/NfPRoMDALlM3UyJhutF96U/+jNXPAZseN0R3sQx
-        XxAoljN8idppJncKyfmmfw==
-X-Google-Smtp-Source: AA6agR63OkJ3F/uzwYlGi8A95/gNftwSE50ItUVMi2nuE2W+J16i0uqZ0trOVlUr7p/55EjQDXWc4A==
-X-Received: by 2002:a05:6830:18d8:b0:638:969c:1eef with SMTP id v24-20020a05683018d800b00638969c1eefmr2257128ote.49.1662583250853;
-        Wed, 07 Sep 2022 13:40:50 -0700 (PDT)
+        bh=CEdjOwMmeA08vXzpoa6WynZhk52OwalyiCa+4vlnpn8=;
+        b=03Lr6y3NgSDhxvZVNYffJheLddDtemt3G3dbvs6voCnXyrrbbLziMMQENbsVPRcSY4
+         NcClwJWaYkDfHM3t7iBM3LO1J2jRkzMuxNCUYLagMD8PrHRa5wUo2EIJTKSkpWl+LyRo
+         IIhsxWK2ednb/WyumZ0mJQAAgcE+/D+mAruWdhBy+tF4ytS5dqY0848ondS/cwHKB+HY
+         O6fgenhiSOR3dbuxgLAELDJ4grHdJTngTvuZlvylrZMEGuv0PIzm02077xXz7e2vYrRi
+         OwLIlT79WzWOvHqZ+ti1n3V9g4Sch45cNXUKxB7VXH6UFnbAMQnHpX3xUy+vU0CgvkmX
+         45fw==
+X-Gm-Message-State: ACgBeo3I65ssEzB3uZsj612bWxc4PwlmIxfpuCtmqnpvR5znmdhLUs8O
+        Ta80YJUggEk1v+nKljIafA==
+X-Google-Smtp-Source: AA6agR4hg/qke5ywPjxL40jP4Lg1PyGJ0LaUfLNHDKid6j59uZVTmHBu1wtjQjtYCYrx92d/pVE+kw==
+X-Received: by 2002:a54:4790:0:b0:343:46c5:9b8e with SMTP id o16-20020a544790000000b0034346c59b8emr102575oic.251.1662583285633;
+        Wed, 07 Sep 2022 13:41:25 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id b10-20020a05687051ca00b0011e73536301sm8677585oaj.52.2022.09.07.13.40.50
+        by smtp.gmail.com with ESMTPSA id d3-20020a4ab203000000b004359da266b4sm5372593ooo.14.2022.09.07.13.41.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Sep 2022 13:40:50 -0700 (PDT)
-Received: (nullmailer pid 303564 invoked by uid 1000);
-        Wed, 07 Sep 2022 20:40:49 -0000
-Date:   Wed, 7 Sep 2022 15:40:49 -0500
+        Wed, 07 Sep 2022 13:41:25 -0700 (PDT)
+Received: (nullmailer pid 304603 invoked by uid 1000);
+        Wed, 07 Sep 2022 20:41:24 -0000
+Date:   Wed, 7 Sep 2022 15:41:24 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Tero Kristo <kristo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bryan Brattlof <bb@ti.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Tero Kristo <kristo@kernel.org>, linux-kernel@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>, Bryan Brattlof <bb@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: arm: ti: Rearrange IOPAD macros
- alphabetically
-Message-ID: <20220907204049.GA303529-robh@kernel.org>
+        Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: arm: ti: Add bindings for AM62A7 SoC
+Message-ID: <20220907204124.GA304568-robh@kernel.org>
 References: <20220901141328.899100-1-vigneshr@ti.com>
- <20220901141328.899100-2-vigneshr@ti.com>
+ <20220901141328.899100-3-vigneshr@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220901141328.899100-2-vigneshr@ti.com>
+In-Reply-To: <20220901141328.899100-3-vigneshr@ti.com>
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
@@ -68,14 +68,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 01 Sep 2022 19:43:24 +0530, Vignesh Raghavendra wrote:
-> Rearrange SOC specific IOPAD macros alphabetically, so that its easier
-> to read. No functional change intended.
+On Thu, 01 Sep 2022 19:43:25 +0530, Vignesh Raghavendra wrote:
+> This adds bindings for TI's AM62A7 family of devices.
 > 
 > Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
 > ---
->  include/dt-bindings/pinctrl/k3.h | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
