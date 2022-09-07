@@ -2,101 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBF355AFED2
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 10:17:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BB245AFF47
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 10:38:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiIGIRN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Sep 2022 04:17:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
+        id S229780AbiIGIiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Sep 2022 04:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230055AbiIGIRI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 04:17:08 -0400
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31A69AB1A4;
-        Wed,  7 Sep 2022 01:17:04 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.143])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MMw6W17cnzKHvN;
-        Wed,  7 Sep 2022 16:15:15 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.102.38])
-        by APP2 (Coremail) with SMTP id Syh0CgDHGXN7UxhjYTD4AQ--.32342S8;
-        Wed, 07 Sep 2022 16:17:02 +0800 (CST)
-From:   Wei Yongjun <weiyongjun@huaweicloud.com>
-To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>, linux-gpio@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH -next 5/5] misc: microchip: pci1xxxx: use module_auxiliary_driver
-Date:   Wed,  7 Sep 2022 08:34:35 +0000
-Message-Id: <20220907083435.1745393-5-weiyongjun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220907083435.1745393-1-weiyongjun@huaweicloud.com>
-References: <20220907083435.1745393-1-weiyongjun@huaweicloud.com>
+        with ESMTP id S229673AbiIGIiK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 04:38:10 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD63AE87D;
+        Wed,  7 Sep 2022 01:37:35 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id l5so9870860qtv.4;
+        Wed, 07 Sep 2022 01:37:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=NEWIwwUk2NSaBA+z9rQHvgwX/oZVvP/K2rLEZAPGJC4=;
+        b=kHSqQQifER8vqeU6eF7kWC4cLxZ9oF8kZrtRAZvp/7pQ5JiGlUBMgTtV9LykTLyR4W
+         eCGZbRJzHpRkdABCMrtP9IhcD/cK8jMg2SFD3Wwo7FJiFQ+WKkmTEux7T2Qu2B5x88Kd
+         x+baYiiN3gEHqt62NJlxYlTLsqAhDKTKSJIhUPhPkJnkjcxUAfdakxJFc6JbS/DbVst4
+         J+04MKU9W3XuUtCa3tWoxHnlOLTArqs9Avjw4bhY9mOkHxQXPYnC5RZPbIN29uRIYvFh
+         VhJJ8yYLyt4jDESNwgzxrHiJuluILwjeuKAw9QFvehieqVVakqszRpkbBzYRQku5ZFoL
+         1Jvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=NEWIwwUk2NSaBA+z9rQHvgwX/oZVvP/K2rLEZAPGJC4=;
+        b=kkC7XncocM1gKtQ4B/n/lz010JNe1NRvdxtPwGNEjqctEHK8QanXVF+Oofx7Y/xWkM
+         Jqh0PxDXZHNfTur/UUEVCaGl5EP9CLhpzqYSGeeOMDL0GIubH3/vEuBQqYezHqJDtxYw
+         YVkye6CE4XzKhrJRtkrroIFjD07GKByfwSNwKeFYOcJRqpGTCFQYkp6XVwZQbffpKUOI
+         383sYftBz49QIY65Owxd0mZ0CcE1feYoV562Qe2FWTrbSgV3EXglETsBRv/NToYL8ViN
+         WccS4woJANW2Eg0nSitCzJi5sY3uaZ4IswrqO6NrY87nFTnK6IG2OPH+/qq6rfdgJEFN
+         9p9Q==
+X-Gm-Message-State: ACgBeo0DiwC+XnfDs/WicqlYVBGJbVTXyOOgcZPG7ZD6YpjwCy4whpaQ
+        LdLO5E5ItUKj0ygR7R3/wi1Qi8lbDx2ZDSGV7pcLFfUOD4Q=
+X-Google-Smtp-Source: AA6agR585tXK8+3jXAmBRSk4xQZYDawOEG6+L58wghQEu/0tUKAUwfc8KWo+1jRzcbarw+DKD5t8iusPb+pgFMh02C8=
+X-Received: by 2002:ac8:5786:0:b0:343:3051:170d with SMTP id
+ v6-20020ac85786000000b003433051170dmr2193079qta.429.1662539853505; Wed, 07
+ Sep 2022 01:37:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: Syh0CgDHGXN7UxhjYTD4AQ--.32342S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWftw13tr1kXF4kJw45Awb_yoW8GFWrpF
-        ZxZryUZ34FvanxKF48A3WUZFyrGa1Ik3W2gF9Fy34FqF1DZ3WI9F4jgF98Zr1YqFWUJF1S
-        qr10yFWDGan8JrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvEb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r106r1rM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-        Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-        rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-        AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E
-        14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-        xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-        z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-        1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-        AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
-        evJa73UjIFyTuYvjxUFgAwUUUUU
-X-CM-SenderInfo: 5zhl50pqjm3046kxt4xhlfz01xgou0bp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 7 Sep 2022 11:36:57 +0300
+Message-ID: <CAHp75VecfNvj3Ji1ivZk3cpwbpr8F4FX0xR5H+=CjAO_o-uuxw@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: ocelot: Fix interrupt controller
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On Wed, Sep 7, 2022 at 10:59 AM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
+>
+> When an external device generated a level based interrupt then the
+> interrupt controller could miss the interrupt. The reason is that the
+> interrupt controller can detect only link changes.
+>
+> In the following example, if there is a PHY that generates an interrupt
+> then the following would happen. The GPIO detected that the interrupt
+> line changed, and then the 'ocelot_irq_handler' will be called. Here it
 
-Use the module_auxiliary_driver() macro to make the code simpler
-by eliminating module_init and module_exit calls.
+was called
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+> detects which GPIO line seen the change and for that will call the
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-index fa80a7788596..9cc771c604ed 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-@@ -421,19 +421,7 @@ static struct auxiliary_driver pci1xxxx_gpio_driver = {
- 	.probe = pci1xxxx_gpio_probe,
- 	.id_table = pci1xxxx_gpio_auxiliary_id_table
- };
--
--static int __init pci1xxxx_gpio_driver_init(void)
--{
--	return auxiliary_driver_register(&pci1xxxx_gpio_driver);
--}
--
--static void __exit pci1xxxx_gpio_driver_exit(void)
--{
--	auxiliary_driver_unregister(&pci1xxxx_gpio_driver);
--}
--
--module_init(pci1xxxx_gpio_driver_init);
--module_exit(pci1xxxx_gpio_driver_exit);
-+module_auxiliary_driver(pci1xxxx_gpio_driver);
- 
- MODULE_DESCRIPTION("Microchip Technology Inc. PCI1xxxx GPIO controller");
- MODULE_AUTHOR("Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>");
+saw
+
+> following:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+>
+> And this works fine for simple cases, but if the PHY generates many
+> interrupts, for example when doing PTP timestamping, then the following
+> could happen. Again the function 'ocelot_irq_handler' will be called
+> and then from here the following could happen:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+>
+> Right before step 3(irq_eoi), the PHY will generate another interrupt.
+> Now the interrupt controller will acknowledge the change in the
+> interrupt line. So we miss the interrupt.
+>
+> A solution will be to use 'handle_level_irq' instead of
+> 'handle_fasteoi_irq', because for this will change routine order of
+> handling the interrupt.
+> 1. irq_mask
+> 2. irq_ack
+> 3. phy interrupt routine
+> 4. irq_unmask
+>
+> And now if the PHY will generate a new interrupt before irq_unmask, the
+> interrupt controller will detect this because it already acknowledge the
+> change in interrupt line at step 2(irq_ack).
+>
+> But this is not the full solution because there is another issue. In
+> case there are 2 PHYs that share the interrupt line. For example phy1
+> generates an interrupt, then the following can happen:
+> 1.irq_mask
+> 2.irq_ack
+> 3.phy0 interrupt routine
+> 4.phy1 interrupt routine
+> 5.irq_unmask
+>
+> In case phy0 will generate an interrupt while clearing the interrupt
+> source in phy1, then the interrupt line will be kept down by phy0. So
+> the interrupt controller will not see any changes in the interrupt line.
+> The solution here is to update 'irq_unmask' such that it can detect if
+> the interrupt line is still active or not. And if it is active then call
+> again the procedure to clear the interrupts. But we don't want to do it
+> every time, only if we know that the interrupt controller have not seen
+
+has not seen
+
+> already that the interrupt line has changed.
+>
+> While at this, add support also for IRQ_TYPE_LEVEL_LOW.
+
+...
+
+> +       regmap_read(info->map, REG(OCELOT_GPIO_IN, info, gpio), &val);
+> +       if ((!(val & BIT(gpio % 32)) && trigger_level == IRQ_TYPE_LEVEL_LOW) ||
+> +             (val & BIT(gpio % 32) && trigger_level == IRQ_TYPE_LEVEL_HIGH))
+> +               active = true;
+
+You can use temporary variable for the bit, like
+
+  unsigned int bit = BIT(gpio % 32);
+
+...
+
+> +       /*
+> +        * In case the interrupt line is still active and the interrupt
+> +        * controller has not seen any changes in the interrupt line, then it
+> +        * means that there happen another interrupt while the line was active.
+> +        * So we missed that one, so we need to kick again the interrupt
+
+the interrupt again
+
+> +        * handler.
+> +        */
+> +       if (active && !ack) {
+> +               struct ocelot_irq_work *work;
+> +
+> +               work = kmalloc(sizeof(*work), GFP_ATOMIC);
+> +               if (!work)
+> +                       return;
+> +
+> +               work->irq_desc = desc;
+> +               INIT_WORK(&work->irq_work, ocelot_irq_work);
+> +               queue_work(system_wq, &work->irq_work);
+> +       }
+
+Here I see potential issues with the object lifetime. 1) The memory is
+allocated here and what does guarantee its freeing? 2) What does
+guarantee that work will be not scheduled if the driver or its parts
+are gone?
+
 -- 
-2.34.1
-
+With Best Regards,
+Andy Shevchenko
