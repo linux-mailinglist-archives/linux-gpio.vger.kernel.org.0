@@ -2,182 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BB245AFF47
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 10:38:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABC1A5AFFC4
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Sep 2022 11:01:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbiIGIiL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Sep 2022 04:38:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
+        id S229682AbiIGJBG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Sep 2022 05:01:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbiIGIiK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 04:38:10 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACD63AE87D;
-        Wed,  7 Sep 2022 01:37:35 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id l5so9870860qtv.4;
-        Wed, 07 Sep 2022 01:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=NEWIwwUk2NSaBA+z9rQHvgwX/oZVvP/K2rLEZAPGJC4=;
-        b=kHSqQQifER8vqeU6eF7kWC4cLxZ9oF8kZrtRAZvp/7pQ5JiGlUBMgTtV9LykTLyR4W
-         eCGZbRJzHpRkdABCMrtP9IhcD/cK8jMg2SFD3Wwo7FJiFQ+WKkmTEux7T2Qu2B5x88Kd
-         x+baYiiN3gEHqt62NJlxYlTLsqAhDKTKSJIhUPhPkJnkjcxUAfdakxJFc6JbS/DbVst4
-         J+04MKU9W3XuUtCa3tWoxHnlOLTArqs9Avjw4bhY9mOkHxQXPYnC5RZPbIN29uRIYvFh
-         VhJJ8yYLyt4jDESNwgzxrHiJuluILwjeuKAw9QFvehieqVVakqszRpkbBzYRQku5ZFoL
-         1Jvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=NEWIwwUk2NSaBA+z9rQHvgwX/oZVvP/K2rLEZAPGJC4=;
-        b=kkC7XncocM1gKtQ4B/n/lz010JNe1NRvdxtPwGNEjqctEHK8QanXVF+Oofx7Y/xWkM
-         Jqh0PxDXZHNfTur/UUEVCaGl5EP9CLhpzqYSGeeOMDL0GIubH3/vEuBQqYezHqJDtxYw
-         YVkye6CE4XzKhrJRtkrroIFjD07GKByfwSNwKeFYOcJRqpGTCFQYkp6XVwZQbffpKUOI
-         383sYftBz49QIY65Owxd0mZ0CcE1feYoV562Qe2FWTrbSgV3EXglETsBRv/NToYL8ViN
-         WccS4woJANW2Eg0nSitCzJi5sY3uaZ4IswrqO6NrY87nFTnK6IG2OPH+/qq6rfdgJEFN
-         9p9Q==
-X-Gm-Message-State: ACgBeo0DiwC+XnfDs/WicqlYVBGJbVTXyOOgcZPG7ZD6YpjwCy4whpaQ
-        LdLO5E5ItUKj0ygR7R3/wi1Qi8lbDx2ZDSGV7pcLFfUOD4Q=
-X-Google-Smtp-Source: AA6agR585tXK8+3jXAmBRSk4xQZYDawOEG6+L58wghQEu/0tUKAUwfc8KWo+1jRzcbarw+DKD5t8iusPb+pgFMh02C8=
-X-Received: by 2002:ac8:5786:0:b0:343:3051:170d with SMTP id
- v6-20020ac85786000000b003433051170dmr2193079qta.429.1662539853505; Wed, 07
- Sep 2022 01:37:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 7 Sep 2022 11:36:57 +0300
-Message-ID: <CAHp75VecfNvj3Ji1ivZk3cpwbpr8F4FX0xR5H+=CjAO_o-uuxw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: ocelot: Fix interrupt controller
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229437AbiIGJBF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 05:01:05 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 07 Sep 2022 02:01:03 PDT
+Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com [64.147.123.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9325A9E2E2;
+        Wed,  7 Sep 2022 02:01:02 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.west.internal (Postfix) with ESMTP id A66422B058C3;
+        Wed,  7 Sep 2022 04:42:01 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Wed, 07 Sep 2022 04:42:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm1; t=1662540121; x=1662543721; bh=CwqfKMH8rF
+        Jq0n8MfKf64/LLnkipF2ZC6faLaJQYssI=; b=iFbH69DPSIHen642gkFD6Df4Zc
+        hvxltbsETwdEtCI7uJxGWG+E58xlt1mLUM87ZlfIr0xQJzkQ6GpwL/1C79P+hFUG
+        HGAoRqamU1F5k7ZsvRELKOYF3gcAFccsMlCE2x+aLBGWBOLiWXrKi7OUyX2eNbkN
+        COTBF7g7lS4s8LbLwWHQ6L1IvxOBrZJtRajiEa7Meq8kMxaVBjqIf3bsOA6VYinz
+        vKnWur+5+2McBsE2hcSxYXJZ6mut+T4mrdAl0LgNyTBd1uHl9hqR6AkpEn9vgkmC
+        Ou1+WiIR6PUE3FcaPPIO3NKoDs43b9fe4E6R4atR/ghDap5NcAQPvaQAukVA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1662540121; x=1662543721; bh=CwqfKMH8rFJq0n8MfKf64/LLnkip
+        F2ZC6faLaJQYssI=; b=CAy84ntWnJCf1x+Ik4W8I4eDBhM+IJW3yRGscigfGxPp
+        sW8yEM1pXDHGQF13EEiCUYVA4+FlkhsiUPNmBWrswZhfl+VKcVtz/E/drabhO3eJ
+        be5rk6oBtaOj99sElD/uTu1VszaGsykIlDFRrUcQbQJLlvDaF5wK1iAQ1tz9uMK9
+        zFR9+r+q4s+MtbS+90jrBqvQrAA5H1T6Yw68M2GVORmJY9VCmVAT/XA9Cn63yj7P
+        bs9/v+uj1kxrEC45xHlXEzEmeNfzdM5hUiI6XyNQ2Rad4uU+qWt6dvK9J0NI7JOr
+        rlq2LR3ZgTD2//XD3Z2J6I05QxVQEw4N/vsw3hLL7g==
+X-ME-Sender: <xms:WFkYY_5WoLxuHstEPz3dFmgk10HXsMyVhQMMQL2NS7d0qfH_XMTtyg>
+    <xme:WFkYY05aixySBJZI-F8Rf34EiYtu70hbvwnpr3sPTJDde15-BLUEEN01elG8qIuaE
+    cQwvKy33ekME1RCqYI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfedttddgtdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:WFkYY2ffvzUcraSjfGbccJpOVIRcEkKF_nU2nhNkUkDYWHdSBT3d7Q>
+    <xmx:WFkYYwIVQM8sUZ18dCbyqQbmz3KXMzOJ3olYkeYBpGTeV28kJlhe7Q>
+    <xmx:WFkYYzKCRCcmFzWivKUssrV0smQau_QWIvLEsuz05FY4PiwSY9LkhA>
+    <xmx:WVkYY700gHe4BIxy75yuW2HAWAom3WMC6vVUqJZq9PbYGR7MVF-Zmoze08g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id C7651B60083; Wed,  7 Sep 2022 04:42:00 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-927-gf4c98c8499-fm-20220826.002-gf4c98c84
+Mime-Version: 1.0
+Message-Id: <77b0aa7b-3183-4a05-85ff-b278aa7f8f11@www.fastmail.com>
+In-Reply-To: <CADVatmNSGSZZNXF7k7YmMqfcoOAiM6JhEfksjoVqoBOLUXfbPQ@mail.gmail.com>
+References: <YxdX2l88PSFGe1r4@debian> <YxeAOgEoUffHudv/@kroah.com>
+ <CADVatmNSGSZZNXF7k7YmMqfcoOAiM6JhEfksjoVqoBOLUXfbPQ@mail.gmail.com>
+Date:   Wed, 07 Sep 2022 10:41:39 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc:     "Kumaravel Thiagarajan" <kumaravel.thiagarajan@microchip.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-next <linux-next@vger.kernel.org>
+Subject: Re: build failure of next-20220906 due to 4ec7ac90ff39 ("misc: microchip:
+ pci1xxxx: Add power management functions - suspend & resume handlers.")
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 10:59 AM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
+On Tue, Sep 6, 2022, at 11:07 PM, Sudip Mukherjee wrote:
+> On Tue, Sep 6, 2022 at 6:15 PM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>> On Tue, Sep 06, 2022 at 03:23:22PM +0100, Sudip Mukherjee (Codethink) wrote:
+>> >
+>> > drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error: 'pci1xxxx_gpio_resume' defined but not used [-Werror=unused-function]
+>> >   311 | static int pci1xxxx_gpio_resume(struct device *dev)
+>> >       |            ^~~~~~~~~~~~~~~~~~~~
+>> > drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error: 'pci1xxxx_gpio_suspend' defined but not used [-Werror=unused-function]
+>> >   295 | static int pci1xxxx_gpio_suspend(struct device *dev)
+>> >       |            ^~~~~~~~~~~~~~~~~~~~~
+>> >
+>> >
+>> > git bisect pointed to 4ec7ac90ff39 ("misc: microchip: pci1xxxx: Add power management functions - suspend & resume handlers.").
+>> >
 >
-> When an external device generated a level based interrupt then the
-> interrupt controller could miss the interrupt. The reason is that the
-> interrupt controller can detect only link changes.
->
-> In the following example, if there is a PHY that generates an interrupt
-> then the following would happen. The GPIO detected that the interrupt
-> line changed, and then the 'ocelot_irq_handler' will be called. Here it
+> Looking at other drivers which uses SIMPLE_DEV_PM_OPS, I think
+> pci1xxxx_gpio_suspend() and pci1xxxx_gpio_resume() needs to be under
+> "#ifdef CONFIG_PM_SLEEP".
 
-was called
+That would work, but a better fix is to use DEFINE_SIMPLE_DEV_PM_OPS()
+in place of the deprecated SIMPLE_DEV_PM_OPS().
 
-> detects which GPIO line seen the change and for that will call the
-
-saw
-
-> following:
-> 1. irq_mask
-> 2. phy interrupt routine
-> 3. irq_eoi
-> 4. irq_unmask
->
-> And this works fine for simple cases, but if the PHY generates many
-> interrupts, for example when doing PTP timestamping, then the following
-> could happen. Again the function 'ocelot_irq_handler' will be called
-> and then from here the following could happen:
-> 1. irq_mask
-> 2. phy interrupt routine
-> 3. irq_eoi
-> 4. irq_unmask
->
-> Right before step 3(irq_eoi), the PHY will generate another interrupt.
-> Now the interrupt controller will acknowledge the change in the
-> interrupt line. So we miss the interrupt.
->
-> A solution will be to use 'handle_level_irq' instead of
-> 'handle_fasteoi_irq', because for this will change routine order of
-> handling the interrupt.
-> 1. irq_mask
-> 2. irq_ack
-> 3. phy interrupt routine
-> 4. irq_unmask
->
-> And now if the PHY will generate a new interrupt before irq_unmask, the
-> interrupt controller will detect this because it already acknowledge the
-> change in interrupt line at step 2(irq_ack).
->
-> But this is not the full solution because there is another issue. In
-> case there are 2 PHYs that share the interrupt line. For example phy1
-> generates an interrupt, then the following can happen:
-> 1.irq_mask
-> 2.irq_ack
-> 3.phy0 interrupt routine
-> 4.phy1 interrupt routine
-> 5.irq_unmask
->
-> In case phy0 will generate an interrupt while clearing the interrupt
-> source in phy1, then the interrupt line will be kept down by phy0. So
-> the interrupt controller will not see any changes in the interrupt line.
-> The solution here is to update 'irq_unmask' such that it can detect if
-> the interrupt line is still active or not. And if it is active then call
-> again the procedure to clear the interrupts. But we don't want to do it
-> every time, only if we know that the interrupt controller have not seen
-
-has not seen
-
-> already that the interrupt line has changed.
->
-> While at this, add support also for IRQ_TYPE_LEVEL_LOW.
-
-...
-
-> +       regmap_read(info->map, REG(OCELOT_GPIO_IN, info, gpio), &val);
-> +       if ((!(val & BIT(gpio % 32)) && trigger_level == IRQ_TYPE_LEVEL_LOW) ||
-> +             (val & BIT(gpio % 32) && trigger_level == IRQ_TYPE_LEVEL_HIGH))
-> +               active = true;
-
-You can use temporary variable for the bit, like
-
-  unsigned int bit = BIT(gpio % 32);
-
-...
-
-> +       /*
-> +        * In case the interrupt line is still active and the interrupt
-> +        * controller has not seen any changes in the interrupt line, then it
-> +        * means that there happen another interrupt while the line was active.
-> +        * So we missed that one, so we need to kick again the interrupt
-
-the interrupt again
-
-> +        * handler.
-> +        */
-> +       if (active && !ack) {
-> +               struct ocelot_irq_work *work;
-> +
-> +               work = kmalloc(sizeof(*work), GFP_ATOMIC);
-> +               if (!work)
-> +                       return;
-> +
-> +               work->irq_desc = desc;
-> +               INIT_WORK(&work->irq_work, ocelot_irq_work);
-> +               queue_work(system_wq, &work->irq_work);
-> +       }
-
-Here I see potential issues with the object lifetime. 1) The memory is
-allocated here and what does guarantee its freeing? 2) What does
-guarantee that work will be not scheduled if the driver or its parts
-are gone?
-
--- 
-With Best Regards,
-Andy Shevchenko
+     Arnd
