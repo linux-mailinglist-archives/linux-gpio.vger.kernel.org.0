@@ -2,88 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F6585B1D43
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 14:38:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBAA95B1D58
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 14:41:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231890AbiIHMip (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 08:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54680 "EHLO
+        id S231894AbiIHMlS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 08:41:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231882AbiIHMin (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 08:38:43 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4486898769
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 05:38:42 -0700 (PDT)
-Received: from fraeml741-chm.china.huawei.com (unknown [172.18.147.206])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4MNdqD5b3Cz67n8d;
-        Thu,  8 Sep 2022 20:34:32 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- fraeml741-chm.china.huawei.com (10.206.15.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 8 Sep 2022 14:38:39 +0200
-Received: from localhost (10.202.226.42) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 8 Sep
- 2022 13:38:39 +0100
-Date:   Thu, 8 Sep 2022 13:38:38 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Jay Fang <f.fangjian@huawei.com>
-CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <linux-gpio@vger.kernel.org>, <jiaxingluo@autox.ai>,
-        <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon GPIO Driver maintainer
-Message-ID: <20220908133838.0000242a@huawei.com>
-In-Reply-To: <20220908112151.13912-1-f.fangjian@huawei.com>
-References: <20220908112151.13912-1-f.fangjian@huawei.com>
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.29; i686-w64-mingw32)
+        with ESMTP id S231903AbiIHMlN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 08:41:13 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A42D1E0F
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 05:41:03 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id lz22so16880551ejb.3
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 05:41:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=7Cc3JjRoygtSTXogpO0wdGB24mbzR+AXN+9ZoeSda84=;
+        b=j8VC/Ra6EgN8dGVA8AGrHXrS2XVoT2RFYj7AiY9Kg1ZrZOYenCJQ9ZZs/P1OwLwVgE
+         GYRrhQiMJVpqNMgAhWw1VEkgfMZ2XbKsAM6JyAwCDuwCGGyCdUB8UO3jI3V1j8qUJI3m
+         GXxk1zOW1GrVfDFB0NIYfVSouOMvgM5GObi3+cytemoNKSwZzHgtdZ9mOztX59/725+m
+         XKDckNZWnY2Zm7u59hgL4tcFpPWEnKVQ1mim/jbUPo1zgVaCVgEfcbyOhmfgOLx0OjTu
+         57FHnlFYgrmQYGm+4ts84xs9kVOaO9z4+KedejqfIzApOVBGVSYyB07+74yYKDi6K0mL
+         jLIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=7Cc3JjRoygtSTXogpO0wdGB24mbzR+AXN+9ZoeSda84=;
+        b=c100MxbPnnyWg3us8gaHn+zL1bb3IQPDphgAlRZvStDy333n1yybHTXYqzqmPOBPUj
+         C6KZN3+L0eKhsLnSZosUvVwVvN8NwAWCqY5JYZV9cPAoKAbRqHaoA91t8fnypX95PD5x
+         JpR38imjcRp/BWI7sIYSj7zKqNz5tSOl5u8NexjkunAZmqZkLBJ6CKCZ9Yftn5fobdkO
+         LhM4cscK8sAmJiqdfRoyl+4oyvlmvp/FiOoe1goEW8V/qVvVMTvppFzQxKIyUoaTvS+E
+         JrOXftkk/2sB67EphjmxZtCB5PIPerWtj9oQmY3z+uUNy0TocndKVS7oqhqvwbsxVlvI
+         2w7Q==
+X-Gm-Message-State: ACgBeo1ZEpl0Zvx4n0K4P62vEGdLUyoeSsdM3Lf2vQBu9PJGiAxZHxgj
+        B/BG4/YNEaCmqwTVvuCk+UhfX2KSuCRbqrjshyMytQ==
+X-Google-Smtp-Source: AA6agR4ePYuOmtxrt0CjkIai+xgdE7eucVDz1eLZcaM3bclYP+MlyvscuYoZ4xtEj0w8eM8TXWU86P2R5T/DfYJ4pZ4=
+X-Received: by 2002:a17:907:1c89:b0:741:4453:75be with SMTP id
+ nb9-20020a1709071c8900b00741445375bemr6018030ejc.208.1662640862005; Thu, 08
+ Sep 2022 05:41:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.42]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220715044948.434149-1-cosmin.tanislav@analog.com>
+ <20220715044948.434149-2-cosmin.tanislav@analog.com> <CACRpkdZVkXM-8DZjTaOxnS05Wz5GHon0sK1g7hDbz5SDJf9A=A@mail.gmail.com>
+ <06476041-e8d6-7030-2f46-ace964c42513@gmail.com>
+In-Reply-To: <06476041-e8d6-7030-2f46-ace964c42513@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 8 Sep 2022 14:40:50 +0200
+Message-ID: <CACRpkda=JdgBqFvY_7q_Zv0HJx1wmtMEfB9heycy5PuEE4mrSA@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: iio: adc: add AD4130
+To:     Cosmin Tanislav <demonsingur@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 8 Sep 2022 19:21:51 +0800
-Jay Fang <f.fangjian@huawei.com> wrote:
+On Thu, Sep 8, 2022 at 9:03 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-> Add Jay Fang as the maintainer of the HiSilicon GPIO Driver, replacing
-> Luo Jiaxing.
-> 
-> Cc: Luo Jiaxing <jiaxingluo@autox.ai>
-> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
+> >> +  adi,ext-clk-freq-hz:
+> >> +    description: Specify the frequency of the external clock.
+> >> +    enum: [76800, 153600]
+> >> +    default: 76800
+> >
+> > This looks like cheating, i.e just outputting a clock on that pin
+> > and ignoring to model the consumer.
+>
+> You got this wrong.
+>
+> The chip has 4 operating modes regarding clocking.
+>
+> Internal 76.8kHz clock (clkout can be used as an interrupt pin).
+> Internal 76.8kHz clock, available externally on the clkout pin (clkout
+> becomes an output).
+> External 76.8kHz clock (clkout is an input).
+> External 153.6kHz clock, internally divided by two (clkout is an input).
+>
+> This property is used to choose between what frequency to set the
+> external clock up with. Indeed, if the external clock is not present,
+> then exposing the 76.8kHz clock using the clock framework would be fine.
+>
+> Maybe you have a better suggestion about what to do with this?
+> How do I tell the chip what frequency the external clock is, but also
+> tell the clock what frequency to use? It's a bit of a conundrum for me.
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+I would imagine not specify in the device tree what frequency to use
+at all.
 
-Good luck to Luo in the new job!
+Instead use software for that.
 
-Thanks,
+The clock provide for the clkout should provide
 
-Jonathan
+static const struct clk_ops extclk_ops = {
+        .recalc_rate = extclk_recalc_rate,
+        .round_rate = extclk_round_rate,
+        .set_rate = extclk_set_rate,
+};
 
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f1390b8270b2..907451fb013a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9122,7 +9122,7 @@ S:	Maintained
->  F:	drivers/dma/hisi_dma.c
->  
->  HISILICON GPIO DRIVER
-> -M:	Luo Jiaxing <luojiaxing@huawei.com>
-> +M:	Jay Fang <f.fangjian@huawei.com>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
->  F:	drivers/gpio/gpio-hisi.c
+This way the consumer driver can issue clk_round_rate(),
+clk_set_rate() etc to make the clk driver determine which parent
+to use for the consumer. Likewise .enable or .prepare should
+then mux out the desired clock.
 
+> >> +  adi,bipolar:
+> >> +    description: Specify if the device should be used in bipolar mode.
+> >> +    type: boolean
+> >
+> > Can you explain what this means? I don't understand what it would
+> > mean for an analog device / AFE to be in bipolar mode.
+> >
+>
+> Range becomes [-VRef, VRef], as opposed to [0, VRef], resolution is
+> halved.
+
+OK that makes sense, put that in the binding description.
+
+Yours,
+Linus Walleij
