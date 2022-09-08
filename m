@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40CD65B1436
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 07:57:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 535DF5B143A
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 07:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbiIHF5P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 01:57:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
+        id S229498AbiIHF7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 01:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiIHF5O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 01:57:14 -0400
+        with ESMTP id S229476AbiIHF7T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 01:59:19 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023F6A2A92;
-        Wed,  7 Sep 2022 22:57:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2F8ADCC2;
+        Wed,  7 Sep 2022 22:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1662616633; x=1694152633;
+  t=1662616758; x=1694152758;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=851xsu1d6GGLtG1KKlj5dAPJcmcZ0Mm6fycIA1b1JA8=;
-  b=ztsjn+64e36uQr63uXO6CpxMjv/j9mFMkWxZHbwYdLMrgjrKkIj+PJ3F
-   wCtiTsv3PiOHgIcdB5orh2Du0YogvBfF8oVWSuFV0av49K1rH6FAQDFGW
-   gQzFJREuN+IxgqotlgWyHwCWnjGp7eVdckZ592HvrUdG+7FkTNrm0F4c6
-   rhXJCrpyt+N3l5Ivyv7MKnts+myHTB0D9CMp0AZFsXyv0hlmDjhERO6bL
-   b1oE0KUXeXOZ3cnbA1KIsmVlP7uXscXTB6GSsjANS5EMKSeVWCOBwIkVH
-   lNVAHV2EmQVIjP325agFALdsufZU4eQaJ75NFX24nEVwxIopTLrDdDP1+
-   A==;
+  bh=ZGowQNTYMHVTn+7v/zjG2zM7l7P9JFeySR/aPP6cIUI=;
+  b=p0m8zhIzxnNzq/WenVl3JRS0Dm9ealAALfCmk3uYkdvSMm8ui2A7lXDF
+   BjIbC1lRjsP3PwAF/cAfgUfMsCwnx5HEXuFohs7kAb9BUO15b6ttkpiXL
+   +j9c3PfKdJFEV0NzZ3EM5G00D8+BVIf1MZasUcPh6ze9neFvY89WK5Tz/
+   IJ4mkGqzRf+fSBVUmO1IEcVtcfq14yZEFq9aelEChrgrJmvZ3jKafmmJu
+   83IriC7ICMRxxJzhwWQCoPga77JIcVCGt1SBtWx0Wy7S/D08XL84HxUgM
+   bZ42EEaBDGoMLSTee1uOaF0mH14s2TDkwhJaCa9sAjcviAVBqIUQGGlLS
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="172894332"
+   d="scan'208";a="172894568"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Sep 2022 22:57:11 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Sep 2022 22:59:17 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 7 Sep 2022 22:57:11 -0700
+ 15.1.2507.12; Wed, 7 Sep 2022 22:59:17 -0700
 Received: from NAM11-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Wed, 7 Sep 2022 22:57:11 -0700
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12 via Frontend Transport; Wed, 7 Sep 2022 22:59:17 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CodG9oH30aixpsszwA4reAJ2WPhNuq9I5eMWOodA/NepW7asnfOrQQc8R6qQfEXxm0dxdxKKtyzdjIvJvB5RnRVWb+/2NAnyDyZx73BxFoiAcJKeE47P4RZaAGGN9KzQU90frOu+/tvIoAmZCK4Ekv/MPxIeY0vcdUFNDA5rtQvqdjSpmRU3tD7hvCMdMMMw+aJ3ZEnutggSj9JG6LnAG46WqCh+CHIgqhd4tU1Zh0NsZ/i4VUEqVAM3ZXjM6wI82PPsj+iT9lC2UI9Jb/GdtB7yTiUipCs9hpJL3LDfK7E0xUO1EKEIlANuxfDqnCmsSpBUQVA0gis66TecSSrk4w==
+ b=AbDinRz6XzJXMVcMzdTxQqBiV+TleqveVNd/30D7tm0LgwL1ZTmX7pYW318QyVrZD9EqEmPM534oev46Q/QVIUNdGfubUAocOfS2zrpEO9LObkpUYjozm00brfn5SEzn4NT4hGvVG7HQJbNmtSC9ZUFRSw3BWiyxXep2ZKgYQzz8VftyCja4eu39x0vlOa2hhsWBGNjE0BrBxHe3Rlx12t6zcLruz3CYUDnbzgTq0h1rbxS/M32nltjnLBmeKG7QswIlgAV+U7sN6D5OCsZhzpiv8LfovkDZg4XcxwvQohAT/F6WzKKhXZruY1arIDr6m1Wha9O3qA2Ku17FK4CJDg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kaCr4Oj7n4rrAPNI+01fyU1NqYds0X/0tfi8XQIilX0=;
- b=DUGmGj0+MTAt7WJCyY3cJjjMSECghDgyVo2SXD55nBjSlOl3LzxAfMns1HQ4gpwTvlBJavV/TYMcl6ZfP7k0edF6QAZNZQFfXXbIwlri7HDF7hfT4z5iVp59BUBadUTzH+pRJKLfw0kVl9HTAWQ4ozgb6tsNcsnLlUhbaXX8B6RtNS46N/IZqEf4v27cgRdUTuEMUNrf/1DkmxvNQ8/asU4E3OluCpJ+4q3XYJG/TUdJgtiowo6USzLkT5nGcK0gBacTBqMghQUjBmWLhmONa6o/DWg4AWXwElgelnpdvNDqwjmhrukebJ6aLkoS/lQR/sP9Zz55wuW65rhNj78SIQ==
+ bh=gTuFQUL/oCCF5rwtpc62uDaDOZmxavwe8InoRZOsIpg=;
+ b=TTTfJNY0cJ4mrzuBGzGL1oacq5kQl4+5U8I+5G6mwOX7Fnddh7GfMzp/t9+j4qfuly9KzCVZSsUH2FF3b6vXXn92KXBHWXhqwhLUwyLXrhZfq30te03HRjt4xxShZliwRBs3LEgIdBlK0aqCmBaksIcLIAL4cdcU02foT1RuFVxG4LDBAELS98TZLRUfyXkf1mryBAczU+hIKB2wPLmcbh+zMQaetgNqg9Ys67bqvjulnjsOalDaBUooDg5SaVhIcsO2maF2Yg8JgPHsELX4ar39k7hx8tN/TzsWwbrfwUHLZpStowuqYjnsBA5LVs27+iGFugEofFgmdcj5FNymfA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -53,31 +53,32 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kaCr4Oj7n4rrAPNI+01fyU1NqYds0X/0tfi8XQIilX0=;
- b=HlNAq7nU6hsmCbt7bOM5aI9zitMV4Dq2/85mx/OTGDs/3rVMCDLiDfo0G2BAYWjd4HB4lUH5VDcTT8gz0InGqXjOqoUtts5kONe9ck6ytdJdcDuMN893gNJWZBMFOE3+AMXYQvdVbIeColMx0HcjnZDlRZfMYKBi7qpVdxTTJDo=
+ bh=gTuFQUL/oCCF5rwtpc62uDaDOZmxavwe8InoRZOsIpg=;
+ b=m0etLAEAmIRUDjq1CDE+k44MNI/y8SzBzwT7O56H1kj7ubFEgNOEbnzO9OOfvksmipxBuA6kebmlEsJVs7wVVQ2i8DYf/9J3EI0kMjQjGDoiJUoDPtcxntOhrnDT8tKzs/h2tWR5mNIBEx7EXd6AsH96SDq2X7uiPMKKk6deumY=
 Received: from BN8PR11MB3668.namprd11.prod.outlook.com (2603:10b6:408:81::24)
  by BY5PR11MB4119.namprd11.prod.outlook.com (2603:10b6:a03:190::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.16; Thu, 8 Sep
- 2022 05:56:59 +0000
+ 2022 05:59:11 +0000
 Received: from BN8PR11MB3668.namprd11.prod.outlook.com
  ([fe80::3198:2077:56c7:1780]) by BN8PR11MB3668.namprd11.prod.outlook.com
  ([fe80::3198:2077:56c7:1780%4]) with mapi id 15.20.5612.014; Thu, 8 Sep 2022
- 05:56:58 +0000
+ 05:59:11 +0000
 From:   <Kumaravel.Thiagarajan@microchip.com>
 To:     <weiyongjun@huaweicloud.com>, <arnd@arndb.de>,
         <gregkh@linuxfoundation.org>
 CC:     <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next v2 1/5] misc: microchip: pci1xxxx: fix error
- handling in gp_aux_bus_probe()
-Thread-Topic: [PATCH -next v2 1/5] misc: microchip: pci1xxxx: fix error
- handling in gp_aux_bus_probe()
-Thread-Index: AQHYwsfi2OCdGO+Jl0GHAVIhlnqa6q3VBr6Q
-Date:   Thu, 8 Sep 2022 05:56:58 +0000
-Message-ID: <BN8PR11MB3668709A318C10F19261FB6CE9409@BN8PR11MB3668.namprd11.prod.outlook.com>
+Subject: RE: [PATCH -next v2 2/5] misc: microchip: pci1xxxx: Fix missing
+ spin_lock_init()
+Thread-Topic: [PATCH -next v2 2/5] misc: microchip: pci1xxxx: Fix missing
+ spin_lock_init()
+Thread-Index: AQHYwsfa7PMhHkHaRUuCegivBl1ESK3VCitA
+Date:   Thu, 8 Sep 2022 05:59:11 +0000
+Message-ID: <BN8PR11MB36687E0E06862C7C89E26DD0E9409@BN8PR11MB3668.namprd11.prod.outlook.com>
 References: <20220907145808.1789249-1-weiyongjun@huaweicloud.com>
-In-Reply-To: <20220907145808.1789249-1-weiyongjun@huaweicloud.com>
+ <20220907145808.1789249-2-weiyongjun@huaweicloud.com>
+In-Reply-To: <20220907145808.1789249-2-weiyongjun@huaweicloud.com>
 Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -86,53 +87,53 @@ authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microchip.com;
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: BN8PR11MB3668:EE_|BY5PR11MB4119:EE_
-x-ms-office365-filtering-correlation-id: 71bb0210-506a-4b43-b7ee-08da915ef15f
+x-ms-office365-filtering-correlation-id: 4efddea2-ca28-4ae7-ff67-08da915f4093
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ARpKgAzi8fiiKPkrdYww3OlwvIYOEb49LFvdfm/S7ol4gUJeAp2pKXU5cnrgCeefWNC48gfJeNmM9zKswPeAiIfLD/I51SxlWpQBQNQLlyKX6snGKSlTmT3yhiNkLd/MVJt9jdkoHCDXmuRgcoKBSk71n7bCnbp8dI5leyp2/DWg17hgm/3+YE4Ub9IR8fSWCmL68Q67oen0hKar7TDb69nYpzDS9vGMSjXV8AE8Rr8eI6Qn/mwvXoUl0fM/cCqgT347u0mD3wUl8omzQgiYJY2dXJP9XiTz3aypMiFeB5XUhUzwocHWEuxg2CQN4bXiIc0C6FhavVBHz2FzNGMNFQaTaYQeQMGaNhZCLsLedcgRSgr+VnkZ18R8LmGTH2H+7lE1RE+zaRKG5RrY1AcL8WMvN+UwMiBN0WsxbPwP29G/eHSJ5+8Gs0d1Elh+WvXOQ8sVWB5Px1IEGPrPjfzXzeLKK5Pw/SaiYnmNRTb7L0nT0iplSiTmtdFyXcm0hZ0dKrHL11t8aK+7r+zMhnzszEFN3R408hT7uMIPhgVouskHe9MFWxjA2zN90JJs8P4vdH7h8czfrKQ5o0eMwKX74DHUwPCOjPGP7Wpmi9Zeuz75BCOyG7GQ2juzuIpytjNm2ITFimWD5YaRZ/aoPU2ir79cxYcyrqKMQjbXaDCr6gRcFAFfEX7KAe6AxZERYPL3aZIanreMGlMDeJy0Be9OkwsWTjB0uWdgOavbaSYpYjICmTOsg8H11ySzKnCDIAv59OkWhqEQJs2LNbpA7SxPYYBu5li6xJRc4NDcP9g6IV4Z4y+I6m2sVVeJIySzwpLxBgyunuiqe/SDEcYfG3yPICgRmi04ocnJH69GiqRsO2Q=
+x-microsoft-antispam-message-info: ujQJ+np8o4pC9Qh301fIE1M6w9YGXPGpgig4Hq0N7WUDJdsIVzjE2TqLQZp5n+QZssYyypjgxi7d9YUSIKA6a3wPSmMI/AYm/orFmc9w0YYvwZ8lVX3l2wB1dms7ZJal7miqxX7GljJeUSOSP5kIctUeyvG0X36s32afavVCoLqvhANjOY5iNzGVjRnSFygijjviTzy2KF9f3fP2XuY66MLS6LHpilTIiT8KK8FLM3w3F/cwiyikcIct+TuCVGlEvzaNrxY+LjsKIpee99vapWCDpKP7LQs12IHgH5DQhoHnbEDEJ3xOxMPO1H5XnlJcVybrl8M8hI1f9XXI3L6IjRXxUp+o1UCKN5cBWM6Sge6vhJ+uRwaGUe88cHjqcvmxBXI2ftmbccN0NMIM6CLizqmERnuIWMGAh9wy+5sT07b3eOw3wGzBcibDgSqL2n8KffssYtCbIN4icsdHBykKCQOaUcZurdZmbWRhmo5KiQMQbQZK5Oy6RzylP+MQtiObk8idi39oLAwwV+rcy+U/4HvZ4hRVmY3oAp4Md+AqOah88D+Z5DihMsy5Hvyl5XsDAHXsavRjhoV7aFFdoDFprbmpN24vncAoHvQcjFVGHqNE0lqkHveG2azMcSdzpedCWRpu2Tw5FqmDXbFfwlp2lpWXBiRG07CajS6zqft/8C3pbEuIO0DXsOWd/lV56Kw79b3MEr3sM6NYT4ciljuD3bLZ+etg/j1wH0OuzG9FrATsTcle2xgFl62k7yk8fUU3v3jVh/e3Qw0+G13puHuafp9cMEFo6XKNOK97kuCrdvxoputmTEic54F7ms4GAQVvze0xts7UINC+5H1F2tF4mfvr/oldJFSF3stIA6ESgaY=
 x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR11MB3668.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(346002)(39860400002)(136003)(366004)(376002)(478600001)(41300700001)(71200400001)(38100700002)(54906003)(316002)(110136005)(186003)(122000001)(83380400001)(38070700005)(6506007)(9686003)(53546011)(26005)(7696005)(2906002)(33656002)(55016003)(64756008)(8936002)(5660300002)(52536014)(66556008)(8676002)(86362001)(4326008)(66946007)(66446008)(76116006)(66476007)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?HQnJEI1zaFscss1A+kjWjgAg38MHW72YChsoNaton8SgFSFucAG/Syen7sYJ?=
- =?us-ascii?Q?8ozfdSz8KBqGERKfWycYAqn2BW94pGKnd//sJsY2TZ0NARF2VGzp/2VKc1kc?=
- =?us-ascii?Q?G1EooRymvouWn5U5+cgJbOVS4QTZjup8RNSgWI+pX7h00KLpK9uYcwE0bDMg?=
- =?us-ascii?Q?lYxZaf775W0Wq0rWbBSymxY5pqpRWEwue6kdl2ESkpBLz6WLBgcJIJUWUAzE?=
- =?us-ascii?Q?UkJLsizV5jctCcEWWOWqXqsDCQmAcDhRRuZSPmXXXplomepyDJbTW6oOIbAv?=
- =?us-ascii?Q?59sZEFPa1Y38l1pCpfw0eGsCvG06twfeQDxJ8Rjm6793P3L1R2ogjBEFxvrB?=
- =?us-ascii?Q?vmjPiE866fK/r+1m8dowHAnHM7Zb7KKKnjAAos6/L+pyg+Tk8vGS70DHLrFh?=
- =?us-ascii?Q?Pq44HNlrDVkxpgqbB+X0sZ2mXfLkK5ehKxxAxlGPBKpN/1oNsPMye9xxUU29?=
- =?us-ascii?Q?bVYahNF+iNFW+al1R/mrkYMyM5c1HNZmwY5HYP+M++O8qf0ljcT3k/NruaZq?=
- =?us-ascii?Q?A33EJL+ARZ0XGsNPfVryhL0GAYn71hhIEDgWplgMCkWN77UFwoQMi4inabo+?=
- =?us-ascii?Q?6flGtwhOoCSK7TG2HSfbkY6Tyq4dlExdz8gK3Cg8hpM8KAWKQQhWXgjuflQT?=
- =?us-ascii?Q?kdjBj3lT40HU3ODvgOd0wFtY7NmLjfbJme/zfEh7+R59YGUn+2VpHrwF56OK?=
- =?us-ascii?Q?SUhwXLjWqlp0bK5pEfCx7BfayM19XAZ2y5esHTN6bST6EShpWvvVH7UZGG77?=
- =?us-ascii?Q?57tVzE+3POovTyknaxt8wzZrAmLJAc1wltiUuAMVvomzDItNOvUod+JqRqWb?=
- =?us-ascii?Q?qUp1DRQaayAWa5OQliWrC8/wLuokZSCNm+bnItOrZ0YDFBVOBJMraanicfGG?=
- =?us-ascii?Q?iyUS+cXGd+wN5prKkT05YOxULsix/Xqvi/cLtHufoO/by6axHgd5SzkWCjzj?=
- =?us-ascii?Q?kseG3ZG4ygmqjiIpQkWeHi/jU2lbbhryuL8dMEG518I+poEjadPelB2aSDnv?=
- =?us-ascii?Q?RPUWTVDumbyhZp5roeweTKcGsatW1EU2w61XJPj/Bhs+jUVzmbJKRKvU+ZON?=
- =?us-ascii?Q?YIVHk9tX+7YhF8stHWKSXF8ig+M48EHHnZabnuoASg/mX958En0UVYncR3Ru?=
- =?us-ascii?Q?e/82DZMQ3VYasbnuCdYikEJHMxt/G4RpmczmBpa+FNnTMTiK/Qr0AqIzboJA?=
- =?us-ascii?Q?0FBONgBPTPhDtLDIJfHue6TAeHSqPnt+hWYvNyN7OVxSMYA1B5Rqs0jibZzY?=
- =?us-ascii?Q?Ic/8Kk/sxXh0OP5SY1GAeKDUxUH+SwWMrqveMUP3sgpvx+5Ga7BLL4H4DdA+?=
- =?us-ascii?Q?t1Trpk8L5Vkrh0P+3vFIMNjJh1yC6MCqyRNQl805RNjU/gByQ2uq0rqzyAoU?=
- =?us-ascii?Q?dLDWYf+7iYbuMy2Utl1cAUpT6UUIjq0rcFnDQIs4fChCPm1KHCFK26jtbHjR?=
- =?us-ascii?Q?eoOJhNN+tYpUW/N1JwpE9SnuQUWznAvbF8sFeWgLMOyT01bA2IcSrNzDiPr0?=
- =?us-ascii?Q?WebUqJ5k8A8WIOejb+L3zZIVibuJ09xO/gsv/cUOUn5ZWivHXdaD0MwHkIdi?=
- =?us-ascii?Q?6BoLo+6jyl5TvJvwnb0CwC0mTvNTm0z+5myTgIAMVGgttc29dPHPBLWshLsY?=
- =?us-ascii?Q?9Wt59ciVpCKwd+1Tw5vTD80=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qjpFRr1vXvm+4qYiXLoqGGmAioWB77oZpmZ10kUWeofEH5NJTPc2XxqfWkpc?=
+ =?us-ascii?Q?InevehMbGunuA8DjbmgVh82RlRbNK/MDu/VD00bCdJa3uk9wmlnYOAPL5t7H?=
+ =?us-ascii?Q?TAbbDQlvNsbsZAc2189MXwLDQIU62tuGcNpbQef6vZPH1KjOMLPcOhrBm7u7?=
+ =?us-ascii?Q?pBRpKALGrPVaweL01uMmsNoYSMOz5GLkDfLPdgvyzax9lC9JxtpshHnBFZZm?=
+ =?us-ascii?Q?s7E2SKIDW+cJqDU3QlqCIMVLqFc3d597GaHjh1FPE+hqbFyPt8oebF33L2a6?=
+ =?us-ascii?Q?LK4SH4/aujaeI7ykZhwIuMv6ag8XOb40p0BhEkXkrJ0l9w5yEQDAqt8rWL+3?=
+ =?us-ascii?Q?+C0vbjavfy+F4vfzTR9LjkKouiHOqW1XvN6JUJCSTZI4QqYd1CxaIuqBaWkg?=
+ =?us-ascii?Q?SIJD5nOIB/38ePymdx4uhq1nAefb7nsxe8A7MH3QxHfFnF7R1jqGy6zrYhA2?=
+ =?us-ascii?Q?nK2nq4NuqI7dR/bq6N5PC45tl7+STqb7/ZbG/Ku7/ZZKCEr5ZO720kc7T2Lm?=
+ =?us-ascii?Q?zSfS5+8PcS3r7pYSqzhNxRXzT/29GA76c10KB6xXFUlYIAnwQeww+X8Ssc1r?=
+ =?us-ascii?Q?ISzywu8RHDUSbIDt4GUCSHzLHTlAhgZy90tUgZAc1CgZiDR0dErDy4cclOA9?=
+ =?us-ascii?Q?vH4/QlXUi26i36MTFF7dq+GNTiODJYt2OftAplkDZuQ6TJpHHOVmtgp8Cf9T?=
+ =?us-ascii?Q?mNTpd3LHaxtsJXxpXN5L7QKsXAefmTP1pRBR9G0TJr/Sp3lJfRvmr3jw+dt/?=
+ =?us-ascii?Q?DDYhms1pJQB114fI8FsV8awg2JC1ni2FrHKDHp1noY6Arhu3b1XyvKTafg2E?=
+ =?us-ascii?Q?vathMe0LIyVWY40y3IvxzLxKySKT9/he33ljrbfklLHrOj70K9snIwFYSeGd?=
+ =?us-ascii?Q?zIvUTZMeOoSv3UqW4XlhXiQ5b3VIzaLTMr2uy2+4GIflyNKSvpB6eKGsT5Rk?=
+ =?us-ascii?Q?8Vys1NudT9YgrVCcvYmezVywwL4bw14k3MXa94ukfDKlMUihv9MzeIQ4q9Tz?=
+ =?us-ascii?Q?gSSOp0T+CDsAPPDB4mcWzm07e4+iLZ626I/3U3Z5s6jcNdFPVoyEumRFZzva?=
+ =?us-ascii?Q?3KjTFR30IraXBfMSQx9Dwu3E+S+i2ceE2/sTnW+WQgJ3ul4g2sE1H+w4ZcCo?=
+ =?us-ascii?Q?0pFgazC80VWDBgcVdmZSeDb77BMNSSpJgUm22P0WuSEIJju6o5Hr12rj+V3m?=
+ =?us-ascii?Q?yEjWLulC72Voy7/sWlp6aP6cVX/JGRq5ofIzkud30hJk5zPat+2mkE8Aposr?=
+ =?us-ascii?Q?OIvFr9UJX/2CcX/TUdqaHmXW/58FtQelQRv19wjGiXoclE7RfG3d5i2B8QaW?=
+ =?us-ascii?Q?x0CinpjyIxU6gZF3NtzSD/NyX8p2x34nvT0P6GJr43oGUI8q5/LQMons3fUZ?=
+ =?us-ascii?Q?DQaL4ID5VzLdYundmmg5WvBKibdyHDM6Ac7EkRZtSp9Q626Ssdei6wPFyxm/?=
+ =?us-ascii?Q?CdEiDO2bsRRbxWPxJGGKqMwDGN0MOswDjmoHyLT/7N5GXnoF0A7h9t/CYCPX?=
+ =?us-ascii?Q?g1ZXHXT1soG8bnrSCazthFRfQCg8bdjBzHzvF5rMxb/3MxJDvmBtmEeBRuNM?=
+ =?us-ascii?Q?bAgzig4PDLxLTqXRMiDvdu/wWuqxOqiE+oSZG3ISWcYQVnzj+LW64QLDAlRH?=
+ =?us-ascii?Q?huH/4h9/81dU/Uc0t6IKNUY=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR11MB3668.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71bb0210-506a-4b43-b7ee-08da915ef15f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 05:56:58.8413
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4efddea2-ca28-4ae7-ff67-08da915f4093
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 05:59:11.7395
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EKk8PJK8BcWOMkIFswR5E0RCIkn8FYV1/l9Qdbg916xggYhj9HW3akgoUZLawSLvYSVLwxgFIBM1P6dKd73+O9IeurprZEvzc+Qw3gLI8aFHMPVVgzlmwd9vPcLMGQJs
+X-MS-Exchange-CrossTenant-userprincipalname: NHsc4v4QuXQmREfoAAh5dyVNTC6kzxISJ83szDfHqU9otqWIn2N8b9ziUxr/+dgdGxAeTzmn++okl08cBZz385qT+6uvJglzOeMNZ3a9+CdT56d3azgd7LSejTtpQid/
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB4119
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
@@ -152,59 +153,42 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 > <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 > Cc: Wei Yongjun <weiyongjun1@huawei.com>; linux-gpio@vger.kernel.org;
 > linux-kernel@vger.kernel.org
-> Subject: [PATCH -next v2 1/5] misc: microchip: pci1xxxx: fix error handli=
-ng in
-> gp_aux_bus_probe()
->=20
+> Subject: [PATCH -next v2 2/5] misc: microchip: pci1xxxx: Fix missing
+> spin_lock_init()
 >=20
 > From: Wei Yongjun <weiyongjun1@huawei.com>
 >=20
-> In some error handling path, resoures alloced may not released.
-> This patch fix them.
-Greg, I have identified some more improvements necessary for the gp_aux_bus=
-_probe function.
-I am working on it.
-But this patch can still be applied.
-
+> The driver allocates the spinlock but not initialize it.
+> Use spin_lock_init() on it to initialize it correctly.
 >=20
-> Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus drive=
-r for the PIO function in the multi-function endpoint of pci1xxxx device.")
+> Fixes: 7d3e4d807df2 ("misc: microchip: pci1xxxx: load gpio driver for the=
+ gpio controller auxiliary device enumerated by the auxiliary bus driver.")
 
 Reviewed-by: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
 
 > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > ---
-> v1 - > v2: add fixes tag, fix pci_alloc_irq_vectors handing
+> v1 -> v2: add fixes tag
 > ---
->  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
+>  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> index bfc03028b34d..11f79f239006 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> @@ -87,12 +87,13 @@ static int gp_aux_bus_probe(struct pci_dev *pdev,
-> const struct pci_device_id *id
->         retval =3D pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
+> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+> b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+> index 230503cca2ff..47e6e87938ae 100644
+> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+> @@ -383,6 +383,7 @@ static int pci1xxxx_gpio_probe(struct auxiliary_devic=
+e
+> *aux_dev,
+>         if (!priv)
+>                 return -ENOMEM;
 >=20
->         if (retval < 0)
-> -               return retval;
-> +               goto err_aux_dev_init_1;
+> +       spin_lock_init(&priv->lock);
+>         priv->aux_dev =3D aux_dev;
 >=20
-> -       pdev->irq =3D pci_irq_vector(pdev, 0);
-> -       if (pdev->irq < 0)
-> -               return retval;
-> +       retval =3D pci_irq_vector(pdev, 0);
-> +       if (retval < 0)
-> +               goto err_aux_dev_init_1;
->=20
-> +       pdev->irq =3D retval;
->         aux_bus->aux_device_wrapper[1]->gp_aux_data.irq_num =3D pdev->irq=
-;
->=20
->         retval =3D auxiliary_device_init(&aux_bus->aux_device_wrapper[1]-
-> >aux_dev);
+>         if (!devm_request_mem_region(&aux_dev->dev, pdata->region_start,
+> 0x800, aux_dev->name))
 > --
 > 2.34.1
 
