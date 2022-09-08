@@ -2,62 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F2575B1734
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:36:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF57D5B1748
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:38:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230463AbiIHIgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36126 "EHLO
+        id S231315AbiIHIit (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 04:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230492AbiIHIgE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:36:04 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3BBDFF67
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:36:02 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id fy31so36383307ejc.6
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:36:02 -0700 (PDT)
+        with ESMTP id S231592AbiIHIiq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:38:46 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3866D149455
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:38:44 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id gb36so36320076ejc.10
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:38:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=OUaGQ6uHB2+dXwiGE5+SddWRClVepXq6e8KWvsAWyP4=;
-        b=PiSCA7ypGDZI4XkBQF4UUIrgN/BP8oLsZwNWQH3bREqrgToKcIfdN/4ceZWHNLX9HK
-         rVIWS2yjw+/aFNVQbBzn1FYDtaG3vgt0tiXQA2Fn1IdezJ+5CLJE88Cmi5pU9OIqv3XW
-         K6rEiwChBEFImck1k1N6huDaunHr//2mluYWC7h+FMLFlByC1e+KLFTuoXaNON+jhxv4
-         0cUx+bC9K7rJeLzRu54byKrreiJGOguyXhprTDst7OGXMKW+XuMjE8P6nGQHBN2nPWhX
-         haEj6ir5R6vNC763uquwTMEHlT5yf7VWTnUFoK88Qi5ym6SMg8uYx+7ElB20RkTZqzkV
-         tbFg==
+        bh=SqPML+unsouuIp4FVHK4Uf7DFvDcdAzoCu01LQ5xtJU=;
+        b=SAoPOQWnZqu89mgLfBmiK5MrA8YCX5o9aGmYu4qqPNVoBkVnERkpNhCjHVCDQ9Zla1
+         dwqjtxWA+cJ6EDML6KOuvVZ4R6NIPdCxT8QAEB80mIcXpDf2Zf9m7S4FsFoMJ51USitH
+         Qd1pfZ4aI8HWIB9O1qt8jwZQ6YhUw0CUeBplhf899+yVwxpGxiGqmmXQn83Kl/G4s1eI
+         C+ZSChYFtQHAmgSz+vgZPMqj3wcCWnPZrWj/U9r/3gRuxpP0SGbraorsJPs29Q973tKF
+         kAzOfKhkV3IcUs1n2dwba5aeil8pWoUhDW7HjrjRLDXn9ByPmVyCvnNoBZTuKajNSFhw
+         VwcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=OUaGQ6uHB2+dXwiGE5+SddWRClVepXq6e8KWvsAWyP4=;
-        b=qhN0JPsOqA9qMDhu2Nl1RSNIHfKTN5PMGruyT0zTbLsoSCmKVkpnUZ4rKE9v0V06pi
-         zP2CH+faND9ZgpW9TJ3PiSmvqE1b7+39RB/m7KHvNKk6onyh/DEKnZdiLuqZkm6XjyA1
-         fmb1s6qyvshzx+l1aaAxrAToW95B+702a+6vZTSQ43XyYAMbpl4Af+LXHDaQsTronb25
-         QvnFsNAFMHI4Le+Ihk8Aqe6wmibgLXCAPNrS5YFXC9IULD6vEBQVuGEuG/xN9R5olvaR
-         3fZfhITMODMJtXnWSE4x0+yvWwk2GSLg/9NknFrY7hqKnNR6MUWsS5l8dlCaTdeZnyZt
-         39vA==
-X-Gm-Message-State: ACgBeo2KZCNH+zPAL4KnqJjZoX9Hryvk6aAOdWaHBvBsyLVbbSkwOrDw
-        y5CFltXblpuAM1MkyAv5DYJwqlKaWpUQ+iyENJzboQ==
-X-Google-Smtp-Source: AA6agR4v7NBtPCgQRzAi/ZTCyJl7YFqTNxvR+MInAejEIuCw6PFGA+JstRAz6Wl6A39KNFiN9NMu9qm0UxdfUIKShNo=
-X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
- ds2-20020a170907724200b00741770bdfc6mr5241555ejc.203.1662626161400; Thu, 08
- Sep 2022 01:36:01 -0700 (PDT)
+        bh=SqPML+unsouuIp4FVHK4Uf7DFvDcdAzoCu01LQ5xtJU=;
+        b=d8UdgH2A7uLoSYNwtyediqJQrXNCni4JC7PYARIb3s0FE7NGCn1Gr1BncLFTDJj3m+
+         4QODMwpjSMoEYweup33DbUh5D9hee9sKqC4g5ppbpSIrgU8SqllhdNOdG/iEzaXTIK4u
+         yioeA2QbefCUvMluwcJOEESyD6MniAeQGmxR5w4OOWQtXlwCqWvDP3CBBLgV4eKOgRgC
+         gZv4afNW0AJaIujTUl5AM6/voX8SEXYDrvYSKRR5DQpXKw2yJZgNLfV+KwIqWDxMgQO6
+         7qwC40qlu/WNg9jzfdZG4urFrKi/ozikZtqRU/5ROXOcMiqaAZ7TVLWNdVfraFjOki5D
+         /AnA==
+X-Gm-Message-State: ACgBeo0Ik7T0BCpQO4hwSrRcPcjjfxXmaLTPaMbkpgr4T7q3JziO27E7
+        aLATf3/BLJM7GgLUmaWtnLCBpXWiObYZ1seFOYaL5g==
+X-Google-Smtp-Source: AA6agR5Qlu6bHigQRlsF7FnyAifGVWu07Yimovaj6W3A7lzSYgEVwFSZi08eyLAuAWp+B7C3eLgpufDg+xQ7EBPkK+Y=
+X-Received: by 2002:a17:907:a420:b0:765:70a4:c101 with SMTP id
+ sg32-20020a170907a42000b0076570a4c101mr5281501ejc.526.1662626322796; Thu, 08
+ Sep 2022 01:38:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
+References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
+ <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
+In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-10-b29adfb27a6c@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:35:50 +0200
-Message-ID: <CACRpkdYW+ZnR9tP5UyUYxQ+CYNYDvMqrbV4g8sOQAVqS1zCLkg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] pinctrl: meson: Switch to use fwnode instead of of_node
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 8 Sep 2022 10:38:31 +0200
+Message-ID: <CACRpkdaeQFP+H786D=SG4s+sQmxScUzve-uWkm-Sg7xFDK_Syw@mail.gmail.com>
+Subject: Re: [PATCH v1 10/11] watchdog: bd9576_wdt: switch to using devm_fwnode_gpiod_get()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Matti Vaittinen <mazziesaccount@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        David Airlie <airlied@linux.ie>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Rob Herring <robh@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -69,15 +98,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 8:00 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Sep 5, 2022 at 8:31 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-> GPIO library now accepts fwnode as a firmware node, so
-> switch the driver to use it.
+> I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
+> so that gpiolib can be cleaned a bit, so let's switch to the generic
+> fwnode property API.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> While at it switch the rest of the calls to read properties in
+> bd9576_wdt_probe() to the generic device property API as well.
+>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-Patch applied.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
