@@ -2,78 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38B255B178A
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:47:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 280175B18C1
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 11:32:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231680AbiIHIrI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56972 "EHLO
+        id S230109AbiIHJcq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 05:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231683AbiIHIqz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:46:55 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9C3B11CD7F
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:46:32 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id z97so1937905ede.8
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:46:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=ike64CUEUd9DsY2jLXloOMGX1zcdA8CVovnEVfdpkWw=;
-        b=LKcaO49R7C8D7BiAe7tCsdVClR1PBI8B7udt+lfBQSS+x1yUq4VGovYQ1webE9nqw7
-         lIQNKZXg+37DOjGos6CnFYKzKtsnkszwufk4cSmLu7jdwiMyGSYw6aRUDNMp2JNTPn9Q
-         s0W5Y+tE3hEbzoF1CfjLlQOGKmHlcZeN/wT8wL24n6MQIgEEqgol87G35WOjwpcuI2lk
-         qNFj7GRCe8xMlX3yyyXSqkgxlEUai6VUTz3ZY1QcAKRzdDCfDLicOza3s7aofcV2xmZm
-         bl3Cf3g4utherIQaOE6u/cHbjoZ+HQ3QQBNu2v35D1poam90vFvonghu7DIe2RuqpQ/m
-         WORA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ike64CUEUd9DsY2jLXloOMGX1zcdA8CVovnEVfdpkWw=;
-        b=Z9vN4agNJIaEtaUikz2pxC9JkeljLB7ZBF8GZ5egdMLYuEwkNToN4/Iq+CzajPwVlk
-         kht5pKqjS5FQDg7BzYyAQypKKc8fBKEAmLI0/INVtV2JDTTdYeH3W3qX3Gpi+10WBTfP
-         Y6pyugE17iNQmRpOGJwlIKAKDV6boL5D0NGvuh1W8WCfJxN4DH6e/EvaaUUoRCQtbGWk
-         3Oos42M1B0XXLXd27yQVoExGwfs//kbas80kPgGaIKX1PZOi08B0uPutsyrFHrrEa9A4
-         AvBmDGYgjqbKCwdsZR2wVac0Xfm+m4UXi/21vTgm2Uff8OCbISaDLnyHXjCe5Y7GlzTP
-         7hCg==
-X-Gm-Message-State: ACgBeo22Z1E84R0+AiI/cAXNuge8IWPHqhoQqisx8EzU3PHHd8NjYkbX
-        n55xi3J8JSPIZEndxqbF721VCXXegAeqy2Bq51aOqw==
-X-Google-Smtp-Source: AA6agR4U76xtXaCBaEkcc16Efe+w9c+SR2weFMmxwjNiQ7qKd8luRRl6XC6xXOWShNwUnwGUtUi4ZhBzOgU6QexOVu0=
-X-Received: by 2002:aa7:d6d9:0:b0:44d:e1b7:d905 with SMTP id
- x25-20020aa7d6d9000000b0044de1b7d905mr6280515edr.32.1662626790778; Thu, 08
- Sep 2022 01:46:30 -0700 (PDT)
+        with ESMTP id S229943AbiIHJcp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 05:32:45 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9160A8E4ED;
+        Thu,  8 Sep 2022 02:32:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662629563; x=1694165563;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X7WUQ53W6WzyHOhXUdkgYWDqneo55gmDmJgGloAx1hQ=;
+  b=Z8A6akF4Spi1KOZ3UjnSHOE7eQJ/wOBiRSR/7pEY+lmSCK2KH6MZrxEr
+   wCwosOsvbNippwqbUDuZrTJtvW94yMEPnuhPUzeaNMUw3uyRq7rqSQmju
+   GU5nXr7Ju2ESSMLfex2BYcH5PkmYW5yqvVAlvbmajeMwWevwaxseQe4ta
+   Go2rDk2MtuOFPt9G+YSkTX8VY+pkHCwBww0e0m4sZtdkq9zIUTpW42Y4X
+   2/9QfvkWNq4rhc5hQEOKNJryKJkoD2ZOzfWaqA4zTBqhE3PyagBOUrva2
+   Us4UBrAs4k24qOgWAX94piAEeLZdC0kdEqyeKcjYb4nH4NvvWpflETVbD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="295856888"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="295856888"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 02:32:42 -0700
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="614825834"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 02:32:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oWDtm-00A3av-16;
+        Thu, 08 Sep 2022 12:32:38 +0300
+Date:   Thu, 8 Sep 2022 12:32:38 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 03/17] pinctrl: cy8c95x0: Allow most of the registers
+ to be cached
+Message-ID: <Yxm2tjFtMcgAIZiP@smile.fi.intel.com>
+References: <20220902182650.83098-1-andriy.shevchenko@linux.intel.com>
+ <20220902182650.83098-3-andriy.shevchenko@linux.intel.com>
+ <CAHp75VcNGEVRnkWeVThaq4zNYoiZGSY-+KfbV5_9zG_5XoriMg@mail.gmail.com>
+ <YxXyTCSKzL42PF1D@smile.fi.intel.com>
+ <CACRpkdY4nJuXAxM7tYviWSPeqmCc6o4D--Vq0CZRPNjWNj+E_A@mail.gmail.com>
+ <CACRpkda=c23ZSBAomncevzboeApSM33t08t_kZUiRaNJ4Dwe-A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
-In-Reply-To: <20220907080251.3391659-1-horatiu.vultur@microchip.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:46:19 +0200
-Message-ID: <CACRpkdYNvL9xf61BPJ1QDotXkJBG18+o=ZsFwoLw_LL-qGZ-Qw@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: ocelot: Fix interrupt controller
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andy.shevchenko@gmail.com, UNGLinuxDriver@microchip.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkda=c23ZSBAomncevzboeApSM33t08t_kZUiRaNJ4Dwe-A@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 7, 2022 at 9:59 AM Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
+On Thu, Sep 08, 2022 at 10:03:38AM +0200, Linus Walleij wrote:
+> On Mon, Sep 5, 2022 at 3:30 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > On Mon, Sep 5, 2022 at 2:57 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Fri, Sep 02, 2022 at 09:42:00PM +0300, Andy Shevchenko wrote:
+> > > > On Fri, Sep 2, 2022 at 9:36 PM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > >
+> > > > > It's unclear why many of static registers were marked as volatile.
+> > > >
+> > > > the static (yeah, forgot it)
+> > > >
+> > > > > They are pretty much bidirectional and static in a sense that
+> > > > > written value is kept there until a new write or chip reset.
+> > > > > Drop those registers from the list to allow them to be cached.
+> > > >
+> > > > This patch is not correct due to indexing access. It's sneaked since I
+> > > > forgot I added it into my main repo. The proper approach should be to
+> > > > create virtual registers and decode them before use. This allows to
+> > > > cache all ports and as a benefit to debug print all port actual
+> > > > statuses.
+> > >
+> > > To be clear: With this one removed from the bunch the rest can be applied w.o.
+> > > any change.
+> >
+> > I'll give Patrick a day or two to test/review and then I'll just apply
+> > them all except this one, they are all pretty self-evident except ACPI
+> > things which have obviously been tested on hardware so from my
+> > point of view it's good to merge.
+> 
+> I applied all patches now except this one (3/17), some patches needed
+> a bit of fuzzing because other stuff in my tree, so please check the
+> result once it lands in linux-next.
 
-> When an external device generated a level based interrupt then the
-> interrupt controller could miss the interrupt. The reason is that the
-> interrupt controller can detect only link changes.
+Looks perfect, thanks!
 
-I see there are some further comments, I expect to just merge v3 into
-fixes as this needs to go into the -rc:s right?
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Yours,
-Linus Walleij
+
