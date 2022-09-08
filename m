@@ -2,68 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBAA95B1D58
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 14:41:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66F065B1D6B
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 14:42:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231894AbiIHMlS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 08:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60270 "EHLO
+        id S229842AbiIHMm5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 08:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231903AbiIHMlN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 08:41:13 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A42D1E0F
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 05:41:03 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id lz22so16880551ejb.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 05:41:03 -0700 (PDT)
+        with ESMTP id S231912AbiIHMmt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 08:42:49 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B97E1E6206
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 05:42:45 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id nc14so37727182ejc.4
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 05:42:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=7Cc3JjRoygtSTXogpO0wdGB24mbzR+AXN+9ZoeSda84=;
-        b=j8VC/Ra6EgN8dGVA8AGrHXrS2XVoT2RFYj7AiY9Kg1ZrZOYenCJQ9ZZs/P1OwLwVgE
-         GYRrhQiMJVpqNMgAhWw1VEkgfMZ2XbKsAM6JyAwCDuwCGGyCdUB8UO3jI3V1j8qUJI3m
-         GXxk1zOW1GrVfDFB0NIYfVSouOMvgM5GObi3+cytemoNKSwZzHgtdZ9mOztX59/725+m
-         XKDckNZWnY2Zm7u59hgL4tcFpPWEnKVQ1mim/jbUPo1zgVaCVgEfcbyOhmfgOLx0OjTu
-         57FHnlFYgrmQYGm+4ts84xs9kVOaO9z4+KedejqfIzApOVBGVSYyB07+74yYKDi6K0mL
-         jLIg==
+        bh=5Wm7fqGHObSvGBpTTKpMN3/jVUagRJP8IWiLmuY+UK4=;
+        b=kQNWM4aUvd/neKvXU8ezIZMSV5uRFq9nllO2SrHG4KO29Oodp9L+NR+s+LsSwgJdId
+         gTzWh7txP3qSLKA12XQCkBcA6SkWbZKNNys+PI7T0L7aYnSaIEjx6yfHmO/wnQR19LpF
+         O0u7Y0nALYNOzoKO6GVKW+V56i+ghPU9qeByq/+G66xcHxdlaXc/XlG3G6OJ7YhyYAjI
+         fT91CsbB5+wdBY44wdNwl03zplabI0yL7O5/LfRa2rDUpa+eVoNr/bj0TWMG48t4kaRQ
+         xV6HURdytVZ7kgyFNXdBMqbqNB/B/+p6Wh0H1jTQwhgIc6msQjyQp1rgI/ZoU5MkA5s3
+         3P7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7Cc3JjRoygtSTXogpO0wdGB24mbzR+AXN+9ZoeSda84=;
-        b=c100MxbPnnyWg3us8gaHn+zL1bb3IQPDphgAlRZvStDy333n1yybHTXYqzqmPOBPUj
-         C6KZN3+L0eKhsLnSZosUvVwVvN8NwAWCqY5JYZV9cPAoKAbRqHaoA91t8fnypX95PD5x
-         JpR38imjcRp/BWI7sIYSj7zKqNz5tSOl5u8NexjkunAZmqZkLBJ6CKCZ9Yftn5fobdkO
-         LhM4cscK8sAmJiqdfRoyl+4oyvlmvp/FiOoe1goEW8V/qVvVMTvppFzQxKIyUoaTvS+E
-         JrOXftkk/2sB67EphjmxZtCB5PIPerWtj9oQmY3z+uUNy0TocndKVS7oqhqvwbsxVlvI
-         2w7Q==
-X-Gm-Message-State: ACgBeo1ZEpl0Zvx4n0K4P62vEGdLUyoeSsdM3Lf2vQBu9PJGiAxZHxgj
-        B/BG4/YNEaCmqwTVvuCk+UhfX2KSuCRbqrjshyMytQ==
-X-Google-Smtp-Source: AA6agR4ePYuOmtxrt0CjkIai+xgdE7eucVDz1eLZcaM3bclYP+MlyvscuYoZ4xtEj0w8eM8TXWU86P2R5T/DfYJ4pZ4=
-X-Received: by 2002:a17:907:1c89:b0:741:4453:75be with SMTP id
- nb9-20020a1709071c8900b00741445375bemr6018030ejc.208.1662640862005; Thu, 08
- Sep 2022 05:41:02 -0700 (PDT)
+        bh=5Wm7fqGHObSvGBpTTKpMN3/jVUagRJP8IWiLmuY+UK4=;
+        b=reVrT5djudZkL90HiGR9IRewtxPXnL9wP3ifERSX5Oi9ZEgTWBVDhzsc7ty6QSJqIn
+         pKTEcVBG7JiuV5foIhOP4V6J8OULTG+nj+FrYzrynCok7iVr57DTF4Cuxf3/3zdvR/eh
+         wPQNfTW7IZbfnctNrUF4D5TBLmIORg4bHHAERy3WAVJfVrZ2z3dWz7cGZnMClUpPGtDB
+         w6F60Oa8me/jhoHwZch7+ykbTfAZ9pKgTVmvk+j/nFP0c1JgS1jM5VohbmZW/K5pZsKE
+         6dxMIFAE7OjL9dW31lLhdKc2pEIBNz0CD7R5etPKMPQDNBfG61gA5u78+oSL5uI40MSB
+         NlnQ==
+X-Gm-Message-State: ACgBeo2vBVdZTTYfiGcY03zvWyX/7J842Fk8lk3fo8V6J+7DVKSv0b7L
+        XUYUgARC4QtUDwvvl4714KeD1FFQUsOhahC0xEhG1Q==
+X-Google-Smtp-Source: AA6agR516yrZB/gyDzPJ7B2l7ixSAyFQL9kXwrwHNeWNdAcGP3p6ZLBsg83txQLc3HWvBrPBVJphHEBRmq7mmZ8U8os=
+X-Received: by 2002:a17:907:a420:b0:765:70a4:c101 with SMTP id
+ sg32-20020a170907a42000b0076570a4c101mr5950348ejc.526.1662640964319; Thu, 08
+ Sep 2022 05:42:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220715044948.434149-1-cosmin.tanislav@analog.com>
- <20220715044948.434149-2-cosmin.tanislav@analog.com> <CACRpkdZVkXM-8DZjTaOxnS05Wz5GHon0sK1g7hDbz5SDJf9A=A@mail.gmail.com>
- <06476041-e8d6-7030-2f46-ace964c42513@gmail.com>
-In-Reply-To: <06476041-e8d6-7030-2f46-ace964c42513@gmail.com>
+References: <20220908053949.3564796-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20220908053949.3564796-1-dmitry.torokhov@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 14:40:50 +0200
-Message-ID: <CACRpkda=JdgBqFvY_7q_Zv0HJx1wmtMEfB9heycy5PuEE4mrSA@mail.gmail.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: iio: adc: add AD4130
-To:     Cosmin Tanislav <demonsingur@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>,
-        Rob Herring <robh@kernel.org>
+Date:   Thu, 8 Sep 2022 14:42:33 +0200
+Message-ID: <CACRpkdZbF_xUGLWD09tsTM8Vtbu1hpW9oOhpmMiOdXe3rCeeUg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] gpiolib: of: do not ignore requested index when
+ applying quirks
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,64 +66,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 8, 2022 at 9:03 AM Cosmin Tanislav <demonsingur@gmail.com> wrote:
+On Thu, Sep 8, 2022 at 7:40 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 
-> >> +  adi,ext-clk-freq-hz:
-> >> +    description: Specify the frequency of the external clock.
-> >> +    enum: [76800, 153600]
-> >> +    default: 76800
-> >
-> > This looks like cheating, i.e just outputting a clock on that pin
-> > and ignoring to model the consumer.
+> We should not ignore index passed into of_find_gpio() when handling
+> quirks. While in practice this change will not have any effect, it
+> will allow consolidate quirk handling.
 >
-> You got this wrong.
->
-> The chip has 4 operating modes regarding clocking.
->
-> Internal 76.8kHz clock (clkout can be used as an interrupt pin).
-> Internal 76.8kHz clock, available externally on the clkout pin (clkout
-> becomes an output).
-> External 76.8kHz clock (clkout is an input).
-> External 153.6kHz clock, internally divided by two (clkout is an input).
->
-> This property is used to choose between what frequency to set the
-> external clock up with. Indeed, if the external clock is not present,
-> then exposing the 76.8kHz clock using the clock framework would be fine.
->
-> Maybe you have a better suggestion about what to do with this?
-> How do I tell the chip what frequency the external clock is, but also
-> tell the clock what frequency to use? It's a bit of a conundrum for me.
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-I would imagine not specify in the device tree what frequency to use
-at all.
-
-Instead use software for that.
-
-The clock provide for the clkout should provide
-
-static const struct clk_ops extclk_ops = {
-        .recalc_rate = extclk_recalc_rate,
-        .round_rate = extclk_round_rate,
-        .set_rate = extclk_set_rate,
-};
-
-This way the consumer driver can issue clk_round_rate(),
-clk_set_rate() etc to make the clk driver determine which parent
-to use for the consumer. Likewise .enable or .prepare should
-then mux out the desired clock.
-
-> >> +  adi,bipolar:
-> >> +    description: Specify if the device should be used in bipolar mode.
-> >> +    type: boolean
-> >
-> > Can you explain what this means? I don't understand what it would
-> > mean for an analog device / AFE to be in bipolar mode.
-> >
->
-> Range becomes [-VRef, VRef], as opposed to [0, VRef], resolution is
-> halved.
-
-OK that makes sense, put that in the binding description.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
