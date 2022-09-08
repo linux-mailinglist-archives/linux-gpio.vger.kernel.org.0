@@ -2,63 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AC5F5B1730
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F2575B1734
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:36:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbiIHIfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60898 "EHLO
+        id S230463AbiIHIgG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 04:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229925AbiIHIfD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:35:03 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF5B52FD4
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:35:00 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id b35so5225530edf.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:35:00 -0700 (PDT)
+        with ESMTP id S230492AbiIHIgE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:36:04 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3BBDFF67
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:36:02 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id fy31so36383307ejc.6
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:36:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=41aJIy4OTHB9iMGo4cS7m9t/pURKyc1pDT6bdLDLpCQ=;
-        b=tMGRAYFGxk8jJRGYJD3oGNdPja4kvXMvJQaOyTlRTiWuOXFEouBb85EbP4zYzCiV7o
-         pwl2SrWb0k6wnYP+27RENex/DDXgHIHL6lNXk9wCWnUuYfy4Da/8mnveh+OvRZEvijOi
-         td26QXx5ZVeHQpeVFe43cPIodT7YYoP6caU5u8ldcm3tIdhKHo7aCAypB8zPGtrBlLrg
-         lO0y0Q8bwnSb3ZTFpaQQtuwnexrZopWQCvb614YpxvUEKV+urxbZ9qOrlS0XfzaHdmJZ
-         BxFVsZW4zt0D6mqfK4mk6XF0re32ZNDb9Jdeg3/sIoe2E3m96mBzJOaiVxXssJAjjmzN
-         tGxQ==
+        bh=OUaGQ6uHB2+dXwiGE5+SddWRClVepXq6e8KWvsAWyP4=;
+        b=PiSCA7ypGDZI4XkBQF4UUIrgN/BP8oLsZwNWQH3bREqrgToKcIfdN/4ceZWHNLX9HK
+         rVIWS2yjw+/aFNVQbBzn1FYDtaG3vgt0tiXQA2Fn1IdezJ+5CLJE88Cmi5pU9OIqv3XW
+         K6rEiwChBEFImck1k1N6huDaunHr//2mluYWC7h+FMLFlByC1e+KLFTuoXaNON+jhxv4
+         0cUx+bC9K7rJeLzRu54byKrreiJGOguyXhprTDst7OGXMKW+XuMjE8P6nGQHBN2nPWhX
+         haEj6ir5R6vNC763uquwTMEHlT5yf7VWTnUFoK88Qi5ym6SMg8uYx+7ElB20RkTZqzkV
+         tbFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=41aJIy4OTHB9iMGo4cS7m9t/pURKyc1pDT6bdLDLpCQ=;
-        b=e71SDebrOuvxDdxy9aQqhIZ55SXQm8JE4pvsQ510ydKD7VPko9qQcpugM7sgo+yy/V
-         /hjLHEqUXLmcA01Mgk221XJ/Se6exskMHkSSPtPY3LTd3QlE1Lhf9MP54uMBmrr8DSum
-         4/BQ0MFJQQu4FUth0byG0nOGw+JFpEJwxCtf2Swq4IuDsTyQQa+pA93pxq6vC+EqiY0W
-         pJIn+mn3aJuOadUhwiW47ShjKAS6j72k/EkbgsrUNv4k5+8ClilqGknrbd/k68rGlzJ3
-         6M0xUJ1d5DMh4qduhbCSg//GveqM6huGou7BJB602la0Vrv6UCMAtiVYZqDtKajMVS4e
-         UI+A==
-X-Gm-Message-State: ACgBeo11G8RhWKkj4S0iAj67O9JW4IzB4xUI7OCu44XClMoYNgTjL3Zs
-        UbgESe4z9/Iv3oAOqg0iSVIXIze2xzGu/qtkMHvqRQ==
-X-Google-Smtp-Source: AA6agR5pz4WZzndTBp4jUUROyInLbrcT00ub2FoRoGT9/n7hi4t+CSCkzYEr6u1rPJG+ddzNyd5BKhWnZVyeyUKEk8g=
-X-Received: by 2002:a05:6402:4517:b0:443:7fe1:2d60 with SMTP id
- ez23-20020a056402451700b004437fe12d60mr6151272edb.133.1662626099071; Thu, 08
- Sep 2022 01:34:59 -0700 (PDT)
+        bh=OUaGQ6uHB2+dXwiGE5+SddWRClVepXq6e8KWvsAWyP4=;
+        b=qhN0JPsOqA9qMDhu2Nl1RSNIHfKTN5PMGruyT0zTbLsoSCmKVkpnUZ4rKE9v0V06pi
+         zP2CH+faND9ZgpW9TJ3PiSmvqE1b7+39RB/m7KHvNKk6onyh/DEKnZdiLuqZkm6XjyA1
+         fmb1s6qyvshzx+l1aaAxrAToW95B+702a+6vZTSQ43XyYAMbpl4Af+LXHDaQsTronb25
+         QvnFsNAFMHI4Le+Ihk8Aqe6wmibgLXCAPNrS5YFXC9IULD6vEBQVuGEuG/xN9R5olvaR
+         3fZfhITMODMJtXnWSE4x0+yvWwk2GSLg/9NknFrY7hqKnNR6MUWsS5l8dlCaTdeZnyZt
+         39vA==
+X-Gm-Message-State: ACgBeo2KZCNH+zPAL4KnqJjZoX9Hryvk6aAOdWaHBvBsyLVbbSkwOrDw
+        y5CFltXblpuAM1MkyAv5DYJwqlKaWpUQ+iyENJzboQ==
+X-Google-Smtp-Source: AA6agR4v7NBtPCgQRzAi/ZTCyJl7YFqTNxvR+MInAejEIuCw6PFGA+JstRAz6Wl6A39KNFiN9NMu9qm0UxdfUIKShNo=
+X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
+ ds2-20020a170907724200b00741770bdfc6mr5241555ejc.203.1662626161400; Thu, 08
+ Sep 2022 01:36:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220906115021.8661-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20220906115021.8661-1-andriy.shevchenko@linux.intel.com>
+References: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220905180034.73132-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:34:48 +0200
-Message-ID: <CACRpkdYYjmW5shHedW95tbUvqcbWrYf87qGSQ10kJT+uDy_acA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] pinctrl: microchip-sgpio: Correct the
- fwnode_irq_get() return value check
+Date:   Thu, 8 Sep 2022 10:35:50 +0200
+Message-ID: <CACRpkdYW+ZnR9tP5UyUYxQ+CYNYDvMqrbV4g8sOQAVqS1zCLkg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: meson: Switch to use fwnode instead of of_node
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Michael Walle <michael@walle.cc>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        UNGLinuxDriver@microchip.com
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -70,15 +69,13 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 1:50 PM Andy Shevchenko
+On Mon, Sep 5, 2022 at 8:00 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> fwnode_irq_get() may return all possible signed values, such as Linux
-> error code. Fix the code to handle this properly.
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the driver to use it.
 >
-> Fixes: be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)")
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Michael Walle <michael@walle.cc>
 
 Patch applied.
 
