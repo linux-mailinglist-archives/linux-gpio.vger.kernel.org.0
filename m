@@ -2,64 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FA115B1651
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:08:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9FCD5B1653
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbiIHIIG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:08:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54598 "EHLO
+        id S231294AbiIHIIJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 04:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbiIHIIF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:08:05 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A39CD5722
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:08:04 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id e18so23131177edj.3
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:08:04 -0700 (PDT)
+        with ESMTP id S231225AbiIHIIH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:08:07 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BB2AD572C
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:08:05 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id q7so26452834lfu.5
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:08:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Nq9RAyCd6+UtoScLi4edEFTTQvVwwjyxgLR4cQ7UbNc=;
-        b=mIIfVBA/JQuwCJELj4JzJRsG1Nw36IQFzlxGR4+ZLnLTRhTTbu2emubIjb06Hq8INC
-         9mGZCeW2hN4ds1t+hQThqVmjf43Y1c7Tm24LgR+rF8PnWcIV1yKAnzseGNwjnyhQiqZz
-         ndIv+tginQ5jLxsGod+2wOPy9bo0iEUJlrq1GQh/w71ldGT5b7t0NogpGPAFq8EtLp0A
-         0+8FsoxMBadiTRC5jWNiWZlhdyddr0QiyuDU43CXwfL2tQwBDjo5jK3bcKOIYOvNdurF
-         TY5U4WPtlnhiq8gnj8i3eDSmJTUGhO7+pjjFloiZlOx0FI7ztBQyx7ZdPQFcZmHGu41a
-         Gcuw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=JIBPCNWbj9cecXNvDfnBoFCAPIFUTWEJI8WrfdBbKVU=;
+        b=UrCBknrwrTHwgWophVsI98zOBga4gi+3YsN7Z2zV+Oc0+SuKLG82NTPefcX8+qUvui
+         QU6HoGw7CvuTahJsK8W2W5UuMza7QmvnoUOZZWdhmACFGaRMU7E4q/bx/YL3wV3DBXlw
+         27byq1k9c1S3315n7UArdhTPLGXZIhrYX4nvWzDcb1vS3aBKnWrax/Ccuxvk3zFwBTD0
+         qSuWQzL6VceU/+wdM7UXi+QyQYUvYAPCZkpf4rypvzBGxCHNrTQXJh8XbK8LKXOlB8Lf
+         lnXGDG8paiMLub41lowMmt/4TP5wZXkOvKxzsr7q4myRCZEmmBK0YfNVUIHPuwAXlxXh
+         Gubg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Nq9RAyCd6+UtoScLi4edEFTTQvVwwjyxgLR4cQ7UbNc=;
-        b=SATxkIhPkQUsSlPR0INiWrYeKe5mZxF+Fu+zG3oZ77YVcw4v7Snl0yHhaVpDG+GYXB
-         exdhQOLjDLzDPppYV001+06EWgZOqgmrdmnEpIkKTEXxgVvs/WxhMRhvzPs7MrSSuLBs
-         LLj2pfK/aLFY/yjo6m9giVuqhzZi6ATCMZkl3lGYnnS1w78oviUHT355/J7lP9A6obSZ
-         f8hLsuzBKNyb0pPriMWHldH9xpjz2cHjkNX9pbVm4Rr57KgzH8+fviXOE/LPfRjG+SmA
-         ZAbUu5s76PbrHakVpK/zsOrdw6QD02W5R3QHl9JsvYRMc8AYlYS0YaSXhgakX4qiwiYt
-         4TWg==
-X-Gm-Message-State: ACgBeo0cQblmwLj4kJ/pRxCJu6hPDdXP1tmTbygxGLVN7dXQ3365E/PG
-        3pTN6hG2PYwam3MpDJbOpF9HA1CVZqX5EfI8k4W3oA==
-X-Google-Smtp-Source: AA6agR7WTvRCDBW0IkNbfuJTlUWJzlM8WNW+y0nsrxsuPLVIdRZKU8mefAPyOa+Yl+h+JXoBRJZaScOatogm9UaU46Q=
-X-Received: by 2002:a05:6402:51d1:b0:448:bed1:269c with SMTP id
- r17-20020a05640251d100b00448bed1269cmr6151724edd.205.1662624483003; Thu, 08
- Sep 2022 01:08:03 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=JIBPCNWbj9cecXNvDfnBoFCAPIFUTWEJI8WrfdBbKVU=;
+        b=A+ks8woJL6sUf9pgGOz+KJ2zsKkStC/qAzsQXVo04niMNKnRcN+/GEYhtGE13/6DVL
+         kDMqXFFF4RmH+/q/jUBcq05fWW3j46hEr04EPfkrXhBn0qOe7xVn3j95C6f+m+xO75Z3
+         Q6QLt7XxVeKOZ6w02v0dnOZxHsYpsoaHlX7i7byC2LWYDuyKwq6IfxAiXqgn5HHGzfNQ
+         JG1UnRMWsY7tieQV6soZ8MFsAmpNXJarWqE+JlgmZxDTjmUhFD14Obqzjp1ckwAClV4k
+         0fsffBi0dePimOvwyXfO0iKWpZfY+NzggdoyjvOd9FS/LHLgm4m0ysXKEM8nCJQhrN0Q
+         rvQg==
+X-Gm-Message-State: ACgBeo0270+c7DXdzIEv7DRzIOP3/4fpGBisOwKJFdOyIOCnoTidWpNV
+        C6fAEz2Jy5T2bkRKE4opBe6jmw==
+X-Google-Smtp-Source: AA6agR6LQp3G0Ji01d4/4I46poA8KDS6PNPUtwbNDKYMLC9OEywqbMo59AYcHMc/WhEaBDt8qLuL4g==
+X-Received: by 2002:a05:6512:3b09:b0:48b:394e:6b3b with SMTP id f9-20020a0565123b0900b0048b394e6b3bmr2170567lfv.567.1662624483732;
+        Thu, 08 Sep 2022 01:08:03 -0700 (PDT)
+Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id f1-20020a05651c02c100b0026ab83298d6sm1425265ljo.77.2022.09.08.01.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Sep 2022 01:08:03 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: pinctrl: qcom,pmic-mpp: make compatible fallbacks specific
+Date:   Thu,  8 Sep 2022 10:07:59 +0200
+Message-Id: <20220908080801.28910-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20220905224408.346425-1-francesco.dolcini@toradex.com>
-In-Reply-To: <20220905224408.346425-1-francesco.dolcini@toradex.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:07:52 +0200
-Message-ID: <CACRpkdbOz+ZWbE_CbH5dXYEosSxK+gFLG2y2tj2CL6LTUZHfcw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: imx8m: kconfig: Fix build error on test compile
-To:     Francesco Dolcini <francesco.dolcini@toradex.com>
-Cc:     linux-gpio@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Peng Fan <peng.fan@nxp.com>, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
@@ -70,24 +73,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 12:44 AM Francesco Dolcini
-<francesco.dolcini@toradex.com> wrote:
+Instead of allowing compatibles followed by any fallback (for SPMI or
+SSBI PMICs), make the list specific.
 
-> PINCTRL_IMX depends on OF, however the dependency is missed when selected
-> by PINCTRL_IMX8M* (it does not follow the indirect 'select' statements),
-> select it explicitly.
->
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/all/202209050605.fezJUgFH-lkp@intel.com/
-> Fixes: 87c2a29a6bf1 ("pinctrl: imx8m: kconfig: Depends on SOC_IMX8M")
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-> ---
-> Linus: I did test on s390 and it's fine, but the topic is tricky for me ...
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../bindings/pinctrl/qcom,pmic-mpp.yaml       | 45 ++++++++++---------
+ 1 file changed, 23 insertions(+), 22 deletions(-)
 
-This is tricky for everyone, has to do with the Kconfig "language".
-Thanks! Patch applied.
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+index df79274d0ec3..72cce38bc1ce 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml
+@@ -15,28 +15,29 @@ description:
+ 
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - qcom,pm8018-mpp
+-          - qcom,pm8019-mpp
+-          - qcom,pm8038-mpp
+-          - qcom,pm8058-mpp
+-          - qcom,pm8226-mpp
+-          - qcom,pm8821-mpp
+-          - qcom,pm8841-mpp
+-          - qcom,pm8916-mpp
+-          - qcom,pm8917-mpp
+-          - qcom,pm8921-mpp
+-          - qcom,pm8941-mpp
+-          - qcom,pm8950-mpp
+-          - qcom,pmi8950-mpp
+-          - qcom,pm8994-mpp
+-          - qcom,pma8084-mpp
+-          - qcom,pmi8994-mpp
+-
+-      - enum:
+-          - qcom,spmi-mpp
+-          - qcom,ssbi-mpp
++    oneOf:
++      - items:
++          - enum:
++              - qcom,pm8019-mpp
++              - qcom,pm8226-mpp
++              - qcom,pm8841-mpp
++              - qcom,pm8916-mpp
++              - qcom,pm8941-mpp
++              - qcom,pm8950-mpp
++              - qcom,pmi8950-mpp
++              - qcom,pm8994-mpp
++              - qcom,pma8084-mpp
++              - qcom,pmi8994-mpp
++          - const: qcom,spmi-mpp
++      - items:
++          - enum:
++              - qcom,pm8018-mpp
++              - qcom,pm8038-mpp
++              - qcom,pm8058-mpp
++              - qcom,pm8821-mpp
++              - qcom,pm8917-mpp
++              - qcom,pm8921-mpp
++          - const: qcom,ssbi-mpp
+ 
+   reg:
+     maxItems: 1
+-- 
+2.34.1
 
-Yours,
-LInus Walleij
