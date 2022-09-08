@@ -2,136 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9426A5B1919
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 11:44:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE24E5B1987
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 12:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbiIHJol (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 05:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34192 "EHLO
+        id S230350AbiIHKCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 06:02:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbiIHJoh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 05:44:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3DCC14008;
-        Thu,  8 Sep 2022 02:44:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04B1A61C30;
-        Thu,  8 Sep 2022 09:44:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F410DC433D7;
-        Thu,  8 Sep 2022 09:44:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662630274;
-        bh=I3kuzLPKhDYkB44Kbq3Ba0qHby0mCUZxIRVbEQXEPyw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hB6x9UYDzP88wUBio5ktCkyq2xTk8jx/SoHt1nTnq9DkjLrlmtjZjNjDl1SRSfjZY
-         cZhY80i34wCcNXFp/b/ApMeVRH3Qx0hOLkKKj0j9/1A4JtVylswYI55Zz8SLXWDyVK
-         BBMrJU4nxKoCieqifcvTXQ0JwDHC/Y1IT+sFghMLAld6ZIboFioVe0vvjo/sgKSqoy
-         MTXf75DznbzCkQKbNdZbKYxj2cJ+gzpfbSnjCBEJdfpFxKRuqsaKrjzvXnpx/rBb8C
-         9wxmaUe/9P1BwYFYVqeIJGXhQ9b53LtP+32BR9PWvzl0CLTRJFAa/C5ooAaVSFKgiA
-         WbAn5uFHHEusw==
-Date:   Thu, 8 Sep 2022 10:44:25 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Terry Bowman <terry.bowman@amd.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        UNGLinuxDriver@microchip.com,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, katie.morris@in-advantage.com
-Subject: Re: [RESEND PATCH v16 mfd 8/8] mfd: ocelot: add support for the
- vsc7512 chip via spi
-Message-ID: <Yxm5eXg5taqn4TEW@google.com>
-References: <20220905162132.2943088-1-colin.foster@in-advantage.com>
- <20220905162132.2943088-9-colin.foster@in-advantage.com>
+        with ESMTP id S230070AbiIHKBv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 06:01:51 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAB1E4DF7;
+        Thu,  8 Sep 2022 03:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662631311; x=1694167311;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=w2tDfZt6u3hn+SCpvEA9SBmEoYmSetazfTtjlLehh7c=;
+  b=Z47flTmERBehmSFH1KZkCHpMah28vsrJRAnb7oRndnb5JBmPL2uJRLE6
+   ZdG2YV4a8Z0nq0zb/7du/9/vk2T3LhoafcoU12AlK9KJa9/oFsyFaRWkd
+   PBlMJXfYJOcZCWoUeixpz7TV6geiTwLe/VBK5lNHQVUYtQullDz1heb0h
+   dOjcc6dKGq9mTlTRgSI+Robj6x3iZMvMyLV4VKnfelCU+Sbq2cfggQg0O
+   Mnhs7/9lbxwVEu2gSK9O4CVsVuOAKWo9ozYKO1YtF8y3DCfTbUZkyP6ty
+   hyNH1H7KG8ItRcqhU1N/afisP0Ymg7C1ra1SSzKwLrNIo3oLVyXKRq9kN
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="358857801"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="358857801"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 03:01:36 -0700
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="614832034"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 03:01:35 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oWELk-00A4K4-1a;
+        Thu, 08 Sep 2022 13:01:32 +0300
+Date:   Thu, 8 Sep 2022 13:01:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] pinctrl: wpcm450: Correct the fwnode_irq_get()
+ return value check
+Message-ID: <Yxm9fB/5IJS3MXGu@smile.fi.intel.com>
+References: <20220905191408.73794-1-andriy.shevchenko@linux.intel.com>
+ <YxkHaBKtiO9zVuKM@probook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220905162132.2943088-9-colin.foster@in-advantage.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <YxkHaBKtiO9zVuKM@probook>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 05 Sep 2022, Colin Foster wrote:
+On Wed, Sep 07, 2022 at 11:04:40PM +0200, Jonathan Neusch�fer wrote:
+> On Mon, Sep 05, 2022 at 10:14:08PM +0300, Andy Shevchenko wrote:
+> > fwnode_irq_get() may return all possible signed values, such as Linux
+> > error code. Fix the code to handle this properly.
+> 
+> It would be good to note explicitly here what a return value of zero
+> means, i.e., as the documentation of of_irq_get says, "IRQ mapping
+> failure", and why it should result in skipping this IRQ.
 
-> The VSC7512 is a networking chip that contains several peripherals. Many of
-> these peripherals are currently supported by the VSC7513 and VSC7514 chips,
-> but those run on an internal CPU. The VSC7512 lacks this CPU, and must be
-> controlled externally.
-> 
-> Utilize the existing drivers by referencing the chip as an MFD. Add support
-> for the two MDIO buses, the internal phys, pinctrl, and serial GPIO.
-> 
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
-> Reviewed-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
-> 
-> v16
->     * Includes fixups:
->     *  ocelot-core.c add includes device.h, export.h, iopoll.h, ioport,h
->     *  ocelot-spi.c add includes device.h, err.h, errno.h, export.h, 
->        mod_devicetable.h, types.h
->     *  Move kconfig.h from ocelot-spi.c to ocelot.h
->     *  Remove unnecessary byteorder.h
->     * Utilize resource_size() function
-> 
-> v15
->     * Add missed include bits.h
->     * Clean _SIZE macros to make them all the same width (e.g. 0x004)
->     * Remove unnecessary ret = ...; return ret; calls
->     * Utilize spi_message_init_with_transfers() instead of
->       spi_message_add_tail() calls in the bus_read routine
->     * Utilize HZ_PER_MHZ from units.h instead of a magic number
->     * Remove unnecessary err < 0 checks
->     * Fix typos in comments
-> 
-> v14
->     * Add Reviewed tag
->     * Copyright ranges are now "2021-2022"
->     * 100-char width applied instead of 80
->     * Remove invalid dev_err_probe return
->     * Remove "spi" and "dev" elements from ocelot_ddata struct.
->     Since "dev" is available throughout, determine "ddata" and "spi" from
->     there instead of keeping separate references.
->     * Add header guard in drivers/mfd/ocelot.h
->     * Document ocelot_ddata struct
-> 
-> ---
->  MAINTAINERS               |   1 +
->  drivers/mfd/Kconfig       |  21 +++
->  drivers/mfd/Makefile      |   3 +
->  drivers/mfd/ocelot-core.c | 161 ++++++++++++++++++++
->  drivers/mfd/ocelot-spi.c  | 299 ++++++++++++++++++++++++++++++++++++++
->  drivers/mfd/ocelot.h      |  49 +++++++
->  6 files changed, 534 insertions(+)
->  create mode 100644 drivers/mfd/ocelot-core.c
->  create mode 100644 drivers/mfd/ocelot-spi.c
->  create mode 100644 drivers/mfd/ocelot.h
+Not that I'm fun of duplicating documentation in the commit message,
+but it won't take much in this case.
 
-Applied, thanks.
+...
+
+> >  		for (i = 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
+> > -			int irq = fwnode_irq_get(child, i);
+> > +			int irq;
+> >  
+> > +			irq = fwnode_irq_get(child, i);
+
+> (Unneccesary churn, but I'll allow it)
+
+The point here is to see that we actually check something that we just got
+from somewhere else. It's slightly better for reading and maintaining the
+code as I explained in [1].
+
+And there is a difference to the cases like
+
+static int foo(struct platform_device *pdev, ...)
+{
+	struct device *dev = &pdev->dev;
+	...
+}
+
+when we know ahead that if pdev is NULL, something is _so_ wrong that
+it's not even our issue.
+
+[1]: https://lore.kernel.org/lkml/CAHp75Vda5KX5pVrNeueQEODoEy405eTb9SYJtts-Lm9jMNocHQ@mail.gmail.com/
+
+> >  			if (irq < 0)
+> >  				break;
+> > +			if (!irq)
+> > +				continue;
+> 
+> Since irq == 0 seems to be an error condition, the following seems fine
+> to me, and simpler:
+> 
+> -			if (irq < 0)
+> +			if (irq <= 0)
+>  				break;
+
+Not sure it's the same by two reasons:
+ 1) break != continue;
+ 2) we might need to convert 0 to error if we ever go to report this
+
+So, to me mapping error shouldn't be fatal to continue, but I would
+like to hear your interpretation since you know this case much better
+than me.
+
+Thanks for the review!
 
 -- 
-Lee Jones [李琼斯]
+With Best Regards,
+Andy Shevchenko
+
+
