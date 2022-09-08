@@ -2,65 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 987D05B296D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 00:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8655B2AAD
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 01:57:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbiIHWhs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 18:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36996 "EHLO
+        id S230027AbiIHX51 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 19:57:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbiIHWhl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 18:37:41 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B50775071E;
-        Thu,  8 Sep 2022 15:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662676657; x=1694212657;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Wg50WZaCdnHgKFNnF024mSmECqYSVjQXtdakITNd+0g=;
-  b=TYO+uoPOlBYx3b0gx3SV4VwkQj7/J1sVxZyAuDW6/WaGYiE4CBha924/
-   ymKGtZzqMWk9KRvBf8lua6MQ3GapFDlFO9hgA6Tvwfs5KIGiSsW5/NUFQ
-   TCoPQC9t/IC7udALlQXpDvl15pNvBJWhzbvjCaGDqGFwZKZPoDK+MFjW/
-   P0ol1uxp8sMTszhmFEiLvUh/zX10qmBhDc4Tq5+DXukaIHiiN9aZu5jy8
-   83MMkXU8RSYr9D0ER3oOYf0Ic8Lg+er8Y5WPnRhOpCkYQa3Z5KsqxLgFW
-   9H1sfdu1KiUQmM6WISoY/r0+AFYVT7qucRew19Me3DMifXzZTaQzZKXhU
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="277074718"
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="277074718"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 15:37:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,300,1654585200"; 
-   d="scan'208";a="615060039"
-Received: from lkp-server02.sh.intel.com (HELO b2938d2e5c5a) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 08 Sep 2022 15:37:33 -0700
-Received: from kbuild by b2938d2e5c5a with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oWQ9N-0000Nt-0V;
-        Thu, 08 Sep 2022 22:37:33 +0000
-Date:   Fri, 09 Sep 2022 06:37:16 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-aspeed@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-        dri-devel@lists.freedesktop.org, bpf@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, alsa-devel@alsa-project.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 47c191411b68a771261be3dc0bd6f68394cef358
-Message-ID: <631a6e9c.D4HRv8SAAnTyu/QX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229954AbiIHX5X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 19:57:23 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132CDFBF20;
+        Thu,  8 Sep 2022 16:57:21 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 288LltR0016279;
+        Thu, 8 Sep 2022 23:57:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=DP+1a705Ln6azuRbeCkaSx6hxJZpQPx385zZM8JCxVc=;
+ b=WTslEZ8quKY0pkQI0Unoz7Qou0LBoSDfEPWldx5LNnEdTEelGlGosHlY5x75gE0Mj7NQ
+ vxPePqv2ud3BhvGd+/TPj2XvcsbuMpw+b4sxun9PfvNlCK0uR2JQ8i7KOaMN5TbLYJpg
+ ssXjw8er6V6KzyFMHPLGnMsEQLhuUREaEokix0bT/zmCAaZbaY3qPgIBNahR44Ct8uHq
+ DSy0c/bKzUmG8y+th9RP9VNppDvcW9xnnIbuJx67FmtnP6u05KPuEOm5jZDD0A6TKgWo
+ kYvZqML+/puGKKEd7K2iVGcY4mi81f5pdDDyvrFxKx85eYw6ncWxabelj0UlsgJj3I0b dw== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jf85138yh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 08 Sep 2022 23:57:12 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 288NqBWk025748
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 8 Sep 2022 23:52:11 GMT
+Received: from [10.110.115.160] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 8 Sep 2022
+ 16:52:10 -0700
+Message-ID: <330b5f46-1bd2-5727-b63c-c730fbdda22c@quicinc.com>
+Date:   Thu, 8 Sep 2022 16:52:10 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH 2/4] pinctrl: qcom: spmi-gpio: Fix the GPIO strength
+ mapping
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <bjorn.andersson@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <konrad.dybcio@somainline.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Anirudh Ghayal <quic_aghayal@quicinc.com>
+References: <20220907201528.9351-1-quic_amelende@quicinc.com>
+ <20220907201528.9351-3-quic_amelende@quicinc.com>
+ <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
+From:   Anjelique Melendez <quic_amelende@quicinc.com>
+In-Reply-To: <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jqFcEesKsAWjweVhpnPr5B8ZFqIB3Jqh
+X-Proofpoint-ORIG-GUID: jqFcEesKsAWjweVhpnPr5B8ZFqIB3Jqh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-08_13,2022-09-08_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ impostorscore=0 spamscore=0 phishscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209080084
+X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,218 +86,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 47c191411b68a771261be3dc0bd6f68394cef358  Add linux-next specific files for 20220908
 
-Error/Warning reports:
 
-https://lore.kernel.org/linux-mm/202209042337.FQi69rLV-lkp@intel.com
-https://lore.kernel.org/linux-mm/202209080718.y5QmlNKH-lkp@intel.com
-https://lore.kernel.org/llvm/202209090343.JPAFJt74-lkp@intel.com
+On 9/8/2022 4:14 AM, Krzysztof Kozlowski wrote:
+> On 07/09/2022 22:15, Anjelique Melendez wrote:
+>> From: Anirudh Ghayal <quic_aghayal@quicinc.com>
+>>
+>> The SPMI based PMICs have the HIGH and LOW GPIO output
+>> strength mappings interchanged, fix them.
+>>
+>> Keep the mapping same for older SSBI based PMICs.
+>>
+>> CRs-Fixed: 2246473
+> 
+> What is this tag about?
+Forgot to remove this tag before up streamed. Will remove for next version.
+> 
+>> Signed-off-by: Anirudh Ghayal <quic_aghayal@quicinc.com>
+>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
+>> ---
+>>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c     | 2 +-
+>>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c     | 4 ++--
+>>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h | 9 +++++++--
+>>  3 files changed, 10 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+>> index cf6b6047de8d..fceccf1ec099 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+>> @@ -525,7 +525,7 @@ static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
+>>  			pad->pullup = arg;
+>>  			break;
+>>  		case PMIC_GPIO_CONF_STRENGTH:
+>> -			if (arg > PMIC_GPIO_STRENGTH_LOW)
+>> +			if (arg > PMIC_GPIO_STRENGTH_HIGH)
+>>  				return -EINVAL;
+>>  			pad->strength = arg;
+>>  			break;
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+>> index 1b41adda8129..0f96d130813b 100644
+>> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+>> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+>> @@ -1,7 +1,7 @@
+>>  // SPDX-License-Identifier: GPL-2.0-only
+>>  /*
+>>   * Copyright (c) 2015, Sony Mobile Communications AB.
+>> - * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2013, 2018 The Linux Foundation. All rights reserved.
+>>   */
+>>  
+>>  #include <linux/module.h>
+>> @@ -371,7 +371,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
+>>  			banks |= BIT(0);
+>>  			break;
+>>  		case PM8XXX_QCOM_DRIVE_STRENGH:
+>> -			if (arg > PMIC_GPIO_STRENGTH_LOW) {
+>> +			if (arg > PM8921_GPIO_STRENGTH_LOW) {
+>>  				dev_err(pctrl->dev, "invalid drive strength\n");
+>>  				return -EINVAL;
+>>  			}
+>> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>> index e5df5ce45a0f..950be952ad3e 100644
+>> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> 
+> You cannot mix bindings with driver. This is an ABI break.
+Ack - Will separate into two changes.
+>> @@ -12,9 +12,14 @@
+>>  #define PMIC_GPIO_PULL_UP_1P5_30	3
+>>  
+>>  #define PMIC_GPIO_STRENGTH_NO		0
+>> -#define PMIC_GPIO_STRENGTH_HIGH		1
+>> +#define PMIC_GPIO_STRENGTH_LOW		1
+>>  #define PMIC_GPIO_STRENGTH_MED		2
+>> -#define PMIC_GPIO_STRENGTH_LOW		3
+>> +#define PMIC_GPIO_STRENGTH_HIGH		3
+> 
+> Didn't you just break all DTSes in the world?
+Ack - lol. Next version will include changes to update any DTS
+that uses PMIC_GPIO_STRENGTH_ 
+> 
+> Best regards,
+> Krzysztof
 
-Error/Warning: (recently discovered and may have been fixed)
-
-ERROR: modpost: "__divdi3" [drivers/gpu/drm/vkms/vkms.ko] undefined!
-ERROR: modpost: "__udivdi3" [drivers/gpu/drm/vkms/vkms.ko] undefined!
-arm-linux-gnueabi-ld: vkms_formats.c:(.text+0x824): undefined reference to `__aeabi_ldivmod'
-drivers/base/regmap/regmap-mmio.c:222:17: error: implicit declaration of function 'writesb'; did you mean 'writeb'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:225:17: error: implicit declaration of function 'writesw'; did you mean 'writew'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:228:17: error: implicit declaration of function 'writesl'; did you mean 'writel'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:232:17: error: implicit declaration of function 'writesq'; did you mean 'writeq'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:232:17: error: implicit declaration of function 'writesq'; did you mean 'writesl'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:358:17: error: implicit declaration of function 'readsb'; did you mean 'readb'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:361:17: error: implicit declaration of function 'readsw'; did you mean 'readw'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:364:17: error: implicit declaration of function 'readsl'; did you mean 'readl'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readq'? [-Werror=implicit-function-declaration]
-drivers/base/regmap/regmap-mmio.c:368:17: error: implicit declaration of function 'readsq'; did you mean 'readsl'? [-Werror=implicit-function-declaration]
-drivers/crypto/aspeed/aspeed-hace.c:133 aspeed_hace_probe() warn: platform_get_irq() does not return zero
-drivers/gpu/drm/amd/amdgpu/imu_v11_0_3.c:139:6: warning: no previous prototype for 'imu_v11_0_3_program_rlc_ram' [-Wmissing-prototypes]
-drivers/gpu/drm/drm_atomic_helper.c:802: warning: expecting prototype for drm_atomic_helper_check_wb_connector_state(). Prototype was for drm_atomic_helper_check_wb_encoder_state() instead
-drivers/gpu/drm/vkms/vkms_formats.c:259: undefined reference to `__divdi3'
-drivers/pinctrl/pinctrl-amd.c:288 amd_gpio_dbg_show() warn: format string contains non-ascii character '\x9a'
-drivers/pinctrl/pinctrl-amd.c:288 amd_gpio_dbg_show() warn: format string contains non-ascii character '\xa1'
-drivers/pinctrl/pinctrl-amd.c:370 amd_gpio_dbg_show() warn: format string contains non-ascii character '\x95'
-drivers/scsi/qla2xxx/qla_os.c:2854:23: warning: assignment to 'struct trace_array *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-drivers/scsi/qla2xxx/qla_os.c:2854:25: error: implicit declaration of function 'trace_array_get_by_name'; did you mean 'trace_array_set_clr_event'? [-Werror=implicit-function-declaration]
-drivers/scsi/qla2xxx/qla_os.c:2869:9: error: implicit declaration of function 'trace_array_put' [-Werror=implicit-function-declaration]
-fs/btrfs/volumes.c:6549 __btrfs_map_block() error: we previously assumed 'mirror_num_ret' could be null (see line 6376)
-ld: drivers/gpu/drm/vkms/vkms_formats.c:260: undefined reference to `__divdi3'
-ld: vkms_formats.c:(.text+0x362): undefined reference to `__divdi3'
-ld: vkms_formats.c:(.text+0x3b2): undefined reference to `__divdi3'
-ld: vkms_formats.c:(.text+0x3ba): undefined reference to `__divdi3'
-ld: vkms_formats.c:(.text+0x47f): undefined reference to `__divdi3'
-mips-linux-ld: vkms_formats.c:(.text.argb_u16_to_RGB565+0xd0): undefined reference to `__divdi3'
-mm/kasan/kasan_test_module.c:90:26: sparse:    struct kasan_rcu_info *
-mm/kasan/kasan_test_module.c:90:26: sparse:    struct kasan_rcu_info [noderef] __rcu *
-sound/soc/codecs/tas2562.c:442:13: warning: variable 'ret' set but not used [-Wunused-but-set-variable]
-vkms_formats.c:(.text+0x266): undefined reference to `__divdi3'
-vkms_formats.c:(.text+0x338): undefined reference to `__divdi3'
-vkms_formats.c:(.text+0x388): undefined reference to `__divdi3'
-vkms_formats.c:(.text+0x390): undefined reference to `__divdi3'
-vkms_formats.c:(.text+0x455): undefined reference to `__divdi3'
-vkms_formats.c:(.text+0x804): undefined reference to `__aeabi_ldivmod'
-vkms_formats.c:(.text.argb_u16_to_RGB565+0xb0): undefined reference to `__divdi3'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
-|   |-- drivers-gpu-drm-amd-amdgpu-imu_v11_0_3.c:warning:no-previous-prototype-for-imu_v11_0_3_program_rlc_ram
-|   |-- drivers-gpu-drm-drm_atomic_helper.c:warning:expecting-prototype-for-drm_atomic_helper_check_wb_connector_state().-Prototype-was-for-drm_atomic_helper_check_wb_encoder_state()-instead
-|   |-- drivers-scsi-qla2xxx-qla_os.c:error:implicit-declaration-of-function-trace_array_get_by_name
-|   |-- drivers-scsi-qla2xxx-qla_os.c:error:implicit-declaration-of-function-trace_array_put
-|   |-- drivers-scsi-qla2xxx-qla_os.c:warning:assignment-to-struct-trace_array-from-int-makes-pointer-from-integer-without-a-cast
-|   `-- sound-soc-codecs-tas2562.c:warning:variable-ret-set-but-not-used
-|-- alpha-randconfig-r013-20220907
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
-|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
-|-- alpha-randconfig-r034-20220907
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsq
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-readsw
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesb
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesl
-|   |-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesq
-|   `-- drivers-base-regmap-regmap-mmio.c:error:implicit-declaration-of-function-writesw
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-imu_v11_0_3.c:warning:no-previous-prototype-for-imu_v11_0_3_program_rlc_ram
-|   |-- drivers-gpu-drm-drm_atomic_helper.c:warning:expecting-prototype-for-drm_atomic_helper_check_wb_connector_state().-Prototype-was-for-drm_atomic_helper_check_wb_encoder_state()-instead
-|   `-- sound-soc-codecs-tas2562.c:warning:variable-ret-set-but-not-used
-|-- arc-randconfig-r003-20220907
-|   `-- drivers-gpu-drm-drm_atomic_helper.c:warning:expecting-prototype-for-drm_atomic_helper_check_wb_connector_state().-Prototype-was-for-drm_atomic_helper_check_wb_encoder_state()-instead
-|-- arc-randconfig-r026-20220907
-|   |-- drivers-gpu-drm-drm_atomic_helper.c:warning:expecting-prototype-for-drm_atomic_helper_check_wb_connector_state().-Prototype-was-for-drm_atomic_helper_check_wb_encoder_state()-instead
-|   `-- sound-soc-codecs-tas2562.c:warning:variable-ret-set-but-not-used
-|-- arc-randconfig-s033-20220907
-|   |-- kernel-bpf-hashtab.c:sparse:sparse:cast-removes-address-space-__percpu-of-expression
-|   |-- kernel-bpf-hashtab.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-void-noderef-__percpu-assigned-pptr-got-void
-|   |-- kernel-bpf-hashtab.c:sparse:sparse:incorrect-type-in-assignment-(different-address-spaces)-expected-void-ptr_to_pptr-got-void-noderef-__percpu-assigned-pptr
-|   |-- kernel-bpf-memalloc.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-noderef-__percpu-__pdata-got-void
-|   |-- kernel-bpf-memalloc.c:sparse:sparse:incorrect-type-in-argument-(different-address-spaces)-expected-void-noderef-__percpu-__pdata-got-void-pptr
-|   |-- kernel-bpf-memalloc.c:sparse:sparse:incorrect-type-in-initializer-(different-address-spaces)-expected-void-pptr-got-void-noderef-__percpu
-|   `-- kernel-exit.c:sparse:sparse:incorrect-type-in-initializer-(different-address-spaces)-expected-struct-sighand_struct-sighand-got-struct-sighand_struct-noderef-__rcu-sighand
-clang_recent_errors
-|-- i386-randconfig-a002
-|   `-- drivers-extcon-extcon-usbc-tusb320.c:warning:expecting-prototype-for-drivers-extcon-extcon-tusb320c().-Prototype-was-for-TUSB320_REG8()-instead
-|-- i386-randconfig-a006
-|   `-- ld.lld:error:undefined-symbol:__udivdi3
-|-- i386-randconfig-a013
-|   `-- ld.lld:error:undefined-symbol:__udivdi3
-|-- i386-randconfig-a015
-|   `-- drivers-extcon-extcon-usbc-tusb320.c:warning:expecting-prototype-for-drivers-extcon-extcon-tusb320c().-Prototype-was-for-TUSB320_REG8()-instead
-|-- powerpc-randconfig-r021-20220907
-|   |-- arch-powerpc-math-emu-fre.c:warning:no-previous-prototype-for-function-fre
-|   |-- arch-powerpc-math-emu-frsqrtes.c:warning:no-previous-prototype-for-function-frsqrtes
-|   |-- arch-powerpc-math-emu-fsqrt.c:warning:no-previous-prototype-for-function-fsqrt
-|   |-- arch-powerpc-math-emu-fsqrts.c:warning:no-previous-prototype-for-function-fsqrts
-|   |-- arch-powerpc-math-emu-mtfsf.c:warning:no-previous-prototype-for-function-mtfsf
-|   `-- arch-powerpc-math-emu-mtfsfi.c:warning:no-previous-prototype-for-function-mtfsfi
-|-- x86_64-randconfig-a003
-|   `-- drivers-extcon-extcon-usbc-tusb320.c:warning:expecting-prototype-for-drivers-extcon-extcon-tusb320c().-Prototype-was-for-TUSB320_REG8()-instead
-|-- x86_64-randconfig-a012
-|   `-- drivers-extcon-extcon-usbc-tusb320.c:warning:expecting-prototype-for-drivers-extcon-extcon-tusb320c().-Prototype-was-for-TUSB320_REG8()-instead
-`-- x86_64-randconfig-a016
-    `-- drivers-extcon-extcon-usbc-tusb320.c:warning:expecting-prototype-for-drivers-extcon-extcon-tusb320c().-Prototype-was-for-TUSB320_REG8()-instead
-
-elapsed time: 734m
-
-configs tested: 75
-configs skipped: 4
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-m68k                             allmodconfig
-x86_64                        randconfig-a011
-powerpc                           allnoconfig
-arc                              allyesconfig
-powerpc                          allmodconfig
-alpha                            allyesconfig
-mips                             allyesconfig
-m68k                             allyesconfig
-x86_64                        randconfig-a015
-i386                          randconfig-a014
-sh                               allmodconfig
-x86_64                        randconfig-a002
-x86_64                              defconfig
-x86_64                        randconfig-a013
-i386                                defconfig
-i386                          randconfig-a001
-x86_64                          rhel-8.3-func
-i386                          randconfig-a003
-x86_64                        randconfig-a006
-arc                  randconfig-r043-20220908
-x86_64                        randconfig-a004
-i386                          randconfig-a005
-arm                                 defconfig
-i386                          randconfig-a012
-i386                          randconfig-a016
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-arm                              allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                           rhel-8.3-syz
-x86_64                               rhel-8.3
-i386                             allyesconfig
-arm64                            allyesconfig
-arc                  randconfig-r043-20220907
-i386                          randconfig-c001
-s390                 randconfig-r044-20220908
-riscv                randconfig-r042-20220908
-x86_64                           allyesconfig
-ia64                             allmodconfig
-csky                              allnoconfig
-arc                               allnoconfig
-alpha                             allnoconfig
-riscv                             allnoconfig
-m68k                       m5275evb_defconfig
-sh                         ap325rxa_defconfig
-arm                        cerfcube_defconfig
-powerpc                         wii_defconfig
-xtensa                  cadence_csp_defconfig
-arm                        mvebu_v7_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a012
-i386                          randconfig-a013
-x86_64                        randconfig-a014
-x86_64                        randconfig-a001
-i386                          randconfig-a002
-x86_64                        randconfig-a003
-x86_64                        randconfig-a016
-i386                          randconfig-a011
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20220907
-i386                          randconfig-a015
-hexagon              randconfig-r041-20220908
-i386                          randconfig-a006
-i386                          randconfig-a004
-riscv                randconfig-r042-20220907
-hexagon              randconfig-r045-20220908
-hexagon              randconfig-r045-20220907
-s390                 randconfig-r044-20220907
-x86_64                          rhel-8.3-rust
-powerpc                        icon_defconfig
-arm                       spear13xx_defconfig
-arm                         palmz72_defconfig
-powerpc                 mpc832x_rdb_defconfig
-x86_64                        randconfig-k001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Thanks,
+Anjelique
