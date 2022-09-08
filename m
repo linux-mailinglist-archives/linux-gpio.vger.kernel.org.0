@@ -2,133 +2,170 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE24E5B1987
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 12:02:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD5575B1A03
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 12:31:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230350AbiIHKCA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 06:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39774 "EHLO
+        id S229989AbiIHKbu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 06:31:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbiIHKBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 06:01:51 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BAB1E4DF7;
-        Thu,  8 Sep 2022 03:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662631311; x=1694167311;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=w2tDfZt6u3hn+SCpvEA9SBmEoYmSetazfTtjlLehh7c=;
-  b=Z47flTmERBehmSFH1KZkCHpMah28vsrJRAnb7oRndnb5JBmPL2uJRLE6
-   ZdG2YV4a8Z0nq0zb/7du/9/vk2T3LhoafcoU12AlK9KJa9/oFsyFaRWkd
-   PBlMJXfYJOcZCWoUeixpz7TV6geiTwLe/VBK5lNHQVUYtQullDz1heb0h
-   dOjcc6dKGq9mTlTRgSI+Robj6x3iZMvMyLV4VKnfelCU+Sbq2cfggQg0O
-   Mnhs7/9lbxwVEu2gSK9O4CVsVuOAKWo9ozYKO1YtF8y3DCfTbUZkyP6ty
-   hyNH1H7KG8ItRcqhU1N/afisP0Ymg7C1ra1SSzKwLrNIo3oLVyXKRq9kN
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="358857801"
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="358857801"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 03:01:36 -0700
-X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="614832034"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 03:01:35 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oWELk-00A4K4-1a;
-        Thu, 08 Sep 2022 13:01:32 +0300
-Date:   Thu, 8 Sep 2022 13:01:32 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] pinctrl: wpcm450: Correct the fwnode_irq_get()
- return value check
-Message-ID: <Yxm9fB/5IJS3MXGu@smile.fi.intel.com>
-References: <20220905191408.73794-1-andriy.shevchenko@linux.intel.com>
- <YxkHaBKtiO9zVuKM@probook>
+        with ESMTP id S229546AbiIHKbt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 06:31:49 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2076.outbound.protection.outlook.com [40.107.220.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2A7BC11D;
+        Thu,  8 Sep 2022 03:31:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TUIQKQULGkK/gZcSVvjbtguB51ydzanpd3FAaqgAoZd7ll9Qv+qVX6tVEqBbAEZ3Zj0/G+KYIMBUg1vu2JNFTJt56SVzrw4S/MW47J38TW8FjyjjY+QtJJ2DLNnr31NIzSSIdQeKgXnOs1KMqw6LtPxAhazsKdJPl6B7xJdqw68JjqPVRyqzftWGaPlFAK2J+sq+EyR2aqm5XVv1no4RkK5TFpdeNoc3ta/72sTu2MtGslklbqg3A+E3ptHwBvEnxmUSIAp3IEfjCoDcAqHb7rxm3RZR7BsoHOsylfGsoLlr6zkjDzcImsmXPlA1GcoiCK7FJ3BZhTIZKlHeS/vdPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rBSDZLhGSjM8dDpKlbMeSmu8poTVqsM/OvTz/79y7/s=;
+ b=Mrv+6ud49nyDzGXKZH0liXgf85B9xCf8MNZYqfr2i34ASgH8+11iATsg7xrFlweIrV+kGcZ+6yYTjMEIKrGGf9myNGRKzxI1F+UXhwqFBeE7IolLuVvrHEL3196AGbTnJkfRT5NJ6roYPnemqWh2E6FBTC++P74FXqezIOamxX3GKiP5/nsFkB5ljWzh604DuH4RGjdJQ6r+rP5W2IaupWcuJCHBhaZtAjttZA1u6oFSwfVGp9cysCFpFwJC12QWQ7e9+eCxv5TQSP4xr+UuA1vsg8MU7J8vDJSJLqUwDC4uOPoVzYLz+MT41F2TkPZoTNBEuQfQ2dPKneqvj5S5tA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rBSDZLhGSjM8dDpKlbMeSmu8poTVqsM/OvTz/79y7/s=;
+ b=tDziDcdkuXyxcfY2GOl9iuXiv7MD56K8vXbkqQKgd78jFyBEjaNNGVBvG/R8A3pvxCwtsU36iIIFd5MsONz71Do57599Qq98+v/0w97T0T1w9rcO/XQVs1C2bzObR9rkPNUeHQjlbnCFVRVAXZwpeVQGCHN621m37DVKYa3G060uhB72qBKQAdi9d5uWjoiXpLn3XIk4Te8g2539nZjpaLdf5ZtkCsalOiPdAAkXjJxZ5wuiH2L8qeSVSxvZq5wsvdTAmLlLrt7+2t1jITVE8wnlsisoqV4rmkMibPIDcWSXcHAfigBhDb3EJTEcoOpdkYjO4zSlxt+kjH5UgiVpqA==
+Received: from DM5PR12MB2406.namprd12.prod.outlook.com (2603:10b6:4:b7::23) by
+ DM6PR12MB4941.namprd12.prod.outlook.com (2603:10b6:5:1b8::17) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5588.10; Thu, 8 Sep 2022 10:31:46 +0000
+Received: from DM5PR12MB2406.namprd12.prod.outlook.com
+ ([fe80::393c:2a84:46aa:3177]) by DM5PR12MB2406.namprd12.prod.outlook.com
+ ([fe80::393c:2a84:46aa:3177%4]) with mapi id 15.20.5612.018; Thu, 8 Sep 2022
+ 10:31:46 +0000
+From:   Prathamesh Shete <pshete@nvidia.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>
+CC:     Suresh Mangipudi <smangipudi@nvidia.com>,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>,
+        Krishna Yarlagadda <kyarlagadda@nvidia.com>
+Subject: RE: [PATCH v2] gpio: tegra186: add Tegra234 PMC compatible in GPIO
+ driver
+Thread-Topic: [PATCH v2] gpio: tegra186: add Tegra234 PMC compatible in GPIO
+ driver
+Thread-Index: AQHYsVrR8d/SrHtqn0eaQvTMm9Q+uK3VeXWg
+Date:   Thu, 8 Sep 2022 10:31:46 +0000
+Message-ID: <DM5PR12MB2406751A5FB491DF5AA50FCCB7409@DM5PR12MB2406.namprd12.prod.outlook.com>
+References: <Yhe0pCpfeCpyfPWg@orome>
+ <20220816102725.14708-1-pshete@nvidia.com>
+In-Reply-To: <20220816102725.14708-1-pshete@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM5PR12MB2406:EE_|DM6PR12MB4941:EE_
+x-ms-office365-filtering-correlation-id: 1ea5b938-cdc0-478c-cbd7-08da91855498
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C3uD/XCeNHriukpPuZdbRiKW+cidBEXVfCoGhzzJ2e5fYqo7mf353dnbu6h5gE3vCb+y/sESMRLfecQ3NAhJYv2UzUPtyyDJ8tUxTApfLA9dq1Cz7MNjjuopgcRIpgG/HgnCp536FChbSupyg9raGnIicnBH/Tc+K1MVCS/7lJwXRjIOpOiGB52UDnwJGGPPePb/CahoarnM+Cw7ZLc9RyJINVatWJmrwApqvxWrdPUpN2cuegRdPUkwMu3NBpvqlgSF5fhSE5fIEMQJAnCdmkbTWEaNjbnmvv/jvrsUh9uUY8ugZ78aMtSFQLMMmjkUCjUK5GrAUg0S/5w6AQoGgKS8dFi07cm9Ym/NKKhGrhPqLsXgtOaySvpfKE4j2Hlc1f5VkfpIKMPupIttu2t3hgv69myB0DpIphMwRuIEjCnj2ipeJ5MfgeY8cuvJ8cmcShWD3x7Fqf0Gn3tMEYiFZlFa0RryYE6Qek0ICvWy9kS8rquMRI1B4vLd960WmYyavjb3ZMAKJM8jUCwNh+bM4eeCAMX4UpAghdi4QvL06R/29HFkzsGM6HENzR/HKLIVivUySlKSE5zvcH9NOxpT1ObWR5hgX6y+RLvuEgoy7fNg/Rc1G4F6e0pJqPjXEUy7Qt8KGOeKqJnfLhFMJzla5J0VITD9xexHpyM8LdG4WOZ5QAT0N9jKFAs2natERGwXVnzqPeaLUGqtd0N/25hGEntvXGQlYZLpy5MM+xL62K74zPnQovshdQobuHjVb6f35SCrC+NR5kqbQccuZnmk3A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB2406.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(7696005)(66556008)(53546011)(8676002)(66476007)(66946007)(5660300002)(110136005)(83380400001)(8936002)(64756008)(76116006)(107886003)(478600001)(26005)(6506007)(41300700001)(52536014)(71200400001)(66446008)(186003)(54906003)(316002)(86362001)(9686003)(55016003)(33656002)(4326008)(38070700005)(2906002)(122000001)(38100700002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?kHavmy9TEsvTr46ImgpN5VFCTitAbF1vwTl9VgaQalr0YWkvbxGbodtY0+Ra?=
+ =?us-ascii?Q?kYPzw3CesJMvUkmtZ17kMITNrXCyru5YjwYL1YMvV1NAz+U3x4tYN+AKOX+F?=
+ =?us-ascii?Q?MDWFCVz0jridvmhwtXP8gbjQwkTpxiQEKfaAlLhrpso6V+Tgp0ya6D2DEyDE?=
+ =?us-ascii?Q?9aVlLwz6hbdTmXKTjBU71GFDTHF6bto3YYxKKDswWVMrgQZA49JWqPnlDQSS?=
+ =?us-ascii?Q?xNnfVlgHsyupft73rkQb0YVFhFUnmSwzWWTmOOTwcPuoOCGsZC8Zlyf9lO/l?=
+ =?us-ascii?Q?ne1zOHAEbZi3JFhmibpSHQH1LRfLyY7rNEiS10SNYo4RA56xYofgB0z2nRJQ?=
+ =?us-ascii?Q?cVZ26A3Bcp2yYU5bJo9GFdlqaXkrPT4Zn14xxhyNo6BbjBKAk/riH6/CPsQr?=
+ =?us-ascii?Q?kaY7xI9emciih6ebRq6vvOYXiApUBeHnDDAlx7XWkQshBloYpGxNxuzNt8gu?=
+ =?us-ascii?Q?YjpU/3oL1V51Xj4tcld+IQYmvREjAfkqGLDpPeF+JrPg747jWR6ytSLbhCdI?=
+ =?us-ascii?Q?6FNXKjOA+/Bq6tITbuZb/hKp4Q3etqqFFhkmhBop1+E8EAGtVKPO9WPNenQd?=
+ =?us-ascii?Q?Hj6XuWVXQTVvTxPgEmZwLh5cn3dUZwzuXPiuCXnPjMUuBZzazCZXpEtXJsEa?=
+ =?us-ascii?Q?80rUMwzFUPCZaZjCYqWYCitglwslohEwvK3IuxWss+Ej0Yxmo7mcs1qhx5UX?=
+ =?us-ascii?Q?2GMmBZDbw8bnmWMmfLP4Y5iaP25znU8H9Pz5dGTk+HUKxK85vsXyTTwIjwwn?=
+ =?us-ascii?Q?VkLEkt7GRTqAUsZRMxooeqpYiBVDa7MXT/SSeC/LadWzYsd6rsbujDn3O4JG?=
+ =?us-ascii?Q?43roAZ40ax1WsyvC4m1XdpiJHcbQTXqIaHWJPCjVwaeft7SxCsfDU3Z8jhBM?=
+ =?us-ascii?Q?WQKBqlJCR5OjxmXbZA+czxlpcNVyr6HJ8wX5VQUnCc0I8I9BoXBV7jO6hpPw?=
+ =?us-ascii?Q?YmXIZqGuOCisCoQicuk/Wmdu10bxvTLtd+mHXbMIU/GKYHEl4WZI1pTobO0m?=
+ =?us-ascii?Q?8utngTSXdBhgg44Yjn1BhXriN/Cf0uut0Ndjfa0m1M77DapOpbCVhLtzM/BG?=
+ =?us-ascii?Q?OImIFHo8TkHPkvcSMtRImGY+YJcAUzWwMC7RtTIz9NTV3pSZjknYqwZP5QE3?=
+ =?us-ascii?Q?0wQ9bJbA7q4DHjGq8yJA1273PXw8SEGXf0ara7NzNcJGWQk3gi4X9Z3VJK35?=
+ =?us-ascii?Q?KytczEKzZJNqqVJrMFcjB6XvtSjjkOz4cVJeHK5Ah3e6E35kx+HodvUSL/hJ?=
+ =?us-ascii?Q?D2PSsTdDrRGokkLMqhRXwqp9dk9ZGEqK4/vcWwwn0TIHW06c/zINT+Lkr+En?=
+ =?us-ascii?Q?Oj0Xv0VyVEYNAxfd666CFH+0ImB6MVsPTgT8PIS831AzigKEWkrhrTT0ABKk?=
+ =?us-ascii?Q?RZNKwKz6g7sV/kT1HmyJG9Mef32YeKngXZn2l/L7lXLBe4dC3DjboCFhYRVd?=
+ =?us-ascii?Q?3biiMGQuq66Q9TKySuDCj2WxuwahaYSVJMZp+B37p7E/VGMdfJIBjFvTsDP5?=
+ =?us-ascii?Q?zqPGvbS2CYZmh8xFrXksNimo7yrtVqBrQZkKS+6V/AsBSfZjC1azOaHYB70p?=
+ =?us-ascii?Q?3J5AAyoIHIk2jzl8y2U=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YxkHaBKtiO9zVuKM@probook>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB2406.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ea5b938-cdc0-478c-cbd7-08da91855498
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 10:31:46.2167
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: IXNtbCiNmXH6n87yvLkKmZREgdmhlqmgFJ+H7mHGDtQBikzEj3YW2LnNIPN1ZYhLUjscjHjj40QhJf+WjFritQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4941
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 11:04:40PM +0200, Jonathan Neuschäfer wrote:
-> On Mon, Sep 05, 2022 at 10:14:08PM +0300, Andy Shevchenko wrote:
-> > fwnode_irq_get() may return all possible signed values, such as Linux
-> > error code. Fix the code to handle this properly.
-> 
-> It would be good to note explicitly here what a return value of zero
-> means, i.e., as the documentation of of_irq_get says, "IRQ mapping
-> failure", and why it should result in skipping this IRQ.
+Hi=20
+Can you please help review this patch=20
 
-Not that I'm fun of duplicating documentation in the commit message,
-but it won't take much in this case.
+Thanks
+Prathamesh.
 
-...
-
-> >  		for (i = 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
-> > -			int irq = fwnode_irq_get(child, i);
-> > +			int irq;
-> >  
-> > +			irq = fwnode_irq_get(child, i);
-
-> (Unneccesary churn, but I'll allow it)
-
-The point here is to see that we actually check something that we just got
-from somewhere else. It's slightly better for reading and maintaining the
-code as I explained in [1].
-
-And there is a difference to the cases like
-
-static int foo(struct platform_device *pdev, ...)
-{
-	struct device *dev = &pdev->dev;
-	...
-}
-
-when we know ahead that if pdev is NULL, something is _so_ wrong that
-it's not even our issue.
-
-[1]: https://lore.kernel.org/lkml/CAHp75Vda5KX5pVrNeueQEODoEy405eTb9SYJtts-Lm9jMNocHQ@mail.gmail.com/
-
-> >  			if (irq < 0)
-> >  				break;
-> > +			if (!irq)
-> > +				continue;
-> 
-> Since irq == 0 seems to be an error condition, the following seems fine
-> to me, and simpler:
-> 
-> -			if (irq < 0)
-> +			if (irq <= 0)
->  				break;
-
-Not sure it's the same by two reasons:
- 1) break != continue;
- 2) we might need to convert 0 to error if we ever go to report this
-
-So, to me mapping error shouldn't be fatal to continue, but I would
-like to hear your interpretation since you know this case much better
-than me.
-
-Thanks for the review!
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> -----Original Message-----
+> From: Prathamesh Shete <pshete@nvidia.com>
+> Sent: Tuesday, August 16, 2022 3:57 PM
+> To: linus.walleij@linaro.org; bgolaszewski@baylibre.com; linux-
+> gpio@vger.kernel.org; linux-tegra@vger.kernel.org; linux-
+> kernel@vger.kernel.org; Jonathan Hunter <jonathanh@nvidia.com>;
+> thierry.reding@gmail.com
+> Cc: Suresh Mangipudi <smangipudi@nvidia.com>; Prathamesh Shete
+> <pshete@nvidia.com>; Manish Bhardwaj <mbhardwaj@nvidia.com>
+> Subject: [PATCH v2] gpio: tegra186: add Tegra234 PMC compatible in GPIO
+> driver
+>=20
+> Using this patch we are adding PMC compatible string for
+> Tegra234 in GPIO driver so the IRQ hierarchy can be set.
+>=20
+> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c =
+index
+> 54d9fa7da9c1..824a355ff27a 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -669,6 +669,7 @@ static unsigned int
+> tegra186_gpio_child_offset_to_irq(struct gpio_chip *chip,  static const s=
+truct
+> of_device_id tegra186_pmc_of_match[] =3D {
+>  	{ .compatible =3D "nvidia,tegra186-pmc" },
+>  	{ .compatible =3D "nvidia,tegra194-pmc" },
+> +	{ .compatible =3D "nvidia,tegra234-pmc" },
+>  	{ /* sentinel */ }
+>  };
+>=20
+> --
+> 2.17.1
 
