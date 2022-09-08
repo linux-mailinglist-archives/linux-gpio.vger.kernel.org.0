@@ -2,61 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 108CE5B10A9
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 01:53:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8AE55B13E7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 07:14:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbiIGXxm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Sep 2022 19:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45162 "EHLO
+        id S229822AbiIHFO5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 01:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbiIGXxk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Sep 2022 19:53:40 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF822CEB38
-        for <linux-gpio@vger.kernel.org>; Wed,  7 Sep 2022 16:53:39 -0700 (PDT)
+        with ESMTP id S229778AbiIHFO4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 01:14:56 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E74E5C9CD
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Sep 2022 22:14:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662594819; x=1694130819;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=afq7WfcNMyREFRVD0+o2whWINHeS3DxNx3J5qZCgnl8=;
-  b=FvVzADGX8EkQ/9UIzuuVq0wqX5gEs4smYHSfleGiV03u2DkqZAkvGC+6
-   7FYmBHBiUHt2I5ICQ2R9MWL1HkuDqJpdqHDAY/yJP9sWMbw9+eTpczwA3
-   7rUZra0/49byhzQGRi/n1oDHArdont8ZpYodUn9Y9YDAKtmYqRydjREKM
-   GXdmmUA0MELZHQ3hrFrLSCHTsR4b4uu53KIhkdYZoY/odsFXCSo+/mr9Y
-   M8d+DjJbFxa3WOonkKnE58UymaSdBhITydB/lr1TP7eII7GaKCElEBpZw
-   JYy7xTzdCaR8B/tfY1ST71sBaXcjbo/6rMoIiMgTLceC0YNJBUaFD/ESw
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="298361418"
-X-IronPort-AV: E=Sophos;i="5.93,298,1654585200"; 
-   d="scan'208";a="298361418"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 16:53:39 -0700
+  t=1662614094; x=1694150094;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1/20hzyJgkCvyrFbiT5BfuH/y2rm2cgRDxr0fIAIPxk=;
+  b=ghBELVdPisvlSpjejdEKXO0IGhD4gKV8RkcXq9TESAuGms9fxDjUS3wA
+   YLUGYgHGnozKURl7kKqSEFpzAEiIEW11gR59iA1tskxwyjGfnT744Ut+J
+   uv5z/SA+IoRstfUgC0RO/r4mVzGIdpTQKKE2EUgR+u8VwDqxQnQtrNQ4u
+   nzFzu4C21BT5pnOpARruyfKdfACc1w2p4BtubxCjwBhcrL29Xe8yhDoEk
+   7snqRT8ElWfSpCzWOYKK2tK1kYkJSCbxnBaHhtfdI5HzvTPPjPIOgwEVK
+   FWPckreB9ApREzagrpAoHB95WBB8h8TpIcZAaYgCcOAgzVjDv7idGxkiS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10463"; a="297071319"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="297071319"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Sep 2022 22:14:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,298,1654585200"; 
-   d="scan'208";a="740475974"
+X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
+   d="scan'208";a="592009755"
 Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 07 Sep 2022 16:53:37 -0700
+  by orsmga006.jf.intel.com with ESMTP; 07 Sep 2022 22:14:52 -0700
 Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1oW4rQ-00076P-1Y;
-        Wed, 07 Sep 2022 23:53:36 +0000
-Date:   Thu, 8 Sep 2022 07:52:52 +0800
+        id 1oW9sJ-0007OP-2w;
+        Thu, 08 Sep 2022 05:14:51 +0000
+Date:   Thu, 08 Sep 2022 13:14:19 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Jianqun Xu <jay.xu@rock-chips.com>, heiko@sntech.de,
-        linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     kbuild-all@lists.01.org, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH v3 RESEND] gpio: rockchip: support acpi
-Message-ID: <202209080711.fRu3ImWL-lkp@intel.com>
-References: <20220907092722.3333752-1-jay.xu@rock-chips.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 279c12df8d2efb28def9d037f288cbfb97c30fe2
+Message-ID: <63197a2b.NKGPjWCBIbPMOKKl%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220907092722.3333752-1-jay.xu@rock-chips.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,131 +62,158 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 279c12df8d2efb28def9d037f288cbfb97c30fe2  gpio: mpc8xxx: Fix support for IRQ_TYPE_LEVEL_LOW flow_type in mpc85xx
 
-Thank you for the patch! Yet something to improve:
+elapsed time: 1046m
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on linus/master v6.0-rc4 next-20220907]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 138
+configs skipped: 3
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jianqun-Xu/gpio-rockchip-support-acpi/20220907-172920
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: loongarch-buildonly-randconfig-r002-20220907 (https://download.01.org/0day-ci/archive/20220908/202209080711.fRu3ImWL-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/6b62c564dce1d94e9256d98661e5a7ae396627fb
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jianqun-Xu/gpio-rockchip-support-acpi/20220907-172920
-        git checkout 6b62c564dce1d94e9256d98661e5a7ae396627fb
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=loongarch SHELL=/bin/bash drivers/gpio/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              defconfig
+arc                  randconfig-r043-20220907
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+i386                                defconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+x86_64                        randconfig-a002
+i386                             allyesconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+x86_64                           rhel-8.3-syz
+i386                          randconfig-a016
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+i386                          randconfig-a012
+i386                          randconfig-a014
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+sh                               allmodconfig
+x86_64                        randconfig-a015
+powerpc                    sam440ep_defconfig
+m68k                          amiga_defconfig
+powerpc                      tqm8xx_defconfig
+m68k                        stmark2_defconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+xtensa                         virt_defconfig
+ia64                         bigsur_defconfig
+arm                        keystone_defconfig
+sh                  sh7785lcr_32bit_defconfig
+m68k                          multi_defconfig
+sh                                  defconfig
+m68k                                defconfig
+mips                     loongson1b_defconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+arm                             pxa_defconfig
+arc                          axs103_defconfig
+mips                           gcw0_defconfig
+parisc64                         alldefconfig
+i386                          randconfig-c001
+sparc                               defconfig
+sh                     sh7710voipgw_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+i386                             alldefconfig
+powerpc                     ep8248e_defconfig
+m68k                          hp300_defconfig
+m68k                        m5272c3_defconfig
+arm                          exynos_defconfig
+sparc                             allnoconfig
+arm                        cerfcube_defconfig
+powerpc                      arches_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                     asp8347_defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+sparc                            alldefconfig
+arm                          pxa3xx_defconfig
+arm                         s3c6400_defconfig
+powerpc                     stx_gp3_defconfig
+arm64                            alldefconfig
+sh                           se7722_defconfig
+sh                             sh03_defconfig
+sh                           se7750_defconfig
+s390                             allmodconfig
+xtensa                       common_defconfig
+sh                          r7785rp_defconfig
+arm                          iop32x_defconfig
+powerpc                     mpc83xx_defconfig
+xtensa                generic_kc705_defconfig
+csky                                defconfig
+um                                  defconfig
+sh                            titan_defconfig
+arm                            mps2_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+sh                          r7780mp_defconfig
+arm                            qcom_defconfig
+ia64                          tiger_defconfig
+arc                              alldefconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+xtensa                           allyesconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+arm                        clps711x_defconfig
+arc                           tb10x_defconfig
+powerpc                       eiger_defconfig
+s390                                defconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+ia64                             allmodconfig
 
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/build_bug.h:5,
-                    from include/linux/bits.h:22,
-                    from include/linux/ioport.h:13,
-                    from include/linux/acpi.h:12,
-                    from drivers/gpio/gpio-rockchip.c:9:
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_of_get_bank_id':
-   drivers/gpio/gpio-rockchip.c:666:27: error: passing argument 1 of 'is_of_node' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     666 |         if (is_of_node(dev->of_node)) {
-         |                        ~~~^~~~~~~~~
-         |                           |
-         |                           struct device_node *
-   include/linux/compiler.h:58:52: note: in definition of macro '__trace_if_var'
-      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                    ^~~~
-   drivers/gpio/gpio-rockchip.c:666:9: note: in expansion of macro 'if'
-     666 |         if (is_of_node(dev->of_node)) {
-         |         ^~
-   In file included from include/linux/irqdomain.h:35,
-                    from include/linux/acpi.h:13:
-   include/linux/of.h:155:59: note: expected 'const struct fwnode_handle *' but argument is of type 'struct device_node *'
-     155 | static inline bool is_of_node(const struct fwnode_handle *fwnode)
-         |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-   drivers/gpio/gpio-rockchip.c:666:27: error: passing argument 1 of 'is_of_node' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     666 |         if (is_of_node(dev->of_node)) {
-         |                        ~~~^~~~~~~~~
-         |                           |
-         |                           struct device_node *
-   include/linux/compiler.h:58:61: note: in definition of macro '__trace_if_var'
-      58 | #define __trace_if_var(cond) (__builtin_constant_p(cond) ? (cond) : __trace_if_value(cond))
-         |                                                             ^~~~
-   drivers/gpio/gpio-rockchip.c:666:9: note: in expansion of macro 'if'
-     666 |         if (is_of_node(dev->of_node)) {
-         |         ^~
-   include/linux/of.h:155:59: note: expected 'const struct fwnode_handle *' but argument is of type 'struct device_node *'
-     155 | static inline bool is_of_node(const struct fwnode_handle *fwnode)
-         |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-   drivers/gpio/gpio-rockchip.c:666:27: error: passing argument 1 of 'is_of_node' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     666 |         if (is_of_node(dev->of_node)) {
-         |                        ~~~^~~~~~~~~
-         |                           |
-         |                           struct device_node *
-   include/linux/compiler.h:69:10: note: in definition of macro '__trace_if_value'
-      69 |         (cond) ?                                        \
-         |          ^~~~
-   include/linux/compiler.h:56:28: note: in expansion of macro '__trace_if_var'
-      56 | #define if(cond, ...) if ( __trace_if_var( !!(cond , ## __VA_ARGS__) ) )
-         |                            ^~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:666:9: note: in expansion of macro 'if'
-     666 |         if (is_of_node(dev->of_node)) {
-         |         ^~
-   include/linux/of.h:155:59: note: expected 'const struct fwnode_handle *' but argument is of type 'struct device_node *'
-     155 | static inline bool is_of_node(const struct fwnode_handle *fwnode)
-         |                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_probe':
->> drivers/gpio/gpio-rockchip.c:882:46: error: unterminated argument list invoking macro "if"
-     882 | MODULE_DEVICE_TABLE(of, rockchip_gpio_match);
-         |                                              ^
->> drivers/gpio/gpio-rockchip.c:883: error: expected '(' at end of input
-   drivers/gpio/gpio-rockchip.c:721:9: note: '-Wmisleading-indentation' is disabled from this point onwards, since column-tracking was disabled due to the size of the code/headers
-     721 |         if (!is_acpi_node(dev_fwnode(dev)) {
-         |         ^~
-   drivers/gpio/gpio-rockchip.c:721:9: note: adding '-flarge-source-files' will allow for more column-tracking support, at the expense of compilation time and memory
-   drivers/gpio/gpio-rockchip.c:721:9: error: expected declaration or statement at end of input
-   drivers/gpio/gpio-rockchip.c:712:13: warning: unused variable 'ret' [-Wunused-variable]
-     712 |         int ret;
-         |             ^~~
-   drivers/gpio/gpio-rockchip.c:710:35: warning: unused variable 'bank' [-Wunused-variable]
-     710 |         struct rockchip_pin_bank *bank = NULL;
-         |                                   ^~~~
-   drivers/gpio/gpio-rockchip.c:709:29: warning: unused variable 'pctldev' [-Wunused-variable]
-     709 |         struct pinctrl_dev *pctldev = NULL;
-         |                             ^~~~~~~
-   drivers/gpio/gpio-rockchip.c: At top level:
-   drivers/gpio/gpio-rockchip.c:706:12: warning: 'rockchip_gpio_probe' defined but not used [-Wunused-function]
-     706 | static int rockchip_gpio_probe(struct platform_device *pdev)
-         |            ^~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:643:1: warning: 'rockchip_gpio_find_bank' defined but not used [-Wunused-function]
-     643 | rockchip_gpio_find_bank(struct pinctrl_dev *pctldev, int id)
-         | ^~~~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:628:13: warning: 'rockchip_gpio_get_ver' defined but not used [-Wunused-function]
-     628 | static void rockchip_gpio_get_ver(struct rockchip_pin_bank *bank)
-         |             ^~~~~~~~~~~~~~~~~~~~~
-   drivers/gpio/gpio-rockchip.c:584:12: warning: 'rockchip_gpiolib_register' defined but not used [-Wunused-function]
-     584 | static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-
-vim +/if +882 drivers/gpio/gpio-rockchip.c
-
-936ee2675eee1f Jianqun Xu 2021-08-16  878  
-936ee2675eee1f Jianqun Xu 2021-08-16  879  MODULE_DESCRIPTION("Rockchip gpio driver");
-936ee2675eee1f Jianqun Xu 2021-08-16  880  MODULE_ALIAS("platform:rockchip-gpio");
-936ee2675eee1f Jianqun Xu 2021-08-16  881  MODULE_LICENSE("GPL v2");
-936ee2675eee1f Jianqun Xu 2021-08-16 @882  MODULE_DEVICE_TABLE(of, rockchip_gpio_match);
+clang tested configs:
+hexagon              randconfig-r041-20220907
+hexagon              randconfig-r045-20220907
+s390                 randconfig-r044-20220907
+riscv                randconfig-r042-20220907
+i386                          randconfig-a006
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a002
+i386                          randconfig-a004
+x86_64                        randconfig-k001
+powerpc                     tqm8540_defconfig
+arm                           spitz_defconfig
+powerpc                 mpc8315_rdb_defconfig
+mips                           ip22_defconfig
+i386                          randconfig-a011
+i386                          randconfig-a013
+powerpc                     akebono_defconfig
+mips                      malta_kvm_defconfig
+arm                    vt8500_v6_v7_defconfig
 
 -- 
 0-DAY CI Kernel Test Service
