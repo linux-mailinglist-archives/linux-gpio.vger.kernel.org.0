@@ -2,95 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF345B167D
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:11:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B315B1692
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:12:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231437AbiIHILe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:11:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        id S231481AbiIHIM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 04:12:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231405AbiIHILB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:11:01 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1D9DD9E9C
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:10:42 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id gh9so14318434ejc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:10:42 -0700 (PDT)
+        with ESMTP id S231405AbiIHIMk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:12:40 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76871DAB96
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:12:02 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id s11so23131440edd.13
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:12:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=j4bs3PwCf8LAGt65QBrJwkN23+x5pcdlnIufUSNJIIQ=;
-        b=XlFrs6f1Ru6mfmrDHSloR2yePiVJ+BuOhZJkeSnSJ/SOiEPgkH7fc5Qh53N1oKwQvH
-         +OoAiOMDe47PpbvHsnBhm6aYdjqjrlxYnSo7yiZbqsAzABr7z6IbsSFiYRJdU8C2FmM8
-         5DH3vl93eI862Lj3YGNPcem5IKwqOFLfYUBV/2qlp66cAcJz+GK/kSoE2Nn6RNzXIdZ9
-         oJUIG5tDSXTW/MSaMC7qK7mdrhaTxlGrLwOPowZ4WpaBUKmm7LiCFjVvj0ZXOF9c8KIJ
-         SNp39mJEoQxBFUzec2wJzhGoK5rRNZ4WQVIZ8FGwGa0dLMi1y1WJKYonoLdQWd7mN1KK
-         y6wg==
+        bh=CsfLF9evkjLMWhZzbrS1cueTNnTYWxzmyf1KcBcwPJY=;
+        b=YVwlNQvyhCelbiE1ndTP9itm1PgEu1I4mLf5jDtXzgOlwCvy2MLWSEDYYWr2Gy6Uq7
+         u4awXYI98ftADXwkYE03yV1XCVXFQNO4ThcU3N23O7CZ/gr3NAateb/hGOhjFC8B6/+x
+         UBeNieHXcKfM5UAYZxa5I/ua2+ZbD5cbtnZk19OPRehwKA58kZLGsh3cfIRMsYWVvKZq
+         f6+vJhEQtb1MEAk/U5yFagPatlaXbTideDeoSmdhIxxntr3yl5fu4vg1/YtTbNmcm4Ne
+         6m6aeNHS3Vkbr1IeA347uA13wemsdXSkiEiVmrHI+LNAG8WHqw34n12N9BRU6weF6nEO
+         hI2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=j4bs3PwCf8LAGt65QBrJwkN23+x5pcdlnIufUSNJIIQ=;
-        b=5NGC/E0qAvOD3uMwISiFIAZ0nyvLXrX7Wdan+WcQ0UPPr5+2K9lgXN09nvZlyqpHhq
-         5loEJCyFjCj/A+JJprom7rhNu1aYckMgmFJrhReGiQQsNGFspHGbx2HdLYC0TY7WjSeK
-         EdaB9CMHcWp/K5dzqyM4MVTkL0Xbk90EOZLDENcPUc4g2CfRRlnQD7hEttaIJGWq3UZ5
-         mwBpJPzm19c9ssI69A0ViCBFKmTq9vKkCBXK3ExY7G1SGpPPL0eUoBTdPO3+Y1PDcBDf
-         dV3nmKjuyGdeD2odfyE+dcsTYdQeybJcvBxYi1eKyCwd3PGnXmxoS159L/nOzTVt4ytF
-         cTeA==
-X-Gm-Message-State: ACgBeo2bq9CRVeelUTBy6en8GR4dmi/fmsNx3cRYtl7LUU6592ZETHpo
-        YEqcHU4DgyhU2TobjxKf6TuPBje/7A54kb/72L/fsg==
-X-Google-Smtp-Source: AA6agR5SiTp1RzXd7QfGvIaagW9XneozTUfgGg71dHg/7zkzwgHHmEoyMH3isqJfBMUwPz7K/i/VjO5b2+tszIQ2lUg=
-X-Received: by 2002:a17:907:1c89:b0:741:4453:75be with SMTP id
- nb9-20020a1709071c8900b00741445375bemr5269882ejc.208.1662624640469; Thu, 08
- Sep 2022 01:10:40 -0700 (PDT)
+        bh=CsfLF9evkjLMWhZzbrS1cueTNnTYWxzmyf1KcBcwPJY=;
+        b=BOUtilWpbbx9yhoXGExdu3rd969QqOk7mq7zImmbLGBZLv62/wLVyGl0ZWvgQsC9eX
+         c8eVvPjff82AP0FBOpiUIvK8i8d/AiHP1f/dyzcu9Q4HQ2Fmmhm0y9Brcr3huJiT5m8U
+         NvpfzbYyDfskEyYeh49MCUJNJRl9znvlH5L+C/UgUTgVupUUoP95/j3+BnYVH9Jf8v+r
+         ZP+Auri0ns0vT6bZXw7dBlZjtxbA9oA4snnlfWYhH5VrgxzEqFoAlyh8CVCVMUemuEft
+         0wu88UT09SNaSVeFDq+p5wvCQ5GCi0I3aakbx2bQrlSFZ57tMBurYxor/8RKY4hCELPL
+         cbkA==
+X-Gm-Message-State: ACgBeo1I3uUCa6PBqooMTxEAuArdRLyd0TNpoCXgsQZuoZEpys9Ky0Qj
+        0/U2B/+tlQev54/9stp9Fv5lzezTg+jS7dN+c/paT7mjWSYyQQ==
+X-Google-Smtp-Source: AA6agR6kg0wMenXTo0aj9ChZKdkYWULOi4m/7fUqfh/BdsmVb2bNbAqHgKqED0NA0TgTW0WakKx8AewS4OJyCfI1xSI=
+X-Received: by 2002:a05:6402:4517:b0:443:7fe1:2d60 with SMTP id
+ ez23-20020a056402451700b004437fe12d60mr6087320edb.133.1662624720431; Thu, 08
+ Sep 2022 01:12:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-8-b29adfb27a6c@gmail.com>
-In-Reply-To: <20220903-gpiod_get_from_of_node-remove-v1-8-b29adfb27a6c@gmail.com>
+References: <20220905185102.74056-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220905185102.74056-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:10:29 +0200
-Message-ID: <CACRpkdakswdcFTgEGX-+2fgOHZ+VsDsRe+yj8hnExKuugnO9xQ@mail.gmail.com>
-Subject: Re: [PATCH v1 08/11] regulator: bd71815: switch to using devm_fwnode_gpiod_get()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 8 Sep 2022 10:11:49 +0200
+Message-ID: <CACRpkdbFZu1Jkj8dyPwbnHRCmOsoMLZ2ZR=RrbzC+YOjMq9b5g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: ingenic: Switch to use fwnode instead of of_node
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Paul Cercueil <paul@crapouillou.net>, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -98,16 +65,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 8:31 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Mon, Sep 5, 2022 at 8:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit, so let's switch to the generic
-> fwnode property API.
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the driver to use it.
 >
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
+
+With all these patches I will probably just apply them and see what
+happens, it's low-risk stuff so I don't foresee much problems.
 
 Yours,
 Linus Walleij
