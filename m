@@ -2,72 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28FF45B1ABF
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 12:58:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C1205B1AC2
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 12:58:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbiIHK6I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 06:58:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53946 "EHLO
+        id S229620AbiIHK6s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 06:58:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbiIHK6F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 06:58:05 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A99B5FF68
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 03:58:04 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id bt10so27093224lfb.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 03:58:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=antfYS9CLMVQjoxq/t8g85oFIDvnTn3dzLrv3hZENl4=;
-        b=Ntkh6WCu0pxXWpACDQuiRU5VFkn8LBrt/pLT5MPHvHa/AwSfwVkuB6PORbKnR4bA9G
-         9+YMccu0nvkshOnU3uICq+UaoMcC8Fx8gmw8fLpBa+X2oshWlUL7W9pPcFT8caQbK3JB
-         VIRD9ynibkix+K2u33yoTdHKsVXdFbVgfjMDht8+4Q1wwLgv1r6NOlqV57NT9RbKX+z3
-         ZvmY8eagnKerJ2voJgW2VD/70jDVPz0B6G/qX14xBgSDaTq0F0yoWRb0+v75MIbHDteg
-         VGHAnigqH3WE8FilG+oj+xb9JYQi7kuvOEWeaeUzJFbPreXwWUNLFrQY9Cs5goAmsl/O
-         rtAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=antfYS9CLMVQjoxq/t8g85oFIDvnTn3dzLrv3hZENl4=;
-        b=xa/sepFGQwtJENXEiJTDTQd0631Z4wj0s0O7nUD/3rLiqnlpkVaFCN3jAOQBjfzjOG
-         fZHHSY7XqRK388quWf2sWPgAlAyMt+c7s1jtxqDwOuYS2U1RYLsw1lTIwfXRsfTxJRFH
-         TOcnpKXOiZhrKh8OwrvMTTIDgnJjfmV4+wL7gcCNvGX5V7D9wIPbd3KeZ6XRs5ZmudgO
-         gB9sscpvnA5mJkhSYnsfWfO0UaL9uk0kyCrmVJ8n+MG9nfxQENg+EB9MvJlu8ZzC32Pe
-         uOFNYppUqTFLtMPOKCSsX+qcQvTLi79BRF8Ei8s/GQE3XfjMd3RIncitFh3iAWHvNEKx
-         NJRg==
-X-Gm-Message-State: ACgBeo19tzA32EC77jfaT3fnjbsQZZsW0OCwQYNqjD/+fMABtiPCWpwy
-        0RGbaSVYhU1fG7tIrscBbBw0Pg==
-X-Google-Smtp-Source: AA6agR4I706BLfaiL+d2jUeE+l8ZvCBicR6HGvKGkJFxogWGEMMiEug0S/q1OWf4gErFrUPjIV1zIA==
-X-Received: by 2002:a05:6512:258b:b0:496:fadd:55f9 with SMTP id bf11-20020a056512258b00b00496fadd55f9mr2836471lfb.356.1662634682929;
-        Thu, 08 Sep 2022 03:58:02 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id p15-20020ac24ecf000000b00497a3e2a191sm1171992lfr.112.2022.09.08.03.58.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Sep 2022 03:58:01 -0700 (PDT)
-Message-ID: <be1c2903-c2af-74b3-b34c-5f8ee4935fad@linaro.org>
-Date:   Thu, 8 Sep 2022 12:58:00 +0200
+        with ESMTP id S229547AbiIHK6q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 06:58:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9001814086
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 03:58:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8A421B8207D
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 10:58:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F164C433C1;
+        Thu,  8 Sep 2022 10:58:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662634722;
+        bh=49jEeNsIKQoe/Dx0yaIkSCvAc5oDN3iWQSfhKBoPbqM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qiRynBjVkZgLcSlAmEC0sG3H832NG2XxGy5AtuYB/WnmkXs06wIhMN6McDmmydctx
+         YQSHiRhb0wFw79FTz3C0158OdQpJZ1CecoWMuZx5G3vC8P9fxYHAZdc8cpnU1Fdw9Q
+         90nX0FZSSS4TWRA5+595HDlkATqYkzDJNWeT2Girz8AUHeVRYFm7l8ZQIPKEmsFvDH
+         JgMtDrjrtgLWzRsJ7drFyGqVTB3qzuTfRQntc7HVRxjCJnKz9AdYSVNViJupa6Cxi9
+         1DbEP+2/q0Oz+1y4dps5C73RWS/NOFyf9jw3v6OrsEzsTF6NzDunO/6Jv+YaNm+Uti
+         jkljPyEM2jGGA==
+Date:   Thu, 8 Sep 2022 11:58:36 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Hector Martin <marcan@marcan.st>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
+Message-ID: <YxnK3LeyfacKssLT@google.com>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+ <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: rockchip: add clock-names
-Content-Language: en-US
-To:     Jianqun Xu <jay.xu@rock-chips.com>, linus.walleij@linaro.org,
-        heiko@sntech.de
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-gpio@vger.kernel.org, linux-rockchip@lists.infradead.org
-References: <20220901013101.2634480-1-jay.xu@rock-chips.com>
- <20220901013101.2634480-2-jay.xu@rock-chips.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220901013101.2634480-2-jay.xu@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,18 +60,191 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/09/2022 03:31, Jianqun Xu wrote:
-> Add 'clock-names' to the gpio dt node. so the driver could get clocks by
-> a const char id, this patch names the clock-names as
->   - 'bus': the apb clock for cpu to access the gpio controller
->   - 'db': the debounce clock for cpu to set debounce clock rate
-> 
-> Since the old dt nodes may have no clock-names, this patch not make them
-> as part of 'required properties'.
-> 
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+On Thu, 01 Sep 2022, Russell King wrote:
 
-I see this patch sent three times... version your patches.
+> From: Hector Martin <marcan@marcan.st>
+> 
+> This driver implements support for the SMC (System Management
+> Controller) in Apple Macs. In contrast to the existing applesmc driver,
+> it uses pluggable backends that allow it to support different SMC
+> implementations, and uses the MFD subsystem to expose the core SMC
+> functionality so that specific features (gpio, hwmon, battery, etc.) can
+> be implemented by separate drivers in their respective downstream
+> subsystems.
+> 
+> The initial RTKit backend adds support for Apple Silicon Macs (M1 et
+> al). We hope a backend for T2 Macs will be written in the future
+> (since those are not supported by applesmc), and eventually an x86
+> backend would allow us to fully deprecate applesmc in favor of this
+> driver.
+> 
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+>  drivers/platform/Kconfig           |   2 +
+>  drivers/platform/Makefile          |   1 +
+>  drivers/platform/apple/Kconfig     |  49 ++++
+>  drivers/platform/apple/Makefile    |  11 +
+>  drivers/platform/apple/smc.h       |  28 ++
+>  drivers/platform/apple/smc_core.c  | 249 ++++++++++++++++
+>  drivers/platform/apple/smc_rtkit.c | 451 +++++++++++++++++++++++++++++
+>  include/linux/mfd/macsmc.h         |  86 ++++++
+>  8 files changed, 877 insertions(+)
+>  create mode 100644 drivers/platform/apple/Kconfig
+>  create mode 100644 drivers/platform/apple/Makefile
+>  create mode 100644 drivers/platform/apple/smc.h
+>  create mode 100644 drivers/platform/apple/smc_core.c
+>  create mode 100644 drivers/platform/apple/smc_rtkit.c
+>  create mode 100644 include/linux/mfd/macsmc.h
+> 
+> diff --git a/drivers/platform/Kconfig b/drivers/platform/Kconfig
+> index b437847b6237..5f8b9bcdb830 100644
+> --- a/drivers/platform/Kconfig
+> +++ b/drivers/platform/Kconfig
+> @@ -13,4 +13,6 @@ source "drivers/platform/olpc/Kconfig"
+>  
+>  source "drivers/platform/surface/Kconfig"
+>  
+> +source "drivers/platform/apple/Kconfig"
+> +
+>  source "drivers/platform/x86/Kconfig"
+> diff --git a/drivers/platform/Makefile b/drivers/platform/Makefile
+> index 4de08ef4ec9d..3e5d5039a28c 100644
+> --- a/drivers/platform/Makefile
+> +++ b/drivers/platform/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_OLPC_EC)		+= olpc/
+>  obj-$(CONFIG_GOLDFISH)		+= goldfish/
+>  obj-$(CONFIG_CHROME_PLATFORMS)	+= chrome/
+>  obj-$(CONFIG_SURFACE_PLATFORMS)	+= surface/
+> +obj-$(CONFIG_APPLE_PLATFORMS)	+= apple/
+> diff --git a/drivers/platform/apple/Kconfig b/drivers/platform/apple/Kconfig
+> new file mode 100644
+> index 000000000000..42525aa9fbbe
+> --- /dev/null
+> +++ b/drivers/platform/apple/Kconfig
+> @@ -0,0 +1,49 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Apple Platform-Specific Drivers
+> +#
+> +
+> +menuconfig APPLE_PLATFORMS
+> +	bool "Apple Mac Platform-Specific Device Drivers"
+> +	default y
+> +	help
+> +	  Say Y here to get to see options for platform-specific device drivers
+> +	  for Apple devices. This option alone does not add any kernel code.
+> +
+> +	  If you say N, all options in this submenu will be skipped and disabled.
+> +
+> +if APPLE_PLATFORMS
+> +
+> +config APPLE_SMC
+> +	tristate "Apple SMC Driver"
+> +	depends on ARCH_APPLE || COMPILE_TEST
+> +	default ARCH_APPLE
+> +	select MFD_CORE
+> +	help
+> +	  Build support for the Apple System Management Controller present in
+> +	  Apple Macs. This driver currently supports the SMC in Apple Silicon
+> +	  Macs. For x86 Macs, see the applesmc driver (SENSORS_APPLESMC).
+> +
+> +	  Say Y here if you have an Apple Silicon Mac.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called macsmc.
+> +
+> +if APPLE_SMC
+> +
+> +config APPLE_SMC_RTKIT
+> +	tristate "RTKit (Apple Silicon) backend"
+> +	depends on ARCH_APPLE || COMPILE_TEST
+> +	depends on APPLE_RTKIT
+> +	default ARCH_APPLE
+> +	help
+> +	  Build support for SMC communications via the RTKit backend. This is
+> +	  required for Apple Silicon Macs.
+> +
+> +	  Say Y here if you have an Apple Silicon Mac.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called macsmc-rtkit.
+> +
+> +endif
+> +endif
+> diff --git a/drivers/platform/apple/Makefile b/drivers/platform/apple/Makefile
+> new file mode 100644
+> index 000000000000..79fac195398b
+> --- /dev/null
+> +++ b/drivers/platform/apple/Makefile
+> @@ -0,0 +1,11 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# Makefile for linux/drivers/platform/apple
+> +# Apple Platform-Specific Drivers
+> +#
+> +
+> +macsmc-y				+= smc_core.o
+> +macsmc-rtkit-y				+= smc_rtkit.o
+> +
+> +obj-$(CONFIG_APPLE_SMC)			+= macsmc.o
+> +obj-$(CONFIG_APPLE_SMC_RTKIT)		+= macsmc-rtkit.o
+> diff --git a/drivers/platform/apple/smc.h b/drivers/platform/apple/smc.h
+> new file mode 100644
+> index 000000000000..8ae51887b2c5
+> --- /dev/null
+> +++ b/drivers/platform/apple/smc.h
+> @@ -0,0 +1,28 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Apple SMC internal core definitions
+> + * Copyright (C) The Asahi Linux Contributors
+> + */
+> +
+> +#ifndef _SMC_H
+> +#define _SMC_H
+> +
+> +#include <linux/mfd/macsmc.h>
+> +
+> +struct apple_smc_backend_ops {
+> +	int (*read_key)(void *cookie, smc_key key, void *buf, size_t size);
+> +	int (*write_key)(void *cookie, smc_key key, void *buf, size_t size);
+> +	int (*write_key_atomic)(void *cookie, smc_key key, void *buf, size_t size);
+> +	int (*rw_key)(void *cookie, smc_key key, void *wbuf, size_t wsize,
+> +		      void *rbuf, size_t rsize);
+> +	int (*get_key_by_index)(void *cookie, int index, smc_key *key);
+> +	int (*get_key_info)(void *cookie, smc_key key, struct apple_smc_key_info *info);
+> +};
+> +
+> +struct apple_smc *apple_smc_probe(struct device *dev, const struct apple_smc_backend_ops *ops,
+> +				  void *cookie);
+> +void *apple_smc_get_cookie(struct apple_smc *smc);
+> +int apple_smc_remove(struct apple_smc *smc);
+> +void apple_smc_event_received(struct apple_smc *smc, uint32_t event);
+> +
+> +#endif
+> diff --git a/drivers/platform/apple/smc_core.c b/drivers/platform/apple/smc_core.c
+> new file mode 100644
+> index 000000000000..daf029cd072f
+> --- /dev/null
+> +++ b/drivers/platform/apple/smc_core.c
+> @@ -0,0 +1,249 @@
+> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
+> +/*
+> + * Apple SMC core framework
+> + * Copyright The Asahi Linux Contributors
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/mfd/core.h>
 
-Best regards,
-Krzysztof
+Please refrain from using the MFD API outside of drivers/mfd.
+
+If you need an MFD driver, please separate it out.
+
+If not, please replace it with the platform_*() API instead.
+
+Thanks.
+
+-- 
+Lee Jones [李琼斯]
