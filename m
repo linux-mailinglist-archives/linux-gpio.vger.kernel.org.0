@@ -2,91 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424EA5B1724
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AC5F5B1730
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 10:35:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231219AbiIHId7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 04:33:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57310 "EHLO
+        id S230177AbiIHIfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 04:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230486AbiIHIdy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:33:54 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C077E1ABA
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:33:41 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id l14so12865588eja.7
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:33:41 -0700 (PDT)
+        with ESMTP id S229925AbiIHIfD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 04:35:03 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DF5B52FD4
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 01:35:00 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id b35so5225530edf.0
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 01:35:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=ZlO9z6iariE6j62dDg3WdSSqBdCZFPhJNQtrGMOHOrM=;
-        b=yoKt2dR8DpMlh2XORFcltXAYMgjes8PsrrPXKGawrKEhed4y+WSSTQmmNgG0Gf1SJu
-         /FfQ3PEPixSLl61o/wNzP2mAl16GeJnsTLbhWLnWfaVkAwo6y83SYrJYUs2zfFeTOmCJ
-         KCfvXIX2k6sUR9M4H2LnnadTsaJNBeTiS5ZBjIN9tOf2Kpq6GTWefCkCUFHSnLO/4AAN
-         bF2Kwwu1NBRMUHGOV8o4kZ9m3PqjItvKGaAHum8EmxiW7WxhfY/+qFWuKiEN2m/2UZCf
-         n8HtcVv1JxiPWMi7HHbrHpse1K4PW6ghIMCVLd1VC32slTHEjJxXugMgMhGNvWgPOPtq
-         zkOg==
+        bh=41aJIy4OTHB9iMGo4cS7m9t/pURKyc1pDT6bdLDLpCQ=;
+        b=tMGRAYFGxk8jJRGYJD3oGNdPja4kvXMvJQaOyTlRTiWuOXFEouBb85EbP4zYzCiV7o
+         pwl2SrWb0k6wnYP+27RENex/DDXgHIHL6lNXk9wCWnUuYfy4Da/8mnveh+OvRZEvijOi
+         td26QXx5ZVeHQpeVFe43cPIodT7YYoP6caU5u8ldcm3tIdhKHo7aCAypB8zPGtrBlLrg
+         lO0y0Q8bwnSb3ZTFpaQQtuwnexrZopWQCvb614YpxvUEKV+urxbZ9qOrlS0XfzaHdmJZ
+         BxFVsZW4zt0D6mqfK4mk6XF0re32ZNDb9Jdeg3/sIoe2E3m96mBzJOaiVxXssJAjjmzN
+         tGxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=ZlO9z6iariE6j62dDg3WdSSqBdCZFPhJNQtrGMOHOrM=;
-        b=iE+1ZXtHaUJTbCfYBhqSfOIgZ1azvDtOWTFKI3RfdcbuFcsX/fIzVXABMbZYf3GPW1
-         OlkwTK3iuKfZUkWeJXUFKxR605nzxRYcgtpZ19cteHtwk+6DG8Xrk0BmvyTk+u/+QALF
-         Jmie42HJRUReyLzmTkLMrctaI7WiN1kFzKXYn9hNtocBd/Dn/4tVlX01MqkrrN/j8ItB
-         b05G+FxM+4FKvkJ0B3H/Y2BWxL5g6FtUedVYtOlsDiELd5Qjf+PX5BVD9Ni7B2LjlZ1v
-         KB+VU4fpQVXjOhcvWTxh43kiiX+3gKV3gw0PcvUreafcnaUfEVMDXGpehKvu637vYPlY
-         gnhQ==
-X-Gm-Message-State: ACgBeo3bWYfv5k3uXl4o+eb6EYXVmHyddR1gmnftxdm4FIxQ7ZXsqNX6
-        gHr1CvvuCWukEWtmsPpo6p+fX/6yBlMXloYpsm2+4A==
-X-Google-Smtp-Source: AA6agR6YdmowLCqDy13X6GVFnJajdgoAbYXT6/9jX+Ol46w4Ykshwr2tFJzDmJvExLu3Rbp1DyOQwdZVX8mDYcaxnJ0=
-X-Received: by 2002:a17:907:7242:b0:741:770b:dfc6 with SMTP id
- ds2-20020a170907724200b00741770bdfc6mr5235773ejc.203.1662626019497; Thu, 08
- Sep 2022 01:33:39 -0700 (PDT)
+        bh=41aJIy4OTHB9iMGo4cS7m9t/pURKyc1pDT6bdLDLpCQ=;
+        b=e71SDebrOuvxDdxy9aQqhIZ55SXQm8JE4pvsQ510ydKD7VPko9qQcpugM7sgo+yy/V
+         /hjLHEqUXLmcA01Mgk221XJ/Se6exskMHkSSPtPY3LTd3QlE1Lhf9MP54uMBmrr8DSum
+         4/BQ0MFJQQu4FUth0byG0nOGw+JFpEJwxCtf2Swq4IuDsTyQQa+pA93pxq6vC+EqiY0W
+         pJIn+mn3aJuOadUhwiW47ShjKAS6j72k/EkbgsrUNv4k5+8ClilqGknrbd/k68rGlzJ3
+         6M0xUJ1d5DMh4qduhbCSg//GveqM6huGou7BJB602la0Vrv6UCMAtiVYZqDtKajMVS4e
+         UI+A==
+X-Gm-Message-State: ACgBeo11G8RhWKkj4S0iAj67O9JW4IzB4xUI7OCu44XClMoYNgTjL3Zs
+        UbgESe4z9/Iv3oAOqg0iSVIXIze2xzGu/qtkMHvqRQ==
+X-Google-Smtp-Source: AA6agR5pz4WZzndTBp4jUUROyInLbrcT00ub2FoRoGT9/n7hi4t+CSCkzYEr6u1rPJG+ddzNyd5BKhWnZVyeyUKEk8g=
+X-Received: by 2002:a05:6402:4517:b0:443:7fe1:2d60 with SMTP id
+ ez23-20020a056402451700b004437fe12d60mr6151272edb.133.1662626099071; Thu, 08
+ Sep 2022 01:34:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220903-gpiod_get_from_of_node-remove-v1-0-b29adfb27a6c@gmail.com>
- <20220903-gpiod_get_from_of_node-remove-v1-7-b29adfb27a6c@gmail.com> <YxaSBRkAG/hKjFol@google.com>
-In-Reply-To: <YxaSBRkAG/hKjFol@google.com>
+References: <20220906115021.8661-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220906115021.8661-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 8 Sep 2022 10:33:28 +0200
-Message-ID: <CACRpkdb2dYvNkyx7O24uURjSYcCPkGR+Gj=weCSG6GdcM1B7Xw@mail.gmail.com>
-Subject: Re: [PATCH v1 07/11] PCI: apple: switch to using fwnode_gpiod_get_index()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
+Date:   Thu, 8 Sep 2022 10:34:48 +0200
+Message-ID: <CACRpkdYYjmW5shHedW95tbUvqcbWrYf87qGSQ10kJT+uDy_acA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] pinctrl: microchip-sgpio: Correct the
+ fwnode_irq_get() return value check
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Michael Walle <michael@walle.cc>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        UNGLinuxDriver@microchip.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -98,38 +70,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 2:19 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Tue, Sep 6, 2022 at 1:50 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> On Sun, Sep 04, 2022 at 11:30:59PM -0700, Dmitry Torokhov wrote:
-> > I would like to stop exporting OF-specific gpiod_get_from_of_node()
-> > so that gpiolib can be cleaned a bit, so let's switch to the generic
-> > fwnode property API.
-> >
-> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> > index a2c3c207a04b..d83817d3ff86 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -516,8 +516,8 @@ static int apple_pcie_setup_port(struct apple_pcie *pcie,
-> >       u32 stat, idx;
-> >       int ret, i;
-> >
-> > -     reset = gpiod_get_from_of_node(np, "reset-gpios", 0,
-> > -                                    GPIOD_OUT_LOW, "PERST#");
-> > +     reset = fwnode_gpiod_get_index(of_fwnode_handle(np),
-> > +                                    "reset", 0, GPIOD_OUT_LOW, "PERST#");
+> fwnode_irq_get() may return all possible signed values, such as Linux
+> error code. Fix the code to handle this properly.
 >
-> Hmm, I am looking at the driver and it leaks the reset gpio on
-> unbind/unload. I guess it does not matter in practice, but still nice
-> not to leak. Thankfully it is easy to cure by switching to devm option:
-> devm_fwnode_gpiod_get().
->
-> I'll send and updated patch with a new justification.
+> Fixes: be2dc859abd4 ("pinctrl: pinctrl-microchip-sgpio: Add irq support (for sparx5)")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Michael Walle <michael@walle.cc>
 
-With that change:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied.
 
 Yours,
 Linus Walleij
