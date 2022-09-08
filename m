@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE0F25B1486
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 08:16:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7ADA95B14D7
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Sep 2022 08:40:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbiIHGQj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 02:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60540 "EHLO
+        id S230031AbiIHGkM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 02:40:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiIHGQh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 02:16:37 -0400
+        with ESMTP id S230454AbiIHGjy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 02:39:54 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CE3B08AB;
-        Wed,  7 Sep 2022 23:16:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E17817045;
+        Wed,  7 Sep 2022 23:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1662617796; x=1694153796;
+  t=1662619179; x=1694155179;
   h=from:to:cc:subject:date:message-id:references:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=K4lA7oWKtDqjiZ+U7ZlWOtn4qUcV89zEccB0ki4nK+k=;
-  b=F+FxxBTpGyP1pWDqnQpVFc9fVHQMfG04xhJVrMfeER5ubTcnV5N3eVYP
-   QdU6FvsIMjogt1jePiYq5iuN87Pi8gwoELOUKgrXLdEcB1cBYcqH+HtYI
-   IN+09T/4UtIMqsVF0ooz90kCDRLfv9EBhS3oNJx5bTHU1DX/wnr7OPc27
-   Jh35q5XolQOmlTpFjYDolCYsmqOmhdE6jHZuOd0XBVPoQpsCawZ/FNJWp
-   e05cBC2FoytJ1Ey0fkHFl03yiIhnKBp14z5TKtSQ+z1FgzdFSrMLFCYDF
-   BRnkTeWlLgAmCXFw3PpFiWF8Lu1o1Qy2fUUFYQcsiDzLmJHHm/MZ9fukP
+  bh=7ysp4HoUqK/qz8eut/nUD/9tsqGwws00JLosedIh9sM=;
+  b=wJAhYbaCZLMk4yAr4SFJuw43If0CCvfLrSj9YG19/4ehSNkWDwLgyw4+
+   LH3HiWlQP1IDOAtSUNyd9kmzMQW8rl4gxIWJkob3hw0kxe9NfNw1wX2ev
+   tQ2OndRckSPECBzX2ZVoNynpXBBC0yy0ovmdIOew0YFIge50JLPkl42y3
+   RT5iGEuDl+3KmEkWqeeCnWLoSZfSflB6yoW9WguKbjhjhp/Xkk6h3LwNM
+   Scu0x7VPxvlNcKpWqiaaXZsKpbJvmevpiccbFG1p37sFKxU6UTVtJGaJi
+   UilNBD0Q93n1vU8tr0w3+sm5tfLiiKD0teqGYmLda92Wc0qiC+RkQCzQv
    g==;
 X-IronPort-AV: E=Sophos;i="5.93,299,1654585200"; 
-   d="scan'208";a="189921321"
+   d="scan'208";a="189923360"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Sep 2022 23:16:35 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Sep 2022 23:39:39 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Wed, 7 Sep 2022 23:16:35 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Wed, 7 Sep 2022 23:16:35 -0700
+ 15.1.2507.12; Wed, 7 Sep 2022 23:39:39 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12 via Frontend Transport; Wed, 7 Sep 2022 23:39:39 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zcbl+vO77o9/LPGvalngC8Fj8MwhgATKtSv2JKfxEOJI7WAucn7Pv7XugaWFACZ5byZXSG3VU9vszu23WVUCKa9cHux6VIqYOSwtVOkw5Y534VeGzkj4pnyhQ/8hFHHbzDrUOhS6QLxu+eals9CVE698jnlsqNYCBBSdBlgq61aZlf51Iu2l3C7Dn+4tsH6rWhww+CpShEEaz5MGutcvflJleMfheuCaG4HLsJcNUs1uooXJ/dlUDExDV9O6juho7LaJOiVsya2VdkDItFRTThXI8axyIwHcsTuIgo1Z1FndT/fN5a3C6HlfzsxHK04v+1P83bLYg4F8jYnBuNMxNw==
+ b=N+TkilQaoMg+P8i9O581Dy8Btlax1a3iqOtN17eT2mvRILP95S1odssSWAidERB13Bq8nJ8vT3fkuIFAOV0s/OFn+Es/IBGB2ABvKhAPwblvlkcUBqK7WUTgjTzu8g8kkpVTx+lHVAGkwBUExoZum3eN3K/GuUA25O+seIRQeij6OjsXK0EeBwMdBEM3z7OPbNiJikcvhbCoHaAUHftPF0kHabz5AoqGXUiA/ZR0ool6pO8oF6VkljcpZ7+jBjKFiyBoN7xbVshrlTxy/hTjNoosMGwS58+g3MIYFtP7Rrkas2oeKdoIor2Tqz4d0H7PwyRALFfErMAh4vn95pPcJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HuOjG3R8zn+wrdyjiG/6cMnA6Fcr74ueVavKRjRsSk8=;
- b=RlXksekqMoN9DssGGr2bX1pMNJu4045IZSSh/hlNNtvn3Rd+77rt+31L9h9HRwHJsLcUOnfNU9Hqip5autvI6Ci4aF6yTsMpPcR9mIhYdhVtEHuIdlww71quTha8Ar+gFinj/Ut/vG6UOZxvM4Z/ukBCRieb45WU7Mpjs8VhXOWz8pDRIqP32c7iPh94sDVqE67tIoNmBZrO/LbYtkEFNG970XmEGIU+Ki2j/L4DFQPrtxsdG/mB5/B8Z1X/5J3dpNcBEtOTwAtGyvEIYzgTbUzd0oCN07G/iEq4d6yMvirgyJDDVJJduZ/AJta7mtI5mPw+MrPi/AC8qyr9lyuOnQ==
+ bh=noY5Wa15eu4DYfVKR2Fqf5o6i+0GnzGNX62peGMEQDY=;
+ b=hFswqS3RQA89r6gLKqZ4nnxfebpccv8sZuVmyiRfKhX6Qbrfj2GinvOer0t3FKr4rjRPzzSCcEqbFQaPJRG3gO9TeodxSTFQ0DcbKa0r35A9ifAUN1Bno6vLnnFfrc6qYdps2chUba/Y4zVeAuuu8pUVXxN43TE2c+mbhLv9b1EPL+X3rvYnqli9mMKcu5xY4ZGnShqIJwaI9ZsKR3tmdmT1HZU0X2vQtqMr/fL4WlJu4SATMJvyv7IF7e8SPfTfkx5FMsGoIUNaeAZPV7sfYMRAMwr0jm4/CqIGx1xE/K6euDuhG/psMOqfblJ6Mbzz81Rqaj3LYXrZeJBgCXWPmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microchip.com; dmarc=pass action=none
  header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
@@ -53,32 +53,34 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=microchiptechnology.onmicrosoft.com;
  s=selector2-microchiptechnology-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HuOjG3R8zn+wrdyjiG/6cMnA6Fcr74ueVavKRjRsSk8=;
- b=kOtaID/DzM4VI3Yr7k/1N1Di5OWLkwLWva/y9srD9cW5tTNjlj6x1NUpFDmbg8wISRIo5E7LFY+Hjx+pOOeBq4wxnP9weBOrX8AIEcYD6zbYrTOYCJVHLEefe0sKb0+UpXIxa6xExHe/3Tfeo1E8x6ltFs9vs7f1L56ltgwKzO8=
+ bh=noY5Wa15eu4DYfVKR2Fqf5o6i+0GnzGNX62peGMEQDY=;
+ b=EkMHFA9OqCj0b+WSbqKhHV+Cs7Oz5CGKDtq4Ac6dx68T6JA1V1tNbNMyIM6XsoR46QDcGLX1yvOb2dv9KaNMSny4A92XUPrzbzE1mW4QCVUN8P7Ul9rGj1VF8j8KY0NB5HxbEfWktn9b2okQT+mNmCLsieTKYHRd6DHscfSPW6U=
 Received: from BN8PR11MB3668.namprd11.prod.outlook.com (2603:10b6:408:81::24)
- by CH2PR11MB4440.namprd11.prod.outlook.com (2603:10b6:610:48::23) with
+ by SA2PR11MB4988.namprd11.prod.outlook.com (2603:10b6:806:f8::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.16; Thu, 8 Sep
- 2022 06:16:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.17; Thu, 8 Sep
+ 2022 06:39:37 +0000
 Received: from BN8PR11MB3668.namprd11.prod.outlook.com
  ([fe80::3198:2077:56c7:1780]) by BN8PR11MB3668.namprd11.prod.outlook.com
  ([fe80::3198:2077:56c7:1780%4]) with mapi id 15.20.5612.014; Thu, 8 Sep 2022
- 06:16:24 +0000
+ 06:39:37 +0000
 From:   <Kumaravel.Thiagarajan@microchip.com>
-To:     <weiyongjun@huaweicloud.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH -next v2 5/5] misc: microchip: pci1xxxx: use
+To:     <gregkh@linuxfoundation.org>
+CC:     <weiyongjun@huaweicloud.com>, <arnd@arndb.de>,
+        <weiyongjun1@huawei.com>, <linux-gpio@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: RE: [PATCH -next 5/5] misc: microchip: pci1xxxx: use
  module_auxiliary_driver
-Thread-Topic: [PATCH -next v2 5/5] misc: microchip: pci1xxxx: use
+Thread-Topic: [PATCH -next 5/5] misc: microchip: pci1xxxx: use
  module_auxiliary_driver
-Thread-Index: AQHYwsfZfRni+0Ehb0+ISLIO7/D6eq3VDGVw
-Date:   Thu, 8 Sep 2022 06:16:24 +0000
-Message-ID: <BN8PR11MB366875590A4F506A398B3FCDE9409@BN8PR11MB3668.namprd11.prod.outlook.com>
-References: <20220907145808.1789249-1-weiyongjun@huaweicloud.com>
- <20220907145808.1789249-5-weiyongjun@huaweicloud.com>
-In-Reply-To: <20220907145808.1789249-5-weiyongjun@huaweicloud.com>
+Thread-Index: AQHYwpJFcj8rv3umvUO2Kgd27/1mVq3UB0oggAAFAQCAAQm5kA==
+Date:   Thu, 8 Sep 2022 06:39:37 +0000
+Message-ID: <BN8PR11MB3668ED7930C8F9739FF87994E9409@BN8PR11MB3668.namprd11.prod.outlook.com>
+References: <20220907083435.1745393-1-weiyongjun@huaweicloud.com>
+ <20220907083435.1745393-5-weiyongjun@huaweicloud.com>
+ <BN8PR11MB3668C4354AB9D0D1D608F0C6E9419@BN8PR11MB3668.namprd11.prod.outlook.com>
+ <Yxiu8m+mJg32KdVS@kroah.com>
+In-Reply-To: <Yxiu8m+mJg32KdVS@kroah.com>
 Accept-Language: en-IN, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -86,55 +88,55 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microchip.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN8PR11MB3668:EE_|CH2PR11MB4440:EE_
-x-ms-office365-filtering-correlation-id: 9c2e5f73-d3f5-4ee2-a558-08da9161a860
+x-ms-traffictypediagnostic: BN8PR11MB3668:EE_|SA2PR11MB4988:EE_
+x-ms-office365-filtering-correlation-id: cc8193ca-ed31-43f4-240b-08da9164e695
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tNDOFQwzXob+1UyfMa+VdwCK4rzeiI69gx/ctszfaYfwrp5q2ugAzn5rYKPNOOchc/JsXOHc3c8XrPcLD4JZpKX8uzEC5GxoKWyMj6UyHJ/0eOuqo6t6KrOsMIdfc78nD2IauGqgSst2l1RcWjIjVQeiRReomcPZv7mK8fZo+VgvGXAsetadrUMZM9ew34ySVW7Na+u+pDZSgta2tgxYR7yMxjlD+9zDJvqX6DTnS0MbbqiJAHhSMuoYGnqHzO4iG8pYtgQ3EhKO9qOG1HY8ZdrhQvW/uh9gPzThpOSP8qsKsnQnTLgnD4jeTQGIbWxRTOUOGweP2g+xskCvfET4bts28cpF/KfvTPGA0Sqzp1CDZLEE1NokxU1nDwmoGmLQG+YzQ7T/b6w2HGsK+ici9Nx+d1YxV1MQRrjkNBTG7t4ffbYDBWop063aWMKXP0HnD8AyLd/gJTwvj0Bq6JccA+AlGlcrVl3tZPmJ9TnE9MeWUvrmt2YPqNVRGAIOpWGh477vQNIkzWK5k16vX6HkIa/o8g8W2WcNMeOxyNu/5aPE059xUIsQUrkDUHMROS1pHSOqOPezLAsdBz3kBToBg/yeaK/abPZ3+emezBSUXCjpncsaT7euwXxaJhihCk8o1qJ+2w/xhBBvHeDw2FrbwObyADMbcwOpaOD6yAlP6K3RkLYJ8pcQ0O91vzmtrZeMlqiSttsUmduHYYflM17uGepdY5ws9rdqy2ZW4M6Xkk2h/ZfxqUgu9duuLvsHRqI6METTP6juPAdUwEdViKdFw1C3LWg1FYZIJXDCk2ZMUttAPdheM6OGvJSixYkN9D9OOTQOF6TbXAy5KCDYUzJo1A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR11MB3668.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(366004)(39860400002)(396003)(136003)(346002)(52536014)(83380400001)(186003)(76116006)(38100700002)(122000001)(8936002)(5660300002)(7696005)(64756008)(66476007)(66446008)(66556008)(66946007)(2906002)(55016003)(478600001)(26005)(9686003)(6506007)(8676002)(33656002)(110136005)(71200400001)(4326008)(41300700001)(38070700005)(54906003)(86362001)(316002)(53546011)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: vjlv1cKBB3aHEb4+x9ulVOOYM+Emupu/7gyFWSxTMaMxva+I5CoNuUGvMHANco5iVp2kZGMTpLffOKNs2yR/t8gblrESzKwCGXJdVZgIWlisj677n9xQe1nP4EOfnVzGE5gMbRXzeVH33pH1YzaQyGuh5nCR06l7RHEvg4IfUE6kfaq9xla96WPsr5qabvlqKsuYI2wH/RrNAaXonWvTTxnMLXQnk47r7H9vGdw/hu0c6/t1g1o/IrXyGxvw9bycLoGHJSpoxuST+Yn9Cjgf+J+6UBiS/gsXROR7wjZZbSUUFdA/TtJyD4ZC0n1lAbF9W6gvX/8kt5Sbi4xK9qwhywWPe8yU9CMLYUR4+4ilSrUp/Q0BKnHTe+Ofna7q8Bd34nLMI7pok2fRIzRUYSj36Pa0GIumdkVkCY8iZ9zVRHIg9g4lV7Pwq8bk0K+IVCLJ18knwegSXrCv81HM3pXfQMe+HYTAxSDmluF1XXChdmDMuwI13j68AbFkZV4tKx1teoiRO5yDEcn5ENxCOebrL43FtF1fnmKC26ztLCHzf998zVw7d7E6VgeHcE1m9tZg1NgIh7caDwr4Pn1x7KC1LCoLgUAIrm/T3WXS7HlHcdMqDy5uqIoKBg9GkQShqnF8hFbGvNYq+so9l1zjvl/kOH/IsOPWaHPo5ssHR41h38CYLz7F+6fRpas6x/lJ01HMrB99DUaSOGO9VefkpGvOp7DODOgoQ9ylU0DTcICjRVpJ4nLrmrvcDV03P0Y0d7BjGu4bq/YJQv1u2MUWsAqgdcMI18AKhD8EqAZ+/ELWlIzseMuJoBt8JkKU8+R2gmS5TI2L4AWCbAjVWxQ7wP2MQZNLFQp6jSBTlSUDE2v15I0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR11MB3668.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(136003)(396003)(366004)(346002)(376002)(66476007)(38070700005)(38100700002)(71200400001)(55016003)(122000001)(5660300002)(54906003)(316002)(6916009)(86362001)(478600001)(41300700001)(76116006)(6506007)(186003)(8936002)(7696005)(53546011)(2906002)(83380400001)(66556008)(66446008)(26005)(66946007)(33656002)(52536014)(64756008)(9686003)(4326008)(8676002)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?o53gn52UWf3wXVhDpZ/8iV+5GDPZ0MeMR1gh49fkv+48jayhIHI8zKQ+4UeD?=
- =?us-ascii?Q?E9j0lxh8+6dtzGrR0GBz+MQeFoicGQ6b8MK7Mu92Bs5R8T+vdqgX6NVxSbBj?=
- =?us-ascii?Q?mX+2PRzuUoxY6QF3fqcGmGRmHuixMsMAlpyMYrUuaHdEyXwHi80YIeLuCkYF?=
- =?us-ascii?Q?V99us842SdaKqfDdQ976ji2grGiyLYsOJ1q/r0GwW3ESHL4Mec3AcMJPYr0g?=
- =?us-ascii?Q?fywEmnZYnnwtpJkxc2eLNr4TfJkUKw2/wamMeamtxM2xXPC6XX4WUMJzVRIB?=
- =?us-ascii?Q?7vBkMAM/YLpON5+akPzUZ4JOHWpCdDEweKIGdKNidl4BGTLhg2tr5zdNOKcm?=
- =?us-ascii?Q?WvgRvm8aVkGWTYsEJx1YkYJU4kiHtb67PlhWpKV2FjFZOXeJGSbGHFF6v9Sc?=
- =?us-ascii?Q?s2w7py46PGhJsXXoSd/LyBJhcYMe+GiAaL6Lxhkw2JUmfDuWaiqZ7PcMH2+i?=
- =?us-ascii?Q?A1KUtNROzSTiDD7lKTZtZ7ko0X7a83jzDdaZBlQvg+YzWBNoeBVZbe+t8WE9?=
- =?us-ascii?Q?Zz+fMbp2ckOz49LzU1mH/65/ekT3rJoKQswXtuqZl90shHm7z0IG2kH1Cneb?=
- =?us-ascii?Q?6iGc8k/LquG3uecBwrBCFaE/wMb3wCs1yaO1T5wnMTlXGpfXrpKZgWGw6EzU?=
- =?us-ascii?Q?wZDV/BvhrctO0zjj1YMuoi4l3lmiut4VLtxBdujfVir6qBZBwOh2dkCOXivI?=
- =?us-ascii?Q?46V6d5TIwKMlNCutkUpDm/t0vkCDq6I76gAQ7yr+bjhNbbVdeRzoG+6GVaz/?=
- =?us-ascii?Q?k6Pr78u5WX49BFfCUaXDe36JyMfNmEJjrZc6erbLoX6I9fbA7xg+1+ckcUt4?=
- =?us-ascii?Q?MYQT6hqqSwR0eJKfSoF5taRsqQAZ50kTNM9upiZCJxe0CvKZj+I+x2lBBnMY?=
- =?us-ascii?Q?vbtOZasS/Si9i6LktBBviKxqXpjaZEEtxS/kTe0bDy86zgOSw2dBnPVaIzaG?=
- =?us-ascii?Q?OP73OxAUJLev6vSoEJeKTfYcYW28iXKiAw4rw5TN/7MdAaOnvtE7fBObj8PX?=
- =?us-ascii?Q?FiXQN5rdJcDXu7qijKfgXuYtbgAaXQAUQhJ5d91Bo6omD4jfWUluVSaiL3eJ?=
- =?us-ascii?Q?RrZQ2kl2xr1cRRJf0x6/Ph2GMz8Io4quzsuWqxgJgs5u6yFLUi0PdX9KB58h?=
- =?us-ascii?Q?6/K27bL+9sdpNBbW5KI/Z7yJ51ojt4iTorJmMqgwrcM6bDt9r1J6kgXXqGym?=
- =?us-ascii?Q?cE5SUeZ9GVK4wkd6osD/RblnUDpbFnO03fjZGiZDAAIZBOuvFzP51iMECikf?=
- =?us-ascii?Q?bD79wWaNsJc8Hfi/SN2TgxEE00KxQSYatycvz5bM2Jl+bGV22rOLyCIixjw8?=
- =?us-ascii?Q?FZetFmmorGrhHWtS0LUhmICXEj1VsMzBHGri2r7y3JV6/j+f65J5nFPezi1+?=
- =?us-ascii?Q?jRwUww9dLucet0huwTmbDAFMWZOXSwH975FWjXvKnu4Cp/2hITmUmyQV7s7E?=
- =?us-ascii?Q?XQrresUxrkHBjgjAnx4xlaWASyBHgHGUtdNwCSM7tuvngEMCkCCSF7eRFTh8?=
- =?us-ascii?Q?yvKWopIjg9BJfYfk/jDeh5TqxxT/HK1GwLLdyoOmEv/nnPeAWQIFZpMlHhbo?=
- =?us-ascii?Q?RFzcW/GCRqFpxoJp1oIoyJf1o5UxUCsHDJoPJ3azysSobC11I6rqaIufZXUO?=
- =?us-ascii?Q?sftfRL9b36E8D+mB2mJrs7c=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?duGtMr5+bcU1f1AuRihMgc1BlQaVqIh/gg+rG9tpPJ7N1FhhGC07HNc/hQX8?=
+ =?us-ascii?Q?lyxksqv/edDoeCvPYD9oxBH8lNt/RzpnA5bK6pfamr/EbvCvKHmF3oVq2Ae7?=
+ =?us-ascii?Q?ed85xA44RUwxJWNt4EKRXVVrXYY03pr1HbRVonoqQn7Koj2xwTKQ3Gj8M7of?=
+ =?us-ascii?Q?efEuEK2MnK//4LcFrsbcXh8oqVFdXO/0X+gPfqWz1dRiMpQPu301JV0gNZHp?=
+ =?us-ascii?Q?gKXV1XBrSu0gJ90pT/0ZzltmLuU7irH4nrj+3nXSpRhPqLI47/rmIjMycEL7?=
+ =?us-ascii?Q?0IYQBmvQeMwIGqgw8n6L8YgdNAZpHUuoxnda3k/wyMiHwXUtnwMvj4yb/4pt?=
+ =?us-ascii?Q?YbT4cVgXQsA8SyBr9c0uIVd1VdEG6nsxZiHhKGi01R5oxTpbdEIN814BNhnw?=
+ =?us-ascii?Q?WA1jcCdgQvGJq9Z8R7qCScnOgIIE919L0agqwL9WDRltDkNzkc2MmC0VHguj?=
+ =?us-ascii?Q?wrO9jQjM+llQzUYUAwsXN+u/b0bKeewTTFZQo4Pqm9TrW394NrSobCU5onu0?=
+ =?us-ascii?Q?55K5pERGueWTyi0Ed6IV0Vj69F7l+9fET3dDbrrkbTo64XRaTRY9X71D6pPw?=
+ =?us-ascii?Q?Ts+BbZ1soCvvE717M55Qn3+bZ2rqVm5ROv7SS42AcntyBfcWHwafU/vm9jjY?=
+ =?us-ascii?Q?TQ0dIfqaU8ubZaw3r+6fM06j1vkRUMBtklz5QY99dCOpfwpET6XkoQYEpqv9?=
+ =?us-ascii?Q?lgOS/d0aDMZx+6NexLUihWPT0BI1ja++97zHDO+dwprvcRY7uX9lkuCQE4ul?=
+ =?us-ascii?Q?TJzpQe6Ty6tzDr52A2QBaBFeLB0ZzfBYlwh60kdSYmXJgvU50UQVPWtDzH2A?=
+ =?us-ascii?Q?WP2fOlbDXt5K2YPKDAj+25etAcy/mBnqWpmBtgtysmzalIRS5af9yRNG8+uZ?=
+ =?us-ascii?Q?eKqwSNcLmMGPcuhP7Xop01I09go7J0nGr2DJ7vu76kr05H1YfPxHA1hcYdxX?=
+ =?us-ascii?Q?4tdAjAE2OrgZafzfburGbsQb/hgbXD43nZwcO532kvSw0C8gM24a6MOjTf3O?=
+ =?us-ascii?Q?Rb/+rOY0PtpIXNOkZUDujtoMHC8ZjtEwDxbzQAixeG7YWHX7k4BcN05prgWT?=
+ =?us-ascii?Q?xq6qd61DalKRt7x4U2XUTT1zbJdIQr7NUHzdGi836BluP8pd8RmWa6empPLq?=
+ =?us-ascii?Q?RlBc3It2TcezNKoMQfPoRza9jDsRPai9SimTzZm7boYBb3fUzzI+0vmCx32A?=
+ =?us-ascii?Q?ErrYAxSXGhFeU1xiENRkrTFe8lFJiiBtNzP1rbDgsV5g9++akPt2tQTSy+ck?=
+ =?us-ascii?Q?2btVhyzGIvd8jHye82TsIeolaFpNEpnJ12ZQPqvYPsyMW1BzmgbOgyrgYVCz?=
+ =?us-ascii?Q?PvXZNMInXyYA0DTSowhvXxveRK7zVtq5hxpUlfBYxE29Cat0ljCcZeYuH4cO?=
+ =?us-ascii?Q?ry0B0Fl936LPHTF9MkF7t50f+RVapDwRXO5GqQELhe0Ce4m3PdDOaAQlYZhy?=
+ =?us-ascii?Q?rjccrJHeZrfe6i7m0PxUmKNWDfBga9KnGWt02VV/L/sheh3EGj0v4hiymexb?=
+ =?us-ascii?Q?TlcxBZVQka/hN7n9hMyL1GsMoVWX2RjK0kkLf++fvxby6hRC6Mgj5w7J9D/L?=
+ =?us-ascii?Q?XWH2/huzdmy6JkMqYlLY4QrL9Irwdh74O38uE1yD2nwLOegJ7Pqe+Oxezu09?=
+ =?us-ascii?Q?rboLNGE6dSr+pNA1xK2ltV4=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR11MB3668.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9c2e5f73-d3f5-4ee2-a558-08da9161a860
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 06:16:24.8951
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc8193ca-ed31-43f4-240b-08da9164e695
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Sep 2022 06:39:37.7324
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J7Z36R6n/EACoIHghpY5PpvzJVxQnqoZglhJ/7HEQgdzgl3ewZNNiL6qyTyFWHPlSBBnIIxkFqQVca8B1AxGnv95qymu7ILiFWRCC94fBemncvlNteFE7MizkuQ3M5Nd
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4440
+X-MS-Exchange-CrossTenant-userprincipalname: MYM8jaoVPP36323f6hd0WHrPxWWPxv6KeRcjVdJNr5Y6oVwk5YEPoBnmu/3pqz/c30R5MM5wjrCkiudf6fIgQ6X/E+Ci3el3bPXEhegmK51gaLgIawJH7WxB+4ihoOru
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB4988
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -145,57 +147,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+
+
 > -----Original Message-----
-> From: Wei Yongjun <weiyongjun@huaweicloud.com>
-> Sent: Wednesday, September 7, 2022 8:28 PM
-> To: Kumaravel Thiagarajan - I21417
-> <Kumaravel.Thiagarajan@microchip.com>; Arnd Bergmann
-> <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Wei Yongjun <weiyongjun1@huawei.com>; linux-gpio@vger.kernel.org;
-> linux-kernel@vger.kernel.org
-> Subject: [PATCH -next v2 5/5] misc: microchip: pci1xxxx: use
+> From: Greg KH <gregkh@linuxfoundation.org>
+> Sent: Wednesday, September 7, 2022 8:17 PM
+> To: Kumaravel Thiagarajan - I21417 <Kumaravel.Thiagarajan@microchip.com>
+> Cc: weiyongjun@huaweicloud.com; arnd@arndb.de;
+> weiyongjun1@huawei.com; linux-gpio@vger.kernel.org; kernel-
+> janitors@vger.kernel.org
+> Subject: Re: [PATCH -next 5/5] misc: microchip: pci1xxxx: use
 > module_auxiliary_driver
 >=20
-> From: Wei Yongjun <weiyongjun1@huawei.com>
+> On Wed, Sep 07, 2022 at 02:35:14PM +0000,
+> Kumaravel.Thiagarajan@microchip.com wrote:
+> > > -----Original Message-----
+> > > From: Wei Yongjun <weiyongjun@huaweicloud.com>
+> > > Sent: Wednesday, September 7, 2022 2:05 PM
+> > > To: Kumaravel Thiagarajan - I21417
+> > > <Kumaravel.Thiagarajan@microchip.com>; Arnd Bergmann
+> > > <arnd@arndb.de>; Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Wei Yongjun <weiyongjun1@huawei.com>;
+> > > linux-gpio@vger.kernel.org; kernel-janitors@vger.kernel.org
+> > > Subject: [PATCH -next 5/5] misc: microchip: pci1xxxx: use
+> > > module_auxiliary_driver
+> > >
+> > >
+> > > Use the module_auxiliary_driver() macro to make the code simpler by
+> > > eliminating module_init and module_exit calls.
+> > I needed this during the experimentation stage. But now these
+> > functions only do register and unregister. Hence, can be replaced with
+> module_auxiliary_driver.
+> > Thanks for your patch.
+> > >
+> > Add this tag -> Fixes: 7d3e4d807df2 ("misc: microchip: pci1xxxx: load g=
+pio
+> driver for the gpio controller auxiliary device enumerated by the auxilia=
+ry bus
+> driver.")?
 >=20
-> Use the module_auxiliary_driver() macro to make the code simpler by
-> eliminating module_init and module_exit calls.
->=20
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Fixes: 7d3e4d807df2 ("misc: microchip: pci1xxxx: load gpio driver for the g=
-pio controller auxiliary device enumerated by the auxiliary bus driver.")
+> As you are the maintainer of this driver, you can add these markings to t=
+he
+> patches and sign off on them when you forward them on to me.  No need to
+> force the original developer to do this if you are already going to do it=
+ as well.
+Sure. Understand this now. Thank you, Greg.
 
-Reviewed-by: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
-
-> ---
->  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 14 +-------------
->  1 file changed, 1 insertion(+), 13 deletions(-)
->=20
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> index fa80a7788596..9cc771c604ed 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> @@ -421,19 +421,7 @@ static struct auxiliary_driver pci1xxxx_gpio_driver =
-=3D {
->         .probe =3D pci1xxxx_gpio_probe,
->         .id_table =3D pci1xxxx_gpio_auxiliary_id_table  };
-> -
-> -static int __init pci1xxxx_gpio_driver_init(void) -{
-> -       return auxiliary_driver_register(&pci1xxxx_gpio_driver);
-> -}
-> -
-> -static void __exit pci1xxxx_gpio_driver_exit(void) -{
-> -       auxiliary_driver_unregister(&pci1xxxx_gpio_driver);
-> -}
-> -
-> -module_init(pci1xxxx_gpio_driver_init);
-> -module_exit(pci1xxxx_gpio_driver_exit);
-> +module_auxiliary_driver(pci1xxxx_gpio_driver);
->=20
->  MODULE_DESCRIPTION("Microchip Technology Inc. PCI1xxxx GPIO
-> controller");  MODULE_AUTHOR("Kumaravel Thiagarajan
-> <kumaravel.thiagarajan@microchip.com>");
-> --
-> 2.34.1
-
+Regards,
+Kumaravel
