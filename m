@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8655B2AAD
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 01:57:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 372FE5B2B1B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 02:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbiIHX51 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 19:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52796 "EHLO
+        id S229684AbiIIAbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 20:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbiIHX5X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 19:57:23 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132CDFBF20;
-        Thu,  8 Sep 2022 16:57:21 -0700 (PDT)
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 288LltR0016279;
-        Thu, 8 Sep 2022 23:57:12 GMT
+        with ESMTP id S229703AbiIIAbp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 20:31:45 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2256ED51C8;
+        Thu,  8 Sep 2022 17:31:44 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28904cqE008607;
+        Fri, 9 Sep 2022 00:31:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=DP+1a705Ln6azuRbeCkaSx6hxJZpQPx385zZM8JCxVc=;
- b=WTslEZ8quKY0pkQI0Unoz7Qou0LBoSDfEPWldx5LNnEdTEelGlGosHlY5x75gE0Mj7NQ
- vxPePqv2ud3BhvGd+/TPj2XvcsbuMpw+b4sxun9PfvNlCK0uR2JQ8i7KOaMN5TbLYJpg
- ssXjw8er6V6KzyFMHPLGnMsEQLhuUREaEokix0bT/zmCAaZbaY3qPgIBNahR44Ct8uHq
- DSy0c/bKzUmG8y+th9RP9VNppDvcW9xnnIbuJx67FmtnP6u05KPuEOm5jZDD0A6TKgWo
- kYvZqML+/puGKKEd7K2iVGcY4mi81f5pdDDyvrFxKx85eYw6ncWxabelj0UlsgJj3I0b dw== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jf85138yh-1
+ bh=XmVWEIzCNB723ISEUcSXGd8hG0eHhwHmmaZx+2kGF1k=;
+ b=UUALUAa+c89HXmK+FhKXjNCBRNq1C8UfXeCdCEuMdra167rKh6EpK0FYkUUYVjpwPyA2
+ vR8vtb5jM3vlTxn/gd+wvFpQEdHlmjiNsBdNJ7nDQxAegVFQ1XSMiiaMhXUMZ0vVC+d6
+ YLHH5tE57eJJzbU+cjGBNvVnYtxNJjSE5CWQ/BBbqCoK81Hu5fDvobuIHxlbKCrpKmac
+ P19Bvay6pBpv5c60ZY7m0DY00W5lQpHH7iIhfDvXYu6fslk9ap0EmYjK/poGm2cZp+gN
+ GXnQKRKct6IQdi1Wg7alsV1kVyj+wbpWy5YNrNcW5VFzGKncA1ZT/c1geAsb9yBQeU6+ /g== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jfeuutcap-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 08 Sep 2022 23:57:12 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 288NqBWk025748
+        Fri, 09 Sep 2022 00:31:36 +0000
+Received: from nasanex01b.na.qualcomm.com (corens_vlan604_snip.qualcomm.com [10.53.140.1])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2890QY12027849
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 8 Sep 2022 23:52:11 GMT
-Received: from [10.110.115.160] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 9 Sep 2022 00:26:34 GMT
+Received: from [10.47.206.1] (10.49.16.6) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 8 Sep 2022
- 16:52:10 -0700
-Message-ID: <330b5f46-1bd2-5727-b63c-c730fbdda22c@quicinc.com>
-Date:   Thu, 8 Sep 2022 16:52:10 -0700
+ 17:26:33 -0700
+Message-ID: <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
+Date:   Thu, 8 Sep 2022 17:25:55 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
 Subject: Re: [PATCH 2/4] pinctrl: qcom: spmi-gpio: Fix the GPIO strength
  mapping
 Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Anjelique Melendez <quic_amelende@quicinc.com>,
         <agross@kernel.org>, <bjorn.andersson@linaro.org>,
         <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>
@@ -57,25 +58,25 @@ CC:     <konrad.dybcio@somainline.org>, <linux-arm-msm@vger.kernel.org>,
 References: <20220907201528.9351-1-quic_amelende@quicinc.com>
  <20220907201528.9351-3-quic_amelende@quicinc.com>
  <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
+From:   David Collins <quic_collinsd@quicinc.com>
 In-Reply-To: <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+X-Originating-IP: [10.49.16.6]
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jqFcEesKsAWjweVhpnPr5B8ZFqIB3Jqh
-X-Proofpoint-ORIG-GUID: jqFcEesKsAWjweVhpnPr5B8ZFqIB3Jqh
+X-Proofpoint-ORIG-GUID: 7qGC2BDiu5fGxALdpzm6kwfI6r3ja-Ss
+X-Proofpoint-GUID: 7qGC2BDiu5fGxALdpzm6kwfI6r3ja-Ss
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-08_13,2022-09-08_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- impostorscore=0 spamscore=0 phishscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209080084
+ definitions=2022-09-08_14,2022-09-08_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
+ mlxscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209080086
 X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -86,9 +87,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 9/8/2022 4:14 AM, Krzysztof Kozlowski wrote:
+On 9/8/22 04:14, Krzysztof Kozlowski wrote:
 > On 07/09/2022 22:15, Anjelique Melendez wrote:
 >> From: Anirudh Ghayal <quic_aghayal@quicinc.com>
 >>
@@ -100,11 +99,11 @@ On 9/8/2022 4:14 AM, Krzysztof Kozlowski wrote:
 >> CRs-Fixed: 2246473
 > 
 > What is this tag about?
-Forgot to remove this tag before up streamed. Will remove for next version.
-> 
->> Signed-off-by: Anirudh Ghayal <quic_aghayal@quicinc.com>
->> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->> ---
+
+This is for internal tracking.  It will be removed in the next version
+of this patch series.
+
+
 >>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c     | 2 +-
 >>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c     | 4 ++--
 >>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h | 9 +++++++--
@@ -151,7 +150,25 @@ Forgot to remove this tag before up streamed. Will remove for next version.
 >> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
 > 
 > You cannot mix bindings with driver. This is an ABI break.
-Ack - Will separate into two changes.
+
+This could be split into two patches.  However, both would need to make
+it into any given build to avoid runtime regressions when
+pinctrl-spmi-gpio.c rejects GPIO strength configurations larger than 1.
+
+I suppose that this kind of bi-directional dependency could be avoided
+by using one of these checks instead in the driver:
+
+if (arg > 3) {
+
+or
+
+if (arg > max(PMIC_GPIO_STRENGTH_LOW, PMIC_GPIO_STRENGTH_HIGH))
+
+Going this route would only require that the driver patch is picked up
+before the DT header patch.
+
+
+
 >> @@ -12,9 +12,14 @@
 >>  #define PMIC_GPIO_PULL_UP_1P5_30	3
 >>  
@@ -163,11 +180,35 @@ Ack - Will separate into two changes.
 >> +#define PMIC_GPIO_STRENGTH_HIGH		3
 > 
 > Didn't you just break all DTSes in the world?
-Ack - lol. Next version will include changes to update any DTS
-that uses PMIC_GPIO_STRENGTH_ 
-> 
-> Best regards,
-> Krzysztof
 
-Thanks,
-Anjelique
+Currently, all PMIC GPIO peripherals managed by the pinctrl-spmi-gpio
+driver are having their drive strength control register programmed
+incorrectly at runtime for the constant name used in DT (i.e.
+PMIC_GPIO_STRENGTH_LOW vs PMIC_GPIO_STRENGTH_HIGH).  Changing the values
+of those constants as done in this patch fixes that incorrect behavior.
+
+The qcom,drive-strength DT property is taking a raw drive strength
+control register value instead of some logical strength abstraction.
+I'm not sure of a better way to handle the situation than fixing the
+incorrect drive strength constant to register value mapping as defined
+in qcom,pmic-gpio.h.
+
+Changing the mapping in qcom,pmic-gpio.h without updating any dtsi files
+could cause a problem for very old targets that use SSBI instead of SPMI
+for PMIC communication.  However, for there to actually be a problem,
+PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH would need to be
+specified for the SSBI PMIC.  That would be GPIO devices with compatible
+strings: "qcom,pm8018-gpio", "qcom,pm8038-gpio", "qcom,pm8058-gpio",
+"qcom,pm8917-gpio", or "qcom,pm8921-gpio".  I could find no instances of
+this situation in the kernel source tree.
+
+The PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH usage in dtsi
+files for SPMI PMICs does not need to be modified.  The DT header patch
+fixes configurations that are currently broken for them.
+
+Note that the drive strength misconfiguration issue doesn't present a
+problem for commercial products as this patch has been cherry-picked
+downstream for several years.
+
+Take care,
+David
