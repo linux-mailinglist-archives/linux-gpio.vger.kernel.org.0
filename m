@@ -2,80 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 327595B2FAF
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 09:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB2595B2FE8
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 09:35:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbiIIHVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 03:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
+        id S231364AbiIIHee (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 03:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbiIIHVc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 03:21:32 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583E2F756D;
-        Fri,  9 Sep 2022 00:21:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A4026CE2160;
-        Fri,  9 Sep 2022 07:21:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2BEC43470;
-        Fri,  9 Sep 2022 07:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662708085;
-        bh=uBJV1O8Ex9BotYWxMsUg1NMKljVGeaEJPyZK0FSfnHc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BAH0QJvjaFpJRkJw8PfQwNS3iZ3eRFxlPx8KbCwR0UPg2C6xyPPy/1tCLoooSb+3f
-         NoQXjeAa+H8R50S+t1T3oitUaG+nVtOoLc3F6GNwY0FnhVjrycY3xM1SULp2UeMjXR
-         SER0tn+FBFtQ3MKkhQVsL205U/mjbttT2mZwu995gHmi+fEUiKrt3OucMv/PK6uP0n
-         vf7XwhAMgwIWvAgZXEsR/wFHC4O3fp1ifZlhftsXj/UttV9VOKgQyDCeblmdZcIT1t
-         C6LLiK3btPepnDX3++qbCyk9PHNo+Sn727+aXk+BAjlKmbhtOZ99FqkUginvikfZWh
-         LpdH6PMp6PdqQ==
-Date:   Fri, 9 Sep 2022 08:21:16 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
-Subject: Re: [RESEND PATCH v16 mfd 1/8] mfd: ocelot: add helper to get regmap
- from a resource
-Message-ID: <YxrpbN8x+agufDe2@google.com>
-References: <20220905162132.2943088-1-colin.foster@in-advantage.com>
- <20220905162132.2943088-2-colin.foster@in-advantage.com>
- <Yxm4oMq8dpsFg61b@google.com>
- <20220908142256.7aad25k553sqfgbm@skbuf>
- <YxoEbfq6YKx/4Vko@colin-ia-desktop>
+        with ESMTP id S231344AbiIIHeb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 03:34:31 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D3465D8
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 00:34:27 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id m15so1246283lfl.9
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 00:34:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=RIxvHEegtZCxPOPw7EphVjzvn7r49/9vRL8dVi9xWMs=;
+        b=NOp54X4f6ury83PRxp2qqhdBmIM7mv360+YQrIn5bGU7s3CQkJFG+5brMbXLsUT49d
+         mqHyf0qNhAkYbaz9qSHaEQaA8y+i0wXJKjIdliolEo1Ygjat3XHmlc05/oNKHaSOQfIp
+         gVvlZakjCK5x3P1hjBwt2q8hmWqn+8V9ovKr2U8IKi2PMR5jSsRCc4yMF/Efhj3ECEfl
+         gUr5Ph1QJY3FPWRgdvNCnFCwzNyV89QqCrCMPyDPTpJ/IFWC7tR3rDocgdcvu5blbIgX
+         m0fKyadbcY6KgmjJ6CQobtbCT3Q0qIXXhT5AOh3XyzmzxUSYl6w3Yix/bIfqcJ4GwF4h
+         UmwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=RIxvHEegtZCxPOPw7EphVjzvn7r49/9vRL8dVi9xWMs=;
+        b=bx6WvG/TJeFZlqmQ389fTFNrLHiuHLlsJ013rDIdYBHbyUQkT+b6l/S+w9iKgc9RQT
+         MulNPMJO+xL3OsANDop4Gml8qnlI99ytdAiJcBkHDeGE2E6MeL40L4iSm71712XDLWQP
+         zh3P1PkbLSWxBZFQ3TMR/Q+vamaRme/zINcptzi6EQV0VbFWoA92Pg5DpHAZQd3cQVff
+         8+dBEBFDilEacpza1huG+EXviptc9cGikSW//YUkHGQQqmNSr7Cq9OvR150pYoQK3COQ
+         pldf6fbZFFjl2cpng8nO1IfVcV5Y4GVsif5xDsBOUf4vHpkwiZGrCY41I+fBEPt45QPj
+         PTOA==
+X-Gm-Message-State: ACgBeo1hUjknpe/YcIvWxV4SGcO6yOjae7uRB/eyzINY+i2wEXS7x6uG
+        GZzFCaUkLE2y3ToBqzhlkSsupg==
+X-Google-Smtp-Source: AA6agR7MFPe/65GpvTSwXGO9jKrS/KFNzQt7E0cl1aUwzOgn5MmUyTpsYJzjIROa0DwMp7uB3Yuu1A==
+X-Received: by 2002:a05:6512:3183:b0:498:fa29:35fe with SMTP id i3-20020a056512318300b00498fa2935femr454877lfe.523.1662708865316;
+        Fri, 09 Sep 2022 00:34:25 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id f25-20020ac25cd9000000b004948378080csm152093lfq.290.2022.09.09.00.34.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 09 Sep 2022 00:34:24 -0700 (PDT)
+Message-ID: <c447b51d-339e-2bd9-2dbd-5198d4eeaa11@linaro.org>
+Date:   Fri, 9 Sep 2022 09:34:23 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <YxoEbfq6YKx/4Vko@colin-ia-desktop>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH 2/4] pinctrl: qcom: spmi-gpio: Fix the GPIO strength
+ mapping
+Content-Language: en-US
+To:     David Collins <quic_collinsd@quicinc.com>,
+        Anjelique Melendez <quic_amelende@quicinc.com>,
+        agross@kernel.org, bjorn.andersson@linaro.org,
+        linus.walleij@linaro.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Anirudh Ghayal <quic_aghayal@quicinc.com>
+References: <20220907201528.9351-1-quic_amelende@quicinc.com>
+ <20220907201528.9351-3-quic_amelende@quicinc.com>
+ <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
+ <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,35 +84,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 08 Sep 2022, Colin Foster wrote:
-
-> On Thu, Sep 08, 2022 at 02:22:56PM +0000, Vladimir Oltean wrote:
-> > On Thu, Sep 08, 2022 at 10:40:48AM +0100, Lee Jones wrote:
-> > > Applied, thanks.
-> > 
-> > Hurray!
-> > 
-> > Colin, what plans do you have for the rest of VSC7512 upstreaming?
-> > Do you need Lee to provide a stable branch for networking to pull, so
-> > you can continue development in this kernel release cycle, or do you
-> > expect that there won't be dependencies and you can therefore just test
-> > on linux-next?
+On 09/09/2022 02:25, David Collins wrote:
+>>> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>>> index e5df5ce45a0f..950be952ad3e 100644
+>>> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>>> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+>>
+>> You cannot mix bindings with driver. This is an ABI break.
 > 
-> Yay!
+> This could be split into two patches.  However, both would need to make
+> it into any given build to avoid runtime regressions when
+> pinctrl-spmi-gpio.c rejects GPIO strength configurations larger than 1.
+
+Which proves this is an ABI break. You need to gracefully handle in the
+driver.
+
 > 
-> My plan was to start sending RFCs on the internal copper phys and get
-> some feedback there. I assume there'll be a couple rounds and I don't
-> expect to hit this next release (if I'm being honest).
+> I suppose that this kind of bi-directional dependency could be avoided
+> by using one of these checks instead in the driver:
 > 
-> So I'll turn this question around to the net people: would a round or
-> two of RFCs that don't cleanly apply to net-next be acceptable? Then I
-> could submit a patch right after the next merge window? I've been
-> dragging these patches around for quite some time, I can do it for
-> another month :-)
+> if (arg > 3) {
+> 
+> or
+> 
+> if (arg > max(PMIC_GPIO_STRENGTH_LOW, PMIC_GPIO_STRENGTH_HIGH))
+> 
+> Going this route would only require that the driver patch is picked up
+> before the DT header patch.
 
-Immutable branch now tested and pushed.
+You cannot change constants in the DT bindings header. Regardless
+whether now or in the future - the constants are frozen. Otherwise it is
+an ABI break. It would be acceptable only if existing feature was
+completely broken and never worked.
 
-See reply to cover-letter.
+> 
+> 
+> 
+>>> @@ -12,9 +12,14 @@
+>>>  #define PMIC_GPIO_PULL_UP_1P5_30	3
+>>>  
+>>>  #define PMIC_GPIO_STRENGTH_NO		0
+>>> -#define PMIC_GPIO_STRENGTH_HIGH		1
+>>> +#define PMIC_GPIO_STRENGTH_LOW		1
+>>>  #define PMIC_GPIO_STRENGTH_MED		2
+>>> -#define PMIC_GPIO_STRENGTH_LOW		3
+>>> +#define PMIC_GPIO_STRENGTH_HIGH		3
+>>
+>> Didn't you just break all DTSes in the world?
+> 
+> Currently, all PMIC GPIO peripherals managed by the pinctrl-spmi-gpio
+> driver are having their drive strength control register programmed
+> incorrectly at runtime for the constant name used in DT (i.e.
+> PMIC_GPIO_STRENGTH_LOW vs PMIC_GPIO_STRENGTH_HIGH).  Changing the values
+> of those constants as done in this patch fixes that incorrect behavior.
 
--- 
-Lee Jones [李琼斯]
+Wait. The values in the bindings should be only, *only* abstract ID
+numbers. Not register values. How is it related to the value being
+programmed in the driver? This is just an enum. If you have DTS with
+PMIC_GPIO_STRENGTH_LOW you program 0xwhatever-you-wish. Not exactly
+current value of "PMIC_GPIO_STRENGTH_LOW".
+
+You need to fix the driver, not the bindings.
+
+> 
+> The qcom,drive-strength DT property is taking a raw drive strength
+> control register value instead of some logical strength abstraction.
+> I'm not sure of a better way to handle the situation than fixing the
+> incorrect drive strength constant to register value mapping as defined
+> in qcom,pmic-gpio.h.
+
+Bindings are not for defining register values, but to define the DTS.
+Feel free to use binding constants for register values if they fit
+you... but if they don't fit, fix the driver. Not the bindings.
+
+> 
+> Changing the mapping in qcom,pmic-gpio.h without updating any dtsi files
+> could cause a problem for very old targets that use SSBI instead of SPMI
+> for PMIC communication.  However, for there to actually be a problem,
+> PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH would need to be
+> specified for the SSBI PMIC.  That would be GPIO devices with compatible
+> strings: "qcom,pm8018-gpio", "qcom,pm8038-gpio", "qcom,pm8058-gpio",
+> "qcom,pm8917-gpio", or "qcom,pm8921-gpio".  I could find no instances of
+> this situation in the kernel source tree.
+> 
+> The PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH usage in dtsi
+> files for SPMI PMICs does not need to be modified.  The DT header patch
+> fixes configurations that are currently broken for them.
+> 
+> Note that the drive strength misconfiguration issue doesn't present a
+> problem for commercial products as this patch has been cherry-picked
+> downstream for several years.
+
+It will affect several other out-of-tree users and other projects. Don't
+think only about Qualcomm tree, but about entire Qualcomm ecosystem and
+its users.
+
+
+Best regards,
+Krzysztof
