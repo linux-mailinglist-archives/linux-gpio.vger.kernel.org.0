@@ -2,84 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 372FE5B2B1B
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 02:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D42B5B2D1F
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 05:55:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbiIIAbr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Sep 2022 20:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52494 "EHLO
+        id S230314AbiIIDy6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Sep 2022 23:54:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiIIAbp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 20:31:45 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2256ED51C8;
-        Thu,  8 Sep 2022 17:31:44 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28904cqE008607;
-        Fri, 9 Sep 2022 00:31:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=XmVWEIzCNB723ISEUcSXGd8hG0eHhwHmmaZx+2kGF1k=;
- b=UUALUAa+c89HXmK+FhKXjNCBRNq1C8UfXeCdCEuMdra167rKh6EpK0FYkUUYVjpwPyA2
- vR8vtb5jM3vlTxn/gd+wvFpQEdHlmjiNsBdNJ7nDQxAegVFQ1XSMiiaMhXUMZ0vVC+d6
- YLHH5tE57eJJzbU+cjGBNvVnYtxNJjSE5CWQ/BBbqCoK81Hu5fDvobuIHxlbKCrpKmac
- P19Bvay6pBpv5c60ZY7m0DY00W5lQpHH7iIhfDvXYu6fslk9ap0EmYjK/poGm2cZp+gN
- GXnQKRKct6IQdi1Wg7alsV1kVyj+wbpWy5YNrNcW5VFzGKncA1ZT/c1geAsb9yBQeU6+ /g== 
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jfeuutcap-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 09 Sep 2022 00:31:36 +0000
-Received: from nasanex01b.na.qualcomm.com (corens_vlan604_snip.qualcomm.com [10.53.140.1])
-        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2890QY12027849
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 9 Sep 2022 00:26:34 GMT
-Received: from [10.47.206.1] (10.49.16.6) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Thu, 8 Sep 2022
- 17:26:33 -0700
-Message-ID: <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
-Date:   Thu, 8 Sep 2022 17:25:55 -0700
+        with ESMTP id S230098AbiIIDyy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Sep 2022 23:54:54 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AAF25C75
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 20:54:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662695691; x=1694231691;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XRvsTDEPiPao/EWU8T6WIWodgbS1DiieNNe1FhU0lTk=;
+  b=QYICvBMqxNwFskp5k5OVSxZLr8EFZfqJWM53DTWtsLLaSoGaOwyNhwPH
+   aRhhI/SzsUVyT/cgI/u0khUOqML9DLLVjCVZvkF1bSmDht9EmIHQEybba
+   dpf9mivHQTTyPnue527a9bl2v8xVa8oYTXWpmY2o08/zL339zSGIpqACG
+   /xWszPaZRLHSjytzjqHgQ/rWXwvLbGIlUP6ZIPP9wGLwjFCrNeFolcxNJ
+   WNpeldIyr/aJjDCXRBEZ+7OdqzezhpqzYxnXTLh4TVp29w11GSGvRjIkX
+   Qit2jS1It1h8y45D++yPR6y95cb/2JSWqeHPan4nKF1dqIAnkpcDKCrot
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="359116197"
+X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
+   d="scan'208";a="359116197"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2022 20:54:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
+   d="scan'208";a="683494870"
+Received: from lkp-server02.sh.intel.com (HELO b2938d2e5c5a) ([10.239.97.151])
+  by fmsmga004.fm.intel.com with ESMTP; 08 Sep 2022 20:54:46 -0700
+Received: from kbuild by b2938d2e5c5a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oWV6L-0000gr-2a;
+        Fri, 09 Sep 2022 03:54:45 +0000
+Date:   Fri, 09 Sep 2022 11:54:16 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 827eb27ec2e508e1ef5dc36d29db73cbae1ccb40
+Message-ID: <631ab8e8.plB6GisYOoQmVdyc%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 2/4] pinctrl: qcom: spmi-gpio: Fix the GPIO strength
- mapping
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        <agross@kernel.org>, <bjorn.andersson@linaro.org>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC:     <konrad.dybcio@somainline.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Anirudh Ghayal <quic_aghayal@quicinc.com>
-References: <20220907201528.9351-1-quic_amelende@quicinc.com>
- <20220907201528.9351-3-quic_amelende@quicinc.com>
- <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
-From:   David Collins <quic_collinsd@quicinc.com>
-In-Reply-To: <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 7qGC2BDiu5fGxALdpzm6kwfI6r3ja-Ss
-X-Proofpoint-GUID: 7qGC2BDiu5fGxALdpzm6kwfI6r3ja-Ss
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-08_14,2022-09-08_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 spamscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 clxscore=1011 phishscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209080086
-X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,128 +62,197 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/8/22 04:14, Krzysztof Kozlowski wrote:
-> On 07/09/2022 22:15, Anjelique Melendez wrote:
->> From: Anirudh Ghayal <quic_aghayal@quicinc.com>
->>
->> The SPMI based PMICs have the HIGH and LOW GPIO output
->> strength mappings interchanged, fix them.
->>
->> Keep the mapping same for older SSBI based PMICs.
->>
->> CRs-Fixed: 2246473
-> 
-> What is this tag about?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 827eb27ec2e508e1ef5dc36d29db73cbae1ccb40  pinctrl: meson: Switch to use fwnode instead of of_node
 
-This is for internal tracking.  It will be removed in the next version
-of this patch series.
+elapsed time: 1134m
 
+configs tested: 176
+configs skipped: 4
 
->>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c     | 2 +-
->>  drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c     | 4 ++--
->>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h | 9 +++++++--
->>  3 files changed, 10 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> index cf6b6047de8d..fceccf1ec099 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
->> @@ -525,7 +525,7 @@ static int pmic_gpio_config_set(struct pinctrl_dev *pctldev, unsigned int pin,
->>  			pad->pullup = arg;
->>  			break;
->>  		case PMIC_GPIO_CONF_STRENGTH:
->> -			if (arg > PMIC_GPIO_STRENGTH_LOW)
->> +			if (arg > PMIC_GPIO_STRENGTH_HIGH)
->>  				return -EINVAL;
->>  			pad->strength = arg;
->>  			break;
->> diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
->> index 1b41adda8129..0f96d130813b 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
->> @@ -1,7 +1,7 @@
->>  // SPDX-License-Identifier: GPL-2.0-only
->>  /*
->>   * Copyright (c) 2015, Sony Mobile Communications AB.
->> - * Copyright (c) 2013, The Linux Foundation. All rights reserved.
->> + * Copyright (c) 2013, 2018 The Linux Foundation. All rights reserved.
->>   */
->>  
->>  #include <linux/module.h>
->> @@ -371,7 +371,7 @@ static int pm8xxx_pin_config_set(struct pinctrl_dev *pctldev,
->>  			banks |= BIT(0);
->>  			break;
->>  		case PM8XXX_QCOM_DRIVE_STRENGH:
->> -			if (arg > PMIC_GPIO_STRENGTH_LOW) {
->> +			if (arg > PM8921_GPIO_STRENGTH_LOW) {
->>  				dev_err(pctrl->dev, "invalid drive strength\n");
->>  				return -EINVAL;
->>  			}
->> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
->> index e5df5ce45a0f..950be952ad3e 100644
->> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
->> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> 
-> You cannot mix bindings with driver. This is an ABI break.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-This could be split into two patches.  However, both would need to make
-it into any given build to avoid runtime regressions when
-pinctrl-spmi-gpio.c rejects GPIO strength configurations larger than 1.
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+x86_64                        randconfig-a015
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+sh                               allmodconfig
+x86_64                        randconfig-a002
+microblaze                          defconfig
+powerpc                        cell_defconfig
+parisc64                         alldefconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                             allyesconfig
+i386                                defconfig
+x86_64                          rhel-8.3-func
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+loongarch                           defconfig
+loongarch                         allnoconfig
+x86_64                         rhel-8.3-kunit
+x86_64                    rhel-8.3-kselftests
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-kvm
+sh                             sh03_defconfig
+sh                           se7750_defconfig
+s390                             allmodconfig
+xtensa                       common_defconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+powerpc                         wii_defconfig
+arm                        cerfcube_defconfig
+xtensa                  cadence_csp_defconfig
+m68k                       m5275evb_defconfig
+sh                         ap325rxa_defconfig
+sparc                             allnoconfig
+powerpc                      arches_defconfig
+openrisc                 simple_smp_defconfig
+powerpc                     asp8347_defconfig
+i386                          randconfig-c001
+i386                             alldefconfig
+powerpc                     ep8248e_defconfig
+m68k                          hp300_defconfig
+m68k                        m5272c3_defconfig
+arm                          exynos_defconfig
+arm                          pxa3xx_defconfig
+arm                         s3c6400_defconfig
+powerpc                     stx_gp3_defconfig
+arm64                            alldefconfig
+sh                           se7722_defconfig
+ia64                          tiger_defconfig
+arc                              alldefconfig
+sh                            titan_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+sh                          r7780mp_defconfig
+arm                            qcom_defconfig
+riscv                randconfig-r042-20220908
+arc                  randconfig-r043-20220907
+arc                  randconfig-r043-20220908
+s390                 randconfig-r044-20220908
+arm                        realview_defconfig
+xtensa                              defconfig
+arm                          iop32x_defconfig
+parisc64                            defconfig
+openrisc                            defconfig
+sh                        sh7757lcr_defconfig
+sparc                               defconfig
+sh                     sh7710voipgw_defconfig
+sh                          r7785rp_defconfig
+powerpc                     mpc83xx_defconfig
+xtensa                generic_kc705_defconfig
+arm                      integrator_defconfig
+sparc64                             defconfig
+arc                     haps_hs_smp_defconfig
+arm                         assabet_defconfig
+arm                            zeus_defconfig
+mips                            ar7_defconfig
+mips                         rt305x_defconfig
+arc                      axs103_smp_defconfig
+openrisc                    or1ksim_defconfig
+sh                             shx3_defconfig
+mips                    maltaup_xpa_defconfig
+mips                  maltasmvp_eva_defconfig
+sh                        edosk7705_defconfig
+arm                        mini2440_defconfig
+sh                            shmin_defconfig
+nios2                               defconfig
+mips                 decstation_r4k_defconfig
+mips                     decstation_defconfig
+sh                          sdk7780_defconfig
+arm                      footbridge_defconfig
+parisc                           allyesconfig
+arm                             pxa_defconfig
+arm                           u8500_defconfig
+powerpc                      mgcoge_defconfig
+m68k                                defconfig
+m68k                          multi_defconfig
+nios2                            allyesconfig
+sh                             espt_defconfig
+sh                     magicpanelr2_defconfig
+arm                            hisi_defconfig
+xtensa                    smp_lx200_defconfig
+m68k                          atari_defconfig
+m68k                       m5475evb_defconfig
+powerpc                 mpc834x_itx_defconfig
+powerpc                     tqm8548_defconfig
+parisc                              defconfig
+powerpc                      ppc40x_defconfig
+mips                      loongson3_defconfig
+sh                         apsh4a3a_defconfig
+parisc                           alldefconfig
+sh                            migor_defconfig
+arc                    vdk_hs38_smp_defconfig
+sh                         microdev_defconfig
+mips                           xway_defconfig
+sparc64                          alldefconfig
+arm                         nhk8815_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+x86_64                        randconfig-c001
+arm                  randconfig-c002-20220908
+ia64                             allmodconfig
 
-I suppose that this kind of bi-directional dependency could be avoided
-by using one of these checks instead in the driver:
+clang tested configs:
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a001
+x86_64                        randconfig-a016
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+powerpc                     tqm8540_defconfig
+arm                           spitz_defconfig
+riscv                randconfig-r042-20220907
+hexagon              randconfig-r041-20220907
+hexagon              randconfig-r045-20220907
+s390                 randconfig-r044-20220907
+powerpc                     akebono_defconfig
+mips                      malta_kvm_defconfig
+arm                    vt8500_v6_v7_defconfig
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+hexagon              randconfig-r041-20220908
+hexagon              randconfig-r045-20220908
+x86_64                        randconfig-k001
+arm                      pxa255-idp_defconfig
+s390                             alldefconfig
+powerpc                        fsp2_defconfig
+powerpc                 mpc8272_ads_defconfig
+mips                        qi_lb60_defconfig
+arm                          pcm027_defconfig
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+mips                           mtx1_defconfig
+mips                          ath79_defconfig
+powerpc                     ppa8548_defconfig
+mips                           ip22_defconfig
 
-if (arg > 3) {
-
-or
-
-if (arg > max(PMIC_GPIO_STRENGTH_LOW, PMIC_GPIO_STRENGTH_HIGH))
-
-Going this route would only require that the driver patch is picked up
-before the DT header patch.
-
-
-
->> @@ -12,9 +12,14 @@
->>  #define PMIC_GPIO_PULL_UP_1P5_30	3
->>  
->>  #define PMIC_GPIO_STRENGTH_NO		0
->> -#define PMIC_GPIO_STRENGTH_HIGH		1
->> +#define PMIC_GPIO_STRENGTH_LOW		1
->>  #define PMIC_GPIO_STRENGTH_MED		2
->> -#define PMIC_GPIO_STRENGTH_LOW		3
->> +#define PMIC_GPIO_STRENGTH_HIGH		3
-> 
-> Didn't you just break all DTSes in the world?
-
-Currently, all PMIC GPIO peripherals managed by the pinctrl-spmi-gpio
-driver are having their drive strength control register programmed
-incorrectly at runtime for the constant name used in DT (i.e.
-PMIC_GPIO_STRENGTH_LOW vs PMIC_GPIO_STRENGTH_HIGH).  Changing the values
-of those constants as done in this patch fixes that incorrect behavior.
-
-The qcom,drive-strength DT property is taking a raw drive strength
-control register value instead of some logical strength abstraction.
-I'm not sure of a better way to handle the situation than fixing the
-incorrect drive strength constant to register value mapping as defined
-in qcom,pmic-gpio.h.
-
-Changing the mapping in qcom,pmic-gpio.h without updating any dtsi files
-could cause a problem for very old targets that use SSBI instead of SPMI
-for PMIC communication.  However, for there to actually be a problem,
-PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH would need to be
-specified for the SSBI PMIC.  That would be GPIO devices with compatible
-strings: "qcom,pm8018-gpio", "qcom,pm8038-gpio", "qcom,pm8058-gpio",
-"qcom,pm8917-gpio", or "qcom,pm8921-gpio".  I could find no instances of
-this situation in the kernel source tree.
-
-The PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH usage in dtsi
-files for SPMI PMICs does not need to be modified.  The DT header patch
-fixes configurations that are currently broken for them.
-
-Note that the drive strength misconfiguration issue doesn't present a
-problem for commercial products as this patch has been cherry-picked
-downstream for several years.
-
-Take care,
-David
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
