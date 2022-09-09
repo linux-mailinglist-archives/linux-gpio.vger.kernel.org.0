@@ -2,97 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0243A5B320A
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 10:44:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E4855B3311
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 11:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbiIIIma (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 04:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
+        id S231815AbiIIJGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 05:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231496AbiIIIm3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 04:42:29 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BC95121135;
-        Fri,  9 Sep 2022 01:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662712947; x=1694248947;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zza+1RX+YBCgJ51RC0Jc8aCx0Iz4g15+5WlRpgh9dpk=;
-  b=Cg5QmF5gHH/4q7nQMRR2oL05qHo9M+nBxz7VOuuZB6Wzu5Ga+TW7RgWd
-   FTqgphiHPfsNYSvuiE3CH8l1l/F5hRx6ESUu4CQYJWD9A6Ug8nvqMgHur
-   aVyTBeW0KBhJr6ZH3GhyNOLvLTj+lmAjhw/iQSSqXM2AjtOESYNrGL8N1
-   tNiGNMQgyxrlHrlm+E84OoRS+NNjxg4WSwRJjk/XTuIRve+Y+z5hAW8Ee
-   xXBoJYoxIYAekar4QZ1PFEvmEZT3WmFhfRSndZ21zhodz8lHRS/OhofuS
-   q+63/ZaIFtFL5fbWJbFbdATEy/niM7Wy/8BNCzY7eVzBo64U1THBLIV5g
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="359153808"
-X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
-   d="scan'208";a="359153808"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 01:42:26 -0700
-X-IronPort-AV: E=Sophos;i="5.93,302,1654585200"; 
-   d="scan'208";a="683561687"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 01:42:25 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oWZaL-00AU95-1s;
-        Fri, 09 Sep 2022 11:42:01 +0300
-Date:   Fri, 9 Sep 2022 11:42:01 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Patrick Rudolph <patrick.rudolph@9elements.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] pinctrl: cy8c95x0: Use 'default' in all
- switch-cases (part 2)
-Message-ID: <Yxr8WYfRT+XKEKGK@smile.fi.intel.com>
-References: <20220908142134.59068-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdYHWSc-kVUdr_YJ-YvMEc-LqrgDj0D62F2WKdA1H5Uvrw@mail.gmail.com>
+        with ESMTP id S229774AbiIIJGK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 05:06:10 -0400
+Received: from mail-m11883.qiye.163.com (mail-m11883.qiye.163.com [115.236.118.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C199B52DED
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 02:06:01 -0700 (PDT)
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by mail-m11883.qiye.163.com (Hmail) with ESMTPA id A036684039F;
+        Fri,  9 Sep 2022 17:05:59 +0800 (CST)
+From:   Jianqun Xu <jay.xu@rock-chips.com>
+To:     heiko@sntech.de, linus.walleij@linaro.org,
+        andriy.shevchenko@linux.intel.com
+Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v5 0/6] gpio: rockchip: support acpi
+Date:   Fri,  9 Sep 2022 17:05:52 +0800
+Message-Id: <20220909090558.3609190-1-jay.xu@rock-chips.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdYHWSc-kVUdr_YJ-YvMEc-LqrgDj0D62F2WKdA1H5Uvrw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZShkfVkgaHh5DQk8aT0sZSVUTARMWGhIXJB
+        QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITkhVSktLWQY+
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K0k6PQw6Mz0aOjYNNEwdTA9O
+        SgkaCk5VSlVKTU1JTEpPSE1LSk1NVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
+        WU5DVUlJVUxVSkpPWVdZCAFZQUlMQ0o3Bg++
+X-HM-Tid: 0a83217fb00d2eb8kusna036684039f
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 09, 2022 at 10:02:51AM +0200, Linus Walleij wrote:
-> On Thu, Sep 8, 2022 at 4:21 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Move the default values to the 'default' case in the switches.
+This patch fix driver to support acpi.
 
-> Patch applied!
+Andy Shevchenko (1):
+  ACPI: utils: Add acpi_dev_uid_to_integer() helper to get _UID as
+    integer
 
-Thanks!
+Jianqun Xu (5):
+  ARM: dts: rockchip: add gpio alias for gpio dt nodes
+  ARM: dts: rockchip: add 'clock-names' for gpio dt nodes
+  arm64: dts: rockchip: add gpio alias for gpio dt nodes
+  arm64: dts: rockchip: add 'clock-names' for gpio dt nodes
+  gpio: rockchip: support acpi
 
-...
-
-> >         case CY8C95X0_DRV_PP_SLOW:
-> >         case CY8C95X0_DRV_HIZ:
-> >                 return true;
-> > +       default:
-> > +               return false;
-> >         }
-> > -
-> > -       return false;
-> 
-> Clearly this is better style, I wonder if we could teach checkpatch to
-> look for this? Or cocinelle?
-
-The latter I believe. But I'm too busy and too lazy to go that road.
+ arch/arm/boot/dts/rk3036.dtsi            |   6 +
+ arch/arm/boot/dts/rk3066a.dtsi           |  12 ++
+ arch/arm/boot/dts/rk3188.dtsi            |   4 +
+ arch/arm/boot/dts/rk322x.dtsi            |   8 +
+ arch/arm/boot/dts/rk3288.dtsi            |   9 ++
+ arch/arm/boot/dts/rk3xxx.dtsi            |   4 +
+ arch/arm64/boot/dts/rockchip/rk3308.dtsi |  10 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi |   8 +
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi |   8 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi |  10 ++
+ arch/arm64/boot/dts/rockchip/rk356x.dtsi |   5 +
+ drivers/acpi/utils.c                     |  24 +++
+ drivers/gpio/gpio-rockchip.c             | 197 ++++++++++++++---------
+ include/acpi/acpi_bus.h                  |   1 +
+ include/linux/acpi.h                     |   5 +
+ 15 files changed, 236 insertions(+), 75 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
+v5:
+ - add patches to add gpio alias and clock-names
+ - get clock by devm_clk_get()
+ - restore gpio range add comment
+ - other codingstyle
 
+v4: suggested by Andy Shevchenko
+ - use dev_fwnode and to_of_node(fwnode) to replace dev->of_node
+ - split to a separate rockchip_gpio_get_clocks
+ - handle fail for clk_prepare_enable
+ - other codingstyle
+
+v3: suggested by Andy Shevchenko
+ - fix irq size (32) to GPIO_MAX_PINS
+ - fix to use is_of_node or is_acpi_node
+ - use standard pattern for error handle
+ - remove redundant assignment
+
+v2:
+ - fix rockchip_pin_output_deferred to rockchip_pin_deferred
+2.25.1
 
