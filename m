@@ -2,40 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E4855B3311
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 11:13:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 090D25B331B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 11:13:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231815AbiIIJGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 05:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34350 "EHLO
+        id S231753AbiIIJGt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 05:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbiIIJGK (ORCPT
+        with ESMTP id S229971AbiIIJGK (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 05:06:10 -0400
 Received: from mail-m11883.qiye.163.com (mail-m11883.qiye.163.com [115.236.118.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C199B52DED
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 462865B78D
         for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 02:06:01 -0700 (PDT)
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by mail-m11883.qiye.163.com (Hmail) with ESMTPA id A036684039F;
-        Fri,  9 Sep 2022 17:05:59 +0800 (CST)
+        by mail-m11883.qiye.163.com (Hmail) with ESMTPA id 34DDD840555;
+        Fri,  9 Sep 2022 17:06:00 +0800 (CST)
 From:   Jianqun Xu <jay.xu@rock-chips.com>
 To:     heiko@sntech.de, linus.walleij@linaro.org,
         andriy.shevchenko@linux.intel.com
 Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
         linux-rockchip@lists.infradead.org,
         Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v5 0/6] gpio: rockchip: support acpi
-Date:   Fri,  9 Sep 2022 17:05:52 +0800
-Message-Id: <20220909090558.3609190-1-jay.xu@rock-chips.com>
+Subject: [PATCH 1/6] ARM: dts: rockchip: add gpio alias for gpio dt nodes
+Date:   Fri,  9 Sep 2022 17:05:53 +0800
+Message-Id: <20220909090558.3609190-2-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220909090558.3609190-1-jay.xu@rock-chips.com>
+References: <20220909090558.3609190-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZShkfVkgaHh5DQk8aT0sZSVUTARMWGhIXJB
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQkgaVh4dQ0JITUsfTB0fT1UTARMWGhIXJB
         QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktITkhVSktLWQY+
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6K0k6PQw6Mz0aOjYNNEwdTA9O
-        SgkaCk5VSlVKTU1JTEpPSE1LSk1NVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
-        WU5DVUlJVUxVSkpPWVdZCAFZQUlMQ0o3Bg++
-X-HM-Tid: 0a83217fb00d2eb8kusna036684039f
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pio6Tjo*Cz0iUTZRNEJJTEIc
+        OilPCRdVSlVKTU1JTEpPSE1LTE9JVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
+        WU5DVUlJVUxVSkpPWVdZCAFZQUhNT0M3Bg++
+X-HM-Tid: 0a83217fb2372eb8kusn34ddd840555
 X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
@@ -45,56 +47,99 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch fix driver to support acpi.
+Add gpio alias for gpio controller dt nodes, which is used by the
+new gpio driver to get the index of gpio controller for driver.
 
-Andy Shevchenko (1):
-  ACPI: utils: Add acpi_dev_uid_to_integer() helper to get _UID as
-    integer
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3036.dtsi  | 3 +++
+ arch/arm/boot/dts/rk3066a.dtsi | 6 ++++++
+ arch/arm/boot/dts/rk322x.dtsi  | 4 ++++
+ arch/arm/boot/dts/rk3288.dtsi  | 9 +++++++++
+ arch/arm/boot/dts/rk3xxx.dtsi  | 4 ++++
+ 5 files changed, 26 insertions(+)
 
-Jianqun Xu (5):
-  ARM: dts: rockchip: add gpio alias for gpio dt nodes
-  ARM: dts: rockchip: add 'clock-names' for gpio dt nodes
-  arm64: dts: rockchip: add gpio alias for gpio dt nodes
-  arm64: dts: rockchip: add 'clock-names' for gpio dt nodes
-  gpio: rockchip: support acpi
-
- arch/arm/boot/dts/rk3036.dtsi            |   6 +
- arch/arm/boot/dts/rk3066a.dtsi           |  12 ++
- arch/arm/boot/dts/rk3188.dtsi            |   4 +
- arch/arm/boot/dts/rk322x.dtsi            |   8 +
- arch/arm/boot/dts/rk3288.dtsi            |   9 ++
- arch/arm/boot/dts/rk3xxx.dtsi            |   4 +
- arch/arm64/boot/dts/rockchip/rk3308.dtsi |  10 ++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi |   8 +
- arch/arm64/boot/dts/rockchip/rk3368.dtsi |   8 +
- arch/arm64/boot/dts/rockchip/rk3399.dtsi |  10 ++
- arch/arm64/boot/dts/rockchip/rk356x.dtsi |   5 +
- drivers/acpi/utils.c                     |  24 +++
- drivers/gpio/gpio-rockchip.c             | 197 ++++++++++++++---------
- include/acpi/acpi_bus.h                  |   1 +
- include/linux/acpi.h                     |   5 +
- 15 files changed, 236 insertions(+), 75 deletions(-)
-
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index 9b0f0497567d..912c21667dd4 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -17,6 +17,9 @@ / {
+ 	interrupt-parent = <&gic>;
+ 
+ 	aliases {
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++		gpio2 = &gpio2;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index de9915d946f7..fe565440d6ad 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -13,6 +13,12 @@
+ / {
+ 	compatible = "rockchip,rk3066a";
+ 
++	aliases {
++		gpio4 = &gpio4;
++		gpio5 = &gpio5;
++		gpio6 = &gpio6;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index ffc16d6b97e1..a814e813a5da 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -15,6 +15,10 @@ / {
+ 	interrupt-parent = <&gic>;
+ 
+ 	aliases {
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++		gpio2 = &gpio2;
++		gpio3 = &gpio3;
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 487b0e03d4b4..4d5184e27389 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -19,6 +19,15 @@ / {
+ 
+ 	aliases {
+ 		ethernet0 = &gmac;
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++		gpio2 = &gpio2;
++		gpio3 = &gpio3;
++		gpio4 = &gpio4;
++		gpio5 = &gpio5;
++		gpio6 = &gpio6;
++		gpio7 = &gpio7;
++		gpio8 = &gpio8;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 616a828e0c6e..e2cb4b51d02f 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -16,6 +16,10 @@ / {
+ 
+ 	aliases {
+ 		ethernet0 = &emac;
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++		gpio2 = &gpio2;
++		gpio3 = &gpio3;
+ 		i2c0 = &i2c0;
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
 -- 
-v5:
- - add patches to add gpio alias and clock-names
- - get clock by devm_clk_get()
- - restore gpio range add comment
- - other codingstyle
-
-v4: suggested by Andy Shevchenko
- - use dev_fwnode and to_of_node(fwnode) to replace dev->of_node
- - split to a separate rockchip_gpio_get_clocks
- - handle fail for clk_prepare_enable
- - other codingstyle
-
-v3: suggested by Andy Shevchenko
- - fix irq size (32) to GPIO_MAX_PINS
- - fix to use is_of_node or is_acpi_node
- - use standard pattern for error handle
- - remove redundant assignment
-
-v2:
- - fix rockchip_pin_output_deferred to rockchip_pin_deferred
 2.25.1
 
