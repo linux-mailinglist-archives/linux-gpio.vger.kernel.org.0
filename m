@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 586105B3772
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 14:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8180E5B377B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 14:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbiIIMRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 08:17:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41288 "EHLO
+        id S231716AbiIIMR7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 08:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbiIIMRJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 08:17:09 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 764681707D
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 05:14:32 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id b17so2421359wrq.3
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 05:14:32 -0700 (PDT)
+        with ESMTP id S231470AbiIIMRb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 08:17:31 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E6995E548
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 05:14:45 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id bj14so2367603wrb.12
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 05:14:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=kU3PArCQqxQipCIfucwesyNxkP/aJS3R0eM5cUNlEUA=;
-        b=Ui/OmfngH60cOIrYZk95zbIeb/2CDhLAf86C5SETenp39ghQqRZG8qx+UR3Hc6R+nU
-         WbPoYPqBmWyiCQA6peYymCZUDHoZZ9M0aQRX2rbmhWaCLgXrJJzi10EyhOHAfIKTC5oa
-         B7yq4PgzU1xJ46WWob3oyz3oMsAhKT6ebysK7pl7dlHAQNK0/8zGIZ3TiU29Tu8Jaj/W
-         VCOB236sZkEshou5uSxp5rhr/EOoBZTeF0L5eyDHKCzgDuzcu7+0LbVNHWuxqcjeJrJ+
-         ShicXWNe/sBC1TVAKcJCXZaeXLpCTNrwMqsZnPbtG/A0wu+jrLhgGVUkk1CBmiJP+7dC
-         ONVg==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=bU+AQcsXemk1KKgCjaU3gvykVFjEj4Zm9kHKe+L3+Kw=;
+        b=iQvtBX5HeVBZTuTdnbFs4s01K5RT+yZYm6ePr4u4EJ+AkSd5bnDWuyTEcnduTKl/Cc
+         QqI4HK/OP7ub73phvUth6wA8baupqBKEN13e1dGepyahVa09iWbeKHrwoJ5TV2Jyh6Bg
+         KTipzfmLLk6wLSvqeEb0DPAi8xWyOSKwVLlM1AvumslzQJ0DLXw4kAWnNojrms050jcq
+         RyhogLD29Rc5Scrjca1VXI4C2Sp6oHtEYRNAQVw+6ahdysLqTKe3nHqm+EmK99FT1ZaB
+         pstlvCeTu0ieogclGb6Oaylmnz6mVlNsbUXe5lF+yA5xfz4SKl1zRnShwXtp5eUQSx46
+         B9Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=kU3PArCQqxQipCIfucwesyNxkP/aJS3R0eM5cUNlEUA=;
-        b=L0HbPkHgquQdAQMuiktEkgHOQo6R7W4/ZzAeZjmPV8cYDUxkKHUG0c+Y6RUIUcsVww
-         SX39OFJp/MuEtEPNwV1uEO4FFcDTOJxBKnvS8EFmFlf5NQregRn5PP7OCi9fRJd9rFpg
-         RSxZV5BcEIrUwu4vU9FvQ02jLrOLA1fYLCQVQL90xbHqXvx/3BdZngiQ9t/0mQI2YOeb
-         qw3lYQrpghJdMkEFBg/DsRRRF46FQiExK6rze7xetO6uJhrNg7sOqwo9FLOaHxmot5LV
-         jn/Dl8FZjIy1Dp0IY8NseUc1PXslaI6RNG0UQgOb1ypgkeL9BEuqxo5Xn7aevuTvgn7p
-         nh6Q==
-X-Gm-Message-State: ACgBeo3OM+FvU+Dy8RnkwXUx6HocxMKcBeqhmi7Brm8pRnIB+5AY9EOs
-        LoEHa5T1MKwPTQg0Tl7TTouaOQ==
-X-Google-Smtp-Source: AA6agR7opbqPg1bHkUfjnVa9VnfIISVE6LHws7dw0+EJuCOY33VPET8FWL9UrGbpIzMCSAu0cP0ZYw==
-X-Received: by 2002:adf:d1ef:0:b0:228:a9ee:8f13 with SMTP id g15-20020adfd1ef000000b00228a9ee8f13mr7523722wrd.686.1662725614654;
-        Fri, 09 Sep 2022 05:13:34 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=bU+AQcsXemk1KKgCjaU3gvykVFjEj4Zm9kHKe+L3+Kw=;
+        b=IjRYFfwRBQIH8DDBRWehuaf7ywvRHl9sFrlCyGAQ85OmmoFA3uN0MtJS+bWQwKRBVl
+         OJIEyXw/yZ9x5GUS+pcuuYmk7WAmjD+cXyWSro43Ufg3XctKTjHwvDk5H0Nn5D1fdWmI
+         zpDizkNu8LHPuaTZfyZA23AR9S9/VhHAYEJMmsMzW2bDezofzHyFRL5j6CG9LOBJ6Rxw
+         Jpt1iofxMogoxh1kpqxSaytXwREGOtPSCYpwN7RZm6lS0mKxSBODr4TVz59JmrQFCuN4
+         HVKRcVhAclxZyt1awvUAK5Nz6fOPcXQAUoCBg+TMeb4VFHA8jtaDbK2JnMpz9/4ajo5m
+         xkBQ==
+X-Gm-Message-State: ACgBeo0pNoGShBRDpZQouBqL7Sv8hysafIw5vwpcDe0EJ6qNJ1bhALnH
+        /MsdvdD+dEsMgqiieh4WboboLw==
+X-Google-Smtp-Source: AA6agR5ob+DApxRqNiEDoa+ZxnDvTCPp4w6FFXtlz8ogbbKZ7zdj1OifeBdTWLRBEHye6hGCV6yTQQ==
+X-Received: by 2002:a05:6000:11d0:b0:228:8d5d:f2e9 with SMTP id i16-20020a05600011d000b002288d5df2e9mr7863995wrx.207.1662725615413;
+        Fri, 09 Sep 2022 05:13:35 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:a421:c10c:c626:3f52])
-        by smtp.gmail.com with ESMTPSA id l10-20020adfe58a000000b0022863395912sm379005wrm.53.2022.09.09.05.13.33
+        by smtp.gmail.com with ESMTPSA id l10-20020adfe58a000000b0022863395912sm379005wrm.53.2022.09.09.05.13.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 05:13:34 -0700 (PDT)
+        Fri, 09 Sep 2022 05:13:35 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -54,10 +55,12 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 0/2] gpiolib: export the consumer's PID to user-space
-Date:   Fri,  9 Sep 2022 14:13:27 +0200
-Message-Id: <20220909121329.42004-1-brgl@bgdev.pl>
+Subject: [PATCH 1/2] gpiolib: un-inline gpiod_request_user()
+Date:   Fri,  9 Sep 2022 14:13:28 +0200
+Message-Id: <20220909121329.42004-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220909121329.42004-1-brgl@bgdev.pl>
+References: <20220909121329.42004-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,26 +73,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I've been asked several times independently over the course of last months
-for a way to figure out the PID of the user-space process that's holding
-a specific GPIO line. This does sound like a valid use-case as the user may
-create a background process that requests some lines and then want to kill
-it to release those lines.
+Pull this bit of code into gpiolib.c as we're soon be calling certain
+symbols static in this compilation unit.
 
-These patches propose to extend the gpio_v2_line_info struct with the
-consumer's PID which is set to the process ID for user-space consumers and
-0 for kernel-space ones.
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ drivers/gpio/gpiolib.c | 11 +++++++++++
+ drivers/gpio/gpiolib.h | 12 +-----------
+ 2 files changed, 12 insertions(+), 11 deletions(-)
 
-Bartosz Golaszewski (2):
-  gpiolib: un-inline gpiod_request_user()
-  gpiolib: cdev: export the consumer's PID
-
- drivers/gpio/gpiolib-cdev.c |  2 ++
- drivers/gpio/gpiolib.c      | 33 +++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib.h      | 14 +++-----------
- include/uapi/linux/gpio.h   |  5 ++++-
- 4 files changed, 38 insertions(+), 16 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index cc9c0a12259e..6768734b9e15 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2009,6 +2009,17 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
+ 	return ret;
+ }
+ 
++int gpiod_request_user(struct gpio_desc *desc, const char *label)
++{
++	int ret;
++
++	ret = gpiod_request(desc, label);
++	if (ret == -EPROBE_DEFER)
++		ret = -ENODEV;
++
++	return ret;
++}
++
+ static bool gpiod_free_commit(struct gpio_desc *desc)
+ {
+ 	bool			ret = false;
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index d900ecdbac46..b35deb08a7f5 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -179,19 +179,9 @@ struct gpio_desc {
+ #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
+ 
+ int gpiod_request(struct gpio_desc *desc, const char *label);
++int gpiod_request_user(struct gpio_desc *desc, const char *label);
+ void gpiod_free(struct gpio_desc *desc);
+ 
+-static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
+-{
+-	int ret;
+-
+-	ret = gpiod_request(desc, label);
+-	if (ret == -EPROBE_DEFER)
+-		ret = -ENODEV;
+-
+-	return ret;
+-}
+-
+ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+ 		unsigned long lflags, enum gpiod_flags dflags);
+ int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
 -- 
 2.34.1
 
