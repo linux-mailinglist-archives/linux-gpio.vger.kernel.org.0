@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB2595B2FE8
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 09:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0774F5B3072
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 09:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231364AbiIIHee (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 03:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33024 "EHLO
+        id S231564AbiIIHjf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 03:39:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231344AbiIIHeb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 03:34:31 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D3465D8
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 00:34:27 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id m15so1246283lfl.9
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 00:34:27 -0700 (PDT)
+        with ESMTP id S231562AbiIIHit (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 03:38:49 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630F594137
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 00:35:53 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id by6so802019ljb.11
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 00:35:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=RIxvHEegtZCxPOPw7EphVjzvn7r49/9vRL8dVi9xWMs=;
-        b=NOp54X4f6ury83PRxp2qqhdBmIM7mv360+YQrIn5bGU7s3CQkJFG+5brMbXLsUT49d
-         mqHyf0qNhAkYbaz9qSHaEQaA8y+i0wXJKjIdliolEo1Ygjat3XHmlc05/oNKHaSOQfIp
-         gVvlZakjCK5x3P1hjBwt2q8hmWqn+8V9ovKr2U8IKi2PMR5jSsRCc4yMF/Efhj3ECEfl
-         gUr5Ph1QJY3FPWRgdvNCnFCwzNyV89QqCrCMPyDPTpJ/IFWC7tR3rDocgdcvu5blbIgX
-         m0fKyadbcY6KgmjJ6CQobtbCT3Q0qIXXhT5AOh3XyzmzxUSYl6w3Yix/bIfqcJ4GwF4h
-         UmwA==
+        bh=555JM3E3kG8yPe2JWLkJCiVLUYiSpaWOeW349uC31mA=;
+        b=GVP49Aqh8XFH5zTOQOiwICGGzG0Y+YD79RjoInSRl0WHma35J8zZoSogeT3sUx4xoj
+         sp8g1WsO2IDhFqiFIxy4Jk8F08KUwRS50dlbN73jtu8Qsnm7jW6TWMhDNfZjHSPByzqa
+         G/YHbvWVf/4C3rXj1O0V2j01rNtypZXB5vuVIMF8Qz0LlxWYpHcjymO6leVQ3XgxzXfd
+         VVJ4pIswb+b6Lxf8JBUkJIVToCZ+3jBzvzUxgysC23zpD1GFX4XRdmG8RClIfImon4dL
+         EXWxLvQ9/slO3r4DLg/nZMfIVT5qaBDn2At1MIE5JtktTarTgNUn9mmpDlpCRJ1Qs772
+         h7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=RIxvHEegtZCxPOPw7EphVjzvn7r49/9vRL8dVi9xWMs=;
-        b=bx6WvG/TJeFZlqmQ389fTFNrLHiuHLlsJ013rDIdYBHbyUQkT+b6l/S+w9iKgc9RQT
-         MulNPMJO+xL3OsANDop4Gml8qnlI99ytdAiJcBkHDeGE2E6MeL40L4iSm71712XDLWQP
-         zh3P1PkbLSWxBZFQ3TMR/Q+vamaRme/zINcptzi6EQV0VbFWoA92Pg5DpHAZQd3cQVff
-         8+dBEBFDilEacpza1huG+EXviptc9cGikSW//YUkHGQQqmNSr7Cq9OvR150pYoQK3COQ
-         pldf6fbZFFjl2cpng8nO1IfVcV5Y4GVsif5xDsBOUf4vHpkwiZGrCY41I+fBEPt45QPj
-         PTOA==
-X-Gm-Message-State: ACgBeo1hUjknpe/YcIvWxV4SGcO6yOjae7uRB/eyzINY+i2wEXS7x6uG
-        GZzFCaUkLE2y3ToBqzhlkSsupg==
-X-Google-Smtp-Source: AA6agR7MFPe/65GpvTSwXGO9jKrS/KFNzQt7E0cl1aUwzOgn5MmUyTpsYJzjIROa0DwMp7uB3Yuu1A==
-X-Received: by 2002:a05:6512:3183:b0:498:fa29:35fe with SMTP id i3-20020a056512318300b00498fa2935femr454877lfe.523.1662708865316;
-        Fri, 09 Sep 2022 00:34:25 -0700 (PDT)
+        bh=555JM3E3kG8yPe2JWLkJCiVLUYiSpaWOeW349uC31mA=;
+        b=CFDhOjCscA82teV2bmdISil6Bg3RBIGdHipF0nwAIW61s+OqWOXxZ4O8+KBKUrOCm+
+         U1vR4waU7kz1m/3q8UR4/LmKgY6P1PtlpyIScA0DD6oYk55u6tOHnMqYtFBIQOfkrZ5f
+         Coo8R55alY8Erj6yLBDRhi4IUrBeAYD5U4gJInLkUWvXWVF4+0SxTr+DM3Ak9hCYQo/J
+         t8QnH/desaeA7i6i6LuMITErcg5UQaOc57PhNano4hUZqOaYzbhin4sC5hPDowSh3d10
+         3GnB+ag+r2EChLB5pMhjRWtR3S4ahqTXADFTOC2ngfJaNGFm9leeLqC2Vx6idSkiPrW6
+         nOzA==
+X-Gm-Message-State: ACgBeo1VgxNWNtDEy5R0cDxNftYj+fhYz1gJgB1uox0k41b8ahBQa0Wg
+        ZwfQ7ioDESyXEylxuea9apse/Q==
+X-Google-Smtp-Source: AA6agR5+9OZpQc/apjMdPrSeSbMl1+YhF8ynIZ+NrlpyerosYwA1YdN0TD3MuDYyujc8ahYgwRssfQ==
+X-Received: by 2002:a2e:7019:0:b0:26b:db2a:577f with SMTP id l25-20020a2e7019000000b0026bdb2a577fmr1678252ljc.105.1662708949663;
+        Fri, 09 Sep 2022 00:35:49 -0700 (PDT)
 Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id f25-20020ac25cd9000000b004948378080csm152093lfq.290.2022.09.09.00.34.24
+        by smtp.gmail.com with ESMTPSA id t23-20020a056512209700b004974da17c2bsm178594lfr.0.2022.09.09.00.35.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Sep 2022 00:34:24 -0700 (PDT)
-Message-ID: <c447b51d-339e-2bd9-2dbd-5198d4eeaa11@linaro.org>
-Date:   Fri, 9 Sep 2022 09:34:23 +0200
+        Fri, 09 Sep 2022 00:35:49 -0700 (PDT)
+Message-ID: <a34c93dd-bb6e-6479-295f-90507f112828@linaro.org>
+Date:   Fri, 9 Sep 2022 09:35:48 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.13.0
 Subject: Re: [PATCH 2/4] pinctrl: qcom: spmi-gpio: Fix the GPIO strength
  mapping
 Content-Language: en-US
-To:     David Collins <quic_collinsd@quicinc.com>,
-        Anjelique Melendez <quic_amelende@quicinc.com>,
-        agross@kernel.org, bjorn.andersson@linaro.org,
-        linus.walleij@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
+To:     Anjelique Melendez <quic_amelende@quicinc.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, linus.walleij@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
 Cc:     konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org,
@@ -69,9 +67,9 @@ Cc:     konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
 References: <20220907201528.9351-1-quic_amelende@quicinc.com>
  <20220907201528.9351-3-quic_amelende@quicinc.com>
  <2b809e98-85ea-6ad9-e810-106563937ddc@linaro.org>
- <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
+ <330b5f46-1bd2-5727-b63c-c730fbdda22c@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <4c017ad4-558b-a8d4-bc8a-eebd2d5a35ba@quicinc.com>
+In-Reply-To: <330b5f46-1bd2-5727-b63c-c730fbdda22c@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -84,42 +82,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/09/2022 02:25, David Collins wrote:
->>> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+On 09/09/2022 01:52, Anjelique Melendez wrote:
+pio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
 >>> index e5df5ce45a0f..950be952ad3e 100644
 >>> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
 >>> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
 >>
 >> You cannot mix bindings with driver. This is an ABI break.
-> 
-> This could be split into two patches.  However, both would need to make
-> it into any given build to avoid runtime regressions when
-> pinctrl-spmi-gpio.c rejects GPIO strength configurations larger than 1.
-
-Which proves this is an ABI break. You need to gracefully handle in the
-driver.
-
-> 
-> I suppose that this kind of bi-directional dependency could be avoided
-> by using one of these checks instead in the driver:
-> 
-> if (arg > 3) {
-> 
-> or
-> 
-> if (arg > max(PMIC_GPIO_STRENGTH_LOW, PMIC_GPIO_STRENGTH_HIGH))
-> 
-> Going this route would only require that the driver patch is picked up
-> before the DT header patch.
-
-You cannot change constants in the DT bindings header. Regardless
-whether now or in the future - the constants are frozen. Otherwise it is
-an ABI break. It would be acceptable only if existing feature was
-completely broken and never worked.
-
-> 
-> 
-> 
+> Ack - Will separate into two changes.
 >>> @@ -12,9 +12,14 @@
 >>>  #define PMIC_GPIO_PULL_UP_1P5_30	3
 >>>  
@@ -131,54 +101,13 @@ completely broken and never worked.
 >>> +#define PMIC_GPIO_STRENGTH_HIGH		3
 >>
 >> Didn't you just break all DTSes in the world?
-> 
-> Currently, all PMIC GPIO peripherals managed by the pinctrl-spmi-gpio
-> driver are having their drive strength control register programmed
-> incorrectly at runtime for the constant name used in DT (i.e.
-> PMIC_GPIO_STRENGTH_LOW vs PMIC_GPIO_STRENGTH_HIGH).  Changing the values
-> of those constants as done in this patch fixes that incorrect behavior.
+> Ack - lol. Next version will include changes to update any DTS
+> that uses PMIC_GPIO_STRENGTH_ 
 
-Wait. The values in the bindings should be only, *only* abstract ID
-numbers. Not register values. How is it related to the value being
-programmed in the driver? This is just an enum. If you have DTS with
-PMIC_GPIO_STRENGTH_LOW you program 0xwhatever-you-wish. Not exactly
-current value of "PMIC_GPIO_STRENGTH_LOW".
-
-You need to fix the driver, not the bindings.
-
-> 
-> The qcom,drive-strength DT property is taking a raw drive strength
-> control register value instead of some logical strength abstraction.
-> I'm not sure of a better way to handle the situation than fixing the
-> incorrect drive strength constant to register value mapping as defined
-> in qcom,pmic-gpio.h.
-
-Bindings are not for defining register values, but to define the DTS.
-Feel free to use binding constants for register values if they fit
-you... but if they don't fit, fix the driver. Not the bindings.
-
-> 
-> Changing the mapping in qcom,pmic-gpio.h without updating any dtsi files
-> could cause a problem for very old targets that use SSBI instead of SPMI
-> for PMIC communication.  However, for there to actually be a problem,
-> PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH would need to be
-> specified for the SSBI PMIC.  That would be GPIO devices with compatible
-> strings: "qcom,pm8018-gpio", "qcom,pm8038-gpio", "qcom,pm8058-gpio",
-> "qcom,pm8917-gpio", or "qcom,pm8921-gpio".  I could find no instances of
-> this situation in the kernel source tree.
-> 
-> The PMIC_GPIO_STRENGTH_LOW or PMIC_GPIO_STRENGTH_HIGH usage in dtsi
-> files for SPMI PMICs does not need to be modified.  The DT header patch
-> fixes configurations that are currently broken for them.
-> 
-> Note that the drive strength misconfiguration issue doesn't present a
-> problem for commercial products as this patch has been cherry-picked
-> downstream for several years.
-
-It will affect several other out-of-tree users and other projects. Don't
-think only about Qualcomm tree, but about entire Qualcomm ecosystem and
-its users.
-
+There is discussion with David, so please wait till consensus is
+reached. It seems you want to change DT binding constant to match
+register value which is not appropriate. Constants are not change'able.
+Constants are abstractions which might or might not match register value.
 
 Best regards,
 Krzysztof
