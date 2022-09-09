@@ -2,47 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 568235B2F58
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 08:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 327595B2FAF
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 09:21:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbiIIG5X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 02:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48216 "EHLO
+        id S229973AbiIIHVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 03:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbiIIG5W (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 02:57:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D13913B54D;
-        Thu,  8 Sep 2022 23:57:21 -0700 (PDT)
+        with ESMTP id S229897AbiIIHVc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 03:21:32 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583E2F756D;
+        Fri,  9 Sep 2022 00:21:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3632F61EBF;
-        Fri,  9 Sep 2022 06:57:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71CB5C433D6;
-        Fri,  9 Sep 2022 06:57:15 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A4026CE2160;
+        Fri,  9 Sep 2022 07:21:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2BEC43470;
+        Fri,  9 Sep 2022 07:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662706640;
-        bh=wkk/fFoxmeTUUDQytAXw1XkL0eqdbPeYJOpSRALOx+4=;
+        s=k20201202; t=1662708085;
+        bh=uBJV1O8Ex9BotYWxMsUg1NMKljVGeaEJPyZK0FSfnHc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lbz+Q8WVa2jAUz8IZxPbN8EucIOUk+tGOanl/J8Hlhs8FGgzAE84WBvFo7K+mcbj0
-         EN01LnSlxC03jEEAE0+vCaN5mrU0nydt7PwHsGdVa2DMvbMIoir4BxZBpUDYESvCPd
-         6WFxzCNh3QRY2V/v7vaY7fuskU5qI7TRWMDroLn0cO5CeP8VnTxobg2wYtIc1MhHV2
-         sxiX/ThX5iKHAJ+Ca7qbo/W4zEmKSsQsd9l86J36WjYM0ZvH4zofs7EiVEtmb6vwlD
-         6sWKrcRHI1b6IauyZOPh9gglbqGOnbh7nrZkwYVBfUG4oC3Q9Wr13Ab5mIhNv5d9Ii
-         HwwanO1l8ef/w==
-Date:   Fri, 9 Sep 2022 07:57:12 +0100
+        b=BAH0QJvjaFpJRkJw8PfQwNS3iZ3eRFxlPx8KbCwR0UPg2C6xyPPy/1tCLoooSb+3f
+         NoQXjeAa+H8R50S+t1T3oitUaG+nVtOoLc3F6GNwY0FnhVjrycY3xM1SULp2UeMjXR
+         SER0tn+FBFtQ3MKkhQVsL205U/mjbttT2mZwu995gHmi+fEUiKrt3OucMv/PK6uP0n
+         vf7XwhAMgwIWvAgZXEsR/wFHC4O3fp1ifZlhftsXj/UttV9VOKgQyDCeblmdZcIT1t
+         C6LLiK3btPepnDX3++qbCyk9PHNo+Sn727+aXk+BAjlKmbhtOZ99FqkUginvikfZWh
+         LpdH6PMp6PdqQ==
+Date:   Fri, 9 Sep 2022 08:21:16 +0100
 From:   Lee Jones <lee@kernel.org>
 To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Terry Bowman <terry.bowman@amd.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
+Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        UNGLinuxDriver@microchip.com,
+        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
         Steen Hegelund <Steen.Hegelund@microchip.com>,
         Lars Povlsen <lars.povlsen@microchip.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -54,16 +58,21 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Andrew Lunn <andrew@lunn.ch>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, katie.morris@in-advantage.com
-Subject: [GIT PULL] Immutable branch between MFD, Net and Pinctrl due for the
- v6.0 merge window
-Message-ID: <YxrjyHcceLOFlT/c@google.com>
+        Rob Herring <robh+dt@kernel.org>,
+        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
+Subject: Re: [RESEND PATCH v16 mfd 1/8] mfd: ocelot: add helper to get regmap
+ from a resource
+Message-ID: <YxrpbN8x+agufDe2@google.com>
 References: <20220905162132.2943088-1-colin.foster@in-advantage.com>
+ <20220905162132.2943088-2-colin.foster@in-advantage.com>
+ <Yxm4oMq8dpsFg61b@google.com>
+ <20220908142256.7aad25k553sqfgbm@skbuf>
+ <YxoEbfq6YKx/4Vko@colin-ia-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220905162132.2943088-1-colin.foster@in-advantage.com>
+In-Reply-To: <YxoEbfq6YKx/4Vko@colin-ia-desktop>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -74,55 +83,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Enjoy!
+On Thu, 08 Sep 2022, Colin Foster wrote:
 
-[ Well done Colin !! ]
+> On Thu, Sep 08, 2022 at 02:22:56PM +0000, Vladimir Oltean wrote:
+> > On Thu, Sep 08, 2022 at 10:40:48AM +0100, Lee Jones wrote:
+> > > Applied, thanks.
+> > 
+> > Hurray!
+> > 
+> > Colin, what plans do you have for the rest of VSC7512 upstreaming?
+> > Do you need Lee to provide a stable branch for networking to pull, so
+> > you can continue development in this kernel release cycle, or do you
+> > expect that there won't be dependencies and you can therefore just test
+> > on linux-next?
+> 
+> Yay!
+> 
+> My plan was to start sending RFCs on the internal copper phys and get
+> some feedback there. I assume there'll be a couple rounds and I don't
+> expect to hit this next release (if I'm being honest).
+> 
+> So I'll turn this question around to the net people: would a round or
+> two of RFCs that don't cleanly apply to net-next be acceptable? Then I
+> could submit a patch right after the next merge window? I've been
+> dragging these patches around for quite some time, I can do it for
+> another month :-)
 
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+Immutable branch now tested and pushed.
 
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-net-pinctrl-v6.0
-
-for you to fetch changes up to f3e893626abeac3cdd9ba41d3395dc6c1b7d5ad6:
-
-  mfd: ocelot: Add support for the vsc7512 chip via spi (2022-09-09 07:54:47 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD Net and Pinctrl due for the v6.0 merge window
-
-----------------------------------------------------------------
-Colin Foster (8):
-      mfd: ocelot: Add helper to get regmap from a resource
-      net: mdio: mscc-miim: add ability to be used in a non-mmio configuration
-      pinctrl: ocelot: add ability to be used in a non-mmio configuration
-      pinctrl: microchip-sgpio: allow sgpio driver to be used as a module
-      pinctrl: microchip-sgpio: add ability to be used in a non-mmio configuration
-      resource: add define macro for register address resources
-      dt-bindings: mfd: ocelot: Add bindings for VSC7512
-      mfd: ocelot: Add support for the vsc7512 chip via spi
-
- .../devicetree/bindings/mfd/mscc,ocelot.yaml       | 160 +++++++++++
- MAINTAINERS                                        |   7 +
- drivers/mfd/Kconfig                                |  21 ++
- drivers/mfd/Makefile                               |   3 +
- drivers/mfd/ocelot-core.c                          | 161 +++++++++++
- drivers/mfd/ocelot-spi.c                           | 299 +++++++++++++++++++++
- drivers/mfd/ocelot.h                               |  49 ++++
- drivers/net/mdio/mdio-mscc-miim.c                  |  42 +--
- drivers/pinctrl/Kconfig                            |   5 +-
- drivers/pinctrl/pinctrl-microchip-sgpio.c          |  14 +-
- drivers/pinctrl/pinctrl-ocelot.c                   |  16 +-
- include/linux/ioport.h                             |   5 +
- include/linux/mfd/ocelot.h                         |  62 +++++
- 13 files changed, 795 insertions(+), 49 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
- create mode 100644 drivers/mfd/ocelot-core.c
- create mode 100644 drivers/mfd/ocelot-spi.c
- create mode 100644 drivers/mfd/ocelot.h
- create mode 100644 include/linux/mfd/ocelot.h
+See reply to cover-letter.
 
 -- 
 Lee Jones [李琼斯]
