@@ -2,104 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D8785B2EC5
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 08:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 568235B2F58
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 08:57:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230403AbiIIGYu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 02:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40864 "EHLO
+        id S231238AbiIIG5X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 02:57:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbiIIGYq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 02:24:46 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06AB41FCDC
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Sep 2022 23:24:43 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id q39-20020a056830442700b0063889adc0ddso499546otv.1
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Sep 2022 23:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date;
-        bh=ZwPxd8LtjEuPX3lP8M/ewsRzKiwOr4k1fCds3gC7Jk4=;
-        b=WcH6UHGbsWFkewU/wT0fJawZxX15Zl4hkDGkeADuGdJGmv3t1iQNtgSoMnFwdIiKsl
-         x0SFF8bkohRdk9mKGKM+s9gauDKjJXrvYE2yTKQmchoZQEeCIon6bMdclwr30NYYePtN
-         LlWsahNYX+ZnmYtHuo+L3HiSHKxAxOAJsjY/zT5bRdtKkslqggYR6PeuSVU/Upq3p6Lx
-         v7+3Sl0ycmpNJAkDyyfB3vDmj0Ku1DLMT5UNXcPYiD+ne677L4tBdx+wZ+UEyMq3qhuC
-         L3qiWtmRltydGdTH8yRtHUUCoYBmNYblSu9kOey2R0GaJCd4zJFwUrFzR3gFC4Ma5YBK
-         ywXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=ZwPxd8LtjEuPX3lP8M/ewsRzKiwOr4k1fCds3gC7Jk4=;
-        b=6fGdV2Er+5KA+RRSGCeufVpivhpk2a9TaXoGqJfdB0CL7I5nv0B4a+rPLlSNTCqUfg
-         N0vxbwwOeNYX4USGhVkE96Wt91wALAkrnHUzi7Ha17O/EvlYDb4lVx+T64x9BkJ4HWzy
-         Uul/qRi3yPjGWcc3GoXD7nGtzkkyh9MpJvfGwnzNAlyfhtRSQwo0SGy+3oGuvGO7la6h
-         KuwzQZOF3G8nL7QZJkbxpz7jRoIv9z+M03nFJDabIO7dnqcqcz/baBU7w/kBQjRsOI++
-         9CbJuTOv508OBelMLAkTljdJplHwjYPHYOtl9Cv0KlANWENsbDIr6Ki51iW6eTXqvTcI
-         EtaQ==
-X-Gm-Message-State: ACgBeo2GxsIOgFGjAtIJkua1KNb5gTxoTmQPlO9pt06bp5V7qZb9hrvR
-        U8IRP8pfIpo6dZT+mdAS1jmDchJ8ujJ5vP2e0Ik=
-X-Google-Smtp-Source: AA6agR5oQwYexb5IuYa5dQgOTrJVTByrVtuS9dapD7VlJ47FKqY17GiN0xDTC5NddRnxIwHXasBmKTYYBxKZ43rAUg0=
-X-Received: by 2002:a9d:6e0e:0:b0:652:6ed2:eb83 with SMTP id
- e14-20020a9d6e0e000000b006526ed2eb83mr3789515otr.308.1662704682511; Thu, 08
- Sep 2022 23:24:42 -0700 (PDT)
+        with ESMTP id S230050AbiIIG5W (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 02:57:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D13913B54D;
+        Thu,  8 Sep 2022 23:57:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3632F61EBF;
+        Fri,  9 Sep 2022 06:57:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71CB5C433D6;
+        Fri,  9 Sep 2022 06:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662706640;
+        bh=wkk/fFoxmeTUUDQytAXw1XkL0eqdbPeYJOpSRALOx+4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lbz+Q8WVa2jAUz8IZxPbN8EucIOUk+tGOanl/J8Hlhs8FGgzAE84WBvFo7K+mcbj0
+         EN01LnSlxC03jEEAE0+vCaN5mrU0nydt7PwHsGdVa2DMvbMIoir4BxZBpUDYESvCPd
+         6WFxzCNh3QRY2V/v7vaY7fuskU5qI7TRWMDroLn0cO5CeP8VnTxobg2wYtIc1MhHV2
+         sxiX/ThX5iKHAJ+Ca7qbo/W4zEmKSsQsd9l86J36WjYM0ZvH4zofs7EiVEtmb6vwlD
+         6sWKrcRHI1b6IauyZOPh9gglbqGOnbh7nrZkwYVBfUG4oC3Q9Wr13Ab5mIhNv5d9Ii
+         HwwanO1l8ef/w==
+Date:   Fri, 9 Sep 2022 07:57:12 +0100
+From:   Lee Jones <lee@kernel.org>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Terry Bowman <terry.bowman@amd.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        UNGLinuxDriver@microchip.com,
+        Steen Hegelund <Steen.Hegelund@microchip.com>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, katie.morris@in-advantage.com
+Subject: [GIT PULL] Immutable branch between MFD, Net and Pinctrl due for the
+ v6.0 merge window
+Message-ID: <YxrjyHcceLOFlT/c@google.com>
+References: <20220905162132.2943088-1-colin.foster@in-advantage.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6358:c27:b0:bc:944f:7c4e with HTTP; Thu, 8 Sep 2022
- 23:24:42 -0700 (PDT)
-Reply-To: stefanopessina14@gmail.com
-From:   Stefano Pessina <prniceugochukwu@gmail.com>
-Date:   Thu, 8 Sep 2022 23:24:42 -0700
-Message-ID: <CA+eeEkAUSxvd2fRt0O=B0KtG8hzLpcviCGXBvO_1bui7P5TghQ@mail.gmail.com>
-Subject: Donation
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM,UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:344 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [stefanopessina14[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [prniceugochukwu[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.1 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220905162132.2943088-1-colin.foster@in-advantage.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Enjoy!
+
+[ Well done Colin !! ]
+
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-net-pinctrl-v6.0
+
+for you to fetch changes up to f3e893626abeac3cdd9ba41d3395dc6c1b7d5ad6:
+
+  mfd: ocelot: Add support for the vsc7512 chip via spi (2022-09-09 07:54:47 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD Net and Pinctrl due for the v6.0 merge window
+
+----------------------------------------------------------------
+Colin Foster (8):
+      mfd: ocelot: Add helper to get regmap from a resource
+      net: mdio: mscc-miim: add ability to be used in a non-mmio configuration
+      pinctrl: ocelot: add ability to be used in a non-mmio configuration
+      pinctrl: microchip-sgpio: allow sgpio driver to be used as a module
+      pinctrl: microchip-sgpio: add ability to be used in a non-mmio configuration
+      resource: add define macro for register address resources
+      dt-bindings: mfd: ocelot: Add bindings for VSC7512
+      mfd: ocelot: Add support for the vsc7512 chip via spi
+
+ .../devicetree/bindings/mfd/mscc,ocelot.yaml       | 160 +++++++++++
+ MAINTAINERS                                        |   7 +
+ drivers/mfd/Kconfig                                |  21 ++
+ drivers/mfd/Makefile                               |   3 +
+ drivers/mfd/ocelot-core.c                          | 161 +++++++++++
+ drivers/mfd/ocelot-spi.c                           | 299 +++++++++++++++++++++
+ drivers/mfd/ocelot.h                               |  49 ++++
+ drivers/net/mdio/mdio-mscc-miim.c                  |  42 +--
+ drivers/pinctrl/Kconfig                            |   5 +-
+ drivers/pinctrl/pinctrl-microchip-sgpio.c          |  14 +-
+ drivers/pinctrl/pinctrl-ocelot.c                   |  16 +-
+ include/linux/ioport.h                             |   5 +
+ include/linux/mfd/ocelot.h                         |  62 +++++
+ 13 files changed, 795 insertions(+), 49 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
+ create mode 100644 drivers/mfd/ocelot-core.c
+ create mode 100644 drivers/mfd/ocelot-spi.c
+ create mode 100644 drivers/mfd/ocelot.h
+ create mode 100644 include/linux/mfd/ocelot.h
+
 -- 
-I am Stefano Pessina, an  Italian business tycoon, investor, and
-philanthropist. the vice chairman, chief executive officer (CEO), and
-the single largest shareholder of Walgreens Boots Alliance. I gave
-away 25 percent of my personal wealth to charity. And I also pledged
-to give away the rest of 25% this year 2022 to Individuals.. I have
-decided to donate $2,200,000.00 to you. If you are interested in my
-donation, do contact me for more info
+Lee Jones [李琼斯]
