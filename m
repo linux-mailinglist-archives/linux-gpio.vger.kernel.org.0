@@ -2,101 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FB825B399B
+	by mail.lfdr.de (Postfix) with ESMTP id 3C98B5B399A
 	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 15:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231657AbiIINsI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 09:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52532 "EHLO
+        id S231790AbiIINqz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 09:46:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231816AbiIINrv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 09:47:51 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5185F1440A3;
-        Fri,  9 Sep 2022 06:47:33 -0700 (PDT)
+        with ESMTP id S231584AbiIINqp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 09:46:45 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B849912E1AF;
+        Fri,  9 Sep 2022 06:46:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662731253; x=1694267253;
+  t=1662731194; x=1694267194;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=aN1SHzTXZGGv2LvfYfQMrEiGcsIXsDTkiwAXlUs8w7A=;
-  b=j1mZTs3Aqxhd9mVoXSzifk1IccnGstTeSV1+NmhG+Pyz4kEk+GO1SuG3
-   mjbKZ7cD2JrBgJacJ/rp3IUI3WihyzF9ZHhBDiVQxBTaj0VG1F39NkoUV
-   vSiMHF626ajFuGtSI493nCnbWIfR4zyGWxDAybeKZOUdo36FEtm054G/H
-   20NmTiswDVDNpCPEGUim0wYUXXHyYKTOqbTe8KwjnSdwrfbjkLjAwbBBY
-   FsvmKpnYnY5w3cKvFlbW3oLR0x0sdAjD+XoudwjCwIxi+RfxLyaG6VfKe
-   6G1daSZo3bvgMesqkQDJqXBC45epVHVd/M8p1zYv274S4P5TTZR86USGM
+  bh=tV01OCiZqy6nXlyR7eAfCljasS50nB/vF+IgCufZZUE=;
+  b=maIfq4KDFkhkLOgbNbQ20ZzVuqE/nJllh6ru6GJ5a2LTFLErxWJpDIyy
+   6BxShoSvqnIc3g/PkSbEXVkDfLaFRxGAL4pMDSYsPZ4+z1f3PmyK42p7a
+   mK8hqzDNKeGGpPI0sBx5pfbOoA9z5vNT98orN2zlK3YWKWFgjCHS4puSn
+   3vMo71QRQxMU18YJlP757iZXRTDquCFCgawbC7ZHnQm/2pNUtQH7uG8LI
+   wXgeFmbUIra9Y8J79vrObfOJW9WIhAtNCbF5Kx9NKK9DIzgX4OpTxVmHx
+   8cQYQoP5L48JO1Ka4BtNzKfMWYdHM2u91PrO8Giv+jTVqraXRVTJC5LCj
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="284493847"
+X-IronPort-AV: E=McAfee;i="6500,9779,10464"; a="383769238"
 X-IronPort-AV: E=Sophos;i="5.93,303,1654585200"; 
-   d="scan'208";a="284493847"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 06:45:22 -0700
+   d="scan'208";a="383769238"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 06:45:43 -0700
 X-IronPort-AV: E=Sophos;i="5.93,303,1654585200"; 
-   d="scan'208";a="645537348"
+   d="scan'208";a="566371087"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 06:45:20 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 06:45:41 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oWeJq-00Aa5q-0J;
-        Fri, 09 Sep 2022 16:45:18 +0300
-Date:   Fri, 9 Sep 2022 16:45:17 +0300
+        id 1oWeKA-00Aa6F-0b;
+        Fri, 09 Sep 2022 16:45:38 +0300
+Date:   Fri, 9 Sep 2022 16:45:37 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
-Message-ID: <YxtDbdN0xEOUsKHw@smile.fi.intel.com>
+Subject: Re: [PATCH 1/2] gpiolib: un-inline gpiod_request_user()
+Message-ID: <YxtDgUbdJnP3RHf7@smile.fi.intel.com>
 References: <20220909121329.42004-1-brgl@bgdev.pl>
- <20220909121329.42004-3-brgl@bgdev.pl>
+ <20220909121329.42004-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220909121329.42004-3-brgl@bgdev.pl>
+In-Reply-To: <20220909121329.42004-2-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 09, 2022 at 02:13:29PM +0200, Bartosz Golaszewski wrote:
-> It's useful for user-space to be able to know the PIDs of processes
-> holding GPIO lines in case they have the permissions and need to kill
-> them.
+On Fri, Sep 09, 2022 at 02:13:28PM +0200, Bartosz Golaszewski wrote:
+> Pull this bit of code into gpiolib.c as we're soon be calling certain
+> symbols static in this compilation unit.
+
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> ---
+>  drivers/gpio/gpiolib.c | 11 +++++++++++
+>  drivers/gpio/gpiolib.h | 12 +-----------
+>  2 files changed, 12 insertions(+), 11 deletions(-)
 > 
-> Extend the gpio_v2_line_info structure with the consumer_pid field
-> that's set to the PID of the user-space process or 0 if the user lives
-> in the kernel.
-
-...
-
-> +int gpiod_request(struct gpio_desc *desc, const char *label)
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index cc9c0a12259e..6768734b9e15 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2009,6 +2009,17 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
+>  	return ret;
+>  }
+>  
+> +int gpiod_request_user(struct gpio_desc *desc, const char *label)
 > +{
-> +	return gpiod_request_with_pid(desc, label, 0);
-
-Why not -1? I would expect this is the usual way of telling
-"don't use this PID".
-
+> +	int ret;
+> +
+> +	ret = gpiod_request(desc, label);
+> +	if (ret == -EPROBE_DEFER)
+> +		ret = -ENODEV;
+> +
+> +	return ret;
 > +}
-
-...
-
-> +		desc_set_pid(desc, 0);
-
-Ditto.
-
-...
-
-> +	ret = gpiod_request_commit(desc, label, 0);
-
-Ditto.
+> +
+>  static bool gpiod_free_commit(struct gpio_desc *desc)
+>  {
+>  	bool			ret = false;
+> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+> index d900ecdbac46..b35deb08a7f5 100644
+> --- a/drivers/gpio/gpiolib.h
+> +++ b/drivers/gpio/gpiolib.h
+> @@ -179,19 +179,9 @@ struct gpio_desc {
+>  #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
+>  
+>  int gpiod_request(struct gpio_desc *desc, const char *label);
+> +int gpiod_request_user(struct gpio_desc *desc, const char *label);
+>  void gpiod_free(struct gpio_desc *desc);
+>  
+> -static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
+> -{
+> -	int ret;
+> -
+> -	ret = gpiod_request(desc, label);
+> -	if (ret == -EPROBE_DEFER)
+> -		ret = -ENODEV;
+> -
+> -	return ret;
+> -}
+> -
+>  int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+>  		unsigned long lflags, enum gpiod_flags dflags);
+>  int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
+> -- 
+> 2.34.1
+> 
 
 -- 
 With Best Regards,
