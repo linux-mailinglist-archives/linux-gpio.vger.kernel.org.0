@@ -2,67 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5264D5B3768
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 14:17:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83CB35B38A7
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 15:11:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231667AbiIIMRc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 08:17:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41204 "EHLO
+        id S230115AbiIINK4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 09:10:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231685AbiIIMRI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 08:17:08 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE3011E
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 05:14:22 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id j26so1216840wms.0
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 05:14:22 -0700 (PDT)
+        with ESMTP id S230100AbiIINKz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 09:10:55 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A78844EA
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 06:10:49 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id e17so2440921edc.5
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Sep 2022 06:10:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=TJ4GfQdS18kjHFzyMVfKhwUm6gcXBWn+mssbcPQeJwE=;
-        b=oN+I2pZAMqI3F5MeqhWKzXHDmX8Vcv6SECSIdW4HUtd1bBI2PS0RstBczHMiXFmLx2
-         iPULfg56vRYZrIC/ZqZocF5LvapN/pLM3Sb/uFSs32AeOql+cbzefQgx+jpxO9/nTYIG
-         DxwPzwNjpuffSzbZYkt9ZZ5wYiIuQ+64ehufT7ox7+tV6obS1IMaiDFxtl+9gkV8J3zC
-         RB49BeuCvypsRAWsa4x4hJ7qs0Zf5mXrlhRbz5FLn70d/PvDo0XYxbiC2aFzqcyqOIiA
-         YMOlv9ga7nVU8qMl5Q2QmR+teVJvjA44Ncz7NUo95O+5OTb5/s0CcZCp0JsokwrZ079n
-         gH+A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=bsMm0nu+g7i1NmtcNEyPla/T7DHXogikmWezyYUdeVI=;
+        b=FiGmnfg3S7AUDv0OIYfaTQy6w0Q7WCv9N8nh/rLbH5hgJbl7qBEJh5N6E/DVggPzAe
+         ioqFKl6gBXxg3+E5ZHJVVhyA6HGAL9k9Ga/PbE8SUFBWDk7fj+PWXEHPF07dwVaTlsJZ
+         RWM3PoSL+25CQO1duTdOXdi55dQeUrBuhBA+ed0gnz4frq/0A+iCtYgH8F9ohVggXWwe
+         KwEkfB83U23h5m3unO71YqZfHKmXY4rlX3LVvhsJrXz6cV+KSqeTazniGqJDtkDfY2Xv
+         mvxyonYHPbr4a/mw0bOTfv1ewbtl3EY4R/iGiM8yo4CjDtjVx3niAHCfsqQ8Ocrc1J1a
+         3dKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=TJ4GfQdS18kjHFzyMVfKhwUm6gcXBWn+mssbcPQeJwE=;
-        b=ACx0rOxlP69R062he9oxMy1Fp5VnzmI03Sjd37ilV5rp9oi7Mi9MgBpSz7EhTBdeeZ
-         i6W/5DffVCTh4pVCQSiqcsS1GYp93JRkpRhh+WJsKoNnUX6YV0c7pbpETSSZi3CjPyXu
-         KafNwLYqZfmE8a6woAusEIVGoAJhKSWt25Do8ogR0DIfHjVpw0do1TQbmyzN2OnISp12
-         kWHpQHv5FIGHDcq3hk8LPGbKHCqUXfPQJ8jGVbFjj/oIZFhNHVBqXD2oJHShzxA2tkvz
-         iUtc2t1gzuSsdJWYY42+sC0CWuNmiBDhDB8f/JCXzFSpNPTL5OMLyr/gttnSbziyzXSt
-         5+pg==
-X-Gm-Message-State: ACgBeo3FegZqNVLB2x7eyzWUjcuj9DNHE/DMJjM0hntX9i8rXO/2THoa
-        dHeasTN3n0eQ2Za1Rnl9aIF1koTTjdJdBQ==
-X-Google-Smtp-Source: AA6agR7FEMeGmHB066ypHBK/GDBz2fh/IZgxjLvt0P89XdLeGs68qyApP3Eftizp90z5O1zcBhMMIw==
-X-Received: by 2002:a05:600c:6009:b0:3a5:b069:5d34 with SMTP id az9-20020a05600c600900b003a5b0695d34mr5250244wmb.115.1662725616388;
-        Fri, 09 Sep 2022 05:13:36 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:a421:c10c:c626:3f52])
-        by smtp.gmail.com with ESMTPSA id l10-20020adfe58a000000b0022863395912sm379005wrm.53.2022.09.09.05.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Sep 2022 05:13:35 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
-Date:   Fri,  9 Sep 2022 14:13:29 +0200
-Message-Id: <20220909121329.42004-3-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220909121329.42004-1-brgl@bgdev.pl>
-References: <20220909121329.42004-1-brgl@bgdev.pl>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=bsMm0nu+g7i1NmtcNEyPla/T7DHXogikmWezyYUdeVI=;
+        b=TnE+p78Nl0ljtN+K9Agg41+GYM8AbB3LA1wH7FzcdFW79wfmHvETqk9alN0MGO8zvr
+         jtfa9s+INZKEhhQIeZA+MTc1RBWYk2s8Jed9Amz99rvBqVEgUZnI5COZZb0xE2jwcfbK
+         uUI6NTVMbTTReheOpOagzvGHAejN0iVx+byYG/Bhd5gnfK1/hDReQ4zHamb/5F5TKpFL
+         oTLIlQshOlsOsJ16uEWeCoicekl2YKlvbaoYCWJaFBMUEKsInSlSBSLLW85+4uTQ1lvm
+         LbH26/XYGF0S+Yy/cBtga5y2vLiqIDl3yAzyOO7jX9niUVJ2MqWnVzZKonJTFLxddmob
+         HBNg==
+X-Gm-Message-State: ACgBeo2FeZhvb19XbxnRmHatyjJBWKM5cQi1LMfQhv82DstkZcYW4h96
+        UxPrpL7YbNWo2t2FpxzDkFgEb+omrviYgSFE/JIHHA==
+X-Google-Smtp-Source: AA6agR4rLLw+2Mto2FpA5ylVcQgfsw/VaaN2Qj6skwfPvRFieasT15e8jBuvji+aQt2J7BgeABU3RO/b1tEnhAymIVY=
+X-Received: by 2002:a05:6402:1d8c:b0:44e:dec5:512b with SMTP id
+ dk12-20020a0564021d8c00b0044edec5512bmr11273909edb.408.1662729047659; Fri, 09
+ Sep 2022 06:10:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <649e875962b486e0bf849aba8f386eb6290a433a.1662714555.git.geert+renesas@glider.be>
+In-Reply-To: <649e875962b486e0bf849aba8f386eb6290a433a.1662714555.git.geert+renesas@glider.be>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 9 Sep 2022 15:10:36 +0200
+Message-ID: <CAMRc=MdCLu3415xvr6vVmNCvD5_k49L3XS3K6ue-fPmiiW2n8w@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: renesas,rcar-gpio: Add r8a779g0 support
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
@@ -73,160 +68,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-It's useful for user-space to be able to know the PIDs of processes
-holding GPIO lines in case they have the permissions and need to kill
-them.
+On Fri, Sep 9, 2022 at 11:09 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Document support for the GPIO controller blocks in the Renesas R-Car
+> V4H (R8A779G0) SoC.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> index 75e5da6a7cc04bbd..aa424e2b95f87a51 100644
+> --- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> @@ -52,6 +52,7 @@ properties:
+>            - enum:
+>                - renesas,gpio-r8a779a0     # R-Car V3U
+>                - renesas,gpio-r8a779f0     # R-Car S4-8
+> +              - renesas,gpio-r8a779g0     # R-Car V4H
+>            - const: renesas,rcar-gen4-gpio # R-Car Gen4
+>
+>    reg:
+> --
+> 2.25.1
+>
 
-Extend the gpio_v2_line_info structure with the consumer_pid field
-that's set to the PID of the user-space process or 0 if the user lives
-in the kernel.
+Applied, thanks!
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpiolib-cdev.c |  2 ++
- drivers/gpio/gpiolib.c      | 24 +++++++++++++++++++-----
- drivers/gpio/gpiolib.h      |  2 ++
- include/uapi/linux/gpio.h   |  5 ++++-
- 4 files changed, 27 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index f8041d4898d1..9b6d518680dc 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -2120,6 +2120,8 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	if (desc->label)
- 		strscpy(info->consumer, desc->label, sizeof(info->consumer));
- 
-+	info->consumer_pid = desc->pid;
-+
- 	/*
- 	 * Userspace only need to know that the kernel is using this GPIO so
- 	 * it can't use it.
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 6768734b9e15..0c9d1639b04d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -96,6 +96,11 @@ static inline void desc_set_label(struct gpio_desc *d, const char *label)
- 	d->label = label;
- }
- 
-+static inline void desc_set_pid(struct gpio_desc *d, pid_t pid)
-+{
-+	d->pid = pid;
-+}
-+
- /**
-  * gpio_to_desc - Convert a GPIO number to its descriptor
-  * @gpio: global GPIO number
-@@ -1892,7 +1897,8 @@ EXPORT_SYMBOL_GPL(gpiochip_remove_pin_ranges);
-  * on each other, and help provide better diagnostics in debugfs.
-  * They're called even less than the "set direction" calls.
-  */
--static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
-+static int
-+gpiod_request_commit(struct gpio_desc *desc, const char *label, pid_t pid)
- {
- 	struct gpio_chip	*gc = desc->gdev->chip;
- 	int			ret;
-@@ -1913,6 +1919,7 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
- 
- 	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
- 		desc_set_label(desc, label ? : "?");
-+		desc_set_pid(desc, pid);
- 	} else {
- 		ret = -EBUSY;
- 		goto out_free_unlock;
-@@ -1987,7 +1994,8 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
- 		return; \
- 	} while (0)
- 
--int gpiod_request(struct gpio_desc *desc, const char *label)
-+static int
-+gpiod_request_with_pid(struct gpio_desc *desc, const char *label, pid_t pid)
- {
- 	int ret = -EPROBE_DEFER;
- 	struct gpio_device *gdev;
-@@ -1996,7 +2004,7 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
- 	gdev = desc->gdev;
- 
- 	if (try_module_get(gdev->owner)) {
--		ret = gpiod_request_commit(desc, label);
-+		ret = gpiod_request_commit(desc, label, pid);
- 		if (ret)
- 			module_put(gdev->owner);
- 		else
-@@ -2009,11 +2017,16 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
- 	return ret;
- }
- 
-+int gpiod_request(struct gpio_desc *desc, const char *label)
-+{
-+	return gpiod_request_with_pid(desc, label, 0);
-+}
-+
- int gpiod_request_user(struct gpio_desc *desc, const char *label)
- {
- 	int ret;
- 
--	ret = gpiod_request(desc, label);
-+	ret = gpiod_request_with_pid(desc, label, current->pid);
- 	if (ret == -EPROBE_DEFER)
- 		ret = -ENODEV;
- 
-@@ -2042,6 +2055,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
- 		}
- 		kfree_const(desc->label);
- 		desc_set_label(desc, NULL);
-+		desc_set_pid(desc, 0);
- 		clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
- 		clear_bit(FLAG_REQUESTED, &desc->flags);
- 		clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
-@@ -2140,7 +2154,7 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 		return desc;
- 	}
- 
--	ret = gpiod_request_commit(desc, label);
-+	ret = gpiod_request_commit(desc, label, 0);
- 	if (ret < 0)
- 		return ERR_PTR(ret);
- 
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index b35deb08a7f5..d1535677e162 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -165,6 +165,8 @@ struct gpio_desc {
- 
- 	/* Connection label */
- 	const char		*label;
-+	/* Consumer's PID (if consumer is in user-space, otherwise 0) */
-+	pid_t			pid;
- 	/* Name of the GPIO */
- 	const char		*name;
- #ifdef CONFIG_OF_DYNAMIC
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index cb9966d49a16..37f10021d1aa 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -219,6 +219,8 @@ struct gpio_v2_line_request {
-  * gpio_v2_line_flag, such as %GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-  * %GPIO_V2_LINE_FLAG_OUTPUT etc, added together.
-  * @attrs: the configuration attributes associated with the line
-+ * @consumer_pid: process ID of the user-space consumer or 0 if the consumer
-+ * lives in kernel space
-  * @padding: reserved for future use
-  */
- struct gpio_v2_line_info {
-@@ -228,8 +230,9 @@ struct gpio_v2_line_info {
- 	__u32 num_attrs;
- 	__aligned_u64 flags;
- 	struct gpio_v2_line_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-+	__s32 consumer_pid;
- 	/* Space reserved for future use. */
--	__u32 padding[4];
-+	__u32 padding[3];
- };
- 
- /**
--- 
-2.34.1
-
+Bart
