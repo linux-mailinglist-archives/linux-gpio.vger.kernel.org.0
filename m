@@ -2,196 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BF0E5B412C
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Sep 2022 23:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EB795B43CA
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Sep 2022 04:56:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229948AbiIIVAt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Sep 2022 17:00:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43540 "EHLO
+        id S229552AbiIJC4a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Sep 2022 22:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiIIVAs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 17:00:48 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6036D9E0;
-        Fri,  9 Sep 2022 14:00:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1662757221;
-        bh=JLntwPoctWAoCyoxRVHbtaxMdOR9afywA5kpPqKGx+Q=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=ShV9lm/So/ywYigMcuszxGuy/M0zsc2P5Hvbxj13Zj9yBjxFyLCzM45Z70K3EEzMf
-         SGg2PdySVxO+YnZztCItoz7c8KrgNQqNUEmGL2Q3IDJLhZ8fUDMnmZA47SObYOxpih
-         TiXrGduobC0deVBp2KjK5Wk59moXvUeOngR6YaMQ=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from probook ([87.78.200.132]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Ml6m4-1pDTqL1i4C-00lR5z; Fri, 09
- Sep 2022 23:00:21 +0200
-Date:   Fri, 9 Sep 2022 23:00:19 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] pinctrl: wpcm450: Correct the fwnode_irq_get()
- return value check
-Message-ID: <YxupY5MGWddiY2mq@probook>
-References: <20220905191408.73794-1-andriy.shevchenko@linux.intel.com>
- <YxkHaBKtiO9zVuKM@probook>
- <Yxm9fB/5IJS3MXGu@smile.fi.intel.com>
+        with ESMTP id S229491AbiIJC43 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Sep 2022 22:56:29 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E996BC6B5A
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Sep 2022 19:56:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662778587; x=1694314587;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2DH/Es7FyStI4cUnLQlASx7K5jgWbNAX9B/cu/d9ErE=;
+  b=EGAIBHx8RI+zotc8nWwCrgeJW0y5aF8zoazbfXw9WTsYcpaB7brUtV9y
+   S89z2UqGNEVGU7MV9+xDuwRBL8VRqafBt5mOvlUjByKmdy7+ss88vF03I
+   Sdwn60MVBYD6bhoes9MkaYdL3vZ5FB1sFIXwRi7H12ingvkOjO9DdZ1WF
+   wepAy7xAJh3LdjjzE3akqBofFJURIY0XOjyCWWpGggYE7FhvC7AOMGcFZ
+   B36NyGDllf2ofrVpxXvssamA0GLWMe9rGnO1fUxThAWKT2CCFa2HDBHP+
+   ixfzCJk9IVMVJ/uDxiu5RPBE8Z52MmwtFj/WbLc7eteIx/ZHB6kbxN6Zq
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10465"; a="361561599"
+X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
+   d="scan'208";a="361561599"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2022 19:56:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,304,1654585200"; 
+   d="scan'208";a="592832581"
+Received: from lkp-server02.sh.intel.com (HELO b2938d2e5c5a) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 09 Sep 2022 19:56:26 -0700
+Received: from kbuild by b2938d2e5c5a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oWqfR-00022n-2T;
+        Sat, 10 Sep 2022 02:56:25 +0000
+Date:   Sat, 10 Sep 2022 10:55:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 3af20d2723be5f70e1ce818504a4c093a81b21f5
+Message-ID: <631bfcbd.wihr4flYxbOYDRGu%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T4S0blP9/51qK21U"
-Content-Disposition: inline
-In-Reply-To: <Yxm9fB/5IJS3MXGu@smile.fi.intel.com>
-X-Provags-ID: V03:K1:r0wpIjMElmEi0hqV8F0RnUamSKCv8L6GjZxaIVBmve/tIxeyEb6
- f3uFy7LBihUBoL1b59/bEm5igYVc+pPV3r746gI4FXNZQPBfYiGC/1JVM2t0DGqiyHPlcvF
- tlqWEDCuEqV+AuOWwBUClSr4xvChsWpcjWWcCGBjS2F8XNaN/Uh68Es1eQBw2fNsJ4ouUpx
- 2iOfzmpJXFdcsop/93O8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2C/pU3Vhr7g=:GXVm17NUUeX89H2jAKMOz1
- MPz7d6NoHtQq9O3tZOpcuU1iu11+Cze9kMjItmcgR+l6rBKds/7BcoO9GHPQs6Mw27dpevTwk
- GeeSLVndPsjc8Y4BxwkCG9R3a6zJKMoxs4DEa6lcdZ/CD7apYMFU6J0FfFc0dMPcjyX2tF7Ym
- XNNuGOxvg+6VTjiHlVm0bUGsKIVUUg/s6hwyBbpHvi2RwSzYkPOI/rX8hDRFBDELz3VAQXTeU
- M2E9Ukp+mpagDUDSuklMxy0fP1N8zTj43BfymGZfOrXZEr/FDmbvT9kCc5Oaisg4pUKx1x1h1
- exQ89+1EWNdBtRh1g/r9O8W1cQaazy+GIG1RUsC3IBppxBLMGQH07fxlFCpsKXvyA73eRtmKk
- 1Yo1MCCSiLB1FqQmOKFH532rlwZnLGAmhhgrfx5xuF3IwekBur8fWy9ewwLM2Qzfz9nZeHIPa
- KsSiP8L/5/UFjjkFUNDFsUKUcMqZr858JJ975vSdYwe3DO49l4mOdu0ZS/5Cu8KJ1+deFGP9v
- ItqHJ+Q7Y0OT8VYP2S/km0IO7CVGb2qdjEEy7mT4AUhF2BB+s0Zq6JcmZq8xjv7piy8KDx7c8
- T6A7y6W8yAkZU143YXBrmCCwwKe9n/OB18a/9l+DtC+SWo6HUXNeiECI9XkS+8kfNdWMXGUbQ
- Q+RjOYkkItn/P6vGIJOODGKVb0EGIz/99ukGwvn9Y0vLWBTjPnhrMy5Ddorrjy17ufpBmOVR6
- 5gmd+I9y2bpYSz09gAgdJRZIaBe45HBbgRNA65TvdscWGqMJWVYBm1uKvmQ+cyMVIXVohI3WI
- vJOj/Bi9KQFDuDpxVw11sGTXFMRWZKO6Gl9UzKbokcTR9LfFtihNt3nIQqOCRvWDI9/yP0Ogy
- 0pMNcnUK2PDSvLpkflZJeFjFQjebRoQreNgxIyN29Cms/jMIODpC4XfUeIqgBC5Cck7EYguc2
- p7xBVjMFEPkYZ0kypK7EvpM9bTS899CRlamVWoBSdegOZOgcGKXzXrFyAjDO8GgzwyR/Z7Cp0
- kDrOHN0S+zlT+s76njoxjl5YC8+piw2UX/KfPzd/w6oZlkR8wTG+Y8/lnuFaL4jwqcG3tk/0n
- RieGUX0h9Ktc8lKl/5xjlB+seWq7JVbOJMhSXanSpzt4r39s0axY6ZDxznu1yXBqBuYAOuY4Z
- clMf9v7fon79Wnc8C9N7OUXD4z
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 3af20d2723be5f70e1ce818504a4c093a81b21f5  dt-bindings: gpio: renesas,rcar-gpio: Add r8a779g0 support
 
---T4S0blP9/51qK21U
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 775m
 
-Hello,
+configs tested: 106
+configs skipped: 2
 
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-On Thu, Sep 08, 2022 at 01:01:32PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 07, 2022 at 11:04:40PM +0200, Jonathan Neusch=C3=A4fer wrote:
-> > On Mon, Sep 05, 2022 at 10:14:08PM +0300, Andy Shevchenko wrote:
-> > > fwnode_irq_get() may return all possible signed values, such as Linux
-> > > error code. Fix the code to handle this properly.
-> >=20
-> > It would be good to note explicitly here what a return value of zero
-> > means, i.e., as the documentation of of_irq_get says, "IRQ mapping
-> > failure", and why it should result in skipping this IRQ.
->=20
-> Not that I'm fun of duplicating documentation in the commit message,
-> but it won't take much in this case.
+gcc tested configs:
+um                             i386_defconfig
+powerpc                           allnoconfig
+um                           x86_64_defconfig
+arm                                 defconfig
+i386                                defconfig
+m68k                             allmodconfig
+x86_64                              defconfig
+arc                              allyesconfig
+x86_64                               rhel-8.3
+sh                               allmodconfig
+alpha                            allyesconfig
+powerpc                          allmodconfig
+m68k                             allyesconfig
+arm64                            allyesconfig
+arc                  randconfig-r043-20220909
+i386                          randconfig-a001
+i386                             allyesconfig
+x86_64                           rhel-8.3-kvm
+mips                             allyesconfig
+x86_64                        randconfig-a013
+x86_64                        randconfig-a004
+arm                              allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                        randconfig-a011
+x86_64                           allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a002
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+i386                          randconfig-a003
+x86_64                        randconfig-a015
+x86_64                        randconfig-a006
+i386                          randconfig-a005
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+sh                             espt_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                            mps2_defconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+powerpc                      ppc40x_defconfig
+arm                         axm55xx_defconfig
+mips                         db1xxx_defconfig
+arm                            zeus_defconfig
+parisc                              defconfig
+sh                     sh7710voipgw_defconfig
+arm                        keystone_defconfig
+x86_64                           alldefconfig
+xtensa                    xip_kc705_defconfig
+mips                    maltaup_xpa_defconfig
+mips                      maltasmvp_defconfig
+i386                          randconfig-c001
+m68k                        m5407c3_defconfig
+nios2                         3c120_defconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+arm                         cm_x300_defconfig
+powerpc                    klondike_defconfig
+arm                          badge4_defconfig
+mips                      fuloong2e_defconfig
+s390                       zfcpdump_defconfig
+mips                        bcm47xx_defconfig
+arm                            pleb_defconfig
+riscv                               defconfig
+nios2                         10m50_defconfig
+powerpc                 mpc837x_rdb_defconfig
+arc                              alldefconfig
+sh                              ul2_defconfig
+arm                           sunxi_defconfig
+arm                          exynos_defconfig
+sh                   secureedge5410_defconfig
+arm                         lubbock_defconfig
+sh                          rsk7264_defconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+ia64                             allmodconfig
+mips                     decstation_defconfig
+sh                         ecovec24_defconfig
+sh                           se7712_defconfig
 
-My problem with the description is that handling "all possible signed
-values" is fairly meaningless: The code arguably did that already, it
-did *something* for every possible value. The significant change of
-your patch is that the value zero is handled differently.
+clang tested configs:
+hexagon              randconfig-r041-20220909
+s390                 randconfig-r044-20220909
+hexagon              randconfig-r045-20220909
+riscv                randconfig-r042-20220909
+x86_64                        randconfig-a012
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a014
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a004
+i386                          randconfig-a006
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                        randconfig-k001
+riscv                randconfig-r042-20220907
+hexagon              randconfig-r041-20220907
+hexagon              randconfig-r045-20220907
+s390                 randconfig-r044-20220907
+hexagon              randconfig-r041-20220908
+hexagon              randconfig-r045-20220908
 
-IOW, what I miss is something along the lines of: "fwnode_irq_get can
-return zero to indicate some errors. Handle this case like other errors."
-
-> ...
->=20
-> > >  		for (i =3D 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
-> > > -			int irq =3D fwnode_irq_get(child, i);
-> > > +			int irq;
-> > > =20
-> > > +			irq =3D fwnode_irq_get(child, i);
->=20
-> > (Unneccesary churn, but I'll allow it)
->=20
-> The point here is to see that we actually check something that we just got
-> from somewhere else. It's slightly better for reading and maintaining the
-> code as I explained in [1].
->=20
-> And there is a difference to the cases like
->=20
-> static int foo(struct platform_device *pdev, ...)
-> {
-> 	struct device *dev =3D &pdev->dev;
-> 	...
-> }
->=20
-> when we know ahead that if pdev is NULL, something is _so_ wrong that
-> it's not even our issue.
->=20
-> [1]: https://lore.kernel.org/lkml/CAHp75Vda5KX5pVrNeueQEODoEy405eTb9SYJtt=
-s-Lm9jMNocHQ@mail.gmail.com/
-
-Ok, fair enough.
-
-
->=20
-> > >  			if (irq < 0)
-> > >  				break;
-> > > +			if (!irq)
-> > > +				continue;
-> >=20
-> > Since irq =3D=3D 0 seems to be an error condition, the following seems =
-fine
-> > to me, and simpler:
-> >=20
-> > -			if (irq < 0)
-> > +			if (irq <=3D 0)
-> >  				break;
->=20
-> Not sure it's the same by two reasons:
->  1) break !=3D continue;
-
-Right, hence why I asked for reasoning why zero should be handled
-the way you propose to handle it.
-
->  2) we might need to convert 0 to error if we ever go to report this
-
-Good point.
-
->=20
-> So, to me mapping error shouldn't be fatal to continue, but I would
-> like to hear your interpretation since you know this case much better
-> than me.
-
-However: In wpcm450_gpio_register, there is currently no reporting for
-mapping errors in this loop.
-
-I'm fine with either break or continue.
-
-
-Thanks,
-Jonathan
-
---T4S0blP9/51qK21U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmMbqUMACgkQCDBEmo7z
-X9vPTg//W68gSOfDJBQZ2/UeuyNZ5V9lnHuvyi6tBr+qM77qU9qZoqss1lcSbVq9
-vhtvGEPdFIvPKb61wU0qYM70Kr3TXHpsFHK9lUo25WZybUq32OJMFZYY0go0IQ2X
-FZ8VpUlb7lMOy0jwPu6ARQhyuVN1I5Cr6EnzWs8bhxAIJANqAMeqD85hsXmel3O8
-4IM+oa+26i5otyGZLeLQPAJO1ABWAExemevWsmfsghTcbSt1fTc34dbnyCCXrAE7
-d09YYaIu9SVHt584aIDMMdGwpXDxF1a4ObaRXvv6atMC07Ezs4zU12hATe+GVGx7
-0MCD+bh4RxjSCrAAKRDItN1nJqMFhZTTB0ugmneDAKzORoiV3iDCxCsABxsH1ds4
-u+yI+JAulbWdHsUOXfuns/qQqaTDPbLYdXE3asunOIRNlvTw+DwzuyJ5sIJfBclJ
-6FuIyv+DjjcEt9YRlKtZzkgMxGw0Z13ZvlVlZb9RS9A176xFO04J1m22Vy2Kj+TF
-5UouBkVh0OU9zkLHa+KRmcT88uvVgzK6YqvATSFBvcYGSV2r1Y3v2HlRWCrNxygy
-vqsgWN/d9dqeVLyj5vVUz3ksveKlFEJ8mhPAwHGxSiQUyOLQ/s6YS88GiMioBlFG
-hRoetTp8LXl9SbQyqmuuVzJsaFocIQ271MtXjOIWJou5+k8YN+o=
-=HFeK
------END PGP SIGNATURE-----
-
---T4S0blP9/51qK21U--
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
