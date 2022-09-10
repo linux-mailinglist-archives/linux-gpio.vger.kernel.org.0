@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DABE5B4997
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Sep 2022 23:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7DD5B49AA
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Sep 2022 23:22:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230327AbiIJVVQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Sep 2022 17:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56906 "EHLO
+        id S230398AbiIJVV7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Sep 2022 17:21:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230250AbiIJVUV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Sep 2022 17:20:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90AD84F65A;
-        Sat, 10 Sep 2022 14:18:08 -0700 (PDT)
+        with ESMTP id S230303AbiIJVVK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Sep 2022 17:21:10 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA274F698;
+        Sat, 10 Sep 2022 14:18:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 51F8CB80948;
-        Sat, 10 Sep 2022 21:17:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31BC0C433D6;
-        Sat, 10 Sep 2022 21:17:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CFDC7B8093B;
+        Sat, 10 Sep 2022 21:18:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1350C433D7;
+        Sat, 10 Sep 2022 21:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662844672;
-        bh=OSeSvRnImeo8dv9QwngwQ9WiyEgOdmCucfPlzB1B/e8=;
+        s=k20201202; t=1662844695;
+        bh=bUQW0Wp4SnI8PrxP3zvxYr7GetJzUvK5EMTjMqSKClw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iu6EAqeVQiIGXxc8ow8eDqivtyAb8C6cyhyDvJpfmbgNMevMnSlbKdM+bHuu1bcCY
-         z8X1c6lfdDl6OIPm1mivgrN/Ft4aWbCt6bqLZy4zyYyFJl1KAjGKtgJsIUy70GUzNT
-         R8v055/SAk0NVuAgNNhQ4ng3xrR0qArktoznRdDCB/YnvPn36Q1bQi8NSNEOLOJye/
-         7bGmrhc0s9i30jY2+z8nAqL2fTMhzq2BwIQHg3NjAnKsHtTeYcaIhHefvXEiEch5Wo
-         w/TWGaMy/KS95tPSHj/d6Z5A/v3LWbTdhdbm0OJkCm6ZRoO6U2u3V1K3ZgXFugCW6o
-         wHVFnEU36c7Sw==
+        b=FJvTvMD6Ex57y7RsviEdyXmNLAirU4jAKED8ijnIGentOhZ5Jf+HXpYifOrt5lXAK
+         zcu7p4mVQLlUJ1kmRr39C9Rzm73UMqeWaw0GnK/h14e7AZBb3qCEH4OuECxM5OJx49
+         vz3DCKMruCASQ5hJRvrDyI6P4z7YqsEc5IKBLDabr+wKuDcCCCG2LViOgmf/rTTwr3
+         4sdZSOzYrb2rGp8HQsQsb74q6FIhBBYveGtXd09TdTUKXjBeB/lF2w1O+NUj7xpReS
+         +/Nu71nU19jzawGO2MGcRAuuP7KbiGZ0b/vFo+f9snqKHtUTm9i577xm/ImvvNecVf
+         bzRhJkOIyP95w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     William Breathitt Gray <william.gray@linaro.org>,
+Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 38/38] gpio: 104-idio-16: Make irq_chip immutable
-Date:   Sat, 10 Sep 2022 17:16:23 -0400
-Message-Id: <20220910211623.69825-38-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, bamv2005@gmail.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 13/21] gpio: mockup: remove gpio debugfs when remove device
+Date:   Sat, 10 Sep 2022 17:17:44 -0400
+Message-Id: <20220910211752.70291-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220910211623.69825-1-sashal@kernel.org>
-References: <20220910211623.69825-1-sashal@kernel.org>
+In-Reply-To: <20220910211752.70291-1-sashal@kernel.org>
+References: <20220910211752.70291-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,83 +57,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: William Breathitt Gray <william.gray@linaro.org>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 410a5041aa60d91ff66a861560e7c879d664270f ]
+[ Upstream commit 303e6da99429510b1e4edf833afe90ac8542e747 ]
 
-Kernel warns about mutable irq_chips:
+GPIO mockup debugfs is created in gpio_mockup_probe() but
+forgot to remove when remove device. This patch add a devm
+managed callback for removing them.
 
-    "not an immutable chip, please consider fixing!"
-
-Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
-new helper functions, and call the appropriate gpiolib functions.
-
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-104-idio-16.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+ drivers/gpio/gpio-mockup.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-104-idio-16.c b/drivers/gpio/gpio-104-idio-16.c
-index 45f7ad8573e19..a8b7c8eafac5a 100644
---- a/drivers/gpio/gpio-104-idio-16.c
-+++ b/drivers/gpio/gpio-104-idio-16.c
-@@ -150,10 +150,11 @@ static void idio_16_irq_mask(struct irq_data *data)
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	const unsigned long mask = BIT(irqd_to_hwirq(data));
-+	const unsigned long offset = irqd_to_hwirq(data);
- 	unsigned long flags;
- 
--	idio16gpio->irq_mask &= ~mask;
-+	idio16gpio->irq_mask &= ~BIT(offset);
-+	gpiochip_disable_irq(chip, offset);
- 
- 	if (!idio16gpio->irq_mask) {
- 		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
-@@ -168,11 +169,12 @@ static void idio_16_irq_unmask(struct irq_data *data)
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	const unsigned long mask = BIT(irqd_to_hwirq(data));
-+	const unsigned long offset = irqd_to_hwirq(data);
- 	const unsigned long prev_irq_mask = idio16gpio->irq_mask;
- 	unsigned long flags;
- 
--	idio16gpio->irq_mask |= mask;
-+	gpiochip_enable_irq(chip, offset);
-+	idio16gpio->irq_mask |= BIT(offset);
- 
- 	if (!prev_irq_mask) {
- 		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
-@@ -193,12 +195,14 @@ static int idio_16_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 	return 0;
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index d26bff29157b5..369a832d96203 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -373,6 +373,13 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
+ 	}
  }
  
--static struct irq_chip idio_16_irqchip = {
-+static const struct irq_chip idio_16_irqchip = {
- 	.name = "104-idio-16",
- 	.irq_ack = idio_16_irq_ack,
- 	.irq_mask = idio_16_irq_mask,
- 	.irq_unmask = idio_16_irq_unmask,
--	.irq_set_type = idio_16_irq_set_type
-+	.irq_set_type = idio_16_irq_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
++static void gpio_mockup_debugfs_cleanup(void *data)
++{
++	struct gpio_mockup_chip *chip = data;
++
++	debugfs_remove_recursive(chip->dbg_dir);
++}
++
+ static void gpio_mockup_dispose_mappings(void *data)
+ {
+ 	struct gpio_mockup_chip *chip = data;
+@@ -455,7 +462,7 @@ static int gpio_mockup_probe(struct platform_device *pdev)
  
- static irqreturn_t idio_16_irq_handler(int irq, void *dev_id)
-@@ -275,7 +279,7 @@ static int idio_16_probe(struct device *dev, unsigned int id)
- 	idio16gpio->out_state = 0xFFFF;
+ 	gpio_mockup_debugfs_setup(dev, chip);
  
- 	girq = &idio16gpio->chip.irq;
--	girq->chip = &idio_16_irqchip;
-+	gpio_irq_chip_set_chip(girq, &idio_16_irqchip);
- 	/* This will let us handle the parent IRQ in the driver */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
+-	return 0;
++	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
+ }
+ 
+ static const struct of_device_id gpio_mockup_of_match[] = {
 -- 
 2.35.1
 
