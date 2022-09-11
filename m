@@ -2,112 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6161E5B4E5E
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 13:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 749AC5B4EE3
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 14:59:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230295AbiIKLZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Sep 2022 07:25:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37354 "EHLO
+        id S230206AbiIKM7B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Sep 2022 08:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230274AbiIKLZ0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 07:25:26 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BCD22B630
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:25:24 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id z25so10420133lfr.2
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:25:24 -0700 (PDT)
+        with ESMTP id S230184AbiIKM7B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 08:59:01 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F3B22B26;
+        Sun, 11 Sep 2022 05:59:00 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id y3so14412316ejc.1;
+        Sun, 11 Sep 2022 05:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=YHs0SEaDJbXoyLL77gh0qKqzR2QzJo2QI/lC2jkxjBs=;
-        b=tb7K4ihe99wtgXdoqfVWwjkSv2XWRM7zXDgHrB6hsB2te0rfp1CtsyaVPTEis4qNgF
-         +xBz1Jdl3YWL0Zix/aOG+fIhrZPxQmmvqGIaMTjdSDIAfEP/Xycds5CJ8ZsVG3RJdbNI
-         2MiM7rTLj3qqwl/9UrPJIbhwnHRwcCF+fS6XOXnGBPsG5sze7vHT6FhzSPij717/DsHN
-         aLlZmRI28TEtOTwEXZX5FBn8L84vfukjcKXs21EXFaO7z3dOr4klvTM4gn+2hgO3zpdo
-         +iCaizTRKG/A+ugula+uVSknSDQq47BtyhFp9ss6khHoJ6H88UofMvwrN+cxrR/pjDkQ
-         QyEA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=Uz9r2eWONtKsHEc45nuRwjLQaSEnYaSN+H3yaDixtHo=;
+        b=FWXsQHN4mwLVy85E12S3bLPp8EehpaI85PYbm2LZeoQ4eGX75liYzcKKzfUu3r2qei
+         /nMfOP2DUosUvMpAKL2cDgdCB0JyLl60X/TyLGtXSTzry6jl1xxc/9lf/svsjCGxmbvo
+         1mwV8pvcwo/DWehZQbTIdFE2Qug3gStUh6LmYHbT4VC0/lzVKGnD5UotKWtHtR1+YF8O
+         J17vAO25LAQu0ZidWMfX9cDR3H24GG+JNwdHd6RwqD2L+miAqttY0KJ1kXZSLi+s3Em3
+         TGvjsv9SUawq05eKt+NKnUOi6zhX+UQT6wAgibZxdX2W98YKic1m52yKal8JmbhvN5Ib
+         WV+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=YHs0SEaDJbXoyLL77gh0qKqzR2QzJo2QI/lC2jkxjBs=;
-        b=CRw0a+o/b66vp6HgDJEqlvxl4fZG7e8LyWAj99qYFrQID10qZxNA2qPbOHNan00Lk0
-         SeoZ2zA/gReVqAx6zLV1co9yV9RIwWRooiq6tIuATSwfPZcYWhdRyqePla6wrCC9gQJX
-         9AEQpzEG73r3zsQ5NNnBe4KDwN2mOuQi1vZs25xzQLhIdOKW8Utz+kQ0AEhMUjsOns71
-         LT/dkmgkKisAU8GTHeXl3Ol7HVaN5oiCrKUXvnJsLEi2Ryz3YOjn1eLhDj7X+Mtm0IkS
-         R7kDcp70e785eRW4/DpRV4mSiouOM5bIKQzR4hidoj+UaffkvgKi5uZVKTgLxIo31w/W
-         SjTg==
-X-Gm-Message-State: ACgBeo1/GU7C6uskGtDVxkzPANfMmswOp/iWJsAC4SdITFMU7v0q5kg1
-        fogE3BAFxtf/r1OtmCiJGlaCRQ==
-X-Google-Smtp-Source: AA6agR5oNmr6m8z31B/zJnwas91EEnPX1JPNa8YKgusE48/bwlAxCnz1sfRM7bpJpFsZWk7+VjHkxw==
-X-Received: by 2002:a05:6512:3e13:b0:499:1829:5181 with SMTP id i19-20020a0565123e1300b0049918295181mr3138202lfv.71.1662895522679;
-        Sun, 11 Sep 2022 04:25:22 -0700 (PDT)
-Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id p4-20020a2eb984000000b0026b96b8ecb6sm629851ljp.111.2022.09.11.04.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Sep 2022 04:25:22 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=Uz9r2eWONtKsHEc45nuRwjLQaSEnYaSN+H3yaDixtHo=;
+        b=VpyAxiP5bRlkEfv3nCy1w2C88DzUlwvHAL/03MV9AzOvyydbpimg+0r4I399AN+KPn
+         8jKPZWiJX6uxKSuZixgvFHS7m8+/tED2ieyJDAiWhbEthPLCsoMjNlNIwe4PL7ex/Aen
+         975P90O+IGwYEDsFvWYQQ8ZCqMmtiZ8H1Y5A1YSfvBGlb25t/9mr7par2njeA6/Eda35
+         tN6zOeVNpqaPgBzP16Eh512G2nSm+MInDI9RpxUh8lh6iPm8OIWRJqDambGIF5FXg0M0
+         49hjBnNg/ffiln4VI14gW667FvV3wl/HtJhz+hLXEcNE3P/QNpwa9NB4CdJl6bMV8Drx
+         rwGQ==
+X-Gm-Message-State: ACgBeo1QhU0rbQg9zqD/QjA8LOyDDnGNmD72cmIpQXWhrywZDc3/bwsi
+        UfoUxa5Gj4j8DUmMuzEgbwnQ/mTFaSb0rg==
+X-Google-Smtp-Source: AA6agR4h4Z2Y0RuzAcGEjuZl8NowapDiXMwJCUwCFppZAVfEhPFCdS1JDkkeYBLIDKghQspPRM7y6w==
+X-Received: by 2002:a17:906:ef8b:b0:730:d348:61b9 with SMTP id ze11-20020a170906ef8b00b00730d34861b9mr15609215ejb.350.1662901138723;
+        Sun, 11 Sep 2022 05:58:58 -0700 (PDT)
+Received: from [192.168.74.101] ([77.78.20.135])
+        by smtp.gmail.com with ESMTPSA id fd2-20020a056402388200b0044ed4d02483sm3867048edb.67.2022.09.11.05.58.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Sep 2022 05:58:58 -0700 (PDT)
+Message-ID: <732d13e0-07a6-3b22-23e3-32f20cf7f750@gmail.com>
+Date:   Sun, 11 Sep 2022 15:59:03 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 01/40] dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix
+ matching pin config
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] dt-bindings: pinctrl: qcom: drop non-working codeaurora.org emails
-Date:   Sun, 11 Sep 2022 13:25:20 +0200
-Message-Id: <20220911112520.203062-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220911111200.199182-1-krzysztof.kozlowski@linaro.org>
+ <20220911111200.199182-2-krzysztof.kozlowski@linaro.org>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+In-Reply-To: <20220911111200.199182-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Emails to codeaurora.org bounce ("Recipient address rejected:
-undeliverable address: No such user here.").
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml         | 1 -
- .../devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml        | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-index 33d1d37fdf6d..624e14f00790 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml
-@@ -8,7 +8,6 @@ title: Qualcomm Technologies, Inc. Low Power Audio SubSystem (LPASS)
-   Low Power Island (LPI) TLMM block
- 
- maintainers:
--  - Srinivasa Rao Mandadapu <srivasam@codeaurora.org>
-   - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
- 
- description: |
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-index 30e682579391..ad3496784678 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
- title: Qualcomm Technologies, Inc. SC7280 TLMM block
- 
- maintainers:
--  - Rajendra Nayak <rnayak@codeaurora.org>
-+  - Bjorn Andersson <andersson@kernel.org>
- 
- description: |
-   This binding describes the Top Level Mode Multiplexer block found in the
--- 
-2.34.1
 
+On 9/11/22 14:11, Krzysztof Kozlowski wrote:
+> Matching PMIC GPIOs config nodes within a '-state' node by '.*' pattern
+> does not work as expected because of linux,phandle in the DTB:
+>
+>     'pins' is a required property
+>     'function' is a required property
+>     'rx', 'tx' do not match any of the regexes: 'pinctrl-[0-9]+'
+>     [[59]] is not of type 'object'
+>
+> Make the schema stricter and expect such nodes to be either named
+> 'pinconfig' or followed with '-pins' prefix.
+
+Well, now you don't allow pinconfig, so maybe tweak the commit message.
+
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Reviewed-by: Iskren Chernev <iskren.chernev@gmail.com>
