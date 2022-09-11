@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDB475B4DBD
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 13:12:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41A6B5B4DB8
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 13:12:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbiIKLMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Sep 2022 07:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33840 "EHLO
+        id S230159AbiIKLMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Sep 2022 07:12:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbiIKLMK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 07:12:10 -0400
+        with ESMTP id S230151AbiIKLMM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 07:12:12 -0400
 Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10CA32B8D
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:08 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id i26so10340459lfp.11
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FA932B9B
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:09 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id k10so10369355lfm.4
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=ULI4E1YGBzuTdtZhggajmSSNmIlXGsKZGjNlYp+12Qw=;
-        b=RuYCb2kd6bIExQCrcE/2UvzSKGbCtuvzauVOaDIaH2C4DIjolIQL6ArQE+EsKfd/Kq
-         hayS1iEymsuhuhnkHCAxx8ogff7ELBxPIJ/YUT0c2UGvsaYNvhbVGmuy63smumXCIx9A
-         grFPDUuCLKfFJTsU5WY2jIELdAcY8Y5WXf+t/OI4fbstJlH81l5dZfvi7F8RTxh35FwV
-         77kv6d9ggFfyultFuxN8lbhMbaDV3H9EyYAD8xR3+dYIUc1TVwbjCiBMiVHFfcUH8gSD
-         0N9g+XLjNdUBh//sKa9uSWivA0LKU1jxDHK6RXjpPpshoLjJ7Tp7zqP3b86dU40dOg5f
-         OIZg==
+        bh=WuNuBKTLriSBOY3KzJZlVDULqq0LYp0F6kHtXN1EUic=;
+        b=JRVUwSOVnd3I2XhJVPfw5ZXXfOBdv1fHnkR2UdcVEgvbqgjvgVcyoxPjDFx9sUD4PT
+         8eSCCWyBGTDgQK53BeTrbwokhrk5dJmAkiwuZ73toHD62VHTeteJi/LhdrhtY50uYvBU
+         ol74O8Lxw6Rh+bvp7JOfFnJcQfqVD6GXOrMToa0DJk/WwzGbFE8T7+EumKyKJhSMdLgm
+         JJp2Nc6xiEfRNxwCNvQZiD+ek+YTBvNC7tO/G76NKsOUnuUqAQNq/F2dXO7OTWGlizdo
+         b/QNvsnFpmJPRJqvB9wWYwsF9D6RNWhKuvwXsrtgXtKfhKaMl+RJgxzjJyECCJKvTd5G
+         Y6Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=ULI4E1YGBzuTdtZhggajmSSNmIlXGsKZGjNlYp+12Qw=;
-        b=HhD46A7wtpegS2LMycjmlv909q1vlrbE16f5NfgsU2YViAyQiatDdogL7fo8huq1YG
-         e8YVN5V3gyHoBAqRKlxfF0pn6kaanBzRADUl3bayA8eW2ymmvy9WmVNmWbc+w+HL7vA6
-         MMTQm3aG5Y1edFm5ngAI13UXWaO8KLstta0mLjpOnuJmoqUEoK7KeF7yOYkIQsjjSToJ
-         G8loH0MOlid1whfrNegruRcqOHsDPv/tmui8hvnvlSicMi8Ca0z8+Sn/fkSsr1ZBN8nv
-         CvmJCB4U9tHOGs+R6wh78GnVFlTDQ7bNO++DB0cvIKOM9M/8tR0Xj/HgrDYLIO43QAHf
-         WQKg==
-X-Gm-Message-State: ACgBeo0BfuS3/FiAIVgYR6XfEykELQN15sq4OgLZoe08uwcMTdv8DazZ
-        A/sCrPzXAPEqkEYbAF+T2Y6J5Q==
-X-Google-Smtp-Source: AA6agR4mVMIRU8kdKCWGn6F7du/Q7/hA9RJ8JPUJVZgTSHFVXov+ZPEGgjpDXMtmlvkLdSGUmnI/Og==
-X-Received: by 2002:a05:6512:2294:b0:494:8dc5:10af with SMTP id f20-20020a056512229400b004948dc510afmr6718001lfu.426.1662894727027;
-        Sun, 11 Sep 2022 04:12:07 -0700 (PDT)
+        bh=WuNuBKTLriSBOY3KzJZlVDULqq0LYp0F6kHtXN1EUic=;
+        b=Ai+ijhiMUJnjCNTTibElMuF6tDeSvt5WGxrsTkK5lrDM3ypACW2HFPk1t9swJDdUqz
+         SKEs67RF/Ikt1dZ6uNryp6waru190egiSwD9r3TzJgMS2TbBmTAq+q0FTuTOnQsj2vcd
+         qDHzXsfJqokwRm7qi9JfEKmv9EWuTj+aSQ+mMXMEFltbWsS8wYCcX6wTqwZHLnXFb5xM
+         AUc/THp1kqq017lk8csvqssgGHVlP1vv8Uf2MS9EWsvuRElWks5RbzxePF3F3CCHPh8b
+         SVoxqvIWSDYV5WmT3inm0scqOevjhdykE1UnWgWt7MASHA6VW/VdmkkpE0SCqastYQy8
+         BUvA==
+X-Gm-Message-State: ACgBeo2bOQVW/N76lPIO/1dA0DOpSLsrvKRibPrUfylUa0UZgMVT7aMo
+        X2nZAN3slpELzse7swa8w3I7Ag==
+X-Google-Smtp-Source: AA6agR6n3KRWcd5ghmh4ehITymhk7BjNz8BbyRpDkNRt2KauvnkCpwjY1w0Vmw+d/+xowTwzmTzzPg==
+X-Received: by 2002:a05:6512:2302:b0:492:ce48:1bab with SMTP id o2-20020a056512230200b00492ce481babmr6680085lfu.266.1662894728127;
+        Sun, 11 Sep 2022 04:12:08 -0700 (PDT)
 Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0025dfd8c9287sm607365ljc.69.2022.09.11.04.12.06
+        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0025dfd8c9287sm607365ljc.69.2022.09.11.04.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Sep 2022 04:12:06 -0700 (PDT)
+        Sun, 11 Sep 2022 04:12:07 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -62,9 +62,9 @@ To:     Andy Gross <agross@kernel.org>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 02/40] dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix matching SD card pins
-Date:   Sun, 11 Sep 2022 13:11:22 +0200
-Message-Id: <20220911111200.199182-3-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 03/40] dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix indentation in example
+Date:   Sun, 11 Sep 2022 13:11:23 +0200
+Message-Id: <20220911111200.199182-4-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220911111200.199182-1-krzysztof.kozlowski@linaro.org>
 References: <20220911111200.199182-1-krzysztof.kozlowski@linaro.org>
@@ -80,47 +80,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SD card pins do not have function, so do not require it:
-
-  pinctrl@500000: sdc2-off-state: 'oneOf' conditional failed, one must be fixed:
-    'pins' is a required property
-    'bias-disable;' is a required property
-    'clk-pins' does not match any of the regexes: 'pinctrl-[0-9]+'
+Bindings example should be indented with 4-spaces.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml         | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml | 80 +++++++++----------
+ 1 file changed, 40 insertions(+), 40 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
-index 8a2b4767c7b6..28b29bf714b4 100644
+index 28b29bf714b4..e39fbb36d8c1 100644
 --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
-@@ -69,7 +69,6 @@ patternProperties:
-     description:
-       Pinctrl node's client devices use subnodes for desired pin configuration.
-       Client device subnodes use below standard properties.
--    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+@@ -150,44 +150,44 @@ additionalProperties: false
  
-     properties:
-       pins:
-@@ -121,6 +120,16 @@ patternProperties:
-     required:
-       - pins
- 
-+    allOf:
-+      - $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
-+      - if:
-+          properties:
-+            pins:
-+              pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-2])$"
-+        then:
-+          required:
-+            - function
+ examples:
+   - |
+-        #include <dt-bindings/interrupt-controller/arm-gic.h>
+-        tlmm: pinctrl@500000 {
+-                compatible = "qcom,sm6115-tlmm";
+-                reg = <0x500000 0x400000>,
+-                        <0x900000 0x400000>,
+-                        <0xd00000 0x400000>;
+-                reg-names = "west", "south", "east";
+-                interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
+-                gpio-controller;
+-                #gpio-cells = <2>;
+-                interrupt-controller;
+-                #interrupt-cells = <2>;
+-                gpio-ranges = <&tlmm 0 0 114>;
+-
+-                sdc2_on_state: sdc2-on-state {
+-                        clk-pins {
+-                                pins = "sdc2_clk";
+-                                bias-disable;
+-                                drive-strength = <16>;
+-                        };
+-
+-                        cmd-pins {
+-                                pins = "sdc2_cmd";
+-                                bias-pull-up;
+-                                drive-strength = <10>;
+-                        };
+-
+-                        data-pins {
+-                                pins = "sdc2_data";
+-                                bias-pull-up;
+-                                drive-strength = <10>;
+-                        };
+-
+-                        sd-cd-pins {
+-                                pins = "gpio88";
+-                                function = "gpio";
+-                                bias-pull-up;
+-                                drive-strength = <2>;
+-                        };
+-                };
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    tlmm: pinctrl@500000 {
++        compatible = "qcom,sm6115-tlmm";
++        reg = <0x500000 0x400000>,
++              <0x900000 0x400000>,
++              <0xd00000 0x400000>;
++        reg-names = "west", "south", "east";
++        interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
++        gpio-controller;
++        #gpio-cells = <2>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++        gpio-ranges = <&tlmm 0 0 114>;
 +
-     additionalProperties: false
- 
- allOf:
++        sdc2_on_state: sdc2-on-state {
++            clk-pins {
++                pins = "sdc2_clk";
++                bias-disable;
++                drive-strength = <16>;
++            };
++
++            cmd-pins {
++                pins = "sdc2_cmd";
++                bias-pull-up;
++                drive-strength = <10>;
++            };
++
++            data-pins {
++                pins = "sdc2_data";
++                bias-pull-up;
++                drive-strength = <10>;
++            };
++
++            sd-cd-pins {
++                pins = "gpio88";
++                function = "gpio";
++                bias-pull-up;
++                drive-strength = <2>;
++            };
+         };
++    };
 -- 
 2.34.1
 
