@@ -2,83 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68E1F5B4CF4
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 11:19:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1495A5B4DAB
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Sep 2022 13:12:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbiIKJTP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Sep 2022 05:19:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42456 "EHLO
+        id S230102AbiIKLMK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 11 Sep 2022 07:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbiIKJTO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 05:19:14 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 357A63C8E5
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 02:19:13 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id f9so9392293lfr.3
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 02:19:13 -0700 (PDT)
+        with ESMTP id S229992AbiIKLMJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 07:12:09 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8232D32AB4
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:06 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id k10so10369235lfm.4
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 04:12:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date;
-        bh=K7SOn56lpl3rQ4W5ApgRofuOiIiXGC1PeTTRy4o8CDc=;
-        b=O1ZK29+wped5PqHbSlaM3sZKDCxoM15vD8it+9uD/87W093Eu05bO+w0hZgTwhnYv9
-         755v63B49BsI+7lb8Ju79Y9Bua5AdOsTAq8fX0ljDPTTrTJcv4RSFucYPEg54dUZNh0y
-         Tsdq372d567n7EsZva2+mxphdfURsxBWAdy6NTOohHGe/PZ9hTKNmj+PhJoKHUWyjnc9
-         /tphsPPZrKKCRW8mjWqoLhK3cKMqa0RKabLJ+qGkWf9OEq5wR3LYvdxsm0oSlcyP5tBO
-         7SLKUG3as6VtBvafQSlZ8AagBnFQ7VW34trFvoiP0uYiWt6NjeVzXvcAqc3JSxXnuLk9
-         /6WA==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=DyvQtQkLpVQGMhu0HWq1UrLx3hRGrWAe+cspY6VBYTw=;
+        b=NADjhuYepfTACJoX+veq4BIyQhdJPojNAGf6lHHEgmoQLsDSFGL8wrDj5wgZczVFGy
+         enyirl4iNFvwp2hEyGLs5gWVJPkLcJxDRno5fZPEtHgLrFQE/HORZRKloc82C+u2ROpQ
+         MKuI6naYuhN4snServdW5jUDtFBx8fZe/yWQwTnd+Wznw5j/tNePkrbpYQrTmm87R1V0
+         SdU7SaG6UJCBR2EVWwMIXycDSe8NthTJXLDpKmEVDddvTe6y3+4aEz7MxBKUkJENoup8
+         d25Hc3TwbM2C0exPmU9bu1Q2tpTwhnmVBVeyWSpjUOYleEaVmGtE1cJcoQACBD/s5CVo
+         jVNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=K7SOn56lpl3rQ4W5ApgRofuOiIiXGC1PeTTRy4o8CDc=;
-        b=RuFt3E/ElecfHeMrRXQdaa7syA89A+Fxv0nE63s+JzPeuPMF1ghxd67o2qGyCfn/kX
-         zyD0UmPF0FtfxZ3gmja/e+WhgZbwc37tiMCPk/HFkbD2v4/71fy3G7ES8BEHz5YZz7YU
-         +8GCwjYC3e0hRMTHRMoDdEYy69GfeP8HP0Zzc5/QQWftvVA695CTOvLjSBvZC+7ShMBi
-         7pt5k3gc83aJLHkzq9CUcyM1xj6el55STlaLBsQZxiKZ/sSc5uN6gdyBOW7P7xpyFK1D
-         b/S6yVV7P0KtJ8cyIhEkzvoKVgEux3EhOoZ22TNZN2KFMDyEZE4JuOjwkGtpX7idZa9n
-         UsYA==
-X-Gm-Message-State: ACgBeo3FsjVZ3jqUPV1gYhpdBRv08oynL3bFraXtudftI9YmFhJrA2LW
-        FuYI2VFkJBa0cTyeG0i8OHrEzpYsQYUqtWbeeBE=
-X-Google-Smtp-Source: AA6agR5+ErzKWcbNOoOALhjqV2nCPZuhDtc+fgIkgWKdTFQURcTcNctvVsThUQtH9DdNxU5+gaMODxgg4TQ8GWDWrV0=
-X-Received: by 2002:ac2:5d6e:0:b0:494:99aa:6548 with SMTP id
- h14-20020ac25d6e000000b0049499aa6548mr6874084lft.508.1662887951223; Sun, 11
- Sep 2022 02:19:11 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=DyvQtQkLpVQGMhu0HWq1UrLx3hRGrWAe+cspY6VBYTw=;
+        b=SvmmFeIp/ecZeOCTn33/lNXToNA83wnnUaVxUSlsmwDp3b6y9qj3bASc34yUfA4IPv
+         qPSL2CISFyDPhHHolM6JP4kjoMA6D3/QxFyOF2GL4sfdFBOz3cjlUu8gaAqy3uKyfbOb
+         I9y17J7DeEyw38I445evVOWa3MOQBfhiCF355taF3NRRnfFqIjt2rB14Uy6V0mnRfT34
+         htGbOXNDN2eYkwXGLCESU0G2X3BvOPNh95G254ePGmCBqjauk6rzfl4kGVh7IKJef4L3
+         zY8OpgNkyU3Ylr+KlbNP9NiCpktL5MZ6ERVYCIdTfT/MtcziRtkjmUc3kDI1JGAr8gha
+         Kp9A==
+X-Gm-Message-State: ACgBeo31iGEq4m5gg0cLFWVyhqB/60dHTU42RpXPFf1uQQwbmhd7l3/e
+        5ClUzhjPBnVz1PU7yMoOjb6kEg==
+X-Google-Smtp-Source: AA6agR7dluRdbnpHfiFP7SDpOslhxBJxISBrAIwWCcucclqnKUH7uFefctD3/fFQdvb+wyhywbWneQ==
+X-Received: by 2002:ac2:4d2b:0:b0:498:fbf0:4f89 with SMTP id h11-20020ac24d2b000000b00498fbf04f89mr3511358lfk.500.1662894724836;
+        Sun, 11 Sep 2022 04:12:04 -0700 (PDT)
+Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id 11-20020a05651c128b00b0025dfd8c9287sm607365ljc.69.2022.09.11.04.12.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Sep 2022 04:12:04 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 00/40] pinctrl/arm64: qcom: fix some of Qualcomm pinctrl schema warnings
+Date:   Sun, 11 Sep 2022 13:11:20 +0200
+Message-Id: <20220911111200.199182-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Sender: michealkevin175@gmail.com
-Received: by 2002:a05:6512:2216:0:0:0:0 with HTTP; Sun, 11 Sep 2022 02:19:10
- -0700 (PDT)
-From:   Aisha Al-Qaddafi <aisha.gdaff21@gmail.com>
-Date:   Sat, 10 Sep 2022 21:19:10 -1200
-X-Google-Sender-Auth: 4eVJPsKzTTt2th9Zsxik2nh3Jm0
-Message-ID: <CAFDyLcys_LJyNwaxytzexNs9y3N=hzOHqO6RUnr4daVZHOn_-g@mail.gmail.com>
-Subject: please i need your assistance
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=3.6 required=5.0 tests=BAYES_99,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MILLION_HUNDRED,MILLION_USD,MONEY_FRAUD_5,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I came across your e-mail contact prior to a private search while in need
-of your assistance. I am Aisha Al-Qaddafi, the only biological
-Daughter of Former President of Libya Col. Muammar Al-Qaddafi. Am a single
-Mother and a Widow with three Children. I have investment funds worth
-Twenty Seven Million Five Hundred Thousand  United State Dollar
-($27.500.000.00 ) and i need a trusted investment Manager/Partner
-because of my current refugee status, however, I
-am interested in you for investment project assistance in your
-country, may be from there, we can build business relationship in the
-nearest future. I am willing to negotiate an investment/business
-profit sharing ratio with you based on the future investment earning
-profits. If you are willing to handle this project on my behalf kindly
-reply urgently to enable me to provide you more information about the
-investment
-funds
+Hi,
+
+That's a set for some of arm64 pinctrl bindings fixing most common warnings.  I
+have a plan to continue this for remaining arm64 (sm8250 needs updates) and for
+arm.
+
+Dependencies
+============
+1. dt-bindings are independent of DTS patches.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (40):
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix matching SD card pins
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: extend example
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: reference tlmm common pins
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: add gpio-line-names
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: correct number of GPIOs
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: add gpio-line-names
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: reference tlmm schema
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: do not require function
+    on non-GPIOs
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: fix indentation in
+    example
+  arm64: dts: qcom: sm6125: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm6350: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm8350-sagami: correct TS pin property
+  arm64: dts: qcom: sm8350: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm8450: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sc7280: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sc7280-herobrine: correct TLMM gpio-line-names
+
+ .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml |  55 +--
+ .../pinctrl/qcom,sc8180x-pinctrl.yaml         |  79 +++--
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        |  73 ++--
+ .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml |  94 +++---
+ .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml |  61 +++-
+ .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml |  73 ++--
+ .../bindings/pinctrl/qcom,sm6375-tlmm.yaml    |  73 ++--
+ .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml |  41 ++-
+ .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml |  73 ++--
+ .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml |  82 +++--
+ .../boot/dts/qcom/sc7280-herobrine-crd.dts    |   2 -
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |  44 +--
+ .../arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi |   8 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |  20 +-
+ arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi    |  14 +-
+ arch/arm64/boot/dts/qcom/sc7280.dtsi          | 316 +++++++++---------
+ .../qcom/sm6125-sony-xperia-seine-pdx201.dts  |   4 +-
+ arch/arm64/boot/dts/qcom/sm6125.dtsi          |  10 +-
+ arch/arm64/boot/dts/qcom/sm6350.dtsi          |  14 +-
+ .../dts/qcom/sm8350-sony-xperia-sagami.dtsi   |   4 +-
+ arch/arm64/boot/dts/qcom/sm8350.dtsi          |  44 +--
+ .../qcom/sm8450-sony-xperia-nagara-pdx223.dts |  12 +-
+ arch/arm64/boot/dts/qcom/sm8450.dtsi          | 152 ++++-----
+ 23 files changed, 733 insertions(+), 615 deletions(-)
+
+-- 
+2.34.1
+
