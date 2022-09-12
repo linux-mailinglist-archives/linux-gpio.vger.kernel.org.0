@@ -2,67 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEA8C5B5169
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Sep 2022 00:04:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D6115B53D6
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Sep 2022 08:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbiIKWD6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 11 Sep 2022 18:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48346 "EHLO
+        id S229586AbiILGR4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Sep 2022 02:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229759AbiIKWD4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 11 Sep 2022 18:03:56 -0400
-Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DBF240B8
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 15:03:54 -0700 (PDT)
-Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-1278624b7c4so18826784fac.5
-        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 15:03:54 -0700 (PDT)
+        with ESMTP id S229514AbiILGR4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Sep 2022 02:17:56 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A9926126
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 23:17:54 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id f9so12420949lfr.3
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Sep 2022 23:17:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=7XTw7m4Nf8cdHglRVS0K+UqUFYYElhVsCMvVRx04Mko=;
-        b=nfUIBfu/DX62qlddDxVvtk7wUU6715kZrtnFlRb7twZx79NcDu3J0fvUSqqUm5/7bG
-         3f6P3RJZs/47vroc1FtdLEOxXttgETgpV6t1TDk8UEtQIQsnmTo7cULkPLCWnpnL0jQ2
-         4QtIYVCo4555yl2hN96WUTQbdXfGcA95uhPvXuW/dfmBk3DrGXTvzGRbzS6wzQzY9eyq
-         UC8Pgs/nYXknmbuAGyAHeXfjN+NzELO6zATZEyLa33H6X2Zum/42rg/tQcY5jlglmc56
-         E1uayubGEXmDK3rjnoFawfn7x6I6nWYXqw8bbjaAGUkgfm+Ya/0cuXwUMkkfLhZaNs8H
-         sksw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=2Irm+03uhKOe8J1NFtHyiJKs5L7CSgbnyfN7vSggVVc=;
+        b=nQiZpj3w7cKDOPwUM7AsGzko5yPxX9BtuLDI/XcTS+uSiHNuc4ynG/iQ26hvDPi5Tr
+         69Wjki+ofu8R94Hr4uE0SM3yuW2GGnbkJnUhvOazGL2mvnSnn9+mEPwyc9No8nqFZFnI
+         jixLr6engymS7yAXuiSWR2WApEcJbei+I9UbP8RZCL/xe9lv6+p5uVeB3BzcAeUU7zUu
+         oLlRsNEn6SAN5nezaZAW3S6Bl6T+nrr3s09jJ+cGhA6RTchu2nbfyZ4C1IbVS9+lAoRD
+         SctUyMsxyduqjMictD/+PIOsN2LcR2JQQt6lzBHrXwtyq4e5z/BNUY05Jh/ruzPgJ5fO
+         lh6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=7XTw7m4Nf8cdHglRVS0K+UqUFYYElhVsCMvVRx04Mko=;
-        b=WGMqSky0649mF5/90QVlO/uxq/r5x4Vqo04l4Fnf0L7NDfd+ISck6/bGzfD4BgEhnG
-         74n7na/yKvi4/SIfmbJiDdRN+0f/V8Seo8LEsBmZ9fqAI2iEXrZFFffy2lDxaLZnSOhr
-         Yq1s4oQqOqeoth23khSVlnTpWlNzqF7uWbNMcfgZef/SuqtOwtDoTNpZ/L10Q5XT4zBZ
-         Os2J8d0M2W4dZ19VZE+aGwDGfOVXdHu0/IaJCD3/44hcJsdF0lH2umzbaDIBsCimsxT3
-         wu0RO/yu1Ppakrfns+5yt6v9gWF/gjRv1R2Xx5j1t5A0c4mWmmH14/frlurd8O6Pnxkz
-         PxuQ==
-X-Gm-Message-State: ACgBeo3zrkM1cRtOcSYYQzNYPwWVKGRahR7V/HkiFP7yFlW7L1wBdHLM
-        +3AR7oWgyjAZMP0+KfxQ06g38w==
-X-Google-Smtp-Source: AA6agR7VThkM5Zrw8/wrAkX2Fckt8wBmzt7Y6t+Ny3QcOjTXwoHJvViE0Ku78AsY28B5LIJ69a2hzA==
-X-Received: by 2002:a05:6808:138b:b0:344:a921:9e06 with SMTP id c11-20020a056808138b00b00344a9219e06mr7945718oiw.272.1662933833677;
-        Sun, 11 Sep 2022 15:03:53 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id r19-20020a056870439300b00127d2005ea1sm4664249oah.18.2022.09.11.15.03.53
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=2Irm+03uhKOe8J1NFtHyiJKs5L7CSgbnyfN7vSggVVc=;
+        b=nNwqkajhqEYHFZSmcQ8/zWYCYk8XicZh/RFddo7Sxn+ehadDM/axOOdrBLebCsgdNI
+         WfnmHC3cVe9A+wYJf10euQElrePCf7uWprB8DUgm0eRs1mjsCq9HmUmLVXSfs8HtD+ss
+         EoP3cWt4mmPiL/GTF89z0pJft8c2P+a59ieK1GmnTb/endrlLCV4deTTqGVp80zPnn+A
+         ZKxMO4lOSRfPabRrB4GovSK4NkJKRAVlxn2vXAsHYrLsWUL5QcegserVJFXe4egqaBUl
+         1arGTvIctYw5oD4RsnU8Qesia7GC5cZJ4juZI9gGI0sXvScK8jTzPnvwgQ1hvLFN2HZd
+         mPvQ==
+X-Gm-Message-State: ACgBeo35plb+Kmf05rqn+1mbOyoRjWVX5MsOyeI0LzE9XitUAjMMcnqW
+        VrAf+Yjknx4yCDVjMNeG8s5Vjw==
+X-Google-Smtp-Source: AA6agR7qJ1X/6P3NkfO19vsTT12nuDAiH0l9Ei1o2OBikOqXOcAtxU3Ukwy6/MAOK+ms83abcb+U2w==
+X-Received: by 2002:a05:6512:10cd:b0:498:fe5b:8ab3 with SMTP id k13-20020a05651210cd00b00498fe5b8ab3mr4970209lfg.613.1662963472311;
+        Sun, 11 Sep 2022 23:17:52 -0700 (PDT)
+Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id t19-20020ac24c13000000b004996fbfd75esm876805lfq.71.2022.09.11.23.17.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Sep 2022 15:03:53 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     brgl@bgdev.pl, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH 3/3] gpio: pci-idio-16: Utilize the idio-16 GPIO library
-Date:   Sun, 11 Sep 2022 16:34:40 -0400
-Message-Id: <bc6282aceca4f0a7bd4f33b5fbe7d5555d6ab32b.1662927941.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <cover.1662927941.git.william.gray@linaro.org>
-References: <cover.1662927941.git.william.gray@linaro.org>
+        Sun, 11 Sep 2022 23:17:51 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 00/40] pinctrl/arm64: qcom: fix some of Qualcomm pinctrl schema warnings
+Date:   Mon, 12 Sep 2022 08:17:06 +0200
+Message-Id: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,223 +76,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ACCES PCI-IDIO-16 device is part of the ACCES IDIO-16 family, so the
-idio-16 GPIO library module is selected and utilized to consolidate
-code.
+Hi,
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/Kconfig            |   1 +
- drivers/gpio/gpio-pci-idio-16.c | 119 ++++----------------------------
- 2 files changed, 14 insertions(+), 106 deletions(-)
+That's a set for some of arm64 pinctrl bindings fixing most common warnings.  I
+have a plan to continue this for remaining arm64 (sm8250 needs updates) and for
+arm.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 48846ee476e2..8b90bff7b198 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1585,6 +1585,7 @@ config GPIO_PCH
- config GPIO_PCI_IDIO_16
- 	tristate "ACCES PCI-IDIO-16 GPIO support"
- 	select GPIOLIB_IRQCHIP
-+	select GPIO_IDIO_16
- 	help
- 	  Enables GPIO support for the ACCES PCI-IDIO-16. An interrupt is
- 	  generated when any of the inputs change state (low to high or high to
-diff --git a/drivers/gpio/gpio-pci-idio-16.c b/drivers/gpio/gpio-pci-idio-16.c
-index 71a13a394050..41f9c447ebf9 100644
---- a/drivers/gpio/gpio-pci-idio-16.c
-+++ b/drivers/gpio/gpio-pci-idio-16.c
-@@ -3,8 +3,7 @@
-  * GPIO driver for the ACCES PCI-IDIO-16
-  * Copyright (C) 2017 William Breathitt Gray
-  */
--#include <linux/bitmap.h>
--#include <linux/bitops.h>
-+#include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/gpio/driver.h>
-@@ -16,51 +15,28 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- 
--/**
-- * struct idio_16_gpio_reg - GPIO device registers structure
-- * @out0_7:	Read: FET Drive Outputs 0-7
-- *		Write: FET Drive Outputs 0-7
-- * @in0_7:	Read: Isolated Inputs 0-7
-- *		Write: Clear Interrupt
-- * @irq_ctl:	Read: Enable IRQ
-- *		Write: Disable IRQ
-- * @filter_ctl:	Read: Activate Input Filters 0-15
-- *		Write: Deactivate Input Filters 0-15
-- * @out8_15:	Read: FET Drive Outputs 8-15
-- *		Write: FET Drive Outputs 8-15
-- * @in8_15:	Read: Isolated Inputs 8-15
-- *		Write: Unused
-- * @irq_status:	Read: Interrupt status
-- *		Write: Unused
-- */
--struct idio_16_gpio_reg {
--	u8 out0_7;
--	u8 in0_7;
--	u8 irq_ctl;
--	u8 filter_ctl;
--	u8 out8_15;
--	u8 in8_15;
--	u8 irq_status;
--};
-+#include "gpio-idio-16.h"
- 
- /**
-  * struct idio_16_gpio - GPIO device private data structure
-  * @chip:	instance of the gpio_chip
-  * @lock:	synchronization lock to prevent I/O race conditions
-  * @reg:	I/O address offset for the GPIO device registers
-+ * @state:	ACCES IDIO-16 device state
-  * @irq_mask:	I/O bits affected by interrupts
-  */
- struct idio_16_gpio {
- 	struct gpio_chip chip;
- 	raw_spinlock_t lock;
--	struct idio_16_gpio_reg __iomem *reg;
-+	struct idio_16 __iomem *reg;
-+	struct idio_16_state state;
- 	unsigned long irq_mask;
- };
- 
- static int idio_16_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int offset)
- {
--	if (offset > 15)
-+	if (idio_16_get_direction(offset))
- 		return GPIO_LINE_DIRECTION_IN;
- 
- 	return GPIO_LINE_DIRECTION_OUT;
-@@ -82,43 +58,16 @@ static int idio_16_gpio_direction_output(struct gpio_chip *chip,
- static int idio_16_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long mask = BIT(offset);
--
--	if (offset < 8)
--		return !!(ioread8(&idio16gpio->reg->out0_7) & mask);
--
--	if (offset < 16)
--		return !!(ioread8(&idio16gpio->reg->out8_15) & (mask >> 8));
--
--	if (offset < 24)
--		return !!(ioread8(&idio16gpio->reg->in0_7) & (mask >> 16));
- 
--	return !!(ioread8(&idio16gpio->reg->in8_15) & (mask >> 24));
-+	return idio_16_get(idio16gpio->reg, offset);
- }
- 
- static int idio_16_gpio_get_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *ports[] = {
--		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
--		&idio16gpio->reg->in0_7, &idio16gpio->reg->in8_15,
--	};
--	void __iomem *port_addr;
--	unsigned long port_state;
--
--	/* clear bits array to a clean slate */
--	bitmap_zero(bits, chip->ngpio);
--
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		port_addr = ports[offset / 8];
--		port_state = ioread8(port_addr) & gpio_mask;
--
--		bitmap_set_value8(bits, port_state, offset);
--	}
- 
-+	idio_16_get_multiple(idio16gpio->reg, &idio16gpio->state, mask, bits);
- 	return 0;
- }
- 
-@@ -126,61 +75,16 @@ static void idio_16_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	int value)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned int mask = BIT(offset);
--	void __iomem *base;
--	unsigned long flags;
--	unsigned int out_state;
--
--	if (offset > 15)
--		return;
--
--	if (offset > 7) {
--		mask >>= 8;
--		base = &idio16gpio->reg->out8_15;
--	} else
--		base = &idio16gpio->reg->out0_7;
--
--	raw_spin_lock_irqsave(&idio16gpio->lock, flags);
- 
--	if (value)
--		out_state = ioread8(base) | mask;
--	else
--		out_state = ioread8(base) & ~mask;
--
--	iowrite8(out_state, base);
--
--	raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
-+	idio_16_set(idio16gpio->reg, &idio16gpio->state, offset, value);
- }
- 
- static void idio_16_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *ports[] = {
--		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
--	};
--	size_t index;
--	void __iomem *port_addr;
--	unsigned long bitmask;
--	unsigned long flags;
--	unsigned long out_state;
- 
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		index = offset / 8;
--		port_addr = ports[index];
--
--		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
--
--		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
--
--		out_state = ioread8(port_addr) & ~gpio_mask;
--		out_state |= bitmask;
--		iowrite8(out_state, port_addr);
--
--		raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
--	}
-+	idio_16_set_multiple(idio16gpio->reg, &idio16gpio->state, mask, bits);
- }
- 
- static void idio_16_irq_ack(struct irq_data *data)
-@@ -335,6 +239,8 @@ static int idio_16_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	idio16gpio->chip.set = idio_16_gpio_set;
- 	idio16gpio->chip.set_multiple = idio_16_gpio_set_multiple;
- 
-+	idio_16_state_init(&idio16gpio->state);
-+
- 	girq = &idio16gpio->chip.irq;
- 	girq->chip = &idio_16_irqchip;
- 	/* This will let us handle the parent IRQ in the driver */
-@@ -379,3 +285,4 @@ module_pci_driver(idio_16_driver);
- MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
- MODULE_DESCRIPTION("ACCES PCI-IDIO-16 GPIO driver");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(IDIO_16);
+Changes since v1
+================
+1. Correct commit msg in commits "fix matching pin config".
+2. Correct commit msg in commit #2 .
+3. Add Rb tags.
+
+Dependencies
+============
+1. dt-bindings are independent of DTS patches.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (40):
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: require function on GPIOs
+  dt-bindings: pinctrl: qcom,sm6115-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6125-pinctrl: extend example
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6350-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm6375-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: reference tlmm common pins
+  dt-bindings: pinctrl: qcom,sm8250-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8350-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sm8450-pinctrl: add gpio-line-names
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: correct number of GPIOs
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: add gpio-line-names
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: reference tlmm schema
+  dt-bindings: pinctrl: qcom,sc7280-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,sc8180x-pinctrl: fix indentation in example
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: do not require function
+    on non-GPIOs
+  dt-bindings: pinctrl: qcom,sc8280xp-pinctrl: fix indentation in
+    example
+  arm64: dts: qcom: sm6125: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm6350: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm8350-sagami: correct TS pin property
+  arm64: dts: qcom: sm8350: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sm8450: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sc7280: align TLMM pin configuration with DT schema
+  arm64: dts: qcom: sc7280-herobrine: correct TLMM gpio-line-names
+
+ .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml |  55 +--
+ .../pinctrl/qcom,sc8180x-pinctrl.yaml         |  79 +++--
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        |  73 ++--
+ .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml |  94 +++---
+ .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml |  61 +++-
+ .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml |  73 ++--
+ .../bindings/pinctrl/qcom,sm6375-tlmm.yaml    |  73 ++--
+ .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml |  41 ++-
+ .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml |  73 ++--
+ .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml |  82 +++--
+ .../boot/dts/qcom/sc7280-herobrine-crd.dts    |   2 -
+ .../arm64/boot/dts/qcom/sc7280-herobrine.dtsi |  44 +--
+ .../arm64/boot/dts/qcom/sc7280-idp-ec-h1.dtsi |   8 +-
+ arch/arm64/boot/dts/qcom/sc7280-idp.dtsi      |  20 +-
+ arch/arm64/boot/dts/qcom/sc7280-qcard.dtsi    |  14 +-
+ arch/arm64/boot/dts/qcom/sc7280.dtsi          | 316 +++++++++---------
+ .../qcom/sm6125-sony-xperia-seine-pdx201.dts  |   4 +-
+ arch/arm64/boot/dts/qcom/sm6125.dtsi          |  10 +-
+ arch/arm64/boot/dts/qcom/sm6350.dtsi          |  14 +-
+ .../dts/qcom/sm8350-sony-xperia-sagami.dtsi   |   4 +-
+ arch/arm64/boot/dts/qcom/sm8350.dtsi          |  44 +--
+ .../qcom/sm8450-sony-xperia-nagara-pdx223.dts |  12 +-
+ arch/arm64/boot/dts/qcom/sm8450.dtsi          | 152 ++++-----
+ 23 files changed, 733 insertions(+), 615 deletions(-)
+
 -- 
-2.37.2
+2.34.1
 
