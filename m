@@ -2,129 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B439F5B6287
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Sep 2022 23:07:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F61A5B6351
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 00:13:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbiILVHx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Sep 2022 17:07:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36028 "EHLO
+        id S229681AbiILWNo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Sep 2022 18:13:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbiILVHp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Sep 2022 17:07:45 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151AF4AD54;
-        Mon, 12 Sep 2022 14:07:44 -0700 (PDT)
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28CK7vG8016341;
-        Mon, 12 Sep 2022 21:07:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=qcppdkim1;
- bh=YZ9IBDpQS6c2IbLsN9TmXfVmaXQewY8d5xC0STEnOiA=;
- b=AYVR5afyAbkyROdu/kbCT1OwG3jfsFFKbhzBTDd0f4M3Y3H5+yxpFUEjsVdMVmdJllQm
- PsqAEUlsN9NmwYjGOm/SyosYtHhs0f+rWVBNEfaP9Sf7lHPtS3N6hgI3SbZDU0n7DR00
- LL+bnEtBECs/12qwUkukPczsDe314AVuSJVT1TK3VPthq8XTpiuJ4LcjZnx2/wYkVxky
- zX7TpfVaqkuO6Vi1e7+nK8hmE5TA8OmxHUwUvjEnWcpHtFEhCTzZxLf1aRS3CJGkkJri
- G344Mk47sJAyv5qBi4eS3b2GPSghzp1U03WaGpHAn6Z1+ERdaAixKk43tbL1EAv4tzB1 +Q== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3jgk635b46-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Sep 2022 21:07:38 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 28CL7b7I012314
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Sep 2022 21:07:37 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.29; Mon, 12 Sep 2022 14:07:37 -0700
-From:   Anjelique Melendez <quic_amelende@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC:     <konrad.dybcio@somainline.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <quic_collinsd@quicinc.com>,
-        <quic_jprakash@quicinc.com>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Subject: [PATCH v2 4/4] dt-bindings: qcom-pmic-gpio: Add PM7250B and PM8450 bindings
-Date:   Mon, 12 Sep 2022 14:06:29 -0700
-Message-ID: <20220912210624.4527-5-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220912210624.4527-1-quic_amelende@quicinc.com>
-References: <20220912210624.4527-1-quic_amelende@quicinc.com>
+        with ESMTP id S229915AbiILWNn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Sep 2022 18:13:43 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808444D809
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Sep 2022 15:13:40 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id s11so5284021ilt.7
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Sep 2022 15:13:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=WtBz2ZjAbdVsCXaJ14UBh6dPKQNQTEXbXV+WGkY+jwg=;
+        b=nfBNhUl+5qqTsJR9FKSY2gYY9fcN0IrZCSEpHl+lpRb/6P9ffCToyjYvaHnUQTneH2
+         0s6d7JIfEG3LJ2CuHlrfcg2lwaYvYAXOm+BfilrDAIFQDpaecYlgWf9V3OvQSIJ7hub2
+         bCLpWIF4W6FmS40ggFgGwjD1YL2JGLpYRqHK4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=WtBz2ZjAbdVsCXaJ14UBh6dPKQNQTEXbXV+WGkY+jwg=;
+        b=PRu2WgQGfcO82cuHeHsjBe2UBW4RiIwKmlvDitazwQ9nLSPepBaGAt+zY+UAkBJfiO
+         jILXlb9P59+/8BU+MalGsY0hpGCGQIH1PdJELonhLkFjMNQtXTFXx4Ka+R2Lzft00iml
+         hxp7+PVWIMzayFmrIqiE3Lo8WopFIWeeQjXQjoOPoX6TE8aCb6gV45Q7U3Lxx0YPTw9n
+         vXuTu7lojrg2S5kjvFeilvfw1q0mdIopYGrTfFvV/qw7n/i4AM7/CQk9tpQs0A+MzbJO
+         10sZ5dW/huvQX8JBDantCSL7ttp5IceM8uz5aSElcG4hHnjSuV+kCeOwySnVB35R/r1U
+         CqiQ==
+X-Gm-Message-State: ACgBeo1KEr9ae4K63kSZ5m7JP3mWpbCn3YxjIWQOyF79L2JWVAOqnXr8
+        3aSUbZt+8qIDtq9ldWuvUtzICQ==
+X-Google-Smtp-Source: AA6agR6Mhax5MMnlQWw37OVm7KiDOL5L2o75oFtVGCDfR+WbrOVoGhj25OvXnu4kb3JI1EKMPCKW0w==
+X-Received: by 2002:a05:6e02:214b:b0:2ec:f24f:5272 with SMTP id d11-20020a056e02214b00b002ecf24f5272mr11230667ilv.169.1663020819876;
+        Mon, 12 Sep 2022 15:13:39 -0700 (PDT)
+Received: from rrangel920.bld.corp.google.com (h24-56-189-219.arvdco.broadband.dynamic.tds.net. [24.56.189.219])
+        by smtp.gmail.com with ESMTPSA id 18-20020a056e020cb200b002f16e7021f6sm4077334ilg.22.2022.09.12.15.13.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Sep 2022 15:13:38 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, jingle.wu@emc.com.tw,
+        mario.limonciello@amd.com, timvp@google.com,
+        linus.walleij@linaro.org, hdegoede@redhat.com, rafael@kernel.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Alistair Francis <alistair@alistair23.me>,
+        Angela Czubak <acz@semihalf.com>,
+        Asmaa Mnebhi <asmaa@nvidia.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        David Thompson <davthompson@nvidia.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Johnny Chuang <johnny.chuang.emc@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Len Brown <lenb@kernel.org>, Lu Wei <luwei32@huawei.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        Wolfram Sang <wsa@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v2 00/13] acpi: i2c: Use SharedAndWake and ExclusiveAndWake to enable wake irq
+Date:   Mon, 12 Sep 2022 16:13:04 -0600
+Message-Id: <20220912221317.2775651-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.37.2.789.g6183377224-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.49.16.6]
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: X2D4hyQTpOfziAdFhrtolXC0lFd-50gR
-X-Proofpoint-ORIG-GUID: X2D4hyQTpOfziAdFhrtolXC0lFd-50gR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-12_14,2022-09-12_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 impostorscore=0 suspectscore=0 bulkscore=0
- clxscore=1015 adultscore=0 phishscore=0 spamscore=0 mlxscore=0
- mlxlogscore=815 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2207270000 definitions=main-2209120072
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
-to include compatible strings for PM7250B and PM8450 PMICs.
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
----
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 4 ++++
- 1 file changed, 4 insertions(+)
+Today, i2c drivers are making the assumption that their IRQs can also
+be used as wake IRQs. This isn't always the case and it can lead to
+spurious wakes. This has recently started to affect AMD Chromebooks.
+With the introduction of
+d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake"), the AMD GPIO
+controller gained the capability to set the wake bit on each GPIO. The
+ACPI specification defines two ways to inform the system if a device is
+wake capable:
+1) The _PRW object defines the GPE that can be used to wake the system.
+2) Setting ExclusiveAndWake or SharedAndWake in the _CRS GpioInt.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 694898f382be..29dd503f9522 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -24,6 +24,7 @@ properties:
-           - qcom,pm6150-gpio
-           - qcom,pm6150l-gpio
-           - qcom,pm6350-gpio
-+          - qcom,pm7250b-gpio
-           - qcom,pm7325-gpio
-           - qcom,pm8005-gpio
-           - qcom,pm8008-gpio
-@@ -231,6 +232,7 @@ allOf:
-             enum:
-               - qcom,pm660l-gpio
-               - qcom,pm6150l-gpio
-+              - qcom,pm7250b-gpio
-               - qcom,pm8038-gpio
-               - qcom,pm8150b-gpio
-               - qcom,pm8150l-gpio
-@@ -392,6 +394,7 @@ $defs:
-                  - gpio1-gpio10 for pm6150
-                  - gpio1-gpio12 for pm6150l
-                  - gpio1-gpio9 for pm6350
-+                 - gpio1-gpio12 for pm7250b
-                  - gpio1-gpio10 for pm7325
-                  - gpio1-gpio4 for pm8005
-                  - gpio1-gpio2 for pm8008
-@@ -407,6 +410,7 @@ $defs:
-                  - gpio1-gpio10 for pm8350
-                  - gpio1-gpio8 for pm8350b
-                  - gpio1-gpio9 for pm8350c
-+                 - gpio1-gpio4 for pm8450
-                  - gpio1-gpio38 for pm8917
-                  - gpio1-gpio44 for pm8921
-                  - gpio1-gpio36 for pm8941
+Currently only the first method is supported. The i2c drivers don't have
+any indication that the IRQ is wake capable, so they guess. This causes
+spurious interrupts, for example:
+* We have an ACPI HID device that has `_PR0` and `_PR3`. It doesn't have
+  `_PRW` or `ExclusiveAndWake` so that means the device can't wake the
+  system.
+* The IRQ line is active level low for this device and is pulled up by
+  the power resource defined in `_PR0`/`_PR3`.
+* The i2c driver will (incorrectly) arm the GPIO for wake by calling
+  `enable_irq_wake` as part of its suspend hook.
+* ACPI will power down the device since it doesn't have a wake GPE
+  associated with it.
+* When the device is powered down, the IRQ line will drop, and it will
+  trigger a wake event.
+
+See the following debug log:
+[   42.335804] PM: Suspending system (s2idle)
+[   42.340186] amd_gpio AMD0030:00: RX: Setting wake for pin 89 to enable
+[   42.467736]     power-0416 __acpi_power_off      : Power resource [PR00] turned off
+[   42.467739] device_pm-0280 device_set_power      : Device [H05D] transitioned to D3cold
+[   42.475210] PM: pm_system_irq_wakeup: 11 triggered pinctrl_amd
+[   42.535293] PM: Wakeup unrelated to ACPI SCI
+[   42.535294] PM: resume from suspend-to-idle
+
+In order to fix this, we need to take into account the wake capable bit
+defined on the Interrupt/GpioInt. This is accomplished by:
+* Migrating some of the i2c drivers over to using the PM subsystem to
+  manage the wake IRQ.
+* Expose the wake_capable bit from the ACPI Interrupt/GpioInt resource
+  to the  i2c core.
+* Use the wake_capable bit in the i2c core to call
+  `dev_pm_set_wake_irq`. This reuses the existing device tree flow.
+* Make the i2c drivers stop calling `dev_pm_set_wake_irq` since it's now
+  handled by the i2c core.
+* Make the ACPI device PM system aware of the wake_irq. This is
+  necessary so the device doesn't incorrectly get powered down when a
+  wake_irq is enabled.
+
+I've tested this code with various combinations of having _PRW,
+ExclusiveAndWake and power resources all defined or not defined, but it
+would be great if others could test this out on their hardware.
+
+I'm sure this will surface some devices where the IRQs were not
+correctly marked as wake capable. Ideally the firmware can be fixed, but
+if not we can work around this in the kernel by providing a board
+specific `struct i2c_board_info` with the `I2C_CLIENT_WAKE` flag set.
+See `chromeos_laptop.c` for an example of matching DMI properties and
+setting the `I2C_CLIENT_WAKE` override.
+
+Thanks,
+Raul
+
+Changes in v2:
+- Added elants_i2c to series
+- Added raydium_ts_i2c to series
+- Fixed call site in mlxbf_gige_probe
+- Added ability to extract wake bit from Interrupt/IRQ resources
+- Look at wake_cabple bit for IRQ/Interrupt resources
+- I chose not to keep the legacy code around since systems without DT or ACPI should be rare.
+
+Raul E Rangel (13):
+  HID: i2c-hid: Use PM subsystem to manage wake irq
+  Input: elan_i2c - Use PM subsystem to manage wake irq
+  Input: elants_i2c - Use PM subsystem to manage wake irq
+  Input: raydium_ts_i2c - Use PM subsystem to manage wake irq
+  gpiolib: acpi: Add wake_capable parameter to acpi_dev_gpio_irq_get_by
+  ACPI: resources: Add wake_capable parameter to acpi_dev_irq_flags
+  i2c: acpi: Use ACPI wake capability bit to set wake_irq
+  ACPI: PM: Take wake IRQ into consideration when entering
+    suspend-to-idle
+  HID: i2c-hid: acpi: Stop setting wakeup_capable
+  HID: i2c-hid: Don't set wake_capable and wake_irq
+  Input: elan_i2c - Don't set wake_capable and wake_irq
+  Input: elants_i2c - Don't set wake_capable and wake_irq
+  Input: raydium_ts_i2c - Don't set wake_capable and wake_irq
+
+ drivers/acpi/device_pm.c                      | 19 +++++++++-
+ drivers/acpi/irq.c                            | 11 ++++--
+ drivers/acpi/resource.c                       | 24 ++++++++----
+ drivers/gpio/gpio-pca953x.c                   |  3 +-
+ drivers/gpio/gpiolib-acpi.c                   | 11 +++++-
+ drivers/gpio/gpiolib-acpi.h                   |  2 +
+ drivers/hid/i2c-hid/i2c-hid-acpi.c            |  5 ---
+ drivers/hid/i2c-hid/i2c-hid-core.c            | 24 ++----------
+ drivers/i2c/i2c-core-acpi.c                   | 37 ++++++++++++++-----
+ drivers/i2c/i2c-core-base.c                   |  6 ++-
+ drivers/i2c/i2c-core.h                        |  4 +-
+ drivers/input/mouse/elan_i2c_core.c           | 15 +-------
+ drivers/input/touchscreen/elants_i2c.c        | 13 +------
+ drivers/input/touchscreen/raydium_i2c_ts.c    |  7 +---
+ .../mellanox/mlxbf_gige/mlxbf_gige_main.c     |  3 +-
+ drivers/pnp/pnpacpi/rsparser.c                |  9 +++--
+ include/linux/acpi.h                          | 17 +++++++--
+ include/linux/ioport.h                        |  3 +-
+ 18 files changed, 121 insertions(+), 92 deletions(-)
+
 -- 
-2.35.1
+2.37.2.789.g6183377224-goog
 
