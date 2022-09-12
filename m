@@ -2,262 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A1E85B56C4
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Sep 2022 10:53:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62C2A5B5723
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Sep 2022 11:25:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230284AbiILIxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Sep 2022 04:53:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
+        id S229688AbiILJZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Sep 2022 05:25:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbiILIxH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Sep 2022 04:53:07 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A8C2BB35
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Sep 2022 01:53:05 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id f20so7175744edf.6
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Sep 2022 01:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=LeyEfTs9yyPVXfKQntxuZT0+LwnhmLDjpHhOJB6RFSE=;
-        b=7ABE4n2klxVQMxfpU2OTGbHusg/nacl5wpccb2AouhOt6U+q1rLxMxx8XtGRV7gSrX
-         P/PaRVBLMdMz9v6pKSwOcMl47ypbfJvWLDBNszfCO/46wKxoyO3J2aGMozLDAukIV0VD
-         cP8r/k0NGIzY1RiCloPIDbRnNLZC4Kq+s8c3IWmAq4BumicbMdPSV49tL5B63KeCv3O4
-         +KZ0zQF3iajccVlc9CUF06CIf0HIn20sdsKzCgndeHtkzKxH5AfHrayNgejVI6D4ftgJ
-         oP5nP5pamEE/AtFO+4LQtLIWo7QjHOyyILcwlIcIoiDOiNLHV1hCw9EOhLIBU1KCzRVd
-         qo0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=LeyEfTs9yyPVXfKQntxuZT0+LwnhmLDjpHhOJB6RFSE=;
-        b=ZGet4eU6jb+8YpGjyZ54kxENbdR85S1ZkTrHjUSzhmOXceKLuDtD4g6jRglqI16nPc
-         2JbliLNx+rZ8Fdcjrwnxo9yNAYTu96TxPwrm8/qvAOIao9ZjqbqzK+lK3/qFTb8XvKtS
-         0AVDsaqy6H0+Kg/fg+QtSZM52vahtHhD+AaHARHzZTGtvR2NlGij53cLDBW4pNZBlob5
-         siM+9z7i0kaO+6NVpfuYD+cv1BsLIpAhybCH20iDpiyJ+A7ecdgtQ58xztod5NqTAlNS
-         d+Uw5IU8erLueKbG2WopW+vyW8RPFtzemBgiPAmkLCQo9+08P+Dj93Ibuq48YSooQZMT
-         C6ww==
-X-Gm-Message-State: ACgBeo1VvwsbRAHcf/CvAVQ3y06EXaimfXCbW4BUsXBawHWMZy41+cxv
-        FrbqZTE5CiT6y+X9XrBpYPugppBceCfrSly0x+MCQw==
-X-Google-Smtp-Source: AA6agR6KW+YIss8DhEhJlUrdXlg2x5bNs4hyDV6JhFmUYYpe+fNhhR98WnSBPobTN8CEbGH06f60IHTHmhiU8IIFQI4=
-X-Received: by 2002:a05:6402:5243:b0:451:6d52:5928 with SMTP id
- t3-20020a056402524300b004516d525928mr6687535edd.328.1662972784211; Mon, 12
- Sep 2022 01:53:04 -0700 (PDT)
+        with ESMTP id S229582AbiILJZ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Sep 2022 05:25:26 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9CFB15707;
+        Mon, 12 Sep 2022 02:25:18 -0700 (PDT)
+X-UUID: 39686754358c49f1bd794d3ebf6e3406-20220912
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=AZpuDZd6s7XQEx6mFFMWytK+mLYefyhJ9Oq8oES2roM=;
+        b=sB6fLgvqmW7PFFoRnVDD1Rv77A8udfeXBmMd+2+PVCgZFE3Q3l7T+hRcEUKNF9PRLJPKjQGaIac7Ug1UyKFr7uRQmNy1eskYlWNOA7BZKR1/w/EbZBhe7OwZSRjjmpX3AW3aCp9ZcRAE7MZK3bZs4Li3+aKlnCzMr16GliynrNM=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.10,REQID:2482df15-41cb-4447-91ef-368f2ce5e602,OB:0,L
+        OB:0,IP:0,URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:100,FILE:0,BULK:0,RULE:Rele
+        ase_Ham,ACTION:release,TS:75
+X-CID-INFO: VERSION:1.1.10,REQID:2482df15-41cb-4447-91ef-368f2ce5e602,OB:0,LOB
+        :0,IP:0,URL:0,TC:0,Content:-25,EDM:0,RT:0,SF:100,FILE:0,BULK:0,RULE:Spam_G
+        S981B3D,ACTION:quarantine,TS:75
+X-CID-META: VersionHash:84eae18,CLOUDID:72cd16f6-6e85-48d9-afd8-0504bbfe04cb,C
+        OID:6de472ee4e7b,Recheck:0,SF:28|17|19|48,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
+X-UUID: 39686754358c49f1bd794d3ebf6e3406-20220912
+Received: from mtkcas10.mediatek.inc [(172.21.101.39)] by mailgw01.mediatek.com
+        (envelope-from <chui-hao.chiu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-SHA384 256/256)
+        with ESMTP id 564293906; Mon, 12 Sep 2022 17:25:13 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Mon, 12 Sep 2022 17:25:11 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.792.15 via Frontend Transport; Mon, 12 Sep 2022 17:25:11 +0800
+From:   Peter Chiu <chui-hao.chiu@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Ryder Lee <ryder.Lee@mediatek.com>,
+        Evelyn Tsai <evelyn.tsai@mediatek.com>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Peter Chiu <chui-hao.chiu@mediatek.com>
+Subject: [PATCH v2] dt-bindings: pinctrl: update bindings for MT7986 SoC
+Date:   Mon, 12 Sep 2022 17:24:40 +0800
+Message-ID: <20220912092440.21011-1-chui-hao.chiu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-References: <20220909121329.42004-1-brgl@bgdev.pl> <20220909121329.42004-3-brgl@bgdev.pl>
- <YxykorLetCjAls/Z@sol>
-In-Reply-To: <YxykorLetCjAls/Z@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 12 Sep 2022 10:52:53 +0200
-Message-ID: <CAMRc=Me46b+Fjz_AAbZZVbaELjY6NGVfNE6mwueiKRTpYe98rA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-MTK:  N
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR,T_SPF_TEMPERROR,
+        UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Sep 10, 2022 at 4:52 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Sep 09, 2022 at 02:13:29PM +0200, Bartosz Golaszewski wrote:
-> > It's useful for user-space to be able to know the PIDs of processes
-> > holding GPIO lines in case they have the permissions and need to kill
-> > them.
-> >
->
-> "the PID of the process holding a GPIO line"
->
-> As written it could be interpreted to imply that multiple processes can
-> hold a line, so go singular to remove that possibility.
->
-> > Extend the gpio_v2_line_info structure with the consumer_pid field
-> > that's set to the PID of the user-space process or 0 if the user lives
-> > in the kernel.
-> >
-> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c |  2 ++
-> >  drivers/gpio/gpiolib.c      | 24 +++++++++++++++++++-----
-> >  drivers/gpio/gpiolib.h      |  2 ++
-> >  include/uapi/linux/gpio.h   |  5 ++++-
-> >  4 files changed, 27 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index f8041d4898d1..9b6d518680dc 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -2120,6 +2120,8 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
-> >       if (desc->label)
-> >               strscpy(info->consumer, desc->label, sizeof(info->consumer));
-> >
-> > +     info->consumer_pid = desc->pid;
-> > +
-> >       /*
-> >        * Userspace only need to know that the kernel is using this GPIO so
-> >        * it can't use it.
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index 6768734b9e15..0c9d1639b04d 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -96,6 +96,11 @@ static inline void desc_set_label(struct gpio_desc *d, const char *label)
-> >       d->label = label;
-> >  }
-> >
-> > +static inline void desc_set_pid(struct gpio_desc *d, pid_t pid)
-> > +{
-> > +     d->pid = pid;
-> > +}
-> > +
-> >  /**
-> >   * gpio_to_desc - Convert a GPIO number to its descriptor
-> >   * @gpio: global GPIO number
-> > @@ -1892,7 +1897,8 @@ EXPORT_SYMBOL_GPL(gpiochip_remove_pin_ranges);
-> >   * on each other, and help provide better diagnostics in debugfs.
-> >   * They're called even less than the "set direction" calls.
-> >   */
-> > -static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
-> > +static int
-> > +gpiod_request_commit(struct gpio_desc *desc, const char *label, pid_t pid)
-> >  {
-> >       struct gpio_chip        *gc = desc->gdev->chip;
-> >       int                     ret;
-> > @@ -1913,6 +1919,7 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
-> >
-> >       if (test_and_set_bit(FLAG_REQUESTED, &desc->flags) == 0) {
-> >               desc_set_label(desc, label ? : "?");
-> > +             desc_set_pid(desc, pid);
-> >       } else {
-> >               ret = -EBUSY;
-> >               goto out_free_unlock;
-> > @@ -1987,7 +1994,8 @@ static int validate_desc(const struct gpio_desc *desc, const char *func)
-> >               return; \
-> >       } while (0)
-> >
-> > -int gpiod_request(struct gpio_desc *desc, const char *label)
-> > +static int
-> > +gpiod_request_with_pid(struct gpio_desc *desc, const char *label, pid_t pid)
-> >  {
-> >       int ret = -EPROBE_DEFER;
-> >       struct gpio_device *gdev;
-> > @@ -1996,7 +2004,7 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
-> >       gdev = desc->gdev;
-> >
-> >       if (try_module_get(gdev->owner)) {
-> > -             ret = gpiod_request_commit(desc, label);
-> > +             ret = gpiod_request_commit(desc, label, pid);
-> >               if (ret)
-> >                       module_put(gdev->owner);
-> >               else
-> > @@ -2009,11 +2017,16 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
-> >       return ret;
-> >  }
-> >
-> > +int gpiod_request(struct gpio_desc *desc, const char *label)
-> > +{
-> > +     return gpiod_request_with_pid(desc, label, 0);
-> > +}
-> > +
-> >  int gpiod_request_user(struct gpio_desc *desc, const char *label)
-> >  {
-> >       int ret;
-> >
-> > -     ret = gpiod_request(desc, label);
-> > +     ret = gpiod_request_with_pid(desc, label, current->pid);
-> >       if (ret == -EPROBE_DEFER)
-> >               ret = -ENODEV;
-> >
-> > @@ -2042,6 +2055,7 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
-> >               }
-> >               kfree_const(desc->label);
-> >               desc_set_label(desc, NULL);
-> > +             desc_set_pid(desc, 0);
-> >               clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
-> >               clear_bit(FLAG_REQUESTED, &desc->flags);
-> >               clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
-> > @@ -2140,7 +2154,7 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-> >               return desc;
-> >       }
-> >
-> > -     ret = gpiod_request_commit(desc, label);
-> > +     ret = gpiod_request_commit(desc, label, 0);
-> >       if (ret < 0)
-> >               return ERR_PTR(ret);
-> >
-> > diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> > index b35deb08a7f5..d1535677e162 100644
-> > --- a/drivers/gpio/gpiolib.h
-> > +++ b/drivers/gpio/gpiolib.h
-> > @@ -165,6 +165,8 @@ struct gpio_desc {
-> >
-> >       /* Connection label */
-> >       const char              *label;
-> > +     /* Consumer's PID (if consumer is in user-space, otherwise 0) */
-> > +     pid_t                   pid;
-> >       /* Name of the GPIO */
-> >       const char              *name;
-> >  #ifdef CONFIG_OF_DYNAMIC
-> > diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-> > index cb9966d49a16..37f10021d1aa 100644
-> > --- a/include/uapi/linux/gpio.h
-> > +++ b/include/uapi/linux/gpio.h
-> > @@ -219,6 +219,8 @@ struct gpio_v2_line_request {
-> >   * gpio_v2_line_flag, such as %GPIO_V2_LINE_FLAG_ACTIVE_LOW,
-> >   * %GPIO_V2_LINE_FLAG_OUTPUT etc, added together.
-> >   * @attrs: the configuration attributes associated with the line
-> > + * @consumer_pid: process ID of the user-space consumer or 0 if the consumer
-> > + * lives in kernel space
-> >   * @padding: reserved for future use
-> >   */
-> >  struct gpio_v2_line_info {
-> > @@ -228,8 +230,9 @@ struct gpio_v2_line_info {
-> >       __u32 num_attrs;
-> >       __aligned_u64 flags;
-> >       struct gpio_v2_line_attribute attrs[GPIO_V2_LINE_NUM_ATTRS_MAX];
-> > +     __s32 consumer_pid;
->
-> My knee-jerk reaction here was to make the pid unsigned, as we never
-> pass a negative PID.
-> Keeping in mind that the existing kernel will return 0 for this field
-> (the existing padding), so 0 needs to be excluded from valid PIDs
-> anyway.
->
-> Andy suggests returning -1 for kernel held lines.
-> In that case 0 would mean "old kernel", while -1 would mean "kernel
-> held".
->
-> As libgpiod will have to convert the 0 to -1 when returning the PID to
-> user-space as a pid_t, I'm good with the uAPI using 0 to mean
-> "no PID available" for all cases. I'm still open to passing -1 for
-> kernel held is there is a use case for it, but I don't see one.
->
+Add wifi pins in the description and set 'maxItems' for groups and pins.
 
-Using -1 sounds good but I've just realized there's a different
-problem. A process holding a file descriptor may fork and both the
-parent and the child will keep the same file descriptors open. Now
-we'll have two processes (with different PIDs) holding the same GPIO
-lines (specifically holding a file descriptor to the same anonymous
-inode).
+Reviewed-by: Sam Shih <sam.shih@mediatek.com>
+Signed-off-by: Peter Chiu <chui-hao.chiu@mediatek.com>
+---
+v2:
+- Set 'maxItems' for groups and pins.
+- Update commit message.
+- Remove '$ref: /schemas/types.yaml#/definitions/string-array'.
+---
+ .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 48 +++++++++++--------
+ 1 file changed, 28 insertions(+), 20 deletions(-)
 
-This already poses a problem for this patch as we'd need to return an
-array of PIDs which we don't have the space for but also is a
-situation which we haven't discussed previously IIRC - two processes
-keeping the same GPIO lines requested.
+diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+index 4eadea55df10..06c819ae7d50 100644
+--- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+@@ -117,6 +117,10 @@ patternProperties:
+           "i2s"             "audio"     62, 63, 64, 65
+           "switch_int"      "eth"       66
+           "mdc_mdio"        "eth"       67
++          "wf_2g"           "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83
++          "wf_5g"           "wifi"      91, 92, 93, 94, 95, 96, 97, 98, 99, 100
++          "wf_dbdc"         "wifi"      74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
++                                        84, 85
+ 
+         $ref: "/schemas/pinctrl/pinmux-node.yaml"
+         properties:
+@@ -234,7 +238,9 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [wf_2g, wf_5g, wf_dbdc]
++                  items:
++                    enum: [wf_2g, wf_5g, wf_dbdc]
++                  maxItems: 3
+       '.*conf.*':
+         type: object
+         additionalProperties: false
+@@ -248,25 +254,27 @@ patternProperties:
+               An array of strings. Each string contains the name of a pin.
+               There is no PIN 41 to PIN 65 above on mt7686b, you can only use
+               those pins on mt7986a.
+-            enum: [SYS_WATCHDOG, WF2G_LED, WF5G_LED, I2C_SCL, I2C_SDA, GPIO_0,
+-                   GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5, GPIO_6, GPIO_7,
+-                   GPIO_8, GPIO_9, GPIO_10, GPIO_11, GPIO_12, GPIO_13, GPIO_14,
+-                   GPIO_15, PWM0, PWM1, SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CS,
+-                   SPI0_HOLD, SPI0_WP, SPI1_CLK, SPI1_MOSI, SPI1_MISO, SPI1_CS,
+-                   SPI2_CLK, SPI2_MOSI, SPI2_MISO, SPI2_CS, SPI2_HOLD, SPI2_WP,
+-                   UART0_RXD, UART0_TXD, PCIE_PERESET_N, UART1_RXD, UART1_TXD,
+-                   UART1_CTS, UART1_RTS, UART2_RXD, UART2_TXD, UART2_CTS,
+-                   UART2_RTS, EMMC_DATA_0, EMMC_DATA_1, EMMC_DATA_2,
+-                   EMMC_DATA_3, EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6,
+-                   EMMC_DATA_7, EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX,
+-                   PCM_DRX, PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
+-                   WF0_DIG_RESETB, WF0_CBA_RESETB, WF0_XO_REQ, WF0_TOP_CLK,
+-                   WF0_TOP_DATA, WF0_HB1, WF0_HB2, WF0_HB3, WF0_HB4, WF0_HB0,
+-                   WF0_HB0_B, WF0_HB5, WF0_HB6, WF0_HB7, WF0_HB8, WF0_HB9,
+-                   WF0_HB10, WF1_DIG_RESETB, WF1_CBA_RESETB, WF1_XO_REQ,
+-                   WF1_TOP_CLK, WF1_TOP_DATA, WF1_HB1, WF1_HB2, WF1_HB3,
+-                   WF1_HB4, WF1_HB0, WF1_HB0_B, WF1_HB5, WF1_HB6, WF1_HB7,
+-                   WF1_HB8]
++            items:
++              enum: [SYS_WATCHDOG, WF2G_LED, WF5G_LED, I2C_SCL, I2C_SDA, GPIO_0,
++                     GPIO_1, GPIO_2, GPIO_3, GPIO_4, GPIO_5, GPIO_6, GPIO_7,
++                     GPIO_8, GPIO_9, GPIO_10, GPIO_11, GPIO_12, GPIO_13, GPIO_14,
++                     GPIO_15, PWM0, PWM1, SPI0_CLK, SPI0_MOSI, SPI0_MISO, SPI0_CS,
++                     SPI0_HOLD, SPI0_WP, SPI1_CLK, SPI1_MOSI, SPI1_MISO, SPI1_CS,
++                     SPI2_CLK, SPI2_MOSI, SPI2_MISO, SPI2_CS, SPI2_HOLD, SPI2_WP,
++                     UART0_RXD, UART0_TXD, PCIE_PERESET_N, UART1_RXD, UART1_TXD,
++                     UART1_CTS, UART1_RTS, UART2_RXD, UART2_TXD, UART2_CTS,
++                     UART2_RTS, EMMC_DATA_0, EMMC_DATA_1, EMMC_DATA_2,
++                     EMMC_DATA_3, EMMC_DATA_4, EMMC_DATA_5, EMMC_DATA_6,
++                     EMMC_DATA_7, EMMC_CMD, EMMC_CK, EMMC_DSL, EMMC_RSTB, PCM_DTX,
++                     PCM_DRX, PCM_CLK, PCM_FS, MT7531_INT, SMI_MDC, SMI_MDIO,
++                     WF0_DIG_RESETB, WF0_CBA_RESETB, WF0_XO_REQ, WF0_TOP_CLK,
++                     WF0_TOP_DATA, WF0_HB1, WF0_HB2, WF0_HB3, WF0_HB4, WF0_HB0,
++                     WF0_HB0_B, WF0_HB5, WF0_HB6, WF0_HB7, WF0_HB8, WF0_HB9,
++                     WF0_HB10, WF1_DIG_RESETB, WF1_CBA_RESETB, WF1_XO_REQ,
++                     WF1_TOP_CLK, WF1_TOP_DATA, WF1_HB1, WF1_HB2, WF1_HB3,
++                     WF1_HB4, WF1_HB0, WF1_HB0_B, WF1_HB5, WF1_HB6, WF1_HB7,
++                     WF1_HB8]
++            maxItems: 101
+ 
+           bias-disable: true
+ 
+-- 
+2.18.0
 
-I don't have any good idea on how to address this yet. One thing off
-the top of my head is: close the parent's file descriptor from kernel
-space (is it even possible?) on fork() (kind of like the close() on
-exec flag).
-
-I need to think about it more.
-
-Bart
