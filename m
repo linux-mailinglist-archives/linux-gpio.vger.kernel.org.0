@@ -2,77 +2,193 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B25845B7754
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 19:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAA2C5B7767
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 19:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232237AbiIMRHT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 13:07:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48720 "EHLO
+        id S231872AbiIMRKa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 13:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232426AbiIMRG4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 13:06:56 -0400
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02A2E8F95D;
-        Tue, 13 Sep 2022 08:56:19 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-127d10b4f19so33228200fac.9;
-        Tue, 13 Sep 2022 08:56:19 -0700 (PDT)
+        with ESMTP id S231265AbiIMRKK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 13:10:10 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5920CC6FD1
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 08:58:54 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id v16so28555756ejr.10
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 08:58:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=iZxym95KdGg+6iEgSjAWKJXLnUiQuXDvKPE1FGjFnQQ=;
+        b=Txrd4gbQ64FspzIne5wVD+p5116iAFqIXH0MCu+LVKesSzlo8cmp2G0adGp27pIY9p
+         05ehWrX5U2KPV1ZB8P58tM2zC7Qd0ekwNaboWuUnZ6BCRLLVZevvc5sd3D8KpwbPzaWn
+         f0y0mAYlRmoVRF4IwQ5N9dL0yDqqiwSHwduJRG20GhGvegJ/QufXdHR1CfGR18G+OsZA
+         Row2hODVjR/fS7Ze6ULWN9wKsTmGvLuMUSrCfAxx+MbyxGdf9puiMBIMzqwNhRvU/5rh
+         a3SPrCJhoRmuVOEMqw449F2oUYkdyejWdnOhAg94Lnzv8kTDAp8XSSDZdA6s+juQBv6D
+         H28A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q2pzBTs8AUPnlW7L4Dy5QX/7RTSl832U+8XEa+jPF14=;
-        b=3TliU4ej1/Mv6yRhY0IRdutabqZiFzRCWABtJhLBqXaquTDSgK/PEDn49vfsVu1lsN
-         3uBxjAppMIxBzoIVAnyox1O6b6dUdt/zQftl3re/PkOXnAcouDn3ulHPs5NqwG5cu+w4
-         oUIonfFNO6F4ShJ2fxDk5tn84zyULl6nCmyP4B7CFyckc4qvUigNTxN6iHGNrtvP1T5X
-         UQafCUcWel2HC0MrAebcfENrMtSU7qDfqkQEgUyR9CMFLtiQpc3TJA75mE3lnJJhyNhg
-         yroVxB8V1Z3bgQkfHmhhGDxiXwx/U4wls9qa/ZVfvYUmOGQcdO+yuU/k/PpLa2Cd2YcA
-         LiGg==
-X-Gm-Message-State: ACgBeo23lOLupB6imJ6Lr5HS/fVyPSWzqUOydHOkAJ8tPKYsn3bK45PC
-        i2JcnOAj3apSPBAegBiXeTtQwuMBIA==
-X-Google-Smtp-Source: AA6agR73VBx3kyn5Mb+AYg6v7nseXC+ZG770Imn8LWQNahhPuIqiBSVJh2wKMMSrn+66t6bBMt2fRA==
-X-Received: by 2002:a05:6808:2084:b0:34f:93ea:fac5 with SMTP id s4-20020a056808208400b0034f93eafac5mr1757751oiw.256.1663084528271;
-        Tue, 13 Sep 2022 08:55:28 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id i4-20020a9d53c4000000b00654625c0c4dsm6103755oth.17.2022.09.13.08.55.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 08:55:27 -0700 (PDT)
-Received: (nullmailer pid 3808048 invoked by uid 1000);
-        Tue, 13 Sep 2022 15:55:27 -0000
-Date:   Tue, 13 Sep 2022 10:55:27 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: add missing entries for
- gpio subnodes
-Message-ID: <20220913155527.GA3807992-robh@kernel.org>
-References: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=iZxym95KdGg+6iEgSjAWKJXLnUiQuXDvKPE1FGjFnQQ=;
+        b=748WSE2nKh5WgbGTWggYbRcUzt1JetIt1KB+RRY4DcMJoc/zN5k1LDUh/lQ5lU0Xc+
+         umfrnwU77NyA96bHlhHgb565N/PhyMVVoUsENXhq5YWn++wJC49/dOrM9GDIIZFqquCp
+         CNW3KfKR4r7oxy8upZ3zM3MArOB3degHuy9DCp+Xu7YcPl029Sjsc4H5Gssq0VR92CDh
+         AqeQSgFFJo64FOg6qPLNeGZcgHREwPa/Pic4/wsraZKGynNWlszx9YUqDYsqA94SjwXu
+         /14pEAxlZONv1nnDDYgCCEQdRATS2glgfCd4t0EMKp2zlKBAzziMwhLvTls3Xp/FWpzD
+         nGHg==
+X-Gm-Message-State: ACgBeo0GhvVCvF4t75VeCtpa+d0C37VkpMQyVe3wiu1tnmtsQvfL0nfe
+        nhrfhPbHqGUxdkfkpo7w02RZEtaztasSSDruWVhBMw==
+X-Google-Smtp-Source: AA6agR5sTFC44yl7xVfN3YGCtspiOuVU7OS/pJGABmPeMSUqaaRrmVQCpNEn1Iu5Q96MQiqmYRcYPVm3/sxonMaD7t0=
+X-Received: by 2002:a17:907:1c87:b0:741:8199:a59d with SMTP id
+ nb7-20020a1709071c8700b007418199a59dmr22298125ejc.736.1663084722934; Tue, 13
+ Sep 2022 08:58:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20220909121329.42004-1-brgl@bgdev.pl> <20220909121329.42004-3-brgl@bgdev.pl>
+ <YxykorLetCjAls/Z@sol> <CAMRc=Me46b+Fjz_AAbZZVbaELjY6NGVfNE6mwueiKRTpYe98rA@mail.gmail.com>
+ <Yx8Bj0+4STpklMc2@sol> <CAMRc=Me=QxXRgZKyirj23r4hEN9bzcPSM6N4z=0yGgAZheh=Qg@mail.gmail.com>
+ <Yx/nG5YsyCa+VXoj@sol> <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
+ <YyCTmZocN/CY4Pg6@sol> <CAMRc=MdBRGW0skXOgPbZy=w4EiWcyKmKwKSZuAj+k4EtbPmvdg@mail.gmail.com>
+ <YyCZ7TN8fyVyuWXY@sol>
+In-Reply-To: <YyCZ7TN8fyVyuWXY@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 13 Sep 2022 17:58:32 +0200
+Message-ID: <CAMRc=MfyD5iyfB5f5hx_Kq4p7NZv+0o8HVOysiy6DaKANpGNKQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 13 Sep 2022 09:46:39 +0200, Alexandre Torgue wrote:
-> Add "interrupt-controller" and gpio-line-names to gpio subnodes in order to
-> fix dtb validation.
-> 
-> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> 
+On Tue, Sep 13, 2022 at 4:55 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Tue, Sep 13, 2022 at 04:35:08PM +0200, Bartosz Golaszewski wrote:
+> > On Tue, Sep 13, 2022 at 4:28 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> > > On Tue, Sep 13, 2022 at 10:54:26AM +0200, Bartosz Golaszewski wrote:
+> > > > On Tue, Sep 13, 2022 at 4:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > >
+> > > > > On Mon, Sep 12, 2022 at 11:56:17AM +0200, Bartosz Golaszewski wrote:
+> > > > > > On Mon, Sep 12, 2022 at 11:53 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > > >
+> > > > > >
+> > > > > > [snip]
+> > > > > >
+> > > > > > > >
+> > > > > > > > Using -1 sounds good but I've just realized there's a different
+> > > > > > > > problem. A process holding a file descriptor may fork and both the
+> > > > > > > > parent and the child will keep the same file descriptors open. Now
+> > > > > > > > we'll have two processes (with different PIDs) holding the same GPIO
+> > > > > > > > lines (specifically holding a file descriptor to the same anonymous
+> > > > > > > > inode).
+> > > > > > > >
+> > > > > > > > This already poses a problem for this patch as we'd need to return an
+> > > > > > > > array of PIDs which we don't have the space for but also is a
+> > > > > > > > situation which we haven't discussed previously IIRC - two processes
+> > > > > > > > keeping the same GPIO lines requested.
+> > > > > > > >
+> > > > > > > > I don't have any good idea on how to address this yet. One thing off
+> > > > > > > > the top of my head is: close the parent's file descriptor from kernel
+> > > > > > > > space (is it even possible?) on fork() (kind of like the close() on
+> > > > > > > > exec flag).
+> > > > > > > >
+> > > > > > > > I need to think about it more.
+> > > > > > > >
+> > > > > > >
+> > > > > > > I thought the O_CLOEXEC was set on the request fds exactly to prevent this
+> > > > > > > case - only one process can hold the request fd.
+> > > > > > >
+> > > > > >
+> > > > > > O_CLOEXEC means "close on exec" not "close on fork". When you fork,
+> > > > > > you inherit all file descriptors from your parent. Only once you call
+> > > > > > execve() are the fds with this flag closed *in the child*.
+> > > > > >
+> > > > >
+> > > > > Ah, ok.
+> > > > > You want to pass request fd ownership from parent to child??
+> > > > > Why not lock ownership to the parent, so O_CLOFORK, were that
+> > > > > available?
+> > > > >
+> > > >
+> > > > Because what if we want to request a line and then daemonize i.e. fork
+> > > > and exit in parent? It makes much more sense to keep the lines
+> > > > requested in the child IMO.
+> > > >
+> > >
+> > > Then you are doing it backwards - daemonize first ;-).
+> > >
+> > > Generally speaking, doesn't transfer of resource ownership to the forked
+> > > child create havoc in multi-threaded apps? i.e. one thread requests a
+> > > resource, another forks.  The parent thread unknowingly loses ownership,
+> > > and the forked child process only starts with a replica of the forking
+> > > thread.
+> > >
+> >
+> > Yeah, sounds like a bad idea.
+> >
+> > > > During the BoF at Linux Plumbers it was suggested to use
+> > > > /proc/$PID/fdinfo to expose the information about which lines are
+> > > > requested but I can't figure out a way to do it elegantly.
+> > > >
+> > >
+> > > Yeah, missed that :-(.
+> > >
+> > > Makes sense.
+> > >
+> > > As each request fd can contain multiple lines on a particular chip,
+> > > you would need to identify the gpiochip and the offsets for that request.
+> > > So two fields - the gpiochip path, and the list of offsets.
+> > >
+> > > Is that already too clunky or am I missing something?
+> > >
+> >
+> > It's worse than that - we don't know the character device's filesystem
+> > path in gpiolib. Nor should we, as we can be in a different fs
+> > namespace when checking it than in which we were when we opened the
+> > device (which is also another concern for storing the path to the
+> > character device in struct gpiod_chip - unless we specify explicitly
+> > that it's the path that was used to open it). Since we don't know it -
+> > we can only get it from the file descriptor that the requesting
+> > process got after calling open() on the GPIO device. But this fd may
+> > have been closed in the meantime. I think I opened a can of worms with
+> > this one. :)
+> >
+>
+> Forgot that we don't have the path readily available in the kernel -
+> would device name suffice?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Maybe. I'm looking at what fdinfo shows in my vm and see things like:
+
+$ cat /proc/2353/fdinfo/10
+pos: 0
+flags: 02004000
+mnt_id: 15
+ino: 1052
+inotify wd:1 ino:1 sdev:3c mask:fce ignored_mask:0 fhandle-bytes:c
+fhandle-type:1 f_handle:7f0dd9400100000000000000
+
+I don't see any tools/libs readily available for parsing these. In
+libgpiod, if the user wanted to read the PID of the owner of the line,
+we'd need to manually go through the list of all fdinfo entries we
+have permissions to access and compare those against the line w'ere
+checking.
+
+We'd need of course first expose that info like:
+
+gpio chip:gpiochip2 lines:0,3,4,7
+
+Does that make sense?
+
+Bart
