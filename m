@@ -2,97 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E5585B758B
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:49:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E12295B73C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:13:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbiIMPtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 11:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
+        id S235240AbiIMPJf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 11:09:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236497AbiIMPsY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:48:24 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D9D86FDB
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:50:35 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id t7so21143415wrm.10
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:50:35 -0700 (PDT)
+        with ESMTP id S235614AbiIMPIv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:08:51 -0400
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3A87675B;
+        Tue, 13 Sep 2022 07:31:24 -0700 (PDT)
+Received: by mail-pf1-f176.google.com with SMTP id d82so11920735pfd.10;
+        Tue, 13 Sep 2022 07:31:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=uuUAUlYESfHNDi+YejfXdKYw5fjz5eIR1Jp8rUlK19c=;
-        b=7cHS8TMvfuKzbGm40Tb3+VrP9f7Ar6nDXuKiFbRac2N9EgqeHDVhDiidwGww+WcreG
-         gLMpW9BQLTN5UKyfsuPg7uNGyu9uUzldNFxWsdf7Uiei3xexG3BOOZYf2csxmyZZaMPG
-         k0D+n231T7uc4N2wfptEAOrDV78/XWJNCDyilJttB3yxs/dkpH5/gfZqXaqYRTEK+2Rq
-         eq4fuLlgjc3g8OntzKwPbwkl++Bc/2c1yEwPYbdFB0WD8a19WFnCHCtbTj6A42HQpO8t
-         PVnP3G3Gjvg8movdXdz+j275mpHNx4CtyqM+i1/7MJIB3VZV1FqtVfl09xpDTeHH6pq/
-         5Qlg==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=uE2k8DemtXQoFgIyx0axivRuuEaQewLGGBhI5xQfpoo=;
+        b=ABby8htyK4p5z9pS9ijVFXTHBZtbRC+kbrxb6x6zZ4tgRINFOL9NZ16LZk0wtyIShs
+         37xkjsS5y0QFnGgF0m8gpKKWoM4F4fsVczYuBF0eHOOkHirw/+7HC9RzfGKuZ97unX2N
+         9QH2pzP8o6ZJaN+qG6FRKDZN4M14P1B4wAJq28gMBSCt7cmXOeIpPsV3K067tcTlE9+L
+         b4FAoDoHODOfCmviN4bfQ+wYEhK0O9QxO75TMXNEIMPecKhuBalU9XfKw3NG4ZFZCOcm
+         s2kJLrqmw/Hhjszh43JsGlHgqtQ5ZNe1g+WHBWcYyj8UhrrEFliYeYFDoLja4CqGMcUs
+         w46g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=uuUAUlYESfHNDi+YejfXdKYw5fjz5eIR1Jp8rUlK19c=;
-        b=yLqBTTKU34PjsvMGxtJ1m1j47PqsRcRwroR31C5JHCQE7eUtFtWvOiTJzIOTxaef1g
-         iVNkC8HhrZ6qow+b2V9Z2VzUhlbEHwuZH1iFXbvKffLky9nov+6bjZ/80vpTVZlh6Hmk
-         zKKHNIW+sBhLDdlj0FqVGlyvs5+P2YIc90qO0Nc+i39NlFeDg1pG0NZG2BTUDNtJYe5o
-         2Lrc3sgQbmaGVomcBxCFb5111PgAws9yBvMdeQw6j5lZyti55ipVv7NEvs2yb2etEEe3
-         WECyQwdNUi8OQ5cVKLnaatiexYGa/OEuaN48jV7/0W+GRyCxfyWLxH/cm8PD2tIgVLMx
-         dASg==
-X-Gm-Message-State: ACgBeo1+a5X/XLV7mywzaJhbm2MA5yWTbXmpORRAPrmAKdS+eea0dPlX
-        i6YOJsJft2G6IX5ihjE8qZlXlnCNFdSygK3qR0rJ54pePrQ=
-X-Google-Smtp-Source: AA6agR6QIGrp2fAdnkwFjFQk/HswZRvMxVXZ0JkwXjwGIC0UzX658mD2J7R45Mae0DXy8vKUiThb3nPXp2Jt9SuFGyU=
-X-Received: by 2002:a05:6402:42c5:b0:44e:b640:16fb with SMTP id
- i5-20020a05640242c500b0044eb64016fbmr26672124edc.29.1663078386576; Tue, 13
- Sep 2022 07:13:06 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=uE2k8DemtXQoFgIyx0axivRuuEaQewLGGBhI5xQfpoo=;
+        b=FN8Ol64z8eg70BydvM2hLU5oVT2GHuBe1ivp0nJL66SM5VEppw37aKw7vnzy2NNPsF
+         l0hl2n65TWVtP+nVsqRxMcNgkcDge+hrs0fP/xDTSuKbjmHt9puuPPozcAFv2uS/mroe
+         KOYM0mTkLwe/8yWTtRlaSjHV7BO7hrsSIWuiQEV5AktnBRu5ClKZkCek7wxRXSmsjd9O
+         spz1hdjA3C24FMf8aJTA8hqq/ZxmzO/p3xyJhmQ/AWKlbdg3+QP+r85FSt1xPWeyZ5Ug
+         bVfviNuZC4QJLqtZ0wETbRJOFyBS9MEPuDtCN9OxdRKNjmx5OrdYT5k9ibAaayt58S4c
+         8IBQ==
+X-Gm-Message-State: ACgBeo19pcwBXW8AEqChsMIwE/Ik6kMBM9kCjorGe7hlhHjmCBe1GPVW
+        LwuWRT+QALJdJppBuvFLUdg=
+X-Google-Smtp-Source: AA6agR5AsU2rLelzEvOegvduVc5Ahp8yRB4ULphBkQexoW8BtQKEFO3AYtdT5xjYzHZYqGfKGNqPxw==
+X-Received: by 2002:a05:6a00:ac4:b0:535:c08:2da7 with SMTP id c4-20020a056a000ac400b005350c082da7mr33345721pfl.69.1663079327532;
+        Tue, 13 Sep 2022 07:28:47 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id w6-20020a170902e88600b0017824e7065fsm6640367plg.180.2022.09.13.07.28.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 07:28:46 -0700 (PDT)
+Date:   Tue, 13 Sep 2022 22:28:41 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
+Message-ID: <YyCTmZocN/CY4Pg6@sol>
+References: <20220909121329.42004-1-brgl@bgdev.pl>
+ <20220909121329.42004-3-brgl@bgdev.pl>
+ <YxykorLetCjAls/Z@sol>
+ <CAMRc=Me46b+Fjz_AAbZZVbaELjY6NGVfNE6mwueiKRTpYe98rA@mail.gmail.com>
+ <Yx8Bj0+4STpklMc2@sol>
+ <CAMRc=Me=QxXRgZKyirj23r4hEN9bzcPSM6N4z=0yGgAZheh=Qg@mail.gmail.com>
+ <Yx/nG5YsyCa+VXoj@sol>
+ <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220908112151.13912-1-f.fangjian@huawei.com>
-In-Reply-To: <20220908112151.13912-1-f.fangjian@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Sep 2022 16:12:55 +0200
-Message-ID: <CAMRc=MftDHFhPQzaJgf4WUjTqNpGsEWi4mHWRVPWWtWx_Z-hbg@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon GPIO Driver maintainer
-To:     Jay Fang <f.fangjian@huawei.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        jonathan.cameron@huawei.com, jiaxingluo@autox.ai,
-        prime.zeng@hisilicon.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 8, 2022 at 1:24 PM Jay Fang <f.fangjian@huawei.com> wrote:
->
-> Add Jay Fang as the maintainer of the HiSilicon GPIO Driver, replacing
-> Luo Jiaxing.
->
-> Cc: Luo Jiaxing <jiaxingluo@autox.ai>
-> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
-> ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index f1390b8270b2..907451fb013a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9122,7 +9122,7 @@ S:        Maintained
->  F:     drivers/dma/hisi_dma.c
->
->  HISILICON GPIO DRIVER
-> -M:     Luo Jiaxing <luojiaxing@huawei.com>
-> +M:     Jay Fang <f.fangjian@huawei.com>
->  L:     linux-gpio@vger.kernel.org
->  S:     Maintained
->  F:     drivers/gpio/gpio-hisi.c
-> --
-> 2.33.0
->
+On Tue, Sep 13, 2022 at 10:54:26AM +0200, Bartosz Golaszewski wrote:
+> On Tue, Sep 13, 2022 at 4:12 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Mon, Sep 12, 2022 at 11:56:17AM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 12, 2022 at 11:53 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > >
+> > > [snip]
+> > >
+> > > > >
+> > > > > Using -1 sounds good but I've just realized there's a different
+> > > > > problem. A process holding a file descriptor may fork and both the
+> > > > > parent and the child will keep the same file descriptors open. Now
+> > > > > we'll have two processes (with different PIDs) holding the same GPIO
+> > > > > lines (specifically holding a file descriptor to the same anonymous
+> > > > > inode).
+> > > > >
+> > > > > This already poses a problem for this patch as we'd need to return an
+> > > > > array of PIDs which we don't have the space for but also is a
+> > > > > situation which we haven't discussed previously IIRC - two processes
+> > > > > keeping the same GPIO lines requested.
+> > > > >
+> > > > > I don't have any good idea on how to address this yet. One thing off
+> > > > > the top of my head is: close the parent's file descriptor from kernel
+> > > > > space (is it even possible?) on fork() (kind of like the close() on
+> > > > > exec flag).
+> > > > >
+> > > > > I need to think about it more.
+> > > > >
+> > > >
+> > > > I thought the O_CLOEXEC was set on the request fds exactly to prevent this
+> > > > case - only one process can hold the request fd.
+> > > >
+> > >
+> > > O_CLOEXEC means "close on exec" not "close on fork". When you fork,
+> > > you inherit all file descriptors from your parent. Only once you call
+> > > execve() are the fds with this flag closed *in the child*.
+> > >
+> >
+> > Ah, ok.
+> > You want to pass request fd ownership from parent to child??
+> > Why not lock ownership to the parent, so O_CLOFORK, were that
+> > available?
+> >
+> 
+> Because what if we want to request a line and then daemonize i.e. fork
+> and exit in parent? It makes much more sense to keep the lines
+> requested in the child IMO.
+> 
 
-Queued, thanks!
+Then you are doing it backwards - daemonize first ;-).
 
-Bart
+Generally speaking, doesn't transfer of resource ownership to the forked
+child create havoc in multi-threaded apps? i.e. one thread requests a
+resource, another forks.  The parent thread unknowingly loses ownership,
+and the forked child process only starts with a replica of the forking
+thread.
+
+> During the BoF at Linux Plumbers it was suggested to use
+> /proc/$PID/fdinfo to expose the information about which lines are
+> requested but I can't figure out a way to do it elegantly.
+> 
+
+Yeah, missed that :-(.
+
+Makes sense.
+
+As each request fd can contain multiple lines on a particular chip,
+you would need to identify the gpiochip and the offsets for that request.
+So two fields - the gpiochip path, and the list of offsets.
+
+Is that already too clunky or am I missing something?
+
+Cheers,
+Kent.
