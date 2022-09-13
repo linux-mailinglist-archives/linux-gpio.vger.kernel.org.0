@@ -2,94 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A89205B6FA5
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 16:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5585B758B
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233039AbiIMOPU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 10:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
+        id S231946AbiIMPtU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 11:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233059AbiIMOOm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 10:14:42 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70BD6113C
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:10:51 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id ay7-20020a05600c1e0700b003b49861bf48so921520wmb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:10:50 -0700 (PDT)
+        with ESMTP id S236497AbiIMPsY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:48:24 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59D9D86FDB
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:50:35 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id t7so21143415wrm.10
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:50:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Te8k9s87unrEgkHcqd5vPRmIiJKPic6o0P3DO6oru9I=;
-        b=QoJLC3BR8wDCo0dQ4CZeGh+M7CkQEibwhsg+xXmtc17UNjkMc3FijrZZ8W+wCgcV+w
-         ySkg74u3AxilkIEmjGc0Xx2e962mqazZ6/UQrt9W4by/BzG0qwzstX9ZKjqqCjfB2nG6
-         xKtWNmPImF3XS5vF751fxviMKRoxE35J5eE7uVUQlNpnYARhoVqIn47L1yCG7phXHSWN
-         orojVXRqGtTSJ0dbiWgPf25SzujNYA3IwAgLUlt6ZjrlDUGbYLeC6ofk8L02Q8oPymWU
-         8A9ZrAiZdpk1mpxk5OEz39GpXFHlf3DJQ1VhQPXhATxU/S3gCOC8fPyDC0BcYjGZUGhs
-         FOWg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=uuUAUlYESfHNDi+YejfXdKYw5fjz5eIR1Jp8rUlK19c=;
+        b=7cHS8TMvfuKzbGm40Tb3+VrP9f7Ar6nDXuKiFbRac2N9EgqeHDVhDiidwGww+WcreG
+         gLMpW9BQLTN5UKyfsuPg7uNGyu9uUzldNFxWsdf7Uiei3xexG3BOOZYf2csxmyZZaMPG
+         k0D+n231T7uc4N2wfptEAOrDV78/XWJNCDyilJttB3yxs/dkpH5/gfZqXaqYRTEK+2Rq
+         eq4fuLlgjc3g8OntzKwPbwkl++Bc/2c1yEwPYbdFB0WD8a19WFnCHCtbTj6A42HQpO8t
+         PVnP3G3Gjvg8movdXdz+j275mpHNx4CtyqM+i1/7MJIB3VZV1FqtVfl09xpDTeHH6pq/
+         5Qlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Te8k9s87unrEgkHcqd5vPRmIiJKPic6o0P3DO6oru9I=;
-        b=t9d/KE/8/lSEPFUIynyyAjp9K0VbZdaHXHbBycyE9N4qmIdq8mBdGI4Ypnl3kMbFJe
-         3NB1+lCmFvtv2KE4KtjpRZICbnl4zdmbRa5wV4Jttojxf2xC9LwWomJqLuW7HpRYZQ7I
-         4KrT8UTrVoS6Qs6BZt2ujaCQv6kQv5pZvEN/HVyCH72RFiojTklwWGNIbEnqntudXWgz
-         9r40ke5nlGlMJNbPd/fb9fYA6OFLF0sAm2P4P33f5CyPdDsegKfoNyUdSSAh63zIm5di
-         Zh2gOrJnevAPLRyVs8nJhgqfipZnc6WjdEiqRz4b3U1afQHtbc17n/2FMo3U6I6Pyfiv
-         hF6w==
-X-Gm-Message-State: ACgBeo31mqx50CdXlf+5ayOlNb5kb8Gv8MlcQX0b5S2fV61GPcK8GMNQ
-        dMmBmcz35MQz53ddtP85z1oQqg==
-X-Google-Smtp-Source: AA6agR7fg9Yc5sCrG6pv+2JK5BauOdoRWdSdVeWZ38mpN9v3VOy/zNf3eVr4hucIAuIPexefzL+VVQ==
-X-Received: by 2002:a05:600c:4a9a:b0:3b4:78ab:bae5 with SMTP id b26-20020a05600c4a9a00b003b478abbae5mr2681954wmp.114.1663078246057;
-        Tue, 13 Sep 2022 07:10:46 -0700 (PDT)
-Received: from [10.119.22.201] ([89.101.193.67])
-        by smtp.gmail.com with ESMTPSA id o12-20020a5d4a8c000000b002285f73f11dsm13050983wrq.81.2022.09.13.07.10.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 07:10:45 -0700 (PDT)
-Message-ID: <6ab84de3-acbd-066f-1e19-4be556d3f4d9@linaro.org>
-Date:   Tue, 13 Sep 2022 16:10:44 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=uuUAUlYESfHNDi+YejfXdKYw5fjz5eIR1Jp8rUlK19c=;
+        b=yLqBTTKU34PjsvMGxtJ1m1j47PqsRcRwroR31C5JHCQE7eUtFtWvOiTJzIOTxaef1g
+         iVNkC8HhrZ6qow+b2V9Z2VzUhlbEHwuZH1iFXbvKffLky9nov+6bjZ/80vpTVZlh6Hmk
+         zKKHNIW+sBhLDdlj0FqVGlyvs5+P2YIc90qO0Nc+i39NlFeDg1pG0NZG2BTUDNtJYe5o
+         2Lrc3sgQbmaGVomcBxCFb5111PgAws9yBvMdeQw6j5lZyti55ipVv7NEvs2yb2etEEe3
+         WECyQwdNUi8OQ5cVKLnaatiexYGa/OEuaN48jV7/0W+GRyCxfyWLxH/cm8PD2tIgVLMx
+         dASg==
+X-Gm-Message-State: ACgBeo1+a5X/XLV7mywzaJhbm2MA5yWTbXmpORRAPrmAKdS+eea0dPlX
+        i6YOJsJft2G6IX5ihjE8qZlXlnCNFdSygK3qR0rJ54pePrQ=
+X-Google-Smtp-Source: AA6agR6QIGrp2fAdnkwFjFQk/HswZRvMxVXZ0JkwXjwGIC0UzX658mD2J7R45Mae0DXy8vKUiThb3nPXp2Jt9SuFGyU=
+X-Received: by 2002:a05:6402:42c5:b0:44e:b640:16fb with SMTP id
+ i5-20020a05640242c500b0044eb64016fbmr26672124edc.29.1663078386576; Tue, 13
+ Sep 2022 07:13:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH] gpio: pca953x: Introduce support for nxp,pcal6408
-Content-Language: en-US
-To:     Nate Drude <nate.d@variscite.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     eran.m@variscite.com
-References: <20220912171347.4167372-1-nate.d@variscite.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220912171347.4167372-1-nate.d@variscite.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20220908112151.13912-1-f.fangjian@huawei.com>
+In-Reply-To: <20220908112151.13912-1-f.fangjian@huawei.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 13 Sep 2022 16:12:55 +0200
+Message-ID: <CAMRc=MftDHFhPQzaJgf4WUjTqNpGsEWi4mHWRVPWWtWx_Z-hbg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: Update HiSilicon GPIO Driver maintainer
+To:     Jay Fang <f.fangjian@huawei.com>
+Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        jonathan.cameron@huawei.com, jiaxingluo@autox.ai,
+        prime.zeng@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/09/2022 19:13, Nate Drude wrote:
-> Signed-off-by: Nate Drude <nate.d@variscite.com>
-
-Missing commit msg.
-
+On Thu, Sep 8, 2022 at 1:24 PM Jay Fang <f.fangjian@huawei.com> wrote:
+>
+> Add Jay Fang as the maintainer of the HiSilicon GPIO Driver, replacing
+> Luo Jiaxing.
+>
+> Cc: Luo Jiaxing <jiaxingluo@autox.ai>
+> Signed-off-by: Jay Fang <f.fangjian@huawei.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-pca95xx.yaml | 1 +
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f1390b8270b2..907451fb013a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9122,7 +9122,7 @@ S:        Maintained
+>  F:     drivers/dma/hisi_dma.c
+>
+>  HISILICON GPIO DRIVER
+> -M:     Luo Jiaxing <luojiaxing@huawei.com>
+> +M:     Jay Fang <f.fangjian@huawei.com>
+>  L:     linux-gpio@vger.kernel.org
+>  S:     Maintained
+>  F:     drivers/gpio/gpio-hisi.c
+> --
+> 2.33.0
+>
 
-Split bindings to separate patch.
+Queued, thanks!
 
-
-
-Best regards,
-Krzysztof
+Bart
