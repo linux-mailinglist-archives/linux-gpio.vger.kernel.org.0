@@ -2,118 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 666F25B7C37
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 22:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4125B7D46
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 00:48:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiIMUaR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 16:30:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39726 "EHLO
+        id S229836AbiIMWsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 18:48:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiIMUaP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 16:30:15 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66806AA30
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 13:30:14 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id a20so7044968qtw.10
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 13:30:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date;
-        bh=IrYH2Znyc6i2p/K0+CV/ZRunlEwhd/pDiycoB2aJ7zA=;
-        b=RL0Gop3gHX3wZwobuD00qT5zq+2e4UPjYHiwRqEOvkTOqnqzmfbZfuaOKIOcHHXl//
-         zIrDAvTaz/ta0baT9P7yquRB7hmJhwxVOFeOFGOvb4R2O1W9exTcd78cVP9t9+ZSzFVa
-         Uh8sDtJxcBqSbmZKssjHR5gPcZep5Vo5bL+GzsnZu9xQxRAJJ/QKuGbVNaaVSvbf+OMF
-         PXdheb6N6JXPxLZem58wxP7QYzjrR4hk6a8AaMHe5iQEPN6HN8KDw8izRfilf6mjCW1T
-         ccRhBe77xu0eTZaEJaTs/dn7hbevIHSAkZ3dCm74sQT6OwUPe6eUKJ4Pu046f9KnR5tG
-         1ycw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=IrYH2Znyc6i2p/K0+CV/ZRunlEwhd/pDiycoB2aJ7zA=;
-        b=6IcpRwq/Js2KkvFixqkiEldN+zxkJjeqfP43V/c+V4j5bJN9/UoDU5uY0UwZfWYBUC
-         fpobvQ7mExLld2+awpmt3bsdqdkgBf/FnekU+eCWSrpxQgeNjbi/hMQyAfqVzEoz8Nhc
-         ymk3hcWwOfRiH7vf2AL1/N/okL6h2vzzdOmCaYQRQKzRxxQHVWZQNkZpx7aNuLFXFme2
-         bFxl001aF7IXUUImqt9Fs5swORAL2h6hBIpDYC/9oRl/Ra0oalqSFD65EvRuoWnlsfSG
-         zDAVDvgD7+P0mT/+V/bRP5S0CcKKDXNn3gaIgTl2izz+rZpSLg0X9wFewisdVkL83ua8
-         bexA==
-X-Gm-Message-State: ACgBeo2WfS3Zh5sbwBrTr/t0xyuis7wV7Um3Vrl3Z20nx8/n09qAud/I
-        yAhxUMfXMc+vGgnSr4Xkj5I=
-X-Google-Smtp-Source: AA6agR7qln2t7PJpctAJ4dtELlDqXDvOPr9Y1+FnUlYjc26b5LQ4FnpHdKZhGH6ej9STpK0iMvLPHQ==
-X-Received: by 2002:a05:622a:347:b0:343:602e:d1eb with SMTP id r7-20020a05622a034700b00343602ed1ebmr30769478qtw.78.1663101013808;
-        Tue, 13 Sep 2022 13:30:13 -0700 (PDT)
-Received: from asus.cpetrescu.net (cpe-98-10-48-140.rochester.res.rr.com. [98.10.48.140])
-        by smtp.gmail.com with ESMTPSA id g11-20020ac8580b000000b003438a8e842fsm275889qtg.44.2022.09.13.13.30.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 13:30:13 -0700 (PDT)
-Message-ID: <e6e721b3756db8b7a4bfe902af53e3377e681187.camel@gmail.com>
-Subject: Re: [PATCH] tools: Change asprintf return code check
-From:   Catalin Petrescu <catalin.petrescu@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Date:   Tue, 13 Sep 2022 16:30:12 -0400
-In-Reply-To: <CAMRc=Md47VUkZ47qoBpxSiHb6y5V2LsSkkO1ogvyY2KY4w4qyg@mail.gmail.com>
-References: <e8bf314dd0edfd0709d71e85fb8d877c3722e33e.camel@gmail.com>
-         <CAMRc=Md47VUkZ47qoBpxSiHb6y5V2LsSkkO1ogvyY2KY4w4qyg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1-0ubuntu1 
+        with ESMTP id S229784AbiIMWsS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 18:48:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8900852DCA;
+        Tue, 13 Sep 2022 15:48:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 29212B81173;
+        Tue, 13 Sep 2022 22:48:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9120C433D6;
+        Tue, 13 Sep 2022 22:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663109294;
+        bh=uv77tai1BCYC/4qEL/4nS7QCqtMJjwF829Abww+ZQl4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=LptG3Lc4LgeKuOIDpuzyAcpL6G5rKzKeOxu810/KQdLJap5fhLuKs62v/W/lysDTX
+         Cft+/+1Y7Vj/2gMCspJvPqZtt/DMo6NdUIPokVxo1glMH747IJRFk4iDOTxdxnzmtk
+         fMGOP4+eHPkgssYli3sz33eoafI4ToZOujUNabiuQXchGGrRN0GegzuyIeDVf5nSvy
+         ysYTqs19fCHFvjlqcQKIXEKkSTLE0nndUuWGWCQ+iS1q0Y5VfALCBcewmR6iOZd8an
+         cjyq90LJCfeaEY8y1yYasjLIDdRuknwtaXOwuEDEAwnDUp71SF+iJslpa125KlfZG1
+         KbfHbetihkd1w==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        agross@kernel.org, vkoul@kernel.org, iskren.chernev@gmail.com,
+        linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+        konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
+        martin.botka@somainline.org, krzysztof.kozlowski@linaro.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org
+Subject: Re: (subset) [PATCH v2 00/40] pinctrl/arm64: qcom: fix some of Qualcomm pinctrl schema warnings
+Date:   Tue, 13 Sep 2022 17:48:07 -0500
+Message-Id: <166310928487.670084.13401205270132967103.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
+References: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 2022-09-13 at 16:47 +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 8, 2022 at 4:03 PM Catalin Petrescu
-> <catalin.petrescu@gmail.com> wrote:
-> >=20
-> > Hi there,
-> >=20
-> > I found a small error (IMHO) in libgpiod.
-> > The issue is that asprintf may return -1 if it fails to allocate
-> > memory, and if that happens, chip_open_by_number will pass a NULL
-> > pointer to gpiod_chip_open.
-> >=20
-> > I hope this helps.
-> >=20
-> > Thanks,
-> >=20
-> > Catalin.
->=20
-> Hey Catalin,
->=20
-> Please next time send the patch inline using git's send-email
-> command.
->=20
-> You're right about the error code check but it should actually be ret
-> < 0 as per asprintf's documentation.
->=20
-> Bart
+On Mon, 12 Sep 2022 08:17:06 +0200, Krzysztof Kozlowski wrote:
+> That's a set for some of arm64 pinctrl bindings fixing most common warnings.  I
+> have a plan to continue this for remaining arm64 (sm8250 needs updates) and for
+> arm.
+> 
+> Changes since v1
+> ================
+> 1. Correct commit msg in commits "fix matching pin config".
+> 2. Correct commit msg in commit #2 .
+> 3. Add Rb tags.
+> 
+> [...]
 
-Hi Bart,
+Applied, thanks!
 
-I'll use git send-email next time. I was not aware of its existence.
-And I still need to figure out how to pass the gmail SMTP
-authentication.
+[34/40] arm64: dts: qcom: sm6125: align TLMM pin configuration with DT schema
+        commit: be24fd19b1b42e0b38e77e0d6a379282bafb6aa6
+[35/40] arm64: dts: qcom: sm6350: align TLMM pin configuration with DT schema
+        commit: 448f5a002fedb2ff2d19e5a563d3af1ea5e123e1
+[36/40] arm64: dts: qcom: sm8350-sagami: correct TS pin property
+        commit: c9c53d1f4329564f98ed0decfe3c377c6639ec5d
+[37/40] arm64: dts: qcom: sm8350: align TLMM pin configuration with DT schema
+        commit: e227fa2970fd259fa65f97c4defb0b85dffc62d7
+[38/40] arm64: dts: qcom: sm8450: align TLMM pin configuration with DT schema
+        commit: a73747528867fabea8e285a1b604594181091507
+[39/40] arm64: dts: qcom: sc7280: align TLMM pin configuration with DT schema
+        commit: d801357a0573105ff5db9fbfde80c3572369a261
+[40/40] arm64: dts: qcom: sc7280-herobrine: correct TLMM gpio-line-names
+        commit: e0eeb08522c94860c3528816f612c335a6d6552c
 
-You're right, when asprintf returns zero, technically, that's not an
-error.
-My thought was that if asprintf ever returns zero, that means that the
-path is a zero-length string.
-So, the next call to gpiod_chip_open(path) will likely fail. But I
-guess, the right thing to do is to let gpiod_chip_open() deal with it.
-
-Thanks,
-
-Catalin.
-
-
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
