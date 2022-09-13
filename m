@@ -2,63 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 888B65B753D
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:37:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD5A45B7561
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:42:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236637AbiIMPhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 11:37:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
+        id S231712AbiIMPl1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 11:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235007AbiIMPgu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:36:50 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1944880F59
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:43:06 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id u6so17888994eda.12
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:43:06 -0700 (PDT)
+        with ESMTP id S233609AbiIMPkv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:40:51 -0400
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D394D82852
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:45:35 -0700 (PDT)
+Received: by mail-ed1-f47.google.com with SMTP id x94so640648ede.11
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:45:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=LYv/1/ou2dunxakJdUfB+aFqC8x+bI9QUcYy5F4Yyxk=;
-        b=zqsYiggjJtqn+iC7H8LDslxU5Bq0dDBnl1zcS6U9Skyswsej8GAAKavPN+eots7rKz
-         ozV2darukxpvoJIqV+2EAl563oo75/6UqpImm3MB767ZLNAFhnvotANjwK40jM6z8cbq
-         Rg9DqP56+lOpiJtUKSK21Fpycmt7jSRH8x/AiUFPXJKFOZ+na0gcIZzAVRevh86Pc2PI
-         ShuSW1+7E6nMMhXS7E9oSWNubRYmfT9WSe+fEqOamlmO4d4NDSplnZH2pxhGZqIGe6dW
-         YD8jtAZw1RPHcI737o9Mv7ZHMoqwTsdH/sJXpjGe4aRhvO7nFGPjYm/O/8lF9xJJry4j
-         +kzw==
+        bh=4shadGKlKLbZWpoeI99+/msiJkg+/KoZvSj2fxjEELE=;
+        b=NsmNT7RRecBMSlDpThp9+H2aYFzNXFUijIK5oX+vhf94Dn5BveHgvFDmfm5QnVp1WN
+         rm8JwkoipnEQlwBdBwNFbKbmUr+HJZ74EpSNEJTC+G2f6j/2b4NEDmSzpJNeVb/LJjmc
+         iEqkO/jDmLHPMTL4IwvOAzk1JGBrBwV7tcLijJPgEsYd6ucKO6fhoM6HW6H+5sHrgTK8
+         SHvvxl3FtiYZYcwDy5JjHq6B4ZVhOZVSN5iJNFk8omELkX1bjUH9bjvZpMHIXv8npoRR
+         4R8tIkSyM5stAQh1aeJp38N7tF4f+iXnIjhOQLJHRC2iMy+PuHctNue4AM5TIbmEiw0m
+         jnCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=LYv/1/ou2dunxakJdUfB+aFqC8x+bI9QUcYy5F4Yyxk=;
-        b=ZKqA/WAtvD81roKbRbOpWJX4rCTsky8IK+QI+NKcKeI7K6KUjt3ogXf92Yx9S8tFxi
-         bPUThFYQLdL5MvUZxWhP6W5/QRvap0lUXMfdUHz9rvnfmjxbTzhOT3/mIu4vS09U4Y/W
-         R3xZAfZOG2aOzpGHzuplWOIaFblwjBIMjG5Fxf34+bzFsDsBAS/8e7FIFHfQFXCugc/h
-         V463jP1EGkU+SsvkzlnNa1dkz7JKFLQZuQ098DJuseS5pvj1Tzct2Ka/HDeiQ+pKDoa9
-         ExVI6qQ2cQZWcnuCN0gkmzEqc/7JdA5ong0C/QANNylSdNr2dmwpAGmeKwBCFRqbJaMj
-         AncQ==
-X-Gm-Message-State: ACgBeo2PGiVfSo7u3/bq7YhYLWTMoqQP6GYY3A2h1YCcssKWG+5mRvui
-        RsNWf34QH7DnZTyhb5ZBdfXTIoToB5GVAHJmm+iFxwOCCQu1SQ==
-X-Google-Smtp-Source: AA6agR5hS+mj9ue6hHSbX4Wj3kOc6fg9CO1DSi1pJJuM5BdWFeBLjHmHil/+L5aBjQ+4S4aIYtbZUnHKb/VVx4pnPfs=
+        bh=4shadGKlKLbZWpoeI99+/msiJkg+/KoZvSj2fxjEELE=;
+        b=1loWp7PnyX8gOLd45VMBPhhfQmktVN+nSS+Sm6QKrNBTT+EHty438pig4rvM5ONdMM
+         TMQnekY/mzlnIO6/XLogqywP0Ea1da9tdcQ2NmKr5XvRLg4VOCKj6xlUvtvKdeC40SlL
+         bhg8LbB4rarbE921kAP7hcFqOOfoomo+1x60vG8Pc3fzpOCJ80BVyKfOqHndeDXcucjz
+         DIlsboJNxkhAZqwMgpNqWTqD7j57p/hPWpEpFA58xCHBC3nITXrlKfSbrFp8bgWuk4cj
+         Cjqf1L1HpB7JRdm4M2uX+PTnpopzI2Fq87aYuISURoxrAT2C1U+x0xbSY+asdp9j0TvC
+         xTcA==
+X-Gm-Message-State: ACgBeo11MStr9w/M6LRp4dr9gN7MaNM1MnB5iSqyEvT/hKt5S5GOanLb
+        EU04bxpWL2/YS+Xelk7VcWqBW7vCh/ZmbMXBUfDWrg==
+X-Google-Smtp-Source: AA6agR6RILAUPG0NngeiqgcBo7YTDrfgbgcCleE9rux0FNMuoqKxgm1TeUQfuh2pOMjpDjp6UiHTTwTcSXS4e3tiRC8=
 X-Received: by 2002:a05:6402:5243:b0:451:6d52:5928 with SMTP id
- t3-20020a056402524300b004516d525928mr11986100edd.328.1663080093586; Tue, 13
- Sep 2022 07:41:33 -0700 (PDT)
+ t3-20020a056402524300b004516d525928mr11992866edd.328.1663080199831; Tue, 13
+ Sep 2022 07:43:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220909095632.2056143-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20220909095632.2056143-1-sergio.paracuellos@gmail.com>
+References: <20220909095632.2056143-1-sergio.paracuellos@gmail.com> <20220909095632.2056143-2-sergio.paracuellos@gmail.com>
+In-Reply-To: <20220909095632.2056143-2-sergio.paracuellos@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Sep 2022 16:41:22 +0200
-Message-ID: <CAMRc=MdG6bLmdLuZhyPRwDv88C92870Q1x4u0gVyrasxbu=65A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: mt7621: Switch to use fwnode instead of of_node
+Date:   Tue, 13 Sep 2022 16:43:09 +0200
+Message-ID: <CAMRc=MeH-f9xt1SAA4rq0SZ8VjtVuh5cuoDfRSK7CM2HQ==scA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: mt7621: Make the irqchip immutable
 To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
         arinc.unal@arinc9.com, matthias.bgg@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,76 +69,92 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Fri, Sep 9, 2022 at 11:56 AM Sergio Paracuellos
 <sergio.paracuellos@gmail.com> wrote:
 >
-> GPIO library now accepts fwnode as a firmware node, so
-> switch the driver to use it.
+> Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+> immutable") added a warning to indicate if the gpiolib is altering the
+> internals of irqchips.  Following this change the following warnings
+> are now observed for the mt7621 driver:
+>
+> gpio gpiochip0: (1e000600.gpio-bank0): not an immutable chip, please cons=
+ider fixing it!
+> gpio gpiochip1: (1e000600.gpio-bank1): not an immutable chip, please cons=
+ider fixing it!
+> gpio gpiochip2: (1e000600.gpio-bank2): not an immutable chip, please cons=
+ider fixing it!
+>
+> Fix this by making the irqchip in the mt7621 driver immutable.
 >
 > Tested-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
 > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 > ---
->  drivers/gpio/gpio-mt7621.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+>  drivers/gpio/gpio-mt7621.c | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
-> index d8a26e503ca5..05891dd3f96e 100644
+> index 05891dd3f96e..729cc8f72343 100644
 > --- a/drivers/gpio/gpio-mt7621.c
 > +++ b/drivers/gpio/gpio-mt7621.c
-> @@ -9,7 +9,6 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> -#include <linux/of_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/spinlock.h>
+> @@ -111,6 +111,8 @@ mediatek_gpio_irq_unmask(struct irq_data *d)
+>         unsigned long flags;
+>         u32 rise, fall, high, low;
 >
-> @@ -205,7 +204,8 @@ mediatek_gpio_xlate(struct gpio_chip *chip,
+> +       gpiochip_enable_irq(gc, d->hwirq);
+> +
+>         spin_lock_irqsave(&rg->lock, flags);
+>         rise =3D mtk_gpio_r32(rg, GPIO_REG_REDGE);
+>         fall =3D mtk_gpio_r32(rg, GPIO_REG_FEDGE);
+> @@ -142,6 +144,8 @@ mediatek_gpio_irq_mask(struct irq_data *d)
+>         mtk_gpio_w32(rg, GPIO_REG_HLVL, high & ~BIT(pin));
+>         mtk_gpio_w32(rg, GPIO_REG_LLVL, low & ~BIT(pin));
+>         spin_unlock_irqrestore(&rg->lock, flags);
+> +
+> +       gpiochip_disable_irq(gc, d->hwirq);
 >  }
 >
 >  static int
-> -mediatek_gpio_bank_probe(struct device *dev, int bank)
-> +mediatek_gpio_bank_probe(struct device *dev,
-> +                        struct fwnode_handle *fwnode, int bank)
->  {
->         struct mtk *mtk =3D dev_get_drvdata(dev);
->         struct mtk_gc *rg;
-> @@ -216,6 +216,7 @@ mediatek_gpio_bank_probe(struct device *dev, int bank=
-)
->         memset(rg, 0, sizeof(*rg));
+> @@ -203,6 +207,16 @@ mediatek_gpio_xlate(struct gpio_chip *chip,
+>         return gpio % MTK_BANK_WIDTH;
+>  }
 >
->         spin_lock_init(&rg->lock);
-> +       rg->chip.fwnode =3D fwnode;
->         rg->bank =3D bank;
+> +static const struct irq_chip mt7621_irq_chip =3D {
+> +       .name           =3D "mt7621-gpio",
+> +       .irq_mask_ack   =3D mediatek_gpio_irq_mask,
+> +       .irq_mask       =3D mediatek_gpio_irq_mask,
+> +       .irq_unmask     =3D mediatek_gpio_irq_unmask,
+> +       .irq_set_type   =3D mediatek_gpio_irq_type,
+> +       .flags          =3D IRQCHIP_IMMUTABLE,
+> +       GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+> +
+>  static int
+>  mediatek_gpio_bank_probe(struct device *dev,
+>                          struct fwnode_handle *fwnode, int bank)
+> @@ -239,11 +253,6 @@ mediatek_gpio_bank_probe(struct device *dev,
+>                 return -ENOMEM;
 >
->         dat =3D mtk->base + GPIO_REG_DATA + (rg->bank * GPIO_BANK_STRIDE)=
-;
-> @@ -290,7 +291,7 @@ static int
->  mediatek_gpio_probe(struct platform_device *pdev)
->  {
->         struct device *dev =3D &pdev->dev;
-> -       struct device_node *np =3D dev->of_node;
-> +       struct fwnode_handle *fwnode =3D dev_fwnode(dev);
->         struct mtk *mtk;
->         int i;
->         int ret;
-> @@ -303,12 +304,12 @@ mediatek_gpio_probe(struct platform_device *pdev)
->         if (IS_ERR(mtk->base))
->                 return PTR_ERR(mtk->base);
+>         rg->chip.offset =3D bank * MTK_BANK_WIDTH;
+> -       rg->irq_chip.name =3D dev_name(dev);
+> -       rg->irq_chip.irq_unmask =3D mediatek_gpio_irq_unmask;
+> -       rg->irq_chip.irq_mask =3D mediatek_gpio_irq_mask;
+> -       rg->irq_chip.irq_mask_ack =3D mediatek_gpio_irq_mask;
+> -       rg->irq_chip.irq_set_type =3D mediatek_gpio_irq_type;
 >
-> -       mtk->gpio_irq =3D irq_of_parse_and_map(np, 0);
-> +       mtk->gpio_irq =3D fwnode_irq_get(fwnode, 0);
-
-You can do even better and just use platform_get_irq().
-
-Bart
-
->         mtk->dev =3D dev;
->         platform_set_drvdata(pdev, mtk);
+>         if (mtk->gpio_irq) {
+>                 struct gpio_irq_chip *girq;
+> @@ -263,7 +272,7 @@ mediatek_gpio_bank_probe(struct device *dev,
+>                 }
 >
->         for (i =3D 0; i < MTK_BANK_CNT; i++) {
-> -               ret =3D mediatek_gpio_bank_probe(dev, i);
-> +               ret =3D mediatek_gpio_bank_probe(dev, fwnode, i);
->                 if (ret)
->                         return ret;
->         }
+>                 girq =3D &rg->chip.irq;
+> -               girq->chip =3D &rg->irq_chip;
+> +               gpio_irq_chip_set_chip(girq, &mt7621_irq_chip);
+>                 /* This will let us handle the parent IRQ in the driver *=
+/
+>                 girq->parent_handler =3D NULL;
+>                 girq->num_parents =3D 0;
 > --
 > 2.25.1
 >
+
+This should go into fixes but depends on the other patch which is
+material for the next release cycle. Can you resend this separately?
+
+Bart
