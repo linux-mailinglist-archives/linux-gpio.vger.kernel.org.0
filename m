@@ -2,163 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE0425B7530
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:35:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 888B65B753D
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Sep 2022 17:37:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234031AbiIMPep (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 11:34:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34602 "EHLO
+        id S236637AbiIMPhO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 11:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236855AbiIMPeM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:34:12 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B806D9E3
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:41:36 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id lz22so28038246ejb.3
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:41:36 -0700 (PDT)
+        with ESMTP id S235007AbiIMPgu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 11:36:50 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1944880F59
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:43:06 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id u6so17888994eda.12
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Sep 2022 07:43:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=Oxnd9qCwRFTsmxT6x25WRkCUJPviNayUbip4kaM0mLQ=;
-        b=7SjLMC1FEEFg9IdvZm3cpyY6yrPLNUbl2gQKIaC8psHcNogFBg8Hr+CshxAKjGARpK
-         JEcPaS17tXMZh9j6F2VVEY/mSuGaC7lYw8LZwVFaeAQSRa3moX5Vp+e9INHxUJU5Gt3/
-         gdXP2m52nM3yFEC2zlR2LA9aB6j3VvbWFYZ4n703YCTkxIYkzGo8zd+Y+rWettgdDE7q
-         1c1LbRT0RdssUFz0FtXdqE91P2x5swt7efArBhUaTrZHYxU7Xyx+0VytOvshyuzQUHpz
-         zcesaXDQrPwQlJoRt7VLXrVrR0BeSIu53tyOVe1+A1Con6e6T2HNB73XlD/zoIE9VQP1
-         Qtqw==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=LYv/1/ou2dunxakJdUfB+aFqC8x+bI9QUcYy5F4Yyxk=;
+        b=zqsYiggjJtqn+iC7H8LDslxU5Bq0dDBnl1zcS6U9Skyswsej8GAAKavPN+eots7rKz
+         ozV2darukxpvoJIqV+2EAl563oo75/6UqpImm3MB767ZLNAFhnvotANjwK40jM6z8cbq
+         Rg9DqP56+lOpiJtUKSK21Fpycmt7jSRH8x/AiUFPXJKFOZ+na0gcIZzAVRevh86Pc2PI
+         ShuSW1+7E6nMMhXS7E9oSWNubRYmfT9WSe+fEqOamlmO4d4NDSplnZH2pxhGZqIGe6dW
+         YD8jtAZw1RPHcI737o9Mv7ZHMoqwTsdH/sJXpjGe4aRhvO7nFGPjYm/O/8lF9xJJry4j
+         +kzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Oxnd9qCwRFTsmxT6x25WRkCUJPviNayUbip4kaM0mLQ=;
-        b=Ep21xojadLIEEiBXItk7hjKva/crWFbCnmb17wNCxw7Ua0/zMVXlelLfBrO+nBaMZT
-         bUhfnmN3UA0m1xDcFJmYYyS1Az/8VlARYZVPKhZGqRfYgzE4otFHbZ+/SzoeAAayOqfj
-         iPhBOhK/1UMrDMK6Mfydj8iDnO5A8UiavYsIbFqU3zYb6mj9ZNMn0zkjLz4QLeTcLljK
-         W26GEJwR5O80ktoE6PAzMxPMcHX5wRS86cME5f8rnqDfeVVj6ciYY9TXnPPnTtQDc+z3
-         Py6hVKquRqJ/VSBR4ZqPjn17EBRoTSI2JJMSqB8dHHFBCEATZX317Q1Ux3YJLHaavfw+
-         iJIA==
-X-Gm-Message-State: ACgBeo0nPFDpJBQYCRHabSkEXiIouo30Bf7kZeFRzzBVKyGHs39QKSC0
-        Qdu72PBzw8G8eDXvGP7BL3udW/eo3S/f85ZkgFS4tg==
-X-Google-Smtp-Source: AA6agR5cTaKBU3zIDbSLmVyeUqwX8xrt7vR1zWK4dMBLYkpfUGhGpXhMdWUTUABqr0Rm+oS565VSt8ueOzQ2VlD6ujk=
-X-Received: by 2002:a17:907:3da9:b0:77b:9672:3f7f with SMTP id
- he41-20020a1709073da900b0077b96723f7fmr10436534ejc.636.1663079719450; Tue, 13
- Sep 2022 07:35:19 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=LYv/1/ou2dunxakJdUfB+aFqC8x+bI9QUcYy5F4Yyxk=;
+        b=ZKqA/WAtvD81roKbRbOpWJX4rCTsky8IK+QI+NKcKeI7K6KUjt3ogXf92Yx9S8tFxi
+         bPUThFYQLdL5MvUZxWhP6W5/QRvap0lUXMfdUHz9rvnfmjxbTzhOT3/mIu4vS09U4Y/W
+         R3xZAfZOG2aOzpGHzuplWOIaFblwjBIMjG5Fxf34+bzFsDsBAS/8e7FIFHfQFXCugc/h
+         V463jP1EGkU+SsvkzlnNa1dkz7JKFLQZuQ098DJuseS5pvj1Tzct2Ka/HDeiQ+pKDoa9
+         ExVI6qQ2cQZWcnuCN0gkmzEqc/7JdA5ong0C/QANNylSdNr2dmwpAGmeKwBCFRqbJaMj
+         AncQ==
+X-Gm-Message-State: ACgBeo2PGiVfSo7u3/bq7YhYLWTMoqQP6GYY3A2h1YCcssKWG+5mRvui
+        RsNWf34QH7DnZTyhb5ZBdfXTIoToB5GVAHJmm+iFxwOCCQu1SQ==
+X-Google-Smtp-Source: AA6agR5hS+mj9ue6hHSbX4Wj3kOc6fg9CO1DSi1pJJuM5BdWFeBLjHmHil/+L5aBjQ+4S4aIYtbZUnHKb/VVx4pnPfs=
+X-Received: by 2002:a05:6402:5243:b0:451:6d52:5928 with SMTP id
+ t3-20020a056402524300b004516d525928mr11986100edd.328.1663080093586; Tue, 13
+ Sep 2022 07:41:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220909121329.42004-1-brgl@bgdev.pl> <20220909121329.42004-3-brgl@bgdev.pl>
- <YxykorLetCjAls/Z@sol> <CAMRc=Me46b+Fjz_AAbZZVbaELjY6NGVfNE6mwueiKRTpYe98rA@mail.gmail.com>
- <Yx8Bj0+4STpklMc2@sol> <CAMRc=Me=QxXRgZKyirj23r4hEN9bzcPSM6N4z=0yGgAZheh=Qg@mail.gmail.com>
- <Yx/nG5YsyCa+VXoj@sol> <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
- <YyCTmZocN/CY4Pg6@sol>
-In-Reply-To: <YyCTmZocN/CY4Pg6@sol>
+References: <20220909095632.2056143-1-sergio.paracuellos@gmail.com>
+In-Reply-To: <20220909095632.2056143-1-sergio.paracuellos@gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 13 Sep 2022 16:35:08 +0200
-Message-ID: <CAMRc=MdBRGW0skXOgPbZy=w4EiWcyKmKwKSZuAj+k4EtbPmvdg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 13 Sep 2022 16:41:22 +0200
+Message-ID: <CAMRc=MdG6bLmdLuZhyPRwDv88C92870Q1x4u0gVyrasxbu=65A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: mt7621: Switch to use fwnode instead of of_node
+To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        arinc.unal@arinc9.com, matthias.bgg@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 4:28 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Fri, Sep 9, 2022 at 11:56 AM Sergio Paracuellos
+<sergio.paracuellos@gmail.com> wrote:
 >
-> On Tue, Sep 13, 2022 at 10:54:26AM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Sep 13, 2022 at 4:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Mon, Sep 12, 2022 at 11:56:17AM +0200, Bartosz Golaszewski wrote:
-> > > > On Mon, Sep 12, 2022 at 11:53 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > >
-> > > >
-> > > > [snip]
-> > > >
-> > > > > >
-> > > > > > Using -1 sounds good but I've just realized there's a different
-> > > > > > problem. A process holding a file descriptor may fork and both the
-> > > > > > parent and the child will keep the same file descriptors open. Now
-> > > > > > we'll have two processes (with different PIDs) holding the same GPIO
-> > > > > > lines (specifically holding a file descriptor to the same anonymous
-> > > > > > inode).
-> > > > > >
-> > > > > > This already poses a problem for this patch as we'd need to return an
-> > > > > > array of PIDs which we don't have the space for but also is a
-> > > > > > situation which we haven't discussed previously IIRC - two processes
-> > > > > > keeping the same GPIO lines requested.
-> > > > > >
-> > > > > > I don't have any good idea on how to address this yet. One thing off
-> > > > > > the top of my head is: close the parent's file descriptor from kernel
-> > > > > > space (is it even possible?) on fork() (kind of like the close() on
-> > > > > > exec flag).
-> > > > > >
-> > > > > > I need to think about it more.
-> > > > > >
-> > > > >
-> > > > > I thought the O_CLOEXEC was set on the request fds exactly to prevent this
-> > > > > case - only one process can hold the request fd.
-> > > > >
-> > > >
-> > > > O_CLOEXEC means "close on exec" not "close on fork". When you fork,
-> > > > you inherit all file descriptors from your parent. Only once you call
-> > > > execve() are the fds with this flag closed *in the child*.
-> > > >
-> > >
-> > > Ah, ok.
-> > > You want to pass request fd ownership from parent to child??
-> > > Why not lock ownership to the parent, so O_CLOFORK, were that
-> > > available?
-> > >
-> >
-> > Because what if we want to request a line and then daemonize i.e. fork
-> > and exit in parent? It makes much more sense to keep the lines
-> > requested in the child IMO.
-> >
+> GPIO library now accepts fwnode as a firmware node, so
+> switch the driver to use it.
 >
-> Then you are doing it backwards - daemonize first ;-).
+> Tested-by: Ar=C4=B1n=C3=A7 =C3=9CNAL <arinc.unal@arinc9.com>
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> ---
+>  drivers/gpio/gpio-mt7621.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 >
-> Generally speaking, doesn't transfer of resource ownership to the forked
-> child create havoc in multi-threaded apps? i.e. one thread requests a
-> resource, another forks.  The parent thread unknowingly loses ownership,
-> and the forked child process only starts with a replica of the forking
-> thread.
+> diff --git a/drivers/gpio/gpio-mt7621.c b/drivers/gpio/gpio-mt7621.c
+> index d8a26e503ca5..05891dd3f96e 100644
+> --- a/drivers/gpio/gpio-mt7621.c
+> +++ b/drivers/gpio/gpio-mt7621.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> -#include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/spinlock.h>
 >
+> @@ -205,7 +204,8 @@ mediatek_gpio_xlate(struct gpio_chip *chip,
+>  }
+>
+>  static int
+> -mediatek_gpio_bank_probe(struct device *dev, int bank)
+> +mediatek_gpio_bank_probe(struct device *dev,
+> +                        struct fwnode_handle *fwnode, int bank)
+>  {
+>         struct mtk *mtk =3D dev_get_drvdata(dev);
+>         struct mtk_gc *rg;
+> @@ -216,6 +216,7 @@ mediatek_gpio_bank_probe(struct device *dev, int bank=
+)
+>         memset(rg, 0, sizeof(*rg));
+>
+>         spin_lock_init(&rg->lock);
+> +       rg->chip.fwnode =3D fwnode;
+>         rg->bank =3D bank;
+>
+>         dat =3D mtk->base + GPIO_REG_DATA + (rg->bank * GPIO_BANK_STRIDE)=
+;
+> @@ -290,7 +291,7 @@ static int
+>  mediatek_gpio_probe(struct platform_device *pdev)
+>  {
+>         struct device *dev =3D &pdev->dev;
+> -       struct device_node *np =3D dev->of_node;
+> +       struct fwnode_handle *fwnode =3D dev_fwnode(dev);
+>         struct mtk *mtk;
+>         int i;
+>         int ret;
+> @@ -303,12 +304,12 @@ mediatek_gpio_probe(struct platform_device *pdev)
+>         if (IS_ERR(mtk->base))
+>                 return PTR_ERR(mtk->base);
+>
+> -       mtk->gpio_irq =3D irq_of_parse_and_map(np, 0);
+> +       mtk->gpio_irq =3D fwnode_irq_get(fwnode, 0);
 
-Yeah, sounds like a bad idea.
+You can do even better and just use platform_get_irq().
 
-> > During the BoF at Linux Plumbers it was suggested to use
-> > /proc/$PID/fdinfo to expose the information about which lines are
-> > requested but I can't figure out a way to do it elegantly.
-> >
->
-> Yeah, missed that :-(.
->
-> Makes sense.
->
-> As each request fd can contain multiple lines on a particular chip,
-> you would need to identify the gpiochip and the offsets for that request.
-> So two fields - the gpiochip path, and the list of offsets.
->
-> Is that already too clunky or am I missing something?
->
+Bart
 
-It's worse than that - we don't know the character device's filesystem
-path in gpiolib. Nor should we, as we can be in a different fs
-namespace when checking it than in which we were when we opened the
-device (which is also another concern for storing the path to the
-character device in struct gpiod_chip - unless we specify explicitly
-that it's the path that was used to open it). Since we don't know it -
-we can only get it from the file descriptor that the requesting
-process got after calling open() on the GPIO device. But this fd may
-have been closed in the meantime. I think I opened a can of worms with
-this one. :)
-
-Bartosz
+>         mtk->dev =3D dev;
+>         platform_set_drvdata(pdev, mtk);
+>
+>         for (i =3D 0; i < MTK_BANK_CNT; i++) {
+> -               ret =3D mediatek_gpio_bank_probe(dev, i);
+> +               ret =3D mediatek_gpio_bank_probe(dev, fwnode, i);
+>                 if (ret)
+>                         return ret;
+>         }
+> --
+> 2.25.1
+>
