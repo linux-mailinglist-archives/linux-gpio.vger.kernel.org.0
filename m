@@ -2,91 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D4125B7D46
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 00:48:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 311E55B7E13
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 03:01:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbiIMWsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 18:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56222 "EHLO
+        id S229616AbiINBBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 21:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbiIMWsS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 18:48:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8900852DCA;
-        Tue, 13 Sep 2022 15:48:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 29212B81173;
-        Tue, 13 Sep 2022 22:48:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9120C433D6;
-        Tue, 13 Sep 2022 22:48:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663109294;
-        bh=uv77tai1BCYC/4qEL/4nS7QCqtMJjwF829Abww+ZQl4=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=LptG3Lc4LgeKuOIDpuzyAcpL6G5rKzKeOxu810/KQdLJap5fhLuKs62v/W/lysDTX
-         Cft+/+1Y7Vj/2gMCspJvPqZtt/DMo6NdUIPokVxo1glMH747IJRFk4iDOTxdxnzmtk
-         fMGOP4+eHPkgssYli3sz33eoafI4ToZOujUNabiuQXchGGrRN0GegzuyIeDVf5nSvy
-         ysYTqs19fCHFvjlqcQKIXEKkSTLE0nndUuWGWCQ+iS1q0Y5VfALCBcewmR6iOZd8an
-         cjyq90LJCfeaEY8y1yYasjLIDdRuknwtaXOwuEDEAwnDUp71SF+iJslpa125KlfZG1
-         KbfHbetihkd1w==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        agross@kernel.org, vkoul@kernel.org, iskren.chernev@gmail.com,
-        linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        konrad.dybcio@somainline.org, linux-arm-msm@vger.kernel.org,
-        martin.botka@somainline.org, krzysztof.kozlowski@linaro.org,
-        devicetree@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: (subset) [PATCH v2 00/40] pinctrl/arm64: qcom: fix some of Qualcomm pinctrl schema warnings
-Date:   Tue, 13 Sep 2022 17:48:07 -0500
-Message-Id: <166310928487.670084.13401205270132967103.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
-References: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229487AbiINBBB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 21:01:01 -0400
+Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B7C5789D;
+        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
+Received: by mail-pf1-x433.google.com with SMTP id y136so13358066pfb.3;
+        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=pDWBwLNj3E614UwmbNJhUGAaW1RykjI2VArpUIowBvY=;
+        b=fmOEtvrzwKZUBg/mi3MwcNaaU/EIbfckVjptNm+k29Y91shLw+v2EhUpEmE/3wjKK0
+         g6TI0Co2TRmoOyWv2kZPYhMIz6A75PtomVGtAs0b89FjA6Qt4lNWX19yhR8AImPiVkaj
+         QBx8dqfiQ/xskLo58u9cPppPbyyinpBo5LZ4QnJYpIrFIpWySzf3nhcNfYXUgedxMiRO
+         WR9pIiIAQX8ZcKPryAoG+2e5mKCQdk0zV4B0tBdiQUKKaDgbFbV1qdc+r7mWejqiDoNr
+         uWZ7pbgo5EfEy22s1mT+P2bGANxPI3hk6EOQ0iVkXegGBPN3ZagjXSyaZCphw7KF7Hr4
+         me/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=pDWBwLNj3E614UwmbNJhUGAaW1RykjI2VArpUIowBvY=;
+        b=Yj+ygC1n7fuse5hwplqahi1KJbkykqnBFHxMQqx6tEZ9rfdozXpdINVyjSwaO1VTy0
+         zPv2yo6Bf4nOTVBhUYaIPA0Fku+XYqJo/FqHoX0NIMADDOrslSVZnszpOO8aHqGM4S5X
+         geBfxgsUxI5I8dAjGqhrVcS43du2/NFJd5aeU6kd7ssnQtm0jKnf5iwqhHIvxpZ8C57J
+         8fS5rIMGDcPFe4ZCakTRgYnDPNibYFX0UEjRZ3qngV8/nT+tKvJeN5MZg183BWgiSY/Y
+         S9CHOV36NBt2/VUDnRXjlEtIKckRxKYCgOmOQ8YZln4736qesT2vAKjhhwPAGuC/DbH6
+         8/8Q==
+X-Gm-Message-State: ACgBeo1nckvKdplFkhPHO7euGWkaxaxVpPqZhGK0SdubDVzE3eIioT3+
+        3QCUjKqzAUVQqbc30v79vJVQSRnm+xQ=
+X-Google-Smtp-Source: AA6agR5qmXyyvxfORlgMqOEM7bdzD6wvyP+/SlS63tEh4McFsmfHezX+1ou7N1MoPRy1EOEoYnB1CA==
+X-Received: by 2002:a63:5c62:0:b0:438:a981:1b27 with SMTP id n34-20020a635c62000000b00438a9811b27mr17582873pgm.443.1663117259354;
+        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id x8-20020a170902a38800b00176c891c893sm9153424pla.131.2022.09.13.18.00.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Sep 2022 18:00:58 -0700 (PDT)
+Date:   Wed, 14 Sep 2022 09:00:53 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
+Message-ID: <YyEnxeWxv2qV7JKI@sol>
+References: <Yx8Bj0+4STpklMc2@sol>
+ <CAMRc=Me=QxXRgZKyirj23r4hEN9bzcPSM6N4z=0yGgAZheh=Qg@mail.gmail.com>
+ <Yx/nG5YsyCa+VXoj@sol>
+ <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
+ <YyCTmZocN/CY4Pg6@sol>
+ <CAMRc=MdBRGW0skXOgPbZy=w4EiWcyKmKwKSZuAj+k4EtbPmvdg@mail.gmail.com>
+ <YyCZ7TN8fyVyuWXY@sol>
+ <CAMRc=MfyD5iyfB5f5hx_Kq4p7NZv+0o8HVOysiy6DaKANpGNKQ@mail.gmail.com>
+ <YyCtI/WPngP9InsD@sol>
+ <YyC4zq2YEmzQMkBL@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YyC4zq2YEmzQMkBL@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 12 Sep 2022 08:17:06 +0200, Krzysztof Kozlowski wrote:
-> That's a set for some of arm64 pinctrl bindings fixing most common warnings.  I
-> have a plan to continue this for remaining arm64 (sm8250 needs updates) and for
-> arm.
+On Tue, Sep 13, 2022 at 08:07:26PM +0300, Andy Shevchenko wrote:
+> On Wed, Sep 14, 2022 at 12:17:39AM +0800, Kent Gibson wrote:
+> > On Tue, Sep 13, 2022 at 05:58:32PM +0200, Bartosz Golaszewski wrote:
+> > > On Tue, Sep 13, 2022 at 4:55 PM Kent Gibson <warthog618@gmail.com> wrote:
 > 
-> Changes since v1
-> ================
-> 1. Correct commit msg in commits "fix matching pin config".
-> 2. Correct commit msg in commit #2 .
-> 3. Add Rb tags.
+> ...
 > 
-> [...]
+> > > We'd need of course first expose that info like:
+> > > 
+> > > gpio chip:gpiochip2 lines:0,3,4,7
+> > > 
+> > > Does that make sense?
+> > 
+> > Makes sense to me, though I don't claim to know anything about fdinfo
+> > field formatting.
+> > 
+> > e.g. I also see fdinfo fields like this:
+> > 
+> > eventfd-count:                0
+> > eventfd-id: 1
+> > 
+> > so
+> > 
+> > gpio-chip:  gpiochip2
+> > gpio-lines: 0,3,4,7
+> > 
+> > might be ok too.
+> 
+> Always think about two or more GPIO chips in the same process with 1 or more
+> lines requested from each of them.
+> 
 
-Applied, thanks!
+I considered that - as Bart noted and as I stated earlier, each request fd
+is limited to one gpiochip and one set of offsets. And those are fixed
+for the lifetime of the request.
+Different requests will be different fds.
 
-[34/40] arm64: dts: qcom: sm6125: align TLMM pin configuration with DT schema
-        commit: be24fd19b1b42e0b38e77e0d6a379282bafb6aa6
-[35/40] arm64: dts: qcom: sm6350: align TLMM pin configuration with DT schema
-        commit: 448f5a002fedb2ff2d19e5a563d3af1ea5e123e1
-[36/40] arm64: dts: qcom: sm8350-sagami: correct TS pin property
-        commit: c9c53d1f4329564f98ed0decfe3c377c6639ec5d
-[37/40] arm64: dts: qcom: sm8350: align TLMM pin configuration with DT schema
-        commit: e227fa2970fd259fa65f97c4defb0b85dffc62d7
-[38/40] arm64: dts: qcom: sm8450: align TLMM pin configuration with DT schema
-        commit: a73747528867fabea8e285a1b604594181091507
-[39/40] arm64: dts: qcom: sc7280: align TLMM pin configuration with DT schema
-        commit: d801357a0573105ff5db9fbfde80c3572369a261
-[40/40] arm64: dts: qcom: sc7280-herobrine: correct TLMM gpio-line-names
-        commit: e0eeb08522c94860c3528816f612c335a6d6552c
+But on the subject of repeats in fdinfo, I get the impression that
+multi-field fdinfo rows, e.g. the tfd rows here:
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+pos:	0
+flags:	02000002
+mnt_id:	14
+ino:	7661
+tfd:       12 events:       19 data:                c  pos:0 ino:1ded sdev:d
+tfd:       14 events:       19 data:                e  pos:0 ino:1ded sdev:d
+
+are formatted that way as they may be repeated, so they are getting all
+their ducks in a row, as it were.
+
+So perhaps the gpio-lines could be exploded into repeated gpio-line rows?
+That may be going overboard as we are only encoding one field per line
+at the moment, not a struct as in the tfd case, but might we ever want
+to add more details?
+
+Again, just speculating based on the few examples I have on hand.
+
+Cheers,
+Kent.
