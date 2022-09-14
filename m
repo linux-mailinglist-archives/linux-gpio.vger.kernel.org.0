@@ -2,65 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50A085B8835
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 14:26:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B084B5B8841
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 14:29:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiINM02 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 08:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41320 "EHLO
+        id S229929AbiINM3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 08:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbiINM0X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 08:26:23 -0400
+        with ESMTP id S230036AbiINM3f (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 08:29:35 -0400
 Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A58AF7D79B
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 05:26:16 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id a41so10133142edf.4
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 05:26:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EAD625E9
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 05:29:34 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id b35so22034418edf.0
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 05:29:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=k9MKDLx1zeog5ZY0mV9PJDJQBpJXdcAQGVDM+T/iZyE=;
-        b=qmVa7tLTdZ4KSZ75NW0cpBFP6z597wc/CMiyEvk9efwFimRXkiKOJsApb1NPN0fmAU
-         TJq+WGVYc804vZ2WPTy69v1lUoPgeYJ9AaZbQEWmRiEaH/Ab0htLv0XAQg6qk0lo4I6E
-         pKZT3S2Gwmu8UKJm0hC/lhd1AVTUkuroStGzJvifwyT3Hkxxoj9lcD212pohzNmT65AF
-         g8p06/eQErClxoxQPNDOes29eo0stZKfRQwgQZpUVOnYxJrdpAP5q9i1JGyLcO83jxqe
-         U5/zf3u2XgLeM8BF7FjdozR/chaWFvYzK713aG9z+4RM331mpkXnZ+EBhig7m+VT1vHA
-         COfw==
+        bh=jnespCOi4e5ijlHSzwftjeKRd5VFy0oZTyj9OtokYu0=;
+        b=X65zrtpZYLz0qwP7r/w7k46Z/L+4PRmMlM86s+IJawVos+vRyzZy/HhnPpOqTcEanS
+         kThtxLFsMy26r1O2ipy9cCDOmyJJpeyfQBJI1Q4sDUGBQ1E+1hxvNfWhv1cGQnd8VZDS
+         yO6MBHNNs0KDD/mmuF8BStsYzCGW/Gvx5fJUkWql4K/Xo6NJzUJAR/uLLpyUSm8+D7nC
+         hXRnmqONRW+kGiGYALDS8Xtj1foeHBXw7xF1VTtFjfzMupYDHhwkqwZrYjHcue3Up7f7
+         yqxQoBpurRVeYSNHy+4jhj62vYN4cl5YZeLRcSifS2raNA0sdPumRq1u1o+mO1cgOAVW
+         ceaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=k9MKDLx1zeog5ZY0mV9PJDJQBpJXdcAQGVDM+T/iZyE=;
-        b=2KLREyuBk4dYMbPlDs2DOPyMiNaZ6blzPLB2I81+qmze8K3MuRDNby1/HD+NAPptGW
-         913N8GxoCMwQI55ED5E6DEI7Dva9HY6mTtFlZTw6Yi4Ax0KtOVr4nktizkccE72v0Rtm
-         elG2rUcLnc2FcczO3oTz+Yrs1mQ6WVN0hZ25RMr719HF8Im45Uvw93Z5IsZHHb59nIhB
-         fL0OQ2ruQMB7q9pFI7mFx8cakway9Fw9HYSHGVP4odnoYTuhPahjpbheQYn973fWYc7N
-         EMih0AxxLymcZd4xyOMwarsA5lzJRrElga+YFT+Roe9Yw7YgS/Kjh/aPKJc1BGSCcLd5
-         35tg==
-X-Gm-Message-State: ACgBeo2EzSFIK1eu8XXS27VvWpo1oY13yCvXNYXY+F5plFj0Ceg9PCZ3
-        BlMRfaXHED3gHJe63wa/IGYwyAVC5rjk9EQmcxd4Or5huO4=
-X-Google-Smtp-Source: AA6agR70V6yk6E7yrt1VsCzInmzb0sjFBZ3tK/GKgE5x8Mfi8c2D6D4XoYotKo71IpJc+WIviIdGGUTxFy3wBbExO1c=
-X-Received: by 2002:aa7:c84f:0:b0:446:2bfb:5a63 with SMTP id
- g15-20020aa7c84f000000b004462bfb5a63mr30393705edt.172.1663158374387; Wed, 14
- Sep 2022 05:26:14 -0700 (PDT)
+        bh=jnespCOi4e5ijlHSzwftjeKRd5VFy0oZTyj9OtokYu0=;
+        b=hZoMhJRoXKzeFtLTsnpopWt+GrWYUEqxIt0uzJXRx9oTtQa65oA7HlazF0BYTlXY7g
+         5vnh8OPRSZqcW7hgsAKF480E0wv1ygrr1pgIKeyafDkUCJGlsgehIG5c9KngC0dPp0re
+         MWQRIGgC7M7liw4v1i6atqmCsIxVicL2adHP7nUwVRMR/Iek1M8Wh5uRSiEp5XdedYKi
+         7Pg+FLFuzryzGuWbg5UeBRrVo+LOxd/RzeJu+pGyBXY3kaLGbexT6t8BYYwX67OJayl4
+         F7tih4LYFNLQeiLBdd9a6zl3hzMLjdvEx06hravQE7A/m2nxH+IEsUdHMVDkFwW/pFbw
+         PHZg==
+X-Gm-Message-State: ACgBeo1Oxn97HY0AZfv699DX1t/JtvcFcgrUVXHoaxb+02LESHqqQwoj
+        o8S29NQieSCWVQ3ErFHXjYzcToQWd4jRKp++CK1QDA==
+X-Google-Smtp-Source: AA6agR4+OibO8oFqsH94aYVpYZC3BLluNjZox/hh9hbWSFFI35QRbaPyjMKRRVrrbe4qdJsihkrSnqPSAYSL+OgeRSU=
+X-Received: by 2002:a05:6402:2690:b0:452:3a85:8b28 with SMTP id
+ w16-20020a056402269000b004523a858b28mr8306834edd.158.1663158572974; Wed, 14
+ Sep 2022 05:29:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220909153802.3370088-1-colin.foster@in-advantage.com>
-In-Reply-To: <20220909153802.3370088-1-colin.foster@in-advantage.com>
+References: <20220909151605.821685-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220909151605.821685-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 14 Sep 2022 14:26:03 +0200
-Message-ID: <CACRpkdYmC6wFX2NWmqmWXem-nNMY27nAPv4XDzhmDf21Nx-6TQ@mail.gmail.com>
-Subject: Re: [PATCH v1] pinctrl: ocelot: add help and description information
- to ocelot pinctrl kconfig
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 14 Sep 2022 14:29:21 +0200
+Message-ID: <CACRpkdb83rHkkUGSUs0=FAkSs8DNWeQYqvSQCf=MttYHhxJVGg@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: samsung: for v6.1
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,15 +69,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 9, 2022 at 5:38 PM Colin Foster
-<colin.foster@in-advantage.com> wrote:
+On Fri, Sep 9, 2022 at 5:16 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> Add missed help information and module export name to the Microsemi Ocelot
-> and Jaguar2 SoC.
+> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
 >
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+>   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+>
+> are available in the Git repository at:
+>
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-6.1
+>
+> for you to fetch changes up to 9d9292576810d0b36897718c24dfbc1a2835314b:
+>
+>   dt-bindings: pinctrl: samsung: deprecate header with register constants (2022-08-19 16:54:10 +0300)
 
-Patch applied.
+Pulled into my "devel" branch, thanks!
 
 Yours,
 Linus Walleij
