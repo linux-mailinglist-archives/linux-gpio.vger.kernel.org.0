@@ -2,82 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 921BC5B8B41
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 17:05:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D77B25B8B78
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 17:12:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbiINPFs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 11:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
+        id S229682AbiINPMI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 11:12:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbiINPFq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 11:05:46 -0400
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C3625C948;
-        Wed, 14 Sep 2022 08:05:44 -0700 (PDT)
-Received: by mail-ot1-f53.google.com with SMTP id d25-20020a9d72d9000000b00655d70a1aeaso7447859otk.3;
-        Wed, 14 Sep 2022 08:05:44 -0700 (PDT)
+        with ESMTP id S229692AbiINPMF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 11:12:05 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CFC179EEF
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 08:11:53 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id az24-20020a05600c601800b003a842e4983cso11790031wmb.0
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 08:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=FDqshHngJe4QAJMkSfGxP7nqWYe+6Ouvyb1oeASj3+A=;
+        b=QkFnBx+i96ZfmpkSO/5wXZ8RQ0Ypwl33j1ceEc+0l8HBCXloWYm3nH/wCya6WJ+dZe
+         WNep9Abuk+TjW5Fz5L59l/Wtelshxxs2hbCuzzjWfx+zNGl42xIlOEnzb9ZW6lbX/HHK
+         tZSV9/M6vGIE6h7fdQYjzgYttkqPOX6pUqHDVR5V9OpfCOGkbf8GVi8jWM49m3okPTwL
+         dCTB/0COTN8P9rejIB9IcFyEduC6yeep33ENYBSfFYh5oWpJptyGZT9iNC1WvMuSfP06
+         xx5HHdquc9q78oxzMKvgDVTny3jWe488IPZnokjRc6tEGNI7Xl0OP9tdNO+C/mMzx6/5
+         +dgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=80//9U4S6KsWyMgkd9OiwJsN9gRoyLztpU/FnVB8ROI=;
-        b=rjS73MzAQrLV8oiXkqN7vSp/NiZldjAs0wGccHvey8PDxrvkBOio1IdnZDX+tcxL7p
-         E0uek3G7HWSniNU/0UyUmoYAWEeDREQSUf+zBAz/jNsYf0rPLmGtJpc72abLPIv3PBVq
-         A6s4LQIsGDmbjnCFX93Q9AhaianS86klPljLRthksUFvqyAQ+XxgBZNZDgI3e+9X6CeN
-         QZcEqyPdXHaaTUh6l1qJDJXdu/1DYqHZXaxFQkd83sEHFSibiJFDGIQ1JwBzrLgN7gLf
-         TMzAp/ICNCYadyzpNOGrV8mM58D9iSmqYGBGcMIU6PPmmv2DnblK1vUCVZkqkTNbT6Ig
-         CevA==
-X-Gm-Message-State: ACgBeo1Y0WwMeZYLI4jH/oiOBxfOY7oO7h+dqwrTiPfhWL5UU7BbD8Me
-        3u8wSLnUGiTSy9Jax5PArw==
-X-Google-Smtp-Source: AA6agR5zJBQVMjWrqECTLtJ5QNTsna7ICAdaJtE7muSiIc4MWJbSXlOqCD8A1Zi0t18uXDKx2/3fxQ==
-X-Received: by 2002:a9d:be7:0:b0:655:b6da:7eda with SMTP id 94-20020a9d0be7000000b00655b6da7edamr10632379oth.46.1663167943740;
-        Wed, 14 Sep 2022 08:05:43 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q14-20020a056871080e00b00127ba61535fsm8664215oap.15.2022.09.14.08.05.42
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=FDqshHngJe4QAJMkSfGxP7nqWYe+6Ouvyb1oeASj3+A=;
+        b=rDKAev39urihwSrSkdS6Y/5PpgqlaNPesHjy0nAmkx7S4jaDUtw5+XWSWMGEft9O3r
+         LMVUDtY4ZgouuUoJ+cySMBqG6s2bdZj4OQiCYXlt9qqngwfgIgmWPmHjxIVigvfHwaVc
+         COkpapvkK3tECHJRdTQxsvW2H4PgCFTtwdFnPDdzZhLRRUizQ4SfTuAF3tOrn0lCJ77O
+         0WPTsU+6qAfSqgDs5JDaWtK+NEuO4tcP/npR3TpWeOqQKSQ3o3Lgf2L+7tmTlsabIRkK
+         t2KN8Cy+pK/G6wTuiDiYCzx3u2C95iN2tyP5B9yXXCbtBXLNNK+c8+oFoZYmqmBU0c1O
+         +pPA==
+X-Gm-Message-State: ACgBeo37UexvVEsQ/07iv9ylPptAOhLTQIypAT53LQEmtQczq63BCdwc
+        BsAjngAG2xbR7lfTP8lrCqlZ7w==
+X-Google-Smtp-Source: AA6agR7UT8Bi3IG8SZxhaWrxDN5WYVN21s7j01/HZd7wV0hHTFaNQwJzsiimN6as7moe9HCEDANLHQ==
+X-Received: by 2002:a7b:cc85:0:b0:3b4:9fc7:cd4d with SMTP id p5-20020a7bcc85000000b003b49fc7cd4dmr2759413wma.68.1663168311739;
+        Wed, 14 Sep 2022 08:11:51 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e580:6bb0:74a0:252b])
+        by smtp.gmail.com with ESMTPSA id b11-20020a05600c4e0b00b003b492753826sm8818481wmq.43.2022.09.14.08.11.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 08:05:43 -0700 (PDT)
-Received: (nullmailer pid 2218149 invoked by uid 1000);
-        Wed, 14 Sep 2022 15:05:42 -0000
-Date:   Wed, 14 Sep 2022 10:05:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     kernel@pengutronix.de, Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: Add gpio-latch binding document
-Message-ID: <20220914150542.GA2218095-robh@kernel.org>
-References: <20220914071306.3254881-1-s.hauer@pengutronix.de>
- <20220914071306.3254881-3-s.hauer@pengutronix.de>
+        Wed, 14 Sep 2022 08:11:51 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Drew Fustini <dfustini@baylibre.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
+Date:   Wed, 14 Sep 2022 17:11:45 +0200
+Message-Id: <20220914151145.73253-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220914071306.3254881-3-s.hauer@pengutronix.de>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 14 Sep 2022 09:13:06 +0200, Sascha Hauer wrote:
-> This adds a binding for a GPIO multiplexer driver based on latches
-> connected to other GPIOs.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> ---
-> 
-> Notes:
->     Changes since v1:
->     - Add license to binding file
-> 
->  .../devicetree/bindings/gpio/gpio-latch.yaml  | 85 +++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-> 
+This adds a new TODO item for gpiolib and can also be used to start
+a discussion about the need for it and implementation details.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+ drivers/gpio/TODO | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+index f87ff3fa8a53..6ab39c5cec9d 100644
+--- a/drivers/gpio/TODO
++++ b/drivers/gpio/TODO
+@@ -197,3 +197,25 @@ A small number of drivers have been converted (pl061, tegra186, msm,
+ amd, apple), and can be used as examples of how to proceed with this
+ conversion. Note that drivers using the generic irqchip framework
+ cannot be converted yet, but watch this space!
++
++Safe-state of GPIOs
++
++During 2022 Linux Plumbers Conference's GPIO & pinctrl BOF it's been discussed
++that we don't have any middle ground between hogging GPIO lines and letting the
++user (either in-kernel or user-space) control them. Either the lines are forever
++reserved as hogs or their state is undefined unless requested.
++
++Currently the behavior of GPIOs that were not requested or were released is
++largely driver dependent (the provider driver decides whether the line's state
++is reverted to some predefined value or left as-is). This can be problematic
++as the output state of a line can damage physical hardware.
++
++This item is about proposing a solution, most likely in the form of a new device
++property called "safe-state" that would define the safe states of specific lines
++(e.g. output-high) but not block the line from being requested by users who 
++could then modify that default state. Once released the GPIO core would then
++put the line back into the "safe-state".
++
++While this could potentially be seen as defining policy in the device-tree, it's
++not anymore a policy than properties such as "regulator-always-on" or gpio-hogs
++themselves are.
+-- 
+2.34.1
+
