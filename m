@@ -2,140 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 311E55B7E13
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 03:01:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CAB15B7E85
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 03:44:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbiINBBC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 21:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
+        id S229489AbiINBoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 21:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiINBBB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 21:01:01 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B7C5789D;
-        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id y136so13358066pfb.3;
-        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
+        with ESMTP id S229461AbiINBoO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 21:44:14 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7A45D0D2;
+        Tue, 13 Sep 2022 18:44:13 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id l6so7205705ilk.13;
+        Tue, 13 Sep 2022 18:44:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=pDWBwLNj3E614UwmbNJhUGAaW1RykjI2VArpUIowBvY=;
-        b=fmOEtvrzwKZUBg/mi3MwcNaaU/EIbfckVjptNm+k29Y91shLw+v2EhUpEmE/3wjKK0
-         g6TI0Co2TRmoOyWv2kZPYhMIz6A75PtomVGtAs0b89FjA6Qt4lNWX19yhR8AImPiVkaj
-         QBx8dqfiQ/xskLo58u9cPppPbyyinpBo5LZ4QnJYpIrFIpWySzf3nhcNfYXUgedxMiRO
-         WR9pIiIAQX8ZcKPryAoG+2e5mKCQdk0zV4B0tBdiQUKKaDgbFbV1qdc+r7mWejqiDoNr
-         uWZ7pbgo5EfEy22s1mT+P2bGANxPI3hk6EOQ0iVkXegGBPN3ZagjXSyaZCphw7KF7Hr4
-         me/w==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Q7Lh7FH8w4M3kKacFLOBmbMxs4WHQSRRgQYPFFxxkjk=;
+        b=goRRtm5dNrBfOpMB6JOWpttLpThCqxKmtTaQH5/ViW63KLGNIE0gI7qG6DbWIcTltv
+         vWr2zwhaVqLcPPqbEsiEPxzcGyT1QmUiasD+XzF66EMMun+AGaylHRZAXWsVNTj2HyAc
+         YUkJoCKUjIkWZNYMbI6EqJSAnU7pDm8cjr9ivFvZUtxi4Bh7e/2Ks941OXavl4Pk0wxW
+         fhRRuBxP3J/I8G0TKQQqeHj3rj3JhQ56z6YIq6WxBFuqbonHjJ1UrPFX+KAWMlaIVqO4
+         eHVgmO0caLZulMJ+O9kVw9Sk7wPXv0e9M6viSrFhCfFa1ca+0AGesRM45HfzswmcpsqO
+         cTHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=pDWBwLNj3E614UwmbNJhUGAaW1RykjI2VArpUIowBvY=;
-        b=Yj+ygC1n7fuse5hwplqahi1KJbkykqnBFHxMQqx6tEZ9rfdozXpdINVyjSwaO1VTy0
-         zPv2yo6Bf4nOTVBhUYaIPA0Fku+XYqJo/FqHoX0NIMADDOrslSVZnszpOO8aHqGM4S5X
-         geBfxgsUxI5I8dAjGqhrVcS43du2/NFJd5aeU6kd7ssnQtm0jKnf5iwqhHIvxpZ8C57J
-         8fS5rIMGDcPFe4ZCakTRgYnDPNibYFX0UEjRZ3qngV8/nT+tKvJeN5MZg183BWgiSY/Y
-         S9CHOV36NBt2/VUDnRXjlEtIKckRxKYCgOmOQ8YZln4736qesT2vAKjhhwPAGuC/DbH6
-         8/8Q==
-X-Gm-Message-State: ACgBeo1nckvKdplFkhPHO7euGWkaxaxVpPqZhGK0SdubDVzE3eIioT3+
-        3QCUjKqzAUVQqbc30v79vJVQSRnm+xQ=
-X-Google-Smtp-Source: AA6agR5qmXyyvxfORlgMqOEM7bdzD6wvyP+/SlS63tEh4McFsmfHezX+1ou7N1MoPRy1EOEoYnB1CA==
-X-Received: by 2002:a63:5c62:0:b0:438:a981:1b27 with SMTP id n34-20020a635c62000000b00438a9811b27mr17582873pgm.443.1663117259354;
-        Tue, 13 Sep 2022 18:00:59 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id x8-20020a170902a38800b00176c891c893sm9153424pla.131.2022.09.13.18.00.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Sep 2022 18:00:58 -0700 (PDT)
-Date:   Wed, 14 Sep 2022 09:00:53 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Q7Lh7FH8w4M3kKacFLOBmbMxs4WHQSRRgQYPFFxxkjk=;
+        b=BKZ/m4Ng36gFzpsiM4dzJFNfAqeiwi8aRWWRaR6OvJrVGaucPbRG+Hak/l5C/I6CIl
+         kXg1Ex8iiP+WHp83C3qfsKCz90WYyUug/tSRzxgv/mZrdhhiYeJbiDtDx6dgZ3tYRDVc
+         GViDkh5jtZyTipVi6rHs1KX1udM8MyATqQffT3IV/uOZd8FKO+0Bi685DUNbwoO2iVoG
+         RODHnz/3hnDTdK/LRrJXFseTfiRoEnScxx3F9WvetE7y/md/1kcv3+P3Nuyr7TDr3nP+
+         awbm3jh/8rmvzUI/VRsdDXYjxbNDlWoSf6ZSEE6FaOJ61gzh9sPZ0mbc0mKKwpgbK7W/
+         2/Kw==
+X-Gm-Message-State: ACgBeo1PzX0iTYVXkGwmn/GpaWQb87ZiQfAP9aG4o3N1Zsz8PgTjhm3o
+        PmuLztZmBi/00Eo9E5EE2Tjz9fjE9QY=
+X-Google-Smtp-Source: AA6agR7Ef7aN4Dc9NsPfULyTpw1ic/3b5vIONFmNWJ4orMcOo8tfvYewi1gU1LNaZbULqs7Fp+YHIQ==
+X-Received: by 2002:a92:ca0f:0:b0:2ee:5577:e447 with SMTP id j15-20020a92ca0f000000b002ee5577e447mr12876105ils.215.1663119853097;
+        Tue, 13 Sep 2022 18:44:13 -0700 (PDT)
+Received: from localhost ([2607:fea8:a2e2:2d00::af41])
+        by smtp.gmail.com with UTF8SMTPSA id x3-20020a026f03000000b0035a205ab110sm5291730jab.123.2022.09.13.18.44.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Sep 2022 18:44:12 -0700 (PDT)
+From:   Richard Acayan <mailingradian@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] gpiolib: cdev: export the consumer's PID
-Message-ID: <YyEnxeWxv2qV7JKI@sol>
-References: <Yx8Bj0+4STpklMc2@sol>
- <CAMRc=Me=QxXRgZKyirj23r4hEN9bzcPSM6N4z=0yGgAZheh=Qg@mail.gmail.com>
- <Yx/nG5YsyCa+VXoj@sol>
- <CAMRc=MfoZQV-aHKSkAw6d_jPPbjn==oR0LA=irjuWLGzQiRP-w@mail.gmail.com>
- <YyCTmZocN/CY4Pg6@sol>
- <CAMRc=MdBRGW0skXOgPbZy=w4EiWcyKmKwKSZuAj+k4EtbPmvdg@mail.gmail.com>
- <YyCZ7TN8fyVyuWXY@sol>
- <CAMRc=MfyD5iyfB5f5hx_Kq4p7NZv+0o8HVOysiy6DaKANpGNKQ@mail.gmail.com>
- <YyCtI/WPngP9InsD@sol>
- <YyC4zq2YEmzQMkBL@smile.fi.intel.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Richard Acayan <mailingradian@gmail.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH 0/2] SDM670 Pin Control Driver
+Date:   Tue, 13 Sep 2022 21:44:02 -0400
+Message-Id: <20220914014404.199505-1-mailingradian@gmail.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyC4zq2YEmzQMkBL@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 08:07:26PM +0300, Andy Shevchenko wrote:
-> On Wed, Sep 14, 2022 at 12:17:39AM +0800, Kent Gibson wrote:
-> > On Tue, Sep 13, 2022 at 05:58:32PM +0200, Bartosz Golaszewski wrote:
-> > > On Tue, Sep 13, 2022 at 4:55 PM Kent Gibson <warthog618@gmail.com> wrote:
-> 
-> ...
-> 
-> > > We'd need of course first expose that info like:
-> > > 
-> > > gpio chip:gpiochip2 lines:0,3,4,7
-> > > 
-> > > Does that make sense?
-> > 
-> > Makes sense to me, though I don't claim to know anything about fdinfo
-> > field formatting.
-> > 
-> > e.g. I also see fdinfo fields like this:
-> > 
-> > eventfd-count:                0
-> > eventfd-id: 1
-> > 
-> > so
-> > 
-> > gpio-chip:  gpiochip2
-> > gpio-lines: 0,3,4,7
-> > 
-> > might be ok too.
-> 
-> Always think about two or more GPIO chips in the same process with 1 or more
-> lines requested from each of them.
-> 
+This patch series adds the driver for the Qualcomm Snapdragon 670 TLMM
+(Top-Level Mode Multiplexer).
 
-I considered that - as Bart noted and as I stated earlier, each request fd
-is limited to one gpiochip and one set of offsets. And those are fixed
-for the lifetime of the request.
-Different requests will be different fds.
+This is not ready yet because the dummy pingroups cause debugfs to
+misbehave. I might be able to find tile values that are safe enough but
+it would be easier if there was already a way to declare a dummy pingroup.
 
-But on the subject of repeats in fdinfo, I get the impression that
-multi-field fdinfo rows, e.g. the tfd rows here:
+ .../bindings/pinctrl/qcom,sdm670-pinctrl.yaml      |  128 ++
+ drivers/pinctrl/qcom/Kconfig                       |    9 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-sdm670.c              | 1368 ++++++++++++++++++++
+ 4 files changed, 1506 insertions(+)
 
-pos:	0
-flags:	02000002
-mnt_id:	14
-ino:	7661
-tfd:       12 events:       19 data:                c  pos:0 ino:1ded sdev:d
-tfd:       14 events:       19 data:                e  pos:0 ino:1ded sdev:d
 
-are formatted that way as they may be repeated, so they are getting all
-their ducks in a row, as it were.
-
-So perhaps the gpio-lines could be exploded into repeated gpio-line rows?
-That may be going overboard as we are only encoding one field per line
-at the moment, not a struct as in the tfd case, but might we ever want
-to add more details?
-
-Again, just speculating based on the few examples I have on hand.
-
-Cheers,
-Kent.
