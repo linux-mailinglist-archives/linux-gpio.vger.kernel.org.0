@@ -2,70 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BFE65B8CC2
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 18:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7B3B5B8CD6
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 18:25:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229577AbiINQVd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 12:21:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
+        id S229657AbiINQZh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 12:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbiINQVc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 12:21:32 -0400
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D97E29C95;
-        Wed, 14 Sep 2022 09:21:31 -0700 (PDT)
-Received: by mail-pj1-x1034.google.com with SMTP id p1-20020a17090a2d8100b0020040a3f75eso14923895pjd.4;
-        Wed, 14 Sep 2022 09:21:31 -0700 (PDT)
+        with ESMTP id S229472AbiINQZg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 12:25:36 -0400
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C5A7D1C4
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 09:25:34 -0700 (PDT)
+Received: by mail-ed1-x532.google.com with SMTP id e18so23076175edj.3
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 09:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=shM0eqNoMydvRAfh5X2W/4dKK3wTBlBQ4aC9T4BQqfg=;
-        b=kcubW4pb2r1dEEI6wGBXa/T3e5Y3jn3NUoMTWrXy5lOGSJ7aG7+Fog+9DXpTCTssDj
-         fa/CAceoKm7llY8WVmV4FfEsuni/8b6xbyHHthtVtUZxDH5xMtMohcd6bdkEcYw3uBRA
-         cmWP776uBIEUm2vUWc1zfjm6lcukFaNsYXAfB3jv7T81oA/OaD8IQsTdi13zf0kWjdtC
-         /lvzIUXShE3F77HI58tO7+fyOBswkgEtS4dt9/p9T+dVpsAzsNxP5+gCkbWmwNay45Cn
-         vt24bXsq+Ht1XEUFrhlBu6CiVUERDJZelaXOlJKHXcSZynySClB/FXRkdDIj07Tg1ADe
-         Mizw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=FodkllfW5mSVFcv5dyl2Dr5bB4IrI1aqYiKSRIoDQaw=;
+        b=R2eRbrqH1nc3Vp0QRlYBSW1CCbZ3AGGY+6y1IPAvAJCyznZe3OwPiBdtbV3LkNaEja
+         JCBYsEv8jJ7tSHkJou2v1wFSzj8RHp93ei5EcQM+t7qWTNta8RW43zykJhxiu8H+DDtr
+         7ce9IRwFxP18P/yanJo2JK7hTR2X2pTnpkr9Xa/6aCGyakxjvCN+7Sa2WCcJk0Zr9+eE
+         XOaQ5CVBeacnPtvw0/C6I37SBIGL7tE0Jh2O5KBuWhPCTtuguZdjINBYXKTimpVjisVU
+         rzI1h8tln71tPTfufHef7NLw6t7eXmc4ZszYFitRdGhqryil5k9aAeLgW374t+iMmtB0
+         zpWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=shM0eqNoMydvRAfh5X2W/4dKK3wTBlBQ4aC9T4BQqfg=;
-        b=C0Bvm6b8Ljr5E5Q6yhoHwPLNujBgsHRTrmlkyJXbVE2JLjzxDW+bU4r4ckq9vHclbG
-         3wTgMjDoehDtDC3kGg4djMVMtPRuudBwcOgfs6JuHzqiSSJQvLiJinEl+qQo8gtw2O7q
-         hCy+lIJY8+tyZwYIGkt7GFxKNh5ewl6xNA+pK698nIJyxQxC5CwTdH0E49Z3WwfK9QHZ
-         Bu2eTBC6tgliUTgneX5qE/tY4pmnFxiKwN1sE3FFRZPPk6ccV6kOj8kUvTEUrDNcwx8p
-         dyMNTcUAL/10sUwafMw2neqfnGElKAnQMeHcoltDAS2S3Gkj18cPzlv29hj69jGdlevH
-         BjAA==
-X-Gm-Message-State: ACgBeo3h6DAZxAm+launElJs0ubZNm10MpSpN/rELOSb8RshvmGyb+GI
-        VWPpAyEbJRfGpglATwM4fyU=
-X-Google-Smtp-Source: AA6agR7uXLwWob9Fp5eAutVNUkTRWtusCfxZ6KXsndnXXc6s1vO+w3cPOE5XRwqeru5FHomSutm/ug==
-X-Received: by 2002:a17:902:f644:b0:172:b074:d1f5 with SMTP id m4-20020a170902f64400b00172b074d1f5mr37227188plg.29.1663172490861;
-        Wed, 14 Sep 2022 09:21:30 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id nh12-20020a17090b364c00b002006428f01esm9392891pjb.55.2022.09.14.09.21.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 09:21:30 -0700 (PDT)
-Date:   Thu, 15 Sep 2022 00:21:24 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=FodkllfW5mSVFcv5dyl2Dr5bB4IrI1aqYiKSRIoDQaw=;
+        b=MIW3vZWy20FpkuSv3CfVf7MUvBgMJ48ocIkIXYaaQyuXb1pyReBmSE4KKcMnZI0JfA
+         eS5rZJqJQJ8HWl9GGwPNZf08YbNMKif9ZMCuM9+NTjqlIjaJMBaAawIlDKY575IXjEfD
+         IDPT4O5rhwD37qKUkClfeJeVRRGVr2MzKP3wW3s+3n7jm0ZMVZEoQNuDNMVJ/9CAuea5
+         x1Og2j6V3ynKCgycYQVrNiYDpv8yo6x7+FTdfRz41uWLB4H0aSmXUh+likncUfDpYBa+
+         DQe1YK7DkUilyqB1UcqHxanWX9bAgj1QMPwlbyevtlhgmoyqkI8JU5JqG+PAzJtvpndW
+         wETA==
+X-Gm-Message-State: ACgBeo0zBZatwCVAN24vAOVNgldsy2/QOafHK7aTr2I/d5G8xkG4fWst
+        ZzaeAMKWFOOdv3BKUVqcKoLqjzJKNd9egcRDntNk5w==
+X-Google-Smtp-Source: AA6agR6/5sgTxAc62jLsnscMZnpHygzSfirD8uXrKdMgu/w+pO5mj6PzSFIsuL/wv0EJbA5x6VoePTJ6K2YulkpOm2w=
+X-Received: by 2002:aa7:dd02:0:b0:44e:f7af:b996 with SMTP id
+ i2-20020aa7dd02000000b0044ef7afb996mr31587967edv.422.1663172732652; Wed, 14
+ Sep 2022 09:25:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20220914151145.73253-1-brgl@bgdev.pl> <YyH/hJMyPZSqyvQj@sol>
+In-Reply-To: <YyH/hJMyPZSqyvQj@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 14 Sep 2022 18:25:21 +0200
+Message-ID: <CAMRc=McERgSkmpWv4k1eB1mtRU=jGhWiXYMdq72h9H9SYuF6Ng@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
+To:     Kent Gibson <warthog618@gmail.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Drew Fustini <dfustini@baylibre.com>,
         Marek Vasut <marek.vasut@gmail.com>,
         Geert Uytterhoeven <geert@linux-m68k.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
-Message-ID: <YyH/hJMyPZSqyvQj@sol>
-References: <20220914151145.73253-1-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220914151145.73253-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,60 +68,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 05:11:45PM +0200, Bartosz Golaszewski wrote:
-> This adds a new TODO item for gpiolib and can also be used to start
-> a discussion about the need for it and implementation details.
-> 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  drivers/gpio/TODO | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-> index f87ff3fa8a53..6ab39c5cec9d 100644
-> --- a/drivers/gpio/TODO
-> +++ b/drivers/gpio/TODO
-> @@ -197,3 +197,25 @@ A small number of drivers have been converted (pl061, tegra186, msm,
->  amd, apple), and can be used as examples of how to proceed with this
->  conversion. Note that drivers using the generic irqchip framework
->  cannot be converted yet, but watch this space!
-> +
-> +Safe-state of GPIOs
-> +
-> +During 2022 Linux Plumbers Conference's GPIO & pinctrl BOF it's been discussed
-> +that we don't have any middle ground between hogging GPIO lines and letting the
-> +user (either in-kernel or user-space) control them. Either the lines are forever
-> +reserved as hogs or their state is undefined unless requested.
-> +
-> +Currently the behavior of GPIOs that were not requested or were released is
-> +largely driver dependent (the provider driver decides whether the line's state
-> +is reverted to some predefined value or left as-is). This can be problematic
-> +as the output state of a line can damage physical hardware.
-> +
-> +This item is about proposing a solution, most likely in the form of a new device
-> +property called "safe-state" that would define the safe states of specific lines
-> +(e.g. output-high) but not block the line from being requested by users who 
-> +could then modify that default state. Once released the GPIO core would then
-> +put the line back into the "safe-state".
-> +
+On Wed, Sep 14, 2022 at 6:21 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Wed, Sep 14, 2022 at 05:11:45PM +0200, Bartosz Golaszewski wrote:
+> > This adds a new TODO item for gpiolib and can also be used to start
+> > a discussion about the need for it and implementation details.
+> >
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > ---
+> >  drivers/gpio/TODO | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+> > index f87ff3fa8a53..6ab39c5cec9d 100644
+> > --- a/drivers/gpio/TODO
+> > +++ b/drivers/gpio/TODO
+> > @@ -197,3 +197,25 @@ A small number of drivers have been converted (pl061, tegra186, msm,
+> >  amd, apple), and can be used as examples of how to proceed with this
+> >  conversion. Note that drivers using the generic irqchip framework
+> >  cannot be converted yet, but watch this space!
+> > +
+> > +Safe-state of GPIOs
+> > +
+> > +During 2022 Linux Plumbers Conference's GPIO & pinctrl BOF it's been discussed
+> > +that we don't have any middle ground between hogging GPIO lines and letting the
+> > +user (either in-kernel or user-space) control them. Either the lines are forever
+> > +reserved as hogs or their state is undefined unless requested.
+> > +
+> > +Currently the behavior of GPIOs that were not requested or were released is
+> > +largely driver dependent (the provider driver decides whether the line's state
+> > +is reverted to some predefined value or left as-is). This can be problematic
+> > +as the output state of a line can damage physical hardware.
+> > +
+> > +This item is about proposing a solution, most likely in the form of a new device
+> > +property called "safe-state" that would define the safe states of specific lines
+> > +(e.g. output-high) but not block the line from being requested by users who
+> > +could then modify that default state. Once released the GPIO core would then
+> > +put the line back into the "safe-state".
+> > +
+>
+> Geert suggests idle-state, rather than safe-state, but you call it
+> the "default state" here as well - pick one.
+>
 
-Geert suggests idle-state, rather than safe-state, but you call it
-the "default state" here as well - pick one.
+idle-state it is then.
 
-So this idle-state would be another attribute on a line that the user
-could configure via the GPIO uAPI, and so replicate the "set and forget"
-sysfs behavior that we are currently missing, and which seems to be the
-biggest sticking point for a transition away from sysfs?
+> So this idle-state would be another attribute on a line that the user
+> could configure via the GPIO uAPI, and so replicate the "set and forget"
+> sysfs behavior that we are currently missing, and which seems to be the
+> biggest sticking point for a transition away from sysfs?
+>
 
-For backward compatibility the default idle-state, i.e. the value the
-idle-state would take if not explicitly set, would map to existing
-behaviour, so let the driver decide?
+No, this should only be defined on the device tree or in ACPI. As the
+HW policy of a device. I don't think we should allow user-space to
+override this behavior.
 
-What happens when gpiolib frees the line?  Isn't the driver still able
-to do what it likes to the line at that point, no matter what GPIO core
-has set it to previously? e.g. gpio_sim_free() restores the line to its
-own internal pull value.
- 
-Cheers,
-Kent.
+> For backward compatibility the default idle-state, i.e. the value the
+> idle-state would take if not explicitly set, would map to existing
+> behaviour, so let the driver decide?
+>
+> What happens when gpiolib frees the line?  Isn't the driver still able
+> to do what it likes to the line at that point, no matter what GPIO core
+> has set it to previously? e.g. gpio_sim_free() restores the line to its
+> own internal pull value.
+>
 
+This "idle-state" property wouldn't be mandatory and normally would
+only be defined for a limited set of lines. I'd say we just override
+whatever the driver does in free() (most drivers don't implement it
+BTW) and do what the property says we should.
+
+Bart
