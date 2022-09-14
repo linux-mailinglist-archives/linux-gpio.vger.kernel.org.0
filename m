@@ -2,111 +2,228 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 672A15B7EC6
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 03:59:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC2805B7EEE
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 04:26:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbiINB7p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Sep 2022 21:59:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54394 "EHLO
+        id S229630AbiINC0C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Sep 2022 22:26:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbiINB7n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 21:59:43 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F0596330;
-        Tue, 13 Sep 2022 18:59:38 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id b23so13435284pfp.9;
-        Tue, 13 Sep 2022 18:59:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=MBMoUjs1/LRqBPqtJw8QUCIFN2AxXmsOdyU31zMj8Qo=;
-        b=VBXE1s30H4C5zDJ+8Zsaf/BEkL8GJBxe78wCKCHLzsPHPPPlGefbeRo+L99ns+KMDG
-         PPFe151cmLEGo4ugIpQBSB+nF6/g3Tf8wxWtt1vRn52QAyaWyMHFMiA8rt3GTwd1Ti1b
-         2ElO2EvzQvMZqlYjngu6sBH5RrbB6SA2ZuTrm/xnNNDyV+UeuktuKx+Do8SKyKbpyoAj
-         2Vee6FgDrT2LKtvaTei4jUqs6iHlr4IwLNWqRITlYyZAmIuCDBEu1bEQ4/48KCChlf/y
-         dQcEeXsiBkxL2QbeBztIg+3G9riiIVckypWkON2394bshz1bNX0fQDvWzSORRPrRpKJQ
-         w06Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=MBMoUjs1/LRqBPqtJw8QUCIFN2AxXmsOdyU31zMj8Qo=;
-        b=zyb3uF3ZuzbUcxFVkj/Qma2EAcomPW6zeOklwsFCuwJwwsU7pqPX8WTPzJtb2+wVjs
-         O5ctX53ngMiJBJ0k/VeOKzDYgLKCL0U5aOO4bni1VNiGhKoJpQcGBZDXHsTrTgY9tuu+
-         fzqCU5RN9/9YJ5oyWUPorh5QQUzFYkuho0q9w6H1K7RvGCNIuuNnQi3uKYATQloD7IAg
-         SNHTQqWMp5/1iwtJFAao1a8phuxni7gYZjx2xh+2ozd6KUWYf2ULTaqPtjLkmMmsX1OA
-         p+7jfjgkCxzyXN7D/t84Zg/b2ibnUwFduf8iNKjV5zBFOQW4Yfo77WC97q373U9ebR4a
-         V9OQ==
-X-Gm-Message-State: ACgBeo36mPmS0dvLxyyV9HrkmJiSBsQkluiIUiYo+vrbTZJeu6KrKt+m
-        y9DXNch9edJGXugbpGM7j9o=
-X-Google-Smtp-Source: AA6agR4u3WENglYh7kF/L2nouFheMKGNZeIS1UoTSAW+q8V0bFwC4eQTSs2u2oyGbrcMOdxBoV7fmw==
-X-Received: by 2002:a63:8a4a:0:b0:434:c99c:6fd4 with SMTP id y71-20020a638a4a000000b00434c99c6fd4mr29301515pgd.24.1663120778134;
-        Tue, 13 Sep 2022 18:59:38 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-75.three.co.id. [180.214.232.75])
-        by smtp.gmail.com with ESMTPSA id w2-20020a1709026f0200b0017808db132bsm9210355plk.137.2022.09.13.18.59.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 18:59:37 -0700 (PDT)
-Message-ID: <db2fdc22-44b8-1e81-ace2-c83c143ac20e@gmail.com>
-Date:   Wed, 14 Sep 2022 08:59:33 +0700
+        with ESMTP id S229564AbiINC0B (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Sep 2022 22:26:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8277840E1D;
+        Tue, 13 Sep 2022 19:26:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8173BB811DC;
+        Wed, 14 Sep 2022 02:25:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AACEC433C1;
+        Wed, 14 Sep 2022 02:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663122357;
+        bh=ypi1T8jHvwWwBxXnENqUAtcBLV9q8tDsMtTn4h1v1y0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aNPDXAm0zIADuzN/bbf7JIL5qmdqNFqhKW/cGGGnQi1Yb6erf1pZPuXmfJrn+Jsoq
+         TVGLBpzTU2LEvGjnBprZlXVNfh8cUkyZSszdfy8QXIm8fNVlhG+eW8jm/E/Og9bdFw
+         3TAD+M2wyF8TYeA726nvWE+wfeuOhAxszaNMPsJfecgjjeyXnfCXrSD/vrosYvVI62
+         yfuIFQ1bqvzWVy/2WLyL/RVKAdEweHq/DOx/PrDvvE2HBnvap4c39ougCaLkospvFZ
+         ZzMUTaD+Tja3fLuGByDHQ/g2zWWtuE6QRm0Pk7DTOIKhNrQBZOADOP0dToMIbVFV+Z
+         WAWWJG2SVSUFw==
+Date:   Tue, 13 Sep 2022 21:25:54 -0500
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Richard Acayan <mailingradian@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: add sdm670 pinctrl
+Message-ID: <20220914022554.ev2gkrh7z6favn33@builder.lan>
+References: <20220914014404.199505-1-mailingradian@gmail.com>
+ <20220914014404.199505-2-mailingradian@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH char-misc-next] misc: microchip: pci1xxxx: use
- DEFINE_SIMPLE_DEV_PM_OPS() in place of the SIMPLE_DEV_PM_OPS() in pci1xxxx's
- gpio driver
-Content-Language: en-US
-To:     Kumaravel.Thiagarajan@microchip.com, linux-kernel@vger.kernel.org,
-        sudipm.mukherjee@gmail.com, arnd@arndb.de,
-        linux-gpio@vger.kernel.org, linux-next@vger.kernel.org,
-        gregkh@linuxfoundation.org
-References: <20220912113634.167820-1-kumaravel.thiagarajan@microchip.com>
- <d34d9264-1f0b-d465-bc1d-75f8c736a35b@gmail.com>
- <BN8PR11MB3668C9D5BD38AECBE160D013E9479@BN8PR11MB3668.namprd11.prod.outlook.com>
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <BN8PR11MB3668C9D5BD38AECBE160D013E9479@BN8PR11MB3668.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220914014404.199505-2-mailingradian@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/14/22 01:27, Kumaravel.Thiagarajan@microchip.com wrote:
->> On 9/12/22 18:36, Kumaravel Thiagarajan wrote:
->>> build errors listed below and reported for the builds of riscv, s390,
->>> csky, alpha and loongarch allmodconfig are fixed in this patch.
->>>
->>> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error:
->> 'pci1xxxx_gpio_resume' defined but not used [-Werror=unused-function]
->>>   311 | static int pci1xxxx_gpio_resume(struct device *dev)
->>>       |            ^~~~~~~~~~~~~~~~~~~~
->>> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error:
->> 'pci1xxxx_gpio_suspend' defined but not used [-Werror=unused-function]
->>>   295 | static int pci1xxxx_gpio_suspend(struct device *dev)
->>>       |            ^~~~~~~~~~~~~~~~~~~~~
->>>
->>
->> What about this description?:
->>
->> "Sudip reported unused function errors on riscv, s390, cksy, alpha, and
->> loongarch (allmodconfig):
->> <pci1xxxx_gpio_* errors>...
->>
->> Fix these errors by using DEFINE_SIMPLE_DEV_PM_OPS."
-> It looks good even though it does not include all the details.
-> But is not how much of detail good enough subjective?
-> I thought some might be looking for more information and chose this way.
-> Do you think I need to change this? Please let me know.
+On Tue, Sep 13, 2022 at 09:44:03PM -0400, Richard Acayan wrote:
+> There is a new driver for the Snapdragon 670 TLMM (Top-Level Mode
+> Multiplexer). Document it.
+> 
+> Adapted from qcom,sm6350-pinctrl.yaml in the same directory at
+> commit c09acbc499e8 ("dt-bindings: pinctrl: use pinctrl.yaml").
+> 
+> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
+> ---
+>  .../bindings/pinctrl/qcom,sdm670-pinctrl.yaml | 128 ++++++++++++++++++
+>  1 file changed, 128 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..28a690bfd348
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-pinctrl.yaml
+> @@ -0,0 +1,128 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdm670-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. SDM670 TLMM block
+> +
+> +maintainers:
+> +  - Richard Acayan <mailingradian@gmail.com>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
+> +  in the SDM670 platform.
+> +
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,sdm670-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  '#interrupt-cells': true
+> +  gpio-controller: true
+> +  gpio-reserved-ranges: true
+> +  '#gpio-cells': true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  '-state$':
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-sdm670-tlmm-state"
+> +      - patternProperties:
+> +          ".*":
 
-Yes, with full error text as Sudip had reported.
+Please see
+https://lore.kernel.org/linux-arm-msm/20220912061746.6311-2-krzysztof.kozlowski@linaro.org/
 
--- 
-An old man doll... just what I always wanted! - Clara
+> +            $ref: "#/$defs/qcom-sdm670-tlmm-state"
+> +
+> +$defs:
+> +  qcom-sdm670-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-4][0-9]|15[01])$"
+
+You only have gpio0 through gpio149 in the implementation, so the last
+15[01] is not applicable.
+
+> +            - enum: [ sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk,
+> +                      sdc2_cmd, sdc2_data ]
+
+You're missing ufs_reset in this list.
+
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+
+Please see
+https://lore.kernel.org/linux-arm-msm/20220912061746.6311-6-krzysztof.kozlowski@linaro.org/
+
+Regards,
+Bjorn
+
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +        enum: [ adsp_ext, agera_pll, atest_char, atest_tsens, atest_tsens2, atest_usb1, atest_usb10,
+> +                atest_usb11, atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21,
+> +                atest_usb22, atest_usb23, cam_mclk, cci_async, cci_i2c, cci_timer0, cci_timer1,
+> +                cci_timer2, cci_timer3, cci_timer4, copy_gp, copy_phase, dbg_out, ddr_bist,
+> +                ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3, edp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3,
+> +                gp_pdm0, gp_pdm1, gp_pdm2, gpio, gps_tx, jitter_bist, ldo_en, ldo_update,
+> +                lpass_slimbus, m_voc, mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3,
+> +                mss_lte, nav_pps, pa_indicator, pci_e0, pci_e1, phase_flag, pll_bist, pll_bypassnl,
+> +                pll_reset, pri_mi2s, pri_mi2s_ws, prng_rosc, qdss_cti, qdss, qlink_enable,
+> +                qlink_request, qua_mi2s, qup0, qup1, qup10, qup11, qup12, qup13, qup14, qup15, qup2,
+> +                qup3, qup4, qup5, qup6, qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sdc4_clk,
+> +                sdc4_cmd, sdc4_data, sd_write, sec_mi2s, ter_mi2s, tgu_ch0, tgu_ch1, tgu_ch2,
+> +                tgu_ch3, tsif1_clk, tsif1_data, tsif1_en, tsif1_error, tsif1_sync, tsif2_clk,
+> +                tsif2_data, tsif2_en, tsif2_error, tsif2_sync, uim1_clk, uim1_data, uim1_present,
+> +                uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset, uim_batt, usb_phy, vfr_1,
+> +                vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0, wlan2_adc1, wsa_clk, wsa_data, ]
+> +
+> +
+> +      bias-disable: true
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      drive-strength: true
+> +      input-enable: true
+> +      output-high: true
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        pinctrl@3400000 {
+> +                compatible = "qcom,sdm670-pinctrl";
+> +                reg = <0x03400000 0x300000>;
+> +                interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +                gpio-controller;
+> +                #gpio-cells = <2>;
+> +                interrupt-controller;
+> +                #interrupt-cells = <2>;
+> +                gpio-ranges = <&tlmm 0 0 151>;
+> +
+> +                qup-i2c9-state {
+> +                        pinmux {
+> +                                pins = "gpio6", "gpio7";
+> +                                function = "qup9";
+> +                        };
+> +                };
+> +        };
+> +...
+> -- 
+> 2.37.3
+> 
