@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 180B65B84E0
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 11:22:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928625B8606
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Sep 2022 12:13:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbiINJWu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 05:22:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
+        id S229479AbiINKN1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 06:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230414AbiINJW3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 05:22:29 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE4BC82D0A
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 02:12:36 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id dv25so33147678ejb.12
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 02:12:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=NVf05MxsGGkxSVh6ElfnxGmkPmGgBxBBxxJUi46xaKM=;
-        b=6ZoVPmCb8jZMOh3Xnf+tk5lQnDZcJzi9cKYvTpm5NqcehUoFtxeFaHH3hFthBsfndb
-         b9BxMc1x+1TwcMIgCwACmDPPsvkwF4kQ+Fi8pxHIhpC65yNBREsEcvuhhcXiku9x8Bre
-         p72CgUkiFaPJR00DidoPM1AM74yl8xC43OWqTHhIWoZdHLDvaUOpR5RfVyG9/LEOEdOr
-         swbJqCfl80lbx2gPt7cocf3WkNWeEvJ4A4jpTDh2LPrL8t20ndUbOsGLYq9lRn20t0iI
-         3D1n+gu14S04o1rmjzPs/9NeEGaTBcVu3P5K1T26pQxb2h54/IsKg1+B7cWNut5xc6I/
-         DWXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=NVf05MxsGGkxSVh6ElfnxGmkPmGgBxBBxxJUi46xaKM=;
-        b=C4JfRys3gJKWdmrPlZGZd/rZrkLdWSZ3+jsOuFmai03FM2lYpVOUcv8VDPiTxPhYrR
-         c422OkXJQcz6oNg4OGfSFDp0a3WO/plK7cV7yavsYccYMxCVyiGLuzdCJJNIkI0PSXWF
-         XRjP2jmhbJTeqctAvFSMb3VLAnKDiDPrbcV8yUlNiYkhcSgIqyhHA+r0c8x2FTJzCK90
-         iwiRfEblLz98XP1U+1ZyfPJ82NPvVZw97zSLGkwyyzE4Yp1yKNHzvUKoRY65V9YsPns5
-         qwJ7LgTXJfHGgF/p9ktbXp/iwOUYbS9yBP00PzdmRD4B6Z7KjmLjrAkOdOsjwDZRc+G6
-         9P+A==
-X-Gm-Message-State: ACgBeo1Yi2jIW90NDuFVqLnE5Xk7uFRpr+6kn4ftz/vB431yPrVVe7zt
-        M4EgxykhGyzrX4UF3ZZkaH/XZlWfygsd9A6d1vPuU7E6Q1A=
-X-Google-Smtp-Source: AA6agR4kYdMAAZq2bPOvC+gcMevuysrFERO0oiissfkalFgDjzQFzK6C9idy6IJgfhV2AC4QRJPqLI8MhCaQKVdxkPA=
-X-Received: by 2002:a17:907:a079:b0:77b:8d9:9d9 with SMTP id
- ia25-20020a170907a07900b0077b08d909d9mr13258650ejc.697.1663146695940; Wed, 14
- Sep 2022 02:11:35 -0700 (PDT)
+        with ESMTP id S229437AbiINKN0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 06:13:26 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D840D21267
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 03:13:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663150405; x=1694686405;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0XhXhimbVkTYIKDHstiot2PhUoireYLQ75qQdnjAlxA=;
+  b=d5XGsH2lom0+7aHkzgfheOVf96cqzgWpQyoWxg42XOS8Kec+6Q5w497+
+   GMUB0bI5kCz+xHPJPDGYHdurUZIxS5pFtkyqVYSyOzMPYNKkInld1nXji
+   nWfrksJKeZhgIUSIvqGPXJ9zVq/uTDpebBL4M3jPMXOHMvwpXmPiJYE4w
+   uLyt5MGdvED4OMJn4VNyX9DWsZJJf0gQmHK79p2igZsNGio9GwXLNI0Wn
+   Csdi3VBL0y4gjyIRBVbvs10efhSa0Y5Y6MAwwq6roM9KjqLBML/HFtvSg
+   8EhTvW+aVxU+4wMYICTkUF0jjVO1bVHNmshW5Y14nVbS62GQMUxbp4uav
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10469"; a="281424191"
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="281424191"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 03:13:25 -0700
+X-IronPort-AV: E=Sophos;i="5.93,315,1654585200"; 
+   d="scan'208";a="647333894"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 03:13:24 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oYPOT-0029H9-0t;
+        Wed, 14 Sep 2022 13:13:21 +0300
+Date:   Wed, 14 Sep 2022 13:13:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod v2][PATCH v2] treewide: rework line configuration
+Message-ID: <YyGpQedIKMRg8IVA@smile.fi.intel.com>
+References: <20220913161407.63472-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <e8bf314dd0edfd0709d71e85fb8d877c3722e33e.camel@gmail.com>
- <CAMRc=Md47VUkZ47qoBpxSiHb6y5V2LsSkkO1ogvyY2KY4w4qyg@mail.gmail.com> <e6e721b3756db8b7a4bfe902af53e3377e681187.camel@gmail.com>
-In-Reply-To: <e6e721b3756db8b7a4bfe902af53e3377e681187.camel@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 14 Sep 2022 11:11:25 +0200
-Message-ID: <CAMRc=MdvHwXPAXY5W5sSAw1f3PjQCcrYO___t4kWaRjK7feaNg@mail.gmail.com>
-Subject: Re: [PATCH] tools: Change asprintf return code check
-To:     Catalin Petrescu <catalin.petrescu@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220913161407.63472-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,56 +64,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 10:30 PM Catalin Petrescu
-<catalin.petrescu@gmail.com> wrote:
->
-> On Tue, 2022-09-13 at 16:47 +0200, Bartosz Golaszewski wrote:
-> > On Thu, Sep 8, 2022 at 4:03 PM Catalin Petrescu
-> > <catalin.petrescu@gmail.com> wrote:
-> > >
-> > > Hi there,
-> > >
-> > > I found a small error (IMHO) in libgpiod.
-> > > The issue is that asprintf may return -1 if it fails to allocate
-> > > memory, and if that happens, chip_open_by_number will pass a NULL
-> > > pointer to gpiod_chip_open.
-> > >
-> > > I hope this helps.
-> > >
-> > > Thanks,
-> > >
-> > > Catalin.
-> >
-> > Hey Catalin,
-> >
-> > Please next time send the patch inline using git's send-email
-> > command.
-> >
-> > You're right about the error code check but it should actually be ret
-> > < 0 as per asprintf's documentation.
-> >
-> > Bart
->
-> Hi Bart,
->
-> I'll use git send-email next time. I was not aware of its existence.
-> And I still need to figure out how to pass the gmail SMTP
-> authentication.
->
-> You're right, when asprintf returns zero, technically, that's not an
-> error.
-> My thought was that if asprintf ever returns zero, that means that the
-> path is a zero-length string.
-> So, the next call to gpiod_chip_open(path) will likely fail. But I
-> guess, the right thing to do is to let gpiod_chip_open() deal with it.
->
-> Thanks,
->
-> Catalin.
->
->
+On Tue, Sep 13, 2022 at 06:14:07PM +0200, Bartosz Golaszewski wrote:
+> This tries to get rid of the concept of defaults and overrides for line
+> properties from the library (or rather hide them from the users). While
+> this makes the C API a bit more complex, it allows for a more elegant
+> high-level interface.
+> 
+> This patch is pretty big but I'll just give an overview here. I don't
+> expect a detailed review of every line.
+> 
+> Low-level data structure model (as seen in the C API):
+> 
+> We're adding a new structure - line_settings. It's a basic data class
+> that stores a set of line properties. The line_config object is simplified
+> and becomes a storage for the mappings between offsets and line_settings.
+> 
+> We no longer require the user to store the offsets array in the
+> request_config. The offsets to request are simply those for which the
+> user explicitly added settings to the line_config. Subsequently, the
+> request_config structure becomes optional for the request.
+> 
+> In C++ bindings this allows us to implement an elegant interface with
+> rust-like chained mutators. To that end, we're also introducing a new
+> intermediate class called request_builder that's returned by the chip's
+> prepare_request() method which exposes routines for storing the line
+> and request configs for the request we're making. For examples of
+> usage - see C++ tests and samples.
 
-Yes and also next thing we do is use strerror() which will return
-"Success" for 0.
+It's a huge change and my knowledge of C++ is a bare minimum from dozen of
+years ago, can you point out to the file with an example how this APIs (which
+are suggested by a new code) look like for developer in practice? Some test
+cases or simple example? This can help to understand the prettiness of the
+API.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
