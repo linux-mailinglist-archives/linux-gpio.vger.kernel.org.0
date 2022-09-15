@@ -2,88 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C4AE5B92FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 05:19:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D65895B9322
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 05:36:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbiIODTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 23:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59694 "EHLO
+        id S229891AbiIODg3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 23:36:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbiIODTj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 23:19:39 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D76E0E1;
-        Wed, 14 Sep 2022 20:19:37 -0700 (PDT)
-Received: from dggpeml500022.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MSj544vdqz14Qb9;
-        Thu, 15 Sep 2022 11:15:36 +0800 (CST)
-Received: from dggpeml500008.china.huawei.com (7.185.36.147) by
- dggpeml500022.china.huawei.com (7.185.36.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 15 Sep 2022 11:19:35 +0800
-Received: from huawei.com (10.67.175.34) by dggpeml500008.china.huawei.com
- (7.185.36.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 15 Sep
- 2022 11:19:34 +0800
-From:   Ren Zhijie <renzhijie2@huawei.com>
-To:     <kumaravel.thiagarajan@microchip.com>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Ren Zhijie <renzhijie2@huawei.com>
-Subject: [PATCH -next] misc: microchip: pci1xxxx: Fix build error unused-function
-Date:   Thu, 15 Sep 2022 11:16:05 +0800
-Message-ID: <20220915031605.86214-1-renzhijie2@huawei.com>
-X-Mailer: git-send-email 2.17.1
+        with ESMTP id S229499AbiIODg3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 23:36:29 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E4A92F71;
+        Wed, 14 Sep 2022 20:36:21 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id g23so8138675qtu.2;
+        Wed, 14 Sep 2022 20:36:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=uJffsqDRUOivPZiC/tl2/T1Mr1z4G0FCt64C8blLYZ4=;
+        b=VeguLffCxfpspTiwdtq9UYKbMufW723noBqlOXGYv9kyyzX90xkv2vzm2I2PEPmJJO
+         boAIMekRhBXHBG5vAF/QLtA3W9Gp+22wTwqels+K66SvO1fO9YieGqy6CVxr4Fk7F4BS
+         KUTeULswMGfGvshWz45/zc8Jep/TmSo97GyH7V948bwu4qDtkN+ZeXR6U8urNPdbxjUm
+         NbnwEFcxITV8IL1wfCvKNK4GRkZIq5quF3ntXhlP4AwfwWuZ4/6wejY4RmLfL2G1YoKZ
+         rHKCYKu4YydlyPA348LQYnDMLm9Hjo4u//s0ftLmErPMSbCdVE8mY8bsou+HyL8nY4Rr
+         +xWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=uJffsqDRUOivPZiC/tl2/T1Mr1z4G0FCt64C8blLYZ4=;
+        b=n0Yl+GBWlD4iJQMP4eKFSzq3WBqpsrRA5AHfPWVdNdn+h76Ip+AKDJMLcws9hKhjID
+         waWlFEAG6p9xZ4zx1PHtjZYxX+6vDrPZJPlhY2wyRkltOQb9vs0a4TXLSBjdCk50piJT
+         emDKWxr7+AqWoJjn2bsFyxlSSBreSiM+6qkABvqJ1euHUAoe9AY9xcNJVhZhPoWC/GWZ
+         SGGPA0xEdqA4I3BlnYctltuJkN2eedBFeziHQSZiTFcNwXjsS6Ulks/wAdMow4EcLM9I
+         bbW2UXkubVjoA7zMAFGNuyXn9HKjbiESsG5ajG/Ne6xy/y6ifJ4lqUCruBGQdUyG6A+P
+         3O6w==
+X-Gm-Message-State: ACgBeo3oarBA3iRDS1S4Ss42oBFvZ+ZPrCyfnXVPqYBAw78OV/fA4TaZ
+        TtCEOvJkvhG4uG4pm6isvD1AKBXo9KK/q7e8OV4=
+X-Google-Smtp-Source: AA6agR4c8u6CA4VfIRaIl+yIQVBvxQDaeXAQN44DFOYuEyXUnfD+E++zb5w5jiIL9rOauuVd+M9PPulwORz+2O5YzXE=
+X-Received: by 2002:a05:622a:164e:b0:35b:a852:52ca with SMTP id
+ y14-20020a05622a164e00b0035ba85252camr21445333qtj.2.1663212980577; Wed, 14
+ Sep 2022 20:36:20 -0700 (PDT)
 MIME-Version: 1.0
+References: <20220311060936.10663-1-JJLIU0@nuvoton.com> <20220311060936.10663-2-JJLIU0@nuvoton.com>
+ <3f77c8c8-4bba-007b-fae9-5fb47f44719c@canonical.com>
+In-Reply-To: <3f77c8c8-4bba-007b-fae9-5fb47f44719c@canonical.com>
+From:   Jim Liu <jim.t90615@gmail.com>
+Date:   Thu, 15 Sep 2022 11:36:09 +0800
+Message-ID: <CAKUZ0+HLAxLw8Tio1HZt8TkYag_UGuDktjNbORwPzfRRrEJ0jQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] dts: add Nuvoton sgpio feature
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>
+Cc:     JJLIU0@nuvoton.com, KWLIU@nuvoton.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, robh+dt@kernel.org, avifishman70@gmail.com,
+        tmaimon77@gmail.com, tali.perry1@gmail.com, venture@google.com,
+        yuenn@google.com, benjaminfair@google.com, CTCCHIEN@nuvoton.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.175.34]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500008.china.huawei.com (7.185.36.147)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If CONFIG_PM_SLEEP is not set,
-make ARCH=x86_64, will be failed, like this:
+Hi Krzysztof Kozlowski
 
-drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error: ‘pci1xxxx_gpio_resume’ defined but not used [-Werror=unused-function]
- static int pci1xxxx_gpio_resume(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~~
-drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error: ‘pci1xxxx_gpio_suspend’ defined but not used [-Werror=unused-function]
- static int pci1xxxx_gpio_suspend(struct device *dev)
-            ^~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
+Thanks for your review.
+I am modifying this driver now, and i have some questions.
 
-commit 1a3c7bb08826 ("PM: core: Add new *_PM_OPS macros,
-deprecate old ones"), 
-add new marco DEFINE_SIMPLE_DEV_PM_OPS to fix this unused-function problem.
+what's mean "Generic node name." ?
+Nuvoton NPCM750 SGPIO module is base on serial to parallel IC (HC595)
+and parallel to serial IC (HC165).
+and dts node name is followed aspeed dts node name.
 
-Fixes: 4ec7ac90ff39 ("misc: microchip: pci1xxxx: Add power management functions - suspend & resume handlers.")
-Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
----
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could you give more information??
 
-diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-index 9cc771c604ed..4cd541166b0c 100644
---- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-+++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-@@ -405,7 +405,7 @@ static int pci1xxxx_gpio_probe(struct auxiliary_device *aux_dev,
- 	return devm_gpiochip_add_data(&aux_dev->dev, &priv->gpio, priv);
- }
- 
--static SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
-+static DEFINE_SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
- 
- static const struct auxiliary_device_id pci1xxxx_gpio_auxiliary_id_table[] = {
- 	{.name = "mchp_pci1xxxx_gp.gp_gpio"},
--- 
-2.17.1
+Best regards,
+Jim
 
+On Fri, Mar 11, 2022 at 5:18 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@canonical.com> wrote:
+>
+> On 11/03/2022 07:09, jimliu2 wrote:
+> > add Nuvoton sgpio feature
+> >
+> > Signed-off-by: jimliu2 <JJLIU0@nuvoton.com>
+> > ---
+> >  arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi | 30 +++++++++++++++++++
+> >  1 file changed, 30 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> > index 3696980a3da1..58f4b463c745 100644
+> > --- a/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> > +++ b/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi
+> > @@ -329,6 +329,36 @@
+> >                               status = "disabled";
+> >                       };
+> >
+> > +                     sgpio1: sgpio@101000 {
+>
+> Generic node name.
+>
+> > +                             clocks = <&clk NPCM7XX_CLK_APB3>;
+> > +                             compatible = "nuvoton,npcm750-sgpio";
+> > +                             interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> > +                             gpio-controller;
+> > +                             #gpio-cells = <2>;
+> > +                             pinctrl-names = "default";
+> > +                             pinctrl-0 = <&iox1_pins>;
+> > +                             bus-frequency = <16000000>;
+> > +                             nin_gpios = <64>;
+> > +                             nout_gpios = <64>;
+> > +                             reg = <0x101000 0x200>;
+>
+> In each node first goes compatible, then reg.
+>
+> Best regards,
+> Krzysztof
