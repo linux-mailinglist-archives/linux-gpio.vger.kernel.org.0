@@ -2,148 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9733A5BA1D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 22:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0AD5BA1FF
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 22:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbiIOUfB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Sep 2022 16:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
+        id S229706AbiIOUus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Sep 2022 16:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiIOUfA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 16:35:00 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0DF167CB
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 13:34:58 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id j13so8874876ljh.4
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 13:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=HoXSRpSHCvMD1eYi2CV8NwSuOO1L6vro/VvSJyV3Nio=;
-        b=XioBsLaejze4YL9UFW9coaZaf++X+o5qBF51oLyAhzI2I9R9H95kfat23VJcDjPk/3
-         8DuMzOKOQJy5skH+MBWsLUyNo0riRny+tTb4gezwkckLsdgSffRTGRJA0pfyTT9CVxRM
-         Q6QmlnVa8TuB9bGMFbTfSML1ia5sIfmDZEYM9OhbxREvyIU5T7uS6Us/PoVY2HIvDd0/
-         qXNYvodhIL0P7YEi7EcELi6ys87ky/2TMcgubGCRtZyPHUN3jjrH45Bj8vfJFXPL2Xhx
-         /QbFIeOJzEWXy9GtoSfzxng5TLvpS9TF/lNMI2M5oJgGV9otEPVHPhr0Vb0e+T/gEcq2
-         Mdpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=HoXSRpSHCvMD1eYi2CV8NwSuOO1L6vro/VvSJyV3Nio=;
-        b=0pDxRgFIqbhocwkrVsgShNyZB7sIE7eP8JhPfNyf8kEd9P5DnKn0I57UTFO4IHetbg
-         v6wrdXQEgL/DBK2WQsth0KvrVKUESWgub0PJlVi+q7loTA27fzHH1gPS5psJVq+KBx1e
-         rEgSEUdSsKTF+/Ye9ApLJ4o4SpekhJxy/2KUP4bzZdoDRrGcGNd+CEsFqjtzw2gHYJXS
-         +k/Pek48V2Q882PXkA6CIr81dJ0nBNfNa5EU7tkMIF7poZg0g5a4uO6oCfQqoYevmyva
-         ACXCaZE0n0JeIbbUGnmvNJUMT2su2lGN6mo18OgL16Exm9YB0I5yLkw50068MD7yl0rq
-         CQVQ==
-X-Gm-Message-State: ACrzQf2thqGsfNfpcRdHZLoENVZgBkv0DJpJt17MzGYHDW76T7FgsMMQ
-        4Mi/Jli935YhysACljIEbnf6krTQ/MEEIb2A
-X-Google-Smtp-Source: AMsMyM57WLOKn4s5AsmGd036+4+beAdEHcRsTP5K9S/XNybIiZNd7DKo/BoSvMwRVBcrb1/XpMV7TQ==
-X-Received: by 2002:a05:651c:158e:b0:26b:46a6:bf63 with SMTP id h14-20020a05651c158e00b0026b46a6bf63mr454155ljq.21.1663274096702;
-        Thu, 15 Sep 2022 13:34:56 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id f23-20020a2eb5b7000000b00264b292232asm3050979ljn.63.2022.09.15.13.34.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Sep 2022 13:34:56 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] gpio: ftgpio010: Make irqchip immutable
-Date:   Thu, 15 Sep 2022 22:32:54 +0200
-Message-Id: <20220915203254.48357-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S229542AbiIOUur (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 16:50:47 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3742481E8
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 13:50:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663275046; x=1694811046;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=cEgtD3kCI534wDcoN77XOOa59BTexETKLMSoJ5N849Y=;
+  b=IA4I3gDtZfpQFQY/m5Dbe8s8U7ETwrlNuMmJg/+bjKp45koU/3Yj3eTL
+   LCuX48Rs8HYXPfmQaOsbyfyrDqH5FllOYu5EKqXTh+uistZXLa/M+px7G
+   MX4V5/Hz1Xdy2ifllzp9PdpIBSRImkVKCTfGzZs9zbRguSdd8aEXnUxy7
+   nqW7JQ0TlsdNV2YPjp1kSDHbb/4SEU0Zq6gpuu+5wHC/FfrUiXILROHBt
+   cbWujEbMfQx5DdDbYHNPS3ynu3cIhw/nPaDLQ+bxdPTPSGKaS5uFEXASn
+   kQ6c/CWiWm2QTt3fAks7CmBYdtYPHIm/qHXct5B2fa4fIs53vW1QfZH1P
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10471"; a="278563797"
+X-IronPort-AV: E=Sophos;i="5.93,319,1654585200"; 
+   d="scan'208";a="278563797"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Sep 2022 13:50:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,319,1654585200"; 
+   d="scan'208";a="706509000"
+Received: from lkp-server02.sh.intel.com (HELO 41300c7200ea) ([10.239.97.151])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Sep 2022 13:50:45 -0700
+Received: from kbuild by 41300c7200ea with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oYvoq-0000zj-2O;
+        Thu, 15 Sep 2022 20:50:44 +0000
+Date:   Fri, 16 Sep 2022 04:49:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ d9e7f0e320516c660d6f33e6c16a3d99970eb14e
+Message-ID: <63238ff5.I0ZXfrnyV2pdgrrk%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This turns the FTGPIO010 irqchip immutable.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: d9e7f0e320516c660d6f33e6c16a3d99970eb14e  gpiolib: of: factor out conversion from OF flags
 
-Tested on the D-Link DIR-685.
+elapsed time: 724m
 
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-ftgpio010.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+configs tested: 110
+configs skipped: 3
 
-diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
-index f422c3e129a0..f77a965f5780 100644
---- a/drivers/gpio/gpio-ftgpio010.c
-+++ b/drivers/gpio/gpio-ftgpio010.c
-@@ -41,14 +41,12 @@
-  * struct ftgpio_gpio - Gemini GPIO state container
-  * @dev: containing device for this instance
-  * @gc: gpiochip for this instance
-- * @irq: irqchip for this instance
-  * @base: remapped I/O-memory base
-  * @clk: silicon clock
-  */
- struct ftgpio_gpio {
- 	struct device *dev;
- 	struct gpio_chip gc;
--	struct irq_chip irq;
- 	void __iomem *base;
- 	struct clk *clk;
- };
-@@ -70,6 +68,7 @@ static void ftgpio_gpio_mask_irq(struct irq_data *d)
- 	val = readl(g->base + GPIO_INT_EN);
- 	val &= ~BIT(irqd_to_hwirq(d));
- 	writel(val, g->base + GPIO_INT_EN);
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
- 
- static void ftgpio_gpio_unmask_irq(struct irq_data *d)
-@@ -78,6 +77,7 @@ static void ftgpio_gpio_unmask_irq(struct irq_data *d)
- 	struct ftgpio_gpio *g = gpiochip_get_data(gc);
- 	u32 val;
- 
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
- 	val = readl(g->base + GPIO_INT_EN);
- 	val |= BIT(irqd_to_hwirq(d));
- 	writel(val, g->base + GPIO_INT_EN);
-@@ -221,6 +221,16 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- 	return 0;
- }
- 
-+static const struct irq_chip ftgpio_irq_chip = {
-+	.name = "FTGPIO010",
-+	.irq_ack = ftgpio_gpio_ack_irq,
-+	.irq_mask = ftgpio_gpio_mask_irq,
-+	.irq_unmask = ftgpio_gpio_unmask_irq,
-+	.irq_set_type = ftgpio_gpio_set_irq_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	 GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int ftgpio_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -277,14 +287,8 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
- 	if (!IS_ERR(g->clk))
- 		g->gc.set_config = ftgpio_gpio_set_config;
- 
--	g->irq.name = "FTGPIO010";
--	g->irq.irq_ack = ftgpio_gpio_ack_irq;
--	g->irq.irq_mask = ftgpio_gpio_mask_irq;
--	g->irq.irq_unmask = ftgpio_gpio_unmask_irq;
--	g->irq.irq_set_type = ftgpio_gpio_set_irq_type;
--
- 	girq = &g->gc.irq;
--	girq->chip = &g->irq;
-+	gpio_irq_chip_set_chip(girq, &ftgpio_irq_chip);
- 	girq->parent_handler = ftgpio_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                          rhel-8.3-func
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+x86_64                         rhel-8.3-kunit
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+ia64                             allmodconfig
+s390                 randconfig-r044-20220915
+arc                  randconfig-r043-20220915
+riscv                randconfig-r042-20220915
+arc                           tb10x_defconfig
+sh                          kfr2r09_defconfig
+xtensa                    xip_kc705_defconfig
+powerpc                    klondike_defconfig
+csky                              allnoconfig
+alpha                             allnoconfig
+arc                               allnoconfig
+riscv                             allnoconfig
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+powerpc                          allyesconfig
+riscv                               defconfig
+riscv                            allmodconfig
+riscv                            allyesconfig
+mips                     decstation_defconfig
+m68k                        m5272c3_defconfig
+m68k                       m5275evb_defconfig
+powerpc                     asp8347_defconfig
+i386                          randconfig-c001
+arm64                               defconfig
+ia64                             allyesconfig
+arm                              allmodconfig
+m68k                                defconfig
+ia64                                defconfig
+mips                             allmodconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+powerpc                        warp_defconfig
+xtensa                           alldefconfig
+powerpc                      mgcoge_defconfig
+m68k                        m5307c3_defconfig
+arm                           viper_defconfig
+sh                         ap325rxa_defconfig
+arc                          axs103_defconfig
+mips                            gpr_defconfig
+sh                             sh03_defconfig
+powerpc                         wii_defconfig
+openrisc                       virt_defconfig
+powerpc                      ep88xc_defconfig
+sparc                       sparc32_defconfig
+powerpc                      arches_defconfig
+sh                          rsk7203_defconfig
+arm                         vf610m4_defconfig
+powerpc                        cell_defconfig
+nios2                               defconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+loongarch                           defconfig
+loongarch                         allnoconfig
+
+clang tested configs:
+s390                 randconfig-r044-20220914
+hexagon              randconfig-r045-20220914
+riscv                randconfig-r042-20220914
+hexagon              randconfig-r041-20220914
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+hexagon              randconfig-r045-20220915
+hexagon              randconfig-r041-20220915
+i386                          randconfig-a011
+i386                          randconfig-a013
+i386                          randconfig-a015
+powerpc                      acadia_defconfig
+x86_64                        randconfig-k001
+powerpc                     kmeter1_defconfig
+
 -- 
-2.37.3
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
