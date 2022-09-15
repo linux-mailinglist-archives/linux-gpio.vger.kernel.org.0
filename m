@@ -2,143 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C7EA5B9F22
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 17:46:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9733A5BA1D5
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 22:35:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiIOPqT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Sep 2022 11:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58730 "EHLO
+        id S229538AbiIOUfB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Sep 2022 16:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbiIOPqS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 11:46:18 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6104F98D30
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 08:46:17 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id l7-20020a056830154700b0065563d564dfso12782156otp.0
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 08:46:17 -0700 (PDT)
+        with ESMTP id S229452AbiIOUfA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 16:35:00 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0DF167CB
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 13:34:58 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id j13so8874876ljh.4
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 13:34:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=f4Fumy8gcL3d3cQFNIhX6OmK6+nx7NWNfwT8g9ms94Q=;
-        b=dgy3yC+GbPWzn6EryT1gBQVG3Urhiu762MCvKGNxmT1/82uUu4Aa56SWDG08ffSBE4
-         fodx6YTHss/KqGaPHbd/HPgbQxiTPo8H0YCQ0yQ4L7dY3PRxkg/dCKB0tYAi26/ZtlUJ
-         e+8Yq4w9g8Ls4l7PjHXLMnB1RulP8PcVDZLBy0+ZMuV5Fw8KDt0Mlf/s1sPC7hE6RYZu
-         9AN+DwIQNrBaT6Zdqa968LR+1RTnH0cjQTXSOJUsKTasYCAt75fInjI3Wskka7LMoFVI
-         G3DbLYW02B57gdiy0Ner8tqgO7x8yN6BsIgx1NeTSnAB6m5eC88ou/Yxl7YrZ13G7H1x
-         5Kuw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=HoXSRpSHCvMD1eYi2CV8NwSuOO1L6vro/VvSJyV3Nio=;
+        b=XioBsLaejze4YL9UFW9coaZaf++X+o5qBF51oLyAhzI2I9R9H95kfat23VJcDjPk/3
+         8DuMzOKOQJy5skH+MBWsLUyNo0riRny+tTb4gezwkckLsdgSffRTGRJA0pfyTT9CVxRM
+         Q6QmlnVa8TuB9bGMFbTfSML1ia5sIfmDZEYM9OhbxREvyIU5T7uS6Us/PoVY2HIvDd0/
+         qXNYvodhIL0P7YEi7EcELi6ys87ky/2TMcgubGCRtZyPHUN3jjrH45Bj8vfJFXPL2Xhx
+         /QbFIeOJzEWXy9GtoSfzxng5TLvpS9TF/lNMI2M5oJgGV9otEPVHPhr0Vb0e+T/gEcq2
+         Mdpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=f4Fumy8gcL3d3cQFNIhX6OmK6+nx7NWNfwT8g9ms94Q=;
-        b=aL10fcI0cvzHTNepRPY7gCap91/ekx6CDVa8zc8NvHM1o3RhL6CUOTNf7wbMbDS15k
-         D8iDEeRcI+RsYXcEYQKMv62Muqu+9y6kK2OsW4yfVpxLGyRVgs27MOiE6C4Zv/1f4MYz
-         MB4SB+wPwgHDmKT0L1rjOGYqTQ6VP5ulcJO9cYbV9mOi9v7pDcnvJJe0BClo1HIsG7U4
-         gDgTvHNwhBMr0vA40SI1YocnYusZXg3+n1SA1TZbmsOi+k6+lnSPQsRheLJXB7Em/DGO
-         3z36SvNqbH9IkL/z2XqgM9nGcMx3JmuV5M5t/FH//gbz10LW8+zPiOwqHsy9wdS7dN/0
-         pT7Q==
-X-Gm-Message-State: ACrzQf3IJcM7tmp0WUVoGXKi2YMe1+PD5jGSwSHb/xG+9s+STijsNt+2
-        LjbwDz0muZGGLh5vf+AQQfaicw==
-X-Google-Smtp-Source: AMsMyM6PIJngKnpR+IIYYsxZy3aFT965jWLYIrPPCRaXofO8IJrdB691WEpW3mAQvxDitrTXDYBDxA==
-X-Received: by 2002:a05:6830:2094:b0:656:56cc:662c with SMTP id y20-20020a056830209400b0065656cc662cmr134857otq.191.1663256776708;
-        Thu, 15 Sep 2022 08:46:16 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id 107-20020a9d0ef4000000b00637190319eesm8795094otj.29.2022.09.15.08.46.15
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=HoXSRpSHCvMD1eYi2CV8NwSuOO1L6vro/VvSJyV3Nio=;
+        b=0pDxRgFIqbhocwkrVsgShNyZB7sIE7eP8JhPfNyf8kEd9P5DnKn0I57UTFO4IHetbg
+         v6wrdXQEgL/DBK2WQsth0KvrVKUESWgub0PJlVi+q7loTA27fzHH1gPS5psJVq+KBx1e
+         rEgSEUdSsKTF+/Ye9ApLJ4o4SpekhJxy/2KUP4bzZdoDRrGcGNd+CEsFqjtzw2gHYJXS
+         +k/Pek48V2Q882PXkA6CIr81dJ0nBNfNa5EU7tkMIF7poZg0g5a4uO6oCfQqoYevmyva
+         ACXCaZE0n0JeIbbUGnmvNJUMT2su2lGN6mo18OgL16Exm9YB0I5yLkw50068MD7yl0rq
+         CQVQ==
+X-Gm-Message-State: ACrzQf2thqGsfNfpcRdHZLoENVZgBkv0DJpJt17MzGYHDW76T7FgsMMQ
+        4Mi/Jli935YhysACljIEbnf6krTQ/MEEIb2A
+X-Google-Smtp-Source: AMsMyM57WLOKn4s5AsmGd036+4+beAdEHcRsTP5K9S/XNybIiZNd7DKo/BoSvMwRVBcrb1/XpMV7TQ==
+X-Received: by 2002:a05:651c:158e:b0:26b:46a6:bf63 with SMTP id h14-20020a05651c158e00b0026b46a6bf63mr454155ljq.21.1663274096702;
+        Thu, 15 Sep 2022 13:34:56 -0700 (PDT)
+Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
+        by smtp.gmail.com with ESMTPSA id f23-20020a2eb5b7000000b00264b292232asm3050979ljn.63.2022.09.15.13.34.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Sep 2022 08:46:15 -0700 (PDT)
-Date:   Thu, 15 Sep 2022 11:46:13 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     brgl@bgdev.pl, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 1/3] gpio: idio-16: Introduce the ACCES IDIO-16 GPIO
- library module
-Message-ID: <YyNIxWS0sneUKas0@fedora>
-References: <cover.1662927941.git.william.gray@linaro.org>
- <6b28fb497c35def57c1920362c82402bed4bd23f.1662927941.git.william.gray@linaro.org>
- <YyCs1/HgOG31MX1N@smile.fi.intel.com>
+        Thu, 15 Sep 2022 13:34:56 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH] gpio: ftgpio010: Make irqchip immutable
+Date:   Thu, 15 Sep 2022 22:32:54 +0200
+Message-Id: <20220915203254.48357-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Nzu/QuXFHOIMvVdg"
-Content-Disposition: inline
-In-Reply-To: <YyCs1/HgOG31MX1N@smile.fi.intel.com>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This turns the FTGPIO010 irqchip immutable.
 
---Nzu/QuXFHOIMvVdg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Tested on the D-Link DIR-685.
 
-On Tue, Sep 13, 2022 at 07:16:23PM +0300, Andy Shevchenko wrote:
-> On Sun, Sep 11, 2022 at 04:34:38PM -0400, William Breathitt Gray wrote:
-> > +	if (*mask & GENMASK(7, 0))
-> > +		bitmap_set_value8(bits, ioread8(&reg->out0_7), 0);
-> > +	if (*mask & GENMASK(15, 8))
-> > +		bitmap_set_value8(bits, ioread8(&reg->out8_15), 8);
-> > +	if (*mask & GENMASK(23, 16))
-> > +		bitmap_set_value8(bits, ioread8(&reg->in0_7), 16);
-> > +	if (*mask & GENMASK(31, 24))
-> > +		bitmap_set_value8(bits, ioread8(&reg->in8_15), 24);
->=20
-> So, the addresses of the ports are not expected to be continuous?
+Cc: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpio-ftgpio010.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
-No, unfortunately the IDIO-16 devices allocate the FET outputs to byte
-offsets 0 and 4 while the isolated inputs are allocated to byte offsets
-1 and 5. I don't know the design reason for the split but that's the
-reason I'm reading these addresses by byte rather than by word.
+diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+index f422c3e129a0..f77a965f5780 100644
+--- a/drivers/gpio/gpio-ftgpio010.c
++++ b/drivers/gpio/gpio-ftgpio010.c
+@@ -41,14 +41,12 @@
+  * struct ftgpio_gpio - Gemini GPIO state container
+  * @dev: containing device for this instance
+  * @gc: gpiochip for this instance
+- * @irq: irqchip for this instance
+  * @base: remapped I/O-memory base
+  * @clk: silicon clock
+  */
+ struct ftgpio_gpio {
+ 	struct device *dev;
+ 	struct gpio_chip gc;
+-	struct irq_chip irq;
+ 	void __iomem *base;
+ 	struct clk *clk;
+ };
+@@ -70,6 +68,7 @@ static void ftgpio_gpio_mask_irq(struct irq_data *d)
+ 	val = readl(g->base + GPIO_INT_EN);
+ 	val &= ~BIT(irqd_to_hwirq(d));
+ 	writel(val, g->base + GPIO_INT_EN);
++	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
+ }
+ 
+ static void ftgpio_gpio_unmask_irq(struct irq_data *d)
+@@ -78,6 +77,7 @@ static void ftgpio_gpio_unmask_irq(struct irq_data *d)
+ 	struct ftgpio_gpio *g = gpiochip_get_data(gc);
+ 	u32 val;
+ 
++	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
+ 	val = readl(g->base + GPIO_INT_EN);
+ 	val |= BIT(irqd_to_hwirq(d));
+ 	writel(val, g->base + GPIO_INT_EN);
+@@ -221,6 +221,16 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
+ 	return 0;
+ }
+ 
++static const struct irq_chip ftgpio_irq_chip = {
++	.name = "FTGPIO010",
++	.irq_ack = ftgpio_gpio_ack_irq,
++	.irq_mask = ftgpio_gpio_mask_irq,
++	.irq_unmask = ftgpio_gpio_unmask_irq,
++	.irq_set_type = ftgpio_gpio_set_irq_type,
++	.flags = IRQCHIP_IMMUTABLE,
++	 GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
+ static int ftgpio_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -277,14 +287,8 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
+ 	if (!IS_ERR(g->clk))
+ 		g->gc.set_config = ftgpio_gpio_set_config;
+ 
+-	g->irq.name = "FTGPIO010";
+-	g->irq.irq_ack = ftgpio_gpio_ack_irq;
+-	g->irq.irq_mask = ftgpio_gpio_mask_irq;
+-	g->irq.irq_unmask = ftgpio_gpio_unmask_irq;
+-	g->irq.irq_set_type = ftgpio_gpio_set_irq_type;
+-
+ 	girq = &g->gc.irq;
+-	girq->chip = &g->irq;
++	gpio_irq_chip_set_chip(girq, &ftgpio_irq_chip);
+ 	girq->parent_handler = ftgpio_gpio_irq_handler;
+ 	girq->num_parents = 1;
+ 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+-- 
+2.37.3
 
-> > +		return;
-> > +
-> > +	spin_lock_irqsave(&state->lock, flags);
->=20
-> > +	if (value)
-> > +		set_bit(offset, state->out_state);
-> > +	else
-> > +		clear_bit(offset, state->out_state);
->=20
-> assign_bit()
->=20
-> But I'm wondering why do you need the atomic bitops under the lock?
-
-I don't think atomic bitops are necessary in this case because of the
-lock as you pointedly out, but I felt using these made the intention of
-the code clearer. Is there a non-atomic version of assign_bit(), or do
-you recommend I use bitwise operations directly here instead?
-
-> > +static inline int idio_16_get_direction(const unsigned long offset)
-> > +{
-> > +	return (offset < IDIO_16_NOUT) ? 0 : 1;
->=20
-> 	return (offset >=3D IDIO_16_NOUT) ? 1 : 0;
->=20
-> ?
-
-I have no particular preference in this case, so I can switch this to
-the >=3D version for consistency with the rest of the code.
-
-Thanks,
-
-William Breathitt Gray
-
---Nzu/QuXFHOIMvVdg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCYyNIxQAKCRC1SFbKvhIj
-K3YnAP95t6WB1f2/suNqh2Of/obYvWHLqiVLCQDkfzLB3jOgRwEA4eU+HB/vod5c
-mxTR52mBZou143ZlB9l/Uw0zfY6nHQk=
-=fJeF
------END PGP SIGNATURE-----
-
---Nzu/QuXFHOIMvVdg--
