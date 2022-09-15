@@ -2,93 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 458DF5B96C5
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 10:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BACB85B9812
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 11:50:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiIOI7G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Sep 2022 04:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        id S230221AbiIOJuk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Sep 2022 05:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229599AbiIOI7E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 04:59:04 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DEED90828
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 01:59:03 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id go34so40572152ejc.2
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Sep 2022 01:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=1yevQqreqFif1tWjDWGjJnPqQZbw5Gj8I8oZ/6Fr7mk=;
-        b=WCwmrkP+09XaX2sS2DJ9Z6v2ic6IGQx0B7niR11WVSgzQ1MyS8R6QmqnsQo35Hn0fJ
-         JJX56OSe09XpAAw4Jj+ahgToitci/rZNgthSG7iECnIHQ0T0WIpXz6mlceXLZk2WtcQj
-         KvTwpPgESZXOg2CBIGdiLqHm5A+3ZcnYe1B8S/O0h9zlqFH4ZNr14eNimbalI0UhnoyE
-         jXWJV0VN+ptM0XuZxuCEifqgKsC5cnjtZeIB/06hIyR8aduteXjAXzUqoPAtjnLr8YwH
-         BVNfHudy4pZinSW63UG6nHKy7Sg0hSlHhU6HVXd/sJbVmg6bdHGNwgyE4uQubBWichjO
-         QrYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=1yevQqreqFif1tWjDWGjJnPqQZbw5Gj8I8oZ/6Fr7mk=;
-        b=C/Osdf3LJNNcNaUarvubmVZM5A6BHrQwuFYksOo6gGOC+S/c88xH58Bkkv/AmG6WM1
-         nn6c7M+6jzzMZT29rIyGkQA5UIe9Q0n4KC4o74IyZFZEnNKA/ZiQjvLXhA6AHC85suCI
-         uz+/KKq6de+SO2ypLVXXTTGpbvhgKttHm6Z/UO5DugeL/3fjiaTxwuEZNb17oGhJAMWX
-         G2yrYcVY0ymeMlHQuX3BgO36MGEmHiaFcFr+chMYSUWvXKB06XAsMU11t1LtDeXHtPuj
-         f1GrxBCZ7Mfe8ZCGM57E0dmNAGzQRhu9GE1QGG64uNh7IXox6Pl+/wxqCrEmW0P8rIpf
-         OWWQ==
-X-Gm-Message-State: ACgBeo0SKugippktahEoxEFjbWtQdClaGl8IqNf7VsPCWSk2zvsbvEQX
-        OOWUzZtdClQzCDWqHw/2vHUGHpHUTAZNLb49GW65jA==
-X-Google-Smtp-Source: AA6agR6FQxW+G+2JxcTI18HbQeQFA4W7utMa4guK35w3CcDNsSaFT+0yiGM/D2WGcfKBtTS/WbU81zjM4+Rau0+S5KY=
-X-Received: by 2002:a17:906:8a5c:b0:77c:9d8:6fbc with SMTP id
- gx28-20020a1709068a5c00b0077c09d86fbcmr15461520ejc.500.1663232341934; Thu, 15
- Sep 2022 01:59:01 -0700 (PDT)
+        with ESMTP id S230224AbiIOJuO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 05:50:14 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98ABC67175;
+        Thu, 15 Sep 2022 02:47:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1663235257; x=1694771257;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hboeAx8mMRpGs54TYdsSnLqFRA2TtwV90q8y69BhRkE=;
+  b=S8bIGEOl5CepDHANbjnzTlUVB44BI3TYkzH2ivVLG4lBiKKTsqslG49i
+   xczQKhpROTfAxTmuxyrM4BdmYEsAIboYyn9lja5acnDoykx5dlx8vjbQs
+   OcsjS1UbxNvwqouqcgbsxEYb/3RxZVjnwrd1V67xCoPjkfzYWOY8B1tvp
+   /HLzCPjq+SMpDIZyC9zPkeDIAIiyLJvIUMe/Ma9AaYwbXQLrFXKmgSAft
+   dUtk1e8s9cy51IhtxE65mRf5HORd5zkJsHkIoF9O2Is7cne/ZFc9socc3
+   6EHuxVx8YOGqnefhXp0qD9kKvkD5nJLZ4dCLqVI1P14si0uECy57OSeIQ
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.93,317,1654585200"; 
+   d="scan'208";a="177279409"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 15 Sep 2022 02:47:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Thu, 15 Sep 2022 02:47:34 -0700
+Received: from CHE-LT-UNGSOFTWARE.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.12 via Frontend Transport; Thu, 15 Sep 2022 02:47:31 -0700
+From:   Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
+To:     <linux-kernel@vger.kernel.org>, <sudipm.mukherjee@gmail.com>,
+        <arnd@arndb.de>, <linux-gpio@vger.kernel.org>,
+        <linux-next@vger.kernel.org>, <gregkh@linuxfoundation.org>,
+        <bagasdotme@gmail.com>, <kumaravel.thiagarajan@microchip.com>
+Subject: [PATCH v2 char-misc-next] misc: microchip: pci1xxxx: use DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in pci1xxxx's gpio driver
+Date:   Thu, 15 Sep 2022 15:17:29 +0530
+Message-ID: <20220915094729.646185-1-kumaravel.thiagarajan@microchip.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20220914151145.73253-1-brgl@bgdev.pl>
-In-Reply-To: <20220914151145.73253-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 15 Sep 2022 10:58:50 +0200
-Message-ID: <CACRpkdZaSL_pkmrVGOT-y7+3i4y6f6Cjgehycq2FKLwPxrbFvw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Drew Fustini <dfustini@baylibre.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 5:11 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+build errors listed below and reported by Sudip Mukherjee
+<sudipm.mukherjee@gmail.com> for the builds of
+riscv, s390, csky, alpha and loongarch allmodconfig are fixed in
+this patch.
 
-> This adds a new TODO item for gpiolib and can also be used to start
-> a discussion about the need for it and implementation details.
->
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error: 'pci1xxxx_gpio_resume' defined but not used [-Werror=unused-function]
+  311 | static int pci1xxxx_gpio_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~~
+drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error: 'pci1xxxx_gpio_suspend' defined but not used [-Werror=unused-function]
+  295 | static int pci1xxxx_gpio_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~~~~~
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 4ec7ac90ff39 ("misc: microchip: pci1xxxx: Add power management functions - suspend & resume handlers.")
+Reported-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Signed-off-by: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
+---
+Changes in v2:
+  - Mention as Sudip had reported in the commit description
+    as suggested by Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Several approaches have been tried in the past. Consider adding
-these lore links:
+diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+index 9cc771c604ed..4cd541166b0c 100644
+--- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
++++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
+@@ -405,7 +405,7 @@ static int pci1xxxx_gpio_probe(struct auxiliary_device *aux_dev,
+ 	return devm_gpiochip_add_data(&aux_dev->dev, &priv->gpio, priv);
+ }
+ 
+-static SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
++static DEFINE_SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
+ 
+ static const struct auxiliary_device_id pci1xxxx_gpio_auxiliary_id_table[] = {
+ 	{.name = "mchp_pci1xxxx_gp.gp_gpio"},
+-- 
+2.25.1
 
-"[PATCH 3/4] gpio: dt-bindings: Declare gpio-hog optional for GPIO
-subnodes" (2016)
-https://lore.kernel.org/linux-devicetree/1456214089-13954-3-git-send-email-mpa@pengutronix.de/
-"[PATCH] gpio: 74x164: add lines-initial-states property" (2018)
-https://lore.kernel.org/lkml/20180815201855.29738-1-mail@david-bauer.net/"
-"[RFC] Initial state for GPIOs" (2019)
-https://lore.kernel.org/linux-gpio/bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com/
-
-Just so we don't have to constantly look them up for referral.
-
-Yours,
-Linus Walleij
