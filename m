@@ -2,225 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FB7B5B9145
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 01:58:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AA3C5B91A5
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 02:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbiINX6u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Sep 2022 19:58:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45032 "EHLO
+        id S229733AbiIOAbH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Sep 2022 20:31:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229682AbiINX6g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 19:58:36 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCF828983A
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 16:58:14 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id d8so10597168iof.11
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 16:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=weBnQ0QpP5GmpITHPCxwi39XWMtQ1xxsLUWjH8IbvVA=;
-        b=NCI1qH9jveKDXncAk6HScGzcKJxjHGgdLhM/38URe/NK1PwO0347geW9jGEWRPuan3
-         Nyk55gqLYsWaNnaTiesN09/mWhoHvWdVenY9SPt012t/Bto5qLlXRAihjvRZG5oznkdn
-         weFqe3hRGlRjOdkxJcZMkNc9v9047Eh5ss25I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=weBnQ0QpP5GmpITHPCxwi39XWMtQ1xxsLUWjH8IbvVA=;
-        b=5Cqk6p4dxhjjw8XOpxtKQfebs7/RrlbudWUHAF9AVGI7DFdzsW2+PGb1FP0kMWseSU
-         wP4E9iwXuVDCMkv7fuwh3at+F/VpVOHfvHQkZ9KwdogVFFi+tDvcIE6bLGWRk7OC1P0b
-         2Ytm6QKfPsKS78Wdbu04BQ4tZhCMs5h0QGD2GY9OvPfF5Ho1DPIn8RK4huBkIgstWNoV
-         cuECKQo0AJY/J2WNJH8Of44GB8LxbITRJZ/cwzuxr1XBY3iP9X1VKFZu+Q+C0bf4i8T/
-         Z9Lesj0Q1cUq88LlTYl+5OOLPFJIt1Brl28/wGWnbajqPgJSWDHAERYOZ/J/mJH2GPTJ
-         hHFQ==
-X-Gm-Message-State: ACgBeo3kVS3jnLEVcME5GgPNJqArCJLPbZS1Nkjrck6Npej9AWgLvN2t
-        SMRW7WpAnbANHDFiigOjnBd44g==
-X-Google-Smtp-Source: AA6agR62n7lPldjnhqzxv1tCULUdyRzyhbSrXdbJarDbGnR8SVPVcFSEfRE3+kA1tw4NIwP6SHeL5Q==
-X-Received: by 2002:a6b:e60f:0:b0:6a1:75d7:271e with SMTP id g15-20020a6be60f000000b006a175d7271emr5783978ioh.79.1663199894205;
-        Wed, 14 Sep 2022 16:58:14 -0700 (PDT)
-Received: from rrangel920.bld.corp.google.com (h24-56-189-219.arvdco.broadband.dynamic.tds.net. [24.56.189.219])
-        by smtp.gmail.com with ESMTPSA id a14-20020a027a0e000000b0034c0e8829c0sm353721jac.0.2022.09.14.16.58.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 16:58:13 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org
-Cc:     jingle.wu@emc.com.tw, rafael@kernel.org,
-        andriy.shevchenko@linux.intel.com, mario.limonciello@amd.com,
-        hdegoede@redhat.com, linus.walleij@linaro.org, timvp@google.com,
-        dmitry.torokhov@gmail.com, Raul E Rangel <rrangel@chromium.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/13] gpiolib: acpi: Add wake_capable variants of acpi_dev_gpio_irq_get
-Date:   Wed, 14 Sep 2022 17:57:53 -0600
-Message-Id: <20220914155914.v3.5.I4ff95ba7e884a486d7814ee888bf864be2ebdef4@changeid>
-X-Mailer: git-send-email 2.37.3.968.ga6b4b080e4-goog
-In-Reply-To: <20220914235801.1731478-1-rrangel@chromium.org>
-References: <20220914235801.1731478-1-rrangel@chromium.org>
+        with ESMTP id S229935AbiIOAbF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Sep 2022 20:31:05 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44EF8990C
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Sep 2022 17:31:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663201863; x=1694737863;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qzBzzh6oQDXpx5Am5c2sDbKZkN7IefE0m4C4RNIeaXE=;
+  b=gWzvcaGn3EUdIiJJG/vcGSne5xcOZbZkIqhMFTenDuH6n6uysNRmWaez
+   917P73j5mMXVQYSKKdno9JSmIx5LjnC5JlMWh5TLXiHLOEMs3Bk6zAy/r
+   LkzROAcmnIpfPhQtjUvGQenu7FGanC79qq0IViSp8qk6Ho6i/UmSVQF0v
+   Sx0rYRBwJhvgYaL4KqgezpKRXCY9NpWlS1Vubapo5fGosfFCOZf1BXe3A
+   yLHLzraFVxhvH3q/muVE5999oLxwaeahXeMXaYUnw2In5QdaE6jsm05Ua
+   Br1vKQHWqTbMFzLRAzP4sQM3H6s3RwsFO2VtWixNzWWN3xT4k++MyJ2z6
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10470"; a="285617256"
+X-IronPort-AV: E=Sophos;i="5.93,316,1654585200"; 
+   d="scan'208";a="285617256"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2022 17:31:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,316,1654585200"; 
+   d="scan'208";a="568214452"
+Received: from lkp-server01.sh.intel.com (HELO d6e6b7c4e5a2) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 14 Sep 2022 17:31:01 -0700
+Received: from kbuild by d6e6b7c4e5a2 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oYcmS-0000il-2p;
+        Thu, 15 Sep 2022 00:31:00 +0000
+Date:   Thu, 15 Sep 2022 08:30:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ 09eed5a1ed3c752892663976837eb4244c2f1984
+Message-ID: <63227213.zlC1t2y9G9IwX+1s%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ACPI spec defines the SharedAndWake and ExclusiveAndWake share type
-keywords. This is an indication that the GPIO IRQ can also be used as a
-wake source. This change exposes the wake_capable bit so drivers can
-correctly enable wake functionality instead of making an assumption.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: 09eed5a1ed3c752892663976837eb4244c2f1984  gpio: mt7621: Make the irqchip immutable
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+elapsed time: 726m
 
-Changes in v3:
-- Kept `acpi_dev_gpio_irq_get_by` unchanged to avoid having to touch
-  unrelated drivers.
-- Converted wake_capable parameter to bool.
+configs tested: 58
+configs skipped: 2
 
-Changes in v2:
-- Fixed call site in mlxbf_gige_probe
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
- drivers/gpio/gpiolib-acpi.c | 17 ++++++++++++++---
- drivers/gpio/gpiolib-acpi.h |  2 ++
- include/linux/acpi.h        | 22 ++++++++++++++++++----
- 3 files changed, 34 insertions(+), 7 deletions(-)
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+i386                          randconfig-a001
+i386                          randconfig-a003
+x86_64                           rhel-8.3-kvm
+x86_64                        randconfig-a004
+x86_64                    rhel-8.3-kselftests
+x86_64                           allyesconfig
+x86_64                           rhel-8.3-syz
+i386                                defconfig
+x86_64                          rhel-8.3-func
+arc                                 defconfig
+i386                          randconfig-a005
+x86_64                        randconfig-a002
+i386                          randconfig-a014
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a006
+i386                          randconfig-a012
+sh                               allmodconfig
+arm                                 defconfig
+s390                             allmodconfig
+arc                  randconfig-r043-20220914
+i386                          randconfig-a016
+mips                             allyesconfig
+alpha                               defconfig
+powerpc                          allmodconfig
+m68k                             allmodconfig
+s390                             allyesconfig
+alpha                            allyesconfig
+x86_64                        randconfig-a013
+s390                                defconfig
+arc                              allyesconfig
+i386                             allyesconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+arm64                            allyesconfig
+arm                              allyesconfig
+m68k                             allyesconfig
+ia64                             allmodconfig
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 9be1376f9a627f..c703f095993a2c 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -741,6 +741,8 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 		lookup->info.pin_config = agpio->pin_config;
- 		lookup->info.debounce = agpio->debounce_timeout;
- 		lookup->info.gpioint = gpioint;
-+		lookup->info.wake_capable = agpio->wake_capable ==
-+					    ACPI_WAKE_CAPABLE;
- 
- 		/*
- 		 * Polarity and triggering are only specified for GpioInt
-@@ -987,10 +989,12 @@ struct gpio_desc *acpi_node_get_gpiod(struct fwnode_handle *fwnode,
- }
- 
- /**
-- * acpi_dev_gpio_irq_get_by() - Find GpioInt and translate it to Linux IRQ number
-+ * acpi_dev_gpio_irq_wake_get_by() - Find GpioInt and translate it to Linux IRQ
-+ *                                   number
-  * @adev: pointer to a ACPI device to get IRQ from
-  * @name: optional name of GpioInt resource
-  * @index: index of GpioInt resource (starting from %0)
-+ * @wake_capable: Set to true if the IRQ is wake capable
-  *
-  * If the device has one or more GpioInt resources, this function can be
-  * used to translate from the GPIO offset in the resource to the Linux IRQ
-@@ -1002,9 +1006,13 @@ struct gpio_desc *acpi_node_get_gpiod(struct fwnode_handle *fwnode,
-  * The function takes optional @name parameter. If the resource has a property
-  * name, then only those will be taken into account.
-  *
-+ * The GPIO is considered wake capable if the GpioInt resource specifies
-+ * SharedAndWake or ExclusiveAndWake.
-+ *
-  * Return: Linux IRQ number (> %0) on success, negative errno on failure.
-  */
--int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index)
-+int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name,
-+				  int index, bool *wake_capable)
- {
- 	int idx, i;
- 	unsigned int irq_flags;
-@@ -1061,13 +1069,16 @@ int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int ind
- 				dev_dbg(&adev->dev, "IRQ %d already in use\n", irq);
- 			}
- 
-+			if (wake_capable)
-+				*wake_capable = info.wake_capable;
-+
- 			return irq;
- 		}
- 
- 	}
- 	return -ENOENT;
- }
--EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_get_by);
-+EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_wake_get_by);
- 
- static acpi_status
- acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index e476558d947136..1ac6816839dbce 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -18,6 +18,7 @@ struct acpi_device;
-  * @pin_config: pin bias as provided by ACPI
-  * @polarity: interrupt polarity as provided by ACPI
-  * @triggering: triggering type as provided by ACPI
-+ * @wake_capable: wake capability as provided by ACPI
-  * @debounce: debounce timeout as provided by ACPI
-  * @quirks: Linux specific quirks as provided by struct acpi_gpio_mapping
-  */
-@@ -28,6 +29,7 @@ struct acpi_gpio_info {
- 	int pin_config;
- 	int polarity;
- 	int triggering;
-+	bool wake_capable;
- 	unsigned int debounce;
- 	unsigned int quirks;
- };
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 6f64b2f3dc5479..d3121cef6cc3bc 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1202,7 +1202,8 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 				struct acpi_resource_gpio **agpio);
- bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
- 			       struct acpi_resource_gpio **agpio);
--int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index);
-+int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name,
-+				  int index, bool *wake_capable);
- #else
- static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 					      struct acpi_resource_gpio **agpio)
-@@ -1214,16 +1215,29 @@ static inline bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
- {
- 	return false;
- }
--static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
--					   const char *name, int index)
-+static inline int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev,
-+						const char *name, int index,
-+						bool *wake_capable)
- {
- 	return -ENXIO;
- }
- #endif
- 
-+static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
-+					   const char *name, int index)
-+{
-+	return acpi_dev_gpio_irq_wake_get_by(adev, name, index, NULL);
-+}
-+
- static inline int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
- {
--	return acpi_dev_gpio_irq_get_by(adev, NULL, index);
-+	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, NULL);
-+}
-+
-+static inline int acpi_dev_gpio_irq_wake_get(struct acpi_device *adev,
-+					     int index, bool *wake_capable)
-+{
-+	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, wake_capable);
- }
- 
- /* Device properties */
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a013
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+i386                          randconfig-a006
+hexagon              randconfig-r041-20220914
+i386                          randconfig-a004
+x86_64                        randconfig-a001
+i386                          randconfig-a011
+x86_64                        randconfig-a003
+riscv                randconfig-r042-20220914
+s390                 randconfig-r044-20220914
+x86_64                        randconfig-a014
+hexagon              randconfig-r045-20220914
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+
 -- 
-2.37.3.968.ga6b4b080e4-goog
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
