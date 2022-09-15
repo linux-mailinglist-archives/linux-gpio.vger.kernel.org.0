@@ -2,118 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9E1D5B9AFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 14:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D3945B9E7F
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Sep 2022 17:14:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230061AbiIOMjL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Sep 2022 08:39:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56592 "EHLO
+        id S230203AbiIOPOU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Sep 2022 11:14:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229986AbiIOMjH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 08:39:07 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67049844CB;
-        Thu, 15 Sep 2022 05:39:02 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id e18so7626791wmq.3;
-        Thu, 15 Sep 2022 05:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=JowbcqaoSeHYfBdTSmK7yPgn5pXXbUiwgqBzQ++Q3hY=;
-        b=Zds6NGqWZZ8qjwOAkmr3ltzpBLskhG8fdSr3MDcQ2Y9bwqVzgQcnifi7N3M1lTlk5V
-         PxmB/A8BKT3rs4TZogzc8BG8tw76D3WstQAobiHRlCJ5HhxKRnJxaemiTP6jT8+Zxcfs
-         BtTsNSKXvFryyTsvhw8Q7uBJLlsXZPRF5A4Bc/cCR/xcQtny7OqCcgPfzPFZihXLi73F
-         SCKiP1FiM0dpH4LH2yyWNrxZNkI9D0M5tJrFx7sEmDLWUHWy6ul6cO3y7ys24eGdPU0F
-         2XWgSxU57fF7M/eZBmj3dYfKXIaB+rPXIwof6BTYBm/D+wEWRb52UqAAkqSRL4vSV3NS
-         wHCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=JowbcqaoSeHYfBdTSmK7yPgn5pXXbUiwgqBzQ++Q3hY=;
-        b=ldB3dYE9AbgLbF8Wet9EtYjPl7ZWaC8L9ahav+SBgipvI3c9TrBs3ioQKacIm+Xgy0
-         /NqbkhW+I1+PcnGvw2UBziBhb/euUWJGXcvSMPZzBkKEs4WoaLa/1/3YN3nvOyOFM/A8
-         MvPIR4W4bWY309VIxh0/1CwxJR0e9ORSrsCyuLhzFxRY/WASn9eyqtnH83WlRPMN4Cit
-         HFeZwjxJ9KRe2ylxJFBj/RuX/HdnmK1cB69dzhXoDX6kjMRU+UjsMjFz7mWVwnabsROD
-         Lcu8CHnRUhoUpZj6jE20zRr0r1rO8+QrspJttkkZ9z+AVB77A3+ea0qUX5Rn9gcb52E8
-         wNAw==
-X-Gm-Message-State: ACgBeo3f/ljQwvrrs6WFRy6mF7lANmHn6GsadWNWphsSiiDxjPfE0yXJ
-        SbzG6dtYeslvWsGK4NGkeBg=
-X-Google-Smtp-Source: AA6agR6p+cQR2KXMA9mKPBtsRgWmraQ/EvHReKZd5/k0gahtz19cEOPpIXYgYOGYaCCdfCyrrcA5ag==
-X-Received: by 2002:a1c:7315:0:b0:3a5:ff61:4080 with SMTP id d21-20020a1c7315000000b003a5ff614080mr6482824wmb.196.1663245541937;
-        Thu, 15 Sep 2022 05:39:01 -0700 (PDT)
-Received: from orome (p200300e41f12c800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f12:c800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id fc8-20020a05600c524800b003b48dac344esm3199521wmb.43.2022.09.15.05.38.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Sep 2022 05:38:57 -0700 (PDT)
-Date:   Thu, 15 Sep 2022 14:38:56 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
-        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
-Subject: Re: [PATCH v2] gpio: tegra186: add Tegra234 PMC compatible in GPIO
- driver
-Message-ID: <YyMc4OkYLLXjiHmL@orome>
-References: <Yhe0pCpfeCpyfPWg@orome>
- <20220816102725.14708-1-pshete@nvidia.com>
+        with ESMTP id S231396AbiIOPN5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Sep 2022 11:13:57 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C770D9F8CF;
+        Thu, 15 Sep 2022 08:07:49 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4MT0p93hDpz14QVt;
+        Thu, 15 Sep 2022 23:03:45 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 15 Sep 2022 23:07:34 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Thu, 15 Sep
+ 2022 23:07:34 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <linus.walleij@linaro.org>, <p.zabel@pengutronix.de>,
+        <horatiu.vultur@microchip.com>
+Subject: [PATCH -next 1/2] pinctrl: ocelot: add missing destroy_workqueue() in error path in ocelot_pinctrl_probe()
+Date:   Thu, 15 Sep 2022 23:14:37 +0800
+Message-ID: <20220915151438.699763-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ObJgmcXHiByHBDO8"
-Content-Disposition: inline
-In-Reply-To: <20220816102725.14708-1-pshete@nvidia.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Add the missing destroy_workqueue() before return from ocelot_pinctrl_probe()
+in error path.
 
---ObJgmcXHiByHBDO8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/pinctrl/pinctrl-ocelot.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-On Tue, Aug 16, 2022 at 03:57:25PM +0530, Prathamesh Shete wrote:
-> Using this patch we are adding PMC compatible string for
-> Tegra234 in GPIO driver so the IRQ hierarchy can be set.
->=20
-> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> ---
->  drivers/gpio/gpio-tegra186.c | 1 +
->  1 file changed, 1 insertion(+)
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index d9c0184c077f..83703a3d291c 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -2072,15 +2072,19 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
+ 	info->pincfg_data = &data->pincfg_data;
+ 
+ 	reset = devm_reset_control_get_optional_shared(dev, "switch");
+-	if (IS_ERR(reset))
+-		return dev_err_probe(dev, PTR_ERR(reset),
+-				     "Failed to get reset\n");
++	if (IS_ERR(reset)) {
++		ret = dev_err_probe(dev, PTR_ERR(reset),
++				    "Failed to get reset\n");
++		goto err_out;
++	}
+ 	reset_control_reset(reset);
+ 
+ 	base = devm_ioremap_resource(dev,
+ 			platform_get_resource(pdev, IORESOURCE_MEM, 0));
+-	if (IS_ERR(base))
+-		return PTR_ERR(base);
++	if (IS_ERR(base)) {
++		ret = PTR_ERR(base);
++		goto err_out;
++	}
+ 
+ 	info->stride = 1 + (info->desc->npins - 1) / 32;
+ 
+@@ -2089,7 +2093,8 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
+ 	info->map = devm_regmap_init_mmio(dev, base, &regmap_config);
+ 	if (IS_ERR(info->map)) {
+ 		dev_err(dev, "Failed to create regmap\n");
+-		return PTR_ERR(info->map);
++		ret = PTR_ERR(info->map);
++		goto err_out;
+ 	}
+ 	dev_set_drvdata(dev, info);
+ 	info->dev = dev;
+@@ -2105,15 +2110,19 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	ret = ocelot_pinctrl_register(pdev, info);
+ 	if (ret)
+-		return ret;
++		goto err_out;
+ 
+ 	ret = ocelot_gpiochip_register(pdev, info);
+ 	if (ret)
+-		return ret;
++		goto err_out;
+ 
+ 	dev_info(dev, "driver registered\n");
+ 
+ 	return 0;
++
++err_out:
++	destroy_workqueue(info->wq);
++	return ret;
+ }
+ 
+ static int ocelot_pinctrl_remove(struct platform_device *pdev)
+-- 
+2.25.1
 
-I already acked this on v1, but here goes again, for patchwork:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---ObJgmcXHiByHBDO8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmMjHOAACgkQ3SOs138+
-s6Hy/Q//dhxKqkvTQwx5kDgrAsB3vWecsum9vMvaN3wqNcheDRlhaNuVY2Q+j2nF
-qNZGvIDjJofnu7TNuCgZE/Kzmtla36JZxLwP1z8u4a5S8F7urkb4jHIJSIwROKfi
-mFFx0Dhf0h1/48xmI1S0M3gf/cX78gLMoMRsZ2tRb8oaMxIrvrBI8Q/6kcQXHi5s
-Ru3U918eU4sVeM3s6WhQHd14ynzkDTuALOOGWP0n1ouSnU0yClSxv8oxfnhdBqDr
-FtNh1DaKDRGVRp0w/jbNFUJaPKBOuEHw2f8wRYAo4TqSFHqVfSfMlHwcbRyNR3JC
-WjBo4ieXw6TPLHVHmeV0ol9+1oPUxevafOpxQk1IlZKXfzah2twdeR+HVhsV+3+B
-0o6v6O43SomBnz1pzRTmBy73p4LdWGLd/Vx+42+1Bipl53vriWmjaAiapScJt+fK
-wvGfeerLeZoUiEicL3y7PYQrhRF5ExAtvgICo2ndGhjDl0enPWUl+kYRchv4yDXE
-oCJTONfKvoJDn7ttMGcM1Ar15p8E32GRhrHxIrYfkYGE6oklZFzQDWeTxvms+8YJ
-bGZsj3kNSC7x1E2PxoRR+6ckGSB+fm5fuJiWl9mTfU/zocWYsINM3kGl1SzCV+ZZ
-S+IbJWLrBm2blnEZhXAVCL0DOzUkl7hwqF8yc3+BKTxvKM9026M=
-=wZRJ
------END PGP SIGNATURE-----
-
---ObJgmcXHiByHBDO8--
