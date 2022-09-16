@@ -2,56 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CD605BA79B
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 09:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E2BE5BA79E
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 09:56:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbiIPHyF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Sep 2022 03:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+        id S230144AbiIPH43 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Sep 2022 03:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbiIPHyD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 03:54:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2D442CDD0
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 00:54:02 -0700 (PDT)
+        with ESMTP id S229515AbiIPH42 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 03:56:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5581859243;
+        Fri, 16 Sep 2022 00:56:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 94267628AF
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:54:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01C01C433D6;
-        Fri, 16 Sep 2022 07:54:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0BCD8B823AF;
+        Fri, 16 Sep 2022 07:56:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FCB0C433C1;
+        Fri, 16 Sep 2022 07:56:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663314842;
-        bh=gfEcWpN+IxNRyFGyR++eCxMgaXtSjjGKTefimFORjI4=;
+        s=k20201202; t=1663314984;
+        bh=RkqjwUllj/uKCHdnKmJ3hDp9wmgNv0b2mFbpTLxvWJ4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eHx7GQQCazUEMUvCXiVzyYKIbAAPir5k4+omPrhgGUgN5ME1C5rxPFz1aW98absmu
-         1ewRtc3aFLylGBoFwfpk4c2H7Ymnpn4pyla+Nk4pRnFwpTIiqaJiQdinXqtfgixLpA
-         nXHYrwSBW4xJ6fBLgm83Ll8AiK2aR8YyMzmPtD+T6Badk4uS8YHiQ/o9w1zm+9lySr
-         eF5i5B5+qEOLoQxL93O414D6q6sdwKPbnW7yI2soDEBbHoDmKmsideU7Lsa+p05wyt
-         4LH0lb1Yznqm6ejpbR664hyMduSu6rmy+Qa8kTeJlB9MdTelCsauk+AYhEqkoYzhVs
-         8PSKsfJbSFeUA==
+        b=sUmh9GfXrImdVQ2LpxQgJPxB99BLoQtQvbcUAEgFG2aMpJ8ccs3WZTSlb0tZtZ5wJ
+         S8CMzs1Ymho7n2nzs/RDNXmWFzqAwAaV303pcZTXVo/r+ahvFSyO/Udx/v2E3h3cTO
+         volmpaj8Dd2J1I72nSTWwIXctgRXW/NqbfKLqCst1ge4lj9mvpEHdGKYWeqwajcXQA
+         34x2JnFgztepu1Jyj7jDFgUEsLCjiEW/+Irdc8xzPFZ1Zvy/2PpWV0OsVvx0ElXQSu
+         XtHqc5V+kl8ahz9gfaZgnr8KYKdyDhQFizOSl9mbfxyMlIpIFoaD+Z7pPy4Ljfo0J7
+         QsTnnv0yMf4Yg==
 Received: from [79.140.208.123] (helo=wait-a-minute.misterjones.org)
         by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.95)
         (envelope-from <maz@kernel.org>)
-        id 1oZ6Ah-00AZ5p-MT;
-        Fri, 16 Sep 2022 08:53:59 +0100
-Date:   Fri, 16 Sep 2022 08:54:00 +0100
-Message-ID: <87tu57lppj.wl-maz@kernel.org>
+        id 1oZ6D0-00AZ6X-Dy;
+        Fri, 16 Sep 2022 08:56:22 +0100
+Date:   Fri, 16 Sep 2022 08:56:23 +0100
+Message-ID: <87sfkrlplk.wl-maz@kernel.org>
 From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH] gpio: ftgpio010: Make irqchip immutable
-In-Reply-To: <20220915203254.48357-1-linus.walleij@linaro.org>
-References: <20220915203254.48357-1-linus.walleij@linaro.org>
+To:     Dongliang Mu <mudongliangabcd@gmail.com>
+Cc:     Dongliang Mu <dzm91@hust.edu.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpio: tpmx86: fix uninitialized variable girq
+In-Reply-To: <CAD-N9QUjonxCM44Y=9cvcYsyAWOTL7pKEE=c4==zh-pSYboooQ@mail.gmail.com>
+References: <20220914051842.69776-1-dzm91@hust.edu.cn>
+        <87zgf2l879.wl-maz@kernel.org>
+        <CAD-N9QUjonxCM44Y=9cvcYsyAWOTL7pKEE=c4==zh-pSYboooQ@mail.gmail.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
  FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
  (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
 Content-Type: text/plain; charset=US-ASCII
 X-SA-Exim-Connect-IP: 79.140.208.123
-X-SA-Exim-Rcpt-To: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl
+X-SA-Exim-Rcpt-To: mudongliangabcd@gmail.com, dzm91@hust.edu.cn, linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -63,20 +68,62 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 15 Sep 2022 21:32:54 +0100,
-Linus Walleij <linus.walleij@linaro.org> wrote:
+On Thu, 15 Sep 2022 07:08:10 +0100,
+Dongliang Mu <mudongliangabcd@gmail.com> wrote:
 > 
-> This turns the FTGPIO010 irqchip immutable.
+> On Wed, Sep 14, 2022 at 3:36 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Wed, 14 Sep 2022 06:18:42 +0100,
+> > Dongliang Mu <dzm91@hust.edu.cn> wrote:
+> > >
+> > > From: Dongliang Mu <mudongliangabcd@gmail.com>
+> > >
+> > > The commit 924610607f19 ("gpio: tpmx86: Move PM device over to
+> > > irq domain") adds a dereference of girq that may be uninitialized.
+> > >
+> > > Fix this by initializing girq and checking irq before invoking
+> > > irq_domain_set_pm_device.
+> > >
+> > > Fixes: 924610607f19 ("gpio: tpmx86: Move PM device over to irq domain")
+> > > Signed-off-by: Dongliang Mu <mudongliangabcd@gmail.com>
+> > > ---
+> > >  drivers/gpio/gpio-tqmx86.c | 6 ++++--
+> > >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-tqmx86.c b/drivers/gpio/gpio-tqmx86.c
+> > > index fa4bc7481f9a..bdef182c11c2 100644
+> > > --- a/drivers/gpio/gpio-tqmx86.c
+> > > +++ b/drivers/gpio/gpio-tqmx86.c
+> > > @@ -231,7 +231,7 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
+> > >       struct device *dev = &pdev->dev;
+> > >       struct tqmx86_gpio_data *gpio;
+> > >       struct gpio_chip *chip;
+> > > -     struct gpio_irq_chip *girq;
+> > > +     struct gpio_irq_chip *girq = NULL;
+> > >       void __iomem *io_base;
+> > >       struct resource *res;
+> > >       int ret, irq;
+> > > @@ -315,7 +315,9 @@ static int tqmx86_gpio_probe(struct platform_device *pdev)
+> > >               goto out_pm_dis;
+> > >       }
+> > >
+> > > -     irq_domain_set_pm_device(girq->domain, dev);
+> > > +     if (girq) {
+> > > +             irq_domain_set_pm_device(girq->domain, dev);
+> > > +     }
+> > >
+> > >       dev_info(dev, "GPIO functionality initialized with %d pins\n",
+> > >                chip->ngpio);
+> >
+> > I wonder if a better fix wouldn't be to directly hoist the
+> > irq_domain_set_pm_device() call into the 'if (irq > 0)' block.
 > 
-> Tested on the D-Link DIR-685.
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/gpio/gpio-ftgpio010.c | 22 +++++++++++++---------
->  1 file changed, 13 insertions(+), 9 deletions(-)
+> If irq_domain_set_pm_device has no dependency on
+> devm_gpiochip_add_data, we can directly move irq_domain_set_pm_device
+> to the if block.
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+There is no dependency there, and you can convince yourself by looking
+at the (trivial) code.
 
 	M.
 
