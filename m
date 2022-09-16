@@ -2,102 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D94C05BA73F
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 09:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0BC85BA740
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 09:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiIPHK6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Sep 2022 03:10:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56862 "EHLO
+        id S229557AbiIPHL2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Sep 2022 03:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbiIPHKe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 03:10:34 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A70F13F8B
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 00:10:22 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id l14so47374107eja.7
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 00:10:22 -0700 (PDT)
+        with ESMTP id S229625AbiIPHL0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 03:11:26 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8F2C4F6A8
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 00:11:25 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id f20so25698427edf.6
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 00:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=w2QwWheEPLVSpXkVNNHXhfxQsdG/BXCUtq+zf7tr0nA=;
-        b=DFnnCaOStqk/p+LnFQwBUjIj7b+VTImIJB6Bfgk8mAEzzdQb7T2RHOIv8ed4332svT
-         v/SGiMaEocsBtVq1HSSeugiCLqvUn0+UpgMqvKzvG9thLPEYIpHk6iOGqflCT8ttbX3R
-         qS4KaS33FsDSc3OS9tnl4ks4nsYQO54Q39zsKiEsAV53KBwGp3/FigIsJ9wpaeIYDfrv
-         a+t9U4jajOec7d+vhpIp5wWGp7Q0OFeaez83NmR3k1GNK3L2R6TTozarlL5kWabAwr9w
-         2m3QsQm7wiKcQm8tXwQ3WuCBYDq8E+/7Up0BI+qShXdiG4gOA/6kKAs+xBKsidoGTj/d
-         kVNw==
+        bh=Il+J/IwMFN/OCdB5DdRAkgc0HSi0POdp4fgf6XHbeZQ=;
+        b=uafbJYHO0nXthCNVl/f1A12HqDv77g5b0PVj/pevJ86KWX1CykSglGrG9jy7kLPBg3
+         RBfmEact4LzUiJPyvix5RuCB/7cx0lSdQaeE8UIFm3NFYdFJendNdRrr0288sEGHeYfj
+         jhPxd7W5Hxh9TSxV6o7K62mJ0r2NEkcghKBAUrU4UzhIbpslURCSu/mqtpZL9N7O1UMq
+         LONXMpb0dd71vq2LvTJdBAtICVVFrGLl869ysi9QoCOiWTSf320QEx39lCQfEAkwiebP
+         bUTv5sMRK8HhVo43GCkhz0Ev5sX8J7qO+01odWoQ5lTDxVY30EiZ4w0Y7wVlDIlgHmNL
+         zJgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=w2QwWheEPLVSpXkVNNHXhfxQsdG/BXCUtq+zf7tr0nA=;
-        b=5vBb7RrBMq2lNPU5UrAZb3YTwlY92sivte5yvRRm3rhwL8VDGRZttIhqVDuw+OeHXO
-         9Q4LVlEIvESgKv5prPrlMmEHPMCILF1G2yTjYdV4eMElXMRMRyjklLpgefEyyx+1Gn60
-         eNwJtisltca3Z+6q5N1RnQEG7BpeNKcJeINIkyE5ZSdrQAqyOLkwzgkeNTNkUGrKzWVE
-         /oLqOxSCgASihtBGxS6OTyThL48meeRgrF+3b+4JaaxrtxuanBAQrbh02mE5eYtmNkfv
-         xv2hok/bU/UV2LFLQatLhOY4/N7lGAthPeUd+1Rhw86NNo+Tp7mE9A8UgJYv2DDWbt0E
-         or+Q==
-X-Gm-Message-State: ACrzQf2yuItXF98FLHlhrZq9SrvBs631dwKQNEZ1GNIE9MzCUxv6q85U
-        PDBwEZUFcolV6DjGuUs9nttz85LSPlAXgICbBUHQoCb8uJ4=
-X-Google-Smtp-Source: AMsMyM44kcL/LhUw3xWduVNk4owqHrBGPzw42yyk9fOGRItmQhfnrTiIajzhDB5wunXxPsXu2rDe8oOLKhrSiJIa5M8=
-X-Received: by 2002:a17:907:a0c6:b0:77d:7ad3:d05f with SMTP id
- hw6-20020a170907a0c600b0077d7ad3d05fmr2578605ejc.734.1663312221345; Fri, 16
- Sep 2022 00:10:21 -0700 (PDT)
+        bh=Il+J/IwMFN/OCdB5DdRAkgc0HSi0POdp4fgf6XHbeZQ=;
+        b=Rpq3SCZKQoORzGdfZ92i51zsf9ATc41Ba3VqV9Fm8fOWhYnD/Kk+UlaHr2/CBPvWRM
+         96k1ELCIOn2Rld4CsoWIl8wv6O/dQBxCU2t0tK4H45QaoiLZN1HcWdz7K9tOvc03zDvP
+         oPWHjaNc+HVLdqRatJBBSjCmzqEvleM6c/YmvMX51FGjKLLrvVR7sYeAsO3jjs71BTlG
+         DzGHkXlU3LwNaa9Ij/2/RWoBivJclu4woNwPoCTfgSeKzjwXT4MhGOOVAnOh5PSWPT/D
+         WgHjSaWMKMSafxlgfMuy7I/cBGPsxQsc7eGnqM4Yv6AlL+aZmyFaYRJWDt6N3zY5WDvr
+         Bm/A==
+X-Gm-Message-State: ACrzQf0cKbAAV4kUhM/zawMIu/bopHIBUIj4AByaIhNAqsArXgyCMWKO
+        /nUU69EixLgUZYxGTT3i8VtdGUToiPqCVuoPA5X1cg==
+X-Google-Smtp-Source: AMsMyM76+YUwjkcs2v3ngXlJLdIIFa9mphvYhzVOIKV4xRlWLAO2vtwJhbKU3gbBabMd24APLXhPaU2MbBHdQEIhKN8=
+X-Received: by 2002:a05:6402:34cc:b0:451:62bf:c816 with SMTP id
+ w12-20020a05640234cc00b0045162bfc816mr2822485edc.213.1663312283959; Fri, 16
+ Sep 2022 00:11:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220915084723.19910-1-brgl@bgdev.pl> <YyL4AwaJIO9kim9s@sol> <YyMGHEbFTs02HguJ@sol>
-In-Reply-To: <YyMGHEbFTs02HguJ@sol>
+References: <20220914151145.73253-1-brgl@bgdev.pl> <CACRpkdZaSL_pkmrVGOT-y7+3i4y6f6Cjgehycq2FKLwPxrbFvw@mail.gmail.com>
+In-Reply-To: <CACRpkdZaSL_pkmrVGOT-y7+3i4y6f6Cjgehycq2FKLwPxrbFvw@mail.gmail.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 16 Sep 2022 09:10:10 +0200
-Message-ID: <CAMRc=Mf1EMeeN5G8Ud-5N63Yf7=4TFN8NbEO6biiubr79712TA@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v2] bindings: cxx: tests: use the builder
- pattern for the GPIO simulator
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 16 Sep 2022 09:11:13 +0200
+Message-ID: <CAMRc=Me+srb_rwwaUxx1a=8+Wqm5sc2APzfCoFG3+QxRK5kEKA@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org
+        Drew Fustini <dfustini@baylibre.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 1:01 PM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu, Sep 15, 2022 at 10:59 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Thu, Sep 15, 2022 at 06:01:39PM +0800, Kent Gibson wrote:
-> > On Thu, Sep 15, 2022 at 10:47:23AM +0200, Bartosz Golaszewski wrote:
-> > > In order to make the interface more elegant use the Rust-like builder
-> > > pattern for the GPIO simulator class.
-> > >
-> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > > ---
-> >
-> > > -   ::gpiosim::chip sim({{ property::NUM_LINES, 8 }, { property::LABEL, "foobar" }});
-> > > +   auto sim = make_sim()
-> > > +           .set_num_lines(8)
-> > > +           .set_label("foobar")
-> > > +           .build();
-> > > +
-> >
-> > You do this a few times, so perhaps add a helper to create a simple
-> > simulator with a given a number of lines?
-> >
-> > (I called the equivalent in my tests a Simpleton, borrowing LinusW's
-> > practice of naming things after yourself.
-> > Not that I'm suggesting you use that name.)
+> On Wed, Sep 14, 2022 at 5:11 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Good grief - I meant LinusT.  See what I mean?
+> > This adds a new TODO item for gpiolib and can also be used to start
+> > a discussion about the need for it and implementation details.
+> >
+> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+>
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Several approaches have been tried in the past. Consider adding
+> these lore links:
+>
+> "[PATCH 3/4] gpio: dt-bindings: Declare gpio-hog optional for GPIO
+> subnodes" (2016)
+> https://lore.kernel.org/linux-devicetree/1456214089-13954-3-git-send-email-mpa@pengutronix.de/
+> "[PATCH] gpio: 74x164: add lines-initial-states property" (2018)
+> https://lore.kernel.org/lkml/20180815201855.29738-1-mail@david-bauer.net/"
+> "[RFC] Initial state for GPIOs" (2019)
+> https://lore.kernel.org/linux-gpio/bee53b48c96603ae8970d42bc4bff386b876bc51.camel@collabora.com/
+>
+> Just so we don't have to constantly look them up for referral.
 >
 
-Yeah, I was going to say that Linus W - being the nicest person ever -
-would have never called anyone a Simpleton. :)
+Of course we were not the first ones to think about it...
 
-And as for the Simpleton itself - I may add it in the future but for
-now I think I'll just keep this version - it's brief and clear.
+I'll read through it later. Was there any particular reason why this
+never made its way into the kernel?
 
 Bart
