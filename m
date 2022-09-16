@@ -2,478 +2,993 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0858A5BAF90
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 16:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 486115BB009
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 17:15:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231341AbiIPOoF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Sep 2022 10:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        id S229531AbiIPPPp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Sep 2022 11:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231372AbiIPOoE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 10:44:04 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1829E5F221
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:44:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663339442; x=1694875442;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gLSznxd8T+69M1DaDETXKkyW81PVE30+Xx00nDgb6Sc=;
-  b=CUTA4AF9Ujbua5iik86WJ1+FURWk3/zphhMmeNHDADQGenDiZfjyQ2lu
-   x9/72nw3RX6O3v7StDRLDI+NMhneBCtUIRErefd30ioq33szo1rk2Ll/F
-   pf2Su67rrv1bZEhggbE83IwyNLpQVLAUcbC1qVMaBzrYXBmAfN69KrRFA
-   JuBZaH0VOx6sbg3kQEsz3bwCVhaLX+dKdALewaKb0dKrTYT9cGjs1YL6G
-   et2ilRdtiykV8LGhcONWEJKp8+dfl5beuYP9Te8xDSIsubugFSjGSgS2n
-   yB+fANWd9pOmKh6CN2XMVxZ++aTCWwwZpQX0E4cUhmD5YDYzZHlqBN3w4
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="360744927"
-X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
-   d="scan'208";a="360744927"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 07:44:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,320,1654585200"; 
-   d="scan'208";a="686158540"
-Received: from lkp-server02.sh.intel.com (HELO 41300c7200ea) ([10.239.97.151])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Sep 2022 07:43:58 -0700
-Received: from kbuild by 41300c7200ea with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1oZCZS-0001qk-0U;
-        Fri, 16 Sep 2022 14:43:58 +0000
-Date:   Fri, 16 Sep 2022 22:43:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jianqun Xu <jay.xu@rock-chips.com>, jbx6244@gmail.com,
-        heiko@sntech.de, linus.walleij@linaro.org,
-        andriy.shevchenko@linux.intel.com
-Cc:     kbuild-all@lists.01.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: Re: [PATCH] pinctrl: rockchip: find gpiochip by name from gpio module
-Message-ID: <202209162216.ywZfA4Za-lkp@intel.com>
-References: <20220916084343.458566-1-jay.xu@rock-chips.com>
+        with ESMTP id S230288AbiIPPPo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 11:15:44 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B454B4AA
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 08:15:41 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oZD3p-0003yR-JS; Fri, 16 Sep 2022 17:15:21 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oZD3l-0016t5-E9; Fri, 16 Sep 2022 17:15:15 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oZD3i-001KHi-Gs; Fri, 16 Sep 2022 17:15:14 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-pwm@vger.kernel.org, kernel@pengutronix.de,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Douglas Anderson <dianders@chromium.org>,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Robert Foss <robert.foss@linaro.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-leds@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 1/3] pwm: Change prototype of .get_state() callback to return an error
+Date:   Fri, 16 Sep 2022 17:15:04 +0200
+Message-Id: <20220916151506.298488-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220916084343.458566-1-jay.xu@rock-chips.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=32995; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=d3eHmQEzWt6c1ZfZ0dQ5fQlH+rM8VvM43WB01eW2ey0=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjJJLwkzsddquMNJkk0Gh2VUGARhJ5v9Q9TrgPyFz8 swBmGQ2JATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCYySS8AAKCRDB/BR4rcrsCRcYCA Cf3seCkGuvOZ6DKQXyGRlZh4Urfn7u5iCNGEb08YEyzXAlfHKdY1MdabzvXKbHGKgy8rBZ7Wm6kkpv rr4mxydm8ZCC8RlmCdMUQTX8WrlSmBX4mNqD49XjNoUNlApg6fi/cmCftsEF9JFMuJtmI6EofWw1d/ qspwxBAV0TnxSa4M9wRs3DK7+jyhTlQvrGthf6uPaV0WrqnQmmt9HRYvRHfJG6t+tCa4jQxq/IOrq3 FqbLxE9H6j8eZ2fquN4qyZbCbkojT8ycOuIbTxRku2xK23cUF/eCwaR9esVR6B1cslrIvNUlFIoV/E JtgFeyBonwzzZU+jutkD4lj1ZKgfDy
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jianqun,
+Most drivers succeed to read out the programmed state unconditionally.
+But some don't, allow them to signal a failure to the pwm core.
 
-Thank you for the patch! Yet something to improve:
+All drivers are adapted to return 0 on success and forward the error
+code otherwise.
 
-[auto build test ERROR on rockchip/for-next]
-[also build test ERROR on linus/master v6.0-rc5 next-20220916]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The core doesn't make use of this yet.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jianqun-Xu/pinctrl-rockchip-find-gpiochip-by-name-from-gpio-module/20220916-164429
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-config: arm-randconfig-r026-20220916 (https://download.01.org/0day-ci/archive/20220916/202209162216.ywZfA4Za-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/3b7aea26a196ae8a452c7283c4a42d98eade1aff
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jianqun-Xu/pinctrl-rockchip-find-gpiochip-by-name-from-gpio-module/20220916-164429
-        git checkout 3b7aea26a196ae8a452c7283c4a42d98eade1aff
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/gpio/
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-mvebu.c             |  9 ++++++---
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
+ drivers/leds/rgb/leds-qcom-lpg.c      | 12 +++++++-----
+ drivers/pwm/pwm-atmel.c               |  6 ++++--
+ drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
+ drivers/pwm/pwm-crc.c                 | 10 ++++++----
+ drivers/pwm/pwm-cros-ec.c             | 12 ++++++------
+ drivers/pwm/pwm-dwc.c                 |  6 ++++--
+ drivers/pwm/pwm-hibvt.c               |  6 ++++--
+ drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
+ drivers/pwm/pwm-imx27.c               |  8 +++++---
+ drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
+ drivers/pwm/pwm-iqs620a.c             |  6 ++++--
+ drivers/pwm/pwm-keembay.c             |  6 ++++--
+ drivers/pwm/pwm-lpss.c                |  4 +++-
+ drivers/pwm/pwm-meson.c               |  9 ++++-----
+ drivers/pwm/pwm-mtk-disp.c            | 17 ++++++++---------
+ drivers/pwm/pwm-pca9685.c             |  8 +++++---
+ drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
+ drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
+ drivers/pwm/pwm-sifive.c              |  4 +++-
+ drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
+ drivers/pwm/pwm-sprd.c                | 13 ++++++-------
+ drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
+ drivers/pwm/pwm-sun4i.c               | 13 ++++++++-----
+ drivers/pwm/pwm-sunplus.c             |  6 ++++--
+ drivers/pwm/pwm-visconti.c            |  4 +++-
+ drivers/pwm/pwm-xilinx.c              |  8 +++++---
+ include/linux/pwm.h                   |  4 ++--
+ 29 files changed, 145 insertions(+), 98 deletions(-)
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_irq_reqres':
->> drivers/gpio/gpio-rockchip.c:477:36: error: passing argument 1 of 'gpiochip_reqres_irq' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     477 |         return gpiochip_reqres_irq(&bank->gpio_chip, d->hwirq);
-         |                                    ^~~~~~~~~~~~~~~~
-         |                                    |
-         |                                    struct gpio_chip **
-   In file included from drivers/gpio/gpio-rockchip.c:13:
-   include/linux/gpio/driver.h:622:43: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     622 | int gpiochip_reqres_irq(struct gpio_chip *gc, unsigned int offset);
-         |                         ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_irq_relres':
->> drivers/gpio/gpio-rockchip.c:485:29: error: passing argument 1 of 'gpiochip_relres_irq' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     485 |         gpiochip_relres_irq(&bank->gpio_chip, d->hwirq);
-         |                             ^~~~~~~~~~~~~~~~
-         |                             |
-         |                             struct gpio_chip **
-   include/linux/gpio/driver.h:623:44: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     623 | void gpiochip_relres_irq(struct gpio_chip *gc, unsigned int offset);
-         |                          ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpiolib_register':
->> drivers/gpio/gpio-rockchip.c:584:27: error: incompatible types when assigning to type 'struct gpio_chip *' from type 'struct gpio_chip'
-     584 |         bank->gpio_chip = rockchip_gpiolib_chip;
-         |                           ^~~~~~~~~~~~~~~~~~~~~
->> drivers/gpio/gpio-rockchip.c:586:12: error: assignment to 'struct gpio_chip *' from incompatible pointer type 'struct gpio_chip **' [-Werror=incompatible-pointer-types]
-     586 |         gc = &bank->gpio_chip;
-         |            ^
->> drivers/gpio/gpio-rockchip.c:637:25: error: passing argument 1 of 'gpiochip_remove' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     637 |         gpiochip_remove(&bank->gpio_chip);
-         |                         ^~~~~~~~~~~~~~~~
-         |                         |
-         |                         struct gpio_chip **
-   include/linux/gpio/driver.h:613:47: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     613 | extern void gpiochip_remove(struct gpio_chip *gc);
-         |                             ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_probe':
->> drivers/gpio/gpio-rockchip.c:759:62: error: passing argument 1 of 'rockchip_gpio_direction_output' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     759 |                         ret = rockchip_gpio_direction_output(&bank->gpio_chip, cfg->pin, cfg->arg);
-         |                                                              ^~~~~~~~~~~~~~~~
-         |                                                              |
-         |                                                              struct gpio_chip **
-   drivers/gpio/gpio-rockchip.c:256:61: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     256 | static int rockchip_gpio_direction_output(struct gpio_chip *gc,
-         |                                           ~~~~~~~~~~~~~~~~~~^~
->> drivers/gpio/gpio-rockchip.c:765:61: error: passing argument 1 of 'rockchip_gpio_direction_input' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     765 |                         ret = rockchip_gpio_direction_input(&bank->gpio_chip, cfg->pin);
-         |                                                             ^~~~~~~~~~~~~~~~
-         |                                                             |
-         |                                                             struct gpio_chip **
-   drivers/gpio/gpio-rockchip.c:250:60: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     250 | static int rockchip_gpio_direction_input(struct gpio_chip *gc,
-         |                                          ~~~~~~~~~~~~~~~~~~^~
-   drivers/gpio/gpio-rockchip.c: In function 'rockchip_gpio_remove':
-   drivers/gpio/gpio-rockchip.c:789:25: error: passing argument 1 of 'gpiochip_remove' from incompatible pointer type [-Werror=incompatible-pointer-types]
-     789 |         gpiochip_remove(&bank->gpio_chip);
-         |                         ^~~~~~~~~~~~~~~~
-         |                         |
-         |                         struct gpio_chip **
-   include/linux/gpio/driver.h:613:47: note: expected 'struct gpio_chip *' but argument is of type 'struct gpio_chip **'
-     613 | extern void gpiochip_remove(struct gpio_chip *gc);
-         |                             ~~~~~~~~~~~~~~~~~~^~
-   cc1: some warnings being treated as errors
-
-
-vim +584 drivers/gpio/gpio-rockchip.c
-
-936ee2675eee1f Jianqun Xu     2021-08-16  471  
-adc8b4bf2a7f6f John Keeping   2021-12-02  472  static int rockchip_irq_reqres(struct irq_data *d)
-adc8b4bf2a7f6f John Keeping   2021-12-02  473  {
-adc8b4bf2a7f6f John Keeping   2021-12-02  474  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-adc8b4bf2a7f6f John Keeping   2021-12-02  475  	struct rockchip_pin_bank *bank = gc->private;
-adc8b4bf2a7f6f John Keeping   2021-12-02  476  
-adc8b4bf2a7f6f John Keeping   2021-12-02 @477  	return gpiochip_reqres_irq(&bank->gpio_chip, d->hwirq);
-adc8b4bf2a7f6f John Keeping   2021-12-02  478  }
-adc8b4bf2a7f6f John Keeping   2021-12-02  479  
-adc8b4bf2a7f6f John Keeping   2021-12-02  480  static void rockchip_irq_relres(struct irq_data *d)
-adc8b4bf2a7f6f John Keeping   2021-12-02  481  {
-adc8b4bf2a7f6f John Keeping   2021-12-02  482  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-adc8b4bf2a7f6f John Keeping   2021-12-02  483  	struct rockchip_pin_bank *bank = gc->private;
-adc8b4bf2a7f6f John Keeping   2021-12-02  484  
-adc8b4bf2a7f6f John Keeping   2021-12-02 @485  	gpiochip_relres_irq(&bank->gpio_chip, d->hwirq);
-adc8b4bf2a7f6f John Keeping   2021-12-02  486  }
-adc8b4bf2a7f6f John Keeping   2021-12-02  487  
-936ee2675eee1f Jianqun Xu     2021-08-16  488  static void rockchip_irq_suspend(struct irq_data *d)
-936ee2675eee1f Jianqun Xu     2021-08-16  489  {
-936ee2675eee1f Jianqun Xu     2021-08-16  490  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-936ee2675eee1f Jianqun Xu     2021-08-16  491  	struct rockchip_pin_bank *bank = gc->private;
-936ee2675eee1f Jianqun Xu     2021-08-16  492  
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  493  	bank->saved_masks = irq_reg_readl(gc, bank->gpio_regs->int_mask);
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  494  	irq_reg_writel(gc, ~gc->wake_active, bank->gpio_regs->int_mask);
-936ee2675eee1f Jianqun Xu     2021-08-16  495  }
-936ee2675eee1f Jianqun Xu     2021-08-16  496  
-936ee2675eee1f Jianqun Xu     2021-08-16  497  static void rockchip_irq_resume(struct irq_data *d)
-936ee2675eee1f Jianqun Xu     2021-08-16  498  {
-936ee2675eee1f Jianqun Xu     2021-08-16  499  	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-936ee2675eee1f Jianqun Xu     2021-08-16  500  	struct rockchip_pin_bank *bank = gc->private;
-936ee2675eee1f Jianqun Xu     2021-08-16  501  
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  502  	irq_reg_writel(gc, bank->saved_masks, bank->gpio_regs->int_mask);
-936ee2675eee1f Jianqun Xu     2021-08-16  503  }
-936ee2675eee1f Jianqun Xu     2021-08-16  504  
-936ee2675eee1f Jianqun Xu     2021-08-16  505  static void rockchip_irq_enable(struct irq_data *d)
-936ee2675eee1f Jianqun Xu     2021-08-16  506  {
-936ee2675eee1f Jianqun Xu     2021-08-16  507  	irq_gc_mask_clr_bit(d);
-936ee2675eee1f Jianqun Xu     2021-08-16  508  }
-936ee2675eee1f Jianqun Xu     2021-08-16  509  
-936ee2675eee1f Jianqun Xu     2021-08-16  510  static void rockchip_irq_disable(struct irq_data *d)
-936ee2675eee1f Jianqun Xu     2021-08-16  511  {
-936ee2675eee1f Jianqun Xu     2021-08-16  512  	irq_gc_mask_set_bit(d);
-936ee2675eee1f Jianqun Xu     2021-08-16  513  }
-936ee2675eee1f Jianqun Xu     2021-08-16  514  
-936ee2675eee1f Jianqun Xu     2021-08-16  515  static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
-936ee2675eee1f Jianqun Xu     2021-08-16  516  {
-936ee2675eee1f Jianqun Xu     2021-08-16  517  	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-936ee2675eee1f Jianqun Xu     2021-08-16  518  	struct irq_chip_generic *gc;
-936ee2675eee1f Jianqun Xu     2021-08-16  519  	int ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  520  
-936ee2675eee1f Jianqun Xu     2021-08-16  521  	bank->domain = irq_domain_add_linear(bank->of_node, 32,
-936ee2675eee1f Jianqun Xu     2021-08-16  522  					&irq_generic_chip_ops, NULL);
-936ee2675eee1f Jianqun Xu     2021-08-16  523  	if (!bank->domain) {
-936ee2675eee1f Jianqun Xu     2021-08-16  524  		dev_warn(bank->dev, "could not init irq domain for bank %s\n",
-936ee2675eee1f Jianqun Xu     2021-08-16  525  			 bank->name);
-936ee2675eee1f Jianqun Xu     2021-08-16  526  		return -EINVAL;
-936ee2675eee1f Jianqun Xu     2021-08-16  527  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  528  
-936ee2675eee1f Jianqun Xu     2021-08-16  529  	ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
-936ee2675eee1f Jianqun Xu     2021-08-16  530  					     "rockchip_gpio_irq",
-936ee2675eee1f Jianqun Xu     2021-08-16  531  					     handle_level_irq,
-936ee2675eee1f Jianqun Xu     2021-08-16  532  					     clr, 0, 0);
-936ee2675eee1f Jianqun Xu     2021-08-16  533  	if (ret) {
-936ee2675eee1f Jianqun Xu     2021-08-16  534  		dev_err(bank->dev, "could not alloc generic chips for bank %s\n",
-936ee2675eee1f Jianqun Xu     2021-08-16  535  			bank->name);
-936ee2675eee1f Jianqun Xu     2021-08-16  536  		irq_domain_remove(bank->domain);
-936ee2675eee1f Jianqun Xu     2021-08-16  537  		return -EINVAL;
-936ee2675eee1f Jianqun Xu     2021-08-16  538  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  539  
-936ee2675eee1f Jianqun Xu     2021-08-16  540  	gc = irq_get_domain_generic_chip(bank->domain, 0);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  541  	if (bank->gpio_type == GPIO_TYPE_V2) {
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  542  		gc->reg_writel = gpio_writel_v2;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  543  		gc->reg_readl = gpio_readl_v2;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  544  	}
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  545  
-936ee2675eee1f Jianqun Xu     2021-08-16  546  	gc->reg_base = bank->reg_base;
-936ee2675eee1f Jianqun Xu     2021-08-16  547  	gc->private = bank;
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  548  	gc->chip_types[0].regs.mask = bank->gpio_regs->int_mask;
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  549  	gc->chip_types[0].regs.ack = bank->gpio_regs->port_eoi;
-936ee2675eee1f Jianqun Xu     2021-08-16  550  	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
-936ee2675eee1f Jianqun Xu     2021-08-16  551  	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-936ee2675eee1f Jianqun Xu     2021-08-16  552  	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-936ee2675eee1f Jianqun Xu     2021-08-16  553  	gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
-936ee2675eee1f Jianqun Xu     2021-08-16  554  	gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
-936ee2675eee1f Jianqun Xu     2021-08-16  555  	gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
-936ee2675eee1f Jianqun Xu     2021-08-16  556  	gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
-936ee2675eee1f Jianqun Xu     2021-08-16  557  	gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
-936ee2675eee1f Jianqun Xu     2021-08-16  558  	gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
-adc8b4bf2a7f6f John Keeping   2021-12-02  559  	gc->chip_types[0].chip.irq_request_resources = rockchip_irq_reqres;
-adc8b4bf2a7f6f John Keeping   2021-12-02  560  	gc->chip_types[0].chip.irq_release_resources = rockchip_irq_relres;
-936ee2675eee1f Jianqun Xu     2021-08-16  561  	gc->wake_enabled = IRQ_MSK(bank->nr_pins);
-936ee2675eee1f Jianqun Xu     2021-08-16  562  
-936ee2675eee1f Jianqun Xu     2021-08-16  563  	/*
-936ee2675eee1f Jianqun Xu     2021-08-16  564  	 * Linux assumes that all interrupts start out disabled/masked.
-936ee2675eee1f Jianqun Xu     2021-08-16  565  	 * Our driver only uses the concept of masked and always keeps
-936ee2675eee1f Jianqun Xu     2021-08-16  566  	 * things enabled, so for us that's all masked and all enabled.
-936ee2675eee1f Jianqun Xu     2021-08-16  567  	 */
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  568  	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->int_mask);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  569  	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->port_eoi);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  570  	rockchip_gpio_writel(bank, 0xffffffff, bank->gpio_regs->int_en);
-936ee2675eee1f Jianqun Xu     2021-08-16  571  	gc->mask_cache = 0xffffffff;
-936ee2675eee1f Jianqun Xu     2021-08-16  572  
-936ee2675eee1f Jianqun Xu     2021-08-16  573  	irq_set_chained_handler_and_data(bank->irq,
-936ee2675eee1f Jianqun Xu     2021-08-16  574  					 rockchip_irq_demux, bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  575  
-936ee2675eee1f Jianqun Xu     2021-08-16  576  	return 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  577  }
-936ee2675eee1f Jianqun Xu     2021-08-16  578  
-936ee2675eee1f Jianqun Xu     2021-08-16  579  static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-936ee2675eee1f Jianqun Xu     2021-08-16  580  {
-936ee2675eee1f Jianqun Xu     2021-08-16  581  	struct gpio_chip *gc;
-936ee2675eee1f Jianqun Xu     2021-08-16  582  	int ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  583  
-936ee2675eee1f Jianqun Xu     2021-08-16 @584  	bank->gpio_chip = rockchip_gpiolib_chip;
-936ee2675eee1f Jianqun Xu     2021-08-16  585  
-936ee2675eee1f Jianqun Xu     2021-08-16 @586  	gc = &bank->gpio_chip;
-936ee2675eee1f Jianqun Xu     2021-08-16  587  	gc->base = bank->pin_base;
-936ee2675eee1f Jianqun Xu     2021-08-16  588  	gc->ngpio = bank->nr_pins;
-936ee2675eee1f Jianqun Xu     2021-08-16  589  	gc->label = bank->name;
-936ee2675eee1f Jianqun Xu     2021-08-16  590  	gc->parent = bank->dev;
-936ee2675eee1f Jianqun Xu     2021-08-16  591  
-936ee2675eee1f Jianqun Xu     2021-08-16  592  	ret = gpiochip_add_data(gc, bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  593  	if (ret) {
-936ee2675eee1f Jianqun Xu     2021-08-16  594  		dev_err(bank->dev, "failed to add gpiochip %s, %d\n",
-936ee2675eee1f Jianqun Xu     2021-08-16  595  			gc->label, ret);
-936ee2675eee1f Jianqun Xu     2021-08-16  596  		return ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  597  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  598  
-936ee2675eee1f Jianqun Xu     2021-08-16  599  	/*
-936ee2675eee1f Jianqun Xu     2021-08-16  600  	 * For DeviceTree-supported systems, the gpio core checks the
-936ee2675eee1f Jianqun Xu     2021-08-16  601  	 * pinctrl's device node for the "gpio-ranges" property.
-936ee2675eee1f Jianqun Xu     2021-08-16  602  	 * If it is present, it takes care of adding the pin ranges
-936ee2675eee1f Jianqun Xu     2021-08-16  603  	 * for the driver. In this case the driver can skip ahead.
-936ee2675eee1f Jianqun Xu     2021-08-16  604  	 *
-936ee2675eee1f Jianqun Xu     2021-08-16  605  	 * In order to remain compatible with older, existing DeviceTree
-936ee2675eee1f Jianqun Xu     2021-08-16  606  	 * files which don't set the "gpio-ranges" property or systems that
-936ee2675eee1f Jianqun Xu     2021-08-16  607  	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
-936ee2675eee1f Jianqun Xu     2021-08-16  608  	 */
-936ee2675eee1f Jianqun Xu     2021-08-16  609  	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
-936ee2675eee1f Jianqun Xu     2021-08-16  610  		struct device_node *pctlnp = of_get_parent(bank->of_node);
-936ee2675eee1f Jianqun Xu     2021-08-16  611  		struct pinctrl_dev *pctldev = NULL;
-936ee2675eee1f Jianqun Xu     2021-08-16  612  
-936ee2675eee1f Jianqun Xu     2021-08-16  613  		if (!pctlnp)
-936ee2675eee1f Jianqun Xu     2021-08-16  614  			return -ENODATA;
-936ee2675eee1f Jianqun Xu     2021-08-16  615  
-936ee2675eee1f Jianqun Xu     2021-08-16  616  		pctldev = of_pinctrl_get(pctlnp);
-936ee2675eee1f Jianqun Xu     2021-08-16  617  		if (!pctldev)
-936ee2675eee1f Jianqun Xu     2021-08-16  618  			return -ENODEV;
-936ee2675eee1f Jianqun Xu     2021-08-16  619  
-936ee2675eee1f Jianqun Xu     2021-08-16  620  		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0,
-936ee2675eee1f Jianqun Xu     2021-08-16  621  					     gc->base, gc->ngpio);
-936ee2675eee1f Jianqun Xu     2021-08-16  622  		if (ret) {
-936ee2675eee1f Jianqun Xu     2021-08-16  623  			dev_err(bank->dev, "Failed to add pin range\n");
-936ee2675eee1f Jianqun Xu     2021-08-16  624  			goto fail;
-936ee2675eee1f Jianqun Xu     2021-08-16  625  		}
-936ee2675eee1f Jianqun Xu     2021-08-16  626  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  627  
-936ee2675eee1f Jianqun Xu     2021-08-16  628  	ret = rockchip_interrupts_register(bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  629  	if (ret) {
-936ee2675eee1f Jianqun Xu     2021-08-16  630  		dev_err(bank->dev, "failed to register interrupt, %d\n", ret);
-936ee2675eee1f Jianqun Xu     2021-08-16  631  		goto fail;
-936ee2675eee1f Jianqun Xu     2021-08-16  632  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  633  
-936ee2675eee1f Jianqun Xu     2021-08-16  634  	return 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  635  
-936ee2675eee1f Jianqun Xu     2021-08-16  636  fail:
-936ee2675eee1f Jianqun Xu     2021-08-16 @637  	gpiochip_remove(&bank->gpio_chip);
-936ee2675eee1f Jianqun Xu     2021-08-16  638  
-936ee2675eee1f Jianqun Xu     2021-08-16  639  	return ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  640  }
-936ee2675eee1f Jianqun Xu     2021-08-16  641  
-936ee2675eee1f Jianqun Xu     2021-08-16  642  static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
-936ee2675eee1f Jianqun Xu     2021-08-16  643  {
-936ee2675eee1f Jianqun Xu     2021-08-16  644  	struct resource res;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  645  	int id = 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  646  
-936ee2675eee1f Jianqun Xu     2021-08-16  647  	if (of_address_to_resource(bank->of_node, 0, &res)) {
-936ee2675eee1f Jianqun Xu     2021-08-16  648  		dev_err(bank->dev, "cannot find IO resource for bank\n");
-936ee2675eee1f Jianqun Xu     2021-08-16  649  		return -ENOENT;
-936ee2675eee1f Jianqun Xu     2021-08-16  650  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  651  
-936ee2675eee1f Jianqun Xu     2021-08-16  652  	bank->reg_base = devm_ioremap_resource(bank->dev, &res);
-936ee2675eee1f Jianqun Xu     2021-08-16  653  	if (IS_ERR(bank->reg_base))
-936ee2675eee1f Jianqun Xu     2021-08-16  654  		return PTR_ERR(bank->reg_base);
-936ee2675eee1f Jianqun Xu     2021-08-16  655  
-936ee2675eee1f Jianqun Xu     2021-08-16  656  	bank->irq = irq_of_parse_and_map(bank->of_node, 0);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  657  	if (!bank->irq)
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  658  		return -EINVAL;
-936ee2675eee1f Jianqun Xu     2021-08-16  659  
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  660  	bank->clk = of_clk_get(bank->of_node, 0);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  661  	if (IS_ERR(bank->clk))
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  662  		return PTR_ERR(bank->clk);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  663  
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  664  	clk_prepare_enable(bank->clk);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  665  	id = readl(bank->reg_base + gpio_regs_v2.version_id);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  666  
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  667  	/* If not gpio v2, that is default to v1. */
-cc165ba48aaf7d Jianqun Xu     2022-06-23  668  	if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  669  		bank->gpio_regs = &gpio_regs_v2;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  670  		bank->gpio_type = GPIO_TYPE_V2;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  671  		bank->db_clk = of_clk_get(bank->of_node, 1);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  672  		if (IS_ERR(bank->db_clk)) {
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  673  			dev_err(bank->dev, "cannot find debounce clk\n");
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  674  			clk_disable_unprepare(bank->clk);
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  675  			return -EINVAL;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  676  		}
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  677  	} else {
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  678  		bank->gpio_regs = &gpio_regs_v1;
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  679  		bank->gpio_type = GPIO_TYPE_V1;
-3bcbd1a85b68e5 Jianqun Xu     2021-08-16  680  	}
-ff96a8c21cdbf4 Jianqun Xu     2021-08-16  681  
-936ee2675eee1f Jianqun Xu     2021-08-16  682  	return 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  683  }
-936ee2675eee1f Jianqun Xu     2021-08-16  684  
-936ee2675eee1f Jianqun Xu     2021-08-16  685  static struct rockchip_pin_bank *
-936ee2675eee1f Jianqun Xu     2021-08-16  686  rockchip_gpio_find_bank(struct pinctrl_dev *pctldev, int id)
-936ee2675eee1f Jianqun Xu     2021-08-16  687  {
-936ee2675eee1f Jianqun Xu     2021-08-16  688  	struct rockchip_pinctrl *info;
-936ee2675eee1f Jianqun Xu     2021-08-16  689  	struct rockchip_pin_bank *bank;
-936ee2675eee1f Jianqun Xu     2021-08-16  690  	int i, found = 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  691  
-936ee2675eee1f Jianqun Xu     2021-08-16  692  	info = pinctrl_dev_get_drvdata(pctldev);
-936ee2675eee1f Jianqun Xu     2021-08-16  693  	bank = info->ctrl->pin_banks;
-936ee2675eee1f Jianqun Xu     2021-08-16  694  	for (i = 0; i < info->ctrl->nr_banks; i++, bank++) {
-936ee2675eee1f Jianqun Xu     2021-08-16  695  		if (bank->bank_num == id) {
-936ee2675eee1f Jianqun Xu     2021-08-16  696  			found = 1;
-936ee2675eee1f Jianqun Xu     2021-08-16  697  			break;
-936ee2675eee1f Jianqun Xu     2021-08-16  698  		}
-936ee2675eee1f Jianqun Xu     2021-08-16  699  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  700  
-936ee2675eee1f Jianqun Xu     2021-08-16  701  	return found ? bank : NULL;
-936ee2675eee1f Jianqun Xu     2021-08-16  702  }
-936ee2675eee1f Jianqun Xu     2021-08-16  703  
-936ee2675eee1f Jianqun Xu     2021-08-16  704  static int rockchip_gpio_probe(struct platform_device *pdev)
-936ee2675eee1f Jianqun Xu     2021-08-16  705  {
-936ee2675eee1f Jianqun Xu     2021-08-16  706  	struct device *dev = &pdev->dev;
-936ee2675eee1f Jianqun Xu     2021-08-16  707  	struct device_node *np = dev->of_node;
-936ee2675eee1f Jianqun Xu     2021-08-16  708  	struct device_node *pctlnp = of_get_parent(np);
-936ee2675eee1f Jianqun Xu     2021-08-16  709  	struct pinctrl_dev *pctldev = NULL;
-936ee2675eee1f Jianqun Xu     2021-08-16  710  	struct rockchip_pin_bank *bank = NULL;
-8ce5ef64546850 Caleb Connolly 2022-03-28  711  	struct rockchip_pin_deferred *cfg;
-936ee2675eee1f Jianqun Xu     2021-08-16  712  	static int gpio;
-936ee2675eee1f Jianqun Xu     2021-08-16  713  	int id, ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  714  
-936ee2675eee1f Jianqun Xu     2021-08-16  715  	if (!np || !pctlnp)
-936ee2675eee1f Jianqun Xu     2021-08-16  716  		return -ENODEV;
-936ee2675eee1f Jianqun Xu     2021-08-16  717  
-936ee2675eee1f Jianqun Xu     2021-08-16  718  	pctldev = of_pinctrl_get(pctlnp);
-936ee2675eee1f Jianqun Xu     2021-08-16  719  	if (!pctldev)
-936ee2675eee1f Jianqun Xu     2021-08-16  720  		return -EPROBE_DEFER;
-936ee2675eee1f Jianqun Xu     2021-08-16  721  
-936ee2675eee1f Jianqun Xu     2021-08-16  722  	id = of_alias_get_id(np, "gpio");
-936ee2675eee1f Jianqun Xu     2021-08-16  723  	if (id < 0)
-936ee2675eee1f Jianqun Xu     2021-08-16  724  		id = gpio++;
-936ee2675eee1f Jianqun Xu     2021-08-16  725  
-936ee2675eee1f Jianqun Xu     2021-08-16  726  	bank = rockchip_gpio_find_bank(pctldev, id);
-936ee2675eee1f Jianqun Xu     2021-08-16  727  	if (!bank)
-936ee2675eee1f Jianqun Xu     2021-08-16  728  		return -EINVAL;
-936ee2675eee1f Jianqun Xu     2021-08-16  729  
-936ee2675eee1f Jianqun Xu     2021-08-16  730  	bank->dev = dev;
-936ee2675eee1f Jianqun Xu     2021-08-16  731  	bank->of_node = np;
-936ee2675eee1f Jianqun Xu     2021-08-16  732  
-936ee2675eee1f Jianqun Xu     2021-08-16  733  	raw_spin_lock_init(&bank->slock);
-936ee2675eee1f Jianqun Xu     2021-08-16  734  
-936ee2675eee1f Jianqun Xu     2021-08-16  735  	ret = rockchip_get_bank_data(bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  736  	if (ret)
-936ee2675eee1f Jianqun Xu     2021-08-16  737  		return ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  738  
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  739  	/*
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  740  	 * Prevent clashes with a deferred output setting
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  741  	 * being added right at this moment.
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  742  	 */
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  743  	mutex_lock(&bank->deferred_lock);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  744  
-936ee2675eee1f Jianqun Xu     2021-08-16  745  	ret = rockchip_gpiolib_register(bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  746  	if (ret) {
-936ee2675eee1f Jianqun Xu     2021-08-16  747  		clk_disable_unprepare(bank->clk);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  748  		mutex_unlock(&bank->deferred_lock);
-936ee2675eee1f Jianqun Xu     2021-08-16  749  		return ret;
-936ee2675eee1f Jianqun Xu     2021-08-16  750  	}
-936ee2675eee1f Jianqun Xu     2021-08-16  751  
-8ce5ef64546850 Caleb Connolly 2022-03-28  752  	while (!list_empty(&bank->deferred_pins)) {
-8ce5ef64546850 Caleb Connolly 2022-03-28  753  		cfg = list_first_entry(&bank->deferred_pins,
-8ce5ef64546850 Caleb Connolly 2022-03-28  754  				       struct rockchip_pin_deferred, head);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  755  		list_del(&cfg->head);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  756  
-8ce5ef64546850 Caleb Connolly 2022-03-28  757  		switch (cfg->param) {
-8ce5ef64546850 Caleb Connolly 2022-03-28  758  		case PIN_CONFIG_OUTPUT:
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14 @759  			ret = rockchip_gpio_direction_output(&bank->gpio_chip, cfg->pin, cfg->arg);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  760  			if (ret)
-8ce5ef64546850 Caleb Connolly 2022-03-28  761  				dev_warn(dev, "setting output pin %u to %u failed\n", cfg->pin,
-8ce5ef64546850 Caleb Connolly 2022-03-28  762  					 cfg->arg);
-8ce5ef64546850 Caleb Connolly 2022-03-28  763  			break;
-7ff11357810fd1 Caleb Connolly 2022-03-28  764  		case PIN_CONFIG_INPUT_ENABLE:
-7ff11357810fd1 Caleb Connolly 2022-03-28 @765  			ret = rockchip_gpio_direction_input(&bank->gpio_chip, cfg->pin);
-7ff11357810fd1 Caleb Connolly 2022-03-28  766  			if (ret)
-7ff11357810fd1 Caleb Connolly 2022-03-28  767  				dev_warn(dev, "setting input pin %u failed\n", cfg->pin);
-7ff11357810fd1 Caleb Connolly 2022-03-28  768  			break;
-8ce5ef64546850 Caleb Connolly 2022-03-28  769  		default:
-8ce5ef64546850 Caleb Connolly 2022-03-28  770  			dev_warn(dev, "unknown deferred config param %d\n", cfg->param);
-8ce5ef64546850 Caleb Connolly 2022-03-28  771  			break;
-8ce5ef64546850 Caleb Connolly 2022-03-28  772  		}
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  773  		kfree(cfg);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  774  	}
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  775  
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  776  	mutex_unlock(&bank->deferred_lock);
-59dd178e1d7cb6 Heiko Stuebner 2021-09-14  777  
-936ee2675eee1f Jianqun Xu     2021-08-16  778  	platform_set_drvdata(pdev, bank);
-936ee2675eee1f Jianqun Xu     2021-08-16  779  	dev_info(dev, "probed %pOF\n", np);
-936ee2675eee1f Jianqun Xu     2021-08-16  780  
-936ee2675eee1f Jianqun Xu     2021-08-16  781  	return 0;
-936ee2675eee1f Jianqun Xu     2021-08-16  782  }
-936ee2675eee1f Jianqun Xu     2021-08-16  783  
-
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index aa126ab80f0c..fa48825654c9 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -657,9 +657,10 @@ static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	spin_unlock_irqrestore(&mvpwm->lock, flags);
+ }
+ 
+-static void mvebu_pwm_get_state(struct pwm_chip *chip,
+-				struct pwm_device *pwm,
+-				struct pwm_state *state) {
++static int mvebu_pwm_get_state(struct pwm_chip *chip,
++			       struct pwm_device *pwm,
++			       struct pwm_state *state)
++{
+ 
+ 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
+ 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
+@@ -693,6 +694,8 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
+ 		state->enabled = false;
+ 
+ 	spin_unlock_irqrestore(&mvpwm->lock, flags);
++
++	return 0;
+ }
+ 
+ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+index d6dd4d99a229..102c23f66ffd 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
+@@ -1427,8 +1427,8 @@ static int ti_sn_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				struct pwm_state *state)
++static int ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
+ {
+ 	struct ti_sn65dsi86 *pdata = pwm_chip_to_ti_sn_bridge(chip);
+ 	unsigned int pwm_en_inv;
+@@ -1439,19 +1439,19 @@ static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	ret = regmap_read(pdata->regmap, SN_PWM_EN_INV_REG, &pwm_en_inv);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_SCALE_REG, &scale);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	ret = ti_sn65dsi86_read_u16(pdata, SN_BACKLIGHT_REG, &backlight);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	ret = regmap_read(pdata->regmap, SN_PWM_PRE_DIV_REG, &pre_div);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	state->enabled = FIELD_GET(SN_PWM_EN_MASK, pwm_en_inv);
+ 	if (FIELD_GET(SN_PWM_INV_MASK, pwm_en_inv))
+@@ -1466,6 +1466,8 @@ static void ti_sn_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	if (state->duty_cycle > state->period)
+ 		state->duty_cycle = state->period;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops ti_sn_pwm_ops = {
+diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qcom-lpg.c
+index 02f51cc61837..dc8f3a482a5a 100644
+--- a/drivers/leds/rgb/leds-qcom-lpg.c
++++ b/drivers/leds/rgb/leds-qcom-lpg.c
+@@ -968,7 +968,7 @@ static int lpg_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			      struct pwm_state *state)
+ {
+ 	struct lpg *lpg = container_of(chip, struct lpg, pwm);
+@@ -982,20 +982,20 @@ static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	ret = regmap_read(lpg->map, chan->base + LPG_SIZE_CLK_REG, &val);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	refclk = lpg_clk_rates[val & PWM_CLK_SELECT_MASK];
+ 	if (refclk) {
+ 		ret = regmap_read(lpg->map, chan->base + LPG_PREDIV_CLK_REG, &val);
+ 		if (ret)
+-			return;
++			return ret;
+ 
+ 		pre_div = lpg_pre_divs[FIELD_GET(PWM_FREQ_PRE_DIV_MASK, val)];
+ 		m = FIELD_GET(PWM_FREQ_EXP_MASK, val);
+ 
+ 		ret = regmap_bulk_read(lpg->map, chan->base + PWM_VALUE_REG, &pwm_value, sizeof(pwm_value));
+ 		if (ret)
+-			return;
++			return ret;
+ 
+ 		state->period = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * LPG_RESOLUTION * pre_div * (1 << m), refclk);
+ 		state->duty_cycle = DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pwm_value * pre_div * (1 << m), refclk);
+@@ -1006,13 +1006,15 @@ static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	ret = regmap_read(lpg->map, chan->base + PWM_ENABLE_CONTROL_REG, &val);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	state->enabled = FIELD_GET(LPG_ENABLE_CONTROL_OUTPUT, val);
+ 	state->polarity = PWM_POLARITY_NORMAL;
+ 
+ 	if (state->duty_cycle > state->period)
+ 		state->duty_cycle = state->period;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops lpg_pwm_ops = {
+diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+index 8e00a4286145..cdbc23649032 100644
+--- a/drivers/pwm/pwm-atmel.c
++++ b/drivers/pwm/pwm-atmel.c
+@@ -356,8 +356,8 @@ static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				struct pwm_state *state)
++static int atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
+ {
+ 	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+ 	u32 sr, cmr;
+@@ -396,6 +396,8 @@ static void atmel_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		state->polarity = PWM_POLARITY_INVERSED;
+ 	else
+ 		state->polarity = PWM_POLARITY_NORMAL;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops atmel_pwm_ops = {
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 7251037d4dd5..97ec131eb7c1 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -68,8 +68,8 @@ static void iproc_pwmc_disable(struct iproc_pwmc *ip, unsigned int channel)
+ 	ndelay(400);
+ }
+ 
+-static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				 struct pwm_state *state)
++static int iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				struct pwm_state *state)
+ {
+ 	struct iproc_pwmc *ip = to_iproc_pwmc(chip);
+ 	u64 tmp, multi, rate;
+@@ -91,7 +91,7 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (rate == 0) {
+ 		state->period = 0;
+ 		state->duty_cycle = 0;
+-		return;
++		return 0;
+ 	}
+ 
+ 	value = readl(ip->base + IPROC_PWM_PRESCALE_OFFSET);
+@@ -107,6 +107,8 @@ static void iproc_pwmc_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	value = readl(ip->base + IPROC_PWM_DUTY_CYCLE_OFFSET(pwm->hwpwm));
+ 	tmp = (value & IPROC_PWM_PERIOD_MAX) * multi;
+ 	state->duty_cycle = div64_u64(tmp, rate);
++
++	return 0;
+ }
+ 
+ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
+index 7b357d1cf642..811e6f424927 100644
+--- a/drivers/pwm/pwm-crc.c
++++ b/drivers/pwm/pwm-crc.c
+@@ -121,8 +121,8 @@ static int crc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-			      struct pwm_state *state)
++static int crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			     struct pwm_state *state)
+ {
+ 	struct crystalcove_pwm *crc_pwm = to_crc_pwm(chip);
+ 	struct device *dev = crc_pwm->chip.dev;
+@@ -132,13 +132,13 @@ static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	error = regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
+ 	if (error) {
+ 		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
+-		return;
++		return -EIO;
+ 	}
+ 
+ 	error = regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_reg);
+ 	if (error) {
+ 		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
+-		return;
++		return -EIO;
+ 	}
+ 
+ 	clk_div = (clk_div_reg & ~PWM_OUTPUT_ENABLE) + 1;
+@@ -149,6 +149,8 @@ static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		DIV_ROUND_UP_ULL(duty_cycle_reg * state->period, PWM_MAX_LEVEL);
+ 	state->polarity = PWM_POLARITY_NORMAL;
+ 	state->enabled = !!(clk_div_reg & PWM_OUTPUT_ENABLE);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops crc_pwm_ops = {
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 7f10f56c3eb6..0e5dbc5287e2 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -183,18 +183,16 @@ static int cros_ec_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				  struct pwm_state *state)
++static int cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
+ {
+ 	struct cros_ec_pwm_device *ec_pwm = pwm_to_cros_ec_pwm(chip);
+ 	struct cros_ec_pwm *channel = pwm_get_chip_data(pwm);
+ 	int ret;
+ 
+ 	ret = cros_ec_pwm_get_duty(ec_pwm, pwm->hwpwm);
+-	if (ret < 0) {
+-		dev_err(chip->dev, "error getting initial duty: %d\n", ret);
+-		return;
+-	}
++	if (ret < 0)
++		return ret;
+ 
+ 	state->enabled = (ret > 0);
+ 	state->period = EC_PWM_MAX_DUTY;
+@@ -212,6 +210,8 @@ static void cros_ec_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		state->duty_cycle = channel->duty_cycle;
+ 	else
+ 		state->duty_cycle = ret;
++
++	return 0;
+ }
+ 
+ static struct pwm_device *
+diff --git a/drivers/pwm/pwm-dwc.c b/drivers/pwm/pwm-dwc.c
+index 7568300bb11e..bd2308812096 100644
+--- a/drivers/pwm/pwm-dwc.c
++++ b/drivers/pwm/pwm-dwc.c
+@@ -163,8 +163,8 @@ static int dwc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-			      struct pwm_state *state)
++static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			     struct pwm_state *state)
+ {
+ 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
+ 	u64 duty, period;
+@@ -188,6 +188,8 @@ static void dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	state->polarity = PWM_POLARITY_INVERSED;
+ 
+ 	pm_runtime_put_sync(chip->dev);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops dwc_pwm_ops = {
+diff --git a/drivers/pwm/pwm-hibvt.c b/drivers/pwm/pwm-hibvt.c
+index 333f1b18ff4e..12c05c155cab 100644
+--- a/drivers/pwm/pwm-hibvt.c
++++ b/drivers/pwm/pwm-hibvt.c
+@@ -128,8 +128,8 @@ static void hibvt_pwm_set_polarity(struct pwm_chip *chip,
+ 				PWM_POLARITY_MASK, (0x0 << PWM_POLARITY_SHIFT));
+ }
+ 
+-static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				struct pwm_state *state)
++static int hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
+ {
+ 	struct hibvt_pwm_chip *hi_pwm_chip = to_hibvt_pwm_chip(chip);
+ 	void __iomem *base;
+@@ -146,6 +146,8 @@ static void hibvt_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	value = readl(base + PWM_CTRL_ADDR(pwm->hwpwm));
+ 	state->enabled = (PWM_ENABLE_MASK & value);
++
++	return 0;
+ }
+ 
+ static int hibvt_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+index e5e7b7c339a8..ed1aad96fff0 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -132,9 +132,9 @@ static int pwm_imx_tpm_round_state(struct pwm_chip *chip,
+ 	return 0;
+ }
+ 
+-static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+-				  struct pwm_device *pwm,
+-				  struct pwm_state *state)
++static int pwm_imx_tpm_get_state(struct pwm_chip *chip,
++				 struct pwm_device *pwm,
++				 struct pwm_state *state)
+ {
+ 	struct imx_tpm_pwm_chip *tpm = to_imx_tpm_pwm_chip(chip);
+ 	u32 rate, val, prescale;
+@@ -164,6 +164,8 @@ static void pwm_imx_tpm_get_state(struct pwm_chip *chip,
+ 
+ 	/* get channel status */
+ 	state->enabled = FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
++
++	return 0;
+ }
+ 
+ /* this function is supposed to be called with mutex hold */
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index ea91a2f81a9f..29a3089c534c 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -118,8 +118,8 @@ static void pwm_imx27_clk_disable_unprepare(struct pwm_imx27_chip *imx)
+ 	clk_disable_unprepare(imx->clk_ipg);
+ }
+ 
+-static void pwm_imx27_get_state(struct pwm_chip *chip,
+-				struct pwm_device *pwm, struct pwm_state *state)
++static int pwm_imx27_get_state(struct pwm_chip *chip,
++			       struct pwm_device *pwm, struct pwm_state *state)
+ {
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+ 	u32 period, prescaler, pwm_clk, val;
+@@ -128,7 +128,7 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 
+ 	ret = pwm_imx27_clk_prepare_enable(imx);
+ 	if (ret < 0)
+-		return;
++		return ret;
+ 
+ 	val = readl(imx->mmio_base + MX3_PWMCR);
+ 
+@@ -170,6 +170,8 @@ static void pwm_imx27_get_state(struct pwm_chip *chip,
+ 	state->duty_cycle = DIV_ROUND_UP_ULL(tmp, pwm_clk);
+ 
+ 	pwm_imx27_clk_disable_unprepare(imx);
++
++	return 0;
+ }
+ 
+ static void pwm_imx27_sw_reset(struct pwm_chip *chip)
+diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
+index b66c35074087..0cd7dd548e82 100644
+--- a/drivers/pwm/pwm-intel-lgm.c
++++ b/drivers/pwm/pwm-intel-lgm.c
+@@ -86,8 +86,8 @@ static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return lgm_pwm_enable(chip, 1);
+ }
+ 
+-static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-			      struct pwm_state *state)
++static int lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			     struct pwm_state *state)
+ {
+ 	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
+ 	u32 duty, val;
+@@ -100,6 +100,8 @@ static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	regmap_read(pc->regmap, LGM_PWM_FAN_CON0, &val);
+ 	duty = FIELD_GET(LGM_PWM_FAN_DC_MSK, val);
+ 	state->duty_cycle = DIV_ROUND_UP(duty * pc->period, LGM_PWM_MAX_DUTY_CYCLE);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops lgm_pwm_ops = {
+diff --git a/drivers/pwm/pwm-iqs620a.c b/drivers/pwm/pwm-iqs620a.c
+index 54bd95a5cab0..15aae53db5ab 100644
+--- a/drivers/pwm/pwm-iqs620a.c
++++ b/drivers/pwm/pwm-iqs620a.c
+@@ -104,8 +104,8 @@ static int iqs620_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				 struct pwm_state *state)
++static int iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				struct pwm_state *state)
+ {
+ 	struct iqs620_pwm_private *iqs620_pwm;
+ 
+@@ -126,6 +126,8 @@ static void iqs620_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	mutex_unlock(&iqs620_pwm->lock);
+ 
+ 	state->period = IQS620_PWM_PERIOD_NS;
++
++	return 0;
+ }
+ 
+ static int iqs620_pwm_notifier(struct notifier_block *notifier,
+diff --git a/drivers/pwm/pwm-keembay.c b/drivers/pwm/pwm-keembay.c
+index 733811b05721..ac02d8bb4a0b 100644
+--- a/drivers/pwm/pwm-keembay.c
++++ b/drivers/pwm/pwm-keembay.c
+@@ -89,8 +89,8 @@ static void keembay_pwm_disable(struct keembay_pwm *priv, int ch)
+ 				KMB_PWM_LEADIN_OFFSET(ch));
+ }
+ 
+-static void keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				  struct pwm_state *state)
++static int keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
+ {
+ 	struct keembay_pwm *priv = to_keembay_pwm_dev(chip);
+ 	unsigned long long high, low;
+@@ -113,6 +113,8 @@ static void keembay_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	state->duty_cycle = DIV_ROUND_UP_ULL(high, clk_rate);
+ 	state->period = DIV_ROUND_UP_ULL(high + low, clk_rate);
+ 	state->polarity = PWM_POLARITY_NORMAL;
++
++	return 0;
+ }
+ 
+ static int keembay_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 36d4e83e6b79..7c3c2e0f0bf4 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -168,7 +168,7 @@ static int pwm_lpss_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++static int pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			       struct pwm_state *state)
+ {
+ 	struct pwm_lpss_chip *lpwm = to_lpwm(chip);
+@@ -199,6 +199,8 @@ static void pwm_lpss_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	state->enabled = !!(ctrl & PWM_ENABLE);
+ 
+ 	pm_runtime_put(chip->dev);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops pwm_lpss_ops = {
+diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+index 57112f438c6d..6bca7c0bf65f 100644
+--- a/drivers/pwm/pwm-meson.c
++++ b/drivers/pwm/pwm-meson.c
+@@ -318,17 +318,14 @@ static unsigned int meson_pwm_cnt_to_ns(struct pwm_chip *chip,
+ 	return cnt * fin_ns * (channel->pre_div + 1);
+ }
+ 
+-static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				struct pwm_state *state)
++static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			       struct pwm_state *state)
+ {
+ 	struct meson_pwm *meson = to_meson_pwm(chip);
+ 	struct meson_pwm_channel_data *channel_data;
+ 	struct meson_pwm_channel *channel;
+ 	u32 value, tmp;
+ 
+-	if (!state)
+-		return;
+-
+ 	channel = &meson->channels[pwm->hwpwm];
+ 	channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
+ 
+@@ -357,6 +354,8 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		state->period = 0;
+ 		state->duty_cycle = 0;
+ 	}
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops meson_pwm_ops = {
+diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+index c605013e4114..ce601f5ac9a6 100644
+--- a/drivers/pwm/pwm-mtk-disp.c
++++ b/drivers/pwm/pwm-mtk-disp.c
+@@ -172,9 +172,9 @@ static int mtk_disp_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+-				   struct pwm_device *pwm,
+-				   struct pwm_state *state)
++static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
+ {
+ 	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+ 	u64 rate, period, high_width;
+@@ -182,16 +182,13 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ 	int err;
+ 
+ 	err = clk_prepare_enable(mdp->clk_main);
+-	if (err < 0) {
+-		dev_err(chip->dev, "Can't enable mdp->clk_main: %pe\n", ERR_PTR(err));
+-		return;
+-	}
++	if (err < 0)
++		return err;
+ 
+ 	err = clk_prepare_enable(mdp->clk_mm);
+ 	if (err < 0) {
+-		dev_err(chip->dev, "Can't enable mdp->clk_mm: %pe\n", ERR_PTR(err));
+ 		clk_disable_unprepare(mdp->clk_main);
+-		return;
++		return err;
+ 	}
+ 
+ 	rate = clk_get_rate(mdp->clk_main);
+@@ -211,6 +208,8 @@ static void mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ 	state->polarity = PWM_POLARITY_NORMAL;
+ 	clk_disable_unprepare(mdp->clk_mm);
+ 	clk_disable_unprepare(mdp->clk_main);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops mtk_disp_pwm_ops = {
+diff --git a/drivers/pwm/pwm-pca9685.c b/drivers/pwm/pwm-pca9685.c
+index c91fa7f9e33d..9353938b24c2 100644
+--- a/drivers/pwm/pwm-pca9685.c
++++ b/drivers/pwm/pwm-pca9685.c
+@@ -431,8 +431,8 @@ static int pca9685_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				  struct pwm_state *state)
++static int pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
+ {
+ 	struct pca9685 *pca = to_pca(chip);
+ 	unsigned long long duty;
+@@ -458,12 +458,14 @@ static void pca9685_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		 */
+ 		state->duty_cycle = 0;
+ 		state->enabled = false;
+-		return;
++		return 0;
+ 	}
+ 
+ 	state->enabled = true;
+ 	duty = pca9685_pwm_get_duty(pca, pwm->hwpwm);
+ 	state->duty_cycle = DIV_ROUND_DOWN_ULL(duty * state->period, PCA9685_COUNTER_RANGE);
++
++	return 0;
+ }
+ 
+ static int pca9685_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+diff --git a/drivers/pwm/pwm-raspberrypi-poe.c b/drivers/pwm/pwm-raspberrypi-poe.c
+index 6ff73029f367..2939b71a7ba7 100644
+--- a/drivers/pwm/pwm-raspberrypi-poe.c
++++ b/drivers/pwm/pwm-raspberrypi-poe.c
+@@ -82,9 +82,9 @@ static int raspberrypi_pwm_get_property(struct rpi_firmware *firmware,
+ 	return 0;
+ }
+ 
+-static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
+-				      struct pwm_device *pwm,
+-				      struct pwm_state *state)
++static int raspberrypi_pwm_get_state(struct pwm_chip *chip,
++				     struct pwm_device *pwm,
++				     struct pwm_state *state)
+ {
+ 	struct raspberrypi_pwm *rpipwm = raspberrypi_pwm_from_chip(chip);
+ 
+@@ -93,6 +93,8 @@ static void raspberrypi_pwm_get_state(struct pwm_chip *chip,
+ 					 RPI_PWM_MAX_DUTY);
+ 	state->enabled = !!(rpipwm->duty_cycle);
+ 	state->polarity = PWM_POLARITY_NORMAL;
++
++	return 0;
+ }
+ 
+ static int raspberrypi_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+index f3647b317152..004807201ffe 100644
+--- a/drivers/pwm/pwm-rockchip.c
++++ b/drivers/pwm/pwm-rockchip.c
+@@ -57,9 +57,9 @@ static inline struct rockchip_pwm_chip *to_rockchip_pwm_chip(struct pwm_chip *c)
+ 	return container_of(c, struct rockchip_pwm_chip, chip);
+ }
+ 
+-static void rockchip_pwm_get_state(struct pwm_chip *chip,
+-				   struct pwm_device *pwm,
+-				   struct pwm_state *state)
++static int rockchip_pwm_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
+ {
+ 	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+ 	u32 enable_conf = pc->data->enable_conf;
+@@ -70,11 +70,11 @@ static void rockchip_pwm_get_state(struct pwm_chip *chip,
+ 
+ 	ret = clk_enable(pc->pclk);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	ret = clk_enable(pc->clk);
+ 	if (ret)
+-		return;
++		return ret;
+ 
+ 	clk_rate = clk_get_rate(pc->clk);
+ 
+@@ -96,6 +96,8 @@ static void rockchip_pwm_get_state(struct pwm_chip *chip,
+ 
+ 	clk_disable(pc->clk);
+ 	clk_disable(pc->pclk);
++
++	return 0;
+ }
+ 
+ static void rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+index 2d4fa5e5fdd4..0056d642cc83 100644
+--- a/drivers/pwm/pwm-sifive.c
++++ b/drivers/pwm/pwm-sifive.c
+@@ -105,7 +105,7 @@ static void pwm_sifive_update_clock(struct pwm_sifive_ddata *ddata,
+ 		"New real_period = %u ns\n", ddata->real_period);
+ }
+ 
+-static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 				 struct pwm_state *state)
+ {
+ 	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
+@@ -123,6 +123,8 @@ static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	state->duty_cycle =
+ 		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
+ 	state->polarity = PWM_POLARITY_INVERSED;
++
++	return 0;
+ }
+ 
+ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-sl28cpld.c b/drivers/pwm/pwm-sl28cpld.c
+index 589aeaaa6ac8..e64900ad4ba1 100644
+--- a/drivers/pwm/pwm-sl28cpld.c
++++ b/drivers/pwm/pwm-sl28cpld.c
+@@ -87,9 +87,9 @@ struct sl28cpld_pwm {
+ #define sl28cpld_pwm_from_chip(_chip) \
+ 	container_of(_chip, struct sl28cpld_pwm, pwm_chip)
+ 
+-static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+-				   struct pwm_device *pwm,
+-				   struct pwm_state *state)
++static int sl28cpld_pwm_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
+ {
+ 	struct sl28cpld_pwm *priv = sl28cpld_pwm_from_chip(chip);
+ 	unsigned int reg;
+@@ -115,6 +115,8 @@ static void sl28cpld_pwm_get_state(struct pwm_chip *chip,
+ 	 * the PWM core.
+ 	 */
+ 	state->duty_cycle = min(state->duty_cycle, state->period);
++
++	return 0;
+ }
+ 
+ static int sl28cpld_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+index 7004f55bbf11..aa06b3ce81a6 100644
+--- a/drivers/pwm/pwm-sprd.c
++++ b/drivers/pwm/pwm-sprd.c
+@@ -65,8 +65,8 @@ static void sprd_pwm_write(struct sprd_pwm_chip *spc, u32 hwid,
+ 	writel_relaxed(val, spc->base + offset);
+ }
+ 
+-static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-			       struct pwm_state *state)
++static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			      struct pwm_state *state)
+ {
+ 	struct sprd_pwm_chip *spc =
+ 		container_of(chip, struct sprd_pwm_chip, chip);
+@@ -80,11 +80,8 @@ static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * reading to the registers.
+ 	 */
+ 	ret = clk_bulk_prepare_enable(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+-	if (ret) {
+-		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+-			pwm->hwpwm);
+-		return;
+-	}
++	if (ret)
++		return ret;
+ 
+ 	val = sprd_pwm_read(spc, pwm->hwpwm, SPRD_PWM_ENABLE);
+ 	if (val & SPRD_PWM_ENABLE_BIT)
+@@ -113,6 +110,8 @@ static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Disable PWM clocks if the PWM channel is not in enable state. */
+ 	if (!state->enabled)
+ 		clk_bulk_disable_unprepare(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
++
++	return 0;
+ }
+ 
+ static int sprd_pwm_config(struct sprd_pwm_chip *spc, struct pwm_device *pwm,
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 3115abb3f52a..39364c52cfe4 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -157,9 +157,9 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return ret;
+ }
+ 
+-static void stm32_pwm_lp_get_state(struct pwm_chip *chip,
+-				   struct pwm_device *pwm,
+-				   struct pwm_state *state)
++static int stm32_pwm_lp_get_state(struct pwm_chip *chip,
++				  struct pwm_device *pwm,
++				  struct pwm_state *state)
+ {
+ 	struct stm32_pwm_lp *priv = to_stm32_pwm_lp(chip);
+ 	unsigned long rate = clk_get_rate(priv->clk);
+@@ -185,6 +185,8 @@ static void stm32_pwm_lp_get_state(struct pwm_chip *chip,
+ 	tmp = prd - val;
+ 	tmp = (tmp << presc) * NSEC_PER_SEC;
+ 	state->duty_cycle = DIV_ROUND_CLOSEST_ULL(tmp, rate);
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops stm32_pwm_lp_ops = {
+diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+index c8445b0a3339..ead909400e64 100644
+--- a/drivers/pwm/pwm-sun4i.c
++++ b/drivers/pwm/pwm-sun4i.c
+@@ -108,9 +108,9 @@ static inline void sun4i_pwm_writel(struct sun4i_pwm_chip *chip,
+ 	writel(val, chip->base + offset);
+ }
+ 
+-static void sun4i_pwm_get_state(struct pwm_chip *chip,
+-				struct pwm_device *pwm,
+-				struct pwm_state *state)
++static int sun4i_pwm_get_state(struct pwm_chip *chip,
++			       struct pwm_device *pwm,
++			       struct pwm_state *state)
+ {
+ 	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+ 	u64 clk_rate, tmp;
+@@ -132,7 +132,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+ 		state->duty_cycle = DIV_ROUND_UP_ULL(state->period, 2);
+ 		state->polarity = PWM_POLARITY_NORMAL;
+ 		state->enabled = true;
+-		return;
++		return 0;
+ 	}
+ 
+ 	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+@@ -142,7 +142,8 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+ 		prescaler = prescaler_table[PWM_REG_PRESCAL(val, pwm->hwpwm)];
+ 
+ 	if (prescaler == 0)
+-		return;
++		/* huh? is this an error? */
++		return 0;
+ 
+ 	if (val & BIT_CH(PWM_ACT_STATE, pwm->hwpwm))
+ 		state->polarity = PWM_POLARITY_NORMAL;
+@@ -162,6 +163,8 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+ 
+ 	tmp = (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
+ 	state->period = DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
++
++	return 0;
+ }
+ 
+ static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+diff --git a/drivers/pwm/pwm-sunplus.c b/drivers/pwm/pwm-sunplus.c
+index e776fd16512d..d6ebe9f03b35 100644
+--- a/drivers/pwm/pwm-sunplus.c
++++ b/drivers/pwm/pwm-sunplus.c
+@@ -124,8 +124,8 @@ static int sunplus_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+-				  struct pwm_state *state)
++static int sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++				 struct pwm_state *state)
+ {
+ 	struct sunplus_pwm *priv = to_sunplus_pwm(chip);
+ 	u32 mode0, dd_freq, duty;
+@@ -155,6 +155,8 @@ static void sunplus_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	}
+ 
+ 	state->polarity = PWM_POLARITY_NORMAL;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops sunplus_pwm_ops = {
+diff --git a/drivers/pwm/pwm-visconti.c b/drivers/pwm/pwm-visconti.c
+index 927c4cbb1daf..d78a47cdd139 100644
+--- a/drivers/pwm/pwm-visconti.c
++++ b/drivers/pwm/pwm-visconti.c
+@@ -103,7 +103,7 @@ static int visconti_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	return 0;
+ }
+ 
+-static void visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++static int visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+ 				   struct pwm_state *state)
+ {
+ 	struct visconti_pwm_chip *priv = visconti_pwm_from_chip(chip);
+@@ -122,6 +122,8 @@ static void visconti_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm
+ 		state->polarity = PWM_POLARITY_NORMAL;
+ 
+ 	state->enabled = true;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops visconti_pwm_ops = {
+diff --git a/drivers/pwm/pwm-xilinx.c b/drivers/pwm/pwm-xilinx.c
+index 4dab2b86c427..f7a50fdcd9a5 100644
+--- a/drivers/pwm/pwm-xilinx.c
++++ b/drivers/pwm/pwm-xilinx.c
+@@ -169,9 +169,9 @@ static int xilinx_pwm_apply(struct pwm_chip *chip, struct pwm_device *unused,
+ 	return 0;
+ }
+ 
+-static void xilinx_pwm_get_state(struct pwm_chip *chip,
+-				 struct pwm_device *unused,
+-				 struct pwm_state *state)
++static int xilinx_pwm_get_state(struct pwm_chip *chip,
++				struct pwm_device *unused,
++				struct pwm_state *state)
+ {
+ 	struct xilinx_timer_priv *priv = xilinx_pwm_chip_to_priv(chip);
+ 	u32 tlr0, tlr1, tcsr0, tcsr1;
+@@ -191,6 +191,8 @@ static void xilinx_pwm_get_state(struct pwm_chip *chip,
+ 	 */
+ 	if (state->period == state->duty_cycle)
+ 		state->duty_cycle = 0;
++
++	return 0;
+ }
+ 
+ static const struct pwm_ops xilinx_pwm_ops = {
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 9429930c5566..ee17e92ac6c0 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -276,8 +276,8 @@ struct pwm_ops {
+ 		       struct pwm_capture *result, unsigned long timeout);
+ 	int (*apply)(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		     const struct pwm_state *state);
+-	void (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
+-			  struct pwm_state *state);
++	int (*get_state)(struct pwm_chip *chip, struct pwm_device *pwm,
++			 struct pwm_state *state);
+ 	struct module *owner;
+ };
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.37.2
+
