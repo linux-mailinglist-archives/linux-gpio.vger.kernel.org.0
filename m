@@ -2,134 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB6DD5BAEBB
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 16:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6DB85BAEE9
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 16:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbiIPOAu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Sep 2022 10:00:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33430 "EHLO
+        id S231779AbiIPOF5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Sep 2022 10:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231415AbiIPOAs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 10:00:48 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853DA61D6B
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:00:46 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id y3so49709624ejc.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:00:46 -0700 (PDT)
+        with ESMTP id S231616AbiIPOFp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 10:05:45 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 014201D318
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:05:44 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id r12so24570216ljg.10
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=linux-foundation.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=GaUFnwsF+GNkHx8TdRwDpLzcGfUTwgcJZXalpSa+ZSw=;
-        b=RtpJpR+CWL67LDuc+ZpXme7YMb5aARFSGK/NVk14KCkFvz0yFQUYhS7zjELPxvqL32
-         5u9pSenjEVl2C2kznpdvqvgMl7Mkp755ljPB8A4WlUdpYvK8CrU127svaJSBR4mu1OIG
-         5nxv6gbz18x44KWZHvCuPe9GNugxj9tK1DrrkD6JxA7xRil/xwd6MTAxsIXpYuYT20w4
-         //TvmVUn0VmpbWqHZvnXOz+zNjeBNeI4o+v96949tKuYaBojzCQqW0GdfGfJ8JxtDTuD
-         g5RYSnHa3zJ+n03Kp20uJs6Fn4XJLzbC9Nax/Ttqo7DYl44R9i+/nLc+lFArzHLjOSp9
-         THyg==
+        bh=nPsSPucMBuKtAd8AfZmYJlLAtpXVu8go4ahtDG4VctY=;
+        b=UmQ9IXGR6XcCNXRD2DdV5uYcKzvLhdmr2An44e3UEarwwC0ssykFVCSD9XSpivnMJS
+         BTCNHB5aEiYWmpQ0B0Ha17T53z8CXBxGc6u0cf6KqNzgqalgKi69MrSZHYHD85ib0qVA
+         D43sGYn6lNB3T7DBJ56h64qScbc/4GBc6bHr8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=GaUFnwsF+GNkHx8TdRwDpLzcGfUTwgcJZXalpSa+ZSw=;
-        b=T1B6YDuHcSByaacr3rtvydm7vtQbquib6aCjv1ompX9dcP2+FnIH1ZLh1gmU+DzO9G
-         n0hX/KTZ2zu0gxhFbCfN+papcpPsCFpwFkR6tVlqVm5fyEd0gW+0hAF/EG5Os+cBtAD4
-         7FdkJ867IxI11B5YFFRKbVlrS/PaJJU9ZR5BYtwS7SEzjFJVM+ILlbz6/7xK1PszV9V5
-         4XGL48m9i4pLzf19/H8Y0bhPCNCBbSDoDycRCQ/45IIb5zBV80xNrO/JfbanfkEdQ78j
-         glM63ZLdyezixtdyXBQF/RVeSbrDjndkkuVMxzWEfkyg09U6frpQvJDtb5F22r3f74cS
-         Lvbw==
-X-Gm-Message-State: ACrzQf3PR1DD8KEvxbShLIJXVID69lHvINVeIAP/iUaGIch+C8EYXsLd
-        L9GbCfZUmXgz2HSivweQNIE305oaJNuvqowKEoqecg==
-X-Google-Smtp-Source: AMsMyM6iG5//9kvIfX7d0yoThHgkwgZnNEh9txI8/sDR0hFJTZvo/Ir/WZIfLixivLBwo7CMLfmkD2QoMyMXiDxp6Sw=
-X-Received: by 2002:a17:906:8a55:b0:780:9b5d:aa06 with SMTP id
- gx21-20020a1709068a5500b007809b5daa06mr2756098ejc.500.1663336845070; Fri, 16
- Sep 2022 07:00:45 -0700 (PDT)
+        bh=nPsSPucMBuKtAd8AfZmYJlLAtpXVu8go4ahtDG4VctY=;
+        b=IpTsXg90/5tEX+ZGblBCUTRCO9KmfjR1FPiaRdS3/1kS+aOr8fCnzYjDVXxBKfGtJp
+         kj/+K6MzO5B31fT3sjH9S7XAqRM0esKUC/XVauW3cdVCb7j5az1n/VjGuuPol8QpPH24
+         G6ik1ibM40oHN0fj/MEjrqsasx+AmFsJvz9XqcNtXF2gwfKSYxLPSOw5kvThi/OzcaCe
+         M/KEc5VcallQVA2m36iI1680XGtauHBx+Os090+I3HrzSUi+Od0IVlX7+csq7xQkCsfV
+         ttkHWr2Psth8gFlLxYYrdI24Ozl3G/d2dqD+K24zwC+Yxl7SQhfG3j8fxKEAYerkYskt
+         T88A==
+X-Gm-Message-State: ACrzQf3edHUMWAN1U9cnPiESN9vdTrnHwzzVug0DBZpG9o7jbNjQ5Wts
+        rwmj+3RpvC07XWTXc++r6o6u815RlVWPwr3mEBU=
+X-Google-Smtp-Source: AMsMyM7vVyQfA85TcgsHVTipE8zG8B0oKy+7vl+O1cHHLr1BozQqW5n6Lp/HHRgI2XAhzUhlkRf2gA==
+X-Received: by 2002:a05:651c:1692:b0:26c:37bb:de2 with SMTP id bd18-20020a05651c169200b0026c37bb0de2mr1370431ljb.463.1663337142058;
+        Fri, 16 Sep 2022 07:05:42 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id e19-20020a05651236d300b004994117b0fdsm3497697lfs.281.2022.09.16.07.05.41
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 16 Sep 2022 07:05:41 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id z25so35805733lfr.2
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 07:05:41 -0700 (PDT)
+X-Received: by 2002:a05:6512:31c1:b0:498:fe7:b46 with SMTP id
+ j1-20020a05651231c100b004980fe70b46mr1699244lfe.549.1663337140735; Fri, 16
+ Sep 2022 07:05:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220914151145.73253-1-brgl@bgdev.pl> <CACRpkdZaSL_pkmrVGOT-y7+3i4y6f6Cjgehycq2FKLwPxrbFvw@mail.gmail.com>
- <CAMRc=Me+srb_rwwaUxx1a=8+Wqm5sc2APzfCoFG3+QxRK5kEKA@mail.gmail.com>
- <CACRpkdZwsLM64m7xHgNg=FPqTYaou9=KpN2rckyp6sKiJokU7A@mail.gmail.com> <CAL_JsqKxdX_Pya-N9n+w8a9ZqCa3AdFaRUXu0E31Joyb0psk_w@mail.gmail.com>
-In-Reply-To: <CAL_JsqKxdX_Pya-N9n+w8a9ZqCa3AdFaRUXu0E31Joyb0psk_w@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 16 Sep 2022 16:00:33 +0200
-Message-ID: <CACRpkdZSi4DiqNShPB8YkhbDdYG7=yRRXXaiZFptHT2fdEOwqw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: TODO: add an item about GPIO safe-state
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Drew Fustini <dfustini@baylibre.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20220916074253.781428-1-brgl@bgdev.pl>
+In-Reply-To: <20220916074253.781428-1-brgl@bgdev.pl>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 16 Sep 2022 07:05:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh7XqYTJgDHGF5xYBNJEKtf1wQ7Gg3vjr+onevNN8uHvw@mail.gmail.com>
+Message-ID: <CAHk-=wh7XqYTJgDHGF5xYBNJEKtf1wQ7Gg3vjr+onevNN8uHvw@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v6.0-rc6
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 3:47 PM Rob Herring <robh+dt@kernel.org> wrote:
-
-> > Inability to drive through a DT binding that was acceptable for the
-> > DT binding maintainers.
+On Fri, Sep 16, 2022 at 12:42 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> AFAICT, this came up briefly in 2015, then 2017, then 2019. (You're a
-> year late this time.) A nice regular pattern to not get something
-> upstream...
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-fixes-for-v6.0-rc6
 
-:D
+I think you forgot to push the tag, there's no such thing.
 
-> > A good idea to get it passed I think would be to ask Rob (with some
-> > examples) how he thinks it should look and finalize the bindings
-> > before coding.
->
-> My issue was more that by the time the kernel or even bootloader runs,
-> quite a bit of time has passed given all the firmware that runs
-> nowadays. Doesn't a safe state need to be set as early as possible?
-> Like probably before anything using DT?
+I see the branch ("gpio/for-current") that contains that top commit,
+but no fixes tag by that name.
 
-So that is less related to the bindings and more related to the
-implementation, right?
-
-I think this has always been seen as "default state at the point
-when the operating system boots" but possibly we should just add
-a flag or something to the bindings to say how early-ish the
-particular default safe state config applies?
-
-> A node per GPIO could end up being a lot of nodes and I can certainly
-> see folks just initializing every GPIO. That would be a lot of bloat.
-> As I see it we need 4 bits per line: direction, state(high/low), pull
-> up/down/none.
-
-I don't know exactly which use cases people have here, but yeah
-definitely biasing for example, so a certain line can go out of reset
-thanks to getting pulled up.
-
-I imagined something like a ngpios long array:
-
-/* Initial states */
-gpio-init-states = <GPIO_OUT_LOW, GPIO_OUT_HIGH,
-  GPIO_NO_CHANGE, GPIO_NO_CHANGE, GPIO_OUT_HIGH ...>;
-
-these defines does not exist in include/dt-bindings/gpio/gpio.h,
-it's just my idea of it.
-
-> Finally, don't non-GPIO pins need the same thing? You don't want a
-> default output driving what needs to be an input.
-
-The pin control subsystem has something like this, in the "default"
-and "init" states the pins are set to a default mux/pin config.
-So for SoC GPIOs in many cases this problem is already solved
-by using pin control states and hogs, as pin control is often used
-as a back-end for GPIO. e.g. all Qualcomm platforms TLMM.
-
-GPIO lines however can also be on a I2C or USB expander or
-something where pin control is not applicable at all, so this would be
-for initializing lines on those controllers.
-
-Yours,
-Linus Walleij
+              Linus
