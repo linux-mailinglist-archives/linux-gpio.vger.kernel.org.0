@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7762B5BB3B3
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 22:55:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAE1E5BB433
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Sep 2022 23:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230160AbiIPUy4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Sep 2022 16:54:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        id S229608AbiIPV6z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Sep 2022 17:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbiIPUyx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 16:54:53 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3999E3CBC8;
-        Fri, 16 Sep 2022 13:54:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663361692; x=1694897692;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=+VzWhmgyYCXNILKaundHDtRro3YKIfd1SdoSLC4IIgk=;
-  b=GI3LgrwN7Oiyb3sEKpEQg09IVTKFQOmYr9cDXgDZz6O8IXrLVGsCX0HL
-   xLcEc4TxsKtwuJmWvIVgQlhxT1iwXfvdR2uDzy8D2j2YkOuYrxgPhYOMf
-   QCnHNhHh2g9cZSHfUcKNcBl1tP9r64QHi2RsMQx/m4PColMgZewVpFNRJ
-   l0pL5iPkN8e+4a5bFDpc0PRDKr5korj+Y/T6LBlon46BcSxrT2q9lX0Wd
-   YZ8mzcXzVS08MxmB+eoSMHKstcaLaTVxzxpNTd8vmMWQKfmopLmoxDMiC
-   baaXBVLog/adiVxz0z3jOzeDnjjdHV6+DSbv3yOMZmU+jaWUq+30zbEBK
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10472"; a="297803155"
-X-IronPort-AV: E=Sophos;i="5.93,321,1654585200"; 
-   d="scan'208";a="297803155"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Sep 2022 13:54:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,321,1654585200"; 
-   d="scan'208";a="862860544"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Sep 2022 13:54:40 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4051A238; Fri, 16 Sep 2022 23:54:57 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Patrick Rudolph <patrick.rudolph@9elements.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v1 3/3] pinctrl: cy8c95x0: Align function names in cy8c95x0_pmxops
-Date:   Fri, 16 Sep 2022 23:54:50 +0300
-Message-Id: <20220916205450.86278-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220916205450.86278-1-andriy.shevchenko@linux.intel.com>
-References: <20220916205450.86278-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229978AbiIPV6y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Sep 2022 17:58:54 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3FE4BB922
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 14:58:51 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id s14-20020a17090a6e4e00b0020057c70943so1031868pjm.1
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Sep 2022 14:58:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=worldwidemarketdata.com; s=google;
+        h=importance:thread-index:content-language:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:to:from
+         :from:to:cc:subject:date;
+        bh=DUuJ2mgsOAAJCWASlsTejJyFk9U3fgBCbX5rANAlE+c=;
+        b=aRrW0G1HU4K2Fa1aMYxo4ELtCriE2z47Lvl+4rG0yOnPe7kNpYsC0sYnTZa82ZaBnW
+         goaGH5+msnqenlEA1qrAVStPtHm+FhE9+ZMM8hgYsAhB8Qc44vCdF406eOxONSWI57Dn
+         2XKHIJZXljXJrGrdbEGNgVH9B0kS0jOin0/R8VvkodcW0X5cFcTUA+aHRxfpCqFL1AbY
+         wAHy0x8ul4qWMSzU1awRdpHjEMailQ5Sk1RyxZYAJ3462RktRMGJHlqcrAv91E0BbZn8
+         xBsLW8O8WLELjF6UpAM+Kwa39+XH5vVS9wRdNLoMyOcKGsNEsN5wpv9N+7ENywwH+jxi
+         2D0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=importance:thread-index:content-language:content-transfer-encoding
+         :mime-version:message-id:date:subject:in-reply-to:references:to:from
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=DUuJ2mgsOAAJCWASlsTejJyFk9U3fgBCbX5rANAlE+c=;
+        b=ppAgIQEVzGQjhEuQydI65JOSGNrNi+6YBC/ltZYaveD9KTv1eHx3VLJD95fOKF9zy8
+         /D6MWU587EVsiTBSWO7I7ArmHMsLIcY3nQo5ByoQdGFKsf+S5bf/BeP0ieNHKUCoAzsL
+         d4gUedgqpO3sE0AxmdCg/WZrgKdNdmgpIr8WQIIWpW74A93LfGrSsoKNHcapSmb5vd0Y
+         PQLNFpdKTodE3cXy/jR7tU7ZTdeti2cNaGEACCwy8bO5fHUyLBJLJqX+mKnlTuvwdgOV
+         AERUF9ohkidkZ98q6CAQOzBKIGjAbGvqKxRYM+TZbgKWQP/cgm6tZSftKaEC7D+sbJ5l
+         NATQ==
+X-Gm-Message-State: ACrzQf23f5XVA7nWgmo3czqQdR4mYczKVi1GxnibOwEHzEbU8cbqdqVx
+        drVozEZiwKNkcqK0CzL2W5ETTw==
+X-Google-Smtp-Source: AMsMyM7AmMLF+1VxEJ5YXKpWHIFW43eTF3cAw9YhsE6hFNmVESaHz9Enw4GFqeOaSA7e5ylIl68Bxw==
+X-Received: by 2002:a17:902:7602:b0:172:a064:4a2f with SMTP id k2-20020a170902760200b00172a0644a2fmr1833956pll.56.1663365531358;
+        Fri, 16 Sep 2022 14:58:51 -0700 (PDT)
+Received: from DESKTOPR3SMN2M ([49.207.231.67])
+        by smtp.gmail.com with ESMTPSA id p18-20020a170902e75200b0017849a2b56asm8967053plf.46.2022.09.16.14.58.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Sep 2022 14:58:50 -0700 (PDT)
+From:   "Olivia Adam" <olivia@worldwidemarketdata.com>
+To:     "'Olivia Adam'" <olivia@worldwidemarketdata.com>
+References: 
+In-Reply-To: 
+Subject: RE: IBC Attendees Email List
+Date:   Fri, 16 Sep 2022 16:53:24 -0500
+Message-ID: <75c101d8ca17$80397f60$80ac7e20$@worldwidemarketdata.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Priority: 1 (Highest)
+X-MSMail-Priority: High
+X-Mailer: Microsoft Outlook 14.0
+Content-Language: en-us
+Thread-Index: AdjKFbRgtn5b3SFKQ/2/HzocAapEcQAAMPMgAAAADxAAAAAKEAAAAAdwAAAACNAAAAAIoAAAAAhAAAAACNAAAAAIYAAAAAgAAAAACNAAAAAIYAAAAAgwAAAACPAAAAAJkAAAAAdgAAAADCAAAAALUAAAAAmwAAAACbAAAAAM4AAAAAmwAAAAC+AAAAAJcA==
+Importance: High
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Align the function names in the cy8c95x0_pmxops() to follow
-the struct pinmux_ops members naming schema.
+Hi,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/pinctrl-cy8c95x0.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+I hope you're doing great and staying healthy!
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 367a9386dfb7..68509a2301b8 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -1103,7 +1103,7 @@ static const struct pinctrl_ops cy8c95x0_pinctrl_ops = {
- 	.pin_dbg_show = cy8c95x0_pin_dbg_show,
- };
- 
--static const char *cy8c95x0_get_functions_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+static const char *cy8c95x0_get_function_name(struct pinctrl_dev *pctldev, unsigned int selector)
- {
- 	return cy8c95x0_get_fname(selector);
- }
-@@ -1113,9 +1113,9 @@ static int cy8c95x0_get_functions_count(struct pinctrl_dev *pctldev)
- 	return 2;
- }
- 
--static int cy8c95x0_get_groups(struct pinctrl_dev *pctldev, unsigned int selector,
--			       const char * const **groups,
--			       unsigned int * const num_groups)
-+static int cy8c95x0_get_function_groups(struct pinctrl_dev *pctldev, unsigned int selector,
-+					const char * const **groups,
-+					unsigned int * const num_groups)
- {
- 	struct cy8c95x0_pinctrl *chip = pinctrl_dev_get_drvdata(pctldev);
- 
-@@ -1164,8 +1164,8 @@ static int cy8c95x0_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
- 
- static const struct pinmux_ops cy8c95x0_pmxops = {
- 	.get_functions_count = cy8c95x0_get_functions_count,
--	.get_function_name = cy8c95x0_get_functions_name,
--	.get_function_groups = cy8c95x0_get_groups,
-+	.get_function_name = cy8c95x0_get_function_name,
-+	.get_function_groups = cy8c95x0_get_function_groups,
- 	.set_mux = cy8c95x0_set_mux,
- 	.strict = true,
- };
--- 
-2.35.1
+Would you be interested in acquiring IBC Attendees Data List 2022?
+
+List contains: Company Name, Contact Name, First Name, Middle Name, Last
+Name, Title, Address, Street, City, Zip code, State, Country, Telephone,
+Email address and more,
+
+No of Contacts:- 35,028
+Cost: $ 1,881
+
+Looking forward for your response,
+
+Kind Regards,
+Olivia Adam
+Marketing Coordinator
+
 
