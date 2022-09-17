@@ -2,188 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 133235BB86F
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Sep 2022 15:21:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C14E35BB89A
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Sep 2022 16:01:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbiIQNVO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 17 Sep 2022 09:21:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
+        id S229595AbiIQOA7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 17 Sep 2022 10:00:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbiIQNVO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Sep 2022 09:21:14 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2122A371BA
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Sep 2022 06:21:11 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id a8so39709349lff.13
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Sep 2022 06:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=KaOlmbXe9DZ4gb/0Zywy7+zB4GvKUp4PiTaGIeHqYbE=;
-        b=M2fUu2p6oW62uf7McGaRuWAvLC8ffR3rrqu9QBb1g0o5MeBEnZOTE5b9foL/zTdGUS
-         ZJXm1WY0UrqCKOPldOw2paSNi8p4xY9M93bN0FG6ObR4+1ptGa9sPES3zrXN04s1RJe4
-         7irWuGzTj3xAfYpO2NaJkBl73pFMC0sRU4hs1hWWyLWgWJ4DKUfSC8lWArxDAezmGO6q
-         BsYccXZTkUIYYiARzVX+0++DOeAhHxxXJVY9MN1atv0pgxJw69JOtwKCcslRaBn7nlhz
-         QzhVY/C+BeuLxIpS81mmSMPU+3HAhSxCldKDAxfBt2ZDeI+rividOscdv8+hAtjwuVU6
-         QLHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=KaOlmbXe9DZ4gb/0Zywy7+zB4GvKUp4PiTaGIeHqYbE=;
-        b=khFIlB5Izz6n/0wSM2bM8qCwUTCj9+MC7nMudU5JH2B3L8ev5B0cgVzDOtqMzazC3K
-         3UxdDZEZmcbGTrxUXOf438H6PcnAQ8pZGEDlnYc0hD+ZfzeSIHSZ5Z3XBn4YLBIeKbUo
-         KHqeKZKMvdfC/40Gaxsy/jnykF/PEtvcLSlEHhIjOtzLx3K2vo1IcjEbHHSTO0xDVPfY
-         ne67HxvtKnpJNp0sOnFtzVUrn8rQ662uBO1lEVgliOLf8yKDcSplEu1BhRNnMZwdoQL0
-         NzR3FzMqtUht5v5WwdCoIXtIRQ4P+pYjL2BppRTKq/5CjthCLeXH8gTKckmnJevNAjrS
-         eIKA==
-X-Gm-Message-State: ACrzQf0DH0/PJjo8I/wBnZO29VHBYchfxeD6J/VgbXDoJjmjxZw590Pg
-        ZJbFDfL1DWDFuAhOkj+hk7UfmWCQ477dBzuu
-X-Google-Smtp-Source: AMsMyM7U1X4tI0kH3EnARTpJ6OfTlzWV9yr3LrnoyJnwFGsr6McUAby0vd2HG4/F2XPNDZfL68LEnw==
-X-Received: by 2002:a05:6512:3f1d:b0:492:348c:5cc9 with SMTP id y29-20020a0565123f1d00b00492348c5cc9mr3173121lfa.399.1663420869995;
-        Sat, 17 Sep 2022 06:21:09 -0700 (PDT)
-Received: from localhost.localdomain (c-fdcc225c.014-348-6c756e10.bbcust.telenor.se. [92.34.204.253])
-        by smtp.gmail.com with ESMTPSA id v8-20020a2ea608000000b0026c1cbbf464sm2662521ljp.112.2022.09.17.06.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Sep 2022 06:21:09 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH] pinctrl: nomadik: Make gpio irqchip immutable
-Date:   Sat, 17 Sep 2022 15:19:07 +0200
-Message-Id: <20220917131907.86899-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S229538AbiIQOA6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 17 Sep 2022 10:00:58 -0400
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8605727DD0;
+        Sat, 17 Sep 2022 07:00:54 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4MVCJd19r6z9sSl;
+        Sat, 17 Sep 2022 16:00:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1663423249;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6DcmRe0LF0MU+4e2ppiRLqDmTlbfSLqTxFtL2uF+s9U=;
+        b=B6D7zWPq4RveuzvhLcn58lD/iQM9co7uL0yfSGedLxZ4d2HlF0oP7IRi02oYHih7I9vfIZ
+        IKKpk8LIVOqCmtG8FxXG9QqMB7PcdJ/b9n6H7ely6Pxh5l5/Ro6kjXQAxJYdR8o3/rmizh
+        mVaCzJk9GaDK9lwI1enWKwHMeT80+UD9xFzAxv41yk8BmuJ37Jhwaa1A+4WpeDlhOB9rOV
+        Ucz5kkDBYPKZ4MDspUqpOG3GnnbdAiaqU7Bunr1+iGM4doEcvxUUypcQeuM2+3E+AuPT6u
+        DRryxn97n2D3VT/VlWWweoNlyH5R1CzJkgsnQ9YzZ88sD5aU910OuBKXgPGcaw==
+Message-ID: <d756107b-5cc5-53ba-b420-d4664e3a9bb7@gorani.run>
+Date:   Sat, 17 Sep 2022 23:00:40 +0900
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2 2/2] gpio: pca9570: add slg7xl45106 support
+To:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+Cc:     linux-gpio@vger.kernel.org, git@amd.com,
+        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        robh+dt@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20220915114803.26185-1-shubhrajyoti.datta@amd.com>
+ <20220915114803.26185-3-shubhrajyoti.datta@amd.com>
+From:   Sungbo Eo <mans0n@gorani.run>
+In-Reply-To: <20220915114803.26185-3-shubhrajyoti.datta@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This makes the Nomadik GPIO irqchip immutable.
+Hi,
 
-Tested on the Samsung Galaxy SIII mini GT-I8190.
+Thanks for the update.
+I was thinking I should reply to your patch in the last month, but I was
+a little busy at the time and I forgot to do so...
 
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 51 +++++++++++------------
- 1 file changed, 24 insertions(+), 27 deletions(-)
+On 2022-09-15 20:48, Shubhrajyoti Datta wrote:
+> slg7xl45106 is a I2C GPO expander.
+> Add a compatible string for the same. Also update the
+> driver to write and read from it.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+> ---
+> v2:
+> Use platform data insted of compatible
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index f5014d09d81a..1ee3b45dd6bc 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -244,7 +244,6 @@ enum nmk_gpio_slpm {
- 
- struct nmk_gpio_chip {
- 	struct gpio_chip chip;
--	struct irq_chip irqchip;
- 	void __iomem *addr;
- 	struct clk *clk;
- 	unsigned int bank;
-@@ -675,15 +674,11 @@ static void __nmk_gpio_set_wake(struct nmk_gpio_chip *nmk_chip,
- 	__nmk_gpio_irq_modify(nmk_chip, offset, WAKE, on);
- }
- 
--static int nmk_gpio_irq_maskunmask(struct irq_data *d, bool enable)
-+static void nmk_gpio_irq_maskunmask(struct nmk_gpio_chip *nmk_chip,
-+				    struct irq_data *d, bool enable)
- {
--	struct nmk_gpio_chip *nmk_chip;
- 	unsigned long flags;
- 
--	nmk_chip = irq_data_get_irq_chip_data(d);
--	if (!nmk_chip)
--		return -EINVAL;
--
- 	clk_enable(nmk_chip->clk);
- 	spin_lock_irqsave(&nmk_gpio_slpm_lock, flags);
- 	spin_lock(&nmk_chip->lock);
-@@ -696,18 +691,22 @@ static int nmk_gpio_irq_maskunmask(struct irq_data *d, bool enable)
- 	spin_unlock(&nmk_chip->lock);
- 	spin_unlock_irqrestore(&nmk_gpio_slpm_lock, flags);
- 	clk_disable(nmk_chip->clk);
--
--	return 0;
- }
- 
- static void nmk_gpio_irq_mask(struct irq_data *d)
- {
--	nmk_gpio_irq_maskunmask(d, false);
-+	struct nmk_gpio_chip *nmk_chip = irq_data_get_irq_chip_data(d);
-+
-+	nmk_gpio_irq_maskunmask(nmk_chip, d, false);
-+	gpiochip_disable_irq(&nmk_chip->chip, irqd_to_hwirq(d));
- }
- 
- static void nmk_gpio_irq_unmask(struct irq_data *d)
- {
--	nmk_gpio_irq_maskunmask(d, true);
-+	struct nmk_gpio_chip *nmk_chip = irq_data_get_irq_chip_data(d);
-+
-+	gpiochip_enable_irq(&nmk_chip->chip, irqd_to_hwirq(d));
-+	nmk_gpio_irq_maskunmask(nmk_chip, d, true);
- }
- 
- static int nmk_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-@@ -1078,13 +1077,25 @@ static struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
- 	return nmk_chip;
- }
- 
-+static const struct irq_chip nmk_irq_chip = {
-+	.name = "nomadik-gpio",
-+	.irq_ack = nmk_gpio_irq_ack,
-+	.irq_mask = nmk_gpio_irq_mask,
-+	.irq_unmask = nmk_gpio_irq_unmask,
-+	.irq_set_type = nmk_gpio_irq_set_type,
-+	.irq_set_wake = nmk_gpio_irq_set_wake,
-+	.irq_startup = nmk_gpio_irq_startup,
-+	.irq_shutdown = nmk_gpio_irq_shutdown,
-+	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int nmk_gpio_probe(struct platform_device *dev)
- {
- 	struct device_node *np = dev->dev.of_node;
- 	struct nmk_gpio_chip *nmk_chip;
- 	struct gpio_chip *chip;
- 	struct gpio_irq_chip *girq;
--	struct irq_chip *irqchip;
- 	bool supports_sleepmode;
- 	int irq;
- 	int ret;
-@@ -1125,22 +1136,8 @@ static int nmk_gpio_probe(struct platform_device *dev)
- 	chip->can_sleep = false;
- 	chip->owner = THIS_MODULE;
- 
--	irqchip = &nmk_chip->irqchip;
--	irqchip->irq_ack = nmk_gpio_irq_ack;
--	irqchip->irq_mask = nmk_gpio_irq_mask;
--	irqchip->irq_unmask = nmk_gpio_irq_unmask;
--	irqchip->irq_set_type = nmk_gpio_irq_set_type;
--	irqchip->irq_set_wake = nmk_gpio_irq_set_wake;
--	irqchip->irq_startup = nmk_gpio_irq_startup;
--	irqchip->irq_shutdown = nmk_gpio_irq_shutdown;
--	irqchip->flags = IRQCHIP_MASK_ON_SUSPEND;
--	irqchip->name = kasprintf(GFP_KERNEL, "nmk%u-%u-%u",
--				  dev->id,
--				  chip->base,
--				  chip->base + chip->ngpio - 1);
--
- 	girq = &chip->irq;
--	girq->chip = irqchip;
-+	gpio_irq_chip_set_chip(girq, &nmk_irq_chip);
- 	girq->parent_handler = nmk_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(&dev->dev, 1,
--- 
-2.37.3
+Moving the command property into the new platform structure is nice.
+And please add more description about the device in the commit message.
+We don't even know the full name of the vendor from your patch.
+I like the older version of your patch in that perspective.
+https://lore.kernel.org/all/1656426829-1008-3-git-send-email-shubhrajyoti.datta@xilinx.com/
+And a link to the device datasheet would be also nice (if possible).
 
+> 
+>  drivers/gpio/gpio-pca9570.c | 39 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 35 insertions(+), 4 deletions(-)
+
+And I was also thinking that tpic2810 driver might be more appropriate
+then this pca9570 driver for a device with one command byte.
+Actually I had forked tpic2810 to create pca9570 to support a device
+without any command byte.
+Come to think of it, the two drivers may even be consolidated into a
+single generic one... What do you think?
+
+Thanks,
+Sungbo
