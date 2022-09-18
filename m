@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7805D5BBE86
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 16:57:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0122F5BBE89
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 16:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbiIRO45 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Sep 2022 10:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39006 "EHLO
+        id S229718AbiIRO5d (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Sep 2022 10:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229852AbiIRO4y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 10:56:54 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBE351F63C
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:56:52 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id l14so59163781eja.7
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:56:52 -0700 (PDT)
+        with ESMTP id S229881AbiIRO5b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 10:57:31 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572532018C
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:57:30 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id y3so59219749ejc.1
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:57:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=lE0151MOVJU7BCff5aIrbc8nw/Cj8NqWzyGXKi//Yt8=;
-        b=USYlxGY65uQAuLcRBeamKUF9bG441v20ZKIPL2hAdEVlIPvS0tFo9Abb6r9m+W7KPY
-         I4vLDqXcrcVEh8/OOaG4sETMKJvjUU2l6QCD3t63li8dSJ3NbdQuRdvBUcQF7B0I9kQY
-         X8HZM9/jAeLipPkMKfthiiWz4vuFHeud5AwLfoYMFVpnVqA6kSgDEV8JmzsdD9xOQ/Qb
-         EOdH/aFw87UgnOxte2stPq9oMDryGw154uNuL7byDLYgc++hCTzg0uOGutATcr0H0jD4
-         Wh9ncQ2uSmunsbZ1+7ADHXfYtUUR/8gnfTvbfwjofyyPnpvHkwbG+TDGDPh4W7KM+2zz
-         YQ6w==
+        bh=dyWurCv6umTff7vcMJzhKPxGOrO7Im/vE4FnLmopayI=;
+        b=py+uqmM2y+DHXQXns/qqCb3l7AXNQasq9XD93G7XbAR9QQv3q5oyGJtXTqT34Vvf51
+         xteKNPjjHEpK13pUtnGQ96BPNm9dE8/q9Dc/Wb2I67/G07Mv2oqzx177Cqt9RlzxtOQP
+         L3rEWs3HRxcMw6sIMHQSSA+mgEy14aHMVxNfC1b2G1zS+NfK/bawJNY8X2MzMM8gE79R
+         T75w3FSVsQdpgZ5bLKnQ2CxCIWiIHYl6r9ND2pkxUb45FbOLcFpeBEpMXt/1bzsF818H
+         7U7IbNk0yiVsvSDp2Hy35SuLi3KLfxVyuZ66HrqQ7COcfrMT/HFQSFygCHvsfByZkRzX
+         Ft/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=lE0151MOVJU7BCff5aIrbc8nw/Cj8NqWzyGXKi//Yt8=;
-        b=NBW7e8Rs5HeZQoSkavvVp5bZnJKkkiKK1eFoOmq5O22RpRqu4jnwA6p9GVhnLRfOLQ
-         9f1mmMtelM1Gc5n0gbhqFFnqYLSmJgI3igZcdJIlOKtl0pGs/hRRMh4YKpb/Ya3K8I0x
-         53oij4m+or+OvliRlzafViyQoFjEconJwoQmq6QAXnUxHN1JOSYJJcnErRWUGgEr/JgC
-         wTKjxXe+c8lFjNRW9KXQCYiBDh7CZEjZL2NgtMHz8/7BTK810M5J37dXBmqy5pdPdxGn
-         OAfqxqhxaY4PEIgkE3H7DSwlxxZh2etNEfy7MbqZaAGcKyGHwVm/AkSBGnKKg8q4pa5m
-         BIGg==
-X-Gm-Message-State: ACrzQf32Rls63gqi1TCl4JtuX3T238EMgvY2xxxisXzlNSF0L4+X4n+m
-        LZwoqWaLLlZnVsmhndkivtJk0F9zKJVjBlp9ZH5w3g==
-X-Google-Smtp-Source: AMsMyM4QKI9Y/vyxhGGs4ZMj48GrTD5Y1x/6XnaQn20imcRKM1PFqF2ix/utSEmG36MElI6MN8K1EJsDNkNb2TK2QxA=
-X-Received: by 2002:a17:906:5d04:b0:77f:ca9f:33d1 with SMTP id
- g4-20020a1709065d0400b0077fca9f33d1mr10216154ejt.526.1663513011575; Sun, 18
- Sep 2022 07:56:51 -0700 (PDT)
+        bh=dyWurCv6umTff7vcMJzhKPxGOrO7Im/vE4FnLmopayI=;
+        b=JFyXIwezMvJyx4zxh2KrQGoUDMQPYQMe46uaRYd2N2G3YPf0RRzMgp4GU50Su4kzEo
+         a+ile4+0agDGJ26cgBGlrslE8ohE7mPt9cQjRtP9+Cgbcs0ZdG5M2f4ooDRneAmortfx
+         ZnpknJd8dsDbMnv3mV3omM2s4R6hgnNTV3GhGjx7yNINxHxPQ1RqUzF6ThKhOBAwT8oX
+         eyvkYKTbiDkoHTzBueF4Rc982qB3kLeOHeCUO4CzQL6pdOmpjYW/sxH9/5e/iUvJ1sdp
+         w9H/gAvKI77SqdddobyRVVWOSNEVTxp1+uUzcHZdeTLUPMHkTCHtr6gFUyt59Dl0vMxs
+         huHQ==
+X-Gm-Message-State: ACrzQf0azBtawlTSnz+uReGRlXurdenSGbrYgpLcTVoGwWIjfFZl9uj2
+        letckcXaNtbNjzdB9OXfYbwtN2Kw4sTPJLV7JG8J4A==
+X-Google-Smtp-Source: AMsMyM4gHCdoCTZOpAzWE3ZHy04U3dFyvJdXBikAiGPHZsPCm1QjzXgnd1p3smxr22qT8omxuxygwWfQhAF72ibaRHk=
+X-Received: by 2002:a17:907:e9e:b0:77f:9688:2714 with SMTP id
+ ho30-20020a1709070e9e00b0077f96882714mr10108201ejc.208.1663513048951; Sun, 18
+ Sep 2022 07:57:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220914071306.3254881-1-s.hauer@pengutronix.de> <20220914071306.3254881-2-s.hauer@pengutronix.de>
-In-Reply-To: <20220914071306.3254881-2-s.hauer@pengutronix.de>
+References: <20220914071306.3254881-1-s.hauer@pengutronix.de> <20220914071306.3254881-3-s.hauer@pengutronix.de>
+In-Reply-To: <20220914071306.3254881-3-s.hauer@pengutronix.de>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 18 Sep 2022 16:56:39 +0200
-Message-ID: <CACRpkdayh4-MxZJfjWdrGJu-ZJ2jgWStLgN3LZrwG41=wZw4RQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: Add gpio latch driver
+Date:   Sun, 18 Sep 2022 16:57:17 +0200
+Message-ID: <CACRpkdZumA8=dFZ6CzvkQ_SYO62V5YB9JJ32M3-Ta3_6WCheCw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: gpio: Add gpio-latch binding document
 To:     Sascha Hauer <s.hauer@pengutronix.de>
 Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -66,21 +66,13 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Wed, Sep 14, 2022 at 9:13 AM Sascha Hauer <s.hauer@pengutronix.de> wrote:
->
-> This driver implements a GPIO multiplexer based on latches connected to
-> other GPIOs. A set of data GPIOs is connected to the data input of
-> multiple latches. The clock input of each latch is driven by another
-> set of GPIOs. With two 8-bit latches 10 GPIOs can be multiplexed into
-> 16 GPIOs. GPOs might be a better term as in fact the multiplexed pins
-> are output only.
+
+> This adds a binding for a GPIO multiplexer driver based on latches
+> connected to other GPIOs.
 >
 > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 
-I see Serge has additional comments but apart from that this
-looks acceptable to me:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-You may want to add set_multiple[_cansleep] later, but it
-will survive without it.
 
 Yours,
 Linus Walleij
