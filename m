@@ -2,140 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C4E5BBCC5
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 11:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1CD05BBE4F
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 16:17:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbiIRJZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Sep 2022 05:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55020 "EHLO
+        id S229517AbiIRORt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Sep 2022 10:17:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229678AbiIRJZw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 05:25:52 -0400
-X-Greylist: delayed 10683 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 18 Sep 2022 02:25:50 PDT
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AC0C275D4
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 02:25:50 -0700 (PDT)
-Received: from [192.168.1.18] ([90.11.190.129])
-        by smtp.orange.fr with ESMTPA
-        id ZqYboS2ydtk1aZqYcoIyTK; Sun, 18 Sep 2022 11:25:48 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 18 Sep 2022 11:25:48 +0200
-X-ME-IP: 90.11.190.129
-Message-ID: <a0215d71-b7d6-17cf-8e98-dcefa7a1671b@wanadoo.fr>
-Date:   Sun, 18 Sep 2022 11:25:45 +0200
+        with ESMTP id S229579AbiIRORs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 10:17:48 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED5D240B8
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:17:47 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id y17so53999564ejo.6
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 07:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=GCngLOpiriPVcDjGNSe4Z3flJgLrJqyubPZYXv5Syrg=;
+        b=yPzT20AON/wt2KXO+zhxHoHmVAhH0+1ul+dYnbINBzLjThpT71wsw/kNxcGUTFUxWg
+         kpyd0VArvhq+WLibwNt0H8kv/6O3h9Oesc0flE3ZzHcW9mEHKWMr3bIGeQEnpCdxoCqZ
+         5Bh3Ye+2lhRjBG6WQfF6KHRkFdM8fMYULEf9TzstCVcvxj5QkjdA0Eg0JBWQBH+JG3tk
+         yYGcwqSyePau9t8Idvq0YsKMJ2Y3gFNj2Xz5/kmw+qn3FVsRkpFcGkGI0bcL0ogvStk2
+         SMnXKtSTrWrOAc4qMN43Li6K59VEPxJcbYiXFkunNL0+moL072ujSbr1xxdLnG8dvyNf
+         nmfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=GCngLOpiriPVcDjGNSe4Z3flJgLrJqyubPZYXv5Syrg=;
+        b=6hx4lh41TBD9HEkv5+I0+0X6e1ZAptHDnvItyWIaqsK3yC6gIK4BjDsy9gZ1y75S79
+         o0Mw4PY+S75oOpJoIYrk5GQlXjvQklVTdp3nO1aWVom/vuHLv3qgR4olJrudGtrzleaq
+         OaVHJBTnhu9XNhNEEaqbgwZAeXqYXuKcr4adUb11iNalmSFv8ZVV9KdHkSc4PbKmdJU+
+         mpESjG8PlcXQL4YHTV+H9YYCcEtQcaFcS2uYoQUr9YEgKgBYfXLtg2WynWhfYP6IZytD
+         sQpmPGg+vFo6aTHPRMeYyb3x8KwdXdWystpoF6z9Em4Raxyumb/R5T4CQaubuCtOIIdF
+         6EoQ==
+X-Gm-Message-State: ACrzQf1D4Ev6aydl/5tYPulbwX6/Ul0HCdj3lX566RzdqamZ6NEnHpQU
+        cLtpHfFgCUywh4QUgMpWDucSNEILJGGaGy9o1Q5rQInmi20=
+X-Google-Smtp-Source: AMsMyM7VXibftbkQTCJySSHieHJubeML6O7U3VmO5IsWMaT/XmcXQOzFvodhnKbc4CbY8HSwPo4GPxXq1zlyxdsGrW4=
+X-Received: by 2002:a17:907:e9e:b0:77f:9688:2714 with SMTP id
+ ho30-20020a1709070e9e00b0077f96882714mr10019173ejc.208.1663510665640; Sun, 18
+ Sep 2022 07:17:45 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 3/3] misc: microchip: pci1xxxx: Fix the error handling
- paths of gp_aux_bus_probe()
-Content-Language: en-US
-To:     kernel test robot <lkp@intel.com>,
-        Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <1b41531de02ee029628d9b0ec2cf1ee7f180fe10.1663482259.git.christophe.jaillet@wanadoo.fr>
- <202209181527.7wmi1NBN-lkp@intel.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <202209181527.7wmi1NBN-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20220917213729.341321-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20220917213729.341321-1-u.kleine-koenig@pengutronix.de>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sun, 18 Sep 2022 16:17:34 +0200
+Message-ID: <CACRpkdZv4sKrePMdd+ROMAXmnykAsxgo2McxFcdqCbBUmq_zgw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: twl4030: Reorder functions which allows to drop a
+ forward declaraion
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le 18/09/2022 à 10:03, kernel test robot a écrit :
-> Hi Christophe,
-> 
-> Thank you for the patch! Perhaps something to improve:
-> 
-> [auto build test WARNING on char-misc/char-misc-testing]
-> [also build test WARNING on next-20220916]
-> [cannot apply to linus/master v6.0-rc5]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Christophe-JAILLET/misc-microchip-pci1xxxx-Fix-the-error-handling-path-of-gp_aux_bus_probe/20220918-143022
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git ceecbbddbf549fe0b7ffa3804a6e255b3360030f
-> config: xtensa-randconfig-r022-20220918
-> compiler: xtensa-linux-gcc (GCC) 12.1.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # https://github.com/intel-lab-lkp/linux/commit/089c1639fdebdad9be8de56c1546308eac15747d
->          git remote add linux-review https://github.com/intel-lab-lkp/linux
->          git fetch --no-tags linux-review Christophe-JAILLET/misc-microchip-pci1xxxx-Fix-the-error-handling-path-of-gp_aux_bus_probe/20220918-143022
->          git checkout 089c1639fdebdad9be8de56c1546308eac15747d
->          # save the config file
->          mkdir build_dir && cp config build_dir/.config
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=xtensa SHELL=/bin/bash drivers/misc/mchp_pci1xxxx/
-> 
-> If you fix the issue, kindly add following tag where applicable
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All warnings (new ones prefixed by >>):
-> 
->     drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c: In function 'gp_aux_bus_probe':
->>> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c:35:13: warning: variable 'irq' set but not used [-Wunused-but-set-variable]
->        35 |         int irq, retval;
->           |             ^~~
-> 
-> 
-> vim +/irq +35 drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-> 
+On Sat, Sep 17, 2022 at 11:38 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-[...]
+> There is no cyclic dependency between gpio_twl4030_probe() and
+> gpio_twl4030_remove(), so by moving the latter before the former the
+> forward declaration can be dropped.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
->      75	
->      76		retval = pci_alloc_irq_vectors(pdev, 1, 1, PCI_IRQ_ALL_TYPES);
->      77		if (retval < 0)
->      78			goto err_aux_dev_del_0;
->      79	
->      80		retval = pci_irq_vector(pdev, 0);
->      81		if (retval < 0)
->      82			goto err_aux_dev_del_0;
->      83		irq = retval;
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-We save the irq number here...
-
->      84	
->      85		aux_bus->aux_device_wrapper[1] = kzalloc(sizeof(*aux_bus->aux_device_wrapper[1]),
->      86							 GFP_KERNEL);
->      87		if (!aux_bus->aux_device_wrapper[1]) {
->      88			retval = -ENOMEM;
->      89			goto err_aux_dev_del_0;
->      90		}
->      91	
->      92		retval = ida_alloc(&gp_client_ida, GFP_KERNEL);
->      93		if (retval < 0) {
->      94			kfree(aux_bus->aux_device_wrapper[1]);
->      95			goto err_aux_dev_del_0;
->      96		}
->      97	
->      98		aux_bus->aux_device_wrapper[1]->aux_dev.name = aux_dev_gpio_name;
->      99		aux_bus->aux_device_wrapper[1]->aux_dev.dev.parent = &pdev->dev;
->     100		aux_bus->aux_device_wrapper[1]->aux_dev.dev.release = gp_auxiliary_device_release;
->     101		aux_bus->aux_device_wrapper[1]->aux_dev.id = retval;
->     102	
->     103		aux_bus->aux_device_wrapper[1]->gp_aux_data.region_start = pci_resource_start(pdev, 0);
->     104		aux_bus->aux_device_wrapper[1]->gp_aux_data.region_length = pci_resource_end(pdev, 0);
->     105	
->     106		pdev->irq = retval;
-
-... then this should be:
-    pdev->irq = irq;
-here.
-
-I'll send a v2 in a few days.
-Let see first if we get some other feedback.
-
-CJ
-
+Yours,
+Linus Walleij
