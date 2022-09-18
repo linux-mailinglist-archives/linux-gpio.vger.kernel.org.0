@@ -2,24 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3CEE5BBC26
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 08:27:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A85115BBC27
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 08:27:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbiIRG1c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Sep 2022 02:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        id S229557AbiIRG1l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Sep 2022 02:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbiIRG1a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 02:27:30 -0400
-Received: from smtp.smtpout.orange.fr (smtp01.smtpout.orange.fr [80.12.242.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F9125EAF
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Sep 2022 23:27:28 -0700 (PDT)
+        with ESMTP id S229471AbiIRG1i (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 02:27:38 -0400
+Received: from smtp.smtpout.orange.fr (smtp05.smtpout.orange.fr [80.12.242.127])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AB525EAC
+        for <linux-gpio@vger.kernel.org>; Sat, 17 Sep 2022 23:27:38 -0700 (PDT)
 Received: from pop-os.home ([90.11.190.129])
         by smtp.orange.fr with ESMTPA
-        id Znm1oh1YIBDYDZnm1ofRWp; Sun, 18 Sep 2022 08:27:27 +0200
+        id ZnmAoJp3fTyouZnmAoYlTc; Sun, 18 Sep 2022 08:27:36 +0200
 X-ME-Helo: pop-os.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 18 Sep 2022 08:27:27 +0200
+X-ME-Date: Sun, 18 Sep 2022 08:27:36 +0200
 X-ME-IP: 90.11.190.129
 From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
@@ -28,9 +28,9 @@ To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
 Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
         Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
         linux-gpio@vger.kernel.org
-Subject: [PATCH 1/3] misc: microchip: pci1xxxx: Do not disable the pci device twice in gp_aux_bus_remove()
-Date:   Sun, 18 Sep 2022 08:27:24 +0200
-Message-Id: <8a3a385b3ae15ee7497469ec3250302b626a018b.1663482259.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 2/3] misc: microchip: pci1xxxx: Fix a memory leak in the error handling of gp_aux_bus_probe()
+Date:   Sun, 18 Sep 2022 08:27:33 +0200
+Message-Id: <17e19926669a1654e5f2495bf3b289581183d02e.1663482259.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1663482259.git.christophe.jaillet@wanadoo.fr>
 References: <cover.1663482259.git.christophe.jaillet@wanadoo.fr>
@@ -45,24 +45,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-gp_aux_bus_probe() uses pcim_enable_device(), so there is no point in
-calling pci_disable_device() explicitly in the remove function.
+'aux_bus' is freed in the remove function but not in the error handling
+path of the probe.
+
+Use devm_kzalloc() to simplify the remove function and fix the leak in the
+probe.
 
 Fixes: 393fc2f5948f ("misc: microchip: pci1xxxx: load auxiliary bus driver for the PIO function in the multi-function endpoint of pci1xxxx device.")
 Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
- drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-index edff3ee73f6f..6c4f8384aa09 100644
+index 6c4f8384aa09..32af2b14ff34 100644
 --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
 +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gp.c
-@@ -139,7 +139,6 @@ static void gp_aux_bus_remove(struct pci_dev *pdev)
+@@ -38,7 +38,7 @@ static int gp_aux_bus_probe(struct pci_dev *pdev, const struct pci_device_id *id
+ 	if (retval)
+ 		return retval;
+ 
+-	aux_bus = kzalloc(sizeof(*aux_bus), GFP_KERNEL);
++	aux_bus = devm_kzalloc(&pdev->dev, sizeof(*aux_bus), GFP_KERNEL);
+ 	if (!aux_bus)
+ 		return -ENOMEM;
+ 
+@@ -138,7 +138,6 @@ static void gp_aux_bus_remove(struct pci_dev *pdev)
+ 	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[0]->aux_dev);
  	auxiliary_device_delete(&aux_bus->aux_device_wrapper[1]->aux_dev);
  	auxiliary_device_uninit(&aux_bus->aux_device_wrapper[1]->aux_dev);
- 	kfree(aux_bus);
--	pci_disable_device(pdev);
+-	kfree(aux_bus);
  }
  
  static const struct pci_device_id pci1xxxx_tbl[] = {
