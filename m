@@ -2,291 +2,321 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72FF05BBFAD
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 21:55:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3E1D5BBF4B
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Sep 2022 20:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbiIRTyR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Sep 2022 15:54:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58376 "EHLO
+        id S229458AbiIRS3P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Sep 2022 14:29:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbiIRTyP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 15:54:15 -0400
-Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26292B17
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 12:54:14 -0700 (PDT)
-Received: by mail-qv1-xf2d.google.com with SMTP id c6so20509679qvn.6
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Sep 2022 12:54:14 -0700 (PDT)
+        with ESMTP id S229447AbiIRS3O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Sep 2022 14:29:14 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD7D101EA;
+        Sun, 18 Sep 2022 11:29:11 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id x27so10240721lfu.0;
+        Sun, 18 Sep 2022 11:29:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=lOXjsiEmngT43M1lyro/xLi2Qow0vt5RnvkI5Uizgxk=;
-        b=YxNNYCnYJ18J3/PuB6z1JGbffOkmrEJPQcN7U1FgWcT6rk29t06Tj2kzOYqTbyua0Q
-         iKnHHN0VQG48+OZcgxRdijh5OAcsgR/hn/4wWnapvuj8fDIe4ZcW8Y3c3aQCGaGFolAW
-         /LRyXVo13QOyVOWqU8gyC9doFdjfqjp6ID38X0RhS9jz3bHFnD7dc9CvSAO66ar4Pn9b
-         yBBdenlKnGQts7iiyj2JVKmBim1RB806Zzb3XmRJZmEqJrQLGU+ZkXKH5kR+p09vQzyc
-         6LZ7KRFTnJI5Nt358qFr9BL0u/xOtB9RgJ0AXTIrhhOt2a0an9Nx4rIlDRguDyZpUa3Z
-         ZWqg==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=WA3909OkPlGQ2DqJkniN7gPfMblXDPfE9yZdpVr0YiU=;
+        b=ole8W+krjxvE9MZCDv41ZKiVanU59Kf76tIKgueiSoEVqzSG9ue6OqZnFslBFG+qFj
+         r0yW6jG+/RO6FjDNuixVeXWEtC6vJZPgt6UpdFvrlZGnw/W3cNduGBuR7XjS+vxUL747
+         kH6t4c2rPE2NWmxLQfkyPCsVk2LVZhiTdKm7S3SmVbzSfhth5ePNhoHqa/CuBKc8AlUr
+         duZ1dj3BNq0oSb7FL+PVc6KX6rpvskIBJq+ZK6whvlGJk+zDQB/sUzbSaU2iQ6rhUrMM
+         uXEoOIMlDqv93Bz8cPjM+uuLmIWHNG8E3+nvlqQI9U6pvKxFM4rmo9OtP6S6wYplIGx6
+         EoEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=lOXjsiEmngT43M1lyro/xLi2Qow0vt5RnvkI5Uizgxk=;
-        b=ybb0TNvgG2Qp0Tjza8Qxfh42Hiyd2PHO8n2vuDF5CrlmlcJicSduWB0+dBuzoP62ry
-         NDFPxvdtEFQ/Pbt3aR5jbMThmiOFUbD4gZ0jCDSAMVn58b5cHZeFvQgX/h8onUoIp7Rz
-         EpCUZga+GQj2lWPM+R6IBUumMpsN9EyzGdIuMN+KrDdjAsselZppBGntevEPFl6EtsZV
-         6y8LXYGoh22K4C1hv6eMTlGAyXXG1F0+0X34w9FaCZckdY6TgdTnfthcvLDeFEoXJmUr
-         Nl7tS5weztnfwZNq6NZuCCE9iBl8Q/MTVRtRRO7Alrwd7Vlo6OvGjDr9YSm2iqJoWOSZ
-         5ujw==
-X-Gm-Message-State: ACrzQf1mO5e7UHYY9lSKxca2bnxjMzYmZRE//+Ahtbr9P+GzlIYbDD6t
-        8R/5rg/HkIoSvlmJMWwTpX3HdA==
-X-Google-Smtp-Source: AMsMyM5VAmXF9KHvSJRMEj8oKnrwvxEqhQZp+aqALHtmWNyKE0PmTxVTeMijuiHbX074TwZiqoGKIQ==
-X-Received: by 2002:a05:6214:528e:b0:4ac:d1bf:59b4 with SMTP id kj14-20020a056214528e00b004acd1bf59b4mr12272150qvb.3.1663530853206;
-        Sun, 18 Sep 2022 12:54:13 -0700 (PDT)
-Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id i67-20020a37b846000000b006ce7d9dea7asm10753310qkf.13.2022.09.18.12.54.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 18 Sep 2022 12:54:12 -0700 (PDT)
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     brgl@bgdev.pl, linus.walleij@linaro.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        linux-gpio@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH v2 3/3] gpio: pci-idio-16: Utilize the idio-16 GPIO library
-Date:   Sun, 18 Sep 2022 12:50:45 -0400
-Message-Id: <7fbd42200acd2bc6559f224a35cf4dc9dc6052ce.1663519546.git.william.gray@linaro.org>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <cover.1663519546.git.william.gray@linaro.org>
-References: <cover.1663519546.git.william.gray@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=WA3909OkPlGQ2DqJkniN7gPfMblXDPfE9yZdpVr0YiU=;
+        b=lSIB7QOH/D7lt/FTIwWwsBFhxGjn/TrNUbl64u56CLqLJQd2n46ypa0aLclK00aava
+         ieN1f7iClVHYF9A/Itv4/DQKafXzl5qeiHT5F3d79KOft9m7TtDAmNFtdiO0Gv5sgBmq
+         d+xkXzcURBcSr27gvLua4DbDv2fp154co9OQz2vEJJKqnkB7grERU9EL/vfqamE/B2gg
+         dKnJrt9d6ktdjhspEqp3t9ZA5q4Gw949GQh2AkubWWVq4NkarqYercz+5B8Wm4wrqgzM
+         69KErcjCt5SndkOeFWwK8tFqnb4I3tPEOl+GT5dxcWJi527dd7227OndEfuxTBknN31o
+         aFqg==
+X-Gm-Message-State: ACrzQf2OfU2zgRCOsG6xsXLYEtzY5NSsH8Xv+9O6jR3Z3D73J8Q5um6S
+        pfTtkv5USmthv2hTHLJVuuKKvzxMfLg4W4txK7o=
+X-Google-Smtp-Source: AMsMyM5ZhObwU1v6wtX7DkaBvz8M9Gqw0K7XRrt7OcA3paEWSzLhcYG167feZG7HisdunSOAsJoDLRBbmqX3I68trH8=
+X-Received: by 2002:a05:6512:eaa:b0:497:a1ed:6fa5 with SMTP id
+ bi42-20020a0565120eaa00b00497a1ed6fa5mr4728843lfb.108.1663525749385; Sun, 18
+ Sep 2022 11:29:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20220714122322.63663-1-tmaimon77@gmail.com> <20220714122322.63663-2-tmaimon77@gmail.com>
+ <20220718211046.GA3547663-robh@kernel.org>
+In-Reply-To: <20220718211046.GA3547663-robh@kernel.org>
+From:   Tomer Maimon <tmaimon77@gmail.com>
+Date:   Sun, 18 Sep 2022 21:28:57 +0300
+Message-ID: <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO documentation
+To:     Rob Herring <robh@kernel.org>
+Cc:     Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The ACCES PCI-IDIO-16 device is part of the ACCES IDIO-16 family, so the
-idio-16 GPIO library module is selected and utilized to consolidate
-code.
+Hi Rob,
 
-Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
----
- drivers/gpio/Kconfig            |   1 +
- drivers/gpio/gpio-pci-idio-16.c | 119 ++++----------------------------
- 2 files changed, 14 insertions(+), 106 deletions(-)
+Thanks for your comment and sorry for the late reply.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 48846ee476e2..8b90bff7b198 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1585,6 +1585,7 @@ config GPIO_PCH
- config GPIO_PCI_IDIO_16
- 	tristate "ACCES PCI-IDIO-16 GPIO support"
- 	select GPIOLIB_IRQCHIP
-+	select GPIO_IDIO_16
- 	help
- 	  Enables GPIO support for the ACCES PCI-IDIO-16. An interrupt is
- 	  generated when any of the inputs change state (low to high or high to
-diff --git a/drivers/gpio/gpio-pci-idio-16.c b/drivers/gpio/gpio-pci-idio-16.c
-index 71a13a394050..a86ce748384b 100644
---- a/drivers/gpio/gpio-pci-idio-16.c
-+++ b/drivers/gpio/gpio-pci-idio-16.c
-@@ -3,8 +3,7 @@
-  * GPIO driver for the ACCES PCI-IDIO-16
-  * Copyright (C) 2017 William Breathitt Gray
-  */
--#include <linux/bitmap.h>
--#include <linux/bitops.h>
-+#include <linux/bits.h>
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/gpio/driver.h>
-@@ -16,51 +15,28 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- 
--/**
-- * struct idio_16_gpio_reg - GPIO device registers structure
-- * @out0_7:	Read: FET Drive Outputs 0-7
-- *		Write: FET Drive Outputs 0-7
-- * @in0_7:	Read: Isolated Inputs 0-7
-- *		Write: Clear Interrupt
-- * @irq_ctl:	Read: Enable IRQ
-- *		Write: Disable IRQ
-- * @filter_ctl:	Read: Activate Input Filters 0-15
-- *		Write: Deactivate Input Filters 0-15
-- * @out8_15:	Read: FET Drive Outputs 8-15
-- *		Write: FET Drive Outputs 8-15
-- * @in8_15:	Read: Isolated Inputs 8-15
-- *		Write: Unused
-- * @irq_status:	Read: Interrupt status
-- *		Write: Unused
-- */
--struct idio_16_gpio_reg {
--	u8 out0_7;
--	u8 in0_7;
--	u8 irq_ctl;
--	u8 filter_ctl;
--	u8 out8_15;
--	u8 in8_15;
--	u8 irq_status;
--};
-+#include "gpio-idio-16.h"
- 
- /**
-  * struct idio_16_gpio - GPIO device private data structure
-  * @chip:	instance of the gpio_chip
-  * @lock:	synchronization lock to prevent I/O race conditions
-  * @reg:	I/O address offset for the GPIO device registers
-+ * @state:	ACCES IDIO-16 device state
-  * @irq_mask:	I/O bits affected by interrupts
-  */
- struct idio_16_gpio {
- 	struct gpio_chip chip;
- 	raw_spinlock_t lock;
--	struct idio_16_gpio_reg __iomem *reg;
-+	struct idio_16 __iomem *reg;
-+	struct idio_16_state state;
- 	unsigned long irq_mask;
- };
- 
- static int idio_16_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int offset)
- {
--	if (offset > 15)
-+	if (idio_16_get_direction(offset))
- 		return GPIO_LINE_DIRECTION_IN;
- 
- 	return GPIO_LINE_DIRECTION_OUT;
-@@ -82,43 +58,16 @@ static int idio_16_gpio_direction_output(struct gpio_chip *chip,
- static int idio_16_gpio_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long mask = BIT(offset);
--
--	if (offset < 8)
--		return !!(ioread8(&idio16gpio->reg->out0_7) & mask);
--
--	if (offset < 16)
--		return !!(ioread8(&idio16gpio->reg->out8_15) & (mask >> 8));
--
--	if (offset < 24)
--		return !!(ioread8(&idio16gpio->reg->in0_7) & (mask >> 16));
- 
--	return !!(ioread8(&idio16gpio->reg->in8_15) & (mask >> 24));
-+	return idio_16_get(idio16gpio->reg, &idio16gpio->state, offset);
- }
- 
- static int idio_16_gpio_get_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *ports[] = {
--		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
--		&idio16gpio->reg->in0_7, &idio16gpio->reg->in8_15,
--	};
--	void __iomem *port_addr;
--	unsigned long port_state;
--
--	/* clear bits array to a clean slate */
--	bitmap_zero(bits, chip->ngpio);
--
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		port_addr = ports[offset / 8];
--		port_state = ioread8(port_addr) & gpio_mask;
--
--		bitmap_set_value8(bits, port_state, offset);
--	}
- 
-+	idio_16_get_multiple(idio16gpio->reg, &idio16gpio->state, mask, bits);
- 	return 0;
- }
- 
-@@ -126,61 +75,16 @@ static void idio_16_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	int value)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned int mask = BIT(offset);
--	void __iomem *base;
--	unsigned long flags;
--	unsigned int out_state;
--
--	if (offset > 15)
--		return;
--
--	if (offset > 7) {
--		mask >>= 8;
--		base = &idio16gpio->reg->out8_15;
--	} else
--		base = &idio16gpio->reg->out0_7;
--
--	raw_spin_lock_irqsave(&idio16gpio->lock, flags);
- 
--	if (value)
--		out_state = ioread8(base) | mask;
--	else
--		out_state = ioread8(base) & ~mask;
--
--	iowrite8(out_state, base);
--
--	raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
-+	idio_16_set(idio16gpio->reg, &idio16gpio->state, offset, value);
- }
- 
- static void idio_16_gpio_set_multiple(struct gpio_chip *chip,
- 	unsigned long *mask, unsigned long *bits)
- {
- 	struct idio_16_gpio *const idio16gpio = gpiochip_get_data(chip);
--	unsigned long offset;
--	unsigned long gpio_mask;
--	void __iomem *ports[] = {
--		&idio16gpio->reg->out0_7, &idio16gpio->reg->out8_15,
--	};
--	size_t index;
--	void __iomem *port_addr;
--	unsigned long bitmask;
--	unsigned long flags;
--	unsigned long out_state;
- 
--	for_each_set_clump8(offset, gpio_mask, mask, ARRAY_SIZE(ports) * 8) {
--		index = offset / 8;
--		port_addr = ports[index];
--
--		bitmask = bitmap_get_value8(bits, offset) & gpio_mask;
--
--		raw_spin_lock_irqsave(&idio16gpio->lock, flags);
--
--		out_state = ioread8(port_addr) & ~gpio_mask;
--		out_state |= bitmask;
--		iowrite8(out_state, port_addr);
--
--		raw_spin_unlock_irqrestore(&idio16gpio->lock, flags);
--	}
-+	idio_16_set_multiple(idio16gpio->reg, &idio16gpio->state, mask, bits);
- }
- 
- static void idio_16_irq_ack(struct irq_data *data)
-@@ -335,6 +239,8 @@ static int idio_16_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	idio16gpio->chip.set = idio_16_gpio_set;
- 	idio16gpio->chip.set_multiple = idio_16_gpio_set_multiple;
- 
-+	idio_16_state_init(&idio16gpio->state);
-+
- 	girq = &idio16gpio->chip.irq;
- 	girq->chip = &idio_16_irqchip;
- 	/* This will let us handle the parent IRQ in the driver */
-@@ -379,3 +285,4 @@ module_pci_driver(idio_16_driver);
- MODULE_AUTHOR("William Breathitt Gray <vilhelm.gray@gmail.com>");
- MODULE_DESCRIPTION("ACCES PCI-IDIO-16 GPIO driver");
- MODULE_LICENSE("GPL v2");
-+MODULE_IMPORT_NS(GPIO_IDIO_16);
--- 
-2.37.3
+On Tue, 19 Jul 2022 at 00:10, Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu, Jul 14, 2022 at 03:23:21PM +0300, Tomer Maimon wrote:
+> > Added device tree binding documentation for Nuvoton Arbel BMC NPCM8XX
+> > pinmux and GPIO controller.
+> >
+> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> > ---
+> >  .../pinctrl/nuvoton,npcm845-pinctrl.yaml      | 213 ++++++++++++++++++
+> >  1 file changed, 213 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..104766f7acc5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+> > @@ -0,0 +1,213 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/nuvoton,npcm845-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Nuvoton NPCM845 Pin Controller and GPIO
+> > +
+> > +maintainers:
+> > +  - Tomer Maimon <tmaimon77@gmail.com>
+> > +
+> > +description:
+> > +  The Nuvoton BMC NPCM8XX Pin Controller multi-function routed through
+> > +  the multiplexing block, Each pin supports GPIO functionality (GPIOx)
+> > +  and multiple functions that directly connect the pin to different
+> > +  hardware blocks.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: nuvoton,npcm845-pinctrl
+> > +
+> > +  ranges:
+> > +    maxItems: 1
+> > +
+> > +  '#address-cells':
+> > +    const: 1
+> > +
+> > +  '#size-cells':
+> > +    const: 1
+> > +
+> > +  nuvoton,sysgcr:
+> > +    $ref: /schemas/types.yaml#/definitions/phandle
+> > +    description: a phandle to access GCR registers.
+> > +
+> > +patternProperties:
+> > +  "^gpio@":
+> > +    type: object
+> > +
+> > +    description:
+> > +      Eight GPIO banks that each contain between 32 GPIOs.
+>
+> 'each contain between 32'?
+will be fixed net version.
+>
+> > +
+> > +    properties:
+> > +      gpio-controller: true
+> > +
+> > +      '#gpio-cells':
+> > +        const: 2
+> > +
+> > +      reg:
+> > +        maxItems: 1
+> > +
+> > +      interrupts:
+> > +        maxItems: 1
+> > +
+> > +      gpio-ranges:
+> > +        maxItems: 1
+> > +
+> > +    required:
+> > +      - gpio-controller
+> > +      - '#gpio-cells'
+> > +      - reg
+> > +      - interrupts
+> > +      - gpio-ranges
+> > +
+> > +  "-mux":
+>
+> '-mux$'? Something like 'foo-muxbar' is needed?
+No.
+>
+> > +    $ref: pinmux-node.yaml#
+> > +
+> > +    properties:
+> > +      groups:
+> > +        description:
+> > +          One or more groups of pins to mux to a certain function
+> > +        items:
+> > +          enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> > +                  smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> > +                  smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> > +                  smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> > +                  spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> > +                  bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> > +                  rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> > +                  fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> > +                  fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> > +                  r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> > +                  rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> > +                  smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> > +                  smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> > +                  pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> > +                  serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> > +                  spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> > +                  smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> > +                  smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> > +                  hgpio4, hgpio5, hgpio6, hgpio7 ]
+> > +
+> > +      function:
+> > +        description:
+> > +          The function that a group of pins is muxed to
+> > +        enum: [ iox1, iox2, smb1d, smb2d, lkgpo1, lkgpo2, ioxh, gspi,
+> > +                smb5b, smb5c, lkgpo0, pspi2, jm1, jm2, smb4den, smb4b,
+> > +                smb4c, smb15, smb16, smb17, smb18, smb19, smb20, smb21,
+> > +                smb22, smb23, smb4d, smb14, smb5, smb4, smb3, spi0cs1,
+> > +                spi0cs2, spi0cs3, smb3c, smb3b, bmcuart0a, uart1, jtag2,
+> > +                bmcuart1, uart2, bmcuart0b, r1err, r1md, r1oen, r2oen,
+> > +                rmii3, r3oen, smb3d, fanin0, fanin1, fanin2, fanin3, fanin4,
+> > +                fanin5, fanin6, fanin7, fanin8, fanin9, fanin10, fanin11,
+> > +                fanin12, fanin13, fanin14, fanin15, pwm0, pwm1, pwm2, pwm3,
+> > +                r2, r2err, r2md, r3rxer, ga20kbc, smb5d, lpc, espi, rg1,
+> > +                rg1mdio, rg2, ddr, i3c0, i3c1, i3c2, i3c3, i3c4, i3c5,
+> > +                smb0, smb1, smb2, smb2c, smb2b, smb1c, smb1b, smb8, smb9,
+> > +                smb10, smb11, sd1, sd1pwr, pwm4, pwm5, pwm6, pwm7, pwm8,
+> > +                pwm9, pwm10, pwm11, mmc8, mmc, mmcwp, mmccd, mmcrst, clkout,
+> > +                serirq, lpcclk, scipme, sci, smb6, smb7, spi1, faninx, r1,
+> > +                spi3, spi3cs1, spi3quad, spi3cs2, spi3cs3, nprd_smi, smb0b,
+> > +                smb0c, smb0den, smb0d, ddc, rg2mdio, wdog1, wdog2, smb12,
+> > +                smb13, spix, spixcs1, clkreq, hgpio0, hgpio1, hgpio2, hgpio3,
+> > +                hgpio4, hgpio5, hgpio6, hgpio7 ]
+> > +
+> > +    dependencies:
+> > +      groups: [ function ]
+> > +      function: [ groups ]
+> > +
+> > +    additionalProperties: false
+> > +
+> > +  "^pin":
+> > +    $ref: pincfg-node.yaml#
+> > +
+> > +    properties:
+> > +      pins:
+> > +        description:
+> > +          A list of pins to configure in certain ways, such as enabling
+> > +          debouncing
+> > +
+> > +      bias-disable: true
+> > +
+> > +      bias-pull-up: true
+> > +
+> > +      bias-pull-down: true
+> > +
+> > +      input-enable: true
+> > +
+> > +      output-low: true
+> > +
+> > +      output-high: true
+> > +
+> > +      drive-push-pull: true
+> > +
+> > +      drive-open-drain: true
+> > +
+> > +      input-debounce:
+> > +        description:
+> > +          Debouncing periods in microseconds, one period per interrupt
+> > +          bank found in the controller
+> > +        $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +        minItems: 1
+> > +        maxItems: 4
+> > +
+> > +      slew-rate:
+> > +        description: |
+> > +          0: Low rate
+> > +          1: High rate
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 1]
+> > +
+> > +      drive-strength:
+> > +        enum: [ 0, 1, 2, 4, 8, 12 ]
+> > +
+> > +    additionalProperties: false
+> > +
+> > +allOf:
+> > +  - $ref: "pinctrl.yaml#"
+> > +
+> > +required:
+> > +  - compatible
+> > +  - ranges
+> > +  - '#address-cells'
+> > +  - '#size-cells'
+> > +  - nuvoton,sysgcr
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +
+> > +    soc {
+> > +      #address-cells = <2>;
+> > +      #size-cells = <2>;
+> > +
+> > +      pinctrl: pinctrl@f0800000 {
+> > +        compatible = "nuvoton,npcm845-pinctrl";
+> > +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+> > +        #address-cells = <1>;
+> > +        #size-cells = <1>;
+> > +        nuvoton,sysgcr = <&gcr>;
+> > +
+> > +        gpio0: gpio@f0010000 {
+>
+> gpio@0
+>
+> Is this really a child block of the pinctrl? Doesn't really look like it
+> based on addressess. Where are the pinctrl registers? In the sysgcr? If
+> so, then pinctrl should be a child of it. But that doesn't really work
+> too well with gpio child nodes...
+the pin controller mux is handled by sysgcr this is why the sysgcr in
+the mother node,
+and the pin configuration are handled by the GPIO registers.  each
+GPIO bank (child) contains 32 GPIO.
+this is why the GPIO is the child node.
 
+>
+> Rob
+
+Best regards,
+
+Tomer
