@@ -2,114 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32DDD5BD1CB
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 18:05:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B92445BD1D3
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 18:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiISQFT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 12:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
+        id S229592AbiISQGn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 12:06:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229904AbiISQEz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 12:04:55 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3B664F3;
-        Mon, 19 Sep 2022 09:03:56 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 28JG3hAT080911;
-        Mon, 19 Sep 2022 11:03:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1663603423;
-        bh=2ObUHsu17ZORD4jCLvyH/uWRJtHCGgdk1cTknrp/V7A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=u6j+vYJVplWE6z19mG6BuoUQNRORtXY3d9E25m043Z/JjB/brusODlIA1RehuNthK
-         80FZRzehiknHeBsrtfkPNDdIDNqgjhoNG9r98B7O2sBdEHAe14aJ50X0MwvLJoQDDS
-         2ljWqAg8p0Jsy/TrPbLfksQgaQ10b4QcI0tfR+M4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 28JG3hWX004692
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 19 Sep 2022 11:03:43 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Mon, 19
- Sep 2022 11:03:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Mon, 19 Sep 2022 11:03:42 -0500
-Received: from uda0132425.dhcp.ti.com (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 28JG3dEr001204;
-        Mon, 19 Sep 2022 11:03:40 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        with ESMTP id S229563AbiISQGl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 12:06:41 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A58CBE3
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 09:06:40 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id i26so47714061lfp.11
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 09:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=iE9nxQEFInaL7XSikMpoXTZbHYoCnjZKoSz4CSYOZnA=;
+        b=UAOja/FfrymFuV0xvicbL7PMXuUl4mPyof1Okb0o4luFMO529ZM+SZDfwGKYf+HTMf
+         a/WaNIKZH+CCwzmVfwGBHNgDh6tyEE/4RCYW3s7Xy7CUDsPExVi8yVgN77oSpkFy1wP0
+         EZDoTz0wXXRlHxsk4U6dtvkL2742ktOiuNpmr9RmscpZCU5Du2ez6apYChpa26SOBuxd
+         8D5LRWj2h5/EJlkgEmYbAKihkayVc39iPARINK4Y7nQn0Yf6r8U/fwVO+POZ4Tm3kQed
+         Czy0pCZbVQwwyLBIv33YaafZbPlkHahN7hk1BWUO99D62XnnMEsRLm6WG1yXMAoUug8l
+         tELg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=iE9nxQEFInaL7XSikMpoXTZbHYoCnjZKoSz4CSYOZnA=;
+        b=Cw42xYcQxh5akabm462hBSySMZrI+NcJ48M/JING2MV6Wa/TnTrCq043UwI4ZW6WTw
+         xiJJGS1eC6sps1vHseA/1aqCXDeo0nVEXgbkHOFZvIpM0Sp4TedHXk64bmGchwrHEzCc
+         neTkCVSlDWGTLLB95vDfJtRYwnjpTtl/qlvYJvC7/Tk1QAlSxE1VqQLYovhyA0+rlvZw
+         A/tpUowGejV4wf0+dow7zvIgqz1Ru6PbXXpoYoZNbkq7ceJ8G1sS+5oYiNxYa9jUBj80
+         GlS4esP1jPhMQDSeeO8uZGZscBGQdVsq6KKMcr20yYieNMfbcygg4e91KSQp/NGfDlq5
+         tilg==
+X-Gm-Message-State: ACrzQf3Uae6snsvF9ocRkO6UrM3EoYJhlGkkrJouiInB7X5yFYSrffdU
+        mbkBRNbzlyrvNQUyfTdmOdRPcQ==
+X-Google-Smtp-Source: AMsMyM65h0pq/i+FvwWdh8cUN9HdV6WWDFVY+wFWguOob0zVZcboRCwsVykWpVj97GAsCtp0S9YpTw==
+X-Received: by 2002:ac2:4bc7:0:b0:49a:dbf7:73e9 with SMTP id o7-20020ac24bc7000000b0049adbf773e9mr5964150lfq.529.1663603598864;
+        Mon, 19 Sep 2022 09:06:38 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id t22-20020a2e5356000000b00268b85321eesm3787302ljd.113.2022.09.19.09.06.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 09:06:38 -0700 (PDT)
+Message-ID: <bfca0379-7346-13e7-a18f-66740c5871b3@linaro.org>
+Date:   Mon, 19 Sep 2022 18:06:37 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
+ documentation
+Content-Language: en-US
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Bryan Brattlof <bb@ti.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/5] arm64: dts: ti: Add support for AM62A family of SoCs
-Date:   Mon, 19 Sep 2022 21:33:36 +0530
-Message-ID: <166360336860.225542.16586137913783585865.b4-ty@ti.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220901141328.899100-1-vigneshr@ti.com>
-References: <20220901141328.899100-1-vigneshr@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+References: <20220714122322.63663-1-tmaimon77@gmail.com>
+ <20220714122322.63663-2-tmaimon77@gmail.com>
+ <20220718211046.GA3547663-robh@kernel.org>
+ <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
+ <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
+ <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Vignesh Raghavendra,
+On 19/09/2022 16:31, Tomer Maimon wrote:
+>>>>> +examples:
+>>>>> +  - |
+>>>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>>> +    #include <dt-bindings/gpio/gpio.h>
+>>>>> +
+>>>>> +    soc {
+>>>>> +      #address-cells = <2>;
+>>>>> +      #size-cells = <2>;
+>>>>> +
+>>>>> +      pinctrl: pinctrl@f0800000 {
+>>>>> +        compatible = "nuvoton,npcm845-pinctrl";
+>>>>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <1>;
+>>>>> +        nuvoton,sysgcr = <&gcr>;
+>>>>> +
+>>>>> +        gpio0: gpio@f0010000 {
+>>>>
+>>>> gpio@0
+>>>>
+>>>> Is this really a child block of the pinctrl? Doesn't really look like it
+>>>> based on addressess. Where are the pinctrl registers? In the sysgcr? If
+>>>> so, then pinctrl should be a child of it. But that doesn't really work
+>>>> too well with gpio child nodes...
+>>> the pin controller mux is handled by sysgcr this is why the sysgcr in
+>>> the mother node,
+>>> and the pin configuration are handled by the GPIO registers.  each
+>>> GPIO bank (child) contains 32 GPIO.
+>>> this is why the GPIO is the child node.
+>>
+>> Then maybe pinctrl should be the sysgcr and expose regmap for other devices?
+> The pin controller using the sysgcr to handle the pinmux, this is why
+> the sysgcr is in the mother node, is it problematic?
 
-On Thu, 1 Sep 2022 19:43:23 +0530, Vignesh Raghavendra wrote:
-> This series adds basic boot support for AM62A SoCs with UART, MMC/SD and
-> GPIO support on AM62A SK EVM
-> 
-> Bootlog: https://gist.github.com/r-vignesh/4d88f53bb0489f1675fa78f993e95d3f
-> Tech Ref manual: https://www.ti.com/lit/zip/spruj16
-> Schematics: https://www.ti.com/lit/zip/sprr459
-> 
-> [...]
+You said pin-controller mux registers are in sysgcr, so it should not be
+used via syscon.
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
+Please provide address map description to convince us that this is
+correct HW representation.
 
-[1/5] dt-bindings: arm: ti: Rearrange IOPAD macros alphabetically
-      commit: a3c52977419beabc5cb4d6f0b062fd4cb460e54d
-[2/5] dt-bindings: arm: ti: Add bindings for AM62A7 SoC
-      commit: cad20a8de86f37d2500963b1a424f9d658d8e54a
-[3/5] dt-bindings: pinctrl: k3: Introduce pinmux definitions for AM62A
-      commit: 1607e6f9289cdb4c982a223e80ff3c5e827b7cd4
-[4/5] arm64: dts: ti: Introduce AM62A7 family of SoCs
-      commit: 5fc6b1b62639c764e6e7e261f384d2fb47eff39b
-[5/5] arm64: dts: ti: Add support for AM62A7-SK
-      commit: 38c4a08c820cd2483750a68f2bf84c3665fe6137
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
-
+Best regards,
+Krzysztof
