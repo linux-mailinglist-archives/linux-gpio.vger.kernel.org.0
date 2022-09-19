@@ -2,236 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED3E65BC5CE
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 11:54:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED3A35BCACB
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 13:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbiISJyW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 05:54:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49578 "EHLO
+        id S229769AbiISLcg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 07:32:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229682AbiISJyV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 05:54:21 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8D412AD1;
-        Mon, 19 Sep 2022 02:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663581260; x=1695117260;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J84tZUNo70mPEn5i619JIcO867QIpVxzMSvGnO/5+I8=;
-  b=bsKaM9zDaIbwkwleTrglfuDwMot7CaoLbHG9DnScRE3TePWPrxjw9SWl
-   zFD+CVTPQNm7qODXYw5wnZzt5QkMWRmVvbIUscTkud5+7Iz2AZWBJWS57
-   0GFHR/pdcQk1WRILBOCK7QgUe3zbEPcB3Z6ZK9GknTtIeQACQZQjL0Kmt
-   FN2EXLqR1LEbhUmLPRkQmOwxa5Fgo8itoLg2OEEGA9xdTl6y4YluMSiD5
-   OuSTSt8Q3kmeBDBlSh9jJvkYrncW9fr0p+qW/h9OxcTPnGs/XqEbwcRY8
-   FTMIwH4zPfm+/hEZ/GXIKsvbxsqsb6exOKxzDYluJkaqWLU6JwHyAmGOD
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10474"; a="363314046"
-X-IronPort-AV: E=Sophos;i="5.93,327,1654585200"; 
-   d="scan'208";a="363314046"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Sep 2022 02:54:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,327,1654585200"; 
-   d="scan'208";a="793795409"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 19 Sep 2022 02:54:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oaDTh-004VMM-2h;
-        Mon, 19 Sep 2022 12:54:13 +0300
-Date:   Mon, 19 Sep 2022 12:54:13 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org,
-        jingle.wu@emc.com.tw, rafael@kernel.org, mario.limonciello@amd.com,
-        hdegoede@redhat.com, linus.walleij@linaro.org, timvp@google.com,
-        dmitry.torokhov@gmail.com, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Len Brown <lenb@kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 05/13] gpiolib: acpi: Add wake_capable variants of
- acpi_dev_gpio_irq_get
-Message-ID: <Yyg8RU2k6ZCRuqri@smile.fi.intel.com>
-References: <20220914235801.1731478-1-rrangel@chromium.org>
- <20220914155914.v3.5.I4ff95ba7e884a486d7814ee888bf864be2ebdef4@changeid>
+        with ESMTP id S229611AbiISLcc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 07:32:32 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BC127FD5
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 04:32:30 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id i26so46415041lfp.11
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 04:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=f3dXWg0oh8xL1M1dPWVh4Ebk/AkdK0Pb6P7zeBhDtd8=;
+        b=WNQozphNVQEppxOaUs5pFh0cbqStGednEszBlcHE4tVBgW8Fitzf6RfFqiVg9uSafn
+         NHQBhxyRtXdXJ5Nmy0jbE9fCtb7RLeo6HjmJmcotg2syt95F765PD17poSOqlJ/+3/Pj
+         3gNKTsPca1DH4ARuIs2M34Lo+TP20QTTV5I/A/p3ubbkNdvVvteVnomRf3m9zwavVmtC
+         e+zRTkNuQ5MZj8hC7keLp8imZRieAuL7xQRi2Bx9idof1dozsQ6r15WXR8N8UFlaSrB/
+         vY5iPx+yJ5ytmyK0O05RDrZ0fjfaFUK+w2oAqPfmwnC8K/iVLk1fRFXVVeHAktxM1j56
+         JMIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=f3dXWg0oh8xL1M1dPWVh4Ebk/AkdK0Pb6P7zeBhDtd8=;
+        b=sS128+u0XhE9OFOMv/ZJdX8oDAtOHhHxmnFgN/nGIWAn31ZIRRu6pCvK6WGdw6JvKN
+         r2kTratOGV+ip9ycvFlG91Sauyz2YjgMUo5GYGkdO313YGTbQt65tAzDTm1lpYFlSivm
+         6Sn0kj7C8YdgUmFYQSFlPlWXrqLFaOcpYs59NC7HKicTZkWnhmOyESxOGsMw/0Pfa1u2
+         QD4jIiwLYQw3bn3GYvVpH1nRR3gY5jHRs9YxMDgLC61Ox1ZsCtcOXTSqhF2WKxuiJqO4
+         uM49f3f49k7ARjMbc2OB1vUZwPlpJNBJ5ecWpF0yNNyQvcXYMnuz2AJzTcjnyzO8YcHR
+         F9YQ==
+X-Gm-Message-State: ACrzQf23fCOHOTFXlPA8kuCuJf4DZxYfrUOy+i8bb4H3XJb9lZnXPvDM
+        PdX31NVN1vIRRXlI/MQf3tWnZQ==
+X-Google-Smtp-Source: AMsMyM72aSuNbNRXSHuMBnyfRIgi9Sq5tlL62YUtFv6VcV1eQojmbXG0YOwSyj5a45zfpYEjpES+Ag==
+X-Received: by 2002:a05:6512:11c8:b0:497:c19e:c709 with SMTP id h8-20020a05651211c800b00497c19ec709mr6532651lfr.152.1663587148763;
+        Mon, 19 Sep 2022 04:32:28 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id bf16-20020a056512259000b00494792ea34esm5130747lfb.273.2022.09.19.04.32.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 19 Sep 2022 04:32:28 -0700 (PDT)
+Message-ID: <9b711a9e-9e63-b69e-fabf-e05c11f145a6@linaro.org>
+Date:   Mon, 19 Sep 2022 13:32:27 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220914155914.v3.5.I4ff95ba7e884a486d7814ee888bf864be2ebdef4@changeid>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: add missing entries for gpio
+ subnodes
+Content-Language: en-US
+To:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>
+References: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 05:57:53PM -0600, Raul E Rangel wrote:
-> The ACPI spec defines the SharedAndWake and ExclusiveAndWake share type
-> keywords. This is an indication that the GPIO IRQ can also be used as a
-> wake source. This change exposes the wake_capable bit so drivers can
-> correctly enable wake functionality instead of making an assumption.
+On 13/09/2022 09:46, Alexandre Torgue wrote:
+> Add "interrupt-controller" and gpio-line-names to gpio subnodes in order to
+> fix dtb validation.
 
-With two nit-picks below
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Rebase your patch on recent Linux kernel and use get_maintainers.pl.
 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
 > 
-> Changes in v3:
-> - Kept `acpi_dev_gpio_irq_get_by` unchanged to avoid having to touch
->   unrelated drivers.
-> - Converted wake_capable parameter to bool.
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
 > 
-> Changes in v2:
-> - Fixed call site in mlxbf_gige_probe
-> 
->  drivers/gpio/gpiolib-acpi.c | 17 ++++++++++++++---
->  drivers/gpio/gpiolib-acpi.h |  2 ++
->  include/linux/acpi.h        | 22 ++++++++++++++++++----
->  3 files changed, 34 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index 9be1376f9a627f..c703f095993a2c 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -741,6 +741,8 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
->  		lookup->info.pin_config = agpio->pin_config;
->  		lookup->info.debounce = agpio->debounce_timeout;
->  		lookup->info.gpioint = gpioint;
-> +		lookup->info.wake_capable = agpio->wake_capable ==
-> +					    ACPI_WAKE_CAPABLE;
-
-Can be still on one line.
-
->  		/*
->  		 * Polarity and triggering are only specified for GpioInt
-> @@ -987,10 +989,12 @@ struct gpio_desc *acpi_node_get_gpiod(struct fwnode_handle *fwnode,
->  }
+> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> index d35dcc4f0242..92582cccbb1b 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
+> @@ -65,6 +65,10 @@ patternProperties:
+>        '#gpio-cells':
+>          const: 2
 >  
->  /**
-> - * acpi_dev_gpio_irq_get_by() - Find GpioInt and translate it to Linux IRQ number
-> + * acpi_dev_gpio_irq_wake_get_by() - Find GpioInt and translate it to Linux IRQ
-> + *                                   number
->   * @adev: pointer to a ACPI device to get IRQ from
->   * @name: optional name of GpioInt resource
->   * @index: index of GpioInt resource (starting from %0)
-> + * @wake_capable: Set to true if the IRQ is wake capable
->   *
->   * If the device has one or more GpioInt resources, this function can be
->   * used to translate from the GPIO offset in the resource to the Linux IRQ
-> @@ -1002,9 +1006,13 @@ struct gpio_desc *acpi_node_get_gpiod(struct fwnode_handle *fwnode,
->   * The function takes optional @name parameter. If the resource has a property
->   * name, then only those will be taken into account.
->   *
-> + * The GPIO is considered wake capable if the GpioInt resource specifies
-> + * SharedAndWake or ExclusiveAndWake.
-> + *
->   * Return: Linux IRQ number (> %0) on success, negative errno on failure.
->   */
-> -int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index)
-> +int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name,
-> +				  int index, bool *wake_capable)
->  {
->  	int idx, i;
->  	unsigned int irq_flags;
-> @@ -1061,13 +1069,16 @@ int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int ind
->  				dev_dbg(&adev->dev, "IRQ %d already in use\n", irq);
->  			}
->  
-> +			if (wake_capable)
-> +				*wake_capable = info.wake_capable;
+> +      interrupt-controller: true
+> +      '#interrupt-cells':
+> +        const: 2
 > +
->  			return irq;
->  		}
+>        reg:
+>          maxItems: 1
+>        clocks:
+> @@ -80,6 +84,8 @@ patternProperties:
+>          minimum: 1
+>          maximum: 16
 >  
->  	}
->  	return -ENOENT;
->  }
-> -EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_get_by);
-> +EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_wake_get_by);
->  
->  static acpi_status
->  acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
-> diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-> index e476558d947136..1ac6816839dbce 100644
-> --- a/drivers/gpio/gpiolib-acpi.h
-> +++ b/drivers/gpio/gpiolib-acpi.h
-> @@ -18,6 +18,7 @@ struct acpi_device;
->   * @pin_config: pin bias as provided by ACPI
->   * @polarity: interrupt polarity as provided by ACPI
->   * @triggering: triggering type as provided by ACPI
-> + * @wake_capable: wake capability as provided by ACPI
->   * @debounce: debounce timeout as provided by ACPI
->   * @quirks: Linux specific quirks as provided by struct acpi_gpio_mapping
->   */
-> @@ -28,6 +29,7 @@ struct acpi_gpio_info {
->  	int pin_config;
->  	int polarity;
->  	int triggering;
-> +	bool wake_capable;
->  	unsigned int debounce;
->  	unsigned int quirks;
->  };
-> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-> index 6f64b2f3dc5479..d3121cef6cc3bc 100644
-> --- a/include/linux/acpi.h
-> +++ b/include/linux/acpi.h
-> @@ -1202,7 +1202,8 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  				struct acpi_resource_gpio **agpio);
->  bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
->  			       struct acpi_resource_gpio **agpio);
-> -int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index);
-> +int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name,
-> +				  int index, bool *wake_capable);
->  #else
->  static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
->  					      struct acpi_resource_gpio **agpio)
-> @@ -1214,16 +1215,29 @@ static inline bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
->  {
->  	return false;
->  }
-> -static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
-> -					   const char *name, int index)
-> +static inline int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev,
-> +						const char *name, int index,
-> +						bool *wake_capable)
->  {
->  	return -ENXIO;
->  }
->  #endif
->  
-> +static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev,
-> +					   const char *name, int index)
-> +{
-> +	return acpi_dev_gpio_irq_wake_get_by(adev, name, index, NULL);
-> +}
-> +
->  static inline int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
->  {
-> -	return acpi_dev_gpio_irq_get_by(adev, NULL, index);
-> +	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, NULL);
-> +}
+> +      gpio-line-names: true
 
-> +static inline int acpi_dev_gpio_irq_wake_get(struct acpi_device *adev,
-> +					     int index, bool *wake_capable)
-> +{
-> +	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, wake_capable);
->  }
-
-I would put this first in the group of these three helpers, so irq_get_by and
-irq_get will be the last (from more parameters to less parameters).
-
->  /* Device properties */
-> -- 
-> 2.37.3.968.ga6b4b080e4-goog
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
+maxItems?
 
 
+Best regards,
+Krzysztof
