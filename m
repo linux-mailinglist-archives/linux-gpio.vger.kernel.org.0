@@ -2,99 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0EBB5BD36D
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 19:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E023C5BD3AB
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 19:27:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbiISRO7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 13:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
+        id S231192AbiISR1l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 13:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbiISRO7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 13:14:59 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45BAE64F3;
-        Mon, 19 Sep 2022 10:14:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F160CB81EDA;
-        Mon, 19 Sep 2022 17:14:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F62DC433D7;
-        Mon, 19 Sep 2022 17:14:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663607695;
-        bh=qR1pUIp0+X38P59+eh0IdZBlLkL3ISJbPk0aQb93FSo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lM4lKurbpX+U+QY2+LEwRUwqORyBnT0oK/SwdU4Y3Hfl25JAj6L+qz1qPiav924Un
-         n4qRTqYyZSKqsSZ9gkW8Atdq2RBf26Ef7BLNM6OWjSwx8vIrTrn1uXSGhPva3wuJbn
-         wmYuhdXCMKWePvgxzfiC9wHBOcTYT5IRP+u2L9a4zCsIPfrz175h5n82VzIPFVfyrJ
-         ZutPFWYx0spw6WoDRwnGf2ALz36Y6rcCaXTEC/Smf4AttHClNzzzsvg6Bx8hTFsdIE
-         nyge9Sz9U+zkUICmooYVFal78EEkF87vODY5U1FUw3dVi+sa8mcneSnQVAZs3qNXd5
-         /QA9sCraskSWg==
-Date:   Mon, 19 Sep 2022 10:14:53 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        Steen Hegelund <Steen.Hegelund@microchip.com>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "katie.morris@in-advantage.com" <katie.morris@in-advantage.com>
-Subject: Re: [RESEND PATCH v16 mfd 1/8] mfd: ocelot: add helper to get
- regmap from a resource
-Message-ID: <20220919101453.43f0a4d5@kernel.org>
-In-Reply-To: <YxoEbfq6YKx/4Vko@colin-ia-desktop>
-References: <20220905162132.2943088-1-colin.foster@in-advantage.com>
-        <20220905162132.2943088-2-colin.foster@in-advantage.com>
-        <Yxm4oMq8dpsFg61b@google.com>
-        <20220908142256.7aad25k553sqfgbm@skbuf>
-        <YxoEbfq6YKx/4Vko@colin-ia-desktop>
+        with ESMTP id S229589AbiISR1k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 13:27:40 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C9DDB13DC1;
+        Mon, 19 Sep 2022 10:27:38 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.93,328,1654527600"; 
+   d="scan'208";a="133293979"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 20 Sep 2022 02:27:38 +0900
+Received: from localhost.localdomain (unknown [10.226.92.28])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 828EA40041A0;
+        Tue, 20 Sep 2022 02:27:35 +0900 (JST)
+From:   Biju Das <biju.das.jz@bp.renesas.com>
+To:     conor.dooley@microchip.com
+Cc:     brgl@bgdev.pl, dmitry.torokhov@gmail.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michael@walle.cc, Biju Das <biju.das.jz@bp.renesas.com>
+Subject: Re: [PATCH] gpiolib: fix OOB access in quirk callbacks
+Date:   Mon, 19 Sep 2022 18:27:32 +0100
+Message-Id: <1041bfe5-6515-feea-36d6-47f8f28938b6@samsung.com> (raw)
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220916110118.446132-1-michael@walle.cc>
+References: <960a9d86-7814-3b2f-d5a0-9bc2b316d12b@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 8 Sep 2022 08:04:13 -0700 Colin Foster wrote:
-> My plan was to start sending RFCs on the internal copper phys and get
-> some feedback there. I assume there'll be a couple rounds and I don't
-> expect to hit this next release (if I'm being honest).
-> 
-> So I'll turn this question around to the net people: would a round or
-> two of RFCs that don't cleanly apply to net-next be acceptable? Then I
-> could submit a patch right after the next merge window? I've been
-> dragging these patches around for quite some time, I can do it for
-> another month :-)
+On 16.09.2022 13:01, Michael Walle wrote:
+> Commit a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
+> introduced an array of quirk functions which get iterated over. But a
+> sentinal value is missing. Add it.
+>
+> Fixes: a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
+> Signed-off-by: Michael Walle <michael@walle.cc>
 
-FWIW RFC patches which don't apply cleanly seem perfectly fine to me.
-Perhaps note the base in the cover letter for those who may want to 
-test them.
+This fixes the boot issue on RZ/G2L board since next-20220916.
 
-We can pull Lee's branch (thanks!) if it turns out the code is ready
-long before the MW.
+Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
+
+> ---
+> FWIW here is the kernel oops backtrace:
+> [    4.108706] Internal error: SP/PC alignment exception: 8a000000 [#1] SMP
+> [    4.115470] Modules linked in:
+> [    4.118549] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.0.0-rc5-next-20220916-00091-g6cae0fcbd5e7 #1821
+> [    4.128033] Hardware name: Kontron KBox A-230-LS (DT)
+> [    4.133127] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    4.140154] pc : 0x61722d6f697067
+> [    4.143495] lr : of_find_gpio+0x138/0x174
+> [    4.147546] sp : ffff80000a24b680
+> [    4.150884] x29: ffff80000a24b680 x28: 0000000000000000 x27: ffff80000996044c
+> [    4.158090] x26: 0000000000000001 x25: ffff80000970f588 x24: ffff800009297968
+> [    4.165295] x23: ffff80000a24b770 x22: 0000000000000000 x21: ffff0020009a7010
+> [    4.172500] x20: ffff8000097752f8 x19: fffffffffffffffe x18: 0000000000000000
+> [    4.179703] x17: ffff8000085fb9d0 x16: ffff8000085fb264 x15: ffff8000085f96ac
+> [    4.186907] x14: 0000000000000000 x13: ffff80000884b3e8 x12: ffff80000884ab04
+> [    4.194111] x11: ffff80000884aa54 x10: 0000000000025080 x9 : ffff8000085fce78
+> [    4.201316] x8 : 0101010101010101 x7 : ffff800009750268 x6 : 051f521459491b57
+> [    4.208520] x5 : 571b495914521f05 x4 : 6e61722d6f697067 x3 : ffff80000a24b6d4
+> [    4.215724] x2 : 0000000000000000 x1 : ffff8000097752f8 x0 : ffff00207f7e4b20
+> [    4.222928] Call trace:
+> [    4.225389]  0x61722d6f697067
+> [    4.228377]  gpiod_get_index+0x12c/0x440
+> [    4.232334]  devm_gpiod_get_index+0x34/0xf0
+> [    4.236553]  devm_gpiod_get_optional+0x20/0x40
+> [    4.241036]  uart_get_rs485_mode+0x104/0x180
+> [    4.245345]  serial8250_register_8250_port+0x198/0x484
+> [    4.250532]  of_platform_serial_probe+0x358/0x640
+> [    4.255279]  platform_probe+0x70/0xe0
+> [    4.258973]  really_probe+0xc4/0x2e4
+> [    4.262577]  __driver_probe_device+0x80/0xec
+> [    4.266882]  driver_probe_device+0x44/0x150
+> [    4.271100]  __driver_attach+0x88/0x1a0
+> [    4.274967]  bus_for_each_dev+0x78/0xdc
+> [    4.278833]  driver_attach+0x2c/0x40
+> [    4.282437]  bus_add_driver+0x15c/0x210
+> [    4.286303]  driver_register+0x80/0x13c
+> [    4.290170]  __platform_driver_register+0x30/0x3c
+> [    4.294915]  of_platform_serial_driver_init+0x24/0x30
+> [    4.300013]  do_one_initcall+0x4c/0x240
+> [    4.303882]  kernel_init_freeable+0x29c/0x30c
+> [    4.308276]  kernel_init+0x2c/0x140
+> [    4.311793]  ret_from_fork+0x10/0x20
+> [    4.315401] Code: bad PC value
+>
+>   drivers/gpio/gpiolib-of.c | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 95be5f0d2623..0e4e1291604d 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -498,6 +498,7 @@ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
+>   	of_find_regulator_gpio,
+>   	of_find_arizona_gpio,
+>   	of_find_usb_gpio,
+> +	NULL
+>   };
+>   
+>   struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+
+Best regards
+-- 
+Biju
