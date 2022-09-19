@@ -2,136 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B92445BD1D3
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 18:06:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 000D85BD323
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 19:05:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229592AbiISQGn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 12:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60144 "EHLO
+        id S230478AbiISRE6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 13:04:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbiISQGl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 12:06:41 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A58CBE3
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 09:06:40 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id i26so47714061lfp.11
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 09:06:40 -0700 (PDT)
+        with ESMTP id S230490AbiISREg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 13:04:36 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58EE040E23;
+        Mon, 19 Sep 2022 10:03:48 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id ay7-20020a05600c1e0700b003b49861bf48so4150706wmb.0;
+        Mon, 19 Sep 2022 10:03:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=iE9nxQEFInaL7XSikMpoXTZbHYoCnjZKoSz4CSYOZnA=;
-        b=UAOja/FfrymFuV0xvicbL7PMXuUl4mPyof1Okb0o4luFMO529ZM+SZDfwGKYf+HTMf
-         a/WaNIKZH+CCwzmVfwGBHNgDh6tyEE/4RCYW3s7Xy7CUDsPExVi8yVgN77oSpkFy1wP0
-         EZDoTz0wXXRlHxsk4U6dtvkL2742ktOiuNpmr9RmscpZCU5Du2ez6apYChpa26SOBuxd
-         8D5LRWj2h5/EJlkgEmYbAKihkayVc39iPARINK4Y7nQn0Yf6r8U/fwVO+POZ4Tm3kQed
-         Czy0pCZbVQwwyLBIv33YaafZbPlkHahN7hk1BWUO99D62XnnMEsRLm6WG1yXMAoUug8l
-         tELg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=gqdfX/1lhtDbmfJeIadecs7tBJ8OWa8eyinT/PgvpPY=;
+        b=ZfZ3F+T1rO9Xo20L5ZV5e36zfIvSTZwRqaV7ygVZzaSQ75HuDe4xA/hc51RpZqn5MM
+         iST2P9W7JgM8TgtkvbIfkSbCJGmeKPfiKsQOBJ+7cRoVFK60lcqYLSdHc106YtDtTwTs
+         zgXplemn4zZOHF0lsAvJPMr87eMjq4BQAz7V2xOEXrU6zeucfTAYKc8bvfgXLiZy4ntg
+         THeiSiZH27eIjQCsjcoPRl8Bo6wIn9iHcDycodSpvC71vivtqksYXFnei2q7MRE0o37d
+         JV8E1kRa3Cp7AusVUjCpc1QFzRUU4+m55nEc5dpe2+QGIumSTLpxGFF5/Zy0/G5lSk+9
+         Jbfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=iE9nxQEFInaL7XSikMpoXTZbHYoCnjZKoSz4CSYOZnA=;
-        b=Cw42xYcQxh5akabm462hBSySMZrI+NcJ48M/JING2MV6Wa/TnTrCq043UwI4ZW6WTw
-         xiJJGS1eC6sps1vHseA/1aqCXDeo0nVEXgbkHOFZvIpM0Sp4TedHXk64bmGchwrHEzCc
-         neTkCVSlDWGTLLB95vDfJtRYwnjpTtl/qlvYJvC7/Tk1QAlSxE1VqQLYovhyA0+rlvZw
-         A/tpUowGejV4wf0+dow7zvIgqz1Ru6PbXXpoYoZNbkq7ceJ8G1sS+5oYiNxYa9jUBj80
-         GlS4esP1jPhMQDSeeO8uZGZscBGQdVsq6KKMcr20yYieNMfbcygg4e91KSQp/NGfDlq5
-         tilg==
-X-Gm-Message-State: ACrzQf3Uae6snsvF9ocRkO6UrM3EoYJhlGkkrJouiInB7X5yFYSrffdU
-        mbkBRNbzlyrvNQUyfTdmOdRPcQ==
-X-Google-Smtp-Source: AMsMyM65h0pq/i+FvwWdh8cUN9HdV6WWDFVY+wFWguOob0zVZcboRCwsVykWpVj97GAsCtp0S9YpTw==
-X-Received: by 2002:ac2:4bc7:0:b0:49a:dbf7:73e9 with SMTP id o7-20020ac24bc7000000b0049adbf773e9mr5964150lfq.529.1663603598864;
-        Mon, 19 Sep 2022 09:06:38 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id t22-20020a2e5356000000b00268b85321eesm3787302ljd.113.2022.09.19.09.06.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Sep 2022 09:06:38 -0700 (PDT)
-Message-ID: <bfca0379-7346-13e7-a18f-66740c5871b3@linaro.org>
-Date:   Mon, 19 Sep 2022 18:06:37 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
- documentation
-Content-Language: en-US
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=gqdfX/1lhtDbmfJeIadecs7tBJ8OWa8eyinT/PgvpPY=;
+        b=4qRzmNSzMp5HvYCyuoyU3yKcC511d+5N/usgCO29XgjwhaQG3Orr3+hJC7FOVoAX0m
+         XUzmZ9RhDWsKpDGklE/OPjSHJIaG/tAnPzV9eRoeA+N0m/pIAKJyYFnSvPCOkO4xfOkM
+         4qv7aB9P8pHdmk3xRXKm9mYRxrubWDBI015f1V4Ifoq3JXuIyHPiGl0nojqBwpBMXSEi
+         BJx8gqTx6P1o8vqVR2Dq4nOZMp2YdmviKhkaUmJDWRzaziN/LLdNWg4EioAlDJaLv7WF
+         hNGjLhwn4MyIvnVDq4uvSYRWQKKXApXCA4k66Id5hREgnIEJYyB/h/iAbrWnVNx0TOV6
+         WvXg==
+X-Gm-Message-State: ACrzQf0RS9+vclMhcCIFtn8MNqp8ZLDphrr2Yiy8y7nKOnt98JEZhN2+
+        +9nUHPSTs88NLAu6P1hz2LE=
+X-Google-Smtp-Source: AMsMyM53aRgt7aTtewkEJRuCo4upKB8GdNM1JJ6NEcbMTicVcQPz3s47Zg2Ya84IFAwXiMMXV79GRA==
+X-Received: by 2002:a05:600c:26d2:b0:3b4:7572:4317 with SMTP id 18-20020a05600c26d200b003b475724317mr13194152wmv.134.1663607009937;
+        Mon, 19 Sep 2022 10:03:29 -0700 (PDT)
+Received: from localhost.localdomain ([95.183.227.98])
+        by smtp.gmail.com with ESMTPSA id ci10-20020a5d5d8a000000b0021e6c52c921sm17562487wrb.54.2022.09.19.10.03.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Sep 2022 10:03:29 -0700 (PDT)
+From:   Yassine Oudjana <yassine.oudjana@gmail.com>
+X-Google-Original-From: Yassine Oudjana <y.oudjana@protonmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
-        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-References: <20220714122322.63663-1-tmaimon77@gmail.com>
- <20220714122322.63663-2-tmaimon77@gmail.com>
- <20220718211046.GA3547663-robh@kernel.org>
- <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
- <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
- <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
+        Yassine Oudjana <yassine.oudjana@gmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] MediaTek MT6735 pinctrl support and DT binding changes
+Date:   Mon, 19 Sep 2022 20:01:11 +0300
+Message-Id: <20220919170115.94873-1-y.oudjana@protonmail.com>
+X-Mailer: git-send-email 2.37.3
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 19/09/2022 16:31, Tomer Maimon wrote:
->>>>> +examples:
->>>>> +  - |
->>>>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
->>>>> +    #include <dt-bindings/gpio/gpio.h>
->>>>> +
->>>>> +    soc {
->>>>> +      #address-cells = <2>;
->>>>> +      #size-cells = <2>;
->>>>> +
->>>>> +      pinctrl: pinctrl@f0800000 {
->>>>> +        compatible = "nuvoton,npcm845-pinctrl";
->>>>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <1>;
->>>>> +        nuvoton,sysgcr = <&gcr>;
->>>>> +
->>>>> +        gpio0: gpio@f0010000 {
->>>>
->>>> gpio@0
->>>>
->>>> Is this really a child block of the pinctrl? Doesn't really look like it
->>>> based on addressess. Where are the pinctrl registers? In the sysgcr? If
->>>> so, then pinctrl should be a child of it. But that doesn't really work
->>>> too well with gpio child nodes...
->>> the pin controller mux is handled by sysgcr this is why the sysgcr in
->>> the mother node,
->>> and the pin configuration are handled by the GPIO registers.  each
->>> GPIO bank (child) contains 32 GPIO.
->>> this is why the GPIO is the child node.
->>
->> Then maybe pinctrl should be the sysgcr and expose regmap for other devices?
-> The pin controller using the sysgcr to handle the pinmux, this is why
-> the sysgcr is in the mother node, is it problematic?
+From: Yassine Oudjana <y.oudjana@protonmail.com>
 
-You said pin-controller mux registers are in sysgcr, so it should not be
-used via syscon.
+This series adds a driver for the pin controller found on the MediaTek MT6735
+and MT6735M SoCs. The two differ in the last 6 physical pins, which are used
+for MSDC2 on MT6735 but don't exist on MT6735M (since MSDC2 doesn't exist on it
+to begin with). In preparation to document DT bindings for this pin controller,
+the existing documents for MT67xx SoCs are combined into one in order to
+eliminate duplicate property definitions and standardize pin configuration node
+names.
 
-Please provide address map description to convince us that this is
-correct HW representation.
+Yassine Oudjana (4):
+  dt-bindings: pinctrl: Combine MediaTek MT67xx pinctrl binding docs
+  arm64: dts: mediatek: mt6797: Make pin configuration nodes follow DT
+    bindings
+  dt-bindings: pinctrl: mediatek,mt67xx-pinctrl: Document MT6735 pin
+    controller bindings
+  pinctrl: mediatek: Add MT6735 pinctrl driver
 
-Best regards,
-Krzysztof
+ .../pinctrl/mediatek,mt6779-pinctrl.yaml      |  207 -
+ .../pinctrl/mediatek,mt6797-pinctrl.yaml      |  176 -
+ ...6795.yaml => mediatek,mt67xx-pinctrl.yaml} |  222 +-
+ MAINTAINERS                                   |   10 +-
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi      |   20 +-
+ drivers/pinctrl/mediatek/Kconfig              |    6 +
+ drivers/pinctrl/mediatek/Makefile             |    1 +
+ drivers/pinctrl/mediatek/pinctrl-mt6735.c     |  584 +++
+ drivers/pinctrl/mediatek/pinctrl-mtk-mt6735.h | 3993 +++++++++++++++++
+ 9 files changed, 4778 insertions(+), 441 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6797-pinctrl.yaml
+ rename Documentation/devicetree/bindings/pinctrl/{mediatek,pinctrl-mt6795.yaml => mediatek,mt67xx-pinctrl.yaml} (58%)
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt6735.c
+ create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt6735.h
+
+-- 
+2.37.3
+
