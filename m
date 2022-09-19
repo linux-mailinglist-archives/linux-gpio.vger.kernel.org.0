@@ -2,84 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D4B5BCE3E
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 16:13:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C21B5BCEEC
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Sep 2022 16:32:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbiISONs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 10:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34206 "EHLO
+        id S230144AbiISOck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 10:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbiISONr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 10:13:47 -0400
-Received: from mail-yw1-x1144.google.com (mail-yw1-x1144.google.com [IPv6:2607:f8b0:4864:20::1144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 107B53207E
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 07:13:46 -0700 (PDT)
-Received: by mail-yw1-x1144.google.com with SMTP id 00721157ae682-324ec5a9e97so340930487b3.7
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 07:13:46 -0700 (PDT)
+        with ESMTP id S230148AbiISOc2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 10:32:28 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82CBF32EDB;
+        Mon, 19 Sep 2022 07:32:10 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id z25so47296258lfr.2;
+        Mon, 19 Sep 2022 07:32:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=5N+aMihLorZXBHcklDfHgYNT/W4ZQvt0cLc1vwY1KVE=;
-        b=mUWl7S2Y4/CWgqFso+XmN6Xqp8+CFE05l7JuQpZyPgBkK+hCv4nAf5riUlWYlCEvT4
-         5Qky6Sqf87ecwSE6ZgnN/M4JNgb90eWdXgvublcOBvJ4fmSXto+LIN17Nd+Zo7LkKAXH
-         JiFkCIcsM4TzAFdhHNb4/dvx19hVFUsWVLCQeexD0+XseruCvKpUl3dGh0D334YkmTHI
-         VmtrQ3fTwTXkV5l50FR04UN5RMTqmDkNSISD/PkMGvv0O95GNPhQ0hzc9I6ayYV1BhHx
-         MEoi6AxmJxiODxUnIj2Hd0gj/rRMdCp1bmwPwXIY3ff8pNSca2pGQXJpLDpwHL7VxXVq
-         tLGg==
+        bh=fbOtVx32xD0An1BP4gF5wsbpUuDHf0RuAIKgzeGlyw8=;
+        b=oCY3SQQ06GI1T0nc3vcegfw92SJwkc8GhNmDuFea6YzJroQA1iJ/C0VGdrJSgUz9jx
+         mApqMR+9XBUm/uurHE2l+5JQHn2ITXWeQV9bcFU0CNL9s/AsShY84T7chTNmXJLWe4wu
+         WCP+4EKr9Nr34D7du1LtLHoiWh7Br/ERUuvDz1gBnykah2JOscL2r/aUjHsOHwb9ltbJ
+         la5S4xmdhcWePibJaIj099rNjvZPOikrYSFMzzIMFFgI8RfwnlpHlXHB52MRUmJUBjs+
+         SdqxwySj5lN9Am7atnFcJv1SQm1DdpFDiYichNtnI6qxbj8CBO8UxKyxH1InjVj1eEj4
+         8Rzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=5N+aMihLorZXBHcklDfHgYNT/W4ZQvt0cLc1vwY1KVE=;
-        b=JYyLo98XWWD2Q4lSFpPJuIJR6CMA/fN/8jQ8SItztz6h7eMsctN6oL4Sk2RnMQpJtx
-         ZpoNXPDjsAJl0byzRiG9lU1VoJtLtOVDNbqvhsYiIEkS7PIzjtP5O0j7bJEj6FKvBku4
-         eAYkqi7HnGHzF56ZwtZ2CmjCJ1GWarQlAFzdJy1h/t/fGQCEiuiZONyaj4K5wsv742Jz
-         6kTZlx4ZH+6KrPFz/8YnEdfIop27kmj2Ps6cpQ5U4yu6MNspU4IGTi3N3vrtY7lUqNJA
-         PrwE/hw4kpRu6RG1DD+O+/D08++21aXkeNpdN2bqypGkhRUR5dJ3qs+zAP84p8KBvU4q
-         1JFw==
-X-Gm-Message-State: ACrzQf2svJ9I6I4S2o8XB2CgL3ysKBYCrVo9fAyQ4ERfKLdunFCuo+qm
-        1j09A5XkdiWUfWokLjcjknsC6k0ffvN+Pi5/Yi4=
-X-Google-Smtp-Source: AMsMyM7Ef0u62N/5DUXX0q86EAugLF0XHftnjQsZCYkMa85rQjam7b1SYONFq2Dyyl8oo9VHyrqGiu8Le9FphSdDf7o=
-X-Received: by 2002:a81:1dd6:0:b0:349:c9c9:eb61 with SMTP id
- d205-20020a811dd6000000b00349c9c9eb61mr14822070ywd.7.1663596825274; Mon, 19
- Sep 2022 07:13:45 -0700 (PDT)
+        bh=fbOtVx32xD0An1BP4gF5wsbpUuDHf0RuAIKgzeGlyw8=;
+        b=Lt1D4qLYnzvhgfZDUFcwtSDGcX4eTXghxl/bK7NF3aAsvIBA0fd/Flr76bm+Us3/dh
+         F2uoFk6aw6BjNPdStZL5UXzzstS8/eKWAYPC+XxTLLukIPCImAlMwr/v4XNVoAJBT8mF
+         Y4OZhg8WscoiWaCHx1kt0lZHv9WFnb+ZQFqXGPIN03meJTy/SdaM34YNyXD2AHckHKxX
+         r3j79qIJL7yphWMhzOQqLekwDuutH0uLsZXaY706e3xn8tTB6OYbsv0jlP1yiDgzdN6G
+         3ADC1Q+agPsjLjWi2v1bP4jzoPBuyZCVAhDpoB6tjQOe1zq3J8vajArI2Z8BP6cGd8Qg
+         VxfQ==
+X-Gm-Message-State: ACrzQf1CI2oYgSVCzHkXDk6+n7xSleC06/HaGhfmJ1Y769SRwLq6tdTB
+        0IBaQcDMV91qkmV1LG9gF50x5vo2tzAhdtFrQNg=
+X-Google-Smtp-Source: AMsMyM4TvhQ+C6HD/ZV0YS/n8Apo8lVG6faXAtccFQUMj9KOsAXpl4UCFWGvBlxtGV9MQYWcekd+O4B2UpHaNWuzNlw=
+X-Received: by 2002:a05:6512:eaa:b0:497:a1ed:6fa5 with SMTP id
+ bi42-20020a0565120eaa00b00497a1ed6fa5mr6073634lfb.108.1663597928023; Mon, 19
+ Sep 2022 07:32:08 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a05:7010:8e28:b0:305:bafb:f9c2 with HTTP; Mon, 19 Sep 2022
- 07:13:44 -0700 (PDT)
-Reply-To: jennifermbaya036@gmail.com
-From:   "Mrs.Jennifer Mbaya" <tantisayo@gmail.com>
-Date:   Mon, 19 Sep 2022 15:13:44 +0100
-Message-ID: <CAOOke06_EYisqAAMuj_qqrsu7FL6WSsJKocc3LQa_4H1emUOPA@mail.gmail.com>
-Subject: Edunsaaja
-To:     undisclosed-recipients:;
+References: <20220714122322.63663-1-tmaimon77@gmail.com> <20220714122322.63663-2-tmaimon77@gmail.com>
+ <20220718211046.GA3547663-robh@kernel.org> <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
+ <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
+In-Reply-To: <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
+From:   Tomer Maimon <tmaimon77@gmail.com>
+Date:   Mon, 19 Sep 2022 17:31:56 +0300
+Message-ID: <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO documentation
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_HK_NAME_FM_MR_MRS,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: **
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Edunsaaja
+Hi Krzysztof,
 
-Nimess=C3=A4si on palkinto Yhdistyneilt=C3=A4 Kansakunnilta ja Maailman
-terveysj=C3=A4rjest=C3=B6lt=C3=A4, joka on osa kansainv=C3=A4list=C3=A4 val=
-uuttarahastoa, johon
-s=C3=A4hk=C3=B6postisi, osoite ja raha on luovutettu meille siirtoa varten,
-vahvista yst=C3=A4v=C3=A4llisesti tietosi siirtoa varten.
-Meit=C3=A4 kehotettiin siirt=C3=A4m=C3=A4=C3=A4n kaikki vireill=C3=A4 oleva=
-t tapahtumat
-seuraavien kahden aikana, mutta jos olet vastaanottanut rahasi, j=C3=A4t=C3=
-=A4
-t=C3=A4m=C3=A4 viesti huomioimatta, jos et toimi heti.
-Tarvitsemme kiireellist=C3=A4 vastausta t=C3=A4h=C3=A4n viestiin, t=C3=A4m=
-=C3=A4 ei ole yksi
-niist=C3=A4 Internet-huijareista, se on pandemiaapu.
-Jennifer
+Sorry but I didn't understand,
+
+On Mon, 19 Sept 2022 at 09:56, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 18/09/2022 20:28, Tomer Maimon wrote:
+> > Hi Rob,
+> >
+> > Thanks for your comment and sorry for the late reply.
+>
+> Two months... we are out of the context and this will not help your
+> patchset.
+>
+> >
+> > On Tue, 19 Jul 2022 at 00:10, Rob Herring <robh@kernel.org> wrote:
+> >>
+>
+> (...)
+>
+> >>> +examples:
+> >>> +  - |
+> >>> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> >>> +    #include <dt-bindings/gpio/gpio.h>
+> >>> +
+> >>> +    soc {
+> >>> +      #address-cells = <2>;
+> >>> +      #size-cells = <2>;
+> >>> +
+> >>> +      pinctrl: pinctrl@f0800000 {
+> >>> +        compatible = "nuvoton,npcm845-pinctrl";
+> >>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+> >>> +        #address-cells = <1>;
+> >>> +        #size-cells = <1>;
+> >>> +        nuvoton,sysgcr = <&gcr>;
+> >>> +
+> >>> +        gpio0: gpio@f0010000 {
+> >>
+> >> gpio@0
+> >>
+> >> Is this really a child block of the pinctrl? Doesn't really look like it
+> >> based on addressess. Where are the pinctrl registers? In the sysgcr? If
+> >> so, then pinctrl should be a child of it. But that doesn't really work
+> >> too well with gpio child nodes...
+> > the pin controller mux is handled by sysgcr this is why the sysgcr in
+> > the mother node,
+> > and the pin configuration are handled by the GPIO registers.  each
+> > GPIO bank (child) contains 32 GPIO.
+> > this is why the GPIO is the child node.
+>
+> Then maybe pinctrl should be the sysgcr and expose regmap for other devices?
+The pin controller using the sysgcr to handle the pinmux, this is why
+the sysgcr is in the mother node, is it problematic?
+
+>
+>
+> Best regards,
+> Krzysztof
+
+Best regards,
+
+Tomer
