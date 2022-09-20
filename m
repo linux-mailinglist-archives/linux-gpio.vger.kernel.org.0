@@ -2,231 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D9D5BE39C
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 12:44:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F8B85BE534
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 14:06:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229647AbiITKnw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 06:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39920 "EHLO
+        id S229512AbiITMGv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 08:06:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231436AbiITKnY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 06:43:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E399663F29
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 03:43:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663670592;
+        with ESMTP id S229490AbiITMGu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 08:06:50 -0400
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A996866A41;
+        Tue, 20 Sep 2022 05:06:48 -0700 (PDT)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 983431CAC;
+        Tue, 20 Sep 2022 14:06:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1663675606;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qMA0rQs86FOwfocxFPVrINYPjkbq3Q1x9nWeAx3V0gI=;
-        b=i7RiBaoiwVpRGjSHu0HPOwQxdPYI7vfZJX+lZuIGLVk1uY5VeQQMOWq2raBR/IQDPa/A+x
-        AntwPk+86NZyzWfHculruhB9SBe5HHYlgiVDfOmOvfh8kwMtR5OvhfTkm0Ka8wJCfwnmWa
-        HVLeJjz/CXgb+R4dn0NWsHTIiQ31oPE=
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
- [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-646-sAfzk-92NFmMExzM4a5bDA-1; Tue, 20 Sep 2022 06:43:10 -0400
-X-MC-Unique: sAfzk-92NFmMExzM4a5bDA-1
-Received: by mail-pl1-f198.google.com with SMTP id e2-20020a17090301c200b001787cf4aaa4so1480216plh.14
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 03:43:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=qMA0rQs86FOwfocxFPVrINYPjkbq3Q1x9nWeAx3V0gI=;
-        b=Q+Skv7qXVIe6EFoDNhIA4JWkok64a2hgCbrStJ214VRqb3C8ZPRP6VSTqAoKbIcWej
-         VkYbOnyi/7vecgcnADh2NTdMMpc9h8wvvy612Ts7yuN6Tkgr8NMpGBtIYIGYaxFGK8yA
-         1jGQmW56fuU4/aYJaabcjaYHpfyTxDzztetkr0VoJZCQq+ysHG2gw1RzOrptA55tTRnE
-         4qAjOqQ/FJ0dte6USPaluIWzWHmNjj4V3WMpyEJViu2SuwRrRmcrn/WpRuBHki64gwup
-         VHj9GdleivuSFjq2P2F2mySy+IoE+oiVc0WX/azf1IqNM7CxfirK4aKxFF8jSUPOwsLv
-         urcA==
-X-Gm-Message-State: ACrzQf115D0gJPrlulvjlwMz4Se/nrf+5xM4EE8Ml4tmGsLsSc2edQg6
-        iD4tG9ErowKj030CWiAHuPAf3tO8QLE065BrfCmwjZn8vVHwCsbYxc12nZLs2gG/vwAD7oAvkCX
-        +fOEDo6LVu3PCJeP/UCFje8lsl1GOftOkNOEryQ==
-X-Received: by 2002:a17:90b:1d12:b0:200:461c:fa7d with SMTP id on18-20020a17090b1d1200b00200461cfa7dmr3254640pjb.38.1663670589902;
-        Tue, 20 Sep 2022 03:43:09 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4LwOlWM+owfEUV010mJfgetj3SukXN+Y26a36gzyfhur973qtqvZjOgY/ZWBiyAeoxHSdwI2HqG3nq0p7A1iQ=
-X-Received: by 2002:a17:90b:1d12:b0:200:461c:fa7d with SMTP id
- on18-20020a17090b1d1200b00200461cfa7dmr3254615pjb.38.1663670589623; Tue, 20
- Sep 2022 03:43:09 -0700 (PDT)
+        bh=GGJm4OddW5ycYbBK3aai1KOzFQZUa2U+B9jqRthWOQA=;
+        b=EQPe+GDNHi8nwoB/SDtJPkZ5m7ExT+DPRvCTXDGaE8RQhPj4+si7TaSUzMKd3mwuGcZ8dg
+        Gw40DfeOdOI+/AUUBv+7N3dpi5hKZqnpVrQRx4hem+hGspR51R+U/55Kpw1IlTg9vQxDad
+        iUgumadC/h9J8iEySv489XK9lqt6SWGIFRVydvf3VKWxzXTQuS1k2U+MQw7h11IdmkHy2E
+        UXo2yK9aJ6jngSy1dIVVx4mx40RITJnVJCT/ShDrqDRil7uHyR2LKHzCm1UkNQoFT9OIpI
+        dgBQl0GS4zrNzfYVz6cfqmziwLPckjV6gpZARzqEL6v0sDBuTO1crOOPQf7RFA==
+From:   Michael Walle <michael@walle.cc>
+To:     horatiu.vultur@microchip.com
+Cc:     UNGLinuxDriver@microchip.com, andy.shevchenko@gmail.com,
+        linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
+Date:   Tue, 20 Sep 2022 14:06:42 +0200
+Message-Id: <20220920120642.690340-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220909145942.844102-1-horatiu.vultur@microchip.com>
+References: <20220909145942.844102-1-horatiu.vultur@microchip.com>
 MIME-Version: 1.0
-References: <20220919155916.1044219-1-rrangel@chromium.org>
-In-Reply-To: <20220919155916.1044219-1-rrangel@chromium.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 20 Sep 2022 12:42:58 +0200
-Message-ID: <CAO-hwJKcpXQjvLuQK+wfqkU0LHxKbbAyNCZnQGxe47fm1o6LQw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/13] acpi: i2c: Use SharedAndWake and
- ExclusiveAndWake to enable wake irq
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-acpi@vger.kernel.org,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        timvp@google.com, Hans De Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        rafael@kernel.org, Mario Limonciello <mario.limonciello@amd.com>,
-        jingle <jingle.wu@emc.com.tw>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alistair Francis <alistair@alistair23.me>,
-        Angela Czubak <acz@semihalf.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz Szczepanek <bsz@semihalf.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Johnny Chuang <johnny.chuang.emc@gmail.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Len Brown <lenb@kernel.org>, Rob Herring <robh@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Yang Li <yang.lee@linux.alibaba.com>,
-        linux-gpio@vger.kernel.org, Linux I2C <linux-i2c@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam: Yes
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 19, 2022 at 5:59 PM Raul E Rangel <rrangel@chromium.org> wrote:
->
-> Today, i2c drivers are making the assumption that their IRQs can also
-> be used as wake IRQs. This isn't always the case and it can lead to
-> spurious wakes. This has recently started to affect AMD Chromebooks.
-> With the introduction of
-> d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake"), the AMD GPIO
-> controller gained the capability to set the wake bit on each GPIO. The
-> ACPI specification defines two ways to inform the system if a device is
-> wake capable:
-> 1) The _PRW object defines the GPE that can be used to wake the system.
-> 2) Setting ExclusiveAndWake or SharedAndWake in the _CRS GpioInt.
->
-> Currently only the first method is supported. The i2c drivers don't have
-> any indication that the IRQ is wake capable, so they guess. This causes
-> spurious interrupts, for example:
-> * We have an ACPI HID device that has `_PR0` and `_PR3`. It doesn't have
->   `_PRW` or `ExclusiveAndWake` so that means the device can't wake the
->   system.
-> * The IRQ line is active level low for this device and is pulled up by
->   the power resource defined in `_PR0`/`_PR3`.
-> * The i2c driver will (incorrectly) arm the GPIO for wake by calling
->   `enable_irq_wake` as part of its suspend hook.
-> * ACPI will power down the device since it doesn't have a wake GPE
->   associated with it.
-> * When the device is powered down, the IRQ line will drop, and it will
->   trigger a wake event.
->
-> See the following debug log:
-> [   42.335804] PM: Suspending system (s2idle)
-> [   42.340186] amd_gpio AMD0030:00: RX: Setting wake for pin 89 to enable
-> [   42.467736]     power-0416 __acpi_power_off      : Power resource [PR00] turned off
-> [   42.467739] device_pm-0280 device_set_power      : Device [H05D] transitioned to D3cold
-> [   42.475210] PM: pm_system_irq_wakeup: 11 triggered pinctrl_amd
-> [   42.535293] PM: Wakeup unrelated to ACPI SCI
-> [   42.535294] PM: resume from suspend-to-idle
->
-> In order to fix this, we need to take into account the wake capable bit
-> defined on the Interrupt/GpioInt. This is accomplished by:
-> * Migrating some of the i2c drivers over to using the PM subsystem to
->   manage the wake IRQ.
-> * Expose the wake_capable bit from the ACPI Interrupt/GpioInt resource
->   to the  i2c core.
-> * Use the wake_capable bit in the i2c core to call
->   `dev_pm_set_wake_irq`. This reuses the existing device tree flow.
-> * Make the i2c drivers stop calling `dev_pm_set_wake_irq` since it's now
->   handled by the i2c core.
-> * Make the ACPI device PM system aware of the wake_irq. This is
->   necessary so the device doesn't incorrectly get powered down when a
->   wake_irq is enabled.
->
-> I've tested this code with various combinations of having _PRW,
-> ExclusiveAndWake and power resources all defined or not defined, but it
-> would be great if others could test this out on their hardware.
->
-> I'm sure this will surface some devices where the IRQs were not
-> correctly marked as wake capable. Ideally the firmware can be fixed, but
-> if not we can work around this in the kernel by providing a board
-> specific `struct i2c_board_info` with the `I2C_CLIENT_WAKE` flag set.
-> See `chromeos_laptop.c` for an example of matching DMI properties and
-> setting the `I2C_CLIENT_WAKE` override.
->
-> Thanks,
-> Raul
->
-> Changes in v4:
-> - Added Reviewed-by
-> - Reformatted with 96 char limit
-> - Removed unnecessary !!
-> - Removed unrelated white space change
-> - Renamed i2c_acpi_add_resource to i2c_acpi_add_irq_resource
-> - Expanded logic in i2c_acpi_add_i2c_resource to make it easier to read
->
-> Changes in v3:
-> - Kept `acpi_dev_gpio_irq_get_by` unchanged to avoid having to touch
->   unrelated drivers.
-> - Converted wake_capable parameter to bool.
-> - Fixed bad indent
-> - Convert wake_capable to bool
-> - Only update wake_capable pointer once
-> - Move wake_capable local into local block
->
-> Changes in v2:
-> - Added elants_i2c to series
-> - Added raydium_ts_i2c to series
-> - Fixed call site in mlxbf_gige_probe
-> - Added ability to extract wake bit from Interrupt/IRQ resources
-> - Look at wake_cabple bit for IRQ/Interrupt resources
-> - I chose not to keep the legacy code around since systems without DT or ACPI should be rare.
->
-> Raul E Rangel (13):
->   HID: i2c-hid: Use PM subsystem to manage wake irq
->   Input: elan_i2c - Use PM subsystem to manage wake irq
->   Input: elants_i2c - Use PM subsystem to manage wake irq
->   Input: raydium_ts_i2c - Use PM subsystem to manage wake irq
->   gpiolib: acpi: Add wake_capable variants of acpi_dev_gpio_irq_get
->   ACPI: resources: Add wake_capable parameter to acpi_dev_irq_flags
->   i2c: acpi: Use ACPI wake capability bit to set wake_irq
->   ACPI: PM: Take wake IRQ into consideration when entering
->     suspend-to-idle
->   HID: i2c-hid: acpi: Stop setting wakeup_capable
->   HID: i2c-hid: Don't set wake_capable and wake_irq
->   Input: elan_i2c - Don't set wake_capable and wake_irq
->   Input: elants_i2c - Don't set wake_capable and wake_irq
->   Input: raydium_ts_i2c - Don't set wake_capable and wake_irq
->
->  drivers/acpi/device_pm.c                   | 19 +++++++++--
->  drivers/acpi/irq.c                         |  8 +++--
->  drivers/acpi/resource.c                    | 23 ++++++++++----
->  drivers/gpio/gpiolib-acpi.c                | 15 +++++++--
->  drivers/gpio/gpiolib-acpi.h                |  2 ++
->  drivers/hid/i2c-hid/i2c-hid-acpi.c         |  5 ---
->  drivers/hid/i2c-hid/i2c-hid-core.c         | 24 ++------------
->  drivers/i2c/i2c-core-acpi.c                | 37 ++++++++++++++++------
->  drivers/i2c/i2c-core-base.c                |  6 +++-
->  drivers/i2c/i2c-core.h                     |  4 +--
->  drivers/input/mouse/elan_i2c_core.c        | 15 +--------
->  drivers/input/touchscreen/elants_i2c.c     | 13 ++------
->  drivers/input/touchscreen/raydium_i2c_ts.c |  7 +---
->  drivers/pnp/pnpacpi/rsparser.c             |  7 ++--
->  include/linux/acpi.h                       | 23 +++++++++++---
->  include/linux/ioport.h                     |  3 +-
->  16 files changed, 117 insertions(+), 94 deletions(-)
->
+Hi Horatiu,
 
-For the HID patches (1, 9, 10):
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> When an external device generated a level based interrupt then the
+> interrupt controller could miss the interrupt. The reason is that the
+> interrupt controller can detect only link changes.
+> 
+> In the following example, if there is a PHY that generates an interrupt
+> then the following would happen. The GPIO detected that the interrupt
+> line changed, and then the 'ocelot_irq_handler' was called. Here it
+> detects which GPIO line saw the change and for that will call the
+> following:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+> 
+> And this works fine for simple cases, but if the PHY generates many
+> interrupts, for example when doing PTP timestamping, then the following
+> could happen. Again the function 'ocelot_irq_handler' will be called
+> and then from here the following could happen:
+> 1. irq_mask
+> 2. phy interrupt routine
+> 3. irq_eoi
+> 4. irq_unmask
+> 
+> Right before step 3(irq_eoi), the PHY will generate another interrupt.
+> Now the interrupt controller will acknowledge the change in the
+> interrupt line. So we miss the interrupt.
+> 
+> A solution will be to use 'handle_level_irq' instead of
+> 'handle_fasteoi_irq', because for this will change routine order of
+> handling the interrupt.
+> 1. irq_mask
+> 2. irq_ack
+> 3. phy interrupt routine
+> 4. irq_unmask
+> 
+> And now if the PHY will generate a new interrupt before irq_unmask, the
+> interrupt controller will detect this because it already acknowledge the
+> change in interrupt line at step 2(irq_ack).
+> 
+> But this is not the full solution because there is another issue. In
+> case there are 2 PHYs that share the interrupt line. For example phy1
+> generates an interrupt, then the following can happen:
+> 1.irq_mask
+> 2.irq_ack
+> 3.phy0 interrupt routine
+> 4.phy1 interrupt routine
+> 5.irq_unmask
+> 
+> In case phy0 will generate an interrupt while clearing the interrupt
+> source in phy1, then the interrupt line will be kept down by phy0. So
+> the interrupt controller will not see any changes in the interrupt line.
+> The solution here is to update 'irq_unmask' such that it can detect if
+> the interrupt line is still active or not. And if it is active then call
+> again the procedure to clear the interrupts. But we don't want to do it
+> every time, only if we know that the interrupt controller has not seen
+> already that the interrupt line has changed.
+> 
+> While at this, add support also for IRQ_TYPE_LEVEL_LOW.
 
-Feel free to take those through whatever tree is the best, we don't
-have anything scheduled for i2c-hid for 6.1 right now.
+Our board has a shared active low interrupt line, connected to a quad PHY
+LAN8814 and two GPY215 PHYs. I've gave this a try but it doesn't seem to
+work. It seems the interrupt fires multiple times. If I plug a cable in
+one of the LAN8814 ports, I see that the interrupt count in
+/proc/interrupts has increased by two. If I use a GPY215 port, I see about
+40 interrupts firing.
 
-Cheers,
-Benjamin
+I've verified that there is only one low pulse on the interrupt line. I've
+noticed though, that the number of interrupts seem to be correlating with
+the length of the low pulse.
 
+-michael
