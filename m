@@ -2,120 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 292E05BE7BD
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 15:56:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5A7F5BE805
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 16:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbiITN4G (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 09:56:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44504 "EHLO
+        id S231434AbiITOFm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 10:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbiITNzo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 09:55:44 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A6703684E
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 06:54:39 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id f20so3944633edf.6
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 06:54:38 -0700 (PDT)
+        with ESMTP id S231444AbiITOF3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 10:05:29 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC0FCD6
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 07:05:27 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id u9so6447423ejy.5
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 07:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=DLUl+3DSxpghb+4XVDEdCI4TXeLI6nIF01m7+R/dTes=;
-        b=I03TMuUOg4ZdeMC99+46z4AfULcPnl4IXNk6St0H/OKqsWPQvEg0sNSTPnFK6EVnGW
-         WGq/s2WMelHwnhwaPR+Ua9DCI+Qq+MM7r3lbbA+55ln63ju/jgAKkISyQHxnr7EQaBjm
-         528ryRJ+b7y9tYmOGNbKgXB9xC71hNBVCiRyWb9BXk2DOnIy0dmNuUuskKLpxp2BdZe0
-         W8giLV38QuUgRcofNnkpf42Dw8r/AIIECpxoOoNgrRNK7u0ozVbITGYe2sgY+/2VUP5E
-         HyPfezqZlwFh9nnsPL594U+aEwHaQ6xz38/mxiVbdvummsNAni2pfuoNkc2GIK12gEK6
-         5F1w==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=ZsigJrgZTMlJCvXV0JIC8q9Qi7TNohuEmhSDzWoFL1o=;
+        b=Y1Bwe8GFf/+tL5SaeApc1k5XntRjb5w6LrBd/bJKfOHSMhv/+TvyAWxH7SQqjZwoxw
+         rRqZ/d+DN9jgEHde1qHmCfwSZAW7YYQrVwUgPUNkXar1EZ8DHJi0LWHAz+PU2ccIVrbp
+         EbSZaqIRaTp+XI8K3X1i6AtXko05poikjH/CR1oHV0oCIzJ0H3NN685k5LNTjyxcYCdO
+         TQvbSQsNN3Mqrq9btaEkyKrQcSrA9LoQb1kV7O/vvDzRVchQvawaGgzxUkuy4cIGttNb
+         ClZqPW09sc5e7pgSfHxO+jdJ83X6odK5tv91IuawljFANp0n8/7ftbRN5RV8U3Ody+SG
+         V9MA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=DLUl+3DSxpghb+4XVDEdCI4TXeLI6nIF01m7+R/dTes=;
-        b=EkQgd391TRJ5okUlD78YGRTzzoaIkMcG4n8EcljhWyU9RD2pAqbxcZVQ1uF45PXwc8
-         Ktm6+4ibIg2EsgZUezDzoMSYVTRcvHhYIMDoHuovJ0sTfJ4oKzjpnoSc2ymBJfE+vkd8
-         ZdCEqGFfivAA8v0yi5b/MWkeUFlWIlBReqwHcx/cCYvknABADajeVvvrWePhFMjiKJnK
-         Ms+SFG25FPfgfZ9Jm/wbt5V5mAg8EOuu44UbSbX0fLmgNlg4Q730yl0WlK4gOjJTG8qi
-         lmSZ06VmwSW3f5+ki3a5ndSEyR+6o8IgrMhkeFLsgpAEWuwP63RCpcGx7BRRnJ0GtJZl
-         5WvA==
-X-Gm-Message-State: ACrzQf2ZoNkHKFSZJNK34d6oH2WwVOcWmBm0WPDRKqUo3GpWLEvwlF8n
-        OcfKVy/gnFv4zBwJUipqAuHWfQ==
-X-Google-Smtp-Source: AMsMyM7CtiJE1Ez0ADzDOiMGkV/6ZNzyWNnYrCEosRVgLIdloLixcmJXoaOoWiAFgtSzL9yBSbudLA==
-X-Received: by 2002:a05:6402:1f0e:b0:453:a419:b3a0 with SMTP id b14-20020a0564021f0e00b00453a419b3a0mr14412561edb.124.1663682077666;
-        Tue, 20 Sep 2022 06:54:37 -0700 (PDT)
-Received: from brgl-uxlite.. ([77.241.232.28])
-        by smtp.gmail.com with ESMTPSA id m23-20020a509317000000b0044f21c69608sm100503eda.10.2022.09.20.06.54.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 06:54:37 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] gpiolib: cdev: add fdinfo output for line request file descriptors
-Date:   Tue, 20 Sep 2022 15:54:35 +0200
-Message-Id: <20220920135435.15593-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=ZsigJrgZTMlJCvXV0JIC8q9Qi7TNohuEmhSDzWoFL1o=;
+        b=CMGtiOenWJnDeT4vLNFb6WPaBVIghaek+Bs2BYTJrwKmxXxBy0kwZX1xWzh/RqH4Ax
+         rHU0zvyXEuC5BlRaVy4gNMYA2kpA7P9GcjXyncM+uNhoyg/A5QIOXdVuLLBel4L6O0bA
+         UQjHK1v3VJFNOtbWz5cEZDDPAq7rjGbz+7gBqDKcQy6ieoVzi8rSDRpGr6qjuDuN6i3A
+         aSjug5gPyXt7TKZqSF+NMYpah3TvsWZZhfDfqu96MRy0QrHpr03s3IACUSBaLABX6Jig
+         JidNoZ3p4LrGDM2c1trx4f4ujmapjvUdoR52NP1hr5bfdbO8Qgaog3ICy+gti3nv35aX
+         vQcg==
+X-Gm-Message-State: ACrzQf0PlULxLNAzDN9U3ZRjM5srBOaIwDLwGHsWk3qrRKGqSjwpe4oG
+        Vs8qrxoRvwsloWVWGf0vuuwn2hvlUJ3L8nz+0c8orw==
+X-Google-Smtp-Source: AMsMyM6ZhqAFnCjKIFWhDOh9kI40KhsEYcM2qTiZX2GDtbyIt8b78RFhnFK/h0o9OPsV+2EPmzQhMRs16aNLaePC+2M=
+X-Received: by 2002:a17:907:1c96:b0:780:602c:677c with SMTP id
+ nb22-20020a1709071c9600b00780602c677cmr16949485ejc.736.1663682726141; Tue, 20
+ Sep 2022 07:05:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+References: <Yym/j+Y9MBOIhWtK@black.fi.intel.com>
+In-Reply-To: <Yym/j+Y9MBOIhWtK@black.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 20 Sep 2022 16:05:14 +0200
+Message-ID: <CAMRc=Me873ynTWMyM0oe434zMbb3kdFfAUELFVc+hquedDfKHg@mail.gmail.com>
+Subject: Re: [GIT PULL] intel-gpio for 6.1-1
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add fdinfo output for file descriptors created for user-space line
-requests in GPIO uAPI v2. The fdinfo file now contains the name of the
-GPIO device that is the "parent" of the request as well as offsets of
-the lines requested. This allows user-space to parse the /proc/$PID/fdinfo
-entries and deduct the PID of the process that requested a specific line.
+On Tue, Sep 20, 2022 at 3:26 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Hi Linux GPIO  maintainers,
+>
+> A small quirk for GPIO ACPI library. Was a few weeks in Linux Next, shouldn't
+> be any conflicts with anything. Please pull for v6.1.
+>
+> Thanks,
+>
+> With Best Regards,
+> Andy Shevchenko
+>
+> The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+>
+>   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+>
+> are available in the Git repository at:
+>
+>   git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.1-1
+>
 
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
----
- drivers/gpio/gpiolib-cdev.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Pulled, but what happened with the git://git.kernel.org/... address? :(
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index f8041d4898d1..0f7b5562c410 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1497,6 +1497,21 @@ static int linereq_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PROC_FS
-+static void linereq_show_fdinfo(struct seq_file *out, struct file *file)
-+{
-+	struct linereq *lr = file->private_data;
-+	struct device *dev = &lr->gdev->dev;
-+	u16 i;
-+
-+	seq_printf(out, "gpio-device:\t%s\n", dev_name(dev));
-+
-+	for (i = 0; i < lr->num_lines; i++)
-+		seq_printf(out, "gpio-line:\t%d\n",
-+			   gpio_chip_hwgpio(lr->lines[i].desc));
-+}
-+#endif
-+
- static const struct file_operations line_fileops = {
- 	.release = linereq_release,
- 	.read = linereq_read,
-@@ -1507,6 +1522,9 @@ static const struct file_operations line_fileops = {
- #ifdef CONFIG_COMPAT
- 	.compat_ioctl = linereq_ioctl_compat,
- #endif
-+#ifdef CONFIG_PROC_FS
-+	.show_fdinfo = linereq_show_fdinfo,
-+#endif
- };
- 
- static int linereq_create(struct gpio_device *gdev, void __user *ip)
--- 
-2.34.1
+Bart
 
+> for you to fetch changes up to 0ea76c401f9245ac209f1b1ce03a7e1fb9de36e5:
+>
+>   gpiolib: acpi: Add a quirk for Asus UM325UAZ (2022-09-05 13:15:56 +0300)
+>
+> ----------------------------------------------------------------
+> intel-gpio for v6.1-1
+>
+> * Add a quirk for Asus UM325UAZ to make GPIO interrupts working
+>
+> The following is an automated git shortlog grouped by driver:
+>
+> gpiolib:
+>  -  acpi: Add a quirk for Asus UM325UAZ
+>  -  acpi: Add support to ignore programming an interrupt
+>
+> ----------------------------------------------------------------
+> Mario Limonciello (2):
+>       gpiolib: acpi: Add support to ignore programming an interrupt
+>       gpiolib: acpi: Add a quirk for Asus UM325UAZ
+>
+>  drivers/gpio/gpiolib-acpi.c | 38 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 34 insertions(+), 4 deletions(-)
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
