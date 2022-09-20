@@ -2,115 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A019F5BE5ED
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 14:34:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB0C5BE702
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 15:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbiITMeO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 08:34:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        id S229907AbiITN0c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 09:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229982AbiITMeM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 08:34:12 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972825F110;
-        Tue, 20 Sep 2022 05:34:11 -0700 (PDT)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 990341CAC;
-        Tue, 20 Sep 2022 14:34:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1663677249;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vy3394MDBwTyDF5riRpGQ1bWI/Uxx+v9aoRpfwrtVw8=;
-        b=KLIiwldTgLh6waIO/BXq7aQ3yTMHLFx/Y1z74gAe+OaI4pMml15WCZgkgZrCdsP6u5vQNx
-        OeS2VehbPnUXgzy91fu27zngDuZrZxgAytYqDtkFhEL7G2kfsddRuiqFVRIv2eTwkIJgbS
-        RvHNJz5HVTyPvHZJfQ55X7I2D8sEwsf8J4YkPZUtPzMZvQkTy7opNbd9C0SZ5lnlSbUbE+
-        5uRydG3+vo6VmB4dkIKBjMySCmNpcTtOkaGa1J2FmV89ufEl25Z9bT3U88Q/gOSmTFa9CJ
-        oon5pzB/dsvYF3ZWfvvWfwBrsFlY0PiQuAOwiieyHUrlSFlStg36lrMvKwqFwA==
+        with ESMTP id S229785AbiITN0b (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 09:26:31 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3E6272
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 06:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663680390; x=1695216390;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=YmmpYVGnim7w6UooSPi023lt/oovAdSTMiOav9Ujq30=;
+  b=PJ0UYFhmZBLZGa3AV8eGYYkcuIT0QvOy6BBzd02AaI5dw4+siO177SXh
+   CopDnvTud1rARSyGiALbKaTmFYcTFKrxasp2ftwilr3J3DMi60UzXNRxs
+   CWEuy+kZND4hMLmZmLVpoMQNCll3LehSo8xCblnP0RMMHFhk5uic95Y33
+   RckNrE+hwxOZ1L4ltpBsZGvKO+sPePMEyw8Cj2OgI0poBDG7UKmP4GlM7
+   8Io682gLsgDHz7Y/WyRTH/vbU7S7GSYrGLFlcdi5L0ptO5PXuXc5V4Fcd
+   xsYMtf8hm+nOSENcI5fzJDXpVZ7dE3HQExGA7HUkmkjY0ZskuwWPL+cUQ
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="363650465"
+X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
+   d="scan'208";a="363650465"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:26:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
+   d="scan'208";a="652092480"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 20 Sep 2022 06:26:21 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 797A5238; Tue, 20 Sep 2022 16:26:39 +0300 (EEST)
+Date:   Tue, 20 Sep 2022 16:26:39 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linux GPIO <linux-gpio@vger.kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [GIT PULL] intel-gpio for 6.1-1
+Message-ID: <Yym/j+Y9MBOIhWtK@black.fi.intel.com>
 MIME-Version: 1.0
-Date:   Tue, 20 Sep 2022 14:34:09 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
-        andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
-In-Reply-To: <CACRpkdb70zawWDSxUM=hJYkOEbG5a5guZWBytqUmRG2FZLiXsQ@mail.gmail.com>
-References: <20220909145942.844102-1-horatiu.vultur@microchip.com>
- <20220920120642.690340-1-michael@walle.cc>
- <CACRpkdb70zawWDSxUM=hJYkOEbG5a5guZWBytqUmRG2FZLiXsQ@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <faa173ddc1d55d2e3931246453e5e953@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2022-09-20 14:28, schrieb Linus Walleij:
-> On Tue, Sep 20, 2022 at 2:06 PM Michael Walle <michael@walle.cc> wrote:
-> 
->> Our board has a shared active low interrupt line, connected to a quad 
->> PHY
->> LAN8814 and two GPY215 PHYs. I've gave this a try but it doesn't seem 
->> to
->> work. It seems the interrupt fires multiple times. If I plug a cable 
->> in
->> one of the LAN8814 ports, I see that the interrupt count in
->> /proc/interrupts has increased by two. If I use a GPY215 port, I see 
->> about
->> 40 interrupts firing.
-> 
-> A lot of interrupts firing is very typical for level IRQs.
+Hi Linux GPIO  maintainers,
 
-Common but wrong? Except in the error case, /proc/interrupts
-was always reliable on our boards :)
+A small quirk for GPIO ACPI library. Was a few weeks in Linux Next, shouldn't
+be any conflicts with anything. Please pull for v6.1.
 
-> So I assume these are wire-OR, i.e. exploiting open drain with
-> a pull-up resistor.
+Thanks,
 
-Yes, the usual shared line interrupts.
+With Best Regards,
+Andy Shevchenko
 
-> Just checking: since these drivers obviously must pass pass
-> IRQF_SHARED, have you also made sure that each driver also
-> will properly return IRQ_HANDLED if the interrupt was for them
-> (triggered by "their" hardware) but IRQ_NONE if the interrupt was
-> not for them (triggered by something else)?
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
 
-Thanks, I'll check it.
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
 
-> The IRQ core relies on all drivers to do the right thing here.
-> 
-> Otherwise the IRQ will just re-fire until someone/something
-> manages to properly handle it and drive the line high again.
-> 
-> A typical case would be the LAN8814 driver having been probed
-> first, thus its IRQ handler will be visited first, and always returning
-> IRQ_HANDLED thereby "stealing" the irq from everyone else.
-> 
-> Another possible problem is if you don't have an external pull-up
-> resistor and you need some pin config to enable pull-up on the
-> SoC input line. This will generate a lot of IRQs.
+are available in the Git repository at:
 
-I've checked with a scope, the levels and edges look good.
+  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.1-1
 
-> A third problem would be that the line need time to rise.
-> But that should be uncommon.
+for you to fetch changes up to 0ea76c401f9245ac209f1b1ce03a7e1fb9de36e5:
 
-I haven't looked at the code of this patch, but obiously it
-is emulating the level triggered behavior with just a pin change
-interrupt. There might also be something wrong there, too.
+  gpiolib: acpi: Add a quirk for Asus UM325UAZ (2022-09-05 13:15:56 +0300)
 
--michael
+----------------------------------------------------------------
+intel-gpio for v6.1-1
+
+* Add a quirk for Asus UM325UAZ to make GPIO interrupts working
+
+The following is an automated git shortlog grouped by driver:
+
+gpiolib:
+ -  acpi: Add a quirk for Asus UM325UAZ
+ -  acpi: Add support to ignore programming an interrupt
+
+----------------------------------------------------------------
+Mario Limonciello (2):
+      gpiolib: acpi: Add support to ignore programming an interrupt
+      gpiolib: acpi: Add a quirk for Asus UM325UAZ
+
+ drivers/gpio/gpiolib-acpi.c | 38 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 34 insertions(+), 4 deletions(-)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
