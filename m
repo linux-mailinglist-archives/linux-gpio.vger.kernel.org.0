@@ -2,96 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0691C5BE034
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 10:34:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FAC55BE0AC
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 10:48:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbiITIeW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 04:34:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33528 "EHLO
+        id S231135AbiITIsD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 04:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230218AbiITIdw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 04:33:52 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA05A65B1;
-        Tue, 20 Sep 2022 01:33:49 -0700 (PDT)
-Received: (Authenticated sender: miquel.raynal@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 93B0A40008;
-        Tue, 20 Sep 2022 08:33:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1663662828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=WdCBW02Fmd3bjrCh+OZZwzQ5M+jFgiJ3BIAxKxcGchY=;
-        b=Fkc2Mq4Ojmk6fA3bxJPKaJn0WLqyjQT/npMoIhSfZX76aXLoThMbC516XCfnOeiiBamxGC
-        ef/U8lKG8CzN7Q96xUd4LtMIeVblPti2tyyEKtMf32UNp7AfXZFnOGAg+k1ZQGwJQykmDA
-        fPkMuJPLuC8phFSfGeS17s7hENly3KI6ctjaChfKwb4CKjQrsUOoc0MDXBqqdVTbOhXDoh
-        3wV2R5IcM/BB7UthrsqKmOzknjS7VAp0uOkeJv2MDKwd/JfIjmk/eBV1Xgz128d0vrXrJ+
-        HCs5k8j2cnkQ3Ho73v081g4gSg/IgirZsYsb+6cipakSlYrU6szR8RzXypbq3Q==
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Matti Vaittinen <mazziesaccount@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?utf-8?q?Krzysztof_Wilc?= =?utf-8?q?zy=C5=84ski?= <kw@linux.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        David Airlie <airlied@linux.ie>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?utf-8?q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Cc:     linux-watchdog@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v1 03/11] mtd: rawnand: stm32_fmc2: switch to using devm_fwnode_gpiod_get()
-Date:   Tue, 20 Sep 2022 10:33:42 +0200
-Message-Id: <20220920083342.601039-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To:  <20220903-gpiod_get_from_of_node-remove-v1-3-b29adfb27a6c@gmail.com>
-References: 
+        with ESMTP id S231526AbiITIru (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 04:47:50 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7560D3F32B
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 01:47:42 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id a3so2584413lfk.9
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 01:47:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=bPC0wOWHS3IfkpyiNHTrPOKy7lllIftEAhOiSZ57lWE=;
+        b=xx1IH7gi6vuXdqBC8gCyQHJnBpx94OKrk8RWttmSL7BTYXLGZYOAlUaOt5XuevZRnI
+         9mSoFEAlQNRW61/D2d1n/yX+9Dpz8Yu6GH3mETVc/M1epxE3yWY+B1QVJSFOqmmDrR7T
+         xRXFcc8j6PJmvvPziypomGMvbLcSUw8Zw5j+9gguuGJHRlf4aLbzn6XIoIFLgN/F8c8z
+         HJfRm3xT9jZxkfNdJxEZKyb6cZJ+UA0/c8SRFXYiowtu1Vmx4Y8RhqEbIf57ZdIwtSv/
+         G9u7MDQwRP+0LWtaOjq1H5EGhEDOJU0yCBXB261I5VwDV7N3/ApG/rF8WseQw7wYCd4q
+         JIbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=bPC0wOWHS3IfkpyiNHTrPOKy7lllIftEAhOiSZ57lWE=;
+        b=nEkROG8XIHgz7YV6vyU5W7ZeIJlhRZIpqKSimjm0tFdt86aoxaV5EmSB8HU2T1zS7S
+         p8RtaitSVcxyqgeUHAp8tQwebV5AZehdmwRXPcrtfQw0K85FvX2GgZPs+Rm2ztTFMQS5
+         QJgtVjhY3HfnEjBjSRL2B/Z2UYiNj6ZTRrgDaM6cXxOGi14BmxQtSnRK0CqIOF7ablKz
+         qHNjoB1FJDgdjSmG5w8XvGz23ZLGCA9embFy2Jrql2YZUagGPx07qyrYn1xf8OtSCKlJ
+         kBjq5bA6Z9W9iJF8aqs6APSdzZlfU3iGXyj9lo9NBXLLz4fg55mPOBIbtBwfh1As50jM
+         wdHw==
+X-Gm-Message-State: ACrzQf0DdJjlatrLB85AD4wUW0gL+7Zka4C6ELb8zK/UO7x1/aOnIL1G
+        UXwKdr2VpGqeX4T6W+XBrGYojg==
+X-Google-Smtp-Source: AMsMyM5H098ZyPcH4hQiK06tnggqiLZI22yq2+Z+n6Ilu5uMR/fxGiIdZGjRfa+iAg143TZk4rwxyw==
+X-Received: by 2002:a05:6512:3c9f:b0:49d:d486:96d7 with SMTP id h31-20020a0565123c9f00b0049dd48696d7mr7980206lfv.596.1663663660813;
+        Tue, 20 Sep 2022 01:47:40 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id q9-20020ac246e9000000b0049486c66140sm205437lfo.119.2022.09.20.01.47.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Sep 2022 01:47:40 -0700 (PDT)
+Message-ID: <6f1ad082-74e4-e4e7-9304-5cdd95cc9f66@linaro.org>
+Date:   Tue, 20 Sep 2022 10:47:39 +0200
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: b'130bd3cdb880c444005e173485124a7bbf3df9b2'
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
+ documentation
+Content-Language: en-US
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+References: <20220714122322.63663-1-tmaimon77@gmail.com>
+ <20220714122322.63663-2-tmaimon77@gmail.com>
+ <20220718211046.GA3547663-robh@kernel.org>
+ <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
+ <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
+ <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
+ <bfca0379-7346-13e7-a18f-66740c5871b3@linaro.org>
+ <CAP6Zq1gyDW8ZwwAZ1jyfNEZa09WN-biZZJY8tBmW_gzMzpj3ZA@mail.gmail.com>
+ <2b0e6e33-ef76-4bd4-8894-53f9a3fe68b4@linaro.org>
+ <CAP6Zq1iwW6HvvfM684VLG0ZT-0OLKT0udW4bHxsZsTMEypo2sg@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAP6Zq1iwW6HvvfM684VLG0ZT-0OLKT0udW4bHxsZsTMEypo2sg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 2022-09-05 at 06:30:55 UTC, Dmitry Torokhov wrote:
-> I would like to stop exporting OF-specific devm_gpiod_get_from_of_node()
-> so that gpiolib can be cleaned a bit, so let's switch to the generic
-> fwnode property API.
-> 
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+On 20/09/2022 10:32, Tomer Maimon wrote:
+> On Tue, 20 Sept 2022 at 11:21, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 20/09/2022 09:59, Tomer Maimon wrote:
+>>>>>>>>> +      pinctrl: pinctrl@f0800000 {
+>>>>>>>>> +        compatible = "nuvoton,npcm845-pinctrl";
+>>>>>>>>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+>>>>>>>>> +        #address-cells = <1>;
+>>>>>>>>> +        #size-cells = <1>;
+>>>>>>>>> +        nuvoton,sysgcr = <&gcr>;
+>>>>>>>>> +
+>>>>>>>>> +        gpio0: gpio@f0010000 {
+>>>>>>>>
+>>>>>>>> gpio@0
+>>>>>>>>
+>>>>>>>> Is this really a child block of the pinctrl? Doesn't really look like it
+>>>>>>>> based on addressess. Where are the pinctrl registers? In the sysgcr? If
+>>>>>>>> so, then pinctrl should be a child of it. But that doesn't really work
+>>>>>>>> too well with gpio child nodes...
+>>>>>>> the pin controller mux is handled by sysgcr this is why the sysgcr in
+>>>>>>> the mother node,
+>>>>>>> and the pin configuration are handled by the GPIO registers.  each
+>>>>>>> GPIO bank (child) contains 32 GPIO.
+>>>>>>> this is why the GPIO is the child node.
+>>>>>>
+>>>>>> Then maybe pinctrl should be the sysgcr and expose regmap for other devices?
+>>>>> The pin controller using the sysgcr to handle the pinmux, this is why
+>>>>> the sysgcr is in the mother node, is it problematic?
+>>>>
+>>>> You said pin-controller mux registers are in sysgcr, so it should not be
+>>>> used via syscon.
+>>> Sorry but maybe I missed something.
+>>> the sysgcr is used for miscellaneous features and not only for the pin
+>>> controller mux, this is why it used syscon and defined in the dtsi:
+>>>                 gcr: system-controller@f0800000 {
+>>>                         compatible = "nuvoton,npcm845-gcr", "syscon";
+>>>                         reg = <0x0 0xf0800000 0x0 0x1000>;
+>>>                 };
+>>>>
+>>>> Please provide address map description to convince us that this is
+>>>> correct HW representation.
+>>> GCR (sysgcr) registers 0xf0800000-0xf0801000 - used for miscellaneous
+>>> features, not only pin mux.
+>>> GPIO0 0xf0010000-0xf0011000
+>>> GPIO1 0xf0011000-0xf0012000
+>>> ...
+>>> GPIO7 0xf0017000-0xf0018000
+>>>>
+>>
+>> Then why your pinctrl is in sysgcr IO range? (pinctrl@f0800000)
+> you suggest using pinctrl@0 or pinctrl@f0010000 and not
+> pinctrl@f0800000 because 0xf0800000 is the GCR address that serve
+> miscellaneous features and not only pinmux controller ?
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+If you have a map like you pasted, then DTS like this:
 
-Miquel
+syscon@f0800000 {}
+pinctrl@f0800000 {
+  gpio@f0010000 {}
+}
+
+Is quite weird, don't you think? You have two devices on the same unit
+address which is not allowed. You have child of pinctrl with entirely
+different unit address, so how is it its child?
+
+Best regards,
+Krzysztof
