@@ -2,55 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB0C5BE702
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 15:26:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DBA85BE71B
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 15:30:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbiITN0c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 09:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
+        id S229962AbiITNaU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 09:30:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbiITN0b (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 09:26:31 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3E6272
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 06:26:30 -0700 (PDT)
+        with ESMTP id S229760AbiITNaS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 09:30:18 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08D330563;
+        Tue, 20 Sep 2022 06:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663680390; x=1695216390;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=YmmpYVGnim7w6UooSPi023lt/oovAdSTMiOav9Ujq30=;
-  b=PJ0UYFhmZBLZGa3AV8eGYYkcuIT0QvOy6BBzd02AaI5dw4+siO177SXh
-   CopDnvTud1rARSyGiALbKaTmFYcTFKrxasp2ftwilr3J3DMi60UzXNRxs
-   CWEuy+kZND4hMLmZmLVpoMQNCll3LehSo8xCblnP0RMMHFhk5uic95Y33
-   RckNrE+hwxOZ1L4ltpBsZGvKO+sPePMEyw8Cj2OgI0poBDG7UKmP4GlM7
-   8Io682gLsgDHz7Y/WyRTH/vbU7S7GSYrGLFlcdi5L0ptO5PXuXc5V4Fcd
-   xsYMtf8hm+nOSENcI5fzJDXpVZ7dE3HQExGA7HUkmkjY0ZskuwWPL+cUQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="363650465"
+  t=1663680617; x=1695216617;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Bn99q4ngGyop/53C923Ky1yeNu9zZONopt7ou69a41U=;
+  b=JJc0ARY6k/m2Y9qdXqPJSRYHsoT2whSickylCOlpA5YhmFpcPxP8AC51
+   lhVQgadQlYSkKa2nt8K9mgij/4oeOXA+YJGkKcUATt2Ms/CsSnOCQvXp7
+   7r8Y2AJGBPrqe2/F/vkYZVfAuZZavNANAHDdziuwI+MYB+GIvtvslqltZ
+   7TP4/khnmYk5JXMjg0BIfIu2l8x98LlXCFCoroFMrzhppZqZZvrpl4yA7
+   p584urM2w9er4RnGL32aoFUjgi5mMkWR/92/zXvqpUM3mQ5PBKk1thjvL
+   a5iNQ94TGEDwAnDaBzKtTlo4GYsw3OMxxomqxhTIoCJQpYSUe8f37ZuCK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="299681408"
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="363650465"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:26:23 -0700
+   d="scan'208";a="299681408"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 06:30:17 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,330,1654585200"; 
-   d="scan'208";a="652092480"
+   d="scan'208";a="794259561"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 20 Sep 2022 06:26:21 -0700
+  by orsmga005.jf.intel.com with ESMTP; 20 Sep 2022 06:30:15 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 797A5238; Tue, 20 Sep 2022 16:26:39 +0300 (EEST)
-Date:   Tue, 20 Sep 2022 16:26:39 +0300
+        id DA3F9238; Tue, 20 Sep 2022 16:30:32 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 6.1-1
-Message-ID: <Yym/j+Y9MBOIhWtK@black.fi.intel.com>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Bamvor Jian Zhang <bamv2005@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] gpio: mockup: Fix potential resource leakage when register a chip
+Date:   Tue, 20 Sep 2022 16:30:31 +0300
+Message-Id: <20220920133031.30031-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,49 +60,31 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO  maintainers,
+If creation of software node fails, the locally allocated string
+array is left unfreed. Free it on error path.
 
-A small quirk for GPIO ACPI library. Was a few weeks in Linux Next, shouldn't
-be any conflicts with anything. Please pull for v6.1.
+Fixes: 6fda593f3082 ("gpio: mockup: Convert to use software nodes")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-mockup.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
-
-  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.1-1
-
-for you to fetch changes up to 0ea76c401f9245ac209f1b1ce03a7e1fb9de36e5:
-
-  gpiolib: acpi: Add a quirk for Asus UM325UAZ (2022-09-05 13:15:56 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v6.1-1
-
-* Add a quirk for Asus UM325UAZ to make GPIO interrupts working
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  acpi: Add a quirk for Asus UM325UAZ
- -  acpi: Add support to ignore programming an interrupt
-
-----------------------------------------------------------------
-Mario Limonciello (2):
-      gpiolib: acpi: Add support to ignore programming an interrupt
-      gpiolib: acpi: Add a quirk for Asus UM325UAZ
-
- drivers/gpio/gpiolib-acpi.c | 38 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 34 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
+index a2e505a7545c..d6e42159fe44 100644
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -533,8 +533,10 @@ static int __init gpio_mockup_register_chip(int idx)
+ 	}
+ 
+ 	fwnode = fwnode_create_software_node(properties, NULL);
+-	if (IS_ERR(fwnode))
++	if (IS_ERR(fwnode)) {
++		kfree_strarray(line_names, ngpio);
+ 		return PTR_ERR(fwnode);
++	}
+ 
+ 	pdevinfo.name = "gpio-mockup";
+ 	pdevinfo.id = idx;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
