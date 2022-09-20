@@ -2,80 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 115DB5BE8D2
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 16:25:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA44D5BE8E2
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 16:27:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231849AbiITOZp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 10:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50768 "EHLO
+        id S230148AbiITO1r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 10:27:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231852AbiITOZS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 10:25:18 -0400
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C39226;
-        Tue, 20 Sep 2022 07:25:10 -0700 (PDT)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 874C11251;
-        Tue, 20 Sep 2022 16:25:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1663683906;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gwSU9hw6TvimqBoWZiboEIRnW6xJeUix7UR4c0rVKcQ=;
-        b=BmXPhfhgoZGgy9qAIMm8clSotCFCpQOxKoXDeZxtsvC1SFZmUUgHZFf4ohld/OPBO07w5m
-        rzJXrnMWLYGK4IN0LQl92J43cjZTRBHSqMGkDgzIYyEh8ViyjEnuB0fkBL24MPYt8QXqs7
-        q4R2XQCd9YnRzCc6Rrt1EiQtcMfpquitQOsM9U05fv3X+0ZCsOgqeVZH1N3n6Z7okp8iQ/
-        5FJ5L7ffz5oZeJiwi8xkibyhvEraA3h+l/rHuW6rLBm1Hx0lhY/gpnIH0YQOAsULi2WKOE
-        7T37+9pLPyYv//28rzovXYrOwp9y66ObTxan+CYncIJhXgf54orMa695Tt2r9w==
+        with ESMTP id S229984AbiITO1q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 10:27:46 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28D7226;
+        Tue, 20 Sep 2022 07:27:45 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id q21so4084906edc.9;
+        Tue, 20 Sep 2022 07:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Liib93EzAVK4sIXWmleEPgo27rMYZRDPIdCFkLHuB5M=;
+        b=dMG2QRyt14LehNiiB+J9RwfNaOh3XMRlofrRUiXp8eEerZ/Y/yxuZlzRufNhvJsiIP
+         79tJAxppdISgWCmQUPj002Y1c1meWmKOfisjkkJ+LG5hzbQ25z6HR9rXB3z0HcpLxQAw
+         +gJELaz3TPiaWSd1DRz3dn39Pt5ocYQkl9aQ9xpL7rXGI8rKQMzDsa2xl4EMlcFGOFzH
+         wcY3BMLtXDBa6rWTP6Qv1rSXWLw8jCVg9cyGMueXO/XLJIPTdY/uigEm9bHlwW38NEXm
+         YBtt/Wbx9bp3/NG7czzZQuhwGu3nklQFFfn9ixLnTHQ+aDQIPl9biEExxyYaon6aAkYz
+         Aing==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Liib93EzAVK4sIXWmleEPgo27rMYZRDPIdCFkLHuB5M=;
+        b=7lRqj3pg4v1NtnM78s5Z0jOwJ5lUMWZtfMnMJy08ThEXosATRic0ybK+ZCKkH5bZj5
+         PgMDcMzvdFyW0M8XEEvDAB7V0e+ynsFx5jine6ClgK6dErsSNE/fb+zjQYBUU+NOIG7d
+         meb9Hiw+BqeYdnIJ0dq5eegPQGEsoPqDrhEe6XI8AKskaQ/QYib8y2lUqqmq4Zr5ofm8
+         diaIxk/bL/7SHvEg8OskyqLFTWOjKjhPALS96brgkg2OiraRIvAvi0yvMW8tVGJGsbps
+         +hWq0TNZKgPfwpSAqAgAvhZ30T0zYM2z0cSFyHbbgyjJPXPpbLPXuOYeEX9+lKpKnqyj
+         CbwQ==
+X-Gm-Message-State: ACrzQf3MbuLxcl4JUKs7/Y3GKQhrufQMWznQ887ONOhAIkB5YbhUTobL
+        MnkNx2DQX54m0etj0hyXt8E=
+X-Google-Smtp-Source: AMsMyM7coyvmIfxhR6pD9GxGAVD7jsOgaRM34Cdu4jxKnWEkpw364h10JilpoeF3EBQetit6MVb/bw==
+X-Received: by 2002:a05:6402:298e:b0:451:129e:1b35 with SMTP id eq14-20020a056402298e00b00451129e1b35mr20165670edb.79.1663684064221;
+        Tue, 20 Sep 2022 07:27:44 -0700 (PDT)
+Received: from localhost.localdomain (84-72-105-84.dclient.hispeed.ch. [84.72.105.84])
+        by smtp.gmail.com with ESMTPSA id s4-20020a1709066c8400b0077fb63da010sm971442ejr.114.2022.09.20.07.27.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Sep 2022 07:27:43 -0700 (PDT)
+From:   Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Nicolas Frattaroli <frattaroli.nicolas@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpiolib: Fix missing array end sentinel in quirks array
+Date:   Tue, 20 Sep 2022 16:27:18 +0200
+Message-Id: <20220920142718.633062-1-frattaroli.nicolas@gmail.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Date:   Tue, 20 Sep 2022 16:25:06 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
-        andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
-In-Reply-To: <faa173ddc1d55d2e3931246453e5e953@walle.cc>
-References: <20220909145942.844102-1-horatiu.vultur@microchip.com>
- <20220920120642.690340-1-michael@walle.cc>
- <CACRpkdb70zawWDSxUM=hJYkOEbG5a5guZWBytqUmRG2FZLiXsQ@mail.gmail.com>
- <faa173ddc1d55d2e3931246453e5e953@walle.cc>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <8ec019b32b7221237ccf84fabf07e63d@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Am 2022-09-20 14:34, schrieb Michael Walle:
-> Am 2022-09-20 14:28, schrieb Linus Walleij:
+Without the sentinel, the loop never actually terminates if there
+are no quirks, and wreaks havoc across the kernel resulting in a
+juicy panic.
 
->> Just checking: since these drivers obviously must pass pass
->> IRQF_SHARED, have you also made sure that each driver also
->> will properly return IRQ_HANDLED if the interrupt was for them
->> (triggered by "their" hardware) but IRQ_NONE if the interrupt was
->> not for them (triggered by something else)?
-> 
-> Thanks, I'll check it.
+Fix this by adding a NULL at the end.
 
-The gpy driver seems to handle that correctly. The micrel one introduced
-a regression some time ago. I've send a fix in the meantime [1], but it
-doesn't help for the multiple interrupts here.
+Fixes: a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
+Signed-off-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
+---
+ drivers/gpio/gpiolib-of.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--michael
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 95be5f0d2623..1b60cd04883f 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -498,6 +498,7 @@ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
+ 	of_find_regulator_gpio,
+ 	of_find_arizona_gpio,
+ 	of_find_usb_gpio,
++	NULL,
+ };
+ 
+ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+-- 
+2.37.3
 
-[1] 
-https://lore.kernel.org/netdev/20220920141619.808117-1-michael@walle.cc/
