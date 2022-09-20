@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 428635BE57C
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 14:16:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A41315BE5C6
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 14:29:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbiITMQ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 08:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56296 "EHLO
+        id S230155AbiITM3B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 08:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbiITMQ4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 08:16:56 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F557437A
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 05:16:53 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id l14so5645212eja.7
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 05:16:53 -0700 (PDT)
+        with ESMTP id S229799AbiITM27 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 08:28:59 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D7F75389
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 05:28:57 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id z97so3555648ede.8
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 05:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=7gtq2D7ZlY5x6f4bF+Iyc+xdvmS4p6zc1uZBoY1keB4=;
-        b=OJSTWU4p0vvqx+Eq4FPfcymTaD8QbFgEBPo+iQBVkrmyDk0X8kOj1QoC6UJ8ethNGr
-         zNElUFOiJxVsY6MEQe4O/LUxV5sjpsQCIpidnv/WplAMfE6mlFwWlxPQZ9UDcS/HGT0N
-         y30NlrUKzLJAe63fbQ+MiX7FGaWgxiztKlqwN+XhrW/vrQGaONtnZlblUbZyH1NUt/9k
-         mp8h8h+88CjYf1tlatoLRDU8IyA+GL5fB73vdIdF7bNvqQ638c7U4FAAKxS1AtwX5HKU
-         GR2qPT9YpfT3TBRdWR8I4/g++qRXkMM75yRLleUilfvnEJF1sQTmF9sJmh/4O4yrfTHQ
-         KAIQ==
+        bh=x/dpCo5isvN6L6y4460xJDzd0mKTKQeLQI6ROjAtcPE=;
+        b=o+8/eyHIZ+W+h8BCccsh2J61rtQyvRmlSe79hoETQtKbpuUQvaCWb5bN+xiCpIvBT/
+         eRw/3UuHBSkh86ua/Y2jMZBQOOBoUBqV5nbJjzuOvvy+7fggrggQkhUmHMEaActfSM7l
+         UlsBqnZ6AAj87rXx3XSv5+i1vlEz8Werunkp1xMIFYbCRWQwHWk1ULUqKqBC90VRwkI7
+         XdxPuNPwTSD6rpqBx3I19vo7nBhNCEf+amTGk/dvBqyXZhZMgxZ5X9cP3Sq4IBS/42kj
+         P4p8BanWS656h/FsN6Ki75rYosSS8YiNRgV5Bh7tZI86ByOx5ADzfkqAhvD9qhAZKAIf
+         l4bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=7gtq2D7ZlY5x6f4bF+Iyc+xdvmS4p6zc1uZBoY1keB4=;
-        b=MRKFXRWqLMlPx9x45QmravbpXAO2M/pSLhtE4HuPV5L59ls/2HNDkM66040YiXt3iB
-         DZIOgz/3XT+Oib5gZqzHd6xRc/FYuE8Ot+6S+JYOPe35CDHT1gCS19PuWw4Ncpt2jBRk
-         QDWCgPltYzicpNmun5g02K1n9XL8wO+iFR/eT+u5LfrAMBjFoPUyllp7AvoFQGwu09A6
-         vM1nflH42KF9dKmylfCdlKpHWOvyCNEIbCLDxvsw64eOgWDR7gIVWIuqg2z6wCLJdeKq
-         SN+DkMxFVcWAPEwaOcJBMNjiQWOh5ReRvN6dU29YXZuzngzcrBVNz6X1nhMUkEBK+zmU
-         6RHA==
-X-Gm-Message-State: ACrzQf0cCnYV15OPJg3PkM0bMY/YkMw8Im88yrxWklrBaj8pTBGId/RR
-        9HOYk7WqKaFS/V4ekFhb78Uod0Nqux8XVNDIq/DViQ==
-X-Google-Smtp-Source: AMsMyM62bRTISJ7ZRxjTcCy1xiJ9QX0kv+wW8eMNky+/hKqM5AMqckoNDXqwsdKlnDnehUgviL7xaNf2l4YNJ/n7Hho=
-X-Received: by 2002:a17:906:5d04:b0:77f:ca9f:33d1 with SMTP id
- g4-20020a1709065d0400b0077fca9f33d1mr17118089ejt.526.1663676212184; Tue, 20
- Sep 2022 05:16:52 -0700 (PDT)
+        bh=x/dpCo5isvN6L6y4460xJDzd0mKTKQeLQI6ROjAtcPE=;
+        b=jvSgYYThhl+Da7WfvitRpdB3oWq+sZ7pzsBCJoeOtdnzjTyAWYLGo+CBqKCz+WCRrF
+         p+VoiPMPNRXxfEW/1JbGpl1WxRqDwvPJ45vtiB/JjqxDTFhJgRfS09fyvYOOvdm6mjy2
+         pzoYFbM0ADTTPSr32IGa2scYYZqoFdwTZ530dgNARpDhDiJbQV4qi+i4ahA9itkmPHFc
+         YJZaT7Cq5IvVwZV6N7MOQpgWtOxcqVQVZR4zHMj+AXGM3AluFVVYHOmnV/wDxVNhl00G
+         y8+GyE/eHIEtgZLzvhK+AjmQr1Kr2U3wYwxpj5hqsXBJRZfsK8fx3S8KDVRi26ko8FeN
+         /BJw==
+X-Gm-Message-State: ACrzQf2LNcyacTe1L9xW3WvWEJzX9x0H3yAAWoIgzbOW4Clp14G6PJe1
+        C+Iail05tkwXZgWtjuX2BoaOh5vwf7BL54XYQYjQaQ==
+X-Google-Smtp-Source: AMsMyM6deT5Ir8Df8O9B2ZIl1h+f0n+Olh1trvgdRVrwDAscZAsjxlbnUHR1QrUKKfohPTx4n3QFQhC8cY4TrEmARbU=
+X-Received: by 2002:aa7:c050:0:b0:453:4427:a947 with SMTP id
+ k16-20020aa7c050000000b004534427a947mr18822439edo.172.1663676936357; Tue, 20
+ Sep 2022 05:28:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220920010930.822856-1-jay.xu@rock-chips.com>
-In-Reply-To: <20220920010930.822856-1-jay.xu@rock-chips.com>
+References: <20220909145942.844102-1-horatiu.vultur@microchip.com> <20220920120642.690340-1-michael@walle.cc>
+In-Reply-To: <20220920120642.690340-1-michael@walle.cc>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 20 Sep 2022 14:16:40 +0200
-Message-ID: <CACRpkdYhCsOVN-sjAFaDBAS9nk7kn0cO6CshSsygcXAYZ3iC5Q@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: make gpiochip_find_by_name to be common function
-To:     Jianqun Xu <jay.xu@rock-chips.com>
-Cc:     brgl@bgdev.pl, andriy.shevchenko@linux.intel.com,
-        linux-gpio@vger.kernel.or, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+Date:   Tue, 20 Sep 2022 14:28:44 +0200
+Message-ID: <CACRpkdb70zawWDSxUM=hJYkOEbG5a5guZWBytqUmRG2FZLiXsQ@mail.gmail.com>
+Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
+To:     Michael Walle <michael@walle.cc>
+Cc:     horatiu.vultur@microchip.com, UNGLinuxDriver@microchip.com,
+        andy.shevchenko@gmail.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -66,52 +66,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 3:09 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+On Tue, Sep 20, 2022 at 2:06 PM Michael Walle <michael@walle.cc> wrote:
 
-> Move find_chip_by_name from gpiolib to the gpio/driver.h, also rename to
-> gpiochip_find_by_name, make it to be a common function.
->
-> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+> Our board has a shared active low interrupt line, connected to a quad PHY
+> LAN8814 and two GPY215 PHYs. I've gave this a try but it doesn't seem to
+> work. It seems the interrupt fires multiple times. If I plug a cable in
+> one of the LAN8814 ports, I see that the interrupt count in
+> /proc/interrupts has increased by two. If I use a GPY215 port, I see about
+> 40 interrupts firing.
 
-It feels like you are reimplementing component_match_add() and
-component_master_add_with_match().
+A lot of interrupts firing is very typical for level IRQs.
 
-This is infrastructure from <linux/component.h> that make a device
-initialize (bind) and probe subdrivers from a master driver.
+So I assume these are wire-OR, i.e. exploiting open drain with
+a pull-up resistor.
 
-See for example in drivers/gpu/drm/vc4/vc4_drv.c:
+Just checking: since these drivers obviously must pass pass
+IRQF_SHARED, have you also made sure that each driver also
+will properly return IRQ_HANDLED if the interrupt was for them
+(triggered by "their" hardware) but IRQ_NONE if the interrupt was
+not for them (triggered by something else)?
 
-static struct platform_driver *const component_drivers[] = {
-        &vc4_hvs_driver,
-        &vc4_hdmi_driver,
-        &vc4_vec_driver,
-        &vc4_dpi_driver,
-        &vc4_dsi_driver,
-        &vc4_txp_driver,
-        &vc4_crtc_driver,
-        &vc4_v3d_driver,
-};
+The IRQ core relies on all drivers to do the right thing here.
 
-static int vc4_platform_drm_probe(struct platform_device *pdev)
-{
-        struct component_match *match = NULL;
-        struct device *dev = &pdev->dev;
+Otherwise the IRQ will just re-fire until someone/something
+manages to properly handle it and drive the line high again.
 
-        vc4_match_add_drivers(dev, &match,
-                              component_drivers, ARRAY_SIZE(component_drivers));
+A typical case would be the LAN8814 driver having been probed
+first, thus its IRQ handler will be visited first, and always returning
+IRQ_HANDLED thereby "stealing" the irq from everyone else.
 
-        return component_master_add_with_match(dev, &vc4_drm_ops, match);
-}
+Another possible problem is if you don't have an external pull-up
+resistor and you need some pin config to enable pull-up on the
+SoC input line. This will generate a lot of IRQs.
 
-This will let each driver bind individually, then the probe calls will be
-orchestrated by the component_master_add_with_match(): the master
-probes first then each subdriver (hvs, hdmi etc).
-
-This makes it possible to control dependencies in componsite
-(componentized) drivers, as you pin controller and GPIO controllers.
-
-I used this for example in a charging driver with dependencies in
-drivers/power/supply/ab8500_charger.c and in some DRM drivers.
+A third problem would be that the line need time to rise.
+But that should be uncommon.
 
 Yours,
 Linus Walleij
