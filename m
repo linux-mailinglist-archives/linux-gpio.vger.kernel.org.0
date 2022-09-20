@@ -2,89 +2,201 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1B525BEC3F
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 19:47:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 081E55BEDA1
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 21:26:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbiITRro (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 13:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
+        id S231436AbiITT0Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 15:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbiITRr2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 13:47:28 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A846E65574;
-        Tue, 20 Sep 2022 10:47:24 -0700 (PDT)
+        with ESMTP id S231437AbiITT0N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 15:26:13 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B729501B3;
+        Tue, 20 Sep 2022 12:26:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663696044; x=1695232044;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1663701971; x=1695237971;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=7paNFYGOegGwNWKM0I1JzPA7eZal509/HcIVxSQt/mw=;
-  b=kq53lbS6k5JYB9TufUMtKicZITTrvtW9tKWRirdbtEqGWkh4GHTQBaxx
-   +lJ3PtbLozG/GWxz7VPZXJ5+Vj7doNNmKHFwlqnnH8Cs/bs+r0CEmzNAn
-   pntGORpDNVw04rOhD08XvzR0UtU7azo6UqFylmVQ8OQiIUwjOcprqkvst
-   czyDlqGAKON5Gdzf6KJYzDmlGi+ESrWVkJAAstQDy5MYdyhto0Uw0MdAt
-   WKYWabFrqm9obrumzJiFR9hWU6D9UpANPIc+kUQCZwnB/VS5wG61+2jO8
-   2eFazTEL0x4kj26bfYD7nj+cLXrrR4fs64NfnbdnGBq2//sTuX/0SU1kO
+  bh=U1i4KKG54erJ7qy10D3Cu5MhJaA3JhI4yYQxdJTJq4E=;
+  b=yyjQfW0mQs1uTyY46i7FlcX7oBAgnU1Wzfba+zkN5ZAmFiQ1vntEedZA
+   o9SJeBdxww5MIMHUqNz3jewjVUu8Uk0V7gCojtfdTahOH86nDRK8EmeF3
+   0kV7GWoSekdrBvyJboRYj5mFmUNtiG3iYvxVdOK+shRIuH9I3yYUD91cE
+   awIJGoHTGufLgSzvBxeMDw9zeawcbZWkRW1QqzQNy7mXgwqL1KMV0Sq99
+   SrbHlMLPaXezWty1gm2OMC1KYM6NtOfMkU0wXfL87PIBeBpM9wutO5T7D
+   xZOHbUFlcW3r518zQ/KscUyIlhiaTetQ2UmAw5gGKdCLkHcTUTmI0VXGi
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="363728542"
 X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="363728542"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 10:47:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="649687156"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 20 Sep 2022 10:47:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oahL7-0059eA-11;
-        Tue, 20 Sep 2022 20:47:21 +0300
-Date:   Tue, 20 Sep 2022 20:47:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: cdev: add fdinfo output for line request file
- descriptors
-Message-ID: <Yyn8qABbRDGYAnnv@smile.fi.intel.com>
-References: <20220920135435.15593-1-brgl@bgdev.pl>
- <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
- <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
+   d="scan'208";a="178108389"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 20 Sep 2022 12:26:09 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Tue, 20 Sep 2022 12:26:08 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex02.mchp-main.com
+ (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
+ Transport; Tue, 20 Sep 2022 12:26:08 -0700
+Date:   Tue, 20 Sep 2022 21:30:33 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Michael Walle <michael@walle.cc>
+CC:     <UNGLinuxDriver@microchip.com>, <andy.shevchenko@gmail.com>,
+        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
+Message-ID: <20220920193033.bpmyt6pdob5b45id@soft-dev3-1.localhost>
+References: <20220909145942.844102-1-horatiu.vultur@microchip.com>
+ <20220920120642.690340-1-michael@walle.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220920120642.690340-1-michael@walle.cc>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 08:29:29PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 20, 2022 at 08:19:25PM +0300, Andy Shevchenko wrote:
-> > On Tue, Sep 20, 2022 at 03:54:35PM +0200, Bartosz Golaszewski wrote:
-
-...
-
-> > Also don't forget that sizes over PAGE_SIZE in sysfs sometimes problematic and
-> > racy.(the commit 888be6067b97 ("ACPI: sysfs: Fix a buffer overrun problem with
-> > description_show()") for the reference).
+The 09/20/2022 14:06, Michael Walle wrote:
 > 
-> This is not the commit I wanted to point to... But suddenly can't find easily
-> the one I remembered happened in the kernel.
+> Hi Horatiu,
 
-Found the one:
-00ee22c28915 ("PM / wakeup: Use seq_open() to show wakeup stats")
+Hi Walle,
+
+> 
+> > When an external device generated a level based interrupt then the
+> > interrupt controller could miss the interrupt. The reason is that the
+> > interrupt controller can detect only link changes.
+> >
+> > In the following example, if there is a PHY that generates an interrupt
+> > then the following would happen. The GPIO detected that the interrupt
+> > line changed, and then the 'ocelot_irq_handler' was called. Here it
+> > detects which GPIO line saw the change and for that will call the
+> > following:
+> > 1. irq_mask
+> > 2. phy interrupt routine
+> > 3. irq_eoi
+> > 4. irq_unmask
+> >
+> > And this works fine for simple cases, but if the PHY generates many
+> > interrupts, for example when doing PTP timestamping, then the following
+> > could happen. Again the function 'ocelot_irq_handler' will be called
+> > and then from here the following could happen:
+> > 1. irq_mask
+> > 2. phy interrupt routine
+> > 3. irq_eoi
+> > 4. irq_unmask
+> >
+> > Right before step 3(irq_eoi), the PHY will generate another interrupt.
+> > Now the interrupt controller will acknowledge the change in the
+> > interrupt line. So we miss the interrupt.
+> >
+> > A solution will be to use 'handle_level_irq' instead of
+> > 'handle_fasteoi_irq', because for this will change routine order of
+> > handling the interrupt.
+> > 1. irq_mask
+> > 2. irq_ack
+> > 3. phy interrupt routine
+> > 4. irq_unmask
+> >
+> > And now if the PHY will generate a new interrupt before irq_unmask, the
+> > interrupt controller will detect this because it already acknowledge the
+> > change in interrupt line at step 2(irq_ack).
+> >
+> > But this is not the full solution because there is another issue. In
+> > case there are 2 PHYs that share the interrupt line. For example phy1
+> > generates an interrupt, then the following can happen:
+> > 1.irq_mask
+> > 2.irq_ack
+> > 3.phy0 interrupt routine
+> > 4.phy1 interrupt routine
+> > 5.irq_unmask
+> >
+> > In case phy0 will generate an interrupt while clearing the interrupt
+> > source in phy1, then the interrupt line will be kept down by phy0. So
+> > the interrupt controller will not see any changes in the interrupt line.
+> > The solution here is to update 'irq_unmask' such that it can detect if
+> > the interrupt line is still active or not. And if it is active then call
+> > again the procedure to clear the interrupts. But we don't want to do it
+> > every time, only if we know that the interrupt controller has not seen
+> > already that the interrupt line has changed.
+> >
+> > While at this, add support also for IRQ_TYPE_LEVEL_LOW.
+> 
+> Our board has a shared active low interrupt line, connected to a quad PHY
+> LAN8814 and two GPY215 PHYs. I've gave this a try but it doesn't seem to
+> work. It seems the interrupt fires multiple times. If I plug a cable in
+> one of the LAN8814 ports, I see that the interrupt count in
+> /proc/interrupts has increased by two. If I use a GPY215 port, I see about
+> 40 interrupts firing.
+
+I really don't know why would see 40 interrupts on GPY215. But I can
+explain why you see 2 interrupts with LAN8814 ports.
+The reason is that the interrupt controller in the pinctrl detects edges
+and not levels. So if we take an example: the PHY will generate an
+interrupt by pulling down the line. Then pinctrl detects this change in
+the line so will start interrupt handler rutine. It would mask, ack,
+call the PHY interrupt routine. At this point when the PHY clears the
+interrupt source, the interrupt line will be high. So the interrupt
+controller will see also this change. Then when the interrupt controller
+will unmask the interrupt, it would generate a new one. And this is the
+second interrupt.
+I didn't know that is a big issue to get another interrupt. Because
+before it was possible to miss interrupts, so I thought it was a pretty
+fair trade.
+
+Below I have a diff that I tried with LAN8814 PHYs and I could see that
+count in /proc/interrupts is increasing correctly.
+
+> 
+> I've verified that there is only one low pulse on the interrupt line. I've
+> noticed though, that the number of interrupts seem to be correlating with
+> the length of the low pulse.
+---
+diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
+index c7df8c5fe5854..105771ff82e62 100644
+--- a/drivers/pinctrl/pinctrl-ocelot.c
++++ b/drivers/pinctrl/pinctrl-ocelot.c
+@@ -1863,19 +1863,28 @@ static void ocelot_irq_unmask_level(struct irq_data *data)
+ 	if (val & bit)
+ 		ack = true;
+ 
++	/* Try to clear any rising edges */
++	if (!active && ack)
++		regmap_write_bits(info->map, REG(OCELOT_GPIO_INTR, info, gpio),
++				  bit, bit);
++
+ 	/* Enable the interrupt now */
+ 	gpiochip_enable_irq(chip, gpio);
+ 	regmap_update_bits(info->map, REG(OCELOT_GPIO_INTR_ENA, info, gpio),
+ 			   bit, bit);
+ 
+ 	/*
+-	 * In case the interrupt line is still active and the interrupt
+-	 * controller has not seen any changes in the interrupt line, then it
+-	 * means that there happen another interrupt while the line was active.
++	 * In case the interrupt line is still active then it means that
++	 * there happen another interrupt while the line was active.
+ 	 * So we missed that one, so we need to kick the interrupt again
+ 	 * handler.
+ 	 */
+-	if (active && !ack) {
++	regmap_read(info->map, REG(OCELOT_GPIO_IN, info, gpio), &val);
++	if ((!(val & bit) && trigger_level == IRQ_TYPE_LEVEL_LOW) ||
++	      (val & bit && trigger_level == IRQ_TYPE_LEVEL_HIGH))
++		active = true;
++
++	if (active) {
+ 		struct ocelot_irq_work *work;
+ 
+ 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
+---
+> 
+> -michael
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+/Horatiu
