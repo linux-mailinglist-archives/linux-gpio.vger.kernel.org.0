@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD2775BEC04
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 19:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B525BEC3F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 19:47:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbiITRaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 13:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
+        id S230394AbiITRro (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 13:47:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231503AbiITR36 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 13:29:58 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E68522290;
-        Tue, 20 Sep 2022 10:29:42 -0700 (PDT)
+        with ESMTP id S231425AbiITRr2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 13:47:28 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A846E65574;
+        Tue, 20 Sep 2022 10:47:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663694983; x=1695230983;
+  t=1663696044; x=1695232044;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=w8/YG0nidbb5+vN2FkxNfJIceA5A1DLzUcR7puogyMM=;
-  b=VzkeQCrlK2dphaCiKaJAiP1rKVJFEljLiV2OOvW6prDsjZwZt9g8bj7R
-   AZS1GxZVbuDrAmUE1PGikU53/kb9ieoWPOvtw+7YXzlMB6HBgPtr+uVfR
-   P5Tkunu4acXndNHIQKr4BqGAzhxqcbV9o39dt0xaa+PaxPNXkZaS8TOau
-   9i/swg9W4oHFFdUz1sI9+rlFzed5kVaRt7Wlq5CW0TBeZ389PlzMPS5sY
-   tmnlAftf5GHAMY02A40mgAqJGmOVRssGPYhIgMoV78MBo9rs5L1byN9nl
-   LQODRmNnwbkAk4sQjnL58KEIKNKLjQd1iSQ3qTv3/IaS7UwVdvZXbwx0d
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="297360289"
+  bh=7paNFYGOegGwNWKM0I1JzPA7eZal509/HcIVxSQt/mw=;
+  b=kq53lbS6k5JYB9TufUMtKicZITTrvtW9tKWRirdbtEqGWkh4GHTQBaxx
+   +lJ3PtbLozG/GWxz7VPZXJ5+Vj7doNNmKHFwlqnnH8Cs/bs+r0CEmzNAn
+   pntGORpDNVw04rOhD08XvzR0UtU7azo6UqFylmVQ8OQiIUwjOcprqkvst
+   czyDlqGAKON5Gdzf6KJYzDmlGi+ESrWVkJAAstQDy5MYdyhto0Uw0MdAt
+   WKYWabFrqm9obrumzJiFR9hWU6D9UpANPIc+kUQCZwnB/VS5wG61+2jO8
+   2eFazTEL0x4kj26bfYD7nj+cLXrrR4fs64NfnbdnGBq2//sTuX/0SU1kO
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="363728542"
 X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="297360289"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 10:29:32 -0700
+   d="scan'208";a="363728542"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 10:47:24 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="947766882"
+   d="scan'208";a="649687156"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Sep 2022 10:29:31 -0700
+  by orsmga008.jf.intel.com with ESMTP; 20 Sep 2022 10:47:22 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oah3p-0059IS-1s;
-        Tue, 20 Sep 2022 20:29:29 +0300
-Date:   Tue, 20 Sep 2022 20:29:29 +0300
+        id 1oahL7-0059eA-11;
+        Tue, 20 Sep 2022 20:47:21 +0300
+Date:   Tue, 20 Sep 2022 20:47:20 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
@@ -49,16 +49,17 @@ Cc:     Kent Gibson <warthog618@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] gpiolib: cdev: add fdinfo output for line request file
  descriptors
-Message-ID: <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
+Message-ID: <Yyn8qABbRDGYAnnv@smile.fi.intel.com>
 References: <20220920135435.15593-1-brgl@bgdev.pl>
  <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
+ <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
+In-Reply-To: <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,17 +67,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 08:19:25PM +0300, Andy Shevchenko wrote:
-> On Tue, Sep 20, 2022 at 03:54:35PM +0200, Bartosz Golaszewski wrote:
+On Tue, Sep 20, 2022 at 08:29:29PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 20, 2022 at 08:19:25PM +0300, Andy Shevchenko wrote:
+> > On Tue, Sep 20, 2022 at 03:54:35PM +0200, Bartosz Golaszewski wrote:
 
 ...
 
-> Also don't forget that sizes over PAGE_SIZE in sysfs sometimes problematic and
-> racy.(the commit 888be6067b97 ("ACPI: sysfs: Fix a buffer overrun problem with
-> description_show()") for the reference).
+> > Also don't forget that sizes over PAGE_SIZE in sysfs sometimes problematic and
+> > racy.(the commit 888be6067b97 ("ACPI: sysfs: Fix a buffer overrun problem with
+> > description_show()") for the reference).
+> 
+> This is not the commit I wanted to point to... But suddenly can't find easily
+> the one I remembered happened in the kernel.
 
-This is not the commit I wanted to point to... But suddenly can't find easily
-the one I remembered happened in the kernel.
+Found the one:
+00ee22c28915 ("PM / wakeup: Use seq_open() to show wakeup stats")
 
 -- 
 With Best Regards,
