@@ -2,108 +2,186 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E3415BE8F1
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 16:29:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1C435BE9E8
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 17:17:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231265AbiITO3z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 10:29:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58086 "EHLO
+        id S231317AbiITPRd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 11:17:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231187AbiITO3y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 10:29:54 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5495FDFF9;
-        Tue, 20 Sep 2022 07:29:52 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 29so4148543edv.2;
-        Tue, 20 Sep 2022 07:29:52 -0700 (PDT)
+        with ESMTP id S231239AbiITPRL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 11:17:11 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B9263F3D
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 08:16:54 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id z25so4374997lfr.2
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Sep 2022 08:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=RszqQLsUVQfAFJeEQ7hoI8g4RH+WeWcEr+tv0BYlD1w=;
-        b=oUCdR2MByfag2AceIhidd4X0VO+EXvXQSVE80gvHh1j65Ep+rsNtuF/pRRCSVGqQez
-         IF/zxdC/28zBNcQgKJJurMTp6qbA2m+bUSxan2c8YD88inPzcHsNFMpjX8TeuFY11loU
-         xulHV/KGUDA+oHmzJZ5OL/c8rXfcVmsv9whNbc9fiBtj3VgIqP/9s4Q+mIYVbry4Twwl
-         XnQgI5M0NWgaJowIkPCu8zr5g89q6XeUp6MblDYbUJ1aVQdkykK5hAB2dFe0+nntU8Y0
-         XvrAj00ngQIr1aZ1YNzLHodbDiIkvy9lChURy4FoBSqCIGgKd62pP2r1S1uLG6Gt8TVi
-         WVKg==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=LBJXkuxhmse5P1lyWiiuBqBUGrfjJdoy9vn87fbJbbE=;
+        b=Z8+4YFNvQpl0pK3twnvrjV0GrnqkQyNjD4XoPyfhgQ0kMzL3xC1YdrNlobjz4u0q38
+         1ZHc3WI5zWPwRyPAiT0x3qVF0tfnsZTAPl0E+d1OgZqXQ1sQSBsb8MltMigMtSqt9p3l
+         QsqpQeQTJ3C+7vcxP9TNIxoorYesosdGLp4anmGPy9K+h4Jp71gIZk7o/nlBoZq0xciT
+         O8AbvGY+uai3Re7ZDT6d2D1Y8u1v3ARaMKpkcmjLFIXufIadSyB2BZmH3v6iok7QpoNd
+         H9NrPUwGlS84FnOGUy9iQiQ1++ZeS7x8yMwqeF+qNNI49iP1WpEohenKwgDWIb8kbr0g
+         bJZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=RszqQLsUVQfAFJeEQ7hoI8g4RH+WeWcEr+tv0BYlD1w=;
-        b=5j6V3jkIQOdZB49s/UYps/8+uh2ys2KPxbhHJAYO+gpNaso3AM3yBwbypDIa8bPKbE
-         ALYBkYspRIykWkD0EgekS5w4RgpdPoNATm8GXb7VOTzOaZ/9NjKJT+r4J2UCrz6OU0aO
-         qRtMlZLd7WOqf+r15+IzJyT27asrFEzvwZSt+Zzz4bWi/41JfgVdM9VHnxk04N70QM1n
-         khnWVzKDD9dIfpc5ODno3KofrLipoPqJToEOxEfPm+qKW2YPTHhoUcVIPcK5Mkjr8Gg+
-         BB/dykYPpb8Fy4Sk9deGpPeGPfcclpgq5BGPDaXHs4QTNV6MPC1VuEa/isnBNoEQmavU
-         60lw==
-X-Gm-Message-State: ACrzQf3bfOiFKPHUrAceWj/1/kdCXBV/Ol0b+sZqxOb8Ug76ZKOtWRng
-        Shw/uhqddr8/V9kjOGDrgAs=
-X-Google-Smtp-Source: AMsMyM5P7uqGDuNXhYe992hJ7Y9aGbbJF+AsbKLgx2u0/TNRdjaBvJ3twieALQPOshBvixLHCvSx1Q==
-X-Received: by 2002:a05:6402:156:b0:440:b458:93df with SMTP id s22-20020a056402015600b00440b45893dfmr21271644edu.337.1663684190299;
-        Tue, 20 Sep 2022 07:29:50 -0700 (PDT)
-Received: from archbook.localnet (84-72-105-84.dclient.hispeed.ch. [84.72.105.84])
-        by smtp.gmail.com with ESMTPSA id v11-20020a1709064e8b00b0073d87068042sm943378eju.110.2022.09.20.07.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Sep 2022 07:29:49 -0700 (PDT)
-From:   Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: Fix missing array end sentinel in quirks array
-Date:   Tue, 20 Sep 2022 16:29:48 +0200
-Message-ID: <2041321.FWP5BukD0m@archbook>
-In-Reply-To: <20220920142718.633062-1-frattaroli.nicolas@gmail.com>
-References: <20220920142718.633062-1-frattaroli.nicolas@gmail.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=LBJXkuxhmse5P1lyWiiuBqBUGrfjJdoy9vn87fbJbbE=;
+        b=BsMoN7bstLdUxujCdqLSa7tfxl5U99L35aBHYknr3agrjn2dWIoW47344NXwpBzJw+
+         drjELr/l+z/hi8nW/ke0aHmZu2a1qcvno2JZh1V1Lt+a7XA0yBFbomwsSqUDD06K1LQN
+         rcd+mgCsWibCJKR3E06jcMzJTJjtP9LLLzLazpZPgEf6SacDgy9f5cbR0L9oxZCVT2yf
+         zszZVg390NRISe3oI+dC93MqgjAhbosZhVk+WVevr+mBcBzkSlUh8UiWF6t0P1egl5Nw
+         NP4PTTNbMOS1HWYeMKQmdvXI5TsbniWJIy97/0nEllO73Jgi9gVWxAuJO0rwy9QrN3Ij
+         i6PA==
+X-Gm-Message-State: ACrzQf1g/63c5zTWUxwEfEf+B0N7BvrR/7Nm9iDlm7PL3D/vMUmjX/f5
+        kbfDHDyNsEG+8mCdK4SaArNSSepm/KDUxQ==
+X-Google-Smtp-Source: AMsMyM6SQUnreP+sl7ZN5I5Dmk/k+y1Uh7VFe8XVZJXlGsEPqcb7RcbafqbaRJ+eNvNUYZ9pOjY5PQ==
+X-Received: by 2002:a05:6512:32c1:b0:49f:5c95:5146 with SMTP id f1-20020a05651232c100b0049f5c955146mr6050239lfg.469.1663687012826;
+        Tue, 20 Sep 2022 08:16:52 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id du8-20020a056512298800b00492f0f66956sm351627lfb.284.2022.09.20.08.16.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Sep 2022 08:16:52 -0700 (PDT)
+Message-ID: <d8b7fce1-99fa-584b-55e0-f4c3cbe500e2@linaro.org>
+Date:   Tue, 20 Sep 2022 17:16:51 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v2 1/2] dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO
+ documentation
+Content-Language: en-US
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Jonathan_Neusch=c3=a4fer?= <j.neuschaefer@gmx.net>,
+        zhengbin13@huawei.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>
+References: <20220714122322.63663-1-tmaimon77@gmail.com>
+ <20220714122322.63663-2-tmaimon77@gmail.com>
+ <20220718211046.GA3547663-robh@kernel.org>
+ <CAP6Zq1hQ5m2kkQOKaYsKhPQhCW+vdsdyPRxxb_yRGMB=gJCPdw@mail.gmail.com>
+ <3981e6e8-d4bb-b13d-7aaa-7aea83ffaad9@linaro.org>
+ <CAP6Zq1gp1ph1wixgb6nL+2R8We2YJ2HQM2iC05itq_XWd2Cwig@mail.gmail.com>
+ <bfca0379-7346-13e7-a18f-66740c5871b3@linaro.org>
+ <CAP6Zq1gyDW8ZwwAZ1jyfNEZa09WN-biZZJY8tBmW_gzMzpj3ZA@mail.gmail.com>
+ <2b0e6e33-ef76-4bd4-8894-53f9a3fe68b4@linaro.org>
+ <CAP6Zq1iwW6HvvfM684VLG0ZT-0OLKT0udW4bHxsZsTMEypo2sg@mail.gmail.com>
+ <6f1ad082-74e4-e4e7-9304-5cdd95cc9f66@linaro.org>
+ <CAP6Zq1hTS7mVWvYWfTwWvrZibKMpW5r7=wE6W9uETb=aS6MTuA@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAP6Zq1hTS7mVWvYWfTwWvrZibKMpW5r7=wE6W9uETb=aS6MTuA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Dienstag, 20. September 2022 16:27:18 CEST Nicolas Frattaroli wrote:
-> Without the sentinel, the loop never actually terminates if there
-> are no quirks, and wreaks havoc across the kernel resulting in a
-> juicy panic.
-> 
-> Fix this by adding a NULL at the end.
-> 
-> Fixes: a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
-> Signed-off-by: Nicolas Frattaroli <frattaroli.nicolas@gmail.com>
-> ---
->  drivers/gpio/gpiolib-of.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 95be5f0d2623..1b60cd04883f 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -498,6 +498,7 @@ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
->  	of_find_regulator_gpio,
->  	of_find_arizona_gpio,
->  	of_find_usb_gpio,
-> +	NULL,
->  };
->  
->  struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
-> 
+On 20/09/2022 11:27, Tomer Maimon wrote:
+> On Tue, 20 Sept 2022 at 11:47, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 20/09/2022 10:32, Tomer Maimon wrote:
+>>> On Tue, 20 Sept 2022 at 11:21, Krzysztof Kozlowski
+>>> <krzysztof.kozlowski@linaro.org> wrote:
+>>>>
+>>>> On 20/09/2022 09:59, Tomer Maimon wrote:
+>>>>>>>>>>> +      pinctrl: pinctrl@f0800000 {
+>>>>>>>>>>> +        compatible = "nuvoton,npcm845-pinctrl";
+>>>>>>>>>>> +        ranges = <0x0 0x0 0xf0010000 0x8000>;
+>>>>>>>>>>> +        #address-cells = <1>;
+>>>>>>>>>>> +        #size-cells = <1>;
+>>>>>>>>>>> +        nuvoton,sysgcr = <&gcr>;
+>>>>>>>>>>> +
+>>>>>>>>>>> +        gpio0: gpio@f0010000 {
+>>>>>>>>>>
+>>>>>>>>>> gpio@0
+>>>>>>>>>>
+>>>>>>>>>> Is this really a child block of the pinctrl? Doesn't really look like it
+>>>>>>>>>> based on addressess. Where are the pinctrl registers? In the sysgcr? If
+>>>>>>>>>> so, then pinctrl should be a child of it. But that doesn't really work
+>>>>>>>>>> too well with gpio child nodes...
+>>>>>>>>> the pin controller mux is handled by sysgcr this is why the sysgcr in
+>>>>>>>>> the mother node,
+>>>>>>>>> and the pin configuration are handled by the GPIO registers.  each
+>>>>>>>>> GPIO bank (child) contains 32 GPIO.
+>>>>>>>>> this is why the GPIO is the child node.
+>>>>>>>>
+>>>>>>>> Then maybe pinctrl should be the sysgcr and expose regmap for other devices?
+>>>>>>> The pin controller using the sysgcr to handle the pinmux, this is why
+>>>>>>> the sysgcr is in the mother node, is it problematic?
+>>>>>>
+>>>>>> You said pin-controller mux registers are in sysgcr, so it should not be
+>>>>>> used via syscon.
+>>>>> Sorry but maybe I missed something.
+>>>>> the sysgcr is used for miscellaneous features and not only for the pin
+>>>>> controller mux, this is why it used syscon and defined in the dtsi:
+>>>>>                 gcr: system-controller@f0800000 {
+>>>>>                         compatible = "nuvoton,npcm845-gcr", "syscon";
+>>>>>                         reg = <0x0 0xf0800000 0x0 0x1000>;
+>>>>>                 };
+>>>>>>
+>>>>>> Please provide address map description to convince us that this is
+>>>>>> correct HW representation.
+>>>>> GCR (sysgcr) registers 0xf0800000-0xf0801000 - used for miscellaneous
+>>>>> features, not only pin mux.
+>>>>> GPIO0 0xf0010000-0xf0011000
+>>>>> GPIO1 0xf0011000-0xf0012000
+>>>>> ...
+>>>>> GPIO7 0xf0017000-0xf0018000
+>>>>>>
+>>>>
+>>>> Then why your pinctrl is in sysgcr IO range? (pinctrl@f0800000)
+>>> you suggest using pinctrl@0 or pinctrl@f0010000 and not
+>>> pinctrl@f0800000 because 0xf0800000 is the GCR address that serve
+>>> miscellaneous features and not only pinmux controller ?
+>>
+>> If you have a map like you pasted, then DTS like this:
+>>
+>> syscon@f0800000 {}
+>> pinctrl@f0800000 {
+>>   gpio@f0010000 {}
+>> }
+>>
+>> Is quite weird, don't you think? You have two devices on the same unit
+>> address which is not allowed. You have child of pinctrl with entirely
+> O.K.
+>> different unit address, so how is it its child?
+> The pinctrl node name will modify the pinctrl@f0010000 the same as the
+> range property and the start of the child registers,is it fine?
 
-Disregard this, just saw it was already fixed[1].
+We are all busy, so I don't have that much bandwidth to review each of
+your many solutions and instead poking me with every possible solution,
+I would prefer if you think a bit how this all should work and look.
 
-Regards,
-Nicolas Frattaroli
+I don't know if it is fine. Why you should have two devices like this:
+pinctrl@f0010000 {
+gpio@f0010000 {}
+}
 
-[1]: https://lore.kernel.org/linux-gpio/CAMRc=MeF-81yottUqqYdHmuFokysyNsXTgU+FOFWv7bL=QMJOg@mail.gmail.com/T/
+???
+Instead of one device? Answer such questions to yourself before asking
+me. Please come with reasonable DTS describing the hardware.
 
-
-
+Best regards,
+Krzysztof
