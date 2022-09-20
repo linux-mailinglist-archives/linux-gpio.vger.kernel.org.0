@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB9F5BDD54
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 08:33:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 803625BDD7B
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 08:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231139AbiITGd3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 02:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38232 "EHLO
+        id S231197AbiITGlP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 02:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230304AbiITGcz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 02:32:55 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 167855F106
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 23:31:51 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a26so3745207ejc.4
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 23:31:51 -0700 (PDT)
+        with ESMTP id S231195AbiITGk5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 02:40:57 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C98B35EDD8
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 23:40:11 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id hy2so53800ejc.8
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 23:40:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=s+frRaEwA/RcGyGjnXK24dJJkfvLXboQ7giFAMb+z7M=;
-        b=jvM671HyEZOVyWKMOI30kui1DWMvx+kxpa3CgpGwdhBC7DWCtMs3QpB28xrkvwHJhs
-         rcohXPItBIcdFAEeVVZFrOlOowUYDzc/JwBamQAiSY8kAsFG4FEVk/bc4cwWL4oF/fF7
-         GDfFACSMbwG0jrATh6IivQ5RZ0daHAF7gaSvVMKRUy1k0fkRC4mhk96ePDFXaf1JUfLJ
-         5ePiRdYtH9lXk3DMwvOt2C4DEeQ0avVHlp+SB2zD7eeHlVIc7Npi/Cs9Pu27FlZg/UDu
-         HvklTP4M//HPyXeKbPKrJyKhD4Dw462gBxLWuGbZTzN6ouf2nUVLhh/NoDxm2wTXDh9i
-         1zBQ==
+        bh=4qHBWtvtS5lv+YsJJQWO+VtMhZZyJ3/vvKihmFXgE4c=;
+        b=s9GRZmt6oE99PBnCD69nEa0OtMPNMBCXBROmbHOgv3pI5cVvMlWko4awt/p/+0LSgA
+         3fQhDh1UJ7KHNTJ1+1S2I6yRk9uVlHpOOmgT08wPxFf8InZ+35dTxucAb2aRpjZONSdM
+         mls0wwf1yF9zQU2lpdgpGubdSI/LAVDenIaNWFFk1fwVq8zXhqGYaqcjaUXH0AbKl76N
+         Vwl1OFzj0fH/vvMSbT1pZKIHLNV81tNxcpvSRW2YxGyO5JaqAaCdu7RjRzRkPm6deaDU
+         3xrVKoMPiXYY1BdprHzQ/Z2JLw5PyAoXzG5QXZTWGJpssL5sN+XHtj6KOUoZobqY6cew
+         EbVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=s+frRaEwA/RcGyGjnXK24dJJkfvLXboQ7giFAMb+z7M=;
-        b=QwW7A+rdgcMgrJFLYCDhErcQfOduiWfK6S/Mz4+S0JUYNXAM9K+ow0ah8L4nlYvNZV
-         KYQrplrCbFcwXoJ8UJBmaxr7/7Ut8fHKlYFi9pfptEJh1v01hn9x2+4SDlFRJtFEA4K5
-         5P8xqu8DTOqfNznFpror4bKkuiijMSRh5solj+BtNtqIVatqjc4voXyddpb5UhJDi/rD
-         i6JRbshRW7O9JymbakTtaXxehvqDgGWU17jwp/AjirXSKbgh4INEjWra4XozFuIl8CD3
-         IAPCfxEMSy1sgjcvF58VgXd0h3eQ1ygmiZoECCEk7f0rnvPay6hPViQwTB1NBX2B9iHf
-         qY9g==
-X-Gm-Message-State: ACrzQf0g3HGb2x/9vp02/8vfOs06TKT8c4TjQc4hh6Z9BdsBvTHjREsx
-        Ihq2kqKTSStfj2MRW5TFoV58HrpoRYadA/OAydlQwg==
-X-Google-Smtp-Source: AMsMyM4w6Js+/UlQYzaeExWs1x5yTNUooqiKcZDhmQv03gdezE9pqIm4LpSBl9zt59u3tweBchHlF0L3Zq/8741zz4k=
-X-Received: by 2002:a17:907:3da9:b0:77b:9672:3f7f with SMTP id
- he41-20020a1709073da900b0077b96723f7fmr15657862ejc.636.1663655510114; Mon, 19
- Sep 2022 23:31:50 -0700 (PDT)
+        bh=4qHBWtvtS5lv+YsJJQWO+VtMhZZyJ3/vvKihmFXgE4c=;
+        b=3YHWBfVTHZEeE8yOJ8AU0IhbnehqwDjNVN6oOF0nBNSzLm07d8kbQ+tLv3M3HwzuyP
+         D2aBQd4IE/shbVZPf1+qVtDCHBFnPof5zaAyKoBkO7nPnafkguuKQIdqqelpSgRnG8kY
+         fQpIARZKFdSjHAykG7xWFh308f9J5hRDULbxKjvpFjaiQV4sW+25E2BrFwvijWSvdJVy
+         NnfkekjJygeB0lWLEybeUXttQO2KSJ781PA5uETTAykvdmGkWyxLBNw6OIwtG3TVDZSp
+         Sphv2sWRSeujsw2paAxftPjOObIH9hLKRNvpY/t84+/v2rLTvP5G5RCzSzWFGtTb7UiU
+         J5WA==
+X-Gm-Message-State: ACrzQf30f+4FgvyGVMbP399cPqH87XeNmWsTC130FW0Z17dldFLTI8Z1
+        poFkXt8Fb9EXOzyT4JgKmfMkYhXFuEhdOG/vN9WY1g==
+X-Google-Smtp-Source: AMsMyM4wXLZE7czB9+kEBQruymKBBlA5zawUrElq5yiHE772/SyraHfS4uoXzUlBNMZsrpRNhTXL+be5gpfBaPowmkM=
+X-Received: by 2002:a17:907:1c96:b0:780:602c:677c with SMTP id
+ nb22-20020a1709071c9600b00780602c677cmr15587856ejc.736.1663656009634; Mon, 19
+ Sep 2022 23:40:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220916110118.446132-1-michael@walle.cc>
-In-Reply-To: <20220916110118.446132-1-michael@walle.cc>
+References: <20220920011747.824280-1-jay.xu@rock-chips.com>
+In-Reply-To: <20220920011747.824280-1-jay.xu@rock-chips.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 20 Sep 2022 08:31:39 +0200
-Message-ID: <CAMRc=MeF-81yottUqqYdHmuFokysyNsXTgU+FOFWv7bL=QMJOg@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix OOB access in quirk callbacks
-To:     Michael Walle <michael@walle.cc>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 20 Sep 2022 08:39:59 +0200
+Message-ID: <CAMRc=McYhs8yoJ=_TQEcjr=-6UaYkGuZOpZnAGOTFs_oMOQrUw@mail.gmail.com>
+Subject: Re: [PATCH RESEND] gpiolib: make gpiochip_find_by_name to be common function
+To:     Jianqun Xu <jay.xu@rock-chips.com>
+Cc:     linus.walleij@linaro.org, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.or, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
@@ -65,78 +65,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 16, 2022 at 1:01 PM Michael Walle <michael@walle.cc> wrote:
+On Tue, Sep 20, 2022 at 3:17 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
 >
-> Commit a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
-> introduced an array of quirk functions which get iterated over. But a
-> sentinal value is missing. Add it.
+> Move find_chip_by_name from gpiolib to the gpio/driver.h, also rename to
+> gpiochip_find_by_name, make it to be a common function.
 >
-> Fixes: a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
-> Signed-off-by: Michael Walle <michael@walle.cc>
+
+Why did you resend it immediately? And what is the reason for this change?
+
+Bart
+
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 > ---
-> FWIW here is the kernel oops backtrace:
-> [    4.108706] Internal error: SP/PC alignment exception: 8a000000 [#1] SMP
-> [    4.115470] Modules linked in:
-> [    4.118549] CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.0.0-rc5-next-20220916-00091-g6cae0fcbd5e7 #1821
-> [    4.128033] Hardware name: Kontron KBox A-230-LS (DT)
-> [    4.133127] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    4.140154] pc : 0x61722d6f697067
-> [    4.143495] lr : of_find_gpio+0x138/0x174
-> [    4.147546] sp : ffff80000a24b680
-> [    4.150884] x29: ffff80000a24b680 x28: 0000000000000000 x27: ffff80000996044c
-> [    4.158090] x26: 0000000000000001 x25: ffff80000970f588 x24: ffff800009297968
-> [    4.165295] x23: ffff80000a24b770 x22: 0000000000000000 x21: ffff0020009a7010
-> [    4.172500] x20: ffff8000097752f8 x19: fffffffffffffffe x18: 0000000000000000
-> [    4.179703] x17: ffff8000085fb9d0 x16: ffff8000085fb264 x15: ffff8000085f96ac
-> [    4.186907] x14: 0000000000000000 x13: ffff80000884b3e8 x12: ffff80000884ab04
-> [    4.194111] x11: ffff80000884aa54 x10: 0000000000025080 x9 : ffff8000085fce78
-> [    4.201316] x8 : 0101010101010101 x7 : ffff800009750268 x6 : 051f521459491b57
-> [    4.208520] x5 : 571b495914521f05 x4 : 6e61722d6f697067 x3 : ffff80000a24b6d4
-> [    4.215724] x2 : 0000000000000000 x1 : ffff8000097752f8 x0 : ffff00207f7e4b20
-> [    4.222928] Call trace:
-> [    4.225389]  0x61722d6f697067
-> [    4.228377]  gpiod_get_index+0x12c/0x440
-> [    4.232334]  devm_gpiod_get_index+0x34/0xf0
-> [    4.236553]  devm_gpiod_get_optional+0x20/0x40
-> [    4.241036]  uart_get_rs485_mode+0x104/0x180
-> [    4.245345]  serial8250_register_8250_port+0x198/0x484
-> [    4.250532]  of_platform_serial_probe+0x358/0x640
-> [    4.255279]  platform_probe+0x70/0xe0
-> [    4.258973]  really_probe+0xc4/0x2e4
-> [    4.262577]  __driver_probe_device+0x80/0xec
-> [    4.266882]  driver_probe_device+0x44/0x150
-> [    4.271100]  __driver_attach+0x88/0x1a0
-> [    4.274967]  bus_for_each_dev+0x78/0xdc
-> [    4.278833]  driver_attach+0x2c/0x40
-> [    4.282437]  bus_add_driver+0x15c/0x210
-> [    4.286303]  driver_register+0x80/0x13c
-> [    4.290170]  __platform_driver_register+0x30/0x3c
-> [    4.294915]  of_platform_serial_driver_init+0x24/0x30
-> [    4.300013]  do_one_initcall+0x4c/0x240
-> [    4.303882]  kernel_init_freeable+0x29c/0x30c
-> [    4.308276]  kernel_init+0x2c/0x140
-> [    4.311793]  ret_from_fork+0x10/0x20
-> [    4.315401] Code: bad PC value
+>  drivers/gpio/gpiolib.c      | 16 ++--------------
+>  include/linux/gpio/driver.h | 12 ++++++++++++
+>  2 files changed, 14 insertions(+), 14 deletions(-)
 >
->  drivers/gpio/gpiolib-of.c | 1 +
->  1 file changed, 1 insertion(+)
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index cc9c0a12259e..c06334772c47 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -935,18 +935,6 @@ struct gpio_chip *gpiochip_find(void *data,
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_find);
 >
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 95be5f0d2623..0e4e1291604d 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -498,6 +498,7 @@ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
->         of_find_regulator_gpio,
->         of_find_arizona_gpio,
->         of_find_usb_gpio,
-> +       NULL
->  };
+> -static int gpiochip_match_name(struct gpio_chip *gc, void *data)
+> -{
+> -       const char *name = data;
+> -
+> -       return !strcmp(gc->label, name);
+> -}
+> -
+> -static struct gpio_chip *find_chip_by_name(const char *name)
+> -{
+> -       return gpiochip_find((void *)name, gpiochip_match_name);
+> -}
+> -
+>  #ifdef CONFIG_GPIOLIB_IRQCHIP
 >
->  struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>  /*
+> @@ -3660,7 +3648,7 @@ void gpiod_add_hogs(struct gpiod_hog *hogs)
+>                  * The chip may have been registered earlier, so check if it
+>                  * exists and, if so, try to hog the line now.
+>                  */
+> -               gc = find_chip_by_name(hog->chip_label);
+> +               gc = gpiochip_find_by_name(hog->chip_label);
+>                 if (gc)
+>                         gpiochip_machine_hog(gc, hog);
+>         }
+> @@ -3745,7 +3733,7 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
+>                         return ERR_PTR(-EPROBE_DEFER);
+>                 }
+>
+> -               gc = find_chip_by_name(p->key);
+> +               gc = gpiochip_find_by_name(p->key);
+>
+>                 if (!gc) {
+>                         /*
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index 6aeea1071b1b..4ed26a7d98ff 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -618,6 +618,18 @@ extern int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip
+>  extern struct gpio_chip *gpiochip_find(void *data,
+>                               int (*match)(struct gpio_chip *gc, void *data));
+>
+> +static int gpiochip_match_name(struct gpio_chip *gc, void *data)
+> +{
+> +       const char *name = data;
+> +
+> +       return !strcmp(gc->label, name);
+> +}
+> +
+> +static inline struct gpio_chip *gpiochip_find_by_name(const char *name)
+> +{
+> +       return gpiochip_find((void *)name, gpiochip_match_name);
+> +}
+> +
+>  bool gpiochip_line_is_irq(struct gpio_chip *gc, unsigned int offset);
+>  int gpiochip_reqres_irq(struct gpio_chip *gc, unsigned int offset);
+>  void gpiochip_relres_irq(struct gpio_chip *gc, unsigned int offset);
 > --
-> 2.30.2
+> 2.25.1
 >
-
-Applied, thanks!
-
-Bartosz
