@@ -2,20 +2,20 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 784AD5BDADD
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 05:34:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AB4A5BDADF
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 05:34:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbiITDeJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Sep 2022 23:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43780 "EHLO
+        id S229905AbiITDeL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Sep 2022 23:34:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiITDeI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 23:34:08 -0400
+        with ESMTP id S229782AbiITDeJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Sep 2022 23:34:09 -0400
 Received: from mail-m11875.qiye.163.com (mail-m11875.qiye.163.com [115.236.118.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B7B559263
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 20:34:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E8B5926D
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Sep 2022 20:34:08 -0700 (PDT)
 Received: from localhost.localdomain (unknown [58.22.7.114])
-        by mail-m11875.qiye.163.com (Hmail) with ESMTPA id 3BC3B28046F;
+        by mail-m11875.qiye.163.com (Hmail) with ESMTPA id F02952805EB;
         Tue, 20 Sep 2022 11:34:05 +0800 (CST)
 From:   Jianqun Xu <jay.xu@rock-chips.com>
 To:     jbx6244@gmail.com, heiko@sntech.de, linus.walleij@linaro.org,
@@ -23,19 +23,21 @@ To:     jbx6244@gmail.com, heiko@sntech.de, linus.walleij@linaro.org,
 Cc:     brgl@bgdev.pl, linux-gpio@vger.kernel.org,
         linux-rockchip@lists.infradead.org,
         Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH v3 0/2] rockchip pinctrl for acpi
-Date:   Tue, 20 Sep 2022 11:34:02 +0800
-Message-Id: <20220920033404.885527-1-jay.xu@rock-chips.com>
+Subject: [PATCH v3 1/2] pinctrl: rockchip: find gpiochip by gpio label
+Date:   Tue, 20 Sep 2022 11:34:03 +0800
+Message-Id: <20220920033404.885527-2-jay.xu@rock-chips.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220920033404.885527-1-jay.xu@rock-chips.com>
+References: <20220920033404.885527-1-jay.xu@rock-chips.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGR0YVklJQhpNSBofSR9JQ1UTARMWGhIXJB
+        tZV1koWUFJSktLSjdXWS1ZQUlXWQ8JGhUIEh9ZQVlCQ0tPVh9KSU1LTUIYTB0YH1UTARMWGhIXJB
         QOD1lXWRgSC1lBWU5DVUlJVUxVSkpPWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ok06EDo5GD0ZTR0jAUlRTT9L
-        KzkaCT9VSlVKTU1ITU9PQ09OQklKVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
-        WU5DVUlJVUxVSkpPWVdZCAFZQUpOSU83Bg++
-X-HM-Tid: 0a8358f5c5802eb1kusn3bc3b28046f
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NRA6Qio6Mj0YDB0UAU8MTToO
+        IghPCTlVSlVKTU1ITU9PQ09NTElMVTMWGhIXVREaAlUDDjsJFBgQVhgTEgsIVRgUFkVZV1kSC1lB
+        WU5DVUlJVUxVSkpPWVdZCAFZQU5LSUw3Bg++
+X-HM-Tid: 0a8358f5c85c2eb1kusnf02952805eb
 X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS
         autolearn=no autolearn_force=no version=3.4.6
@@ -45,26 +47,111 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-These patch fixes to support acpi by:
-1. populate gpio platform before pinctrl to probe
-2. get gpiochip by finding from gpiochip list
-3. get match data by device api
+Currently the pinctrl device acts as parent for the GPIO devices for
+Rockchip platform, the pinctrl driver probes first and then populate the
+GPIO platform lastly.
 
-Jianqun Xu (2):
-  pinctrl: rockchip: find gpiochip by gpio label
-  pinctrl: rockchip: get match data by device_get_match_data
+This patch makes the pinctrl to populate GPIO platform firstly and then
+do probe after GPIO probed successfully. Also get the gpiochip by label.
 
- drivers/pinctrl/pinctrl-rockchip.c | 55 ++++++++++++++++++++----------
+Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 41 ++++++++++++++++++++++--------
  drivers/pinctrl/pinctrl-rockchip.h |  2 +-
- 2 files changed, 38 insertions(+), 19 deletions(-)
+ 2 files changed, 31 insertions(+), 12 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index a91061f9c2ac..de86b2bc6380 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -2726,7 +2726,7 @@ static int rockchip_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
+ {
+ 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
+-	struct gpio_chip *gpio = &bank->gpio_chip;
++	struct gpio_chip *gpio = bank->gpio_chip;
+ 	enum pin_config_param param;
+ 	u32 arg;
+ 	int i;
+@@ -2832,7 +2832,7 @@ static int rockchip_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
+ {
+ 	struct rockchip_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
+ 	struct rockchip_pin_bank *bank = pin_to_bank(info, pin);
+-	struct gpio_chip *gpio = &bank->gpio_chip;
++	struct gpio_chip *gpio = bank->gpio_chip;
+ 	enum pin_config_param param = pinconf_to_config_param(*config);
+ 	u16 arg;
+ 	int rc;
+@@ -3291,16 +3291,20 @@ static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
+ 
+ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ {
+-	struct rockchip_pinctrl *info;
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node, *node;
++	struct fwnode_handle *fwnode = dev_fwnode(dev);
++	struct rockchip_pinctrl *info;
+ 	struct rockchip_pin_ctrl *ctrl;
++	struct device_node *np, *node;
+ 	struct resource *res;
+ 	void __iomem *base;
+-	int ret;
++	int ret, i;
+ 
+-	if (!dev->of_node)
+-		return dev_err_probe(dev, -ENODEV, "device tree node not found\n");
++	if (is_of_node(fwnode)) {
++		ret = of_platform_populate(to_of_node(fwnode), NULL, NULL, NULL);
++		if (ret)
++			return dev_err_probe(dev, ret, "failed to register gpio device\n");
++	}
+ 
+ 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
+ 	if (!info)
+@@ -3358,11 +3362,26 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	platform_set_drvdata(pdev, info);
++	for (i = 0; i < ctrl->nr_banks; i++) {
++		struct gpio_chip *gc;
++		struct rockchip_pin_bank *bank = &ctrl->pin_banks[i];
+ 
+-	ret = of_platform_populate(np, NULL, NULL, &pdev->dev);
+-	if (ret)
+-		return dev_err_probe(dev, ret, "failed to register gpio device\n");
++		gc = gpiochip_find_by_name((void *)ctrl->pin_banks[i].name);
++		if (!gc) {
++			dev_err(dev, "fail to find gpiochip\n");
++			return ret;
++		}
++
++		ret = gpiochip_add_pin_range(gc, dev_name(dev), 0, gc->base, gc->ngpio);
++		if (ret) {
++			dev_err(dev, "fail to add pin range\n");
++			return ret;
++		}
++		bank->gpio_chip = gc;
++	}
++
++	platform_set_drvdata(pdev, info);
++	dev_info(dev, "probed %pfw\n", fwnode);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/pinctrl/pinctrl-rockchip.h b/drivers/pinctrl/pinctrl-rockchip.h
+index 4759f336941e..2be12e76b2c4 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.h
++++ b/drivers/pinctrl/pinctrl-rockchip.h
+@@ -330,7 +330,7 @@ struct rockchip_pin_bank {
+ 	struct device_node		*of_node;
+ 	struct rockchip_pinctrl		*drvdata;
+ 	struct irq_domain		*domain;
+-	struct gpio_chip		gpio_chip;
++	struct gpio_chip		*gpio_chip;
+ 	struct pinctrl_gpio_range	grange;
+ 	raw_spinlock_t			slock;
+ 	const struct rockchip_gpio_regs	*gpio_regs;
 -- 
-v3:
- - fix 'gpio' to 'GPIO', 'rockchip' to 'Rockchip'
- - use gpiochip_find_by_name
-
-v2:
-- add a second patch to support acpi
-
 2.25.1
 
