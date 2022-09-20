@@ -2,46 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 613D85BEBBF
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 19:19:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD2775BEC04
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Sep 2022 19:30:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229926AbiITRTg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Sep 2022 13:19:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37808 "EHLO
+        id S231197AbiITRaS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Sep 2022 13:30:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiITRTf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 13:19:35 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F3E2FA;
-        Tue, 20 Sep 2022 10:19:28 -0700 (PDT)
+        with ESMTP id S231503AbiITR36 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Sep 2022 13:29:58 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E68522290;
+        Tue, 20 Sep 2022 10:29:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663694368; x=1695230368;
+  t=1663694983; x=1695230983;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=YHeX8KqiCGEuO7hZn5tECjp6JIpCg4NbTW4+9gOhRTQ=;
-  b=NhVsGZD8CoC338fd9kLege2H/kkAbRiKf/eWsHm6frr5NZodfqRWLC0J
-   NUUcKCVJyZnQU29ejrX4yMPCesi0HzT6cHON447DFk4CVfEewBMel5Yta
-   HtSyowg1r9ZqWDE7S2HTRPSw1Nn+pcCHR6pSjem+sSb+iqDcVYAT3X/yq
-   hxy2FWkp4px+WLliNXy21l2CG9B/XAeVbdqPy1LWtNKp6owd/+X6ID9uy
-   K2w7EEqGi1bxJ+vcK5r/Cm0aPWlNzls+GnpPH/K/MRsNkSSfOX1LrHP/D
-   UTKzJVfNdb1yzeUWzldAacmYRfB8xWsQNs5SAvWPC020Mjv8jwSFu33oe
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="299750011"
+  bh=w8/YG0nidbb5+vN2FkxNfJIceA5A1DLzUcR7puogyMM=;
+  b=VzkeQCrlK2dphaCiKaJAiP1rKVJFEljLiV2OOvW6prDsjZwZt9g8bj7R
+   AZS1GxZVbuDrAmUE1PGikU53/kb9ieoWPOvtw+7YXzlMB6HBgPtr+uVfR
+   P5Tkunu4acXndNHIQKr4BqGAzhxqcbV9o39dt0xaa+PaxPNXkZaS8TOau
+   9i/swg9W4oHFFdUz1sI9+rlFzed5kVaRt7Wlq5CW0TBeZ389PlzMPS5sY
+   tmnlAftf5GHAMY02A40mgAqJGmOVRssGPYhIgMoV78MBo9rs5L1byN9nl
+   LQODRmNnwbkAk4sQjnL58KEIKNKLjQd1iSQ3qTv3/IaS7UwVdvZXbwx0d
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10476"; a="297360289"
 X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="299750011"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 10:19:28 -0700
+   d="scan'208";a="297360289"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Sep 2022 10:29:32 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,331,1654585200"; 
-   d="scan'208";a="794340908"
+   d="scan'208";a="947766882"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 20 Sep 2022 10:19:26 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 20 Sep 2022 10:29:31 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oagu5-00595C-0O;
-        Tue, 20 Sep 2022 20:19:25 +0300
-Date:   Tue, 20 Sep 2022 20:19:24 +0300
+        id 1oah3p-0059IS-1s;
+        Tue, 20 Sep 2022 20:29:29 +0300
+Date:   Tue, 20 Sep 2022 20:29:29 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
@@ -49,12 +49,13 @@ Cc:     Kent Gibson <warthog618@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] gpiolib: cdev: add fdinfo output for line request file
  descriptors
-Message-ID: <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
+Message-ID: <Yyn4eUKCOSxcLKdi@smile.fi.intel.com>
 References: <20220920135435.15593-1-brgl@bgdev.pl>
+ <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220920135435.15593-1-brgl@bgdev.pl>
+In-Reply-To: <Yyn2HEBPPWlJ3E0W@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
@@ -65,69 +66,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 03:54:35PM +0200, Bartosz Golaszewski wrote:
-> Add fdinfo output for file descriptors created for user-space line
-> requests in GPIO uAPI v2. The fdinfo file now contains the name of the
-> GPIO device that is the "parent" of the request as well as offsets of
-> the lines requested. This allows user-space to parse the /proc/$PID/fdinfo
-> entries and deduct the PID of the process that requested a specific line.
+On Tue, Sep 20, 2022 at 08:19:25PM +0300, Andy Shevchenko wrote:
+> On Tue, Sep 20, 2022 at 03:54:35PM +0200, Bartosz Golaszewski wrote:
 
-In principle I'm fine, but see below.
+...
 
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index f8041d4898d1..0f7b5562c410 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1497,6 +1497,21 @@ static int linereq_release(struct inode *inode, struct file *file)
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_PROC_FS
-> +static void linereq_show_fdinfo(struct seq_file *out, struct file *file)
-> +{
-> +	struct linereq *lr = file->private_data;
-> +	struct device *dev = &lr->gdev->dev;
-> +	u16 i;
-> +
-> +	seq_printf(out, "gpio-device:\t%s\n", dev_name(dev));
-> +
-> +	for (i = 0; i < lr->num_lines; i++)
-> +		seq_printf(out, "gpio-line:\t%d\n",
-> +			   gpio_chip_hwgpio(lr->lines[i].desc));
+> Also don't forget that sizes over PAGE_SIZE in sysfs sometimes problematic and
+> racy.(the commit 888be6067b97 ("ACPI: sysfs: Fix a buffer overrun problem with
+> description_show()") for the reference).
 
-Hmm... Not sure which variant is better (as for machine parsing and for human),
-but I was thinking of
-
-	gpio-lines: 1,4,6, ...
-
-Also don't forget that sizes over PAGE_SIZE in sysfs sometimes problematic and
-racy.(the commit 888be6067b97 ("ACPI: sysfs: Fix a buffer overrun problem with
-description_show()") for the reference).
-
-> +}
-> +#endif
-> +
->  static const struct file_operations line_fileops = {
->  	.release = linereq_release,
->  	.read = linereq_read,
-> @@ -1507,6 +1522,9 @@ static const struct file_operations line_fileops = {
->  #ifdef CONFIG_COMPAT
->  	.compat_ioctl = linereq_ioctl_compat,
->  #endif
-> +#ifdef CONFIG_PROC_FS
-> +	.show_fdinfo = linereq_show_fdinfo,
-> +#endif
->  };
->  
->  static int linereq_create(struct gpio_device *gdev, void __user *ip)
-> -- 
-> 2.34.1
-> 
+This is not the commit I wanted to point to... But suddenly can't find easily
+the one I remembered happened in the kernel.
 
 -- 
 With Best Regards,
