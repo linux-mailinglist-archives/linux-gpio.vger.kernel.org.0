@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 898865C03AB
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 18:08:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDD235C037A
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 18:05:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232572AbiIUQIQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Sep 2022 12:08:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
+        id S232372AbiIUQFs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Sep 2022 12:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232493AbiIUQHP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 12:07:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50699F184;
-        Wed, 21 Sep 2022 08:55:38 -0700 (PDT)
+        with ESMTP id S232646AbiIUQEY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 12:04:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CA45E556;
+        Wed, 21 Sep 2022 08:54:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D2B5FB830D5;
-        Wed, 21 Sep 2022 15:54:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664D1C4347C;
-        Wed, 21 Sep 2022 15:54:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B0096318B;
+        Wed, 21 Sep 2022 15:54:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438A0C43144;
+        Wed, 21 Sep 2022 15:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663775668;
+        s=k20201202; t=1663775678;
         bh=QGczFgAHvbSQI3rwphu6DQAbiEnCcEoB8hmQoCSCrjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/SkC/fgnalgL/Zh7DNmt8NIIy7yptXnxHfL4dgUSzt6F1mEzpI7D6im32hfSdQAE
-         skHbIQFJRZncKNTzaTwZliaPEXMC+I6DHBQnZZ/NRrOXy02n4q1xbCSRRH9eZsnM/y
-         u3vze+/S6ZtU15VfMzLkdDw5a8GrHKxXFItv+iQstQHyhRACDTZ6pbPBdOoMMMwmQy
-         rvTkaZHfaBaTP8zwoo+kQgYglfaKUnLxwTWFqbKcFei2Pl9r5NVwP2x5VeruzlkmkD
-         XfVrX8EvYXA5U+dreG9Q1fc+cD0zfpswdLzTTTqt9jX40quHOEeSh2Ytbd0Yx5/e07
-         A6PxPVED+O9cg==
+        b=kX4V7+WW0dvtdhfQ5iSnlmFdm8VdHaYs7dN8LyyaHt4I9VLxHx5Axznun0QRtpI5l
+         dxnwSMyZ4XfBIlXh58jIN8WFGuhxaED9A0PfacBYFSqoSvlrXKn8xjWeA9M510mADR
+         gfl/SbS06QkjFujguxqbnLGxKgsYQtOacJVlSlQvSWLfM0XSHrhyUizG+s+R2p7yWt
+         Wa2YB76a1NJ2aWrhYgpm9suIJPpr+T08tbwNGN72Ibxq2McvvV4eGV4Zq+GAZNYMdg
+         L4fAuvd8gOlhOXiptHk4Ug9hyPZN+/JEVV0OUCWSEMubnKhC97TrKKDluMfTHW3Jw+
+         +cOAnNKFv0uUQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -39,12 +39,12 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>, linusw@kernel.org,
         kaloz@openwrt.org, khalasa@piap.pl,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 3/7] gpio: ixp4xx: Make irqchip immutable
-Date:   Wed, 21 Sep 2022 11:54:21 -0400
-Message-Id: <20220921155425.235273-3-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 2/5] gpio: ixp4xx: Make irqchip immutable
+Date:   Wed, 21 Sep 2022 11:54:33 -0400
+Message-Id: <20220921155436.235371-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220921155425.235273-1-sashal@kernel.org>
-References: <20220921155425.235273-1-sashal@kernel.org>
+In-Reply-To: <20220921155436.235371-1-sashal@kernel.org>
+References: <20220921155436.235371-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
