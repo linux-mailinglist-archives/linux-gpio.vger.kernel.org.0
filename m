@@ -2,78 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D42A5BF7E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 09:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28CD65BF88D
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 10:02:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbiIUHjk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Sep 2022 03:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
+        id S229512AbiIUICr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Sep 2022 04:02:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230269AbiIUHji (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 03:39:38 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C27C26FF
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:39:36 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id u18so7775183lfo.8
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:39:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=tNVLuYYtNnbltSH1rqkGLOPuwpfzM6MeggviQef2o3c=;
-        b=eeKsByuZdpqmneWBtxLifX0qYSG2bmYLjZyalf15bMTosJPkzUr/gCEWZLyngdl5nB
-         iPpAGlIamGrdSLy9QODUQc/I5W5SQjWRUFconeJ5pmif9mzieq8AWqGzTTeI8kwXrY9H
-         bosDBMxwk72pOPuCUIikaen2Oo6Ok72BVOQ+w3gIIvs8rxKMYY2Hq/p9TUlfzjMJVWiG
-         h71rQrotW+Ef2FQ61204fLN7r/yaYxiQP6yet5sg30e/lu+PrZXDbP9f0F1Vqez9srD4
-         /9BR2kiQRHaolnbGHM79h97j+59ktzI4GtKu2iCbPWsua7chMZlVqiOANtC2ZRqK12Yj
-         U0mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=tNVLuYYtNnbltSH1rqkGLOPuwpfzM6MeggviQef2o3c=;
-        b=A8llPgxtvjAUyWag2ToDpSoZlEGWyY9HEnTmNYOueMl1M9UpTIdNUR4C2Pv8AFGz4L
-         PHIqQsx/H+QQCBV0sJenNoLypkiuN1cG4ksCsoONO8JfVIyqx+4YxHDZytGLjiiTCgXm
-         1CAbOSMcq2GmTa5n4RFy+is35jLKCiiOPgb4+h7yL6sLwyxXO1WgnoRWvv/p6ktkTsIR
-         9lpNj5xrdo7i/Uw2HoZrjOKKZGoQG7lNZq/lddbFhUCheRzLVf98x3bQprmsgGW64Ybl
-         NKExN0N251N+lOMp5ZdTUqq0bqPSupp0utvkKnXTYogvBNoeRDNX0V4JUPelmGCK8Zjt
-         AnaQ==
-X-Gm-Message-State: ACrzQf3A4ycwM4oRPzFtGZLN1tDmkbAVzZY+7jgBZYGHWjgrcxJm92p6
-        Ec5P37NKJICwVAO10PzctIwlCg==
-X-Google-Smtp-Source: AMsMyM72ZI2J7U3/gmd0qbBnFYhpkP11nSbXRVR9n3XjmBlVgP+lFhdLjbYR4M3dycy+3QB5oaH8VA==
-X-Received: by 2002:a05:6512:2210:b0:499:d710:9c0d with SMTP id h16-20020a056512221000b00499d7109c0dmr10393748lfu.325.1663745974473;
-        Wed, 21 Sep 2022 00:39:34 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id x15-20020a056512078f00b00498f00420e9sm316688lfr.194.2022.09.21.00.39.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Sep 2022 00:39:33 -0700 (PDT)
-Message-ID: <bd65f87f-4ef7-7191-594a-fad2df448503@linaro.org>
-Date:   Wed, 21 Sep 2022 09:39:32 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: qcom: add sdm670 pinctrl
-Content-Language: en-US
-To:     Richard Acayan <mailingradian@gmail.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20220920222939.150330-1-mailingradian@gmail.com>
- <20220920222939.150330-2-mailingradian@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220920222939.150330-2-mailingradian@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S229677AbiIUICp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 04:02:45 -0400
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 911AD8277C
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 01:02:43 -0700 (PDT)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B52D4207FDD;
+        Wed, 21 Sep 2022 10:02:41 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 24EB22080AA;
+        Wed, 21 Sep 2022 10:02:41 +0200 (CEST)
+Received: from local (shlinux2.ap.freescale.net [10.192.224.44])
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id A6D86180222C;
+        Wed, 21 Sep 2022 16:02:39 +0800 (+08)
+From:   haibo.chen@nxp.com
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, dmitry.torokhov@gmail.com
+Cc:     linux-gpio@vger.kernel.org, haibo.chen@nxp.com,
+        aisheng.dong@nxp.com, linux-imx@nxp.com
+Subject: [PATCH] gpiolib: add NULL to the end of arry of_find_gpio_quirks[]
+Date:   Wed, 21 Sep 2022 15:43:57 +0800
+Message-Id: <1663746237-7133-1-git-send-email-haibo.chen@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,18 +40,82 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/09/2022 00:29, Richard Acayan wrote:
-> There is a new driver for the Snapdragon 670 TLMM (Top-Level Mode
-> Multiplexer). Document it.
-> 
-> Adapted from qcom,sm6350-pinctrl.yaml.
-> 
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> ---
+From: Haibo Chen <haibo.chen@nxp.com>
 
+After commit a2b5e207cade ("gpiolib: rework quirk handling in
+of_find_gpio()"), it add an arry of_find_gpio_quirks[], but in
+the for loop, it use *q to judge whether it is out of the arry
+range. Unfortunately, in the arry, forget to add NULL in the end,
+which has the risk of out of arry access, here is the dump on
+i.MX8MM-evk board:
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+[    0.773631] Internal error: SP/PC alignment exception: 000000008a000000 [#1] PREEMPT SMP
+[    0.781112] Modules linked in:
+[    0.784173] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 6.0.0-rc6-next-20220919 #4
+[    0.791609] Hardware name: FSL i.MX8MM EVK board (DT)
+[    0.796686] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    0.803682] pc : 0x61722d6f697067
+[    0.807009] lr : of_find_gpio+0x130/0x170
+[    0.811035] sp : ffff80000a44b9d0
+[    0.814357] x29: ffff80000a44b9d0 x28: 0000000000000000 x27: ffff0000002ece80
+[    0.821534] x26: ffff000003948a00 x25: 0000000000000001 x24: ffff8000098285e8
+[    0.828707] x23: ffff800009175f48 x22: ffff80000a44bac0 x21: 0000000000000000
+[    0.835882] x20: ffff000000236810 x19: ffff80000978c588 x18: 0000000000000000
+[    0.843057] x17: 0000000000009800 x16: 0000000000004650 x15: 0000000000000001
+[    0.850232] x14: 0000000000000000 x13: 0000000000000018 x12: 0101010101010101
+[    0.857407] x11: ff7f7f7f7f7f7f7f x10: fffffffffff8e088 x9 : 0000000000000003
+[    0.864582] x8 : 0101010101010101 x7 : ffff80000971a7b0 x6 : 141047145c43003a
+[    0.871757] x5 : 6e61722d6f697067 x4 : fffffffffffffffe x3 : ffff80000a44ba24
+[    0.878934] x2 : 0000000000000000 x1 : ffff80000978c588 x0 : ffff00007dbf7d00
+[    0.886110] Call trace:
+[    0.888560]  0x61722d6f697067
+[    0.891534]  gpiod_get_index+0x124/0x3c4
+[    0.895470]  devm_gpiod_get_index+0x2c/0xe4
+[    0.899670]  devm_gpiod_get_optional+0x18/0x30
+[    0.904132]  uart_get_rs485_mode+0x100/0x17c
+[    0.908420]  imx_uart_probe+0x3f0/0x800
+[    0.912272]  platform_probe+0x68/0xe0
+[    0.915945]  really_probe+0xbc/0x2dc
+[    0.919532]  __driver_probe_device+0x78/0xe0
+[    0.923820]  driver_probe_device+0xd8/0x160
+[    0.928020]  __driver_attach+0x80/0x190
+[    0.931870]  bus_for_each_dev+0x70/0xd0
+[    0.935720]  driver_attach+0x24/0x30
+[    0.939307]  bus_add_driver+0x150/0x200
+[    0.943159]  driver_register+0x78/0x130
+[    0.947007]  __platform_driver_register+0x28/0x34
+[    0.951732]  imx_uart_init+0x3c/0x64
+[    0.955320]  do_one_initcall+0x50/0x1c0
+[    0.959170]  kernel_init_freeable+0x218/0x284
+[    0.963545]  kernel_init+0x24/0x12c
+[    0.967045]  ret_from_fork+0x10/0x20
+[    0.970640] Code: bad PC value
+[    0.973700] ---[ end trace 0000000000000000 ]---
+[    0.978399] Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
+[    0.986035] SMP: stopping secondary CPUs
+[    0.989978] Kernel Offset: disabled
+[    0.993472] CPU features: 0x00000,00800084,0000421b
+[    0.998372] Memory Limit: none
+[    1.001437] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b ]---
 
+Fixes: a2b5e207cade ("gpiolib: rework quirk handling in of_find_gpio()")
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+---
+ drivers/gpio/gpiolib-of.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 95be5f0d2623..1b60cd04883f 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -498,6 +498,7 @@ static const of_find_gpio_quirk of_find_gpio_quirks[] = {
+ 	of_find_regulator_gpio,
+ 	of_find_arizona_gpio,
+ 	of_find_usb_gpio,
++	NULL,
+ };
+ 
+ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+-- 
+2.34.1
+
