@@ -2,141 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F30E15BFBA2
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 11:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 555FF5BFC2E
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 12:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbiIUJtS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Sep 2022 05:49:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59168 "EHLO
+        id S231281AbiIUKSh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Sep 2022 06:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232000AbiIUJsz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 05:48:55 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F65397D6B;
-        Wed, 21 Sep 2022 02:46:39 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id C7FAC660202C;
-        Wed, 21 Sep 2022 10:45:43 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1663753544;
-        bh=9ji1SJvfdXYebHWHKsGj8bj+sMSEq74pzAp6Nbn4WWM=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=CQ13WHYIS9frO3QW4TLXbP+zllrNOekCNYslUt32DxeL8LgiWbziNNxXOHW40TnBO
-         XQ8sMohQ/jRnrtvh234ZD1fLlLA+2pQ/3LI+46OCU4017X0ZpySHtGur4hjvy8+8Vk
-         SUJbnwzxy4+xYsuMbFm6Z2nktJsxF3/RM2/0Qhzee7rGywwOeTlLDdPapCez7P0K8s
-         cik6AH29MKZTU8r/gXBYI1/a+14po/EwWVQDGdIWR1Mh3EBODL19MxJz9YNZlF9Hvb
-         PyTpUr4CaziU6zYnWI4ErS5dsPYzyWhwRMQ6gMmaGH7dW5Vra8kpWAoIJPlZGhd4xG
-         JIz+KykszkSsw==
-Message-ID: <0c2ef56e-5dab-fb79-fead-adb4acef4cc6@collabora.com>
-Date:   Wed, 21 Sep 2022 11:45:41 +0200
+        with ESMTP id S231433AbiIUKS1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 06:18:27 -0400
+X-Greylist: delayed 899 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 21 Sep 2022 03:18:23 PDT
+Received: from maillog.nuvoton.com (maillog.nuvoton.com [202.39.227.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31B5295AF9;
+        Wed, 21 Sep 2022 03:18:23 -0700 (PDT)
+Received: from NTHCCAS01.nuvoton.com (NTHCCAS01.nuvoton.com [10.1.8.28])
+        by maillog.nuvoton.com (Postfix) with ESMTP id E4ACF1C811BA;
+        Wed, 21 Sep 2022 17:50:55 +0800 (CST)
+Received: from NTHCCAS03.nuvoton.com (10.1.20.28) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.7; Wed, 21 Sep
+ 2022 17:50:55 +0800
+Received: from NTHCCAS04.nuvoton.com (10.1.8.29) by NTHCCAS03.nuvoton.com
+ (10.1.20.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1847.3; Wed, 21 Sep
+ 2022 17:50:55 +0800
+Received: from taln60.nuvoton.co.il (10.191.1.180) by NTHCCAS04.nuvoton.com
+ (10.1.12.25) with Microsoft SMTP Server id 15.1.2176.2 via Frontend
+ Transport; Wed, 21 Sep 2022 17:50:55 +0800
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
+        id 8241A62EFD; Wed, 21 Sep 2022 12:50:54 +0300 (IDT)
+From:   Tomer Maimon <tmaimon77@gmail.com>
+To:     <avifishman70@gmail.com>, <tali.perry1@gmail.com>,
+        <joel@jms.id.au>, <venture@google.com>, <yuenn@google.com>,
+        <benjaminfair@google.com>, <linus.walleij@linaro.org>,
+        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <j.neuschaefer@gmx.net>, <zhengbin13@huawei.com>
+CC:     <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v3 0/2] pinctrl: nuvoton: add pinmux and GPIO driver for NPCM8XX
+Date:   Wed, 21 Sep 2022 12:50:51 +0300
+Message-ID: <20220921095053.88658-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.33.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH 1/4] dt-bindings: pinctrl: Combine MediaTek MT67xx pinctrl
- binding docs
-To:     yassine.oudjana@gmail.com,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20220919170115.94873-1-y.oudjana@protonmail.com>
- <20220919170115.94873-2-y.oudjana@protonmail.com>
- <4c425cf8-f9ca-969c-f8ed-688410bfb922@collabora.com>
- <1860b0ff-5544-5e74-ccfc-beda18824927@linaro.org>
- <YQZJIR.QQOJU0071T1J1@gmail.com>
-Content-Language: en-US
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <YQZJIR.QQOJU0071T1J1@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.5 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+        FORGED_GMAIL_RCVD,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,NML_ADSP_CUSTOM_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 21/09/22 11:30, yassine.oudjana@gmail.com ha scritto:
-> 
-> 
-> On Wed, Sep 21 2022 at 09:11:12 AM +0200, Krzysztof Kozlowski 
-> <krzysztof.kozlowski@linaro.org> wrote:
->> On 20/09/2022 10:06, AngeloGioacchino Del Regno wrote:
->>> Â Il 19/09/22 19:01, Yassine Oudjana ha scritto:
->>>> Â From: Yassine Oudjana <y.oudjana@protonmail.com>
->>>>
->>>> Â Documents for MT6779, MT6795 and MT6797 that currently exist share
->>>> Â most properties, and each one has slightly differently worded
->>>> Â descriptions for those properties. Combine all three documents into
->>>> Â one common document for all MT67xx SoC pin controllers, picking a few
->>>> Â parts from each and accounting for differences such as items in reg
->>>> Â and reg-names properties. Also document the MT6765 pin controller
->>>> Â which currently has a driver but no DT binding documentation. It should
->>>> Â be possible to also include bindings for MT8183 and MT8188, but these
->>>> Â have some additional properties that might complicate things a bit,
->>>> Â so they are left alone for now.
->>>>
->>>> Â Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
->>>> Â ---
->>>> Â Â  .../pinctrl/mediatek,mt6779-pinctrl.yamlÂ Â Â Â Â  | 207 ------------------
->>>> Â Â  .../pinctrl/mediatek,mt6797-pinctrl.yamlÂ Â Â Â Â  | 176 ---------------
->>>> Â Â  ...6795.yaml => mediatek,mt67xx-pinctrl.yaml} | 181 +++++++++++----
->>>
->>> Â Hello Yassine,
->>> Â nice cleanup over here!
->>>
->>> Â There's a catch though: as far as I know, wildcards are not permitted... so you
->>> Â should, at this point, merge all of these in mediatek,mt6779-pinctrl.yaml instead.
->>>
->>> Â Before jumping to that, though... Krzysztof, can you please confirm (or deny)?
->>
->> Wildcards are not allowed in compatibles. In filename wildcards or
->> family name could work if they are really going to match the devices. I
->> have doubts here. 67xx is quite a lot of different devices, so I am not
->> sure this will cover them all.
->>
->> I would prefer one name (oldest SoC or lowest number).
-> 
-> Lowest number (and probably oldest too but not sure since mediatek naming 
-> conventions are a bit weird) currently documented is mt6779, but mt6765 gets 
-> documented in this patch and mt6735 (this one I know for sure is older than the 
-> rest) in a following patch, so do I just stick with mt6779 or do I change it in the 
-> following patches documenting mt6765 and mt6735?
-> 
+This patch set adds pinmux and GPIO controller for the Arbel NPCM8XX 
+Baseboard Management Controller (BMC).
 
-I see the sequence as:
+Arbel BMC NPCM8XX pinctrl driver based on Poleg NPCM7XX, except the
+pin mux mapping difference the NPCM8XX GPIO supports adjust debounce
+period time.
 
-1. You merge mediatek,mt6797-pinctrl.yaml into mediatek,mt6779-pinctrl.yaml; then
-2. Adding MT6765 documentation to mediatek,mt6779-pinctrl.yaml; then
-3. Adding support for MT6735, documentation goes again to 6779-pinctrl.
+Arbel BMC NPCM8XX Pinmux functions accessible only for pin groups 
+and pin configuration parameters available only for individual pins.
 
-This means that you're working with mediatek,mt6779-pinctrl.yaml :-)
+Arbel BMC NPCM8XX has eight identical GPIO modules,
+each module has 32 GPIO ports.
 
-P.S.: That was also a suggestion about how to split things per-commit!
+Most of the GPIO ports are multiplexed with other system functions.
 
-Cheers,
-Angelo
+The NPCM8XX pinctrl and GPIO driver were tested on NPCM845 evaluation board.
 
-> Thanks,
-> Yassine
-> 
->>
->> Best regards,
->> Krzysztof
-> 
-> 
+Addressed comments from:
+ - Andy Shevchenko: https://lkml.org/lkml/2022/7/14/1218
+ - Rob Herring: https://lkml.org/lkml/2022/7/18/1165
+ - Krzysztof Kozlowski: https://lkml.org/lkml/2022/9/19/68
+			https://lkml.org/lkml/2022/7/14/757
+
+Changes since version 2:
+- Pin controller driver
+        - Modify kernel configuration.
+        - Adding and removing include files.
+        - Using the same register format size.
+        - Reducing lines by command combination.
+        - Remove unnecessary parentheses use.
+        - Use GENMASK and BIT macros.
+        - Using traditional patterns.
+
+ - Pin controller dt-binding
+        - Modify GPIO description.
+        - pintcrtl node name, Sorry, I know we have a long discussion about it.
+          Still, I think the best header pinctrl node name is pinctrl@f0800000. 
+          because the pin mux is handled through the GCR.
+	  BTW, same pinctrl header name is used in the NPCM7XX pinctrl version.
+	  https://elixir.bootlin.com/linux/v6.0-rc6/source/arch/arm/boot/dts/nuvoton-common-npcm7xx.dtsi#L560
+
+Changes since version 1:
+ - Pin controller driver
+	- Remove unnecessary debug prints and comments.
+	- Use fwnode functions.
+	- Remove Redundant 'else'.
+	- Use switch case instead of else if.
+	- Use GENMASK and BIT macros.
+	- Use dev_err_probe in probe error.
+	- Use callback GPIO range.
+	- Add GCR phandle property.
+	- Parameter order in reversed xmas
+
+ - Pin controller dt-binding
+	- Modify name from pin to mux.
+	- Add phandle property.
+
+Tomer Maimon (2):
+  dt-binding: pinctrl: Add NPCM8XX pinctrl and GPIO documentation
+  pinctrl: nuvoton: add NPCM8XX pinctrl and GPIO driver
+
+ .../pinctrl/nuvoton,npcm845-pinctrl.yaml      |  213 ++
+ drivers/pinctrl/nuvoton/Kconfig               |   14 +
+ drivers/pinctrl/nuvoton/Makefile              |    1 +
+ drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c     | 2485 +++++++++++++++++
+ 4 files changed, 2713 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,npcm845-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-npcm8xx.c
+
+-- 
+2.33.0
 
