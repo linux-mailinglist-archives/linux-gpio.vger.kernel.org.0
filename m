@@ -2,130 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A415BF7C4
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 09:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D42A5BF7E5
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 09:39:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229966AbiIUHdS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Sep 2022 03:33:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        id S230306AbiIUHjk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Sep 2022 03:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229872AbiIUHdR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 03:33:17 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D55127EFE8
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:33:15 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id f20so7315137edf.6
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:33:15 -0700 (PDT)
+        with ESMTP id S230269AbiIUHji (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 03:39:38 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C27C26FF
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:39:36 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id u18so7775183lfo.8
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Sep 2022 00:39:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=rTQHRpCuYWTF0TW7ZqPRytz1miu1sr94XDRZMIsgnL4=;
-        b=SoG1y4ffqJysqfAETOiLczIeeg0p+5834Zi5KDxCo+qQTGQhPSdFKfVGTOogBy8ymo
-         97xDbl+VLIxe5GtnP560IpvbcKvVxU+PW/d3pqbY6pLFu97p64yn4ieKfQgVE35YluP3
-         Ks4sQBv5pm3TvaL4j+f4Bzhcjhkxwy48AETBioAgFRWXcvSfJer8F+t6HcS1JtCMlemQ
-         McDv+5IaGlJBQw1GPGlrbYBiNl+/1HN4bVIluYsLGo0xKouVnsNRzFTCJaiV/mEZgdYn
-         TfE1zZUxmGMSmH0bXwWBeDncqufpR5fBA5unv2uS8CjaLceXGWE6+ojI3um07JxSHtxV
-         UStA==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=tNVLuYYtNnbltSH1rqkGLOPuwpfzM6MeggviQef2o3c=;
+        b=eeKsByuZdpqmneWBtxLifX0qYSG2bmYLjZyalf15bMTosJPkzUr/gCEWZLyngdl5nB
+         iPpAGlIamGrdSLy9QODUQc/I5W5SQjWRUFconeJ5pmif9mzieq8AWqGzTTeI8kwXrY9H
+         bosDBMxwk72pOPuCUIikaen2Oo6Ok72BVOQ+w3gIIvs8rxKMYY2Hq/p9TUlfzjMJVWiG
+         h71rQrotW+Ef2FQ61204fLN7r/yaYxiQP6yet5sg30e/lu+PrZXDbP9f0F1Vqez9srD4
+         /9BR2kiQRHaolnbGHM79h97j+59ktzI4GtKu2iCbPWsua7chMZlVqiOANtC2ZRqK12Yj
+         U0mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=rTQHRpCuYWTF0TW7ZqPRytz1miu1sr94XDRZMIsgnL4=;
-        b=1eyrc1t4qXpowMrXKzBbDVqE/NiYovmWxfhnms7KA+ubQuFibMpZvEg1RNYVEDUtYe
-         AsvZ0Is2XGLBcEkbip1/L1I4Xzdw+JshijDQyJedPpbA58GmYzdTX5opGADcIVSNZ2rQ
-         aO4/eEpCTUzIqsKzm4FsbZSn/dL3OiYeJIMqM9+dOnvXXP//PSqMKzt3N7XCNCzs5YBB
-         +gffeDmOatmZZSOtnvzKMdrKNYTVp89fR8wCrMVJ+SlM2dzcgr6z/HS8r37SZ+rnnpyT
-         fdFF3OFj8HvDewdzFI4md4rMlW3tJw0M0HL+j9v7rL0DJYRNqTwmx6mlUO+6VwQabBga
-         toLg==
-X-Gm-Message-State: ACrzQf0sWbk6nD94n27ZRwUT/7vC7qk9opDojKheKvEhPpiJg11wXU1r
-        26VGLQQC5N3IOnJx/4GCO4gqgfuQx6WAUrVjJtru4Q==
-X-Google-Smtp-Source: AMsMyM6KUo0g4SGhIWfZVj6dctZadODYk2rB4I7ebaJRb0iTeabclBUImzA9WGWuRD3KERMnJXDKWRJPtNPlsI42zRI=
-X-Received: by 2002:aa7:d488:0:b0:454:646a:4f98 with SMTP id
- b8-20020aa7d488000000b00454646a4f98mr7041993edr.408.1663745594398; Wed, 21
- Sep 2022 00:33:14 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=tNVLuYYtNnbltSH1rqkGLOPuwpfzM6MeggviQef2o3c=;
+        b=A8llPgxtvjAUyWag2ToDpSoZlEGWyY9HEnTmNYOueMl1M9UpTIdNUR4C2Pv8AFGz4L
+         PHIqQsx/H+QQCBV0sJenNoLypkiuN1cG4ksCsoONO8JfVIyqx+4YxHDZytGLjiiTCgXm
+         1CAbOSMcq2GmTa5n4RFy+is35jLKCiiOPgb4+h7yL6sLwyxXO1WgnoRWvv/p6ktkTsIR
+         9lpNj5xrdo7i/Uw2HoZrjOKKZGoQG7lNZq/lddbFhUCheRzLVf98x3bQprmsgGW64Ybl
+         NKExN0N251N+lOMp5ZdTUqq0bqPSupp0utvkKnXTYogvBNoeRDNX0V4JUPelmGCK8Zjt
+         AnaQ==
+X-Gm-Message-State: ACrzQf3A4ycwM4oRPzFtGZLN1tDmkbAVzZY+7jgBZYGHWjgrcxJm92p6
+        Ec5P37NKJICwVAO10PzctIwlCg==
+X-Google-Smtp-Source: AMsMyM72ZI2J7U3/gmd0qbBnFYhpkP11nSbXRVR9n3XjmBlVgP+lFhdLjbYR4M3dycy+3QB5oaH8VA==
+X-Received: by 2002:a05:6512:2210:b0:499:d710:9c0d with SMTP id h16-20020a056512221000b00499d7109c0dmr10393748lfu.325.1663745974473;
+        Wed, 21 Sep 2022 00:39:34 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id x15-20020a056512078f00b00498f00420e9sm316688lfr.194.2022.09.21.00.39.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Sep 2022 00:39:33 -0700 (PDT)
+Message-ID: <bd65f87f-4ef7-7191-594a-fad2df448503@linaro.org>
+Date:   Wed, 21 Sep 2022 09:39:32 +0200
 MIME-Version: 1.0
-References: <20220921032020.25398-1-Meng.Li@windriver.com>
-In-Reply-To: <20220921032020.25398-1-Meng.Li@windriver.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 21 Sep 2022 09:33:03 +0200
-Message-ID: <CAMRc=MdYxX4ZsTQDmAQy5pmzDFBTKnw8qwVVHdcDK2Ui+b569w@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: Set lineevent_state::irq after IRQ
- register successfully
-To:     Meng Li <Meng.Li@windriver.com>
-Cc:     linus.walleij@linaro.org, warthog618@gmail.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: qcom: add sdm670 pinctrl
+Content-Language: en-US
+To:     Richard Acayan <mailingradian@gmail.com>,
+        linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20220920222939.150330-1-mailingradian@gmail.com>
+ <20220920222939.150330-2-mailingradian@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220920222939.150330-2-mailingradian@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 5:23 AM Meng Li <Meng.Li@windriver.com> wrote:
->
-> When running gpio test on nxp-ls1028 platform with below command
-> gpiomon --num-events=3 --rising-edge gpiochip1 25
-> There will be a warning trace as below:
-> Call trace:
-> free_irq+0x204/0x360
-> lineevent_free+0x64/0x70
-> gpio_ioctl+0x598/0x6a0
-> __arm64_sys_ioctl+0xb4/0x100
-> invoke_syscall+0x5c/0x130
-> ......
-> el0t_64_sync+0x1a0/0x1a4
-> The reason of this issue is that calling request_threaded_irq()
-> function failed, and then lineevent_free() is invoked to release
-> the resource. Since the lineevent_state::irq was already set, so
-> the subsequent invocation of free_irq() would trigger the above
-> warning call trace. To fix this issue, set the lineevent_state::irq
-> after the IRQ register successfully.
->
-> Fixes: 468242724143 ("gpiolib: cdev: refactor lineevent cleanup into lineevent_free")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Meng Li <Meng.Li@windriver.com>
+On 21/09/2022 00:29, Richard Acayan wrote:
+> There is a new driver for the Snapdragon 670 TLMM (Top-Level Mode
+> Multiplexer). Document it.
+> 
+> Adapted from qcom,sm6350-pinctrl.yaml.
+> 
+> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
 > ---
->  drivers/gpio/gpiolib-cdev.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index ffa0256cad5a..937e7a8dd8a9 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -1784,7 +1784,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->                 ret = -ENODEV;
->                 goto out_free_le;
->         }
-> -       le->irq = irq;
->
->         if (eflags & GPIOEVENT_REQUEST_RISING_EDGE)
->                 irqflags |= test_bit(FLAG_ACTIVE_LOW, &desc->flags) ?
-> @@ -1798,7 +1797,7 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         init_waitqueue_head(&le->wait);
->
->         /* Request a thread to read the events */
-> -       ret = request_threaded_irq(le->irq,
-> +       ret = request_threaded_irq(irq,
->                                    lineevent_irq_handler,
->                                    lineevent_irq_thread,
->                                    irqflags,
-> @@ -1807,6 +1806,8 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
->         if (ret)
->                 goto out_free_le;
->
-> +       le->irq = irq;
-> +
->         fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
->         if (fd < 0) {
->                 ret = fd;
-> --
-> 2.36.1
->
 
-Applied, thanks!
 
-Bart
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+
+Best regards,
+Krzysztof
