@@ -2,51 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 073265C04B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 18:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 619225C04D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Sep 2022 18:57:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231825AbiIUQxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Sep 2022 12:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35208 "EHLO
+        id S229771AbiIUQ5p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Sep 2022 12:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231932AbiIUQwk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 12:52:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51285322;
-        Wed, 21 Sep 2022 09:48:52 -0700 (PDT)
+        with ESMTP id S230463AbiIUQ5e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Sep 2022 12:57:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9A0222;
+        Wed, 21 Sep 2022 09:57:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E5CC7B831B2;
-        Wed, 21 Sep 2022 16:48:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEEB3C433D6;
-        Wed, 21 Sep 2022 16:48:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 36E866321F;
+        Wed, 21 Sep 2022 16:57:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D0D8C433C1;
+        Wed, 21 Sep 2022 16:57:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663778929;
-        bh=lrEPP288W1ztvVtKqLc2Qx5zAzNeiXnqsUHoGX4blzA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sZsVCx5+DxjcXTU2UWOzibWtuKlfXVoueVFoDHkj6tx1aVXXjJvbMZIpSfNhzbxPR
-         sutHHAjpQ36zAbpEZ6+cvRg3j5q65wW40eBvkrFAHsxdUKl33LP5Kf5y0Y81ZEyb28
-         8dRbyIydXTkT3ajVJmYYpe+rFAyjqHVnnFM8zg+u2685rPrQ2uRYME2UfGIxxROwXD
-         7Ja1AxkK3khqj7enwTtxSfoxi4LZy7D92I5qzDkWEy2xE5sE2wogzqBW1YnbOaFzU1
-         qptVgQH6AIiXHZRFkYDI+xyOTWEoNlbjojgVSHMRSvY/xdoWQRcJgBd+oS5B6maj3w
-         3gKHSSVPmYJug==
-Date:   Wed, 21 Sep 2022 17:48:45 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, sudipm.mukherjee@gmail.com,
-        arnd@arndb.de, linux-gpio@vger.kernel.org,
-        linux-next@vger.kernel.org, gregkh@linuxfoundation.org,
-        bagasdotme@gmail.com, zengheng4@huawei.com
-Subject: Re: [PATCH v2 char-misc-next] misc: microchip: pci1xxxx: use
- DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in
- pci1xxxx's gpio driver
-Message-ID: <YytAbfmMfxNsIjcy@spud>
-References: <20220915094729.646185-1-kumaravel.thiagarajan@microchip.com>
+        s=k20201202; t=1663779452;
+        bh=LeK5JLTbFJzs1hR1169CAEELd2s0T4NEbTDkGk4Qc78=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hMwpdt1IY3z7GH5nlskxk3QBoXR7H/soWjBbsLnMGh7thd+WpGZvhB/EGa49p57qd
+         Odsp1gZRPTma06dVip7Pj1Tcpn+yXEiyIWdIiF5aRYvuQ4Dj4Ybz4h4TIpnZsdkSrw
+         Bn1t8q0F1aXLM3MpCMRXHwPNNPfGqSar3kjCU1DX/m/+C889aHp9QLOwgv5pPlN5T5
+         EL3/YYWwNXTDH4A8sC2LIHKsbxGL6rgj9J7xc5UeKBZecoAQBDeYK97MOOv8/781VC
+         hAAdJyWL6tEBMRfGgG5Q5RULdFzA3x/eRxH7piUsz/W4xMvMwaDuZxi25n1K65AU6u
+         +YRiP7pw75M+g==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ob32Q-00BizR-D0;
+        Wed, 21 Sep 2022 17:57:30 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220915094729.646185-1-kumaravel.thiagarajan@microchip.com>
+Date:   Wed, 21 Sep 2022 17:57:30 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linusw@kernel.org,
+        kaloz@openwrt.org, khalasa@piap.pl,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 2/5] gpio: ixp4xx: Make irqchip immutable
+In-Reply-To: <20220921155436.235371-2-sashal@kernel.org>
+References: <20220921155436.235371-1-sashal@kernel.org>
+ <20220921155436.235371-2-sashal@kernel.org>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <fec2e2e2e74d680d5f9de6d68fb5fe18@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: sashal@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl, linusw@kernel.org, kaloz@openwrt.org, khalasa@piap.pl, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,64 +69,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 03:17:29PM +0530, Kumaravel Thiagarajan wrote:
-> misc: microchip: pci1xxxx: use DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in pci1xxxx's gpio driver
-                                                                    ^^
-FYI, double space in the subject here, rather a mouthful though and
-surely everything after SIMPLE_DEV_PM_OPS() is redundant?
-
-> build errors listed below and reported by Sudip Mukherjee
-> <sudipm.mukherjee@gmail.com> for the builds of
-> riscv, s390, csky, alpha and loongarch allmodconfig are fixed in
-> this patch.
-
-allmodconfig has been broken for a while now, and this patch appears
-to have been sitting for a week & a second fix has shown up at:
-https://lore.kernel.org/all/20220919094250.858716-1-zengheng4@huawei.com/
-
-I do note that Zeng Hang's patch does slightly more than this one does,
-but idk about about the PM APIs /shrug.
-
-Has this just slipped under the radar since so many of us were
-attending conferences etc the last while or are you looking for
-Kumaravel to do something more here?
-
-Thanks,
-Conor.
-
+On 2022-09-21 16:54, Sasha Levin wrote:
+> From: Linus Walleij <linus.walleij@linaro.org>
 > 
-> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:311:12: error: 'pci1xxxx_gpio_resume' defined but not used [-Werror=unused-function]
->   311 | static int pci1xxxx_gpio_resume(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~~
-> drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c:295:12: error: 'pci1xxxx_gpio_suspend' defined but not used [-Werror=unused-function]
->   295 | static int pci1xxxx_gpio_suspend(struct device *dev)
->       |            ^~~~~~~~~~~~~~~~~~~~~
+> [ Upstream commit 94e9bc73d85aa6ecfe249e985ff57abe0ab35f34 ]
 > 
-> Fixes: 4ec7ac90ff39 ("misc: microchip: pci1xxxx: Add power management functions - suspend & resume handlers.")
-> Reported-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
-> Signed-off-by: Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>
-> ---
-> Changes in v2:
->   - Mention as Sudip had reported in the commit description
->     as suggested by Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
->  drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> This turns the IXP4xx GPIO irqchip into an immutable
+> irqchip, a bit different from the standard template due
+> to being hierarchical.
 > 
-> diff --git a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> index 9cc771c604ed..4cd541166b0c 100644
-> --- a/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> +++ b/drivers/misc/mchp_pci1xxxx/mchp_pci1xxxx_gpio.c
-> @@ -405,7 +405,7 @@ static int pci1xxxx_gpio_probe(struct auxiliary_device *aux_dev,
->  	return devm_gpiochip_add_data(&aux_dev->dev, &priv->gpio, priv);
->  }
->  
-> -static SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
-> +static DEFINE_SIMPLE_DEV_PM_OPS(pci1xxxx_gpio_pm_ops, pci1xxxx_gpio_suspend, pci1xxxx_gpio_resume);
->  
->  static const struct auxiliary_device_id pci1xxxx_gpio_auxiliary_id_table[] = {
->  	{.name = "mchp_pci1xxxx_gp.gp_gpio"},
-> -- 
-> 2.25.1
+> Tested on the IXP4xx which uses drivers/ata/pata_ixp4xx_cf.c
+> for a rootfs on compact flash with IRQs from this GPIO
+> block to the CF ATA controller.
 > 
-> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+
+Why? The required dependencies are only in 5,19, and are
+definitely NOT a stable candidate...
+
+This isn't a fix by any stretch of the imagination.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
