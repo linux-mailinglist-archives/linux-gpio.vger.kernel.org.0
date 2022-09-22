@@ -2,52 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF2DB5E6635
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 16:54:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B1435E6719
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 17:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231368AbiIVOx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 10:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34736 "EHLO
+        id S229905AbiIVPau (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 11:30:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbiIVOx6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 10:53:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E61D4DE7;
-        Thu, 22 Sep 2022 07:53:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 79D40B83813;
-        Thu, 22 Sep 2022 14:53:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4BDCC433D7;
-        Thu, 22 Sep 2022 14:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1663858435;
-        bh=KTeWixHxNoQJTPzIJzb7kAXpWkg5DahLdcLN1A+Xbe8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pbw5mctyzje5yeed6jCcw7cpD8giF93mj1nh1wLENp5hV1ZznhMzpjVGT/fvnG4l5
-         JaO+KSaN8+ziXiPWHE9Z2UFQ7QHD1IZv0DlwDcZyGnccfqmxv0FxD9ZwErVko9DIpY
-         PrpjShLb+aWuhpHcLTMx6wMthUQU+bin98t1Oz+8=
-Date:   Thu, 22 Sep 2022 16:53:52 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
-        linux-kernel@vger.kernel.org, sudipm.mukherjee@gmail.com,
-        arnd@arndb.de, linux-gpio@vger.kernel.org,
-        linux-next@vger.kernel.org, bagasdotme@gmail.com,
-        zengheng4@huawei.com
-Subject: Re: [PATCH v2 char-misc-next] misc: microchip: pci1xxxx: use
- DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in
- pci1xxxx's gpio driver
-Message-ID: <Yyx3AMaETK2GsBHl@kroah.com>
-References: <20220915094729.646185-1-kumaravel.thiagarajan@microchip.com>
- <YytAbfmMfxNsIjcy@spud>
+        with ESMTP id S231861AbiIVPas (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 11:30:48 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3448B5A7E;
+        Thu, 22 Sep 2022 08:30:44 -0700 (PDT)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MYJyY4TmKzMnl1;
+        Thu, 22 Sep 2022 23:25:57 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 22 Sep 2022 23:30:40 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 22 Sep
+ 2022 23:30:39 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>
+CC:     <linus.walleij@linaro.org>, <corbet@lwn.net>,
+        <yangyingliang@huawei.com>
+Subject: [PATCH -next] Documentation: devres: add missing PINCTRL helpers
+Date:   Thu, 22 Sep 2022 23:37:37 +0800
+Message-ID: <20220922153737.2863951-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YytAbfmMfxNsIjcy@spud>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,30 +48,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 05:48:45PM +0100, Conor Dooley wrote:
-> On Thu, Sep 15, 2022 at 03:17:29PM +0530, Kumaravel Thiagarajan wrote:
-> > misc: microchip: pci1xxxx: use DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in pci1xxxx's gpio driver
->                                                                     ^^
-> FYI, double space in the subject here, rather a mouthful though and
-> surely everything after SIMPLE_DEV_PM_OPS() is redundant?
-> 
-> > build errors listed below and reported by Sudip Mukherjee
-> > <sudipm.mukherjee@gmail.com> for the builds of
-> > riscv, s390, csky, alpha and loongarch allmodconfig are fixed in
-> > this patch.
-> 
-> allmodconfig has been broken for a while now, and this patch appears
-> to have been sitting for a week & a second fix has shown up at:
-> https://lore.kernel.org/all/20220919094250.858716-1-zengheng4@huawei.com/
-> 
-> I do note that Zeng Hang's patch does slightly more than this one does,
-> but idk about about the PM APIs /shrug.
-> 
-> Has this just slipped under the radar since so many of us were
-> attending conferences etc the last while or are you looking for
-> Kumaravel to do something more here?
+Add devm_pinctrl_get_select() and devm_pinctrl_register_and_init() to
+devres.rst.
 
-I've taken this change now, sorry for the delay.  Was not looking at
-patches while at conferences.
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ Documentation/driver-api/driver-model/devres.rst | 2 ++
+ 1 file changed, 2 insertions(+)
 
-greg k-h
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index 2895f9ea00c4..d31eb10b271d 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -391,7 +391,9 @@ PHY
+ PINCTRL
+   devm_pinctrl_get()
+   devm_pinctrl_put()
++  devm_pinctrl_get_select()
+   devm_pinctrl_register()
++  devm_pinctrl_register_and_init()
+   devm_pinctrl_unregister()
+ 
+ POWER
+-- 
+2.25.1
+
