@@ -2,70 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EED155E5D96
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 10:37:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E5385E5E4A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 11:17:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229985AbiIVIhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 04:37:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60236 "EHLO
+        id S230209AbiIVJRh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 05:17:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiIVIhQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 04:37:16 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69D5A1D27
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:37:15 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id 13so19404977ejn.3
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=TwVaZJkLdwmom6Stee69RLiTEJKn72psfncdzouODpI=;
-        b=jdxAJwiTAFGS0B//ixBkSccbSUKqSmHlo7dcQGhPy0FAOjJQPeqG0s8qNE6vwXngsd
-         Sx18XH3h/nVh3UKgU0cvSlBmvr/z2TyRoG3ptmTNRK7o5QMLyfKSG0NMAN8+CNSnrysp
-         odOzxlwAzfZfZDBLxLhGiWXdSrZJuOD66dWxlnUOEowakrWXUjs19IsxP6WsH4kBGJqG
-         9oCdbtZkjfkKD8tEft8Dk1bslOuxZ0x30lce+IyVpKyg78G86X+4fShmiJEiUEdZ+48M
-         KUAc3k/KZ3oFWs8dBRycJQFgUM81d/pIrCLHY8xRG1UGlF2jkwaU2+2a5A95K9zxSfms
-         +j4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=TwVaZJkLdwmom6Stee69RLiTEJKn72psfncdzouODpI=;
-        b=K0U2Ii33nrz3vddP3jLPkanATOrLAa3Fj72mN+4JYYaHCNK6BVqDNe/QBACwgnpoXL
-         LNCbdhYpGR2ssF9oKp2CEC48HuF0g91QnRGdb0pykQtCRocaxCvBeycduOLbuSAjfVSm
-         KPPIy9urB8wbQqv8Y0IIgqjGdNoNANfDaZbiXpBiQ6AWfl5HwIUvgnm1ZWj/zk+yqBHs
-         PExFJxg3FoWII0py5EoMvsjOlAsdjcCd4ccb+8MlVQMoRvGsuQneJuRvlEP5+E/WAg64
-         KdaTn3muTMgYd+r4z01e3XXSuoJXYqIhhL2gBbDG7GDRRhjwr6PXG7A0LlSaEi51B4Hv
-         D5Dw==
-X-Gm-Message-State: ACrzQf1l0DUSMcyYslO1Ib3nQWgxY9apFNNo+W9wmUod+iWCKJBFJyyE
-        zZLhK/Kx4zBEA2L9QjI6lIwUZzn2S8YGf/pY62+/pQ==
-X-Google-Smtp-Source: AMsMyM70aN5WdtKZVMkYxt4MFoCnTTjO1UEouE/n+cIuMmbkZXDhle7VhmG91bHu0r0RObEWsdg/5pI21oePMCVrOm0=
-X-Received: by 2002:a17:907:9807:b0:781:feee:f87c with SMTP id
- ji7-20020a170907980700b00781feeef87cmr1812708ejc.101.1663835834350; Thu, 22
- Sep 2022 01:37:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220905145555.674800-1-etienne.carriere@linaro.org>
-In-Reply-To: <20220905145555.674800-1-etienne.carriere@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 22 Sep 2022 10:37:03 +0200
-Message-ID: <CAMRc=Mcq3u+1JjvXJ2X774vknq-LOeCfE7hLj2As7Q5A13tx0w@mail.gmail.com>
-Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
-To:     Etienne Carriere <etienne.carriere@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        with ESMTP id S229712AbiIVJRf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 05:17:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D510CD01F4;
+        Thu, 22 Sep 2022 02:17:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D13062037;
+        Thu, 22 Sep 2022 09:17:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9523C433D6;
+        Thu, 22 Sep 2022 09:17:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663838252;
+        bh=d1bj7NoeTwC6Lx1X6ziK4AjlLmrJTJF3DowJifqcCQU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RHI5RGFM6qUtx37r6c7rLN6MLed7Ik1JQTz9m3PJofNEzF2DAwU0hcI01f2NUSdSC
+         GvItCD7JOVPSJVDIC3e5kXSNkypHxsukpxraCXkHiBHRXPRTw9MPp3lWYqf7Q5jKqe
+         Ab23otJcEN/ndZh+i+cMF/XeBiAjUda2SXAM1GjDiUjiofNkfkMx9QqKEMq3JUdbQO
+         B3ILg6+kLcd31gfVfLB1P2hnD6z/qXy1UJNpXXZRGbx/KmR3qgzz8Fb+t2t2q4ZNmy
+         YqKYWzT/GAYVgylB4SD/vvFD+qF9kGGKo1G8hfNQ4DyjPdRU+ea3f6Xv0erXy5GRff
+         ENnd409EbgWQA==
+Received: from 185-176-101-241.host.sccbroadband.ie ([185.176.101.241] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1obIKo-00Br7c-I6;
+        Thu, 22 Sep 2022 10:17:30 +0100
+Date:   Thu, 22 Sep 2022 10:17:27 +0100
+Message-ID: <87illfkbtk.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        linusw@kernel.org, kaloz@openwrt.org, khalasa@piap.pl,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.4 2/5] gpio: ixp4xx: Make irqchip immutable
+In-Reply-To: <CAMRc=MexqLhu3ZWt1AbzBestswqmHNpct1LQiif0JGECTjHz4Q@mail.gmail.com>
+References: <20220921155436.235371-1-sashal@kernel.org>
+        <20220921155436.235371-2-sashal@kernel.org>
+        <fec2e2e2e74d680d5f9de6d68fb5fe18@kernel.org>
+        <CAMRc=MexqLhu3ZWt1AbzBestswqmHNpct1LQiif0JGECTjHz4Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.176.101.241
+X-SA-Exim-Rcpt-To: brgl@bgdev.pl, sashal@kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linus.walleij@linaro.org, linusw@kernel.org, kaloz@openwrt.org, khalasa@piap.pl, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,29 +70,57 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 5, 2022 at 4:57 PM Etienne Carriere
-<etienne.carriere@linaro.org> wrote:
->
-> Changes gpio.h DT binding header file to be published under GPLv2 or
-> BSD-2-Clause license terms. This change allows this GPIO generic
-> bindings header file to be used in software components as bootloaders
-> and OSes that are not published under GPLv2 terms.
->
-> All contributors to gpio.h file in copy.
->
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Laxman Dewangan <ldewangan@nvidia.com>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
->
-> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
-> ---
+Hi Bartosz,
 
-Applied, thanks!
+On Wed, 21 Sep 2022 21:04:27 +0100,
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+> On Wed, Sep 21, 2022 at 6:57 PM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On 2022-09-21 16:54, Sasha Levin wrote:
+> > > From: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > [ Upstream commit 94e9bc73d85aa6ecfe249e985ff57abe0ab35f34 ]
+> > >
+> > > This turns the IXP4xx GPIO irqchip into an immutable
+> > > irqchip, a bit different from the standard template due
+> > > to being hierarchical.
+> > >
+> > > Tested on the IXP4xx which uses drivers/ata/pata_ixp4xx_cf.c
+> > > for a rootfs on compact flash with IRQs from this GPIO
+> > > block to the CF ATA controller.
+> > >
+> > > Cc: Marc Zyngier <maz@kernel.org>
+> > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> > > Acked-by: Marc Zyngier <maz@kernel.org>
+> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >
+> > Why? The required dependencies are only in 5,19, and are
+> > definitely NOT a stable candidate...
+> >
+> > This isn't a fix by any stretch of the imagination.
+> >
+> 
+> Hi Marc,
+> 
+> While I didn't mark it for stable (and it shouldn't go into any branch
+> earlier than 5.19.x), I did send the patches making the irqchips
+> immutable to Linus Torvalds as fixes as they technically do *fix* the
+> warning emitted by gpiolib and make the implementation correct.
+> 
+> I think these patches should still be part of the v5.19.x stable branch.
 
-Bart
+5.19, sure. All the dependencies are there, and tightening the driver
+implementations is a valuable goal.
+
+However, targeting all the other stable releases (5.4, 5.10, 5.15)
+makes little sense. It won't even compile! Do the dependencies need to
+be backported? I don't think it is worthwhile, as this is a long
+series containing multiple related changes spread all over the tree.
+This would defeat the very purpose of a stable tree.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
