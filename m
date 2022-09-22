@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 027D95E639D
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 15:31:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF2DB5E6635
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 16:54:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231482AbiIVNbK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 09:31:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58074 "EHLO
+        id S231368AbiIVOx7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 10:53:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231452AbiIVNbJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 09:31:09 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2178D4DDC
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 06:31:07 -0700 (PDT)
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1obMIE-0005Jr-0M; Thu, 22 Sep 2022 15:31:06 +0200
-Received: from sha by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1obMID-00072j-AZ; Thu, 22 Sep 2022 15:31:05 +0200
-Date:   Thu, 22 Sep 2022 15:31:05 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 1/2] gpio: Add gpio latch driver
-Message-ID: <20220922133105.GN986@pengutronix.de>
-References: <20220914071306.3254881-1-s.hauer@pengutronix.de>
- <20220914071306.3254881-2-s.hauer@pengutronix.de>
- <20220914140310.5ffrnsy63piegdyr@mobilestation>
+        with ESMTP id S229901AbiIVOx6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 10:53:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E61D4DE7;
+        Thu, 22 Sep 2022 07:53:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 79D40B83813;
+        Thu, 22 Sep 2022 14:53:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4BDCC433D7;
+        Thu, 22 Sep 2022 14:53:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1663858435;
+        bh=KTeWixHxNoQJTPzIJzb7kAXpWkg5DahLdcLN1A+Xbe8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pbw5mctyzje5yeed6jCcw7cpD8giF93mj1nh1wLENp5hV1ZznhMzpjVGT/fvnG4l5
+         JaO+KSaN8+ziXiPWHE9Z2UFQ7QHD1IZv0DlwDcZyGnccfqmxv0FxD9ZwErVko9DIpY
+         PrpjShLb+aWuhpHcLTMx6wMthUQU+bin98t1Oz+8=
+Date:   Thu, 22 Sep 2022 16:53:52 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Conor Dooley <conor@kernel.org>
+Cc:     Kumaravel Thiagarajan <kumaravel.thiagarajan@microchip.com>,
+        linux-kernel@vger.kernel.org, sudipm.mukherjee@gmail.com,
+        arnd@arndb.de, linux-gpio@vger.kernel.org,
+        linux-next@vger.kernel.org, bagasdotme@gmail.com,
+        zengheng4@huawei.com
+Subject: Re: [PATCH v2 char-misc-next] misc: microchip: pci1xxxx: use
+ DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in
+ pci1xxxx's gpio driver
+Message-ID: <Yyx3AMaETK2GsBHl@kroah.com>
+References: <20220915094729.646185-1-kumaravel.thiagarajan@microchip.com>
+ <YytAbfmMfxNsIjcy@spud>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220914140310.5ffrnsy63piegdyr@mobilestation>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+In-Reply-To: <YytAbfmMfxNsIjcy@spud>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,47 +55,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 05:03:10PM +0300, Serge Semin wrote:
-> > +				    unsigned int offset, bool val)
-> > +{
-> > +	int latch = offset / priv->n_latched_gpios;
-> > +	int i;
-> > +
-> > +	assign_bit(offset, priv->shadow, val);
-> > +
+On Wed, Sep 21, 2022 at 05:48:45PM +0100, Conor Dooley wrote:
+> On Thu, Sep 15, 2022 at 03:17:29PM +0530, Kumaravel Thiagarajan wrote:
+> > misc: microchip: pci1xxxx: use DEFINE_SIMPLE_DEV_PM_OPS() in place  of the SIMPLE_DEV_PM_OPS() in pci1xxxx's gpio driver
+>                                                                     ^^
+> FYI, double space in the subject here, rather a mouthful though and
+> surely everything after SIMPLE_DEV_PM_OPS() is redundant?
 > 
-> > +	for (i = 0; i < priv->n_latched_gpios; i++)
-> > +		set(priv->latched_gpios->desc[i],
-> > +		    test_bit(latch * priv->n_latched_gpios + i, priv->shadow));
+> > build errors listed below and reported by Sudip Mukherjee
+> > <sudipm.mukherjee@gmail.com> for the builds of
+> > riscv, s390, csky, alpha and loongarch allmodconfig are fixed in
+> > this patch.
 > 
-> -> duration?
+> allmodconfig has been broken for a while now, and this patch appears
+> to have been sitting for a week & a second fix has shown up at:
+> https://lore.kernel.org/all/20220919094250.858716-1-zengheng4@huawei.com/
 > 
-> > +
-> > +	set(priv->clk_gpios->desc[latch], 1);
+> I do note that Zeng Hang's patch does slightly more than this one does,
+> but idk about about the PM APIs /shrug.
 > 
-> -> duration?
-> 
-> > +	set(priv->clk_gpios->desc[latch], 0);
-> 
-> I am pretty much sure there must be some duration between the actions
-> above *. See for instance the tw and (tsu + th) timing requirements in
-> the next edge-triggered flip-flops:
-> https://www.ti.com/lit/ds/symlink/sn74lv74a.pdf?ts=1663163389954&ref_url=https%253A%252F%252Fwww.google.com%252F
-> 
-> The durations are normally small (ns or a bit smaller) but still need
-> to be added anyway.
-> 
-> Note since the durations are device-specific an additional DT-property array
-> with durations should be added too.
+> Has this just slipped under the radar since so many of us were
+> attending conferences etc the last while or are you looking for
+> Kumaravel to do something more here?
 
-Do you think a fixed udelay(1) would be enough for now? Bigger delays
-shouldn't be needed and smaller delays expand to udelay(1) anyway on
-architectures not providing an architecture specific ndelay().
+I've taken this change now, sorry for the delay.  Was not looking at
+patches while at conferences.
 
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+greg k-h
