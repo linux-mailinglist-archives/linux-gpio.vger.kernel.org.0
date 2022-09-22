@@ -2,152 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1BB95E6D61
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 22:50:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A85825E6EC3
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 23:48:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230021AbiIVUup (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 16:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58400 "EHLO
+        id S231449AbiIVVsd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 17:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229578AbiIVUuo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 16:50:44 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392CC10951D
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 13:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663879843; x=1695415843;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=90/m2HnU4wZARYPN00Q5RP68pycDbJ9een2YWU2dYNQ=;
-  b=i47TSjx4qMSwYHJwpNlH9mf09TFXT65Wp6nzoalFAzVzVIN+/10SC9dR
-   QOwnyQvW4cnxLhYBkVPQ88kUIDiXsZ83fPuUFpAk/N/8O3S2h8Dmzuqub
-   O6sySMQoTwBDUIhzcByajc5SyFrnasGSjq24wDPmaD/l2bXXYYp3uZJw+
-   AXF3MN2Ayc1qWQMs+gAZlSYFJR7F5eInDVNDwzXeievfYgQyep+DC3rqR
-   +GkAKgKkLD9ZgrJ0UEl1UwQSLgKWCvMFy5O5m4CT0hI4grq1S+S1xWr1d
-   AUR8RjMmD4Kugmfqkal+5rqk1hC11D6tVyoEsLMv8NwpL40KkB8JuSkSg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="280152702"
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="280152702"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 13:50:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="653142919"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 22 Sep 2022 13:50:41 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1obT9c-0004xC-2a;
-        Thu, 22 Sep 2022 20:50:40 +0000
-Date:   Fri, 23 Sep 2022 04:50:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 792f494e4a00de57e4ee0647d490ec1aac2dae23
-Message-ID: <632cca9d.LohIBkRzNj70oZE5%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231462AbiIVVsb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 17:48:31 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B533FF8C35;
+        Thu, 22 Sep 2022 14:48:30 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id w13so10068306plp.1;
+        Thu, 22 Sep 2022 14:48:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=vFFY3rh84yOuYPuVnI3lRYvTzhLEPqFEznPPwuwFY3M=;
+        b=mQYrehBkW0Tp8m8Z92J+sUWuoHaNyKSJGsM63/CbKHcRsyDKdNSeJ0FIyTyvU+hCU5
+         kICwerayKtM6cRjpG+iPR2H7kvi+FTeNkS7uqlQjYGuMLRd2ICn0lUVnorO8jlyok8ng
+         WEUFogy2xra3ii0ZfvdhERRdNb/H+ObezXLvAQBWAU5Fq0I3PIV3+9jjjny+LA3nUwML
+         hbh0LLe06bHG5EKft3uyDA+TfGNJt76Lj3XfZLDxOyQe9NLgL8eISn8QUUI7a60aYqD+
+         Ea1zulRIFsTuesGYc4guku+yFDiqOUmveLAcsDeSB/ZpUT25Bm6fnCRDZr/ZUtL9AwZA
+         yS1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=vFFY3rh84yOuYPuVnI3lRYvTzhLEPqFEznPPwuwFY3M=;
+        b=5QJl3fyWQ5ZdGF4GyiUx1lRLa7pWlPD6FfAvi1tMs5NlPLxeRX622ki2UGeL009Ecf
+         6/eQZbu2z82DZ3VW9qJTrP6WBnhajBUgb2D7iIHx7xtU0+yMt1KqtbNXwo5KcPEYucuO
+         BGbiuZWCEkFzeKJWuI6sNU4FwIyQAAuPX6dsHWN2hnfgKiyxGI+mVUuQSWSkzdL37hfM
+         /aaDZf4UTBUWB6Ul8svWBIZ/TjmSEZgJoY/GkxQWzm/YCXfwc2TrdExaohTSxq19EySo
+         0yX6jUm8uRAlvPvL8mn02kUj5+5HCEQm8mz8OcHexGdJlJMW5PlRcs1zzQx08reQW7ig
+         Ah3g==
+X-Gm-Message-State: ACrzQf0599jwu8851fA7Ob8t98pxFsZyoQt3bqZp1Kr+/N1r/5fZRNkM
+        Vvbs9zjgJfLd+WRahQt2Vzk=
+X-Google-Smtp-Source: AMsMyM7Tl5x3qq3rpo9H8vHIvgajXbO3mDq3Rl+jvxpGF1uRvjW0c9A26/fvCDdGQ27LMj3HQvb+Sg==
+X-Received: by 2002:a17:902:b7c5:b0:178:a207:d789 with SMTP id v5-20020a170902b7c500b00178a207d789mr5241220plz.70.1663883310074;
+        Thu, 22 Sep 2022 14:48:30 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:c558:d894:7bf:3842])
+        by smtp.gmail.com with ESMTPSA id cp2-20020a170902e78200b00178b77b7e71sm4478027plb.188.2022.09.22.14.48.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 14:48:29 -0700 (PDT)
+Date:   Thu, 22 Sep 2022 14:48:26 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v1 0/3] Get rid of
+ devm_fwnode_get_[index_]gpiod_from_child()
+Message-ID: <YyzYKmsjKflqT1xZ@google.com>
+References: <20220902-get_gpiod_from_child-remove-v1-0-1e47125df20f@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20220902-get_gpiod_from_child-remove-v1-0-1e47125df20f@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 792f494e4a00de57e4ee0647d490ec1aac2dae23  dt-binding: gpio: publish binding IDs under dual license
+Hi Pavel, Marek,
 
-elapsed time: 720m
+On Fri, Sep 02, 2022 at 05:55:24PM -0700, Dmitry Torokhov wrote:
+> This drops the last uses of devm_fwnode_get_[index_]gpiod_from_child()
+> from the tree and drops the stubs implementing this API on top of
+> devm_fwnode_gpiod_get_index().
+> 
+> Note that the bulk of users were converted in 2019, the couple of LED
+> drivers are all that have remained.
+> 
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> 
+> ---
+> Dmitry Torokhov (3):
+>       leds: gpio: switch to using devm_fwnode_gpiod_get()
+>       leds: lgm-sso: switch to using devm_fwnode_gpiod_get()
+>       gpiolib: remove devm_fwnode_get_[index_]gpiod_from_child()
+> 
+>  drivers/leds/blink/leds-lgm-sso.c |  5 ++---
+>  drivers/leds/leds-gpio.c          |  5 ++---
+>  include/linux/gpio/consumer.h     | 21 ---------------------
+>  3 files changed, 4 insertions(+), 27 deletions(-)
+> ---
+> base-commit: 7fd22855300e693668c3397771b3a2b3948f827a
+> change-id: 20220902-get_gpiod_from_child-remove-a62638849e91
+> 
 
-configs tested: 72
-configs skipped: 2
+Could you please consider picking this up for 6.1? Or would you be OK
+with this going through other tree (GPIO maybe)?
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                                defconfig
-x86_64                        randconfig-a002
-s390                             allyesconfig
-x86_64                        randconfig-a004
-arc                  randconfig-r043-20220921
-i386                                defconfig
-riscv                randconfig-r042-20220921
-x86_64                        randconfig-a006
-i386                          randconfig-a001
-arm                                 defconfig
-i386                          randconfig-a003
-s390                 randconfig-r044-20220921
-x86_64                              defconfig
-i386                          randconfig-a005
-x86_64                        randconfig-a013
-arm                              allyesconfig
-alpha                            allyesconfig
-x86_64                        randconfig-a011
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-arm64                            allyesconfig
-arc                              allyesconfig
-x86_64                           rhel-8.3-syz
-i386                          randconfig-a016
-powerpc                           allnoconfig
-x86_64                         rhel-8.3-kunit
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64                           rhel-8.3-kvm
-m68k                             allyesconfig
-x86_64                    rhel-8.3-kselftests
-m68k                             allmodconfig
-i386                             allyesconfig
-x86_64                          rhel-8.3-func
-ia64                             allmodconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-powerpc                 mpc837x_mds_defconfig
-xtensa                          iss_defconfig
-nios2                            alldefconfig
-m68k                            mac_defconfig
-sh                        edosk7705_defconfig
-xtensa                    smp_lx200_defconfig
-csky                             alldefconfig
-sh                           se7705_defconfig
-powerpc                      tqm8xx_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20220921
-hexagon              randconfig-r045-20220921
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-hexagon              randconfig-r041-20220922
-hexagon              randconfig-r045-20220922
-riscv                randconfig-r042-20220922
-s390                 randconfig-r044-20220922
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-x86_64                        randconfig-a014
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Dmitry
