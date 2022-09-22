@@ -2,133 +2,288 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6303F5E5E66
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 11:22:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 259B15E5EBE
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 11:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229911AbiIVJWR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 05:22:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
+        id S230037AbiIVJjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 05:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229766AbiIVJWQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 05:22:16 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1451A357CF
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:22:15 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id f20so12643510edf.6
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:22:15 -0700 (PDT)
+        with ESMTP id S229624AbiIVJjV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 05:39:21 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80DFD4A88
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:39:19 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id e17so12727217edc.5
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=zu/La+x+mpg9RbS6KzOiMcR3Pzz+/DF7NsH0TJMll3E=;
-        b=4GmtMp8FS4kvV0sC8dJyAlSDdoTr1eiE/h4eGi4dV/y09UuLkhNz/89eshTv3e7P/k
-         2V1+eOSeMA0zSuM2uyK7YJtLi/rzzSEIayVF4gsIsl5q4yl1Dz2ixLhLksmkZ08FI1Lv
-         LxnAnQl0jcwEee3LMsL0+nwnZdsuaG+n9AisksQwaxxOIGXWmjANoQTY3jDB33RBx+q9
-         bbVE44ETrWCPfv/WqnTWb+47gmrBYbi6TlUimKfetw5MncPt3TTckIObv2xxTPhumvZd
-         LSj/dmKL8n4glxLubXrrCb1WAujcZcFcOxZB+uT1JdyFbHNqJKK1qxg+gnj3848dG4LT
-         GpSQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=g212aaB9s6G5YiOKra2HHbgqzyT13URpuJ/igvRQHVA=;
+        b=DqnMyJ0WSh26epyzfZSwELrKFrk/MoIrsyyrYvn5MLMgwJGe6kyZybBtUiUdY7suoO
+         FLcD2c29S8QRULTKpJOwmH9JJ8hcRsfzkk/ncVl+i+mtKcTP0gb45f75oo3eCmeufngb
+         h4/boH22JRwrtL9KDPquWyNyEs0MAqO9LFvvpQTjXbwDz14i8rU8Hq3b0ohRDqPZGyY/
+         GNrSeYJJrXbSLqIpqf1/iasLBI36X5Nxxuu4DXmRZFi00B8jp+2MOSV0cqs/TJw/9GkQ
+         82j49aUhwwcY35ibLBTFOPhwkEQLmy2BOGCaHw+TVpLpDTuMbglsaK48J8+rJRgVgQEd
+         EgBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=zu/La+x+mpg9RbS6KzOiMcR3Pzz+/DF7NsH0TJMll3E=;
-        b=QWivdODPP5n9CqQr98mLpt2QG6OVbT3cBeNrf/qzcpJWUv3pOOeeoS9Ae+FtbR/1IC
-         J7Al6jf7pXvnhwzMd3qwhV/Stu08FLbJUMzDRxGjdbPyJf/xDnKeKHQAX+tX/YKJyNQS
-         //Zf3O5P03rKvokmEuYc5p6Jzo+XxcvZHX9l/IdRcsrdh5qcZ75x5Oo1JVTizjldh+sY
-         h0VbQQFKnstogI1tO2Vofw3NUMUKZo1+inwFvN8ELNnMq+EJpWHIIpIo53l17eahLzqA
-         3EfiRZGGwkWYYMfCvcQWGvkMQZbzD59DgPb5Q2mYrzsGoH/QP19BU6sUshEVo2HwI3S6
-         aNJQ==
-X-Gm-Message-State: ACrzQf0E9MYjfhIZspP7UstL6x3aIKeN9Zremydu5MoIzTXZ+lZtsPE/
-        myZ/oaWbVN+IiRXDyBnuYgwJFkz5TaqiWZYLNVO+5i6CAfxmDA==
-X-Google-Smtp-Source: AMsMyM6t0dzsEN8zI2x07k/UlGz3qtD6DQMIpEajWDiAzlPr9fzEqxhzzQWYxEuyJ6uMgW/USf5taysjv/4DflS4r0I=
-X-Received: by 2002:aa7:dd02:0:b0:44e:f7af:b996 with SMTP id
- i2-20020aa7dd02000000b0044ef7afb996mr2311635edv.422.1663838533258; Thu, 22
- Sep 2022 02:22:13 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=g212aaB9s6G5YiOKra2HHbgqzyT13URpuJ/igvRQHVA=;
+        b=VT2tmfZSVj0Ic8chFCixf0E7Fq9ksp6dOV+zHOnb1QPYCVHbByMs+qFnl5kEl3odTY
+         nbFx4gIUy/6oDoFXRBsHaPhMW2lgmZ5fLf3DoNYZDDYfJn28mc6VlpKf+IMfugaIHtQA
+         RPfrGJw8rfDIzdW2NY0P4Ccchf4jQrjABHqSsM32+t09+ZVEi2liLMnW91TR3Qafe0fM
+         2XeknDjELvJwUKG3FpyzCngLcuUsvxAOPx69FyeYqIkTsyb7QyoqoZG0LFUfyJ9WUref
+         Lx4zdDBygFLkJMk3xDx/s8UxUxHLI3dOgMz1gWE0juUniMM1WvbVtihTc/XNmpmhqj+9
+         or7Q==
+X-Gm-Message-State: ACrzQf2fYr47Svxl7dr1Zo2sdkPwGJJJG3rg3/cs1cBR2PIq2jHA3Bs+
+        sJ2Av5GUty1BcdfhH8rwGJWCvf5l4BLIFlEQjkbfBA==
+X-Google-Smtp-Source: AMsMyM6dtKQTIJXG+dOR6Cz9VoVggP/7sOOEdaN+UvoxMPfgNyRHi96wgGZFUZAvZ6zPn5aqu8M9PiSu+CFXYiD2av8=
+X-Received: by 2002:a05:6402:b85:b0:44e:dad7:3e24 with SMTP id
+ cf5-20020a0564020b8500b0044edad73e24mr2416321edb.264.1663839558176; Thu, 22
+ Sep 2022 02:39:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220921155436.235371-1-sashal@kernel.org> <20220921155436.235371-2-sashal@kernel.org>
- <fec2e2e2e74d680d5f9de6d68fb5fe18@kernel.org> <CAMRc=MexqLhu3ZWt1AbzBestswqmHNpct1LQiif0JGECTjHz4Q@mail.gmail.com>
- <87illfkbtk.wl-maz@kernel.org>
-In-Reply-To: <87illfkbtk.wl-maz@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 22 Sep 2022 11:22:02 +0200
-Message-ID: <CAMRc=Md9JKdW8wmbun_0_1y2RQbck7q=vzOkdw6n+FBgpf0h8w@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.4 2/5] gpio: ixp4xx: Make irqchip immutable
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        linusw@kernel.org, kaloz@openwrt.org, khalasa@piap.pl,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+References: <20220921164741.757857192@linuxfoundation.org>
+In-Reply-To: <20220921164741.757857192@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 22 Sep 2022 15:09:06 +0530
+Message-ID: <CA+G9fYuULy6jqbWznNSYz5bhOebTXgCSLEnznmsb+LsesEN5oA@mail.gmail.com>
+Subject: Re: [PATCH 5.19 00/39] 5.19.11-rc2 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+        slade@sladewatkins.com,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 22, 2022 at 11:17 AM Marc Zyngier <maz@kernel.org> wrote:
+On Wed, 21 Sept 2022 at 22:18, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Hi Bartosz,
+> This is the start of the stable review cycle for the 5.19.11 release.
+> There are 39 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> On Wed, 21 Sep 2022 21:04:27 +0100,
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > On Wed, Sep 21, 2022 at 6:57 PM Marc Zyngier <maz@kernel.org> wrote:
-> > >
-> > > On 2022-09-21 16:54, Sasha Levin wrote:
-> > > > From: Linus Walleij <linus.walleij@linaro.org>
-> > > >
-> > > > [ Upstream commit 94e9bc73d85aa6ecfe249e985ff57abe0ab35f34 ]
-> > > >
-> > > > This turns the IXP4xx GPIO irqchip into an immutable
-> > > > irqchip, a bit different from the standard template due
-> > > > to being hierarchical.
-> > > >
-> > > > Tested on the IXP4xx which uses drivers/ata/pata_ixp4xx_cf.c
-> > > > for a rootfs on compact flash with IRQs from this GPIO
-> > > > block to the CF ATA controller.
-> > > >
-> > > > Cc: Marc Zyngier <maz@kernel.org>
-> > > > Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> > > > Acked-by: Marc Zyngier <maz@kernel.org>
-> > > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > > > Signed-off-by: Sasha Levin <sashal@kernel.org>
-> > >
-> > > Why? The required dependencies are only in 5,19, and are
-> > > definitely NOT a stable candidate...
-> > >
-> > > This isn't a fix by any stretch of the imagination.
-> > >
-> >
-> > Hi Marc,
-> >
-> > While I didn't mark it for stable (and it shouldn't go into any branch
-> > earlier than 5.19.x), I did send the patches making the irqchips
-> > immutable to Linus Torvalds as fixes as they technically do *fix* the
-> > warning emitted by gpiolib and make the implementation correct.
-> >
-> > I think these patches should still be part of the v5.19.x stable branch.
+> Responses should be made by Fri, 23 Sep 2022 16:47:28 +0000.
+> Anything received after that time might be too late.
 >
-> 5.19, sure. All the dependencies are there, and tightening the driver
-> implementations is a valuable goal.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.19.11-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.19.y
+> and the diffstat can be found below.
 >
-> However, targeting all the other stable releases (5.4, 5.10, 5.15)
-> makes little sense. It won't even compile! Do the dependencies need to
-> be backported? I don't think it is worthwhile, as this is a long
-> series containing multiple related changes spread all over the tree.
-> This would defeat the very purpose of a stable tree.
+> thanks,
 >
+> greg k-h
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-That's what I'm saying. All the conversions to immutable irqchips
-should go to v5.19 but nowhere else.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I thought that by saying "This isn't a fix by any stretch of the
-imagination." you meant it should go like regular feature patches into
-the next merge window only.
+NOTE:
+As we have already reported from the previous stable rc review
+about the gpiod test runs causing kernel crash on 5.19. 5.15 and 5.10
 
-Sasha: can you drop this from all branches earlier than v5.19?
+This is caused by commit 303e6da99429 ("gpio: mockup: remove gpio
+debugfs when remove device")
 
-Thanks,
-Bartosz
+Crash log:
+---------
++ cd ./automated/linux/gpiod
++ ./gpiod.sh /opt/libgpiod/bin/
+[INFO]  libgpiod test suite
+[INFO]  117 tests registered
+[INFO]  checking the linux kernel version
+[INFO]  kernel release is v5.19.11 - ok to run tests
+[INFO]  using gpio-tools from '/usr/bin'
+[   11.896410] Unable to handle kernel NULL pointer dereference at
+virtual address 00000000000000a0
+[   11.897453] Mem abort info:
+[   11.897727]   ESR =3D 0x0000000096000006
+[   11.898066]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+[   11.898534]   SET =3D 0, FnV =3D 0
+[   11.898819]   EA =3D 0, S1PTW =3D 0
+[   11.899087]   FSC =3D 0x06: level 2 translation fault
+[   11.903218] Data abort info:
+[   11.903507]   ISV =3D 0, ISS =3D 0x00000006
+[   11.903832]   CM =3D 0, WnR =3D 0
+[   11.904072] user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000103292000
+[   11.904618] [00000000000000a0] pgd=3D08000001070fb003,
+p4d=3D08000001070fb003, pud=3D0800000104941003, pmd=3D0000000000000000
+[   11.905598] Internal error: Oops: 96000006 [#1] PREEMPT SMP
+[   11.906088] Modules linked in: gpio_mockup(-) bluetooth cfg80211
+rfkill crct10dif_ce fuse drm
+[   11.906899] CPU: 3 PID: 366 Comm: gpiod-test Not tainted 5.19.11-rc2 #1
+[   11.907491] Hardware name: linux,dummy-virt (DT)
+[   11.907932] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=
+=3D--)
+[   11.908535] pc : down_write+0x1c/0x24c
+[   11.908885] lr : simple_recursive_removal+0x50/0x280
+
+https://lore.kernel.org/lkml/CA+G9fYtxYKgqia+Crjok5yLshm3TpFwMyD8V5_-OkayA8=
+UnDww@mail.gmail.com/
+
+## Build
+* kernel: 5.19.11-rc2
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-5.19.y
+* git commit: 8d4fd61ab089cbb028a32652f9096cf53dfe54b3
+* git describe: v5.19.10-40-g8d4fd61ab089
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.19.y/build/v5.19=
+.10-40-g8d4fd61ab089
+
+## No Test Regressions (compared to v5.19.10)
+
+## No Metric Regressions (compared to v5.19.10)
+
+## No Test Fixes (compared to v5.19.10)
+
+## No Metric Fixes (compared to v5.19.10)
+
+## Test result summary
+total: 112536, pass: 99749, fail: 876, skip: 11697, xfail: 214
+
+## Build Summary
+* arc: 10 total, 10 passed, 0 failed
+* arm: 339 total, 336 passed, 3 failed
+* arm64: 72 total, 70 passed, 2 failed
+* i386: 61 total, 55 passed, 6 failed
+* mips: 62 total, 59 passed, 3 failed
+* parisc: 14 total, 14 passed, 0 failed
+* powerpc: 75 total, 66 passed, 9 failed
+* riscv: 32 total, 27 passed, 5 failed
+* s390: 26 total, 24 passed, 2 failed
+* sh: 26 total, 24 passed, 2 failed
+* sparc: 14 total, 14 passed, 0 failed
+* x86_64: 65 total, 63 passed, 2 failed
+
+## Test suites summary
+* fwts
+* igt-gpu-tools
+* kselftest-android
+* kselftest-arm64
+* kselftest-arm64/arm64.btitest.bti_c_func
+* kselftest-arm64/arm64.btitest.bti_j_func
+* kselftest-arm64/arm64.btitest.bti_jc_func
+* kselftest-arm64/arm64.btitest.bti_none_func
+* kselftest-arm64/arm64.btitest.nohint_func
+* kselftest-arm64/arm64.btitest.paciasp_func
+* kselftest-arm64/arm64.nobtitest.bti_c_func
+* kselftest-arm64/arm64.nobtitest.bti_j_func
+* kselftest-arm64/arm64.nobtitest.bti_jc_func
+* kselftest-arm64/arm64.nobtitest.bti_none_func
+* kselftest-arm64/arm64.nobtitest.nohint_func
+* kselftest-arm64/arm64.nobtitest.paciasp_func
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-drivers-dma-buf
+* kselftest-efivarfs
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-futex
+* kselftest-gpio
+* kselftest-ipc
+* kselftest-ir
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-lib
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-memory-hotplug
+* kselftest-mincore
+* kselftest-mount
+* kselftest-mqueue
+* kselftest-netfilter
+* kselftest-nsfs
+* kselftest-openat2
+* kselftest-pid_namespace
+* kselftest-pidfd
+* kselftest-proc
+* kselftest-pstore
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-splice
+* kselftest-static_keys
+* kselftest-sync
+* kselftest-sysctl
+* kselftest-tc-testing
+* kselftest-timens
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user
+* kselftest-vm
+* kselftest-zram
+* kunit
+* kvm-unit-tests
+* libhugetlbfs
+* log-parser-boot
+* log-parser-test
+* ltp-cap_bounds
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-fsx
+* ltp-hugetlb
+* ltp-io
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-open-posix-tests
+* ltp-pty
+* ltp-sched
+* ltp-securebits
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* network-basic-tests
+* rcutorture
+* v4l2-compliance
+* vdso
+
+--
+Linaro LKFT
+https://lkft.linaro.org
