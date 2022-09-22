@@ -2,288 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 259B15E5EBE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 11:39:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 406B95E5EF2
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 11:51:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230037AbiIVJjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 05:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58330 "EHLO
+        id S229805AbiIVJvh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 05:51:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbiIVJjV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 05:39:21 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80DFD4A88
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:39:19 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id e17so12727217edc.5
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:39:19 -0700 (PDT)
+        with ESMTP id S230492AbiIVJv3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 05:51:29 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE2FD6934
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:51:28 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id r133-20020a1c448b000000b003b494ffc00bso997066wma.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 02:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=g212aaB9s6G5YiOKra2HHbgqzyT13URpuJ/igvRQHVA=;
-        b=DqnMyJ0WSh26epyzfZSwELrKFrk/MoIrsyyrYvn5MLMgwJGe6kyZybBtUiUdY7suoO
-         FLcD2c29S8QRULTKpJOwmH9JJ8hcRsfzkk/ncVl+i+mtKcTP0gb45f75oo3eCmeufngb
-         h4/boH22JRwrtL9KDPquWyNyEs0MAqO9LFvvpQTjXbwDz14i8rU8Hq3b0ohRDqPZGyY/
-         GNrSeYJJrXbSLqIpqf1/iasLBI36X5Nxxuu4DXmRZFi00B8jp+2MOSV0cqs/TJw/9GkQ
-         82j49aUhwwcY35ibLBTFOPhwkEQLmy2BOGCaHw+TVpLpDTuMbglsaK48J8+rJRgVgQEd
-         EgBw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=Rb6Uqyu2WzSu+tRX/bDFi/OcXRyj4UgkaGzj9qUzolE=;
+        b=mydLPdcLUohCzu0hbeaFRSooVdLuyge+vxFQ007ccw1+sbhoSEQgKtho2/RwWuJDi+
+         HpFcWch8GoaEbnTculZHJDynzXkPeZlxwr14mklIJ90tNZW77F873v7JMCXJJnMi0y3g
+         gCxO6uT92/OJczpGrRI/tRE1EytXK5AcuKY5Ft+3ZJ26wtrJ5jS5eUPSkNthxAywOnnV
+         aHxhxEG3JV+S7bv3Hkhwc68hsEQxPwMDtur8jCiqqex82JX0VkyF3gx0ezoWrsKH/aFR
+         g0NROJyChhz6U2k5NYjkSLzYdU7W/Q6xju1ktkoP9v8DilgD9xCOuSDooxltX+8BlTO2
+         Ab2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=g212aaB9s6G5YiOKra2HHbgqzyT13URpuJ/igvRQHVA=;
-        b=VT2tmfZSVj0Ic8chFCixf0E7Fq9ksp6dOV+zHOnb1QPYCVHbByMs+qFnl5kEl3odTY
-         nbFx4gIUy/6oDoFXRBsHaPhMW2lgmZ5fLf3DoNYZDDYfJn28mc6VlpKf+IMfugaIHtQA
-         RPfrGJw8rfDIzdW2NY0P4Ccchf4jQrjABHqSsM32+t09+ZVEi2liLMnW91TR3Qafe0fM
-         2XeknDjELvJwUKG3FpyzCngLcuUsvxAOPx69FyeYqIkTsyb7QyoqoZG0LFUfyJ9WUref
-         Lx4zdDBygFLkJMk3xDx/s8UxUxHLI3dOgMz1gWE0juUniMM1WvbVtihTc/XNmpmhqj+9
-         or7Q==
-X-Gm-Message-State: ACrzQf2fYr47Svxl7dr1Zo2sdkPwGJJJG3rg3/cs1cBR2PIq2jHA3Bs+
-        sJ2Av5GUty1BcdfhH8rwGJWCvf5l4BLIFlEQjkbfBA==
-X-Google-Smtp-Source: AMsMyM6dtKQTIJXG+dOR6Cz9VoVggP/7sOOEdaN+UvoxMPfgNyRHi96wgGZFUZAvZ6zPn5aqu8M9PiSu+CFXYiD2av8=
-X-Received: by 2002:a05:6402:b85:b0:44e:dad7:3e24 with SMTP id
- cf5-20020a0564020b8500b0044edad73e24mr2416321edb.264.1663839558176; Thu, 22
- Sep 2022 02:39:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220921164741.757857192@linuxfoundation.org>
-In-Reply-To: <20220921164741.757857192@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Thu, 22 Sep 2022 15:09:06 +0530
-Message-ID: <CA+G9fYuULy6jqbWznNSYz5bhOebTXgCSLEnznmsb+LsesEN5oA@mail.gmail.com>
-Subject: Re: [PATCH 5.19 00/39] 5.19.11-rc2 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        slade@sladewatkins.com,
-        William Breathitt Gray <william.gray@linaro.org>,
-        Wei Yongjun <weiyongjun1@huawei.com>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=Rb6Uqyu2WzSu+tRX/bDFi/OcXRyj4UgkaGzj9qUzolE=;
+        b=xd5Mc3A1zkhFy523iOordXgdlvoGUi1momxdnPyLwB7o88kbNmjWLBJRaSpB1/nd7V
+         eqlqNxfpTNmoFVxHAeBPYBbg1bznSYvl7+QMMEivznwnVPs9uu47BhqfyXYfh4j2cCsI
+         Qbo/EY6oInUqclK2RnIg69Tbn+Dyd7lvqxtkM66HNEa4972vHNFaXxF0iCkig/x5AEso
+         MIeyWZ80DjcXwnr9uHKf3U/Xiob/pXPkPxv7L0pnsNKc5S5L52QqdmuWCwLhwmKiyKfm
+         CAtkphVFidq0koxnvMfbQfK3OUcTloWsgdEvUzdvzz3WAsROL8w/9FExstUpdSGPZ0TZ
+         Py9g==
+X-Gm-Message-State: ACrzQf3X6VNOFrs0vE7wUDx936aZSsWN+EyNFBg1wHD/2MvGRq9953to
+        ycNsN6sPC+ut7m1StTfiAHC0PNKJvGe0Lw==
+X-Google-Smtp-Source: AMsMyM4mLRf9XgS0jE921KojXuOJe3rRkOvcZYptbEnVTm6qkFm5bRmNQ7NSJ8ezshPP29S0Jq53uw==
+X-Received: by 2002:a7b:c047:0:b0:3b4:adc7:1ecb with SMTP id u7-20020a7bc047000000b003b4adc71ecbmr1699644wmc.144.1663840286468;
+        Thu, 22 Sep 2022 02:51:26 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8b36:6d:2c67:43fd])
+        by smtp.gmail.com with ESMTPSA id h4-20020a05600c350400b003a3170a7af9sm7139124wmq.4.2022.09.22.02.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 02:51:26 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v2] gpiolib: cdev: add fdinfo output for line request file descriptors
+Date:   Thu, 22 Sep 2022 11:51:24 +0200
+Message-Id: <20220922095124.116116-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 21 Sept 2022 at 22:18, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.19.11 release.
-> There are 39 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 23 Sep 2022 16:47:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.19.11-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.19.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Add fdinfo output for file descriptors created for user-space line
+requests in GPIO uAPI v2. The fdinfo file now contains the name of the
+GPIO chip that is the "parent" of the request as well as offsets of
+the lines requested. This allows user-space to parse the /proc/$PID/fdinfo
+entries and deduce the PID of the process that requested a specific line.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
+---
+v1 -> v2:
+  - change `gpio-device` to `gpio-chip` in the fdinfo output
+  - change deduct into deduce as suggested by Kent in the commit message
 
-NOTE:
-As we have already reported from the previous stable rc review
-about the gpiod test runs causing kernel crash on 5.19. 5.15 and 5.10
+ drivers/gpio/gpiolib-cdev.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-This is caused by commit 303e6da99429 ("gpio: mockup: remove gpio
-debugfs when remove device")
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index f8041d4898d1..01c15e9e6896 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -1497,6 +1497,21 @@ static int linereq_release(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static void linereq_show_fdinfo(struct seq_file *out, struct file *file)
++{
++	struct linereq *lr = file->private_data;
++	struct device *dev = &lr->gdev->dev;
++	u16 i;
++
++	seq_printf(out, "gpio-chip:\t%s\n", dev_name(dev));
++
++	for (i = 0; i < lr->num_lines; i++)
++		seq_printf(out, "gpio-line:\t%d\n",
++			   gpio_chip_hwgpio(lr->lines[i].desc));
++}
++#endif
++
+ static const struct file_operations line_fileops = {
+ 	.release = linereq_release,
+ 	.read = linereq_read,
+@@ -1507,6 +1522,9 @@ static const struct file_operations line_fileops = {
+ #ifdef CONFIG_COMPAT
+ 	.compat_ioctl = linereq_ioctl_compat,
+ #endif
++#ifdef CONFIG_PROC_FS
++	.show_fdinfo = linereq_show_fdinfo,
++#endif
+ };
+ 
+ static int linereq_create(struct gpio_device *gdev, void __user *ip)
+-- 
+2.34.1
 
-Crash log:
----------
-+ cd ./automated/linux/gpiod
-+ ./gpiod.sh /opt/libgpiod/bin/
-[INFO]  libgpiod test suite
-[INFO]  117 tests registered
-[INFO]  checking the linux kernel version
-[INFO]  kernel release is v5.19.11 - ok to run tests
-[INFO]  using gpio-tools from '/usr/bin'
-[   11.896410] Unable to handle kernel NULL pointer dereference at
-virtual address 00000000000000a0
-[   11.897453] Mem abort info:
-[   11.897727]   ESR =3D 0x0000000096000006
-[   11.898066]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-[   11.898534]   SET =3D 0, FnV =3D 0
-[   11.898819]   EA =3D 0, S1PTW =3D 0
-[   11.899087]   FSC =3D 0x06: level 2 translation fault
-[   11.903218] Data abort info:
-[   11.903507]   ISV =3D 0, ISS =3D 0x00000006
-[   11.903832]   CM =3D 0, WnR =3D 0
-[   11.904072] user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000103292000
-[   11.904618] [00000000000000a0] pgd=3D08000001070fb003,
-p4d=3D08000001070fb003, pud=3D0800000104941003, pmd=3D0000000000000000
-[   11.905598] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[   11.906088] Modules linked in: gpio_mockup(-) bluetooth cfg80211
-rfkill crct10dif_ce fuse drm
-[   11.906899] CPU: 3 PID: 366 Comm: gpiod-test Not tainted 5.19.11-rc2 #1
-[   11.907491] Hardware name: linux,dummy-virt (DT)
-[   11.907932] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[   11.908535] pc : down_write+0x1c/0x24c
-[   11.908885] lr : simple_recursive_removal+0x50/0x280
-
-https://lore.kernel.org/lkml/CA+G9fYtxYKgqia+Crjok5yLshm3TpFwMyD8V5_-OkayA8=
-UnDww@mail.gmail.com/
-
-## Build
-* kernel: 5.19.11-rc2
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.19.y
-* git commit: 8d4fd61ab089cbb028a32652f9096cf53dfe54b3
-* git describe: v5.19.10-40-g8d4fd61ab089
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.19.y/build/v5.19=
-.10-40-g8d4fd61ab089
-
-## No Test Regressions (compared to v5.19.10)
-
-## No Metric Regressions (compared to v5.19.10)
-
-## No Test Fixes (compared to v5.19.10)
-
-## No Metric Fixes (compared to v5.19.10)
-
-## Test result summary
-total: 112536, pass: 99749, fail: 876, skip: 11697, xfail: 214
-
-## Build Summary
-* arc: 10 total, 10 passed, 0 failed
-* arm: 339 total, 336 passed, 3 failed
-* arm64: 72 total, 70 passed, 2 failed
-* i386: 61 total, 55 passed, 6 failed
-* mips: 62 total, 59 passed, 3 failed
-* parisc: 14 total, 14 passed, 0 failed
-* powerpc: 75 total, 66 passed, 9 failed
-* riscv: 32 total, 27 passed, 5 failed
-* s390: 26 total, 24 passed, 2 failed
-* sh: 26 total, 24 passed, 2 failed
-* sparc: 14 total, 14 passed, 0 failed
-* x86_64: 65 total, 63 passed, 2 failed
-
-## Test suites summary
-* fwts
-* igt-gpu-tools
-* kselftest-android
-* kselftest-arm64
-* kselftest-arm64/arm64.btitest.bti_c_func
-* kselftest-arm64/arm64.btitest.bti_j_func
-* kselftest-arm64/arm64.btitest.bti_jc_func
-* kselftest-arm64/arm64.btitest.bti_none_func
-* kselftest-arm64/arm64.btitest.nohint_func
-* kselftest-arm64/arm64.btitest.paciasp_func
-* kselftest-arm64/arm64.nobtitest.bti_c_func
-* kselftest-arm64/arm64.nobtitest.bti_j_func
-* kselftest-arm64/arm64.nobtitest.bti_jc_func
-* kselftest-arm64/arm64.nobtitest.bti_none_func
-* kselftest-arm64/arm64.nobtitest.nohint_func
-* kselftest-arm64/arm64.nobtitest.paciasp_func
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-drivers-dma-buf
-* kselftest-efivarfs
-* kselftest-filesystems
-* kselftest-filesystems-binderfs
-* kselftest-firmware
-* kselftest-fpu
-* kselftest-futex
-* kselftest-gpio
-* kselftest-ipc
-* kselftest-ir
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-lib
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-memory-hotplug
-* kselftest-mincore
-* kselftest-mount
-* kselftest-mqueue
-* kselftest-netfilter
-* kselftest-nsfs
-* kselftest-openat2
-* kselftest-pid_namespace
-* kselftest-pidfd
-* kselftest-proc
-* kselftest-pstore
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-splice
-* kselftest-static_keys
-* kselftest-sync
-* kselftest-sysctl
-* kselftest-tc-testing
-* kselftest-timens
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user
-* kselftest-vm
-* kselftest-zram
-* kunit
-* kvm-unit-tests
-* libhugetlbfs
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-fsx
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-open-posix-tests
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* network-basic-tests
-* rcutorture
-* v4l2-compliance
-* vdso
-
---
-Linaro LKFT
-https://lkft.linaro.org
