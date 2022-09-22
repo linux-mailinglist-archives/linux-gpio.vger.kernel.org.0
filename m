@@ -2,68 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C43635E5D90
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 10:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EED155E5D96
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Sep 2022 10:37:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbiIVIfF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 04:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56942 "EHLO
+        id S229985AbiIVIhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Sep 2022 04:37:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiIVIfE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 04:35:04 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02931EC70
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:35:02 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id e18so12527618edj.3
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:35:02 -0700 (PDT)
+        with ESMTP id S229977AbiIVIhQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 04:37:16 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C69D5A1D27
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:37:15 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id 13so19404977ejn.3
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Sep 2022 01:37:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=9k5XZsKEuVg+w97GW3NVqqtdvOIwwsJ0tLsuQ7fHq8E=;
-        b=FJ6r/HguZTeXEn2iM6s0wY+O49nKDExlr9X65U39yFCpAszdozjll8AsP0HXCfOYfk
-         3kNrRDSna3185ik/ihUdiYyEeZ/iiFE1/Zss4EfQEWuaJjbf74pQO4rJ6Ow8OH/tjdxb
-         KRgwJTsDqowN2AJMYTv0a4BM3wF4t8Oo1iADeGRe54Iaq4yX1ZmIc6VcrAM90PL51vO3
-         tXYU0mr/LyQnfoylMtgrdiTAJAqELB/GszHadpd6e75RlrPhA2meuSid8ckYg9i0dYTf
-         WBTQp9OATvFv5ckTye7qGmBmz+usPaz8gSstzHin3+pQ5OisN/cFohZ0GSTYXOMrAbtc
-         TRtQ==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=TwVaZJkLdwmom6Stee69RLiTEJKn72psfncdzouODpI=;
+        b=jdxAJwiTAFGS0B//ixBkSccbSUKqSmHlo7dcQGhPy0FAOjJQPeqG0s8qNE6vwXngsd
+         Sx18XH3h/nVh3UKgU0cvSlBmvr/z2TyRoG3ptmTNRK7o5QMLyfKSG0NMAN8+CNSnrysp
+         odOzxlwAzfZfZDBLxLhGiWXdSrZJuOD66dWxlnUOEowakrWXUjs19IsxP6WsH4kBGJqG
+         9oCdbtZkjfkKD8tEft8Dk1bslOuxZ0x30lce+IyVpKyg78G86X+4fShmiJEiUEdZ+48M
+         KUAc3k/KZ3oFWs8dBRycJQFgUM81d/pIrCLHY8xRG1UGlF2jkwaU2+2a5A95K9zxSfms
+         +j4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=9k5XZsKEuVg+w97GW3NVqqtdvOIwwsJ0tLsuQ7fHq8E=;
-        b=jQBBoQ9HNkEYKoqaPZwSLuX64lQqBYNPa6yfDmrzUhZpIKQJaNrsXOVq05tqgsUGV8
-         AVoYw90e2iB2Nt0aUC0BxWyfUuDwaaG+/G+rFkmmASK+XCcBkzTVScaIzqTaZ5c1fOp5
-         R4mDp8qE9w42Uh1XJMIXeyyNwrpnTewhK3akGptEB1Bi7RSG0ydk1c1NPeV7G8YZ5825
-         0MIMWjS7WJdoNJBhCIuuHV0MTPDQr5s808Y7KgAE6zyVzdkP8g5f0lEeqnGkFqR7HNJx
-         JxrCD8av9P/HAqQvfkox8XSNC20nnXUl61pWV8/3yvshajFTEffRCpMnIx4UDWhHxkC7
-         GrmQ==
-X-Gm-Message-State: ACrzQf0/nQjwUqs1nUWjZupR8nDvefQaj2Va5eavRLCZ5QAiMjL1/4WH
-        9i20LPM4A50D0I4dQEzF+jgutSON7j7IPgP1yhlbQg==
-X-Google-Smtp-Source: AMsMyM5Om/uY7TZ7Zkqo5JBiny2QBL7GKG4E5XX0XdXuPjTvM3Go95ggGcKvQj/ljg41n1A8wVB6KfT+jfAQZ2h1IK0=
-X-Received: by 2002:aa7:dd02:0:b0:44e:f7af:b996 with SMTP id
- i2-20020aa7dd02000000b0044ef7afb996mr2116386edv.422.1663835701030; Thu, 22
- Sep 2022 01:35:01 -0700 (PDT)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=TwVaZJkLdwmom6Stee69RLiTEJKn72psfncdzouODpI=;
+        b=K0U2Ii33nrz3vddP3jLPkanATOrLAa3Fj72mN+4JYYaHCNK6BVqDNe/QBACwgnpoXL
+         LNCbdhYpGR2ssF9oKp2CEC48HuF0g91QnRGdb0pykQtCRocaxCvBeycduOLbuSAjfVSm
+         KPPIy9urB8wbQqv8Y0IIgqjGdNoNANfDaZbiXpBiQ6AWfl5HwIUvgnm1ZWj/zk+yqBHs
+         PExFJxg3FoWII0py5EoMvsjOlAsdjcCd4ccb+8MlVQMoRvGsuQneJuRvlEP5+E/WAg64
+         KdaTn3muTMgYd+r4z01e3XXSuoJXYqIhhL2gBbDG7GDRRhjwr6PXG7A0LlSaEi51B4Hv
+         D5Dw==
+X-Gm-Message-State: ACrzQf1l0DUSMcyYslO1Ib3nQWgxY9apFNNo+W9wmUod+iWCKJBFJyyE
+        zZLhK/Kx4zBEA2L9QjI6lIwUZzn2S8YGf/pY62+/pQ==
+X-Google-Smtp-Source: AMsMyM70aN5WdtKZVMkYxt4MFoCnTTjO1UEouE/n+cIuMmbkZXDhle7VhmG91bHu0r0RObEWsdg/5pI21oePMCVrOm0=
+X-Received: by 2002:a17:907:9807:b0:781:feee:f87c with SMTP id
+ ji7-20020a170907980700b00781feeef87cmr1812708ejc.101.1663835834350; Thu, 22
+ Sep 2022 01:37:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220831134516.78108-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MdQiBHr3cDPWN_PRj2nGVoG-GJJyRNrHNwTaAUvz=35ew@mail.gmail.com>
- <2022090109473952058033@rock-chips.com> <CAMRc=McXoBqm-SBJTWdULZGep98V5-z3O9Dygkd07H=Z2k0-HA@mail.gmail.com>
- <2022090115251208267537@rock-chips.com>
-In-Reply-To: <2022090115251208267537@rock-chips.com>
+References: <20220905145555.674800-1-etienne.carriere@linaro.org>
+In-Reply-To: <20220905145555.674800-1-etienne.carriere@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 22 Sep 2022 10:34:49 +0200
-Message-ID: <CAMRc=MdZVG8PC3_SmRYn54zTx-x_UfUxnRzhsLEaYEzDS=VjRA@mail.gmail.com>
-Subject: Re: Re: [PATCH v2 1/1] gpio: rockchip: Switch to use fwnode instead
- of of_node
-To:     "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linus.walleij" <linus.walleij@linaro.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Date:   Thu, 22 Sep 2022 10:37:03 +0200
+Message-ID: <CAMRc=Mcq3u+1JjvXJ2X774vknq-LOeCfE7hLj2As7Q5A13tx0w@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -73,132 +73,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 1, 2022 at 9:25 AM jay.xu@rock-chips.com
-<jay.xu@rock-chips.com> wrote:
+On Mon, Sep 5, 2022 at 4:57 PM Etienne Carriere
+<etienne.carriere@linaro.org> wrote:
 >
-> Hi Bart
+> Changes gpio.h DT binding header file to be published under GPLv2 or
+> BSD-2-Clause license terms. This change allows this GPIO generic
+> bindings header file to be used in software components as bootloaders
+> and OSes that are not published under GPLv2 terms.
 >
-> --------------
-> jay.xu@rock-chips.com
-> >On Thu, Sep 1, 2022 at 3:47 AM jay.xu@rock-chips.com
-> ><jay.xu@rock-chips.com> wrote:
-> >>
-> >> Hi
-> >>
-> >> --------------
-> >> jay.xu@rock-chips.com
-> >> >On Wed, Aug 31, 2022 at 3:45 PM Andy Shevchenko
-> >> ><andriy.shevchenko@linux.intel.com> wrote:
-> >> >>
-> >> >> GPIO library now accepts fwnode as a firmware node, so
-> >> >> switch the driver to use it.
-> >> >>
-> >> >> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> >> >> ---
-> >> >> v2: fixed compilation errors (LKP), replace some OF calls (Bart)
-> >> >>  drivers/gpio/gpio-rockchip.c       | 38 +++++++++++-------------------
-> >> >>  drivers/pinctrl/pinctrl-rockchip.h |  2 --
-> >> >>  2 files changed, 14 insertions(+), 26 deletions(-)
-> >> >>
-> >> >> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> >> >> index bb50335239ac..e8fa99fd4c80 100644
-> >> >> --- a/drivers/gpio/gpio-rockchip.c
-> >> >> +++ b/drivers/gpio/gpio-rockchip.c
-> >> >> @@ -14,12 +14,11 @@
-> >> >>  #include <linux/init.h>
-> >> >>  #include <linux/interrupt.h>
-> >> >>  #include <linux/io.h>
-> >> >> +#include <linux/mod_devicetable.h>
-> >> >>  #include <linux/module.h>
-> >> >>  #include <linux/of.h>
-> >> >> -#include <linux/of_address.h>
-> >> >> -#include <linux/of_device.h>
-> >> >> -#include <linux/of_irq.h>
-> >> >>  #include <linux/pinctrl/pinconf-generic.h>
-> >> >> +#include <linux/property.h>
-> >> >>  #include <linux/regmap.h>
-> >> >>
-> >> >>  #include "../pinctrl/core.h"
-> >> >> @@ -518,7 +517,7 @@ static int rockchip_interrupts_register(struct rockchip_pin_bank *bank)
-> >> >>         struct irq_chip_generic *gc;
-> >> >>         int ret;
-> >> >>
-> >> >> -       bank->domain = irq_domain_add_linear(bank->of_node, 32,
-> >> >> +       bank->domain = irq_domain_create_linear(dev_fwnode(bank->dev), 32,
-> >> >>                                         &irq_generic_chip_ops, NULL);
-> >> >>         if (!bank->domain) {
-> >> >>                 dev_warn(bank->dev, "could not init irq domain for bank %s\n",
-> >> >> @@ -606,14 +605,10 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-> >> >>          * files which don't set the "gpio-ranges" property or systems that
-> >> >>          * utilize ACPI the driver has to call gpiochip_add_pin_range().
-> >> >>          */
-> >> >> -       if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
-> >> >> -               struct device_node *pctlnp = of_get_parent(bank->of_node);
-> >> >> +       if (!device_property_read_bool(bank->dev, "gpio-ranges")) {
-> >> >>                 struct pinctrl_dev *pctldev = NULL;
-> >> >>
-> >> >> -               if (!pctlnp)
-> >> >> -                       return -ENODATA;
-> >> >> -
-> >> >> -               pctldev = of_pinctrl_get(pctlnp);
-> >> >> +               pctldev = pinctrl_get(bank->dev->parent);
-> >> >>                 if (!pctldev)
-> >> >>                         return -ENODEV;
-> >> >>
-> >> >> @@ -641,23 +636,20 @@ static int rockchip_gpiolib_register(struct rockchip_pin_bank *bank)
-> >> >>
-> >> >>  static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
-> >> >>  {
-> >> >> +       struct platform_device *pdev = to_platform_device(bank->dev);
-> >> >> +       struct device_node *np = bank->dev->of_node;
-> >> >>         struct resource res;
-> >> >>         int id = 0;
-> >> >>
-> >> >> -       if (of_address_to_resource(bank->of_node, 0, &res)) {
-> >> >> -               dev_err(bank->dev, "cannot find IO resource for bank\n");
-> >> >> -               return -ENOENT;
-> >> >> -       }
-> >> >> -
-> >> >> -       bank->reg_base = devm_ioremap_resource(bank->dev, &res);
-> >> >> +       bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
-> >> >>         if (IS_ERR(bank->reg_base))
-> >> >>                 return PTR_ERR(bank->reg_base);
-> >> >>
-> >> >> -       bank->irq = irq_of_parse_and_map(bank->of_node, 0);
-> >> >> +       bank->irq = platform_get_irq(pdev, 0);
-> >> >>         if (!bank->irq)
-> >> >>                 return -EINVAL;
-> >> >>
-> >> >> -       bank->clk = of_clk_get(bank->of_node, 0);
-> >> >> +       bank->clk = of_clk_get(np, 0);
-> >> >
-> >> >Why did you stop above? Why not regular clk_get here?
-> >> >
-> >> >>         if (IS_ERR(bank->clk))
-> >> >>                 return PTR_ERR(bank->clk);
-> >> >>
-> >> >> @@ -668,7 +660,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank)
-> >> >>         if (id == GPIO_TYPE_V2 || id == GPIO_TYPE_V2_1) {
-> >> >>                 bank->gpio_regs = &gpio_regs_v2;
-> >> >>                 bank->gpio_type = GPIO_TYPE_V2;
-> >> >> -               bank->db_clk = of_clk_get(bank->of_node, 1);
-> >> >> +               bank->db_clk = of_clk_get(np, 1);
-> >> >
-> >> >Ah, the clocks don't have names in DT? That's unfortunate...
-> >>
-> >> The patch add 'clock-names' property for gpio dt node, after that, the driver can change to
-> >> devm_clk_get(dev, "bus");
-> >> devm_clk_get(dev, "db");
-> >>
-> >
-> >We can't unfortunately, we need to remain compatible with existing DTs.
-> >
-> As said in the patch comment, the 'clock-names' is not 'required' since existing DTs
-> Do the driver can try get by id first and then do a second try with legency way without id ?
+> All contributors to gpio.h file in copy.
 >
-> or other suggestion ?
+> Cc: Stephen Warren <swarren@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Laxman Dewangan <ldewangan@nvidia.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 >
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> ---
 
-No, it sounds good to me.
+Applied, thanks!
 
 Bart
