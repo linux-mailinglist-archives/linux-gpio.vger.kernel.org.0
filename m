@@ -2,93 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B3BF5E78AE
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 12:50:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 082145E7D96
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 16:52:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbiIWKus (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Sep 2022 06:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55440 "EHLO
+        id S229461AbiIWOwL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Sep 2022 10:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231835AbiIWKuW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 06:50:22 -0400
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9069B5AC6E
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 03:50:16 -0700 (PDT)
-Received: from p508fdb48.dip0.t-ipconnect.de ([80.143.219.72] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <heiko@sntech.de>)
-        id 1obgG2-00062d-Uv; Fri, 23 Sep 2022 12:50:11 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     "linus. walleij" <linus.walleij@linaro.org>,
-        "jay.xu@rock-chips.com" <jay.xu@rock-chips.com>
-Cc:     Johan Jonker <jbx6244@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Subject: Re: [PATCH v2 RESEND 0/2] rockchip pinctrl for acpi
-Date:   Fri, 23 Sep 2022 12:50:10 +0200
-Message-ID: <2678726.jE0xQCEvom@phil>
-In-Reply-To: <202209231835365953827@rock-chips.com>
-References: <20220917060929.657778-1-jay.xu@rock-chips.com> <2419940.Icojqenx9y@phil> <202209231835365953827@rock-chips.com>
+        with ESMTP id S229577AbiIWOwL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 10:52:11 -0400
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3FB12B4BF;
+        Fri, 23 Sep 2022 07:52:09 -0700 (PDT)
+Received: (Authenticated sender: foss@0leil.net)
+        by mail.gandi.net (Postfix) with ESMTPSA id 2271C60003;
+        Fri, 23 Sep 2022 14:52:02 +0000 (UTC)
+From:   Quentin Schulz <foss+kernel@0leil.net>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
+        jay.xu@rock-chips.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        foss+kernel@0leil.net,
+        Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Subject: [PATCH 0/2] fix gpio-sysfs/libgpiod for rockchip
+Date:   Fri, 23 Sep 2022 16:51:39 +0200
+Message-Id: <20220923145141.3463754-1-foss+kernel@0leil.net>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_PASS,
-        T_SPF_HELO_TEMPERROR autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Jay,
+From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
 
-Am Freitag, 23. September 2022, 12:35:36 CEST schrieb jay.xu@rock-chips.com:
-> Hi heiko
-> 
-> --------------
-> jay.xu@rock-chips.com
-> >Am Dienstag, 20. September 2022, 11:26:26 CEST schrieb Linus Walleij:
-> >> On Sat, Sep 17, 2022 at 8:09 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
-> >>
-> >> > These patch fixes to support acpi by:
-> >> > 1. populate gpio platform before pinctrl to probe
-> >> > 2. get gpiochip by finding from gpiochip list
-> >> > 3. get match data by device api
-> >> >
-> >> > Jianqun Xu (2):
-> >> >   pinctrl: rockchip: find gpiochip by name from gpio module
-> >> >   pinctrl: rockchip: get match data by device_get_match_data
-> >>
-> >> These look OK to me but I would feel better if Heiko or Andy ACK:ed
-> >> them so I give them a few more days to comment.
-> >
-> >Right now I'm actually quite confused as I seem to have a bunch
-> >of pinctrl/gpio-acpi patchsets of varying lengths in my inbox.
-> >
-> >There is a "v2", a "v8", a 20-patchset without version.
-> >It's all quite confusing.
-> > 
-> From v2 to v8, I summit fixes in one patch, and them sugguested by Andy, I try to separate them
-> into small patches 20-patchset.
-> 
-> The heart change is 
-> 
-> current
-> 1. pinctrl register first
-> 2. gpiochip register and find pinctrl device to add pin range
-> 
-> this patch fix to
-> 1. gpiochip register itself
-> 2. pinctrl register and find all gpiochips and add pin range
-> 
-> Please help to review directly to 20-patchset, I will add some suggested-by and acked-by later
+Since the split of gpio and pinctrl in their own driver, gpio-sysfs and
+libgpiod userspace GPIO handling has been broken because the pins aren't
+put into their GPIO function anymore since pinctrl subsystem is
+"bypassed" when requesting GPIOs from userspace.
 
-ok, I'll drop all the other acpi/pinctrl/gpio sets and move to the 20-patch-series.
+This fixes it by making the gpio driver actually request from the
+pinctrl subsystem to put the pin in its GPIO function when the GPIO
+direction is set in userspace.
 
-Thanks for the clarification
-Heiko
+I discovered the issue because we have a GPIO the user needs to control
+from userspace to flash FW on an on-board STM32 that is actually on the
+same pin as one used by the flash controller. Considering the storage
+medium tried by the BOOTROM is emmc->nor->nand->sdmmc, booting from emmc
+didn't show the issue because the default function for pins is GPIO and
+the flash controller pins didn't need to be muxed by the BOOTROM.
+However, if there's nothing on emmc, the BOOTROM does the pinmux for SPI
+controller and puts the pins in their flash mode and therefore the
+handling of that pin as a GPIO from userspace was not possible, but only
+when booting on something else than eMMC.
 
+This restores the behavior as seen in v5.14 and earlier.
+
+Cheers,
+Quentin
+
+Quentin Schulz (2):
+  pinctrl: rockchip: add pinmux_ops.gpio_set_direction callback
+  gpio: rockchip: request GPIO mux to pinctrl when setting direction
+
+ drivers/gpio/gpio-rockchip.c       |  6 ++++++
+ drivers/pinctrl/pinctrl-rockchip.c | 13 +++++++++++++
+ 2 files changed, 19 insertions(+)
+
+-- 
+2.37.3
 
