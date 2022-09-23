@@ -2,91 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27BBA5E71FD
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 04:40:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 406075E74F7
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 09:39:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbiIWCk1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Sep 2022 22:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47180 "EHLO
+        id S229766AbiIWHjS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Sep 2022 03:39:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232321AbiIWCkO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Sep 2022 22:40:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD4D0814E1;
-        Thu, 22 Sep 2022 19:40:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E9A4562312;
-        Fri, 23 Sep 2022 02:40:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CAEC433D6;
-        Fri, 23 Sep 2022 02:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663900811;
-        bh=hgq+etZgS87xH2btz4n6jRvDNnpE64NXArdWf7MXyWY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XtwC/a9MRb7JQ+wackPWqjdh8FAmAxXUoZpv8BK0SFWWzF6OWlWalvHK5rGtr1WyO
-         +OBiJbghM7JCIazeGlnwOps0QNNUvSZamTboCDJPIj17KCSWL7WMDxwcabUWJ0pBdf
-         UY7fPs+H2LxOD+ZoDpvuiW+rNA/nvBeOGW7Or1arP2dMrKE5XegQPUaCnMJqfEor3L
-         vzps27NKU4/4oJCA5fHjMirZFYKlIDe+KWqqVih1ocd2zohZcyjeyoIQKFLGhlwYdd
-         23FDRjD8fbjjSLxnLAVKJVHVrYVVVIU01hslIZIoGHTVMFtkt+IFJ2j9Y/z2KGBF9w
-         d0+XUpFkOzilw==
-Date:   Thu, 22 Sep 2022 19:40:09 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Colin Foster <colin.foster@in-advantage.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 net-next 08/14] net: dsa: felix: update init_regmap
- to be string-based
-Message-ID: <20220922194009.276371fc@kernel.org>
-In-Reply-To: <20220922193906.7ab18960@kernel.org>
-References: <20220922040102.1554459-1-colin.foster@in-advantage.com>
-        <20220922040102.1554459-9-colin.foster@in-advantage.com>
-        <20220922193906.7ab18960@kernel.org>
+        with ESMTP id S229706AbiIWHjR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 03:39:17 -0400
+Received: from mail.fadrush.pl (mail.fadrush.pl [54.37.225.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AE212849A
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 00:39:16 -0700 (PDT)
+Received: by mail.fadrush.pl (Postfix, from userid 1002)
+        id 844A922730; Fri, 23 Sep 2022 07:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fadrush.pl; s=mail;
+        t=1663918755; bh=bD6j9gIFU6CLTaCGl0Ow9oeIxtirvTfMeNZSfLEZQ+I=;
+        h=Date:From:To:Subject:From;
+        b=QhPdWHlUm96mk8GXhKhWN7iSZonYFHp0ggzba5OUtvdVFxqnlzpTU+dpijQZNW1MO
+         CQj/uYb7tidh4FydMnatqrLnk4lPze4G/DDYgp+NillraStuSADiM0FJBO8hAxaDAL
+         AI6TNFsWvNz0KtUhcrkab5xlycg2I1r8Jsc25o54IdN/o8rgVBth1uILQ2pKN6tfRV
+         ngvSC36xuj2DO3eq5xwLHlSDroejg0BRnMRgu+W95bMEvLAHM9YUMAlCMuNw61PP8C
+         VaQvbgCSrkRvHVLXKYlj4cH74q4CfnEPIJalsz2MbPCt7ZtQfcAd5P5iKS8knhFZ2v
+         2+CWd0KxjAerg==
+Received: by mail.fadrush.pl for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 07:36:05 GMT
+Message-ID: <20220923064500-0.1.1t.ha56.0.nuecjam917@fadrush.pl>
+Date:   Fri, 23 Sep 2022 07:36:05 GMT
+From:   "Jakub Olejniczak" <jakub.olejniczak@fadrush.pl>
+To:     <linux-gpio@vger.kernel.org>
+Subject: =?UTF-8?Q?Zwi=C4=99kszenie_p=C5=82ynno=C5=9Bci_finansowej?=
+X-Mailer: mail.fadrush.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 22 Sep 2022 19:39:06 -0700 Jakub Kicinski wrote:
-> On Wed, 21 Sep 2022 21:00:56 -0700 Colin Foster wrote:
-> > During development, it was believed that a wrapper for ocelot_regmap_init()
-> > would be sufficient for the felix driver to work in non-mmio scenarios.
-> > This was merged in during commit 242bd0c10bbd ("net: dsa: ocelot: felix:
-> > add interface for custom regmaps")
-> > 
-> > As the external ocelot DSA driver grew closer to an acceptable state, it
-> > was realized that most of the parameters that were passed in from struct
-> > resource *res were useless and ignored. This is due to the fact that the
-> > external ocelot DSA driver utilizes dev_get_regmap(dev, resource->name).
-> > 
-> > Instead of simply ignoring those parameters, refactor the API to only
-> > require the name as an argument. MMIO scenarios this will reconstruct the
-> > struct resource before calling ocelot_regmap_init(ocelot, resource). MFD
-> > scenarios need only call dev_get_regmap(dev, name).
+Dzie=C5=84 dobry,
 
-Ah, and the modpost:
+kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, poniewa=C5=BC chcia=C5=82bym za=
+proponowa=C4=87 wygodne rozwi=C4=85zanie, kt=C3=B3re umo=C5=BCliwi Pa=C5=84=
+stwa firmie stabilny rozw=C3=B3j.=20
 
-ERROR: modpost: drivers/net/dsa/ocelot/mscc_seville: 'felix_init_regmap' exported twice. Previous export was in drivers/net/dsa/ocelot/mscc_felix.ko
+Konkurencyjne otoczenie wymaga ci=C4=85g=C5=82ego ulepszania i poszerzeni=
+a oferty, co z kolei wi=C4=85=C5=BCe si=C4=99 z konieczno=C5=9Bci=C4=85 i=
+nwestowania. Brak odpowiedniego kapita=C5=82u powa=C5=BCnie ogranicza tem=
+po rozwoju firmy.
+
+Od wielu lat z powodzeniem pomagam firmom w uzyskaniu najlepszej formy fi=
+nansowania z banku oraz UE. Mam sta=C5=82ych Klient=C3=B3w, kt=C3=B3rzy n=
+adal ch=C4=99tnie korzystaj=C4=85 z moich us=C5=82ug, a tak=C5=BCe poleca=
+j=C4=85 je innym.
+
+Czy chcieliby Pa=C5=84stwo skorzysta=C4=87 z pomocy wykwalifikowanego i d=
+o=C5=9Bwiadczonego doradcy finansowego?
+
+
+Pozdrawiam
+Jakub Olejniczak
