@@ -2,113 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BEEF5E786A
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 12:32:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DBAA5E786F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 12:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231371AbiIWKct (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Sep 2022 06:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56984 "EHLO
+        id S229512AbiIWKdv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Sep 2022 06:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230424AbiIWKcP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 06:32:15 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5565311E5FA
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 03:31:59 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id p5so14084509ljc.13
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 03:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=JYMmhfkFM4ANd32GEEelSBV88bdLE1Ja446ByYHiaXA=;
-        b=NeRn+B9WRWOsoR9LzOGZJy5GxoiA1NB6ylwd4hE/tqg/RSCDyuM/KHVHuT2kA9FRSK
-         c7V57vIhgWsR8e0J1Jdr+U55ja/VyEJweGVSiL+1p3uxK8TvSRR4uTIzM9IjHxZ4i5ce
-         ToIM2tljUC+ybVzXLHI/fbp56eaQ02XsoXGvWZmzgg9nQYuCH1ehvArcYsRfsbibCvQW
-         rmITz0AAswRXChWK02oxfHFwpBNAU2EC66YRrCzRa9a1ZK59kgOWkYBLdtH87rFLd7c+
-         o6PDI/Hw8gqTJhu4BuPT3UZFTB/6OxwpVs9wbvQ59udQs/pNlJLckxTsDpu41MRWpIZv
-         kv1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=JYMmhfkFM4ANd32GEEelSBV88bdLE1Ja446ByYHiaXA=;
-        b=3qWbiY2g48N5Y4/FJrpkenYlb4XxdHUyNEEJyDBbmKJdveRLJFYQz0FrFlKaQlIhZq
-         Oqp9cc9mH+HE+v67554qdVp6xVCpEdhr76r6eTuQYdzWRBkjIEYdtE+rSoK1ZUtYzkfq
-         Fpx/BcGyNAIWubnH7mKtI9Nlvy1CvPqSrA/kavgYWKe7ZoRB/NzzP92cEKRY6e6BmXw4
-         X/tPjZ9d5sw9f/GaET1lFw/7Rcy960OL58NVVWcTE/01Jho+HKCO2MIhQG+YAJAYpyv7
-         0BUVaMfEzKQsUeYtHr1EbBt0LuCGMC81EotlLhTtVUKw2FSE17Uv1+MqhgGP+VIrdONg
-         unSQ==
-X-Gm-Message-State: ACrzQf3CX438EzsjI/IvPLvSu9p6xBJeL8nH2zUqQWRP+KcD7eFX+ami
-        Ws3hpZRi6GBNQ/c07QmW9YfOvg==
-X-Google-Smtp-Source: AMsMyM4cV+jFFO9JIbh1AGxjnaC9WhvCSEcPo5m/X4um5ZzZvU4UL9Tx52cV06TLSinxTNc7/bU5Rg==
-X-Received: by 2002:a05:651c:11cc:b0:26c:14c5:5b8f with SMTP id z12-20020a05651c11cc00b0026c14c55b8fmr2658081ljo.450.1663929117731;
-        Fri, 23 Sep 2022 03:31:57 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id v4-20020a2e9f44000000b0026ac7cd51afsm1316687ljk.57.2022.09.23.03.31.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Sep 2022 03:31:57 -0700 (PDT)
-Message-ID: <cfd55866-0fd1-e819-75bb-31eff15bf984@linaro.org>
-Date:   Fri, 23 Sep 2022 12:31:56 +0200
+        with ESMTP id S231802AbiIWKd1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 06:33:27 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FB1A178BC
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 03:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663929206; x=1695465206;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sbt6cd6bMKZZescG1FHs0vj+QdI6/FusrkBoUfimDzM=;
+  b=gTelr6lyFBDoLNea82oc8ERuYIxn5cNBkKrBezj7T1teBWjLlGJHgc5v
+   D5NMeYYzS97ge4x8DEKD7E39y1g5unUaCO0hgl4ezZYYGkpAIYWCLF5Li
+   e6eXzZRJ95s4sxFxVN86h7KBFA6DHxO4TTrOgCNT49vnP5NBiSt1parJD
+   PzfF84PG8WZGsWa4z/RZbdlJfew4wLYxnrKyFE9wacN6H71TDyhfJf3Bs
+   HSHzwZyHgSup4sst/oMDUlqxHWdbj+yXlc8x78d3y1H1Mra6TkV43ehLn
+   dYlhkXwnoQMQ4eASnpkVc3oi9BCIdSqfbb6+KiPjBPU9tUbDKBatS43Pl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="280929960"
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="280929960"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Sep 2022 03:33:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
+   d="scan'208";a="571335290"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 23 Sep 2022 03:33:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1obfzl-006QDU-2e;
+        Fri, 23 Sep 2022 13:33:21 +0300
+Date:   Fri, 23 Sep 2022 13:33:21 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Heiko Stuebner <heiko@sntech.de>
+Cc:     Jianqun Xu <jay.xu@rock-chips.com>,
+        Linus Walleij <linus.walleij@linaro.org>, jbx6244@gmail.com,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v2 RESEND 0/2] rockchip pinctrl for acpi
+Message-ID: <Yy2LcZmdaN3t898E@smile.fi.intel.com>
+References: <20220917060929.657778-1-jay.xu@rock-chips.com>
+ <CACRpkdanniba+TUAeqei93dmkBT82HY5D95KxTsc8aE7jV+5VQ@mail.gmail.com>
+ <2419940.Icojqenx9y@phil>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH 08/12] dt-bindings: pinctrl: qcom,sm8250-lpass-lpi: add
- bias-bus-hold and input-enable
-Content-Language: en-US
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20220922195651.345369-1-krzysztof.kozlowski@linaro.org>
- <20220922195651.345369-9-krzysztof.kozlowski@linaro.org>
- <20220923093131.5fb5co5i3f4eybcs@krzk-bin>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220923093131.5fb5co5i3f4eybcs@krzk-bin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MISSING_HEADERS,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2419940.Icojqenx9y@phil>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/09/2022 11:31, Krzysztof Kozlowski wrote:
-> On Thu, 22 Sep 2022 21:56:47 +0200, Krzysztof Kozlowski wrote:
->> The existing SC7280 LPASS pin controller nodes use bias-bus-hold and
->> input-enable, so allow them.  Squash also blank lines for readability.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  .../bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
->>
+On Fri, Sep 23, 2022 at 12:26:06PM +0200, Heiko Stuebner wrote:
+> Am Dienstag, 20. September 2022, 11:26:26 CEST schrieb Linus Walleij:
+> > On Sat, Sep 17, 2022 at 8:09 AM Jianqun Xu <jay.xu@rock-chips.com> wrote:
+> > 
+> > > These patch fixes to support acpi by:
+> > > 1. populate gpio platform before pinctrl to probe
+> > > 2. get gpiochip by finding from gpiochip list
+> > > 3. get match data by device api
+> > >
+> > > Jianqun Xu (2):
+> > >   pinctrl: rockchip: find gpiochip by name from gpio module
+> > >   pinctrl: rockchip: get match data by device_get_match_data
+> > 
+> > These look OK to me but I would feel better if Heiko or Andy ACK:ed
+> > them so I give them a few more days to comment.
 > 
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
+> Right now I'm actually quite confused as I seem to have a bunch
+> of pinctrl/gpio-acpi patchsets of varying lengths in my inbox.
 > 
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-> This will change in the future.
-> 
-> Full log is available here: https://patchwork.ozlabs.org/patch/1681325
-> 
-> 
-> pinctrl@33c0000: 'dmic01-active-pins', 'dmic01-sleep-pins', 'rx_swr-active-pins', 'tx_swr-active-pins', 'tx_swr-sleep-pins', 'wsa-swr-active-pins', 'wsa-swr-sleep-pins' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+> There is a "v2", a "v8", a 20-patchset without version.
+> It's all quite confusing.
 
-This is being fixed in next DTS patches. I'll reorganize them if there
-is going to be a resubmit.
+With the LKP complains on top of almost each series...
 
-Best regards,
-Krzysztof
+That's why I stopped considering them seriously (like some RFC is going on)
+and no more reviewing.
+
+I can suggest the author to create a branch on a public tree and collect all
+series together (like topic branches that are merged one-by-one to the main
+topic branch) and start again.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
