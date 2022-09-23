@@ -2,133 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 255295E76BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 11:21:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A45F75E7733
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Sep 2022 11:32:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbiIWJVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Sep 2022 05:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57202 "EHLO
+        id S231864AbiIWJcR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 23 Sep 2022 05:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230488AbiIWJVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 05:21:35 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F3413070F
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 02:21:33 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id h3so13984244lja.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 02:21:33 -0700 (PDT)
+        with ESMTP id S231868AbiIWJbm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Sep 2022 05:31:42 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E1CB3AE61
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 02:31:35 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id z20so14003757ljq.3
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Sep 2022 02:31:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=7slKNQh60cH75T6cRpc524ASdPemcdJLGtdMzrxSYyU=;
-        b=HyrSz8jTScQZTYUsbOu1g5FDL7oZOyf1s0Lc0HZQi9P6adutQjNUM+Un9WYFhsVEij
-         Ba6Sl/mUaV0geS0UFA+BSP9uuLEa+6W1+/fDWvK73NB397lq6UusDD+bx2PVpvf87VP/
-         AcpC/5nFqDzljfIkvAzdfFYnkLHeG4CoNhH8mJ52uLQP8trylJMZf9IOMThEFmnHqNmK
-         H3p/jhzsCjrnf6KC3xTQ6esGIio110B+EIL54O3dOvQPs+Kfp+/37S6OTRQK2V/LzRfB
-         BA6aJSe5MqtuDBAGaKYEmKU2bcM2gUMdgvfHg45t7ZIepj8APZObWmjdzoilEos+qpp1
-         MqoA==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=loilT9KOrc8UgH6EVysVDR9IA3XxRhSds+VZ69dyocA=;
+        b=tKLpy2UwHDJcgXNYiAbhs5SI5sJHw23wtrZtVFWcXI8ADmftNYt9f9eqzGbmFjGO5B
+         NzXpwiN+FfIrULrse9QbxxKmF23tyTNCZVU7bhZ2CA4zzWuTJQC0DxQhlZaW9JGbrvI+
+         6+ZBM9zRYxIJKOZSk3gpYzQFjzFjgLf68rc6Ckzk2M2BgUdI/Ve1EGg4TiCJ1PKHYIVe
+         sLk7PPl8X9EuVw7x16TmD0VksSNJIhoHp/cYFZ8iRE/EZgkTC0a1JysQ2ux5EMnhL9Km
+         JWG2t0zq2ryD9zW5Pi9/w3dl+90iIKqT6FTAwSCe/G9MNlcA78cf6tRhQJmP79XdzrUb
+         LSGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=7slKNQh60cH75T6cRpc524ASdPemcdJLGtdMzrxSYyU=;
-        b=RZ/iE0cWVhltbG5sfz72mVT4EQ5JgfF70zB8CPQiB8JQJuAy71qBFwCGbynbOcPgOM
-         UKDlT7EpEFr0tmAtV4e0pxbyRWYtO94eDvRDbFAluq9wdPUeII3yG0WT849rF41uTO7D
-         OnlA6pMYK02HQ7e6YWFKKymfFeyk8/e47QKiWVdd9+i0waW0XQ+B1aXD3uuCLnaHPAGe
-         kO7FsC4Jpu1xDBAuMofU2Id8/BRhi7G7bLTr0bLVjNa9vHxms+yCQIqcV8NGcR1p6BAB
-         wQHIC+kO9ZdGE4CLORv1tpF73J+iztoqObxWL1FsfF9gVu9kExnx5+NjyDmKwvDXPNqk
-         iAdg==
-X-Gm-Message-State: ACrzQf0YPFH2A5Yh34N8sr9nkhNboH1QiUVR8CAdf8XleZUrHDJbxUsy
-        +lvRPEmm8L89fjSBL2OGAaQzNQ==
-X-Google-Smtp-Source: AMsMyM74Lo3/SJUxoYla08JLCU/g5bhtWWnSLD+31ZWhtxJwgkE+9Vc+9/OUSstjZkqFaNSdWOVI5w==
-X-Received: by 2002:a2e:bc11:0:b0:26c:565:12f6 with SMTP id b17-20020a2ebc11000000b0026c056512f6mr2423362ljf.91.1663924891762;
-        Fri, 23 Sep 2022 02:21:31 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id bg33-20020a05651c0ba100b00261beb471d1sm1284238ljb.121.2022.09.23.02.21.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Sep 2022 02:21:31 -0700 (PDT)
-Message-ID: <5145d4db-65bf-971d-84cd-73c222311cd3@linaro.org>
-Date:   Fri, 23 Sep 2022 11:21:30 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: add missing entries for gpio
- subnodes
-Content-Language: en-US
-To:     Alexandre TORGUE <alexandre.torgue@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>
-References: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
- <9b711a9e-9e63-b69e-fabf-e05c11f145a6@linaro.org>
- <c21b9c95-ae35-fd7e-9e8e-6926703725b4@foss.st.com>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=loilT9KOrc8UgH6EVysVDR9IA3XxRhSds+VZ69dyocA=;
+        b=682XQVi3B6WPpkSXGlp+3HO14Dqqjk3SvFZ10/30iFRAjCIU1w/X0+L50pJqblTwK8
+         SwtffK0L08kU/VrxGiRGc7vIn/lNk5XcXjrk8mlvZF1yaDwtWVGulLaxyamY2CJofbcT
+         yLGZSU+VHjZSyGa3SxIdXvw/ybqmUcz/cSdIYgROBj4upW2Vsf88tvEJilAg8h89oRGF
+         /9J6A6VBUnCpp3X9tJm61WkOGNblt2UoPspNFkQeFmzWB5DTl9I2gvzl4jfWq2KZ0GUf
+         NrEYXcoxx7txgidb2/jRuLBT/z/lvm2NCHC9VdXP5GFj7UsIHZpwUPvf/OeWUf/l+VZj
+         W3OQ==
+X-Gm-Message-State: ACrzQf01jX+ne3Mt7uJIuR2PSLeZVHGmtJunADj0VTZB0lPAsL4dwdgk
+        OcgGw2apqGIMJLWaMVgXBekbVw==
+X-Google-Smtp-Source: AMsMyM5pu4SglWelw1JOJblaAvHizdmtgcvDCNQ6UzszauiF6a9na7nIKBo2/ir/pFTyjxwg3tIZ3Q==
+X-Received: by 2002:a2e:a28e:0:b0:25e:734f:38fa with SMTP id k14-20020a2ea28e000000b0025e734f38famr2522446lja.446.1663925493539;
+        Fri, 23 Sep 2022 02:31:33 -0700 (PDT)
+Received: from krzk-bin (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id n5-20020ac24905000000b0048a934168c0sm1367297lfi.35.2022.09.23.02.31.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Sep 2022 02:31:33 -0700 (PDT)
+Date:   Fri, 23 Sep 2022 11:31:31 +0200
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <c21b9c95-ae35-fd7e-9e8e-6926703725b4@foss.st.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 08/12] dt-bindings: pinctrl: qcom,sm8250-lpass-lpi: add
+ bias-bus-hold and input-enable
+Message-ID: <20220923093131.5fb5co5i3f4eybcs@krzk-bin>
+References: <20220922195651.345369-1-krzysztof.kozlowski@linaro.org>
+ <20220922195651.345369-9-krzysztof.kozlowski@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20220922195651.345369-9-krzysztof.kozlowski@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/09/2022 10:29, Alexandre TORGUE wrote:
-> Hi Krzysztof
+On Thu, 22 Sep 2022 21:56:47 +0200, Krzysztof Kozlowski wrote:
+> The existing SC7280 LPASS pin controller nodes use bias-bus-hold and
+> input-enable, so allow them.  Squash also blank lines for readability.
 > 
-> On 9/19/22 13:32, Krzysztof Kozlowski wrote:
->> On 13/09/2022 09:46, Alexandre Torgue wrote:
->>> Add "interrupt-controller" and gpio-line-names to gpio subnodes in order to
->>> fix dtb validation.
->>
->> Rebase your patch on recent Linux kernel and use get_maintainers.pl.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8250-lpass-lpi-pinctrl.yaml     | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> I did it on 6.0-rc5 but yes I used your kernel.org address instead of 
-> linaro ones. Sorry.
-> 
->>
->>>
->>> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> index d35dcc4f0242..92582cccbb1b 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>> @@ -65,6 +65,10 @@ patternProperties:
->>>         '#gpio-cells':
->>>           const: 2
->>>   
->>> +      interrupt-controller: true
->>> +      '#interrupt-cells':
->>> +        const: 2
->>> +
->>>         reg:
->>>           maxItems: 1
->>>         clocks:
->>> @@ -80,6 +84,8 @@ patternProperties:
->>>           minimum: 1
->>>           maximum: 16
->>>   
->>> +      gpio-line-names: true
->>
->> maxItems?
-> 
-> Generic question, Is it mandatory to add maxItems information for all 
-> entries ?
 
-It's not mandatory for all. For some it is recommended, for some it does
-not make sense. Here it's quite easy to add and it will validate the
-entry. Any reason not to add it?
+Running 'make dtbs_check' with the schema in this patch gives the
+following warnings. Consider if they are expected or the schema is
+incorrect. These may not be new warnings.
 
-Best regards,
-Krzysztof
+Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+This will change in the future.
 
+Full log is available here: https://patchwork.ozlabs.org/patch/1681325
+
+
+pinctrl@33c0000: 'dmic01-active-pins', 'dmic01-sleep-pins', 'rx_swr-active-pins', 'tx_swr-active-pins', 'tx_swr-sleep-pins', 'wsa-swr-active-pins', 'wsa-swr-sleep-pins' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/qrb5165-rb5.dtb
+	arch/arm64/boot/dts/qcom/sm8250-hdk.dtb
+	arch/arm64/boot/dts/qcom/sm8250-mtp.dtb
+	arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx203.dtb
+	arch/arm64/boot/dts/qcom/sm8250-sony-xperia-edo-pdx206.dtb
