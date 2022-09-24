@@ -2,123 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF3B15E8B83
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Sep 2022 12:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0DD5E8F18
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Sep 2022 19:57:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbiIXKes (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 24 Sep 2022 06:34:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47684 "EHLO
+        id S233688AbiIXR5Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 24 Sep 2022 13:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbiIXKeq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Sep 2022 06:34:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2041C18363;
-        Sat, 24 Sep 2022 03:34:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0A9F4B80185;
-        Sat, 24 Sep 2022 10:34:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D15C433D6;
-        Sat, 24 Sep 2022 10:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664015680;
-        bh=oisNXHG20hbajKiTp7wbgvOV+P1rIP3yuHleqV2SUGo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IK0TEg1YwTI9ms7ZKiFlbOQt4D3uUDAMwVdNi1bg7uy/dJrbZ352sBasUwNI0IFKG
-         lz6x25YPz+qDvnWUvU4kefzAPuucREiEKHKlsPtZu4xpDQ9CLZXFWBbqk3hH3yjyqf
-         VRxP1wX0y61CjfSbBG0DQO6zhEP3snF1nWWzODVMvKGCoPWzN/SD4vthrSw+odq4Y0
-         xL796yT+neUWPb37yHs/Ox1QLCq2jT/MHqlD7eVVC1lDQkY7kCYHdvXWeH9W5TpmQa
-         sdwALYh3pjcCv5iVO1OXtLYmOARTOh86VD2+95zDQ+oFDmnaH+KR7pPKxVFXQFxOPs
-         bjMdd4t6Xu70Q==
-Received: by pali.im (Postfix)
-        id 0D45F8A2; Sat, 24 Sep 2022 12:34:37 +0200 (CEST)
-Date:   Sat, 24 Sep 2022 12:34:37 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        with ESMTP id S230117AbiIXR5Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 24 Sep 2022 13:57:24 -0400
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B043F57272;
+        Sat, 24 Sep 2022 10:57:23 -0700 (PDT)
+Received: by mail-oi1-f179.google.com with SMTP id r125so3577736oia.8;
+        Sat, 24 Sep 2022 10:57:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=MNOSZz5lgglfdVhYVEsjBp40JWxVfkPldnmOTbA13Os=;
+        b=xVnaZ9R40dX+676GMVW6h/C0Az/p9Ft3ZiDTvVKT8Rhw8xk9Hy1iWE1Fp0Ud0rlZiN
+         6tvb8M9676a1oWNhHbTfYo8FGc5N+88iv4mA5MWjzQKS+iOTK7QjQfvJ4UL2Lj2npu1J
+         BSfWQ3K0e+C26cbLMnoKzEPeL+ZsDhhj3kdN4zTqllwDPGcYaXz60XMGHaVe5WsKrpzG
+         ldEAElSBn72BgC65NyLTw1E1kAQuz6MFtGfb7UULyu2pYe0UMFd8eScThW7bUCpP3oSD
+         yvMU1WkC4XAtAAARp4kwLu3WmBqgBEqzPn8beUAatvSU5h2i5GFmcAhM/muRpq56G345
+         RZUA==
+X-Gm-Message-State: ACrzQf2GyWodpJO76aJJPp2B2aJi7Ea/4Ts8KdNeYiNBOCX8tEXKXrIL
+        VuOsWIVXbvVSrKO0OySd7eTlMwWUG7ub
+X-Google-Smtp-Source: AMsMyM6oyPLVaeViQti/HxPQuX6anjWMfjhjh3Jm8yYM5cghzCKRbfOr/ouhp8go5OYafCTsPE8RHQ==
+X-Received: by 2002:a05:6808:2c8:b0:350:504b:ee10 with SMTP id a8-20020a05680802c800b00350504bee10mr10798246oid.103.1664042242955;
+        Sat, 24 Sep 2022 10:57:22 -0700 (PDT)
+Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i12-20020a056871028c00b0010d5d5c3fc3sm6205331oae.8.2022.09.24.10.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 24 Sep 2022 10:57:22 -0700 (PDT)
+Received: (nullmailer pid 1055544 invoked by uid 1000);
+        Sat, 24 Sep 2022 17:57:21 -0000
+Date:   Sat, 24 Sep 2022 12:57:21 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Etienne Carriere <etienne.carriere@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-Cc:     linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 1/4] gpio: mvebu: Fix check for pwm support on non-A8K
- platforms
-Message-ID: <20220924103437.ww4urmq6cnhzj373@pali>
-References: <20220714115515.5748-1-pali@kernel.org>
- <20220714183328.4137-1-pali@kernel.org>
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual
+ license
+Message-ID: <20220924175721.GA1051922-robh@kernel.org>
+References: <20220905145555.674800-1-etienne.carriere@linaro.org>
+ <CAMRc=Mcq3u+1JjvXJ2X774vknq-LOeCfE7hLj2As7Q5A13tx0w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220714183328.4137-1-pali@kernel.org>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=Mcq3u+1JjvXJ2X774vknq-LOeCfE7hLj2As7Q5A13tx0w@mail.gmail.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PING?
+On Thu, Sep 22, 2022 at 10:37:03AM +0200, Bartosz Golaszewski wrote:
+> On Mon, Sep 5, 2022 at 4:57 PM Etienne Carriere
+> <etienne.carriere@linaro.org> wrote:
+> >
+> > Changes gpio.h DT binding header file to be published under GPLv2 or
+> > BSD-2-Clause license terms. This change allows this GPIO generic
+> > bindings header file to be used in software components as bootloaders
+> > and OSes that are not published under GPLv2 terms.
+> >
+> > All contributors to gpio.h file in copy.
+> >
+> > Cc: Stephen Warren <swarren@nvidia.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Laxman Dewangan <ldewangan@nvidia.com>
+> > Cc: Andrew Jeffery <andrew@aj.id.au>
+> > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > Cc: Nuno S� <nuno.sa@analog.com>
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> >
+> > Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> > ---
+> 
+> Applied, thanks!
 
-On Thursday 14 July 2022 20:33:25 Pali Rohár wrote:
-> pwm support incompatible with Armada 80x0/70x0 API is not only in
-> Armada 370, but also in Armada XP, 38x and 39x. So basically every non-A8K
-> platform. Fix check for pwm support appropriately.
-> 
-> Fixes: 85b7d8abfec7 ("gpio: mvebu: add pwm support for Armada 8K/7K")
-> Signed-off-by: Pali Rohár <pali@kernel.org>
-> 
-> ---
-> Changes in v2:
-> * reverse the if/else order per Baruch request
-> ---
->  drivers/gpio/gpio-mvebu.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index 2db19cd640a4..de1e7a1a76f2 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -793,8 +793,12 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->  	u32 offset;
->  	u32 set;
->  
-> -	if (of_device_is_compatible(mvchip->chip.of_node,
-> -				    "marvell,armada-370-gpio")) {
-> +	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
-> +		int ret = of_property_read_u32(dev->of_node,
-> +					       "marvell,pwm-offset", &offset);
-> +		if (ret < 0)
-> +			return 0;
-> +	} else {
->  		/*
->  		 * There are only two sets of PWM configuration registers for
->  		 * all the GPIO lines on those SoCs which this driver reserves
-> @@ -804,13 +808,6 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
->  		if (!platform_get_resource_byname(pdev, IORESOURCE_MEM, "pwm"))
->  			return 0;
->  		offset = 0;
-> -	} else if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
-> -		int ret = of_property_read_u32(dev->of_node,
-> -					       "marvell,pwm-offset", &offset);
-> -		if (ret < 0)
-> -			return 0;
-> -	} else {
-> -		return 0;
->  	}
->  
->  	if (IS_ERR(mvchip->clk))
-> -- 
-> 2.20.1
-> 
+I don't think anyone is really going to care, but you first need acks 
+from the Cc list to re-license or a lawyer to tell you it's not 
+copyrightable anyways and doesn't matter. Your choice. ;)
+
+Rob
