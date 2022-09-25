@@ -2,99 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2899B5E92D6
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Sep 2022 13:54:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49C035E93F7
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Sep 2022 17:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232234AbiIYLye (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 25 Sep 2022 07:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49410 "EHLO
+        id S230435AbiIYPaJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 25 Sep 2022 11:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbiIYLyd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 25 Sep 2022 07:54:33 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 066CE2D76A
-        for <linux-gpio@vger.kernel.org>; Sun, 25 Sep 2022 04:54:29 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id b6so4647974ljr.10
-        for <linux-gpio@vger.kernel.org>; Sun, 25 Sep 2022 04:54:28 -0700 (PDT)
+        with ESMTP id S229915AbiIYPaI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 25 Sep 2022 11:30:08 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB35113EB0;
+        Sun, 25 Sep 2022 08:30:06 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id a10so5076021ljq.0;
+        Sun, 25 Sep 2022 08:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Q46V3bJGY5zK2gbUyWGrQRsMlQhZzKF53118KkxntJ8=;
-        b=n5CpgP2J1Z1DA5Itg2vYm43fttQpqbE/BycyCWdr1poja6mSAQfBJUaN7s1j5xR31j
-         k494Hkw1628M3V4SKcYP2Z4KZUkrRPvnHUt4XVgXAtwjxjZPEriBxFd1TUEWPcnUmLzY
-         zZun2J6E7Hl6iOp3rl8RiozOqiNHUbVyyGaUnKK1vOISsHj4e8/+LU+8l3+2gjyIFEB9
-         2bQAozw+iVeIf+Mic47g7u9aD4ks0Z0suwOkZ4fAoqTQhm9TZXB78zlHszHagl4Rlb4K
-         Anns1kkb2TyG19FTg1PbA8PmJy+izOLmYe0VPigHtjmv5uYZaSHtijZh6dKYjWcTGVT2
-         dtXw==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=Pr4hdtR9ZMxFsotthP0GIPIDk3AwgpXePU9FjOtd4jM=;
+        b=NwbVc70pVdhpbbli3K0HiIBsCFJRRgvep4vrXRWBGawWjY9iIZm1wO0PD9S03RLNLE
+         hRD+Gm6UBiK+nh+B0fzuoJ253P7gFHyO0ciRtnjolaMeGXnZuV7xlIgbHTtb3a1SLyzO
+         oeSBcqcm8s3oLczejF7tKVDqxbF/tUt8+7k0NXCfEXc6Coz46VEa6an6Sc9IDB6mXEPa
+         7y9Lcm4/32US250n9h2CxpQwmXqac4xmY78sXS87AUtJ8ovrZvIFqYPqqiVM92DcXFf5
+         CGyRPUGpohyljQ3T42i36DixmOIoIUZ0gjD0aBNgyX44QBVIgeDDK9sF6UOSZKzY1YvD
+         XqZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Q46V3bJGY5zK2gbUyWGrQRsMlQhZzKF53118KkxntJ8=;
-        b=490fO0i2F5jatDSldIphDgIa3+XrWylFM4pK2wRyJfai3BbyJi+Oczih4MQ4EvtFV1
-         2Oy/AUWK2QbfmTGbmd0wD5Dt28/BOtjHP87YpWSJMUL0KQ34hniU1FGxf8qzz0ZSYCpu
-         gdS/+xe/3LYJ3GRuabaWukvHQaHOEr1XNZ1g168EqKl6nVUY/hwSqXrV9DrpJnHtreA2
-         HdPDjHOsOXRc5fxn6BbsLdI/deIgGuh0cS/j5TXoB9oSRmG/Z1ODUwT934QfEyBo/z2h
-         icd8H25bZ46vIxooXvqg/JMOgUveqSbdjkFqJ+jNBTj17e9bDXSnrFwtvltwljdgqsI/
-         LKwg==
-X-Gm-Message-State: ACrzQf0+F83SfZq7nXF/GC72PHCwUKPWWL936QzCpm2PKSVFGtuQl6Vj
-        SkRGNAGLBXFDdPjkEx6OeII8ng==
-X-Google-Smtp-Source: AMsMyM5XLWU55ymLsZdVdphhQDPQJN/T6CnftbdVvYYEq2iLQstLu/xbqjofALcr2z8IxLxOviUD9Q==
-X-Received: by 2002:a05:651c:211:b0:26b:e743:b4b0 with SMTP id y17-20020a05651c021100b0026be743b4b0mr5919239ljn.527.1664106867404;
-        Sun, 25 Sep 2022 04:54:27 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id k20-20020a2eb754000000b0026c64fd8f0csm2015407ljo.71.2022.09.25.04.54.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 25 Sep 2022 04:54:26 -0700 (PDT)
-Message-ID: <441153f6-26ee-cbb2-fe42-101de91952c5@linaro.org>
-Date:   Sun, 25 Sep 2022 13:54:25 +0200
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=Pr4hdtR9ZMxFsotthP0GIPIDk3AwgpXePU9FjOtd4jM=;
+        b=QWayc+FTw859D8iJrdZv2Vy2z3m4quAwdJvHkp7gLf/IxEzLZIDNDeCMkkg3lOmh+J
+         WXWXMPk8q9kL5LhZMtMCSMhmZdEkstpG/9gweV7gkTnA6CoAud25cGrvZjSOYbaiupxd
+         n+sFWSDdqXDSEy2xKel24anzeh5SPHGzoF+zLW8E1xxu4B5w+VYSnpfSxT5Hg+C0Y3cA
+         5J5oI99iNE6rloVy/lQVv8aDh/1PPIP66uR3OxsVDH4VvzZRtUx1eTaH1NsjXEXheu7m
+         ZYseA4f7lGaaWl63qCw0zAUZuhDWTQoY2bXNvllq6QYqK7yDA1uBQJ+b4w3OkSBvMEhQ
+         n38Q==
+X-Gm-Message-State: ACrzQf0oTl5YuGC5kIGiTu3Fs5N0W5fq2bh05Afry6eWc3Txor6XNUPu
+        xsTnwAjUKLSRycgYeI4+YqvctfMuW6U=
+X-Google-Smtp-Source: AMsMyM7plqoO5FQaZpTYc7Bq6EPlvM0QTDT9gTrfhDUkT5/JaJsq3hNrsGEHC8yyWY5ebuGGCiEeYg==
+X-Received: by 2002:a05:651c:482:b0:26b:e964:3f00 with SMTP id s2-20020a05651c048200b0026be9643f00mr5858740ljc.464.1664119805003;
+        Sun, 25 Sep 2022 08:30:05 -0700 (PDT)
+Received: from mobilestation ([95.79.140.178])
+        by smtp.gmail.com with ESMTPSA id m5-20020a056512358500b00499a6ef78a7sm2250391lfr.66.2022.09.25.08.30.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Sep 2022 08:30:04 -0700 (PDT)
+Date:   Sun, 25 Sep 2022 18:30:02 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Sascha Hauer <s.hauer@pengutronix.de>,
+        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH v3 1/2] gpio: Add gpio latch driver
+Message-ID: <20220925153002.makz5eijmwzrgqqs@mobilestation>
+References: <20220914071306.3254881-1-s.hauer@pengutronix.de>
+ <20220914071306.3254881-2-s.hauer@pengutronix.de>
+ <20220914140310.5ffrnsy63piegdyr@mobilestation>
+ <20220922133105.GN986@pengutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v2] pinctrl: qcom: restrict drivers per ARM/ARM64
-Content-Language: en-US
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20220925112103.148836-1-krzysztof.kozlowski@linaro.org>
- <08E290AD-C842-4BF2-9C57-2CE59A4C5D88@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <08E290AD-C842-4BF2-9C57-2CE59A4C5D88@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220922133105.GN986@pengutronix.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/09/2022 13:43, Dmitry Baryshkov wrote:
-> 
-> 
-> On 25 September 2022 14:21:03 GMT+03:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->> There is no point to allow selecting pin-controller drivers for Qualcomm
->> ARMv7 SoCs when building ARM64 kernel, and vice versa.  This makes
->> kernel configuration more difficult as many do not remember the Qualcomm
->> SoCs.  There won't be a single image for ARMv7 and ARMv8/9 SoCs, so no
->> features/options are lost.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> I haven't checked which restrictions apply to msm8916 at this moment, but it might be worth adding 'depends on ARM || ARM64 || COMPILE_TEST'
+To += @Rob, @Linus
 
-This is limited by ARCH_QCOM (top-level if in the file), so I am not
-sure what would be benefits.
+On Thu, Sep 22, 2022 at 03:31:05PM +0200, Sascha Hauer wrote:
+> On Wed, Sep 14, 2022 at 05:03:10PM +0300, Serge Semin wrote:
+> > > +				    unsigned int offset, bool val)
+> > > +{
+> > > +	int latch = offset / priv->n_latched_gpios;
+> > > +	int i;
+> > > +
+> > > +	assign_bit(offset, priv->shadow, val);
+> > > +
+> > 
+> > > +	for (i = 0; i < priv->n_latched_gpios; i++)
+> > > +		set(priv->latched_gpios->desc[i],
+> > > +		    test_bit(latch * priv->n_latched_gpios + i, priv->shadow));
+> > 
+> > -> duration?
+> > 
+> > > +
+> > > +	set(priv->clk_gpios->desc[latch], 1);
+> > 
+> > -> duration?
+> > 
+> > > +	set(priv->clk_gpios->desc[latch], 0);
+> > 
+> > I am pretty much sure there must be some duration between the actions
+> > above *. See for instance the tw and (tsu + th) timing requirements in
+> > the next edge-triggered flip-flops:
+> > https://www.ti.com/lit/ds/symlink/sn74lv74a.pdf?ts=1663163389954&ref_url=https%253A%252F%252Fwww.google.com%252F
+> > 
+> > The durations are normally small (ns or a bit smaller) but still need
+> > to be added anyway.
+> > 
+> > Note since the durations are device-specific an additional DT-property array
+> > with durations should be added too.
+> 
 
-Best regards,
-Krzysztof
+> Do you think a fixed udelay(1) would be enough for now? Bigger delays
+> shouldn't be needed and smaller delays expand to udelay(1) anyway on
+> architectures not providing an architecture specific ndelay().
 
+I am sure you shouldn't assume what the particular architecture
+provide and what it doesn't. When it comes to the GPIOs the switching
+timings can have a critical value in a lot of applications (like i2c
+bitbang, or real-time systems). There is no point in waiting for
+micro seconds in the fast-path like this when there is only a few
+nano seconds delay required.
+
+I couldn't find any generic ready-to-use DT-property for this case.
+So IMO instead the next properties would work:
+1. "setup-duration-ns" - data input timing after which the clock input
+can be asserted (Tsu in the hw-manual above).
+2. "clock-duration-ns" - clock input timing for which the CLK signal
+must be kept asserted so the device would perceive the input
+states, the outputs would be updated and the clock signal could be
+driven back to low (Tw including Th in the hw-manual above).
+
+@Rob, @Linus, any suggestion regarding the properties and their naming?
+
+-Serge
+
+> 
+> Sascha
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
