@@ -2,49 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40C6E5E99F0
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 08:58:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CA465E9A56
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 09:20:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233561AbiIZG6D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 02:58:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47044 "EHLO
+        id S234041AbiIZHUs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 03:20:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233506AbiIZG56 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 02:57:58 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E914E2AC6D;
-        Sun, 25 Sep 2022 23:57:55 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MbYRv2q4wzHqSq;
-        Mon, 26 Sep 2022 14:55:39 +0800 (CST)
-Received: from [10.174.178.165] (10.174.178.165) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Mon, 26 Sep 2022 14:57:53 +0800
-Subject: Re: [PATCH -next 0/2] allow gpio simulator be used as interrupt
- controller
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20220826080230.1712978-1-weiyongjun1@huawei.com>
- <CAMRc=Mc-m7JfDqM3ALy43T+S9DdpV8boEy+J6ruQZjLkqbZHPw@mail.gmail.com>
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-Message-ID: <557e3d18-057c-f787-d422-d54f6e4be36f@huawei.com>
-Date:   Mon, 26 Sep 2022 14:57:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+        with ESMTP id S233742AbiIZHUr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 03:20:47 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0BC24BEC
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:20:46 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id z13-20020a7bc7cd000000b003b5054c6f9bso6361148wmk.2
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date;
+        bh=3jdNtELdCn4sS99CPBgsVFr3jQOrpqoAztbQgH6ZpnE=;
+        b=tn3lOcQjwJXnx1Sx0TUQ62fSBIhMpku7J++HgD5uFWFnqKGT+lJ8cfrpZgsx1isATe
+         miwsSvYxv0bVUUco9JYk5vQpUBtIT5b1gIvclSTZF3iUtBapuWuzGmPh1O9+ghG/8TE1
+         xee7ee/237mIf1GV+tluXRrY/qH/MVVvoEoTBrz7JOq7CmuoMKYYZ1x6vAW0hHNHn0si
+         uVdNXesmpKUlzHj1hSzZa5QcRQoxmSSTXnMPt9XI43ygFaE0UwTjnl6BLmMVrXkzgJjn
+         h1Kgax2nWYS9QMhBG6+6qJ2moO4TQIDFFYZMbBlzTEoKSzn44MPfBjeLp8yt/3j3+GAm
+         hwtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=3jdNtELdCn4sS99CPBgsVFr3jQOrpqoAztbQgH6ZpnE=;
+        b=2UQM0n4HgLKPqC5qElDKb23uvryPTvN6ZhPUIjtUwBLqmrIGQylBzkY+wIxQ3gBRt8
+         j6c/1saLTSiVvcTm4UJZeIq2+orMllNHqWULJmBS5rGKIQG0viYzTojOlxoM3KUmVMDB
+         cO4X96A6mt1jRi82MP1HP7kiQtZw3xxUfa9HVUaVYtxlT5yX1SOPRuKGo7Yy/YWGRF4Q
+         vgFSlKGQYy3qFIwnvoIC/LWTP+f1jd5WwIuFQxOLBAuZ4mBd3UUtY2GODj5pUJoQXwst
+         FoXeis2WwcOeej1KlsjP7P77OBuUXd64Zr4ERpA5akoCRrffrCS8VWI5uQEbR0gnOyF+
+         Ao1g==
+X-Gm-Message-State: ACrzQf0niP64frD22B5dkIVKyU4eyQKhDYr6iVchkec8JKs4YQU9U2sa
+        Hsy5BYPx+zHB1jLqr0PdBdwqKzhwKV9bGXSoQDnIKA==
+X-Google-Smtp-Source: AMsMyM5oTORr2x7yyhS1QT1DENmiHP9FslJNer9UgFyATnA8n6gcC3oJMwEaX6Aaxc+zwFauRci48qNhw1xDVg8ViEY=
+X-Received: by 2002:a05:600c:1e08:b0:3b4:8fef:d63c with SMTP id
+ ay8-20020a05600c1e0800b003b48fefd63cmr20577851wmb.158.1664176844980; Mon, 26
+ Sep 2022 00:20:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=Mc-m7JfDqM3ALy43T+S9DdpV8boEy+J6ruQZjLkqbZHPw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.165]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-8.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20220714115515.5748-1-pali@kernel.org> <20220714183328.4137-1-pali@kernel.org>
+In-Reply-To: <20220714183328.4137-1-pali@kernel.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 26 Sep 2022 09:20:33 +0200
+Message-ID: <CAMRc=MfAS3GQ_U+kaHPP7ApCs1StVsUdBFee7Ey_xUYW2CDMXg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] gpio: mvebu: Fix check for pwm support on non-A8K platforms
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Lee Jones <lee.jones@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,100 +77,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jul 14, 2022 at 8:33 PM Pali Roh=C3=A1r <pali@kernel.org> wrote:
+>
+> pwm support incompatible with Armada 80x0/70x0 API is not only in
+> Armada 370, but also in Armada XP, 38x and 39x. So basically every non-A8=
+K
+> platform. Fix check for pwm support appropriately.
+>
+> Fixes: 85b7d8abfec7 ("gpio: mvebu: add pwm support for Armada 8K/7K")
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
+>
+> ---
+> Changes in v2:
+> * reverse the if/else order per Baruch request
 
+Applied, thanks!
 
-On 2022/9/1 0:08, Bartosz Golaszewski wrote:
-> On Fri, Aug 26, 2022 at 9:44 AM Wei Yongjun <weiyongjun1@huawei.com> wrote:
->>
->> This series allow gpio simulator be used as interrupt controller, the use
->> case is mockup some device which using GPIO as interrupt controller, such
->> as mcp2515 CAN device. With the dts [1], we can mockup a mcp2515 device,
->> and trigger irq by following commands:
->>
->>  $ echo pull-down > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
->>  $ echo pull-up > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
->>
->>
->> --[1]---------------------------------------------------------
->> /dts-v1/;
->>
->> #include <dt-bindings/interrupt-controller/irq.h>
->>
->> / {
->>         clk24m: clk24m {
->>                 compatible = "fixed-clock";
->>                 clock-output-names = "clk24m";
->>                 clock-frequency = <24000000>;
->>                 #clock-cells = <0>;
->>         };
->>
->>         gpio-sim {
->>                 compatible = "gpio-simulator";
->>
->>                 bank0: bank0 {
->>                         gpio-controller;
->>                         #gpio-cells = <2>;
->>                         ngpios = <16>;
->>
->>                         interrupt-controller;
->>                         #interrupt-cells = <2>;
->>
->>                         line_b-hog {
->>                                 gpio-hog;
->>                                 gpios = <0 1>;
->>                                 input;
->>                                 line-name = "irq-sim";
->>                         };
-> 
-> Why do you need this hog? The GPIO will be marked as requested once
-> the interrupt is taken by the driver.
-
-Sorry for reply later.
-
-It seems that only if driver request gpio with fwnode_gpiod_get_index()
-marks GPIO as request one.
-
-If driver using request_threaded_irq() request one irq, the requested
-status will not be marked. We need to use hog or request by userspace
-to mark as requested.
-
-> 
->>                 };
->>         };
->>
->>         spi: spi {
->>                 compatible = "spi-mockup";
->>
->>                 #address-cells = <1>;
->>                 #size-cells = <0>;
->>
->>                 can0: can@1 {
->>                         compatible = "microchip,mcp2515";
->>                         reg = <1>;
->>                         clocks = <&clk24m>;
->>                         interrupt-parent = <&bank0>;
->>                         interrupts = <0 IRQ_TYPE_EDGE_BOTH>;
->>                 };
->>
->>         };
->> };
->> ------------------------------><-----------------------------
->>
->> Wei Yongjun (2):
->>   genirq/irq_sim: Allow both one and two cell bindings
->>   gpio: sim: make gpio simulator can be used as interrupt controller
->>
->>  drivers/gpio/gpio-sim.c | 2 +-
->>  kernel/irq/irq_sim.c    | 1 +
->>  2 files changed, 2 insertions(+), 1 deletion(-)
->>
->> --
->> 2.34.1
->>
-> 
-> Can you add some info about this to the documentation?
-
-Will do that
-
-Thanks,
-Wei Yongjun
+Bart
