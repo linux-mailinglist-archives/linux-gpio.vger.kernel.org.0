@@ -2,122 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A3C25E9C5C
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 10:47:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CD3A5E9D08
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 11:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234500AbiIZIrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 04:47:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
+        id S234117AbiIZJLo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 05:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234422AbiIZIrO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 04:47:14 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C39324082
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 01:47:05 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id a14so6593943ljj.8
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 01:47:05 -0700 (PDT)
+        with ESMTP id S234628AbiIZJLn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 05:11:43 -0400
+Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B325D3AB06
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 02:11:42 -0700 (PDT)
+Received: by mail-wm1-x341.google.com with SMTP id r133-20020a1c448b000000b003b494ffc00bso7093249wma.0
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 02:11:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=vrv065D+ctkztUjNUa3Jmz1/DXnw7DhEXSuZPsqfZUM=;
-        b=J071zhv/iyvxBhhD3psGEI6Cg1DZGDrWbj/a2rzs1PQrBZVi1x4YFbVXd+qF8v1zeM
-         L5LcIQmhQXg+djyOPZlWWjEH+2xODIqEOphDzDqNuV+U/0uYUKhy09ZIsGrBweC6pKJa
-         ucZJ5Rvx0mqq7jjlw4fcxWPltrTPib8k3vLvTPGV/DukWFB+dhhjprSk5yGd/ggRY6TA
-         skkp+RGujF6/85kzXHXolxPh0l4y9aTeTn2KdGvufQoCQOyBXW0M+gIWNpUqERTg++UJ
-         iwtcvRRvx+9130yMOkp9pG77Ghe9H2+TJ3G5r3QhBWKXwAQxVZefiQptIznsD90ckZT7
-         ppSQ==
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date;
+        bh=EThfXOsChd8Ds/teM8XF9/4bZFxtFbmMMLDhrhk/LVg=;
+        b=YZ5eoYIuIJ6p1I7Tp7lJ7DfAZHCYo72xYKLIJT8KeobjK51yVBgeg9CPXFZxfy/hHA
+         icOo7NbSG5b8+wC0ehDya+YuxiqQyBKcWTe0/ZIslatLP4Kx102K93kkDQQpWJ4igGC6
+         MMBQbEREXE/gxkcmoOIjHrR7f5mQuG/VC6leGvntTKQ/LBJHGeMqEoIGTZ5vSxmlxVVQ
+         hayzLTywgePCOE+jMr0A88DhvHWxxGYB5U+uZUxDth/C24YfLgttMN49jEUS5unEAJ01
+         U2Fcs8jq6ivcbSAUtcthy9YeMotawg+cE3Go3+3JHo7FYcRvp/InaiYdCHiF2eFwbnfp
+         XcMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=to:subject:message-id:date:from:sender:mime-version
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=vrv065D+ctkztUjNUa3Jmz1/DXnw7DhEXSuZPsqfZUM=;
-        b=LMjwi2q0LZQv4eaeaB2AGTHoMHwrqc+Fdy9wvfp/kqSvEdRDnwQWlF4iNh7EB9epc8
-         hw6rFyWHc9pzaghHWqCXqBGdql3O2nIt+8QfyvD7caHrhcg6Kt67Nq37Tpi4iuiCXUOI
-         4bYIWGVtO0NhGkvNp+LHdd+LI55634hnLzFguSj0+s1eZDZnTQ5D4Z+doo90+i16ZePA
-         JC8Y2tH3GmvOxY6pEt/tHf5UMg7egeYV1NATl9bhqrmpbGikfjVsds7xeePHjdThzZqd
-         43D1Hi86CY0t/FxTTqDbxV0wFHLZfHK2NActVtha0Ie31qZhWMmzGAecKm12GRXW50cj
-         er7w==
-X-Gm-Message-State: ACrzQf2Ed62nyPZx5xHwrqGJhW950khp6bJzoXGY3d2KVyEqfO3cHVJS
-        0AxaRIfrN9e2ZZ3d4jS9LIAkVw==
-X-Google-Smtp-Source: AMsMyM6LLIPv9bce/eO6Q1DzKsESf0rQUW8AIaaA5vkZLY+uRsnwWBGJc9Ve5Sr0LN9Vt9PSnwuvlQ==
-X-Received: by 2002:a2e:b74b:0:b0:26c:5cf3:cc87 with SMTP id k11-20020a2eb74b000000b0026c5cf3cc87mr7568481ljo.75.1664182023890;
-        Mon, 26 Sep 2022 01:47:03 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id z17-20020a05651c11d100b0026c1cbbf464sm2289057ljo.112.2022.09.26.01.47.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Sep 2022 01:47:03 -0700 (PDT)
-Message-ID: <98adff9a-e55c-1b3a-4951-e569ff25499f@linaro.org>
-Date:   Mon, 26 Sep 2022 10:47:02 +0200
+        bh=EThfXOsChd8Ds/teM8XF9/4bZFxtFbmMMLDhrhk/LVg=;
+        b=ZAcj/x36DhY3acNh8N/2hTw3B0iis5EzdO+VCVq//Rcrld4K+gvLVI2jqjnuuml6op
+         sJj0c6NcAyZ7KTnwqkVUXDUjt5k75W4BLQxuHmWW5RcbKpWR3FP1d9pBhYKjG5xxO5i6
+         Z7vgVdqIE6oVsIC6B7ob+Mz880JFC8FtxrKt9TNu03rPpJWaKX2yrsPMIhV8XR0yI3L4
+         Ys7JIOOtTE80zovmBz2RRr08IIq/nm+6UUU4gUSc6/7/SGFPBPwgizlfSPjIm7FLKEGy
+         DKrnl5GwvpK5xNnjbwLeNqaLghqaL8PKcTbVo3xQsrtATQDPX+q3zC9EaToPS/9Fyf9O
+         nbew==
+X-Gm-Message-State: ACrzQf1iVcfSdv/fPhc8ZyA2+fvnuIqcSztlmaxDXRvPfpvJ7CjehkTh
+        ADqY0MitQ+2x6z/thquw+o7AiPVx5TdyAku6JYM=
+X-Google-Smtp-Source: AMsMyM4V77tBYxJb30tY3LzVhPeiL5xuNiSJLOXuP6FLfeI98xrdmThBKae0zM3OVAhE8qI3YWTAM527YleNn3WuP70=
+X-Received: by 2002:a05:600c:474a:b0:3b4:cb3f:2f5f with SMTP id
+ w10-20020a05600c474a00b003b4cb3f2f5fmr21263219wmo.8.1664183501063; Mon, 26
+ Sep 2022 02:11:41 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 12/15] dt-bindings: pinctrl: qcom,sm8250: fix matching pin
- config
-Content-Language: en-US
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220925110608.145728-1-krzysztof.kozlowski@linaro.org>
- <20220925110608.145728-13-krzysztof.kozlowski@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220925110608.145728-13-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Sender: amzzywisdom@gmail.com
+Received: by 2002:a05:6020:a2d3:b0:213:d018:20e0 with HTTP; Mon, 26 Sep 2022
+ 02:11:40 -0700 (PDT)
+From:   Ibrahim idewu <ibrahimidewu4@gmail.com>
+Date:   Mon, 26 Sep 2022 10:11:40 +0100
+X-Google-Sender-Auth: O9oqiFjND9XyUvu40GFqd04DRBw
+Message-ID: <CAHmYgf4QQ-BNxsckhq951p7UF5_cqwoN=k=CPBxjKAM39k_vGQ@mail.gmail.com>
+Subject: I Need Your Respond
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.4 required=5.0 tests=ADVANCE_FEE_5_NEW_FRM_MNY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FILL_THIS_FORM,FREEMAIL_FROM,HK_SCAM,LOTS_OF_MONEY,MONEY_FORM,
+        MONEY_FRAUD_3,NA_DOLLARS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_FILL_THIS_FORM_LOAN,UNDISC_MONEY autolearn=no autolearn_force=no
         version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/09/2022 13:06, Krzysztof Kozlowski wrote:
-> The TLMM pin controller follows generic pin-controller bindings, so
-> should have subnodes with '-state' and '-pins'.  Otherwise the subnodes
-> (level one and two) are not properly matched.  This method also unifies
-> the bindings with other Qualcomm TLMM and LPASS pinctrl bindings.
-> 
-> The change causes indentation decrement, so the diff-hunk looks big, but
-> there are no functional changes in the subnode "properties" section.
-> The only difference there is removal of blank lines between common GPIO
-> pinconf properties.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 145 +++++++++---------
->  1 file changed, 75 insertions(+), 70 deletions(-)
-> 
+My name is Mr.Ibrahim Idewu, i work in the bank here in burkina faso.
+I got your contact
+from internet search i hope that you will not expose or betray this
+trust and confident that am about to entrust in you for the benefit of
+our both families.
 
-(...)
+I decovered an abandoned fund here in our bank belonging to a dead
+businessman who lost hs life and entire family in a motor accident,
+I am in need of your help as a foreigner to present you as the next of
+kin and to transfer the
+sum of $19.3 million U.S dollars (nineteen.three million U.S dollars) into your
+account risk is completely %100 free.
 
-> +
-> +    required:
-> +      - pins
-> +
-> +    allOf:
-> +      - $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
-> +      - if:
-> +          properties:
-> +            pins:
-> +              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
-> +        then:
-> +          required:
-> +            - function
+send me the below details
 
-In my other patchset, I moved this if:then: to common schema, therefore
-this patch will be later rebased. All other patches in the patchset are
-free to go, so far.
+Your Full Name.
 
-Best regards,
-Krzysztof
+Your Country.
 
+Your Age.
+
+Your Occupation.
+
+Phone Number.
+
+contact address
+
+best regards
+mr Ibrahim Idewu
