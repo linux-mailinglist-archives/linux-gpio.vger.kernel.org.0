@@ -2,177 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 425A65E9A8E
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 09:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 862E45E9AA5
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 09:44:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234082AbiIZHir (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 03:38:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33656 "EHLO
+        id S234146AbiIZHok (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 03:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233416AbiIZHiq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 03:38:46 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9B829826
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:38:45 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id z13-20020a7bc7cd000000b003b5054c6f9bso6386277wmk.2
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:38:44 -0700 (PDT)
+        with ESMTP id S234109AbiIZHo2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 03:44:28 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76502A432
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:44:26 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id j16so9523456lfg.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 00:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=iszbgWp+XMy4E/1Fqaw0VvMuVcvOlJ2rp3ekiASDHJc=;
-        b=YOou8AySocycsI7Np6RjW55+2oLY8WOCSybWG/iYtcDrTf/tBU2WB5sHlC852NhMHy
-         uHW2SxZa51yTaLCn3qRhlQMRbGQzOvKsu+/XJOzMPnoaf8tVVc/VxtWKJF51XrpMivSw
-         x5QadKJwp7iVZTwmJO4YuqyyCQgDIPz6LJc6pNnFbKiGnBum7QKA5eBKyEMw6RA/DgNq
-         YLB02CXUn4dmwVUIwwACLDsD1NJqOOwMpwXQaJW2fEHd5xpRpfxBvpd24Xmgi8DIkiQX
-         GyYJuWUjFoJgs0wDbyw0h+I/TAvZ3b8zMAT8+qJX2enix4/ViSbQTZEHy1X96BAlRXGr
-         UqbQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=vUExKf8KWqjbGh/mdk6ctZRIxTZ/1o6Zypm7c6EDOBM=;
+        b=B3fAwidX+AucDd5l1XECebY0hxjAdWTJaCAozYeSvxxEvqCF/M2g/o/TZxs8ZoZONc
+         pbGirrL1yiK1eFstzIvABLDj4gcqS+xF1hBI28TzblmAtnaU60Qc6Gv6KYZuWSW4lwZx
+         lf0Vh9JUe0BoMJr4DQzHGbv0qaOiv2axzozwGR9swExtohk2V+3xP5KDcrtYt4GFq2vp
+         pw1CcvrRSE7ri+sJJecY3zpOBwX8LvHKGdjSmNoauXT21/0Z8d08BF0j0NGtGiPS499R
+         BPzwoUPDrjFfYOvKwnY6tv3O7xRlxwQj2sLfrNdS7TpNY36eH1ZhYmEPtM5rNuzOnae6
+         avhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=iszbgWp+XMy4E/1Fqaw0VvMuVcvOlJ2rp3ekiASDHJc=;
-        b=xXpRWfE7Hg6QrDIJJysMb+dQkzv53gLN8a3JDTtxQr2Ag6dU7u9iiu/L6mqCae0bAN
-         F6snGr+slwSITgUVDtSqJKViGucjXKvME/5nMOlo7fD3S7FmG6MdRz5kstGJfi30JoFQ
-         AvLIx/Kpk+ACZZTxlzNWawHmThHnAiLa508ywIwqwA2TfqaLujp2OxOP++seoQZ4/9ge
-         GK00RW5ADt7tnc6WGOqK//1y5eStXZ7ExpG89ET9kjkrd1D/xuxRdYBcnxKn3MxWL1A3
-         6gSWN+mMbLPzLygPsKokxxrwLO8phz71v+k3jZAi2aMWnMyVaFibpSKfvc0sj8vP5NHV
-         ZPtg==
-X-Gm-Message-State: ACrzQf2Zp9h3e2e1b7I+SfJGUiLPy6w8wAq+tvGY4NvOm+Jlr1oHZlwN
-        gDaF16lQa8D03p94pCuqLk/aNWO55BsG4lIMFCC6uQJdSsQ=
-X-Google-Smtp-Source: AMsMyM4BBX3eEIMBCTD1q0iEZpqaQUCLBZ2gbTsIsicgqoiL+eK4qdHLRPfRoG0zMEPaMp0wA/I0bkN1LtSiPE0U5Cw=
-X-Received: by 2002:a05:600c:1caa:b0:3a8:4066:981d with SMTP id
- k42-20020a05600c1caa00b003a84066981dmr21051372wms.54.1664177923562; Mon, 26
- Sep 2022 00:38:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220826080230.1712978-1-weiyongjun1@huawei.com>
- <CAMRc=Mc-m7JfDqM3ALy43T+S9DdpV8boEy+J6ruQZjLkqbZHPw@mail.gmail.com> <557e3d18-057c-f787-d422-d54f6e4be36f@huawei.com>
-In-Reply-To: <557e3d18-057c-f787-d422-d54f6e4be36f@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 26 Sep 2022 09:38:32 +0200
-Message-ID: <CAMRc=MeNJAgkaD6P4t6=0hy4F7Mkw_Jyg_X5QJ5C3em9cW4iOw@mail.gmail.com>
-Subject: Re: [PATCH -next 0/2] allow gpio simulator be used as interrupt controller
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=vUExKf8KWqjbGh/mdk6ctZRIxTZ/1o6Zypm7c6EDOBM=;
+        b=qFARd29ZOvPsycjVGGQPH8ryaBUu1+FwOycmu3WlIBcCc7fU0achRJWUen5aTiyBiO
+         5naO3mZ1CZiyF/bi7wUlLE2qFf/o1kphtscTVUc8HnGDKkCEuYnIeWrr0dKiGXjmYRxs
+         Acwo8vrXQ2UeQxLsxId3iF7OCShDUfZMfwvGuN4FjFK6z7gcad7wyp5XiQYY8KgdJUyi
+         ITnSl5Jw8ZZeuwKp3HVxw59g8kmVWkd6K3SS8iZLhFeEVYo4c3lx/Oru3ZCezQAPHu9G
+         IteRvhSg7l7b6iUS2wQrfxG4As3ikmXhecCSmZAg0S0qbMFVGrGBt36NdlOdEHiy+xWU
+         dH1Q==
+X-Gm-Message-State: ACrzQf0r9f6OBs6CzL9nAlo6GIRHdRxFtx0cB7NeQSRDwQIq4zArsMC3
+        YRaYoWPeh2m8B8jxtrBdBDjdtKnLycBMog==
+X-Google-Smtp-Source: AMsMyM4IsHSulfNu1TKObJjoD4Rl4J6v569jAY105yoTy9+m+Ldw8YyI9ltdhmJa89mGwY0aRJHQ6w==
+X-Received: by 2002:a19:654d:0:b0:49f:5309:1cb6 with SMTP id c13-20020a19654d000000b0049f53091cb6mr8045380lfj.522.1664178265274;
+        Mon, 26 Sep 2022 00:44:25 -0700 (PDT)
+Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id g6-20020a19e046000000b004978e51b691sm2453298lfj.266.2022.09.26.00.44.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Sep 2022 00:44:24 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 00/33] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM pinctrl schema warnings
+Date:   Mon, 26 Sep 2022 09:43:42 +0200
+Message-Id: <20220926074415.53100-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 8:57 AM Wei Yongjun <weiyongjun1@huawei.com> wrote:
->
->
->
-> On 2022/9/1 0:08, Bartosz Golaszewski wrote:
-> > On Fri, Aug 26, 2022 at 9:44 AM Wei Yongjun <weiyongjun1@huawei.com> wrote:
-> >>
-> >> This series allow gpio simulator be used as interrupt controller, the use
-> >> case is mockup some device which using GPIO as interrupt controller, such
-> >> as mcp2515 CAN device. With the dts [1], we can mockup a mcp2515 device,
-> >> and trigger irq by following commands:
-> >>
-> >>  $ echo pull-down > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
-> >>  $ echo pull-up > /sys/bus/gpio/devices/gpiochip0/sim_gpio0/pull
-> >>
-> >>
-> >> --[1]---------------------------------------------------------
-> >> /dts-v1/;
-> >>
-> >> #include <dt-bindings/interrupt-controller/irq.h>
-> >>
-> >> / {
-> >>         clk24m: clk24m {
-> >>                 compatible = "fixed-clock";
-> >>                 clock-output-names = "clk24m";
-> >>                 clock-frequency = <24000000>;
-> >>                 #clock-cells = <0>;
-> >>         };
-> >>
-> >>         gpio-sim {
-> >>                 compatible = "gpio-simulator";
-> >>
-> >>                 bank0: bank0 {
-> >>                         gpio-controller;
-> >>                         #gpio-cells = <2>;
-> >>                         ngpios = <16>;
-> >>
-> >>                         interrupt-controller;
-> >>                         #interrupt-cells = <2>;
-> >>
-> >>                         line_b-hog {
-> >>                                 gpio-hog;
-> >>                                 gpios = <0 1>;
-> >>                                 input;
-> >>                                 line-name = "irq-sim";
-> >>                         };
-> >
-> > Why do you need this hog? The GPIO will be marked as requested once
-> > the interrupt is taken by the driver.
->
-> Sorry for reply later.
->
-> It seems that only if driver request gpio with fwnode_gpiod_get_index()
-> marks GPIO as request one.
->
-> If driver using request_threaded_irq() request one irq, the requested
-> status will not be marked. We need to use hog or request by userspace
-> to mark as requested.
->
+Hi,
 
-Right, of course. Thanks.
+Changes since v1
+================
+v1: https://lore.kernel.org/linux-devicetree/20220924080459.13084-1-krzysztof.kozlowski@linaro.org/T/#t
+1. As Stephan suggested, move check for function on non-GPIO pins to common
+   TLMM schema.  This affects few commits in the set named:
+   "use common TLMM schema"
+   "do not require function on non-GPIOs"
 
-> >
-> >>                 };
-> >>         };
-> >>
-> >>         spi: spi {
-> >>                 compatible = "spi-mockup";
-> >>
-> >>                 #address-cells = <1>;
-> >>                 #size-cells = <0>;
-> >>
-> >>                 can0: can@1 {
-> >>                         compatible = "microchip,mcp2515";
-> >>                         reg = <1>;
-> >>                         clocks = <&clk24m>;
-> >>                         interrupt-parent = <&bank0>;
-> >>                         interrupts = <0 IRQ_TYPE_EDGE_BOTH>;
-> >>                 };
-> >>
-> >>         };
-> >> };
-> >> ------------------------------><-----------------------------
-> >>
-> >> Wei Yongjun (2):
-> >>   genirq/irq_sim: Allow both one and two cell bindings
-> >>   gpio: sim: make gpio simulator can be used as interrupt controller
-> >>
-> >>  drivers/gpio/gpio-sim.c | 2 +-
-> >>  kernel/irq/irq_sim.c    | 1 +
-> >>  2 files changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> --
-> >> 2.34.1
-> >>
-> >
-> > Can you add some info about this to the documentation?
->
+Overview
+========
+This is the third, independent patchset around Qualcomm pinctrl in recent days:
+1. First round of TLMM fixes: merged
+2. LPASS fixes:
+   https://lore.kernel.org/linux-devicetree/20220922195651.345369-1-krzysztof.kozlowski@linaro.org/T/#t
+3. ARMv7 TLMM fixes: *THIS PATCHSET*
+4. ARMv8 remaining TLMM fixes: v1 send:
+   https://lore.kernel.org/linux-devicetree/20220925110608.145728-1-krzysztof.kozlowski@linaro.org/T/#t
 
-Ok, I'll wait for v2.
+Dependencies
+============
+1. No dependencies.
+2. dt-bindings are independent of DTS patches.
 
-And you can drop the -next prefix too, it doesn't fix anything in next.
+Best regards,
+Krzysztof
 
-Bart
+Krzysztof Kozlowski (33):
+  arm64: dts: qcom: ipq6018-cp01-c1: correct blspi1 pins
+  arm64: dts: qcom: ipq6018: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: sdx55: add gpio-ranges to TLMM pinctrl
+  ARM: dts: qcom: sdx55: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8226: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8974: align TLMM pin configuration with DT schema
+  dt-bindings: pinctrl: qcom,tlmm-common: add common check for function
+  dt-bindings: pinctrl: qcom,ipq6018: add qpic_pad function
+  dt-bindings: pinctrl: qcom,ipq6018: increase number of pins in pinmux
+  dt-bindings: pinctrl: qcom,ipq6018: fix matching pin config
+  dt-bindings: pinctrl: qcom,ipq6018: use common TLMM schema
+  dt-bindings: pinctrl: qcom,ipq6018: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8226: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8226: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8226: add functions and input-enable
+  dt-bindings: pinctrl: qcom,msm8226: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8953: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8953: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8953: fix indentation in example
+  dt-bindings: pinctrl: qcom,mdm9607: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,mdm9607: fix indentation in example
+  dt-bindings: pinctrl: qcom,qcm2290: fix matching pin config
+  dt-bindings: pinctrl: qcom,qcm2290: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx55: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix indentation in example
+  dt-bindings: pinctrl: qcom,sdx65: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx65: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sc7280: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8280xp: fix indentation in example
+    (remaining piece)
 
-> Will do that
->
-> Thanks,
-> Wei Yongjun
+ .../pinctrl/qcom,ipq6018-pinctrl.yaml         | 60 +++++++++--------
+ .../pinctrl/qcom,mdm9607-pinctrl.yaml         | 23 ++++---
+ .../pinctrl/qcom,msm8226-pinctrl.yaml         | 63 +++++++++---------
+ .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 64 +++++++++----------
+ .../pinctrl/qcom,msm8953-pinctrl.yaml         | 51 ++++++++-------
+ .../pinctrl/qcom,qcm2290-pinctrl.yaml         | 11 ++--
+ .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml | 14 +++-
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        |  4 +-
+ .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  | 51 ++++++++-------
+ .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 12 ++--
+ .../bindings/pinctrl/qcom,tlmm-common.yaml    | 20 ++++--
+ arch/arm/boot/dts/qcom-apq8026-lg-lenok.dts   |  6 +-
+ arch/arm/boot/dts/qcom-msm8226.dtsi           | 24 +++----
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 30 ++++-----
+ .../boot/dts/qcom-sdx55-telit-fn980-tlb.dts   | 45 +++++--------
+ arch/arm/boot/dts/qcom-sdx55.dtsi             |  1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts  |  8 ++-
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |  4 +-
+ 18 files changed, 264 insertions(+), 227 deletions(-)
+
+-- 
+2.34.1
+
