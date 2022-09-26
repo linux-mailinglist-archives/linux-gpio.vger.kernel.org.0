@@ -2,126 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C92375E9BFE
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 10:27:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A3C25E9C5C
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 10:47:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234264AbiIZI1e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 04:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        id S234500AbiIZIrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 04:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234218AbiIZI12 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 04:27:28 -0400
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF24371B8;
-        Mon, 26 Sep 2022 01:27:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.30.67.153])
-        by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4MbbRj5Klgzl7ZR;
-        Mon, 26 Sep 2022 16:25:37 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.102.38])
-        by APP4 (Coremail) with SMTP id gCh0CgAHf45oYjFjX1aNBQ--.36343S7;
-        Mon, 26 Sep 2022 16:27:22 +0800 (CST)
-From:   Wei Yongjun <weiyongjun@huaweicloud.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] gpio: sim: document use case for interrupt controller
-Date:   Mon, 26 Sep 2022 08:44:28 +0000
-Message-Id: <20220926084428.1792815-4-weiyongjun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
-References: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
+        with ESMTP id S234422AbiIZIrO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 04:47:14 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C39324082
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 01:47:05 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id a14so6593943ljj.8
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 01:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=vrv065D+ctkztUjNUa3Jmz1/DXnw7DhEXSuZPsqfZUM=;
+        b=J071zhv/iyvxBhhD3psGEI6Cg1DZGDrWbj/a2rzs1PQrBZVi1x4YFbVXd+qF8v1zeM
+         L5LcIQmhQXg+djyOPZlWWjEH+2xODIqEOphDzDqNuV+U/0uYUKhy09ZIsGrBweC6pKJa
+         ucZJ5Rvx0mqq7jjlw4fcxWPltrTPib8k3vLvTPGV/DukWFB+dhhjprSk5yGd/ggRY6TA
+         skkp+RGujF6/85kzXHXolxPh0l4y9aTeTn2KdGvufQoCQOyBXW0M+gIWNpUqERTg++UJ
+         iwtcvRRvx+9130yMOkp9pG77Ghe9H2+TJ3G5r3QhBWKXwAQxVZefiQptIznsD90ckZT7
+         ppSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=vrv065D+ctkztUjNUa3Jmz1/DXnw7DhEXSuZPsqfZUM=;
+        b=LMjwi2q0LZQv4eaeaB2AGTHoMHwrqc+Fdy9wvfp/kqSvEdRDnwQWlF4iNh7EB9epc8
+         hw6rFyWHc9pzaghHWqCXqBGdql3O2nIt+8QfyvD7caHrhcg6Kt67Nq37Tpi4iuiCXUOI
+         4bYIWGVtO0NhGkvNp+LHdd+LI55634hnLzFguSj0+s1eZDZnTQ5D4Z+doo90+i16ZePA
+         JC8Y2tH3GmvOxY6pEt/tHf5UMg7egeYV1NATl9bhqrmpbGikfjVsds7xeePHjdThzZqd
+         43D1Hi86CY0t/FxTTqDbxV0wFHLZfHK2NActVtha0Ie31qZhWMmzGAecKm12GRXW50cj
+         er7w==
+X-Gm-Message-State: ACrzQf2Ed62nyPZx5xHwrqGJhW950khp6bJzoXGY3d2KVyEqfO3cHVJS
+        0AxaRIfrN9e2ZZ3d4jS9LIAkVw==
+X-Google-Smtp-Source: AMsMyM6LLIPv9bce/eO6Q1DzKsESf0rQUW8AIaaA5vkZLY+uRsnwWBGJc9Ve5Sr0LN9Vt9PSnwuvlQ==
+X-Received: by 2002:a2e:b74b:0:b0:26c:5cf3:cc87 with SMTP id k11-20020a2eb74b000000b0026c5cf3cc87mr7568481ljo.75.1664182023890;
+        Mon, 26 Sep 2022 01:47:03 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id z17-20020a05651c11d100b0026c1cbbf464sm2289057ljo.112.2022.09.26.01.47.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Sep 2022 01:47:03 -0700 (PDT)
+Message-ID: <98adff9a-e55c-1b3a-4951-e569ff25499f@linaro.org>
+Date:   Mon, 26 Sep 2022 10:47:02 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: gCh0CgAHf45oYjFjX1aNBQ--.36343S7
-X-Coremail-Antispam: 1UD129KBjvJXoW7urWDXrWrZr1rCry7XF1fJFb_yoW8Wr4fpF
-        1DKryIqw1kGF17C3yFyF4Sk3sxZw1rGrZ5u3Z2kF4rJFyrtryvq3yjyryrXF18XrWUXay5
-        ZrZa9F10kr1qyw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvGb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6r1S6rWUM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
-        A2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-        w2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-        Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-        Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-        6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-        73UjIFyTuYvjxU2PEfUUUUU
-X-CM-SenderInfo: 5zhl50pqjm3046kxt4xhlfz01xgou0bp/
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 12/15] dt-bindings: pinctrl: qcom,sm8250: fix matching pin
+ config
+Content-Language: en-US
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220925110608.145728-1-krzysztof.kozlowski@linaro.org>
+ <20220925110608.145728-13-krzysztof.kozlowski@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220925110608.145728-13-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On 25/09/2022 13:06, Krzysztof Kozlowski wrote:
+> The TLMM pin controller follows generic pin-controller bindings, so
+> should have subnodes with '-state' and '-pins'.  Otherwise the subnodes
+> (level one and two) are not properly matched.  This method also unifies
+> the bindings with other Qualcomm TLMM and LPASS pinctrl bindings.
+> 
+> The change causes indentation decrement, so the diff-hunk looks big, but
+> there are no functional changes in the subnode "properties" section.
+> The only difference there is removal of blank lines between common GPIO
+> pinconf properties.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 145 +++++++++---------
+>  1 file changed, 75 insertions(+), 70 deletions(-)
+> 
 
-Add document for using GPIO sim as interrupt controller.
+(...)
 
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- Documentation/admin-guide/gpio/gpio-sim.rst | 44 +++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+> +
+> +    required:
+> +      - pins
+> +
+> +    allOf:
+> +      - $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+> +      - if:
+> +          properties:
+> +            pins:
+> +              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9])$"
+> +        then:
+> +          required:
+> +            - function
 
-diff --git a/Documentation/admin-guide/gpio/gpio-sim.rst b/Documentation/admin-guide/gpio/gpio-sim.rst
-index d8a90c81b9ee..7ccb3f80c90e 100644
---- a/Documentation/admin-guide/gpio/gpio-sim.rst
-+++ b/Documentation/admin-guide/gpio/gpio-sim.rst
-@@ -132,3 +132,47 @@ group there are two attibutes:
-     ``value`` - allows to read the current value of the line which may be
-                 different from the pull if the line is being driven from
-                 user-space
-+
-+An example device-tree code defining a GPIO simulator as interrupt controller:
-+
-+.. code-block :: none
-+
-+    gpio-sim {
-+        compatible = "gpio-simulator";
-+
-+        bank0 {
-+            gpio-controller;
-+            #gpio-cells = <2>;
-+            ngpios = <16>;
-+
-+            interrupt-controller;
-+            #interrupt-cells = <2>;
-+
-+            line0 {
-+                gpio-hog;
-+                gpios = <0 1>;
-+                input;
-+                line-name = "irq-sim";
-+            }
-+        };
-+    };
-+
-+    spi: spi {
-+        compatible = "spi-mockup";
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        can0: can@1 {
-+            compatible = "microchip,mcp2515";
-+            reg = <1>;
-+            interrupt-parent = <&bank0>;
-+            interrupts = <0 IRQ_TYPE_EDGE_BOTH>;
-+        }
-+    };
-+
-+Trigger irq by writing value to pull setting:
-+
-+.. code-block :: none
-+
-+    $ echo pull-down > /sys/devices/platform/gpio-sim/gpiochipX/sim_gpio0/pull
-+    $ echo pull-up > /sys/devices/platform/gpio-sim/gpiochipX/sim_gpio0/pull
--- 
-2.34.1
+In my other patchset, I moved this if:then: to common schema, therefore
+this patch will be later rebased. All other patches in the patchset are
+free to go, so far.
+
+Best regards,
+Krzysztof
 
