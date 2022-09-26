@@ -2,139 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DC845EA7EF
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 16:08:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D90C5EA88F
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 16:37:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234333AbiIZOIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 10:08:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43554 "EHLO
+        id S234953AbiIZOhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 10:37:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbiIZOHt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 10:07:49 -0400
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6342028AC;
-        Mon, 26 Sep 2022 05:18:54 -0700 (PDT)
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28Q6n3rW004276;
-        Mon, 26 Sep 2022 12:32:05 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=selector1;
- bh=2YNk7rnU4FZ13+o3uecNedyFsARFhIeA+ezdGLGCGk4=;
- b=N/E+FthewNCLizrMRhhzGDsnNtzC5gNVHOgrchi7o+xablsWgHH+JEMTQiXZhSvOMoZF
- kzTVL/7paUPj9gIK5AjIdHwHUp7zTtr0ZmML/F5lH58fLbqaEzl1/JMe+pdtzO3+Q8Wv
- CpBDc0wdI3ZADsJ/CjInzicNOln/2ljjhh0sXV1kE4pHVox8SAaqpK7MvnEV11EBxYCV
- bVSyfx7fdin1+6kiOhGPclP/i9t9BNg6jqBDp10SKp6K4Hi4N4/6ZHgFc4FvJLcX115F
- YpdWo1trqKRP9h5ipHecJh8EJQHY+YYq8KPJ3a2K8UZTqiw7STbaldSlTTyBx3hBs9MH Pw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3jsrsjau3x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 26 Sep 2022 12:32:05 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 02E3B100034;
-        Mon, 26 Sep 2022 12:32:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7CD6D21FEA8;
-        Mon, 26 Sep 2022 12:32:03 +0200 (CEST)
-Received: from [10.201.21.93] (10.75.127.51) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.2375.31; Mon, 26 Sep
- 2022 12:32:03 +0200
-Message-ID: <a8d9aee9-a1e3-5d9a-b9f3-4e92f79a99ef@foss.st.com>
-Date:   Mon, 26 Sep 2022 12:32:02 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] dt-bindings: pinctrl: stm32: add missing entries for gpio
- subnodes
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        with ESMTP id S234327AbiIZOgj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 10:36:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC1C97B37;
+        Mon, 26 Sep 2022 05:55:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9256B60C6E;
+        Mon, 26 Sep 2022 12:55:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E39C433D6;
+        Mon, 26 Sep 2022 12:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664196934;
+        bh=qq99K9XkP93M84dnnMozsOV4GmoylkCVnPnfD0oKiyU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dwbRZmynfcASU15mDDPIzON0HAGhIomclk99wjisGdXoNQkSUsw/jgfv99lUFcfMg
+         3WuYpxn6O3BJgwMZ1E1r3ywIRWZqYwaIKhkm4w7SnAf4xECi8v6MM4Px4AZjYJg8sX
+         UqrJnZCiNlx6BZZF1X5/uYJUOrU7Qn1IyVtEkASBfHzp7PPIPcHpqKZ+ScFR4lKXMr
+         wznyCujjpvNoPdU9zd/xvw81c7cJTTivqrrmay3NfR+rXfT3y4Kdk4Ela8FrQrGCN7
+         RKaihDTuH4axR6ALGxNS/rJrLdIcCjDiJ7O/YdYq2oUhPK75VEA7Nubzs5+pHtZygG
+         CRygiM5FVL9Ig==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ocndz-00Ch5r-SD;
+        Mon, 26 Sep 2022 13:55:31 +0100
+Date:   Mon, 26 Sep 2022 08:55:31 -0400
+Message-ID: <865yha8fcs.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Wei Yongjun <weiyongjun@huaweicloud.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>
-References: <20220913074639.31932-1-alexandre.torgue@foss.st.com>
- <9b711a9e-9e63-b69e-fabf-e05c11f145a6@linaro.org>
- <c21b9c95-ae35-fd7e-9e8e-6926703725b4@foss.st.com>
- <5145d4db-65bf-971d-84cd-73c222311cd3@linaro.org>
-From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <5145d4db-65bf-971d-84cd-73c222311cd3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-09-26_08,2022-09-22_02,2022-06-22_01
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] genirq/irq_sim: Allow both one and two cell bindings
+In-Reply-To: <CAMRc=MfjB4QTf_zp5Rk3T_ndqDjCCjAW2HmGpJ9EF-i1epSLcw@mail.gmail.com>
+References: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
+        <20220926084428.1792815-2-weiyongjun@huaweicloud.com>
+        <CAMRc=MfjB4QTf_zp5Rk3T_ndqDjCCjAW2HmGpJ9EF-i1epSLcw@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: brgl@bgdev.pl, weiyongjun@huaweicloud.com, tglx@linutronix.de, linus.walleij@linaro.org, weiyongjun1@huawei.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 9/23/22 11:21, Krzysztof Kozlowski wrote:
-> On 23/09/2022 10:29, Alexandre TORGUE wrote:
->> Hi Krzysztof
->>
->> On 9/19/22 13:32, Krzysztof Kozlowski wrote:
->>> On 13/09/2022 09:46, Alexandre Torgue wrote:
->>>> Add "interrupt-controller" and gpio-line-names to gpio subnodes in order to
->>>> fix dtb validation.
->>>
->>> Rebase your patch on recent Linux kernel and use get_maintainers.pl.
->>
->> I did it on 6.0-rc5 but yes I used your kernel.org address instead of
->> linaro ones. Sorry.
->>
->>>
->>>>
->>>> Signed-off-by: Alexandre Torgue <alexandre.torgue@foss.st.com>
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>>> index d35dcc4f0242..92582cccbb1b 100644
->>>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml
->>>> @@ -65,6 +65,10 @@ patternProperties:
->>>>          '#gpio-cells':
->>>>            const: 2
->>>>    
->>>> +      interrupt-controller: true
->>>> +      '#interrupt-cells':
->>>> +        const: 2
->>>> +
->>>>          reg:
->>>>            maxItems: 1
->>>>          clocks:
->>>> @@ -80,6 +84,8 @@ patternProperties:
->>>>            minimum: 1
->>>>            maximum: 16
->>>>    
->>>> +      gpio-line-names: true
->>>
->>> maxItems?
->>
->> Generic question, Is it mandatory to add maxItems information for all
->> entries ?
+On Mon, 26 Sep 2022 07:24:48 -0400,
+Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 > 
-> It's not mandatory for all. For some it is recommended, for some it does
-> not make sense. Here it's quite easy to add and it will validate the
-> entry. Any reason not to add it?
-
-Ok understood. To be honest, no reasons to not add it.
-
-cheers
-alex
-
+> On Mon, Sep 26, 2022 at 10:27 AM Wei Yongjun <weiyongjun@huaweicloud.com> wrote:
+> >
+> > From: Wei Yongjun <weiyongjun1@huawei.com>
+> >
+> > The IRQ simulator only support one cell binding now, this patch make it
+> > works with either one or two cell bindings, where the cell values map
+> > directly to the irq number and irq flags.
+> >
+> > Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> > ---
+> >  kernel/irq/irq_sim.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+> > index dd76323ea3fd..73a90b7b6022 100644
+> > --- a/kernel/irq/irq_sim.c
+> > +++ b/kernel/irq/irq_sim.c
+> > @@ -149,6 +149,7 @@ static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
+> >  static const struct irq_domain_ops irq_sim_domain_ops = {
+> >         .map            = irq_sim_domain_map,
+> >         .unmap          = irq_sim_domain_unmap,
+> > +       .xlate          = irq_domain_xlate_onetwocell,
+> >  };
+> >
+> >  /**
+> > --
+> > 2.34.1
+> >
 > 
-> Best regards,
-> Krzysztof
-> 
+> You'll need Marc's (Cc'ed) Ack here.
 
+The question is what will the simulator code do with this information.
+Throw it away? What of 3/4/5 cell bindings? I'd rather see the
+simulator being extended to deal with arbitrary bindings instead of
+trading a harcoded limit for another one. And also give some
+semantics to the extra cells.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
