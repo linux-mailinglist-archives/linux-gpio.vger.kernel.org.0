@@ -2,69 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3F735EAA0C
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 17:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 083F75EACC4
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 18:40:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236033AbiIZPQr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 11:16:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42256 "EHLO
+        id S229508AbiIZQkx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 12:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235911AbiIZPQ1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 11:16:27 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E065B7B2A0
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 07:01:38 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id z13so14293281ejp.6
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 07:01:38 -0700 (PDT)
+        with ESMTP id S229507AbiIZQkR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 12:40:17 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF2713F298
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 08:27:05 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id n35-20020a05600c502300b003b4924c6868so8239801wmr.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 08:27:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=WwbBPgpgSOhDsXzAEnUiTwCSqAmh6U+810HxaiUH3Zs=;
-        b=UrtVKnOix0Lho2BSMv2jSyYSA0LAxChjJSwfJ8qTj/5/DnGtjVLDNF2LzMibde/9P2
-         d3V5rEl2RYMIyanf52ejwgaNhpSmEPgYXM0GCAJmELQeM/1tcX1tZgYRH9uJU/Z5sFM4
-         zutpl2fJ/EdCTMLz9rqgeLdeTooH2JtCE4BRWEA+UJ0zAtBJdD231k04hqVSnXL2Kfgg
-         thRDnPf/nZI+TIqICwinTP+GmAhxGOTEtR1tof0/lk/DFyiV7ZEi4qvjev6xIQgJFRxl
-         V23ZAx/v4v6pHUor7HWaOVNbTOi2eKOGNxkZTZslHmxAwFlx4zvar+lsSY+t0U98mIlj
-         ioVA==
+        bh=tFE5SbkFgpb1NvTKVHzw1d3zMhgb4sE+PEHXvzG2uqM=;
+        b=Ejntay67JSZq4w3jzdJQ8fUfJ7rsbksdyz1iLxr9yNr2h7bgFx4gmM6hFblMW5K/q0
+         br6EnnUHOIF6tZ4OETLYHbVunBpYoueWc6ifFHtnRKvxioRL1mJR6/engmXVnKyqOApo
+         +GN+S1eIUgl5O1asLFia5P1+08Gd8AyzJhsbUocRsw6KEnVGqnbJdPh7E93Rbp7gifl0
+         z33e3WRpCx9BrOzgJRmNi9uYy6GmVEsRiVLyjHTjhIF63vs/G6RrYAbTET92SNhqLgk4
+         d2QiEJBzdQQcUv8fZHR0b+sO3lSBUTNyFSYAMMDthXIfkYINwtQqH59GJWfULAmqBcw+
+         Q/rA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=WwbBPgpgSOhDsXzAEnUiTwCSqAmh6U+810HxaiUH3Zs=;
-        b=1R14btX5101FRfPdlPJGqxXDeE9hZZOL2LcZHpR04MYGKdn/uFN6y9JtO3tUqPZPXg
-         3Q6nAOg02zFqCIFCrscjFTcCSnQK2IPSRlnMfL44bME5ZO0RtRT6RJWBloZ0PNZeD3eH
-         Uh6ItLo2jdZIX79PnOM8ZHogsWtqgmhc5WXXsrsxp5efxkSQ6UvoF9+tSkn5MICFr9mr
-         HqmwFkvQcsdGwQQ/eyhcsxlHvdM6AerkZGG/F7wDe4HLX3jJCy6krRUez4yFSJC7VL2K
-         U0fClw283M12vzl+g/sm8j72VvB2K5zu91NG6V9FX4LauZX3MOs85/zxgtIxlN2rQHbl
-         G+Og==
-X-Gm-Message-State: ACrzQf2LF8si2chaW1PRts7Gsg0t6ZN+lca8qzSimWD/rz3hJAHcCesg
-        JsL1xwRbVDg5IaFPvu3r2qWCddobWXOqxKLIqcLuUw==
-X-Google-Smtp-Source: AMsMyM5EGRHraqsTUxCdbMQ61QK0aJzGFGFVBi/7vZQSQr/VAFXheJhEouqn+2fNCDyvTRnY/g1MvwLGQu/Nd94MN44=
-X-Received: by 2002:a17:906:fe46:b0:73d:939a:ec99 with SMTP id
- wz6-20020a170906fe4600b0073d939aec99mr18595743ejb.169.1664200897188; Mon, 26
- Sep 2022 07:01:37 -0700 (PDT)
+        bh=tFE5SbkFgpb1NvTKVHzw1d3zMhgb4sE+PEHXvzG2uqM=;
+        b=4WWcZYt3jY+PQsu6DHeoGbKmuonZV/H1knfoBgw1dVDbf6vbJlZ2j7cP6kiMBSU122
+         jjXuDMyk1nizPBzsY8y3f+CbtagZ7uNoUT4JFJBRrCyge00pKHspW7EiV3CFWekmlfHZ
+         +1ZvlSzsIGlqRXECvNMI5QX4YprB+dFZYyxXMIOEOK08JzTZvLHGOrnkuFM2b/SPkWJC
+         8mnyaeMBZ90PPVZtm+o3sWilmgVMDs8GT2g2GiTRDgZD2Qox+6WlR5D7mK4p7dBl2CTW
+         7Y7sNjt8IwRQj4BHG+mvNBumF119Oo+Fyk5uYsiqnVKhhRrnWbn4qAbuD3QoSYp76dhm
+         67KA==
+X-Gm-Message-State: ACrzQf1L0k+3P363v8re7a6DbRsMuhqevJjXQJPuxFLojXzu7T5UwZdr
+        wLzPeXw8WBotZjBwzglnerZ1KRQZmDbmUngNOF3qLA==
+X-Google-Smtp-Source: AMsMyM4p8BgC7fd/fNSKGzo+zV03AEtoC81YHu4OPasEFYTxayyU9myDzw/NkTdgQENtuDRSnOPuYQ8wtut1ZC/Rx0I=
+X-Received: by 2002:a05:600c:a185:b0:3b4:ff33:9fc4 with SMTP id
+ id5-20020a05600ca18500b003b4ff339fc4mr16731609wmb.2.1664206022182; Mon, 26
+ Sep 2022 08:27:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220926100756.074519146@linuxfoundation.org>
-In-Reply-To: <20220926100756.074519146@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 26 Sep 2022 19:31:25 +0530
-Message-ID: <CA+G9fYsiTk-nq98AaQF+BNmxtEH911m+SDhXGbLns5Nb91cMWA@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/148] 5.15.71-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        slade@sladewatkins.com, Linus Walleij <linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Jordan Niethe <jniethe5@gmail.com>
+References: <cover.1664189248.git.viresh.kumar@linaro.org> <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
+ <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+In-Reply-To: <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Mon, 26 Sep 2022 20:56:51 +0530
+Message-ID: <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -75,95 +70,65 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 26 Sept 2022 at 16:04, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Bartosz,
+
+On Mon, 26 Sept 2022 at 18:59, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+> Thanks for being patient with me. :)
+
+I should thank you for being patient with me :)
+
+> > +    /// Read an event stored in the buffer.
+> > +    pub fn event(&self, index: u64) -> Result<edge::Event> {
+> > +        edge::Event::new(&self.ibuffer, index)
+> > +    }
 >
-> This is the start of the stable review cycle for the 5.15.71 release.
-> There are 148 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> In Event's new() you call gpiod_edge_event_buffer_get_event() which
+> returns a pointer to an event stored inside the buffer. There's also
+> the event_clone() function that calls gpiod_edge_event_copy() but I
+> don't see it called anywhere.
+
+I thought that is required if the user is concerned that the buffer will
+be overwritten by a new event, hence make a copy. Is that
+understanding correct? I didn't use it here for that reason, but it can
+be useful to the user expecting a lot of events.
+
+> Should users pay attention to the
+> lifetime of the buffer storing the event?
+
+No.
+
+> Because IMO if the buffer
+> goes out of scope, the program will crash attempting to access the
+> event.
+
+This is where Rust's memory safety comes in. If you see the design of
+the 'structure Event', it saves a reference to the 'struct BufferInternal'.
+The drop() implementation of BufferInternal calls:
+gpiod_edge_event_buffer_free(), but it won't get called unless all the
+references to it have gone out of scope. So untill the time user is still
+using any of the events, the buffer won't get freed. So we will never
+have invalid reference issue here.
+
+> In C++ the events in the buffer can only be accessed as const
+> edge_event& so it's clear we're only holding a reference to an object
+> existing somewhere else. Internally, the object stored in the buffer
+> doesn't copy the edge event, only holds a C pointer to the event
+> structure in struct gpiod_edge_event_buffer. Only upon calling
+> edge_event& edge_event::operator=(const edge_event& other) will we
+> trigger a copy.
 >
-> Responses should be made by Wed, 28 Sep 2022 10:07:26 +0000.
-> Anything received after that time might be too late.
+> This way doing `for (const auto& event: buffer)` allows us to iterate
+> over events without doing any additional allocations.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.71-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Can we reproduce that behavior in Rust? For instance, the above
+> function could return a borrowed reference and then we could have some
+> interface to trigger the copy? Maybe do an implicit copy like in C++?
+> I don't know if that's possible though.
 
-Following build warnings / errors noticed on arm and powerpc on stable-rc 5.15.
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Regressions found on arm:
-
-   - build-gcc-8-ixp4xx_defconfig
-   - build-gcc-11-ixp4xx_defconfig
-   - build-gcc-12-ixp4xx_defconfig
-   - build-gcc-9-ixp4xx_defconfig
-   - build-gcc-10-ixp4xx_defconfig
-
-Regressions found on powerpc:
-
-   - build-clang-nightly-defconfig
-   - build-gcc-8-maple_defconfig
-   - build-gcc-9-cell_defconfig
-   - build-gcc-12-cell_defconfig
-   - build-gcc-11-cell_defconfig
-   - build-gcc-8-cell_defconfig
-   - build-gcc-10-cell_defconfig
-   - build-clang-14-defconfig
-   - build-gcc-9-maple_defconfig
-   - build-gcc-10-maple_defconfig
-   - build-gcc-11-defconfig
-   - build-clang-13-defconfig
-   - build-gcc-8-defconfig
-   - build-gcc-12-maple_defconfig
-   - build-gcc-10-defconfig
-   - build-gcc-11-maple_defconfig
-   - build-gcc-9-defconfig
-   - build-gcc-12-defconfig
-
-arm build errors:
------------------
-drivers/gpio/gpio-ixp4xx.c:171:11: error: 'IRQCHIP_IMMUTABLE'
-undeclared here (not in a function); did you mean 'IS_IMMUTABLE'?
-  .flags = IRQCHIP_IMMUTABLE,
-           ^~~~~~~~~~~~~~~~~
-           IS_IMMUTABLE
-drivers/gpio/gpio-ixp4xx.c:172:2: error:
-'GPIOCHIP_IRQ_RESOURCE_HELPERS' undeclared here (not in a function)
-  GPIOCHIP_IRQ_RESOURCE_HELPERS,
-  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/gpio/gpio-ixp4xx.c:172:2: warning: excess elements in struct initializer
-drivers/gpio/gpio-ixp4xx.c:172:2: note: (near initialization for
-'ixp4xx_gpio_irqchip')
-drivers/gpio/gpio-ixp4xx.c: In function 'ixp4xx_gpio_probe':
-drivers/gpio/gpio-ixp4xx.c:296:2: error: implicit declaration of
-function 'gpio_irq_chip_set_chip'; did you mean 'gpiochip_get_data'?
-[-Werror=implicit-function-declaration]
-  gpio_irq_chip_set_chip(girq, &ixp4xx_gpio_irqchip);
-  ^~~~~~~~~~~~~~~~~~~~~~
-  gpiochip_get_data
-cc1: some warnings being treated as errors
-
-Build:
-https://builds.tuxbuild.com/2FInaOdiei4NQtTNOEIHoQiC7Lq/
-
-Powerpc build errors:
------------------
-powerpc64le-linux-gnu-ld: arch/powerpc/kernel/rtas_entry.o: in
-function `enter_rtas':
-(.text+0x92): undefined reference to `IRQS_ENABLED'
-
-build: https://builds.tuxbuild.com/2FInbucjJPAvqTvJc7358SVLh2O/
-
+So here in Rust, you clone() normally to make a copy, but the
+standard clone() declaration can't have an error returned and so I had
+to name it event_clone().
 
 --
-Linaro LKFT
-https://lkft.linaro.org
+Viresh
