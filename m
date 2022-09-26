@@ -2,71 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E62D25EAD60
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 18:59:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D32155EAD87
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Sep 2022 19:05:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230042AbiIZQ7i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Sep 2022 12:59:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44668 "EHLO
+        id S230179AbiIZRFH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Sep 2022 13:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230070AbiIZQ7O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 12:59:14 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB7AC6BCC5
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 08:57:48 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id x1-20020a17090ab00100b001fda21bbc90so12875185pjq.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Sep 2022 08:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=Fve91+Qky4XfIdzkq3rjb/VOBR2UF0t7Grvjns8qLCs=;
-        b=UbxC17ypIvlIVmAyOZUbqwj1fxStG23r3QUtzo6cJEKnCdCSHK2+Raw+llEyGAEmG/
-         dim18zI91BPqB+c+T9ObZJe5Ud4nFRnbztjt679xzvH0HhsXT7T1C1V+99GUL9+3i+ty
-         IsJhwBwNqGwxIaXZMaS/bR5GDS7sWKHqFzZcz5xH42MLBxIfzUg3si03DXECTKrthtRb
-         9RZZGl0H+sMV+4Oq6WlyesiJywEBhCMvE7pFBJPdxTBDqlDnkmH0Grjb1vKTmMDaRElJ
-         kWJE+2W50LoLD9jG86Cql2kEZ+19vcTzgqrwlcA6CNBA20vQGnu8UjJj0uo8SyfV7ZJ3
-         iOSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=Fve91+Qky4XfIdzkq3rjb/VOBR2UF0t7Grvjns8qLCs=;
-        b=q+Eh5Z+iyvRhStBVVdrprbbjgSWGdGZtmWiVg9Hy6OrszDXZ1mNoj+tUMw5YeRD41N
-         d5zZSEF/r6hCijuaaX3vyCZ34UkOrESWb/IUP9iCDzhmPHhlPS8PUcCrWo8yJ7+yOGz7
-         k5n2DCrL6g6Zj0ayzgecskO/B5U7hzlmCbTOsYHPuNsBp/y0tQlB4KjSgkDrk2ZMdy6A
-         e535P4WUCMM5/E08vzg+7bvf6DzRqgeHjvIs/34gq+Q1QiSw50QVZJkes2QDGa00P4LE
-         i15ZtuZMG5u+zU+FKEtvChI/6KRHTFB7VfNaru502N0LdaKVsbxxTtSk2L+q7vSCjXnd
-         xVAQ==
-X-Gm-Message-State: ACrzQf0tQaK9y7hjlIOLudhN36B5OzJWOKajsTnvjOeQFXwlb3Baxc0c
-        YIM0blzomgmoDv1QIz6FBV/xXg==
-X-Google-Smtp-Source: AMsMyM6YP8TVxHoy3axEgnVGoYsS4EQNzSiKq4LTYqCnbvPQfwpcBfxeN8Au8HHSfQFHlqq398zEiA==
-X-Received: by 2002:a17:90b:1642:b0:203:1630:c54d with SMTP id il2-20020a17090b164200b002031630c54dmr36361120pjb.122.1664207868413;
-        Mon, 26 Sep 2022 08:57:48 -0700 (PDT)
-Received: from localhost ([122.172.85.153])
-        by smtp.gmail.com with ESMTPSA id i9-20020a056a00224900b00537aa0fbb57sm12218775pfu.51.2022.09.26.08.57.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Sep 2022 08:57:47 -0700 (PDT)
-Date:   Mon, 26 Sep 2022 21:27:45 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V6 0/8] libgpiod: Add Rust bindings
-Message-ID: <20220926155745.wlen6eird5bryfni@vireshk-i7>
-References: <cover.1664189248.git.viresh.kumar@linaro.org>
+        with ESMTP id S230186AbiIZREj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Sep 2022 13:04:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D639DF52;
+        Mon, 26 Sep 2022 09:07:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A60EB60F7C;
+        Mon, 26 Sep 2022 16:07:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9037EC433D6;
+        Mon, 26 Sep 2022 16:07:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1664208434;
+        bh=hCRRXsW11YMvC8Y8h44DrQp5jTNBYzAtTZLpVUqbjlU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EF15N9D47cxNAsXFeSi5soyYYba34r9NeDFJVBY8v30k6RTbFpNHiwVH+ek+dTDNK
+         iw2lxudpF2qZtThPYwua1VtVBX8uEMvLphOC2K6n+gk20KlSz8HI0TW1XHDzsj4nzu
+         bgCDqtPGe2T7yd+gkv7FPAVHdH0V76v/fr09oM/U=
+Date:   Mon, 26 Sep 2022 18:07:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+        slade@sladewatkins.com, Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Imre Kaloz <kaloz@openwrt.org>,
+        Krzysztof Halasa <khalasa@piap.pl>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Jordan Niethe <jniethe5@gmail.com>
+Subject: Re: [PATCH 5.15 000/148] 5.15.71-rc1 review
+Message-ID: <YzHOLw5flpnGswCp@kroah.com>
+References: <20220926100756.074519146@linuxfoundation.org>
+ <CA+G9fYsiTk-nq98AaQF+BNmxtEH911m+SDhXGbLns5Nb91cMWA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1664189248.git.viresh.kumar@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <CA+G9fYsiTk-nq98AaQF+BNmxtEH911m+SDhXGbLns5Nb91cMWA@mail.gmail.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,17 +61,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26-09-22, 16:38, Viresh Kumar wrote:
-> Hello,
+On Mon, Sep 26, 2022 at 07:31:25PM +0530, Naresh Kamboju wrote:
+> On Mon, 26 Sept 2022 at 16:04, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.15.71 release.
+> > There are 148 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 28 Sep 2022 10:07:26 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.71-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> Here is another version of rust bindings for libgpiod v2.0, based of the
-> next/libgpiod-2.0 + the HTE patch from Bartosz [1].
+> Following build warnings / errors noticed on arm and powerpc on stable-rc 5.15.
 > 
-> Pushed here:
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
-> https://github.com/vireshk/libgpiod master
+> Regressions found on arm:
+> 
+>    - build-gcc-8-ixp4xx_defconfig
+>    - build-gcc-11-ixp4xx_defconfig
+>    - build-gcc-12-ixp4xx_defconfig
+>    - build-gcc-9-ixp4xx_defconfig
+>    - build-gcc-10-ixp4xx_defconfig
+> 
+> Regressions found on powerpc:
+> 
+>    - build-clang-nightly-defconfig
+>    - build-gcc-8-maple_defconfig
+>    - build-gcc-9-cell_defconfig
+>    - build-gcc-12-cell_defconfig
+>    - build-gcc-11-cell_defconfig
+>    - build-gcc-8-cell_defconfig
+>    - build-gcc-10-cell_defconfig
+>    - build-clang-14-defconfig
+>    - build-gcc-9-maple_defconfig
+>    - build-gcc-10-maple_defconfig
+>    - build-gcc-11-defconfig
+>    - build-clang-13-defconfig
+>    - build-gcc-8-defconfig
+>    - build-gcc-12-maple_defconfig
+>    - build-gcc-10-defconfig
+>    - build-gcc-11-maple_defconfig
+>    - build-gcc-9-defconfig
+>    - build-gcc-12-defconfig
+> 
+> arm build errors:
+> -----------------
+> drivers/gpio/gpio-ixp4xx.c:171:11: error: 'IRQCHIP_IMMUTABLE'
+> undeclared here (not in a function); did you mean 'IS_IMMUTABLE'?
+>   .flags = IRQCHIP_IMMUTABLE,
+>            ^~~~~~~~~~~~~~~~~
+>            IS_IMMUTABLE
+> drivers/gpio/gpio-ixp4xx.c:172:2: error:
+> 'GPIOCHIP_IRQ_RESOURCE_HELPERS' undeclared here (not in a function)
+>   GPIOCHIP_IRQ_RESOURCE_HELPERS,
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/gpio/gpio-ixp4xx.c:172:2: warning: excess elements in struct initializer
+> drivers/gpio/gpio-ixp4xx.c:172:2: note: (near initialization for
+> 'ixp4xx_gpio_irqchip')
+> drivers/gpio/gpio-ixp4xx.c: In function 'ixp4xx_gpio_probe':
+> drivers/gpio/gpio-ixp4xx.c:296:2: error: implicit declaration of
+> function 'gpio_irq_chip_set_chip'; did you mean 'gpiochip_get_data'?
+> [-Werror=implicit-function-declaration]
+>   gpio_irq_chip_set_chip(girq, &ixp4xx_gpio_irqchip);
+>   ^~~~~~~~~~~~~~~~~~~~~~
+>   gpiochip_get_data
+> cc1: some warnings being treated as errors
 
-Pushed current version as v6, master is used for something else currently.
+Should be fixed now, will do a -rc2 soon.
 
--- 
-viresh
+thanks,
+
+greg k-h
