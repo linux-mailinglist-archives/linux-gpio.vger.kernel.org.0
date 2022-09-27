@@ -2,31 +2,31 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F9D35EC2ED
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 14:39:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 513765EC2F2
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 14:39:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232032AbiI0Mj3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Sep 2022 08:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35376 "EHLO
+        id S230149AbiI0Mjn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Sep 2022 08:39:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbiI0MjZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 08:39:25 -0400
-Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [IPv6:2001:4b7a:2000:18::171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B301215D66E;
-        Tue, 27 Sep 2022 05:39:23 -0700 (PDT)
+        with ESMTP id S232262AbiI0Mjk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 08:39:40 -0400
+Received: from relay08.th.seeweb.it (relay08.th.seeweb.it [IPv6:2001:4b7a:2000:18::169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0E82A1B0;
+        Tue, 27 Sep 2022 05:39:34 -0700 (PDT)
 Received: from [192.168.1.101] (95.49.29.188.neoplus.adsl.tpnet.pl [95.49.29.188])
         (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id ACEAB3F35C;
-        Tue, 27 Sep 2022 14:39:21 +0200 (CEST)
-Message-ID: <72a150f1-c91b-cd46-6933-3ef101a428f9@somainline.org>
-Date:   Tue, 27 Sep 2022 14:39:21 +0200
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 15C7F3EF29;
+        Tue, 27 Sep 2022 14:39:33 +0200 (CEST)
+Message-ID: <9f8e45f4-8ac3-ed58-86b4-6f5e39b16e28@somainline.org>
+Date:   Tue, 27 Sep 2022 14:39:32 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [PATCH 09/15] arm64: dts: qcom: sm6125-sony-xperia: add missing
- SD CD GPIO functions
+Subject: Re: [PATCH 10/15] arm64: dts: qcom: sm6125: align TLMM pin
+ configuration with DT schema
 Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Andy Gross <agross@kernel.org>,
@@ -37,14 +37,14 @@ To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20220925110608.145728-1-krzysztof.kozlowski@linaro.org>
- <20220925110608.145728-10-krzysztof.kozlowski@linaro.org>
+ <20220925110608.145728-11-krzysztof.kozlowski@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-In-Reply-To: <20220925110608.145728-10-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220925110608.145728-11-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -54,39 +54,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 On 25.09.2022 13:06, Krzysztof Kozlowski wrote:
-> Add default GPIO function to SD card detect pins on SM6125 Sony Xperia,
-> as required by bindings:
-> 
->   qcom/sm6125-sony-xperia-seine-pdx201.dtb: pinctrl@500000: sdc2-off-state: 'oneOf' conditional failed, one must be fixed:
->     'pins' is a required property
->     'function' is a required property
->     'clk-pins', 'cmd-pins', 'data-pins', 'sd-cd-pins' do not match any of the regexes: 'pinctrl-[0-9]+'
+> DT schema expects TLMM pin configuration nodes to be named with
+> '-state' suffix and their optional children with '-pins' suffix.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
 Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 
 Konrad
->  arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dts | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm64/boot/dts/qcom/sm6125.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dts b/arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dts
-> index 6a8b88cc4385..9af4b76fa6d7 100644
-> --- a/arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm6125-sony-xperia-seine-pdx201.dts
-> @@ -89,6 +89,7 @@ &hsusb_phy1 {
->  &sdc2_off_state {
->  	sd-cd-pins {
->  		pins = "gpio98";
-> +		function = "gpio";
->  		drive-strength = <2>;
->  		bias-disable;
->  	};
-> @@ -97,6 +98,7 @@ sd-cd-pins {
->  &sdc2_on_state {
->  	sd-cd-pins {
->  		pins = "gpio98";
-> +		function = "gpio";
->  		drive-strength = <2>;
->  		bias-pull-up;
->  	};
+> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> index 1fe3fa3ad877..af49a748e511 100644
+> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+> @@ -407,13 +407,13 @@ data-pins {
+>  			};
+>  
+>  			sdc2_on_state: sdc2-on-state {
+> -				clk {
+> +				clk-pins {
+>  					pins = "sdc2_clk";
+>  					drive-strength = <16>;
+>  					bias-disable;
+>  				};
+>  
+> -				cmd-pins-pins {
+> +				cmd-pins {
+>  					pins = "sdc2_cmd";
+>  					drive-strength = <10>;
+>  					bias-pull-up;
