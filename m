@@ -2,109 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B4C5ECB6F
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 19:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE5765ECBAE
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 19:54:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233453AbiI0RmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Sep 2022 13:42:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44452 "EHLO
+        id S231425AbiI0RyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Sep 2022 13:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233378AbiI0RlG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 13:41:06 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C99E51E4581
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Sep 2022 10:39:21 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 10so16812485lfy.5
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Sep 2022 10:39:21 -0700 (PDT)
+        with ESMTP id S229567AbiI0RyA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 13:54:00 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E3935FA7;
+        Tue, 27 Sep 2022 10:53:59 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id y8so14230988edc.10;
+        Tue, 27 Sep 2022 10:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=eAxpH6loNU1iZeyA8GiJlas/ttJky4BrFApN1xAe7yY=;
-        b=NLyEVVNddfnTHSmbZNZ/w7X8uV5KFeKgIH8RauK4PeuC8IfmjYrsTxriGGR++Jlcp0
-         S2aoYebYYreI//5RTbL+meXTjlFCf6xlDha73PMFdAOBUw21wR0kclSZPeySXnx4U3D9
-         297XUrgbeLBbev50zRyZJd2qz8L4I3Xd12stfKPgWvSWizDXkUnN+zvNZCPegGj2GaxB
-         VDMwHLKEjOShiK+2CsNU0O8XlxmrScFqTdx4GMUed/RxlRfgoxwzsZbxSFAC9/jtzhAl
-         yN8FdV64L8AaXgn7EAEKtv/+I9DyTN47f/Sxrc0A3Kcc5H9bwinRyMtic98P1e0bdZWX
-         5t2g==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=1Ypdl4TRQC+1OSWNoWtNsZeRHzU6ew8cFJ+YEjQfHTc=;
+        b=KqO/zXxWkOwDPjKbXu8hyuaZYWxR9s9hv1at+3jJv5Y1FY6E0+h8Rgc0BE+pauKcdo
+         KHXPYY5Co95VFHegGHFKyg6eiNfyncmORzdlLOM59YxHuYo71OEdMGc7Ksu/R5LhQoOZ
+         0p9c3auRYjW/2g0W3Q6WUoij8rvt0NMtgGAlcR5plE0dZ81MJZF/Azy7wu8EPC6Irpjp
+         XH/XHMPcsLmTqi/yWbjhr/zx0XFFBFjLbwJ66lmIyRI6cb6QtL2HavkWTR2OaXE9FhpL
+         BZiTfbXVybauGSTo3aHFuTOTrl0rpWhC0oTQQhrdhrPhW+EZ8+S794xtfQZ0DlGDZf+3
+         pYBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=eAxpH6loNU1iZeyA8GiJlas/ttJky4BrFApN1xAe7yY=;
-        b=WzsZ3JAwKhbXHv9+S5PHWKv2jE8qybPlrVPIcjk2Q/oPRBgyF4krkKdnxMQ8I83d+Q
-         733/Smk0xIyoRiYuhpfbikYi9ivT5DAENutrY15qT/n9iy8h6TFRK//8hQjCB3Jlv2/k
-         EVoNNv1j+C1AJj/LerOY7+HYIAQKDwNAHS1YMOVum1Hm4eOIFew3n1vnZr+M+w8Ezs1s
-         U2UWG5Xwl6CHTo9o1gr/TekEcTr55g+OVoOhobMR6cdqmoVczJ26m3Gjj4kfdkklHQzK
-         5W8Xafn7eO7C7pSaZq8zAbQm0S5KZ+QTfKzACea4cMv9b2jAWeBi8jdyEA6cCWQP0sGC
-         SZNQ==
-X-Gm-Message-State: ACrzQf1C1uqtt7LJNlssyGKBi6uCeNByVwBCS5aiTnmeN1/JOlIgxHJh
-        IUUlC2O6LQqGJxfdHwtf4VzFjw==
-X-Google-Smtp-Source: AMsMyM4hMJHYiZwblEf+lFcnE65TS2ubA/NfDAnElbA++I9XUy1z/+NwnRUxUmBJwGwhT8vk/DIHVA==
-X-Received: by 2002:ac2:4945:0:b0:498:eb8d:e283 with SMTP id o5-20020ac24945000000b00498eb8de283mr11868886lfi.192.1664300361251;
-        Tue, 27 Sep 2022 10:39:21 -0700 (PDT)
-Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id q12-20020ac246ec000000b00498f570aef2sm218879lfo.209.2022.09.27.10.39.19
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=1Ypdl4TRQC+1OSWNoWtNsZeRHzU6ew8cFJ+YEjQfHTc=;
+        b=pW7VVKvcXKzj/WNEnVBSXe00pojx5BLdJ3WSXu1j0dLGhDJCFc0HT8VdHf1PzP2w2L
+         Q5feWq4vsvffPoURHcj0hracjXklcjU2af0K+61VaQU0XV4EkTuiHwEtq3Lsx/ZKPBmB
+         zEUxbpfrCBSLordqWRiVAszNvQeYKTxpgNJHpoW832hL1a2dlJMBA0whWYo37QZKL3/9
+         Fq5wvAjzvCU0mMxiAztVMlyuy3Ck8+IcDUKImYcDwzdZOw44tKW0cUGCA0sGdWJEnPzY
+         VU8H4rtihBIK2s1CzCG21mt3Z9F2Y72OQvVOnK5n1NkSFNcsQ1AVJQ40EO+OP8glN11q
+         RGCg==
+X-Gm-Message-State: ACrzQf1N5Mlp6Kr3e5ElOhWELtPOumNnyeyKAFErFtd29PmBzOucBMWh
+        mtA48fO8nDz10PjLxRhm4c+s9YuSRBT12IMy
+X-Google-Smtp-Source: AMsMyM4oYDuidVOOn0Lqag9BVv4J+Q7FYAuopwpG4GOuNpRt6Rih4mCc0JdTv2q9+6xTw0yPNXZZ+w==
+X-Received: by 2002:a05:6402:1554:b0:457:375e:7289 with SMTP id p20-20020a056402155400b00457375e7289mr13151127edx.171.1664301237455;
+        Tue, 27 Sep 2022 10:53:57 -0700 (PDT)
+Received: from skbuf ([188.27.184.197])
+        by smtp.gmail.com with ESMTPSA id k22-20020a17090632d600b007030c97ae62sm1123767ejk.191.2022.09.27.10.53.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 10:39:20 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Tue, 27 Sep 2022 10:53:56 -0700 (PDT)
+Date:   Tue, 27 Sep 2022 20:53:53 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Colin Foster <colin.foster@in-advantage.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Lee Jones <lee@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        krishna Lanka <quic_vamslank@quicinc.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 34/34] dt-bindings: pinctrl: qcom,sc8280xp: fix indentation in example (remaining piece)
-Date:   Tue, 27 Sep 2022 19:37:02 +0200
-Message-Id: <20220927173702.5200-35-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220927173702.5200-1-krzysztof.kozlowski@linaro.org>
-References: <20220927173702.5200-1-krzysztof.kozlowski@linaro.org>
+        Rob Herring <robh+dt@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 net-next 08/14] net: dsa: felix: update init_regmap to
+ be string-based
+Message-ID: <20220927175353.mn5lpxopp2n2yegr@skbuf>
+References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
+ <20220926002928.2744638-9-colin.foster@in-advantage.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220926002928.2744638-9-colin.foster@in-advantage.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Bindings example should be indented with 4-spaces.  Previous adjustment
-missefd one spot.
+Hi Colin,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
----
- .../devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml    | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Sun, Sep 25, 2022 at 05:29:22PM -0700, Colin Foster wrote:
+> During development, it was believed that a wrapper for ocelot_regmap_init()
+> would be sufficient for the felix driver to work in non-mmio scenarios.
+> This was merged in during commit 242bd0c10bbd ("net: dsa: ocelot: felix:
+> add interface for custom regmaps")
+> 
+> As the external ocelot DSA driver grew closer to an acceptable state, it
+> was realized that most of the parameters that were passed in from struct
+> resource *res were useless and ignored. This is due to the fact that the
+> external ocelot DSA driver utilizes dev_get_regmap(dev, resource->name).
+> 
+> Instead of simply ignoring those parameters, refactor the API to only
+> require the name as an argument. MMIO scenarios this will reconstruct the
+> struct resource before calling ocelot_regmap_init(ocelot, resource). MFD
+> scenarios need only call dev_get_regmap(dev, name).
+> 
+> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> ---
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-index b9ab130cd558..0b251caaebf2 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml
-@@ -139,8 +139,8 @@ examples:
-         gpio-ranges = <&tlmm 0 0 230>;
- 
-         gpio-wo-subnode-state {
--                pins = "gpio1";
--                function = "gpio";
-+            pins = "gpio1";
-+            function = "gpio";
-         };
- 
-         uart-w-subnodes-state {
--- 
-2.34.1
+I don't like how this turned out. I was expecting you not to look at the
+exported resources from the ocelot-core anymore - that was kind of the
+point of using just the names rather than the whole resource definitions.
 
+I am also sorry for the mess that the felix driver currently is in, and
+the fact that some things may have confused you. I will prepare a patch
+set which offers an alternative to this, and send it for review.
