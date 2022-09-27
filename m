@@ -2,138 +2,206 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F6CC5ECC2A
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 20:33:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A24A75ECC4A
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Sep 2022 20:44:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbiI0SdZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Sep 2022 14:33:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34484 "EHLO
+        id S231714AbiI0SoP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Sep 2022 14:44:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231288AbiI0SdX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 14:33:23 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E076C1B8CAE;
-        Tue, 27 Sep 2022 11:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1664303595;
-        bh=53cuAKl4+6V2r0luXj5DLEifbyiTT6MTrfmNNiUmdC4=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=R4qxv5tnCRSe58L7/dI/DH5vqWO6307gOuvUXqFdDweRgEBloJcqxTKYGVjbEcf3a
-         XjU0pbzoSzUtJzIUBjEIjp1EHR7RnGRoBUbIVkRpCr+dVCetFXgQfzTrl8VeVkPfTB
-         RmCLGqapyg2Ix6q2HBWNrr8NXkDRIiu+lLWJzEKs=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from probook ([88.78.142.174]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MAfYm-1oWgs724sK-00B0KS; Tue, 27
- Sep 2022 20:33:15 +0200
-Date:   Tue, 27 Sep 2022 20:33:13 +0200
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] pinctrl: wpcm450: Correct the fwnode_irq_get()
- return value check
-Message-ID: <YzNB6eg/caVtPEHA@probook>
-References: <20220927175509.15695-1-andriy.shevchenko@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Km42Vwm6MZWulEDn"
+        with ESMTP id S231863AbiI0SoG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 14:44:06 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2114.outbound.protection.outlook.com [40.107.96.114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8A151C5C91;
+        Tue, 27 Sep 2022 11:43:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EDuLQoL1q5/fxpPYeyZuJ/rPBq7Hx5n4NPprQ5tBLnz/spmbMUzQ9sFo9ReBZEy2yvb2M9Xl3EYpxebiCKWXcbML1OArZkka7tj1CGF62wGsGKQJTA5y1zxMBX4TtX0n6ZkfD7WwqeO1BYMEOTmzNgjgDfOgTgpbyT3UDLOSuY24xgJrKKf77ApEf+Uv4kwW82eGUusiLshUFH47xjbX7EZKDruIAOY6ecMSiLdQGY6/T34knXyTUgjP8d3UidIfXHrJJEMgVj2ZeHunjhPZoG3MhjUhKg4aJs6TtmDVz9W9NNzS6m/1iqI5IKZN58wZw4uNdOk82b9H8NB//zQqoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WOOIluDrrS6D42uUWaPM1Sqm/zyolDl/YjS2FO8+LDs=;
+ b=MMVBCo/d/3b0EV0+1u4zsqvgbUkqoDvFF380QQ+oqAYpCkAfr/CEaWZyvWf/0RAMPzY3XfXP0KH74X9sTKnQoNfjBKP9NRtrBYBgElXngAlBsbHgk6UUqFqBuE3Vxqx2Ago1ODV/gnUU67iQrC7Fym4z9biqgCvrrkyMO13IOYfPdxb26ijce8z/+a/WjN0ru1BUxFRG/N0u7QN4Ra3gfQFIMHArILbmrzuRFDdHzq64Uf8MuWFvRVZHkTU9fzNbcWlIqwD+ykLovZxpPBCbcXFTAUqUYZwAC4Yfg1C1PQoA8VaPrREs9NvkDQJQjr6BzzY8l7JPLfSwq5iH4/nLcA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=in-advantage.com; dmarc=pass action=none
+ header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WOOIluDrrS6D42uUWaPM1Sqm/zyolDl/YjS2FO8+LDs=;
+ b=SAq68meVyZgFrE0C3VPz6deV7VDIGOH5NGl0Kqt2efr9ZUEdJo4XHAtVT3a5Q4KfTDjahvK51qqTtKpxGiutIyVRtMUFjYbxKblQKf3X/aiSszJpvaGUcxvNQSmVCcuth65L0m2GPlkNzdlknVdhZ+oIXyZEvL2aMjCwpw+RnSQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=in-advantage.com;
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37) by BLAPR10MB5347.namprd10.prod.outlook.com
+ (2603:10b6:208:328::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.25; Tue, 27 Sep
+ 2022 18:43:56 +0000
+Received: from MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::b417:2ac7:1925:8f69]) by MWHPR1001MB2351.namprd10.prod.outlook.com
+ ([fe80::b417:2ac7:1925:8f69%4]) with mapi id 15.20.5654.026; Tue, 27 Sep 2022
+ 18:43:56 +0000
+Date:   Tue, 27 Sep 2022 11:43:46 -0700
+From:   Colin Foster <colin.foster@in-advantage.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Lee Jones <lee@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 net-next 08/14] net: dsa: felix: update init_regmap to
+ be string-based
+Message-ID: <YzNEYiXx6UoJLEdk@colin-ia-desktop>
+References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
+ <20220926002928.2744638-9-colin.foster@in-advantage.com>
+ <20220927175353.mn5lpxopp2n2yegr@skbuf>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927175509.15695-1-andriy.shevchenko@linux.intel.com>
-X-Provags-ID: V03:K1:GBttuH6Yja2j0kYfXLwCxLfKcE3uAKwo0uuhJHsSqCOyY6HKIGN
- 2sHYF8ZEnW41xYiw+bnIjMztGptrx22z9Q7WXqQMvksDyffK3Xk6Abvoy6HVlZvtDyEieml
- 6gCDQtFzWXNJZVHKQl+RlFrXyTDCHQyT3+5LdKMEPxplZ0JRuRhkx0S27a6nMTODEu7/d8w
- TUZVZLycXpvXC2Ry9N92g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:j5JOV09qQco=:74LG8tZoC7HdVWImdEGlqf
- TPnCF/o5vdpLc24PXvcKCSHjj2mwrXqQ16QMb0US5qBbEb6zsS+vEdizTsv1CgfevCCzq65XC
- g2ZS6sPnk+0+2xk2IgdevhsQO6F95kraeoA2+SGe3zB2/YpZyTjselpnhFayEJUiSXjxS8d9d
- BU4Y7lU8bNdsCPQRGfJ5+ag3HsKWfkDaMwxO3FyiJsChSHuRdMzzEr3yamazWMKUlCRNX78Lc
- aYUssuASvB/xBYHdEbL889n8JwBaKnY65r1CAvRECNpce40fheeAp4mIyxJkv2dK604eiLWb7
- A5Ab2IJklER9wKR9DRXXjmZGgldv0diNMFZpMwapxdWYM7HCj1KlOiVG/mGkDkr17z3L6rem6
- 3BYbCiXkeADtKCyTS7tRRNoWZWbe4ZowuLMsdt3bH0K2iX0mOla3rg+A6A0tgJTa2sw3s7Eww
- X4ch5Ujg0sLz6XBN9ziM8GGGE1OB+hAE0c5Nr3ir6uUIUYKO6AEtHFCRmh/wSvc4MHupyN7hm
- sX+yj4g/HWECdvHDy0rVbUkD469e+RRi67E+8yjI/Ed0uB5VgcJD7gIWwUT92zfLWAGEBfMys
- S7DZlh9a2QCsoAMgI0Xz4Qn+BD+1vg/xIJDMNy2WWu2t7e9dHAm8mgL5eB0g4tJYbK83AdACb
- 9oQmAqPSqmTYXmz+UUSC63SxLhq2F+yxVgNN98sO1MBKvqUGPu2iNZvv+qsJOWVCBILsL/aGE
- DePliV+BVv0iwwwjWWcstG0CJHB0XI+/kUMe1Txxh3ENUrZAyZ+f1vEhPROfHCeyBBUKRYJBT
- JGvjiLASnWnLwX68sR2b0U+NxAgJMTnnbBAR00NIZ6XSVZkSDcpGAA4XorxfQfb62oeaBZGy0
- SMEk73GqRfEOjThVj64o5QX2UptV422A4wChnMft9N3YvRrCYYOd9rQ5iuCJ0P1tOSwtfgKE8
- T4/3DglwcMxVDj7027LleE5jeL/EDp8PE2nBaeXYvWE10yFB9vMcL8nAsroyBTH8cBKkjsGL/
- tZlvBXyrPBtiBenWUxvhWMRRTiNM1W80malcwsi9TiEW/uaT2iK85MQmhwjypG69TmL/O7vON
- 7jdQBTuASjZAgBN51NCmFQ6SM8FdOu2/ARJ3fCGrWYjH+YQG5BULjMDFWYBki+KGxxq73UQ7/
- h8tRCEvwZcWm2qY918fHiOlcHp
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_H2,RCVD_IN_MSPIKE_ZBI,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220927175353.mn5lpxopp2n2yegr@skbuf>
+X-ClientProxiedBy: SJ0P220CA0008.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:a03:41b::17) To MWHPR1001MB2351.namprd10.prod.outlook.com
+ (2603:10b6:301:35::37)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWHPR1001MB2351:EE_|BLAPR10MB5347:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8e849877-3295-4636-bcfe-08daa0b83b7e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PD4y87sbo6nEasXPEaLcPsq8730LI2zmDGjVjqwUGGxmpMuWRkCBRuv+bJvpgqGPZylv8wcYg3KkeRgY/l+F/lvD9tnkfY17gd+3orfCODnAHTQnKBsbg4P1M35OZaDtEvbWyXSZajCoaWYT5flDIWTLFPNnO2b1py/2HQE0TakUAqFS2HLb5BVSGo5HeHnv1McytdmFEVeoQUo7QAwBc4X0vCDULfiMwgTBExKw+Quw0z5hc1K4U2rIARTL1F8seTBg/5gNk0Afpi6bldiI6elYfX+Ib8uOREydHBienYzfBsF4VTdarl/DXlzpImuKeRk3mm5rYhyZGYy5JTsBDMj+OhSlMeVOK9zWEA5tbVgnqRdYrCoQJ7FE+i36ivcIape+r9a62NBNjMJjI8pguaj2Wm6kCaK3okANSLitp1Eqq2ZTYP/ZMVyaNTYiwCvrPJfmV6cvJs73Fsat5G3nYQ7jWuCVOKucsRj2y8YEdqIvkKwor4NJo06qZ8FsbeO2hbf6HzDyjZfxkfWaVulgnpLPwDVaWlBhgOjWaWuWhVUYmrJQPhdlbyeoAuI2C9JfHkNOtH4oE7ihlzlaoKKa0EFRZq/3UPumo3UY4RFyr8gSU5vdEjk/3Fz8Tnw/9r96IycF+41VWtFEI+w4kbYmFXwvk6ALh9QGbew7u/1xg3LjcS1/cibOIrcfZKGR4ANN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2351.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(396003)(366004)(346002)(136003)(376002)(39830400003)(451199015)(2906002)(41300700001)(6506007)(8936002)(6666004)(7416002)(44832011)(5660300002)(6512007)(9686003)(33716001)(38100700002)(186003)(26005)(86362001)(83380400001)(8676002)(478600001)(54906003)(6916009)(316002)(66556008)(66946007)(4326008)(66476007)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JDdiPKrtBaJ85JmzGWM/z0hP65lQjOD1RWPMMyv9UXr05NK4uc6LIBAow6ME?=
+ =?us-ascii?Q?XKt9i3zYhWkbeDM2WqRDRZjpnQks0T6mC7P3oByRxn2AelbN22tkp09DMTN2?=
+ =?us-ascii?Q?ZsLNqs7Y3NtYwNW2pdlFmDrXvOxfR5alvZYaHp4w+oIl+Ce1CE+JDfhRvJsN?=
+ =?us-ascii?Q?dPGwgjDdwN04MhNiCHm3SH4Khz/FbAdfNRYxJs6GQ2YS8tnrw4JHlv9vumAN?=
+ =?us-ascii?Q?qhLNtv8ahO4/+A1Xwq7uSp3VMrGKO8EF/YL5O7aAhC7hLY3d44tamvLM3WAw?=
+ =?us-ascii?Q?1rmNtG/sRawenQHKFS0m1xbPTJmDVXi2bsReFm8sMKsHTpcGyf2pky7Ue9kw?=
+ =?us-ascii?Q?7ML25mETgvw9wwdtH5tJr8Etrbn6NHpEaP4i8mYvmIHLa8OIJ63QxSK/xwtX?=
+ =?us-ascii?Q?7HzDKJGObqUbcCmzoOkhG0Jw4MuVal2MbhfTMdB6UtQ4U/9kM9AyKf4J++G0?=
+ =?us-ascii?Q?3+ub1yhNmzbDlqb55gM70G+or237Ob6BXG7QeLT5Wlur9ZBylsXqtDUrCVgC?=
+ =?us-ascii?Q?8nDdzvnLQYB4WkZbT3psDfO/w5Id0W79VvcgMa52sy+u/JjmzoXd/qMPi5Gd?=
+ =?us-ascii?Q?ssES1ttiAYj1AgiJHQIBc2SXE4teJsmCU8AerAY8n8cDEaKk54Leh3wQdpor?=
+ =?us-ascii?Q?II2GoPHlofVlwWzU+FUarEaB+/eDQRz+3PeCHH+wiO93L4yRJ2pVlQDYEHTf?=
+ =?us-ascii?Q?tnEv+c/zGIabWeudodPPqdrztFiO/ib34+VVUWmqEV/fXoXB5kAugmDujKX1?=
+ =?us-ascii?Q?Ckmcrv7BIShLQezTmhcvZ/sR5wPb1lhEFTV2wqosqydhdn6at5R2DiiKtET/?=
+ =?us-ascii?Q?8ZxMH/qXUx7N1S3PCZdrgtfByMtbA1vpkCEzU9YMMPx0yJs2zpe6waSbh5TI?=
+ =?us-ascii?Q?ooYXipUJgNc3vCpZcSbx8md0EtiOBySyGEkhB/LTjcm3jdfARIPtQsl/Ep1n?=
+ =?us-ascii?Q?+aepKab06P0q6XjY3Vrfc6ufoBYbgadzqjd0oJ9NpREIyr6b8W2HjUMXxWIx?=
+ =?us-ascii?Q?L8XajL36EWepXPjf11wM92EzOQm4IYkBqhr8J2IE3pn8NKeN8aqW7Q/2OFRF?=
+ =?us-ascii?Q?j3tDHYecIUiwUNXc1SNUuNTAKPnHGfuH5Y9aD5hpDRBAmig05KTr11nOtalw?=
+ =?us-ascii?Q?yvsfJR7WYi8KfyuzeiFcrxBQeA4Fo14KvwZAs/37spEfWZ1pXIcqKridVSGx?=
+ =?us-ascii?Q?17pE6REYgNyjss1eeUP6a1ooWyHRyy/vF3YBBL4B86BdkW2zuzhd0ytCByRt?=
+ =?us-ascii?Q?+iOousXARpVovmKpCbVf4WdmMQpJgaG8dBuDpy2RAKg7NWvce6j3rf2A5zcA?=
+ =?us-ascii?Q?rr9RT1RU0rqqF23APQvw9Xk5J5LrMGqhguq0NeO3FgPPJpWRqwkM9uv/MmAZ?=
+ =?us-ascii?Q?YWmXJNd+NDLszj4h/cwV5gtr2AG0/pNj4UhgXOUXG8a1BRWD2ojXpwRaYNO5?=
+ =?us-ascii?Q?zjw4I8y8SzGr14qAdeiK4UKyqR42yupd54MviimeVWPcmwSYSRGgaKcY7uci?=
+ =?us-ascii?Q?idvBoj6vxXSKxhUAe5qidCJoa5jW4iJKsfQUIcAmAVyZcUgZiTd8z5S+Nti9?=
+ =?us-ascii?Q?v0GDJDwQODdPJ+7aFPCTar+BAyox5opDoL9VALv739LdodiNioPyzsjZ1e3E?=
+ =?us-ascii?Q?iA=3D=3D?=
+X-OriginatorOrg: in-advantage.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e849877-3295-4636-bcfe-08daa0b83b7e
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2351.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Sep 2022 18:43:56.2215
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: agUwwwXjSdeRMO47myjBPcutqUvfivJhOd1iIIU1AeHKdXqVnvjsoiZMke9lepdJAM73BeZqm3udouYl9SrKz0yG3hln9cPUFnHiK8Gw85Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5347
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Vladimir,
 
---Km42Vwm6MZWulEDn
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 27, 2022 at 08:53:53PM +0300, Vladimir Oltean wrote:
+> Hi Colin,
+> 
+> On Sun, Sep 25, 2022 at 05:29:22PM -0700, Colin Foster wrote:
+> > During development, it was believed that a wrapper for ocelot_regmap_init()
+> > would be sufficient for the felix driver to work in non-mmio scenarios.
+> > This was merged in during commit 242bd0c10bbd ("net: dsa: ocelot: felix:
+> > add interface for custom regmaps")
+> > 
+> > As the external ocelot DSA driver grew closer to an acceptable state, it
+> > was realized that most of the parameters that were passed in from struct
+> > resource *res were useless and ignored. This is due to the fact that the
+> > external ocelot DSA driver utilizes dev_get_regmap(dev, resource->name).
+> > 
+> > Instead of simply ignoring those parameters, refactor the API to only
+> > require the name as an argument. MMIO scenarios this will reconstruct the
+> > struct resource before calling ocelot_regmap_init(ocelot, resource). MFD
+> > scenarios need only call dev_get_regmap(dev, name).
+> > 
+> > Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+> > ---
+> 
+> I don't like how this turned out. I was expecting you not to look at the
+> exported resources from the ocelot-core anymore - that was kind of the
+> point of using just the names rather than the whole resource definitions.
 
-On Tue, Sep 27, 2022 at 08:55:09PM +0300, Andy Shevchenko wrote:
-> fwnode_irq_get() can return zero to indicate IRQ mapping errors.
-> Handle this case by skipping the interrupt resource.
->=20
-> Fixes: a1d1e0e3d80a ("pinctrl: nuvoton: Add driver for WPCM450")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: amended commit message (Jonathan)
->  drivers/pinctrl/nuvoton/pinctrl-wpcm450.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c b/drivers/pinctrl/=
-nuvoton/pinctrl-wpcm450.c
-> index 0dbeb91f0bf2..8193b92da403 100644
-> --- a/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> +++ b/drivers/pinctrl/nuvoton/pinctrl-wpcm450.c
-> @@ -1081,10 +1081,13 @@ static int wpcm450_gpio_register(struct platform_=
-device *pdev,
-> =20
->  		girq->num_parents =3D 0;
->  		for (i =3D 0; i < WPCM450_NUM_GPIO_IRQS; i++) {
-> -			int irq =3D fwnode_irq_get(child, i);
-> +			int irq;
-> =20
-> +			irq =3D fwnode_irq_get(child, i);
->  			if (irq < 0)
->  				break;
-> +			if (!irq)
-> +				continue;
-> =20
->  			girq->parents[i] =3D irq;
->  			girq->num_parents++;
+I see your point. The init_regmap(name) interface collides with the
+*_io_res arrays. Changing the init_regmap() interface doesn't really
+change the underlying issue - *_io_res[] is the thing that you're
+suggesting to go.
 
-Reviewed-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+I'm interested to see where this is going. I feel like it might be a
+constant names[] array, then felix_vsc9959_init_regmap() where the
+specific name <> resource mapping happens. Maybe a common
+felix_match_resource_to_name(name, res, len)?
 
-Thanks!
+That would definitely remove the need for exporting the
+vsc7512_*_io_res[] arrays, which I didn't understand from your v1
+review.
 
---Km42Vwm6MZWulEDn
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Something like:
+include/soc/mscc/ocelot.h
+#define OCELOT_RES_NAME_ANA "ana"
 
-iQIzBAABCgAdFiEEvHAHGBBjQPVy+qvDCDBEmo7zX9sFAmMzQa4ACgkQCDBEmo7z
-X9sndw/9H/f2KjwV37CMZvF046GEPoj6Ym1c02TBbGn2/DBvMpoS/Rp60VlzpwkC
-8XUojHU+N8+YRscTc2A6WdSo4QSqq37oiC9H0Pqd6TBZjukG/kKpYZGLXnathsGu
-HapskWBvxdqKljT3Aiw69Ttk+NulabMVXS6l8Nnqs9ERk44qlUQcvvR2ATPczHcp
-aZcxaf4qrqXMDTqmv2K2sYEgbOG72NMVu24aeGhpPtDAFfOeQ6E8W7MYvEJsMi9s
-PoPc3du+qbsUunnhCIB+ozfk9FgA0Asx2TKJo3gyr50fLcH3+OYo9yBt/qLg0vwW
-54t14RAFlZJ1uMpiS9GtVTeaRf+Ihun57TJSlPMSPKCD8a+6OLk6SDiIbYHtlySN
-AoGYdeGlErKsa/LPL366REj7sngwta1GHT3n0vTvl9f5/o5NOW88ILOwXXpMAMUA
-JI4zAC8+rJRUmGXxD4yRnnhmz8UyjhRBy72AoSstB81Yr2TIYFWGP4K81KMfNNE+
-NztMj0xmJnoQGBuSvEQsjm8lA7fXt8DLQPBVTfg9uyLmzUgteRwnGNKad9EmHGZt
-F6NgSdSKlYOGVwCa9DME0zuv/d1ahW35FybPgZ5P+ynbC9iSXQEpdrsuw/zZ5W8s
-K0P76rwROYwmWqBTdoePsBgPc4NCLWhiLGIN/reNDiSmcBXfAVE=
-=JTuN
------END PGP SIGNATURE-----
+const char *ocelot_target_names[TARGET_MAX] = {[ANA] = OCELOT_RES_NAME_ANA};
 
---Km42Vwm6MZWulEDn--
+...
+
+
+drivers/net/dsa/ocelot/felix.c
+for (i = 0; i < TARGET_MAX; i++)
+    target = felix->info->init_regmap(ocelot_target_names[i]);
+
+...
+
+
+drivers/net/dsa/ocelot/felix_vsc9959.c
+static const struct resource vsc9959_target_io_res[TARGET_MAX] = ...;
+
+vsc9959_init_regmap(name)
+{
+    /* more logic for port_io_res, but you get the point */
+    return felix_init_regmap(name, &vsc9959_target_io_res, TARGET_MAX);
+}
+
+
+> 
+> I am also sorry for the mess that the felix driver currently is in, and
+> the fact that some things may have confused you.
+
+Vladimir, you might be the last person on earth who owes me an apology.
+
