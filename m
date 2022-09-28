@@ -2,132 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EA4B5EDFF0
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 17:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 316BC5EE117
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 17:59:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233731AbiI1PRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 11:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56084 "EHLO
+        id S234442AbiI1P7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 11:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiI1PRV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 11:17:21 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ACDE8B2C4
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 08:17:20 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id iw17so12073078plb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 08:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=ghawqaLQ421cJD+xuI4053nt7PxFnu+wVQFMzKEtwF0=;
-        b=SEF5Ah1Fg94aK+LAukYdSINgroIBF5cnO6q14p95NWMZ5xiBEz6rXRvflqVb8fU7PD
-         2i3N9qxhfIfZC9mD0H050goF8hr4wlCzKrbrPUYf190kJ3MsHkZN+cTuj+aLil4ebVxX
-         5J+OeUouaVB7zGsC4logNDoie7OA7w3JnMIUlbfIFqVvONJOmDtpDf99gUp0H5aSh5DG
-         Dr+A6DqZdY3EHvgbfmzeRd7K7dMFjYlohWI73qptMrdvcVQzukjjqcVjjsqEyTl9kO2V
-         gRPhpl/N7vF08jg10FuB4U+g3YTBQ5sFdMxnVm+pTY7E99zx4Cjtq4xWU/hfX+OhcSDU
-         SKRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=ghawqaLQ421cJD+xuI4053nt7PxFnu+wVQFMzKEtwF0=;
-        b=m4UYTarR0/hUlhyRxjPqlDwnBNDh2+3wdxiiGFgsIIoLNxEfUIhy6e+ByYlL+9f5PF
-         5rrIcr3gcroI8r7cGPtRzE9AntZ4ORHSVLJK9xymbcJC6gyjGui7dMO1dnJhItOLKbN5
-         oAngedfWhmFdit8DCWXuK6Uql+16/ewI+IU8+CL/VQvZJEWbalg4D2kT1qu2uiXZrzZp
-         +GGEODehlMWT8htErHHqMB2mBP8BvE+I8ihERGouXXo9s8UPOirire7lZbLg++PwQgxy
-         skUvV2wC2rOvoAgUfUHOkheyNtivp0SOUlLKv5VS7xfvIwFOTBIRWTMKGUZJoe/jPd+y
-         jnKQ==
-X-Gm-Message-State: ACrzQf3jFzLuUPggsq0xkBUK+sGP3cjEoxk6bw66C2onnYvNH0SmJ4Kp
-        6CXxZN63hGVF6otvNJWiV/XZ+Q==
-X-Google-Smtp-Source: AMsMyM6PPAZZDB0CE2dCElyqOwb5KXUz4D/5ViD9yzpN99hVMqPyyGoBDizwAljRN5BE8Dahwebrgg==
-X-Received: by 2002:a17:902:7b87:b0:179:ec0a:7239 with SMTP id w7-20020a1709027b8700b00179ec0a7239mr301347pll.139.1664378239912;
-        Wed, 28 Sep 2022 08:17:19 -0700 (PDT)
-Received: from localhost ([122.172.85.153])
-        by smtp.gmail.com with ESMTPSA id 64-20020a630343000000b0043be496f3f3sm3757606pgd.57.2022.09.28.08.17.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 08:17:18 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 20:47:16 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S233408AbiI1P64 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 11:58:56 -0400
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26AB0E3EF4;
+        Wed, 28 Sep 2022 08:58:12 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E8DC747C;
+        Wed, 28 Sep 2022 17:58:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1664380690;
+        bh=d4aeRqyj8cvrUyW8hXIk3lH+fIMhuD/VGVgGbzpZaTw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=krVVM+TppDPUODjD6f+M70aOOt39hmoc530gGq6/v+KrOdJq6qzTwqISUNlbBNC1f
+         XAmWFo3bGVwE6Q2h3bNSLijZYBjyNeie6SBianNIKtOmD4/aBcvoWnJ2bsLSCGBbvl
+         ph+8yBzeM32SbaMyIVIe153yfjv0nVMcSylGoRDI=
+Date:   Wed, 28 Sep 2022 18:58:08 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-Message-ID: <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
-References: <cover.1664189248.git.viresh.kumar@linaro.org>
- <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
- <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
- <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
- <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
- <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
- <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        git@xilinx.com, saikrishna12468@gmail.com
+Subject: Re: [PATCH 0/4] pinctrl: pinctrl-zynqmp: Add tri-state configuration
+ support
+Message-ID: <YzRvEPUWUXP4x7+h@pendragon.ideasonboard.com>
+References: <1655462819-28801-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+In-Reply-To: <1655462819-28801-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28-09-22, 14:20, Bartosz Golaszewski wrote:
-> Ok, so this is not correct. The doc for
-> gpiod_edge_event_buffer_get_event() says:
-> 
->  * @return Pointer to an event stored in the buffer. The lifetime of the
->  *   event is tied to the buffer object. Users must not free the event
->  *   returned by this function.
-> 
-> We make no guarantees that the address returned by
-> gpiod_edge_event_buffer_get_event() will still be valid after a call
-> to gpiod_line_request_read_edge_event(). In fact the doc for the
-> latter says:
-> 
->  * @note Any exising events in the buffer are overwritten.  This is not an
->  *       append operation.
-> 
-> So we're being clear that after a call to
-> gpiod_line_request_read_edge_event(), all previously returned edge
-> event pointers are invalid unless the objects to which they point were
-> explicitly copied.
-> 
-> Current implementation does indeed work like what you describe but
-> that behavior is not "contractually" guaranteed and can change even
-> between minor releases.
-> 
-> In C++ if you do:
-> 
-> const edge_event& ev = buffer.get_event(0);
-> request.read_edge_event(buffer);
-> std::cout << ev << std::endl;
-> 
-> You risk a segfault.
-> 
-> My understanding is that Rust should not allow a crash in this
-> situation by design.
+Hi Sai,
 
-Hmm, so what exactly do we want to do here then ?
+On Fri, Jun 17, 2022 at 04:16:55PM +0530, Sai Krishna Potthuri wrote:
+> This series update the Xilinx firmware, ZynqMP dt-binding and ZynqMP
+> pinctrl driver to handle 'output-enable' and 'bias-high-impedance'
+> configurations. As part of these configurations, ZynqMP pinctrl driver
+> takes care of pin tri-state setting.
+> Also fix the kernel doc warning in ZynqMP pinctrl driver.
 
-- Don't allow events to be referenced ? i.e. make event_clone() the default
-  behavior ?
+I'm afraid this causes a regression :-( With this series applied, boot
+breaks with the following message being printed to the serial console:
 
-- Don't allow read_edge_event() to be called twice for a buffer ? that will be
-  inefficient though.
+Received exception
+MSR: 0x200, EAR: 0xFF180198, EDR: 0x0, ESR: 0x64
 
-- Somehow guarantee that reference to all the events are dropped before issuing
-  read_edge_event() again, else make it fail ? I am not sure how straight
-  forward that can be though.
+I've traced that to the probe of the UART, when it calls into the
+firmware to set pin MIO18 to high impedance. According to v1.7 of the
+ZynqMP registers reference (UG1087), there is no register at address
+0xFF180198.
+
+I am using the VCU TRD 2021.1 for testing. Does this series require a
+firmware update ? If so backward compatibility needs to be preserved.
+It's very late in the v6.0-rc cycle for a fix, a revert may be best at
+this point, to give us time to fix the issue properly.
+
+> Note: Resending the series as i see this series didn't went out due
+> to some issue with my mail client. Please ignore if this series is 
+> already received.
+> 
+> Sai Krishna Potthuri (4):
+>   firmware: xilinx: Add configuration values for tri-state
+>   dt-bindings: pinctrl-zynqmp: Add output-enable configuration
+>   pinctrl: pinctrl-zynqmp: Add support for output-enable and
+>     bias-high-impedance
+>   pinctrl: pinctrl-zynqmp: Fix kernel-doc warning
+> 
+>  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml         |  4 ++++
+>  drivers/pinctrl/pinctrl-zynqmp.c                      | 11 +++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h                  |  5 +++++
+>  3 files changed, 20 insertions(+)
 
 -- 
-viresh
+Regards,
+
+Laurent Pinchart
