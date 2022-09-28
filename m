@@ -2,109 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7292D5ED6E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 09:55:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EE6E5ED65E
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 09:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233856AbiI1Hze (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 03:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
+        id S232348AbiI1Hjj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 03:39:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233854AbiI1HzA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 03:55:00 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7BD2DF0;
-        Wed, 28 Sep 2022 00:54:47 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Mcp6p0N5SzHqPY;
-        Wed, 28 Sep 2022 15:30:10 +0800 (CST)
-Received: from [10.174.178.165] (10.174.178.165) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 28 Sep 2022 15:32:26 +0800
-Subject: Re: [PATCH v2 1/3] genirq/irq_sim: Allow both one and two cell
- bindings
-To:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Wei Yongjun <weiyongjun@huaweicloud.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
- <20220926084428.1792815-2-weiyongjun@huaweicloud.com>
- <CAMRc=MfjB4QTf_zp5Rk3T_ndqDjCCjAW2HmGpJ9EF-i1epSLcw@mail.gmail.com>
- <865yha8fcs.wl-maz@kernel.org>
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-Message-ID: <e9dc5d57-6978-c491-1851-9ea6d4ecfcf5@huawei.com>
-Date:   Wed, 28 Sep 2022 15:32:25 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.1.1
+        with ESMTP id S232160AbiI1HjJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 03:39:09 -0400
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000DD10AB39
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 00:37:30 -0700 (PDT)
+Received: by mail-wr1-x42d.google.com with SMTP id bk15so10633185wrb.13
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 00:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:reply-to:from
+         :references:to:content-language:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date;
+        bh=kFq/owo5gWxLx4y4U9Fe+fPvLJZVx8JY9zybO1v4ydg=;
+        b=ckxO9rYUBw3zTw7PSdGafId1ucZgdHlyLgsZ8jPjH2pxi7wEQNPNURrMeeunL7D6AP
+         T7NQbk/qn5v/vwiJdJVV8TiMr3zOuaekgPmHe9gsjBQeSbUX0LotbI3M9g/3s0gCuxJG
+         fuUgZKztpJy5RyKxDQ5BbovtplL0LKPyauzkZwygCAEP1+MLuC3okpAajlyywtU2SqBy
+         46wuNwRLrgGzRMytOFJkHi3pTCD2ADA3lQ7U0f/Rk1Agu92U9k7dgPLAfHFe9XbAsDBn
+         rUi8cSJd5V8SOAIxyIFBpoG3/00FC41KdP+X1QCrwjheq7iK8OF+kXTwCnMxBhi/zOk/
+         GYkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:organization:reply-to:from
+         :references:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date;
+        bh=kFq/owo5gWxLx4y4U9Fe+fPvLJZVx8JY9zybO1v4ydg=;
+        b=707Y6SVUw7WvFdpH1ttTIzghS0ioqW3v2M7uRGctLxqMbrJO/6KroMmZvP7VzONpq+
+         IhD3eFjUVO9gl0YF/8i12ZVHiLdBjwMEreKmZyKi0kzyolUSjvpUIQf+NgIGvYsYnjja
+         DQi+Wu8R54JNhUH1P0NGxf1duN7dYSm6a7YyVOnTCjx2nD/xSjWJvlLTOl1b5rd9Rl7s
+         Lfk/HpvC1JsGs1B8UMD/k05QNu6FJmluYFoSJbqmdTO9z2Pp0E2alD+8+08IdG/CvFIH
+         QWtJlp2XZgqIlIfMQiHQ28H5Dm2GayC2ayl1WEnSo/Yh2HoFfYszivuhmyJ/mpNQH/Xf
+         bC2w==
+X-Gm-Message-State: ACrzQf0ptC2qugE2HPtWci1m4wyWNr+1dxhtyLT9uUh1LjAgktwLklLA
+        9vUx41N+78IuC1MYi0d6M/PnYw==
+X-Google-Smtp-Source: AMsMyM4UCYKXfp+Vp5r77z7N9Wtr6ueFmRFzPoSCUj42eYXswXZPNVfdXkBELNrukknRDKnbPrzp2g==
+X-Received: by 2002:a5d:64e8:0:b0:22a:bb78:1e44 with SMTP id g8-20020a5d64e8000000b0022abb781e44mr21177746wri.378.1664350645933;
+        Wed, 28 Sep 2022 00:37:25 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:982:cbb0:11d4:7c71:accf:6521? ([2a01:e0a:982:cbb0:11d4:7c71:accf:6521])
+        by smtp.gmail.com with ESMTPSA id o9-20020a05600c510900b003a5c244fc13sm1014948wms.2.2022.09.28.00.37.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 28 Sep 2022 00:37:25 -0700 (PDT)
+Message-ID: <1fdbf742-e325-9b14-b795-0178c21dcf20@linaro.org>
+Date:   Wed, 28 Sep 2022 09:37:24 +0200
 MIME-Version: 1.0
-In-Reply-To: <865yha8fcs.wl-maz@kernel.org>
-Content-Type: text/plain; charset="gbk"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 01/12] arm64: dts: qcom: sc7280: drop clock-cells from
+ LPASS TLMM
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220927153429.55365-1-krzysztof.kozlowski@linaro.org>
+ <20220927153429.55365-2-krzysztof.kozlowski@linaro.org>
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Organization: Linaro Developer Services
+In-Reply-To: <20220927153429.55365-2-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.165]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 2022/9/26 20:55, Marc Zyngier wrote:
-> On Mon, 26 Sep 2022 07:24:48 -0400,
-> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>
->> On Mon, Sep 26, 2022 at 10:27 AM Wei Yongjun <weiyongjun@huaweicloud.com> wrote:
->>>
->>> From: Wei Yongjun <weiyongjun1@huawei.com>
->>>
->>> The IRQ simulator only support one cell binding now, this patch make it
->>> works with either one or two cell bindings, where the cell values map
->>> directly to the irq number and irq flags.
->>>
->>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
->>> ---
->>>  kernel/irq/irq_sim.c | 1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
->>> index dd76323ea3fd..73a90b7b6022 100644
->>> --- a/kernel/irq/irq_sim.c
->>> +++ b/kernel/irq/irq_sim.c
->>> @@ -149,6 +149,7 @@ static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
->>>  static const struct irq_domain_ops irq_sim_domain_ops = {
->>>         .map            = irq_sim_domain_map,
->>>         .unmap          = irq_sim_domain_unmap,
->>> +       .xlate          = irq_domain_xlate_onetwocell,
->>>  };
->>>
->>>  /**
->>> --
->>> 2.34.1
->>>
->>
->> You'll need Marc's (Cc'ed) Ack here.
-
-Hi Marc,
-
+On 27/09/2022 17:34, Krzysztof Kozlowski wrote:
+> The LPASS pin-controller is not a clock provider:
 > 
-> The question is what will the simulator code do with this information.
-> Throw it away? What of 3/4/5 cell bindings? I'd rather see the
+>    qcom/sc7280-herobrine-herobrine-r1.dtb: pinctrl@33c0000: '#clock-cells' does not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sc7280.dtsi | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> index 8d807b7bf66a..8823b75a6f1b 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+> @@ -2432,8 +2432,6 @@ lpass_tlmm: pinctrl@33c0000 {
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&lpass_tlmm 0 0 15>;
+>   
+> -			#clock-cells = <1>;
+> -
+>   			lpass_dmic01_clk: dmic01-clk {
+>   				pins = "gpio6";
+>   				function = "dmic1_clk";
 
-The 3/4/5 cell bindings is selience ignored currently.
-
-> simulator being extended to deal with arbitrary bindings instead of
-> trading a harcoded limit for another one. And also give some
-> semantics to the extra cells.
-
-Would you means we should allow the users to overwrite the xlate callback
-or overwrite the domain_ops?
-
-Regards,
-Wei Yongjun
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
