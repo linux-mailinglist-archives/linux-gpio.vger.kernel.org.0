@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 985C85EE3D1
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 20:05:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 492695EE3F6
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 20:11:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234417AbiI1SFR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 14:05:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49710 "EHLO
+        id S234124AbiI1SK5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 14:10:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234420AbiI1SFP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 14:05:15 -0400
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F1D7AC36;
-        Wed, 28 Sep 2022 11:05:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1664388308;
+        with ESMTP id S233244AbiI1SK4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 14:10:56 -0400
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BB186731;
+        Wed, 28 Sep 2022 11:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1664388472;
     s=strato-dkim-0002; d=gerhold.net;
     h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
     From:Subject:Sender;
-    bh=6ww6vEm2Ci8TeM1f1oxHc+4j/zU9WsPV4VXaGwkCDa8=;
-    b=sSejvT8OYastO5cXoMEf5gxUVNyboP2C+TX2mTeSIcFyt5Av2JKbOrMsGLHlvsIkj2
-    ncF9bEBBd/QPvULA91ZsOi6ydbVULxGp6FQ1vu/rHST9JV5LCLk3G3M8ilsOUyq0E+hs
-    RnjdSUjKJXsbYUGa1F0Vs9qY36r7Ye4PJjPaCQa7oOYqMhJkh4IRtMLZc/PNYMAu2Y6U
-    Jhva7F7w8L9d2O2tl5eerrA6UC0hzOmIm0xwzdeQ6vEgxcL4coAsC+/FoubqXyFTt51J
-    2WIYKH6c5k26fmPRBPdhTRdR5JLlhQM+rDiraDGWvnXp5xX9TKTK7z5ZlEY+VRZ1kMer
-    eYaw==
+    bh=VTSVj2/MnOzJogQVqPNRuV3EWW6q3oME4cKoVN1IPfA=;
+    b=HIE0nrnl86PcacEc+gjvo/s+CmKFJ2DK60CZI9HqR74aX5VXWA/6gfj5IE/HRcLGOt
+    GbSjkT359x0MuY8AcAe5QETxWkV35dpn7/34UfK/t8kZq2I2PKwgkTU9LDYMVEsceSBa
+    f652Bmv8FjrEP/EmPkQwmGfJfcSU6iLLVtUnmFqiGf5LxEb1QpZZJ1rbuAaEN8NDgwvy
+    BvkiLJh+tCIDeW7SEF3+Wa1c+8txl1eoUyFHlglQIWPXB+wvxB5YPGF17kmUmRJPugLa
+    f/lK8E5g2SxLTDcRw0pdBJrGvZ9olxQkZGjaURFqN/H7rxkdyxR7ZRCSJCIqqdvSMCCh
+    sPiA==
 Authentication-Results: strato.com;
     dkim=none
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u267FZF9PwpcNKLVrK88/6Y="
 X-RZG-CLASS-ID: mo00
 Received: from gerhold.net
     by smtp.strato.de (RZmta 48.1.3 AUTH)
-    with ESMTPSA id 06b848y8SI580jR
+    with ESMTPSA id 06b848y8SI7p0jv
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-    Wed, 28 Sep 2022 20:05:08 +0200 (CEST)
-Date:   Wed, 28 Sep 2022 20:04:57 +0200
+    Wed, 28 Sep 2022 20:07:51 +0200 (CEST)
+Date:   Wed, 28 Sep 2022 20:07:50 +0200
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -47,18 +47,17 @@ Cc:     Andy Gross <agross@kernel.org>,
         Shawn Guo <shawn.guo@linaro.org>,
         Vinod Koul <vkoul@kernel.org>,
         krishna Lanka <quic_vamslank@quicinc.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/34] dt-bindings: pinctrl: qcom,tlmm-common: add
- common check for function
-Message-ID: <YzSMlGXIIXvAR5He@gerhold.net>
+Subject: Re: [PATCH v3 18/34] dt-bindings: pinctrl: qcom,msm8909-tlmm: fix
+ matching pin config
+Message-ID: <YzSNdpvVkWEDSdu1@gerhold.net>
 References: <20220927173702.5200-1-krzysztof.kozlowski@linaro.org>
- <20220927173702.5200-8-krzysztof.kozlowski@linaro.org>
+ <20220927173702.5200-19-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927173702.5200-8-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220927173702.5200-19-krzysztof.kozlowski@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -68,60 +67,52 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 07:36:35PM +0200, Krzysztof Kozlowski wrote:
-> Certain pins, like SDcard related, do not have functions and such should
-> not be required.  Add a check for this in common Qualcomm TLMM pin
-> controller schema.
+On Tue, Sep 27, 2022 at 07:36:46PM +0200, Krzysztof Kozlowski wrote:
+> The TLMM pin controller follows generic pin-controller bindings, so
+> should have subnodes with '-state' and '-pins'.  Otherwise the subnodes
+> (level one and two) are not properly matched.  This method also unifies
+> the bindings with other Qualcomm TLMM and LPASS pinctrl bindings.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-Thanks for moving this to the common schema!
-
-FWIW:
 Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
 
 > ---
->  .../bindings/pinctrl/qcom,tlmm-common.yaml    | 20 +++++++++++++++----
->  1 file changed, 16 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml     | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
-> index c88c8dcb69d9..e1354f0c64f8 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,tlmm-common.yaml
-> @@ -65,10 +65,6 @@ additionalProperties: true
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> index e03530091478..b1735918fa90 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
+> @@ -43,8 +43,9 @@ patternProperties:
+>      oneOf:
+>        - $ref: "#/$defs/qcom-msm8909-tlmm-state"
+>        - patternProperties:
+> -          ".*":
+> +          "-pins$":
+>              $ref: "#/$defs/qcom-msm8909-tlmm-state"
+> +        additionalProperties: false
 >  
 >  $defs:
->    qcom-tlmm-state:
-> -    allOf:
-> -      - $ref: pincfg-node.yaml#
-> -      - $ref: pinmux-node.yaml#
-> -
->      properties:
->        drive-strength:
->          enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> @@ -82,5 +78,21 @@ $defs:
->        output-high: true
->        output-low: true
+>    qcom-msm8909-tlmm-state:
+> @@ -136,13 +137,13 @@ examples:
+>                  };
 >  
-> +    allOf:
-> +      - $ref: pincfg-node.yaml#
-> +      - $ref: pinmux-node.yaml#
-> +
-> +      - if:
-> +          properties:
-> +            pins:
-> +              items:
-> +                pattern: "^gpio"
-> +        then:
-> +          required:
-> +            - function
-> +        else:
-> +          properties:
-> +            function: false
-> +
->      additionalProperties: true
->  ...
+>                  uart-w-subnodes-state {
+> -                        rx {
+> +                        rx-pins {
+>                                  pins = "gpio4";
+>                                  function = "blsp_uart1";
+>                                  bias-pull-up;
+>                          };
+>  
+> -                        tx {
+> +                        tx-pins {
+>                                  pins = "gpio5";
+>                                  function = "blsp_uart1";
+>                                  bias-disable;
 > -- 
 > 2.34.1
 > 
