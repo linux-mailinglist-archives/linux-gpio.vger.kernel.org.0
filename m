@@ -2,99 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D1255EDBDB
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 13:35:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C47255EDC71
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 14:21:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233299AbiI1LfC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 07:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57418 "EHLO
+        id S232140AbiI1MVW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 08:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233460AbiI1Le7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 07:34:59 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A92ED2DF9
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 04:34:56 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id p5so13979684ljc.13
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 04:34:56 -0700 (PDT)
+        with ESMTP id S233287AbiI1MVC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 08:21:02 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16B8855BB
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 05:20:59 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id n10so19468287wrw.12
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 05:20:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=Wmm3PYhtV0Temk3PjlmvDvpIDKPL+kZO9REeZH8pHw4=;
-        b=Gsu1DUijGnPZVlYbr6KWm+6Uw30vBX+0hVgAjJnWWGavd7khovuC4RcxMH8VPiX/Je
-         N925R4PheU/8K3iCIqScp6tKck0PCYkD7WCuL03ctPXaOLcsMqmdeOsZWj7cg65NW+6i
-         Ptx3mFDtKGyGz2wg72e5oqnaTcsELsLULvqlJVhNjumZAlYxC0UL8sNH/8sMkxHZhM6Y
-         F2BkjLzuEURnrg2/RxVT73NItprpRlChZCbCZCWGGTcqd2bSWH3OH8dKe0x04HTtiG7m
-         Dp7PijiLGcWz5hUaGLZZpBp8vpdXTYgBVooF7vEFn6I0UaoBIz+F3ImY2rqnlsxBUEsj
-         bnuA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=v/p8K7HtaX6JAI3yHVrBzF1uNSv7sOcL+OZjbUD2ia8=;
+        b=mnduWAb4b61HqjGzTRCLB1zYtA2v3vHmwAAHRMajriWFbvyjRM5qC4A2PiXno9fUUb
+         r4FB8ecJApkcTpRBB1TTKdTgSd0/kJdvJmf19C1eAjaRrawha4PJT1qEN+v48+qIVrCX
+         peCSCkUv7uW0SrBAqdlfwq6v8n1KrBBBcypOTIKxybwycYuQzLvskB0SSwxJ1Fbm9dJc
+         iEYsZ0BeGdCpF4BSzN6JIWbiOJj8RZ81gbFTSYO2z4VGCK6vvV+lsTPHa3sn3CbQfoZK
+         IKLzRAd/G+9/TluEMmHwCjCC6NzeZxEu9DAiR6N4qtSq8Hjk9D5tYwmTb2B74xM+Iq9Y
+         t4BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Wmm3PYhtV0Temk3PjlmvDvpIDKPL+kZO9REeZH8pHw4=;
-        b=rUED7Ib1Dt471Mo6E3sO/Yxqog9kRkGN3VqPuIhC3VvtN2TIdUd7FWl53X2BM2z8EH
-         P0+eqy3RxSsevW91TQEYyIPZYKJs/9oWYs1aW86Sbj70SE3eWfzDTK1bWGR/ArY/I+2W
-         SI2RVqszyxoBkpct9EwriexzfuiHV9u8YhnmmGLCrE+YAm8Jv+16XUOhgdEHrG6Q6YH3
-         Cj21FKMzAoJ5HprPyblu4iuSopUzTaSzRr3hTxmdOFelom5BLX75x4rCRB2TGjQvfARH
-         d2W9nynb9Ea5NRF+Vtjgi2k6zc36hdaG1HfElsPexRteW50jopYxtkMfIKK48IX3ktj6
-         Ao8Q==
-X-Gm-Message-State: ACrzQf2kZao9uQ8oM+wi7M/GT1zIx+k3KGQv2H5aUzwsEvILMoyC28bp
-        snADGcX3kXVgqqsiEVeUO0/10EPgpfl4Jw==
-X-Google-Smtp-Source: AMsMyM6ycqbJpMFxuM7dxgdDn+8BfCPIoIjFMyEhhvkOovnGu5dOcNqfvtr+nrdOzDXwnwAsrwOuLQ==
-X-Received: by 2002:a2e:575c:0:b0:26a:9f39:b3f7 with SMTP id r28-20020a2e575c000000b0026a9f39b3f7mr11716111ljd.315.1664364895052;
-        Wed, 28 Sep 2022 04:34:55 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id 2-20020ac24842000000b00492f5ad0ae7sm456910lfy.43.2022.09.28.04.34.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 04:34:54 -0700 (PDT)
-Message-ID: <b5b2fb58-e7a4-4ec9-2908-a6d334a79982@linaro.org>
-Date:   Wed, 28 Sep 2022 13:34:53 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=v/p8K7HtaX6JAI3yHVrBzF1uNSv7sOcL+OZjbUD2ia8=;
+        b=Z/7r1cu6nXmDQ//p3Q8OyDu9GZPx5T+9NPXtGxPyMxsgYSPlk/Wj1iRxmrxSjySEOe
+         vWZyS2FKRjYdW1r4Q40Q7LUWn1wxPvfSapUh4tt96oJ73NO/OjxiUh7V5LSf5kOjXIH/
+         FJDqubKl7NVe+wkZq66GH5NTj1EAWAkx+x3yed8tJ9nOFqLhQ+cpYpQxpQ54PP7AN6JN
+         ZYfiPRKt5Hok0bH4YqTMpJjj/EtnVxFayFWmbAetpYhgNVLPL52zuauPmO0jvedtOkox
+         Ros8EGtxRqCO/5DN7t8xyQzEcRoZkvKO8iQ4704axkHIQKS961rm8yA4xSugi1Mv+pTP
+         CfPw==
+X-Gm-Message-State: ACrzQf2f58unsxfkjF4YeLoghlhKDcEQqksmbeOodcfZ03c/y3MROQFK
+        EdhJaILxOSSpxz5OnEqlvZhL5hJJdHhtD5+tm8ChwPUjdU4DYg==
+X-Google-Smtp-Source: AMsMyM6vAAPTrfLS5shHf/0YDqDknAQfBBc1TeK9sdL/4N/yOBQZPEn2y3EmPyrLoZS1FgvSZPAIHmkeQbGAQEzvzug=
+X-Received: by 2002:a05:6000:15ce:b0:226:f2ab:516d with SMTP id
+ y14-20020a05600015ce00b00226f2ab516dmr20594723wry.264.1664367658002; Wed, 28
+ Sep 2022 05:20:58 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 3/3] dt-bindings: gpio: Add compatible string for Unisoc
- UMS512
-Content-Language: en-US
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20220928092937.27120-1-zhang.lyra@gmail.com>
- <20220928092937.27120-3-zhang.lyra@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220928092937.27120-3-zhang.lyra@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <cover.1664189248.git.viresh.kumar@linaro.org> <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
+ <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+ <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+ <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
+ <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com> <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
+In-Reply-To: <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 28 Sep 2022 14:20:46 +0200
+Message-ID: <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/09/2022 11:29, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> 
-> UMS512 use the same GPIO and EIC controller with SC9860, so this
-> patch adds compatible string for UMS512 directly.
+On Wed, Sep 28, 2022 at 1:10 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> Here is what happens at each call for easier understanding:
+>
+> On 27-09-22, 17:25, Bartosz Golaszewski wrote:
+> > So what happens if I do this:
+> >
+> > let buf = edge::event::Buffer::new(10)?;
+>
+> buf1 = gpiod_edge_event_buffer_new()
+>
+> > let request = chip.request_lines(&rconfig, &lconfig)?;
+>
+> gpiod_chip_request_lines()
+>
+> > let count = request.read_edge_events(&buffer)?;
+>
+> gpiod_line_request_read_edge_event(buf1)
+>
+> > let event = buffer.event(0);
+>
+> event1 = gpiod_edge_event_buffer_get_event(buf1, 0)
+>
+> > let count = request.read_edge_events(&buffer)?;
+>
+> gpiod_line_request_read_edge_event(buf1)
+>
+> > println!("line: {}", event.line_offset());
+>
+> gpiod_edge_event_get_line_offset(event1)
+>
+>
+> We will allocate a single buffer (buf1) and the event (event1) will be a
+> reference onto its first event entry in the buffer. It will print offset value
+> from the second read_edge_events() here instead of first, as it was just a
+> reference to the first event. And for such a use case, the user should do
+>
+> event = buffer.event(0).event_clone();
+>
+> --
+> viresh
 
-Do not use "This commit/patch".
-https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
+Ok, so this is not correct. The doc for
+gpiod_edge_event_buffer_get_event() says:
 
-With commit msg fixed:
+ * @return Pointer to an event stored in the buffer. The lifetime of the
+ *   event is tied to the buffer object. Users must not free the event
+ *   returned by this function.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+We make no guarantees that the address returned by
+gpiod_edge_event_buffer_get_event() will still be valid after a call
+to gpiod_line_request_read_edge_event(). In fact the doc for the
+latter says:
 
-Best regards,
-Krzysztof
+ * @note Any exising events in the buffer are overwritten.  This is not an
+ *       append operation.
 
+So we're being clear that after a call to
+gpiod_line_request_read_edge_event(), all previously returned edge
+event pointers are invalid unless the objects to which they point were
+explicitly copied.
+
+Current implementation does indeed work like what you describe but
+that behavior is not "contractually" guaranteed and can change even
+between minor releases.
+
+In C++ if you do:
+
+const edge_event& ev = buffer.get_event(0);
+request.read_edge_event(buffer);
+std::cout << ev << std::endl;
+
+You risk a segfault.
+
+My understanding is that Rust should not allow a crash in this
+situation by design.
+
+Bart
