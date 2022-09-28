@@ -2,99 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 349135ED68F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 09:43:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE615ED6CE
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 09:51:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233299AbiI1HnI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 03:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
+        id S233868AbiI1HvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 03:51:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233386AbiI1HmW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 03:42:22 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3069722507
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 00:39:37 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id ay7-20020a05600c1e0700b003b49861bf48so2028529wmb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 00:39:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date;
-        bh=eZ9vmIYK1QfwhenZBRouVIsuSBTYdFiZ0xlDO4qNIH8=;
-        b=YP59cW8lrVF2vOFhawusd/K5/JXcFlmeVWcAqT73dIHoqw4dH5sezATt8Hll/hbLvX
-         lYD8qnVkefTQ1h0d4S4jN64oaBrp6dsd6vKNCLiOwi8EX09JwxAPeEN2p9pH6SA9IYMN
-         DmxlZx1WEqGi2zNwBX7QxROa+6QyYLs+uS5vViRyZaRG8y9aKlmCZtz8Dj7c44RGqkro
-         M+j1HygCMomNO+hRirBWBUvA85CmmVfWvQmVpJlpfCWJ3IbB/cSH6M7IAr6qXlRDujaV
-         bExBan0gvXm+tRx8uqrS3R1YhpiVvUfOOaqQ8xkPUhyUYlKG1XKcJs+pVYZKUjqOsgbh
-         DX5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date;
-        bh=eZ9vmIYK1QfwhenZBRouVIsuSBTYdFiZ0xlDO4qNIH8=;
-        b=BXGKultoGtCOuF3GHHiRoHeHADIzAs7k6XUWAjVaXzWhXz3RwYLwDaPCNGy7d0BuKP
-         lAddsd9u5Zg3Y8l2UG8b54U1C3Pg/v+jjnx5jxKPAeXp39FKLqBTocfWA0pIWaFHJ1i6
-         9HJ2hCdsp7Y1/u+MmEJLtuYQZFg2e1Rrye7JGtWRypCcqlIl063YgXX90GoINTv+JD2y
-         4lINuhBGMlTeFMTCaq8eHwkx7oyvKEpNY8x8JzAy3BhX4YxH7taxisCQ75geQQfgi0kU
-         5JLgupEfy24WvAUWgZkIIsOFxXcudWNInhQuQsT8Nnvfm7Z3t9bOa46NmbbEaROOHsnC
-         pY7w==
-X-Gm-Message-State: ACrzQf3cIj6p+mGfMKcGKGM9gHM5rijOLq6HY4/AZHG9xxBAi86k0tQD
-        0qP/8erv2JvkxatpgLti1OCQwg==
-X-Google-Smtp-Source: AMsMyM5jD0OFaMJHJ0m2ZOXngKxrXR6qa0WEz8XJGfH4kTaEpvtxFwKJlI7b68KFB4UtiSXWq7mv4g==
-X-Received: by 2002:a05:600c:2212:b0:3b4:9ab8:b24e with SMTP id z18-20020a05600c221200b003b49ab8b24emr5583208wml.127.1664350776087;
-        Wed, 28 Sep 2022 00:39:36 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:982:cbb0:11d4:7c71:accf:6521? ([2a01:e0a:982:cbb0:11d4:7c71:accf:6521])
-        by smtp.gmail.com with ESMTPSA id m7-20020a05600c3b0700b003a1980d55c4sm912020wms.47.2022.09.28.00.39.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 00:39:35 -0700 (PDT)
-Message-ID: <ec137750-1c8f-d190-701a-48a9866aeefd@linaro.org>
-Date:   Wed, 28 Sep 2022 09:39:34 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 04/12] arm64: dts: qcom: sm8250: align LPASS pin
- configuration with DT schema
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        with ESMTP id S233871AbiI1Huq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 03:50:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AAA9B3B;
+        Wed, 28 Sep 2022 00:49:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4E6D9B81F64;
+        Wed, 28 Sep 2022 07:49:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB287C433D6;
+        Wed, 28 Sep 2022 07:49:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664351348;
+        bh=tSFaGvv8+ZTypBsJXfaH7GNqTOxZdKyLPnylrK/B66w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=quSEMugNEUvE770Q4jkKvM5xwTMLbnNlY0TBxM19EQftuqAy5uGWznNXafcGB/h1R
+         TRUSe7Ej6lvL0MSlLCNr/nDD+tAj4D9rM/2Q6p7zg5aSbVQCxFKYtvLlO3Xl89oDsd
+         r6RRooFFRY0e1U5qvfGimqe6UUEJdcZfpeXtR8UH+ICV36EHq3vh6EjrYBss3Y2MXW
+         AR3il1mBrPLntSPNt/uzF7t6AxkSYPkC17cYaCezHPvEq9C9ZVIMvmlzK/EAWxs69a
+         fBnhDnQl6Rjkb8p9HhiF7xZGLA2EqPA2HrPG1JX7s5luvDrk+NkfOVF/444Cpilz2g
+         58QYZpyzPiHlA==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1odRoW-00DCT1-PT;
+        Wed, 28 Sep 2022 08:49:05 +0100
+Date:   Wed, 28 Sep 2022 08:47:57 +0100
+Message-ID: <871qrwhrde.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Wei Yongjun <weiyongjun@huaweicloud.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220927153429.55365-1-krzysztof.kozlowski@linaro.org>
- <20220927153429.55365-5-krzysztof.kozlowski@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Organization: Linaro Developer Services
-In-Reply-To: <20220927153429.55365-5-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] genirq/irq_sim: Allow both one and two cell bindings
+In-Reply-To: <e9dc5d57-6978-c491-1851-9ea6d4ecfcf5@huawei.com>
+References: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
+        <20220926084428.1792815-2-weiyongjun@huaweicloud.com>
+        <CAMRc=MfjB4QTf_zp5Rk3T_ndqDjCCjAW2HmGpJ9EF-i1epSLcw@mail.gmail.com>
+        <865yha8fcs.wl-maz@kernel.org>
+        <e9dc5d57-6978-c491-1851-9ea6d4ecfcf5@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: weiyongjun1@huawei.com, brgl@bgdev.pl, weiyongjun@huaweicloud.com, tglx@linutronix.de, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27/09/2022 17:34, Krzysztof Kozlowski wrote:
-> DT schema expects LPASS pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.
+On Wed, 28 Sep 2022 08:32:25 +0100,
+Wei Yongjun <weiyongjun1@huawei.com> wrote:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->   arch/arm64/boot/dts/qcom/sm8250.dtsi | 44 ++++++++++++++--------------
->   1 file changed, 22 insertions(+), 22 deletions(-)
 > 
+> 
+> On 2022/9/26 20:55, Marc Zyngier wrote:
+> > On Mon, 26 Sep 2022 07:24:48 -0400,
+> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >>
+> >> On Mon, Sep 26, 2022 at 10:27 AM Wei Yongjun <weiyongjun@huaweicloud.com> wrote:
+> >>>
+> >>> From: Wei Yongjun <weiyongjun1@huawei.com>
+> >>>
+> >>> The IRQ simulator only support one cell binding now, this patch make it
+> >>> works with either one or two cell bindings, where the cell values map
+> >>> directly to the irq number and irq flags.
+> >>>
+> >>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> >>> ---
+> >>>  kernel/irq/irq_sim.c | 1 +
+> >>>  1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+> >>> index dd76323ea3fd..73a90b7b6022 100644
+> >>> --- a/kernel/irq/irq_sim.c
+> >>> +++ b/kernel/irq/irq_sim.c
+> >>> @@ -149,6 +149,7 @@ static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
+> >>>  static const struct irq_domain_ops irq_sim_domain_ops = {
+> >>>         .map            = irq_sim_domain_map,
+> >>>         .unmap          = irq_sim_domain_unmap,
+> >>> +       .xlate          = irq_domain_xlate_onetwocell,
+> >>>  };
+> >>>
+> >>>  /**
+> >>> --
+> >>> 2.34.1
+> >>>
+> >>
+> >> You'll need Marc's (Cc'ed) Ack here.
+> 
+> Hi Marc,
+> 
+> > 
+> > The question is what will the simulator code do with this information.
+> > Throw it away? What of 3/4/5 cell bindings? I'd rather see the
+> 
+> The 3/4/5 cell bindings is selience ignored currently.
+> 
+> > simulator being extended to deal with arbitrary bindings instead of
+> > trading a harcoded limit for another one. And also give some
+> > semantics to the extra cells.
+> 
+> Would you means we should allow the users to overwrite the xlate callback
+> or overwrite the domain_ops?
 
-<snip>
+Neither. I think the caller should provide an irq_domain_ops structure
+at domain creation, with the .xlate member populated, and the irq_sim
+code would add its own ops to it.
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Providing NULL would ensure we fallback to the existing behaviour.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
