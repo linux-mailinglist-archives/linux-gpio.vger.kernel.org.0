@@ -2,86 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA06C5ED1F8
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 02:25:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7292D5ED6E5
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 09:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232356AbiI1AZP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Sep 2022 20:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46574 "EHLO
+        id S233856AbiI1Hze (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 03:55:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233042AbiI1AYo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 20:24:44 -0400
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696DC1EE772;
-        Tue, 27 Sep 2022 17:24:17 -0700 (PDT)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1319573379eso2569085fac.0;
-        Tue, 27 Sep 2022 17:24:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=emvP3YSyBpP+FskRt08StkDM9pRDZiCrhQHQG+rB6FE=;
-        b=EhHggIDLqL80WrsFZKlV/oOO60fajlo8901b9RQ1j/t94fDaFmqudzPLRcGTNjqgaE
-         2hVNQ+oMGnHdyupjS1ehvuSVy7ammRVfbdO3N8dRdv+X6hAWMIfcAxDFw/CD8vQQ4Xdb
-         9+OJ0dZGUh6nrrOxiJxDPweS2lbnr1XZDNRM2L796AWDYQSvlp+thh2F2zuZvyqarrWN
-         4rwvt2Pj4/c/5hGc7R2MHIQWc3FquexOkO0Z+USUlp3oP4DjfRmQzoPhJt+wNWU7jcAd
-         wxFZSymDBH3ugblLckG04JNxCMrpoLwyAL6UixOALzS7OML1j3qM9/X38umjJKb24siz
-         mE2g==
-X-Gm-Message-State: ACrzQf1UYBAGYlDyT8fB0YCnA69AKeqZCVx/ab9FTE3gNo/9YT4Jxxhm
-        MBqOtS56oQKp0/0M2ZxPsVSI9MMl0w==
-X-Google-Smtp-Source: AMsMyM7eOVxfo8/++Dna9DjiLq5ihgEzlcXt3mZaOCPGIdA8MtwTkb0E0zydywZ0B8nz+65TCQ0hBA==
-X-Received: by 2002:a05:6870:4184:b0:131:55a3:2fef with SMTP id y4-20020a056870418400b0013155a32fefmr3751387oac.223.1664324652219;
-        Tue, 27 Sep 2022 17:24:12 -0700 (PDT)
-Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id i42-20020a056870892a00b00127a6357bd5sm1690605oao.49.2022.09.27.17.24.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 17:24:11 -0700 (PDT)
-Received: (nullmailer pid 2708319 invoked by uid 1000);
-        Wed, 28 Sep 2022 00:24:11 -0000
-Date:   Tue, 27 Sep 2022 19:24:11 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
+        with ESMTP id S233854AbiI1HzA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 03:55:00 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7BD2DF0;
+        Wed, 28 Sep 2022 00:54:47 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Mcp6p0N5SzHqPY;
+        Wed, 28 Sep 2022 15:30:10 +0800 (CST)
+Received: from [10.174.178.165] (10.174.178.165) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Wed, 28 Sep 2022 15:32:26 +0800
+Subject: Re: [PATCH v2 1/3] genirq/irq_sim: Allow both one and two cell
+ bindings
+To:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Wei Yongjun <weiyongjun@huaweicloud.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        krishna Lanka <quic_vamslank@quicinc.com>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 34/34] dt-bindings: pinctrl: qcom,sc8280xp: fix
- indentation in example (remaining piece)
-Message-ID: <20220928002411.GA2708263-robh@kernel.org>
-References: <20220927173702.5200-1-krzysztof.kozlowski@linaro.org>
- <20220927173702.5200-35-krzysztof.kozlowski@linaro.org>
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20220926084428.1792815-1-weiyongjun@huaweicloud.com>
+ <20220926084428.1792815-2-weiyongjun@huaweicloud.com>
+ <CAMRc=MfjB4QTf_zp5Rk3T_ndqDjCCjAW2HmGpJ9EF-i1epSLcw@mail.gmail.com>
+ <865yha8fcs.wl-maz@kernel.org>
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+Message-ID: <e9dc5d57-6978-c491-1851-9ea6d4ecfcf5@huawei.com>
+Date:   Wed, 28 Sep 2022 15:32:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220927173702.5200-35-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <865yha8fcs.wl-maz@kernel.org>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.165]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 27 Sep 2022 19:37:02 +0200, Krzysztof Kozlowski wrote:
-> Bindings example should be indented with 4-spaces.  Previous adjustment
-> missefd one spot.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,sc8280xp-pinctrl.yaml    | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+On 2022/9/26 20:55, Marc Zyngier wrote:
+> On Mon, 26 Sep 2022 07:24:48 -0400,
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>
+>> On Mon, Sep 26, 2022 at 10:27 AM Wei Yongjun <weiyongjun@huaweicloud.com> wrote:
+>>>
+>>> From: Wei Yongjun <weiyongjun1@huawei.com>
+>>>
+>>> The IRQ simulator only support one cell binding now, this patch make it
+>>> works with either one or two cell bindings, where the cell values map
+>>> directly to the irq number and irq flags.
+>>>
+>>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+>>> ---
+>>>  kernel/irq/irq_sim.c | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/kernel/irq/irq_sim.c b/kernel/irq/irq_sim.c
+>>> index dd76323ea3fd..73a90b7b6022 100644
+>>> --- a/kernel/irq/irq_sim.c
+>>> +++ b/kernel/irq/irq_sim.c
+>>> @@ -149,6 +149,7 @@ static void irq_sim_domain_unmap(struct irq_domain *domain, unsigned int virq)
+>>>  static const struct irq_domain_ops irq_sim_domain_ops = {
+>>>         .map            = irq_sim_domain_map,
+>>>         .unmap          = irq_sim_domain_unmap,
+>>> +       .xlate          = irq_domain_xlate_onetwocell,
+>>>  };
+>>>
+>>>  /**
+>>> --
+>>> 2.34.1
+>>>
+>>
+>> You'll need Marc's (Cc'ed) Ack here.
+
+Hi Marc,
+
+> 
+> The question is what will the simulator code do with this information.
+> Throw it away? What of 3/4/5 cell bindings? I'd rather see the
+
+The 3/4/5 cell bindings is selience ignored currently.
+
+> simulator being extended to deal with arbitrary bindings instead of
+> trading a harcoded limit for another one. And also give some
+> semantics to the extra cells.
+
+Would you means we should allow the users to overwrite the xlate callback
+or overwrite the domain_ops?
+
+Regards,
+Wei Yongjun
