@@ -2,91 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03CA95ED1EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 02:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD9CE5ED1F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 02:24:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232912AbiI1AYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Sep 2022 20:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43128 "EHLO
+        id S232892AbiI1AYt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Sep 2022 20:24:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232929AbiI1AXd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 20:23:33 -0400
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7F91C99D0;
-        Tue, 27 Sep 2022 17:23:29 -0700 (PDT)
-Received: by mail-oi1-f180.google.com with SMTP id g130so13667210oia.13;
-        Tue, 27 Sep 2022 17:23:29 -0700 (PDT)
+        with ESMTP id S232966AbiI1AYc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Sep 2022 20:24:32 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EBA1ED6DC;
+        Tue, 27 Sep 2022 17:23:56 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-13189cd5789so3654371fac.11;
+        Tue, 27 Sep 2022 17:23:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=1ql8osKKiX11AWgBttLdJc5/t2n/m0cIIQ1QiFmAs3w=;
-        b=IC6FYM0WB5rTyXwv0Wgm1DL20/O2iw9W0YGoax3PsTsrNVRr5ZZwk/azuyWyXeCeZM
-         8d6gRxWn9W/5T5iiyK9iLCiXsicKXrqxbnIVAHCMZ0n+7SCuG+49KuUxkKQQYKJAQpox
-         RwDc4joW+wGDvuTJdFQmyOw6uhDl5/b42yAeElulrJ/HgwrxreL6L3+ygogO/HyJWGbH
-         +tBCzI7d5FRP9DHuNfsc+YdiJ/4z9k0yi8ZVyKlI0xkgffaYyGt2wOMqBmgEZjR5NEyd
-         aSFj09g02zX8MCkmXi+U24Tk57hxaAqfCkhYVP+9wxHqTvICO4nrbKSqD6yuG52W6/wZ
-         lLrw==
-X-Gm-Message-State: ACrzQf0Ew1I7mcTImAntAOonPu4LWjp3Hv/dMV/CRuVKuI733iBGrrT/
-        7ZG5OTKDjoyRMxW2fJeRJw==
-X-Google-Smtp-Source: AMsMyM6jbmgRBwx7KFoiQ23aOsU9B7nN/s/muKdM5IPIrLOOO31hrlzupf0VienQkJUR2xWe/hJFHw==
-X-Received: by 2002:a05:6808:1390:b0:350:45fd:7d31 with SMTP id c16-20020a056808139000b0035045fd7d31mr3226331oiw.253.1664324609145;
-        Tue, 27 Sep 2022 17:23:29 -0700 (PDT)
+        bh=zMLeoHtdamoqlMw3SAiO+aszjrVM2v+8GP1lZ0YQlSQ=;
+        b=o2anF7t8ItbGUhitaaRpyyzyCTdLWz6hnaKgdJuU+wlpU2X/9y3S6x3QwV4EP/fXwy
+         Z68vzAKKX7CjDq9vbXngejIxDpVitaJBZTE8pYpJ+Ch4ssqijDXHtEl27DwSpmIQoMti
+         EiciaRz4kBz8ys10+Drm68/fRscbdK85t+B1kxA0bvf0RMnGVrOQQMTsSOEme4BNIN2l
+         JIcH9qL4Jc0ftNjBF0u/qFpxZ0ogMXrFPvnLiY2XvfN6R/g50w31Zn3QbE3R4wML2RhX
+         aZDjJz2ToUzT+mvLOWZVEONGu7qGKdDTKtZteemfU8Aw9NB2tmPhTHyi8pccJxc/bjiR
+         wAsA==
+X-Gm-Message-State: ACrzQf0WKXZHY+TcuUnSLlpHWuuWhQ2RTFQoTKBCscfblc8/izPUxdrO
+        e4H2itkBqWN5RVBeVOH2Dw==
+X-Google-Smtp-Source: AMsMyM5nxBDhvS41nzdohFuv11m96EK8tE4quFTzO423gRGAdF9jNBHE3gHgpv+wD0PSdNxnIRiURA==
+X-Received: by 2002:a05:6870:4594:b0:127:a9e2:1ab3 with SMTP id y20-20020a056870459400b00127a9e21ab3mr3849789oao.156.1664324634652;
+        Tue, 27 Sep 2022 17:23:54 -0700 (PDT)
 Received: from robh.at.kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id b21-20020a4ae215000000b0043540f7701esm1217122oot.31.2022.09.27.17.23.28
+        by smtp.gmail.com with ESMTPSA id i7-20020a4ad087000000b0044afc1ba91asm1185385oor.44.2022.09.27.17.23.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Sep 2022 17:23:28 -0700 (PDT)
-Received: (nullmailer pid 2703254 invoked by uid 1000);
-        Wed, 28 Sep 2022 00:23:27 -0000
-Date:   Tue, 27 Sep 2022 19:23:27 -0500
+        Tue, 27 Sep 2022 17:23:54 -0700 (PDT)
+Received: (nullmailer pid 2707679 invoked by uid 1000);
+        Wed, 28 Sep 2022 00:23:53 -0000
+Date:   Tue, 27 Sep 2022 19:23:53 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        krishna Lanka <quic_vamslank@quicinc.com>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        linux-gpio@vger.kernel.org,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
         Bjorn Andersson <andersson@kernel.org>
-Subject: Re: [PATCH v3 32/34] dt-bindings: pinctrl: qcom,sdx65: use common
- TLMM schema
-Message-ID: <20220928002327.GA2703186-robh@kernel.org>
+Subject: Re: [PATCH v3 33/34] dt-bindings: pinctrl: qcom,sc7280: fix matching
+ pin config
+Message-ID: <20220928002353.GA2707641-robh@kernel.org>
 References: <20220927173702.5200-1-krzysztof.kozlowski@linaro.org>
- <20220927173702.5200-33-krzysztof.kozlowski@linaro.org>
+ <20220927173702.5200-34-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220927173702.5200-33-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+In-Reply-To: <20220927173702.5200-34-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 27 Sep 2022 19:37:00 +0200, Krzysztof Kozlowski wrote:
-> Reference common Qualcomm TLMM pin controller schema, to bring other
-> regular schemas and additional checks, like function required only for
-> GPIOs.
+On Tue, 27 Sep 2022 19:37:01 +0200, Krzysztof Kozlowski wrote:
+> The TLMM pin controller follows generic pin-controller bindings, so
+> should have subnodes with '-state' and '-pins'.  Otherwise the subnodes
+> (level one and two) are not properly matched.  This method also unifies
+> the bindings with other Qualcomm TLMM and LPASS pinctrl bindings.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> 
 > ---
-> 
-> v1 was reviewed by Rob, but patch was changed since that time, so not
-> adding Rob's tag.
-> ---
->  .../devicetree/bindings/pinctrl/qcom,sdx65-pinctrl.yaml       | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml      | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
