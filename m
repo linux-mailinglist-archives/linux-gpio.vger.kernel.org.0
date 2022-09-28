@@ -2,104 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E69D25EE213
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 18:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71E8D5EE39F
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 19:55:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234037AbiI1QmV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 12:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50298 "EHLO
+        id S234254AbiI1RzN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 13:55:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234007AbiI1QmU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 12:42:20 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 828A1D4DD4;
-        Wed, 28 Sep 2022 09:42:18 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 732B947C;
-        Wed, 28 Sep 2022 18:42:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1664383335;
-        bh=7KA1n0RAEw+lqCsVliprwKrAzzAI6PKXJUVUTsE8vvI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jhf5yymccXEDElBwJIt9EVPsMTJhdaS+OPOIzhAFb0KKYTCWvhXBCXPVq0m0n32Sw
-         rpu+rVv2WBSXKIBQc7SBwG+tCmDelTn/2MDcQNB+cLRLCfNdajVo7oyzBCQ5WlTJkW
-         1v1iGNAwQSsnpksEPl/MA7pMSfUlB4hJOx2kwMsc=
-Date:   Wed, 28 Sep 2022 19:42:14 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        git@xilinx.com, saikrishna12468@gmail.com
-Subject: Re: [PATCH 0/4] pinctrl: pinctrl-zynqmp: Add tri-state configuration
- support
-Message-ID: <YzR5ZoAbaYONnmPS@pendragon.ideasonboard.com>
-References: <1655462819-28801-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <YzRvEPUWUXP4x7+h@pendragon.ideasonboard.com>
+        with ESMTP id S234762AbiI1Ryq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 13:54:46 -0400
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 685EE10039F
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 10:54:17 -0700 (PDT)
+Received: by mail-wm1-x334.google.com with SMTP id iv17so8991181wmb.4
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 10:54:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=QLnqCNrdkrN+F2FOjxqA+Okyc0NN3uVigCxct92mU/0=;
+        b=5EPmCXROsEl/can+mvrAhLARO1VUVjgESzDFoHuvkPZscJxvjXrqyPw0zAex4cY/Py
+         z5pA0Eg3WQJjvKItkmlYfa1R49ggArUbo3vF6HrdN6Aqo5Ace0iToW6/GLW+naXGwmmK
+         mnIavam8iPcQip0fL3izIyFyvsQRoXmCNa+AXn0lxu5PViR0Uckc//Vtqpi+SpG/VExo
+         aYx2ysKnp9hl5G2/uSS/cYHs2Pm/4KB2Eubc3VwnbMAm5ZH7qjP0BckGvExgJ71i99K2
+         b7ZNN4mmZ/RYCiO7kzedCkEjsznZwQg/FjD9MoODW1+xy9HSqjolLQwZ5d7kxYhsXJyN
+         wKNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=QLnqCNrdkrN+F2FOjxqA+Okyc0NN3uVigCxct92mU/0=;
+        b=out0HAVey0m8UnXjrsloY7AetiMcT0ViBzV7orIegZNOjtIIQ78PmZCfPqoqlf6g0H
+         m9hsTndxGt6kRxagoNQqagz5mU81txydilMSDFm8a1a1FPN2IVJQCAxz4bB49aJaDafQ
+         mnSpH+P0r00S7qqeyfLlu0NIrJGdHnVwT/nJj8ks7/SX35IWJOk2vZXUOE0DXmVVu3e/
+         S6ovam3LbYZ7gsQxDu/3fey/m6D/Kbp2Sd+rXm4lwDRWyYjIZUg8Z4fUyncWNkrOa0f7
+         klqvShU9BWCIKQYgNkdjJZQYWLqk/9mElFzjnDUh8L5OG7d7dlNRLvYKWHgPmQr/mXz6
+         hK8w==
+X-Gm-Message-State: ACrzQf3+ghCiFzQCm2NGnfvpGXjLYR61RRzlZfbeSCZU+NCTaEHM+heP
+        /sWUU1RLwUZKtb47KssblduSz/6Qy6xeJQGr50Rbomszpxs=
+X-Google-Smtp-Source: AMsMyM7OQz0GkmPpX0DQFk7u73FswPIaIA/CfJrGqWpiESMqIFPs4gndJdNFZYHHVek7vu0tDaDF+WEWAoc03Ntddtg=
+X-Received: by 2002:a05:600c:b42:b0:3b4:7580:a995 with SMTP id
+ k2-20020a05600c0b4200b003b47580a995mr8000436wmr.30.1664387656355; Wed, 28 Sep
+ 2022 10:54:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <YzRvEPUWUXP4x7+h@pendragon.ideasonboard.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <cover.1664189248.git.viresh.kumar@linaro.org> <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
+ <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+ <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+ <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
+ <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
+ <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+ <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
+In-Reply-To: <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 28 Sep 2022 19:54:05 +0200
+Message-ID: <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 06:58:10PM +0300, Laurent Pinchart wrote:
-> Hi Sai,
-> 
-> On Fri, Jun 17, 2022 at 04:16:55PM +0530, Sai Krishna Potthuri wrote:
-> > This series update the Xilinx firmware, ZynqMP dt-binding and ZynqMP
-> > pinctrl driver to handle 'output-enable' and 'bias-high-impedance'
-> > configurations. As part of these configurations, ZynqMP pinctrl driver
-> > takes care of pin tri-state setting.
-> > Also fix the kernel doc warning in ZynqMP pinctrl driver.
-> 
-> I'm afraid this causes a regression :-( With this series applied, boot
-> breaks with the following message being printed to the serial console:
-> 
-> Received exception
-> MSR: 0x200, EAR: 0xFF180198, EDR: 0x0, ESR: 0x64
-> 
-> I've traced that to the probe of the UART, when it calls into the
-> firmware to set pin MIO18 to high impedance. According to v1.7 of the
-> ZynqMP registers reference (UG1087), there is no register at address
-> 0xFF180198.
-> 
-> I am using the VCU TRD 2021.1 for testing. Does this series require a
-> firmware update ? If so backward compatibility needs to be preserved.
-> It's very late in the v6.0-rc cycle for a fix, a revert may be best at
-> this point, to give us time to fix the issue properly.
+On Wed, Sep 28, 2022 at 5:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 28-09-22, 14:20, Bartosz Golaszewski wrote:
+> > Ok, so this is not correct. The doc for
+> > gpiod_edge_event_buffer_get_event() says:
+> >
+> >  * @return Pointer to an event stored in the buffer. The lifetime of the
+> >  *   event is tied to the buffer object. Users must not free the event
+> >  *   returned by this function.
+> >
+> > We make no guarantees that the address returned by
+> > gpiod_edge_event_buffer_get_event() will still be valid after a call
+> > to gpiod_line_request_read_edge_event(). In fact the doc for the
+> > latter says:
+> >
+> >  * @note Any exising events in the buffer are overwritten.  This is not an
+> >  *       append operation.
+> >
+> > So we're being clear that after a call to
+> > gpiod_line_request_read_edge_event(), all previously returned edge
+> > event pointers are invalid unless the objects to which they point were
+> > explicitly copied.
+> >
+> > Current implementation does indeed work like what you describe but
+> > that behavior is not "contractually" guaranteed and can change even
+> > between minor releases.
+> >
+> > In C++ if you do:
+> >
+> > const edge_event& ev = buffer.get_event(0);
+> > request.read_edge_event(buffer);
+> > std::cout << ev << std::endl;
+> >
+> > You risk a segfault.
+> >
+> > My understanding is that Rust should not allow a crash in this
+> > situation by design.
+>
+> Hmm, so what exactly do we want to do here then ?
+>
+> - Don't allow events to be referenced ? i.e. make event_clone() the default
+>   behavior ?
+>
 
-I've now tested the VCU TRD 2022.1 (which AFAIK is the latest available
-version), and the problem doesn't occue then. It thus seems this depends
-on a firmware update, which is impractical at best for all old designs
-:-(
+God no, that would be wasteful.
 
-> > Note: Resending the series as i see this series didn't went out due
-> > to some issue with my mail client. Please ignore if this series is 
-> > already received.
-> > 
-> > Sai Krishna Potthuri (4):
-> >   firmware: xilinx: Add configuration values for tri-state
-> >   dt-bindings: pinctrl-zynqmp: Add output-enable configuration
-> >   pinctrl: pinctrl-zynqmp: Add support for output-enable and
-> >     bias-high-impedance
-> >   pinctrl: pinctrl-zynqmp: Fix kernel-doc warning
-> > 
-> >  .../bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml         |  4 ++++
-> >  drivers/pinctrl/pinctrl-zynqmp.c                      | 11 +++++++++++
-> >  include/linux/firmware/xlnx-zynqmp.h                  |  5 +++++
-> >  3 files changed, 20 insertions(+)
+> - Don't allow read_edge_event() to be called twice for a buffer ? that will be
+>   inefficient though.
+>
 
--- 
-Regards,
+Not good either.
 
-Laurent Pinchart
+> - Somehow guarantee that reference to all the events are dropped before issuing
+>   read_edge_event() again, else make it fail ? I am not sure how straight
+>   forward that can be though.
+
+In C++ the preferred way is to do buffer.get_event(0) which will
+return a constant reference. If you store that reference as const
+edge_event& ev = buffer.get_event(0) and reuse it after rereading into
+that buffer and the program crashes - that's on you. In most cases you
+should just do buffer.get_event(0).line_offset() etc. If you do:
+
+edge_event event = buffer.get_event(0);
+
+You'll copy the event and it will survive the overwriting of the buffer.
+
+I'm a Rust beginner but my understanding is that the whole idea of the
+language design is to *not* allow a situation where the program can
+crash. It should be detected at build-time. We must not rely on
+"contracts" defined by documentation.
+
+Is there a way to invalidate a reference in Rust? Have a small (cheap)
+object in the buffer which the event references and which would get
+dropped when reading into the buffer?
+
+Bart
