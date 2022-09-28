@@ -2,236 +2,196 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E03F95ED7A3
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 10:25:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D88B65ED8F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 11:29:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232902AbiI1IZZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 04:25:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
+        id S232866AbiI1J3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 05:29:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231587AbiI1IZY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 04:25:24 -0400
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826050713
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 01:25:18 -0700 (PDT)
-Received: by mail-lf1-x131.google.com with SMTP id bu25so17368742lfb.3
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 01:25:18 -0700 (PDT)
+        with ESMTP id S229838AbiI1J3x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 05:29:53 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B1D31D0C7;
+        Wed, 28 Sep 2022 02:29:50 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id e11-20020a17090a77cb00b00205edbfd646so1507146pjs.1;
+        Wed, 28 Sep 2022 02:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=44BDHNSti79tl8v1Eaa7d6KYOVFkLP1VzWu1QAI0Esc=;
-        b=RRP7gVQNWd4jOJ3YkjEKGjRwsb/inj6ShkxUxpCzFUXnrrLQAvUEXls71fGmU57mg9
-         LIXaW33WyWLiPEqPFCufgX99n/i1w+ksxWFx/3TCuyAK0TZ9Untje5vKu+Z9YBXl0Ft+
-         bdRQzvgON66SjoXR9sVSQHP5r0F4SA/hY4Q8+3pcno+C5/p0F/0H32fBKmSwFJ/q+nQC
-         hWoBPILfKg9g/OJvDcfb4J9lGLKh+mUImjWDOibS8joTGtZT/vooOkn603u9pOcULjKL
-         wSkSm1JjugUmiQ910+kGAJ0kYD2KWdI8raE4jFySNrNDlTWqHHBP5YQHB2amClo5DhVH
-         AIFA==
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=tJu5+3r8ivCyAS03HPqEIU5aJjM4gwmSBQgnIQ+4SPM=;
+        b=VpOahVSjO5al4k6Oz8lZxxcglS9LeVuTHIsbp2xGQ34520KHaXfABa0Njr6IU1PPag
+         WPoNMLLsZY9ufUMAU10LOXwD4Wym1JEBS+K23MrfaqffgjrIVEvmnGsloVBP4bm07cPC
+         bhSl1vsFQISLsJAlkx9M19oFD/9vm/iPvSQTrlGCPBDSb3LsDf5gSJ9aoackzXY6BBU2
+         2VaXujWX+iSYrRuvhM6u9YKryf0IjYklZwpWTCwTDPgFw7rreWNCks7xz5LIdx1pncDo
+         iTwIJKbMQQi/dZpvDWIjMBvaLrDMIAR85sZtRHOzqyjNa3zddbRHSEt9zAmH6N7CoEEW
+         o7DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=44BDHNSti79tl8v1Eaa7d6KYOVFkLP1VzWu1QAI0Esc=;
-        b=hYwVBBq6OZrnbgSFzgIv2tmUnzNZEVWCGayNV5GI/TWYeSlMMm4XUxp698EtId2z42
-         9vTjDjK16gfQOTLseJQdyDdcddXhbb1hixvZE99NI6MOkBXIc6+8EOMGgAyi2qzuixjl
-         Gf48MM8xEDZasYpKHsoNtDLxJvezD3qDVI2e1GxVWsbvHToLKhIDgxM4FI5e0IWcpnqc
-         AGW3dwOOTl3P9WMgSYulmcrsoD2DoLEdTTLL5gFsBz3NWuOE2WI+2uUAAyDhlyyF416Z
-         Ap2Be1DcKeO7CgpcvSFNLJOkupeAUW04F2RoZZ6rnFPLVRB9MGs20D53t3H9q1tSsdg+
-         Sw6Q==
-X-Gm-Message-State: ACrzQf1iHcPQI/wLPHhRuHO2gollRxS2U9EB1pM3utRmn2iYPIZlb6iF
-        MrXRw0wXqzCv9zrXVA6u96BHzw==
-X-Google-Smtp-Source: AMsMyM7mHw+7O59tuyhPhnTMDLtidSY7Y9Ozeqjd0eFgcm1SvbjWGeI0J7uO+JL8WwD3O6Ty62EexQ==
-X-Received: by 2002:a05:6512:159e:b0:498:f1eb:f7a with SMTP id bp30-20020a056512159e00b00498f1eb0f7amr12170717lfb.425.1664353517084;
-        Wed, 28 Sep 2022 01:25:17 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id n13-20020a05651203ed00b004978e51b691sm408596lfq.266.2022.09.28.01.25.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 28 Sep 2022 01:25:16 -0700 (PDT)
-Message-ID: <7757c8bd-67cc-17cf-657d-da83fb3994b7@linaro.org>
-Date:   Wed, 28 Sep 2022 10:25:15 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v5 1/3] dt-bindings: pinctrl: qcom: add sdm670 pinctrl
-Content-Language: en-US
-To:     Richard Acayan <mailingradian@gmail.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=tJu5+3r8ivCyAS03HPqEIU5aJjM4gwmSBQgnIQ+4SPM=;
+        b=UX9WmiVPKrEwJcK/ieUk0g6Qxt0DmhwbdkJeSflPUxbbUCimqH2LHzLF+7JJ391MRV
+         i33plDlzqzkGFnG8GFSzAysdiXoz6Q5kasvk+33mPOo1TPHmGddgqdtzWICvAKOjDb7n
+         m+kNm+ddqBs/yCKk7ph2V5lHdY39pSKGkIKwnsCLcERNajyfyjC5BHnGpn3JLevpc8xN
+         JfxIr5K2QP0NNra+egp5+NE6HBZuqX3X9KG5KFY36G4I1ib1OJuFjku1eY4D072kW0rC
+         EmZe0TAugZhbLDwA1eZRqvkOp7iznW6/hMIKVtkMDIJbKpYO/h0y6KkBiObI3FlOhXRk
+         SmjA==
+X-Gm-Message-State: ACrzQf1BaFRnlXbQ828m1GobL3gc443Q76ktSfO7lBt2mG/YkynRk/jT
+        jK0yAmOVVKXkv8cb9Nbcx0g=
+X-Google-Smtp-Source: AMsMyM7DMllFRiL1QIaYIiPsZis835Han9NNI9x7AIEa+c2olw+/cyVJ3z/YF7gR4IyhY3NNG/rEYQ==
+X-Received: by 2002:a17:90b:358e:b0:200:9d8a:7a70 with SMTP id mm14-20020a17090b358e00b002009d8a7a70mr9288152pjb.61.1664357389723;
+        Wed, 28 Sep 2022 02:29:49 -0700 (PDT)
+Received: from xm06403pcu.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id b22-20020a17090a101600b0020071acaecasm1026831pja.42.2022.09.28.02.29.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Sep 2022 02:29:49 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-References: <20220927230833.125749-1-mailingradian@gmail.com>
- <20220927230833.125749-2-mailingradian@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220927230833.125749-2-mailingradian@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/3] dt-bindings: gpio: Conver Unisoc GPIO controller binding to yaml
+Date:   Wed, 28 Sep 2022 17:29:35 +0800
+Message-Id: <20220928092937.27120-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/09/2022 01:08, Richard Acayan wrote:
-> There is a new driver for the Snapdragon 670 TLMM (Top-Level Mode
-> Multiplexer). Document it.
-> 
-> Adapted from qcom,sm6350-pinctrl.yaml.
-> 
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,sdm670-tlmm.yaml    | 138 ++++++++++++++++++
->  1 file changed, 138 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
-> new file mode 100644
-> index 000000000000..1d8e76db57c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
-> @@ -0,0 +1,138 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdm670-tlmm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SDM670 TLMM block
-> +
-> +maintainers:
-> +  - Richard Acayan <mailingradian@gmail.com>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
-> +  in the SDM670 platform.
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdm670-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  '#interrupt-cells': true
-> +  gpio-controller: true
-> +  gpio-reserved-ranges:
-> +    minItems: 1
-> +    maxItems: 75
-> +
-> +  '#gpio-cells': true
-> +  gpio-ranges: true
-> +  wakeup-parent: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +patternProperties:
-> +  '-state$':
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Use " quotes here.
+Convert the Unisoc gpio controller binding to DT schema format.
 
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sdm670-tlmm-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sdm670-tlmm-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  qcom-sdm670-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-4][0-9])$"
-> +            - enum: [ ufs_reset, sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data,
-> +                      sdc2_clk, sdc2_cmd, sdc2_data ]
-> +        minItems: 1
-> +        maxItems: 36
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +
-> +        enum: [ adsp_ext, agera_pll, atest_char, atest_tsens, atest_tsens2, atest_usb1, atest_usb10,
-> +                atest_usb11, atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21,
-> +                atest_usb22, atest_usb23, cam_mclk, cci_async, cci_i2c, cci_timer0, cci_timer1,
-> +                cci_timer2, cci_timer3, cci_timer4, copy_gp, copy_phase, dbg_out, ddr_bist,
-> +                ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3, edp_hot, edp_lcd, gcc_gp1, gcc_gp2, gcc_gp3,
-> +                gp_pdm0, gp_pdm1, gp_pdm2, gpio, gps_tx, jitter_bist, ldo_en, ldo_update,
-> +                lpass_slimbus, m_voc, mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3,
-> +                mss_lte, nav_pps, pa_indicator, pci_e0, pci_e1, phase_flag, pll_bist, pll_bypassnl,
-> +                pll_reset, pri_mi2s, pri_mi2s_ws, prng_rosc, qdss_cti, qdss, qlink_enable,
-> +                qlink_request, qua_mi2s, qup0, qup1, qup10, qup11, qup12, qup13, qup14, qup15, qup2,
-> +                qup3, qup4, qup5, qup6, qup7, qup8, qup9, qup_l4, qup_l5, qup_l6, sdc4_clk,
-> +                sdc4_cmd, sdc4_data, sd_write, sec_mi2s, ter_mi2s, tgu_ch0, tgu_ch1, tgu_ch2,
-> +                tgu_ch3, tsif1_clk, tsif1_data, tsif1_en, tsif1_error, tsif1_sync, tsif2_clk,
-> +                tsif2_data, tsif2_en, tsif2_error, tsif2_sync, uim1_clk, uim1_data, uim1_present,
-> +                uim1_reset, uim2_clk, uim2_data, uim2_present, uim2_reset, uim_batt, usb_phy, vfr_1,
-> +                vsense_trigger, wlan1_adc0, wlan1_adc1, wlan2_adc0, wlan2_adc1, wsa_clk, wsa_data, ]
-> +
-> +
-> +      bias-disable: true
-> +      bias-pull-down: true
-> +      bias-pull-up: true
-> +      drive-strength: true
-> +      input-enable: true
-> +      output-high: true
-> +      output-low: true
-> +
-> +    required:
-> +      - pins
-> +
-> +    allOf:
-> +      - $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+---
+ .../devicetree/bindings/gpio/gpio-sprd.txt    | 28 --------
+ .../devicetree/bindings/gpio/sprd,gpio.yaml   | 70 +++++++++++++++++++
+ 2 files changed, 70 insertions(+), 28 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
 
-Drop quotes.
-
-> +      - if:
-> +          properties:
-> +            pins:
-> +              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-4][0-9])$"
-> +        then:
-> +          required:
-> +            - function
-> +
-
-You can drop it (and move the ref just after description). This will be
-handled with common schema:
-https://lore.kernel.org/linux-devicetree/20220927173702.5200-1-krzysztof.kozlowski@linaro.org/T/#m48dedb167f16315dbacd5c56c57f9033fe28a5d9
-
-This however is not a dependency - if you remove these lines, your patch
-can still be applied independently of mine.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+deleted file mode 100644
+index eca97d45388f..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-sprd.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-Spreadtrum GPIO controller bindings
+-
+-The controller's registers are organized as sets of sixteen 16-bit
+-registers with each set controlling a bank of up to 16 pins. A single
+-interrupt is shared for all of the banks handled by the controller.
+-
+-Required properties:
+-- compatible: Should be "sprd,sc9860-gpio".
+-- reg: Define the base and range of the I/O address space containing
+-the GPIO controller registers.
+-- gpio-controller: Marks the device node as a GPIO controller.
+-- #gpio-cells: Should be <2>. The first cell is the gpio number and
+-the second cell is used to specify optional parameters.
+-- interrupt-controller: Marks the device node as an interrupt controller.
+-- #interrupt-cells: Should be <2>. Specifies the number of cells needed
+-to encode interrupt source.
+-- interrupts: Should be the port interrupt shared by all the gpios.
+-
+-Example:
+-	ap_gpio: gpio@40280000 {
+-		compatible = "sprd,sc9860-gpio";
+-		reg = <0 0x40280000 0 0x1000>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
+-	};
+diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+new file mode 100644
+index 000000000000..c0cd1ed9809b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+@@ -0,0 +1,70 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2022 Unisoc Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/sprd,gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Unisoc GPIO controller
++
++maintainers:
++  - Orson Zhai <orsonzhai@gmail.com>
++  - Baolin Wang <baolin.wang7@gmail.com>
++  - Chunyan Zhang <zhang.lyra@gmail.com>
++
++description:
++  The controller's registers are organized as sets of sixteen 16-bit
++  registers with each set controlling a bank of up to 16 pins. A single
++  interrupt is shared for all of the banks handled by the controller.
++
++properties:
++  compatible:
++    const: sprd,sc9860-gpio
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupts:
++    maxItems: 1
++    description: The interrupt shared by all GPIO lines for this controller.
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++  - interrupt-controller
++  - "#interrupt-cells"
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        ap_gpio: gpio@40280000 {
++            compatible = "sprd,sc9860-gpio";
++            reg = <0 0x40280000 0 0x1000>;
++            gpio-controller;
++            #gpio-cells = <2>;
++            interrupt-controller;
++            #interrupt-cells = <2>;
++            interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++        };
++    };
++...
+-- 
+2.25.1
 
