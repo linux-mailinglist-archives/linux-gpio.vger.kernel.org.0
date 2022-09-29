@@ -2,81 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F00A55EF488
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 13:43:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CA9E5EF62F
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 15:14:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235382AbiI2Ln0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 07:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43136 "EHLO
+        id S235362AbiI2NOQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 09:14:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233190AbiI2LnY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 07:43:24 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11254137914
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 04:43:24 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id u69so1226434pgd.2
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 04:43:24 -0700 (PDT)
+        with ESMTP id S235679AbiI2NOD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 09:14:03 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E119186991
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 06:13:51 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id s10so1502887ljp.5
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 06:13:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=VffcU/I7l0bKIbYm1ircaLOmu08RzELOCVStQe2A14o=;
-        b=dQHvALQSIq5qRUaXm1Ml+LJzlfaRu+OQzMs/9l7p231W0xkv1I2PIeDNJlSNgjK9SX
-         EuoxcoKjuFHmbDzC4eXiKq3cvPmrlhEYAhUbdSTPhQKgvEAs5lISZibR7csBLcWXiv3d
-         JoLBj1aV7P6VPudj1A8iT9LaLbQuGXbTyNGHfqW4Vanbm5X9rEIdSFqzP5B0XJov0fnc
-         iESlesiRG3BAVoHf3i18CpHE9H6mzosjrDIr3rCUOn+vgQKh6wJa59qJ8mbRq3ccyifZ
-         +46y16SWDPiF2rEACq0Dnu+M/t75EwlCpw+IRpd4Uju1QuXgPVAk4ecor2KEKspIhlN8
-         KM+Q==
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=tIW2HbJiOlBSdP6fVAORaxjH/uYMGCngHaITXFjh1vE=;
+        b=Mf+Okd6WOcouI7/GLNto4+11PukX3NTzw46mNRoQKaSG9bZDUUg0nYnfPHye0uRQq/
+         EXjca5eNhY1HJWqAsF3atEz7tgzue8zcdmseUZMKzlzZCx4OtJ6QglAufo/bxtEOx/al
+         Pq4yn4xbNAPxSSDrhMgVa2hgdaddmlGrqlNNXmKNcpYLyD2eHE4ShWtLKzLVpkR0ZzJT
+         y1dAWdnUGDUKGumyb+r4m8n0MRfXj0NexwUYLYqOf5AxMVvDqabFZypXaRTTLzDDAtEG
+         EjlUFmJnne1Y3j79RsBtt0JAg/ws8Fuo2Bg8yUGgWcTmwH/GQHjCd5g0JVu6wYcb8zoH
+         +PMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=VffcU/I7l0bKIbYm1ircaLOmu08RzELOCVStQe2A14o=;
-        b=kc7In77aDjLtYiguRjGjj2AADGgT+CTIBlOYBHFTzcEpb8zpTe4UfBbpain0mG/CIY
-         +xceXuxiYPDbBnMUxHpCagPqm6bITezdJlmrjDZ9oHPpCZPVfPaMBUGLnU3HhcPR40/G
-         W5Khd8UpABibWDMbL72WaOOy+QYXAVlYguPmnymGGRdh8q/Tv1RyFPsYnQGC5iA11vyw
-         zoYSlwBSL5FXO3UgMLJzpTlH8G17q52bWP+6NXD9zEoil+rZa2y2P5RtUgriuPz1lx9N
-         qd6Wb7JIJAA/V/styECCiZ6iwCEWBu2rbPPjdD6WMngXp3ZuV5G32OdgUUG6/NvYt5pl
-         4GHw==
-X-Gm-Message-State: ACrzQf1yCjCr7y/21BOQl0TJca9gXsYFYvtHWp0849lDTkH+qALgsEl1
-        buNwov8zDYzwxo3qtRJV7w0=
-X-Google-Smtp-Source: AMsMyM5DzwqHvrgCjI/LgyMpfujtuLxSaNokxtSfVEORlSBPEzR8mOxUjXuWc26VxF2bx75SyufdsA==
-X-Received: by 2002:a63:85c2:0:b0:43a:dff6:d42d with SMTP id u185-20020a6385c2000000b0043adff6d42dmr2535589pgd.519.1664451803484;
-        Thu, 29 Sep 2022 04:43:23 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id g30-20020aa79f1e000000b00537f16e25d3sm5971226pfr.75.2022.09.29.04.43.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 04:43:23 -0700 (PDT)
-Date:   Thu, 29 Sep 2022 19:43:16 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-Message-ID: <YzWE1BpdCEqJqDJN@sol>
-References: <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
- <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
- <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
- <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
- <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
- <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
- <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
- <CAMRc=McSZWLdPNESPLfDD4UgyvtyU7BcvB-ZZrvDWM3LDYjEMA@mail.gmail.com>
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=tIW2HbJiOlBSdP6fVAORaxjH/uYMGCngHaITXFjh1vE=;
+        b=ObganSdGSUonDbxbJhQusOYb2MOPY6lMG2bC4KgUuoZ/qtuC3YmPEVsMinanllGmhZ
+         nd+ARoYCNyGku5BC7qCq4VEuy0lmZ290pEaqj8Zxdu3y9YT7yNoY2S7A+cSJJVQv9j6N
+         A+mZoJcS8z/sfpXA6PELdwJWtXnFtGXxDmJqss0xFALd4fNeVErhRFpteCaSHlinN+Ug
+         iw5ps3lQruWOSkB2+b5kC2+pe1Q3hUjh4FG1f63jkCaYehmztSxW59Z+Zf1N5xEpQIu5
+         8RJ0Sxu46YsJ45G2mzJ/vfT006OwAM02ghgDn3zlO2MbLCUD/PXtoasogf70MuJQWn1a
+         6N9w==
+X-Gm-Message-State: ACrzQf0D2rDA+g35bZlz+mZcxQDHXAvuQvKKmGJ2FCUz7GEKBRORi8Qb
+        W3UeM/dFUfn+zHO30NIrKVMQtSmadGdWKSih+reMyRqrtuI=
+X-Google-Smtp-Source: AMsMyM6sUd3EvaUJKpWxq3rGBTaW6DhnmHipQ24N6hivRKn/HgV6inr85BkrbKJRf5xk0Fbg+E6CKdLztJIe7GVu4JU=
+X-Received: by 2002:a2e:a7cf:0:b0:26c:541a:e04c with SMTP id
+ x15-20020a2ea7cf000000b0026c541ae04cmr1126067ljp.425.1664457228549; Thu, 29
+ Sep 2022 06:13:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=McSZWLdPNESPLfDD4UgyvtyU7BcvB-ZZrvDWM3LDYjEMA@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+From:   Mark Locascio <maldata@gmail.com>
+Date:   Thu, 29 Sep 2022 08:13:36 -0500
+Message-ID: <CA+8QDpKHEm6UZBRUSsuo+K62MROLcLRqbOZnB9D6qionsD5j5Q@mail.gmail.com>
+Subject: [libgpiod] Either a bug or a misunderstanding regarding bulk operations
+To:     linux-gpio@vger.kernel.org
+Content-Type: multipart/mixed; boundary="000000000000da537c05e9d0a5af"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,144 +61,174 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 09:37:40AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Sep 29, 2022 at 8:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> >
-> > On 28-09-22, 19:54, Bartosz Golaszewski wrote:
-> > > On Wed, Sep 28, 2022 at 5:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > Hmm, so what exactly do we want to do here then ?
-> > > >
-> > > > - Don't allow events to be referenced ? i.e. make event_clone() the default
-> > > >   behavior ?
-> > > >
-> > >
-> > > God no, that would be wasteful.
-> > >
-> > > > - Don't allow read_edge_event() to be called twice for a buffer ? that will be
-> > > >   inefficient though.
-> > > >
-> > >
-> > > Not good either.
-> >
-> > As I expected for both of them :)
-> >
-> > > > - Somehow guarantee that reference to all the events are dropped before issuing
-> > > >   read_edge_event() again, else make it fail ? I am not sure how straight
-> > > >   forward that can be though.
-> > >
-> > > In C++ the preferred way is to do buffer.get_event(0) which will
-> > > return a constant reference. If you store that reference as const
-> > > edge_event& ev = buffer.get_event(0) and reuse it after rereading into
-> > > that buffer and the program crashes - that's on you. In most cases you
-> > > should just do buffer.get_event(0).line_offset() etc. If you do:
-> > >
-> > > edge_event event = buffer.get_event(0);
-> > >
-> > > You'll copy the event and it will survive the overwriting of the buffer.
-> >
-> > Right, same happens here.
-> >
-> > > I'm a Rust beginner but my understanding is that the whole idea of the
-> > > language design is to *not* allow a situation where the program can
-> > > crash. It should be detected at build-time. We must not rely on
-> > > "contracts" defined by documentation.
-> >
-> > If everything was written in Rust, then this problem won't occur for sure. But
-> > in this case part of the code is available via FFI (foreign function interface)
-> > and they guarantees are a bit limited there and depend on what the FFI
-> > guarantees.
-> >
-> > > Is there a way to invalidate a reference in Rust? Have a small (cheap)
-> > > object in the buffer which the event references and which would get
-> > > dropped when reading into the buffer?
-> >
-> > I am not sure. There are locks, but then they have a cost.
-> >
-> 
-> I'm not talking about locking, this should be left to the user of the module.
-> 
-> Can we force-drop an object still referenced by other objects in Rust?
-> This is what I had in mind - a small, dummy, cheap object inside the
-> buffer that's created when reading into the buffer. Each even would
-> reference it and then Rust would not allow us to drop it as long as
-> there are references to it. Does it make sense? Is that possible?
-> 
+--000000000000da537c05e9d0a5af
+Content-Type: text/plain; charset="UTF-8"
 
-No, Rust will explicitly prevent you from dropping referenced objects.
+  Hi,
 
-But is this the sort of thing you mean:
+I was working with libgpiod and I noticed some unintuitive behavior. I
+can't say for sure that it's a bug, but at the very least, it's
+confusing, and I want to get clarification. Sample code is attached.
 
-use std::process::ExitCode;
+Let's say I have four lines that I want to use as outputs. I can
+request them all at once like this:
 
-#[derive(Clone)]
-struct Event {
-    pub id: u8
+struct gpiod_chip* chip = gpiod_chip_open("/dev/gpiochip0");
+struct gpiod_line_bulk lines;
+uint32_t offsets[NUMOUTPUTS] = {6, 13, 19, 26};
+int get_lines_result = gpiod_chip_get_lines(chip, offsets, NUMOUTPUTS, &lines);
+int32_t values[NUMOUTPUTS] = {0, 0, 0, 0};
+int set_dir_result = gpiod_line_request_bulk_output(&lines, "testgpio", values);
+
+And then when I want to set new values, I can update the "values"
+array and then do:
+
+int set_result = gpiod_line_set_value_bulk(&lines, values);
+
+This works exactly as expected. However, I need to maintain an array
+of the current values of all the output lines. If I didn't want to do
+that, perhaps because I was wrapping this in a function, I thought it
+could make sense to get a single line object from the bulk object, and
+then just set that one value. For example:
+
+void set_line_high(struct gpiod_line_bulk* all_lines, int line_index)
+{
+    struct gpiod_line* single_line =
+gpiod_line_bulk_get_line(&all_lines, line_index);
+    int set_result = gpiod_line_set_value(single_line, 1);
 }
 
-struct Events {
-    b: Vec<Event>
-}
+This only works for line_index == 0. A more illuminating test case is
+to have a loop that iterates over all of my outputs and toggles them
+all every second:
 
-impl Events {
-    pub fn get(&self, idx: usize) -> Option<&Event> {
-        self.b.get(idx)
+while (keep_going)
+{
+    for (int i = 0; i < NUMOUTPUTS  ; i++)
+    {
+        values[i] = counter % 2;
+
+        struct gpiod_line* single_line = gpiod_line_bulk_get_line(&lines, i);
+        int set_result = gpiod_line_set_value(single_line, values[i]);
     }
+
+    counter++;
+    usleep(1000000);
 }
 
-struct Buffer {
-    count: u8,
-    events: Option<Events>,
+When I run this, the first line in the bulk object is the only one
+that toggles. The other three are always off. If I replace it with
+
+for (int i = 0; i < NUMOUTPUTS; i++)
+{
+    values[i] = counter % 2;
 }
 
-impl Buffer {
-    
-    pub fn read(&mut self) -> Result<&Events, ()> {
-        self.count += 1;
-        self.events = Some(Events{b: vec![Event{id: self.count}]});
-        self.events.as_ref().ok_or(())
-    }
-}
+int set_result = gpiod_line_set_value_bulk(&lines, values);
+counter++;
+usleep(1000000);
 
-fn main() -> Result<ExitCode, ()>{
-    let mut b = Buffer{count: 0, events:None};
-    let mut ee = b.read()?;
-    let e = ee.get(0);
-    println!("{:?}", e.unwrap().id);
-    let cloned_e = e.unwrap().clone();
-    drop(e); // <-- comment out to try to create a dangling event reference
-    ee = b.read()?;
-    let e = ee.get(0); // <-- comment out to try to create a dangling event reference
-    println!("{:?}", cloned_e.id);
-    println!("{:?}", e.unwrap().id);
-    Ok(ExitCode::from(42))
-}
+it works fine, and all lines toggle as expected. I have attached two
+test programs that build & run on a raspberry pi (I just attached the
+GPIOs to LEDs to see what's happening). One works, the other doesn't,
+using the approaches above.
 
-That is a skeletal proof of concept - the small, dummy, cheap object is
-the Vec in Events.  Is that cheap enough? You might be able to replace
-that with something cheaper, but Events needs to be able to pull an
-Event reference from somewhere (from the borrow checker's PoV) so it
-made this demo simpler.
+Is this expected behavior? I took a look at the code and didn't see an
+immediate reason this wouldn't work. Let me know, and I'm happy to
+help either troubleshoot or help update the docs to make it more clear
+why this isn't intended to work.
 
-Comment out the two lines to try to carry e across the buffer read().
-The compiler will not allow it, as e already borrows from b.
+Thanks!
+-Mark
 
-In an actual implementation Event would wrap the C event, and Events.get()
-would get the event pointer for the Event and return that as a reference.
-The Event clone would call into C, rather than being derived as it is here.
+--000000000000da537c05e9d0a5af
+Content-Type: text/plain; charset="US-ASCII"; name="test-working.c"
+Content-Disposition: attachment; filename="test-working.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_l8n2uih41>
+X-Attachment-Id: f_l8n2uih41
 
-Key points:  Buffer has to own the Events snapshot that is returned by
-reference by read().  The return by reference creates a borrow on the
-Buffer.  The read() requires a &mut to prevent the Buffer being read
-while there are any borrows outstanding.
-The Events returns individual events by reference to create a borrow on
-the Events to prevent it (and the Buffer) being dropped or modified.
-The Event clone returns a concrete event that does not have a borrow of
-the Events or Buffer.
+I2luY2x1ZGUgPGdwaW9kLmg+CiNpbmNsdWRlIDxlcnJvci5oPgojaW5jbHVkZSA8ZmNudGwuaD4g
+IC8vIGZvciBvcGVuKCkKI2luY2x1ZGUgPGxpbnV4L3NwaS9zcGlkZXYuaD4gIC8vIGZvciBzdHJ1
+Y3Qgc3BpX2lvY190cmFuc2ZlcgojaW5jbHVkZSA8c2lnbmFsLmg+ICAvLyBmb3Igc2lnbmFsIGhh
+bmRsaW5nCiNpbmNsdWRlIDxzdGRpby5oPiAgLy8gZnByaW50ZiwgcHJpbnRmLCBzdGRlcnIKI2lu
+Y2x1ZGUgPHN0cmluZy5oPiAgLy8gZm9yIG1lbXNldAojaW5jbHVkZSA8dW5pc3RkLmg+ICAvLyBm
+b3IgY2xvc2UoKQojaW5jbHVkZSA8c3lzL2lvY3RsLmg+IC8vIGZvciBpb2N0bCgpCiNpbmNsdWRl
+IDxzeXMvdGltZS5oPgojaW5jbHVkZSA8c3RkaW50Lmg+IC8vIGZvciB1aW50MzJfdAoKI2RlZmlu
+ZSBOVU1PVVRQVVRTIDQKCnZvbGF0aWxlIGJvb2wga2VlcF9nb2luZzsKCnZvaWQgdGVybWluYXRp
+b25faGFuZGxlcihpbnQgc2lnbnVtKQp7CiAgICBrZWVwX2dvaW5nID0gZmFsc2U7Cn0KCmludCBt
+YWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCnsKICAgIHN0cnVjdCBzaWdhY3Rpb24gdGVybV9o
+YW5kbGVyOwogICAgc3RydWN0IHNpZ2FjdGlvbiBwcmV2X2hhbmRsZXI7CgogICAgc3RydWN0IGdw
+aW9kX2NoaXAqIGNoaXAgPSBOVUxMOwogICAgc3RydWN0IGdwaW9kX2xpbmVfYnVsayBsaW5lczsK
+CiAgICB0ZXJtX2hhbmRsZXIuc2FfaGFuZGxlciA9IHRlcm1pbmF0aW9uX2hhbmRsZXI7CiAgICBz
+aWdlbXB0eXNldCgmdGVybV9oYW5kbGVyLnNhX21hc2spOwogICAgdGVybV9oYW5kbGVyLnNhX2Zs
+YWdzID0gMDsKICAgIHNpZ2FjdGlvbihTSUdJTlQsICZ0ZXJtX2hhbmRsZXIsICZwcmV2X2hhbmRs
+ZXIpOwoKICAgIHByaW50ZigiU2V0dGluZyB1cCBHUElPLi4uXG4iKTsKCiAgICBjaGlwID0gZ3Bp
+b2RfY2hpcF9vcGVuKCIvZGV2L2dwaW9jaGlwMCIpOwogICAgaWYgKCFjaGlwKQogICAgewogICAg
+ICAgIHBlcnJvcigiZ3Bpb2RfY2hpcF9vcGVuIGZhaWxlZCIpOwogICAgICAgIHJldHVybiAxOwog
+ICAgfQoKICAgIHVpbnQzMl90IG9mZnNldHNbTlVNT1VUUFVUU10gPSB7NiwgMTMsIDE5LCAyNn07
+CiAgICBpbnQgZ2V0X2xpbmVzX3Jlc3VsdCA9IGdwaW9kX2NoaXBfZ2V0X2xpbmVzKGNoaXAsIG9m
+ZnNldHMsIE5VTU9VVFBVVFMsICZsaW5lcyk7CiAgICBpZiAoZ2V0X2xpbmVzX3Jlc3VsdCAhPSAw
+KQogICAgewogICAgICAgIHBlcnJvcigiZ3Bpb2RfY2hpcF9nZXRfbGluZXMgZmFpbGVkIik7CiAg
+ICAgICAgcmV0dXJuIDE7CiAgICB9CgogICAgaW50MzJfdCB2YWx1ZXNbTlVNT1VUUFVUU10gPSB7
+MCwgMCwgMCwgMH07CiAgICBpbnQgc2V0X2Rpcl9yZXN1bHQgPSBncGlvZF9saW5lX3JlcXVlc3Rf
+YnVsa19vdXRwdXQoJmxpbmVzLCAidGVzdGdwaW8iLCB2YWx1ZXMpOwogICAgaWYgKHNldF9kaXJf
+cmVzdWx0ICE9IDApCiAgICB7CiAgICAgICAgcHJpbnRmKCJncGlvZF9saW5lX3JlcXVlc3Rfb3V0
+cHV0KCkgZmFpbGVkXG4iKTsKICAgICAgICByZXR1cm4gMTsKICAgIH0KCiAgICBrZWVwX2dvaW5n
+ID0gdHJ1ZTsKICAgIGludCBjb3VudGVyID0gMDsKICAgIHdoaWxlIChrZWVwX2dvaW5nKQogICAg
+ewogICAgICAgIGZvciAoaW50IGkgPSAwOyBpIDwgTlVNT1VUUFVUUzsgaSsrKQogICAgICAgIHsK
+ICAgICAgICAgICAgdmFsdWVzW2ldID0gY291bnRlciAlIDI7CiAgICAgICAgfQoKICAgICAgICBp
+bnQgc2V0X3Jlc3VsdCA9IGdwaW9kX2xpbmVfc2V0X3ZhbHVlX2J1bGsoJmxpbmVzLCB2YWx1ZXMp
+OwogICAgICAgIGlmIChzZXRfcmVzdWx0ICE9IDApCiAgICAgICAgewogICAgICAgICAgICBwcmlu
+dGYoImdwaW9kX2xpbmVfc2V0X3ZhbHVlKCkgZmFpbGVkIVxuIik7CiAgICAgICAgICAgIGtlZXBf
+Z29pbmcgPSBmYWxzZTsKICAgICAgICB9CgogICAgICAgIGNvdW50ZXIrKzsKICAgICAgICB1c2xl
+ZXAoMTAwMDAwMCk7CiAgICB9CgogICAgcHJpbnRmKCJTdG9wcGluZy5cbiIpOwoKICAgIGdwaW9k
+X2xpbmVfcmVsZWFzZV9idWxrKCZsaW5lcyk7CiAgICBncGlvZF9jaGlwX2Nsb3NlKGNoaXApOwoK
+ICAgIHByaW50ZigiU3RvcHBlZC5cbiIpOwoKICAgIHJldHVybiAwOwp9Cg==
+--000000000000da537c05e9d0a5af
+Content-Type: text/plain; charset="US-ASCII"; name="test-not-working.c"
+Content-Disposition: attachment; filename="test-not-working.c"
+Content-Transfer-Encoding: base64
+Content-ID: <f_l8n2uifq0>
+X-Attachment-Id: f_l8n2uifq0
 
-There may well be better ways to do this, and you would really want to
-do some benchmarking to compare it with the immediate clone option - it
-may well be worse, but hopefully it at least demonstrates the semantics
-you are after.
-
-Cheers,
-Kent.
+I2luY2x1ZGUgPGdwaW9kLmg+CiNpbmNsdWRlIDxlcnJvci5oPgojaW5jbHVkZSA8ZmNudGwuaD4g
+IC8vIGZvciBvcGVuKCkKI2luY2x1ZGUgPGxpbnV4L3NwaS9zcGlkZXYuaD4gIC8vIGZvciBzdHJ1
+Y3Qgc3BpX2lvY190cmFuc2ZlcgojaW5jbHVkZSA8c2lnbmFsLmg+ICAvLyBmb3Igc2lnbmFsIGhh
+bmRsaW5nCiNpbmNsdWRlIDxzdGRpby5oPiAgLy8gZnByaW50ZiwgcHJpbnRmLCBzdGRlcnIKI2lu
+Y2x1ZGUgPHN0cmluZy5oPiAgLy8gZm9yIG1lbXNldAojaW5jbHVkZSA8dW5pc3RkLmg+ICAvLyBm
+b3IgY2xvc2UoKQojaW5jbHVkZSA8c3lzL2lvY3RsLmg+IC8vIGZvciBpb2N0bCgpCiNpbmNsdWRl
+IDxzeXMvdGltZS5oPgojaW5jbHVkZSA8c3RkaW50Lmg+IC8vIGZvciB1aW50MzJfdAoKI2RlZmlu
+ZSBOVU1PVVRQVVRTIDQKCnZvbGF0aWxlIGJvb2wga2VlcF9nb2luZzsKCnZvaWQgdGVybWluYXRp
+b25faGFuZGxlcihpbnQgc2lnbnVtKQp7CiAgICBrZWVwX2dvaW5nID0gZmFsc2U7Cn0KCmludCBt
+YWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCnsKICAgIHN0cnVjdCBzaWdhY3Rpb24gdGVybV9o
+YW5kbGVyOwogICAgc3RydWN0IHNpZ2FjdGlvbiBwcmV2X2hhbmRsZXI7CgogICAgc3RydWN0IGdw
+aW9kX2NoaXAqIGNoaXAgPSBOVUxMOwogICAgc3RydWN0IGdwaW9kX2xpbmVfYnVsayBsaW5lczsK
+CiAgICB0ZXJtX2hhbmRsZXIuc2FfaGFuZGxlciA9IHRlcm1pbmF0aW9uX2hhbmRsZXI7CiAgICBz
+aWdlbXB0eXNldCgmdGVybV9oYW5kbGVyLnNhX21hc2spOwogICAgdGVybV9oYW5kbGVyLnNhX2Zs
+YWdzID0gMDsKICAgIHNpZ2FjdGlvbihTSUdJTlQsICZ0ZXJtX2hhbmRsZXIsICZwcmV2X2hhbmRs
+ZXIpOwoKICAgIHByaW50ZigiU2V0dGluZyB1cCBHUElPLi4uXG4iKTsKCiAgICBjaGlwID0gZ3Bp
+b2RfY2hpcF9vcGVuKCIvZGV2L2dwaW9jaGlwMCIpOwogICAgaWYgKCFjaGlwKQogICAgewogICAg
+ICAgIHBlcnJvcigiZ3Bpb2RfY2hpcF9vcGVuIGZhaWxlZCIpOwogICAgICAgIHJldHVybiAxOwog
+ICAgfQoKICAgIHVpbnQzMl90IG9mZnNldHNbTlVNT1VUUFVUU10gPSB7NiwgMTMsIDE5LCAyNn07
+CiAgICBpbnQgZ2V0X2xpbmVzX3Jlc3VsdCA9IGdwaW9kX2NoaXBfZ2V0X2xpbmVzKGNoaXAsIG9m
+ZnNldHMsIE5VTU9VVFBVVFMsICZsaW5lcyk7CiAgICBpZiAoZ2V0X2xpbmVzX3Jlc3VsdCAhPSAw
+KQogICAgewogICAgICAgIHBlcnJvcigiZ3Bpb2RfY2hpcF9nZXRfbGluZXMgZmFpbGVkIik7CiAg
+ICAgICAgcmV0dXJuIDE7CiAgICB9CgogICAgaW50MzJfdCB2YWx1ZXNbTlVNT1VUUFVUU10gPSB7
+MCwgMCwgMCwgMH07CiAgICBpbnQgc2V0X2Rpcl9yZXN1bHQgPSBncGlvZF9saW5lX3JlcXVlc3Rf
+YnVsa19vdXRwdXQoJmxpbmVzLCAidGVzdGdwaW8iLCB2YWx1ZXMpOwogICAgaWYgKHNldF9kaXJf
+cmVzdWx0ICE9IDApCiAgICB7CiAgICAgICAgcHJpbnRmKCJncGlvZF9saW5lX3JlcXVlc3Rfb3V0
+cHV0KCkgZmFpbGVkXG4iKTsKICAgICAgICByZXR1cm4gMTsKICAgIH0KCiAgICBrZWVwX2dvaW5n
+ID0gdHJ1ZTsKICAgIGludCBjb3VudGVyID0gMDsKICAgIHdoaWxlIChrZWVwX2dvaW5nKQogICAg
+ewogICAgICAgIGZvciAoaW50IGkgPSAwOyBpIDwgTlVNT1VUUFVUUzsgaSsrKQogICAgICAgIHsK
+ICAgICAgICAgICAgdmFsdWVzW2ldID0gY291bnRlciAlIDI7CgogICAgICAgICAgICBzdHJ1Y3Qg
+Z3Bpb2RfbGluZSogc2luZ2xlX2xpbmUgPSBncGlvZF9saW5lX2J1bGtfZ2V0X2xpbmUoJmxpbmVz
+LCBpKTsKICAgICAgICAgICAgaW50IHNldF9yZXN1bHQgPSBncGlvZF9saW5lX3NldF92YWx1ZShz
+aW5nbGVfbGluZSwgdmFsdWVzW2ldKTsKICAgICAgICAgICAgaWYgKHNldF9yZXN1bHQgIT0gMCkK
+ICAgICAgICAgICAgewogICAgICAgICAgICAgICAgcHJpbnRmKCJncGlvZF9saW5lX3NldF92YWx1
+ZSgpIGZhaWxlZCFcbiIpOwogICAgICAgICAgICAgICAga2VlcF9nb2luZyA9IGZhbHNlOwogICAg
+ICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICBjb3VudGVyKys7CiAgICAgICAgdXNsZWVwKDEw
+MDAwMDApOwogICAgfQoKICAgIHByaW50ZigiU3RvcHBpbmcuXG4iKTsKCiAgICBncGlvZF9saW5l
+X3JlbGVhc2VfYnVsaygmbGluZXMpOwogICAgZ3Bpb2RfY2hpcF9jbG9zZShjaGlwKTsKCiAgICBw
+cmludGYoIlN0b3BwZWQuXG4iKTsKCiAgICByZXR1cm4gMDsKfQo=
+--000000000000da537c05e9d0a5af--
