@@ -2,92 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21E395EFF82
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 23:56:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F72C5F0012
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 00:27:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229437AbiI2V4w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 17:56:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49856 "EHLO
+        id S229944AbiI2W1K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 18:27:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbiI2V4v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 17:56:51 -0400
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E8C145959;
-        Thu, 29 Sep 2022 14:56:50 -0700 (PDT)
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-131886d366cso3394531fac.10;
-        Thu, 29 Sep 2022 14:56:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=EJen2ttDhFxOc16LaWiBXDkrf31fuKODtOYbjKdt6ns=;
-        b=XBok32O8Umq95jvQz89Jj4AE6z0EVXn4vW8wyU1Af/4WA1G6Wv7SmEIE0yJDpKWehE
-         Pko0rKSyeuVCpHoT/8v7ZbIdnsinHaQ2yK+H/qzoSyZuOCz4AR1wPs3bcU7SVYWMxV+q
-         FYG8hk1TKrjsszdYSAVFMis9pmzzKedeRZ6vSPx4rNjMzhzOnW98aqko2Q8KtV+NmYX1
-         lHWEStP65Q2JpjGcFdXvuo5ctrFrehxQ62Tz74xT99NDj7Tqzie7e4FrCpLyh2lcyn+Y
-         VkbtSfmbj5+m3o7D6wOZKwH7Q/RI/X4/oSA7oyvt2cATLS/5NxsNnuq0YoUUIXSU4+c9
-         DUEw==
-X-Gm-Message-State: ACrzQf2BYGVbM8FmVnAcntcBHmUp5WNw7tqyRCKAwJ1mosI2FvA0Axvq
-        jV7Zw9tDnOj8gUzZbU67nw==
-X-Google-Smtp-Source: AMsMyM47C0YmzwZluUIw8W3m576jCvxFl3M9CN/HsBS7NJTg3YWg1qmkyc+v/BX9cx6f5EXgyQzgJQ==
-X-Received: by 2002:a05:6870:b508:b0:12d:1c59:90d9 with SMTP id v8-20020a056870b50800b0012d1c5990d9mr9785566oap.199.1664488609670;
-        Thu, 29 Sep 2022 14:56:49 -0700 (PDT)
-Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id t7-20020a9d66c7000000b00636d0984f5asm205815otm.11.2022.09.29.14.56.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 14:56:49 -0700 (PDT)
-Received: (nullmailer pid 2775235 invoked by uid 1000);
-        Thu, 29 Sep 2022 21:56:48 -0000
-Date:   Thu, 29 Sep 2022 16:56:48 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-stm32@st-md-mailman.stormreply.com,
+        with ESMTP id S229991AbiI2W1I (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 18:27:08 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA2A15E479;
+        Thu, 29 Sep 2022 15:27:04 -0700 (PDT)
+X-QQ-mid: bizesmtp88t1664490413t16ssqjp
+Received: from localhost.localdomain ( [113.72.146.201])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Fri, 30 Sep 2022 06:26:52 +0800 (CST)
+X-QQ-SSF: 01000000002000305000B00A0000000
+X-QQ-FEAT: YHTLUubWl26ZkpaLq7zsbw4d8O56YD7LwT0wcBWFjGJFdn4RvGt4in89BcWGS
+        U6clL3z7tkZIWNwlFhVpyr0KfLiD+6L4Z0fsnaOfFw/ykvRIRzdXo9a4m3v4nLGj8OJ+6ro
+        wYOvz1LQ7AuWSC/crvH5NIKCF1oDmolC74QTQNe7YX2te+tAYPeHVxX0X6boWdm+YILDCy5
+        EGNDuwpkZufDYaJs308Z7yglt9m7hA1eOjXvVK4FqZBTPpaQbNJT9c1oSCt8c+h6GCZyVrs
+        TC0oRjlfZonYAs86W/lahhg+ftUX496LzCyngeyGzZAyomv583Kz7NO4o/43WjLEUz53IWj
+        W2nzW0C27gumiS9wusps+Y5af8OuauMG/u9rWp6ZGlkcSJoaLzFc94tbXu0W93b73GIXw4G
+        n9xRBLJPbl/z4Lah4K4BeQ==
+X-QQ-GoodBg: 0
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: Document
- interrupt-controller property
-Message-ID: <166448860809.2775190.4452882592081127280.robh@kernel.org>
-References: <20220926204752.381798-1-marex@denx.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220926204752.381798-1-marex@denx.de>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 17/30] dt-bindings: clock: Add starfive,jh7110-clkgen-sys bindings
+Date:   Fri, 30 Sep 2022 06:26:47 +0800
+Message-Id: <20220929222647.23816-1-hal.feng@linux.starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 26 Sep 2022 22:47:52 +0200, Marek Vasut wrote:
-> Document interrupt-controller property and its interrupt-cells.
-> This fixes dtbs_check warnings when building current Linux DTs:
-> 
-> "
-> arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dtb: pinctrl@50002000: gpio@5000a000: '#interrupt-cells', 'interrupt-controller' do not match any of the regexes: 'pinctrl-[0-9]+'
-> "
-> 
-> Signed-off-by: Marek Vasut <marex@denx.de>
-> ---
-> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-stm32@st-md-mailman.stormreply.com
-> To: linux-arm-kernel@lists.infradead.org
-> ---
->  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml          | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+From: Emil Renner Berthing <kernel@esmil.dk>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Add bindings for the system clock generator on the JH7110
+RISC-V SoC by StarFive Technology Ltd.
+
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+---
+ .../clock/starfive,jh7110-clkgen-sys.yaml     | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-sys.yaml
+
+diff --git a/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-sys.yaml b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-sys.yaml
+new file mode 100644
+index 000000000000..290b730145ab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-sys.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/clock/starfive,jh7110-clkgen-sys.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: StarFive JH7110 System Clock Generator
++
++maintainers:
++  - Emil Renner Berthing <kernel@esmil.dk>
++  - Xingyu Wu <xingyu.wu@linux.starfivetech.com>
++
++properties:
++  compatible:
++    const: starfive,jh7110-clkgen-sys
++
++  clocks:
++    items:
++      - description: Main Oscillator (24 MHz)
++      - description: RMII reference clock
++      - description: RGMII RX clock
++      - description: I2S TX bit clock
++      - description: I2S TX left/right clock
++      - description: I2S RX bit clock
++      - description: I2S RX left/right clock
++      - description: TDM
++      - description: mclk
++
++  clock-names:
++    items:
++      - const: osc
++      - const: gmac1_rmii_refin
++      - const: gmac1_rgmii_rxin
++      - const: i2stx_bclk_ext
++      - const: i2stx_lrck_ext
++      - const: i2srx_bclk_ext
++      - const: i2srx_lrck_ext
++      - const: tdm_ext
++      - const: mclk_ext
++
++  '#clock-cells':
++    const: 1
++    description:
++      See <dt-bindings/clock/starfive-jh7110-sys.h> for valid indices.
++
++required:
++  - compatible
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++additionalProperties: false
++
++examples:
++  - |
++    syscrg_clk: clock-controller@13020000 {
++        compatible = "starfive,jh7110-clkgen-sys";
++        clocks = <&osc>, <&gmac1_rmii_refin>,
++                 <&gmac1_rgmii_rxin>,
++                 <&i2stx_bclk_ext>, <&i2stx_lrck_ext>,
++                 <&i2srx_bclk_ext>, <&i2srx_lrck_ext>,
++                 <&tdm_ext>, <&mclk_ext>;
++        clock-names = "osc", "gmac1_rmii_refin",
++                      "gmac1_rgmii_rxin",
++                      "i2stx_bclk_ext", "i2stx_lrck_ext",
++                      "i2srx_bclk_ext", "i2srx_lrck_ext",
++                      "tdm_ext", "mclk_ext";
++        #clock-cells = <1>;
++    };
+-- 
+2.17.1
+
