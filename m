@@ -2,109 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A47B55EFC8A
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 19:59:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0562F5EFCD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 20:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbiI2R7j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 13:59:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35566 "EHLO
+        id S234954AbiI2SPS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 14:15:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234970AbiI2R7g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 13:59:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92899FD1;
-        Thu, 29 Sep 2022 10:59:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3C13DB82617;
-        Thu, 29 Sep 2022 17:59:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8C7C433D6;
-        Thu, 29 Sep 2022 17:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664474370;
-        bh=q9pUnXr+y7ypf+y9MFvS031N4YM5aIIn48LYK2fF6ak=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NsesspPuNjiQpeaUs5Gl0Pc5mZrqIZrRFwrqNTM2SlBclmeg4Dh2fzkdW1q4jmPhF
-         dxWFzIvSoedHnZWGkpgjQHbM7jplc2ug/MXFq9CvXRCd8wgeynb9Mu1Sx19iyWdqNr
-         0bFP/QFI2R/jpoK0exdhgZ9PNLWtJ5n6JLMgevAMSthuiVBuGG3SwVI6oi31mLn38w
-         R0HwVpqYrP2eOs+eDNR344/s+xva+gSzcDPdUi02DGu8B1DCNcc+8gdj5XxchMTY2y
-         ZQa9FyasbW40mQ5ZZiIY6gHZHyrY1nNF7ziFOLnytHsqAxH8ozyhxp8XSyu+A8ktER
-         x4xt4YUxj4OkQ==
-Date:   Thu, 29 Sep 2022 18:59:24 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Hal Feng <hal.feng@linux.starfivetech.com>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+        with ESMTP id S235660AbiI2SPQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 14:15:16 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D08B852DFD;
+        Thu, 29 Sep 2022 11:15:13 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id x18so1371355qkn.6;
+        Thu, 29 Sep 2022 11:15:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=xJrfHh9m1y1mjLWU8/W5I2WoXknkHmJK5KJTG4spzqE=;
+        b=UDIxp+LcQcJFtSSFzEIUAIGNalAcdctXkzZXb2q67hAIoObyOZxgIlJ2lGFFmtTToH
+         a1qctPZAz+4bJbqnokw/Dwq/J+s5Q8s6DeFDqdRyAImlE9k8QKd2VfxQRtjw8xSLnisp
+         1DJty/m6/9s4Qc9oSxgMz1861bMlaX0vf3AUcqCGC2S/AMSczIzM1G8YCBj2hHiLsfNO
+         jRWQg8lZNWiPI38aLIazZnunTR9EI1XXavz98ybUQBN+8dvD1E/zsbRQQQ5nDH2BxPRz
+         XHgaiMqwmy00DPyV3kG/2IFcpQK8XQdSTYBm/6vunQcDKb5vUIMkb5/gNa9RH82PADch
+         R2uw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=xJrfHh9m1y1mjLWU8/W5I2WoXknkHmJK5KJTG4spzqE=;
+        b=GNdkNjbQYCf+YZlAqY1hdCBDazzO77yeX091AJcWh58ccOvYti1OYrmtYBZ2xZQUmO
+         J2DfgwMENJ4AIbhtvQaw3llxIILyWu0Stk8L9czmJ2hVLdg1cQILNCwOGQW6Ab1+vsRd
+         SpMq+HQAdHivZ8fWtbdl+xLYYcSEk3iWsio6BJDnadb0O3FCQ/oZ/c6IlFblECdW4Jax
+         SO5iuWac4cZ7ygUHqOpmDOD74NO5H4k/NyT7ftdVzBPXiWaBcoNEWUpn8VwjVnYcbzEI
+         KZpL5l1EfZNdu7KA9nTT2GUZ0zdouDgvGfIZCoIfdNFKZDOknfpEFziycRl8L65u+hLl
+         /t5g==
+X-Gm-Message-State: ACrzQf2xjbmgcj1qiiVKpvzxvs3mkiWgK/gcQoOMPPrbYdM+K1YbhDxp
+        CfpCfAH/YWvR+8WI0+gXPzBJHApKOhY=
+X-Google-Smtp-Source: AMsMyM7nKDCrdjQyyHNL3+Z9ZA/IbTGD9c5/dwe/hZ8iHGHVHU7+ZVvQLhULHKlC2duBXJPsq3mSmA==
+X-Received: by 2002:a05:620a:d83:b0:6ce:bcfb:c4fa with SMTP id q3-20020a05620a0d8300b006cebcfbc4famr3292803qkl.567.1664475311056;
+        Thu, 29 Sep 2022 11:15:11 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id s13-20020a05622a1a8d00b003431446588fsm6246267qtc.5.2022.09.29.11.15.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Sep 2022 11:15:10 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     daniel.lezcano@linaro.org, rafael@kernel.org,
+        linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/30] Basic StarFive JH7110 RISC-V SoC support
-Message-ID: <YzXc/FSbDpkElK0O@spud>
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <4ddabe3a-9f55-2a6a-c1c1-ccc3fc74e98a@linaro.org>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] MAINTAINERS: Update TI bandgap and Davinci GPIO entries
+Date:   Thu, 29 Sep 2022 11:15:05 -0700
+Message-Id: <20220929181505.1100260-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ddabe3a-9f55-2a6a-c1c1-ccc3fc74e98a@linaro.org>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 04:45:26PM +0200, Krzysztof Kozlowski wrote:
-> On 29/09/2022 16:31, Hal Feng wrote:
-> 
-> > This series is also available at 
-> > https://github.com/hal-feng/linux/commits/visionfive2-minimal
-> > 
-> > [1] https://www.cnx-software.com/2022/08/23/starfive-visionfive-2-quad-core-risc-v-sbc-linux/
-> > [2] https://wiki.rvspace.org/
-> > 
-> > Emil Renner Berthing (17):
-> >   dt-bindings: riscv: Add StarFive JH7110 bindings
-> >   dt-bindings: timer: Add StarFive JH7110 clint
-> >   dt-bindings: interrupt-controller: Add StarFive JH7110 plic
-> >   dt-bindings: sifive-l2-cache: Support StarFive JH71x0 SoCs
-> >   soc: sifive: l2 cache: Convert to platform driver
-> >   soc: sifive: l2 cache: Add StarFive JH71x0 support
-> >   reset: starfive: jh7100: Use 32bit I/O on 32bit registers
-> >   dt-bindings: reset: Add StarFive JH7110 reset definitions
-> >   clk: starfive: Factor out common clock driver code
-> >   dt-bindings: clock: Add StarFive JH7110 system clock definitions
-> >   dt-bindings: clock: Add starfive,jh7110-clkgen-sys bindings
-> >   clk: starfive: Add StarFive JH7110 system clock driver
-> >   dt-bindings: clock: Add StarFive JH7110 always-on definitions
-> >   dt-bindings: clock: Add starfive,jh7110-clkgen-aon bindings
-> >   clk: starfive: Add StarFive JH7110 always-on clock driver
-> >   RISC-V: Add initial StarFive JH7110 device tree
-> >   RISC-V: Add StarFive JH7110 VisionFive2 board device tree
-> 
-> Where is the rest of patches? Lists got only 5 of them. Anyway this is a
-> bit too big patchset. Split per subsystem.
+The email j-keerthy@ti.com is bouncing.
 
-They seem to be coming in over time in dribs and drabs. I assume it is
-not a mailing list problem given how many lists are CCed on the mail and
-the fact that they have different providers.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ MAINTAINERS | 2 --
+ 1 file changed, 2 deletions(-)
 
-For v2 (or multiple v2s) please fix up your process so that this gets
-sent normally and not a couple of patches every hour.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bf67ee939ab1..f1545b5755ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20477,7 +20477,6 @@ F:	drivers/media/platform/ti/am437x/
+ 
+ TI BANDGAP AND THERMAL DRIVER
+ M:	Eduardo Valentin <edubezval@gmail.com>
+-M:	Keerthy <j-keerthy@ti.com>
+ L:	linux-pm@vger.kernel.org
+ L:	linux-omap@vger.kernel.org
+ S:	Maintained
+@@ -20519,7 +20518,6 @@ F:	Documentation/devicetree/bindings/clock/ti/davinci/
+ F:	drivers/clk/davinci/
+ 
+ TI DAVINCI SERIES GPIO DRIVER
+-M:	Keerthy <j-keerthy@ti.com>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+-- 
+2.25.1
 
-Thanks,
-Conor.
