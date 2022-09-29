@@ -2,41 +2,28 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B16965EF92E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 17:37:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E19C5EF9BC
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 18:07:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236011AbiI2Pfi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 11:35:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45876 "EHLO
+        id S235966AbiI2QHG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 12:07:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234535AbiI2PeS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 11:34:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F25F01C00DD;
-        Thu, 29 Sep 2022 08:33:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 90A7C61227;
-        Thu, 29 Sep 2022 15:33:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 665A5C433C1;
-        Thu, 29 Sep 2022 15:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664465623;
-        bh=+81bAoJyqC0ALTsR9tloD4BNLwube6I1s0Bczot21Xk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hq1NG+ARl0FcweRYLLtiF+pfBV56zxl92+e8Jox7KnYupArV9QTRLdTUAEo6Biyp2
-         Dsd0cqplyrzh72f33CMTb8897MZ3CI2BaHj3lStC8CQEZQh10IOrCMHjLfLGuhj+ZR
-         UhxQbnRj3matK9cJbNK93AB7UgQjPOi6+lVfGsJhpHl+jKFAUFSI0vD7MS0vlH70O6
-         tUZ5cbTv990KaRXWXYrYcc6WHaH+pVw6T8ZmYFUykcSlot6bwKYiJuhrW8YKf0YLVG
-         qsaSIMXcDY6vJTGqGQl/cdNG9pZPn8oxDv+K71DJqQlxdh3peuH4TbSXUJYbKHgsP/
-         jIZTsKGUKPU0w==
-Date:   Thu, 29 Sep 2022 16:33:36 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Hal Feng <hal.feng@linux.starfivetech.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S235954AbiI2QHC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 12:07:02 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65CF613E21;
+        Thu, 29 Sep 2022 09:06:59 -0700 (PDT)
+X-QQ-Spam: true
+X-QQ-mid: bizesmtp84t1664461977tq1saah5
+Received: from localhost.localdomain ( [113.72.145.157])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Thu, 29 Sep 2022 22:32:56 +0800 (CST)
+X-QQ-SSF: 01000000002000201000B00A0000000
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -49,73 +36,131 @@ Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 04/30] dt-bindings: sifive-l2-cache: Support StarFive
- JH71x0 SoCs
-Message-ID: <YzW60PDwnJ7GeLYK@spud>
+Subject: [PATCH v1 07/30] reset: starfive: jh7100: Use 32bit I/O on 32bit registers
+Date:   Thu, 29 Sep 2022 22:32:02 +0800
+Message-Id: <20220929143225.17907-8-hal.feng@linux.starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
 References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220929143225.17907-5-hal.feng@linux.starfivetech.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220929143225.17907-5-hal.feng@linux.starfivetech.com>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 10:31:59PM +0800, Hal Feng wrote:
-> From: Emil Renner Berthing <kernel@esmil.dk>
-> 
-> This cache controller is also used on the StarFive JH7100 and JH7110
-> SoCs.
+From: Emil Renner Berthing <kernel@esmil.dk>
 
-Ditto this patch, hopefully [0] will have landed as 6.1 material
-before you get around to an actual v2.
+We currently use 64bit I/O on the 32bit registers. This works because
+there are an even number of assert and status registers, so they're only
+ever accessed in pairs on 64bit boundaries.
 
-Thanks,
-Conor
+There are however other reset controllers for audio and video on the
+JH7100 SoC with only one status register that isn't 64bit aligned so
+64bit I/O results in an unaligned access exception.
 
-0 - https://lore.kernel.org/linux-riscv/20220913061817.22564-1-zong.li@sifive.com/
+Switch to 32bit I/O in preparation for supporting these resets too.
 
-> 
-> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
-> ---
->  Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> index ca3b9be58058..ba29ecfd3a92 100644
-> --- a/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/sifive-l2-cache.yaml
-> @@ -24,6 +24,8 @@ select:
->          enum:
->            - sifive,fu540-c000-ccache
->            - sifive,fu740-c000-ccache
-> +          - starfive,jh7100-ccache
-> +          - starfive,jh7110-ccache
->  
->    required:
->      - compatible
-> @@ -35,6 +37,8 @@ properties:
->            - enum:
->                - sifive,fu540-c000-ccache
->                - sifive,fu740-c000-ccache
-> +              - starfive,jh7100-ccache
-> +              - starfive,jh7110-ccache
->            - const: cache
->        - items:
->            - const: microchip,mpfs-ccache
-> -- 
-> 2.17.1
-> 
-> 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+---
+ drivers/reset/reset-starfive-jh7100.c | 41 +++++++++++++--------------
+ 1 file changed, 20 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive-jh7100.c
+index fc44b2fb3e03..a6e0945071e9 100644
+--- a/drivers/reset/reset-starfive-jh7100.c
++++ b/drivers/reset/reset-starfive-jh7100.c
+@@ -7,7 +7,6 @@
+ 
+ #include <linux/bitmap.h>
+ #include <linux/io.h>
+-#include <linux/io-64-nonatomic-lo-hi.h>
+ #include <linux/iopoll.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/platform_device.h>
+@@ -34,16 +33,16 @@
+  * lines don't though, so store the expected value of the status registers when
+  * all lines are asserted.
+  */
+-static const u64 jh7100_reset_asserted[2] = {
++static const u32 jh7100_reset_asserted[4] = {
+ 	/* STATUS0 */
+-	BIT_ULL_MASK(JH7100_RST_U74) |
+-	BIT_ULL_MASK(JH7100_RST_VP6_DRESET) |
+-	BIT_ULL_MASK(JH7100_RST_VP6_BRESET) |
++	BIT(JH7100_RST_U74 % 32) |
++	BIT(JH7100_RST_VP6_DRESET % 32) |
++	BIT(JH7100_RST_VP6_BRESET % 32),
+ 	/* STATUS1 */
+-	BIT_ULL_MASK(JH7100_RST_HIFI4_DRESET) |
+-	BIT_ULL_MASK(JH7100_RST_HIFI4_BRESET),
++	BIT(JH7100_RST_HIFI4_DRESET % 32) |
++	BIT(JH7100_RST_HIFI4_BRESET % 32),
+ 	/* STATUS2 */
+-	BIT_ULL_MASK(JH7100_RST_E24) |
++	BIT(JH7100_RST_E24 % 32),
+ 	/* STATUS3 */
+ 	0,
+ };
+@@ -65,12 +64,12 @@ static int jh7100_reset_update(struct reset_controller_dev *rcdev,
+ 			       unsigned long id, bool assert)
+ {
+ 	struct jh7100_reset *data = jh7100_reset_from(rcdev);
+-	unsigned long offset = BIT_ULL_WORD(id);
+-	u64 mask = BIT_ULL_MASK(id);
+-	void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + offset * sizeof(u64);
+-	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + offset * sizeof(u64);
+-	u64 done = jh7100_reset_asserted[offset] & mask;
+-	u64 value;
++	unsigned long offset = id / 32;
++	u32 mask = BIT(id % 32);
++	void __iomem *reg_assert = data->base + JH7100_RESET_ASSERT0 + offset * sizeof(u32);
++	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + offset * sizeof(u32);
++	u32 done = jh7100_reset_asserted[offset] & mask;
++	u32 value;
+ 	unsigned long flags;
+ 	int ret;
+ 
+@@ -79,15 +78,15 @@ static int jh7100_reset_update(struct reset_controller_dev *rcdev,
+ 
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+-	value = readq(reg_assert);
++	value = readl(reg_assert);
+ 	if (assert)
+ 		value |= mask;
+ 	else
+ 		value &= ~mask;
+-	writeq(value, reg_assert);
++	writel(value, reg_assert);
+ 
+ 	/* if the associated clock is gated, deasserting might otherwise hang forever */
+-	ret = readq_poll_timeout_atomic(reg_status, value, (value & mask) == done, 0, 1000);
++	ret = readl_poll_timeout_atomic(reg_status, value, (value & mask) == done, 0, 1000);
+ 
+ 	spin_unlock_irqrestore(&data->lock, flags);
+ 	return ret;
+@@ -121,10 +120,10 @@ static int jh7100_reset_status(struct reset_controller_dev *rcdev,
+ 			       unsigned long id)
+ {
+ 	struct jh7100_reset *data = jh7100_reset_from(rcdev);
+-	unsigned long offset = BIT_ULL_WORD(id);
+-	u64 mask = BIT_ULL_MASK(id);
+-	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + offset * sizeof(u64);
+-	u64 value = readq(reg_status);
++	unsigned long offset = id / 32;
++	u32 mask = BIT(id % 32);
++	void __iomem *reg_status = data->base + JH7100_RESET_STATUS0 + offset * sizeof(u32);
++	u32 value = readl(reg_status);
+ 
+ 	return !((value ^ jh7100_reset_asserted[offset]) & mask);
+ }
+-- 
+2.17.1
+
