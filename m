@@ -2,74 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3619E5EF6F5
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 15:55:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2464E5EF798
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 16:33:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235291AbiI2Nzz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 09:55:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45328 "EHLO
+        id S235530AbiI2OdC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 10:33:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235065AbiI2Nzx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 09:55:53 -0400
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA48D109600
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 06:55:52 -0700 (PDT)
-Received: by mail-io1-xd35.google.com with SMTP id 64so934346iov.13
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 06:55:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=dJqyDZta+r98pSvbq4xZJeYjWmW9XvLhEwiY9wSbAjI=;
-        b=QbqeVjWZpFX22pwCsGPD+W5GuIp7Ix6dU07r9J70H+7mjNNVOFhbYVJXc9y8oxXAQi
-         HafYSGGdsPsC0wYa/iIFBllwe5RmLlZ5rU33SwhhV29tzqKg+sHHGW3h4/ajqImtkA35
-         WHHg0qwqMuVvT741YDsjPHjEK7vRe5TfTvt7wLFa/JvEVHn70LQpJ4IeXpsxrkHFS2bK
-         fM3d5j7WAYKLz4H7oMvRli0ncU09IhdLlI9dA1OTuVt+hoxvFlbx/0pCP2Yd8UErldA9
-         TwqBP/sc59/AaODsdT2XMdDQsmBT9gQWn2B/ioJfl3S+SzZrMTxU13om2Qn/RC81LDeu
-         SP8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=dJqyDZta+r98pSvbq4xZJeYjWmW9XvLhEwiY9wSbAjI=;
-        b=LX4wKsXDvG93azA3Lij+OCPsR6LIR58IlR6GTYO3hmrnbsKlZdLJyti9BjL49wA0fH
-         VNtLvrhW50Z2RDLyu4EoH986h2ioD4JH43u7cWW45jv6fb0nIEmPkBKrRIz13q0ud+BA
-         afqWqRUts1x6N39DIJgdU46VgSQ9n2uenN6DUQj0nJJdZwObWp4L3bLqY1zcRAzdYTX+
-         0ZG3QBGaQ027zQoK1OicnqZlE9pv8kswuKToAugw9/WXZumCkx3YGQzyE70De8ty+Z1/
-         0uNOgLuuC3tJD7bavXFTcTlJdA/Mb4srzFbtXpyoy6zHuSvisT2VfgPTJ1oXL+IjKnUh
-         SIVQ==
-X-Gm-Message-State: ACrzQf36jPS9ZWAqgduu2PsigJVwy9rYHWzCZar1RH2sJX1IIOrquzNP
-        1KPmK5mQSc/6GYw4N21ksU2e3SXDGiW0m0Cq1CgAn3Ijm7nXag==
-X-Google-Smtp-Source: AMsMyM4yr4wvwE7cnN8DMcshiuA47OPFfrUUxSGbRwl0OobC5QUU7cWy199wCPNvdILGndyzMmXhfWmp3uEhmvG9Irs=
-X-Received: by 2002:a5d:9411:0:b0:6a7:f7ec:6dd8 with SMTP id
- v17-20020a5d9411000000b006a7f7ec6dd8mr464527ion.44.1664459752241; Thu, 29 Sep
- 2022 06:55:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1664189248.git.viresh.kumar@linaro.org> <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
- <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
- <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
- <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
- <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
- <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
-In-Reply-To: <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 29 Sep 2022 15:55:40 +0200
-Message-ID: <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        with ESMTP id S235035AbiI2OdB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 10:33:01 -0400
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2141BCAEE;
+        Thu, 29 Sep 2022 07:32:56 -0700 (PDT)
+X-QQ-mid: bizesmtp84t1664461951tron3wmm
+Received: from localhost.localdomain ( [113.72.145.157])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Thu, 29 Sep 2022 22:32:30 +0800 (CST)
+X-QQ-SSF: 01000000002000201000B00A0000000
+X-QQ-FEAT: zT6n3Y95oi2dV4Ml4TeENn6rWDhM72I0AUGipTNm6zw3cZPAnb4ndNllPSfyP
+        8da56NPWHPn+O4O6aWhrbdjZkTnKiAyFK/ognXdOrZaGH7ksIDUoYVoIhKn+I7gEawmJjA1
+        KiZGfpwO11HkO9cFhwvZANwlebLyV32+081rK3OIrF6YqDHnx/pnFDfCy5lQjoOWpyj92j8
+        1zF7OUkq1zQjtKO3aD0uUqFsvsV+b3Z6FHp9DLVo6iFLBpIYeUXz99y022L9tWrb1z3DgOM
+        GrmFofepc4nb7K3c/mEibz7Oikb5YRuqtbheAQz45lcZ+0njxKcTqSJdDyhp+fhVcoVjiGg
+        bTh44dbo+fva7cz435yTBxuRfcXJNa4tOzLcR/XpWoExXcm1IrlTPyROvUonoJF+mrth3yU
+        7NyOb5sEg9k=
+X-QQ-GoodBg: 0
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 00/30] Basic StarFive JH7110 RISC-V SoC support
+Date:   Thu, 29 Sep 2022 22:31:55 +0800
+Message-Id: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+X-Mailer: git-send-email 2.17.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,30 +60,138 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Sep 28, 2022 at 7:54 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> I'm a Rust beginner but my understanding is that the whole idea of the
-> language design is to *not* allow a situation where the program can
-> crash. It should be detected at build-time. We must not rely on
+This series adds basic support for the StarFive JH7110 RISC-V SoC to
+boot up and get a serial console. This series includes basic clock, 
+reset, pinctrl and uart drivers, which are necessary for booting.
+It's should be noted that the reset and clock driver codes of JH7110
+are partly common with those of JH7100, so the common codes are
+factored out and can be reused by drivers of JH7110 and other more
+SoCs from StarFive.
 
-More precisely, it needs to avoid UB (which is defined similarly as in
-C++, and of course UB may lead to a crash if one is lucky).
+The JH7110 is the upgraded version of JH7100 and also the first official
+released version of JH71XX series SoCs from StarFive Technology Ltd. 
+The VisionFive 2 boards equipped with JH7110 SoCs are launched
+recently [1]. More information and support can visit RVspace wiki [2].
 
-> Is there a way to invalidate a reference in Rust? Have a small (cheap)
-> object in the buffer which the event references and which would get
-> dropped when reading into the buffer?
+This series is also available at 
+https://github.com/hal-feng/linux/commits/visionfive2-minimal
 
-From your C++ example above:
+[1] https://www.cnx-software.com/2022/08/23/starfive-visionfive-2-quad-core-risc-v-sbc-linux/
+[2] https://wiki.rvspace.org/
 
-    const edge_event& ev = buffer.get_event(0);
-    request.read_edge_event(buffer);
-    std::cout << ev << std::endl;
+Emil Renner Berthing (17):
+  dt-bindings: riscv: Add StarFive JH7110 bindings
+  dt-bindings: timer: Add StarFive JH7110 clint
+  dt-bindings: interrupt-controller: Add StarFive JH7110 plic
+  dt-bindings: sifive-l2-cache: Support StarFive JH71x0 SoCs
+  soc: sifive: l2 cache: Convert to platform driver
+  soc: sifive: l2 cache: Add StarFive JH71x0 support
+  reset: starfive: jh7100: Use 32bit I/O on 32bit registers
+  dt-bindings: reset: Add StarFive JH7110 reset definitions
+  clk: starfive: Factor out common clock driver code
+  dt-bindings: clock: Add StarFive JH7110 system clock definitions
+  dt-bindings: clock: Add starfive,jh7110-clkgen-sys bindings
+  clk: starfive: Add StarFive JH7110 system clock driver
+  dt-bindings: clock: Add StarFive JH7110 always-on definitions
+  dt-bindings: clock: Add starfive,jh7110-clkgen-aon bindings
+  clk: starfive: Add StarFive JH7110 always-on clock driver
+  RISC-V: Add initial StarFive JH7110 device tree
+  RISC-V: Add StarFive JH7110 VisionFive2 board device tree
 
-It looks like a container whose elements get invalidated, so
-`read_edge_event` could require an exclusive reference to `buffer` in
-Rust, that way you cannot keep borrows to its elements like `ev` if
-you want to call it. But of course this requires tying the lifetime of
-the events to that of the buffer.
+Hal Feng (8):
+  reset: starfive: jh7100: Use regmap APIs to operate registers
+  reset: starfive: jh7100: Move necessary properties to device tree
+  reset: starfive: Rename 'reset-starfive-jh7100.c' to
+    'reset-starfive.c'
+  dt-bindings: reset: Add starfive,jh7110-reset bindings
+  reset: starfive: Add StarFive JH7110 SoC support
+  clk: starfive: Use regmap APIs to operate registers
+  RISC-V: defconfig: Enable CONFIG_SERIAL_8250_DW
+  RISC-V: Add StarFive JH7100 and JH7110 SoC Kconfig options
 
-Cheers,
-Miguel
+Jianlong Huang (5):
+  pinctrl: Create subdirectory for StarFive drivers
+  pinctrl: starfive: Rename "pinctrl-starfive" to
+    "pinctrl-starfive-jh7100"
+  dt-bindings: pinctrl: Add StarFive JH7110 pinctrl definitions
+  dt-bindings: pinctrl: Add StarFive JH7110 pinctrl bindings
+  pinctrl: starfive: Add StarFive JH7110 driver
+
+ .../clock/starfive,jh7110-clkgen-aon.yaml     |  62 ++
+ .../clock/starfive,jh7110-clkgen-sys.yaml     |  69 ++
+ .../sifive,plic-1.0.0.yaml                    |   1 +
+ .../pinctrl/starfive,jh7100-pinctrl.yaml      |   2 +-
+ .../pinctrl/starfive,jh7110-pinctrl.yaml      | 202 ++++
+ .../bindings/reset/starfive,jh7100-reset.yaml |  20 +
+ .../bindings/reset/starfive,jh7110-reset.yaml |  54 +
+ .../bindings/riscv/sifive-l2-cache.yaml       |   4 +
+ .../devicetree/bindings/riscv/starfive.yaml   |   3 +
+ .../bindings/timer/sifive,clint.yaml          |   1 +
+ MAINTAINERS                                   |  27 +-
+ arch/riscv/Kconfig.socs                       |  28 +-
+ arch/riscv/boot/dts/starfive/Makefile         |   3 +-
+ .../dts/starfive/jh7100-beaglev-starlight.dts |   2 +-
+ arch/riscv/boot/dts/starfive/jh7100.dtsi      |   3 +
+ .../jh7110-starfive-visionfive-v2.dts         |  91 ++
+ arch/riscv/boot/dts/starfive/jh7110.dtsi      | 449 +++++++++
+ arch/riscv/configs/defconfig                  |   1 +
+ drivers/clk/starfive/Kconfig                  |  29 +-
+ drivers/clk/starfive/Makefile                 |   6 +-
+ .../clk/starfive/clk-starfive-jh7100-audio.c  | 138 +--
+ drivers/clk/starfive/clk-starfive-jh7100.c    | 836 +++++-----------
+ drivers/clk/starfive/clk-starfive-jh7100.h    | 112 ---
+ .../clk/starfive/clk-starfive-jh7110-aon.c    | 161 +++
+ .../clk/starfive/clk-starfive-jh7110-sys.c    | 648 ++++++++++++
+ drivers/clk/starfive/clk-starfive.c           | 349 +++++++
+ drivers/clk/starfive/clk-starfive.h           | 112 +++
+ drivers/pinctrl/Kconfig                       |  18 +-
+ drivers/pinctrl/Makefile                      |   2 +-
+ drivers/pinctrl/starfive/Kconfig              |  37 +
+ drivers/pinctrl/starfive/Makefile             |   8 +
+ drivers/pinctrl/starfive/pinctrl-jh7110-aon.c | 718 ++++++++++++++
+ drivers/pinctrl/starfive/pinctrl-jh7110-sys.c | 925 +++++++++++++++++
+ .../pinctrl-starfive-jh7100.c}                |  10 +-
+ drivers/pinctrl/starfive/pinctrl-starfive.c   | 539 ++++++++++
+ drivers/pinctrl/starfive/pinctrl-starfive.h   | 131 +++
+ drivers/reset/Kconfig                         |   7 +-
+ drivers/reset/Makefile                        |   2 +-
+ drivers/reset/reset-starfive-jh7100.c         | 173 ----
+ drivers/reset/reset-starfive.c                | 218 ++++
+ drivers/soc/Makefile                          |   2 +-
+ drivers/soc/sifive/Kconfig                    |   2 +-
+ drivers/soc/sifive/sifive_l2_cache.c          |  86 +-
+ .../dt-bindings/clock/starfive-jh7110-aon.h   |  26 +
+ .../dt-bindings/clock/starfive-jh7110-sys.h   | 215 ++++
+ ...l-starfive.h => pinctrl-starfive-jh7100.h} |   6 +-
+ .../pinctrl/pinctrl-starfive-jh7110.h         | 931 ++++++++++++++++++
+ include/dt-bindings/reset/starfive-jh7110.h   | 154 +++
+ 48 files changed, 6604 insertions(+), 1019 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
+ create mode 100644 Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-sys.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
+ create mode 100644 arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-v2.dts
+ create mode 100644 arch/riscv/boot/dts/starfive/jh7110.dtsi
+ delete mode 100644 drivers/clk/starfive/clk-starfive-jh7100.h
+ create mode 100644 drivers/clk/starfive/clk-starfive-jh7110-aon.c
+ create mode 100644 drivers/clk/starfive/clk-starfive-jh7110-sys.c
+ create mode 100644 drivers/clk/starfive/clk-starfive.c
+ create mode 100644 drivers/clk/starfive/clk-starfive.h
+ create mode 100644 drivers/pinctrl/starfive/Kconfig
+ create mode 100644 drivers/pinctrl/starfive/Makefile
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-jh7110-aon.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-jh7110-sys.c
+ rename drivers/pinctrl/{pinctrl-starfive.c => starfive/pinctrl-starfive-jh7100.c} (99%)
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive.h
+ delete mode 100644 drivers/reset/reset-starfive-jh7100.c
+ create mode 100644 drivers/reset/reset-starfive.c
+ create mode 100644 include/dt-bindings/clock/starfive-jh7110-aon.h
+ create mode 100644 include/dt-bindings/clock/starfive-jh7110-sys.h
+ rename include/dt-bindings/pinctrl/{pinctrl-starfive.h => pinctrl-starfive-jh7100.h} (98%)
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-starfive-jh7110.h
+ create mode 100644 include/dt-bindings/reset/starfive-jh7110.h
+
+-- 
+2.17.1
+
