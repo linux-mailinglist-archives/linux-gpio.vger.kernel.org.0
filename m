@@ -2,63 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8252A5EE68F
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Sep 2022 22:21:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBFA05EEBB7
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 04:30:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234704AbiI1UU7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Sep 2022 16:20:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34592 "EHLO
+        id S234100AbiI2Cac (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Sep 2022 22:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234582AbiI1UUZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 16:20:25 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDE2BEB;
-        Wed, 28 Sep 2022 13:20:22 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id v1so12653546plo.9;
-        Wed, 28 Sep 2022 13:20:22 -0700 (PDT)
+        with ESMTP id S231499AbiI2Cab (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Sep 2022 22:30:31 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49B310E5F9;
+        Wed, 28 Sep 2022 19:30:30 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id r193so4536480vke.13;
+        Wed, 28 Sep 2022 19:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date;
-        bh=MXeDMHLUELvAe5XHkVOHWbbRpG/jdLEqo2Af5kPyfsY=;
-        b=lmuWvWSR3NxhmCJZK82ALeaL/obSiEchFl+ZNxDMEfaFmAnf1RzfYEEZfLlfukLf8p
-         31UphFnM01eC4l3vOvPGFceusnYeijgz4vMha4kA241PPDeSNTY6ucAUQCdF1JzJxAyC
-         75NPrQgKfIw74AgguDxZRbSnP27DJDbEf8Co3prInoui3a87eDPdTjOQxR5Y6MPAy7Zh
-         SN2LM6fRxQvKyS12FEH+R0w/I0gDYtReBafcfbjxDUU01moQh/W/0kc1V35Mrk1Pvtro
-         JscL6eaH4lWdJQ0bg15EfOIUAkRhwPMCvzmLRdO9ZSZ+q5WkkcqyDLb3McMgOCFV54xS
-         1e6w==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=kfhHvPkJrYvpjcx9wrG7I5US83ZBRovptePYpc0nVPs=;
+        b=HblNEBMnM00VhREXEt5aynr7ML1dy+pc0MwCyrcDsYJOiY33+pheof43cBtr3PNfxK
+         gYBkI/9gdo1iUZwI1DKK3PChefb4XwIAH266v6cK7JuKuoOGlRTbdqL1tBn8CiHAKGeE
+         cqJIG1YCGr+AlJ82f8eyEkShp3TQfpwmUlEUkLe4ftWuYb7aVyaieMffXWOuDxeijE5q
+         Y7DasNsm0zLv6ZIikWzQaUOov+7Vwa+CuDQLEf6nrmOX2cEp9E0PV/mYVGKBVBUuW5bW
+         4GD04eJ2rUSzXcnuPCMJxbBF3AYZCUqNTSBaa545FI8Bf5CVWiRgoQNYt3tsVw5805Ho
+         zyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=MXeDMHLUELvAe5XHkVOHWbbRpG/jdLEqo2Af5kPyfsY=;
-        b=TXw8wlBmx1FOMjutxhXdfCJQpJT1Q41DOYextcbR/N3X3t/rzWeENynmro8MfarZs9
-         3tCjyt136OR62f3CBmVXSQFffwqKc/lBvuGbbmudxir6U+istiaA1w1SGV/7MRwjw4DH
-         BmHymhH/SoBw3Cb0XePYL3cyqoBgViKzmNc/zPUZyKgMofNl8+bGalD9p1SdFYyXgmSH
-         rQ8BKylBwf4k8NsE88LrAVnwlOaqAqx9gVEmwrFt7AllJCqwlARlBOI5W3X8mw/0/CdW
-         xy0crE5us26i1RQ5e+pDjezEi72zPkAOh8trCJTo8sCvx3BSJmrdhaNC6y4wOwk7XnpH
-         u3Ow==
-X-Gm-Message-State: ACrzQf3dRyFFIXxKLYzqo5tCSiUTlYShVmYmdyOboze/GYni6kUivnwO
-        02+YZ/TZJ9Xwo+Zc2IrVDeGoScW/ynI=
-X-Google-Smtp-Source: AMsMyM6ZCPhOlFf9kNCBJe5F8CGDMSRmVni7H4heKCaETLCjc0CJ92R4sIOebBq1IJQXNnmbx2bFcw==
-X-Received: by 2002:a17:90b:1bc7:b0:202:52ce:a1d with SMTP id oa7-20020a17090b1bc700b0020252ce0a1dmr12538209pjb.110.1664396422061;
-        Wed, 28 Sep 2022 13:20:22 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:1a91:59b8:faf:7b4f])
-        by smtp.gmail.com with ESMTPSA id y8-20020a17090322c800b00179c99eb815sm4197815plg.33.2022.09.28.13.20.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 13:20:21 -0700 (PDT)
-Date:   Wed, 28 Sep 2022 13:20:18 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Patrice Chotard <patrice.chotard@foss.st.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: st: stop abusing of_get_named_gpio()
-Message-ID: <YzSsgoVoJn4+mSpv@google.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=kfhHvPkJrYvpjcx9wrG7I5US83ZBRovptePYpc0nVPs=;
+        b=LAR0mpwLgaGmRcm4Qu3EetLddfl3xGrfs174jC0Z55/BgKDIREftzmhYOQmV/JN6e5
+         LhDX6X1TdiJPuD9UTPCbUadhlPopNgGAw1dbNMpKgCwtygxIK+Uo+7/pmnx4WccWNrYR
+         xOKbAz1sbm6/jvcR6VHVCToNqA0A2mJKk9CaMU6Z/xJBzC575ireopYEij+clBeHxLa0
+         P72XhRJFs93lpSaeRXm3vsrxNmDeDV1qri0RI3chUogAKtsASpkocdD1qmJthfdH5Boi
+         +LODheH+cziHtiVqVxyfHxrurQq3sK60BVDR5AHTHFVZV8Fra5T9CctMBXcND1llhY/Q
+         /Gqg==
+X-Gm-Message-State: ACrzQf2gXehX7ZzaNW3a5NBUnold6qMGlCR7yvFOeP5C4a5hdteTf4L1
+        0Aqr21LCtZTwwr4Bk/qCuLganS2/lLTJyARLmhKWBk2WtHp+IA==
+X-Google-Smtp-Source: AMsMyM6iyWsZaj4HsA0BsyqLCbhjxvp0u2xNOR3hLf6sYblldoJgTlo6MznK1QRfxmEF5wJ6izFJRQj20U304euHz6k=
+X-Received: by 2002:a1f:2596:0:b0:3a2:5864:697c with SMTP id
+ l144-20020a1f2596000000b003a25864697cmr361084vkl.37.1664418630041; Wed, 28
+ Sep 2022 19:30:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220928092937.27120-1-zhang.lyra@gmail.com> <fca2b97c-9d4f-d372-ef2a-aae8b367bbe5@linaro.org>
+In-Reply-To: <fca2b97c-9d4f-d372-ef2a-aae8b367bbe5@linaro.org>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Thu, 29 Sep 2022 10:29:53 +0800
+Message-ID: <CAAfSe-t=-pZAcrY0o-ct1uJaNhtkCMQKNW5gOrJfE6DEOhSZDw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: Conver Unisoc GPIO controller
+ binding to yaml
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -69,93 +72,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Pin descriptions for this chip only look like standard GPIO device tree
-descriptions, while in fact they contain additional data (in excess of
-number of cells specified in description of gpio controllers). They also
-refer to only pins/gpios belonging to the driver and not to arbitrary
-gpio in the system.
+Hi Krzysztof,
 
-Because we want to stop exporting OF-specific handlers from gpiolib-of,
-let's parse the pin reference ourself instead of trying to call
-of_get_named_gpio().
+On Wed, 28 Sept 2022 at 19:31, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 28/09/2022 11:29, Chunyan Zhang wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Convert the Unisoc gpio controller binding to DT schema format.
+> >
+>
+>
+> Thank you for your patch. There is something to discuss/improve.
+>
+> > diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+> > new file mode 100644
+> > index 000000000000..c0cd1ed9809b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+> > @@ -0,0 +1,70 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +# Copyright 2022 Unisoc Inc.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/sprd,gpio.yaml#
+>
+> Use compatible as filename, so sprd,sc9860-gpio.yaml
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
+Humm... This is not only for SC9860, also for other IPs, UMS512 as an
+example which added in this patchset.
 
-Just compiled, not tested on real hardware.
+Thanks for the review,
+Chunyan
 
- drivers/pinctrl/pinctrl-st.c | 34 ++++++++++++++++++++++++++++++----
- 1 file changed, 30 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 0fea71fd9a00..cf7f9cbe6044 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -12,7 +12,6 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
--#include <linux/of_gpio.h> /* of_get_named_gpio() */
- #include <linux/of_address.h>
- #include <linux/gpio/driver.h>
- #include <linux/regmap.h>
-@@ -1162,6 +1161,31 @@ static void st_parse_syscfgs(struct st_pinctrl *info, int bank,
- 	return;
- }
- 
-+static int st_pctl_dt_calculate_pin(struct st_pinctrl *info,
-+				    phandle bank, unsigned int offset)
-+{
-+	struct device_node *np;
-+	struct gpio_chip *chip;
-+	int retval = -EINVAL;
-+	int i;
-+
-+	np = of_find_node_by_phandle(bank);
-+	if (!np)
-+		return -EINVAL;
-+
-+	for (i = 0; i < info->nbanks; i++) {
-+		chip = &info->banks[i].gpio_chip;
-+		if (chip->of_node == np) {
-+			if (offset < chip->ngpio)
-+				retval = chip->base + offset;
-+			break;
-+		}
-+	}
-+
-+	of_node_put(np);
-+	return retval;
-+}
-+
- /*
-  * Each pin is represented in of the below forms.
-  * <bank offset mux direction rt_type rt_delay rt_clk>
-@@ -1175,6 +1199,8 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 	struct device *dev = info->dev;
- 	struct st_pinconf *conf;
- 	struct device_node *pins;
-+	phandle bank;
-+	unsigned int offset;
- 	int i = 0, npins = 0, nr_props, ret = 0;
- 
- 	pins = of_get_child_by_name(np, "st,pins");
-@@ -1214,9 +1240,9 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
- 		conf = &grp->pin_conf[i];
- 
- 		/* bank & offset */
--		be32_to_cpup(list++);
--		be32_to_cpup(list++);
--		conf->pin = of_get_named_gpio(pins, pp->name, 0);
-+		bank = be32_to_cpup(list++);
-+		offset = be32_to_cpup(list++);
-+		conf->pin = st_pctl_dt_calculate_pin(info, bank, offset);
- 		conf->name = pp->name;
- 		grp->pins[i] = conf->pin;
- 		/* mux */
--- 
-2.38.0.rc1.362.ged0d419d3c-goog
-
-
--- 
-Dmitry
+>
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Unisoc GPIO controller
+> > +
+>
+> Best regards,
+> Krzysztof
+>
