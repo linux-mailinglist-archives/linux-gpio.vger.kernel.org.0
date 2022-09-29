@@ -2,110 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CEE55EEE7E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 09:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 313335EEF39
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 09:38:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235016AbiI2HJS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 03:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50312 "EHLO
+        id S234856AbiI2Hh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 03:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234255AbiI2HJS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 03:09:18 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2056.outbound.protection.outlook.com [40.107.223.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7F7533A12;
-        Thu, 29 Sep 2022 00:09:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eel/3b1Nqez88prSHKaMrXNw4nQ1tJrU1B4aRFHFgHo1gjRRCrq1Ct8qDE31ZSOvFdgIxiPBe0VKb1kGNlMvuv6ndvwE9WY5gDN3JJIJCYIX/Ozee0NT8Ko1zP+6TkQP3BWIsIJnlDWUy9kFjquZDXV9tukpHkepavke+1pY3+YVXaV8iTUBoQfagP77DGfFUk+qrwR27QTizWLRb9l7OSvc3AZhQ5wQ5IHey/MbHnpB9ZwKdkO3RgfKbugt0HX0DrAMfxnqgJaDx0BzXcceGqfViNtuekHerIrw2Z+7d8+1QTv+IOiAOprHRpJi8Qxw52c073QhbLM2N0HctDTiQw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RKR4/fPMjwzOEEtojeWIv1ux/SYRoCv8jyMQF9irRBc=;
- b=D4pEryuyXywg/e4WHJxmvbJnZWZ/dSMHPUvdzBC9tXV1k0nsAm2v4mSldGxcd/3R/soJ757pC5MdZS0WBN4yZPebLOwWCVWzMzK9zkVxP3F6HgpPZie0sJLS/WnPOx/xyej9dUJocCvUpnyuxQW1Q0lQySeftAS0RWUOVym/aJYKWbbDByDil7lTxibKdUs3A2hLkRh3te7/dm90u3kHL7JO0OD18yLKdiV90/V28s8Mf/+CWFx1RLh46MF/UKHQOPZ/3bjmYzNblnQfwMrXglGGeWsCtH5Qjv/vgQT/zaH48Uw7DAyz1ScduY3NmqzIU07k0xTMhIeNfCzb7Sd7pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=ideasonboard.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RKR4/fPMjwzOEEtojeWIv1ux/SYRoCv8jyMQF9irRBc=;
- b=DLs25qjU/yqXr0ZQmJnwiIHb6CWH15SwNJHHs4SZ3+NIUROAeUYE3yg0bKlrB+cFS2YjCMlRjQT2lA+AWn3+xEvRDqDZGpvst7dKrXbPDAX8wCKgYoPPIKzatrIuAoXn7k9BQKW5u87rzyF9n5ucXE9r5hgDpuYN/rktSUrdP4M=
-Received: from MW4PR03CA0141.namprd03.prod.outlook.com (2603:10b6:303:8c::26)
- by CY5PR12MB6036.namprd12.prod.outlook.com (2603:10b6:930:2c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.25; Thu, 29 Sep
- 2022 07:09:13 +0000
-Received: from CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8c:cafe::72) by MW4PR03CA0141.outlook.office365.com
- (2603:10b6:303:8c::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.17 via Frontend
- Transport; Thu, 29 Sep 2022 07:09:13 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT019.mail.protection.outlook.com (10.13.175.57) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5676.17 via Frontend Transport; Thu, 29 Sep 2022 07:09:12 +0000
-Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Thu, 29 Sep
- 2022 02:09:07 -0500
-Message-ID: <9b7fac69-265e-52f2-21e4-83d9da0f257b@amd.com>
-Date:   Thu, 29 Sep 2022 09:08:26 +0200
+        with ESMTP id S235263AbiI2Hh4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 03:37:56 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF80139434
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 00:37:53 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id s14so821069wro.0
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 00:37:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=xG6pe0Nay2+KrgG9S8vdNuAtRjhdZxqetcN9bQkot20=;
+        b=HEN/jqAE2JezpK7R9YCzOonruSd64+3jK7G1P9TDS8uFgsAE3Safe/mypetBJMbfZI
+         DSaHugbtQlZCf+49Wd5VMCT80LCAveYI8qzCtJeBu2Wf0dzND2U32BA4xE2y2PwuTiEM
+         QVYr5dwDQbaLbFxZop1okYUd/5UKwle9I3hxrz33uneYdStGOR1ZRBcf/kz5B45H7M81
+         sxfoGWgeh/MtR3QmhSQLNzd1rG4RFtoflgJOJGjxQkCQVHEqxlcuJ7xuFRx9nMOAtsIr
+         GpbN5UlXCo0ebpO0oyw0oqjK697Q+kowPGzyWTz3HUFzyKO3vRZO2YTZFVMkNxaDh3V3
+         DAUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=xG6pe0Nay2+KrgG9S8vdNuAtRjhdZxqetcN9bQkot20=;
+        b=H+EWaqtWFHtGYz7dgqOixfPlOBPMAJSdj8qmRaOB9Irz1XenTqICFkVdjtbXK0FhgA
+         p92Gvl5Fy8jTxfYcxOsoCug8n9QSU9xqIXhYHccIk9zS9OJFa7/+7lefxGI5gKS+QElE
+         b6rXK+kk+FnQjlqi6ROS4Wo8HOYJ74sH23VhmeATf1B0W0XxbkZ24BTV1PoGE3jRCYN6
+         ArekTFoHK9djEkcDRVorn89l0mMdF4aWLQWFItEbw2kxdmAYUJZxd2LQqDdbD8zRTXYR
+         XyvUax/fdLSH3RplOJ8y5BYf3W9FlQnEq5qcSDHmZg1DSAApWARUcP8YYTVIVOijOee4
+         fBRA==
+X-Gm-Message-State: ACrzQf3ml7hM41/f/41RvdTArdeTq4J9pF9ic8AXW/6J4yG2/Oe85QwU
+        +tjOn4U93I5VKBQzS/erpqM0RLn2x0nGdeNHK2j1Eg==
+X-Google-Smtp-Source: AMsMyM4ks5gAiuVMx711Z/72no3JerL8iWbDRDem5jZ1fbMEYIMXT7/GHlZtxF043hsk4edunxWm8uBRWQRI5iXn7os=
+X-Received: by 2002:a05:6000:231:b0:22c:c8e3:67e5 with SMTP id
+ l17-20020a056000023100b0022cc8e367e5mr1198602wrz.570.1664437072110; Thu, 29
+ Sep 2022 00:37:52 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH 0/4] pinctrl: pinctrl-zynqmp: Add tri-state configuration
- support
-Content-Language: en-US
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sai Krishna Potthuri <lakshmi.sai.krishna.potthuri@xilinx.com>,
-        "Kannan, Arun Balaji" <arun.balaji.kannan@amd.com>,
-        "Mutthareddyvari, Jyotheeswar Reddy" 
-        <jyotheeswar.reddy.mutthareddyvari@amd.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <git@xilinx.com>,
-        <saikrishna12468@gmail.com>
-References: <1655462819-28801-1-git-send-email-lakshmi.sai.krishna.potthuri@xilinx.com>
- <YzRvEPUWUXP4x7+h@pendragon.ideasonboard.com>
- <YzR5ZoAbaYONnmPS@pendragon.ideasonboard.com>
-From:   Michal Simek <michal.simek@amd.com>
-In-Reply-To: <YzR5ZoAbaYONnmPS@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT019:EE_|CY5PR12MB6036:EE_
-X-MS-Office365-Filtering-Correlation-Id: e156bd2f-1305-4a1b-cc92-08daa1e98341
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Edit3xWIKF6cbHoBo+hbL/R7cVOOQwdPTzJIFLH/5giym8QNQCUO/p+0ttdl7xrAPVSSYH9+/cNd5GfbSW4e5IwHiiMnca2evSimJRa23uHpVue8JMeBhzYiOSqB0vcLTl65RHOlao0Mo0OPc5x4gIjfaqB0if0nv1764ReijS210YGPzkkrLFd4owrKLLfpsgK2pvEwRDfsfWm8eS8vYEv9ZVvohDTePC8iLbmJNDYM+qRBUDIiDHcxd36WxK5iWf32gmrRrMR+7w4dAwf6pdP81AYmOHxZgAiXRTyaEme4+HBxO9MZTygVfLIhirT7m5kqknrq5PrL2waqRDy4LQRLF8AIUIqporcjfLQIsnrFvsjKZmLhr2UbHIT9VNEtkBzOjVtX8VclOQwxA0Cy2Je4lEYOiZz71YeexbcEBAdDDbkN7wSa/OvwSxhpGQ68DqjN61NL8Oudmh/K6rtBDzgoCy++7uHJOqSyvUDtYkpksXZsQ3KDVPMAUztzuQL+7qFcoNVGc1nPpySmjumO7dhl+ethyldPV1JmWq2Z0IDuFugJ/kLTvQaLV+Hcy8SHNHKuORMQTMD5umCnFY1BIq5to7bA7nJbNM3/MAmeQge5k8vcKAoB3p0GkJeLO+AUP+IDINU4oHLyM4/aMDYAA6skvJora29IZEpXT8hLGmbEozFUVXk1ZI83LjjzpXFgndXw/jolhLoA0767b/5G6xvVbzrZXsL0bCN/PAMqNrLTEgdRO5XV+hXQlnr3Q4S+ckh+kWuqkcbzvNSxGtyhVIYHWmvV4WQIXu/jVDdT0qb8g9me0XHzFMWSlyrrvLZ3V9Mv7VLBpYLZEh1KCP3DsA==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(396003)(39860400002)(136003)(451199015)(40470700004)(36840700001)(46966006)(70586007)(6636002)(70206006)(44832011)(5660300002)(8676002)(4326008)(8936002)(31696002)(110136005)(86362001)(2906002)(81166007)(36756003)(356005)(40460700003)(82740400003)(336012)(186003)(82310400005)(41300700001)(40480700001)(6666004)(478600001)(16526019)(16576012)(54906003)(26005)(53546011)(47076005)(2616005)(316002)(36860700001)(426003)(83380400001)(31686004)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Sep 2022 07:09:12.5894
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e156bd2f-1305-4a1b-cc92-08daa1e98341
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT019.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6036
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
+ <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+ <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+ <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
+ <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
+ <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+ <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+ <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
+In-Reply-To: <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 29 Sep 2022 09:37:40 +0200
+Message-ID: <CAMRc=McSZWLdPNESPLfDD4UgyvtyU7BcvB-ZZrvDWM3LDYjEMA@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -113,45 +77,74 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Laurent,
+On Thu, Sep 29, 2022 at 8:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 28-09-22, 19:54, Bartosz Golaszewski wrote:
+> > On Wed, Sep 28, 2022 at 5:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > > Hmm, so what exactly do we want to do here then ?
+> > >
+> > > - Don't allow events to be referenced ? i.e. make event_clone() the default
+> > >   behavior ?
+> > >
+> >
+> > God no, that would be wasteful.
+> >
+> > > - Don't allow read_edge_event() to be called twice for a buffer ? that will be
+> > >   inefficient though.
+> > >
+> >
+> > Not good either.
+>
+> As I expected for both of them :)
+>
+> > > - Somehow guarantee that reference to all the events are dropped before issuing
+> > >   read_edge_event() again, else make it fail ? I am not sure how straight
+> > >   forward that can be though.
+> >
+> > In C++ the preferred way is to do buffer.get_event(0) which will
+> > return a constant reference. If you store that reference as const
+> > edge_event& ev = buffer.get_event(0) and reuse it after rereading into
+> > that buffer and the program crashes - that's on you. In most cases you
+> > should just do buffer.get_event(0).line_offset() etc. If you do:
+> >
+> > edge_event event = buffer.get_event(0);
+> >
+> > You'll copy the event and it will survive the overwriting of the buffer.
+>
+> Right, same happens here.
+>
+> > I'm a Rust beginner but my understanding is that the whole idea of the
+> > language design is to *not* allow a situation where the program can
+> > crash. It should be detected at build-time. We must not rely on
+> > "contracts" defined by documentation.
+>
+> If everything was written in Rust, then this problem won't occur for sure. But
+> in this case part of the code is available via FFI (foreign function interface)
+> and they guarantees are a bit limited there and depend on what the FFI
+> guarantees.
+>
+> > Is there a way to invalidate a reference in Rust? Have a small (cheap)
+> > object in the buffer which the event references and which would get
+> > dropped when reading into the buffer?
+>
+> I am not sure. There are locks, but then they have a cost.
+>
 
-On 9/28/22 18:42, Laurent Pinchart wrote:
-> 
-> On Wed, Sep 28, 2022 at 06:58:10PM +0300, Laurent Pinchart wrote:
->> Hi Sai,
->>
->> On Fri, Jun 17, 2022 at 04:16:55PM +0530, Sai Krishna Potthuri wrote:
->>> This series update the Xilinx firmware, ZynqMP dt-binding and ZynqMP
->>> pinctrl driver to handle 'output-enable' and 'bias-high-impedance'
->>> configurations. As part of these configurations, ZynqMP pinctrl driver
->>> takes care of pin tri-state setting.
->>> Also fix the kernel doc warning in ZynqMP pinctrl driver.
->>
->> I'm afraid this causes a regression :-( With this series applied, boot
->> breaks with the following message being printed to the serial console:
->>
->> Received exception
->> MSR: 0x200, EAR: 0xFF180198, EDR: 0x0, ESR: 0x64
->>
->> I've traced that to the probe of the UART, when it calls into the
->> firmware to set pin MIO18 to high impedance. According to v1.7 of the
->> ZynqMP registers reference (UG1087), there is no register at address
->> 0xFF180198.
->>
->> I am using the VCU TRD 2021.1 for testing. Does this series require a
->> firmware update ? If so backward compatibility needs to be preserved.
->> It's very late in the v6.0-rc cycle for a fix, a revert may be best at
->> this point, to give us time to fix the issue properly.
-> 
-> I've now tested the VCU TRD 2022.1 (which AFAIK is the latest available
-> version), and the problem doesn't occue then. It thus seems this depends
-> on a firmware update, which is impractical at best for all old designs
-> :-(
+I'm not talking about locking, this should be left to the user of the module.
 
-That's correct observation. Supporting these two properties requires newer pmufw 
-or that message is received.
-I will let Arun and Jyotheeswar to comment it. I don't think there is a way to 
-detect which firmware has implementation for it available.
+Can we force-drop an object still referenced by other objects in Rust?
+This is what I had in mind - a small, dummy, cheap object inside the
+buffer that's created when reading into the buffer. Each even would
+reference it and then Rust would not allow us to drop it as long as
+there are references to it. Does it make sense? Is that possible?
 
-Thanks,
-Michal
+> Miguel, any suggestions ?
+>
+> Bartosz, just as an FYI I am out on vacation until end of next week and won't
+> have access to a workstation. I can still reply via Gmail (html) from my phone
+> though.
+>
+
+Nah, just take the time off and rest. BTW, I'm starting at linaro next week. :)
+
+Bart
