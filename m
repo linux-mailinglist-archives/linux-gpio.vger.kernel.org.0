@@ -2,275 +2,229 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6AA15EF9CF
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 18:09:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBDBC5EFA1E
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 18:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236002AbiI2QJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 12:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
+        id S236144AbiI2QTh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 12:19:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236018AbiI2QJL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 12:09:11 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C11761D1E24;
-        Thu, 29 Sep 2022 09:09:08 -0700 (PDT)
-X-QQ-Spam: true
-X-QQ-mid: bizesmtp84t1664461988tobq0a5b
-Received: from localhost.localdomain ( [113.72.145.157])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Thu, 29 Sep 2022 22:33:07 +0800 (CST)
-X-QQ-SSF: 01000000002000201000B00A0000000
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Hal Feng <hal.feng@linux.starfivetech.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 10/30] reset: starfive: Rename 'reset-starfive-jh7100.c' to 'reset-starfive.c'
-Date:   Thu, 29 Sep 2022 22:32:05 +0800
-Message-Id: <20220929143225.17907-11-hal.feng@linux.starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S236170AbiI2QT1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 12:19:27 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE201E1CE9
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 09:19:21 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id q83so1289674iod.7
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 09:19:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MXIVSMuAlBQ+2uSHmUHfHLOHcWF4zJCrevwd/gYh7dQ=;
+        b=dsmioauJSX/3oatV6YYYUCM6wUugxdJ55wkiAT9yEJEv4LIHzw5FG0PgkXOAlwZn59
+         hUKWeM1H6uEW+mxbWtyTrEIKyYQ+ZPeF3hxDEmf7GDwbA7fS/Z6wwuscpoajTudrI39X
+         tquzl4O104NooQFCFGAnjWz4UmvZ4NXm/Y1Wk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MXIVSMuAlBQ+2uSHmUHfHLOHcWF4zJCrevwd/gYh7dQ=;
+        b=uNYkZ76Laxkb7nWva/UH2s8W+P+z2jrzykHyxHsJaR6n3aAnlYzDt3IQ5Gvg9IoVEB
+         l2IettYvPLcsCEiZY4vuSzA4b5O/HXqDLGUYMkRob3ZyTPFclyUmyXg4/GeG0I2ck9pN
+         SDKqpD7J1j5QSGXp2p7bySDmhIt0g7ixxSb2HLWMOZNHWZgdoTuOxupsw2kg4sjhJfBS
+         22Cb9ZSRI9FA1M2euZDX+kqhqICjmzrTJiuaIiVUh42qIZVZiQ68DRL3ezvEdbpxcnXm
+         gD078pRSQRvu3noXG92Rn/CFrhIHwIzknqfOXvah8IoHaiaMk6mpmAOnCprVTw+Go5QF
+         kZqg==
+X-Gm-Message-State: ACrzQf38+xAJt/D8VbJMLIdExcif43zUQpXNTwSfAZJcmZPwCFfQTmKp
+        DsOTcVoaItF3dGb85yiR+gbnTw==
+X-Google-Smtp-Source: AMsMyM48p648vCzLy0mzgB1SpfuUOV6UBxOwCPopt1gMezmSdZkKJCSvUHOMvuMmrY0rMqLArJW7Vw==
+X-Received: by 2002:a05:6638:339e:b0:35a:39e5:ed46 with SMTP id h30-20020a056638339e00b0035a39e5ed46mr2306365jav.12.1664468361129;
+        Thu, 29 Sep 2022 09:19:21 -0700 (PDT)
+Received: from rrangel920.bld.corp.google.com (h24-56-189-219.arvdco.broadband.dynamic.tds.net. [24.56.189.219])
+        by smtp.gmail.com with ESMTPSA id f12-20020a02848c000000b0035aab2f1ab1sm2965451jai.134.2022.09.29.09.19.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Sep 2022 09:19:20 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-acpi@vger.kernel.org, linux-input@vger.kernel.org
+Cc:     andriy.shevchenko@linux.intel.com, dmitry.torokhov@gmail.com,
+        hdegoede@redhat.com, rafael@kernel.org,
+        mika.westerberg@linux.intel.com, mario.limonciello@amd.com,
+        timvp@google.com, linus.walleij@linaro.org, jingle.wu@emc.com.tw,
+        Raul E Rangel <rrangel@chromium.org>,
+        Alistair Francis <alistair@alistair23.me>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bartosz Szczepanek <bsz@semihalf.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Johnny Chuang <johnny.chuang.emc@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Len Brown <lenb@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>, Tom Rix <trix@redhat.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Yang Li <yang.lee@linux.alibaba.com>,
+        linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH v6 00/13] acpi: i2c: Use SharedAndWake and ExclusiveAndWake to enable wake irq
+Date:   Thu, 29 Sep 2022 10:19:04 -0600
+Message-Id: <20220929161917.2348231-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.37.3.998.g577e59143f-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-So this reset driver can be compatible with other StarFive SoCs.
-No functional change.
+Today, i2c drivers are making the assumption that their IRQs can also
+be used as wake IRQs. This isn't always the case and it can lead to
+spurious wakes. This has recently started to affect AMD Chromebooks.
+With the introduction of
+d62bd5ce12d7 ("pinctrl: amd: Implement irq_set_wake"), the AMD GPIO
+controller gained the capability to set the wake bit on each GPIO. The
+ACPI specification defines two ways to inform the system if a device is
+wake capable:
+1) The _PRW object defines the GPE that can be used to wake the system.
+2) Setting ExclusiveAndWake or SharedAndWake in the _CRS GpioInt.
 
-Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
----
- MAINTAINERS                                   |  9 +--
- drivers/reset/Kconfig                         |  6 +-
- drivers/reset/Makefile                        |  2 +-
- ...set-starfive-jh7100.c => reset-starfive.c} | 68 +++++++++----------
- 4 files changed, 43 insertions(+), 42 deletions(-)
- rename drivers/reset/{reset-starfive-jh7100.c => reset-starfive.c} (70%)
+Currently only the first method is supported. The i2c drivers don't have
+any indication that the IRQ is wake capable, so they guess. This causes
+spurious interrupts, for example:
+* We have an ACPI HID device that has `_PR0` and `_PR3`. It doesn't have
+  `_PRW` or `ExclusiveAndWake` so that means the device can't wake the
+  system.
+* The IRQ line is active level low for this device and is pulled up by
+  the power resource defined in `_PR0`/`_PR3`.
+* The i2c driver will (incorrectly) arm the GPIO for wake by calling
+  `enable_irq_wake` as part of its suspend hook.
+* ACPI will power down the device since it doesn't have a wake GPE
+  associated with it.
+* When the device is powered down, the IRQ line will drop, and it will
+  trigger a wake event.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f5ca4aefd184..f2319a3b708b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19411,12 +19411,13 @@ F:	Documentation/devicetree/bindings/pinctrl/starfive,jh7100-pinctrl.yaml
- F:	drivers/pinctrl/pinctrl-starfive.c
- F:	include/dt-bindings/pinctrl/pinctrl-starfive.h
- 
--STARFIVE JH7100 RESET CONTROLLER DRIVER
-+STARFIVE RESET CONTROLLER DRIVER
- M:	Emil Renner Berthing <kernel@esmil.dk>
-+M:	Hal Feng <hal.feng@linux.starfivetech.com>
- S:	Maintained
--F:	Documentation/devicetree/bindings/reset/starfive,jh7100-reset.yaml
--F:	drivers/reset/reset-starfive-jh7100.c
--F:	include/dt-bindings/reset/starfive-jh7100.h
-+F:	Documentation/devicetree/bindings/reset/starfive*
-+F:	drivers/reset/reset-starfive.c
-+F:	include/dt-bindings/reset/starfive*
- 
- STATIC BRANCH/CALL
- M:	Peter Zijlstra <peterz@infradead.org>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 806773e88832..8121de5ecc3c 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -225,12 +225,12 @@ config RESET_SOCFPGA
- 	  This enables the reset driver for the SoCFPGA ARMv7 platforms. This
- 	  driver gets initialized early during platform init calls.
- 
--config RESET_STARFIVE_JH7100
--	bool "StarFive JH7100 Reset Driver"
-+config RESET_STARFIVE
-+	bool "StarFive SoC Reset Driver"
- 	depends on SOC_STARFIVE || COMPILE_TEST
- 	default SOC_STARFIVE
- 	help
--	  This enables the reset controller driver for the StarFive JH7100 SoC.
-+	  This enables the reset controller driver for the StarFive SoCs.
- 
- config RESET_SUNPLUS
- 	bool "Sunplus SoCs Reset Driver" if COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index cd5cf8e7c6a7..269268a48f56 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -29,7 +29,7 @@ obj-$(CONFIG_RESET_RZG2L_USBPHY_CTRL) += reset-rzg2l-usbphy-ctrl.o
- obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
- obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
- obj-$(CONFIG_RESET_SOCFPGA) += reset-socfpga.o
--obj-$(CONFIG_RESET_STARFIVE_JH7100) += reset-starfive-jh7100.o
-+obj-$(CONFIG_RESET_STARFIVE) += reset-starfive.o
- obj-$(CONFIG_RESET_SUNPLUS) += reset-sunplus.o
- obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
-diff --git a/drivers/reset/reset-starfive-jh7100.c b/drivers/reset/reset-starfive.c
-similarity index 70%
-rename from drivers/reset/reset-starfive-jh7100.c
-rename to drivers/reset/reset-starfive.c
-index d3656e99ae0e..56d07bafadd7 100644
---- a/drivers/reset/reset-starfive-jh7100.c
-+++ b/drivers/reset/reset-starfive.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0-or-later
- /*
-- * Reset driver for the StarFive JH7100 SoC
-+ * Reset driver for the StarFive SoC
-  *
-  * Copyright (C) 2021 Emil Renner Berthing <kernel@esmil.dk>
-  * Copyright (C) 2021-2022 StarFive Technology Co., Ltd.
-@@ -36,7 +36,7 @@ static const u32 jh7100_reset_asserted[4] = {
- 	0,
- };
- 
--struct jh7100_reset {
-+struct starfive_reset {
- 	struct reset_controller_dev rcdev;
- 	struct regmap *regmap;
- 	u32 assert_offset;
-@@ -45,16 +45,16 @@ struct jh7100_reset {
- 	const u32 *asserted;
- };
- 
--static inline struct jh7100_reset *
--jh7100_reset_from(struct reset_controller_dev *rcdev)
-+static inline struct starfive_reset *
-+starfive_reset_from(struct reset_controller_dev *rcdev)
- {
--	return container_of(rcdev, struct jh7100_reset, rcdev);
-+	return container_of(rcdev, struct starfive_reset, rcdev);
- }
- 
--static int jh7100_reset_update(struct reset_controller_dev *rcdev,
--			       unsigned long id, bool assert)
-+static int starfive_reset_update(struct reset_controller_dev *rcdev,
-+				 unsigned long id, bool assert)
- {
--	struct jh7100_reset *data = jh7100_reset_from(rcdev);
-+	struct starfive_reset *data = starfive_reset_from(rcdev);
- 	u32 offset = id / 32;
- 	u32 mask = BIT(id % 32);
- 	u32 reg_assert = data->assert_offset + offset * sizeof(u32);
-@@ -86,34 +86,34 @@ static int jh7100_reset_update(struct reset_controller_dev *rcdev,
- 	return ret;
- }
- 
--static int jh7100_reset_assert(struct reset_controller_dev *rcdev,
--			       unsigned long id)
-+static int starfive_reset_assert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
- {
--	return jh7100_reset_update(rcdev, id, true);
-+	return starfive_reset_update(rcdev, id, true);
- }
- 
--static int jh7100_reset_deassert(struct reset_controller_dev *rcdev,
--				 unsigned long id)
-+static int starfive_reset_deassert(struct reset_controller_dev *rcdev,
-+				   unsigned long id)
- {
--	return jh7100_reset_update(rcdev, id, false);
-+	return starfive_reset_update(rcdev, id, false);
- }
- 
--static int jh7100_reset_reset(struct reset_controller_dev *rcdev,
--			      unsigned long id)
-+static int starfive_reset_reset(struct reset_controller_dev *rcdev,
-+				unsigned long id)
- {
- 	int ret;
- 
--	ret = jh7100_reset_assert(rcdev, id);
-+	ret = starfive_reset_assert(rcdev, id);
- 	if (ret)
- 		return ret;
- 
--	return jh7100_reset_deassert(rcdev, id);
-+	return starfive_reset_deassert(rcdev, id);
- }
- 
--static int jh7100_reset_status(struct reset_controller_dev *rcdev,
--			       unsigned long id)
-+static int starfive_reset_status(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
- {
--	struct jh7100_reset *data = jh7100_reset_from(rcdev);
-+	struct starfive_reset *data = starfive_reset_from(rcdev);
- 	u32 offset = id / 32;
- 	u32 mask = BIT(id % 32);
- 	u32 reg_status = data->status_offset + offset * sizeof(u32);
-@@ -127,16 +127,16 @@ static int jh7100_reset_status(struct reset_controller_dev *rcdev,
- 	return !((value ^ data->asserted[offset]) & mask);
- }
- 
--static const struct reset_control_ops jh7100_reset_ops = {
--	.assert		= jh7100_reset_assert,
--	.deassert	= jh7100_reset_deassert,
--	.reset		= jh7100_reset_reset,
--	.status		= jh7100_reset_status,
-+static const struct reset_control_ops starfive_reset_ops = {
-+	.assert		= starfive_reset_assert,
-+	.deassert	= starfive_reset_deassert,
-+	.reset		= starfive_reset_reset,
-+	.status		= starfive_reset_status,
- };
- 
--static int __init jh7100_reset_probe(struct platform_device *pdev)
-+static int __init starfive_reset_probe(struct platform_device *pdev)
- {
--	struct jh7100_reset *data;
-+	struct starfive_reset *data;
- 	int ret;
- 
- 	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-@@ -171,7 +171,7 @@ static int __init jh7100_reset_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	data->rcdev.ops = &jh7100_reset_ops;
-+	data->rcdev.ops = &starfive_reset_ops;
- 	data->rcdev.owner = THIS_MODULE;
- 	data->rcdev.nr_resets = data->nr_resets;
- 	data->rcdev.dev = &pdev->dev;
-@@ -182,16 +182,16 @@ static int __init jh7100_reset_probe(struct platform_device *pdev)
- 	return devm_reset_controller_register(&pdev->dev, &data->rcdev);
- }
- 
--static const struct of_device_id jh7100_reset_dt_ids[] = {
-+static const struct of_device_id starfive_reset_dt_ids[] = {
- 	{ .compatible = "starfive,jh7100-reset" },
- 	{ /* sentinel */ }
- };
- 
--static struct platform_driver jh7100_reset_driver = {
-+static struct platform_driver starfive_reset_driver = {
- 	.driver = {
--		.name = "jh7100-reset",
--		.of_match_table = jh7100_reset_dt_ids,
-+		.name = "starfive-reset",
-+		.of_match_table = starfive_reset_dt_ids,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver_probe(jh7100_reset_driver, jh7100_reset_probe);
-+builtin_platform_driver_probe(starfive_reset_driver, starfive_reset_probe);
+See the following debug log:
+[   42.335804] PM: Suspending system (s2idle)
+[   42.340186] amd_gpio AMD0030:00: RX: Setting wake for pin 89 to enable
+[   42.467736]     power-0416 __acpi_power_off      : Power resource [PR00] turned off
+[   42.467739] device_pm-0280 device_set_power      : Device [H05D] transitioned to D3cold
+[   42.475210] PM: pm_system_irq_wakeup: 11 triggered pinctrl_amd
+[   42.535293] PM: Wakeup unrelated to ACPI SCI
+[   42.535294] PM: resume from suspend-to-idle
+
+In order to fix this, we need to take into account the wake capable bit
+defined on the Interrupt/GpioInt. This is accomplished by:
+* Migrating some of the i2c drivers over to using the PM subsystem to
+  manage the wake IRQ.
+* Expose the wake_capable bit from the ACPI Interrupt/GpioInt resource
+  to the  i2c core.
+* Use the wake_capable bit in the i2c core to call
+  `dev_pm_set_wake_irq`. This reuses the existing device tree flow.
+* Make the i2c drivers stop calling `dev_pm_set_wake_irq` since it's now
+  handled by the i2c core.
+* Make the ACPI device PM system aware of the wake_irq. This is
+  necessary so the device doesn't incorrectly get powered down when a
+  wake_irq is enabled.
+
+I've tested this code with various combinations of having _PRW,
+ExclusiveAndWake and power resources all defined or not defined, but it
+would be great if others could test this out on their hardware.
+
+I'm sure this will surface some devices where the IRQs were not
+correctly marked as wake capable. Ideally the firmware can be fixed, but
+if not we can work around this in the kernel by providing a board
+specific `struct i2c_board_info` with the `I2C_CLIENT_WAKE` flag set.
+See `chromeos_laptop.c` for an example of matching DMI properties and
+setting the `I2C_CLIENT_WAKE` override.
+
+Thanks,
+Raul
+
+Changes in v6:
+- Return early when irq < 0
+- Refactored to leave else clause
+
+Changes in v5:
+- Added Acked-by: Benjamin Tissoires
+- Removed clang-format white space changes
+- Check irq return value before updating wake_capable pointer
+- Go back to using adev->wakeup.flags.valid to keep the diff cleaner
+- Fix a typo in comment
+
+Changes in v4:
+- Added Reviewed-by
+- Reformatted with 96 char limit
+- Added Reviewed-by
+- Reformatted with 96 char limit
+- Removed unnecessary !!
+- Removed unrelated whitespace change
+- Added Reviewed-by
+- Renamed i2c_acpi_add_resource to i2c_acpi_add_irq_resource
+- Expanded logic in i2c_acpi_add_i2c_resource to make it easier to read
+
+Changes in v3:
+- Kept `acpi_dev_gpio_irq_get_by` unchanged to avoid having to touch
+  unrelated drivers.
+- Converted wake_capable parameter to bool.
+- Fixed bad indent
+- Convert wake_capable to bool
+- Only update wake_capable pointer once
+- Move wake_capable local into local block
+
+Changes in v2:
+- Added elants_i2c to series
+- Added raydium_ts_i2c to series
+- Fixed call site in mlxbf_gige_probe
+- Added ability to extract wake bit from Interrupt/IRQ resources
+- Look at wake_cabple bit for IRQ/Interrupt resources
+- I chose not to keep the legacy code around since systems without DT or ACPI should be rare.
+
+Raul E Rangel (13):
+  HID: i2c-hid: Use PM subsystem to manage wake irq
+  Input: elan_i2c - Use PM subsystem to manage wake irq
+  Input: elants_i2c - Use PM subsystem to manage wake irq
+  Input: raydium_ts_i2c - Use PM subsystem to manage wake irq
+  gpiolib: acpi: Add wake_capable variants of acpi_dev_gpio_irq_get
+  ACPI: resources: Add wake_capable parameter to acpi_dev_irq_flags
+  i2c: acpi: Use ACPI wake capability bit to set wake_irq
+  ACPI: PM: Take wake IRQ into consideration when entering
+    suspend-to-idle
+  HID: i2c-hid: acpi: Stop setting wakeup_capable
+  HID: i2c-hid: Don't set wake_capable and wake_irq
+  Input: elan_i2c - Don't set wake_capable and wake_irq
+  Input: elants_i2c - Don't set wake_capable and wake_irq
+  Input: raydium_ts_i2c - Don't set wake_capable and wake_irq
+
+ drivers/acpi/device_pm.c                   | 15 ++++++++
+ drivers/acpi/irq.c                         |  8 +++--
+ drivers/acpi/resource.c                    | 16 ++++++---
+ drivers/gpio/gpiolib-acpi.c                | 15 ++++++--
+ drivers/gpio/gpiolib-acpi.h                |  2 ++
+ drivers/hid/i2c-hid/i2c-hid-acpi.c         |  5 ---
+ drivers/hid/i2c-hid/i2c-hid-core.c         | 24 ++-----------
+ drivers/i2c/i2c-core-acpi.c                | 40 ++++++++++++++++------
+ drivers/i2c/i2c-core-base.c                |  6 +++-
+ drivers/i2c/i2c-core.h                     |  4 +--
+ drivers/input/mouse/elan_i2c_core.c        | 15 +-------
+ drivers/input/touchscreen/elants_i2c.c     | 13 ++-----
+ drivers/input/touchscreen/raydium_i2c_ts.c |  7 +---
+ drivers/pnp/pnpacpi/rsparser.c             |  7 ++--
+ include/linux/acpi.h                       | 23 ++++++++++---
+ include/linux/ioport.h                     |  3 +-
+ 16 files changed, 113 insertions(+), 90 deletions(-)
+
 -- 
-2.17.1
+2.37.3.998.g577e59143f-goog
 
