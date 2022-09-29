@@ -2,141 +2,232 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C725EEE1B
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 08:54:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 263995EEE21
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 08:56:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbiI2GyS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 02:54:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
+        id S234959AbiI2Gz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 02:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234952AbiI2GyR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 02:54:17 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA3A12F761
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 23:54:16 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id b21so479967plz.7
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 23:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=g7pmH4wl9mnYOJLw/C4Z5mz6PmJK8Xgd4ECsRpBcpsc=;
-        b=BwC/igXizLjdGHXOFSsAv0TOT/TTi/IOF7GtoqFGXKv6qponcFu4fYgeZiMaqyukig
-         u7idsyUn62rf4AmFoqvZgNWJuGaipKEAdXMtw4VwoBG1L+KgNLIJ0OxdcszfvXgQNN8r
-         luhumJKbZBKeYLEcdQNopl5tR3lrC83tDRS3sAaBRGaIGRqNN/I04ugb5tYBbQsy1fXL
-         oC/2hYfJ1yxuw0P8ilTXJ6g8n9j5lL9ubkeiQDB8OFMu9XP/hzziDnf02+7R4Trgn2mV
-         pw2r5ZI5vtbetDrgEFbc0TLDiysC0uuFozQ0cAIdYA3vmaWEQreQxefA+lD4kQPobG6O
-         izxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=g7pmH4wl9mnYOJLw/C4Z5mz6PmJK8Xgd4ECsRpBcpsc=;
-        b=ChRR6kLgKIeXnNRug/pnAmC/CqASSt7Ky8J75bcBFV4eTkU/wdE5kJoNpAEFm6ukwP
-         Mq5WLaVAEY3QWlHeBD422PqOrc0ABze/Em0cDgv9FjgZpnzc67ByqsWZWiaQgGskekw3
-         H9f6FQFHDvphypcDSFHJFgm1Gjx7fZSWal9jt48LG8o1N0sd3H2mWS0RQ6tKdQ4v5uOV
-         k7Bng9B7JT2yuHsPXhUNop5giZRhDgt01WQ0PuT+dELGopVWHCCvnjR5Nrw+WEALxu71
-         w/Y1EoUeRd2Dn921LUXmnj1dljQU3DVthjYsaqeo03QFWhG6ckEvpqex+iFJN9DJXKrz
-         f1gA==
-X-Gm-Message-State: ACrzQf2+ZwmC8Wd6cB6NXvzqONxb3iT0606RyPEWc6Ylagkakufc0DGP
-        Igb2KHjUak5m0vY0HqHeqePt2w==
-X-Google-Smtp-Source: AMsMyM6+4+a0BcZnvheDSbTWHDFF6J9xFpEyo0k6EhZrumQ+kaJzPjS4I9Cpn5O5N62gcPG8U7/RuQ==
-X-Received: by 2002:a17:902:dac7:b0:178:b5e0:3627 with SMTP id q7-20020a170902dac700b00178b5e03627mr1899530plx.147.1664434455752;
-        Wed, 28 Sep 2022 23:54:15 -0700 (PDT)
-Received: from localhost ([122.172.85.153])
-        by smtp.gmail.com with ESMTPSA id c1-20020a170902d48100b00174be817124sm5056105plg.221.2022.09.28.23.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 23:54:14 -0700 (PDT)
-Date:   Thu, 29 Sep 2022 12:24:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-Message-ID: <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
-References: <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
- <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
- <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
- <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
- <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
- <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
- <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
- <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+        with ESMTP id S234939AbiI2Gz5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 02:55:57 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5B810AB30
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Sep 2022 23:55:55 -0700 (PDT)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odnSN-0007ad-HW; Thu, 29 Sep 2022 08:55:39 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odnSJ-003Yiv-PN; Thu, 29 Sep 2022 08:55:34 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1odnSH-004JPt-Gz; Thu, 29 Sep 2022 08:55:33 +0200
+Date:   Thu, 29 Sep 2022 08:55:32 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        kernel@pengutronix.de, Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Douglas Anderson <dianders@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-gpio@vger.kernel.org,
+        Andrzej Hajda <andrzej.hajda@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Robert Foss <robert.foss@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-leds@vger.kernel.org,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/3] pwm: Change prototype of .get_state() callback to
+ return an error
+Message-ID: <20220929065532.n3kc44zimshufe4c@pengutronix.de>
+References: <20220916151506.298488-1-u.kleine-koenig@pengutronix.de>
+ <YzRCvGNpWXKyO/PE@orome>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6w6u3nfxl4bcy3e3"
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YzRCvGNpWXKyO/PE@orome>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28-09-22, 19:54, Bartosz Golaszewski wrote:
-> On Wed, Sep 28, 2022 at 5:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > Hmm, so what exactly do we want to do here then ?
-> >
-> > - Don't allow events to be referenced ? i.e. make event_clone() the default
-> >   behavior ?
-> >
-> 
-> God no, that would be wasteful.
-> 
-> > - Don't allow read_edge_event() to be called twice for a buffer ? that will be
-> >   inefficient though.
-> >
-> 
-> Not good either.
 
-As I expected for both of them :)
+--6w6u3nfxl4bcy3e3
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > - Somehow guarantee that reference to all the events are dropped before issuing
-> >   read_edge_event() again, else make it fail ? I am not sure how straight
-> >   forward that can be though.
-> 
-> In C++ the preferred way is to do buffer.get_event(0) which will
-> return a constant reference. If you store that reference as const
-> edge_event& ev = buffer.get_event(0) and reuse it after rereading into
-> that buffer and the program crashes - that's on you. In most cases you
-> should just do buffer.get_event(0).line_offset() etc. If you do:
-> 
-> edge_event event = buffer.get_event(0);
-> 
-> You'll copy the event and it will survive the overwriting of the buffer.
+On Wed, Sep 28, 2022 at 02:49:00PM +0200, Thierry Reding wrote:
+> On Fri, Sep 16, 2022 at 05:15:04PM +0200, Uwe Kleine-K=F6nig wrote:
+> [...]
+> > diff --git a/drivers/pwm/pwm-crc.c b/drivers/pwm/pwm-crc.c
+> > index 7b357d1cf642..811e6f424927 100644
+> > --- a/drivers/pwm/pwm-crc.c
+> > +++ b/drivers/pwm/pwm-crc.c
+> > @@ -121,8 +121,8 @@ static int crc_pwm_apply(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+> >  	return 0;
+> >  }
+> > =20
+> > -static void crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > -			      struct pwm_state *state)
+> > +static int crc_pwm_get_state(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> > +			     struct pwm_state *state)
+> >  {
+> >  	struct crystalcove_pwm *crc_pwm =3D to_crc_pwm(chip);
+> >  	struct device *dev =3D crc_pwm->chip.dev;
+> > @@ -132,13 +132,13 @@ static void crc_pwm_get_state(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> >  	error =3D regmap_read(crc_pwm->regmap, PWM0_CLK_DIV, &clk_div_reg);
+> >  	if (error) {
+> >  		dev_err(dev, "Error reading PWM0_CLK_DIV %d\n", error);
+> > -		return;
+> > +		return -EIO;
+> >  	}
+> > =20
+> >  	error =3D regmap_read(crc_pwm->regmap, PWM0_DUTY_CYCLE, &duty_cycle_r=
+eg);
+> >  	if (error) {
+> >  		dev_err(dev, "Error reading PWM0_DUTY_CYCLE %d\n", error);
+> > -		return;
+> > +		return -EIO;
+> >  	}
+>=20
+> In other drivers you propagate errors from regmap_read(), why not here?
 
-Right, same happens here.
+Oh, this is indeed wrong and should be "return error".
 
-> I'm a Rust beginner but my understanding is that the whole idea of the
-> language design is to *not* allow a situation where the program can
-> crash. It should be detected at build-time. We must not rely on
-> "contracts" defined by documentation.
+>=20
+> > diff --git a/drivers/pwm/pwm-sprd.c b/drivers/pwm/pwm-sprd.c
+> > index 7004f55bbf11..aa06b3ce81a6 100644
+> > --- a/drivers/pwm/pwm-sprd.c
+> > +++ b/drivers/pwm/pwm-sprd.c
+> > @@ -65,8 +65,8 @@ static void sprd_pwm_write(struct sprd_pwm_chip *spc,=
+ u32 hwid,
+> >  	writel_relaxed(val, spc->base + offset);
+> >  }
+> > =20
+> > -static void sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > -			       struct pwm_state *state)
+> > +static int sprd_pwm_get_state(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> > +			      struct pwm_state *state)
+> >  {
+> >  	struct sprd_pwm_chip *spc =3D
+> >  		container_of(chip, struct sprd_pwm_chip, chip);
+> > @@ -80,11 +80,8 @@ static void sprd_pwm_get_state(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> >  	 * reading to the registers.
+> >  	 */
+> >  	ret =3D clk_bulk_prepare_enable(SPRD_PWM_CHN_CLKS_NUM, chn->clks);
+> > -	if (ret) {
+> > -		dev_err(spc->dev, "failed to enable pwm%u clocks\n",
+> > -			pwm->hwpwm);
+>=20
+> This might be useful information, so perhaps leave it in?
 
-If everything was written in Rust, then this problem won't occur for sure. But
-in this case part of the code is available via FFI (foreign function interface)
-and they guarantees are a bit limited there and depend on what the FFI
-guarantees.
+Ok, I don't like .get_state emitting an error, but agreed, that's an
+orthogonal issue that shouldn't be addressed en passant in this change.
 
-> Is there a way to invalidate a reference in Rust? Have a small (cheap)
-> object in the buffer which the event references and which would get
-> dropped when reading into the buffer?
+> [...]
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index c8445b0a3339..ead909400e64 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -108,9 +108,9 @@ static inline void sun4i_pwm_writel(struct sun4i_pw=
+m_chip *chip,
+> >  	writel(val, chip->base + offset);
+> >  }
+> > =20
+> > -static void sun4i_pwm_get_state(struct pwm_chip *chip,
+> > -				struct pwm_device *pwm,
+> > -				struct pwm_state *state)
+> > +static int sun4i_pwm_get_state(struct pwm_chip *chip,
+> > +			       struct pwm_device *pwm,
+> > +			       struct pwm_state *state)
+> >  {
+> >  	struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >  	u64 clk_rate, tmp;
+> > @@ -132,7 +132,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *ch=
+ip,
+> >  		state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
+> >  		state->polarity =3D PWM_POLARITY_NORMAL;
+> >  		state->enabled =3D true;
+> > -		return;
+> > +		return 0;
+> >  	}
+> > =20
+> >  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> > @@ -142,7 +142,8 @@ static void sun4i_pwm_get_state(struct pwm_chip *ch=
+ip,
+> >  		prescaler =3D prescaler_table[PWM_REG_PRESCAL(val, pwm->hwpwm)];
+> > =20
+> >  	if (prescaler =3D=3D 0)
+> > -		return;
+> > +		/* huh? is this an error? */
+> > +		return 0;
+>=20
+> Yeah, I think this would count as an error. The prescaler value returned
+> from that table is 0 in what seems to be "invalid" configurations. If
+> you look at how this is used in sun4i_pwm_calculate(), these entries are
+> skipped for the computation of the duty cycle. So I would expect this to
+> happen in either an invalidly configured or completely unconfigured PWM.
+>=20
+> That raises the question about what to do in these cases. If we return
+> an error, that could potentially throw off consumers. So perhaps the
+> closest would be to return a disabled PWM? Or perhaps it'd be up to the
+> consumer to provide some fallback configuration for invalidly configured
+> or unconfigured PWMs.
 
-I am not sure. There are locks, but then they have a cost.
+This is something I'd address on the framework level. i.e. don't care in
+the lowlevel driver about setting .enabled =3D false (or whatever we
+choose to do) but care for that in drivers/pwm/core.c.
 
-Miguel, any suggestions ?
+Note that the status quo is that if that error happens the consumer sees
+whatever state the lowlevel driver stored in pwm->state, without an
+error indication.
 
-Bartosz, just as an FYI I am out on vacation until end of next week and won't
-have access to a workstation. I can still reply via Gmail (html) from my phone
-though.
+Will send a v2.
 
--- 
-viresh
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--6w6u3nfxl4bcy3e3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmM1QWEACgkQwfwUeK3K
+7AnVsgf+Ldl2tUGY9LFOCK2ERWS85VthgpwLbNMQlzHq7y/5oI2/DogWTP3xDZ8y
+Bbxo+AhFrbHTizo5c7SgHrWIAb1G2I+tHmJbBym+oZd6Tx33aS+8gHsha4WWRjm3
+OVZuFQnivYrgRyIbihT8CpeEOH+vyfo7vQHQeYE/8+YtgODsiSdu2TRWSkzhaXCC
+iTtNUPhvbn8iMRSciSYaUAMS4LwmACM+GVQ0+zAQUFMwbMKQiGgsq9We527pOFCT
+RkxTVKHr7hWaB92iSuDcIC2FLOeQfTKKwXHWCjuqef+OPnLhpuXsSbVHvDlqdwTa
+V/JINGn/9VpPyw25hZ/WAqlEr/10MA==
+=CHS4
+-----END PGP SIGNATURE-----
+
+--6w6u3nfxl4bcy3e3--
