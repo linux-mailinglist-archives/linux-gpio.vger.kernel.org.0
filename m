@@ -2,76 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 982FA5EFF7C
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 23:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEE3D5EFF80
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 23:56:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229447AbiI2V4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 17:56:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
+        id S229449AbiI2V4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 17:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiI2V4S (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 17:56:18 -0400
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689AE13D1FA;
-        Thu, 29 Sep 2022 14:56:17 -0700 (PDT)
-Received: by mail-oi1-f169.google.com with SMTP id m130so2964433oif.6;
-        Thu, 29 Sep 2022 14:56:17 -0700 (PDT)
+        with ESMTP id S229437AbiI2V4e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 17:56:34 -0400
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE5F3140199;
+        Thu, 29 Sep 2022 14:56:33 -0700 (PDT)
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-131ea99262dso1124277fac.9;
+        Thu, 29 Sep 2022 14:56:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=D8Kzu6/oUlXFxvg+6E7aKSySK9Mlh0ChMnK2mROPKCE=;
-        b=AoTXGGSijEbXTdqGcpl2g034Fks7fa6r6P7VgeHAyapAFGA+QgO5WygPHlTbVQ4I2j
-         4qFVyVPzN12fB50aWolFFrOel20iA7r6mIUBuKjUkzb3A+o6W+gJNoGIhj5bziueFfPC
-         hxoaJSCOmAM1SRxVOKyo8uI0frL5aaQWWOq5uGEpaEuiaSXqLHfHx7ZlAAULcnMJTpAL
-         xRdGAGmq+am3LRwP+c/olROXcLPBB/m3pSrmmwbH8tG5/39gH40HYlT77C5T2lDouBRo
-         780BUH8XTEOLo6L14PKGyS98Oq13wt9osB3PaYoEcpY0udgbTo0Pt9/aZZn3ksDxlpSI
-         higg==
-X-Gm-Message-State: ACrzQf0AaB8xntqW3KD7l7UXjQpXbavHGlXivUg+eV2tuVpxppkOKx8U
-        baL/oM7rbMyR+s7/3z8H8g==
-X-Google-Smtp-Source: AMsMyM6vkT/2Iy7WkSiRvFEP9tOdvyNHCt/e98BoJAO+18wdaCWPiS6KSTW4OzCKS/X9LylcQX5ajA==
-X-Received: by 2002:a05:6808:3012:b0:351:3f4:d060 with SMTP id ay18-20020a056808301200b0035103f4d060mr8127189oib.241.1664488576681;
-        Thu, 29 Sep 2022 14:56:16 -0700 (PDT)
+        bh=V9zVHpuWkh/i7x7TQRfGROzdebyc2nbt6mtcwCC/H2s=;
+        b=KTtQFv4cWpbNf+yDLTvilDYM5pwhqtAQ+M4/F2Gh6GHafEJQzpB8PoALFalxASGnsA
+         z8F1ZKZgfWcCc0Qn5z8dzaPpBjc5h/t7MAoUFLZ+sZ1Itjd9wytx12Wf/v0AXiNVJ5aL
+         IrTqDjG1fl2u9yrzUJo6NoJGHhdsFIp9wLbhU6kXTJ8pyj+9j2ykHmc+1GkjUMdxZ3gD
+         pugBFlfrzrOhytGgpthlpBe7wCzUFxw9HPsXEagjZ+pBOf3kH8Ch9sCCZ7YeKY61ECJc
+         ZxZCnDb2A0MmXNOUCxmCrYX3mcI1e0FTZH5OLrXhfjlF8GHk/FCmgSoJfA0u3AGHzz7N
+         2X8w==
+X-Gm-Message-State: ACrzQf2BcCL4oDcFhfLNv0VpYqKEYB5HgSFwCCYy+H1ypAn/NVM/VzCo
+        vXUzf0DvAsQrU2bdtckLJw==
+X-Google-Smtp-Source: AMsMyM4q8qqCa206penQyorIBTJoLeOZmP4X4ZijAKx++JcFwG/uTedysH1VCHoh4TMmaMzoMTADNw==
+X-Received: by 2002:a05:6870:c391:b0:10c:a937:aaf1 with SMTP id g17-20020a056870c39100b0010ca937aaf1mr3062395oao.272.1664488593146;
+        Thu, 29 Sep 2022 14:56:33 -0700 (PDT)
 Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r63-20020acaf342000000b00342d18cc2fdsm112068oih.53.2022.09.29.14.56.15
+        by smtp.gmail.com with ESMTPSA id o8-20020a056870524800b0013185365eb7sm235997oai.28.2022.09.29.14.56.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 14:56:16 -0700 (PDT)
-Received: (nullmailer pid 2774408 invoked by uid 1000);
-        Thu, 29 Sep 2022 21:56:15 -0000
-Date:   Thu, 29 Sep 2022 16:56:15 -0500
+        Thu, 29 Sep 2022 14:56:32 -0700 (PDT)
+Received: (nullmailer pid 2774818 invoked by uid 1000);
+        Thu, 29 Sep 2022 21:56:32 -0000
+Date:   Thu, 29 Sep 2022 16:56:32 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Marek Vasut <marex@denx.de>
-Cc:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
         linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: Document gpio-line-names
-Message-ID: <166448857513.2774347.13258639802949517982.robh@kernel.org>
-References: <20220926204724.381760-1-marex@denx.de>
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: Document gpio-hog
+ pattern property
+Message-ID: <166448859158.2774756.9828897136767131481.robh@kernel.org>
+References: <20220926204735.381779-1-marex@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220926204724.381760-1-marex@denx.de>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+In-Reply-To: <20220926204735.381779-1-marex@denx.de>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 26 Sep 2022 22:47:24 +0200, Marek Vasut wrote:
-> Document gpio-line-names property as valid property.
+On Mon, 26 Sep 2022 22:47:35 +0200, Marek Vasut wrote:
+> Document gpio-hog pattern property and its subnodes.
 > This fixes dtbs_check warnings when building current Linux DTs:
 > 
 > "
-> arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dtb: pinctrl@50002000: gpio@50009000: 'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+> arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dtb: pinctrl@50002000: gpio@50003000: 'rs485-rx-en-hog' does not match any of the regexes: 'pinctrl-[0-9]+'
 > "
 > 
 > Signed-off-by: Marek Vasut <marex@denx.de>
@@ -85,8 +87,8 @@ On Mon, 26 Sep 2022 22:47:24 +0200, Marek Vasut wrote:
 > Cc: linux-stm32@st-md-mailman.stormreply.com
 > To: linux-arm-kernel@lists.infradead.org
 > ---
->  Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml       | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
