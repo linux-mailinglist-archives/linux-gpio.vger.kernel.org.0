@@ -2,81 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC7E35EFE82
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 22:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 982FA5EFF7C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 23:56:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbiI2URr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 16:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        id S229447AbiI2V4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 17:56:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiI2URq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 16:17:46 -0400
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7957D14C073;
-        Thu, 29 Sep 2022 13:17:46 -0700 (PDT)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-131886d366cso3131975fac.10;
-        Thu, 29 Sep 2022 13:17:46 -0700 (PDT)
+        with ESMTP id S229449AbiI2V4S (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 17:56:18 -0400
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689AE13D1FA;
+        Thu, 29 Sep 2022 14:56:17 -0700 (PDT)
+Received: by mail-oi1-f169.google.com with SMTP id m130so2964433oif.6;
+        Thu, 29 Sep 2022 14:56:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=IVA+NrMANs4JcKoWxiGjDSoZB/KJJG5M2ElGXAEd1LQ=;
-        b=BDMWSj+7x6siv1+ejEfvi2SaQPvYV9DtSQGgROb55Zvf6l5ODcjChhw/5RTww0w7F5
-         1QSUFhgBPN2GVAU0CgC/qNE90szofIXND6qM7sMS2S9Uop6Q1lCana7MLd/dfmGcvtzX
-         zeYU1cKbl38HrseF1GwqkRwYkSZEWwrV58d55zQ5SXd7XtG5cVkJJTLhtlUdBiNuFysL
-         IiBjFAZhe1CedAKkuG52YnaT1Q5yk1SAp8+mbcCvn5MCfdjuz31ANyb5iJWvHCuvjl9v
-         yzKEzAqPMhRxM3g7U0xVsZvuk+UsE8N61Jnb4CkWKc1nfQTUR3OC98hPrYY5n52axv7z
-         k3GA==
-X-Gm-Message-State: ACrzQf2QzAcSyl9jNRgS3Kz2+b89sV4K5fuuDPNini2zNNs8RDvI29TH
-        m/zswDvmBR9NX9am2P6glQ==
-X-Google-Smtp-Source: AMsMyM5hetl0HHDC2qK6ExH1+h4F7f6dnhMO81xHxrvx3iFO5iw/K+DsIgpZIaC0Sw6VbUCwoC2ioA==
-X-Received: by 2002:a05:6870:ac0f:b0:127:c036:d61c with SMTP id kw15-20020a056870ac0f00b00127c036d61cmr2825034oab.278.1664482665739;
-        Thu, 29 Sep 2022 13:17:45 -0700 (PDT)
+        bh=D8Kzu6/oUlXFxvg+6E7aKSySK9Mlh0ChMnK2mROPKCE=;
+        b=AoTXGGSijEbXTdqGcpl2g034Fks7fa6r6P7VgeHAyapAFGA+QgO5WygPHlTbVQ4I2j
+         4qFVyVPzN12fB50aWolFFrOel20iA7r6mIUBuKjUkzb3A+o6W+gJNoGIhj5bziueFfPC
+         hxoaJSCOmAM1SRxVOKyo8uI0frL5aaQWWOq5uGEpaEuiaSXqLHfHx7ZlAAULcnMJTpAL
+         xRdGAGmq+am3LRwP+c/olROXcLPBB/m3pSrmmwbH8tG5/39gH40HYlT77C5T2lDouBRo
+         780BUH8XTEOLo6L14PKGyS98Oq13wt9osB3PaYoEcpY0udgbTo0Pt9/aZZn3ksDxlpSI
+         higg==
+X-Gm-Message-State: ACrzQf0AaB8xntqW3KD7l7UXjQpXbavHGlXivUg+eV2tuVpxppkOKx8U
+        baL/oM7rbMyR+s7/3z8H8g==
+X-Google-Smtp-Source: AMsMyM6vkT/2Iy7WkSiRvFEP9tOdvyNHCt/e98BoJAO+18wdaCWPiS6KSTW4OzCKS/X9LylcQX5ajA==
+X-Received: by 2002:a05:6808:3012:b0:351:3f4:d060 with SMTP id ay18-20020a056808301200b0035103f4d060mr8127189oib.241.1664488576681;
+        Thu, 29 Sep 2022 14:56:16 -0700 (PDT)
 Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id x93-20020a9d20e6000000b00657865c9827sm149014ota.46.2022.09.29.13.17.44
+        by smtp.gmail.com with ESMTPSA id r63-20020acaf342000000b00342d18cc2fdsm112068oih.53.2022.09.29.14.56.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 13:17:45 -0700 (PDT)
-Received: (nullmailer pid 2668356 invoked by uid 1000);
-        Thu, 29 Sep 2022 20:17:44 -0000
-Date:   Thu, 29 Sep 2022 15:17:44 -0500
+        Thu, 29 Sep 2022 14:56:16 -0700 (PDT)
+Received: (nullmailer pid 2774408 invoked by uid 1000);
+        Thu, 29 Sep 2022 21:56:15 -0000
+Date:   Thu, 29 Sep 2022 16:56:15 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+To:     Marek Vasut <marex@denx.de>
+Cc:     Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        linux-gpio@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH 15/15] dt-bindings: pinctrl: qcom,sc7280: correct number
- of GPIOs
-Message-ID: <166448266385.2668307.7265164290114312879.robh@kernel.org>
-References: <20220925110608.145728-1-krzysztof.kozlowski@linaro.org>
- <20220925110608.145728-16-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: st,stm32: Document gpio-line-names
+Message-ID: <166448857513.2774347.13258639802949517982.robh@kernel.org>
+References: <20220926204724.381760-1-marex@denx.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220925110608.145728-16-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+In-Reply-To: <20220926204724.381760-1-marex@denx.de>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 25 Sep 2022 13:06:08 +0200, Krzysztof Kozlowski wrote:
-> SC7280 has 175 GPIOs (gpio0-174), so correct size of gpio-line-names and
-> narrow the pattern for matching pin names.
+On Mon, 26 Sep 2022 22:47:24 +0200, Marek Vasut wrote:
+> Document gpio-line-names property as valid property.
+> This fixes dtbs_check warnings when building current Linux DTs:
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> "
+> arch/arm/boot/dts/stm32mp153c-dhcom-drc02.dtb: pinctrl@50002000: gpio@50009000: 'gpio-line-names' does not match any of the regexes: 'pinctrl-[0-9]+'
+> "
+> 
+> Signed-off-by: Marek Vasut <marex@denx.de>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml    | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Cc: Alexandre Torgue <alexandre.torgue@foss.st.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-stm32@st-md-mailman.stormreply.com
+> To: linux-arm-kernel@lists.infradead.org
+> ---
+>  Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Acked-by: Rob Herring <robh@kernel.org>
