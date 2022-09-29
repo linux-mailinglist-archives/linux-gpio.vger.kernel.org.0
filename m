@@ -2,74 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 313335EEF39
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 09:38:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 361395EEF76
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Sep 2022 09:44:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234856AbiI2Hh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Sep 2022 03:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41590 "EHLO
+        id S235130AbiI2HoB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Sep 2022 03:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235263AbiI2Hh4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 03:37:56 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF80139434
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 00:37:53 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id s14so821069wro.0
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Sep 2022 00:37:53 -0700 (PDT)
+        with ESMTP id S235520AbiI2Hnp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Sep 2022 03:43:45 -0400
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BCF27D789;
+        Thu, 29 Sep 2022 00:43:41 -0700 (PDT)
+Received: by mail-ua1-x935.google.com with SMTP id a4so209066uao.0;
+        Thu, 29 Sep 2022 00:43:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=xG6pe0Nay2+KrgG9S8vdNuAtRjhdZxqetcN9bQkot20=;
-        b=HEN/jqAE2JezpK7R9YCzOonruSd64+3jK7G1P9TDS8uFgsAE3Safe/mypetBJMbfZI
-         DSaHugbtQlZCf+49Wd5VMCT80LCAveYI8qzCtJeBu2Wf0dzND2U32BA4xE2y2PwuTiEM
-         QVYr5dwDQbaLbFxZop1okYUd/5UKwle9I3hxrz33uneYdStGOR1ZRBcf/kz5B45H7M81
-         sxfoGWgeh/MtR3QmhSQLNzd1rG4RFtoflgJOJGjxQkCQVHEqxlcuJ7xuFRx9nMOAtsIr
-         GpbN5UlXCo0ebpO0oyw0oqjK697Q+kowPGzyWTz3HUFzyKO3vRZO2YTZFVMkNxaDh3V3
-         DAUQ==
+        bh=hUW+w97bjwcMZAz2wEha3h2rI21nTjZgAo+7PEzzR7o=;
+        b=IE9LHSxpzmDUKXAXpwHaYnHjLj1WufJVEYfJ1hGOFxil3rrScoNoLneEmDUcqYGDo/
+         cmnDLwBy5pEenkueOTqCV+am/5vXym19TECHw5twZhfNwDVDerAskkddsMYTI5iyXcb9
+         DKeNtto5a2ndL2uhg4dGQ+GhgCdAK8SvkRUTbps0BQnaxHCtqGHEWrXW1L8fXhtkJtvK
+         xEbpRhYNxNBRsDCHgiwHkY7GxRqwABdkPK0KVFe4aKZvOyCNtvpSM5qwc9EXYZdj7Ccx
+         +pI87QqvzlYDGu6n8JKzdWzkbjB8p0Z8F352cBkYLNp5LL5IyZKCRiZJ4CAtoLvoTv3W
+         5eTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=xG6pe0Nay2+KrgG9S8vdNuAtRjhdZxqetcN9bQkot20=;
-        b=H+EWaqtWFHtGYz7dgqOixfPlOBPMAJSdj8qmRaOB9Irz1XenTqICFkVdjtbXK0FhgA
-         p92Gvl5Fy8jTxfYcxOsoCug8n9QSU9xqIXhYHccIk9zS9OJFa7/+7lefxGI5gKS+QElE
-         b6rXK+kk+FnQjlqi6ROS4Wo8HOYJ74sH23VhmeATf1B0W0XxbkZ24BTV1PoGE3jRCYN6
-         ArekTFoHK9djEkcDRVorn89l0mMdF4aWLQWFItEbw2kxdmAYUJZxd2LQqDdbD8zRTXYR
-         XyvUax/fdLSH3RplOJ8y5BYf3W9FlQnEq5qcSDHmZg1DSAApWARUcP8YYTVIVOijOee4
-         fBRA==
-X-Gm-Message-State: ACrzQf3ml7hM41/f/41RvdTArdeTq4J9pF9ic8AXW/6J4yG2/Oe85QwU
-        +tjOn4U93I5VKBQzS/erpqM0RLn2x0nGdeNHK2j1Eg==
-X-Google-Smtp-Source: AMsMyM4ks5gAiuVMx711Z/72no3JerL8iWbDRDem5jZ1fbMEYIMXT7/GHlZtxF043hsk4edunxWm8uBRWQRI5iXn7os=
-X-Received: by 2002:a05:6000:231:b0:22c:c8e3:67e5 with SMTP id
- l17-20020a056000023100b0022cc8e367e5mr1198602wrz.570.1664437072110; Thu, 29
- Sep 2022 00:37:52 -0700 (PDT)
+        bh=hUW+w97bjwcMZAz2wEha3h2rI21nTjZgAo+7PEzzR7o=;
+        b=iA3hcRubxNaD3F5znpW2v21sAUQ02aV/Eme5ySqZHWX2XGMZ0hqc6PqrS2aNYJzCNM
+         7XOvA9WeLsxI9jSHdYHeYAUmcSjsTRoM3vxHH7+QNUAIXQhUPRmtN/p1fuQWuVwaY+yY
+         NqLdeyF/QAJmjpVkMMMVAuksYkSA7dTkMKpTXCQej3Rgmoq+bIg//oIsJuqJcTFSXN1r
+         97IbqBFpd5a90gMxtx/NJO6ArIouOZ17FKvICxpO6nIMeM+O298LNBshSr6kCFsg8oqn
+         tABsvapuLbbAg6Ba5zRcZcDTRyBDniyGf+wIk5KefrcvGObvxQA5EEAs9p+/5BzIRvy0
+         p03g==
+X-Gm-Message-State: ACrzQf1hS+urFFtsOMtrmsHyu8dYArGsdKXmUErK191kYZC4dOmVgEZT
+        yPsBZmS3mPj7refPDuVFDeUGfv+OConztQZYPD8=
+X-Google-Smtp-Source: AMsMyM7ZHbYAiRKbQseodi2xdbkJcMUR30vIeLDXSMJPODyQS/Sgc7Hny7j2kIzLs5PAY4GuSRRyTMEfCI5USrXqyrw=
+X-Received: by 2002:a9f:3767:0:b0:3d1:2de3:12a8 with SMTP id
+ a36-20020a9f3767000000b003d12de312a8mr881708uae.47.1664437420589; Thu, 29 Sep
+ 2022 00:43:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <f86049275ed165a3bf6922962b3c7e02744e5ef0.1664189248.git.viresh.kumar@linaro.org>
- <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
- <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
- <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
- <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
- <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
- <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
-In-Reply-To: <20220929065409.rqilrzxaczvvds4i@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 29 Sep 2022 09:37:40 +0200
-Message-ID: <CAMRc=McSZWLdPNESPLfDD4UgyvtyU7BcvB-ZZrvDWM3LDYjEMA@mail.gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-To:     Viresh Kumar <viresh.kumar@linaro.org>
+References: <20220928092937.27120-1-zhang.lyra@gmail.com> <fca2b97c-9d4f-d372-ef2a-aae8b367bbe5@linaro.org>
+ <CAAfSe-t=-pZAcrY0o-ct1uJaNhtkCMQKNW5gOrJfE6DEOhSZDw@mail.gmail.com> <bb61ff78-182f-f4e2-bee8-556234ca07ee@linaro.org>
+In-Reply-To: <bb61ff78-182f-f4e2-bee8-556234ca07ee@linaro.org>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Thu, 29 Sep 2022 15:43:04 +0800
+Message-ID: <CAAfSe-veC5syRMLbDDxDsYXTx=OS09DEMGS-O=c_9PSa7r9tuA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: gpio: Conver Unisoc GPIO controller
+ binding to yaml
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,74 +73,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 8:54 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Thu, 29 Sept 2022 at 15:02, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> On 28-09-22, 19:54, Bartosz Golaszewski wrote:
-> > On Wed, Sep 28, 2022 at 5:17 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > Hmm, so what exactly do we want to do here then ?
-> > >
-> > > - Don't allow events to be referenced ? i.e. make event_clone() the default
-> > >   behavior ?
-> > >
+> On 29/09/2022 04:29, Chunyan Zhang wrote:
+> > Hi Krzysztof,
 > >
-> > God no, that would be wasteful.
+> > On Wed, 28 Sept 2022 at 19:31, Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 28/09/2022 11:29, Chunyan Zhang wrote:
+> >>> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >>>
+> >>> Convert the Unisoc gpio controller binding to DT schema format.
+> >>>
+> >>
+> >>
+> >> Thank you for your patch. There is something to discuss/improve.
+> >>
+> >>> diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+> >>> new file mode 100644
+> >>> index 000000000000..c0cd1ed9809b
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+> >>> @@ -0,0 +1,70 @@
+> >>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >>> +# Copyright 2022 Unisoc Inc.
+> >>> +%YAML 1.2
+> >>> +---
+> >>> +$id: http://devicetree.org/schemas/gpio/sprd,gpio.yaml#
+> >>
+> >> Use compatible as filename, so sprd,sc9860-gpio.yaml
 > >
-> > > - Don't allow read_edge_event() to be called twice for a buffer ? that will be
-> > >   inefficient though.
-> > >
+> > Humm... This is not only for SC9860, also for other IPs, UMS512 as an
+> > example which added in this patchset.
 > >
-> > Not good either.
 >
-> As I expected for both of them :)
 >
-> > > - Somehow guarantee that reference to all the events are dropped before issuing
-> > >   read_edge_event() again, else make it fail ? I am not sure how straight
-> > >   forward that can be though.
-> >
-> > In C++ the preferred way is to do buffer.get_event(0) which will
-> > return a constant reference. If you store that reference as const
-> > edge_event& ev = buffer.get_event(0) and reuse it after rereading into
-> > that buffer and the program crashes - that's on you. In most cases you
-> > should just do buffer.get_event(0).line_offset() etc. If you do:
-> >
-> > edge_event event = buffer.get_event(0);
-> >
-> > You'll copy the event and it will survive the overwriting of the buffer.
->
-> Right, same happens here.
->
-> > I'm a Rust beginner but my understanding is that the whole idea of the
-> > language design is to *not* allow a situation where the program can
-> > crash. It should be detected at build-time. We must not rely on
-> > "contracts" defined by documentation.
->
-> If everything was written in Rust, then this problem won't occur for sure. But
-> in this case part of the code is available via FFI (foreign function interface)
-> and they guarantees are a bit limited there and depend on what the FFI
-> guarantees.
->
-> > Is there a way to invalidate a reference in Rust? Have a small (cheap)
-> > object in the buffer which the event references and which would get
-> > dropped when reading into the buffer?
->
-> I am not sure. There are locks, but then they have a cost.
->
+> Then it's ok. It seems you have also typo in commit subject (Conver).
 
-I'm not talking about locking, this should be left to the user of the module.
+Ah yes -_-||, will fix that.
 
-Can we force-drop an object still referenced by other objects in Rust?
-This is what I had in mind - a small, dummy, cheap object inside the
-buffer that's created when reading into the buffer. Each even would
-reference it and then Rust would not allow us to drop it as long as
-there are references to it. Does it make sense? Is that possible?
-
-> Miguel, any suggestions ?
 >
-> Bartosz, just as an FYI I am out on vacation until end of next week and won't
-> have access to a workstation. I can still reply via Gmail (html) from my phone
-> though.
+> Best regards,
+> Krzysztof
 >
-
-Nah, just take the time off and rest. BTW, I'm starting at linaro next week. :)
-
-Bart
