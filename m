@@ -2,184 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2ED35F0619
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 09:56:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4B435F0651
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 10:24:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230174AbiI3H4P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 03:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43010 "EHLO
+        id S229458AbiI3IYT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 04:24:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230142AbiI3H4O (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 03:56:14 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87621129343;
-        Fri, 30 Sep 2022 00:56:10 -0700 (PDT)
-X-QQ-mid: bizesmtp66t1664524436t6e292ex
-Received: from ubuntu.localdomain ( [113.72.146.201])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 30 Sep 2022 15:53:54 +0800 (CST)
-X-QQ-SSF: 01000000000000305000000A0000000
-X-QQ-FEAT: ZTnzshg2nJZqmliBeRNueqPWEdXdgHJCgeesknqnTxWetQZKfd5/Y0w6CQcL/
-        uZJ+Y/q0/+stBlFaI11fiKedF60zP1rH+Acx9y1tkepzWLmV2sR8yoEsksgoa6NTs45V8q/
-        io2rZ72MB0eR79fMOMl2SDhlRn53ZAJMdVRLJDks89eZA0M0o6o/YLRcBfEf7pP3jS8Cp0Y
-        VTZ00zbXxZ9oPyG4bsYkZuM27ln7wNn0E02C2kIRJXqleGgBhEJOj+e5S68zi/Yw29G9yxx
-        Ov9CSp1IQkndh2R2qGcX8ci6/OUHZskpc4+yMnjmd63Ktcjo3kKk1r8OQVc8GMq1ad9kHeo
-        lcb57S8w93OaHlv/2Vnn1h2JEi4BZiYTEAqJOeLQs4x+9RVe4Q+B8TYftIDylLpllh+Co/G
-        FOeyz1IdO5U=
-X-QQ-GoodBg: 0
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Hal Feng <hal.feng@linux.starfivetech.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 28/30] RISC-V: Add StarFive JH7110 VisionFive2 board device tree
-Date:   Fri, 30 Sep 2022 15:53:53 +0800
-Message-Id: <20220930075353.6842-1-hal.feng@linux.starfivetech.com>
+        with ESMTP id S229758AbiI3IYR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 04:24:17 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA81102A5F;
+        Fri, 30 Sep 2022 01:24:17 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 129so3578152pgc.5;
+        Fri, 30 Sep 2022 01:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=0RqxEQAHQZEaHAKWXAUWV8kcDN7zBdalBBC9QBhUnUA=;
+        b=avdijZLh9gRBjuFE3iPocj714zAL/+oHfJLBqEA2IaZy5+ZzZy2rF78rxJ5BhaKTdf
+         hFrnYKWFpXm7xFgiMtDPSMX8GnniBd+RI5tFie82BzvQkh0TUKdwCS9Lhl0tMArj3E9G
+         3+GnOPxy331az7AUR5UPcf4vHsmsCSwJ1PM07wLyWyuldxEhnVfhQ8dFMbpOjyFUB9BR
+         +/1nBGxMDdP6nznzktchogxuZwh4LMTcbGo/NqmorUjvqH1+dIGuR8E/DfHu7qfxKIU2
+         cRCxaWz1hCdc9q6gLF5KN25enZu2tkx2zxAvZuSh3TElK04/KHXm76pYCfv8xx8kv60J
+         TBGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=0RqxEQAHQZEaHAKWXAUWV8kcDN7zBdalBBC9QBhUnUA=;
+        b=29p9530bKOEgaeZYlq75ETBpRLrIJxaSMEdlosc6wOwZAtrfxF0n9smo8/ivdrxYch
+         dYpyj5KkFoUPpa6FXyJRtZ2ZKlN+0zPy/UlhpZK41TgE1vxDHRhDxqFL476vgzJ9mVAV
+         RBvs7SMJNDlAgnQDlKQQW/ndsdFSmOgF9SsQs74lEb0Wl6dYiMzFFtHhHzhP5Xv0OSTK
+         JpFzA9FwAaDHNBQbDruQQ8CwM2Oarja/S+kGRcTjujfFAmA7m1gJWtkjqvAwu4GM5KDj
+         2Vo8FfzJ96X1JIChfV0IlACPkPaK2JgmMsE2o+mGzgAvVN17jJ2DjrKOc+qu8KV73Tcw
+         myyQ==
+X-Gm-Message-State: ACrzQf0r/pq+rAxtoDItVnAlOQLRxbuR4zC3AA3W9puywJSbejM+Eigc
+        idQSoAJ4H2lnNYppWKYKqJw=
+X-Google-Smtp-Source: AMsMyM5NiWR90FD7scZ4nGM5ILSvhBeP+6QeUo/NBXXx+X1cLHbgeKyo83Lx0JxoERWiXG/FA1uxFQ==
+X-Received: by 2002:a05:6a02:192:b0:43c:a0cb:44d3 with SMTP id bj18-20020a056a02019200b0043ca0cb44d3mr6859464pgb.139.1664526256594;
+        Fri, 30 Sep 2022 01:24:16 -0700 (PDT)
+Received: from xm06403pcu.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id 63-20020a620442000000b00540d03f3792sm1132083pfe.81.2022.09.30.01.24.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 01:24:16 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH V2 0/3] Convert Unisoc GPIO bindings to yaml and add support for UMS512
+Date:   Fri, 30 Sep 2022 16:24:02 +0800
+Message-Id: <20220930082405.1761-1-zhang.lyra@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-Add a minimal device tree for StarFive JH7110 VisionFive2 board.
-Support booting and basic clock/reset/pinctrl/uart drivers.
+Changes on V2:
+* Addressed review comments:
+- Fixed typo;
+- Added description for 'reg' property and modified its maxItems;
+- Removed redundant examples;
+- Rephrased commit message.
 
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
-Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
----
- arch/riscv/boot/dts/starfive/Makefile         |  1 +
- .../jh7110-starfive-visionfive-v2.dts         | 91 +++++++++++++++++++
- 2 files changed, 92 insertions(+)
- create mode 100644 arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-v2.dts
+Chunyan Zhang (3):
+  dt-bindings: gpio: Convert Unisoc GPIO controller binding to yaml
+  dt-bindings: gpio: Convert Unisoc EIC controller binding to yaml
+  dt-bindings: gpio: Add compatible string for Unisoc UMS512
 
-diff --git a/arch/riscv/boot/dts/starfive/Makefile b/arch/riscv/boot/dts/starfive/Makefile
-index 0ea1bc15ab30..e1237dbc6aac 100644
---- a/arch/riscv/boot/dts/starfive/Makefile
-+++ b/arch/riscv/boot/dts/starfive/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- dtb-$(CONFIG_SOC_STARFIVE) += jh7100-beaglev-starlight.dtb
-+dtb-$(CONFIG_SOC_STARFIVE) += jh7110-starfive-visionfive-v2.dtb
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-v2.dts b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-v2.dts
-new file mode 100644
-index 000000000000..6b9fe32c7eac
---- /dev/null
-+++ b/arch/riscv/boot/dts/starfive/jh7110-starfive-visionfive-v2.dts
-@@ -0,0 +1,91 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Copyright (C) 2022 StarFive Technology Co., Ltd.
-+ * Copyright (C) 2022 Emil Renner Berthing <kernel@esmil.dk>
-+ */
-+
-+/dts-v1/;
-+#include "jh7110.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/pinctrl-starfive-jh7110.h>
-+
-+/ {
-+	model = "StarFive VisionFive V2";
-+	compatible = "starfive,visionfive-v2", "starfive,jh7110";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	cpus {
-+		timebase-frequency = <4000000>;
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x40000000 0x1 0x0>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		linux,cma {
-+			compatible = "shared-dma-pool";
-+			reusable;
-+			size = <0x0 0x20000000>;
-+			alignment = <0x0 0x1000>;
-+			alloc-ranges = <0x0 0xa0000000 0x0 0x20000000>;
-+			linux,cma-default;
-+		};
-+
-+		e24_mem: e24@c0000000 {
-+			reg = <0x0 0xc0110000 0x0 0xf0000>;
-+			no-map;
-+		};
-+
-+		xrp_reserved: xrpbuffer@f0000000 {
-+			reg = <0x0 0xf0000000 0x0 0x01ffffff>,
-+			      <0x0 0xf2000000 0x0 0x00001000>,
-+			      <0x0 0xf2001000 0x0 0x00fff000>,
-+			      <0x0 0xf3000000 0x0 0x00001000>;
-+		};
-+
-+	};
-+
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpio 35 GPIO_ACTIVE_HIGH>;
-+		priority = <224>;
-+	};
-+};
-+
-+&gpio {
-+	uart0_pins: uart0-pins {
-+		uart0-pins-tx {
-+			starfive,pins = <PAD_GPIO5>;
-+			starfive,pin-ioconfig = <IO(GPIO_IE(1) | GPIO_DS(3))>;
-+			starfive,pin-gpio-dout = <GPO_UART0_SOUT>;
-+			starfive,pin-gpio-doen = <OEN_LOW>;
-+		};
-+
-+		uart0-pins-rx {
-+			starfive,pins = <PAD_GPIO6>;
-+			starfive,pinmux = <PAD_GPIO6_FUNC_SEL 0>;
-+			starfive,pin-ioconfig = <IO(GPIO_IE(1) | GPIO_PU(1))>;
-+			starfive,pin-gpio-doen = <OEN_HIGH>;
-+			starfive,pin-gpio-din =  <GPI_UART0_SIN>;
-+		};
-+	};
-+};
-+
-+&osc {
-+	clock-frequency = <24000000>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins>;
-+	status = "okay";
-+};
+ .../bindings/gpio/gpio-eic-sprd.txt           |  97 ------------
+ .../devicetree/bindings/gpio/gpio-sprd.txt    |  28 ----
+ .../bindings/gpio/sprd,gpio-eic.yaml          | 140 ++++++++++++++++++
+ .../devicetree/bindings/gpio/sprd,gpio.yaml   |  75 ++++++++++
+ 4 files changed, 215 insertions(+), 125 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-sprd.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
+
 -- 
-2.17.1
+2.25.1
 
