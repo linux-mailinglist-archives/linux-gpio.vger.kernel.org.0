@@ -2,49 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7D295F0BCD
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 14:38:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92F3B5F0C08
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 14:51:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbiI3Mh7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 08:37:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35570 "EHLO
+        id S231429AbiI3MvU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 08:51:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiI3Mh6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 08:37:58 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 886831AF0A;
-        Fri, 30 Sep 2022 05:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1664541477; x=1696077477;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=g97BiHM6o59FUlv7BemhsBNGyRYECFjXlvWFuEOzmqo=;
-  b=yOs3MFPYSRARn6D6pGx8St3HNCOXQuSBRDXpEpvlXKrXy21YjlRJJU5+
-   vJPVRgoJX2Hqq4La5e0hMRfyysaBtpnpBPH8GWReuWk3q3LEUpg6hF4Br
-   /7772rsofnH/xu1XXW6giJxGskk7bo4KYSsXRREtbbSZMBqR0Xja55H+g
-   m/+5xZoihSldBo45cMREaBN1R38DLSp2SKbbJbJi8jeVlnazRKyUwiE55
-   f/Y3vLoUULIOAe6SJVTKI3PV4QPal1Gm9wEcozdR1banCaTw+MFr0pKj3
-   1Wpv2a4XJkr9q/PQYu3fDbNXJzU9c076QqeBxI1GkXfDaP4Nzcb4tfen8
-   g==;
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="182692375"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Sep 2022 05:37:56 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Fri, 30 Sep 2022 05:37:55 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Fri, 30 Sep 2022 05:37:51 -0700
-Date:   Fri, 30 Sep 2022 13:37:28 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
+        with ESMTP id S231430AbiI3MvK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 08:51:10 -0400
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0741296B0;
+        Fri, 30 Sep 2022 05:51:07 -0700 (PDT)
+Received: by mail-oo1-f43.google.com with SMTP id c13-20020a4ac30d000000b0047663e3e16bso2151473ooq.6;
+        Fri, 30 Sep 2022 05:51:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=BKN6pqBF7loqZ839qOR8sDSeqrGBR2M9kkbIljc9QgQ=;
+        b=q1+rm/AFwaboD5iJGKYd04dXFyQIe5vxxJFDVH6llfqGlxnEeQiA1XVtqXa7uRDQYq
+         QxMKCZmwVjr/mVV+xDCQbjZPa7cE4+0NBDjpsyMBLnH2WKN+kb8Ikieni3NJ8ZWkkH96
+         Req4Dp+YlxeNO63/Jbi5ZuIFp+1kxkn+EH7epAHqerQ9AmHVOpyq7fKIDPouQj5Q+OcD
+         7BCBESbgTsVaVHwFRBlfAA/gfHmSpJ66FoE3rDd6EUKR7s32YcJLbvCDU1cwgf1L9ndE
+         Fa3UQpg2v/kuizvuSHy4g69HrCzQylyue8Jqm/DR2DHtchATgxmkMDB9apdItQSZI7w0
+         f1NQ==
+X-Gm-Message-State: ACrzQf1xJpojHfzy2yZdOAR4fy/lNQZUR3REWljH2LLTHT+4eIYUNL3H
+        sWQCF3Ivr8h/Hl99PrECIjJFUUEHgQ==
+X-Google-Smtp-Source: AMsMyM72ktgqnPB0ybe/B6VZXT6Kl6bUWcvvBo5Ci6aR/i1omOc8r4PKjbOczRXFwoDN4TtO+evoZg==
+X-Received: by 2002:a4a:434d:0:b0:441:9b4:ffad with SMTP id l13-20020a4a434d000000b0044109b4ffadmr3293506ooj.31.1664542266341;
+        Fri, 30 Sep 2022 05:51:06 -0700 (PDT)
+Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id b2-20020a9d7542000000b00637032a39a3sm560382otl.6.2022.09.30.05.51.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 05:51:05 -0700 (PDT)
+Received: (nullmailer pid 95617 invoked by uid 1000);
+        Fri, 30 Sep 2022 12:51:05 -0000
+Date:   Fri, 30 Sep 2022 07:51:05 -0500
+From:   Rob Herring <robh@kernel.org>
 To:     Hal Feng <hal.feng@linux.starfivetech.com>
-CC:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -57,199 +55,86 @@ CC:     <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Emil Renner Berthing <kernel@esmil.dk>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 30/30] RISC-V: Add StarFive JH7100 and JH7110 SoC
- Kconfig options
-Message-ID: <YzbjCIfoxjsFCuD1@wendy>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 20/30] dt-bindings: clock: Add
+ starfive,jh7110-clkgen-aon bindings
+Message-ID: <20220930125105.GA93753-robh@kernel.org>
 References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220930122318.9244-1-hal.feng@linux.starfivetech.com>
+ <20220930055632.5136-1-hal.feng@linux.starfivetech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220930122318.9244-1-hal.feng@linux.starfivetech.com>
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220930055632.5136-1-hal.feng@linux.starfivetech.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 08:23:18PM +0800, Hal Feng wrote:
-> Add Kconfig options to select the specified StarFive SoC. Select
-> necessary Kconfig options required by the specified SoC for booting.
+On Fri, Sep 30, 2022 at 01:56:32PM +0800, Hal Feng wrote:
+> From: Emil Renner Berthing <kernel@esmil.dk>
 > 
+> Add bindings for the always-on clock generator on the JH7110
+> RISC-V SoC by StarFive Technology Ltd.
+> 
+> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 > ---
->  arch/riscv/Kconfig.socs               | 27 ++++++++++++++++++++++++++-
->  arch/riscv/boot/dts/starfive/Makefile |  4 ++--
->  drivers/clk/starfive/Kconfig          | 14 ++++++--------
->  drivers/pinctrl/starfive/Kconfig      |  6 ++----
->  drivers/reset/Kconfig                 |  1 -
-
-Firstly, you cannot change all of these files in one commit, sorry.
-
->  5 files changed, 36 insertions(+), 16 deletions(-)
+>  .../clock/starfive,jh7110-clkgen-aon.yaml     | 62 +++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
 > 
-> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> index 10f68a4359f9..321c448e7b6f 100644
-> --- a/arch/riscv/Kconfig.socs
-> +++ b/arch/riscv/Kconfig.socs
-> @@ -22,10 +22,35 @@ config SOC_STARFIVE
->  	bool "StarFive SoCs"
->  	select PINCTRL
->  	select RESET_CONTROLLER
-> +	select RESET_STARFIVE
-
-Secondly, we are trying to get rid of selects in arch/riscv at the
-moment, not add them. use "default SOC_STARFIVE" in
-drivers/reset/kconfig instead please.
-
-> +	help
-> +	  This enables support for StarFive SoC platform hardware.
+> diff --git a/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
+> new file mode 100644
+> index 000000000000..029ff57b9e3e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/starfive,jh7110-clkgen-aon.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +if SOC_STARFIVE
-
-I don't think we want to have per soc selection menus in arch code,
-I think this should move to drivers/soc (a la Renesas) if you want to
-have a per soc selection menu or else just do "default SOC_STARFIVE"
-for both clock and pinctrl drivers in the clk and pinctrl Kconfig
-entries.
-
-Thanks,
-Conor.
-
+> +title: StarFive JH7110 Always-On Clock Generator
 > +
-> +config SOC_JH7100
-> +	bool "StarFive JH7100 SoC support"
-> +	depends on SOC_STARFIVE
->  	select SIFIVE_L2
->  	select SIFIVE_PLIC
-> +	select CLK_STARFIVE_JH7100
-> +	select PINCTRL_STARFIVE_JH7100
-> +	default SOC_STARFIVE
->  	help
-> -	  This enables support for StarFive SoC platform hardware.
-> +	  This enables support for StarFive JH7100 SoC.
+> +maintainers:
+> +  - Emil Renner Berthing <kernel@esmil.dk>
+> +  - Xingyu Wu <xingyu.wu@linux.starfivetech.com>
 > +
-> +config SOC_JH7110
-> +	bool "StarFive JH7110 SoC support"
-> +	depends on SOC_STARFIVE
-> +	select SIFIVE_L2
-> +	select SIFIVE_PLIC
-> +	select CLK_STARFIVE_JH7110_SYS
-> +	select PINCTRL_STARFIVE_JH7110
-> +	default SOC_STARFIVE
-> +	help
-> +	  This enables support for StarFive JH7110 SoC.
+> +properties:
+> +  compatible:
+> +    const: starfive,jh7110-clkgen-aon
 > +
-> +endif
->  
->  config SOC_VIRT
->  	bool "QEMU Virt Machine"
-> diff --git a/arch/riscv/boot/dts/starfive/Makefile b/arch/riscv/boot/dts/starfive/Makefile
-> index e1237dbc6aac..a6ecd3c2ec7d 100644
-> --- a/arch/riscv/boot/dts/starfive/Makefile
-> +++ b/arch/riscv/boot/dts/starfive/Makefile
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -dtb-$(CONFIG_SOC_STARFIVE) += jh7100-beaglev-starlight.dtb
-> -dtb-$(CONFIG_SOC_STARFIVE) += jh7110-starfive-visionfive-v2.dtb
-> +dtb-$(CONFIG_SOC_JH7100) += jh7100-beaglev-starlight.dtb
-> +dtb-$(CONFIG_SOC_JH7110) += jh7110-starfive-visionfive-v2.dtb
-> diff --git a/drivers/clk/starfive/Kconfig b/drivers/clk/starfive/Kconfig
-> index 42aad3b553cb..d0490e9f42db 100644
-> --- a/drivers/clk/starfive/Kconfig
-> +++ b/drivers/clk/starfive/Kconfig
-> @@ -5,36 +5,34 @@ config CLK_STARFIVE
->  
->  config CLK_STARFIVE_JH7100
->  	bool "StarFive JH7100 clock support"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7100 || COMPILE_TEST
->  	select CLK_STARFIVE
-> -	default SOC_STARFIVE
->  	help
->  	  Say yes here to support the clock controller on the StarFive JH7100
->  	  SoC.
->  
->  config CLK_STARFIVE_JH7100_AUDIO
->  	tristate "StarFive JH7100 audio clock support"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7100 || COMPILE_TEST
->  	select CLK_STARFIVE
-> -	default m if SOC_STARFIVE
-> +	default m if SOC_JH7100
->  	help
->  	  Say Y or M here to support the audio clocks on the StarFive JH7100
->  	  SoC.
->  
->  config CLK_STARFIVE_JH7110_SYS
->  	bool "StarFive JH7110 system clock support"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7110 || COMPILE_TEST
->  	select CLK_STARFIVE
-> -	default SOC_STARFIVE
->  	help
->  	  Say yes here to support the system clock controller on the
->  	  StarFive JH7110 SoC.
->  
->  config CLK_STARFIVE_JH7110_AON
->  	tristate "StarFive JH7110 always-on clock support"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7110 || COMPILE_TEST
->  	select CLK_STARFIVE
-> -	default m if SOC_STARFIVE
-> +	default m if SOC_JH7110
->  	help
->  	  Say yes here to support the always-on clock controller on the
->  	  StarFive JH7110 SoC.
-> diff --git a/drivers/pinctrl/starfive/Kconfig b/drivers/pinctrl/starfive/Kconfig
-> index fde39f4a7922..d09bdf6d3029 100644
-> --- a/drivers/pinctrl/starfive/Kconfig
-> +++ b/drivers/pinctrl/starfive/Kconfig
-> @@ -2,7 +2,7 @@
->  
->  config PINCTRL_STARFIVE_JH7100
->  	tristate "Pinctrl and GPIO driver for the StarFive JH7100 SoC"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7100 || COMPILE_TEST
->  	depends on OF
->  	select GENERIC_PINCTRL_GROUPS
->  	select GENERIC_PINMUX_FUNCTIONS
-> @@ -10,7 +10,6 @@ config PINCTRL_STARFIVE_JH7100
->  	select GPIOLIB
->  	select GPIOLIB_IRQCHIP
->  	select OF_GPIO
-> -	default SOC_STARFIVE
->  	help
->  	  Say yes here to support pin control on the StarFive JH7100 SoC.
->  	  This also provides an interface to the GPIO pins not used by other
-> @@ -28,10 +27,9 @@ config PINCTRL_STARFIVE
->  
->  config PINCTRL_STARFIVE_JH7110
->  	bool "Pinctrl and GPIO driver for the StarFive JH7110 SoC"
-> -	depends on SOC_STARFIVE || COMPILE_TEST
-> +	depends on SOC_JH7110 || COMPILE_TEST
->  	depends on OF
->  	select PINCTRL_STARFIVE
-> -	default SOC_STARFIVE
->  	help
->  	  Say yes here to support pin control on the StarFive JH7110 SoC.
->  	  This also provides an interface to the GPIO pins not used by other
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 8121de5ecc3c..c001879bd890 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -228,7 +228,6 @@ config RESET_SOCFPGA
->  config RESET_STARFIVE
->  	bool "StarFive SoC Reset Driver"
->  	depends on SOC_STARFIVE || COMPILE_TEST
-> -	default SOC_STARFIVE
->  	help
->  	  This enables the reset controller driver for the StarFive SoCs.
->  
-> -- 
-> 2.17.1
-> 
+> +  clocks:
+> +    items:
+> +      - description: Main Oscillator
+> +      - description: RTC clock
+> +      - description: RMII reference clock
+> +      - description: RGMII RX clock
+> +      - description: STG AXI/AHB clock
+> +      - description: APB Bus clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: osc
+> +      - const: clk_rtc
+> +      - const: gmac0_rmii_refin
+> +      - const: gmac0_rgmii_rxin
+> +      - const: stg_axiahb
+> +      - const: apb_bus_func
+> +
+> +  '#clock-cells':
+> +    const: 1
+> +    description:
+> +      See <dt-bindings/clock/starfive-jh7110-aon.h> for valid indices.
+
+No 'reg'? How do you access this h/w then? If it is part of some block, 
+we need to see the full picture.
+
+Rob
