@@ -2,327 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19D4A5F09F3
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 13:21:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 518025F0B7C
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 14:16:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232547AbiI3LV2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 07:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58332 "EHLO
+        id S231547AbiI3MQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 08:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231276AbiI3LUz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 07:20:55 -0400
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32743CEE88
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 04:09:24 -0700 (PDT)
-Received: by mail-lf1-x12b.google.com with SMTP id a8so6305157lff.13
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 04:09:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=tdHtHF+L8WhspMis4iiPFewDbwHGxtfsKqQmXXud88E=;
-        b=tGmnFIBQmr9QlELIQAtuwtWwClhFeZsqW5T14DWkCokssrq7YlfiFRj15ZVoUC/1P8
-         N3mZ6QC50rgkyzKwlxil8ftVUg48SRsEi0yyXnMw71faySgOvUgJT4EI7hTZbe72HXpL
-         NiCIizhUp7eyQ73+9m/G7kxApuDmIdaNDt+EP8oc13U2qtpWBRM/3WpZCePzh0GPwNOA
-         RqUtUyB7MRUW8t6t3Y44Kc9H87o6ciys9ZbGolNUpirFUvk+4NiGQmWadnMAZpE29/uz
-         ZZeecXqHI8jbQTLLXQrkWq2H7SIirmdd1xP4qSUy55ZH9GAQ68vTuGzJCsm/wEDpDXux
-         a84Q==
+        with ESMTP id S231405AbiI3MQM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 08:16:12 -0400
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA484FA5CD;
+        Fri, 30 Sep 2022 05:16:11 -0700 (PDT)
+Received: by mail-oi1-f176.google.com with SMTP id s125so4558782oie.4;
+        Fri, 30 Sep 2022 05:16:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=tdHtHF+L8WhspMis4iiPFewDbwHGxtfsKqQmXXud88E=;
-        b=8JVL20dsm+cdGqQSeux7Uvb/emeLdjQI790Prz05nyM0B4WmsmkYAClMcVOleh2LVg
-         CI3Ow6EaGUnQeW7RCDg63cz7itpOgfusEAVwBnFSl7t/oKms/cfPXPfTZyns70ocjKHB
-         U3/0Nv6leZptSRlvoza5iJmKjk7JDy8vqo/yXpmUL4P0fmHuVyPxvAXxfeo2VzlS3bYQ
-         0rtpgTt8YQdgkBg9KNf7jT0RRWsInfXtPbma3Su1/8BOBd9waI14POb8mVNM3+hYksfL
-         W2SrkKAR8c2gv4IhRrqKnhdpPQie0jeKnDPrljlQZJC3mbHAow6j6E+Xv4Fsrew9MWpq
-         zJhg==
-X-Gm-Message-State: ACrzQf1MWiYgkoUwlIrnzrIqq43UqNE2iH0zS2gPS5sHo0oKxS4NUV4O
-        8KurbEZbeMGFmstpYUNXvekYmA==
-X-Google-Smtp-Source: AMsMyM5z65vzq0NTyxq5BiAd6UIgpP759WsaUofMn8X6LLynEJE+EvhVg9aA4Mh0qlJ6nqx67+gX3Q==
-X-Received: by 2002:a19:dc54:0:b0:49f:53f3:9bcd with SMTP id f20-20020a19dc54000000b0049f53f39bcdmr3275718lfj.158.1664536162165;
-        Fri, 30 Sep 2022 04:09:22 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id d15-20020ac25ecf000000b004979e231fafsm263696lfq.38.2022.09.30.04.09.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 04:09:21 -0700 (PDT)
-Message-ID: <727a540d-0ca9-ade3-894d-f1774d10a681@linaro.org>
-Date:   Fri, 30 Sep 2022 13:09:20 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH V2 2/3] dt-bindings: gpio: Convert Unisoc EIC controller
- binding to yaml
-Content-Language: en-US
-To:     Chunyan Zhang <zhang.lyra@gmail.com>,
+        bh=/065kmeBBgsqY7mGeD3pqFv3I0PvMxNoHX9Ksgu7T30=;
+        b=JyzJCVz73FgcN7dYX8jnpCBfyrhrvb2it2F7+L60CISc5XbpaC0clCDw0x/6k5DUKZ
+         JqYt7JG9OpAe7JwdsYFP/V/iXzEhhAIjiiScAQ3kLR+Enw4N3y81gMjh/3woZOSA36f+
+         3jt8RB9uep8MiZJt0T/qoxIFe7JnRIjU4UCKPqUEpCpRmqUqDPjJsw5qcro/ZQVkjvPd
+         Nt9Gzo/97O7Oqzv731HBNc5P3RqDuLvPV/pSoeJNKJQ6r9iOsZFcq6VZt6DhYtVTwL1z
+         S5GYKCUo0wCM2N5PC1Cy9vg0TCMkZw4Hbo/uhZLnZ40NDdJiijB+nNo6cXeIyAslQX+p
+         YAAA==
+X-Gm-Message-State: ACrzQf3rFirtq1oCZp5AYleTXGMiqzqNhiqbBnuwLY+V0cz7OYCnrCuO
+        lTsA8PKmw2IA4Huo0exOVw==
+X-Google-Smtp-Source: AMsMyM6b4kW54HB8pp5Pi4ELHpIa42H84Xw0SVjZrdV7SOwG2N+Q7jofwCOuam7R8btNT4qq0a1f4A==
+X-Received: by 2002:a05:6808:1a87:b0:34f:67aa:5089 with SMTP id bm7-20020a0568081a8700b0034f67aa5089mr9184129oib.108.1664540170945;
+        Fri, 30 Sep 2022 05:16:10 -0700 (PDT)
+Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id m18-20020a056870889200b0012d939eb0bfsm580825oam.34.2022.09.30.05.16.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 05:16:10 -0700 (PDT)
+Received: (nullmailer pid 58498 invoked by uid 1000);
+        Fri, 30 Sep 2022 12:16:09 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Hal Feng <hal.feng@linux.starfivetech.com>
+Cc:     Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-clk@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20220930082405.1761-1-zhang.lyra@gmail.com>
- <20220930082405.1761-3-zhang.lyra@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220930082405.1761-3-zhang.lyra@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        linux-riscv@lists.infradead.org, Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <20220930073845.6309-1-hal.feng@linux.starfivetech.com>
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com> <20220930073845.6309-1-hal.feng@linux.starfivetech.com>
+Message-Id: <166453971800.15128.2899761905092626256.robh@kernel.org>
+Subject: Re: [PATCH v1 25/30] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl bindings
+Date:   Fri, 30 Sep 2022 07:16:09 -0500
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/09/2022 10:24, Chunyan Zhang wrote:
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On Fri, 30 Sep 2022 15:38:45 +0800, Hal Feng wrote:
+> From: Jianlong Huang <jianlong.huang@starfivetech.com>
 > 
-> Convert the Unisoc EIC controller binding to DT schema format.
-> Update the maxItems of 'reg' property, since the current gpio-eic-sprd
-> driver supports 3 reg items. Also remove three redundant examples.
+> Add pinctrl bindings for StarFive JH7110 SoC.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
+> Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 > ---
->  .../bindings/gpio/gpio-eic-sprd.txt           |  97 --------------
->  .../bindings/gpio/sprd,gpio-eic.yaml          | 119 ++++++++++++++++++
->  2 files changed, 119 insertions(+), 97 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
->  create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
+>  .../pinctrl/starfive,jh7110-pinctrl.yaml      | 202 ++++++++++++++++++
+>  1 file changed, 202 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt b/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-> deleted file mode 100644
-> index 54040a2bfe3a..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-> +++ /dev/null
-> @@ -1,97 +0,0 @@
-> -Spreadtrum EIC controller bindings
-> -
-> -The EIC is the abbreviation of external interrupt controller, which can
-> -be used only in input mode. The Spreadtrum platform has 2 EIC controllers,
-> -one is in digital chip, and another one is in PMIC. The digital chip EIC
-> -controller contains 4 sub-modules: EIC-debounce, EIC-latch, EIC-async and
-> -EIC-sync. But the PMIC EIC controller contains only one EIC-debounce sub-
-> -module.
-> -
-> -The EIC-debounce sub-module provides up to 8 source input signal
-> -connections. A debounce mechanism is used to capture the input signals'
-> -stable status (millisecond resolution) and a single-trigger mechanism
-> -is introduced into this sub-module to enhance the input event detection
-> -reliability. In addition, this sub-module's clock can be shut off
-> -automatically to reduce power dissipation. Moreover the debounce range
-> -is from 1ms to 4s with a step size of 1ms. The input signal will be
-> -ignored if it is asserted for less than 1 ms.
-> -
-> -The EIC-latch sub-module is used to latch some special power down signals
-> -and generate interrupts, since the EIC-latch does not depend on the APB
-> -clock to capture signals.
-> -
-> -The EIC-async sub-module uses a 32kHz clock to capture the short signals
-> -(microsecond resolution) to generate interrupts by level or edge trigger.
-> -
-> -The EIC-sync is similar with GPIO's input function, which is a synchronized
-> -signal input register. It can generate interrupts by level or edge trigger
-> -when detecting input signals.
-> -
-> -Required properties:
-> -- compatible: Should be one of the following:
-> -  "sprd,sc9860-eic-debounce",
-> -  "sprd,sc9860-eic-latch",
-> -  "sprd,sc9860-eic-async",
-> -  "sprd,sc9860-eic-sync",
-> -  "sprd,sc2731-eic".
-> -- reg: Define the base and range of the I/O address space containing
-> -  the GPIO controller registers.
-> -- gpio-controller: Marks the device node as a GPIO controller.
-> -- #gpio-cells: Should be <2>. The first cell is the gpio number and
-> -  the second cell is used to specify optional parameters.
-> -- interrupt-controller: Marks the device node as an interrupt controller.
-> -- #interrupt-cells: Should be <2>. Specifies the number of cells needed
-> -  to encode interrupt source.
-> -- interrupts: Should be the port interrupt shared by all the gpios.
-> -
-> -Example:
-> -	eic_debounce: gpio@40210000 {
-> -		compatible = "sprd,sc9860-eic-debounce";
-> -		reg = <0 0x40210000 0 0x80>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
-> -
-> -	eic_latch: gpio@40210080 {
-> -		compatible = "sprd,sc9860-eic-latch";
-> -		reg = <0 0x40210080 0 0x20>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
-> -
-> -	eic_async: gpio@402100a0 {
-> -		compatible = "sprd,sc9860-eic-async";
-> -		reg = <0 0x402100a0 0 0x20>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
-> -
-> -	eic_sync: gpio@402100c0 {
-> -		compatible = "sprd,sc9860-eic-sync";
-> -		reg = <0 0x402100c0 0 0x20>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
-> -
-> -	pmic_eic: gpio@300 {
-> -		compatible = "sprd,sc2731-eic";
-> -		reg = <0x300>;
-> -		interrupt-parent = <&sc2731_pmic>;
-> -		interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> -		gpio-controller;
-> -		#gpio-cells = <2>;
-> -		interrupt-controller;
-> -		#interrupt-cells = <2>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
-> new file mode 100644
-> index 000000000000..c288a8dd44c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
-> @@ -0,0 +1,119 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2022 Unisoc Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/sprd,gpio-eic.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Unisoc EIC controller
-> +
-> +maintainers:
-> +  - Orson Zhai <orsonzhai@gmail.com>
-> +  - Baolin Wang <baolin.wang7@gmail.com>
-> +  - Chunyan Zhang <zhang.lyra@gmail.com>
-> +
-> +description:
-> +  The EIC is the abbreviation of external interrupt controller, which can
-> +  be used only in input mode. The Spreadtrum platform has 2 EIC controllers,
-> +  one is in digital chip, and another one is in PMIC. The digital chip EIC
-> +  controller contains 4 sub-modules, i.e. EIC-debounce, EIC-latch, EIC-async and
-> +  EIC-sync. But the PMIC EIC controller contains only one EIC-debounce sub-
-> +  module.
-> +
-> +  The EIC-debounce sub-module provides up to 8 source input signal
-> +  connections. A debounce mechanism is used to capture the input signals'
-> +  stable status (millisecond resolution) and a single-trigger mechanism
-> +  is introduced into this sub-module to enhance the input event detection
-> +  reliability. In addition, this sub-module's clock can be shut off
-> +  automatically to reduce power dissipation. Moreover the debounce range
-> +  is from 1ms to 4s with a step size of 1ms. The input signal will be
-> +  ignored if it is asserted for less than 1 ms.
-> +
-> +  The EIC-latch sub-module is used to latch some special power down signals
-> +  and generate interrupts, since the EIC-latch does not depend on the APB
-> +  clock to capture signals.
-> +
-> +  The EIC-async sub-module uses a 32kHz clock to capture the short signals
-> +  (microsecond resolution) to generate interrupts by level or edge trigger.
-> +
-> +  The EIC-sync is similar with GPIO's input function, which is a synchronized
-> +  signal input register. It can generate interrupts by level or edge trigger
-> +  when detecting input signals.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - sprd,sc9860-eic-debounce
-> +      - sprd,sc9860-eic-latch
-> +      - sprd,sc9860-eic-async
-> +      - sprd,sc9860-eic-sync
-> +      - sprd,sc2731-eic
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 3
-> +    description:
-> +      EIC controller can support maximum 3 banks which has its own
-> +      address base.
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +    description:
-> +      The interrupt shared by all GPIO lines for this controller.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - interrupts
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        eic_debounce: gpio@40210000 {
-> +            compatible = "sprd,sc9860-eic-debounce";
-> +            reg = <0 0x40210000 0 0x80>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +            interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> +    };
-> +
-> +    sc2730_pmic {
 
-If you insisted to keep it, at least should be correct, so just pmic.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic_eic: gpio@300 {
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml:18:5: [warning] wrong indentation: expected 6 but found 4 (indentation)
+./Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml:49:5: [warning] wrong indentation: expected 6 but found 4 (indentation)
 
-It's exactly the same example as above - all same properties. Drop it or
-bring some differences.
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml: error checking schema file
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.yaml: ignoring, error in schema: patternProperties: -[0-9]+$: patternProperties: -pins$: properties: starfive,pinmux
+Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.example.dts:21:18: fatal error: dt-bindings/clock/starfive-jh7110-sys.h: No such file or directory
+   21 |         #include <dt-bindings/clock/starfive-jh7110-sys.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:384: Documentation/devicetree/bindings/pinctrl/starfive,jh7110-pinctrl.example.dtb] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1420: dt_binding_check] Error 2
 
+doc reference errors (make refcheckdocs):
 
-Best regards,
-Krzysztof
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
