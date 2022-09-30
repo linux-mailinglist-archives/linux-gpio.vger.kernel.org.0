@@ -2,58 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90D2A5F044A
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 07:50:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B445F5F044F
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 07:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbiI3FuE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 01:50:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45014 "EHLO
+        id S229955AbiI3FwR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 01:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiI3FuD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 01:50:03 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE0644564;
-        Thu, 29 Sep 2022 22:49:57 -0700 (PDT)
-X-QQ-mid: bizesmtp77t1664516986tn7ksjcj
-Received: from ubuntu.localdomain ( [113.72.146.201])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 30 Sep 2022 13:49:44 +0800 (CST)
-X-QQ-SSF: 01000000000000305000000A0000000
-X-QQ-FEAT: dcYQFNbI8vE+qoAKv14uwKmwB+isk8Bi6JVRmSKueWlrbNKei9wcurdjin6Tn
-        ISnvD+5g9odJ/SFlZ9pw09fv28J0oBeNBSVRCfuaKL1mV6mRbii1yGlUcb9B/7RfhsML+mj
-        7GctJjx3b7sZO7Iy8vqrjtmqKubrulGoleILQdZR5rou94ZixVsRHw9LTe3YJe2LwYh2Mqt
-        YAiLWksFg7y9X48cPV5uzTElKD5tFUAgUz/PmsfQOl/5yLCw7kYet8Lo5YHAcohxqFfwIOq
-        W88ZezD9JDAiM65D7SCBuggVgAtOie96KFN8Vu9Z0Vom7GIwEIt9hh6bIEj4DZmYRWIPvrK
-        r71o2PirKRT+HLVU+1YqZX0o5PGejkix77qyZeEQi2IZ/ZKlSoSWPhD/zh92J7HSgtABMHB
-        22Xyd2iVRJs1zKEXfTSoRA==
-X-QQ-GoodBg: 0
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Hal Feng <hal.feng@linux.starfivetech.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 19/30] dt-bindings: clock: Add StarFive JH7110 always-on definitions
-Date:   Fri, 30 Sep 2022 13:49:43 +0800
-Message-Id: <20220930054943.4744-1-hal.feng@linux.starfivetech.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        with ESMTP id S229479AbiI3FwQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 01:52:16 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AEAC1FBCB3;
+        Thu, 29 Sep 2022 22:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664517134; x=1696053134;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3KPEcgR85ZOMW5q/JgOUeEEbfoaGIM6iNZckmuOtgYs=;
+  b=OfkmDMIQEryd0AhYOQeI11qEfUKsnPUZKJY3w9rQkb8hQOi/lksP3JOY
+   +w3xzsPNx5+5Z+TH5WK9nHwDQJIhL/rRC3eBKhLgHP3jsLjAkyJfwsmvL
+   CGxgphEp3z26faMAqS9Sg0GKzW0wqezL4OmjDmQqXsJ04GahaX+vT2mi1
+   rEAeU9SNmYuqDiPZXtPMpGRi+FxtcIRa8oka9wmVAiwiET/pDiXWFDOl9
+   TdLIJJ66jykWkYlABgxdRLlfEREnSLKGW2IAjqYmXM/G0M8KI6PM1xxi/
+   81seGbSeiGY1Nzj6XigRMjfM7mcgl+9iNHDfcg97HEw/JR7ZkwehycGlW
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="366161189"
+X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
+   d="scan'208";a="366161189"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Sep 2022 22:52:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10485"; a="748117448"
+X-IronPort-AV: E=Sophos;i="5.93,357,1654585200"; 
+   d="scan'208";a="748117448"
+Received: from lkp-server01.sh.intel.com (HELO 14cc182da2d0) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 29 Sep 2022 22:52:10 -0700
+Received: from kbuild by 14cc182da2d0 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oe8wT-0000Zf-2Q;
+        Fri, 30 Sep 2022 05:52:09 +0000
+Date:   Fri, 30 Sep 2022 13:51:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 1c6c4f42b3de4f18ea96d62950d0e266ca35a055
+Message-ID: <633683f5.q63D6Na3AYhI/Rp2%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,49 +67,208 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Emil Renner Berthing <kernel@esmil.dk>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 1c6c4f42b3de4f18ea96d62950d0e266ca35a055  Add linux-next specific files for 20220929
 
-Add all clock outputs for the StarFive JH7110 always-on clock generator.
+Error/Warning reports:
 
-Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
----
- .../dt-bindings/clock/starfive-jh7110-aon.h   | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/clock/starfive-jh7110-aon.h
+https://lore.kernel.org/linux-mm/202209150141.WgbAKqmX-lkp@intel.com
+https://lore.kernel.org/llvm/202209300609.14WJ5tgf-lkp@intel.com
+https://lore.kernel.org/llvm/202209300825.jcUh1OUm-lkp@intel.com
 
-diff --git a/include/dt-bindings/clock/starfive-jh7110-aon.h b/include/dt-bindings/clock/starfive-jh7110-aon.h
-new file mode 100644
-index 000000000000..5f1f7f2f1533
---- /dev/null
-+++ b/include/dt-bindings/clock/starfive-jh7110-aon.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 OR MIT */
-+/*
-+ * Copyright 2022 Emil Renner Berthing <kernel@esmil.dk>
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_STARFIVE_JH7110_AON_H__
-+#define __DT_BINDINGS_CLOCK_STARFIVE_JH7110_AON_H__
-+
-+#define JH7110_AONCLK_OSC_DIV4			 0
-+#define JH7110_AONCLK_APB_FUNC			 1
-+#define JH7110_AONCLK_GMAC0_AHB			 2
-+#define JH7110_AONCLK_GMAC0_AXI			 3
-+#define JH7110_AONCLK_GMAC0_RMII_RTX		 4
-+#define JH7110_AONCLK_GMAC0_TX			 5
-+#define JH7110_AONCLK_GMAC0_TX_INV		 6
-+#define JH7110_AONCLK_GMAC0_RX			 7
-+#define JH7110_AONCLK_GMAC0_RX_INV		 8
-+#define JH7110_AONCLK_OTPC_APB			 9
-+#define JH7110_AONCLK_RTC_APB			10
-+#define JH7110_AONCLK_RTC_INTERNAL		11
-+#define JH7110_AONCLK_RTC_32K			12
-+#define JH7110_AONCLK_RTC_CAL			13
-+
-+#define JH7110_AONCLK_END			14
-+
-+#endif /* __DT_BINDINGS_CLOCK_STARFIVE_JH7110_H__ */
+Error/Warning: (recently discovered and may have been fixed)
+
+/kbuild/src/minority/drivers/gpu/drm/msm/msm_gem_shrinker.c:29:28: error: '__GFP_ATOMIC' undeclared (first use in this function); did you mean 'GFP_ATOMIC'?
+ERROR: modpost: "devm_iio_channel_get_all" [drivers/power/supply/mt6370-charger.ko] undefined!
+ERROR: modpost: "devm_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+ERROR: modpost: "devm_ioremap_resource" [drivers/dma/qcom/hdma.ko] undefined!
+ERROR: modpost: "devm_memremap" [drivers/misc/open-dice.ko] undefined!
+ERROR: modpost: "devm_memunmap" [drivers/misc/open-dice.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/char/xillybus/xillybus_of.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/clk/xilinx/clk-xlnx-clock-wizard.ko] undefined!
+ERROR: modpost: "iio_read_channel_processed" [drivers/power/supply/mt6370-charger.ko] undefined!
+ERROR: modpost: "ioremap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
+ERROR: modpost: "iounmap" [drivers/net/ethernet/8390/pcnet_cs.ko] undefined!
+ERROR: modpost: "iounmap" [drivers/tty/ipwireless/ipwireless.ko] undefined!
+arch/arm64/kernel/alternative.c:199:6: warning: no previous prototype for 'apply_alternatives_vdso' [-Wmissing-prototypes]
+arch/arm64/kernel/alternative.c:295:14: warning: no previous prototype for 'alt_cb_patch_nops' [-Wmissing-prototypes]
+depmod: ERROR: Cycle detected: nf_conntrack -> nf_nat -> nf_conntrack
+depmod: ERROR: Found 2 modules in dependency cycles!
+drivers/gpu/drm/msm/msm_gem_shrinker.c:29:28: error: '__GFP_ATOMIC' undeclared (first use in this function); did you mean 'GFP_ATOMIC'?
+drivers/pinctrl/pinctrl-amd.c:288 amd_gpio_dbg_show() warn: format string contains non-ascii character '\x9a'
+drivers/pinctrl/pinctrl-amd.c:288 amd_gpio_dbg_show() warn: format string contains non-ascii character '\xa1'
+drivers/pinctrl/pinctrl-amd.c:370 amd_gpio_dbg_show() warn: format string contains non-ascii character '\x95'
+grep: smatch_trinity_*: No such file or directory
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- arc-allyesconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- arm-allyesconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- arm-defconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- arm64-allyesconfig
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- arm64-buildonly-randconfig-r001-20220926
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
+|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
+|-- arm64-buildonly-randconfig-r002-20220926
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
+|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
+|-- arm64-randconfig-r002-20220926
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
+|   `-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
+|-- arm64-randconfig-r033-20220926
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-alt_cb_patch_nops
+|   |-- arch-arm64-kernel-alternative.c:warning:no-previous-prototype-for-apply_alternatives_vdso
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- ia64-allmodconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- m68k-allmodconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- m68k-allyesconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- microblaze-randconfig-m041-20220925
+|   |-- drivers-gpu-drm-display-drm_dp_helper.c-drm_dp_phy_name()-warn:unsigned-dp_phy-is-never-less-than-zero.
+|   |-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|   |-- drivers-pinctrl-pinctrl-amd.c-amd_gpio_dbg_show()-warn:format-string-contains-non-ascii-character-x95
+|   |-- drivers-pinctrl-pinctrl-amd.c-amd_gpio_dbg_show()-warn:format-string-contains-non-ascii-character-x9a
+|   |-- drivers-pinctrl-pinctrl-amd.c-amd_gpio_dbg_show()-warn:format-string-contains-non-ascii-character-xa1
+|   `-- grep:smatch_trinity_:No-such-file-or-directory
+|-- mips-allyesconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- nios2-buildonly-randconfig-r004-20220928
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- openrisc-randconfig-r015-20220925
+|   |-- ERROR:devm_iio_channel_get_all-drivers-power-supply-mt6370-charger.ko-undefined
+|   `-- ERROR:iio_read_channel_processed-drivers-power-supply-mt6370-charger.ko-undefined
+|-- powerpc-allmodconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:__GFP_ATOMIC-undeclared-(first-use-in-this-function)
+|-- s390-allmodconfig
+|   |-- ERROR:devm_ioremap_resource-drivers-dma-fsl-edma.ko-undefined
+|   |-- ERROR:devm_ioremap_resource-drivers-dma-idma64.ko-undefined
+clang_recent_errors
+|-- arm-randconfig-r001-20220928
+|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
+|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
+|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
+|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
+|   `-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
+|-- hexagon-allmodconfig
+|   `-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:use-of-undeclared-identifier-__GFP_ATOMIC
+|-- powerpc-buildonly-randconfig-r002-20220928
+|   |-- drivers-gpu-drm-msm-msm_gem_shrinker.c:error:use-of-undeclared-identifier-__GFP_ATOMIC
+|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt2701.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
+|   |-- drivers-phy-mediatek-phy-mtk-hdmi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(uns
+|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8173.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
+|   |-- drivers-phy-mediatek-phy-mtk-mipi-dsi-mt8183.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:
+|   `-- drivers-phy-mediatek-phy-mtk-tphy.c:warning:result-of-comparison-of-constant-with-expression-of-type-typeof-(_Generic((mask_)-char:(unsigned-char)-unsigned-char:(unsigned-char)-signed-char:(unsigned-c
+|-- s390-randconfig-r044-20220928
+|   |-- apparmorfs.c:(.text):undefined-reference-to-zstd_max_clevel
+|   |-- apparmorfs.c:(.text):undefined-reference-to-zstd_min_clevel
+|   |-- lsm.c:(.text):undefined-reference-to-zstd_min_clevel
+|   `-- s39-linux-ld:lsm.c:(.text):undefined-reference-to-zstd_max_clevel
+`-- x86_64-rhel-8.3-rust
+    |-- ld.lld:error:undefined-symbol:__rust_alloc
+    |-- ld.lld:error:undefined-symbol:__rust_dealloc
+    |-- ld.lld:error:undefined-symbol:__rust_realloc
+    |-- ld.lld:error:undefined-symbol:bool-as-core::fmt::Display::fmt
+    |-- ld.lld:error:undefined-symbol:core::fmt::Formatter::debug_list
+    |-- ld.lld:error:undefined-symbol:core::fmt::Formatter::debug_lower_hex
+    |-- ld.lld:error:undefined-symbol:core::fmt::Formatter::debug_upper_hex
+    |-- ld.lld:error:undefined-symbol:core::fmt::builders::DebugList::entry
+    |-- ld.lld:error:undefined-symbol:core::fmt::builders::DebugList::finish
+    |-- ld.lld:error:undefined-symbol:core::panicking::panic
+    |-- ld.lld:error:undefined-symbol:i32-as-core::fmt::Display::fmt
+    |-- ld.lld:error:undefined-symbol:i32-as-core::fmt::LowerHex::fmt
+    |-- ld.lld:error:undefined-symbol:i32-as-core::fmt::UpperHex::fmt
+    |-- ld.lld:error:undefined-symbol:kernel::error::Error-as-core::convert::From-alloc::collections::TryReserveError::from
+    |-- ld.lld:error:undefined-symbol:kernel::error::Error::to_kernel_errno
+    |-- ld.lld:error:undefined-symbol:kernel::print::call_printk
+    |-- ld.lld:error:undefined-symbol:kernel::print::format_strings::INFO
+    `-- ld.lld:error:undefined-symbol:rust_fmt_argument
+
+elapsed time: 735m
+
+configs tested: 65
+configs skipped: 2
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+arc                                 defconfig
+i386                                defconfig
+x86_64                              defconfig
+alpha                               defconfig
+x86_64                               rhel-8.3
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+i386                 randconfig-a001-20220926
+i386                 randconfig-a004-20220926
+i386                 randconfig-a002-20220926
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+s390                             allmodconfig
+i386                 randconfig-a003-20220926
+s390                                defconfig
+x86_64               randconfig-a002-20220926
+i386                 randconfig-a006-20220926
+x86_64                           rhel-8.3-kvm
+i386                 randconfig-a005-20220926
+x86_64               randconfig-a004-20220926
+arm                                 defconfig
+s390                             allyesconfig
+arc                  randconfig-r043-20220928
+x86_64                           allyesconfig
+i386                             allyesconfig
+sh                               allmodconfig
+x86_64               randconfig-a001-20220926
+m68k                             allmodconfig
+arm                              allyesconfig
+mips                             allyesconfig
+x86_64               randconfig-a003-20220926
+arm64                            allyesconfig
+x86_64               randconfig-a005-20220926
+x86_64               randconfig-a006-20220926
+arc                              allyesconfig
+powerpc                          allmodconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+ia64                             allmodconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+i386                          randconfig-a005
+
+clang tested configs:
+i386                 randconfig-a011-20220926
+i386                 randconfig-a015-20220926
+i386                 randconfig-a014-20220926
+i386                 randconfig-a013-20220926
+i386                 randconfig-a016-20220926
+x86_64               randconfig-a014-20220926
+hexagon              randconfig-r041-20220928
+x86_64               randconfig-a016-20220926
+i386                 randconfig-a012-20220926
+x86_64               randconfig-a013-20220926
+riscv                randconfig-r042-20220928
+hexagon              randconfig-r045-20220928
+s390                 randconfig-r044-20220928
+x86_64               randconfig-a011-20220926
+x86_64                          rhel-8.3-rust
+x86_64               randconfig-a015-20220926
+x86_64               randconfig-a012-20220926
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
