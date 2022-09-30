@@ -2,30 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36F735F045F
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 07:56:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 296015F0474
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 08:03:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbiI3F4z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 01:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
+        id S230165AbiI3GDi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 02:03:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbiI3F4t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 01:56:49 -0400
+        with ESMTP id S229681AbiI3GDd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 02:03:33 -0400
 Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D004E16DDCB;
-        Thu, 29 Sep 2022 22:56:45 -0700 (PDT)
-X-QQ-mid: bizesmtp89t1664517395tl46psyh
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED4C1A20C;
+        Thu, 29 Sep 2022 23:03:30 -0700 (PDT)
+X-QQ-mid: bizesmtp62t1664517799tij3bsc6
 Received: from ubuntu.localdomain ( [113.72.146.201])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 30 Sep 2022 13:56:33 +0800 (CST)
+        id ; Fri, 30 Sep 2022 14:03:17 +0800 (CST)
 X-QQ-SSF: 01000000000000305000000A0000000
-X-QQ-FEAT: bQsUcYFpAAbYh5IE5ZQJa21f+7RzMKXkTWoGjOTn9RYsMgEYDgMtGTVoiYE0X
-        950t0angog4i0EbjIImNUPmJSYyEjYeqTDfjglx1tBLSGnLqME7PIvImRR9KhNW961IXGUT
-        A6wJDFItRdELl+XBJQbrMy09GJf+hc45Hbb+kvLJuSuoTaElzuojk8hhGzO/ssgHQexgBM9
-        SXcvfyvAYFMiiUP0CeRJIMwXonhn1a1U6F4r+79b7YHnIAu1XO2/Xl/8z7t9OqtJUtDdqTH
-        y8iVVk+Qokja6Vojt3dqGGaHKYr1LPgIXQBYFyt4eYivjul2LpLK5In5s1OxsD+cI+Bgb4R
-        FZ3yRuVJyFRhfYvDIyIgsoLX78xR5chr11v7/YuBjfPa4XSkOfFZgAFMSNYemIc/NZaCFML
-        /t8NBeRSD5WLFEhW1CYz1w==
+X-QQ-FEAT: LFB8ggNdtfegzutrEXPYDv00uQ8pocNn9ktPPbgopVIjFmZr5mHwBtGv88KAm
+        YkBj/38u/8717JdCow+h+e/xagBU379mRuVsRTRFoo15YXVoPrgxtgnoBZQoMFKYqytYMZo
+        UMnB536yha3K8gTlxOUzLHATtMtkYl88EAu6Xb9+VrGlbh/7/wgOZNXrJL7VukuVvf9KKMQ
+        f9bqP251X7p9CdM9VyF8zr3d+oSN2KD14iNQamdW2KdenMPODVIek8qWQzjFe6Br5CFWj3T
+        AluEpdhqIyLKM8WI47nbVUvlcXA1Ebw16kZEe/pQiOoRWvZwXYfSP9RdKy1iNp1HBvMzG1q
+        4PNnvhUD8ODAERuejw+1KoLk2EInUIHPXHCmdK29sEf3hDRDN1C8yIU1YoaqnGbdf17eiyx
+        WJg0V1GY+Ew=
 X-QQ-GoodBg: 0
 From:   Hal Feng <hal.feng@linux.starfivetech.com>
 To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
@@ -45,9 +45,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Emil Renner Berthing <kernel@esmil.dk>,
         Hal Feng <hal.feng@linux.starfivetech.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 20/30] dt-bindings: clock: Add starfive,jh7110-clkgen-aon bindings
-Date:   Fri, 30 Sep 2022 13:56:32 +0800
-Message-Id: <20220930055632.5136-1-hal.feng@linux.starfivetech.com>
+Subject: [PATCH v1 21/30] clk: starfive: Add StarFive JH7110 always-on clock driver
+Date:   Fri, 30 Sep 2022 14:03:16 +0800
+Message-Id: <20220930060316.5232-1-hal.feng@linux.starfivetech.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
 References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
@@ -63,84 +63,210 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Emil Renner Berthing <kernel@esmil.dk>
 
-Add bindings for the always-on clock generator on the JH7110
-RISC-V SoC by StarFive Technology Ltd.
+Add driver for the StarFive JH7110 always-on clock controller.
 
 Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
 Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 ---
- .../clock/starfive,jh7110-clkgen-aon.yaml     | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
+ drivers/clk/starfive/Kconfig                  |   9 +
+ drivers/clk/starfive/Makefile                 |   1 +
+ .../clk/starfive/clk-starfive-jh7110-aon.c    | 161 ++++++++++++++++++
+ 3 files changed, 171 insertions(+)
+ create mode 100644 drivers/clk/starfive/clk-starfive-jh7110-aon.c
 
-diff --git a/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
+diff --git a/drivers/clk/starfive/Kconfig b/drivers/clk/starfive/Kconfig
+index c13096543a8b..42aad3b553cb 100644
+--- a/drivers/clk/starfive/Kconfig
++++ b/drivers/clk/starfive/Kconfig
+@@ -29,3 +29,12 @@ config CLK_STARFIVE_JH7110_SYS
+ 	help
+ 	  Say yes here to support the system clock controller on the
+ 	  StarFive JH7110 SoC.
++
++config CLK_STARFIVE_JH7110_AON
++	tristate "StarFive JH7110 always-on clock support"
++	depends on SOC_STARFIVE || COMPILE_TEST
++	select CLK_STARFIVE
++	default m if SOC_STARFIVE
++	help
++	  Say yes here to support the always-on clock controller on the
++	  StarFive JH7110 SoC.
+diff --git a/drivers/clk/starfive/Makefile b/drivers/clk/starfive/Makefile
+index 2bc126cc91f2..b54d11340704 100644
+--- a/drivers/clk/starfive/Makefile
++++ b/drivers/clk/starfive/Makefile
+@@ -5,3 +5,4 @@ obj-$(CONFIG_CLK_STARFIVE_JH7100)	+= clk-starfive-jh7100.o
+ obj-$(CONFIG_CLK_STARFIVE_JH7100_AUDIO)	+= clk-starfive-jh7100-audio.o
+ 
+ obj-$(CONFIG_CLK_STARFIVE_JH7110_SYS)	+= clk-starfive-jh7110-sys.o
++obj-$(CONFIG_CLK_STARFIVE_JH7110_AON)	+= clk-starfive-jh7110-aon.o
+diff --git a/drivers/clk/starfive/clk-starfive-jh7110-aon.c b/drivers/clk/starfive/clk-starfive-jh7110-aon.c
 new file mode 100644
-index 000000000000..029ff57b9e3e
+index 000000000000..4975e7ad67be
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/starfive,jh7110-clkgen-aon.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/starfive,jh7110-clkgen-aon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/clk/starfive/clk-starfive-jh7110-aon.c
+@@ -0,0 +1,161 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * StarFive JH7110 Always-On Clock Driver
++ *
++ * Copyright (C) 2022 Emil Renner Berthing <kernel@esmil.dk>
++ */
 +
-+title: StarFive JH7110 Always-On Clock Generator
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
 +
-+maintainers:
-+  - Emil Renner Berthing <kernel@esmil.dk>
-+  - Xingyu Wu <xingyu.wu@linux.starfivetech.com>
++#include <dt-bindings/clock/starfive-jh7110-aon.h>
 +
-+properties:
-+  compatible:
-+    const: starfive,jh7110-clkgen-aon
++#include "clk-starfive.h"
 +
-+  clocks:
-+    items:
-+      - description: Main Oscillator
-+      - description: RTC clock
-+      - description: RMII reference clock
-+      - description: RGMII RX clock
-+      - description: STG AXI/AHB clock
-+      - description: APB Bus clock
++/* external clocks */
++#define JH7110_AONCLK_OSC		(JH7110_AONCLK_END + 0)
++#define JH7110_AONCLK_RTC		(JH7110_AONCLK_END + 1)
++#define JH7110_AONCLK_GMAC0_RMII_REFIN	(JH7110_AONCLK_END + 2)
++#define JH7110_AONCLK_GMAC0_RGMII_RXIN	(JH7110_AONCLK_END + 3)
++#define JH7110_AONCLK_STG_AXIAHB	(JH7110_AONCLK_END + 4)
++#define JH7110_AONCLK_APB_BUS_FUNC	(JH7110_AONCLK_END + 5)
++#define JH7110_AONCLK_GMAC0_GTXCLK	(JH7110_AONCLK_END + 6)
 +
-+  clock-names:
-+    items:
-+      - const: osc
-+      - const: clk_rtc
-+      - const: gmac0_rmii_refin
-+      - const: gmac0_rgmii_rxin
-+      - const: stg_axiahb
-+      - const: apb_bus_func
++static const struct starfive_clk_data jh7110_aonclk_data[] = {
++	/* source */
++	STARFIVE__DIV(JH7110_AONCLK_OSC_DIV4, "osc_div4", 4,
++		      JH7110_AONCLK_OSC),
++	STARFIVE__MUX(JH7110_AONCLK_APB_FUNC, "aon_apb_func", 2,
++		      JH7110_AONCLK_OSC_DIV4,
++		      JH7110_AONCLK_OSC),
++	/* gmac0 */
++	STARFIVE_GATE(JH7110_AONCLK_GMAC0_AHB, "gmac0_ahb", 0,
++		      JH7110_AONCLK_STG_AXIAHB),
++	STARFIVE_GATE(JH7110_AONCLK_GMAC0_AXI, "gmac0_axi", 0,
++		      JH7110_AONCLK_STG_AXIAHB),
++	STARFIVE__DIV(JH7110_AONCLK_GMAC0_RMII_RTX, "gmac0_rmii_rtx", 30,
++		      JH7110_AONCLK_GMAC0_RMII_REFIN),
++	STARFIVE_GMUX(JH7110_AONCLK_GMAC0_TX, "gmac0_tx", 0, 2,
++		      JH7110_AONCLK_GMAC0_GTXCLK,
++		      JH7110_AONCLK_GMAC0_RMII_RTX),
++	STARFIVE__INV(JH7110_AONCLK_GMAC0_TX_INV, "gmac0_tx_inv",
++		      JH7110_AONCLK_GMAC0_TX),
++	STARFIVE__MUX(JH7110_AONCLK_GMAC0_RX, "gmac0_rx", 2,
++		      JH7110_AONCLK_GMAC0_RGMII_RXIN,
++		      JH7110_AONCLK_GMAC0_RMII_RTX),
++	STARFIVE__INV(JH7110_AONCLK_GMAC0_RX_INV, "gmac0_rx_inv",
++		      JH7110_AONCLK_GMAC0_RX),
++	/* otpc */
++	STARFIVE_GATE(JH7110_AONCLK_OTPC_APB, "otpc_apb", CLK_IGNORE_UNUSED,
++		      JH7110_AONCLK_APB_BUS_FUNC),
++	/* rtc */
++	STARFIVE_GATE(JH7110_AONCLK_RTC_APB, "rtc_apb", CLK_IGNORE_UNUSED,
++		      JH7110_AONCLK_APB_BUS_FUNC),
++	STARFIVE__DIV(JH7110_AONCLK_RTC_INTERNAL, "rtc_internal", 1022,
++		      JH7110_AONCLK_OSC),
++	STARFIVE__MUX(JH7110_AONCLK_RTC_32K, "rtc_32k", 2,
++		      JH7110_AONCLK_RTC,
++		      JH7110_AONCLK_RTC_INTERNAL),
++	STARFIVE_GATE(JH7110_AONCLK_RTC_CAL, "rtc_cal", 0,
++		      JH7110_AONCLK_OSC),
++};
 +
-+  '#clock-cells':
-+    const: 1
-+    description:
-+      See <dt-bindings/clock/starfive-jh7110-aon.h> for valid indices.
++static struct clk_hw *jh7110_aonclk_get(struct of_phandle_args *clkspec, void *data)
++{
++	struct starfive_clk_priv *priv = data;
++	unsigned int idx = clkspec->args[0];
 +
-+required:
-+  - compatible
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
++	if (idx < JH7110_AONCLK_END)
++		return &priv->reg[idx].hw;
 +
-+additionalProperties: false
++	return ERR_PTR(-EINVAL);
++}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/starfive-jh7110-sys.h>
++static int jh7110_aoncrg_probe(struct platform_device *pdev)
++{
++	struct starfive_clk_priv *priv;
++	unsigned int idx;
++	int ret;
 +
-+    aoncrg: clock-controller@17000000 {
-+        compatible = "starfive,jh7110-aoncrg";
-+        clocks = <&osc>, <&clk_rtc>,
-+                 <&gmac0_rmii_refin>, <&gmac0_rgmii_rxin>,
-+                 <&syscrg JH7110_SYSCLK_STG_AXIAHB>,
-+                 <&syscrg JH7110_SYSCLK_APB_BUS_FUNC>;
-+        clock-names = "osc", "clk_rtc",
-+                      "gmac0_rmii_refin", "gmac0_rgmii_rxin",
-+                      "stg_axiahb", "apb_bus_func";
-+        #clock-cells = <1>;
-+    };
++	priv = devm_kzalloc(&pdev->dev,
++			    struct_size(priv, reg, JH7110_AONCLK_END),
++			    GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->dev = &pdev->dev;
++
++	priv->regmap = syscon_node_to_regmap(priv->dev->of_node->parent);
++	if (IS_ERR(priv->regmap)) {
++		dev_err(priv->dev, "failed to get regmap (error %ld)\n",
++			PTR_ERR(priv->regmap));
++		return PTR_ERR(priv->regmap);
++	}
++
++	for (idx = 0; idx < JH7110_AONCLK_END; idx++) {
++		u32 max = jh7110_aonclk_data[idx].max;
++		struct clk_parent_data parents[4] = {};
++		struct clk_init_data init = {
++			.name = jh7110_aonclk_data[idx].name,
++			.ops = starfive_clk_ops(max),
++			.parent_data = parents,
++			.num_parents = ((max & STARFIVE_CLK_MUX_MASK)
++					>> STARFIVE_CLK_MUX_SHIFT) + 1,
++			.flags = jh7110_aonclk_data[idx].flags,
++		};
++		struct starfive_clk *clk = &priv->reg[idx];
++		unsigned int i;
++
++		for (i = 0; i < init.num_parents; i++) {
++			unsigned int pidx = jh7110_aonclk_data[idx].parents[i];
++
++			if (pidx < JH7110_AONCLK_END)
++				parents[i].hw = &priv->reg[pidx].hw;
++			else if (pidx == JH7110_AONCLK_OSC)
++				parents[i].fw_name = "osc";
++			else if (pidx == JH7110_AONCLK_RTC)
++				parents[i].fw_name = "clk_rtc";
++			else if (pidx == JH7110_AONCLK_GMAC0_RMII_REFIN)
++				parents[i].fw_name = "gmac0_rmii_refin";
++			else if (pidx == JH7110_AONCLK_GMAC0_RGMII_RXIN)
++				parents[i].fw_name = "gmac0_rgmii_rxin";
++			else if (pidx == JH7110_AONCLK_STG_AXIAHB)
++				parents[i].fw_name = "stg_axiahb";
++			else if (pidx == JH7110_AONCLK_APB_BUS_FUNC)
++				parents[i].fw_name = "apb_bus_func";
++		}
++
++		clk->hw.init = &init;
++		clk->idx = idx;
++		clk->max_div = max & STARFIVE_CLK_DIV_MASK;
++
++		ret = devm_clk_hw_register(&pdev->dev, &clk->hw);
++		if (ret)
++			return ret;
++	}
++
++	return devm_of_clk_add_hw_provider(&pdev->dev, jh7110_aonclk_get, priv);
++}
++
++static const struct of_device_id jh7110_aoncrg_match[] = {
++	{ .compatible = "starfive,jh7110-clkgen-aon" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, jh7110_aoncrg_match);
++
++static struct platform_driver jh7110_aoncrg_driver = {
++	.probe = jh7110_aoncrg_probe,
++	.driver = {
++		.name = "clk-starfive-jh7110-aon",
++		.of_match_table = jh7110_aoncrg_match,
++	},
++};
++module_platform_driver(jh7110_aoncrg_driver);
++
++MODULE_AUTHOR("Emil Renner Berthing");
++MODULE_DESCRIPTION("StarFive JH7110 always-on clock driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
 
