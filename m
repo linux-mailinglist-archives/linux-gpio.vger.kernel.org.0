@@ -2,100 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 070665F0C56
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 15:21:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9250D5F1021
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 18:38:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiI3NVB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 09:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57806 "EHLO
+        id S230236AbiI3QiW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 12:38:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230092AbiI3NU6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 09:20:58 -0400
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49BA5A4B2E;
-        Fri, 30 Sep 2022 06:20:56 -0700 (PDT)
-Received: (Authenticated sender: foss@0leil.net)
-        by mail.gandi.net (Postfix) with ESMTPSA id 2CB0020005;
-        Fri, 30 Sep 2022 13:20:51 +0000 (UTC)
-From:   Quentin Schulz <foss+kernel@0leil.net>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, heiko@sntech.de,
-        jay.xu@rock-chips.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        foss+kernel@0leil.net,
-        Quentin Schulz <quentin.schulz@theobroma-systems.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 2/2] gpio: rockchip: request GPIO mux to pinctrl when setting direction
-Date:   Fri, 30 Sep 2022 15:20:33 +0200
-Message-Id: <20220930132033.4003377-3-foss+kernel@0leil.net>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20220930132033.4003377-1-foss+kernel@0leil.net>
-References: <20220930132033.4003377-1-foss+kernel@0leil.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231701AbiI3QiU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 12:38:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DF11739DB;
+        Fri, 30 Sep 2022 09:38:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 397D3B82961;
+        Fri, 30 Sep 2022 16:38:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E278DC433D6;
+        Fri, 30 Sep 2022 16:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664555896;
+        bh=6ZMEUrPQX6cckaFQAD7taUYv3Tr/6ElYEI8r9/Zk7IY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=kOm2McKlpoMWzt+duVjii36iDLsBkdFaFNfzjCEvrY0TTCQYb8azvX7MI7hxobBkY
+         Lr8K8XSsTlQ645/d+4Nd4BKk7xgQ83Jf+bXiJ/sTU3nxOwWikro03mlGymOaSh+Fjs
+         4Bey1cnt53s9QKF6OlP5fApz9UXNGVC7CSgi8YkIksHx+13zuwQFRD2VufIjbvp+a8
+         8aniwzlxMQSFxcJ28+bVSjp0mlZ3jZvBwjZ/IuofmMWqBJPn9tDCGCm7CzsDgx0wZG
+         1Chplaq06az/bi0IZaCu0fHXrc+S5501xneIOlPnjBOQCuNMAB8ZADP0YgcmLUiX2o
+         kwo1RvyqMuOpw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CD1A4C04E59;
+        Fri, 30 Sep 2022 16:38:16 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.0
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20220930094040.39361-1-brgl@bgdev.pl>
+References: <20220930094040.39361-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20220930094040.39361-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.0
+X-PR-Tracked-Commit-Id: 4335417da2b8d6d9b2d4411b5f9e248e5bb2d380
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 89e10b860cbf8015dd77aaa90839fb0ef65e0619
+Message-Id: <166455589683.13600.15697207210603432091.pr-tracker-bot@kernel.org>
+Date:   Fri, 30 Sep 2022 16:38:16 +0000
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+The pull request you sent on Fri, 30 Sep 2022 11:40:40 +0200:
 
-Before the split of gpio and pinctrl sections in their own driver,
-rockchip_set_mux was called in pinmux_ops.gpio_set_direction for
-configuring a pin in its GPIO function.
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.0
 
-This is essential for cases where pinctrl is "bypassed" by gpio
-consumers otherwise the GPIO function is not configured for the pin and
-it does not work. Such was the case for the sysfs/libgpiod userspace
-GPIO handling.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/89e10b860cbf8015dd77aaa90839fb0ef65e0619
 
-Let's call pinctrl_gpio_direction_input/output when setting the
-direction of a GPIO so that the pinctrl core requests from the rockchip
-pinctrl driver to put the pin in its GPIO function.
+Thank you!
 
-Fixes: 9ce9a02039de ("pinctrl/rockchip: drop the gpio related codes")
-Fixes: 936ee2675eee ("gpio/rockchip: add driver for rockchip gpio")
-Cc: stable@vger.kernel.org
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Signed-off-by: Quentin Schulz <quentin.schulz@theobroma-systems.com>
----
-
-v2:
- - added Reviewed-by,
- - added missing linux/pinctrl/consumer.h header,
-
- drivers/gpio/gpio-rockchip.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-index bb50335239ac8..9c976ad7208ef 100644
---- a/drivers/gpio/gpio-rockchip.c
-+++ b/drivers/gpio/gpio-rockchip.c
-@@ -19,6 +19,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-+#include <linux/pinctrl/consumer.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/regmap.h>
- 
-@@ -156,6 +157,12 @@ static int rockchip_gpio_set_direction(struct gpio_chip *chip,
- 	unsigned long flags;
- 	u32 data = input ? 0 : 1;
- 
-+
-+	if (input)
-+		pinctrl_gpio_direction_input(bank->pin_base + offset);
-+	else
-+		pinctrl_gpio_direction_output(bank->pin_base + offset);
-+
- 	raw_spin_lock_irqsave(&bank->slock, flags);
- 	rockchip_gpio_writel_bit(bank, offset, data, bank->gpio_regs->port_ddr);
- 	raw_spin_unlock_irqrestore(&bank->slock, flags);
 -- 
-2.37.3
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
