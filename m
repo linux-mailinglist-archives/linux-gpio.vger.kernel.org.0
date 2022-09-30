@@ -2,151 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B77A85F0659
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 10:24:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99365F0735
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 11:09:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231179AbiI3IYb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 04:24:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
+        id S230349AbiI3JJM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 05:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231158AbiI3IY3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 04:24:29 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BAD21129E1;
-        Fri, 30 Sep 2022 01:24:29 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id lx7so3645063pjb.0;
-        Fri, 30 Sep 2022 01:24:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date;
-        bh=jS+l3dIGKbArOyuWAe9VWLB+9jLBaurWIwoqS5nKuX8=;
-        b=Gtd3BT7EJKCuKw82inp4gINpe1F3cv9JvLqP7vH060hkioNT5dDYVdpX17ImOSavyO
-         p/aveQYLbt0YOMnHcO2qJgODIzszyASKw54tF1yUk2AAHQYQv40lXKpIt/CnM5gNJkby
-         mwVu3a82LvRrZCfI4IzkEmQ+CA0qaPFD/04A26YpIA93qmoklwhQK3rrwyu8vlZlo5+n
-         uqRL0K3RNfooC1f0y4xpYll6PAE1HVa7Ma6EK86GzxmoVGUJNlxw9HJG6CPqqm4p2fSk
-         zDjcjnPvsjjhva1zq/SeWNLI1zm8BvfJ82VdBNkecwhlYajVtQS6xP+mqt0FF+JaoHzz
-         fEcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=jS+l3dIGKbArOyuWAe9VWLB+9jLBaurWIwoqS5nKuX8=;
-        b=Fpb1p/BqqRjUQN+4PrV7CxlPa1ZODEqFLZ3RFZ7YJiTQ3mSKzQ911BZIrJQhND9JT5
-         pYjYqgRzwu4LhIvlFofwIG9L1tAJ+neCNWnLorLfxl3IahwTdOeUfEKbGiYKbODYBnnJ
-         QNYOLGC5cVS2NhTpgMGQWZEkYdCiXjdJZkpEBaIn547pvJNUOIVrmw6+bgnAmXDZZ6ZS
-         +jg20bx9gMZEF7RCGXWkjHhfmcuQtmXsf2zCkPhhrQBrDwXAR1faaUoL9i+Yc3nueRhY
-         OBhcEBaGyzo9qBoeyPvm0R93Ub82BsCM6tk7QskoDVDLBor08BW9kOMbqW1mMSAEetCB
-         5zZg==
-X-Gm-Message-State: ACrzQf3QIBRYbHQHjpUjtr/4gfocQXiS5ND8A8YeLqPn6QMO+0CUupGj
-        k7/GCgjf0H/wVvMRAza9ey8=
-X-Google-Smtp-Source: AMsMyM4io8gqopHHzVVMNCtcfVhtrD7kfVgdDbxZ1JSbkaSsu14LDbnk/vjrkrMQR3yg4moMKtQKJA==
-X-Received: by 2002:a17:902:bcc3:b0:178:639a:1a10 with SMTP id o3-20020a170902bcc300b00178639a1a10mr7679039pls.159.1664526268625;
-        Fri, 30 Sep 2022 01:24:28 -0700 (PDT)
-Received: from xm06403pcu.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 63-20020a620442000000b00540d03f3792sm1132083pfe.81.2022.09.30.01.24.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 01:24:28 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH V2 3/3] dt-bindings: gpio: Add compatible string to support Unisoc UMS512
-Date:   Fri, 30 Sep 2022 16:24:05 +0800
-Message-Id: <20220930082405.1761-4-zhang.lyra@gmail.com>
+        with ESMTP id S229566AbiI3JJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 05:09:11 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB9D2ED4A;
+        Fri, 30 Sep 2022 02:09:08 -0700 (PDT)
+X-QQ-mid: bizesmtp78t1664528816tuqcmaei
+Received: from ubuntu.localdomain ( [113.72.146.201])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Fri, 30 Sep 2022 17:06:54 +0800 (CST)
+X-QQ-SSF: 01000000000000305000000A0000000
+X-QQ-FEAT: dcYQFNbI8vHgGBegdo4q9m3MYLIYCHcw61t0e3fQ/Hq7EkLkmrCEJbkHKfFlG
+        J4zmi7grr3n/OnwCkitlLiu4qcHnTOsYdPqejqBFnT0LtYo71L1edvOVk8EqtBU/4NITA1v
+        PtvMIi33G6+geE5Dd7Xac7PKFO83VGfrb9v3HUE71s36L+Ak4KHisHaZkXU39WXe8TV7AUX
+        q+V7+WA4YGqKpmQTORK9G3XgM1C5YwLvoydQ6vz8XQ8mL/G9PJW987+tEw4XK5Hu7XQzgcN
+        KjPitbWT1T8TMnUvEQDlipeEru32FxvLp89vTIwWeP2uI+17rxGu3MROCL82u0OFZBPCrY+
+        J8aBzuhMWa2Us40P8GNsprTnvf4zhQfu4pLTNgpXugz2pvHj18+EXRpgSYrCSlqRLsMhXA8
+        O7fk+0n7ykI=
+X-QQ-GoodBg: 0
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+To:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 29/30] RISC-V: defconfig: Enable CONFIG_SERIAL_8250_DW
+Date:   Fri, 30 Sep 2022 17:06:53 +0800
+Message-Id: <20220930090653.7449-1-hal.feng@linux.starfivetech.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220930082405.1761-1-zhang.lyra@gmail.com>
-References: <20220930082405.1761-1-zhang.lyra@gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Add CONFIG_SERIAL_8250_DW=y, which is a necessary option for
+StarFive JH7110 and JH7100 SoCs to boot with serial ports.
 
-UMS512 use the same GPIO and EIC controller IP with SC9860.
-
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 ---
- .../bindings/gpio/sprd,gpio-eic.yaml          | 33 +++++++++++++++----
- .../devicetree/bindings/gpio/sprd,gpio.yaml   |  7 +++-
- 2 files changed, 33 insertions(+), 7 deletions(-)
+ arch/riscv/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
-index c288a8dd44c8..3b7d338d44fb 100644
---- a/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
-+++ b/Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
-@@ -42,12 +42,33 @@ description:
- 
- properties:
-   compatible:
--    enum:
--      - sprd,sc9860-eic-debounce
--      - sprd,sc9860-eic-latch
--      - sprd,sc9860-eic-async
--      - sprd,sc9860-eic-sync
--      - sprd,sc2731-eic
-+    oneOf:
-+      - enum:
-+          - sprd,sc9860-eic-debounce
-+          - sprd,sc9860-eic-latch
-+          - sprd,sc9860-eic-async
-+          - sprd,sc9860-eic-sync
-+          - sprd,sc2731-eic
-+      - items:
-+          - enum:
-+              - sprd,ums512-eic-debounce
-+          - const: sprd,sc9860-eic-debounce
-+      - items:
-+          - enum:
-+              - sprd,ums512-eic-latch
-+          - const: sprd,sc9860-eic-latch
-+      - items:
-+          - enum:
-+              - sprd,ums512-eic-async
-+          - const: sprd,sc9860-eic-async
-+      - items:
-+          - enum:
-+              - sprd,ums512-eic-sync
-+          - const: sprd,sc9860-eic-sync
-+      - items:
-+          - enum:
-+              - sprd,sc2730-eic
-+          - const: sprd,sc2731-eic
- 
-   reg:
-     minItems: 1
-diff --git a/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
-index c0cd1ed9809b..a1ecb2b96a76 100644
---- a/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
-+++ b/Documentation/devicetree/bindings/gpio/sprd,gpio.yaml
-@@ -19,7 +19,12 @@ description:
- 
- properties:
-   compatible:
--    const: sprd,sc9860-gpio
-+    oneOf:
-+      - const: sprd,sc9860-gpio
-+      - items:
-+          - enum:
-+              - sprd,ums512-gpio
-+          - const: sprd,sc9860-gpio
- 
-   reg:
-     maxItems: 1
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index aed332a9d4ea..0c44484cd3a4 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -122,6 +122,7 @@ CONFIG_MICROSEMI_PHY=y
+ CONFIG_INPUT_MOUSEDEV=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_8250_DW=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_VIRTIO_CONSOLE=y
+ CONFIG_HW_RANDOM=y
 -- 
-2.25.1
+2.17.1
 
