@@ -2,52 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFE75F12AF
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 21:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F0015F1320
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Sep 2022 22:05:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiI3TbN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Sep 2022 15:31:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43018 "EHLO
+        id S231298AbiI3UFx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Sep 2022 16:05:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232164AbiI3TaY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 15:30:24 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2C1A50518
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 12:30:13 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id q17so5802047lji.11
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 12:30:13 -0700 (PDT)
+        with ESMTP id S232229AbiI3UFu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Sep 2022 16:05:50 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECA113EEB0
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 13:05:43 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id u18so8451883lfo.8
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Sep 2022 13:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=D4UikLTplWsHhZaUVls61V0/b6sUXu3Z8bQRTT/fioM=;
-        b=DlDOTLmE/3K9A1fyyNvzhl65kiZ3T7Ie6Bil8zmwXlww+YoeawtfDqe4h1+lsSqJj0
-         FEvBVI5MQc0XGN480GaRmhbhBRMmX2O7WLGCSSKtct/PUc7DVIU+T7e69jFGKWG7IUB5
-         PfiPd919QmwqSTLoIq+fuHzINwZv+D1KEavJLUpsaqzrcAz0N+ETYyjB5wP8zjzYaYZq
-         g9asxPEiXppHKFRp0uobCF5IhS8EV4qOA11XN/OGb2cKZd/OL4Bx8ToWbdWbrJtuC8OV
-         hAovSOkPfp5WsOy1mM399GcELKeABSAGEzWijn0Jwc6MCkSSRWYM5vl85JXApmMSpYzw
-         tRmg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=g/s25fFcFRGt0la+CChBB+sBdX3rR06NtZ97e/TRl5g=;
+        b=me/zb+fTWwauv6a8wKXk9yOUdj4EAtMg04lETTXuDKjgI/eZDWpd++d6SmtVz3ucXc
+         guFq17zdb/KB3klhaWvzujGg/3kTdh6Wc/q9NyIu7t1qR4OqsUjZvxdqIQ0CJrPuYFWx
+         1zE6UYdas78gySILgPwOocpOE/R2xDb/Nag81tMpJVCP4VOZhaI9abp4EK7IaA+jldy7
+         G3oQTMKmdaZSqlPVrYoMW/ws5ZARU6gn/sb8DD24/PnLlUx8nDcBkQxEcwJWZ0HT4DlX
+         axZCh9bpDTZK39OUtYCHXRokhWZ4MDFTQz4U16FLWTFDccX/jPT8C2VGNXBJ2EhVIEyE
+         JufA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=D4UikLTplWsHhZaUVls61V0/b6sUXu3Z8bQRTT/fioM=;
-        b=emfdajhV+1tH1DNw3jq/9HDqLSXu4wOLe3hZ8cMQiQfgYLNABkSWz30mxlpaGp8SNR
-         syxHEG+GTOVL+ANKZf/+wu2UyuD77JWCc8cZ0RVNrPnyGqtpIWLK6IH+hPbeDoFkAZoi
-         Ss0hrSwWUR/pzevwFdjnBjTvroIvnj6Tm1PjuYv9CupxJx8DqXs4otW1MyONhMqk9n+F
-         SqAreomSPbkjX8W+fvoK5JbCL3SVcikJHmob7boN0qCRhiGEqj67mEXb9+x19oc7GSr6
-         eqRjYjH+14qXmQSiX45yd2FtpN9ZY5/zvh0Gk2UIDxnSRyzmGwZIy9LxmlHCdOI+Gjgy
-         0YSw==
-X-Gm-Message-State: ACrzQf2GrpH9awy/jBIuI35Iq6gI5rzoSaIMzJ43QVzCjSoOuTMXaKYO
-        Q+3P3ZOMqo/UsF/5VXShXXS2Ww==
-X-Google-Smtp-Source: AMsMyM57Ib5akcpmzoy0N5pqvXa9scToASPNmSaFb5mBPkLhQOljFXK5PJPbJIyANZcTWwPDHeLq5Q==
-X-Received: by 2002:a2e:8e8d:0:b0:26c:5d95:b31b with SMTP id z13-20020a2e8e8d000000b0026c5d95b31bmr3158920ljk.465.1664566213340;
-        Fri, 30 Sep 2022 12:30:13 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=g/s25fFcFRGt0la+CChBB+sBdX3rR06NtZ97e/TRl5g=;
+        b=p5lTibTZlcSXux+m/H1TmXxsRFeKVXqkCdUSX8hD0NtlbSkEBhb4EfePrSsGQWfeQS
+         ksb+YCkJk6gHHz+ZONGQ/feRp4rWAGwmqngfE2dOB38EnDKn28Jc3mxRxy/W8gJUk2X9
+         kW3kdgGNRJLb7urx+C9D7dcukoUxmQq5Jg/PF9X3smUETU5qj/7kn3vYYT1m0wGoo+nt
+         obCo7By/bmJO4+tca4ju3vuRWQ5VjuDKjGOxzm4JrkUOZw1ZH0nWIWMxqSILb1uivXUD
+         eGPR6l4ZT6WVNAluOg6cDdw83HHrd2WlGU6nQUP9nuNLPLPK4e2bzAXcZU44RLVkDHHt
+         izHg==
+X-Gm-Message-State: ACrzQf0xgYXuMP5NvXOBr42Fw6zWch44ls5fFoVlJ+DxIhW58PP9joVO
+        ra0AE/taizM1JZ+vBrF/ZC3lQGPVhhK9AA==
+X-Google-Smtp-Source: AMsMyM6pk4TIFeOeSsegG9bum/68726TptgPM44O7vmL/VW6rcp/ziYMJNNvGEwM+T+2wd5OKKvdxQ==
+X-Received: by 2002:a05:6512:3502:b0:496:8e:9307 with SMTP id h2-20020a056512350200b00496008e9307mr3648621lfs.504.1664568342138;
+        Fri, 30 Sep 2022 13:05:42 -0700 (PDT)
 Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id br32-20020a056512402000b0049f9799d349sm393603lfb.187.2022.09.30.12.30.12
+        by smtp.gmail.com with ESMTPSA id d10-20020ac2544a000000b00492f45cbbfcsm398876lfn.302.2022.09.30.13.05.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 12:30:13 -0700 (PDT)
+        Fri, 30 Sep 2022 13:05:41 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -57,14 +56,11 @@ To:     Andy Gross <agross@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 16/16] dt-bindings: pinctrl: qcom,sc7280: correct number of GPIOs
-Date:   Fri, 30 Sep 2022 21:29:54 +0200
-Message-Id: <20220930192954.242546-17-krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/2] pinctrl/arm64: qcom: convert sdm845 bindings to DT schema
+Date:   Fri, 30 Sep 2022 22:05:27 +0200
+Message-Id: <20220930200529.331223-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
-References: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -77,46 +73,47 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-SC7280 has 175 GPIOs (gpio0-174), so correct size of gpio-line-names and
-narrow the pattern for matching pin names.
+Hi,
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml    | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Overview
+========
+This is independent patchset of my recent Qualcomm pinctrl fixes.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-index 1db05c43d58c..2a6b5a719d18 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
-@@ -43,7 +43,7 @@ properties:
-     maxItems: 1
- 
-   gpio-line-names:
--    maxItems: 174
-+    maxItems: 175
- 
-   wakeup-parent: true
- 
-@@ -70,7 +70,7 @@ $defs:
-           subnode.
-         items:
-           oneOf:
--            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9]|18[0-2])$"
-+            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-6][0-9]|17[0-4])$"
-             - enum: [ sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk,
-                       sdc2_cmd, sdc2_data, ufs_reset ]
-         minItems: 1
-@@ -132,7 +132,7 @@ $defs:
-       - if:
-           properties:
-             pins:
--              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-7][0-9]|18[0-2])$"
-+              pattern: "^gpio([0-9]|[1-9][0-9]|1[0-6][0-9]|17[0-4])$"
-         then:
-           required:
-             - function
+If the total amount of patches from me around Qualcomm pinctrl is a bit
+overwhelming, well, yeah, expect more to come. One way to solve it is to
+merge/apply faster than I can create new patches. :-)
+
+Dependencies
+============
+1. No dependencies.
+2. dt-bindings are independent of DTS patches.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (2):
+  arm64: dts: qcom: sdm845: align TLMM pin configuration with DT schema
+  dt-bindings: pinctrl: qcom,sdm845: convert to dtschema
+
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 176 ---------
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml | 158 ++++++++
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi    | 344 +++++++-----------
+ arch/arm64/boot/dts/qcom/sdm845-db845c.dts    |  76 ++--
+ .../arm64/boot/dts/qcom/sdm845-lg-common.dtsi |  60 ++-
+ arch/arm64/boot/dts/qcom/sdm845-lg-judyln.dts |   2 +-
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  60 ++-
+ .../boot/dts/qcom/sdm845-oneplus-common.dtsi  |  88 ++---
+ .../boot/dts/qcom/sdm845-shift-axolotl.dts    | 138 +++----
+ .../dts/qcom/sdm845-sony-xperia-tama.dtsi     |   6 +-
+ .../boot/dts/qcom/sdm845-xiaomi-beryllium.dts |  26 +-
+ .../boot/dts/qcom/sdm845-xiaomi-polaris.dts   |  30 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 305 +++++++---------
+ .../boot/dts/qcom/sdm850-lenovo-yoga-c630.dts |  33 +-
+ .../boot/dts/qcom/sdm850-samsung-w737.dts     |  96 ++---
+ 15 files changed, 671 insertions(+), 927 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml
+
 -- 
 2.34.1
 
