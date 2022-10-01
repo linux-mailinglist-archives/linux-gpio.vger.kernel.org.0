@@ -2,76 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3BE5F1AFF
-	for <lists+linux-gpio@lfdr.de>; Sat,  1 Oct 2022 11:09:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 887A35F1B28
+	for <lists+linux-gpio@lfdr.de>; Sat,  1 Oct 2022 11:20:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbiJAJJE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 1 Oct 2022 05:09:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
+        id S229632AbiJAJUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 1 Oct 2022 05:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiJAJJD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Oct 2022 05:09:03 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13AC152216
-        for <linux-gpio@vger.kernel.org>; Sat,  1 Oct 2022 02:09:01 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id z4so10177767lft.2
-        for <linux-gpio@vger.kernel.org>; Sat, 01 Oct 2022 02:09:01 -0700 (PDT)
+        with ESMTP id S229612AbiJAJUo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 1 Oct 2022 05:20:44 -0400
+Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35D5ECD1DF
+        for <linux-gpio@vger.kernel.org>; Sat,  1 Oct 2022 02:20:42 -0700 (PDT)
+Received: by mail-lf1-x12b.google.com with SMTP id o7so2929416lfk.7
+        for <linux-gpio@vger.kernel.org>; Sat, 01 Oct 2022 02:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=Mi4lVfw+IHcwJ5lVPsJSIkTGyr1PyheHdIcmyKlZe1Y=;
-        b=KeDG5TKrOzZ7tm7yp3J+b7W+BW81w/IMLQpDEbBU9eqEupeDKtk2ppnVRKnqXJl/Vc
-         LUOjmJx9Xf1VkZRbixMXPa4FqLnXCSmKCV2Udva/3mFlKojaSi5R1bFcYkEivGawXaP5
-         WFL0CDeGyJ74O/N8rtkDonrJ/HvopFX+wxUc2TWdHj2Sy0MKMqJZwhYI1/9rUR7F1HD2
-         kH+yG4Pgm8Tq1i4B/IQou2o+YNg5Tx+Fsp/8SpFVI8+fA8YIIdO8/52dLwOXbuTJg8QA
-         /ALOLx3v8iETZqaC5YCgjtegJlrMYFI+as7pOC6as+XxOUlVjNGWwXFSTknkUNkgxpTK
-         ZyWA==
+        bh=+wucZNX0Wwe0qQzZ7D8P59CVWmW7nCgHShbe6I3lY48=;
+        b=SySlrt0VioI2J+vd5flh5fGNH5ZlxTsrRzpzbFJSBrbvZMtbDh86z64V6C0YW+NM12
+         dnvf8FfBbKEXZlpywlvX9CmO1fnniKCPkdnnswze49wGJQfuvkA7u3OjwRQPB7SGEi52
+         0UKpEcLuMLuQSrVwaK77NwCRnjKXZ/3FSxLpBoy6Ai+S9YH1tHvPmhDF31e1vtmgzD4Q
+         fcxGU0Lxp+1rZmbvwEL1MxtM7JQVkMo/n1dwNtlVXJcYrHNEu4+eFb9FwScSUna/nb5M
+         +LF/CF6KvHAEEc0B1VeU3MERZHHUnU+4+F5LNtODue5Uhzt2eKz4OmvDZn4UJsz9cwyX
+         bLiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=Mi4lVfw+IHcwJ5lVPsJSIkTGyr1PyheHdIcmyKlZe1Y=;
-        b=rqJxDbR/GpNMtZwWp28N/pGlGx7Cok8mNzSw+YcTYcwl+bEap7oFmZ421tm3jy76m9
-         jMUTq+lSidsAkYnCRUI5bsPoFz6Tx61zri1rLUXzI2PUZnLQ05fqQFYNdAqgX3TjyWti
-         wyI0ZA3HQU8uEOfZrFF7F62boZYF76+NXQpDSjo76cCeSOmhqTNLZxQZkHoCUBNFgZtU
-         YvbhyR1OlsCaqZJSlry3UB4uOWFFk/ciKVKWSS590Z4mig55AWXgK0yGHOPqeN1CsUBD
-         wx5LRr8hWeOH2l4C3zhwF4hMEi2x4HkgawL5V89boI7ayEPUTJ0C6jpg6qVOHYUe+0H+
-         CVYA==
-X-Gm-Message-State: ACrzQf1SY+qOrgwJRt1oyS1qLmXiYk7A3Vfl4CGLW0QgSCGYDUtepx+s
-        XvOc7Cw0t4oVIcFF5SVYsefdDEGdw/rVBw==
-X-Google-Smtp-Source: AMsMyM5r/bKFV4pBSeOFKESQI4LJ0/kAs64NBjyrtwkObyRf5Hz1x/bTiCXe0CrOl8IWvejrqi18wg==
-X-Received: by 2002:a05:6512:462:b0:4a2:22ff:e628 with SMTP id x2-20020a056512046200b004a222ffe628mr783765lfd.4.1664615340174;
-        Sat, 01 Oct 2022 02:09:00 -0700 (PDT)
+        bh=+wucZNX0Wwe0qQzZ7D8P59CVWmW7nCgHShbe6I3lY48=;
+        b=EB3Qn6n2cfZgftvdYP2yGm5+q5I3PK+EYxiLd7O6cWjDcxFprNyd0ikpN8m+psvpvu
+         ni9cCvFbiPVpGZmCW5QT812qMYT5GtmvLMGjDwubmG6KzEfq8Io9kt4toppwjCqzXTjs
+         75zgGfrp3uclTmMLV3FlTh5ITAzVGJJGPkvnoBY+943qC5qA1/7pJzWDpXB1y3xVzTwv
+         RHt/p8fKbN4MuKf4XQA+V3RssiMCkkkKwGDHAngfITzUfBblmnnvhs+urTe92mOKcMp6
+         Xm/lgFhJU4qzjLqYKoAHoi1ra7OSkW4VP7hPGMzD1jBx5U9LHx9L+Rfiv8ixGfJSuh9T
+         VntQ==
+X-Gm-Message-State: ACrzQf0Kf7tS7Ozv/TayBKJEKThAIGWzQaA0y+IfZaCRSDNXP2u/BBZr
+        Z1UEoVlaNsQ2GzGa1HuLtsJgPw==
+X-Google-Smtp-Source: AMsMyM6Svfw02+ySiCJFl9MbBdIlPwjHKROPv/yWMiiGL74FoEWPw4z4aIZyr+GFy+jeTGblmX3UHg==
+X-Received: by 2002:a05:6512:3c8c:b0:498:f7ba:9a69 with SMTP id h12-20020a0565123c8c00b00498f7ba9a69mr4675399lfv.8.1664616040517;
+        Sat, 01 Oct 2022 02:20:40 -0700 (PDT)
 Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id q7-20020a0565123a8700b0048aef1abb08sm685433lfu.297.2022.10.01.02.08.59
+        by smtp.gmail.com with ESMTPSA id g5-20020a2eb5c5000000b0026bf43a4d72sm372746ljn.115.2022.10.01.02.20.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 01 Oct 2022 02:08:59 -0700 (PDT)
-Message-ID: <0af4b02d-094a-ae12-1365-c5df3f472fe4@linaro.org>
-Date:   Sat, 1 Oct 2022 11:08:58 +0200
+        Sat, 01 Oct 2022 02:20:39 -0700 (PDT)
+Message-ID: <b12393d9-6b1a-a9cb-a964-cb2936da12cf@linaro.org>
+Date:   Sat, 1 Oct 2022 11:20:39 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: qcom,sdm845: convert to
- dtschema
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and QRU1000
+ pinctrl bindings
 Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org
-References: <20220930200529.331223-1-krzysztof.kozlowski@linaro.org>
- <20220930200529.331223-3-krzysztof.kozlowski@linaro.org>
- <166457528911.1113207.5679249386040323169.robh@kernel.org>
+To:     Melody Olvera <quic_molvera@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221001030546.28220-1-quic_molvera@quicinc.com>
+ <20221001030546.28220-2-quic_molvera@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <166457528911.1113207.5679249386040323169.robh@kernel.org>
+In-Reply-To: <20221001030546.28220-2-quic_molvera@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -81,71 +80,176 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 01/10/2022 00:05, Rob Herring wrote:
-> On Fri, 30 Sep 2022 22:05:29 +0200, Krzysztof Kozlowski wrote:
->> Convert Qualcomm SDM845 pin controller bindings to DT schema.  Keep
->> the parsing of pin configuration subnodes consistent with other Qualco=
-mm
->> schemas (children named with '-state' suffix, their children with
->> '-pins').
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 176 -----------------=
--
->>  .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml | 158 ++++++++++++++++
->>  2 files changed, 158 insertions(+), 176 deletions(-)
->>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm=
-845-pinctrl.txt
->>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm=
-845-pinctrl.yaml
->>
->=20
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
->=20
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check=
-=2E
-> This will change in the future.
->=20
-> Full log is available here: https://patchwork.ozlabs.org/patch/
->=20
->=20
-> pinctrl@3400000: 'ap-edp-bklten', 'ap-suspend-l-hog', 'ap_suspend_l_ass=
-ert', 'ap_suspend_l_deassert', 'bios-flash-wp-r-l', 'cci0-default', 'cci0=
--sleep', 'cci1-default', 'cci1-sleep', 'ec-ap-int-l', 'edp-brij-en', 'edp=
--brij-irq', 'en-pp3300-dx-edp', 'h1-ap-int-odl', 'pen-eject-odl', 'pen-ir=
-q-l', 'pen-pdct-l', 'pen-rst-l', 'qspi-clk', 'qspi-cs0', 'qspi-cs1', 'qsp=
-i-data01', 'qspi-data12', 'quat_mi2s_active', 'quat_mi2s_sd0_active', 'qu=
-at_mi2s_sd0_sleep', 'quat_mi2s_sd1_active', 'quat_mi2s_sd1_sleep', 'quat_=
-mi2s_sd2_active', 'quat_mi2s_sd2_sleep', 'quat_mi2s_sd3_active', 'quat_mi=
-2s_sd3_sleep', 'quat_mi2s_sleep', 'qup-i2c0-default', 'qup-i2c1-default',=
- 'qup-i2c10-default', 'qup-i2c11-default', 'qup-i2c12-default', 'qup-i2c1=
-3-default', 'qup-i2c14-default', 'qup-i2c15-default', 'qup-i2c2-default',=
- 'qup-i2c3-default', 'qup-i2c4-default', 'qup-i2c5-default', 'qup-i2c6-de=
-fault', 'qup-i2c7-default', 'qup-i2c8-default', 'qup-i2c9-default', 'qup-=
-spi0-default', 'qup-spi1-default', 'qup-spi10-default', 'qup-spi11-defaul=
-t', 'qup-spi12-default', 'qup-spi13-default', 'qup-spi14-default', 'qup-s=
-pi15-default', 'qup-spi2-default', 'qup-spi3-default', 'qup-spi4-default'=
-, 'qup-spi5-default', 'qup-spi6-default', 'qup-spi7-default', 'qup-spi8-d=
-efault', 'qup-spi9-default', 'qup-uart0-default', 'qup-uart1-default', 'q=
-up-uart10-default', 'qup-uart11-default', 'qup-uart12-default', 'qup-uart=
-13-default', 'qup-uart14-default', 'qup-uart15-default', 'qup-uart2-defau=
-lt', 'qup-uart3-default', 'qup-uart4-default', 'qup-uart5-default', 'qup-=
-uart6-default', 'qup-uart7-default', 'qup-uart8-default', 'qup-uart9-defa=
-ult', 'sd-cd-odl', 'sdc2-clk', 'sdc2-cmd', 'sdc2-data', 'ts-int-l', 'ts-r=
-eset-l' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
-> 	arch/arm64/boot/dts/qcom/sdm845-cheza-r1.dtb
-> 	arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
-> 	arch/arm64/boot/dts/qcom/sdm845-cheza-r3.dtb
+On 01/10/2022 05:05, Melody Olvera wrote:
+> Add documentation details for device tree bindings for QDU1000 and QRU1000
+> TLMM devices.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  .../pinctrl/qcom,qdru1000-pinctrl.yaml        | 133 ++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..e8d938303231
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml
+> @@ -0,0 +1,133 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
+> +
+> +maintainers:
+> +  - Melody Olvera <quic_molvera@quicinc.com>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block.
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: qcom,qdu1000-tlmm
+> +      - const: qcom,qru1000-tlmm
+> +
+> +  reg:
+> +    items:
+> +      - description: Base address of TLMM register space
+> +      - description: Size of TLMM register space
+> +
+> +  interrupts:
+> +    minItems: 0
 
-This is fixed in patch #1 in this set, however for some reason DT
-patchwork did not get it (maybe size too big?).
+Cannot be 0 of interrupts.
 
-For reference, the patch is available in Qualcomm patchwork:
-https://patchwork.kernel.org/project/linux-arm-msm/patch/20220930200529.3=
-31223-2-krzysztof.kozlowski@linaro.org/
+> +    maxItems: 1
+> +    items:
+> +      - const: TLMM summary IRQ
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  wakeup-parent:
+> +    maxItems: 1
+> +    description:
+> +      Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> +      a general description of GPIO and interrupt bindings.
+> +
+> +      Please refer to pinctrl-bindings.txt in this directory for details of the
+> +      common pinctrl bindings used by client devices, including the meaning of the
+> +      phrase "pin configuration node".
+> +
+> +      The pin configuration nodes act as a container for an arbitrary number of
+> +      subnodes. Each of these subnodes represents some desired configuration for a
+> +      pin, a group, or a list of pins or groups. This configuration can include the
+> +      mux function to select on those pin(s)/group(s), and various pin configuration
+> +      parameters, such as pull-up, drive strength, etc.
+> +
+> +
+> +# PIN CONFIGURATION NODES
+> +patternPropetries:
+> +  '^.*$':
+> +    if:
+> +      type: object
+> +    then:
+
+Nope, that's not correct binding. It does not work. It never worked.
+
+Please do it exactly like:
+https://lore.kernel.org/linux-devicetree/20220930200529.331223-1-krzysztof.kozlowski@linaro.org/T/#m08b62ef5d873a52a5cbf3c53b25eff03726e7a16
+https://lore.kernel.org/linux-devicetree/20220927173702.5200-1-krzysztof.kozlowski@linaro.org/T/#t
+
+
+> +      properties:
+> +        pins:
+> +          description:
+> +            List of gpio pins affected by the properties specified in
+> +            this subnode.
+> +          items:
+> +            oneOf:
+> +              - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-9][0-9]|20[0-9])"
+> +              - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
+> +            minItems: 1
+> +            maxItems: 36
+> +        function:
+> +          description:
+> +            Specify the alternative function to be configured for the
+> +            specified pins. Functions are only valid for gpio pins.
+> +          enum: [gpio, aon_cam, atest_char, atest_char0, atest_char1, atest_char2, atest_char3,
+> +            atest_usb0, atest_usb00, atest_usb01, atest_usb02, atest_usb03, audio_ref, cam_mclk,
+> +            cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4,
+> +            cmu_rng0, cmu_rng1, cmu_rng2, cmu_rng3, coex_uart1, coex_uart2, cri_trng, cri_trng0,
+> +            cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1, ddr_pxi2, ddr_pxi3, dp_hot, gcc_gp1,
+> +            gcc_gp2, gcc_gp3, ibi_i3c, jitter_bist, mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2,
+> +            mdp_vsync3, mi2s0_data0, mi2s0_data1, mi2s0_sck, mi2s0_ws, mi2s2_data0, mi2s2_data1,
+> +            mi2s2_sck, mi2s2_ws, mss_grfc0, mss_grfc1, mss_grfc10, mss_grfc11, mss_grfc12,
+> +            mss_grfc2, mss_grfc3, mss_grfc4, mss_grfc5, mss_grfc6, mss_grfc7, mss_grfc8, mss_grfc9,
+> +            nav_0, nav_1, nav_2, pcie0_clkreqn, pcie1_clkreqn, phase_flag0, phase_flag1,
+> +            phase_flag10, phase_flag11, phase_flag12, phase_flag13, phase_flag14, phase_flag15,
+> +            phase_flag16, phase_flag17, phase_flag18, phase_flag19, phase_flag2, phase_flag20,
+> +            phase_flag21, phase_flag22, phase_flag23, phase_flag24, phase_flag25, phase_flag26,
+> +            phase_flag27, phase_flag28, phase_flag29, phase_flag3, phase_flag30, phase_flag31,
+> +            phase_flag4, phase_flag5, phase_flag6, phase_flag7, phase_flag8, phase_flag9, pll_bist,
+> +            pll_clk, pri_mi2s, prng_rosc0, prng_rosc1, prng_rosc2, prng_rosc3, qdss_cti, qdss_gpio,
+> +            qdss_gpio0, qdss_gpio1, qdss_gpio10, qdss_gpio11, qdss_gpio12, qdss_gpio13, qdss_gpio14,
+> +            qdss_gpio15, qdss_gpio2, qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6, qdss_gpio7,
+> +            qdss_gpio8, qdss_gpio9, qlink0_enable, qlink0_request, qlink0_wmss, qlink1_enable,
+> +            qlink1_request, qlink1_wmss, qlink2_enable, qlink2_request, qlink2_wmss, qspi0, qspi1,
+> +            qspi2, qspi3, qspi_clk, qspi_cs, qup0, qup1, qup10, qup11, qup12, qup13, qup14, qup15,
+> +            qup16, qup17, qup18, qup19, qup2, qup20, qup21, qup3, qup4, qup5, qup6, qup7, qup8,
+> +            qup9, qup_l4, qup_l5, qup_l6, sd_write, sdc40, sdc41, sdc42, sdc43, sdc4_clk, sdc4_cmd,
+> +            sec_mi2s, tb_trig, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3, tmess_prng0, tmess_prng1,
+> +            tmess_prng2, tmess_prng3, tsense_pwm1, tsense_pwm2, uim0_clk, uim0_data, uim0_present,
+> +            uim0_reset, uim1_clk, uim1_data, uim1_present, uim1_reset, usb2phy_ac, usb_phy, vfr_0,
+> +            vfr_1, vsense_trigger]
+> +        drive-strength:
+> +          enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +          default: 2
+> +          description:
+> +            Selects the drive strength for the specified pins, in mA.
+> +        bias-pull-down: true
+> +        bias-pull-up: true
+> +        bias-disable: true
+> +        output-high: true
+> +        output-low: true
+
+You miss blank lines in several places. Please do it exactly like I
+shown for sdm845.
+
+> +      required:
+> +        - pins
+> +        - function
+> +      additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    tlmm: pinctrl@03000000 {
+> +      compatible = "qcom,qdu10000-tlmm";
+> +      reg = <0x03000000 0xdc2000>;
+> +      interrupts = <0 208 0>;
+
+Use defines.
+
+> +      gpio-controller;
+> +      #gpio-cells = <2>;
+> +      interrupt-controller;
+> +      #interrupt-cells = <2>;
+> +      wakeup-parent = <&pdc>;
+
+Missing children.
+
+> +    };
 
 Best regards,
 Krzysztof
