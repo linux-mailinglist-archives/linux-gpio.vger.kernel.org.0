@@ -2,76 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85EA85F35FE
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 20:58:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80AFA5F362A
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 21:16:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiJCS56 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Oct 2022 14:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        id S229703AbiJCTQW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Oct 2022 15:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiJCS5x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 14:57:53 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19EE1371B6
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 11:57:50 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id e18so7589856wmq.3
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Oct 2022 11:57:50 -0700 (PDT)
+        with ESMTP id S229461AbiJCTQV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 15:16:21 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3DB30573
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 12:16:18 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id qx23so6190964ejb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Oct 2022 12:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=sWBCePO1yc3ehsSOLYqdO1HxPbUDLg8Mw6hPEvtGOZ4=;
-        b=E5IJ+vLtHUuKDhwQRojA3DL0RPFg3zDYAMiq48QV0Wnw1F0J2MeXI66nhLKVr2R4i0
-         WbqJjuFGk6T2n9rEII8q13s/dNnhaAW8QvN8TRlLw3RIatgXh7fMqeLfELEmb0i4z3pu
-         hTg51h763QiSga4PW/t6D5TP+SRA6qrex6p4ZTUg1AaPtuD9SPv1WWmlljGq367yxs55
-         ANNwChEBqX/zcC02gME1NSL09CMSRD9e1djmUeUo2NE/SJTXcx/F5V8fd+n2jt5vxeG1
-         EPuOg5/ueAdt+RUJSIjt+4uKXKS47KoAJRj8VtNtzj2HnGNNGqYWaJORQFakYrVpkKcy
-         HICg==
+        bh=EJmCld9y6KB8eRy9I0zDmp0PKZYGcStJe83KPH6aFr8=;
+        b=ic08+oY1jDUkZSpQ6tzgKhyeypyfmFm9NgjAp4vYRjxeBteDUC1G46Z3O/k5Y5UTkG
+         eMfPo8nRiCm2Ja3n5+iuqZzFnZ4+tS7PQ/Lbg21gq/L3+eYUUs8ZeGS1A9YHAkjggDOn
+         C6mqNANFaetO8+/pEFt+/fcrmKcYz3PvimOMrfnr96gsBL+1+poZM+PsqxCz6LBx5bJQ
+         P32RWoUsV/Z1+rzmiqZ8LmfN7kGJAPu2dz9YNI6rE+DncCPTcodsv9h7sEuL+Omx1rcG
+         l2V0qQ1gdAUxQJqvoq3dqvgMXQ5KVaOqqGjZGGWpMvull1PUaaxmqvNLqjeRDDKgIR7R
+         L2jQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=sWBCePO1yc3ehsSOLYqdO1HxPbUDLg8Mw6hPEvtGOZ4=;
-        b=s5QqH5VqZeYnjpDJEOCEfJRNPoy1WQZPmBsPqZ3aVrhvR6j1/h2v0DFzgie/osmqmc
-         Tv4Vsw8dcvLJmeYwldWWLa/ldD2pcpezlursF2gmfTiASVPM48tVwGufDkbjqEhrsS2q
-         Os04LwiWtZZgHowkhOLFu+fwAenvY7LHTFZz0F0K4Kuzh2WBNr34Eq+1FjkCUB73lWFk
-         75OpPMkVkfUmcSiy3ZM7AHCaFcLSnCm/YzJ7AewrXUjJk0jcAXzwzQO603pY61fYfYaF
-         +0XmqhKQz8H8kKvvzjF6xmgbgGo1ZnlVMcYdJzGBOxjMK9TxQm+NPwMB7buh8RhjW7yK
-         1z3w==
-X-Gm-Message-State: ACrzQf0dNJy0V9hFGWNqLerDn/D0hqu3ac+39U9MkKZc4bZQPwmBGKSQ
-        rU6VUTvjrsjrWO1O/P8QTeWYxMc3kWGZk1fCdR737A==
-X-Google-Smtp-Source: AMsMyM4gQpRW6RybKOyY5PojGAmBhRa8j9y95xNU3ZsWqA5W1JM9eyNsecIeEJ9jfyDrbhPsIp7lGq+039PtZSZEY0k=
-X-Received: by 2002:a05:600c:1e08:b0:3b4:8fef:d63c with SMTP id
- ay8-20020a05600c1e0800b003b48fefd63cmr7634987wmb.158.1664823469252; Mon, 03
- Oct 2022 11:57:49 -0700 (PDT)
+        bh=EJmCld9y6KB8eRy9I0zDmp0PKZYGcStJe83KPH6aFr8=;
+        b=bDPlIZp33LNzSNehvkYuKp0OaGDgEiDijsP1nrlg9Bm6QfnYuwNThoaqy4Daj+ZlK6
+         dM+QzbeaVyY709IBm5MaPO/2W8xPt4u0ruVLCqRdOEZiy/8zVfecMHdrhMlUMs7gy8Vr
+         o+SSoYiPCNviUiT23xZ4clMF0EYQ29nrdIep6OnBNpcxAf9xlHDfb6/jVJzULnakwjF0
+         cMmIijq73Gt9J9K8cNq1lon4NNxDZeFH6OgT2E3AhLoxz6vN8kqCsgn6Db4+Yf4Tc2Hg
+         who2L3lMG5HU2hbcc95Zt7k32K6w++Zm8A+SSqVK7FlAf7ZUdwYodVKEV1iIiFo0Cq0f
+         CSPw==
+X-Gm-Message-State: ACrzQf11Muc5mi1W0kxKe8lBp2EIl5jFmQnn6dkZ0JZ9Ygjep/O6Rb43
+        2kmvx1DdYzot3K/v+NohwV+QLlPSHlPZ47k7Nq2IIg==
+X-Google-Smtp-Source: AMsMyM5CqC5O7zpV/nIPjTWE5eb+IDXEDjT9fokGoCO+9qLYEhRLXEbVhUGylha928ZTbiRuDkD5wWHpdhWnORWiR6o=
+X-Received: by 2002:a17:906:8a46:b0:781:71fc:d23f with SMTP id
+ gx6-20020a1709068a4600b0078171fcd23fmr16486043ejc.500.1664824577115; Mon, 03
+ Oct 2022 12:16:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221003074520.2526581-1-linus.walleij@linaro.org>
-In-Reply-To: <20221003074520.2526581-1-linus.walleij@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 3 Oct 2022 20:57:38 +0200
-Message-ID: <CAMRc=McJha_-0XqDcyyZZYESRWQTnkgJJc0yvcoxb7MVU94hCQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: tc3589x: Make irqchip immutable
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>
+References: <20221001210725.60967-1-mailingradian@gmail.com>
+In-Reply-To: <20221001210725.60967-1-mailingradian@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 3 Oct 2022 21:16:06 +0200
+Message-ID: <CACRpkdYnFBbVqUEfqn65y-8Bit9yu_FbkX4voW1z6viZk+KCQA@mail.gmail.com>
+Subject: Re: [PATCH v6 0/3] SDM670 Pin Control Driver
+To:     Richard Acayan <mailingradian@gmail.com>
+Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 3, 2022 at 9:45 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Sat, Oct 1, 2022 at 11:07 PM Richard Acayan <mailingradian@gmail.com> wrote:
 >
-> This turns the Toshiba tc3589x gpio irqchip immutable.
->
-> Cc: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
+> Changes since v5:
+>  - remove function requirement in schema
+>  - change "-state$" regex to double quotes in schema
+>  - drop quotes from qcom-tlmm-state ref in dt schema
 
-I applied it to my for-next tree and will send it to Linus T. together
-with my GPIO PR later this week.
+The DT bindings seem fine, I'm waiting for Bjorns review of the driver
+before applying.
 
-Bart
+Yours,
+Linus Walleij
