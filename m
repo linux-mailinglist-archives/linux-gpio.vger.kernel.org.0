@@ -2,101 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 026B65F2E69
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 11:47:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAAAC5F312B
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 15:25:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbiJCJrd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Oct 2022 05:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58352 "EHLO
+        id S229963AbiJCNZK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Oct 2022 09:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbiJCJrS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 05:47:18 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5C8DFC6
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 02:44:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664790282; x=1696326282;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Xb8ggPFy+eDXOpSRxMhJfe7mhTnBJJB/jC/Lnoz45aA=;
-  b=U+IuYG+NpJ8WzkZLSMQPPtkPsh2zzyvkODNZ1si4+7DFrHwHqyuo6Aom
-   UZAErf5hOEVk+x7gqEWzKEz9W2weKm0ld9PyIMRCpUYUkm6HI3hVvekBg
-   aacuNw95Iah2RaDZSUFy6W797z4ghMgU8ZHyphiZUzte5BqBs7nS6dDpf
-   DSW2/DT8av9RqTw7J3XfCahWJWkanH+wgrBj9ogPWAVn0RXoBSZmdkkMt
-   y5lTWqYrcma8Jz8QbnRVMIOZFN+q8vAvooKKIl9H5rJXmDN0mN29t7Sx0
-   9YRyx1Y+igGi7Zc/B22iZuKDd+SYHWHS2D0lzk+WMx6NofF/5WjWxqatE
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="304080114"
-X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
-   d="scan'208";a="304080114"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 02:44:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="656669934"
-X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
-   d="scan'208";a="656669934"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 03 Oct 2022 02:44:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ofI07-001Rmr-0z;
-        Mon, 03 Oct 2022 12:44:39 +0300
-Date:   Mon, 3 Oct 2022 12:44:39 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux GPIO <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [GIT PULL] intel-gpio for 6.1-1
-Message-ID: <YzqvByGu2W9JH1wH@smile.fi.intel.com>
-References: <Yym/j+Y9MBOIhWtK@black.fi.intel.com>
- <CAMRc=Me873ynTWMyM0oe434zMbb3kdFfAUELFVc+hquedDfKHg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Me873ynTWMyM0oe434zMbb3kdFfAUELFVc+hquedDfKHg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230089AbiJCNZD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 09:25:03 -0400
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7515E1C40E;
+        Mon,  3 Oct 2022 06:24:58 -0700 (PDT)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-131fd187e35so9215867fac.7;
+        Mon, 03 Oct 2022 06:24:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=dp9Q43aEM0PPaQLtEehgy86DJM9cN8chhlldSX2/zbE=;
+        b=h9OCJiwwVFOgpz7B3sueZwM3erDo0ko4JiMkUQ7Tl8My1W+VEcNKaLy2Nc2csVHfMr
+         NLCJrW6MBOga7zlGcPUQYLmR7IHMI8e1WxWY9YKaK+NABrWIfExAhkbnys7Lvnvl54Oc
+         I4Gh1vyeIHd8xAJmrK0bPC4/Jy+nmWIOFsWAKx+gmWoWdF9nKX82T99ft82WEFzC2eqG
+         vN8XD0iYSRx8MvBnP5sC3zwLdvBLdd1I+bwIZM/sHXyEt45KCyPNrU+hsAOBJRVwrq8j
+         XJQFJ9pmg0SQ/tBVd7NTX6x9mH3jI6KjkTkfFensjDqiArV/9GxN5/NfCJJPgwCSpX+S
+         u9mw==
+X-Gm-Message-State: ACrzQf1kL8r1A4bQ9/79bxpDOVR9Sc8oBhjOw18tBQZcq6dWktpFSXLL
+        EAtqz5On49WMaTqlJxsgLA==
+X-Google-Smtp-Source: AMsMyM7P6fWDgZWJ+pDZmkkAnk2LXEdlTXcYkaRZqBA/R/V40rxhbTlyp2FNBvV/KD5Twb5VdE5p6w==
+X-Received: by 2002:a05:6870:c5a4:b0:131:6edd:3955 with SMTP id ba36-20020a056870c5a400b001316edd3955mr5528184oab.96.1664803497375;
+        Mon, 03 Oct 2022 06:24:57 -0700 (PDT)
+Received: from macbook.herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g97-20020a9d12ea000000b0065a193c08absm2397902otg.34.2022.10.03.06.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Oct 2022 06:24:57 -0700 (PDT)
+Received: (nullmailer pid 1863803 invoked by uid 1000);
+        Mon, 03 Oct 2022 13:24:48 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Melody Olvera <quic_molvera@quicinc.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20221001030546.28220-2-quic_molvera@quicinc.com>
+References: <20221001030546.28220-1-quic_molvera@quicinc.com> <20221001030546.28220-2-quic_molvera@quicinc.com>
+Message-Id: <166479587409.1658979.1716808349864966908.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and QRU1000 pinctrl bindings
+Date:   Mon, 03 Oct 2022 08:24:48 -0500
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 20, 2022 at 04:05:14PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Sep 20, 2022 at 3:26 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > Hi Linux GPIO  maintainers,
-> >
-> > A small quirk for GPIO ACPI library. Was a few weeks in Linux Next, shouldn't
-> > be any conflicts with anything. Please pull for v6.1.
-> >
-> > Thanks,
-> >
-> > With Best Regards,
-> > Andy Shevchenko
-> >
-> > The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
-> >
-> >   Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
-> >
-> > are available in the Git repository at:
-> >
-> >   git@gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.1-1
-> >
+On Fri, 30 Sep 2022 20:05:45 -0700, Melody Olvera wrote:
+> Add documentation details for device tree bindings for QDU1000 and QRU1000
+> TLMM devices.
 > 
-> Pulled, but what happened with the git://git.kernel.org/... address? :(
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  .../pinctrl/qcom,qdru1000-pinctrl.yaml        | 133 ++++++++++++++++++
+>  1 file changed, 133 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml
+> 
 
-Because change wasn't submitted and hence old script had been used. Now
-submitted and updated all my local repos with the scripts I'm using.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Thanks for pointing this out.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:81:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:82:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:83:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:84:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:85:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:86:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:87:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:88:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:89:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:90:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:91:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:92:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:93:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:94:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:95:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:96:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:97:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:98:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:99:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:100:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:101:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:102:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:103:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:104:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:105:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml:106:13: [warning] wrong indentation: expected 17 but found 12 (indentation)
 
--- 
-With Best Regards,
-Andy Shevchenko
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: properties:interrupts:minItems: 0 is less than the minimum of 1
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: properties:interrupts: {'minItems': 0, 'maxItems': 1, 'items': [{'const': 'TLMM summary IRQ'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: properties:interrupts: 'oneOf' conditional failed, one must be fixed:
+	[{'const': 'TLMM summary IRQ'}] is too short
+	False schema does not allow 0
+	1 was expected
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: 'patternPropetries' is not one of ['$id', '$schema', 'title', 'description', 'examples', 'required', 'allOf', 'anyOf', 'oneOf', 'definitions', '$defs', 'additionalProperties', 'dependencies', 'dependentRequired', 'dependentSchemas', 'patternProperties', 'properties', 'if', 'then', 'else', 'unevaluatedProperties', 'deprecated', 'maintainers', 'select', '$ref']
+	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: 'oneOf' conditional failed, one must be fixed:
+	'unevaluatedProperties' is a required property
+	'additionalProperties' is a required property
+	hint: Either unevaluatedProperties or additionalProperties must be present
+	from schema $id: http://devicetree.org/meta-schemas/core.yaml#
+./Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: error checking schema file
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.yaml: ignoring, error in schema: properties: interrupts: minItems
+Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.example.dts:21.32-30.11: Warning (unit_address_format): /example-0/pinctrl@03000000: unit name should not have leading 0s
+Documentation/devicetree/bindings/pinctrl/qcom,qdru1000-pinctrl.example.dtb:0:0: /example-0/pinctrl@03000000: failed to match any schema with compatible: ['qcom,qdu10000-tlmm']
 
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
