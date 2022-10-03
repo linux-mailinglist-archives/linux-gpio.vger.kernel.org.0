@@ -2,53 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB8F25F263F
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 00:51:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ADD15F2B73
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 10:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbiJBWvZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 2 Oct 2022 18:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52322 "EHLO
+        id S230472AbiJCIMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Oct 2022 04:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbiJBWur (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 2 Oct 2022 18:50:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A094183BD;
-        Sun,  2 Oct 2022 15:50:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DADE360F10;
-        Sun,  2 Oct 2022 22:50:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8439DC43150;
-        Sun,  2 Oct 2022 22:50:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664751012;
-        bh=Ij9qIbVDOEwLjRKRVfWKa91KXVvfWGsn+1ZqzNaeZok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Br8dGoPBKpvPUwfipDblk5Pc/cYmX7ZaEDLG89VrSiz/pTBLwH8TbhtjOHNo3c3C0
-         YKfbgbIYyfVGn2aetsjQ7OOvpwWEJBgdRu+US0m+2pUaDHQ01m1rcsfiJ5N0QEttGB
-         s/rYBwS9l//KqXieCC6BxUc2evxEw26Qd1ypVaAA1+Rkm5q1C9PGmxtw9iFxkZ1Y3L
-         zySubN4VLVGpX6z3jp0rU+6OJ2prchnvibZCIZzF1x5qAOV5LXkSmJRl6l7Ac4cvLZ
-         4m6eYdLaqmGhtZ6fTdalyTiviw5SsaJ7/VStn8ryPw/f4z457JduHIw0Ku2W0qqr23
-         YH4L6JC+4CsRQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+        with ESMTP id S230516AbiJCILu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 04:11:50 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E3558DE2
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 00:47:21 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id s17so519188ljs.12
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Oct 2022 00:47:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=WsMDIgTqIoOZSUIMDyCEkcJfjoFUy9Uu1cpUdao7SPA=;
+        b=mSMBZmJ0lQkhJe3xW4/oZZuplWwTUC9P553F69yODJoYP3lYm256fhZzdnKEu67rBV
+         308/wL3bLS49BLsI88oD6sKFM62O8wLKqTaGBMFZ5+GrxHQ5waSk16mCPBQUTUNUh2tI
+         FgHDJ1OnXSIOEOWsIxKINgd1vdjXduxEgpDaobHN0WHwRqUU0HPGU6glraPfBWxkOS4R
+         7ms7OvLQprRqDDZGOM7/ZBEsY7TesHJHPJrF/PkTn9F/erVF3uAzOdm21zQJTQbRh4g0
+         7G2syioJJoUh33AVT06c0wFtZY5NxtonT7QXMSqghc9DlVGfig7/BxGKYljnGUyv0//v
+         8G0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=WsMDIgTqIoOZSUIMDyCEkcJfjoFUy9Uu1cpUdao7SPA=;
+        b=IXDPfWza27SH+/Q3qj7naJVs+x+/zmNf4Da79FffDQWuSVzjwYfnOw5zkOoNU3y2Ty
+         EWBH2p7pxx8S2q9vuVKT4919AL29hj7uJb01Nf1BOeXisri3umEmVopZBiGVsEl+rqSa
+         AFzY9gWe2/EVS/Czc1QpqEziI0e2x4f2v+ygf+twyGS1g3fOynYAv3YD5hvmce6cUg7N
+         /LxiQFDITF7aMaJDspfN/mpmfQ+VyFHxkdRJEyw/NVJ0DKPButp0CuykotmlV+BYSUyL
+         YCGZJcQN7vDhnmybCNl89CYZtaRKVcNTF7NV9d9nlJILDylNyZXGJXQWwMxIDLNGj5mT
+         WFdw==
+X-Gm-Message-State: ACrzQf2TygV7N9CFbaJ6BagggM0LfQa38GC65eU1Ref+VZXV648Orofo
+        vPJSJSDAe66BI335IvrqeVFIvXhLAl4sTA==
+X-Google-Smtp-Source: AMsMyM5Yvgq5ceqahssxogk84F/hTcOHimEMShwOgtsFtBvNwT6HKwpv0IrQ1LuOBlh0BrZxAwtuRQ==
+X-Received: by 2002:a2e:80d4:0:b0:26d:e557:a9ca with SMTP id r20-20020a2e80d4000000b0026de557a9camr77160ljg.311.1664783123771;
+        Mon, 03 Oct 2022 00:45:23 -0700 (PDT)
+Received: from fedora.. ([85.235.10.72])
+        by smtp.gmail.com with ESMTPSA id be12-20020a056512250c00b00498ff4ae746sm1342371lfb.294.2022.10.03.00.45.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Oct 2022 00:45:22 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.19 18/29] gpio: ftgpio010: Make irqchip immutable
-Date:   Sun,  2 Oct 2022 18:49:11 -0400
-Message-Id: <20221002224922.238837-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221002224922.238837-1-sashal@kernel.org>
-References: <20221002224922.238837-1-sashal@kernel.org>
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH v2] gpio: tc3589x: Make irqchip immutable
+Date:   Mon,  3 Oct 2022 09:45:20 +0200
+Message-Id: <20221003074520.2526581-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,91 +66,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
-
-[ Upstream commit ab637d48363d7b8ee67ae089808a8bc6051d53c4 ]
-
-This turns the FTGPIO010 irqchip immutable.
-
-Tested on the D-Link DIR-685.
+This turns the Toshiba tc3589x gpio irqchip immutable.
 
 Cc: Marc Zyngier <maz@kernel.org>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpio-ftgpio010.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ChangeLog v1->v2:
+- Add the proper gpiochip_disable|enable_irq() calls in
+  mask|unmask, oops.
+---
+ drivers/gpio/gpio-tc3589x.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
-index f422c3e129a0..f77a965f5780 100644
---- a/drivers/gpio/gpio-ftgpio010.c
-+++ b/drivers/gpio/gpio-ftgpio010.c
-@@ -41,14 +41,12 @@
-  * struct ftgpio_gpio - Gemini GPIO state container
-  * @dev: containing device for this instance
-  * @gc: gpiochip for this instance
-- * @irq: irqchip for this instance
-  * @base: remapped I/O-memory base
-  * @clk: silicon clock
-  */
- struct ftgpio_gpio {
- 	struct device *dev;
- 	struct gpio_chip gc;
--	struct irq_chip irq;
- 	void __iomem *base;
- 	struct clk *clk;
+diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
+index 443fe975bf13..e62ee7e56908 100644
+--- a/drivers/gpio/gpio-tc3589x.c
++++ b/drivers/gpio/gpio-tc3589x.c
+@@ -230,6 +230,7 @@ static void tc3589x_gpio_irq_mask(struct irq_data *d)
+ 
+ 	tc3589x_gpio->regs[REG_IE][regoffset] &= ~mask;
+ 	tc3589x_gpio->regs[REG_DIRECT][regoffset] |= mask;
++	gpiochip_disable_irq(gc, offset);
+ }
+ 
+ static void tc3589x_gpio_irq_unmask(struct irq_data *d)
+@@ -240,17 +241,20 @@ static void tc3589x_gpio_irq_unmask(struct irq_data *d)
+ 	int regoffset = offset / 8;
+ 	int mask = BIT(offset % 8);
+ 
++	gpiochip_enable_irq(gc, offset);
+ 	tc3589x_gpio->regs[REG_IE][regoffset] |= mask;
+ 	tc3589x_gpio->regs[REG_DIRECT][regoffset] &= ~mask;
+ }
+ 
+-static struct irq_chip tc3589x_gpio_irq_chip = {
++static const struct irq_chip tc3589x_gpio_irq_chip = {
+ 	.name			= "tc3589x-gpio",
+ 	.irq_bus_lock		= tc3589x_gpio_irq_lock,
+ 	.irq_bus_sync_unlock	= tc3589x_gpio_irq_sync_unlock,
+ 	.irq_mask		= tc3589x_gpio_irq_mask,
+ 	.irq_unmask		= tc3589x_gpio_irq_unmask,
+ 	.irq_set_type		= tc3589x_gpio_irq_set_type,
++	.flags =		IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
  };
-@@ -70,6 +68,7 @@ static void ftgpio_gpio_mask_irq(struct irq_data *d)
- 	val = readl(g->base + GPIO_INT_EN);
- 	val &= ~BIT(irqd_to_hwirq(d));
- 	writel(val, g->base + GPIO_INT_EN);
-+	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
- }
  
- static void ftgpio_gpio_unmask_irq(struct irq_data *d)
-@@ -78,6 +77,7 @@ static void ftgpio_gpio_unmask_irq(struct irq_data *d)
- 	struct ftgpio_gpio *g = gpiochip_get_data(gc);
- 	u32 val;
+ static irqreturn_t tc3589x_gpio_irq(int irq, void *dev)
+@@ -321,7 +325,7 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
+ 	tc3589x_gpio->chip.base = -1;
  
-+	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
- 	val = readl(g->base + GPIO_INT_EN);
- 	val |= BIT(irqd_to_hwirq(d));
- 	writel(val, g->base + GPIO_INT_EN);
-@@ -221,6 +221,16 @@ static int ftgpio_gpio_set_config(struct gpio_chip *gc, unsigned int offset,
- 	return 0;
- }
- 
-+static const struct irq_chip ftgpio_irq_chip = {
-+	.name = "FTGPIO010",
-+	.irq_ack = ftgpio_gpio_ack_irq,
-+	.irq_mask = ftgpio_gpio_mask_irq,
-+	.irq_unmask = ftgpio_gpio_unmask_irq,
-+	.irq_set_type = ftgpio_gpio_set_irq_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	 GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int ftgpio_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -277,14 +287,8 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
- 	if (!IS_ERR(g->clk))
- 		g->gc.set_config = ftgpio_gpio_set_config;
- 
--	g->irq.name = "FTGPIO010";
--	g->irq.irq_ack = ftgpio_gpio_ack_irq;
--	g->irq.irq_mask = ftgpio_gpio_mask_irq;
--	g->irq.irq_unmask = ftgpio_gpio_unmask_irq;
--	g->irq.irq_set_type = ftgpio_gpio_set_irq_type;
--
- 	girq = &g->gc.irq;
--	girq->chip = &g->irq;
-+	gpio_irq_chip_set_chip(girq, &ftgpio_irq_chip);
- 	girq->parent_handler = ftgpio_gpio_irq_handler;
- 	girq->num_parents = 1;
- 	girq->parents = devm_kcalloc(dev, 1, sizeof(*girq->parents),
+ 	girq = &tc3589x_gpio->chip.irq;
+-	girq->chip = &tc3589x_gpio_irq_chip;
++	gpio_irq_chip_set_chip(girq, &tc3589x_gpio_irq_chip);
+ 	/* This will let us handle the parent IRQ in the driver */
+ 	girq->parent_handler = NULL;
+ 	girq->num_parents = 0;
 -- 
-2.35.1
+2.37.3
 
