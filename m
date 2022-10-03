@@ -2,125 +2,247 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADD15F2B73
-	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 10:12:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E10335F2B96
+	for <lists+linux-gpio@lfdr.de>; Mon,  3 Oct 2022 10:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbiJCIMN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 3 Oct 2022 04:12:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45610 "EHLO
+        id S229699AbiJCIWH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 3 Oct 2022 04:22:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbiJCILu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 04:11:50 -0400
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E3558DE2
-        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 00:47:21 -0700 (PDT)
-Received: by mail-lj1-x22e.google.com with SMTP id s17so519188ljs.12
-        for <linux-gpio@vger.kernel.org>; Mon, 03 Oct 2022 00:47:21 -0700 (PDT)
+        with ESMTP id S230118AbiJCIVu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 3 Oct 2022 04:21:50 -0400
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B214DB5A
+        for <linux-gpio@vger.kernel.org>; Mon,  3 Oct 2022 00:56:11 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id b4so8471380wrs.1
+        for <linux-gpio@vger.kernel.org>; Mon, 03 Oct 2022 00:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=WsMDIgTqIoOZSUIMDyCEkcJfjoFUy9Uu1cpUdao7SPA=;
-        b=mSMBZmJ0lQkhJe3xW4/oZZuplWwTUC9P553F69yODJoYP3lYm256fhZzdnKEu67rBV
-         308/wL3bLS49BLsI88oD6sKFM62O8wLKqTaGBMFZ5+GrxHQ5waSk16mCPBQUTUNUh2tI
-         FgHDJ1OnXSIOEOWsIxKINgd1vdjXduxEgpDaobHN0WHwRqUU0HPGU6glraPfBWxkOS4R
-         7ms7OvLQprRqDDZGOM7/ZBEsY7TesHJHPJrF/PkTn9F/erVF3uAzOdm21zQJTQbRh4g0
-         7G2syioJJoUh33AVT06c0wFtZY5NxtonT7QXMSqghc9DlVGfig7/BxGKYljnGUyv0//v
-         8G0A==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=bB4QODiV4ix6zkRrvYNhY3GV2ClzEd5J+34STuLCzKw=;
+        b=yZ5ng242zRMNlTnRBjTZtxobncF3M8tT6KrSVOIR2XyKNpVv8ggJpdPN+rPLdlpGNL
+         sPFvj6JbmhwHVfzA3eDj9eT7NWDi4F2nvyFlLWJvZ7MebMNACswGxSTlTtSoDH3oRYtg
+         3PAaOCFesm7gfsx4C47Z8N11ICSaWRgvEmguT05aqsi8Sajet3NUHYKFAZr/XKMso/7n
+         o39yxNo1PRx2b3MeyKIDtyHNmTsoSwydwd/vnVqYVwzhTFujKSDLdVytMZFhVZfV+KoB
+         z6pX0OE0kPF5suH5jVt2eRrwhnMrrwBpgKn4TXSp/16ecozMkQI9SdpEZ9o0sIkdwRPd
+         dNEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=WsMDIgTqIoOZSUIMDyCEkcJfjoFUy9Uu1cpUdao7SPA=;
-        b=IXDPfWza27SH+/Q3qj7naJVs+x+/zmNf4Da79FffDQWuSVzjwYfnOw5zkOoNU3y2Ty
-         EWBH2p7pxx8S2q9vuVKT4919AL29hj7uJb01Nf1BOeXisri3umEmVopZBiGVsEl+rqSa
-         AFzY9gWe2/EVS/Czc1QpqEziI0e2x4f2v+ygf+twyGS1g3fOynYAv3YD5hvmce6cUg7N
-         /LxiQFDITF7aMaJDspfN/mpmfQ+VyFHxkdRJEyw/NVJ0DKPButp0CuykotmlV+BYSUyL
-         YCGZJcQN7vDhnmybCNl89CYZtaRKVcNTF7NV9d9nlJILDylNyZXGJXQWwMxIDLNGj5mT
-         WFdw==
-X-Gm-Message-State: ACrzQf2TygV7N9CFbaJ6BagggM0LfQa38GC65eU1Ref+VZXV648Orofo
-        vPJSJSDAe66BI335IvrqeVFIvXhLAl4sTA==
-X-Google-Smtp-Source: AMsMyM5Yvgq5ceqahssxogk84F/hTcOHimEMShwOgtsFtBvNwT6HKwpv0IrQ1LuOBlh0BrZxAwtuRQ==
-X-Received: by 2002:a2e:80d4:0:b0:26d:e557:a9ca with SMTP id r20-20020a2e80d4000000b0026de557a9camr77160ljg.311.1664783123771;
-        Mon, 03 Oct 2022 00:45:23 -0700 (PDT)
-Received: from fedora.. ([85.235.10.72])
-        by smtp.gmail.com with ESMTPSA id be12-20020a056512250c00b00498ff4ae746sm1342371lfb.294.2022.10.03.00.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 00:45:22 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH v2] gpio: tc3589x: Make irqchip immutable
-Date:   Mon,  3 Oct 2022 09:45:20 +0200
-Message-Id: <20221003074520.2526581-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=bB4QODiV4ix6zkRrvYNhY3GV2ClzEd5J+34STuLCzKw=;
+        b=0H+lRiiesCKiof3G3pgAeCmpFQy945dRbPCxGoOAUdVgGRL+onsz8lVKjMkWflmyut
+         JMA/Ij3q53BYxg3jim+CTNcDbU7cJFGFPSxjhSIp0IXPJbYBQwaeMhsXANkc8C8D6Opx
+         E+9IatL4w8ONfT5VsOw+l+6AKhfPqwKp3lF2eNCb7fFchZ3JLnUFz3krUO4WUlSRwvxn
+         DVaHVPCExWWRvf/QPa7XKrJsMTavpdwhIOV66EuUDHLk9NkS4NA3XaQ01+NLZLTN9++5
+         LiFUxHrpqNn60vWd8U6BF9HCpO0s+gO90tMzc2kBLZTGDFokVcBO80W0yk2Bs7mMKZxq
+         ex9A==
+X-Gm-Message-State: ACrzQf30z1Ac5HtxwCSfTgBvvIvaXmVJ+0ljahwIvFuK21uU2WuM5Whi
+        5MRNEsBhYQMAdp2kqIoHfIwqxyIYfNQBRA==
+X-Google-Smtp-Source: AMsMyM6oHyT1f+Ni6PLeXacAjkpE6naKgTyswsbAsDu1OnUxvpPuNqtcoODYeCbSnrRiT8UBoIhs3Q==
+X-Received: by 2002:a05:651c:1a0a:b0:26c:d1e:7b3 with SMTP id by10-20020a05651c1a0a00b0026c0d1e07b3mr6508293ljb.160.1664783159226;
+        Mon, 03 Oct 2022 00:45:59 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id br32-20020a056512402000b0049d83646ce7sm1350514lfb.110.2022.10.03.00.45.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Oct 2022 00:45:58 -0700 (PDT)
+Message-ID: <7b253e51-30d4-7a71-2b14-7b987c3045fc@linaro.org>
+Date:   Mon, 3 Oct 2022 09:45:57 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v1 27/30] RISC-V: Add initial StarFive JH7110 device tree
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>,
+        Hal Feng <hal.feng@linux.starfivetech.com>
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220930074914.6757-1-hal.feng@linux.starfivetech.com>
+ <Yzgb0GzpLsV3RJyk@spud>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <Yzgb0GzpLsV3RJyk@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This turns the Toshiba tc3589x gpio irqchip immutable.
+On 01/10/2022 12:52, Conor Dooley wrote:
+> On Fri, Sep 30, 2022 at 03:49:14PM +0800, Hal Feng wrote:
+>> From: Emil Renner Berthing <kernel@esmil.dk>
+>>
+>> Add initial device tree for the JH7110 RISC-V SoC by
+>> StarFive Technology Ltd.
+>>
+>> Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+>> Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
+>> Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+> 
+> There's little point reviewing this dt since there's a load of issues
+> that you can trivially find by running dtbs_check/dt_binding_check, but
 
-Cc: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Add the proper gpiochip_disable|enable_irq() calls in
-  mask|unmask, oops.
----
- drivers/gpio/gpio-tc3589x.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Yep...
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index 443fe975bf13..e62ee7e56908 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -230,6 +230,7 @@ static void tc3589x_gpio_irq_mask(struct irq_data *d)
- 
- 	tc3589x_gpio->regs[REG_IE][regoffset] &= ~mask;
- 	tc3589x_gpio->regs[REG_DIRECT][regoffset] |= mask;
-+	gpiochip_disable_irq(gc, offset);
- }
- 
- static void tc3589x_gpio_irq_unmask(struct irq_data *d)
-@@ -240,17 +241,20 @@ static void tc3589x_gpio_irq_unmask(struct irq_data *d)
- 	int regoffset = offset / 8;
- 	int mask = BIT(offset % 8);
- 
-+	gpiochip_enable_irq(gc, offset);
- 	tc3589x_gpio->regs[REG_IE][regoffset] |= mask;
- 	tc3589x_gpio->regs[REG_DIRECT][regoffset] &= ~mask;
- }
- 
--static struct irq_chip tc3589x_gpio_irq_chip = {
-+static const struct irq_chip tc3589x_gpio_irq_chip = {
- 	.name			= "tc3589x-gpio",
- 	.irq_bus_lock		= tc3589x_gpio_irq_lock,
- 	.irq_bus_sync_unlock	= tc3589x_gpio_irq_sync_unlock,
- 	.irq_mask		= tc3589x_gpio_irq_mask,
- 	.irq_unmask		= tc3589x_gpio_irq_unmask,
- 	.irq_set_type		= tc3589x_gpio_irq_set_type,
-+	.flags =		IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static irqreturn_t tc3589x_gpio_irq(int irq, void *dev)
-@@ -321,7 +325,7 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	tc3589x_gpio->chip.base = -1;
- 
- 	girq = &tc3589x_gpio->chip.irq;
--	girq->chip = &tc3589x_gpio_irq_chip;
-+	gpio_irq_chip_set_chip(girq, &tc3589x_gpio_irq_chip);
- 	/* This will let us handle the parent IRQ in the driver */
- 	girq->parent_handler = NULL;
- 	girq->num_parents = 0;
--- 
-2.37.3
+> this SoB change is wrong - if Emil wrote the patch, then Jianlong's SoB
+> is either redundant or should be accompanied by a Co-developed-by tag.
+
+Depends. Jianlong might have just rebased the patch.
+
+> 
+> Ditto for patch 28/30 "RISC-V: Add StarFive JH7110 VisionFive2 board
+> device tree".
+> 
+>> ---
+>>  arch/riscv/boot/dts/starfive/jh7110.dtsi | 449 +++++++++++++++++++++++
+>>  1 file changed, 449 insertions(+)
+>>  create mode 100644 arch/riscv/boot/dts/starfive/jh7110.dtsi
+>>
+>> diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+>> new file mode 100644
+>> index 000000000000..46f418d4198a
+>> --- /dev/null
+>> +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> 
+>> +
+>> +	osc: osc {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +
+>> +	clk_rtc: clk_rtc {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +
+>> +	gmac0_rmii_refin: gmac0_rmii_refin {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <50000000>;
+> 
+> I assume, given osc has it's frequency set in the board dts, that these
+> are all oscillators on the SoC?
+> 
+>> +	};
+>> +
+>> +	gmac0_rgmii_rxin: gmac0_rgmii_rxin {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <125000000>;
+>> +	};
+>> +
+>> +	gmac1_rmii_refin: gmac1_rmii_refin {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <50000000>;
+>> +	};
+>> +
+>> +	gmac1_rgmii_rxin: gmac1_rgmii_rxin {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <125000000>;
+>> +	};
+>> +
+>> +	i2stx_bclk_ext: i2stx_bclk_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <12288000>;
+>> +	};
+>> +
+>> +	i2stx_lrck_ext: i2stx_lrck_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <192000>;
+>> +	};
+>> +
+>> +	i2srx_bclk_ext: i2srx_bclk_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <12288000>;
+>> +	};
+>> +
+>> +	i2srx_lrck_ext: i2srx_lrck_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <192000>;
+>> +	};
+>> +
+>> +	tdm_ext: tdm_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <49152000>;
+>> +	};
+>> +
+>> +	mclk_ext: mclk_ext {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <49152000>;
+>> +	};
+> 
+>> +		syscrg: syscrg@13020000 {
+> 
+> The generic node name for syscons is just "syscon" afaik.
+
+Yes.
+
+> 
+>> +			compatible = "syscon", "simple-mfd";
+
+And this is not allowed. Needs specific compatible.
+
+
+>> +			reg = <0x0 0x13020000 0x0 0x10000>;
+>> +
+> 
+>> +		aoncrg: aoncrg@17000000 {
+> 
+> Again, syscon as the node name?
+
+Yes.
+
+> 
+>> +			compatible = "syscon", "simple-mfd";
+
+And this is a NAK.
+
+>> +			reg = <0x0 0x17000000 0x0 0x10000>;
+>> +
+>> +		gpio: gpio@13040000 {
+> 
+> Someone else (Krzysztof maybe?) should comment, but is "pinctrl" not the
+> genric node name for pinctrl nodes?
+
+Yes, for pin controller nodes, this should be "pinctrl" and schema
+requires it. The problem was that his driver did not use generic pinctrl
+bindings, which is no-go on its own.
+
+This could be a gpio controller (so "gpio" would be fine), although
+compatible suggests otherwise.
+
+
+Best regards,
+Krzysztof
 
