@@ -2,106 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4364C5F42C1
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 14:15:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D555F43BF
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 14:59:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiJDMP1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 08:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        id S229616AbiJDM66 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 08:58:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiJDMP0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 08:15:26 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A44712768;
-        Tue,  4 Oct 2022 05:15:24 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id s30so14850964eds.1;
-        Tue, 04 Oct 2022 05:15:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=2lOHsA4YDq2IujWxO2OEfkKj+VmjOjVPd32CvU9w1c4=;
-        b=MtiN0+8DKyMoOZfm9dkixtCFFOQDi8dcF30pSFv3f78JsHYgtZQVlyGSKOnM8C9vQd
-         h2n8MQWwLwY9mLa5+1Es/JRxockRg/gB5JIGp4MlDibcA9d5y/3zkByIS8dcodmmpyFD
-         8sklYE0Bq9oE0cIrYdtMKWf9q37fXYjIImqAD8oLFaOQIvj+aptTtra/+eGUmK7qKfwF
-         6x6NPdICbxH4QZFpJNCqJNIPo8kdMOBL1mW5f091ksVHYljDOhHZNV2L269om61fIo8W
-         S0tAIXCTNSiKNgRMwQzabQsmXNh0rd2/6n5JNGviBTH+nIUJoGQaO+pA3Rfge9jJGcmH
-         EJsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=2lOHsA4YDq2IujWxO2OEfkKj+VmjOjVPd32CvU9w1c4=;
-        b=qsrZrKSNRkkqCeNA1FEcBkoUcc+w+jb4VrI3zQCJxUMApcdv4ezI0batD1uCttPssM
-         W0bDmpwFvKJbcNqCMOwmlf5rQQPUG/UaXgBd01EJhCpadbe+6ULJ3xcqlXhAGxBwPEeC
-         PTsJJ+V1nB483Ly9YDE/+UDN1unmLKKaPE7KVzrD2BrXnBRRQlSDtOefMw42ckf8hQvk
-         /uXmRKNzTi1gurC6L+/6GK8d+vybiPe/0anze8Vd1Td+99LSODnKU/sSVzgWT9pTQzsF
-         ReNCXrnvjFrL96DTc7e8jq7Jfu2wCqnw4BRrwUC1Tf7+l8aQ8v4HAVZ8Xj4gLVUevtwL
-         RUrw==
-X-Gm-Message-State: ACrzQf0R9TjiGFu7lMVwq9ShA6AaNU+TMSoxx4Ui8o+EEf8f0aWMio88
-        qpSADUCRfH8zjpnhdP5+t1E=
-X-Google-Smtp-Source: AMsMyM7sGqjKVDsAcBoTJRuW2xubDE5GjBS+Bd0StTskoL/V+fhdd8EfQQhWwh77AEluye9o145tIA==
-X-Received: by 2002:aa7:cb18:0:b0:452:9071:aff with SMTP id s24-20020aa7cb18000000b0045290710affmr22877322edt.194.1664885722541;
-        Tue, 04 Oct 2022 05:15:22 -0700 (PDT)
-Received: from skbuf ([188.27.184.197])
-        by smtp.gmail.com with ESMTPSA id l21-20020a17090615d500b00779cde476e4sm6983423ejd.62.2022.10.04.05.15.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 05:15:20 -0700 (PDT)
-Date:   Tue, 4 Oct 2022 15:15:17 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
+        with ESMTP id S230259AbiJDM5q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 08:57:46 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9389AC05;
+        Tue,  4 Oct 2022 05:54:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664888075; x=1696424075;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=34fkB9PiTMeL4NylLu89W/O34IlUWd9gKTytveVgpEw=;
+  b=USJ8fVleKVc5WNBO7Qo9fuS3IkfHA43fPWhj4gQRSXBm2KjgnsMH4eNn
+   iTh0Ht6iWeP1EehBlAqvX8ijUHcOEeDs2ptpF3+WHgI3IUXE8C/PlS+eD
+   +hIV2um6Oto79HTf/HcuqTpS6xwCRSNXzhWbw+3vnjaFpshlDLzNBOkB6
+   wTNW2Cc8gjAjIo36FRlV0G+ky0vXQXZ8pnTU5eDIuB0ZXIafKuIn11fjW
+   vYE+bIvF+ukCFQdoWjFjzmysnoTOxQEjMfkKt8ft+IdL0wQWz4/sgkWhF
+   dQedKBvS6ADpQdgDeqrx7VcxxFB82rWkwVjCb6/aTYuNhAhEAFj1Vy2HS
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="304444151"
+X-IronPort-AV: E=Sophos;i="5.93,157,1654585200"; 
+   d="scan'208";a="304444151"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 05:54:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="575017691"
+X-IronPort-AV: E=Sophos;i="5.93,157,1654585200"; 
+   d="scan'208";a="575017691"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 04 Oct 2022 05:54:32 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1031C17E; Tue,  4 Oct 2022 15:54:51 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Patrice Chotard <patrice.chotard@foss.st.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
- ocelot-ext documentation
-Message-ID: <20221004121517.4j5637hnioepsxgd@skbuf>
-References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
- <20220926002928.2744638-13-colin.foster@in-advantage.com>
- <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v1 1/1] pinctrl: st: Avoid using of_node member of struct gpio_chip
+Date:   Tue,  4 Oct 2022 15:54:49 +0300
+Message-Id: <20221004125449.67679-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 04, 2022 at 01:19:33PM +0200, Krzysztof Kozlowski wrote:
-> > +  # Ocelot-ext VSC7512
-> > +  - |
-> > +    spi {
-> > +        soc@0 {
-> 
-> soc in spi is a bit confusing.
+The of_node member of the struct gpio_chip is obsoleted and
+shouldn't be used. It will be removed in the future.
 
-Do you have a better suggestion for a node name? This is effectively a
-container for peripherals which would otherwise live under a /soc node,
-if they were accessed over MMIO by the internal microprocessor of the
-SoC, rather than by an external processor over SPI.
+Replace its use in st_pctl_dt_calculate_pin() by comparing
+the fwnode pointers.
 
-> How is this example different than previous one (existing soc example)?
-> If by compatible and number of ports, then there is no much value here.
+Fixes: e75729b2f63f ("pinctrl: st: stop abusing of_get_named_gpio()")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-st.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The positioning relative to the other nodes is what's different.
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index cf7f9cbe6044..ac24d07338a4 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1175,7 +1175,7 @@ static int st_pctl_dt_calculate_pin(struct st_pinctrl *info,
+ 
+ 	for (i = 0; i < info->nbanks; i++) {
+ 		chip = &info->banks[i].gpio_chip;
+-		if (chip->of_node == np) {
++		if (chip->fwnode == of_fwnode_handle(np)) {
+ 			if (offset < chip->ngpio)
+ 				retval = chip->base + offset;
+ 			break;
+-- 
+2.35.1
+
