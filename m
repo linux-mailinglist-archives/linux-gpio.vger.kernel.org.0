@@ -2,63 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 28DCD5F3D5F
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:38:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ECCA5F3D64
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:40:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbiJDHiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 03:38:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        id S229608AbiJDHkJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 03:40:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbiJDHiM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:38:12 -0400
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 606114D247
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:38:11 -0700 (PDT)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-357208765adso86836737b3.12
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:38:11 -0700 (PDT)
+        with ESMTP id S229515AbiJDHj7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:39:59 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5489FAE42
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:39:57 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id lt21so1722010ejb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:39:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=OSMuFVsbci918WMEsC7sFXDY5UEKrP97lF7jwpn3ZKY=;
-        b=YUpCQLVh/ZbPEIM6MRSoBRL5dBKPIbED6Jc5x3rLs3i0ZeY74CIthfaKS89OvtzUbJ
-         evJX0WkzNNEHZKx3NZthh7TCtRjKGZfSCXYj572FYJmnWLCNNPeQeE7e7OMHfDMBQgMH
-         iFueADEecwzMszu4qHBUBbfJwnohw3RLekyz+y05PGT8cwVRuNJ9RE/n6ESVgncDkj34
-         DQO7u+mzUTZEUzIypv9gUmKkzpMj+idrKkuLP9Z9/oo7YL2mVu2y1liXo7JWBPzSYBmb
-         gV9oF+WusRD8KAjKLq5izmywBwapiXXrtq5jWYdQlfQRWuaGUB7LLR2d9yAN1L9IEckJ
-         AeJA==
+        bh=Fk5FV2H6ZJpEudEsox/aZJe1w4XcUuZjMAKJn5zlRW4=;
+        b=jfnyM7OV4TLl7OLN//Y0iqw0ZawSOoHt4RAP9xc4xGc5mNMa+YjtNg/40y+jOTHMdh
+         vkJ2L5YgjrM2dhA8OUq4NI2lzNf4R4/hW8S1mG+t+G771PUhrJ2xiQCWLFDtW3VYKqi/
+         OeSpxUsE+ZFTLRtzV17vJNw4knl68OwQlbfNqurWHiCzcwqPme6cP4eHhAhu/62Sqyhn
+         azmlGUvGcCAbG+krZf3hAvvkiMuN6K+mh2GFvpAMpUVzvQLPLZ/bcTN1ymRJiPyrN62E
+         gtdkq678+73eEHg46J+72o085XmFkHsKKbHqTEk9540JdahTv1Jrkyjhp7QgM/+N2o1Y
+         agFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=OSMuFVsbci918WMEsC7sFXDY5UEKrP97lF7jwpn3ZKY=;
-        b=L5RYOkimaHSAAfxHDTYuzFKI/qgLLkNMoKgX4TWyjSKubTfqXIEcYgFnSbIKrWJfY3
-         D837HibZ65qLDEk0PHgXbYzi8ZiM7ifg2wpP1WYOblIjCMnK9J6auPWnG30/33DA21yc
-         TCCFKPmeURQe5dtuf4D1WZGKeqkjjYxprt90YFnDu/W+o+YXYWiHQqb4qwFFLkNNnfS9
-         Gyq+X/z4FSDPL442o01Avm68vEUFAxMpIiqveMo46zJW4zNH1Y58KKns9rwhlRFp5sIx
-         kFca2MCthQemh42k5C5E6e74nXhJwk3NphrDlDibCmsEQXJgr1CBkwGjYbxCp+w4NCl9
-         7wsg==
-X-Gm-Message-State: ACrzQf1VPW93+z/ukTfk3hjZyoLenBkT55ZAMI9uLXX+IasDVgSO4V0F
-        mezIqLhycw+2uGkE/O8G1WA6Fcaj1aOddA9kYtQLlsCBUYo=
-X-Google-Smtp-Source: AMsMyM5j+XEoX2xOKukGTbIUyxbRXejrMOAtr1bbMRrNN55E8u5O5TLP8bVa8lmMZpIgATy9l002URxzu/ufb7quNyI=
-X-Received: by 2002:a0d:f685:0:b0:343:bd3d:80b2 with SMTP id
- g127-20020a0df685000000b00343bd3d80b2mr23377204ywf.485.1664869090657; Tue, 04
- Oct 2022 00:38:10 -0700 (PDT)
+        bh=Fk5FV2H6ZJpEudEsox/aZJe1w4XcUuZjMAKJn5zlRW4=;
+        b=L2w6v9NqjsVlrsRKgWJ/kuT/kwwvmK7A9xSPH5LVZYO/RL30N2sew5ThzPiUTkZ1ZU
+         q+x0+4G75a1Ke/sYS5ApqLlqPZh+sTXiHCZuptQytk2Cu8wl2XwvgtG4i6EGmyZZuTqb
+         xarzT1Y8YuSeV3hHl4DGrTmvWuheb4kZvTKwt+D3aaO6z87EK0OMDTWjNVrHj/biD1Dd
+         Q2D81OKhN0/LFcJ7khWn48dVspGXhZFNtD/i5GiFJAWY3wHk5AU6+J3iSdmmgIBxIPPj
+         9IN7UWJeLzDRkoSm6MqWRxZLClp2z6E1CR8hRWR6OreLShT/XuI0AL8fLVTU7fOseeVL
+         4mQA==
+X-Gm-Message-State: ACrzQf1Oaa88QKOl29oAK9DR1dOr8Wn7cuBOufrmL6WtQA/2CmuNl7NS
+        zSLh6H0xciOl64PFfJvCKEhWIlroljtLNZI0wCbMkYqYxqU=
+X-Google-Smtp-Source: AMsMyM7I3ncyX6Y3v9qE+1nNnP4hl6GDl1x4XnefAi78LF+Z1tPcPzzfrm0p1KZOTqCCv5UCJYMJ2NZTPNhBm1AuhAM=
+X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
+ dd6-20020a1709069b8600b0073d72cf72afmr18109222ejc.440.1664869195927; Tue, 04
+ Oct 2022 00:39:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220925112103.148836-1-krzysztof.kozlowski@linaro.org>
- <08E290AD-C842-4BF2-9C57-2CE59A4C5D88@linaro.org> <441153f6-26ee-cbb2-fe42-101de91952c5@linaro.org>
-In-Reply-To: <441153f6-26ee-cbb2-fe42-101de91952c5@linaro.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 4 Oct 2022 10:37:59 +0300
-Message-ID: <CAA8EJpouyuCn5Kz-3RgRJPd+K1sWwtidz1L_mXY_U2AFQq8oOg@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: qcom: restrict drivers per ARM/ARM64
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20220927133926.103943-1-yuancan@huawei.com>
+In-Reply-To: <20220927133926.103943-1-yuancan@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Oct 2022 09:39:45 +0200
+Message-ID: <CACRpkdZCM4ieJWOJFf6FZfZrfJndy3vkQ5cB4QJoq=DeiODY=Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: bcm: Remove unused struct bcm6328_pingroup
+To:     Yuan Can <yuancan@huawei.com>
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -69,30 +63,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 25 Sept 2022 at 14:54, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 25/09/2022 13:43, Dmitry Baryshkov wrote:
-> >
-> >
-> > On 25 September 2022 14:21:03 GMT+03:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
-> >> There is no point to allow selecting pin-controller drivers for Qualcomm
-> >> ARMv7 SoCs when building ARM64 kernel, and vice versa.  This makes
-> >> kernel configuration more difficult as many do not remember the Qualcomm
-> >> SoCs.  There won't be a single image for ARMv7 and ARMv8/9 SoCs, so no
-> >> features/options are lost.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >
-> > I haven't checked which restrictions apply to msm8916 at this moment, but it might be worth adding 'depends on ARM || ARM64 || COMPILE_TEST'
->
-> This is limited by ARCH_QCOM (top-level if in the file), so I am not
-> sure what would be benefits.
+On Tue, Sep 27, 2022 at 3:42 PM Yuan Can <yuancan@huawei.com> wrote:
 
-I thought that it might be added to represent the fact that this is
-not an omission, but a special case which can be used by both 32-bit
-and 64-bit archs.
+> After commit 0e3db16300fb("pinctrl: bcm: Convert drivers to use struct pingroup
+> and PINCTRL_PINGROUP()"), no one use struct bcm6328_pingroup, so remove it.
+>
+> Signed-off-by: Yuan Can <yuancan@huawei.com>
 
--- 
-With best wishes
-Dmitry
+Patch applied!
+
+Yours,
+Linus Walleij
