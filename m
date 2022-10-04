@@ -2,56 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9751D5F3F32
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 11:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C57385F3F6F
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 11:22:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbiJDJJT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 05:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52470 "EHLO
+        id S231177AbiJDJWy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 05:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229735AbiJDJJS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 05:09:18 -0400
+        with ESMTP id S229797AbiJDJWO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 05:22:14 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FFBA36873;
-        Tue,  4 Oct 2022 02:09:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9046FDECB;
+        Tue,  4 Oct 2022 02:21:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1664874557; x=1696410557;
+  t=1664875305; x=1696411305;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=d0Q4O+kmvKaauRU9ZS3xkd85MWtpgvf4CT6+vWYRHb0=;
-  b=UWvjRFjJWYZiDVV5Ch4LmHnb5ycRmOrX2V1hWgsW4ofljXeqDM6BK88p
-   54XTyW+5v+uNDuXjunMBq+hddE95IGYfM6Zz/o87DwO0q67R5hfSsQWUQ
-   4CKvgocbpUS1Iojn1GDeADKnN6PpvD2sKKx3Sh30EuMXVbDY24SPvKcaD
-   hoB6b2KLlcDJPZ3dZn1xcdQWBVU7Q2mxLslybiMQ+THAdncwX8YHimKiS
-   ogtyabzv0tfBoe838P+l7F0MFh9Lj0LmUp+h8JBSDiR42+Ic9H2CU0SE/
-   x7CrroY57EusdkbSAPj769CIMTZEW5SjN+d4+xy6w8jUrQLCoNJVFXC4g
-   w==;
+  bh=KSstq/GCDUme5uuX6zJ9Gh7FdRRSeg4CqrX1gghhPcA=;
+  b=spwgZp1IdDixEYQY5EC9yHPIcjNl1hFJd3RLgRMCV7abnnDu0lmrn8ii
+   bHGKRHIU2j6pzFVPWkXn89a/v3loSLBt+2xhDHzQF1ukarNLbGZNKZPn+
+   G/zU5PexK9nRsxx3K84Jrio+t1igUB4KKWvcbL11W9GQS/ZVTdaCfQ9Zj
+   s8pHJi49gLh1wlEgZH09v181m/4hGqSTav/aQm3D9lNi//Kbsi7eKKxIf
+   wwWjvBqhO2Z0iBj1EzaRdRRygrkTTzuPisbQ8WUxvj7eah3y7bhqNcEJ7
+   9SOWLiyFNdqLgpV1iZX2C9xiddC6JQ+J7JcdNbiBuMr3J0+9iQgWEw1kV
+   g==;
 X-IronPort-AV: E=Sophos;i="5.93,367,1654585200"; 
-   d="scan'208";a="176912392"
+   d="scan'208";a="176914034"
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2022 02:09:16 -0700
+  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2022 02:21:44 -0700
 Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Tue, 4 Oct 2022 02:09:15 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
- Transport; Tue, 4 Oct 2022 02:09:15 -0700
-Date:   Tue, 4 Oct 2022 11:13:47 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linus.walleij@linaro.org>, <p.zabel@pengutronix.de>,
-        <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH -next v3] pinctrl: ocelot: add missing
- destroy_workqueue() in error path in ocelot_pinctrl_probe()
-Message-ID: <20221004091347.fotcdx75ut7zaly5@soft-dev3-1.localhost>
-References: <20220925021258.1492905-1-yangyingliang@huawei.com>
+ 15.1.2507.12; Tue, 4 Oct 2022 02:21:43 -0700
+Received: from wendy (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
+ Transport; Tue, 4 Oct 2022 02:21:40 -0700
+Date:   Tue, 4 Oct 2022 10:21:18 +0100
+From:   Conor Dooley <conor.dooley@microchip.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh@kernel.org>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <devicetree@vger.kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v1 23/30] pinctrl: starfive: Rename "pinctrl-starfive" to
+ "pinctrl-starfive-jh7100"
+Message-ID: <Yzv7Dmc0/IbAystL@wendy>
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220930061404.5418-1-hal.feng@linux.starfivetech.com>
+ <166457324093.1075476.18009315584754055366.robh@kernel.org>
+ <CACRpkdZmmMjVwpHxkJP+Ui0XJgrdZx8kpVybifbwkRB1_uMhAg@mail.gmail.com>
+ <Yzv1uJbGMuFmRsRL@wendy>
+ <CACRpkdZYXhc7phDmHrVwNzWWvjiQZHEsaQgdsbPF8JK-Yse_QQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20220925021258.1492905-1-yangyingliang@huawei.com>
+In-Reply-To: <CACRpkdZYXhc7phDmHrVwNzWWvjiQZHEsaQgdsbPF8JK-Yse_QQ@mail.gmail.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,81 +80,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The 09/25/2022 10:12, Yang Yingliang wrote:
+On Tue, Oct 04, 2022 at 11:13:37AM +0200, Linus Walleij wrote:
+> On Tue, Oct 4, 2022 at 10:59 AM Conor Dooley <conor.dooley@microchip.com> wrote:
+> > On Tue, Oct 04, 2022 at 10:48:38AM +0200, Linus Walleij wrote:
+> > > On Fri, Sep 30, 2022 at 11:28 PM Rob Herring <robh@kernel.org> wrote:
+> > > > On Fri, 30 Sep 2022 14:14:04 +0800, Hal Feng wrote:
+> > > > > From: Jianlong Huang <jianlong.huang@starfivetech.com>
+> > > > >
+> > > > > Add the SoC name to make it more clear. Also the next generation StarFive
+> > > > > SoCs will use "pinctrl-starfive" as the core of StarFive pinctrl driver.
+> > > > > No functional change.
+> > > > >
+> > > > > Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
+> > > > > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+> > > > > ---
+> > > > >  .../bindings/pinctrl/starfive,jh7100-pinctrl.yaml           | 2 +-
+> > > > >  arch/riscv/boot/dts/starfive/jh7100-beaglev-starlight.dts   | 2 +-
+> > > > >  drivers/pinctrl/starfive/Kconfig                            | 2 +-
+> > > > >  drivers/pinctrl/starfive/Makefile                           | 2 +-
+> > > > >  .../{pinctrl-starfive.c => pinctrl-starfive-jh7100.c}       | 2 +-
+> > > > >  .../{pinctrl-starfive.h => pinctrl-starfive-jh7100.h}       | 6 +++---
+> > > > >  6 files changed, 8 insertions(+), 8 deletions(-)
+> > > > >  rename drivers/pinctrl/starfive/{pinctrl-starfive.c => pinctrl-starfive-jh7100.c} (99%)
+> > > > >  rename include/dt-bindings/pinctrl/{pinctrl-starfive.h => pinctrl-starfive-jh7100.h} (98%)
+> > > > >
+> > > >
+> > > > Reviewed-by: Rob Herring <robh@kernel.org>
+> > > >
+> > > > Would be good to pull this out separately and apply for 6.1. It's kind
+> > > > of messy with cross tree dependencies.
+> > >
+> > > OK I applied this for V6.1.
+> >
+> > Will this need to be done immutably so it can be pulled into the riscv
+> > tree in case this gets applied as a late change for 6.1:
+> > https://lore.kernel.org/linux-riscv/c5169131-486e-9808-ba48-b7abe1be6a99@collabora.com/
 > 
-> Using devm_add_action_or_reset() to make workqueue device-managed, so it can be
-> destroy whenever the driver is unbound.
+> Always one finger on the fast-forward button have we? ;)
 
-Reviewed-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Dunno what you mean by that mate, sorry!
 
-> 
-> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
-> v3:
->   Using devm_add_action_or_reset().
-> 
-> v2:
->   move alloc_ordered_workqueue() after ocelot_pinctrl_register().
-> ---
->  drivers/pinctrl/pinctrl-ocelot.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-> index 62ce3957abe4..266fbc957273 100644
-> --- a/drivers/pinctrl/pinctrl-ocelot.c
-> +++ b/drivers/pinctrl/pinctrl-ocelot.c
-> @@ -2038,6 +2038,11 @@ static struct regmap *ocelot_pinctrl_create_pincfg(struct platform_device *pdev,
->         return devm_regmap_init_mmio(&pdev->dev, base, &regmap_config);
->  }
-> 
-> +static void ocelot_destroy_workqueue(void *data)
-> +{
-> +       destroy_workqueue(data);
-> +}
-> +
->  static int ocelot_pinctrl_probe(struct platform_device *pdev)
->  {
->         const struct ocelot_match_data *data;
-> @@ -2069,6 +2074,11 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
->         if (!info->wq)
->                 return -ENOMEM;
-> 
-> +       ret = devm_add_action_or_reset(dev, ocelot_destroy_workqueue,
-> +                                      info->wq);
-> +       if (ret)
-> +               return ret;
-> +
->         info->pincfg_data = &data->pincfg_data;
-> 
->         reset = devm_reset_control_get_optional_shared(dev, "switch");
-> @@ -2110,15 +2120,6 @@ static int ocelot_pinctrl_probe(struct platform_device *pdev)
->         return 0;
->  }
-> 
-> -static int ocelot_pinctrl_remove(struct platform_device *pdev)
-> -{
-> -       struct ocelot_pinctrl *info = platform_get_drvdata(pdev);
-> -
-> -       destroy_workqueue(info->wq);
-> -
-> -       return 0;
-> -}
-> -
->  static struct platform_driver ocelot_pinctrl_driver = {
->         .driver = {
->                 .name = "pinctrl-ocelot",
-> @@ -2126,7 +2127,6 @@ static struct platform_driver ocelot_pinctrl_driver = {
->                 .suppress_bind_attrs = true,
->         },
->         .probe = ocelot_pinctrl_probe,
-> -       .remove = ocelot_pinctrl_remove,
->  };
->  module_platform_driver(ocelot_pinctrl_driver);
-> 
-> --
-> 2.25.1
-> 
+I just saw the mail wanted to have the decency to reply to that fellow
+& tell him to rebase after rc1 to avoid a conflict.
 
--- 
-/Horatiu
+> Rob's point was that I should apply this for v6.1 so that exactly
+> that kind of cross-dependencies and immutable branches could
+> be avoided for the v6.2 development cycle.
+> 
+> The merge window is already open, it's a bit late for completely
+> new stuff I think.
+
+History suggests otherwise, but I'd be lying if I said I disagreed.
