@@ -2,88 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A23085F41DA
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 13:19:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DDD35F4239
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 13:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiJDLTl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 07:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46890 "EHLO
+        id S229505AbiJDLqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 07:46:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiJDLTk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 07:19:40 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 697EC387
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 04:19:36 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id f37so2313409lfv.8
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 04:19:36 -0700 (PDT)
+        with ESMTP id S229446AbiJDLqW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 07:46:22 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13C5D64
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 04:46:21 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a26so28273493ejc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 04:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=A6XWKxs2Jpf+nDr2Vc3Rkr+Qr/XH1f1qA7BAxLgKido=;
-        b=cqvLdXqsagr5kcaewhfqkJeswzQsOsCweQYXWMcDtw8/jJOKAeWrzeV0MiRG92Tk5c
-         Iid+d3NnsW0DRv2zLdSbKWciFbLjMEU8R5NsIvTF5ZTqh/gROVrtTHeIteNJOP0rvAyz
-         4pEeNAzL8+WAH0FiH6ConPczbi5+BI/TGJTPA5d59wWDh0qeEVBwAvWj7cTLxxG3ZEgQ
-         Pz0OMRWVLFNSsFEmeu5UvJc653p1QVupmaVXwkQopYcxxEyyLRFcPkA3zLknuqRg1fLJ
-         5qOQoE3e+oUMah33fJsVepDT4BBT2jxGHJkdPIufs1JmyW80/W6vYTeBsEkXFJycTG/y
-         yezA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=oORNADYw2Hs6SXVF89SHeppIwMC8xyCVRPn/dcMDta8=;
+        b=wZWjblKQl0aEUQB+vsRy3d/uRWWMj87UVamfoB8EIP1aQgI2xKg4PcftQkrG0xBw55
+         3m5310nYhRkYhBm+1K+XqA9RLDCtm+4gXWbglf78SWX4z/0AgiIK3cvTNlPHINt8RkXy
+         6TOStrr2gGBaIAo5w/UDRMc4USsUm1ygbSnY9byqcb6SJBVK+i62NNhfV276hJl+Exzm
+         XzvgEyn6ekFYzmoO4jfu8QNcrZLD9MbO+g7jg+SfjQejp/p7v8Er31pJ19hTt9aY0d84
+         YOd/OCCoWDwbZ4keWrC2tGNMy4ufJdh5w7NZ5nbEun0ddCh0aMPaGF8GZeiuM2jL4jMv
+         ajAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=A6XWKxs2Jpf+nDr2Vc3Rkr+Qr/XH1f1qA7BAxLgKido=;
-        b=s/0xedTAgp3Ui4uREN3lNZeQfzibU4TUzxcCB7TiahfUeGh7wDDd6sTZzc2NdaC6R9
-         f4oOQptA7Nt0/QtopKkBHLYxpJYwgzI1JPx4uwsuCdJvHxZOOhjF3cQVfjjhLNsA7G4x
-         dEwFlIOJ3dp9vdUitxBswdNQybV6AeoEJyR5vwInNBpTqGm2mZRkYjS9cNmBmNRTXPNk
-         TYKnl28Qoai3dPs8vN5KohlERmR9gMt7vtVjbmK41ltndjYQ8Q2FDFd1KSaez/Cw8Ayp
-         L0KeA7oKjDqWGvmvXhOHbmuMylw2xNgkpG8ovfrrdpMyG/OAyCtGP/Td1OSJysr8N0la
-         LSQQ==
-X-Gm-Message-State: ACrzQf0ezrktYTdJ7Yh/gc60q6mdlN9ZIMJMNs6sl2Abh6VtLPcbpkEU
-        0mkE7Hnt4jYN4hTARI/X4oMH7w==
-X-Google-Smtp-Source: AMsMyM71ILvW++ziuI+MGJfwyGaej1nG2FBbgL4boFT0iAbsyH0SMVvWJ/EYJrCjNb1qjSnx+x4HHg==
-X-Received: by 2002:a05:6512:b08:b0:4a1:d704:fc59 with SMTP id w8-20020a0565120b0800b004a1d704fc59mr8345629lfu.629.1664882374764;
-        Tue, 04 Oct 2022 04:19:34 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id g19-20020ac25393000000b0049944ab6895sm1877001lfh.260.2022.10.04.04.19.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Oct 2022 04:19:34 -0700 (PDT)
-Message-ID: <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
-Date:   Tue, 4 Oct 2022 13:19:33 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=oORNADYw2Hs6SXVF89SHeppIwMC8xyCVRPn/dcMDta8=;
+        b=dik2JquHBUP0LJYFDIhXod/UVhQ6hwEeSUJvbB1J1KI5Jyzki5dWZ3LORbRk2KN0Hh
+         UN3gp3U43mjmiC3ihswDvxSAM5lw7jYFBva5WaFfm4ketIWkRi/veUqpVS8eC4w8y9Bo
+         5Ts4gGpH6fgHzaX04JA8sgi1rvl9+uJsSWqVkbnnKkpJbjczPYynB58I+wVbjd9fiaR5
+         TYwpTOiGieG86Oi2YA6OVcsZvRtSdFV0PBQXav/3WbZBSY6+oxPoWMck1oHy4Dx2WBAv
+         EYYcy4JHR2bUJrCuy52wWSo+qSZgiIc1fRb4KwFQzmhOULG0pY+ScTT25gg/XlcoBtYs
+         djCg==
+X-Gm-Message-State: ACrzQf1VVUQ0fQwOqOdF4nWb9SMMrGDGjZkCW1i6qrWHsClnAbI3ZdZ+
+        A22DPA6ySJnmeal71b5fGwwMo0jCq2Ihtud2mydMWA==
+X-Google-Smtp-Source: AMsMyM6Rl8AvED4hTgT4ckn9RdP7PY+Ahr8aGamCW4ge3WsJ6i9dOd1oT50zsTn5swY3Q+E9I7UEGLnLchLwdXv5+sU=
+X-Received: by 2002:a17:907:2d0b:b0:782:76dc:e557 with SMTP id
+ gs11-20020a1709072d0b00b0078276dce557mr18020112ejc.690.1664883980452; Tue, 04
+ Oct 2022 04:46:20 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
- ocelot-ext documentation
-Content-Language: en-US
-To:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
- <20220926002928.2744638-13-colin.foster@in-advantage.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20220926002928.2744638-13-colin.foster@in-advantage.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20220925021258.1492905-1-yangyingliang@huawei.com>
+In-Reply-To: <20220925021258.1492905-1-yangyingliang@huawei.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 4 Oct 2022 13:46:08 +0200
+Message-ID: <CACRpkdZijkQAT84mfP06SgxBjHmrqSbWwctBBA0pvb_1xYzGvA@mail.gmail.com>
+Subject: Re: [PATCH -next v3] pinctrl: ocelot: add missing destroy_workqueue()
+ in error path in ocelot_pinctrl_probe()
+To:     Yang Yingliang <yangyingliang@huawei.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        p.zabel@pengutronix.de, horatiu.vultur@microchip.com,
+        andy.shevchenko@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -91,123 +66,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 26/09/2022 02:29, Colin Foster wrote:
-> The ocelot-ext driver is another sub-device of the Ocelot / Felix driver
-> system, which currently supports the four internal copper phys.
-> 
-> Signed-off-by: Colin Foster <colin.foster@in-advantage.com>
+On Sun, Sep 25, 2022 at 4:06 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
+
+> Using devm_add_action_or_reset() to make workqueue device-managed, so it can be
+> destroy whenever the driver is unbound.
+>
+> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
+> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 > ---
-> 
-> v3
->     * Remove "currently supported" verbage
->         The Seville and Felix 9959 all list their supported modes following
->         the sentence "The following PHY interface types are supported".
->         During V2, I had used "currently supported" to suggest more interface
->         modes are around the corner, though this had raised questions.
-> 
->         The suggestion was to drop the entire sentence. I did leave the
->         modified sentence there because it exactly matches the other two
->         supported products.
-> 
-> v2
->     * New patch
-> 
-> ---
->  .../bindings/net/dsa/mscc,ocelot.yaml         | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml b/Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml
-> index 8d93ed9c172c..49450a04e589 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml
-> +++ b/Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml
-> @@ -54,9 +54,22 @@ description: |
->        - phy-mode = "1000base-x": on ports 0, 1, 2, 3
->        - phy-mode = "2500base-x": on ports 0, 1, 2, 3
->  
-> +  VSC7412 (Ocelot-Ext):
-> +
-> +    The Ocelot family consists of four devices, the VSC7511, VSC7512, VSC7513,
-> +    and the VSC7514. The VSC7513 and VSC7514 both have an internal MIPS
-> +    processor that natively support Linux. Additionally, all four devices
-> +    support control over external interfaces, SPI and PCIe. The Ocelot-Ext
-> +    driver is for the external control portion.
-> +
-> +    The following PHY interface types are supported:
-> +
-> +      - phy-mode = "internal": on ports 0, 1, 2, 3
-> +
->  properties:
->    compatible:
->      enum:
-> +      - mscc,vsc7512-switch
->        - mscc,vsc9953-switch
->        - pci1957,eef0
->  
-> @@ -258,3 +271,49 @@ examples:
->              };
->          };
->      };
-> +  # Ocelot-ext VSC7512
-> +  - |
-> +    spi {
-> +        soc@0 {
+> v3:
+>   Using devm_add_action_or_reset().
 
-soc in spi is a bit confusing.
+Patch applied, after deleting the hunks removing .remove because
+that was already gone upstream.
 
-Does it even pass the tests? You have unit address but no reg.
-
-> +            compatible = "mscc,vsc7512";
-
-
-> +            #address-cells = <1>;
-> +            #size-cells = <1>;
-> +
-> +            ethernet-switch@0 {
-> +                compatible = "mscc,vsc7512-switch";
-> +                reg = <0 0>;
-
-0 is the address on which soc bus?
-
-> +
-> +                ethernet-ports {
-> +                    #address-cells = <1>;
-> +                    #size-cells = <0>;
-> +
-> +                    port@0 {
-> +                        reg = <0>;
-> +                        label = "cpu";
-> +                        ethernet = <&mac_sw>;
-> +                        phy-handle = <&phy0>;
-> +                        phy-mode = "internal";
-> +                    };
-> +
-> +                    port@1 {
-> +                        reg = <1>;
-> +                        label = "swp1";
-> +                        phy-mode = "internal";
-> +                        phy-handle = <&phy1>;
-> +                    };
-> +
-> +                    port@2 {
-> +                        reg = <2>;
-> +                        phy-mode = "internal";
-> +                        phy-handle = <&phy2>;
-> +                    };
-> +
-> +                    port@3 {
-> +                        reg = <3>;
-> +                        phy-mode = "internal";
-> +                        phy-handle = <&phy3>;
-> +                    };
-
-How is this example different than previous one (existing soc example)?
-If by compatible and number of ports, then there is no much value here.
-
-> +                };
-> +            };
-> +        };
-> +    };
-
-Best regards,
-Krzysztof
-
+Yours,
+Linus Walleij
