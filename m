@@ -2,83 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DDD35F4239
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 13:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4364C5F42C1
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 14:15:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229505AbiJDLqX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 07:46:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56990 "EHLO
+        id S229506AbiJDMP1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 08:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbiJDLqW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 07:46:22 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D13C5D64
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 04:46:21 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a26so28273493ejc.4
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 04:46:21 -0700 (PDT)
+        with ESMTP id S229551AbiJDMP0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 08:15:26 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A44712768;
+        Tue,  4 Oct 2022 05:15:24 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id s30so14850964eds.1;
+        Tue, 04 Oct 2022 05:15:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=oORNADYw2Hs6SXVF89SHeppIwMC8xyCVRPn/dcMDta8=;
-        b=wZWjblKQl0aEUQB+vsRy3d/uRWWMj87UVamfoB8EIP1aQgI2xKg4PcftQkrG0xBw55
-         3m5310nYhRkYhBm+1K+XqA9RLDCtm+4gXWbglf78SWX4z/0AgiIK3cvTNlPHINt8RkXy
-         6TOStrr2gGBaIAo5w/UDRMc4USsUm1ygbSnY9byqcb6SJBVK+i62NNhfV276hJl+Exzm
-         XzvgEyn6ekFYzmoO4jfu8QNcrZLD9MbO+g7jg+SfjQejp/p7v8Er31pJ19hTt9aY0d84
-         YOd/OCCoWDwbZ4keWrC2tGNMy4ufJdh5w7NZ5nbEun0ddCh0aMPaGF8GZeiuM2jL4jMv
-         ajAA==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=2lOHsA4YDq2IujWxO2OEfkKj+VmjOjVPd32CvU9w1c4=;
+        b=MtiN0+8DKyMoOZfm9dkixtCFFOQDi8dcF30pSFv3f78JsHYgtZQVlyGSKOnM8C9vQd
+         h2n8MQWwLwY9mLa5+1Es/JRxockRg/gB5JIGp4MlDibcA9d5y/3zkByIS8dcodmmpyFD
+         8sklYE0Bq9oE0cIrYdtMKWf9q37fXYjIImqAD8oLFaOQIvj+aptTtra/+eGUmK7qKfwF
+         6x6NPdICbxH4QZFpJNCqJNIPo8kdMOBL1mW5f091ksVHYljDOhHZNV2L269om61fIo8W
+         S0tAIXCTNSiKNgRMwQzabQsmXNh0rd2/6n5JNGviBTH+nIUJoGQaO+pA3Rfge9jJGcmH
+         EJsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=oORNADYw2Hs6SXVF89SHeppIwMC8xyCVRPn/dcMDta8=;
-        b=dik2JquHBUP0LJYFDIhXod/UVhQ6hwEeSUJvbB1J1KI5Jyzki5dWZ3LORbRk2KN0Hh
-         UN3gp3U43mjmiC3ihswDvxSAM5lw7jYFBva5WaFfm4ketIWkRi/veUqpVS8eC4w8y9Bo
-         5Ts4gGpH6fgHzaX04JA8sgi1rvl9+uJsSWqVkbnnKkpJbjczPYynB58I+wVbjd9fiaR5
-         TYwpTOiGieG86Oi2YA6OVcsZvRtSdFV0PBQXav/3WbZBSY6+oxPoWMck1oHy4Dx2WBAv
-         EYYcy4JHR2bUJrCuy52wWSo+qSZgiIc1fRb4KwFQzmhOULG0pY+ScTT25gg/XlcoBtYs
-         djCg==
-X-Gm-Message-State: ACrzQf1VVUQ0fQwOqOdF4nWb9SMMrGDGjZkCW1i6qrWHsClnAbI3ZdZ+
-        A22DPA6ySJnmeal71b5fGwwMo0jCq2Ihtud2mydMWA==
-X-Google-Smtp-Source: AMsMyM6Rl8AvED4hTgT4ckn9RdP7PY+Ahr8aGamCW4ge3WsJ6i9dOd1oT50zsTn5swY3Q+E9I7UEGLnLchLwdXv5+sU=
-X-Received: by 2002:a17:907:2d0b:b0:782:76dc:e557 with SMTP id
- gs11-20020a1709072d0b00b0078276dce557mr18020112ejc.690.1664883980452; Tue, 04
- Oct 2022 04:46:20 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=2lOHsA4YDq2IujWxO2OEfkKj+VmjOjVPd32CvU9w1c4=;
+        b=qsrZrKSNRkkqCeNA1FEcBkoUcc+w+jb4VrI3zQCJxUMApcdv4ezI0batD1uCttPssM
+         W0bDmpwFvKJbcNqCMOwmlf5rQQPUG/UaXgBd01EJhCpadbe+6ULJ3xcqlXhAGxBwPEeC
+         PTsJJ+V1nB483Ly9YDE/+UDN1unmLKKaPE7KVzrD2BrXnBRRQlSDtOefMw42ckf8hQvk
+         /uXmRKNzTi1gurC6L+/6GK8d+vybiPe/0anze8Vd1Td+99LSODnKU/sSVzgWT9pTQzsF
+         ReNCXrnvjFrL96DTc7e8jq7Jfu2wCqnw4BRrwUC1Tf7+l8aQ8v4HAVZ8Xj4gLVUevtwL
+         RUrw==
+X-Gm-Message-State: ACrzQf0R9TjiGFu7lMVwq9ShA6AaNU+TMSoxx4Ui8o+EEf8f0aWMio88
+        qpSADUCRfH8zjpnhdP5+t1E=
+X-Google-Smtp-Source: AMsMyM7sGqjKVDsAcBoTJRuW2xubDE5GjBS+Bd0StTskoL/V+fhdd8EfQQhWwh77AEluye9o145tIA==
+X-Received: by 2002:aa7:cb18:0:b0:452:9071:aff with SMTP id s24-20020aa7cb18000000b0045290710affmr22877322edt.194.1664885722541;
+        Tue, 04 Oct 2022 05:15:22 -0700 (PDT)
+Received: from skbuf ([188.27.184.197])
+        by smtp.gmail.com with ESMTPSA id l21-20020a17090615d500b00779cde476e4sm6983423ejd.62.2022.10.04.05.15.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Oct 2022 05:15:20 -0700 (PDT)
+Date:   Tue, 4 Oct 2022 15:15:17 +0300
+From:   Vladimir Oltean <olteanv@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Colin Foster <colin.foster@in-advantage.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Lee Jones <lee@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
+ ocelot-ext documentation
+Message-ID: <20221004121517.4j5637hnioepsxgd@skbuf>
+References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
+ <20220926002928.2744638-13-colin.foster@in-advantage.com>
+ <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
 MIME-Version: 1.0
-References: <20220925021258.1492905-1-yangyingliang@huawei.com>
-In-Reply-To: <20220925021258.1492905-1-yangyingliang@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Oct 2022 13:46:08 +0200
-Message-ID: <CACRpkdZijkQAT84mfP06SgxBjHmrqSbWwctBBA0pvb_1xYzGvA@mail.gmail.com>
-Subject: Re: [PATCH -next v3] pinctrl: ocelot: add missing destroy_workqueue()
- in error path in ocelot_pinctrl_probe()
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        p.zabel@pengutronix.de, horatiu.vultur@microchip.com,
-        andy.shevchenko@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Sep 25, 2022 at 4:06 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
+On Tue, Oct 04, 2022 at 01:19:33PM +0200, Krzysztof Kozlowski wrote:
+> > +  # Ocelot-ext VSC7512
+> > +  - |
+> > +    spi {
+> > +        soc@0 {
+> 
+> soc in spi is a bit confusing.
 
-> Using devm_add_action_or_reset() to make workqueue device-managed, so it can be
-> destroy whenever the driver is unbound.
->
-> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
-> v3:
->   Using devm_add_action_or_reset().
+Do you have a better suggestion for a node name? This is effectively a
+container for peripherals which would otherwise live under a /soc node,
+if they were accessed over MMIO by the internal microprocessor of the
+SoC, rather than by an external processor over SPI.
 
-Patch applied, after deleting the hunks removing .remove because
-that was already gone upstream.
+> How is this example different than previous one (existing soc example)?
+> If by compatible and number of ports, then there is no much value here.
 
-Yours,
-Linus Walleij
+The positioning relative to the other nodes is what's different.
