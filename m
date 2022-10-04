@@ -2,80 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A447B5F3D44
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:30:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A27C75F3D50
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:34:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229816AbiJDHan (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 03:30:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54042 "EHLO
+        id S229816AbiJDHe3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 03:34:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbiJDHaj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:30:39 -0400
+        with ESMTP id S229710AbiJDHe1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:34:27 -0400
 Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65B0831EDC
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:30:35 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id qx23so8878775ejb.11
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:30:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A671241D22
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:34:26 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id kg6so11635964ejc.9
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=yPfd3Jwd9rlaL0Pne53MMVojSqXI9G05BY139YmW+lk=;
-        b=Ca4p3uuK71y+eMmACG00B8GkRIUI9jZUFqlyDeLV8jaWRAJnQzm8vnhB2KlJDXv6Ri
-         9lqUAtjFTMUMEjqcDtUcHApGx8J2e4DtMk5MZZKVzKXLsb3lIq01JIRWx3kkpG1GStnt
-         En56mIQXr4H+A9nuRF0iZC29egex4as+iA+1DanYegxUihLSjhbArn8w4WHdz1f5H3T5
-         puCFpZuTA2h+J2HS75ko05iA5tSz0X24AhKnXb7Tpgq0WejCwsn+dt80hn081GgxyIig
-         /0Sgtt5BZFtHHVdOOwqsI7tMvUNzV00zChCKe32uO5wNc5Hx/480fpBkeQniuGKYYlxu
-         METQ==
+        bh=PB8GJk//RqejjOnpATRYeyDuPsbXbNB+nSYv7IkV3dY=;
+        b=uUwDwLTCDuc6k11DNLdxKvouWouNrX5htEl6budcfGy+KnBLcSwfza7E4uk7TLzJnx
+         P5bxfDbnb0CMlTFfQA4LxKReVwR76SFkmPkIRgj0oJbBdCUpAPiwUSqTuGhTRZir8IWm
+         mOZWLNW/+GF7YeCI4/rPmANUebw6iKIMM3S0Hy6+vhGamhcy3upGINgybT/8xPszgjZM
+         4uBBc1hUwPRzVCnd4xVU77itt/X4xWYUwbkVYZ0/r5pdgWWb+K8H0oeB4Erj+uFKhIvD
+         4O3wiwPkC1JxBdOjcFem6UKauuxuIAPBS7oqdd5ZiBeY/w3Wm8OtrnG7ACuyCYkBF3Ws
+         FCDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=yPfd3Jwd9rlaL0Pne53MMVojSqXI9G05BY139YmW+lk=;
-        b=XvbFRCmSOvfvYnUzoyTSGqG3y4F+eJK73te66Uka049De8gBQaKtJGJUK41bnczZzF
-         pjRalRoJYuRSCqT2xuzDOAwCBikXP1mek28YwP127hg5GNOcy1OQ9HaoMbTsMJaAYCcP
-         jdtuAFkNPZDvBg5nEQVZZKjcd7DQHbHdUCHdlu/a+MghEewWMICZve76zWHv0vntrTRD
-         itJUAoqH/ySqVMv5bM+XVzYQG3Tob+TJ18xQwfd9zPCl3jbUh+MWug4FL9uQtxzWe1VM
-         mQJ/NDllM1xOB03ojCZD1h0Ow+SucXcGXiwzuiLDLy0311Zg2tgYpq/eIjvvDhx5Ozy3
-         Pyug==
-X-Gm-Message-State: ACrzQf2R2X1LOmvdgH3jNqtXfT3Qet/8xhjdew1YE6JCjFlwCS6V8aO5
-        K1F9kbOdCexbflmG17LUrzv+n6k1pascnloxhGOROw==
-X-Google-Smtp-Source: AMsMyM5lxTKIiElB5NO4KnhFjeWLDqHWiPV1kLQ1/5osb1K2FqLqDKVPFtHD7xbKcQ4tqTBREj+wL8LDG64rem6vxP4=
-X-Received: by 2002:a17:907:2d0b:b0:782:76dc:e557 with SMTP id
- gs11-20020a1709072d0b00b0078276dce557mr17303700ejc.690.1664868634318; Tue, 04
- Oct 2022 00:30:34 -0700 (PDT)
+        bh=PB8GJk//RqejjOnpATRYeyDuPsbXbNB+nSYv7IkV3dY=;
+        b=xOEhSR9+TPKlwIteSj/OYN/dZzi4+9jo0oUT1qsulxDjIx7TAW+UR7L5aCFfFNE9Kv
+         q+8wq/eKI2rjPsT8pnBUJOI7CJdr5+9uuBBTsyZZyamBictqd8jqutvetJqsWp69Wn1m
+         PDwuMBEqDi/UToGv+EBDyW0Ql8pizbXaymd74EHugNiTOSLQCTvLQrLR/3E7BjkhojE7
+         Rnwz8JVfQXS4FWoUeGPXKnniEJGlto70L9yB1rgEPCF6KKqbSU+LtYcmDNXzlnEkM0Uc
+         Lnc0I5LEMLoNPVuSXy4I+W0y+/o0ucXC6q8E8cTuk7UB+YC3+P4imccKajrqTHwwRW1O
+         WS5g==
+X-Gm-Message-State: ACrzQf3rU8d3nw9dA0ozdtooVahTsHXh+dOUwYRIl490vMasTDg4cXKo
+        zW0UDIiVrZxL2GBLCEin6w2KEnPGVQvRyUrLOaxy8XM7Myg=
+X-Google-Smtp-Source: AMsMyM4u5QfJ8I4XjmQQ8y27SrW4rIzRwTXevnfaj3eYh/net7YfV7Hustl0WtRIAAw7Cl7QwSDaDDl0rofndt5II+U=
+X-Received: by 2002:a17:906:8a46:b0:781:71fc:d23f with SMTP id
+ gx6-20020a1709068a4600b0078171fcd23fmr18431943ejc.500.1664868865231; Tue, 04
+ Oct 2022 00:34:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220926061259.13491-1-shubhrajyoti.datta@amd.com> <20220926061259.13491-3-shubhrajyoti.datta@amd.com>
-In-Reply-To: <20220926061259.13491-3-shubhrajyoti.datta@amd.com>
+References: <20220925112103.148836-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220925112103.148836-1-krzysztof.kozlowski@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Oct 2022 09:30:23 +0200
-Message-ID: <CACRpkdbOvALG=LLK3QdSwscgBeTsK-dtay75DNKpdqaAAm1MAg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] gpio: pca9570: add a platform data structure
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-Cc:     linux-gpio@vger.kernel.org, git@amd.com,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        robh+dt@kernel.org, brgl@bgdev.pl
+Date:   Tue, 4 Oct 2022 09:34:13 +0200
+Message-ID: <CACRpkdb81Vh1zZDeHArOU4chmT4_5YyEXza5Vvp_n2fHJ_YBew@mail.gmail.com>
+Subject: Re: [PATCH v2] pinctrl: qcom: restrict drivers per ARM/ARM64
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 8:14 AM Shubhrajyoti Datta
-<shubhrajyoti.datta@amd.com> wrote:
+On Sun, Sep 25, 2022 at 1:21 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-> Add struct pca9570_platform_data for adding the platform data
-> structure. Also modify the existing structs for pca9570 and pca9571
+> There is no point to allow selecting pin-controller drivers for Qualcomm
+> ARMv7 SoCs when building ARM64 kernel, and vice versa.  This makes
+> kernel configuration more difficult as many do not remember the Qualcomm
+> SoCs.  There won't be a single image for ARMv7 and ARMv8/9 SoCs, so no
+> features/options are lost.
 >
-> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> ---
+>
+> Changes since v1:
+> 1. Restrict MSM8976 to ARM64.
 
-This looks nice!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This v2 patch applied, because nice.
 
 Yours,
 Linus Walleij
