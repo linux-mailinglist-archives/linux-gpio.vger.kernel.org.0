@@ -2,73 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ECCA5F3D64
-	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D3935F3D67
+	for <lists+linux-gpio@lfdr.de>; Tue,  4 Oct 2022 09:41:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229608AbiJDHkJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 4 Oct 2022 03:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
+        id S229556AbiJDHlj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 4 Oct 2022 03:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJDHj7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:39:59 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5489FAE42
-        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:39:57 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id lt21so1722010ejb.0
-        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:39:57 -0700 (PDT)
+        with ESMTP id S229436AbiJDHlh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 4 Oct 2022 03:41:37 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A1BB264A2
+        for <linux-gpio@vger.kernel.org>; Tue,  4 Oct 2022 00:41:37 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id z97so17660513ede.8
+        for <linux-gpio@vger.kernel.org>; Tue, 04 Oct 2022 00:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date;
-        bh=Fk5FV2H6ZJpEudEsox/aZJe1w4XcUuZjMAKJn5zlRW4=;
-        b=jfnyM7OV4TLl7OLN//Y0iqw0ZawSOoHt4RAP9xc4xGc5mNMa+YjtNg/40y+jOTHMdh
-         vkJ2L5YgjrM2dhA8OUq4NI2lzNf4R4/hW8S1mG+t+G771PUhrJ2xiQCWLFDtW3VYKqi/
-         OeSpxUsE+ZFTLRtzV17vJNw4knl68OwQlbfNqurWHiCzcwqPme6cP4eHhAhu/62Sqyhn
-         azmlGUvGcCAbG+krZf3hAvvkiMuN6K+mh2GFvpAMpUVzvQLPLZ/bcTN1ymRJiPyrN62E
-         gtdkq678+73eEHg46J+72o085XmFkHsKKbHqTEk9540JdahTv1Jrkyjhp7QgM/+N2o1Y
-         agFA==
+        bh=t4gsSkEDUeyo1zPk5TwWbQ0/8jC6JrVvqb9PexG5Ag0=;
+        b=UBF0PMRItbOet9L4f2H+UFFYBdoamlZngKZxhmQcmjGCsvkL5BCA1yDi+Qq4SRGf9f
+         uRxylnAahW+3faOGYgpYURRQOXnPT3AImJrst2EBOcp7SmpVwrAT4iWqwDNNhnaCFCCg
+         nvYwpOcuno9NJ11rCbQ7xt1GuiwuCPysxwSa6vxRaeiVOajb3DKDRJ/3R6UL3wR+H8S1
+         m2dCfN5LQsnz3neoqgEfAy3dTROueQIc9/SWClraMOr8IBMoyO38ljGk5qwTUHpq/O/W
+         lmwSo9I+cRf/B/FW8EZ4alGP2p3TyTee2k6jsgB9WrvfX9qkze4D+rJm9/i+FlWAMUFl
+         h/pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Fk5FV2H6ZJpEudEsox/aZJe1w4XcUuZjMAKJn5zlRW4=;
-        b=L2w6v9NqjsVlrsRKgWJ/kuT/kwwvmK7A9xSPH5LVZYO/RL30N2sew5ThzPiUTkZ1ZU
-         q+x0+4G75a1Ke/sYS5ApqLlqPZh+sTXiHCZuptQytk2Cu8wl2XwvgtG4i6EGmyZZuTqb
-         xarzT1Y8YuSeV3hHl4DGrTmvWuheb4kZvTKwt+D3aaO6z87EK0OMDTWjNVrHj/biD1Dd
-         Q2D81OKhN0/LFcJ7khWn48dVspGXhZFNtD/i5GiFJAWY3wHk5AU6+J3iSdmmgIBxIPPj
-         9IN7UWJeLzDRkoSm6MqWRxZLClp2z6E1CR8hRWR6OreLShT/XuI0AL8fLVTU7fOseeVL
-         4mQA==
-X-Gm-Message-State: ACrzQf1Oaa88QKOl29oAK9DR1dOr8Wn7cuBOufrmL6WtQA/2CmuNl7NS
-        zSLh6H0xciOl64PFfJvCKEhWIlroljtLNZI0wCbMkYqYxqU=
-X-Google-Smtp-Source: AMsMyM7I3ncyX6Y3v9qE+1nNnP4hl6GDl1x4XnefAi78LF+Z1tPcPzzfrm0p1KZOTqCCv5UCJYMJ2NZTPNhBm1AuhAM=
-X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
- dd6-20020a1709069b8600b0073d72cf72afmr18109222ejc.440.1664869195927; Tue, 04
- Oct 2022 00:39:55 -0700 (PDT)
+        bh=t4gsSkEDUeyo1zPk5TwWbQ0/8jC6JrVvqb9PexG5Ag0=;
+        b=Kan4sAZwGdyznFCqfG0htJdCNzybBeIi5kyJwsjQbh/dbK2/R/FqGjbipJb2jGaPmd
+         nzYY0uw8TqrGaEEPx+fTcay/bMA1Uhwo/atlOecwHXHgnCYVHd0ixNwmMK46V/1Yszw7
+         x5wMbXqvb67i41fajESSRmyRAbSNcbfHppADbbI8i1pFfTZ6kw/Apy1d+upjXXoOSAne
+         9NKxTRMhczASRpPfeiu71YqONA11boi/flmduM8CPctZCyvZqqCQCxmol2KWLhN7mHqn
+         uCJB/NdgsuWoOoZYLo2ZE629s79hLfHxeWJDEsTjwUutLwbttH26oqIHpjwg+WdAf9Gt
+         Zr7w==
+X-Gm-Message-State: ACrzQf16LV0Y0NqVdC5r45nFdvdWkukbMOi5U5CX9G68ykT17lwRMOsk
+        j9QH6iTQ7Xg0cSN9ASxaMS768dmwbed9+FXFB2hqLUF8vvI=
+X-Google-Smtp-Source: AMsMyM7GQcaTrnPcsi1VG65yXFMT0nakTfMnpSDx6YTX6GPrb1kCV0eO/IJHHdVl8u3JfE6s/LkAd6uv7UmF8qYAOjA=
+X-Received: by 2002:aa7:c050:0:b0:453:4427:a947 with SMTP id
+ k16-20020aa7c050000000b004534427a947mr22287577edo.172.1664869295589; Tue, 04
+ Oct 2022 00:41:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220927133926.103943-1-yuancan@huawei.com>
-In-Reply-To: <20220927133926.103943-1-yuancan@huawei.com>
+References: <20220927175509.15695-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20220927175509.15695-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 4 Oct 2022 09:39:45 +0200
-Message-ID: <CACRpkdZCM4ieJWOJFf6FZfZrfJndy3vkQ5cB4QJoq=DeiODY=Q@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: bcm: Remove unused struct bcm6328_pingroup
-To:     Yuan Can <yuancan@huawei.com>
-Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org
+Date:   Tue, 4 Oct 2022 09:41:24 +0200
+Message-ID: <CACRpkdYfzE5gvc_L7qfN74gcG0KT=w4D4ZqHQyXT_x_uBXNqTQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] pinctrl: wpcm450: Correct the fwnode_irq_get()
+ return value check
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Sep 27, 2022 at 3:42 PM Yuan Can <yuancan@huawei.com> wrote:
+On Tue, Sep 27, 2022 at 7:54 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> After commit 0e3db16300fb("pinctrl: bcm: Convert drivers to use struct pingroup
-> and PINCTRL_PINGROUP()"), no one use struct bcm6328_pingroup, so remove it.
+> fwnode_irq_get() can return zero to indicate IRQ mapping errors.
+> Handle this case by skipping the interrupt resource.
 >
-> Signed-off-by: Yuan Can <yuancan@huawei.com>
+> Fixes: a1d1e0e3d80a ("pinctrl: nuvoton: Add driver for WPCM450")
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 Patch applied!
 
