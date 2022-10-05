@@ -2,199 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF9795F5579
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Oct 2022 15:33:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFA955F55C2
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Oct 2022 15:45:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbiJENd0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 09:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33876 "EHLO
+        id S230143AbiJENpH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Oct 2022 09:45:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbiJENdY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 09:33:24 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BABEE7A528;
-        Wed,  5 Oct 2022 06:33:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664976803; x=1696512803;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XqQdBjp19mIbx44Ty96ErCKDz0PF5lNUbgCFtZpOCOU=;
-  b=RrTLNx43VFU/wXmB3NdOaU47f7zHJpt7HSmfLAMGDUoljJcoKYDx/wg/
-   wymtS3CUAFx4QU7sauzkk05DKRzBD2KvJImmJVExILifZmE5ByzOS9SeD
-   Lk/yZBLtbjqvRChUlvKE4A0rixGL5qYIpLxoYr5mLMARbMSZ5+W8TNR7m
-   J6nrSURJ7BtuUTwpo4kiBCl8Df438ZbGKlU0wQzXI7twm9pmjKbd3xNr1
-   k5QgJILoIWvgVE6yl8DdT+jjA/QTzbLOf+1RW7Z33XsJeHl77mBFBOaGT
-   VKs30wQ3Fg8/Rnr/6DbOncMNhaO+ZOVOY2KJrYeqG5VRZy6QrvSEtUJxo
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="282870577"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="282870577"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2022 06:33:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="602010546"
-X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
-   d="scan'208";a="602010546"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 05 Oct 2022 06:33:20 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 23A9717E; Wed,  5 Oct 2022 16:33:39 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: [PATCH v1 1/1] pinctrl: actions: make irq_chip immutable
-Date:   Wed,  5 Oct 2022 16:33:37 +0300
-Message-Id: <20221005133337.19245-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S230111AbiJENpE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 09:45:04 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC34C165B1
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Oct 2022 06:45:03 -0700 (PDT)
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E19013F116
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Oct 2022 13:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1664977501;
+        bh=vHvbLZZalRRqCku7hn7wW+CT1JrQH9C5FZAMYitv8cE=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=ELBoh/J2aHKMApIyXEcLZwSZhx1scJYc6HvoE49Lt+D3sWKxR74t4PElnXjlDK5fh
+         T5dc+38XAm+8xrViIfDVKHf0L7k6eBkLfDXLLqueUa7tYwVukzYdgpWZN4t507nNsd
+         IZbNSsKKm8U5BSK5Ip0oCG5G+A3eKAO2fwTPtrkA5Fpmil9pqUYwbI9ehdh8xT4dL8
+         AdRQpYmzqpw3Jt5HO2wt1bN3pwXduR7zfDUYdNguxKV/bJQ6Tomh+KalHhMsxRR4iy
+         BVVr8N9dXTtiEVIlubHSXjxN5YtCvSuLKJHMvn3hiZYl1BSVE4TbBL6qkmzZ0fHmcL
+         NmaLWULn0F3sg==
+Received: by mail-qk1-f199.google.com with SMTP id bm21-20020a05620a199500b006cf6a722b16so14169670qkb.0
+        for <linux-gpio@vger.kernel.org>; Wed, 05 Oct 2022 06:45:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=vHvbLZZalRRqCku7hn7wW+CT1JrQH9C5FZAMYitv8cE=;
+        b=f6oqm4B/0F1iJaFw4DWv2gUYJ0mQNns/qU+g+9k8oCmyRo1/t/GddfGS1nrSC99fVo
+         JjdTkvUp/JsNNcYXl2kg6xas6XhzBVIozP6hSoDSw+2B9hZldbDfnHw34uzwRVfs0NSv
+         x3WsGCUqTmYekEZynupQFTUX0rYF1x+kItWji97lxNxLcpdD/hqda0+tzFMTzq4BpXEt
+         LqugU6zONtyrKJBskczHbXzrM2VRVM7w4D7af0L4T7ADym9JU+LDz3Nf93pQkp3keaC6
+         7NMGGt/1yBHyxqqXem9l5zlYJvcN0VHyvUkni4VwY8dlaRAxjIcH4LeDKYj+pwQVD4fB
+         wgow==
+X-Gm-Message-State: ACrzQf1dyDjdf5A2LqCaq2nfqSl2hjpiK5EvxSetmL6jN/IoDYDSDqaW
+        IfxJVdjCAt0Ud8DP1hLMoGQEZecXpbJ0LwUbXbJLIMn4No73JLj9EulbyjCHjvxLzpkTkmBLR8U
+        7eF1D8sJvEOk6BUdhMv7SbPO6Nh43nrE8dItwuKbD4uy43V1kZKwpraM=
+X-Received: by 2002:a05:620a:3729:b0:6ce:4711:8137 with SMTP id de41-20020a05620a372900b006ce47118137mr19887903qkb.720.1664977499252;
+        Wed, 05 Oct 2022 06:44:59 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM5iRopqmvzesAPcWETTAmBahzPyLHdQHBWSaylF00li/lAnce3mJQiy71AFp3W6dMQuOJaFi94GvW8lzUw0y5Y=
+X-Received: by 2002:a05:620a:3729:b0:6ce:4711:8137 with SMTP id
+ de41-20020a05620a372900b006ce47118137mr19887889qkb.720.1664977499036; Wed, 05
+ Oct 2022 06:44:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220929143225.17907-6-hal.feng@linux.starfivetech.com> <40d0abb6-88dc-d315-f768-27a623f60986@sifive.com>
+In-Reply-To: <40d0abb6-88dc-d315-f768-27a623f60986@sifive.com>
+From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Date:   Wed, 5 Oct 2022 15:44:43 +0200
+Message-ID: <CAJM55Z-PzvM_-_6jTWX+Jyy2FQ3TJdh4uYj0evpktnEENHL6WA@mail.gmail.com>
+Subject: Re: [PATCH v1 05/30] soc: sifive: l2 cache: Convert to platform driver
+To:     Ben Dooks <ben.dooks@sifive.com>
+Cc:     Hal Feng <hal.feng@linux.starfivetech.com>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org, Zong Li <zong.li@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since recently, the kernel is nagging about mutable irq_chips:
+On Thu, 29 Sept 2022 at 19:59, Ben Dooks <ben.dooks@sifive.com> wrote:
+>
+> On 29/09/2022 15:32, Hal Feng wrote:
+> > From: Emil Renner Berthing <kernel@esmil.dk>
+> >
+> > This converts the driver to use the builtin_platform_driver_probe macro
+> > to initialize the driver. This macro ends up calling device_initcall as
+> > was used previously, but also allocates a platform device which gives us
+> > access to much nicer APIs such as platform_ioremap_resource,
+> > platform_get_irq and dev_err_probe.
+>
+> This is useful, but also there are other changes currently being sorted
+> out by Zong Li (cc'd into this message) which have already been reviewed
+> and are hopefully queued for the next kernel release.
+>
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 
-   "not an immutable chip, please consider fixing it!"
+I'm ok with something like this being merged, but please note that if
+we ever want to support the JH7100 which uses registers in this
+peripheral to flush the cache for its non-coherent DMAs then this
+driver needs to be loaded before other peripherals or we will trigger
+the 2nd warning in arch/riscv/mm/dma-noncoherent.c. I'm not sure we
+can do that when it's a platform driver. See this patch for an
+alternative to support the JH71x0s:
+https://github.com/esmil/linux/commit/9c5b29da56ae29159c9572c5bb195fe3a1b535c5
 
-Drop the unneeded copy, flag it as IRQCHIP_IMMUTABLE, add the new
-helper functions and call the appropriate gpiolib functions.
+/Emil
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/actions/pinctrl-owl.c | 39 ++++++++++++++++-----------
- 1 file changed, 24 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
-index ed46abc15d72..0898d178f4e5 100644
---- a/drivers/pinctrl/actions/pinctrl-owl.c
-+++ b/drivers/pinctrl/actions/pinctrl-owl.c
-@@ -38,7 +38,6 @@
-  * @clk: clock control
-  * @soc: reference to soc_data
-  * @base: pinctrl register base address
-- * @irq_chip: IRQ chip information
-  * @num_irq: number of possible interrupts
-  * @irq: interrupt numbers
-  */
-@@ -50,7 +49,6 @@ struct owl_pinctrl {
- 	struct clk *clk;
- 	const struct owl_pinctrl_soc_data *soc;
- 	void __iomem *base;
--	struct irq_chip irq_chip;
- 	unsigned int num_irq;
- 	unsigned int *irq;
- };
-@@ -722,10 +720,11 @@ static void owl_gpio_irq_mask(struct irq_data *data)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
- 	struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
- 	const struct owl_gpio_port *port;
-+	unsigned int gpio = hwirq;
- 	void __iomem *gpio_base;
- 	unsigned long flags;
--	unsigned int gpio = data->hwirq;
- 	u32 val;
- 
- 	port = owl_gpio_get_port(pctrl, &gpio);
-@@ -745,22 +744,27 @@ static void owl_gpio_irq_mask(struct irq_data *data)
- 					OWL_GPIO_CTLR_ENABLE + port->shared_ctl_offset * 5, false);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-+
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void owl_gpio_irq_unmask(struct irq_data *data)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
- 	struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
- 	const struct owl_gpio_port *port;
-+	unsigned int gpio = hwirq;
- 	void __iomem *gpio_base;
- 	unsigned long flags;
--	unsigned int gpio = data->hwirq;
- 	u32 value;
- 
- 	port = owl_gpio_get_port(pctrl, &gpio);
- 	if (WARN_ON(port == NULL))
- 		return;
- 
-+	gpiochip_enable_irq(gc, hwirq);
-+
- 	gpio_base = pctrl->base + port->offset;
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
-@@ -780,20 +784,21 @@ static void owl_gpio_irq_ack(struct irq_data *data)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
- 	struct owl_pinctrl *pctrl = gpiochip_get_data(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(data);
- 	const struct owl_gpio_port *port;
-+	unsigned int gpio = hwirq;
- 	void __iomem *gpio_base;
- 	unsigned long flags;
--	unsigned int gpio = data->hwirq;
- 
- 	/*
- 	 * Switch the interrupt edge to the opposite edge of the interrupt
- 	 * which got triggered for the case of emulating both edges
- 	 */
- 	if (irqd_get_trigger_type(data) == IRQ_TYPE_EDGE_BOTH) {
--		if (owl_gpio_get(gc, gpio))
--			irq_set_type(pctrl, gpio, IRQ_TYPE_EDGE_FALLING);
-+		if (owl_gpio_get(gc, hwirq))
-+			irq_set_type(pctrl, hwirq, IRQ_TYPE_EDGE_FALLING);
- 		else
--			irq_set_type(pctrl, gpio, IRQ_TYPE_EDGE_RISING);
-+			irq_set_type(pctrl, hwirq, IRQ_TYPE_EDGE_RISING);
- 	}
- 
- 	port = owl_gpio_get_port(pctrl, &gpio);
-@@ -825,6 +830,16 @@ static int owl_gpio_irq_set_type(struct irq_data *data, unsigned int type)
- 	return 0;
- }
- 
-+static const struct irq_chip owl_gpio_irqchip = {
-+	.name = "owl-irq",
-+	.irq_ack = owl_gpio_irq_ack,
-+	.irq_mask = owl_gpio_irq_mask,
-+	.irq_unmask = owl_gpio_irq_unmask,
-+	.irq_set_type = owl_gpio_irq_set_type,
-+	.flags = IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static void owl_gpio_irq_handler(struct irq_desc *desc)
- {
- 	struct owl_pinctrl *pctrl = irq_desc_get_handler_data(desc);
-@@ -875,14 +890,8 @@ static int owl_gpio_init(struct owl_pinctrl *pctrl)
- 	chip->parent = pctrl->dev;
- 	chip->owner = THIS_MODULE;
- 
--	pctrl->irq_chip.name = chip->of_node->name;
--	pctrl->irq_chip.irq_ack = owl_gpio_irq_ack;
--	pctrl->irq_chip.irq_mask = owl_gpio_irq_mask;
--	pctrl->irq_chip.irq_unmask = owl_gpio_irq_unmask;
--	pctrl->irq_chip.irq_set_type = owl_gpio_irq_set_type;
--
- 	gpio_irq = &chip->irq;
--	gpio_irq->chip = &pctrl->irq_chip;
-+	gpio_irq_chip_set_chip(gpio_irq, &owl_gpio_irqchip);
- 	gpio_irq->handler = handle_simple_irq;
- 	gpio_irq->default_type = IRQ_TYPE_NONE;
- 	gpio_irq->parent_handler = owl_gpio_irq_handler;
--- 
-2.35.1
-
+> >   drivers/soc/sifive/sifive_l2_cache.c | 79 ++++++++++++++--------------
+> >   1 file changed, 40 insertions(+), 39 deletions(-)
+> >
+> > diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+> > index 59640a1d0b28..010d612f7420 100644
+> > --- a/drivers/soc/sifive/sifive_l2_cache.c
+> > +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> > @@ -7,9 +7,9 @@
+> >    */
+> >   #include <linux/debugfs.h>
+> >   #include <linux/interrupt.h>
+> > -#include <linux/of_irq.h>
+> > -#include <linux/of_address.h>
+> > -#include <linux/device.h>
+> > +#include <linux/io.h>
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/platform_device.h>
+> >   #include <asm/cacheinfo.h>
+> >   #include <soc/sifive/sifive_l2_cache.h>
+> >
+> > @@ -96,12 +96,6 @@ static void l2_config_read(void)
+> >       pr_info("L2CACHE: Index of the largest way enabled: %d\n", regval);
+> >   }
+> >
+> > -static const struct of_device_id sifive_l2_ids[] = {
+> > -     { .compatible = "sifive,fu540-c000-ccache" },
+> > -     { .compatible = "sifive,fu740-c000-ccache" },
+> > -     { /* end of table */ },
+> > -};
+> > -
+> >   static ATOMIC_NOTIFIER_HEAD(l2_err_chain);
+> >
+> >   int register_sifive_l2_error_notifier(struct notifier_block *nb)
+> > @@ -192,36 +186,29 @@ static irqreturn_t l2_int_handler(int irq, void *device)
+> >       return IRQ_HANDLED;
+> >   }
+> >
+> > -static int __init sifive_l2_init(void)
+> > +static int __init sifive_l2_probe(struct platform_device *pdev)
+> >   {
+> > -     struct device_node *np;
+> > -     struct resource res;
+> > -     int i, rc, intr_num;
+> > -
+> > -     np = of_find_matching_node(NULL, sifive_l2_ids);
+> > -     if (!np)
+> > -             return -ENODEV;
+> > -
+> > -     if (of_address_to_resource(np, 0, &res))
+> > -             return -ENODEV;
+> > -
+> > -     l2_base = ioremap(res.start, resource_size(&res));
+> > -     if (!l2_base)
+> > -             return -ENOMEM;
+> > -
+> > -     intr_num = of_property_count_u32_elems(np, "interrupts");
+> > -     if (!intr_num) {
+> > -             pr_err("L2CACHE: no interrupts property\n");
+> > -             return -ENODEV;
+> > -     }
+> > -
+> > -     for (i = 0; i < intr_num; i++) {
+> > -             g_irq[i] = irq_of_parse_and_map(np, i);
+> > -             rc = request_irq(g_irq[i], l2_int_handler, 0, "l2_ecc", NULL);
+> > -             if (rc) {
+> > -                     pr_err("L2CACHE: Could not request IRQ %d\n", g_irq[i]);
+> > -                     return rc;
+> > -             }
+> > +     struct device *dev = &pdev->dev;
+> > +     int nirqs;
+> > +     int ret;
+> > +     int i;
+> > +
+> > +     l2_base = devm_platform_ioremap_resource(pdev, 0);
+> > +     if (IS_ERR(l2_base))
+> > +             return PTR_ERR(l2_base);
+> > +
+> > +     nirqs = platform_irq_count(pdev);
+> > +     if (nirqs <= 0)
+> > +             return dev_err_probe(dev, -ENODEV, "no interrupts\n");
+>
+> I wonder if zero irqs is an actual issue here?
+>
+> > +     for (i = 0; i < nirqs; i++) {
+> > +             g_irq[i] = platform_get_irq(pdev, i);
+>
+> I wonder if we need to keep g_irq[] around now? Is it going to be useful
+> in the future?
+>
+> > +             if (g_irq[i] < 0)
+> > +                     return g_irq[i];
+> > +
+> > +             ret = devm_request_irq(dev, g_irq[i], l2_int_handler, 0, pdev->name, NULL);
+> > +             if (ret)
+> > +                     return dev_err_probe(dev, ret, "Could not request IRQ %d\n", g_irq[i]);
+> >       }
+> >
+> >       l2_config_read();
+> > @@ -234,4 +221,18 @@ static int __init sifive_l2_init(void)
+> >   #endif
+> >       return 0;
+> >   }
+> > -device_initcall(sifive_l2_init);
+> > +
+> > +static const struct of_device_id sifive_l2_match[] = {
+> > +     { .compatible = "sifive,fu540-c000-ccache" },
+> > +     { .compatible = "sifive,fu740-c000-ccache" },
+> > +     { /* sentinel */ }
+> > +};
+> > +
+> > +static struct platform_driver sifive_l2_driver = {
+> > +     .driver = {
+> > +             .name = "sifive_l2_cache",
+> > +             .of_match_table = sifive_l2_match,
+> > +             .suppress_bind_attrs = true,
+> > +     },
+> > +};
+> > +builtin_platform_driver_probe(sifive_l2_driver, sifive_l2_probe);
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
