@@ -2,191 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA7095F509E
-	for <lists+linux-gpio@lfdr.de>; Wed,  5 Oct 2022 10:09:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF5DA5F50B4
+	for <lists+linux-gpio@lfdr.de>; Wed,  5 Oct 2022 10:18:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbiJEIJM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 04:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60090 "EHLO
+        id S229462AbiJEISY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Oct 2022 04:18:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbiJEIJL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 04:09:11 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B76970E62
-        for <linux-gpio@vger.kernel.org>; Wed,  5 Oct 2022 01:09:10 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id m14so693560ljg.2
-        for <linux-gpio@vger.kernel.org>; Wed, 05 Oct 2022 01:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=fKZVMBLV4cyNa9DTz4xK4r/4KYXQ4qFmdv6P+6q2hAE=;
-        b=xDsZijxU2udyYZXfP0YdYnMCiJTLXIDfOLMcGcbDPwCu0RuWMfqe5j2uTWmRPni+xy
-         mhDjJ0RTgzZ0Feb2VhJTe0RHt/bA0sGQmvnwzWaJpnSt6zPYm+E9+r8z8qQKp20QQavf
-         7kp0rT6OGMGUlYJP5Wf/RLrRh6eHALKr/hiRnyDdjYccmIkYH73GotozJPrd7UrxzUr3
-         kYlEZHa1s0Xh9IOMHY8XpFcMEBMONczYn+qCm6BJHEMm0sYr/XhQqUXuyd6xhDR1OWij
-         aaiSTgLfH4ByjBBcL2tjMDBLfswZ8QFqd49cqKGlJHRKx8RiT0mSGp/JI06m8hPU7WvH
-         AlOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=fKZVMBLV4cyNa9DTz4xK4r/4KYXQ4qFmdv6P+6q2hAE=;
-        b=FGc9ge0vQGp3meprdauyRSXMV1SUFAutaMLz0RyR0mkGEe0vo+kOhOFMn4O4Axk6Tz
-         P9c9y2w5hdS85k/6u1BnYvKASJa55WVVW/JVDTiMe3maVjdRjRewBxMc7eCOO8KnfHQQ
-         +DHmxU6WSMVWGdiC5tdEqDJ2Lut7DsSmXLA4ibMFzCZOVX0RlHU53wYdEM9fGGF0rW/7
-         g9xhjkzdLVhknaMPpsC7HfozHN8aiMr4jV+eUUSgG/vuFHHDqXCashLLJyjw8Kmy885z
-         V3ueGNwrcm6shu3h/oYSrwQ9lLSMzI0F0R5Kkvpd6Mj9Sz41aX/TOgUgVptYG6b5u11q
-         BmsQ==
-X-Gm-Message-State: ACrzQf1Kqxaueks5fv7EleTZjwbgKaV1VdoPhoHh4SRG7Kg9BR8wVq4f
-        fV+fHfNjYF9RcMLYtekqjHW4mQ==
-X-Google-Smtp-Source: AMsMyM4eewbzpOumWsknGgIrXWo7yHnFVYt28GJGRa/ZUMTM9+Wwi/Ok1WI3MCBOC0C6gx2HIcSN0A==
-X-Received: by 2002:a05:651c:1069:b0:26c:3e08:25eb with SMTP id y9-20020a05651c106900b0026c3e0825ebmr9136701ljm.441.1664957348366;
-        Wed, 05 Oct 2022 01:09:08 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id z3-20020a056512370300b004a2386b8cf4sm1390141lfr.258.2022.10.05.01.09.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Oct 2022 01:09:07 -0700 (PDT)
-Message-ID: <cae8e149-ef1e-66c6-20f5-067e3fd8c586@linaro.org>
-Date:   Wed, 5 Oct 2022 10:09:06 +0200
+        with ESMTP id S229445AbiJEISX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 04:18:23 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997976B664
+        for <linux-gpio@vger.kernel.org>; Wed,  5 Oct 2022 01:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664957902; x=1696493902;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=dTXGmUP53OIVwsZFWMnvoQf0KiLDlEBDlU5dLoN/LrM=;
+  b=K8AA1fjyRESD0fGK3zE2T3D9Rt0riA8s7GYBENw6L6Ny4pOguEs6Z/yE
+   ZzRX1W8GCqetLJFKz0VA7v5LtUdKyeeOQTe/OPC7WAwq13i1fGdZolddh
+   Vmz5NJCyll2xszos5Ld7q+VU9/H95h3C0nxuBxu4rYp86If1vRHWjEolH
+   TQX5I0ZBF6ENgnZDkYQhnJVDgVCHQ+Id8TVyCf/EG5S2USozD8H9/zHAG
+   MWYRdI3QDmtd8jkgY1W4S3HL5XsYAbFqqORxNYrrvnOcXWI9H5a8bmwOF
+   TJn3RFjrW97dzfsgRQ/KGMGRKkUJcd5j8XHsUWU9OOBxJ58G8JQ6C2MKW
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="304676590"
+X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
+   d="scan'208";a="304676590"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2022 01:18:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="657437781"
+X-IronPort-AV: E=Sophos;i="5.95,159,1661842800"; 
+   d="scan'208";a="657437781"
+Received: from lkp-server01.sh.intel.com (HELO d4f44333118a) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 05 Oct 2022 01:18:03 -0700
+Received: from kbuild by d4f44333118a with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ofzbO-00015X-20;
+        Wed, 05 Oct 2022 08:18:02 +0000
+Date:   Wed, 05 Oct 2022 16:17:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ ba99b756da178aa8c608c4499a91074466050c10
+Message-ID: <633d3d80.27BfqfxRb0L/P9Su%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
- ocelot-ext documentation
-Content-Language: en-US
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
- <20220926002928.2744638-13-colin.foster@in-advantage.com>
- <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
- <20221004121517.4j5637hnioepsxgd@skbuf>
- <6444e5d1-0fc9-03e2-9b2a-ec19fa1e7757@linaro.org>
- <20221004160135.lqugs6cf5b7fwkxq@skbuf>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221004160135.lqugs6cf5b7fwkxq@skbuf>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 04/10/2022 18:01, Vladimir Oltean wrote:
-> On Tue, Oct 04, 2022 at 04:59:02PM +0200, Krzysztof Kozlowski wrote:
->> On 04/10/2022 14:15, Vladimir Oltean wrote:
->>> On Tue, Oct 04, 2022 at 01:19:33PM +0200, Krzysztof Kozlowski wrote:
->>>>> +  # Ocelot-ext VSC7512
->>>>> +  - |
->>>>> +    spi {
->>>>> +        soc@0 {
->>>>
->>>> soc in spi is a bit confusing.
->>>
->>> Do you have a better suggestion for a node name? This is effectively a
->>> container for peripherals which would otherwise live under a /soc node,
->>
->> /soc node implies it does not live under /spi node. Otherwise it would
->> be /spi/soc, right?
-> 
-> Did you read what's written right below? I can explain if you want, but
-> there's no point if you're not going to read or ask other clarification
-> questions.
-> 
->>> if they were accessed over MMIO by the internal microprocessor of the
->>> SoC, rather than by an external processor over SPI.
-> ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> 
-> The /spi/soc@0 node actually has a compatible of "mscc,vsc7512" which
-> Colin did not show in the example (it is not "simple-bus"). It is covered
-> by Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml. Still waiting
-> for a better suggestion for how to name the mfd container node.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: ba99b756da178aa8c608c4499a91074466050c10  pinctrl: starfive: Rename "pinctrl-starfive" to "pinctrl-starfive-jh7100"
 
-Then still the /spi node does not seem related. If I understand
-correctly, your device described in this bindings is a child of soc@0.
-Sounds fine. How that soc@0 is connected to the parent - via SPI or
-whatever - is not related to this binding, is it? It is related to the
-soc binding, but not here.
+elapsed time: 726m
 
-> 
->>>> How is this example different than previous one (existing soc example)?
->>>> If by compatible and number of ports, then there is no much value here.
->>>
->>> The positioning relative to the other nodes is what's different.
->>
->> Positioning of nodes is not worth another example, if everything else is
->> the same. What is here exactly tested or shown by example? Using a
->> device in SPI controller?
-> 
-> Everything is not the same, it is not the same hardware as what is currenly
-> covered by Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml.
-> The "existing soc example" (mscc,vsc9953-switch) has a different port
-> count, integration with a different SERDES, interrupt controller, pin
-> controller, things like that. The examples already differ in port count
-> and phy-mode values, I expect they will start diverging more in the
-> future. If you still believe it's not worth having an example of how to
-> instantiate a SPI-controlled VSC7512 because there also exists an
-> example of an MMIO-controlled VSC9953, then what can I say.
-> 
-> ------ cut here ------
-> 
-> Unrelated to your "existing soc example" (the VSC9953), but relevant and
-> you may want to share your opinion on this:
-> 
-> The same hardware present in the VSC7514 SoC can also be driven by an
-> integrated MIPS processor, and in that case, it is indeed expected that
-> the same dt-bindings cover both the /soc and the /spi/soc@0/ relative
-> positioning of their OF node. This is true for simpler peripherals like
-> "mscc,ocelot-miim", "mscc,ocelot-pinctrl", "mscc,ocelot-sgpio". However
-> it is not true for the main switching IP of the SoC itself.
-> 
-> When driven by a switchdev driver, by the internal MIPS processor (the
-> DMA engine is what is used for packet I/O), the switching IP follows the
-> Documentation/devicetree/bindings/net/mscc,vsc7514-switch.yaml binding
-> document.
-> 
-> When driven by a DSA driver (external processor, host frames are
-> redirected through an Ethernet port instead of DMA controller),
-> the switching IP follows the Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml
-> document.
-> 
-> The switching IP is special in this regard because the hardware is not
-> used in the same way. The DSA dt-binding also needs the 'ethernet'
-> phandle to be present in a port node. The different placement of the
-> bindings according to the use case of the hardware is a bit awkward, but
-> is a direct consequence of the separation between DSA and pure switchdev
-> drivers that has existed thus far (and the fact that DSA has its own
-> folder in the dt-bindings, with common properties in dsa.yaml and
-> dsa-port.yaml etc). It is relatively uncommon for a switching IP to have
-> provisioning to be used in both modes, and for Linux to support both
-> modes (using different drivers), yet this is what we have here.
+configs tested: 101
+configs skipped: 2
 
-Is there a question here to me? What shall I do with this paragraph? You
-know, I do not have a problem of lack of material to read...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
-Krzysztof
+gcc tested configs:
+arm                                 defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+s390                                defconfig
+arc                                 defconfig
+m68k                             allyesconfig
+arm64                            allyesconfig
+alpha                               defconfig
+i386                 randconfig-a016-20221003
+x86_64                              defconfig
+x86_64                          rhel-8.3-func
+riscv                randconfig-r042-20221003
+arm                              allyesconfig
+x86_64               randconfig-a011-20221003
+x86_64                    rhel-8.3-kselftests
+powerpc                          allmodconfig
+x86_64                               rhel-8.3
+s390                 randconfig-r044-20221003
+x86_64               randconfig-a012-20221003
+i386                                defconfig
+mips                             allyesconfig
+x86_64               randconfig-a013-20221003
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+sh                               allmodconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           allyesconfig
+arc                               allnoconfig
+arm                       imx_v6_v7_defconfig
+mips                            ar7_defconfig
+x86_64               randconfig-a015-20221003
+powerpc                           allnoconfig
+i386                 randconfig-a014-20221003
+m68k                                defconfig
+alpha                             allnoconfig
+sh                             shx3_defconfig
+i386                 randconfig-a011-20221003
+riscv                             allnoconfig
+i386                 randconfig-a012-20221003
+i386                 randconfig-a013-20221003
+csky                              allnoconfig
+x86_64               randconfig-a014-20221003
+i386                 randconfig-a015-20221003
+x86_64               randconfig-a016-20221003
+arc                  randconfig-r043-20221003
+s390                             allmodconfig
+arm                      jornada720_defconfig
+arc                  randconfig-r043-20221002
+riscv                               defconfig
+i386                             allyesconfig
+s390                             allyesconfig
+i386                          randconfig-c001
+alpha                            allyesconfig
+arc                              allyesconfig
+m68k                             allmodconfig
+powerpc                 mpc834x_itx_defconfig
+arc                        nsim_700_defconfig
+sh                          lboxre2_defconfig
+sparc                               defconfig
+sh                            titan_defconfig
+mips                          rb532_defconfig
+sh                         ap325rxa_defconfig
+sh                           se7751_defconfig
+riscv                            allmodconfig
+arm                         cm_x300_defconfig
+ia64                             allmodconfig
+nios2                            alldefconfig
+loongarch                 loongson3_defconfig
+mips                            gpr_defconfig
+sh                        sh7763rdp_defconfig
+riscv                            allyesconfig
+parisc                           allyesconfig
+arm                            pleb_defconfig
+arc                          axs101_defconfig
+powerpc                 linkstation_defconfig
+sparc64                             defconfig
+sh                   sh7770_generic_defconfig
 
+clang tested configs:
+i386                 randconfig-a006-20221003
+x86_64               randconfig-a005-20221003
+x86_64               randconfig-a006-20221003
+hexagon              randconfig-r045-20221003
+arm                        neponset_defconfig
+i386                 randconfig-a003-20221003
+riscv                randconfig-r042-20221002
+i386                 randconfig-a002-20221003
+hexagon              randconfig-r041-20221002
+i386                 randconfig-a001-20221003
+i386                 randconfig-a004-20221003
+hexagon              randconfig-r045-20221002
+i386                 randconfig-a005-20221003
+x86_64               randconfig-a001-20221003
+x86_64               randconfig-a003-20221003
+x86_64               randconfig-a002-20221003
+hexagon              randconfig-r041-20221003
+x86_64               randconfig-a004-20221003
+s390                 randconfig-r044-20221002
+arm                         s3c2410_defconfig
+powerpc                   bluestone_defconfig
+powerpc                     ksi8560_defconfig
+mips                     loongson1c_defconfig
+powerpc                 mpc8272_ads_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
