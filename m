@@ -2,111 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77FA95F6371
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 11:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CDCA5F638E
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 11:23:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231448AbiJFJQ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 05:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35796 "EHLO
+        id S231384AbiJFJXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 05:23:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231372AbiJFJQQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 05:16:16 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5D8C9835D;
-        Thu,  6 Oct 2022 02:16:09 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id ADB3566022F9;
-        Thu,  6 Oct 2022 10:16:07 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1665047768;
-        bh=GDGLsYsj0D/nebPVYIooIdcVZbO93mCgP/BtLTyCxqo=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ISYCMpZUlkUQQHPE6fJGNrMrqTWoUe8kPaqYs/+I+MBK3dVUI0emcqqogWe1BmQUZ
-         3BWV/hDTLBd9Zf94zq8ZR1wrRAixEorbnKgojILa7Xqb/SlZx+eebxWO05l/qT0Gic
-         vjZG+dzOb0tX0JnVQuAPtNkwiDFId7UeDrvV/081dHdub00+mQgJkYSWCEK5B780C9
-         24B71rgmUrOwUwB2HzpvJVlfW+zZwi8eYYqXkOZo+T3ltRA9DvsY4rC56N+7AlG7mp
-         cYZFaqrL6fWcfb8orl6492aUztpC5VIquLhofLFUc1Q+wtEUe3OA0V8BtpgZmR3uhg
-         4HoaTcSf9RgiQ==
-Message-ID: <b1140018-8787-4365-14ab-16d21716a162@collabora.com>
-Date:   Thu, 6 Oct 2022 11:16:05 +0200
+        with ESMTP id S231128AbiJFJXx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 05:23:53 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8862598C81
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 02:23:51 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id z23so3129326ejw.12
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 02:23:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=wzZ9wWp7UYvnCxIpLbO55WWroOpcvUpldPq/EJxSsFs=;
+        b=BEEUurO9wMsAhS9TBQKLGHJWW5hytq8RNHB/ZSvn7H4zLhRDL114VcDLh3hj4RHf32
+         WABKUMQ+iF2S1Wk9iajduFk/nC/x09LF5D5wB2p+D7ilxh9EO3aiw/m8+W5vB973WhOt
+         GDvHnnXx1KsTL517mw3g390tJ765RuSzGU0CS9dkd7Nt70tMWLVBdH0OYsLzM7JjpZvd
+         QWVz6dBOCdBrQUwbogS2Vi9wIEqOIpR8naXwlNWCMk8gtZuZZH8FZiJ3nPOEvuEE3IQL
+         GglZqgCXS91f6YncRkwotVXnYUdVkQtKSI6bz6rGt14LRksCUUiHUtaAC1MrqVscxYDP
+         KcSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=wzZ9wWp7UYvnCxIpLbO55WWroOpcvUpldPq/EJxSsFs=;
+        b=a3OMTHLyQ2UH+8sv2KyNy/kqPWYqh8UNFPzY/MBXy0No3HN3WWFsokOlVpicHE7Gqi
+         cQcwhkxQhjw6C2WezDuiPK94Q2U/5LanraUWZ8/y/oRM7qrNX2rThPUn94j6iwzq8PPF
+         b/j5iUXDPnSr7HtyvdMw7HjOHmOazVNHRo2wS0cAy6khkOpyFptmmILeTS2Ddr1kaDY1
+         8j8zUwNbX5+pLwDRoVhhtwGf6mBjd+YA+Gq2BkGOGRuhfI6IupXhk3X+M9UjkrzrwFi/
+         eRIYWH5mr+hRfVrb6NYkRCUOSs5c2exQguKuUz9coAr53ljERdgsyHkytNTQcgiyWszT
+         1TZQ==
+X-Gm-Message-State: ACrzQf2XBztAwvXKMCoskqt9AbkbmsexiCGwhsxi6JFvEmrz/ILCLD5g
+        eb1Etw7X10EocOh7C1Pof1oZUkYf9eumz68OacN05Q==
+X-Google-Smtp-Source: AMsMyM5fv69bTEg7ZmHLVuLYd2+ejXhCQ+P9GFLk9dNI1COIQDqLlH9qEC5b7nVYFds/xtn+DfHLh2K3kzXsvnk5dUU=
+X-Received: by 2002:a17:907:a064:b0:78c:1511:a3cd with SMTP id
+ ia4-20020a170907a06400b0078c1511a3cdmr3181681ejc.203.1665048228986; Thu, 06
+ Oct 2022 02:23:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2 01/10] arm64: dts: mediatek: mt6779: Remove syscon
- compatible from pin controller
-Content-Language: en-US
-To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>
-Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+References: <20221006080154.5396-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20221006080154.5396-1-lukas.bulwahn@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 6 Oct 2022 11:23:37 +0200
+Message-ID: <CACRpkdaVUfM23i9kWT8hbbTEWQWJ887mDyH2WUU7GqpEmDtdew@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust STARFIVE JH7100 PINCTRL DRIVER after
+ file movement
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Emil Renner Berthing <kernel@esmil.dk>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Hal Feng <hal.feng@linux.starfivetech.com>,
+        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20221005174343.24240-1-y.oudjana@protonmail.com>
- <20221005174343.24240-2-y.oudjana@protonmail.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20221005174343.24240-2-y.oudjana@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 05/10/22 19:43, Yassine Oudjana ha scritto:
-> From: Yassine Oudjana <y.oudjana@protonmail.com>
-> 
-> Remove syscon compatible string from pin controller to follow
-> DT bindings and pass checks. Adding the syscon compatible to
-> the DT bindings documentation instead causes a different check
-> error due to the syscon document specifying a maximum of 1 item
-> in the reg property, while this has 9.
+On Thu, Oct 6, 2022 at 10:02 AM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
-Please change this part of the description...
+> Commit ba7fdf88e98a ("pinctrl: Create subdirectory for StarFive drivers")
+> moves pinctrl-starfive.c into its own subdirectory starfive; further,
+> commit ba99b756da17 ("pinctrl: starfive: Rename "pinctrl-starfive" to
+> "pinctrl-starfive-jh7100"") adds the suffix jh7100 to the driver and
+> dt-bindings header file name.
+>
+> These commits however do not adjust the entry in MAINTAINERS. Hence,
+> ./scripts/get_maintainer.pl --self-test=patterns complains about a broken
+> reference.
+>
+> Adjust the entries for STARFIVE JH7100 PINCTRL DRIVER after file movement.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-> Nothing is using the pin
-> controller as a syscon at the moment so it should be a safe
-> thing to do.
+Oops thanks Lukas, excellent work as always!
 
-...to:
-
-This pin controller has never been, and will never be, used as a
-syscon, hence it is safe to drop this compatible.
-
-After which, you get my
-
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-
-> 
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> ---
->   arch/arm64/boot/dts/mediatek/mt6779.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6779.dtsi b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> index 9bdf5145966c..a6fa5212da4e 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6779.dtsi
-> @@ -160,7 +160,7 @@ infracfg_ao: clock-controller@10001000 {
->   		};
->   
->   		pio: pinctrl@10005000 {
-> -			compatible = "mediatek,mt6779-pinctrl", "syscon";
-> +			compatible = "mediatek,mt6779-pinctrl";
->   			reg = <0 0x10005000 0 0x1000>,
->   			      <0 0x11c20000 0 0x1000>,
->   			      <0 0x11d10000 0 0x1000>,
-
+Yours,
+Linus Walleij
