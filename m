@@ -2,170 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 639765F6DE5
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E58915F6DF9
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:14:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232041AbiJFTGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 15:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59486 "EHLO
+        id S231771AbiJFTOP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 15:14:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231881AbiJFTGk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:06:40 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E49606AF;
-        Thu,  6 Oct 2022 12:06:39 -0700 (PDT)
-Received: by mail-oi1-f170.google.com with SMTP id w70so3119019oie.2;
-        Thu, 06 Oct 2022 12:06:39 -0700 (PDT)
+        with ESMTP id S231793AbiJFTON (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:14:13 -0400
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 359EAA3F45;
+        Thu,  6 Oct 2022 12:14:13 -0700 (PDT)
+Received: by mail-oo1-f45.google.com with SMTP id m11-20020a4aab8b000000b00476743c0743so2061672oon.10;
+        Thu, 06 Oct 2022 12:14:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jPEVQe4YSet3buvo/uAwKM5bGj7XGV+aFDBmZihtmho=;
-        b=XjtctX6K32Hjrxi03GpXQtImHK92qTO6acosSISOWlVdVrrnIQ1gEkrbPvPbovY91q
-         /Htrmcx5vohXbaHGgkIGvHLILnQJs5FBmwiI3mL/t/YzazjhRuDzxm+OmTps6GAVeYfd
-         8OwBAEjoikINADTa7sZWG7qfCuyq/1zlXOdQi5inA+TRC9IpDohgMs7nrUYWBGCYNGJF
-         TJLHFXAo2oa3pT4R1S/dWRYGci5NVNoLjp1EJ/AYuJ3HuCNsP5zFuc+pctLvNNT3gzlb
-         NMLhsu3nGwnLgtOo2ID/RvBZYi0mGTGRVIsPk0LSPeXcJGI9MjSjPhnvPbrlLSda/xSV
-         jqTg==
-X-Gm-Message-State: ACrzQf2AcJEbl9YhaUJTuX7fFVe2uWQMmra5BssGVtXHUPX4KgQAiYRg
-        bdvFLrFFB+Q/RNHQmeeMah9e1r8aug==
-X-Google-Smtp-Source: AMsMyM6ACos8BQtyl2t2Tf0o2DJYhk75Lx64cxxwnaWI2x6YAJ1AcQ2zl4PUxF66xgJ8jcarfQEwEg==
-X-Received: by 2002:a05:6808:201a:b0:34f:c23e:ef28 with SMTP id q26-20020a056808201a00b0034fc23eef28mr5718022oiw.6.1665083198937;
-        Thu, 06 Oct 2022 12:06:38 -0700 (PDT)
+        bh=3uOkqH8wHIIwG3lpTmOvwfF29077xeAWMGdj9Sqlpxw=;
+        b=Yz27A3sm4FVeUcOzBqmYXr/nEz0fKGJ3aA53in65MirZamGrYGWUKMdE4GdlzZVDE4
+         v7sMlkkCEEjie2fYtnnTesfzTKvMOjgLQsMoyDVtf3jQyTz95EGKFZZI+1HZJtFEDX9n
+         D7qx5BzN/mpOQIHqiSbUzXd6Oe6rETnwjSU5gTQxBv9PsPNfyYNu66hgv6N3/L/AC8x9
+         omQ/exPZ/9qGp6HPI5nLtVxcGPf0ZZN1DAeGFjkC4SeRYhtJ+IJiicB5472XXABTGG4P
+         ivWrdi7mnBEvEqStNgXqPzH79TqGr+TGi6FYyvwqB5fx0GXgDFeheHIG2TRu7+xCJT20
+         PN1g==
+X-Gm-Message-State: ACrzQf2wT/rkcyJvVLcX4nxVdYTNv6GlSzlS19N551anPxBaqr418Ih4
+        vHdOo6yEdgsg4fBEbgLnXQ==
+X-Google-Smtp-Source: AMsMyM71fwoUSf9tYFfjBz2mhmMUwcP7xYkN22Uv0oapeMLU2C9RJk3TElcPHKa3Anb+dB7iYTEPuA==
+X-Received: by 2002:a9d:30d1:0:b0:654:1288:7cb2 with SMTP id r17-20020a9d30d1000000b0065412887cb2mr605971otg.43.1665083652496;
+        Thu, 06 Oct 2022 12:14:12 -0700 (PDT)
 Received: from robh_at_kernel.org ([2607:fb90:8a65:c536:245:842:a3a4:9017])
-        by smtp.gmail.com with ESMTPSA id a48-20020a4a98b3000000b0044884c40c8asm4651443ooj.30.2022.10.06.12.06.37
+        by smtp.gmail.com with ESMTPSA id f13-20020a056830204d00b006594674d4ddsm195126otp.44.2022.10.06.12.14.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 12:06:38 -0700 (PDT)
-Received: (nullmailer pid 39209 invoked by uid 1000);
-        Thu, 06 Oct 2022 19:06:37 -0000
-Date:   Thu, 6 Oct 2022 14:06:37 -0500
+        Thu, 06 Oct 2022 12:14:11 -0700 (PDT)
+Received: (nullmailer pid 45552 invoked by uid 1000);
+        Thu, 06 Oct 2022 19:14:08 -0000
+Date:   Thu, 6 Oct 2022 14:14:08 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: convert semtech,sx150xq bindings
- to dt-schema
-Message-ID: <20221006190637.GA30963-robh@kernel.org>
-References: <20221005-mdm9615-sx1509q-yaml-v1-0-0c26649b637c@linaro.org>
+To:     Yassine Oudjana <yassine.oudjana@gmail.com>
+Cc:     Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 02/10] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Improve description
+Message-ID: <166508364780.45491.15443497028230774224.robh@kernel.org>
+References: <20221005174343.24240-1-y.oudjana@protonmail.com>
+ <20221005174343.24240-3-y.oudjana@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221005-mdm9615-sx1509q-yaml-v1-0-0c26649b637c@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+In-Reply-To: <20221005174343.24240-3-y.oudjana@protonmail.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 05, 2022 at 02:35:36PM +0000, Neil Armstrong wrote:
-> This converts the Semtech SX150Xq bindings to dt-schemas, add necessary
-> bindings documentation to cover all differences between HW variants
-> and current bindings usage.
+On Wed, 05 Oct 2022 20:43:35 +0300, Yassine Oudjana wrote:
+> From: Yassine Oudjana <y.oudjana@protonmail.com>
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> The current description mentions having to put the pin controller
+> node under a syscon node, but this is not the case in the current
+> MT6779 device tree. It seems that this is not actually needed, so
+> replace the current description with something more generic that
+> describes the use of the hardware block.
+> 
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 > ---
-> To: Rob Herring <robh+dt@kernel.org>
-> To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |  72 -------
->  .../bindings/pinctrl/semtech,sx1501q.yaml          | 207 +++++++++++++++++++++
->  2 files changed, 207 insertions(+), 72 deletions(-)
-
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
-> new file mode 100644
-> index 000000000000..5c21f54b0e2b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
-> @@ -0,0 +1,207 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2022 Linaro Ltd.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/semtech,sx1501q.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech SX150x GPIO expander
-> +
-> +maintainers:
-> +  - Neil Armstrong <neil.armstrong@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - semtech,sx1501q
-> +      - semtech,sx1502q
-> +      - semtech,sx1503q
-> +      - semtech,sx1504q
-> +      - semtech,sx1505q
-> +      - semtech,sx1506q
-> +      - semtech,sx1507q
-> +      - semtech,sx1508q
-> +      - semtech,sx1509q
-> +
-> +  reg: true
-
-maxItems: 1
-
-Some I2C devices have multiple addresses.
-
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  '#interrupt-cells':
-> +    const: 2
-> +
-> +  interrupt-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +
-> +  semtech,probe-reset:
-> +    description: Will trigger a reset of the GPIO expander on probe
-> +    type: boolean
-> +
-> +patternProperties:
-> +  '-cfg$':
-> +    type: object
-> +    properties:
-> +      pins: true
-> +
-> +      bias-disable: true
-> +      bias-pull-up: true
-> +      bias-pull-down: true
-> +      bias-pull-pin-default: true
-> +      drive-push-pull: true
-> +      output-low: true
-> +      output-high: true
-> +      drive-open-drain: true
-> +
-> +    required:
-> +      - pins
-> +
-> +    allOf:
-> +      - $ref: "pincfg-node.yaml#"
-> +      - $ref: "pinmux-node.yaml#"
-> +      - if:
-> +          properties:
-> +            pins:
-> +              contains:
-> +                const: "oscio"
-
-Don't need quotes
-
-With that,
+>  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml          | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
