@@ -2,165 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B6785F5E7B
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 03:51:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A06205F5EA4
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 04:18:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbiJFBu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 21:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
+        id S229810AbiJFCS5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Oct 2022 22:18:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbiJFBuz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 21:50:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241032C67C;
-        Wed,  5 Oct 2022 18:50:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 62096B81F7E;
-        Thu,  6 Oct 2022 01:50:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45094C433C1;
-        Thu,  6 Oct 2022 01:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665021051;
-        bh=QcwagBeSbuvRCsWJIUdcRzilPwxU7LcEOFNF7wVbWwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Spjou0Ke2vUCPkkiik+9LyrmcFtV2qX+eyjNqeSQc5B3afnB7a1l+Ef8K8XKMBxXA
-         dF1LCcWmpnBr5piKgGuIeq38stk/+3Bzl1jx9ixZm52goyH88eYzJZl5ac01+vkMUo
-         EMNRThZHgEfO1M0QQkoxTK4NmnlPNXGPkZ5cUa+mwSDulhi6VhCaJHzxDvuCEf31Bi
-         ScPxxm4vuABATmr0ZRYL+CbY1jkQLaJEhT+p97jYSDNC3T9gPZgPGz1YbjxC7YDTN4
-         e7zRydw0Ym1Z0fktYN7zr9Ykn61a8HCcnirWEz2NKI8omimuLDqG++h0lyT838uc8d
-         rBYQNqFYxz8Tw==
-Date:   Wed, 5 Oct 2022 20:50:47 -0500
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Melody Olvera <quic_molvera@quicinc.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
-Message-ID: <20221006015047.4ten7sjsth7sw6s7@baldur>
-References: <20221001030546.28220-1-quic_molvera@quicinc.com>
- <20221001030546.28220-3-quic_molvera@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221001030546.28220-3-quic_molvera@quicinc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229602AbiJFCS4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 22:18:56 -0400
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54C961709;
+        Wed,  5 Oct 2022 19:18:51 -0700 (PDT)
+Received: by mail-oo1-f53.google.com with SMTP id c17-20020a4aa4d1000000b0047653e7c5f3so533783oom.1;
+        Wed, 05 Oct 2022 19:18:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CjOHz9oWYcg9j871qa8fgBrgohC+V8g1MiOqW5JKL4=;
+        b=QMY8LIlvroa77BX8iVZh5DWLYIL8Cnobx4LF328ZqDNpRzh6uuex6MMEwO+gCbxoT5
+         2ga6zFZEdx0WaLQdbRKOsg8uwzebsJGuDRP1w27tR2Hm7WLkmVmG8oYeCZN7VtkiHTEy
+         NMc8QpvduF3lZPUbJFQQmW3nHtSxrvOupzQwicdgH6rgPW3Tt+qDp8KAMjdYWM98usFY
+         Iq9SBfRvUYhkvhbj/CkfLT7NYBHISrM8XoShCxNBkCZUstnb4ZPzq+0t4OStFpzmwlif
+         lPxhxz2GdyOHPAbVYN6KA9+CEa2x+qA8i6ClYMzXGGWAXMSfWJGf08vkYE0T4nTvp4nX
+         jggg==
+X-Gm-Message-State: ACrzQf31lcwER/loxoclB9J56VmENRsjTEswV8bjfv48wY2bW1WvruHT
+        fqizLyAHHB/2BZWM/5GOBg==
+X-Google-Smtp-Source: AMsMyM5uVMRVN7xJ46xSsumbmxIkl0s7flg0Lvaa2E980Hm7Lu9bkz9PeuyNAu1PsdGrjbVkTVQZtA==
+X-Received: by 2002:a05:6830:43ab:b0:658:2908:d909 with SMTP id s43-20020a05683043ab00b006582908d909mr924905otv.294.1665022730925;
+        Wed, 05 Oct 2022 19:18:50 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id h204-20020aca3ad5000000b0034fd36e95bfsm5104265oia.31.2022.10.05.19.18.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Oct 2022 19:18:50 -0700 (PDT)
+Received: (nullmailer pid 565673 invoked by uid 1000);
+        Thu, 06 Oct 2022 02:18:50 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     =?utf-8?q?Martin_Za=C5=A5ovi=C4=8D?= <m.zatovic1@gmail.com>
+Cc:     linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
+        brgl@bgdev.pl, andersson@kernel.org, gregkh@linuxfoundation.org,
+        saravanak@google.com, mani@kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        hemantk@codeaurora.org, devicetree@vger.kernel.org,
+        Michael.Srba@seznam.cz, robh+dt@kernel.org,
+        jeffrey.l.hugo@gmail.com
+In-Reply-To: <20221005145746.172138-1-m.zatovic1@gmail.com>
+References: <20221005145746.172138-1-m.zatovic1@gmail.com>
+Message-Id: <166502256455.562200.10051593235085988854.robh@kernel.org>
+Subject: Re: [RFCv2 PATCH 1/4] dt-bindings: bus: add Wiegand bus dt documentation
+Date:   Wed, 05 Oct 2022 21:18:50 -0500
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,PP_MIME_FAKE_ASCII_TEXT,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 08:05:46PM -0700, Melody Olvera wrote:
-[..]
-> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.c b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
-> new file mode 100644
-> index 000000000000..8b931ff80bb4
-> --- /dev/null
-> +++ b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
-> @@ -0,0 +1,59 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2021, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-msm.h"
-> +#include "pinctrl-qdru1000.h"
-> +
-> +static const struct msm_pinctrl_soc_data qdru1000_tlmm = {
-> +	.pins = qdru1000_pins,
-> +	.npins = ARRAY_SIZE(qdru1000_pins),
-> +	.functions = qdru1000_functions,
-> +	.nfunctions = ARRAY_SIZE(qdru1000_functions),
-> +	.groups = qdru1000_groups,
-> +	.ngroups = ARRAY_SIZE(qdru1000_groups),
-> +	.ngpios = 151,
-> +};
-> +
-> +static int qdru1000_tlmm_probe(struct platform_device *pdev)
-> +{
-> +	return msm_pinctrl_probe(pdev, &qdru1000_tlmm);
-> +}
-> +
-> +static const struct of_device_id qdru1000_tlmm_of_match[] = {
-> +	{ .compatible = "qcom,qdu1000-tlmm", },
-> +	{ .compatible = "qcom,qru1000-tlmm", },
-> +	{ },
-> +};
-> +
-> +static struct platform_driver qdru1000_tlmm_driver = {
-> +	.driver = {
-> +		.name = "qdru1000-tlmm",
-> +		.of_match_table = qdru1000_tlmm_of_match,
-> +	},
-> +	.probe = qdru1000_tlmm_probe,
-> +	.remove = msm_pinctrl_remove,
-> +};
-> +
-> +static int __init qdru1000_tlmm_init(void)
-> +{
-> +	return platform_driver_register(&qdru1000_tlmm_driver);
-> +}
-> +arch_initcall(qdru1000_tlmm_init);
-> +
-> +static void __exit qdru1000_tlmm_exit(void)
-> +{
-> +	platform_driver_unregister(&qdru1000_tlmm_driver);
-> +}
-> +module_exit(qdru1000_tlmm_exit);
-> +
-> +MODULE_DESCRIPTION("QTI QDRU1000 TLMM driver");
-> +MODULE_LICENSE("GPL v2");
+On Wed, 05 Oct 2022 16:57:43 +0200, Martin Zaťovič wrote:
+> This patch documents the devicetree entry for enabling Wiegand
+> bus driver. The drivers that will use Wiegand bus driver shall
+> create a sub-node of the documented node.
+> 
+> Signed-off-by: Martin Zaťovič <m.zatovic1@gmail.com>
+> ---
+> Hello again,
+> 
+> this is the second round of RFC patches in an attempt to add Wiegand
+> driver to linux kernel. Thank you for all the issues you have pointed
+> out in the first round. I have tried to fix all of them and I have
+> also implemented a Wiegand bus driver, that is now used by the GPIO
+> driver itself - as suggested by Linus.
+> 
+> Any advice you have for me regarding the patches will be appreciated!
+> 
+> With regards,
+> Martin Zaťovič
+> ---
+>  .../devicetree/bindings/bus/wiegand.yaml      | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/bus/wiegand.yaml
+> 
 
-"GPL" only please.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> +MODULE_DEVICE_TABLE(of, qdru1000_tlmm_of_match);
+yamllint warnings/errors:
 
-Please add this next to qdru1000_tlmm_of_match.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.example.dtb: wiegand: 'wiegand-gpio' does not match any of the regexes: 'pinctrl-[0-9]+'
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.example.dtb: wiegand: wiegand-gpio: {'compatible': ['wiegand,wiegand-gpio'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]], 'data-hi-gpios': [[4294967295, 7, 6]], 'data-lo-gpios': [[4294967295, 6, 6]]} is not of type 'array'
+	From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/gpio/gpio-consumer.yaml
+Documentation/devicetree/bindings/bus/wiegand.example.dtb:0:0: /example-0/wiegand/wiegand-gpio: failed to match any schema with compatible: ['wiegand,wiegand-gpio']
 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.h b/drivers/pinctrl/qcom/pinctrl-qdru1000.h
+doc reference errors (make refcheckdocs):
 
-I'm not able to see why this is in a header file and the commit message
-doesn't give a clue. Please align with the customary form, or motivate
-your choice.
+See https://patchwork.ozlabs.org/patch/
 
-[..]
-> +
-> +enum qdru1000_functions {
-> +	msm_mux_gpio,
-> +	msm_mux_CMO_PRI,
-> +	msm_mux_SI5518_INT,
-> +	msm_mux_atest_char_start,
-> +	msm_mux_atest_char_status0,
-> +	msm_mux_atest_char_status1,
-> +	msm_mux_atest_char_status2,
-> +	msm_mux_atest_char_status3,
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-For anything that denotes different pins in one function, please drop
-the suffix and make this a list of functions.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
-[..]
-> +	msm_mux_qspi_data_0,
-> +	msm_mux_qspi_data_1,
-> +	msm_mux_qspi_data_2,
-> +	msm_mux_qspi_data_3,
-> +	msm_mux_qup0_se0_l0,
+pip3 install dtschema --upgrade
 
-E.g. msm_mux_qup0_se0 is enough, giving each pin its own function means
-that we need to define each pin separate in DT.
+Please check and re-submit.
 
-Regards,
-Bjorn
