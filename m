@@ -2,40 +2,40 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40E605F6AC0
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 17:36:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BB235F6B05
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 17:49:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231862AbiJFPgi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 11:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56858 "EHLO
+        id S231210AbiJFPtn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 11:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbiJFPgh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 11:36:37 -0400
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [81.169.146.165])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA753BD072;
-        Thu,  6 Oct 2022 08:36:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1665070592;
+        with ESMTP id S230410AbiJFPtm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 11:49:42 -0400
+Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CEBE30;
+        Thu,  6 Oct 2022 08:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1665071374;
     s=strato-dkim-0002; d=gerhold.net;
     h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:Cc:Date:
     From:Subject:Sender;
-    bh=93YZjM5uq6hKPW57tU48yES77lxzaLoqRI5R07/h1E8=;
-    b=HLyCBgYUGVGcOZ+VaX76POU1CHqw9g3l9xnTU+9ka2fdaRl1HgXpaBHWKY/cmZxO37
-    3mvM1u49oVb0fXQw24WzywhELy1MLKaWI62Nt1lZ9Kskt1DBQ6qbLz5itlLNYIOa8lgG
-    7C1ClPQxfiZgAIXFqpz3xRUSttfs/DtZ4h/AJ+VflGyAC6XcLIyXj1q3+3MyX6cdh2al
-    buff+UQI76Yptn0IudjAzWfFakY87z4AXHUpwTyBahTuBr04qq/2b6gi4cqgs6lTpUDI
-    iQgPXDJDbP/yOA2F/rG16BrVFJ7EbWFpryabSP1xyXnqS131B2PJalQHR28Mrn7+ouOs
-    Xa3g==
+    bh=j7eZp38BjlfdBQLJ5AigHo4JPaCzVu//8rXSvPqwO+Q=;
+    b=DufJXJo8+Fxml6ZIVTresxo4wvbz5GkuHUz19/pI3PuBzFHpccCnZ/y54ymtijn9dB
+    J1Zir4ad/BnyeKwrswqBDo1l+tv98p/OxHWq34YZ91eqINGhiyqIzFPZ5cZsbaRPOoZ3
+    BlQP1CPUqKJUvgQLmTMmSmu51l5InPhbEAjbig2hN13meAsmkzh1wAXmV9grNt+79k2n
+    6l0ACOVOzLndxEmgGTMibVM1bRP4IDIEt791t14glyFswNBAIq3Wjj0Z4QQCPzywtrNh
+    L1onGadREaCQq6MuI8zyOEmrL4m2g/NteKnVUDpNH8V9be58OTpSgJtzDOFgdtA7LjLf
+    fD3A==
 Authentication-Results: strato.com;
     dkim=none
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u261EJF5OxJAhdlWwvWmtQ=="
 X-RZG-CLASS-ID: mo00
 Received: from gerhold.net
     by smtp.strato.de (RZmta 48.1.3 DYNA|AUTH)
-    with ESMTPSA id 06b848y96FaVPyG
+    with ESMTPSA id 06b848y96FnXQ22
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
         (Client did not present a certificate);
-    Thu, 6 Oct 2022 17:36:31 +0200 (CEST)
-Date:   Thu, 6 Oct 2022 17:36:18 +0200
+    Thu, 6 Oct 2022 17:49:33 +0200 (CEST)
+Date:   Thu, 6 Oct 2022 17:49:32 +0200
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -52,86 +52,95 @@ Cc:     Andy Gross <agross@kernel.org>,
         Martin Botka <martin.botka@somainline.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/34] dt-bindings: pinctrl: qcom,msm8909-tlmm: minor
- style cleanups
-Message-ID: <Yz718g8yWxevNI34@gerhold.net>
+Subject: Re: [PATCH 00/34] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM
+ pinctrl schema warnings (5th set)
+Message-ID: <Yz75DAmjI1GbwQpI@gerhold.net>
 References: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
- <20221006140637.246665-19-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221006140637.246665-19-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 06, 2022 at 04:06:21PM +0200, Krzysztof Kozlowski wrote:
-> Drop "binding" from description (and align it with other Qualcomm
-> pinctrl bindings), use double quotes consistently and drop redundant
-> quotes.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi Krzysztof,
 
-Thanks for all the cleanup!
-
-FWIW:
-Acked-by: Stephan Gerhold <stephan@gerhold.net>
-
-> ---
->  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml           | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
+On Thu, Oct 06, 2022 at 04:06:03PM +0200, Krzysztof Kozlowski wrote:
+> [...]
+> Krzysztof Kozlowski (34):
+>   dt-bindings: pinctrl: qcom,mdm9607: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sc7280: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sc8180x: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sc8180x: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sc8280xp: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sm6115: use common TLMM schema
+>   dt-bindings: pinctrl: qcom,sm6125: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sm6125: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sm6350: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sm6350: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sm6375-tlmm: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sm6375-tlmm: drop checks used in common
+>     TLMM
+>   dt-bindings: pinctrl: qcom,sm8250: use common TLMM schema
+>   dt-bindings: pinctrl: qcom,sm8350: drop ref to pinctrl.yaml
+>   dt-bindings: pinctrl: qcom,sm8350: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,sm8450: drop checks used in common TLMM
+>   dt-bindings: pinctrl: qcom,mdm9607: minor style cleanups
+>   dt-bindings: pinctrl: qcom,msm8909-tlmm: minor style cleanups
+>   dt-bindings: pinctrl: qcom,qcm2290: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sdx65: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sc8180x: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sc8280xp: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm6115: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm6125: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm6350: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm6375: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm8250: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm8350: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm8450: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sc7280-lpass-lpi: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm8250-lpass-lpi: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: minor style cleanups
+>   dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: minor style cleanups
+>   dt-bindings: pinctrl: qcom: adjust description
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> index 9c647e24fa9a..cc6d0c9c5100 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8909-tlmm.yaml
-> @@ -10,8 +10,7 @@ maintainers:
->    - Stephan Gerhold <stephan@gerhold.net>
->  
->  description: |
-> -  This binding describes the Top Level Mode Multiplexer (TLMM) block found
-> -  in the MSM8909 platform.
-> +  Top Level Mode Multiplexer pin controller in Qualcomm MSM8909 SoC.
->  
->  allOf:
->    - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> @@ -25,10 +24,10 @@ properties:
->  
->    interrupts: true
->    interrupt-controller: true
-> -  '#interrupt-cells': true
-> +  "#interrupt-cells": true
->    gpio-controller: true
->    gpio-reserved-ranges: true
-> -  '#gpio-cells': true
-> +  "#gpio-cells": true
->    gpio-ranges: true
->    wakeup-parent: true
->  
-> @@ -39,7 +38,7 @@ required:
->  additionalProperties: false
->  
->  patternProperties:
-> -  '-state$':
-> +  "-state$":
->      oneOf:
->        - $ref: "#/$defs/qcom-msm8909-tlmm-state"
->        - patternProperties:
-> @@ -53,7 +52,7 @@ $defs:
->      description:
->        Pinctrl node's client devices use subnodes for desired pin configuration.
->        Client device subnodes use below standard properties.
-> -    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
-> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
->  
->      properties:
->        pins:
-> -- 
-> 2.34.1
-> 
+>  .../pinctrl/qcom,ipq6018-pinctrl.yaml         |  5 +-
+>  .../pinctrl/qcom,mdm9607-pinctrl.yaml         | 16 ++---
+>  .../pinctrl/qcom,msm8226-pinctrl.yaml         |  5 +-
+>  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 11 ++-
+>  .../pinctrl/qcom,msm8953-pinctrl.yaml         |  5 +-
+>  .../pinctrl/qcom,qcm2290-pinctrl.yaml         | 10 ++-
+>  .../qcom,sc7280-lpass-lpi-pinctrl.yaml        | 13 ++--
+>  .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml | 16 +----
+>  .../pinctrl/qcom,sc8180x-pinctrl.yaml         | 27 +++----
+>  .../qcom,sc8280xp-lpass-lpi-pinctrl.yaml      | 13 ++--
+>  .../pinctrl/qcom,sc8280xp-pinctrl.yaml        | 22 ++----
+>  .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  |  5 +-
+>  .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 10 ++-
+>  .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml | 53 +++-----------
+>  .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml | 30 +++-----
+>  .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml | 23 ++----
+>  .../bindings/pinctrl/qcom,sm6375-tlmm.yaml    | 23 ++----
+>  .../qcom,sm8250-lpass-lpi-pinctrl.yaml        | 16 ++---
+>  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 70 ++++++-------------
+>  .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 23 ++----
+>  .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 13 ++--
+>  .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml | 22 ++----
+
+Just a random thought since you are already doing minor style cleanups
+here: Some of these files are named incorrectly, e.g. qcom,sm8450-pinctrl.yaml
+actually documents "qcom,sm8450-tlmm". I noticed this while adding
+qcom,msm8909-tlmm but I have to admit that it did not bother me enough
+to actually prepare a patch for this (and now it would just conflict
+with all your patches). :)
+
+No need to change anything here, just thought I'd mention it.
+
+Thanks!
+Stephan
