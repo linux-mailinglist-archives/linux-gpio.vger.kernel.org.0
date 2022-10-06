@@ -2,90 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A06205F5EA4
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 04:18:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CBC65F5EA8
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 04:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbiJFCS5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 22:18:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53078 "EHLO
+        id S229964AbiJFCS6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Oct 2022 22:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbiJFCS4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 22:18:56 -0400
-Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54C961709;
-        Wed,  5 Oct 2022 19:18:51 -0700 (PDT)
-Received: by mail-oo1-f53.google.com with SMTP id c17-20020a4aa4d1000000b0047653e7c5f3so533783oom.1;
-        Wed, 05 Oct 2022 19:18:51 -0700 (PDT)
+        with ESMTP id S229729AbiJFCS5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 22:18:57 -0400
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDA76B646;
+        Wed,  5 Oct 2022 19:18:54 -0700 (PDT)
+Received: by mail-oo1-f52.google.com with SMTP id r15-20020a4abf0f000000b004761c7e6be1so506266oop.9;
+        Wed, 05 Oct 2022 19:18:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=date:subject:message-id:references:in-reply-to:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CjOHz9oWYcg9j871qa8fgBrgohC+V8g1MiOqW5JKL4=;
-        b=QMY8LIlvroa77BX8iVZh5DWLYIL8Cnobx4LF328ZqDNpRzh6uuex6MMEwO+gCbxoT5
-         2ga6zFZEdx0WaLQdbRKOsg8uwzebsJGuDRP1w27tR2Hm7WLkmVmG8oYeCZN7VtkiHTEy
-         NMc8QpvduF3lZPUbJFQQmW3nHtSxrvOupzQwicdgH6rgPW3Tt+qDp8KAMjdYWM98usFY
-         Iq9SBfRvUYhkvhbj/CkfLT7NYBHISrM8XoShCxNBkCZUstnb4ZPzq+0t4OStFpzmwlif
-         lPxhxz2GdyOHPAbVYN6KA9+CEa2x+qA8i6ClYMzXGGWAXMSfWJGf08vkYE0T4nTvp4nX
-         jggg==
-X-Gm-Message-State: ACrzQf31lcwER/loxoclB9J56VmENRsjTEswV8bjfv48wY2bW1WvruHT
-        fqizLyAHHB/2BZWM/5GOBg==
-X-Google-Smtp-Source: AMsMyM5uVMRVN7xJ46xSsumbmxIkl0s7flg0Lvaa2E980Hm7Lu9bkz9PeuyNAu1PsdGrjbVkTVQZtA==
-X-Received: by 2002:a05:6830:43ab:b0:658:2908:d909 with SMTP id s43-20020a05683043ab00b006582908d909mr924905otv.294.1665022730925;
-        Wed, 05 Oct 2022 19:18:50 -0700 (PDT)
+        bh=FFOpkqjZufkAK5FiEiN5bkXOo99mfhA/7lKBcTpwlOc=;
+        b=q4VMKB9p2V8G9l+fgaF19vNq4UggxbJM6jYTCCkw5cGPvYC8jMph0hATiHKRzNT+q5
+         qhFLe+oWJP9ZYs0l6sgMb9GHfx4TMkHNqLYJyKgAUJWVyF4TE5w6rRB8PVf3JOKSg09s
+         mXumGsNRPNYU/R7oL0VRskCLgDF+iliJhUG4BB39qHayzt9egalBOF3V+YlgkxA2sJD1
+         AhhQC66I6YBBip4AcDQzbxS5Ojn8oBXcWB9VOXfMc1/gWJB3mRozfo9FSW9QVa7a+7Ez
+         ZxhJgJbp5Sly3KJo2vSoX8bym2QXgNXSf+6fRQx/i/qApVhoPWBONpy7a7NHLfK6mdRK
+         bwbg==
+X-Gm-Message-State: ACrzQf0IaOq8xQtmqlYmeYnbxC7PWjcZvZ9N1U2LFp86LaZl8Z5eVkDy
+        4HLs+XhsYgdfab5IrYqp7Q==
+X-Google-Smtp-Source: AMsMyM5K45MEbTKQlz/Q1cezYVFkM+sEQu9vC1IWWlda1XBr7rmBeSLUr2PlRAmZl67PFm7x9o9TeA==
+X-Received: by 2002:a9d:6c13:0:b0:660:e595:c723 with SMTP id f19-20020a9d6c13000000b00660e595c723mr1015983otq.2.1665022733713;
+        Wed, 05 Oct 2022 19:18:53 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id h204-20020aca3ad5000000b0034fd36e95bfsm5104265oia.31.2022.10.05.19.18.49
+        by smtp.gmail.com with ESMTPSA id e19-20020a4ad253000000b0044df311eee1sm3930650oos.33.2022.10.05.19.18.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 19:18:50 -0700 (PDT)
-Received: (nullmailer pid 565673 invoked by uid 1000);
+        Wed, 05 Oct 2022 19:18:53 -0700 (PDT)
+Received: (nullmailer pid 565678 invoked by uid 1000);
         Thu, 06 Oct 2022 02:18:50 -0000
 From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?q?Martin_Za=C5=A5ovi=C4=8D?= <m.zatovic1@gmail.com>
-Cc:     linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        brgl@bgdev.pl, andersson@kernel.org, gregkh@linuxfoundation.org,
-        saravanak@google.com, mani@kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        hemantk@codeaurora.org, devicetree@vger.kernel.org,
-        Michael.Srba@seznam.cz, robh+dt@kernel.org,
-        jeffrey.l.hugo@gmail.com
-In-Reply-To: <20221005145746.172138-1-m.zatovic1@gmail.com>
-References: <20221005145746.172138-1-m.zatovic1@gmail.com>
-Message-Id: <166502256455.562200.10051593235085988854.robh@kernel.org>
-Subject: Re: [RFCv2 PATCH 1/4] dt-bindings: bus: add Wiegand bus dt documentation
+To:     Yassine Oudjana <yassine.oudjana@gmail.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+In-Reply-To: <20221005174343.24240-6-y.oudjana@protonmail.com>
+References: <20221005174343.24240-1-y.oudjana@protonmail.com> <20221005174343.24240-6-y.oudjana@protonmail.com>
+Message-Id: <166502256683.562283.5162543675574392467.robh@kernel.org>
+Subject: Re: [PATCH v2 05/10] dt-bindings: pinctrl: mediatek,pinctrl-mt6795: Fix interrupt count
 Date:   Wed, 05 Oct 2022 21:18:50 -0500
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,PP_MIME_FAKE_ASCII_TEXT,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 05 Oct 2022 16:57:43 +0200, Martin Zaťovič wrote:
-> This patch documents the devicetree entry for enabling Wiegand
-> bus driver. The drivers that will use Wiegand bus driver shall
-> create a sub-node of the documented node.
+On Wed, 05 Oct 2022 20:43:38 +0300, Yassine Oudjana wrote:
+> From: Yassine Oudjana <y.oudjana@protonmail.com>
 > 
-> Signed-off-by: Martin Zaťovič <m.zatovic1@gmail.com>
+> The document currently states a maximum of 1 interrupt, but the DT
+> has 2 specified causing a dtbs_check error. Change the limit to 2
+> to pass the check and add a minimum limit.
+> 
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 > ---
-> Hello again,
-> 
-> this is the second round of RFC patches in an attempt to add Wiegand
-> driver to linux kernel. Thank you for all the issues you have pointed
-> out in the first round. I have tried to fix all of them and I have
-> also implemented a Wiegand bus driver, that is now used by the GPIO
-> driver itself - as suggested by Linus.
-> 
-> Any advice you have for me regarding the patches will be appreciated!
-> 
-> With regards,
-> Martin Zaťovič
-> ---
->  .../devicetree/bindings/bus/wiegand.yaml      | 50 +++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/wiegand.yaml
+>  .../devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml   | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
@@ -94,11 +88,8 @@ on your patch (DT_CHECKER_FLAGS is new in v5.13):
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.example.dtb: wiegand: 'wiegand-gpio' does not match any of the regexes: 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/bus/wiegand.example.dtb: wiegand: wiegand-gpio: {'compatible': ['wiegand,wiegand-gpio'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]], 'data-hi-gpios': [[4294967295, 7, 6]], 'data-lo-gpios': [[4294967295, 6, 6]]} is not of type 'array'
-	From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/gpio/gpio-consumer.yaml
-Documentation/devicetree/bindings/bus/wiegand.example.dtb:0:0: /example-0/wiegand/wiegand-gpio: failed to match any schema with compatible: ['wiegand,wiegand-gpio']
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.example.dtb: pinctrl@10005000: interrupts: [[0, 153, 4]] is too short
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
 
 doc reference errors (make refcheckdocs):
 
