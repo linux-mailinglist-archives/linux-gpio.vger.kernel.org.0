@@ -2,109 +2,165 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1A3D5F5CA1
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 00:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B6785F5E7B
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 03:51:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbiJEWYC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 18:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58698 "EHLO
+        id S229815AbiJFBu5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 5 Oct 2022 21:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbiJEWYB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 18:24:01 -0400
-Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439B23FD50;
-        Wed,  5 Oct 2022 15:24:00 -0700 (PDT)
-Received: by mail-io1-xd2d.google.com with SMTP id d196so3449729iof.11;
-        Wed, 05 Oct 2022 15:24:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=PBQAdfl2FcAetVP79a7BmHKTI8rOne6a7XU+buA6PoY=;
-        b=EfQPNvrc7V4w8OaySbDv7YpELz+xohw9/TTNwDYU3HP3P9xxjHQKPAqHpLbZX7RyAM
-         wF0KaspbxNfMgpvjTiIUjsz44otXYrQqNS5ZtKEcR4JJQmPWZuogTB+MojMg8MyyD5GW
-         IxOM+aTdqagyOjpaApZH/KxPYAoCrRPA9e2NF/aFSal8eBbG4oS2rqai/94ulPnNpY8t
-         h6745mj2Dr6Hyg0y+cd3ZPHAbwdLIEoHM4WIIgRboHZilPaT/GVln7PxphtF+UwL6jZz
-         Sr+Cl98lMbjPtkrfVATIYzwNz8nJHulA6EqPKa6jnXZcnFhpCCiJW08GSgsJHMnXqy1U
-         gnYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=PBQAdfl2FcAetVP79a7BmHKTI8rOne6a7XU+buA6PoY=;
-        b=Iu1GTfe0TdAL7zQddFpBbc19s3u+ZM5O+gv8YYv31lbILlzwpD6G1ac44kjGaWUNPM
-         7OKl4OGHkW6bfFkcWOPG7Upcp+iVayW6DL4/mFGyQPOrOumzH9ax86jQV9UZ7tiWaG08
-         yTzDWCAHyV4Tyns/i5VIiiDBBYqaqAO17vQbPSN/2EYIFj/601mFyehtKuPL27V1XvxZ
-         5xVeOtq8Irr3koRNqDXv4q+33bS5l4KsOwOt7HuUEWD3UgMag5+yR6Cu4VCuyhCu8k9O
-         FyddoZ7wyw6cpnFQwL1s4/NJarnPplhBUEAkX4+l7r79HdmPLnIca5pOQztlbEjHcky+
-         prWg==
-X-Gm-Message-State: ACrzQf26vxjnS2zZjTe9x14RIQe5Aq5jOl7573cQQvWmDvO6dD5+hRQ1
-        9gu9qx/cU01ROluc4/bZpZA=
-X-Google-Smtp-Source: AMsMyM7FIvBR83b1QCpIUMkydqEgN/EL2pCkEn7iksPhOacYbTA6KLg0RuDK+9b5o9pO4lBlHVgEiQ==
-X-Received: by 2002:a02:6d04:0:b0:363:39b7:faa3 with SMTP id m4-20020a026d04000000b0036339b7faa3mr885328jac.156.1665008639719;
-        Wed, 05 Oct 2022 15:23:59 -0700 (PDT)
-Received: from localhost ([2607:fea8:a2e2:2d00::cb3])
-        by smtp.gmail.com with UTF8SMTPSA id q18-20020a0566380ed200b0036241880dc0sm4926104jas.148.2022.10.05.15.23.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Oct 2022 15:23:59 -0700 (PDT)
-From:   Richard Acayan <mailingradian@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+        with ESMTP id S229468AbiJFBuz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 21:50:55 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 241032C67C;
+        Wed,  5 Oct 2022 18:50:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 62096B81F7E;
+        Thu,  6 Oct 2022 01:50:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45094C433C1;
+        Thu,  6 Oct 2022 01:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665021051;
+        bh=QcwagBeSbuvRCsWJIUdcRzilPwxU7LcEOFNF7wVbWwo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Spjou0Ke2vUCPkkiik+9LyrmcFtV2qX+eyjNqeSQc5B3afnB7a1l+Ef8K8XKMBxXA
+         dF1LCcWmpnBr5piKgGuIeq38stk/+3Bzl1jx9ixZm52goyH88eYzJZl5ac01+vkMUo
+         EMNRThZHgEfO1M0QQkoxTK4NmnlPNXGPkZ5cUa+mwSDulhi6VhCaJHzxDvuCEf31Bi
+         ScPxxm4vuABATmr0ZRYL+CbY1jkQLaJEhT+p97jYSDNC3T9gPZgPGz1YbjxC7YDTN4
+         e7zRydw0Ym1Z0fktYN7zr9Ykn61a8HCcnirWEz2NKI8omimuLDqG++h0lyT838uc8d
+         rBYQNqFYxz8Tw==
+Date:   Wed, 5 Oct 2022 20:50:47 -0500
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Melody Olvera <quic_molvera@quicinc.com>
 Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Richard Acayan <mailingradian@gmail.com>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v7 3/3] pinctrl: qcom: add sdm670 pinctrl
-Date:   Wed,  5 Oct 2022 18:23:50 -0400
-Message-Id: <20221005222350.47420-1-mailingradian@gmail.com>
-X-Mailer: git-send-email 2.38.0
-In-Reply-To: <1ed91afd-74d2-1ab0-0d15-1b6e0dfba13b@linaro.org>
-References: <20221004215814.11694-1-mailingradian@gmail.com> <20221004215814.11694-4-mailingradian@gmail.com> <1ed91afd-74d2-1ab0-0d15-1b6e0dfba13b@linaro.org>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
+Message-ID: <20221006015047.4ten7sjsth7sw6s7@baldur>
+References: <20221001030546.28220-1-quic_molvera@quicinc.com>
+ <20221001030546.28220-3-quic_molvera@quicinc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221001030546.28220-3-quic_molvera@quicinc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> On 04/10/2022 23:58, Richard Acayan wrote:
-> > The Snapdragon 670 has a Top-Level Mode Multiplexer (TLMM) for various
-> > features. Add a driver to support it.
-> 
-> (...)
-> 
-> > +
-> > +const int sdm670_reserved_gpios[] = {
-> > +	58, 59, 60, 61, 62, 63, 64, 69, 70, 71, 72, 73, 74, 104, -1
-> > +};
-> > +
-> > +static const struct msm_pinctrl_soc_data sdm670_pinctrl = {
-> > +	.pins = sdm670_pins,
-> > +	.npins = ARRAY_SIZE(sdm670_pins),
-> > +	.functions = sdm670_functions,
-> > +	.nfunctions = ARRAY_SIZE(sdm670_functions),
-> > +	.groups = sdm670_groups,
-> > +	.ngroups = ARRAY_SIZE(sdm670_groups),
-> > +	.ngpios = 151,
-> > +	.reserved_gpios = sdm670_reserved_gpios,
-> > +	.complement_fw_gpio_ranges = true,
-> 
-> This still fails to build... v6 was not compilable, v7 is still.
+On Fri, Sep 30, 2022 at 08:05:46PM -0700, Melody Olvera wrote:
+[..]
+> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.c b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
+> new file mode 100644
+> index 000000000000..8b931ff80bb4
+> --- /dev/null
+> +++ b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
+> @@ -0,0 +1,59 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2021, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +
+> +#include "pinctrl-msm.h"
+> +#include "pinctrl-qdru1000.h"
+> +
+> +static const struct msm_pinctrl_soc_data qdru1000_tlmm = {
+> +	.pins = qdru1000_pins,
+> +	.npins = ARRAY_SIZE(qdru1000_pins),
+> +	.functions = qdru1000_functions,
+> +	.nfunctions = ARRAY_SIZE(qdru1000_functions),
+> +	.groups = qdru1000_groups,
+> +	.ngroups = ARRAY_SIZE(qdru1000_groups),
+> +	.ngpios = 151,
+> +};
+> +
+> +static int qdru1000_tlmm_probe(struct platform_device *pdev)
+> +{
+> +	return msm_pinctrl_probe(pdev, &qdru1000_tlmm);
+> +}
+> +
+> +static const struct of_device_id qdru1000_tlmm_of_match[] = {
+> +	{ .compatible = "qcom,qdu1000-tlmm", },
+> +	{ .compatible = "qcom,qru1000-tlmm", },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver qdru1000_tlmm_driver = {
+> +	.driver = {
+> +		.name = "qdru1000-tlmm",
+> +		.of_match_table = qdru1000_tlmm_of_match,
+> +	},
+> +	.probe = qdru1000_tlmm_probe,
+> +	.remove = msm_pinctrl_remove,
+> +};
+> +
+> +static int __init qdru1000_tlmm_init(void)
+> +{
+> +	return platform_driver_register(&qdru1000_tlmm_driver);
+> +}
+> +arch_initcall(qdru1000_tlmm_init);
+> +
+> +static void __exit qdru1000_tlmm_exit(void)
+> +{
+> +	platform_driver_unregister(&qdru1000_tlmm_driver);
+> +}
+> +module_exit(qdru1000_tlmm_exit);
+> +
+> +MODULE_DESCRIPTION("QTI QDRU1000 TLMM driver");
+> +MODULE_LICENSE("GPL v2");
 
-Sorry, I only see the problem with complement_fw_gpio_ranges being removed from
-the struct and not being removed here (in v7). Is there another issue that
-affected v6?
+"GPL" only please.
 
-> 
-> Best regards,
-> Krzysztof
+> +MODULE_DEVICE_TABLE(of, qdru1000_tlmm_of_match);
+
+Please add this next to qdru1000_tlmm_of_match.
+
+> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.h b/drivers/pinctrl/qcom/pinctrl-qdru1000.h
+
+I'm not able to see why this is in a header file and the commit message
+doesn't give a clue. Please align with the customary form, or motivate
+your choice.
+
+[..]
+> +
+> +enum qdru1000_functions {
+> +	msm_mux_gpio,
+> +	msm_mux_CMO_PRI,
+> +	msm_mux_SI5518_INT,
+> +	msm_mux_atest_char_start,
+> +	msm_mux_atest_char_status0,
+> +	msm_mux_atest_char_status1,
+> +	msm_mux_atest_char_status2,
+> +	msm_mux_atest_char_status3,
+
+For anything that denotes different pins in one function, please drop
+the suffix and make this a list of functions.
+
+[..]
+> +	msm_mux_qspi_data_0,
+> +	msm_mux_qspi_data_1,
+> +	msm_mux_qspi_data_2,
+> +	msm_mux_qspi_data_3,
+> +	msm_mux_qup0_se0_l0,
+
+E.g. msm_mux_qup0_se0 is enough, giving each pin its own function means
+that we need to define each pin separate in DT.
+
+Regards,
+Bjorn
