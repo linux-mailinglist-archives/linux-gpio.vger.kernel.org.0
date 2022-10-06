@@ -2,50 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79D7A5F62AE
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 10:30:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2D3D5F62B8
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 10:33:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbiJFIal (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 04:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        id S230213AbiJFIdH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 04:33:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbiJFIai (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 04:30:38 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C460E8E0F3
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 01:30:36 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ogMH5-00041H-3G; Thu, 06 Oct 2022 10:30:35 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ogMH5-004v8M-Ej; Thu, 06 Oct 2022 10:30:34 +0200
-Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ogMH3-009VHt-Au; Thu, 06 Oct 2022 10:30:33 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-gpio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH v4 2/2] dt-bindings: gpio: Add gpio-latch binding document
-Date:   Thu,  6 Oct 2022 10:30:31 +0200
-Message-Id: <20221006083031.2259006-3-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221006083031.2259006-1-s.hauer@pengutronix.de>
-References: <20221006083031.2259006-1-s.hauer@pengutronix.de>
+        with ESMTP id S230024AbiJFIdG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 04:33:06 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9158D92F6B
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 01:33:04 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id j4so1750096lfk.0
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 01:33:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=0zWyrMkyGobrQx874bTZAA5b8Dexwv4AiQ2OcW+8aGg=;
+        b=Y0pbM6ALrzdTBdXJS966/k1eUheM1kRKNqh/1tvMhMtz20fhpmHRsiw6pvOoxXctNW
+         BOvA6s/vw9ZZkwgKgecdMPfoK6uk/PUzvzf7Qt1pNdjZfozeBq+sN3iBhim8uXtKa2IM
+         8xkSfEX6rWrgBj1a5cyOd0hwQcCRy1DmkwdMSr+GL5CwFcQJ7prg6B0X5RUnIZamT8k4
+         YXKtaGipBhk/vf+eL3inX1B8/qpmd8bG24zRG0HXkqlvsEZjHKpf5nGoNOy1rwonqB9k
+         E9EHCs7JOTYmMFu2SKhkmDZFrzYKp4qLQeksNjbm8cuAoVg5as2VG/bw7zr2RIYxUgLv
+         Lo8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=0zWyrMkyGobrQx874bTZAA5b8Dexwv4AiQ2OcW+8aGg=;
+        b=MxZXffrs8B3PuiiQnin4m0IvSSgEZM2ANXiThWd352uONqDuzQZTXZfQkTuy9iDcaO
+         35KtPZuCrGyZLicwrckD9oBoaQGdfa1HEv0eDGTddYRUVPzcCROmb/jAMQwuD9TN3jZV
+         /Fx8Bup9AGADDWFCZ15WXBNVh4lZgOEU1cb5h0+cbkSwpzeHkY2f79FBA5lmEcZg7k9d
+         8W9vYQm542+0Ld+4aCSiOI09PgnsVo1o3GWj/h0VQDh959YA3DoACKpxPa9n11wQGEY6
+         vHDf2wx4/pk1AfXXS0QwDZTgbSZKeKLKvwtODmV0H5FZlG2uDtCEAl8G3asy5S5ShFgo
+         y2Ew==
+X-Gm-Message-State: ACrzQf22MHrcvrB+hBiIS/jVZgSqLNKcMVmnXhkGLkEDLby0bIAdduTH
+        lojVPhROGKg7RX4i7NOjVasLFA==
+X-Google-Smtp-Source: AMsMyM5Sz53eIoUkX9ETZyqQ/I4MORTTZlFSKbuF8Cns63ZSpGZzYepD6qvicoYHW8NLGQL4JyEAHg==
+X-Received: by 2002:ac2:4114:0:b0:4a0:6357:c362 with SMTP id b20-20020ac24114000000b004a06357c362mr1354775lfi.140.1665045182948;
+        Thu, 06 Oct 2022 01:33:02 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id i1-20020a2ea221000000b0026c549bdd2fsm1825034ljm.129.2022.10.06.01.33.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Oct 2022 01:33:02 -0700 (PDT)
+Message-ID: <f48f112b-a5d5-e0ef-f97c-a582f856d6c9@linaro.org>
+Date:   Thu, 6 Oct 2022 10:33:01 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [RFCv2 PATCH 1/4] dt-bindings: bus: add Wiegand bus dt
+ documentation
+Content-Language: en-US
+To:     =?UTF-8?Q?Martin_Za=c5=a5ovi=c4=8d?= <m.zatovic1@gmail.com>,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
+        gregkh@linuxfoundation.org, jeffrey.l.hugo@gmail.com,
+        andersson@kernel.org, Michael.Srba@seznam.cz, saravanak@google.com,
+        mani@kernel.org, hemantk@codeaurora.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20221005145746.172138-1-m.zatovic1@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221005145746.172138-1-m.zatovic1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,123 +79,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a binding for a GPIO multiplexer driver based on latches
-connected to other GPIOs.
+On 05/10/2022 16:57, Martin Zaťovič wrote:
+> This patch documents the devicetree entry for enabling Wiegand
+> bus driver. The drivers that will use Wiegand bus driver shall
+> create a sub-node of the documented node.
+> 
+> Signed-off-by: Martin Zaťovič <m.zatovic1@gmail.com>
+> ---
+> Hello again,
+> 
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
+Missing cover letter and changelog.
 
-Notes:
-    Changes since v3:
-    - Introduce delays between GPIO toggles as suggested by Serge Semin
-    
-    Changes since v1:
-    - Add license to binding file
-
- .../devicetree/bindings/gpio/gpio-latch.yaml  | 94 +++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-latch.yaml b/Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-new file mode 100644
-index 0000000000000..1ed82a2cebdaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-latch.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO latch controller
-+
-+maintainers:
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+
-+description: |
-+  This binding describes a GPIO multiplexer based on latches connected to
-+  other GPIOs, like this:
-+
-+  CLK0 ----------------------.        ,--------.
-+  CLK1 -------------------.  `--------|>    #0 |
-+                          |           |        |
-+  OUT0 ----------------+--|-----------|D0    Q0|-----|<
-+  OUT1 --------------+-|--|-----------|D1    Q1|-----|<
-+  OUT2 ------------+-|-|--|-----------|D2    Q2|-----|<
-+  OUT3 ----------+-|-|-|--|-----------|D3    Q3|-----|<
-+  OUT4 --------+-|-|-|-|--|-----------|D4    Q4|-----|<
-+  OUT5 ------+-|-|-|-|-|--|-----------|D5    Q5|-----|<
-+  OUT6 ----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|<
-+  OUT7 --+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|<
-+         | | | | | | | |  |           `--------'
-+         | | | | | | | |  |
-+         | | | | | | | |  |           ,--------.
-+         | | | | | | | |  `-----------|>    #1 |
-+         | | | | | | | |              |        |
-+         | | | | | | | `--------------|D0    Q0|-----|<
-+         | | | | | | `----------------|D1    Q1|-----|<
-+         | | | | | `------------------|D2    Q2|-----|<
-+         | | | | `--------------------|D3    Q3|-----|<
-+         | | | `----------------------|D4    Q4|-----|<
-+         | | `------------------------|D5    Q5|-----|<
-+         | `--------------------------|D6    Q6|-----|<
-+         `----------------------------|D7    Q7|-----|<
-+                                      `--------'
-+
-+  The number of clk-gpios and latched-gpios is not fixed. The actual number
-+  of number of latches and the number of inputs per latch is derived from
-+  the number of GPIOs given in the corresponding device tree properties.
-+
-+properties:
-+  compatible:
-+    const: gpio-latch
-+  "#gpio-cells":
-+    const: 2
-+
-+  clk-gpios:
-+    description: Array of GPIOs to be used to clock a latch
-+
-+  latched-gpios:
-+    description: Array of GPIOs to be used as inputs per latch
-+
-+  setup-duration-ns:
-+    description: Delay in nanoseconds to wait after the latch inputs have been
-+      set up
-+
-+  clock-duration-ns:
-+    description: Delay in nanoseconds to wait between clock output changes
-+
-+  gpio-controller: true
-+
-+  gpio-line-names: true
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - clk-gpios
-+  - latched-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio-latch {
-+        #gpio-cells = <2>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_di_do_leds>;
-+        compatible = "gpio-latch";
-+        gpio-controller;
-+        setup-duration-ns = <100>;
-+        clock-duration-ns = <100>;
-+
-+        clk-gpios = <&gpio3 7 0>, <&gpio3 8 0>;
-+        latched-gpios = <&gpio3 21 0>, <&gpio3 22 0>,
-+                       <&gpio3 23 0>, <&gpio3 24 0>,
-+                       <&gpio3 25 0>, <&gpio3 26 0>,
-+                       <&gpio3 27 0>, <&gpio3 28 0>;
-+    };
--- 
-2.30.2
+Best regards,
+Krzysztof
 
