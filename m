@@ -2,86 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9438E5F60D4
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 07:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 785BE5F6178
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 09:14:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbiJFFyT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 01:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
+        id S230165AbiJFHOL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 03:14:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229726AbiJFFyS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 01:54:18 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA2D8992C;
-        Wed,  5 Oct 2022 22:54:16 -0700 (PDT)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MjgWS2SCKzVhlr;
-        Thu,  6 Oct 2022 13:49:56 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 6 Oct 2022 13:54:13 +0800
-Received: from [10.174.178.174] (10.174.178.174) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 6 Oct 2022 13:54:13 +0800
-Subject: Re: [PATCH -next v3] pinctrl: ocelot: add missing destroy_workqueue()
- in error path in ocelot_pinctrl_probe()
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <p.zabel@pengutronix.de>, <horatiu.vultur@microchip.com>,
-        <andy.shevchenko@gmail.com>, <yangyingliang@huawei.com>
-References: <20220925021258.1492905-1-yangyingliang@huawei.com>
- <CACRpkdZijkQAT84mfP06SgxBjHmrqSbWwctBBA0pvb_1xYzGvA@mail.gmail.com>
- <CACRpkda6kCL-FbEdfu9msXH6xnLn9fLC-q6hcm=e_H_AT_uVEQ@mail.gmail.com>
-From:   Yang Yingliang <yangyingliang@huawei.com>
-Message-ID: <ddd58293-0b5b-3c34-c396-0a635444410d@huawei.com>
-Date:   Thu, 6 Oct 2022 13:54:12 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S229762AbiJFHOJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 03:14:09 -0400
+Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F067804AA
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 00:14:08 -0700 (PDT)
+Received: by mail-lj1-x22e.google.com with SMTP id t16so1202891ljh.3
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 00:14:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=GE8M6ZJ5o6R2icJ1+JO0lmFsJdBKSsRC/yaJmko71mo=;
+        b=z2kC3GALZ8dDDiEWEYQdlZCcECxKbAO3Rwx1Yclyj9+WJrqQ8MRrjM6FqVsi1ob2Lm
+         qWGE+mnpRegeTDhIX4Fpwi4KOkJ5y6QowY4Go7puj/HNocWt5vQNZ3XlWCvzZolZLyGA
+         +g6C27UN6TZnLxD0F0LDFEfVtBwN2tfTJRwyq7W0yAdwlm17wyxsWwleKGsCYT7tEbk0
+         L3FH7GItgRUJ+lFYwjeMWIpCGSneZ5qD2m4lvhcmEnXW7y555yKoK4YVN82xTPJRsPdS
+         uUlglbGItc1dWhrS7M5v3/rEVyu6Wpj5GQGQsbpNFSecFxc28cirGYne877sz65arKlY
+         KHwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=GE8M6ZJ5o6R2icJ1+JO0lmFsJdBKSsRC/yaJmko71mo=;
+        b=gbqc8CmXWT4rICdOKpX0o1o8VlzYwAPrKLqWBr5WCqHnBP8uh3J6XOXBnw6Orn0ele
+         LWmlmwFcTLLr9Krku4ENj/y3g1VvElHzuRc5wkQCS6Wrpqyzoawk562EgLsdw6qR/yBB
+         OluJ35bHZyn6Ve0ETBqx4jF/+HgFPkAqyT00N+JZLUAF/BX1WUYd5SwQ8ns2CiVxy2wQ
+         NyQSWbx/FiloxCFf5XHq9GUAlbN8j0vZ63r7hzJhJSDzblVB5TA+rja7+ppAAB4zXwQd
+         2w2V7p0HXvo1jISyCEJXg2fw2IXA9zp+4hSqGG/TF8iarVIxwSrJUtGKmdN0mR7Z3ClP
+         QHsg==
+X-Gm-Message-State: ACrzQf0vsQqstgskriGt5u8GZlHquPgRIuLs1gIUaLC9pbys3bJiRuk+
+        0apdF75MHNTXHdz9Nq2vAKok6g==
+X-Google-Smtp-Source: AMsMyM7Haw1Oa/bZDStDlWRYqGsb4v1odEx6BIMGnNUEqPiohUUhxEzRrYSsjNCz5FWI62efbzpkWg==
+X-Received: by 2002:a05:651c:882:b0:261:81b3:16b3 with SMTP id d2-20020a05651c088200b0026181b316b3mr1141452ljq.142.1665040446637;
+        Thu, 06 Oct 2022 00:14:06 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id d10-20020ac2544a000000b00492f45cbbfcsm2585900lfn.302.2022.10.06.00.14.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Oct 2022 00:14:06 -0700 (PDT)
+Message-ID: <80891d76-aac9-1f51-bb29-87cf9df0903f@linaro.org>
+Date:   Thu, 6 Oct 2022 09:14:05 +0200
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda6kCL-FbEdfu9msXH6xnLn9fLC-q6hcm=e_H_AT_uVEQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v7 3/3] pinctrl: qcom: add sdm670 pinctrl
 Content-Language: en-US
-X-Originating-IP: [10.174.178.174]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+To:     Richard Acayan <mailingradian@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+References: <20221004215814.11694-1-mailingradian@gmail.com>
+ <20221004215814.11694-4-mailingradian@gmail.com>
+ <1ed91afd-74d2-1ab0-0d15-1b6e0dfba13b@linaro.org>
+ <20221005222350.47420-1-mailingradian@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221005222350.47420-1-mailingradian@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
-
-On 2022/10/5 3:57, Linus Walleij wrote:
-> On Tue, Oct 4, 2022 at 1:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Sun, Sep 25, 2022 at 4:06 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
+On 06/10/2022 00:23, Richard Acayan wrote:
+>> On 04/10/2022 23:58, Richard Acayan wrote:
+>>> The Snapdragon 670 has a Top-Level Mode Multiplexer (TLMM) for various
+>>> features. Add a driver to support it.
 >>
->>> Using devm_add_action_or_reset() to make workqueue device-managed, so it can be
->>> destroy whenever the driver is unbound.
->>>
->>> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
->>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->>> ---
->>> v3:
->>>    Using devm_add_action_or_reset().
->> Patch applied, after deleting the hunks removing .remove because
->> that was already gone upstream.
-> Ah, the patch introducing that is in the MFD tree is it not?
->
-> Either ask Lee to apply it or wait until -rc1 it's no big deal
-> anyway. Remind me in two weeks.
-It's OK.
+>> (...)
+>>
+>>> +
+>>> +const int sdm670_reserved_gpios[] = {
+>>> +	58, 59, 60, 61, 62, 63, 64, 69, 70, 71, 72, 73, 74, 104, -1
+>>> +};
+>>> +
+>>> +static const struct msm_pinctrl_soc_data sdm670_pinctrl = {
+>>> +	.pins = sdm670_pins,
+>>> +	.npins = ARRAY_SIZE(sdm670_pins),
+>>> +	.functions = sdm670_functions,
+>>> +	.nfunctions = ARRAY_SIZE(sdm670_functions),
+>>> +	.groups = sdm670_groups,
+>>> +	.ngroups = ARRAY_SIZE(sdm670_groups),
+>>> +	.ngpios = 151,
+>>> +	.reserved_gpios = sdm670_reserved_gpios,
+>>> +	.complement_fw_gpio_ranges = true,
+>>
+>> This still fails to build... v6 was not compilable, v7 is still.
+> 
+> Sorry, I only see the problem with complement_fw_gpio_ranges being removed from
+> the struct and not being removed here (in v7). Is there another issue that
+> affected v6?
 
-Thanks,
-Yang
->
-> Yours,
-> Linus Walleij
-> .
+Check the reports from kernel build robot.
+
+Best regards,
+Krzysztof
+
