@@ -2,51 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 387525F68CC
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 16:06:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E576D5F68C9
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 16:06:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbiJFOGt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 10:06:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54272 "EHLO
+        id S230359AbiJFOGs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 10:06:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231128AbiJFOGr (ORCPT
+        with ESMTP id S231160AbiJFOGr (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 10:06:47 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3E6BE3A
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 07:06:44 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id 10so2878992lfy.5
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 07:06:44 -0700 (PDT)
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93CADA7A9D
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 07:06:45 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id by36so2375129ljb.4
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 07:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=Q9PKkVz5JSd6Red0ZQhk3d2Bnwnk9qONZE4I2NARHis=;
-        b=P1yd/GPwotgXVaiYMKA7nJU5+WQr73w+H/smLgRPaht2EATD5u5hsAFELMvXtm7QXU
-         p/sA+W7SGJj9LE57tDDL9l8bPuvqgtnzx/8hg/j2W6DF8Pkgl4lkjOuIq4exUuBH5SrE
-         +NjkTy46vH9+v4HEUuii5aR7eaD4nAyWbKxL0ErVgGNsvdhVtFaq8mARzxDq5yBTJ44+
-         T4NvRYIPHRYGYtoXNoaRur0Sp3az6OHR2wFTZDz0gCFGDqZQtzyN5QLSdVkkOdNr5WEf
-         RzEKtBb3MoZ6suDpSG1qsDIXYKg3H90XdNpE5jy/xvOxm7PcschDgtHawrCZD2sSooj4
-         noKA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=fQ27kq4/khNZ2CAemqwtqd/847NwOGk9AklkRWTL2kM=;
+        b=iuxl4OevJ8dNqIncrrv/08aN0XNrBsfJsT2ioLWmqLRJp5xbcbghHzDwCvusfqasGz
+         GMlZbsii188NJ41sDXg69fUpvGmY2w5OkeBSEo3pJ2Al3UjDJ1BnfAIXrgBRdkp211GP
+         ydTFFOnzdKvya3t9IrIL9sotbj3E0oVCrARg8QPEBVXEBt4fwelFnka5R+ugEsGiVn1/
+         aovvyTRSuz2e6S6tmRMHmnW8ezD95MFkNM3YJE5LSuCExm3hQRVlmKZsJippVVn2d9ov
+         ynOFPcMljzrt363rQKGiEbfIGxqNUIOb0WlOzV3TYaQepPfgrWENaV7q7U3+5Enurfbd
+         H3mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=Q9PKkVz5JSd6Red0ZQhk3d2Bnwnk9qONZE4I2NARHis=;
-        b=tvTzCnXx4B8ZU5LXtSYu40/zFS+cKCDtkm9Xp00UC/ALtc4j5RnxnhZDyPe8keX3bv
-         o5cPgMqbOTTr9cqu3O+eP5TRgCCb8Ekv93oAHJNIwvp805ES5pu4ZACJPQPgeyLELF32
-         0lrY7rJvyWplLhtOna2DSa9+h0d+M8K8rKanEi5FF2pP/uksVlW5JfUkhlWtq5Lb0HwF
-         2noz7dQLPcWEFmMxrp9RrfPA88S2QHFUFxLRA9t97yXy3yIycthP3EM0mIQpJ9ShBL2w
-         4XMxY1gI1QV/gjtIOo29RnR6tMET37bFoYLt+iehKPyxnmwUxs4CvA5Ia1yIq8Cx/X7m
-         d9UA==
-X-Gm-Message-State: ACrzQf2tOn4U+5te9vl1IYzWyGbYKYPktUY9D8FWVjsquDHwB+2EEgOq
-        ckNV7rw6CqRZsQUU79erlsT67A==
-X-Google-Smtp-Source: AMsMyM7jNkr5nJqC81rh2I33D/cUBPIGVpbYgb6Sc/9YVIQ4bXbpknWTD/xz5aWue1udMin4LwzAgw==
-X-Received: by 2002:ac2:4c52:0:b0:4a2:6bf9:bd7e with SMTP id o18-20020ac24c52000000b004a26bf9bd7emr51873lfk.400.1665065202596;
-        Thu, 06 Oct 2022 07:06:42 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=fQ27kq4/khNZ2CAemqwtqd/847NwOGk9AklkRWTL2kM=;
+        b=cqKqCxiHqqbO6rmvDlCSI6VoCkYGq9ew7Pg6MSqBo3tDFR9QIsyLaUQzQXCb1OiMlK
+         4ZlkIEaxB49S3tfaw+K0gLwQ3rdMR3EWcpxtg4VTGJDA0NbQGeSG9/RxPCpbK+wYus6k
+         2cR9yCG1q6QxutrmRQGCZUmbqqNghhMcD4XeIE8KQfkRUdDP4IgXRbaEmSelFfad9Gs+
+         HMRpvj0vJ7lE8WUiMQgJwUFQ67yNIWFJYpE57Bz4grfG9py+1fszCcyoidOmrB4odAtA
+         lnyQIa38jewVzbHm6ENBwjohSqxT/eudd/I3ViijgDZAO1SW/sMGX55i2DNTv+FojuoT
+         G1sQ==
+X-Gm-Message-State: ACrzQf36Y9T2aqMT4TjRQYdclrrNPaJ/l3gkXL4lZO8D40MgMPBjY4kL
+        PumsWW+X1y72S7DSOC5oa6t6CA==
+X-Google-Smtp-Source: AMsMyM573Gzq6QbH4Fk5gwdTGw3NHY4ObREc5I3fpFs2wtSVTQ1GWhZbRZBeb84OY90eDCXunOf85Q==
+X-Received: by 2002:a2e:9e50:0:b0:261:bbc4:249e with SMTP id g16-20020a2e9e50000000b00261bbc4249emr1716587ljk.265.1665065203929;
+        Thu, 06 Oct 2022 07:06:43 -0700 (PDT)
 Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id z3-20020a056512370300b004a2386b8ce8sm1833929lfr.211.2022.10.06.07.06.41
+        by smtp.gmail.com with ESMTPSA id z3-20020a056512370300b004a2386b8ce8sm1833929lfr.211.2022.10.06.07.06.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 07:06:42 -0700 (PDT)
+        Thu, 06 Oct 2022 07:06:43 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -64,112 +65,43 @@ To:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 00/34] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM pinctrl schema warnings (5th set)
-Date:   Thu,  6 Oct 2022 16:06:03 +0200
-Message-Id: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 01/34] dt-bindings: pinctrl: qcom,mdm9607: drop ref to pinctrl.yaml
+Date:   Thu,  6 Oct 2022 16:06:04 +0200
+Message-Id: <20221006140637.246665-2-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
+References: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+The binding references common Qualcomm TLMM pin controller schema, which
+references pinctrl.yaml.
 
-Patches are organized not by file, but rather type of change
-1. First patches is for common TLMM schema and dropping unneeded refs.
-2. Last patches are pure cleanups without functional impact.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,mdm9607-pinctrl.yaml        | 1 -
+ 1 file changed, 1 deletion(-)
 
-Overview
-========
-This is the *fifth* patchset around Qualcomm pinctrl in recent days:
-1. First round of TLMM fixes: merged
-2. LPASS fixes:
-   https://lore.kernel.org/linux-devicetree/20220927153429.55365-1-krzysztof.kozlowski@linaro.org/
-3. ARMv7 TLMM fixes:
-   https://lore.kernel.org/linux-devicetree/20221006124659.217540-1-krzysztof.kozlowski@linaro.org/
-4. ARMv8 remaining TLMM fixes:
-   https://lore.kernel.org/linux-devicetree/20220930192954.242546-1-krzysztof.kozlowski@linaro.org/
-5. Fifth clean - styles and using common TLMM schema: *THIS PATCHSET*
-
-Dependencies
-============
-1. Almost no dependencies - logically the bindings patch "dt-bindings: pinctrl:
-   qcom,sm8250: drop checks used in common TLMM" depends on patchset #3 above.
-   This is not a hard-dependency, everything will compile nicely, no warnings.
-
-2. dt-bindings are independent of DTS patches.
-
-Best regards,
-Krzysztof
-
-Krzysztof Kozlowski (34):
-  dt-bindings: pinctrl: qcom,mdm9607: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sc7280: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sc8180x: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sc8180x: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sc8280xp: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sm6115: use common TLMM schema
-  dt-bindings: pinctrl: qcom,sm6125: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sm6125: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sm6350: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sm6350: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sm6375-tlmm: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sm6375-tlmm: drop checks used in common
-    TLMM
-  dt-bindings: pinctrl: qcom,sm8250: use common TLMM schema
-  dt-bindings: pinctrl: qcom,sm8350: drop ref to pinctrl.yaml
-  dt-bindings: pinctrl: qcom,sm8350: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,sm8450: drop checks used in common TLMM
-  dt-bindings: pinctrl: qcom,mdm9607: minor style cleanups
-  dt-bindings: pinctrl: qcom,msm8909-tlmm: minor style cleanups
-  dt-bindings: pinctrl: qcom,qcm2290: minor style cleanups
-  dt-bindings: pinctrl: qcom,sdx65: minor style cleanups
-  dt-bindings: pinctrl: qcom,sc8180x: minor style cleanups
-  dt-bindings: pinctrl: qcom,sc8280xp: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm6115: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm6125: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm6350: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm6375: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm8250: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm8350: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm8450: minor style cleanups
-  dt-bindings: pinctrl: qcom,sc7280-lpass-lpi: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm8250-lpass-lpi: minor style cleanups
-  dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: minor style cleanups
-  dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: minor style cleanups
-  dt-bindings: pinctrl: qcom: adjust description
-
- .../pinctrl/qcom,ipq6018-pinctrl.yaml         |  5 +-
- .../pinctrl/qcom,mdm9607-pinctrl.yaml         | 16 ++---
- .../pinctrl/qcom,msm8226-pinctrl.yaml         |  5 +-
- .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 11 ++-
- .../pinctrl/qcom,msm8953-pinctrl.yaml         |  5 +-
- .../pinctrl/qcom,qcm2290-pinctrl.yaml         | 10 ++-
- .../qcom,sc7280-lpass-lpi-pinctrl.yaml        | 13 ++--
- .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml | 16 +----
- .../pinctrl/qcom,sc8180x-pinctrl.yaml         | 27 +++----
- .../qcom,sc8280xp-lpass-lpi-pinctrl.yaml      | 13 ++--
- .../pinctrl/qcom,sc8280xp-pinctrl.yaml        | 22 ++----
- .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  |  5 +-
- .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 10 ++-
- .../bindings/pinctrl/qcom,sm6115-pinctrl.yaml | 53 +++-----------
- .../bindings/pinctrl/qcom,sm6125-pinctrl.yaml | 30 +++-----
- .../bindings/pinctrl/qcom,sm6350-pinctrl.yaml | 23 ++----
- .../bindings/pinctrl/qcom,sm6375-tlmm.yaml    | 23 ++----
- .../qcom,sm8250-lpass-lpi-pinctrl.yaml        | 16 ++---
- .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml | 70 ++++++-------------
- .../bindings/pinctrl/qcom,sm8350-pinctrl.yaml | 23 ++----
- .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 13 ++--
- .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml | 22 ++----
- 22 files changed, 136 insertions(+), 295 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-pinctrl.yaml
+index a37b358715a3..5a9002a83423 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9607-pinctrl.yaml
+@@ -14,7 +14,6 @@ description: |
+   MDM9607 platform.
+ 
+ allOf:
+-  - $ref: "pinctrl.yaml#"
+   - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+ 
+ properties:
 -- 
 2.34.1
 
