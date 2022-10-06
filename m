@@ -2,298 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ADAF35F664E
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 14:45:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B5835F665C
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 14:47:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbiJFMpX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 08:45:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57264 "EHLO
+        id S229868AbiJFMrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 08:47:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbiJFMpW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 08:45:22 -0400
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B96A8052F;
-        Thu,  6 Oct 2022 05:45:21 -0700 (PDT)
-Received: by mail-lf1-x133.google.com with SMTP id 10so2532780lfy.5;
-        Thu, 06 Oct 2022 05:45:20 -0700 (PDT)
+        with ESMTP id S229701AbiJFMrF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 08:47:05 -0400
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C836CA284A
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 05:47:03 -0700 (PDT)
+Received: by mail-lf1-x12c.google.com with SMTP id b2so2527735lfp.6
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 05:47:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=syFIrhNGevPpXvfxZYLYqs6N+xPUHhSpjZPEZ+aL1yE=;
-        b=cYkmR9PyMLbt0fUZ8CVpT1gqVw1vaEgZ4wsD44W4nKx7Xos4hJFwjvvixhe/GGrQA2
-         XgEFyVMIR9hLfcf1uOJDD9CIBog1wBPkJc1urISYU4ZYZX5pJIJsI64RMbrn41VCFkFF
-         12zGr5XSet13JzfrU8PAhjre465InHcEhIPBbSiRxEo7s6LnK17rkDVa3XJYr/gNXchr
-         YxvdS6bpisrHKJVLJa4quUJ3lh2R/i7Y8Q/hn9OHmjnM7b7pXUouwJrW+h++ZD76pXPO
-         CgBuzOevgmjhIWuHd55QAEbB32RqX0PC+sYCe7FErBDNgZrm4bLvk5uBLJM9/kIcoPif
-         oI+Q==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=AOO6GYk3DX7qTzUnwkLMT8us6fRJlkOK0kAXoivsFXI=;
+        b=rHG0eJgyM1OzClUuLqKyKMCZUj2QIwQ3sseD/i/bNJVIn5BqTP2LMUsAz8Q/TQdlHW
+         yUCcnYmTOBTAMeqiBEEyu+aL884MgOLoOvF0j74A2k0pkGSZj6v/SQHohtMjW2BAK04v
+         vZ9pF0qmvEjf7DSJhkYFd0SzLPq+AF3aidpUFgkrJj6CgA4YXmDjLkZ17JFcUm18J1g8
+         tDkozKRubtnJHClFs7uaICkKQAwl2x04G95UdJSSLZamIlc0CkWCLrV5trcFH32Z/Ofl
+         55iSnw1xREjgokHCnftaQhxBwnNJNNVm1Jz52VN0He6lc3otF8CQ+0TheQkKc8a3VH+T
+         nwbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=syFIrhNGevPpXvfxZYLYqs6N+xPUHhSpjZPEZ+aL1yE=;
-        b=khvQtPqemgALyW8c2G54lJjwd7YPBiCwSP0XYsAJiNeHjZEYwiIncQmkBEF6BQ75DM
-         TuifZb4SEjVz7I8HZ0yg638cpjfXuaYNOVeLb5PTlKW2HQQ09aT50seeznJb5tAure32
-         uYD7hK7S9x6Pbc89B+qmTRSCPsLYGy3mgOnGJBYZ/P8RZNJ/uIsjYjnA2AqQMsuPa5MJ
-         JXPJyyRGKV69hlrEcTuBE9KiSPeTkqj7hHkfKzrGoVt9C0SKXcHSmT4yWMRsv1Ihmoee
-         p2MwqBaV5CsB4HIjoC1bfWc/be/Ec6nVRylsTCZfM66Pg+1tUBJ6eJFeqHPRgVIN2OLD
-         kyUQ==
-X-Gm-Message-State: ACrzQf1qS1xtSKCF4rPmN2ow4T+9nZYagBHesNeYMFbn8RJQIkhH8n/d
-        c2Sf17uIa8AxSvVcol0JSCY=
-X-Google-Smtp-Source: AMsMyM6DzzlxndZWW7iD5uVWowNfhScTAs2/V4by3aR5YdWdpz1F2LVYpg4Ih62b9daJuK4sjNemig==
-X-Received: by 2002:a05:6512:2343:b0:4a2:692a:fcd9 with SMTP id p3-20020a056512234300b004a2692afcd9mr1892861lfu.272.1665060319380;
-        Thu, 06 Oct 2022 05:45:19 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id o12-20020a056512230c00b004946748ad4dsm2685630lfu.159.2022.10.06.05.45.18
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=AOO6GYk3DX7qTzUnwkLMT8us6fRJlkOK0kAXoivsFXI=;
+        b=ygH/coSnTHJE5sr8adiKWihWR5QDHsqh/ksJ7ivAZZaePnA0j9mDWOmd5Tfy32Rodc
+         75YE/s58h0gnkzR3CQ4IE/sy1Y+1NAi6BAWAtyfnQneTQacehky5SKWnOE5vuiGDkHJa
+         MmgQlqrgFOtYX9zNhN+48RxSSaHfpDvapjAZDB3/30Kl43ro+Zenr3kXdXVQjQKSXVEg
+         tRtGgEbfl8KBTKFPQheGLHIK025uD/9VdQbuhe1t+ts3PyaUVKm30pQ+nK8SPkR12CvK
+         8qOAS0QPkEaUDH1/uLbtqJ0E8pIuglp7kKxp+chkfQCFx11MSKQsE3dFF5X6unTLTjv2
+         3qdQ==
+X-Gm-Message-State: ACrzQf10hOzxV7MMSCnVS3ThzKuTzdi3Pxh2wN+XtiODeI2gQDqqVtVN
+        bwwzj0xD9MItu9kxcwZrsAI7sg==
+X-Google-Smtp-Source: AMsMyM42mVXhCBo/Hg17pPXtXjcxlvnOO7hiRbUw0wmxXnDWgMtyqLCUeJTwq/oQldfdnhcKbgMRVQ==
+X-Received: by 2002:a05:6512:3f8c:b0:4a1:8d5:d75b with SMTP id x12-20020a0565123f8c00b004a108d5d75bmr1933372lfa.670.1665060422022;
+        Thu, 06 Oct 2022 05:47:02 -0700 (PDT)
+Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id br32-20020a056512402000b00497a3e2a191sm2687659lfb.112.2022.10.06.05.47.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 05:45:19 -0700 (PDT)
-Date:   Thu, 6 Oct 2022 15:45:17 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Thu, 06 Oct 2022 05:47:01 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de
-Subject: Re: [PATCH v4 1/2] gpio: Add gpio latch driver
-Message-ID: <20221006124517.pgw7sh7xkczxjzdv@mobilestation>
-References: <20221006083031.2259006-1-s.hauer@pengutronix.de>
- <20221006083031.2259006-2-s.hauer@pengutronix.de>
- <20221006091506.bhqe2goh3coxcy2e@mobilestation>
- <20221006122634.GW986@pengutronix.de>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v4 00/34] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM pinctrl schema warnings (third set)
+Date:   Thu,  6 Oct 2022 14:46:25 +0200
+Message-Id: <20221006124659.217540-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221006122634.GW986@pengutronix.de>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 06, 2022 at 02:26:34PM +0200, Sascha Hauer wrote:
-> On Thu, Oct 06, 2022 at 12:15:06PM +0300, Serge Semin wrote:
-> > On Thu, Oct 06, 2022 at 10:30:30AM +0200, Sascha Hauer wrote:
-> > > This driver implements a GPIO multiplexer based on latches connected to
-> > > other GPIOs. A set of data GPIOs is connected to the data input of
-> > > multiple latches. The clock input of each latch is driven by another
-> > > set of GPIOs. With two 8-bit latches 10 GPIOs can be multiplexed into
-> > > 16 GPIOs. GPOs might be a better term as in fact the multiplexed pins
-> > > are output only.
-> > > 
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > ---
-> > > 
-> > > Notes:
-> > >     Changes since v3:
-> > >     - Introduce delays between GPIO toggles as suggested by Serge Semin
-> > >     
-> > >     Changes since v2:
-> > >     - Fix inconsistent licensing
-> > >     - document locks
-> > >     - use regular bit operations
-> > >     - include linux/mod_devicetable.h rather than linux/of_device.h
-> > >     - Put spinlock and mutex into a union to make clear that only one of them is used
-> > >     - rename __gpio_latch_set to gpio_latch_set_unlocked
-> > >     
-> > >     Changes since v1:
-> > >     - Use gpiod_set_value_cansleep when the underlying GPIOs might sleep
-> > >     - Move MODULE_DEVICE_TABLE near to the end
-> > > 
-> > >  drivers/gpio/Kconfig      |   6 ++
-> > >  drivers/gpio/Makefile     |   1 +
-> > >  drivers/gpio/gpio-latch.c | 220 ++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 227 insertions(+)
-> > >  create mode 100644 drivers/gpio/gpio-latch.c
-> > > 
-> > > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > > index 0642f579196f2..e4603810ec910 100644
-> > > --- a/drivers/gpio/Kconfig
-> > > +++ b/drivers/gpio/Kconfig
-> > > @@ -1690,6 +1690,12 @@ config GPIO_AGGREGATOR
-> > >  	      industrial control context, to be operated from userspace using
-> > >  	      the GPIO chardev interface.
-> > >  
-> > > +config GPIO_LATCH
-> > > +	tristate "GPIO latch driver"
-> > > +	help
-> > > +	  Say yes here to enable a driver for GPIO multiplexers based on latches
-> > > +	  connected to other GPIOs.
-> > > +
-> > >  config GPIO_MOCKUP
-> > >  	tristate "GPIO Testing Driver"
-> > >  	select IRQ_SIM
-> > > diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> > > index a0985d30f51bb..310fa08decc69 100644
-> > > --- a/drivers/gpio/Makefile
-> > > +++ b/drivers/gpio/Makefile
-> > > @@ -75,6 +75,7 @@ obj-$(CONFIG_GPIO_IT87)			+= gpio-it87.o
-> > >  obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
-> > >  obj-$(CONFIG_GPIO_JANZ_TTL)		+= gpio-janz-ttl.o
-> > >  obj-$(CONFIG_GPIO_KEMPLD)		+= gpio-kempld.o
-> > > +obj-$(CONFIG_GPIO_LATCH)		+= gpio-latch.o
-> > >  obj-$(CONFIG_GPIO_LOGICVC)		+= gpio-logicvc.o
-> > >  obj-$(CONFIG_GPIO_LOONGSON1)		+= gpio-loongson1.o
-> > >  obj-$(CONFIG_GPIO_LOONGSON)		+= gpio-loongson.o
-> > > diff --git a/drivers/gpio/gpio-latch.c b/drivers/gpio/gpio-latch.c
-> > > new file mode 100644
-> > > index 0000000000000..a4ab8f1240450
-> > > --- /dev/null
-> > > +++ b/drivers/gpio/gpio-latch.c
-> > > @@ -0,0 +1,220 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * GPIO latch driver
-> > > + *
-> > > + *  Copyright (C) 2022 Sascha Hauer <s.hauer@pengutronix.de>
-> > > + *
-> > > + * This driver implements a GPIO (or better GPO as there is no input)
-> > > + * multiplexer based on latches like this:
-> > > + *
-> > > + * CLK0 ----------------------.        ,--------.
-> > > + * CLK1 -------------------.  `--------|>    #0 |
-> > > + *                         |           |        |
-> > > + * OUT0 ----------------+--|-----------|D0    Q0|-----|<
-> > > + * OUT1 --------------+-|--|-----------|D1    Q1|-----|<
-> > > + * OUT2 ------------+-|-|--|-----------|D2    Q2|-----|<
-> > > + * OUT3 ----------+-|-|-|--|-----------|D3    Q3|-----|<
-> > > + * OUT4 --------+-|-|-|-|--|-----------|D4    Q4|-----|<
-> > > + * OUT5 ------+-|-|-|-|-|--|-----------|D5    Q5|-----|<
-> > > + * OUT6 ----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|<
-> > > + * OUT7 --+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|<
-> > > + *        | | | | | | | |  |           `--------'
-> > > + *        | | | | | | | |  |
-> > > + *        | | | | | | | |  |           ,--------.
-> > > + *        | | | | | | | |  `-----------|>    #1 |
-> > > + *        | | | | | | | |              |        |
-> > > + *        | | | | | | | `--------------|D0    Q0|-----|<
-> > > + *        | | | | | | `----------------|D1    Q1|-----|<
-> > > + *        | | | | | `------------------|D2    Q2|-----|<
-> > > + *        | | | | `--------------------|D3    Q3|-----|<
-> > > + *        | | | `----------------------|D4    Q4|-----|<
-> > > + *        | | `------------------------|D5    Q5|-----|<
-> > > + *        | `--------------------------|D6    Q6|-----|<
-> > > + *        `----------------------------|D7    Q7|-----|<
-> > > + *                                     `--------'
-> > > + *
-> > > + * The above is just an example. The actual number of number of latches and
-> > > + * the number of inputs per latch is derived from the number of GPIOs given
-> > > + * in the corresponding device tree properties.
-> > > + */
-> > > +
-> > > +#include <linux/err.h>
-> > > +#include <linux/gpio/consumer.h>
-> > > +#include <linux/gpio/driver.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/mod_devicetable.h>
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/delay.h>
-> > > +
-> > > +#include "gpiolib.h"
-> > > +
-> > > +struct gpio_latch_priv {
-> > > +	struct gpio_chip gc;
-> > > +	struct gpio_descs *clk_gpios;
-> > > +	struct gpio_descs *latched_gpios;
-> > > +	int n_latched_gpios;
-> > > +	unsigned int setup_duration_ns;
-> > > +	unsigned int clock_duration_ns;
-> > > +	unsigned long *shadow;
-> > > +	/*
-> > > +	 * Depending on whether any of the underlying GPIOs may sleep we either
-> > > +	 * use a mutex or a spinlock to protect our shadow map.
-> > > +	 */
-> > > +	union {
-> > > +		struct mutex mutex; /* protects @shadow */
-> > > +		spinlock_t spinlock; /* protects @shadow */
-> > > +	};
-> > > +};
-> > > +
-> > > +static int gpio_latch_get_direction(struct gpio_chip *gc, unsigned int offset)
-> > > +{
-> > > +	return GPIO_LINE_DIRECTION_OUT;
-> > > +}
-> > > +
-> > > +static void gpio_latch_set_unlocked(struct gpio_latch_priv *priv,
-> > > +				    void (*set)(struct gpio_desc *desc, int value),
-> > > +				    unsigned int offset, bool val)
-> > > +{
-> > > +	int latch = offset / priv->n_latched_gpios;
-> > > +	int i;
-> > > +
-> > > +	assign_bit(offset, priv->shadow, val);
-> > > +
-> > > +	for (i = 0; i < priv->n_latched_gpios; i++)
-> > > +		set(priv->latched_gpios->desc[i],
-> > > +		    test_bit(latch * priv->n_latched_gpios + i, priv->shadow));
-> > > +
-> > > +	ndelay(priv->setup_duration_ns);
-> > > +	set(priv->clk_gpios->desc[latch], 1);
-> > 
-> > > +	udelay(priv->clock_duration_ns);
-> > 
-> > These are supposed to be !n!delay()'s. Aren't they?
-> 
-> Yes, indeed.
-> 
-> > 
-> > > +	set(priv->clk_gpios->desc[latch], 0);
-> > 
-> > > +	udelay(priv->clock_duration_ns);
-> > 
-> > Why do you need the second clock-duration? AFAICS at least from the
-> > TI SNx4LV74A specification the outputs get updated on the positive
-> > edge of the pulse. So the clock-duration value shall contain both
-> > the "CLK pulse duration" and "CLK hold time", which should be enough
-> > for the latches states being perceived by the device.
-> 
-> The rationale was that there should be some delay between two subsequent
-> calls to gpio_latch_set_unlocked(). You are right though, on my latch
-> the update happens on the positive edge as well, so this shouldn't be
-> needed.
-> 
-> Sascha
-> 
-> > > +	/*
-> > > +	 * Some value which is still acceptable to delay in atomic context.
-> > > +	 * If we need to go higher we might have to switch to usleep_range(),
-> > > +	 * but that cannot ne used in atomic context and the driver would have
-> > > +	 * to be adjusted to support that.
-> > > +	 */
-> > > +	unsigned int duration_ns_max = 5000;
-> > 
+Hi,
 
-> > I don't see you changing this parameter. So it's better to be a macro.
-> 
-> Why should it?
+Changes since v3
+================
+1. All patches with subject: "use common TLMM schema":
+   Drop properties and required items which are already provided by common TLMM
+   schema.
+   The change against v3 is non-trivial, however I retained reviewed-by tags.
+2. Add Rb tags.
 
-Well because of its semantics. It's a constant and is definitely a
-common parameter for any device. So const-macro-based parametrization
-like
+Changes since v2
+================
+1. ipq6018-cp01-c1: do not switch to blsp1 (Robert).
+2. pinctrl: qcom,ipq6018: correct BLSP6->BLSP0 functions: new patch.
+3. Drop quotes from $ref when not needed (Rob).
+4. Add Rb tags. Few patches from v1 got review from Rob, but I changed them in
+   v2 significantly, so I did not keep these Rb tags.
 
-/*
-...
- */
-#define GPIO_LATCH_DURATION_NS_MAX		5000
+Changes since v1
+================
+v1: https://lore.kernel.org/linux-devicetree/20220924080459.13084-1-krzysztof.kozlowski@linaro.org/T/#t
+1. As Stephan suggested, move check for function on non-GPIO pins to common
+   TLMM schema.  This affects few commits in the set named:
+   "use common TLMM schema"
+   "do not require function on non-GPIOs"
 
-placed above the struct gpio_latch_priv declaration with the same
-comment would be more appropriate than a pre-initialized local
-variable. Thus the capitalized name could be right away read that the
-parameter is a constant and common for all the devices. In your
-implementation it isn't obvious from the variable usage context. I had
-to parse the whole gpio_latch_probe() method to understand that.
+Overview
+========
+This is the third, independent patchset around Qualcomm pinctrl in recent days:
+1. First round of TLMM fixes: merged
+2. LPASS fixes:
+   https://lore.kernel.org/linux-devicetree/20220927153429.55365-1-krzysztof.kozlowski@linaro.org/T/#t
+3. ARMv7 TLMM fixes: *THIS PATCHSET*
+4. ARMv8 remaining TLMM fixes: v2 send:
+   https://lore.kernel.org/linux-devicetree/20220930192954.242546-1-krzysztof.kozlowski@linaro.org/
 
--Sergey
+Dependencies
+============
+1. No dependencies.
+2. dt-bindings are independent of DTS patches.
 
-> 
-> Sascha
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (34):
+  arm64: dts: qcom: ipq6018-cp01-c1: use BLSPI1 pins
+  arm64: dts: qcom: ipq6018: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: sdx55: add gpio-ranges to TLMM pinctrl
+  ARM: dts: qcom: sdx55: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8226: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8974: align TLMM pin configuration with DT schema
+  dt-bindings: pinctrl: qcom,tlmm-common: add common check for function
+  dt-bindings: pinctrl: qcom,ipq6018: add qpic_pad function
+  dt-bindings: pinctrl: qcom,ipq6018: correct BLSP6->BLSP0 functions
+  dt-bindings: pinctrl: qcom,ipq6018: increase number of pins in pinmux
+  dt-bindings: pinctrl: qcom,ipq6018: fix matching pin config
+  dt-bindings: pinctrl: qcom,ipq6018: use common TLMM schema
+  dt-bindings: pinctrl: qcom,ipq6018: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8226: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8226: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8226: add functions and input-enable
+  dt-bindings: pinctrl: qcom,msm8226: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8953: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8953: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8953: fix indentation in example
+  dt-bindings: pinctrl: qcom,mdm9607: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,mdm9607: fix indentation in example
+  dt-bindings: pinctrl: qcom,qcm2290: fix matching pin config
+  dt-bindings: pinctrl: qcom,qcm2290: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx55: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix indentation in example
+  dt-bindings: pinctrl: qcom,sdx65: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx65: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sc7280: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8280xp: fix indentation in example
+    (remaining piece)
+
+ .../pinctrl/qcom,ipq6018-pinctrl.yaml         | 95 ++++++++-----------
+ .../pinctrl/qcom,mdm9607-pinctrl.yaml         | 23 +++--
+ .../pinctrl/qcom,msm8226-pinctrl.yaml         | 91 ++++++++----------
+ .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   | 64 ++++++-------
+ .../pinctrl/qcom,msm8953-pinctrl.yaml         | 81 +++++++---------
+ .../pinctrl/qcom,qcm2290-pinctrl.yaml         | 41 ++------
+ .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml | 14 ++-
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        |  4 +-
+ .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  | 79 +++++++--------
+ .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  | 39 +++-----
+ .../bindings/pinctrl/qcom,tlmm-common.yaml    | 20 +++-
+ arch/arm/boot/dts/qcom-apq8026-lg-lenok.dts   |  6 +-
+ arch/arm/boot/dts/qcom-msm8226.dtsi           | 24 ++---
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 30 +++---
+ .../boot/dts/qcom-sdx55-telit-fn980-tlb.dts   | 45 +++------
+ arch/arm/boot/dts/qcom-sdx55.dtsi             |  1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts  |  6 +-
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |  4 +-
+ 18 files changed, 290 insertions(+), 377 deletions(-)
+
+-- 
+2.34.1
+
