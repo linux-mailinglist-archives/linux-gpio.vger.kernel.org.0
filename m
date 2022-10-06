@@ -2,102 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC275F5EA5
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 04:18:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9438E5F60D4
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 07:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229916AbiJFCS6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 5 Oct 2022 22:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53082 "EHLO
+        id S230210AbiJFFyT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 01:54:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiJFCS5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 5 Oct 2022 22:18:57 -0400
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C09691A6;
-        Wed,  5 Oct 2022 19:18:53 -0700 (PDT)
-Received: by mail-oo1-f47.google.com with SMTP id s1-20020a4a81c1000000b0047d5e28cdc0so494593oog.12;
-        Wed, 05 Oct 2022 19:18:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/jZIdY8QX+4KlsWpGeQFNIJVbEesoa2SUydZj7W7bFo=;
-        b=Y/OfwScWIMBVRz4RW60IMiQs+kzOOz3KQaAMbdQ2hw2c3IspEAhCN+Shd23TlApXhT
-         /MQMTnuP4whAI6/lpflckRu/+OjZJCuh4chNu8iJRjbIoHLSlnozvVejwUjZmeQrbbXa
-         rC+PucfrOAiz08EskUPYgYhwatoW5hL+k5uR/LbtvCMP5YXUIRTPx2T76q3dK61SDl/Z
-         vqfrToHBHohi0+ewB8Rdbf+8ofQfnA1qgcX0SWVXxCK9rhS5jCKksRdON/yhejtr46/Q
-         7q3mYFloQwQrKb6mcacNGsJm+/3n/d2UbRVVxo93wVR3o76ZiexQmzySKWDDf5KyNsIB
-         mrWQ==
-X-Gm-Message-State: ACrzQf1SKox+h9M3PoSwTCFmZDgU4vefYCSLz89hoNMxvbO2Fit58Dh+
-        jOra6dGCgKmLQDC7Txg70A==
-X-Google-Smtp-Source: AMsMyM6tuGhNopZGM50q8/x8hUhVFnr7Vr8FB5GIyuq4D71Fu3og97txbMaQnhAN1xbLbinslOCD0A==
-X-Received: by 2002:a9d:4e7:0:b0:65b:e537:5a75 with SMTP id 94-20020a9d04e7000000b0065be5375a75mr993837otm.138.1665022732299;
-        Wed, 05 Oct 2022 19:18:52 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id w19-20020a056830111300b006370abdc976sm4833668otq.58.2022.10.05.19.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 19:18:51 -0700 (PDT)
-Received: (nullmailer pid 565676 invoked by uid 1000);
-        Thu, 06 Oct 2022 02:18:50 -0000
-From:   Rob Herring <robh@kernel.org>
-To:     =?utf-8?q?Martin_Za=C5=A5ovi=C4=8D?= <m.zatovic1@gmail.com>
-Cc:     devicetree@vger.kernel.org, brgl@bgdev.pl, hemantk@codeaurora.org,
-        robh+dt@kernel.org, andersson@kernel.org, mani@kernel.org,
-        saravanak@google.com, jeffrey.l.hugo@gmail.com,
-        Michael.Srba@seznam.cz, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org
-In-Reply-To: <20221005145746.172138-3-m.zatovic1@gmail.com>
-References: <20221005145746.172138-1-m.zatovic1@gmail.com> <20221005145746.172138-3-m.zatovic1@gmail.com>
-Message-Id: <166502256551.562242.10019185148511138173.robh@kernel.org>
-Subject: Re: [RFCv2 PATCH 3/4] dt-bindings: gpio: add Wiegand GPIO driver dt documentation
-Date:   Wed, 05 Oct 2022 21:18:50 -0500
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,PP_MIME_FAKE_ASCII_TEXT,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S229726AbiJFFyS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 01:54:18 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA2D8992C;
+        Wed,  5 Oct 2022 22:54:16 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4MjgWS2SCKzVhlr;
+        Thu,  6 Oct 2022 13:49:56 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 6 Oct 2022 13:54:13 +0800
+Received: from [10.174.178.174] (10.174.178.174) by
+ dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 6 Oct 2022 13:54:13 +0800
+Subject: Re: [PATCH -next v3] pinctrl: ocelot: add missing destroy_workqueue()
+ in error path in ocelot_pinctrl_probe()
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <p.zabel@pengutronix.de>, <horatiu.vultur@microchip.com>,
+        <andy.shevchenko@gmail.com>, <yangyingliang@huawei.com>
+References: <20220925021258.1492905-1-yangyingliang@huawei.com>
+ <CACRpkdZijkQAT84mfP06SgxBjHmrqSbWwctBBA0pvb_1xYzGvA@mail.gmail.com>
+ <CACRpkda6kCL-FbEdfu9msXH6xnLn9fLC-q6hcm=e_H_AT_uVEQ@mail.gmail.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <ddd58293-0b5b-3c34-c396-0a635444410d@huawei.com>
+Date:   Thu, 6 Oct 2022 13:54:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkda6kCL-FbEdfu9msXH6xnLn9fLC-q6hcm=e_H_AT_uVEQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.178.174]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 05 Oct 2022 16:57:45 +0200, Martin Zaťovič wrote:
-> The Wiegand GPIO driver uses two GPIO lines to transmit data -
-> data-hi and data-lo. These lines need to be defined in the
-> devicetree, otherwise the driver will not probe successfully.
-> 
-> Signed-off-by: Martin Zaťovič <m.zatovic1@gmail.com>
-> ---
->  .../bindings/gpio/gpio-wiegand.yaml           | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-wiegand.yaml
-> 
+Hi,
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+On 2022/10/5 3:57, Linus Walleij wrote:
+> On Tue, Oct 4, 2022 at 1:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Sun, Sep 25, 2022 at 4:06 AM Yang Yingliang <yangyingliang@huawei.com> wrote:
+>>
+>>> Using devm_add_action_or_reset() to make workqueue device-managed, so it can be
+>>> destroy whenever the driver is unbound.
+>>>
+>>> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
+>>> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+>>> ---
+>>> v3:
+>>>    Using devm_add_action_or_reset().
+>> Patch applied, after deleting the hunks removing .remove because
+>> that was already gone upstream.
+> Ah, the patch introducing that is in the MFD tree is it not?
+>
+> Either ask Lee to apply it or wait until -rc1 it's no big deal
+> anyway. Remind me in two weeks.
+It's OK.
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-wiegand.example.dtb: wiegand: wiegand-gpio: {'compatible': ['wiegand,wiegand-gpio'], 'pinctrl-names': ['default'], 'pinctrl-0': [[4294967295]], 'data-hi-gpios': [[4294967295, 7, 6]], 'data-lo-gpios': [[4294967295, 6, 6]]} is not of type 'array'
-	From schema: /usr/local/lib/python3.10/dist-packages/dtschema/schemas/gpio/gpio-consumer.yaml
-Documentation/devicetree/bindings/gpio/gpio-wiegand.example.dtb:0:0: /example-0/wiegand: failed to match any schema with compatible: ['wiegand']
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-wiegand.example.dtb: wiegand-gpio: $nodename:0: 'wiegand-gpio' does not match '^wiegand-gpio@[0-9a-f]+$'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-wiegand.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+Thanks,
+Yang
+>
+> Yours,
+> Linus Walleij
+> .
