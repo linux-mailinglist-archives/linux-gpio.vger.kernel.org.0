@@ -2,102 +2,222 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1E765F6EBA
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 22:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 796785F6ED3
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 22:20:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231825AbiJFUO3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 16:14:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
+        id S229919AbiJFUUc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 16:20:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231733AbiJFUO2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 16:14:28 -0400
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D345C7069
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 13:14:26 -0700 (PDT)
-Received: by mail-lj1-x231.google.com with SMTP id bs18so3499930ljb.1
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 13:14:26 -0700 (PDT)
+        with ESMTP id S229529AbiJFUUb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 16:20:31 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2427DAE22A
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 13:20:29 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id f37so4369592lfv.8
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 13:20:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=YnO5PITRS5SnLid2smpNjEkJ3U0pp9+QtZmh6jQdXqc=;
-        b=y1k3uOb9DhhdgrhwnCep/XOW5UcqnP01xobEOWnxehlkE2le6UyePPRGl67RlW1f6S
-         myS/pXnsk+XVlapPD3843JuOw3PwBjlDY0ffWneioudUPHrVvd2/C7O3O4Swcb2VsZJ3
-         HsCQLLo95zC3t+eaLNyomaT3V7XqwgiB2rCLb7Jojm8Foh/jPLZo9EEcGnsBKRQDIDG+
-         sWZoLA9DnQhbTlIHXJA0G2hPZyfjYA7izcnN22qooRc/bGcBgJSFMzGAPjTxYLa2Owas
-         FCBcN3UijQS3TVSpfM5i3OiKpQq6MsqhndRhtLmcOKCdVqcDC/3JUe8GL9n439wOd1bH
-         YUGw==
+        bh=lg2Ge2pvHw2Yt9X+k22wjzhBKqpfRYyWZvz0jY249f8=;
+        b=oOEiiJtt+3NlVVoliUJoMJyab7ex+cGfsnDUh7SWRUoAQwY/uRs27ebDTjkwwAdDDb
+         JvNvNIXnZh8NN8d3BvxJ6DuLcH57cym4PlK/jCtD2DelwJYx+cuGdzaQFZKN/yw9XDpc
+         VsZXQMYcWgEu7v52XPWTjApc0bZFNkxWBrhCf5I+dxQq+oXIJCAYaA403w5q5KMEflkz
+         NDWhsF0rQqJaU/p+UfW6YyJZodu9TGJouqq2aos2zUtBQ9WcBNXx956EecclO0w6Di6u
+         iQH+OqZVhJDEqzS7t7bUufGe35OKboBnqpt/qSkaaw5eNK77/EflgR1da5T8+GOb/gee
+         X4Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=YnO5PITRS5SnLid2smpNjEkJ3U0pp9+QtZmh6jQdXqc=;
-        b=7aw664qHThgOyEahN74RxwrY0qP2ug79ZScJgrTqF9cUVk1RS2fDJzHJpoiegF65g5
-         BFvippLFolCdyTp8fUo4513TDKtdVOcJ4fXrulp1ETWsUIDA42euVYeFgAuvOJYlZj6d
-         Ju8VXbtCn0/txg/1uZnSdD00rgKETF+asI+ACtwC2GOXMrLUch1qhVI6LUtSwO01FBp/
-         DN06ZqxFvP+72XAUADEorkMkG2sJ0+3ryjh7mszV4RB45ft1rBa6qinVoOEs68tszUVt
-         HUxECtcuMrelqviScSlqlbZHdOKdysP/Lx1Eyimy6kwYC/zTkk1n8U6iZLtYOWkzJeoi
-         cJsA==
-X-Gm-Message-State: ACrzQf2Ms6UmJZBhQoleIEELP2BFYkWuzOQ/m1RTLYxZVB7fL/ILsFPo
-        ZomyzbzOPjTtieuYNLrIlHyr9A==
-X-Google-Smtp-Source: AMsMyM5PqWEmLXFWjkM4Pa7rOAO6UktcqFhW6HbDja0bfDUofaov/KmBMqzx9N7wRfGSeHB5BivORg==
-X-Received: by 2002:a2e:b74f:0:b0:26c:426c:60fc with SMTP id k15-20020a2eb74f000000b0026c426c60fcmr511975ljo.432.1665087264312;
-        Thu, 06 Oct 2022 13:14:24 -0700 (PDT)
+        bh=lg2Ge2pvHw2Yt9X+k22wjzhBKqpfRYyWZvz0jY249f8=;
+        b=u7pzuHnK22NFCF9SY+nWBbd1trX5UqjQX8XcKK5hdDwjI569BHJhUdQHo+kMktVfvn
+         /37Cgdq9gI0nOxVNRVsfUqWCVApfn6fcy8zx/kwz7xvdjJhAezKQMR5NTlBMwS/iDD+x
+         F3aANOwBneLPYdLPzzu/s8wL7SAJ7pzRXWF8zZXpmgjtZtKetFARm1yvCAaZKdmMA9O/
+         o/goUj/5GHjw+EjYp82UaTKVZBypdu3y8KmOoPLRjvFJA7R2BKndO6ra9uAY3iZxxCmB
+         u8GidEasR01NO9Xg49XSK2Yms+gOmAzs1tVtZqICsJrZSQx4A4ZRJPHMer0gZr3b338u
+         HcBg==
+X-Gm-Message-State: ACrzQf1qZwjwUxY1FJoqYmhdRVn3sVYS+HRnGKk8XQA/VqnAK7FgzNUw
+        EyEsgk8uF9Vu3QR/p9BJhnyz+F8ObcS0Dw==
+X-Google-Smtp-Source: AMsMyM4wI342OUVOiJD/jCc9cO7qtnA8UniyTPwaHsw6EbTnMr5bYpdTUqU3j3CpDbNMDC/NL/rXNw==
+X-Received: by 2002:ac2:4424:0:b0:4a2:4b01:8458 with SMTP id w4-20020ac24424000000b004a24b018458mr670092lfl.84.1665087627020;
+        Thu, 06 Oct 2022 13:20:27 -0700 (PDT)
 Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id i20-20020a2ea234000000b00261b4df9ec4sm6414ljm.138.2022.10.06.13.14.23
+        by smtp.gmail.com with ESMTPSA id k1-20020a2eb741000000b0026a92616cd2sm12077ljo.35.2022.10.06.13.20.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Oct 2022 13:14:23 -0700 (PDT)
-Message-ID: <aa84760f-bc2a-09d0-6a57-45eb2de7ada9@linaro.org>
-Date:   Thu, 6 Oct 2022 22:14:22 +0200
+        Thu, 06 Oct 2022 13:20:26 -0700 (PDT)
+Message-ID: <cef6b9a2-9753-d478-ab6a-444784a18576@linaro.org>
+Date:   Thu, 6 Oct 2022 22:20:25 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH 4/4] dt-bindings: pinctrl: qcom,sdm630: convert to
- dtschema
-To:     Rob Herring <robh@kernel.org>
-Cc:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>
-References: <20221006104104.171368-1-krzysztof.kozlowski@linaro.org>
- <20221006104104.171368-4-krzysztof.kozlowski@linaro.org>
- <166505883313.1602848.6191967643505476092.robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: convert
+ qcom,mdm9615-pinctrl.txt to dt-schema
 Content-Language: en-US
+To:     neil.armstrong@linaro.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>, Lee Jones <lee@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org>
+ <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+ <8213587e-681a-a948-42a6-2b1632b47ac0@linaro.org>
+ <5a669cee-55b2-f5cb-56f2-279003d08578@linaro.org>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <166505883313.1602848.6191967643505476092.robh@kernel.org>
+In-Reply-To: <5a669cee-55b2-f5cb-56f2-279003d08578@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/10/2022 14:27, Rob Herring wrote:
-> Running 'make dtbs_check' with the schema in this patch gives the
-> following warnings. Consider if they are expected or the schema is
-> incorrect. These may not be new warnings.
+On 06/10/2022 18:20, Neil Armstrong wrote:
+> Hi,
 > 
-> Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-> This will change in the future.
+> On 06/10/2022 13:09, Krzysztof Kozlowski wrote:
+>> On 06/10/2022 11:57, Neil Armstrong wrote:
+>>> Convert the MDM9515 pinctrl bindings to dt-schema.
+>>>
+>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>>> ---
+>>>   .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
+>>>   .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 101 +++++++++++++
+>>>   2 files changed, 101 insertions(+), 161 deletions(-)
+>>>
+>>
+>> Thank you for your patch. There is something to discuss/improve.
+>>
+>>> -		};
+>>> -	};
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
+>>> new file mode 100644
+>>> index 000000000000..6a5966fc0098
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
+>>> @@ -0,0 +1,101 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,mdm9615-pinctrl.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Qualcomm Technologies, Inc. MDM9615 TLMM block
+>>> +
+>>> +maintainers:
+>>> +  - Bjorn Andersson <andersson@kernel.org>
+>>> +
+>>> +description: |
+>>
+>> No need for |
 > 
-> Full log is available here: https://patchwork.ozlabs.org/patch/
+> Ack
 > 
+>>
+>>> +  This binding describes the Top Level Mode Multiplexer block found in the
+>>> +  MDM9615 platform.
+>>
+>> Instead: "Top Level Mode Multiplexer pin controller node in Qualcomm
+>> MDM9615 SoC."
+>>
+>> I see this pattern is coming from other file, so I will fix all of them.
 > 
-> pinctrl@3100000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp2-uart1-active', 'blsp2-uart1-sleep', 'cam-vdig-default', 'cci0_default', 'cci1_default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'i2c7-default', 'i2c7-sleep', 'i2c8-default', 'i2c8-sleep', 'imx219-vana-default', 'imx300-vana-default', 'sdc1-off', 'sdc1-on', 'sdc2-off', 'sdc2-on', 'ts-int-active', 'ts-lcd-id-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
-> 	arch/arm64/boot/dts/qcom/sdm630-sony-xperia-ganges-kirin.dtb
+> Ack, wil use this.
+> 
+>>
+>>> +
+>>> +allOf:
+>>> +  - $ref: "pinctrl.yaml#"
+>>
+>> Drop it, it's included from tlmm-common
+> 
+> Ack
+> 
+>>
+>>> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qcom,mdm9615-pinctrl
+>>> +
+>>> +  reg:
+>>> +    maxItems: 1
+>>> +
+>>> +  interrupts: true
+>>> +  interrupt-controller: true
+>>> +  '#interrupt-cells': true
+>>> +  gpio-controller: true
+>>> +  '#gpio-cells': true
+>>> +  gpio-ranges: true
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - reg
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +patternProperties:
+>>> +  '-state$':
+>>
+>> Use " as quotes
+> 
+> Ack
+> 
+>>
+>>> +    oneOf:
+>>> +      - $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
+>>> +      - patternProperties:
+>>> +          "-pins$":
+>>> +            $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
+> 
+> Interesting, if I add this subnode (that should be valid):
+>        gsbi3-state {
+>          pins = "gpio8", "gpio9", "gpio10", "gpio11";
+>          function = "gsbi3";
+>          drive-strength = <8>;
+>          bias-disable;
+>        };
+> 
+> then I get the following warning from dt_bindings_check:
 
-This is fixed by earlier DTS patches in the series. Maybe they did not
-apply cleanly.
+First, your block for using defs/qcom-mdm9615-pinctrl-state is not
+exactly like it should be, e.g. it misses additionalProperties: false.
+Maybe it misses few things more. Please use one of my latest patches as
+example, e.g.
+https://lore.kernel.org/linux-devicetree/20221006144518.256956-1-krzysztof.kozlowski@linaro.org/T/#t
+
+> 
+> Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.example.dtb: pinctrl@1000000: gsbi3-state: More than one condition true in oneOf schema:
+>          {'oneOf': [{'$ref': '#/$defs/qcom-mdm9615-pinctrl-state'},
+>                     {'patternProperties': {'-pins$': {'$ref': '#/$defs/qcom-mdm9615-pinctrl-state'},
+>                                            'pinctrl-[0-9]+': True},
+>                      'properties': {'$nodename': True,
+>                                     'phandle': True,
+>                                     'pinctrl-names': True,
+>                                     'secure-status': True,
+>                                     'status': True}}]}
+>  From schema: /Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
+> 
+> And I don't understand why, the nodename should not match "-pins$" nor "pinctrl-[0-9]+'...
+
+Hm, dunno... You have a trailing coma in enum with functions - maybe
+remove it?
+
+I looked briefly between your patch and mine for sm8150 and could not
+find differences except that additionalProperties and coma.
 
 Best regards,
 Krzysztof
