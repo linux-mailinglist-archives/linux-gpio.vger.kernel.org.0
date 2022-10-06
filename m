@@ -2,87 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B6F95F6E3D
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:30:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15B2E5F6E42
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:32:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231932AbiJFTaA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 15:30:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
+        id S230408AbiJFTck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 15:32:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231924AbiJFT37 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:29:59 -0400
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4E72CDE8;
-        Thu,  6 Oct 2022 12:29:57 -0700 (PDT)
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-131ea99262dso3335005fac.9;
-        Thu, 06 Oct 2022 12:29:57 -0700 (PDT)
+        with ESMTP id S230286AbiJFTcj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:32:39 -0400
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CD5C2C81;
+        Thu,  6 Oct 2022 12:32:38 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id s192so3184294oie.3;
+        Thu, 06 Oct 2022 12:32:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ySIVfsaxNA1ijAI7bATHRfKRS7AcLI7DST7iNvCc2ro=;
-        b=6WAkoBbyxj1zlTJCBxNdjgCJUyvcm3v6WZokS4X1B2yXH+ESQxBt+lOS8xQoVvtZrI
-         dEQmLKlRXp4Te776ooL8pk+XDtMZbzFVCsmis2qaIAVinn0vEP1Vmm/Mry6Ie3D4HVCL
-         3ekTnj5VU3JdIgcvIEfJi6gVwgyXf/q1NbnR/vloSq3y2bIREOBOwE17cL9i9t50vZqZ
-         IfjJN1UJ48wpbWRQognXFTvmtNlUtVi8i2ua2USzsbpjw++6AMwc3CKKlAuu7tMStxIV
-         rlpA3QB4C0YdVdIxxGL/QJdP1kOhSuOH66PT93eUW2MLz/LxDw0serrSVMSTO0YV/BuS
-         t1uA==
-X-Gm-Message-State: ACrzQf0ZmsIppFtUNxUhR2cn8s3FHTcxxKp5ehf9b2gdyTFRSc2pP20K
-        +dnGGR5rpO2rzMS2/5mBBg==
-X-Google-Smtp-Source: AMsMyM4/iv7myuy0Nn8kCe3Et5vu7Cu1CfGYnJEilG1xPRLoHrvgqYBZoN4qRCc43LPwkI6oA1Oltg==
-X-Received: by 2002:a05:6870:b422:b0:131:d458:2d21 with SMTP id x34-20020a056870b42200b00131d4582d21mr756756oap.24.1665084596364;
-        Thu, 06 Oct 2022 12:29:56 -0700 (PDT)
+        bh=Ou2iWBMYAeA/yRIZnkILz0jhRRskqquaQO86kp7WlKY=;
+        b=6/m8LEu0l51Mnxg4rBcdXW/JAmq2QwSKC3IGMgcbuq/112HGz17ER9Vs/ITkvb3PeA
+         pyMrId2kONAj8KYc5P0/Y03PUTCrXixMNfYpPUKdyEwcq46g1+MUT1koOWDizgkyT4PU
+         cP3g1tGdzBE0XtCsRZysi4U01qdLm+aGh1xf+Oq4l7UjhDQPQnXMgdN3MELH/AGg9Eb6
+         +n4z1oBEZHlO4U8ZdP8vgr3JmYnO5VYrGqahL6N+aOqsvAsRV76nWaLHGlDGbUCjhOZA
+         olNU+DKuZnjJYIeNKgLOGxMTzxDpuscwWdTgBzd0JWyLw+FthNj5phPcIzNAV+/vTojU
+         ObFw==
+X-Gm-Message-State: ACrzQf0vS8oMm309skLIaEoM7paVJQ9l5cwC6whvJl4/VK9vVjWiPJ86
+        q0+9x9lxgy5Bpp8ibR4Osw==
+X-Google-Smtp-Source: AMsMyM6+iKp6n/gVIENPluD3O291vWyTSKOHTvo1T/SMpsq0uv6Gqf3JBN4hgfpp+k6Ft2W1pkEHoA==
+X-Received: by 2002:a05:6808:118e:b0:345:9c3e:121d with SMTP id j14-20020a056808118e00b003459c3e121dmr624143oil.211.1665084757531;
+        Thu, 06 Oct 2022 12:32:37 -0700 (PDT)
 Received: from robh_at_kernel.org ([2607:fb90:8a65:c536:245:842:a3a4:9017])
-        by smtp.gmail.com with ESMTPSA id q65-20020acac044000000b00342fc99c5cbsm6147248oif.54.2022.10.06.12.29.54
+        by smtp.gmail.com with ESMTPSA id z90-20020a9d24e3000000b00655c6b2655esm171173ota.68.2022.10.06.12.32.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 12:29:55 -0700 (PDT)
-Received: (nullmailer pid 58541 invoked by uid 1000);
-        Thu, 06 Oct 2022 19:29:53 -0000
-Date:   Thu, 6 Oct 2022 14:29:53 -0500
+        Thu, 06 Oct 2022 12:32:36 -0700 (PDT)
+Received: (nullmailer pid 60798 invoked by uid 1000);
+        Thu, 06 Oct 2022 19:32:35 -0000
+Date:   Thu, 6 Oct 2022 14:32:34 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Yassine Oudjana <yassine.oudjana@gmail.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         AngeloGioacchino Del Regno 
         <angelogioacchino.delregno@collabora.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
         Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Andy Teng <andy.teng@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 08/10] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Document MT6765 pin controller
-Message-ID: <166508455748.57937.1260917394101293139.robh@kernel.org>
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 09/10] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Document MT6735 pin controller bindings
+Message-ID: <166508475428.60747.9048131740903882168.robh@kernel.org>
 References: <20221005174343.24240-1-y.oudjana@protonmail.com>
- <20221005174343.24240-9-y.oudjana@protonmail.com>
+ <20221005174343.24240-10-y.oudjana@protonmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221005174343.24240-9-y.oudjana@protonmail.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+In-Reply-To: <20221005174343.24240-10-y.oudjana@protonmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 05 Oct 2022 20:43:41 +0300, Yassine Oudjana wrote:
+On Wed, 05 Oct 2022 20:43:42 +0300, Yassine Oudjana wrote:
 > From: Yassine Oudjana <y.oudjana@protonmail.com>
 > 
-> The MT6765 pin controller has had a driver for a while, but DT
-> bindings were never documented for it.
+> Add bindings for the pin controller found on MediaTek MT6735 and
+> MT6735M SoCs, including describing a method to manually specify
+> a pin and function in the pinmux property making defining bindings
+> for each pin/function combination unnecessary. The pin controllers
+> on those SoCs are generally identical, with the only difference
+> being the lack of MSDC2 pins (198-203) on MT6735M.
 > 
 > Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 > ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
