@@ -2,91 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B2E5F6E42
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:32:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3FA15F6E56
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 21:42:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230408AbiJFTck (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 15:32:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50850 "EHLO
+        id S231991AbiJFTmn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 15:42:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbiJFTcj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:32:39 -0400
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48CD5C2C81;
-        Thu,  6 Oct 2022 12:32:38 -0700 (PDT)
-Received: by mail-oi1-f172.google.com with SMTP id s192so3184294oie.3;
-        Thu, 06 Oct 2022 12:32:38 -0700 (PDT)
+        with ESMTP id S231931AbiJFTmm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 15:42:42 -0400
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1410ABD78;
+        Thu,  6 Oct 2022 12:42:40 -0700 (PDT)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-132af5e5543so3370677fac.8;
+        Thu, 06 Oct 2022 12:42:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ou2iWBMYAeA/yRIZnkILz0jhRRskqquaQO86kp7WlKY=;
-        b=6/m8LEu0l51Mnxg4rBcdXW/JAmq2QwSKC3IGMgcbuq/112HGz17ER9Vs/ITkvb3PeA
-         pyMrId2kONAj8KYc5P0/Y03PUTCrXixMNfYpPUKdyEwcq46g1+MUT1koOWDizgkyT4PU
-         cP3g1tGdzBE0XtCsRZysi4U01qdLm+aGh1xf+Oq4l7UjhDQPQnXMgdN3MELH/AGg9Eb6
-         +n4z1oBEZHlO4U8ZdP8vgr3JmYnO5VYrGqahL6N+aOqsvAsRV76nWaLHGlDGbUCjhOZA
-         olNU+DKuZnjJYIeNKgLOGxMTzxDpuscwWdTgBzd0JWyLw+FthNj5phPcIzNAV+/vTojU
-         ObFw==
-X-Gm-Message-State: ACrzQf0vS8oMm309skLIaEoM7paVJQ9l5cwC6whvJl4/VK9vVjWiPJ86
-        q0+9x9lxgy5Bpp8ibR4Osw==
-X-Google-Smtp-Source: AMsMyM6+iKp6n/gVIENPluD3O291vWyTSKOHTvo1T/SMpsq0uv6Gqf3JBN4hgfpp+k6Ft2W1pkEHoA==
-X-Received: by 2002:a05:6808:118e:b0:345:9c3e:121d with SMTP id j14-20020a056808118e00b003459c3e121dmr624143oil.211.1665084757531;
-        Thu, 06 Oct 2022 12:32:37 -0700 (PDT)
+        bh=TsFWLs3oj8F4sWg6UBmyv5DMTDH4cKYoE2SmcAjVX4s=;
+        b=KFrulq+pHE6dUzpBsGxB+bSwYuuNo42A/urwCBAwF7p9V2FJnAxdwQZLdUu6hiFX3W
+         izJoksktACxPVOW//0YMpRztc+C/wQA3DQUEX3sDw5qW4sM3nCiFjyxJP7ZYq5djWwJM
+         9xQWkgSJI7oIF7ZUED6NLcaCNu75SpW4q2RutX8gVTZcOkKYzSgkxVlBh+UnQO23VWBh
+         UiwfhN2dbF++YFahve7n1iQtvgxdMuYyxyAcqG9FfcQn2PwJW2R03BMUE21mVr4VrhWS
+         MB3MOz5K1KZ1iVq0ow1OE3PuJ1Fa+GwYjnDFaaAa7t3nZ8J2I3pByd7oDAk/5lzzDUZ4
+         cUbw==
+X-Gm-Message-State: ACrzQf0iWCHPF7B/P0/C6g6emCzKOvmXU9ZKrHF5K/dm5SPCfrMJau6W
+        hlPNH4Zd5CULhKmk9Mz+RXdHm8ZN8g==
+X-Google-Smtp-Source: AMsMyM42oi6zLhFx0obOpqCDseqKBUGSLCnnYF467OVUN2yvjv/jBJeXV6+C15FmARRL0/8JLVPdzg==
+X-Received: by 2002:a05:6870:15c8:b0:133:16e6:5af8 with SMTP id k8-20020a05687015c800b0013316e65af8mr2299873oad.80.1665085360263;
+        Thu, 06 Oct 2022 12:42:40 -0700 (PDT)
 Received: from robh_at_kernel.org ([2607:fb90:8a65:c536:245:842:a3a4:9017])
-        by smtp.gmail.com with ESMTPSA id z90-20020a9d24e3000000b00655c6b2655esm171173ota.68.2022.10.06.12.32.35
+        by smtp.gmail.com with ESMTPSA id j11-20020acab90b000000b003504f8f6ac5sm16962oif.38.2022.10.06.12.42.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 12:32:36 -0700 (PDT)
-Received: (nullmailer pid 60798 invoked by uid 1000);
-        Thu, 06 Oct 2022 19:32:35 -0000
-Date:   Thu, 6 Oct 2022 14:32:34 -0500
+        Thu, 06 Oct 2022 12:42:39 -0700 (PDT)
+Received: (nullmailer pid 69132 invoked by uid 1000);
+        Thu, 06 Oct 2022 19:42:37 -0000
+Date:   Thu, 6 Oct 2022 14:42:37 -0500
 From:   Rob Herring <robh@kernel.org>
-To:     Yassine Oudjana <yassine.oudjana@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 09/10] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Document MT6735 pin controller bindings
-Message-ID: <166508475428.60747.9048131740903882168.robh@kernel.org>
-References: <20221005174343.24240-1-y.oudjana@protonmail.com>
- <20221005174343.24240-10-y.oudjana@protonmail.com>
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Lee Jones <lee@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-gpio@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: convert
+ qcom,mdm9615-pinctrl.txt to dt-schema
+Message-ID: <20221006194237.GA66144-robh@kernel.org>
+References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org>
+ <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+ <166505882828.1602503.18185089088624527425.robh@kernel.org>
+ <85c9c9ee-37c3-733c-2c67-ac22734844f8@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221005174343.24240-10-y.oudjana@protonmail.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+In-Reply-To: <85c9c9ee-37c3-733c-2c67-ac22734844f8@linaro.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 05 Oct 2022 20:43:42 +0300, Yassine Oudjana wrote:
-> From: Yassine Oudjana <y.oudjana@protonmail.com>
+On Thu, Oct 06, 2022 at 06:21:28PM +0200, Neil Armstrong wrote:
+> On 06/10/2022 14:27, Rob Herring wrote:
+> > On Thu, 06 Oct 2022 09:57:58 +0000, Neil Armstrong wrote:
+> > > Convert the MDM9515 pinctrl bindings to dt-schema.
+> > > 
+> > > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > > ---
+> > >   .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
+> > >   .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 101 +++++++++++++
+> > >   2 files changed, 101 insertions(+), 161 deletions(-)
+> > > 
+> > 
+> > Running 'make dtbs_check' with the schema in this patch gives the
+> > following warnings. Consider if they are expected or the schema is
+> > incorrect. These may not be new warnings.
+> > 
+> > Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+> > This will change in the future.
+> > 
+> > Full log is available here: https://patchwork.ozlabs.org/patch/
+> > 
+> > 
+> > pinctrl@800000: 'gpioext1_pins', 'gsbi3_pins', 'gsbi4_pins', 'gsbi5_i2c_pins', 'gsbi5_uart_pins', 'reset_out_pins', 'sdc_cd_pins' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+> > 	arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dtb
+> > 
 > 
-> Add bindings for the pin controller found on MediaTek MT6735 and
-> MT6735M SoCs, including describing a method to manually specify
-> a pin and function in the pinmux property making defining bindings
-> for each pin/function combination unnecessary. The pin controllers
-> on those SoCs are generally identical, with the only difference
-> being the lack of MSDC2 pins (198-203) on MT6735M.
-> 
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
+> Yes it's fixed in the next patch, should I move the fix before the bindings conversion ?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+No, because I don't apply the dts patches. It's just informational and 
+ignore if you already took care of it.
+
+Rob
