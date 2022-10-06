@@ -2,291 +2,244 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 574DA5F64C2
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 13:05:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DF5C5F64E5
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 13:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231247AbiJFLFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 07:05:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
+        id S231359AbiJFLJj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 07:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231203AbiJFLFI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 07:05:08 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2945E3135E;
-        Thu,  6 Oct 2022 04:05:07 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id z3so1286655edc.10;
-        Thu, 06 Oct 2022 04:05:07 -0700 (PDT)
+        with ESMTP id S231435AbiJFLJQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 07:09:16 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A2B9C20D
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 04:09:08 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id a12so1806596ljr.7
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 04:09:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=SWj+08Nh6gkacuObeofoo80owftzdWimdlCVryl1eqo=;
-        b=quNWaGl9LqL5qFvHqWNTpdUoIPDi6pC1wBdiIe31yXUCwDPp3szjQV9GZJb0dsBMB8
-         f4iftHXkZm9zxr/8oQuoqhumRJ9oq/WaSfAdTK1S9kQ9uGaHcJ1JgvccnT1Uesiq+Ztl
-         9mRXjgl9pB/92eM2LbAa9vitZwL9uVATNu9SvXCRYYZ5E5Rr9V3ZfVjiNuu/IFuKYnqi
-         sBmbBO0UoJP+3fJhjuxZo6RMTbpgHrKc7HJ1K77Eht3NnD6QqO4iG/KN71GWP2GnOjva
-         Ag6GVuOx37MXhkQEz4qhZ/3Ecg3JSw29NDdnXIIl3GZRxBXQAjibIa/XG0r0Lvf5QKf9
-         5/Mw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=oSwQHAbZbNwtUkxLe3eMYZC+tGj9k+iujF/sOCF9CJA=;
+        b=Tau9z0EzEemX7HCD/owFbmkmGdHSWdR2GXMN01Pq8WD79wwfGZUUvfWdoDorqeKlmh
+         STn52wy++sn5LU1hFv0rTb34wPaqHRMXaivhDVNlcNI2ys03njv3Pz8ZibEeN8FtiS0V
+         qWBk1etdgukbW2f2r7XMM8LPpimVLULhngSZ8zBxqxNqpd37/u99toxFKpqCxeGYkdeH
+         03Lx2D90irWUd9+gwnrWZ6YTZJ/lj4AkFAfjH7owXtlhyDIlFSPYlKkiibzV3kR2qq5l
+         G5xx+DJpeE8YVuJK0vNXKj+GiKNbi38wlReyYlk1DuR35JdcPsarF3trF1/KuN+7MOKK
+         WEag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=SWj+08Nh6gkacuObeofoo80owftzdWimdlCVryl1eqo=;
-        b=DwB8UgnaFc+04vKvzcCcCkLwTUHXHgCyPV24v1ouJako20qufShsiXcQbxOJYoZIId
-         EKIezjvycVVmdqxA1CoXD53qxG3Pq7hO2l/rebbg1ZvWpGxYuy4LFhZwTivH9dPC6WXa
-         DbTZC9hNRr7hmpoiMecU7Gf7716PL0mziDVfq4ZsWm8VFLUX2eicN5Ml0up4Z/ixdC3a
-         KWqBm7rcLoCyoCys1NJENhGwMc/wQtkhhhmuQQj/nflkkNY4MYywbM/73nLzzZWAZ4eJ
-         LPJywwYJlsgigtHKn2NosYyas+3qMjXwn/q70xSfE6MNLQmUXtHeRrvmkInBJPis36qd
-         js6g==
-X-Gm-Message-State: ACrzQf3qxFy7ZS5PR+7hXnear+/j290s+rHM/IuTXY/UDPmJNSujLcju
-        2JfUx7jZQWrnwRWaQZaNtJ4=
-X-Google-Smtp-Source: AMsMyM5FmaVUK8IRl2IifqJqWbb12QuQZvx1CzopJn1qkQ7i2wV/7f05khpiPqEnxvrLDKRqppbd/A==
-X-Received: by 2002:a05:6402:500d:b0:459:3e56:e6f9 with SMTP id p13-20020a056402500d00b004593e56e6f9mr4057876eda.367.1665054305305;
-        Thu, 06 Oct 2022 04:05:05 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id lb9-20020a170907784900b0073ddd36ba8csm10198373ejc.145.2022.10.06.04.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 04:05:04 -0700 (PDT)
-Date:   Thu, 6 Oct 2022 13:05:02 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        jonathanh@nvidia.com, linux-gpio@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        smangipudi@nvidia.com, kyarlagadda@nvidia.com,
-        Manish Bhardwaj <mbhardwaj@nvidia.com>
-Subject: Re: [PATCH v2] gpio: tegra186: Check GPIO pin permission before
- access.
-Message-ID: <Yz62XmiH8YG3Dtsf@orome>
-References: <YyHVoihMuKNRFXAS@orome>
- <20221004074845.29583-1-pshete@nvidia.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=oSwQHAbZbNwtUkxLe3eMYZC+tGj9k+iujF/sOCF9CJA=;
+        b=U8Gmd5rapUUQyBHsW0tQbgHHqQdlqv3l6LeTxVIEGnjTLLjdhtNvdFhwG9S9yU4OJS
+         +BEjNJF3x3+mae6up+U+90syyKu75vf7nVAt17a6QTmr8DVOhhCmmYMHeEUYpI62/4E+
+         e3Nr5g9FrPVMLjSroTjDHd6uDE2qs4eoTZy4RpEcfryKDqHRvnMP90MH95kAH6jnb9NY
+         xy+CKkMJC46ELD6ifCdarwTLwTJsDBEV9w1Cq6KjofQnKGN6DPfyKx0IM6IenMDu+ncj
+         YBqgZaNLjAoefaERSaJXU07aiREDIRSLXq4TlIdZgOabevbuU1fwwL5kCNVUpVpgIkNs
+         hwrw==
+X-Gm-Message-State: ACrzQf2LE8L7hRWu6z0v27wdur9DwHvNTVtnC8KXJVn3G3vx5AdueYik
+        Uq0NUs7Vg9ITMLB0JIqb+/qRIQ==
+X-Google-Smtp-Source: AMsMyM4kF91xOWQduw21qrOovrPo1fTjYY44G7Jsn/AvpxsUvItEagkCKICVBiqOgbBqFTMILIn/jQ==
+X-Received: by 2002:a2e:3005:0:b0:26e:18b:f8d0 with SMTP id w5-20020a2e3005000000b0026e018bf8d0mr1237702ljw.451.1665054546334;
+        Thu, 06 Oct 2022 04:09:06 -0700 (PDT)
+Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
+        by smtp.gmail.com with ESMTPSA id n18-20020a2e9052000000b0026acd11cd51sm1859817ljg.59.2022.10.06.04.09.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Oct 2022 04:09:06 -0700 (PDT)
+Message-ID: <8213587e-681a-a948-42a6-2b1632b47ac0@linaro.org>
+Date:   Thu, 6 Oct 2022 13:09:05 +0200
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wIueMpqElCFwwyGl"
-Content-Disposition: inline
-In-Reply-To: <20221004074845.29583-1-pshete@nvidia.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: convert
+ qcom,mdm9615-pinctrl.txt to dt-schema
+Content-Language: en-US
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>, Lee Jones <lee@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org>
+ <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---wIueMpqElCFwwyGl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Oct 04, 2022 at 01:18:45PM +0530, Prathamesh Shete wrote:
-> This change checks if we have the necessary permission to
-> access the GPIO. For devices that have support for virtualisation
-> we need to check both the TEGRA186_GPIO_VM_REG and the
-> TEGRA186_GPIO_SCR_REG registers. For device that do not have
-> virtualisation support for GPIOs we only need to check the
-> TEGRA186_GPIO_SCR_REG register.
->=20
-> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+On 06/10/2022 11:57, Neil Armstrong wrote:
+> Convert the MDM9515 pinctrl bindings to dt-schema.
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  drivers/gpio/gpio-tegra186.c | 74 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 101 +++++++++++++
+>  2 files changed, 101 insertions(+), 161 deletions(-)
+> 
 
-This looks mostly good. A few small comments, see below.
+Thank you for your patch. There is something to discuss/improve.
 
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 54d9fa7da9c1..34b6c287d608 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -26,6 +26,22 @@
-> =20
->  #define TEGRA186_GPIO_INT_ROUTE_MAPPING(p, x) (0x14 + (p) * 0x20 + (x) *=
- 4)
-> =20
-> +#define  TEGRA186_GPIO_VM			0x00
-> +#define  TEGRA186_GPIO_VM_RW_MASK		0x03
-> +#define  TEGRA186_GPIO_SCR			0x04
-> +#define  TEGRA186_GPIO_SCR_PIN_SIZE		0x08
-> +#define  TEGRA186_GPIO_SCR_PORT_SIZE		0x40
-> +#define  TEGRA186_GPIO_SCR_SEC_WEN		BIT(28)
-> +#define  TEGRA186_GPIO_SCR_SEC_REN		BIT(27)
-> +#define  TEGRA186_GPIO_SCR_SEC_G1W		BIT(9)
-> +#define  TEGRA186_GPIO_SCR_SEC_G1R		BIT(1)
-> +#define  TEGRA186_GPIO_FULL_ACCESS		(TEGRA186_GPIO_SCR_SEC_WEN | \
-> +						 TEGRA186_GPIO_SCR_SEC_REN | \
-> +						 TEGRA186_GPIO_SCR_SEC_G1R | \
-> +						 TEGRA186_GPIO_SCR_SEC_G1W)
-> +#define  TEGRA186_GPIO_SCR_SEC_ENABLE		(TEGRA186_GPIO_SCR_SEC_WEN | \
-> +						 TEGRA186_GPIO_SCR_SEC_REN)
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..6a5966fc0098
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
+> @@ -0,0 +1,101 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,mdm9615-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  /* control registers */
->  #define TEGRA186_GPIO_ENABLE_CONFIG 0x00
->  #define  TEGRA186_GPIO_ENABLE_CONFIG_ENABLE BIT(0)
-> @@ -77,6 +93,7 @@ struct tegra_gpio_soc {
->  	unsigned int num_irqs_per_bank;
-> =20
->  	const struct tegra186_pin_range *pin_ranges;
-> +	bool has_vm_support;
-
-You've placed this right between two fields that clearly belong
-together. Best to add new fields towards the end of the structure if
-they are not related to any of the other fields.
-
->  	unsigned int num_pin_ranges;
->  	const char *pinmux;
->  	bool has_gte;
-> @@ -129,6 +146,58 @@ static void __iomem *tegra186_gpio_get_base(struct t=
-egra_gpio *gpio,
->  	return gpio->base + offset + pin * 0x20;
->  }
-> =20
-> +static void __iomem *tegra186_gpio_get_secure_base(struct tegra_gpio *gp=
-io,
-> +					    unsigned int pin)
-> +{
-> +	const struct tegra_gpio_port *port;
-> +	unsigned int offset;
+> +title: Qualcomm Technologies, Inc. MDM9615 TLMM block
 > +
-> +	port =3D tegra186_gpio_get_port(gpio, &pin);
-> +	if (!port)
-> +		return NULL;
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
 > +
-> +	offset =3D port->bank * 0x1000 + port->port * TEGRA186_GPIO_SCR_PORT_SI=
-ZE;
-> +
-> +	return gpio->secure + offset + pin * TEGRA186_GPIO_SCR_PIN_SIZE;
-> +}
-> +
-> +static inline bool tegra186_gpio_is_accessible(struct tegra_gpio *gpio, =
-u32 pin)
+> +description: |
 
-Pin offsets are "unsigned int" in the rest of the driver, so please
-stick to that here as well.
+No need for |
 
-> +{
-> +	void __iomem *secure;
-> +	u32 val;
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  MDM9615 platform.
 
-The drivers uses "u32 value;" everywhere else, so best stick to that for
-consistency.
+Instead: "Top Level Mode Multiplexer pin controller node in Qualcomm
+MDM9615 SoC."
+
+I see this pattern is coming from other file, so I will fix all of them.
 
 > +
-> +	secure =3D tegra186_gpio_get_secure_base(gpio, pin);
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+
+Drop it, it's included from tlmm-common
+
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
 > +
-> +	if (gpio->soc->has_vm_support) {
-> +		val =3D readl(secure + TEGRA186_GPIO_VM);
-> +		if ((val & TEGRA186_GPIO_VM_RW_MASK) !=3D TEGRA186_GPIO_VM_RW_MASK)
-> +			return false;
-> +	}
+> +properties:
+> +  compatible:
+> +    const: qcom,mdm9615-pinctrl
 > +
-> +	val =3D __raw_readl(secure + TEGRA186_GPIO_SCR);
+> +  reg:
+> +    maxItems: 1
 > +
-> +	if ((val & TEGRA186_GPIO_SCR_SEC_ENABLE) =3D=3D 0)
-> +		return true;
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  '#interrupt-cells': true
+> +  gpio-controller: true
+> +  '#gpio-cells': true
+> +  gpio-ranges: true
 > +
-> +	if ((val & TEGRA186_GPIO_FULL_ACCESS) =3D=3D TEGRA186_GPIO_FULL_ACCESS)
-> +		return true;
+> +required:
+> +  - compatible
+> +  - reg
 > +
-> +	return false;
-> +}
+> +additionalProperties: false
 > +
-> +static int tegra186_init_valid_mask(struct gpio_chip *chip,
-> +		unsigned long *valid_mask, unsigned int ngpios)
-> +{
-> +	struct tegra_gpio *gpio =3D gpiochip_get_data(chip);
-> +	int j;
+> +patternProperties:
+> +  '-state$':
 
-Make that unsigned int to match the type of ngpios.
+Use " as quotes
+
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
+> +
+> +'$defs':
+
+No need for quotes
+
+> +  qcom-mdm9615-pinctrl-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state"
+
+No need for quotes
 
 > +
-> +	for (j =3D 0; j < ngpios; j++) {
-> +		if (!tegra186_gpio_is_accessible(gpio, j))
-> +			clear_bit(j, valid_mask);
-> +	}
-> +	return 0;
-> +}
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-7][0-9]|8[0-7])$"
+
+No sd-like functions? If so, then drop oneOf
+
+> +        minItems: 1
+> +        maxItems: 16
 > +
->  static int tegra186_gpio_get_direction(struct gpio_chip *chip,
->  				       unsigned int offset)
->  {
-> @@ -763,6 +832,7 @@ static int tegra186_gpio_probe(struct platform_device=
- *pdev)
->  	gpio->soc =3D device_get_match_data(&pdev->dev);
->  	gpio->gpio.label =3D gpio->soc->name;
->  	gpio->gpio.parent =3D &pdev->dev;
-> +	gpio->gpio.init_valid_mask =3D tegra186_init_valid_mask;
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +        enum: [ gpio, gsbi2_i2c, gsbi3, gsbi4, gsbi5_i2c, gsbi5_uart,
+> +                sdc2, ebi2_lcdc, ps_hold, prim_audio, sec_audio, cdc_mclk, ]
+> +
+> +      bias-disable: true
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      drive-strength: true
+> +      output-high: true
+> +      output-low: true
+> +      input-enable: true
+> +
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +    additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        tlmm: pinctrl@1000000 {
 
-Maybe slot this in before the gpio->gpio.add_pin_ranges assignment
-further below in this function to keep things ordered a bit better.
+Use 4 spaces indentation.
 
-> =20
->  	/* count the number of banks in the controller */
->  	for (i =3D 0; i < gpio->soc->num_ports; i++)
-> @@ -1042,6 +1112,7 @@ static const struct tegra_gpio_soc tegra194_main_so=
-c =3D {
->  	.num_pin_ranges =3D ARRAY_SIZE(tegra194_main_pin_ranges),
->  	.pin_ranges =3D tegra194_main_pin_ranges,
->  	.pinmux =3D "nvidia,tegra194-pinmux",
-> +	.has_vm_support =3D true,
->  };
-> =20
->  #define TEGRA194_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
-> @@ -1067,6 +1138,7 @@ static const struct tegra_gpio_soc tegra194_aon_soc=
- =3D {
->  	.instance =3D 1,
->  	.num_irqs_per_bank =3D 8,
->  	.has_gte =3D true,
-> +	.has_vm_support =3D false,
->  };
-> =20
->  #define TEGRA234_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
-> @@ -1111,6 +1183,7 @@ static const struct tegra_gpio_soc tegra234_main_so=
-c =3D {
->  	.name =3D "tegra234-gpio",
->  	.instance =3D 0,
->  	.num_irqs_per_bank =3D 8,
-> +	.has_vm_support =3D true,
->  };
-> =20
->  #define TEGRA234_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
-> @@ -1136,6 +1209,7 @@ static const struct tegra_gpio_soc tegra234_aon_soc=
- =3D {
->  	.name =3D "tegra234-gpio-aon",
->  	.instance =3D 1,
->  	.num_irqs_per_bank =3D 8,
-> +	.has_vm_support =3D false,
+> +          compatible = "qcom,mdm9615-pinctrl";
+> +          reg = <0x01000000 0x300000>;
+> +          interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +          gpio-controller;
+> +          gpio-ranges = <&msmgpio 0 0 88>;
+> +          #gpio-cells = <2>;
+> +          interrupt-controller;
+> +          #interrupt-cells = <2>;
 
-It's not technically necessary to initialize 0/false fields because
-that's what they end up with if you don't initialize them at all. I do
-like to be explicit, so no objection from me on this. However, since we
-are being explicit, we should set this new field for Tegra186 and
-Tegra241 as well.
+Add example of -state with and without -pins node.
 
-Thierry
+You dropped it with conversion.
 
---wIueMpqElCFwwyGl
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+> +        };
+> 
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM+tlwACgkQ3SOs138+
-s6Ez+w/9FpeFqssyODdvFPPaSJVoQhx8Avcx4WK/cItqBnM+tB1fygrgpl6A2sh5
-XvZKOzhET0TCtFLpftfonlG+3elynFYdOEqugG9vcFTcS7vffxXt9dj5tJX62k7X
-7dbonYK9jvNhy26oEjOe2NOaRk6BOR4KNVC8TYwXZcJizq4Z6m/8apk8hiYLIzd8
-vonhilY/oeA7ac4QtL2JOtN1zmIzUKc0Gmz55ZwOMAhJAZag3zJpsE1dBLDQc96k
-ncDV+v99WFsghH9hdwWGLXf9rvvPkoQFWzayeE6kKMlFVLRnTZE5sYomAAfJfFF1
-TfDcW6P3aj32VCCBq6Jtrlq0Z3LLgbBZyPTJKqTMj1JK+7a7ruDa9RObMCrifPcC
-C4hb1R/F3t7NF/FJOjA3DnWilMwNZV8Ez8ux6FTiVWVMPPyBKnLns7YbFYpOyWd/
-LjD2yKuWhEfAUA0te8GlRBvO4fgm8VxaJqbfK3aOwRZT+n1ZiSCrR1PQMih9GSbE
-PzunC2qRpyr28AoUpII1IqCAYzs/Xz3FBh7XipIQSH1vEQPSzJwwdQXGyhmZTKvl
-aMPL6CAngZsnntATEEMtatiZPnGcJHl63J74cxYXkMrAY9AbEZCaxrjKInOhnIcL
-hEWwUhEXlVozq1FlSZSicZ2YpLNb8tQcF5Sr4N1S/Quu3tVuuR0=
-=wN8V
------END PGP SIGNATURE-----
+Best regards,
+Krzysztof
 
---wIueMpqElCFwwyGl--
