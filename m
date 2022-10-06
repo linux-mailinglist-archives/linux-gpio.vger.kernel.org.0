@@ -2,77 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ED7B5F6605
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 14:28:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B1F65F65FF
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 14:28:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230515AbiJFM2Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 08:28:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53052 "EHLO
+        id S229525AbiJFM2I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 08:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbiJFM2L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 08:28:11 -0400
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CCB0A0259;
-        Thu,  6 Oct 2022 05:28:08 -0700 (PDT)
-Received: by mail-oi1-f174.google.com with SMTP id v134so1801836oie.10;
-        Thu, 06 Oct 2022 05:28:08 -0700 (PDT)
+        with ESMTP id S229734AbiJFM2C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 08:28:02 -0400
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8679B85E;
+        Thu,  6 Oct 2022 05:28:01 -0700 (PDT)
+Received: by mail-oo1-f42.google.com with SMTP id u19-20020a4a9e93000000b004757198549cso1317824ook.0;
+        Thu, 06 Oct 2022 05:28:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=date:subject:message-id:references:in-reply-to:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ie2NVaibuJVOQuIOjeuf0bg2Uj2OCg4BSeKdkXj8/qE=;
-        b=Q0QnV20rMXb3zHWI5NmLFjkIHlPBdiayEbUt9KChlI8Z5z2kfB4VG3kp1dwTz7uXYs
-         58U8ZjA2rMqtZ/rUemRAPmxeMgKG6Xx7vWk3q8zo4l1ArmXSabKfX9PzIBQdpaML0IxF
-         zqIEiMAVnPmeICF6073MaAXOkY6lkq/aLurJ5yJuBQbbYk8vvn0RF+dElRw5/omujuak
-         JSTOkmU3l15o+814By/9Jwh8JL/xO8n3FgKIDUMLTk8MJ1KvPs4WMc2G36fTxr7LQYeG
-         qvvck6lj8/MOdeuz0Ig46IEUR7AtJahoihkVfwU3Ho1Fr6Y1ikyDHaPfZYS8D1a5mgOr
-         grXw==
-X-Gm-Message-State: ACrzQf0URPcamhWQKdWGTm7NDY5LLR+9hP4YHjKye+ekvaBGD83NqyuC
-        VJpAx/1KfTRkm2DYMpJLYF/oHIQuSQ==
-X-Google-Smtp-Source: AMsMyM4nYeOID395+fMyqW4zTjfssuMAcg2266RidlXN1+HuyB61zkhBpt6VKV7/LUttUI8UcGRV/A==
-X-Received: by 2002:a05:6808:1704:b0:351:43bc:5e52 with SMTP id bc4-20020a056808170400b0035143bc5e52mr4675081oib.107.1665059287689;
-        Thu, 06 Oct 2022 05:28:07 -0700 (PDT)
+        bh=LD+/bVMKWMVi1TdoFb/7Rk7QFNHmQh7iMpdXxnsmZnM=;
+        b=BbWQuCJvv4WEhStyPG8W5AL4pv6qujtjfc88fW8X0KoCethazL9IstDRWgJKkZaPFa
+         WVZoVg8EkcDVBrt64+4oCcEz4IK9ThwFOtmxiR/9rn1H7OSV2DlJ8C53FFDCNIJb5Fl5
+         VFmhBbXgL0a7bpaazIKR9IkcBPXfHcwA7NcI+v5qsp9+LZN1nwLPC0QHKdKsvm1frfXl
+         uKGUfn2J2lhebiKE9MOUHVY5eA0fJFfSfVZCeCdZvHjhXoVteGW9eHblbxCVLJCo5mry
+         JP3t22MZfjL6hrZ3SbJTaFcoYYDlvTcS/2oS+CYnVgZhb44RRQasKkGke3GRk3CzG/Jd
+         nAfA==
+X-Gm-Message-State: ACrzQf3W5BpkJ8fRJlg99xkHKLcbDLN5r6HlFbhaO4Wpho5VfSrtpEA2
+        21gkjrq7yuz9XMLf1MJCQxLlrS02aw==
+X-Google-Smtp-Source: AMsMyM6vEm0NpFozxeOWrt/cdZf0yoOiGMfTBbW4yKmcM3Yv5D2tCZ+gIN1JXJoyWpdYFDibLQL2yg==
+X-Received: by 2002:a05:6830:650a:b0:655:e38b:dcd4 with SMTP id cm10-20020a056830650a00b00655e38bdcd4mr1730591otb.189.1665059280885;
+        Thu, 06 Oct 2022 05:28:00 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id v13-20020a056870708d00b0012779ba00fesm2131618oae.2.2022.10.06.05.28.06
+        by smtp.gmail.com with ESMTPSA id o64-20020aca4143000000b00342ded07a75sm5652474oia.18.2022.10.06.05.27.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 05:28:07 -0700 (PDT)
-Received: (nullmailer pid 1613455 invoked by uid 1000);
+        Thu, 06 Oct 2022 05:27:59 -0700 (PDT)
+Received: (nullmailer pid 1613451 invoked by uid 1000);
         Thu, 06 Oct 2022 12:27:55 -0000
 From:   Rob Herring <robh@kernel.org>
 To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+Cc:     Lee Jones <lee@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        linux-arm-msm@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lee Jones <lee@kernel.org>, Andy Gross <agross@kernel.org>
-In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v1-6-0cbc006e2a30@linaro.org>
-References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org> <20221005-mdm9615-pinctrl-yaml-v1-6-0cbc006e2a30@linaro.org>
-Message-Id: <166505883191.1602730.12398385623531260133.robh@kernel.org>
-Subject: Re: [PATCH 6/6] dt-bindings: soc: qcom: ipc-rpm: refer to qcom,ipc-rpm-regulator.yaml
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-gpio@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org> <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
+Message-Id: <166505882828.1602503.18185089088624527425.robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: convert qcom,mdm9615-pinctrl.txt to dt-schema
 Date:   Thu, 06 Oct 2022 07:27:55 -0500
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 06 Oct 2022 09:58:03 +0000, Neil Armstrong wrote:
-> Now we have bindings for the expected regulators subnode, refer
-> to the right qcom,ipc-rpm-regulator.yaml bindings.
+On Thu, 06 Oct 2022 09:57:58 +0000, Neil Armstrong wrote:
+> Convert the MDM9515 pinctrl bindings to dt-schema.
 > 
 > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 101 +++++++++++++
+>  2 files changed, 101 insertions(+), 161 deletions(-)
 > 
 
 Running 'make dtbs_check' with the schema in this patch gives the
@@ -85,26 +86,6 @@ This will change in the future.
 Full log is available here: https://patchwork.ozlabs.org/patch/
 
 
-rpm@104000: 'clock-controller', 'clock-names', 'clocks', 'pm8058-regulators', 'pm8901-regulators' do not match any of the regexes: 'pinctrl-[0-9]+'
-	arch/arm/boot/dts/qcom-apq8060-dragonboard.dtb
-	arch/arm/boot/dts/qcom-msm8660-surf.dtb
-
-rpm@108000: 'clock-controller', 'clock-names', 'clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
-	arch/arm/boot/dts/qcom-ipq8064-ap148.dtb
-	arch/arm/boot/dts/qcom-ipq8064-rb3011.dtb
-
-rpm@108000: 'clock-controller' does not match any of the regexes: 'pinctrl-[0-9]+'
-	arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dtb
-	arch/arm/boot/dts/qcom-apq8064-cm-qs600.dtb
-	arch/arm/boot/dts/qcom-apq8064-ifc6410.dtb
-	arch/arm/boot/dts/qcom-apq8064-sony-xperia-lagan-yuga.dtb
-
-rpm@108000: regulators:vdd_ncp-supply: [[10]] is not of type 'object'
-	arch/arm/boot/dts/qcom-msm8960-cdp.dtb
-
-rpm@108000: regulators:vdd_ncp-supply: [[50]] is not of type 'object'
-	arch/arm/boot/dts/qcom-apq8064-asus-nexus7-flo.dtb
-
-rpm@108000: regulators:vin_ncp-supply: [[48]] is not of type 'object'
-	arch/arm/boot/dts/qcom-apq8064-sony-xperia-lagan-yuga.dtb
+pinctrl@800000: 'gpioext1_pins', 'gsbi3_pins', 'gsbi4_pins', 'gsbi5_i2c_pins', 'gsbi5_uart_pins', 'reset_out_pins', 'sdc_cd_pins' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dtb
 
