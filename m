@@ -2,227 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DADD75F711E
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 00:27:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EDD55F71A6
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 01:22:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbiJFW1x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 18:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        id S231518AbiJFXW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 19:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229683AbiJFW1x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 18:27:53 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E9EF1905
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 15:27:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665095272; x=1696631272;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QUwmQ8NVaTf+xtr0KE2GJ0MQ2FiQmMp929b9gvh2rWY=;
-  b=BUlt4Mjzo2qx3x7Rt3ZwKj7ks2m3ps4jbthnwAq9RHaGJnoPWCQWlB5k
-   +cUNOQV9YPmYPHoa6b3C5tHqalC6wQEusn/Oe2BF14/xUQuBhvwEVpadi
-   d6y4Hnm/K+ohes0588dER76wECuitXkCRbXqnmL8Yh+uDEyBAEWC147J8
-   q8+CQBFYoRHBrA7Qqow7xcfX3GCI54Lieczh8y11bkzkA+rRfujPINlJr
-   IwP6IwZ6ReUx6k4o9OjR12NB9n1VQoc54ue6AWLA4xi6VI6kaBRwChbJh
-   DpcKXg6cxnFLAkQr9c038A8LKF814qpa7v0k9v13CZ0SYjEC+ceda9xap
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10492"; a="330024413"
-X-IronPort-AV: E=Sophos;i="5.95,164,1661842800"; 
-   d="scan'208";a="330024413"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Oct 2022 15:27:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10492"; a="714025696"
-X-IronPort-AV: E=Sophos;i="5.95,164,1661842800"; 
-   d="scan'208";a="714025696"
-Received: from lkp-server01.sh.intel.com (HELO 3c15167049b7) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Oct 2022 15:27:50 -0700
-Received: from kbuild by 3c15167049b7 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ogZLK-0000Xj-0j;
-        Thu, 06 Oct 2022 22:27:50 +0000
-Date:   Fri, 07 Oct 2022 06:27:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 9d157c89c5569f0ef560b7a5b2d7bf59ae98499c
-Message-ID: <633f5637.gzyxUMOJ/0VXh+qc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229912AbiJFXW1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 19:22:27 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9295CD5EC;
+        Thu,  6 Oct 2022 16:22:26 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id g13so1789740ile.0;
+        Thu, 06 Oct 2022 16:22:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=+TEoWgEKTvbiJtOYsEhCaZpzROl8ImC9jVpcIpr9rdA=;
+        b=LEsNljBht9CfS9iP7WzSiemiu4S4Ct90L/IXFPTsG4ClZiwQXJ/ciE77IUb9WwHnuy
+         cK33AT6sQ/tdrC2P2Ho4kmtNjz1wg59WoVdUKLz6ifwvt7tmHmyUFE74w874P8zaUoI2
+         Agg6Yrmtx++jD2bHy+A8jbYJz83rYOo5cBR3kCFwpwQhdncBDFhhRsaCKLl7+IrpZkqG
+         fykMxH4NCIfT1sb8TFnF1e5e2w8kdM1LsZ5XguU23xmROGVVujwKFAvV6S9rO8HX47KZ
+         ylEj57zmvpCLUTGuMFp8x8JJBxRqGTIBYz5xOwdXolQkyZCwbaJPfhjMCqSCA64RIle7
+         ATJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=+TEoWgEKTvbiJtOYsEhCaZpzROl8ImC9jVpcIpr9rdA=;
+        b=AeMW6HFFAPhrfz3Dnu+HtLAZad4ERcyEIXvFjKzXAmqP1mVfykZCNSqF9X+2wKhEvU
+         k5lFB8HhZE37w3vhU4rjKSkqSv1Hs0Q6r0V4jP/vDlIROqmgLs6/3AYf69osJAO88KSK
+         v+wJ6BVeoszY7Ee1S8pLJJEcyEFPZKUo5e7OXdSQ40BWew62T8XRGg5kt9iHV+zdG+9D
+         6Hj0zAKTYrk+U7eb193WTuiC+I/wTAy/1FYY3TCFVZvHk8ezR/AY6QYJqS1wQQcs1ehk
+         YISagq0Gr9U9DdZ2xZxWcgeiR5B4+3NOj8cplbceuRCy7uAIDQuz6aI4jwXyZWjfkYVv
+         I2KQ==
+X-Gm-Message-State: ACrzQf38AYFQkM+nV3+MZDxa16nfAA2XPd7ZyRCBHc6s6wZ/EjXxqiIg
+        VdySaDqL77JPg7sPFLtpXPZV6DUuwxbDsg==
+X-Google-Smtp-Source: AMsMyM6AWsot4DhUoPLqLnJu+BQTwKSnXw48oIotZLDAu/blMk9OHITtBJMVXWE9n9kR37uL2drMHQ==
+X-Received: by 2002:a05:6e02:164d:b0:2f9:46bb:6ffb with SMTP id v13-20020a056e02164d00b002f946bb6ffbmr945606ilu.320.1665098546112;
+        Thu, 06 Oct 2022 16:22:26 -0700 (PDT)
+Received: from localhost ([2607:fea8:a2e2:2d00::d5cc])
+        by smtp.gmail.com with UTF8SMTPSA id x94-20020a0294e7000000b00363455b779csm264890jah.159.2022.10.06.16.22.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Oct 2022 16:22:25 -0700 (PDT)
+From:   Richard Acayan <mailingradian@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Richard Acayan <mailingradian@gmail.com>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ~postmarketos/upstreaming@lists.sr.ht
+Subject: [PATCH v8 0/3] SDM670 Pin Control Driver
+Date:   Thu,  6 Oct 2022 19:22:16 -0400
+Message-Id: <20221006232219.37505-1-mailingradian@gmail.com>
+X-Mailer: git-send-email 2.38.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 9d157c89c5569f0ef560b7a5b2d7bf59ae98499c  MAINTAINERS: adjust STARFIVE JH7100 PINCTRL DRIVER after file movement
+Changes since v7:
+ - remove complement_fw_reserved_gpios from patch 3
 
-elapsed time: 727m
+Changes since v6:
+ - remove bitmap_fill() call completely (original commit was 4c0efbfb2669
+   ("pinctrl: msm: Add ability for drivers to supply a reserved GPIO list"),
+   original author CC'd)
+ - group some entries in pingroup arrays for less lines
+ - accumulate review tags
 
-configs tested: 145
-configs skipped: 4
+Changes since v5:
+ - remove function requirement in schema
+ - change "-state$" regex to double quotes in schema
+ - drop quotes from qcom-tlmm-state ref in dt schema
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Changes since v4:
+ - accumulate review tag
+ - use --cover-letter
+ - this is effectively a resend
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-i386                 randconfig-a016-20221003
-i386                 randconfig-a015-20221003
-arm                                 defconfig
-sh                               allmodconfig
-i386                 randconfig-a011-20221003
-arc                  randconfig-r043-20221003
-m68k                             allyesconfig
-x86_64                              defconfig
-i386                 randconfig-a012-20221003
-arc                  randconfig-r043-20221002
-i386                 randconfig-a013-20221003
-i386                                defconfig
-riscv                randconfig-r042-20221003
-i386                 randconfig-a014-20221003
-arc                                 defconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-s390                             allmodconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-kvm
-x86_64               randconfig-a011-20221003
-s390                 randconfig-r044-20221003
-x86_64               randconfig-a012-20221003
-x86_64                          rhel-8.3-func
-alpha                               defconfig
-x86_64               randconfig-a013-20221003
-s390                                defconfig
-powerpc                           allnoconfig
-arm                              allyesconfig
-x86_64                           allyesconfig
-powerpc                          allmodconfig
-s390                             allyesconfig
-x86_64               randconfig-a014-20221003
-x86_64                    rhel-8.3-kselftests
-mips                             allyesconfig
-x86_64               randconfig-a015-20221003
-x86_64               randconfig-a016-20221003
-arm64                            allyesconfig
-i386                             allyesconfig
-alpha                            allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-ia64                             allmodconfig
-mips                        bcm47xx_defconfig
-arm                          simpad_defconfig
-powerpc                      cm5200_defconfig
-arm                           viper_defconfig
-csky                              allnoconfig
-alpha                             allnoconfig
-arc                               allnoconfig
-riscv                             allnoconfig
-arc                        nsim_700_defconfig
-sh                          r7780mp_defconfig
-xtensa                              defconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-m68k                            q40_defconfig
-mips                  decstation_64_defconfig
-powerpc                     tqm8548_defconfig
-mips                      loongson3_defconfig
-xtensa                  nommu_kc705_defconfig
-m68k                            mac_defconfig
-powerpc                     taishan_defconfig
-powerpc                       eiger_defconfig
-loongarch                        alldefconfig
-powerpc                 mpc85xx_cds_defconfig
-parisc                generic-64bit_defconfig
-i386                          randconfig-c001
-arm                  randconfig-c002-20221002
-x86_64                        randconfig-c001
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-powerpc                        warp_defconfig
-powerpc                      makalu_defconfig
-csky                             alldefconfig
-arc                      axs103_smp_defconfig
-mips                            gpr_defconfig
-arm                     eseries_pxa_defconfig
-mips                         cobalt_defconfig
-openrisc                            defconfig
-nios2                            alldefconfig
-powerpc                      pcm030_defconfig
-arm                      jornada720_defconfig
-sh                            migor_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                     tqm8555_defconfig
-arm                        clps711x_defconfig
-arm                      integrator_defconfig
-powerpc                     sequoia_defconfig
-powerpc                  storcenter_defconfig
-powerpc                     mpc83xx_defconfig
-mips                  maltasmvp_eva_defconfig
-sh                           se7619_defconfig
-riscv                            allyesconfig
-powerpc                  iss476-smp_defconfig
-sparc                            alldefconfig
-m68k                        stmark2_defconfig
-loongarch                           defconfig
-loongarch                         allnoconfig
-loongarch                        allmodconfig
-sparc64                             defconfig
-microblaze                          defconfig
-arm64                            alldefconfig
-openrisc                    or1ksim_defconfig
-parisc64                            defconfig
-powerpc                    adder875_defconfig
-riscv                            allmodconfig
-mips                       bmips_be_defconfig
-mips                 randconfig-c004-20221002
-arm                         s3c6400_defconfig
-mips                     loongson1b_defconfig
-powerpc                     asp8347_defconfig
+Changes since v3:
+ - constrain gpio-reserved-ranges to 1-75 items
+ - proper indentation in dt-bindings example (actually tagged this time
+   instead of an outdated commit)
+ - remove unnecessary commit reference
+ - rename complement_fw_reserved_gpios -> complement_fw_gpio_ranges
 
-clang tested configs:
-hexagon              randconfig-r041-20221002
-riscv                randconfig-r042-20221002
-hexagon              randconfig-r041-20221003
-s390                 randconfig-r044-20221002
-hexagon              randconfig-r045-20221002
-hexagon              randconfig-r045-20221003
-x86_64               randconfig-a005-20221003
-x86_64               randconfig-a002-20221003
-x86_64               randconfig-a001-20221003
-x86_64               randconfig-a004-20221003
-i386                 randconfig-a006-20221003
-x86_64               randconfig-a006-20221003
-i386                 randconfig-a003-20221003
-x86_64               randconfig-a003-20221003
-i386                 randconfig-a001-20221003
-i386                 randconfig-a004-20221003
-i386                 randconfig-a002-20221003
-i386                 randconfig-a005-20221003
-powerpc                    mvme5100_defconfig
-powerpc                     ppa8548_defconfig
-riscv                randconfig-r042-20221006
-hexagon              randconfig-r041-20221006
-s390                 randconfig-r044-20221006
-hexagon              randconfig-r045-20221006
-x86_64                        randconfig-k001
-powerpc                   microwatt_defconfig
-mips                malta_qemu_32r6_defconfig
-powerpc                      obs600_defconfig
-arm                       cns3420vb_defconfig
+Changes since v2:
+ - remove quotes from pinctrl.yaml# in dt-bindings
+ - constrain gpio-reserved-ranges to 1-76 items (includes ufs_reset)
+ - indentation in dt-bindings example
+ - cite downstream kernel source
+ - remove MODULE_AUTHOR (most imported pinctrl drivers don't have this)
+
+Changes since v1:
+ - add a field in msm_pinctrl_soc_data to accomodate the needs of the
+   driver and device dts
+ - apply changes made to existing tlmm dt documentation
+ - add reserved gpios array
+ - rename device tree compat string to qcom,sdm670-tlmm
+ - remove dependency on ACPI
+ - move MODULE_DEVICE_TABLE macro call up
+ - add missing pins (fixes most of the debugfs problems)
+ - move qup0_pins down
+ - add whitespace between UFS_RESET macro and pins array
+
+This patch series adds the driver for the Qualcomm Snapdragon 670 TLMM
+(Top-Level Mode Multiplexer) and introduces a new field so that SDM670-
+related device trees can reserve their own gpios.
+
+Richard Acayan (3):
+  dt-bindings: pinctrl: qcom: add sdm670 pinctrl
+  pinctrl: qcom: do not reinitialize gpio valid mask
+  pinctrl: qcom: add sdm670 pinctrl
+
+ .../bindings/pinctrl/qcom,sdm670-tlmm.yaml    |  129 ++
+ drivers/pinctrl/qcom/Kconfig                  |    9 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c            |    3 +-
+ drivers/pinctrl/qcom/pinctrl-sdm670.c         | 1345 +++++++++++++++++
+ 5 files changed, 1485 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sdm670.c
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.38.0
+
