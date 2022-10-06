@@ -2,78 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 796785F6ED3
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 22:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97BB65F6EDB
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 22:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbiJFUUc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 16:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47750 "EHLO
+        id S229527AbiJFUVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 16:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiJFUUb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 16:20:31 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2427DAE22A
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 13:20:29 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id f37so4369592lfv.8
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 13:20:29 -0700 (PDT)
+        with ESMTP id S229849AbiJFUVk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 16:21:40 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035FEBB042
+        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 13:21:39 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id o7so4379717lfk.7
+        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 13:21:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date;
-        bh=lg2Ge2pvHw2Yt9X+k22wjzhBKqpfRYyWZvz0jY249f8=;
-        b=oOEiiJtt+3NlVVoliUJoMJyab7ex+cGfsnDUh7SWRUoAQwY/uRs27ebDTjkwwAdDDb
-         JvNvNIXnZh8NN8d3BvxJ6DuLcH57cym4PlK/jCtD2DelwJYx+cuGdzaQFZKN/yw9XDpc
-         VsZXQMYcWgEu7v52XPWTjApc0bZFNkxWBrhCf5I+dxQq+oXIJCAYaA403w5q5KMEflkz
-         NDWhsF0rQqJaU/p+UfW6YyJZodu9TGJouqq2aos2zUtBQ9WcBNXx956EecclO0w6Di6u
-         iQH+OqZVhJDEqzS7t7bUufGe35OKboBnqpt/qSkaaw5eNK77/EflgR1da5T8+GOb/gee
-         X4Uw==
+        bh=v14VcMWCpMI9EAr+1tPnKmC3n5xnws8GNTWCzmKsRug=;
+        b=F/dpLSj0BF/XtPU+zcGNBPzEv3P9OsdC8HyGhg4kDoKL1vxoh3SIVFgLzTqkf0EuIu
+         8AXp9vidgCQJyHZckA57xKCZrGKE0Yz9mLGV58OqsCCQbBTSvr8jC9c4qWrkjDho3Vt4
+         YhAexpdfSJ9p1SWLrhpprQDM2LoPt0KafbknRhrNKj8ywgenVZ36/QVVZIb6ixKDB6S1
+         wG0nOYnRdMAfWZj2o1awAZMQfu+xaTUc0cO774KJkIp/oWW1ur7GKz0mk06NgaTD8zP4
+         /i3lUcTq3ttrbUU8DLvzMpmpOZOgXdnIPFL/cWhB4I5DM29LKimqzmSt0mq+FFbwcJKW
+         cyDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=lg2Ge2pvHw2Yt9X+k22wjzhBKqpfRYyWZvz0jY249f8=;
-        b=u7pzuHnK22NFCF9SY+nWBbd1trX5UqjQX8XcKK5hdDwjI569BHJhUdQHo+kMktVfvn
-         /37Cgdq9gI0nOxVNRVsfUqWCVApfn6fcy8zx/kwz7xvdjJhAezKQMR5NTlBMwS/iDD+x
-         F3aANOwBneLPYdLPzzu/s8wL7SAJ7pzRXWF8zZXpmgjtZtKetFARm1yvCAaZKdmMA9O/
-         o/goUj/5GHjw+EjYp82UaTKVZBypdu3y8KmOoPLRjvFJA7R2BKndO6ra9uAY3iZxxCmB
-         u8GidEasR01NO9Xg49XSK2Yms+gOmAzs1tVtZqICsJrZSQx4A4ZRJPHMer0gZr3b338u
-         HcBg==
-X-Gm-Message-State: ACrzQf1qZwjwUxY1FJoqYmhdRVn3sVYS+HRnGKk8XQA/VqnAK7FgzNUw
-        EyEsgk8uF9Vu3QR/p9BJhnyz+F8ObcS0Dw==
-X-Google-Smtp-Source: AMsMyM4wI342OUVOiJD/jCc9cO7qtnA8UniyTPwaHsw6EbTnMr5bYpdTUqU3j3CpDbNMDC/NL/rXNw==
-X-Received: by 2002:ac2:4424:0:b0:4a2:4b01:8458 with SMTP id w4-20020ac24424000000b004a24b018458mr670092lfl.84.1665087627020;
-        Thu, 06 Oct 2022 13:20:27 -0700 (PDT)
+        bh=v14VcMWCpMI9EAr+1tPnKmC3n5xnws8GNTWCzmKsRug=;
+        b=i3BJUY8FTDpSaWrRBFrgypLZfIQKB6cjNnhtDdh0CtRZkrNBguMI0uWgy9XG9OaVgt
+         tjSlOFHEi0t39Mwe1Ob1AmLqEwFLvBqbXhNfA+fOMPvDjXZJh3ICq3ElmPok3QDHz6sn
+         CvRFfNthSYocjot7XDtVGYH0BkavvreY8yote0ZtLGjrt9pFmExCVgSZaAm4BVW2oy8R
+         zQoWJFQ9VtyDF5OykawdmrU/+TgSa8CwQEU0soQsXzUzaBsGOMKOziaPFnmEoKp6ea67
+         mG9AUI116qmSv5Aq7P3sjYwZL9jZ/xLKb9aXtwtnvM75JaV2lTR+lqxykr4d9uP1cwgW
+         08bQ==
+X-Gm-Message-State: ACrzQf2HVOMQjm9SUIl3z+0GrXdnIyTHiJ1tQ5cLnzNXXh2QOVZchP64
+        5t2slKtPClo++R9mxtLs20z0ZA==
+X-Google-Smtp-Source: AMsMyM7mONzSeI+/IkeSV1+W1JYGBirCWpTnzVqCzlkOIi4W5z5C/c5nH7kl/AoPDaTlWk9yra5+hA==
+X-Received: by 2002:ac2:4c8e:0:b0:4a2:4745:a63d with SMTP id d14-20020ac24c8e000000b004a24745a63dmr591062lfl.605.1665087697349;
+        Thu, 06 Oct 2022 13:21:37 -0700 (PDT)
 Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id k1-20020a2eb741000000b0026a92616cd2sm12077ljo.35.2022.10.06.13.20.25
+        by smtp.gmail.com with ESMTPSA id b3-20020a056512070300b004a2386b8ce8sm21100lfs.211.2022.10.06.13.21.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Oct 2022 13:20:26 -0700 (PDT)
-Message-ID: <cef6b9a2-9753-d478-ab6a-444784a18576@linaro.org>
-Date:   Thu, 6 Oct 2022 22:20:25 +0200
+        Thu, 06 Oct 2022 13:21:37 -0700 (PDT)
+Message-ID: <52d2b67a-5f5b-0c71-a455-f30b0b7afd57@linaro.org>
+Date:   Thu, 6 Oct 2022 22:21:36 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: [PATCH 1/6] dt-bindings: pinctrl: convert
- qcom,mdm9615-pinctrl.txt to dt-schema
+Subject: Re: [PATCH 00/34] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM
+ pinctrl schema warnings (5th set)
 Content-Language: en-US
-To:     neil.armstrong@linaro.org,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Andy Gross <agross@kernel.org>, Lee Jones <lee@kernel.org>,
+To:     Stephan Gerhold <stephan@gerhold.net>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-References: <20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org>
- <20221005-mdm9615-pinctrl-yaml-v1-1-0cbc006e2a30@linaro.org>
- <8213587e-681a-a948-42a6-2b1632b47ac0@linaro.org>
- <5a669cee-55b2-f5cb-56f2-279003d08578@linaro.org>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
+ <Yz75DAmjI1GbwQpI@gerhold.net>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <5a669cee-55b2-f5cb-56f2-279003d08578@linaro.org>
+In-Reply-To: <Yz75DAmjI1GbwQpI@gerhold.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -85,139 +87,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/10/2022 18:20, Neil Armstrong wrote:
-> Hi,
+On 06/10/2022 17:49, Stephan Gerhold wrote:
+>>  .../qcom,sm8450-lpass-lpi-pinctrl.yaml        | 13 ++--
+>>  .../bindings/pinctrl/qcom,sm8450-pinctrl.yaml | 22 ++----
 > 
-> On 06/10/2022 13:09, Krzysztof Kozlowski wrote:
->> On 06/10/2022 11:57, Neil Armstrong wrote:
->>> Convert the MDM9515 pinctrl bindings to dt-schema.
->>>
->>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>> ---
->>>   .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
->>>   .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 101 +++++++++++++
->>>   2 files changed, 101 insertions(+), 161 deletions(-)
->>>
->>
->> Thank you for your patch. There is something to discuss/improve.
->>
->>> -		};
->>> -	};
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
->>> new file mode 100644
->>> index 000000000000..6a5966fc0098
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
->>> @@ -0,0 +1,101 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pinctrl/qcom,mdm9615-pinctrl.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Qualcomm Technologies, Inc. MDM9615 TLMM block
->>> +
->>> +maintainers:
->>> +  - Bjorn Andersson <andersson@kernel.org>
->>> +
->>> +description: |
->>
->> No need for |
+> Just a random thought since you are already doing minor style cleanups
+> here: Some of these files are named incorrectly, e.g. qcom,sm8450-pinctrl.yaml
+> actually documents "qcom,sm8450-tlmm". I noticed this while adding
+> qcom,msm8909-tlmm but I have to admit that it did not bother me enough
+> to actually prepare a patch for this (and now it would just conflict
+> with all your patches). :)
 > 
-> Ack
-> 
->>
->>> +  This binding describes the Top Level Mode Multiplexer block found in the
->>> +  MDM9615 platform.
->>
->> Instead: "Top Level Mode Multiplexer pin controller node in Qualcomm
->> MDM9615 SoC."
->>
->> I see this pattern is coming from other file, so I will fix all of them.
-> 
-> Ack, wil use this.
-> 
->>
->>> +
->>> +allOf:
->>> +  - $ref: "pinctrl.yaml#"
->>
->> Drop it, it's included from tlmm-common
-> 
-> Ack
-> 
->>
->>> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
->>> +
->>> +properties:
->>> +  compatible:
->>> +    const: qcom,mdm9615-pinctrl
->>> +
->>> +  reg:
->>> +    maxItems: 1
->>> +
->>> +  interrupts: true
->>> +  interrupt-controller: true
->>> +  '#interrupt-cells': true
->>> +  gpio-controller: true
->>> +  '#gpio-cells': true
->>> +  gpio-ranges: true
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->>> +
->>> +additionalProperties: false
->>> +
->>> +patternProperties:
->>> +  '-state$':
->>
->> Use " as quotes
-> 
-> Ack
-> 
->>
->>> +    oneOf:
->>> +      - $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
->>> +      - patternProperties:
->>> +          "-pins$":
->>> +            $ref: "#/$defs/qcom-mdm9615-pinctrl-state"
-> 
-> Interesting, if I add this subnode (that should be valid):
->        gsbi3-state {
->          pins = "gpio8", "gpio9", "gpio10", "gpio11";
->          function = "gsbi3";
->          drive-strength = <8>;
->          bias-disable;
->        };
-> 
-> then I get the following warning from dt_bindings_check:
+> No need to change anything here, just thought I'd mention it.
 
-First, your block for using defs/qcom-mdm9615-pinctrl-state is not
-exactly like it should be, e.g. it misses additionalProperties: false.
-Maybe it misses few things more. Please use one of my latest patches as
-example, e.g.
-https://lore.kernel.org/linux-devicetree/20221006144518.256956-1-krzysztof.kozlowski@linaro.org/T/#t
-
-> 
-> Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.example.dtb: pinctrl@1000000: gsbi3-state: More than one condition true in oneOf schema:
->          {'oneOf': [{'$ref': '#/$defs/qcom-mdm9615-pinctrl-state'},
->                     {'patternProperties': {'-pins$': {'$ref': '#/$defs/qcom-mdm9615-pinctrl-state'},
->                                            'pinctrl-[0-9]+': True},
->                      'properties': {'$nodename': True,
->                                     'phandle': True,
->                                     'pinctrl-names': True,
->                                     'secure-status': True,
->                                     'status': True}}]}
->  From schema: /Documentation/devicetree/bindings/pinctrl/qcom,mdm9615-pinctrl.yaml
-> 
-> And I don't understand why, the nodename should not match "-pins$" nor "pinctrl-[0-9]+'...
-
-Hm, dunno... You have a trailing coma in enum with functions - maybe
-remove it?
-
-I looked briefly between your patch and mine for sm8150 and could not
-find differences except that additionalProperties and coma.
+Sure, I can change this as well. Thanks for sharing!
 
 Best regards,
 Krzysztof
