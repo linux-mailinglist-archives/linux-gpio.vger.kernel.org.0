@@ -2,485 +2,291 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12D7D5F646E
-	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 12:41:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 574DA5F64C2
+	for <lists+linux-gpio@lfdr.de>; Thu,  6 Oct 2022 13:05:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230144AbiJFKlR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 06:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
+        id S231247AbiJFLFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 07:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231290AbiJFKlQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 06:41:16 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFDF88A7EB
-        for <linux-gpio@vger.kernel.org>; Thu,  6 Oct 2022 03:41:13 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id r14so2103842lfm.2
-        for <linux-gpio@vger.kernel.org>; Thu, 06 Oct 2022 03:41:13 -0700 (PDT)
+        with ESMTP id S231203AbiJFLFI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 07:05:08 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2945E3135E;
+        Thu,  6 Oct 2022 04:05:07 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id z3so1286655edc.10;
+        Thu, 06 Oct 2022 04:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=83k5JZ/X4KlDsxEl7RSSXfEDOzc2Wi0Ts3Xh70GQyqI=;
-        b=tHIzFFqvVxCrJyYTGV9KpmOY0dOkR8C9pDgYKyP5LLgJnxX3PIm+N5/LBdU5UDZyCu
-         wAtt4tQMTiUlcE3sOZ/nPeNluxGTomz7WBqvkvMKnCl6i2xDVmSZ33FG+fkcpGTP2Jb7
-         pYxiOIOi8h7qy4CfYVlAJQa3ij/+dLIv536SjrnxxJooOXaw31MiVkkZavab9dI+pk1C
-         rVr3/542CQiBMktr2+RuXnBFMTSNO3t9ljR0lIho9gLuD62ZGn1GEJAzZJrmZXVmFkjy
-         OcFi8/BexywZDO18nBFDPWREtu7ejPSQbnHvoEeA/ATJAXF5HbmpaiJ01EnezvkmhrMz
-         +d9g==
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=SWj+08Nh6gkacuObeofoo80owftzdWimdlCVryl1eqo=;
+        b=quNWaGl9LqL5qFvHqWNTpdUoIPDi6pC1wBdiIe31yXUCwDPp3szjQV9GZJb0dsBMB8
+         f4iftHXkZm9zxr/8oQuoqhumRJ9oq/WaSfAdTK1S9kQ9uGaHcJ1JgvccnT1Uesiq+Ztl
+         9mRXjgl9pB/92eM2LbAa9vitZwL9uVATNu9SvXCRYYZ5E5Rr9V3ZfVjiNuu/IFuKYnqi
+         sBmbBO0UoJP+3fJhjuxZo6RMTbpgHrKc7HJ1K77Eht3NnD6QqO4iG/KN71GWP2GnOjva
+         Ag6GVuOx37MXhkQEz4qhZ/3Ecg3JSw29NDdnXIIl3GZRxBXQAjibIa/XG0r0Lvf5QKf9
+         5/Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=83k5JZ/X4KlDsxEl7RSSXfEDOzc2Wi0Ts3Xh70GQyqI=;
-        b=DlHIZ1a/sb+IITk9kV+5ne2hV33NC5rPA4rfrScCWW/30zMRZ+Xq3jLT3gLNQqCHGf
-         EptAzMyLC67/4a0xGIxdfCc4RQ/tIQ7z8sEcQaHftU0QkcGUQPao8sEULzyP4VCN+2pD
-         9IeXuI4FEBNDxEA3cW0PVrav78H/tWWSDr34e6da2T0I8zu0CJmdmsco+khKw2O6jnVl
-         ZONo315kF3Da7kZaGsRB75+ITeicxafQ4xG3MCYcGjQCaz3JhWj+/ULqgmYPVv/p7MnE
-         XGyHmX5tECWehZG/xOqMyLakh6Q63TgX7dE78ry5uP/qPPHp/1BjKL9fWw3assan2bBr
-         VOVg==
-X-Gm-Message-State: ACrzQf0s9YXt0Lleox7EvOHF72TNsEmeFj1sncQwZ87LNZrrK22jKo06
-        E/jm4LK7qeXtEoSMkvgMsHiBpw==
-X-Google-Smtp-Source: AMsMyM7Jm1Sa4Q3BbJzA4l65LJriQdZkFXGMyYj3od6G0FKi3wPg4I9FPR5Dav29KHO6zWcuQVTpkw==
-X-Received: by 2002:a05:6512:1281:b0:4a2:5c10:c38b with SMTP id u1-20020a056512128100b004a25c10c38bmr1712647lfs.2.1665052871515;
-        Thu, 06 Oct 2022 03:41:11 -0700 (PDT)
-Received: from krzk-bin.. (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id q3-20020a0565123a8300b00492aefd73a5sm2648293lfu.132.2022.10.06.03.41.10
+        bh=SWj+08Nh6gkacuObeofoo80owftzdWimdlCVryl1eqo=;
+        b=DwB8UgnaFc+04vKvzcCcCkLwTUHXHgCyPV24v1ouJako20qufShsiXcQbxOJYoZIId
+         EKIezjvycVVmdqxA1CoXD53qxG3Pq7hO2l/rebbg1ZvWpGxYuy4LFhZwTivH9dPC6WXa
+         DbTZC9hNRr7hmpoiMecU7Gf7716PL0mziDVfq4ZsWm8VFLUX2eicN5Ml0up4Z/ixdC3a
+         KWqBm7rcLoCyoCys1NJENhGwMc/wQtkhhhmuQQj/nflkkNY4MYywbM/73nLzzZWAZ4eJ
+         LPJywwYJlsgigtHKn2NosYyas+3qMjXwn/q70xSfE6MNLQmUXtHeRrvmkInBJPis36qd
+         js6g==
+X-Gm-Message-State: ACrzQf3qxFy7ZS5PR+7hXnear+/j290s+rHM/IuTXY/UDPmJNSujLcju
+        2JfUx7jZQWrnwRWaQZaNtJ4=
+X-Google-Smtp-Source: AMsMyM5FmaVUK8IRl2IifqJqWbb12QuQZvx1CzopJn1qkQ7i2wV/7f05khpiPqEnxvrLDKRqppbd/A==
+X-Received: by 2002:a05:6402:500d:b0:459:3e56:e6f9 with SMTP id p13-20020a056402500d00b004593e56e6f9mr4057876eda.367.1665054305305;
+        Thu, 06 Oct 2022 04:05:05 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id lb9-20020a170907784900b0073ddd36ba8csm10198373ejc.145.2022.10.06.04.05.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 03:41:11 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 4/4] dt-bindings: pinctrl: qcom,sdm630: convert to dtschema
-Date:   Thu,  6 Oct 2022 12:41:04 +0200
-Message-Id: <20221006104104.171368-4-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221006104104.171368-1-krzysztof.kozlowski@linaro.org>
-References: <20221006104104.171368-1-krzysztof.kozlowski@linaro.org>
+        Thu, 06 Oct 2022 04:05:04 -0700 (PDT)
+Date:   Thu, 6 Oct 2022 13:05:02 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        jonathanh@nvidia.com, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        smangipudi@nvidia.com, kyarlagadda@nvidia.com,
+        Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: Re: [PATCH v2] gpio: tegra186: Check GPIO pin permission before
+ access.
+Message-ID: <Yz62XmiH8YG3Dtsf@orome>
+References: <YyHVoihMuKNRFXAS@orome>
+ <20221004074845.29583-1-pshete@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wIueMpqElCFwwyGl"
+Content-Disposition: inline
+In-Reply-To: <20221004074845.29583-1-pshete@nvidia.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Convert Qualcomm SDM630 and SDM660 pin controller bindings to DT schema.
-Keep the parsing of pin configuration subnodes consistent with other
-Qualcomm schemas (children named with '-state' suffix, their children
-with '-pins').
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../bindings/pinctrl/qcom,sdm630-pinctrl.yaml | 189 +++++++++++++++++
- .../bindings/pinctrl/qcom,sdm660-pinctrl.txt  | 191 ------------------
- 2 files changed, 189 insertions(+), 191 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm630-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
+--wIueMpqElCFwwyGl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm630-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm630-pinctrl.yaml
-new file mode 100644
-index 000000000000..057801652d1a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm630-pinctrl.yaml
-@@ -0,0 +1,189 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,sdm630-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm SDM630 and SDM660 TLMM pin controller
-+
-+maintainers:
-+  - Bjorn Andersson <andersson@kernel.org>
-+  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-+
-+description:
-+  Top Level Mode Multiplexer pin controller node in Qualcomm SDM630 and SDM660
-+  SoC.
-+
-+allOf:
-+  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,sdm630-pinctrl
-+      - qcom,sdm660-pinctrl
-+
-+  reg:
-+    maxItems: 3
-+
-+  reg-names:
-+    items:
-+      - const: south
-+      - const: center
-+      - const: north
-+
-+  interrupts: true
-+  interrupt-controller: true
-+  "#interrupt-cells": true
-+  gpio-controller: true
-+
-+  gpio-reserved-ranges:
-+    minItems: 1
-+    maxItems: 57
-+
-+  gpio-line-names:
-+    maxItems: 114
-+
-+  "#gpio-cells": true
-+  gpio-ranges: true
-+  wakeup-parent: true
-+
-+patternProperties:
-+  "-state$":
-+    oneOf:
-+      - $ref: "#/$defs/qcom-sdm630-tlmm-state"
-+      - patternProperties:
-+          "-pins$":
-+            $ref: "#/$defs/qcom-sdm630-tlmm-state"
-+        additionalProperties: false
-+
-+$defs:
-+  qcom-sdm630-tlmm-state:
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-+
-+    properties:
-+      pins:
-+        description:
-+          List of gpio pins affected by the properties specified in this
-+          subnode.
-+        items:
-+          oneOf:
-+            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-3])$"
-+            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc1_rclk, sdc2_clk,
-+                      sdc2_cmd, sdc2_data ]
-+        minItems: 1
-+        maxItems: 36
-+
-+      function:
-+        description:
-+          Specify the alternative function to be configured for the specified
-+          pins.
-+        enum: [ adsp_ext, agera_pll, atest_char, atest_char0, atest_char1,
-+                atest_char2, atest_char3, atest_gpsadc0, atest_gpsadc1,
-+                atest_tsens, atest_tsens2, atest_usb1, atest_usb10,
-+                atest_usb11, atest_usb12, atest_usb13, atest_usb2, atest_usb20,
-+                atest_usb21, atest_usb22, atest_usb23, audio_ref, bimc_dte0,
-+                bimc_dte1, blsp_i2c1, blsp_i2c2, blsp_i2c3, blsp_i2c4,
-+                blsp_i2c5, blsp_i2c6, blsp_i2c7, blsp_i2c8_a, blsp_i2c8_b,
-+                blsp_spi1, blsp_spi2, blsp_spi3, blsp_spi3_cs1, blsp_spi3_cs2,
-+                blsp_spi4, blsp_spi5, blsp_spi6, blsp_spi7, blsp_spi8_a,
-+                blsp_spi8_b, blsp_spi8_cs1, blsp_spi8_cs2, blsp_uart1,
-+                blsp_uart2, blsp_uart5, blsp_uart6_a, blsp_uart6_b, blsp_uim1,
-+                blsp_uim2, blsp_uim5, blsp_uim6, cam_mclk, cci_async, cci_i2c,
-+                cri_trng, cri_trng0, cri_trng1, dbg_out, ddr_bist, gcc_gp1,
-+                gcc_gp2, gcc_gp3, gpio, gps_tx_a, gps_tx_b, gps_tx_c,
-+                isense_dbg, jitter_bist, ldo_en, ldo_update, m_voc, mdp_vsync,
-+                mdss_vsync0, mdss_vsync1, mdss_vsync2, mdss_vsync3, mss_lte,
-+                nav_pps_a, nav_pps_b, nav_pps_c, pa_indicator, phase_flag0,
-+                phase_flag1, phase_flag10, phase_flag11, phase_flag12,
-+                phase_flag13, phase_flag14, phase_flag15, phase_flag16,
-+                phase_flag17, phase_flag18, phase_flag19, phase_flag2,
-+                phase_flag20, phase_flag21, phase_flag22, phase_flag23,
-+                phase_flag24, phase_flag25, phase_flag26, phase_flag27,
-+                phase_flag28, phase_flag29, phase_flag3, phase_flag30,
-+                phase_flag31, phase_flag4, phase_flag5, phase_flag6,
-+                phase_flag7, phase_flag8, phase_flag9, pll_bypassnl, pll_reset,
-+                pri_mi2s, pri_mi2s_ws, prng_rosc, pwr_crypto, pwr_modem,
-+                pwr_nav, qdss_cti0_a, qdss_cti0_b, qdss_cti1_a, qdss_cti1_b,
-+                qdss_gpio, qdss_gpio0, qdss_gpio1, qdss_gpio10, qdss_gpio11,
-+                qdss_gpio12, qdss_gpio13, qdss_gpio14, qdss_gpio15, qdss_gpio2,
-+                qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6, qdss_gpio7,
-+                qdss_gpio8, qdss_gpio9, qlink_enable, qlink_request, qspi_clk,
-+                qspi_cs, qspi_data0, qspi_data1, qspi_data2, qspi_data3,
-+                qspi_resetn, sec_mi2s, sndwire_clk, sndwire_data, sp_cmu,
-+                ssc_irq, tgu_ch0, tgu_ch1, tsense_pwm1, tsense_pwm2, uim1_clk,
-+                uim1_data, uim1_present, uim1_reset, uim2_clk, uim2_data,
-+                uim2_present, uim2_reset, uim_batt, vfr_1, vsense_clkout,
-+                vsense_data0, vsense_data1, vsense_mode, wlan1_adc0,
-+                wlan1_adc1, wlan2_adc0, wlan2_adc1 ]
-+
-+      bias-disable: true
-+      bias-pull-down: true
-+      bias-pull-up: true
-+      drive-strength: true
-+      input-enable: true
-+      output-high: true
-+      output-low: true
-+
-+    required:
-+      - pins
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    pinctrl@3100000 {
-+        compatible = "qcom,sdm630-pinctrl";
-+        reg = <0x03100000 0x400000>,
-+              <0x03500000 0x400000>,
-+              <0x03900000 0x400000>;
-+        reg-names = "south", "center", "north";
-+        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+        gpio-controller;
-+        gpio-ranges = <&tlmm 0 0 114>;
-+        #gpio-cells = <2>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+
-+        blsp1-uart1-default-state {
-+            pins = "gpio0", "gpio1", "gpio2", "gpio3";
-+            function = "gpio";
-+            drive-strength = <2>;
-+            bias-disable;
-+        };
-+
-+        blsp2_uart1_default: blsp2-uart1-active-state {
-+            tx-rts-pins {
-+                pins = "gpio16", "gpio19";
-+                function = "blsp_uart5";
-+                drive-strength = <2>;
-+                bias-disable;
-+            };
-+
-+            rx-pins {
-+                pins = "gpio17";
-+                function = "blsp_uart5";
-+                drive-strength = <2>;
-+                bias-pull-up;
-+            };
-+
-+            cts-pins {
-+                pins = "gpio18";
-+                function = "blsp_uart5";
-+                drive-strength = <2>;
-+                bias-pull-down;
-+            };
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-deleted file mode 100644
-index be034d329e10..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-+++ /dev/null
-@@ -1,191 +0,0 @@
--Qualcomm Technologies, Inc. SDM660 TLMM block
--
--This binding describes the Top Level Mode Multiplexer block found in the
--SDM660 platform.
--
--- compatible:
--	Usage: required
--	Value type: <string>
--	Definition: must be "qcom,sdm660-pinctrl" or
--		    "qcom,sdm630-pinctrl".
--
--- reg:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: the base address and size of the north, center and south
--		    TLMM tiles.
--
--- reg-names:
--       Usage: required
--       Value type: <stringlist>
--       Definition: names for the cells of reg, must contain "north", "center"
--                   and "south".
--
--- interrupts:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: should specify the TLMM summary IRQ.
--
--- interrupt-controller:
--	Usage: required
--	Value type: <none>
--	Definition: identifies this node as an interrupt controller
--
--- #interrupt-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: must be 2. Specifying the pin number and flags, as defined
--		    in <dt-bindings/interrupt-controller/irq.h>
--
--- gpio-controller:
--	Usage: required
--	Value type: <none>
--	Definition: identifies this node as a gpio controller
--
--- gpio-ranges:
--	Usage: required
--	Value type: <prop-encoded-array>
--	Definition: Specifies the mapping between gpio controller and
--		    pin-controller pins.
--
--- #gpio-cells:
--	Usage: required
--	Value type: <u32>
--	Definition: must be 2. Specifying the pin number and flags, as defined
--		    in <dt-bindings/gpio/gpio.h>
--
--Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
--a general description of GPIO and interrupt bindings.
--
--Please refer to pinctrl-bindings.txt in this directory for details of the
--common pinctrl bindings used by client devices, including the meaning of the
--phrase "pin configuration node".
--
--The pin configuration nodes act as a container for an arbitrary number of
--subnodes. Each of these subnodes represents some desired configuration for a
--pin, a group, or a list of pins or groups. This configuration can include the
--mux function to select on those pin(s)/group(s), and various pin configuration
--parameters, such as pull-up, drive strength, etc.
--
--
--PIN CONFIGURATION NODES:
--
--The name of each subnode is not important; all subnodes should be enumerated
--and processed purely based on their content.
--
--Each subnode only affects those parameters that are explicitly listed. In
--other words, a subnode that lists a mux function but no pin configuration
--parameters implies no information about any pin configuration parameters.
--Similarly, a pin subnode that describes a pullup parameter implies no
--information about e.g. the mux function.
--
--
--The following generic properties as defined in pinctrl-bindings.txt are valid
--to specify in a pin configuration subnode:
--
--- pins:
--	Usage: required
--	Value type: <string-array>
--	Definition: List of gpio pins affected by the properties specified in
--		    this subnode.  Valid pins are:
--		    gpio0-gpio113,
--		        Supports mux, bias and drive-strength
--		    sdc1_clk, sdc1_cmd, sdc1_data sdc2_clk, sdc2_cmd, sdc2_data sdc1_rclk,
--		        Supports bias and drive-strength
--
--- function:
--	Usage: required
--	Value type: <string>
--	Definition: Specify the alternative function to be configured for the
--		    specified pins. Functions are only valid for gpio pins.
--		    Valid values are:
--		    adsp_ext, agera_pll, atest_char, atest_char0, atest_char1,
--		    atest_char2, atest_char3, atest_gpsadc0, atest_gpsadc1,
--		    atest_tsens, atest_tsens2, atest_usb1, atest_usb10,
--		    atest_usb11, atest_usb12, atest_usb13, atest_usb2,
--		    atest_usb20, atest_usb21, atest_usb22, atest_usb23,
--		    audio_ref, bimc_dte0, bimc_dte1, blsp_i2c1, blsp_i2c2,
--		    blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6, blsp_i2c7,
--		    blsp_i2c8_a, blsp_i2c8_b, blsp_spi1, blsp_spi2, blsp_spi3,
--		    blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi4, blsp_spi5,
--		    blsp_spi6, blsp_spi7, blsp_spi8_a, blsp_spi8_b,
--		    blsp_spi8_cs1, blsp_spi8_cs2, blsp_uart1, blsp_uart2,
--		    blsp_uart5, blsp_uart6_a, blsp_uart6_b, blsp_uim1,
--		    blsp_uim2, blsp_uim5, blsp_uim6, cam_mclk, cci_async,
--		    cci_i2c, cri_trng, cri_trng0, cri_trng1, dbg_out, ddr_bist,
--		    gcc_gp1, gcc_gp2, gcc_gp3, gpio, gps_tx_a, gps_tx_b, gps_tx_c,
--		    isense_dbg, jitter_bist, ldo_en, ldo_update, m_voc, mdp_vsync,
--		    mdss_vsync0, mdss_vsync1, mdss_vsync2, mdss_vsync3, mss_lte,
--		    nav_pps_a, nav_pps_b, nav_pps_c, pa_indicator, phase_flag0,
--		    phase_flag1, phase_flag10, phase_flag11, phase_flag12,
--		    phase_flag13, phase_flag14, phase_flag15, phase_flag16,
--		    phase_flag17, phase_flag18, phase_flag19, phase_flag2,
--		    phase_flag20, phase_flag21, phase_flag22, phase_flag23,
--		    phase_flag24, phase_flag25, phase_flag26, phase_flag27,
--		    phase_flag28, phase_flag29, phase_flag3, phase_flag30,
--		    phase_flag31, phase_flag4, phase_flag5, phase_flag6,
--		    phase_flag7, phase_flag8, phase_flag9, pll_bypassnl,
--		    pll_reset, pri_mi2s, pri_mi2s_ws, prng_rosc, pwr_crypto,
--		    pwr_modem, pwr_nav, qdss_cti0_a, qdss_cti0_b, qdss_cti1_a,
--		    qdss_cti1_b, qdss_gpio, qdss_gpio0, qdss_gpio1, qdss_gpio10,
--		    qdss_gpio11, qdss_gpio12, qdss_gpio13, qdss_gpio14, qdss_gpio15,
--		    qdss_gpio2, qdss_gpio3, qdss_gpio4, qdss_gpio5, qdss_gpio6,
--		    qdss_gpio7, qdss_gpio8, qdss_gpio9, qlink_enable, qlink_request,
--		    qspi_clk, qspi_cs, qspi_data0, qspi_data1, qspi_data2,
--		    qspi_data3, qspi_resetn, sec_mi2s, sndwire_clk, sndwire_data,
--		    sp_cmu, ssc_irq, tgu_ch0, tgu_ch1, tsense_pwm1, tsense_pwm2,
--		    uim1_clk, uim1_data, uim1_present, uim1_reset, uim2_clk,
--		    uim2_data, uim2_present, uim2_reset, uim_batt, vfr_1,
--		    vsense_clkout, vsense_data0, vsense_data1, vsense_mode,
--		    wlan1_adc0, wlan1_adc1, wlan2_adc0, wlan2_adc1
--
--- bias-disable:
--	Usage: optional
--	Value type: <none>
--	Definition: The specified pins should be configured as no pull.
--
--- bias-pull-down:
--	Usage: optional
--	Value type: <none>
--	Definition: The specified pins should be configured as pull down.
--
--- bias-pull-up:
--	Usage: optional
--	Value type: <none>
--	Definition: The specified pins should be configured as pull up.
--
--- output-high:
--	Usage: optional
--	Value type: <none>
--	Definition: The specified pins are configured in output mode, driven
--		    high.
--		    Not valid for sdc pins.
--
--- output-low:
--	Usage: optional
--	Value type: <none>
--	Definition: The specified pins are configured in output mode, driven
--		    low.
--		    Not valid for sdc pins.
--
--- drive-strength:
--	Usage: optional
--	Value type: <u32>
--	Definition: Selects the drive strength for the specified pins, in mA.
--		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
--
--Example:
--
--	tlmm: pinctrl@3100000 {
--		compatible = "qcom,sdm660-pinctrl";
--		reg = <0x3100000 0x200000>,
--		      <0x3500000 0x200000>,
--		      <0x3900000 0x200000>;
--		reg-names = "south", "center", "north";
--		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
--		gpio-controller;
--		gpio-ranges = <&tlmm 0 0 114>;
--		#gpio-cells = <2>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--	};
--- 
-2.34.1
+On Tue, Oct 04, 2022 at 01:18:45PM +0530, Prathamesh Shete wrote:
+> This change checks if we have the necessary permission to
+> access the GPIO. For devices that have support for virtualisation
+> we need to check both the TEGRA186_GPIO_VM_REG and the
+> TEGRA186_GPIO_SCR_REG registers. For device that do not have
+> virtualisation support for GPIOs we only need to check the
+> TEGRA186_GPIO_SCR_REG register.
+>=20
+> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> ---
+>  drivers/gpio/gpio-tegra186.c | 74 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
 
+This looks mostly good. A few small comments, see below.
+
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 54d9fa7da9c1..34b6c287d608 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -26,6 +26,22 @@
+> =20
+>  #define TEGRA186_GPIO_INT_ROUTE_MAPPING(p, x) (0x14 + (p) * 0x20 + (x) *=
+ 4)
+> =20
+> +#define  TEGRA186_GPIO_VM			0x00
+> +#define  TEGRA186_GPIO_VM_RW_MASK		0x03
+> +#define  TEGRA186_GPIO_SCR			0x04
+> +#define  TEGRA186_GPIO_SCR_PIN_SIZE		0x08
+> +#define  TEGRA186_GPIO_SCR_PORT_SIZE		0x40
+> +#define  TEGRA186_GPIO_SCR_SEC_WEN		BIT(28)
+> +#define  TEGRA186_GPIO_SCR_SEC_REN		BIT(27)
+> +#define  TEGRA186_GPIO_SCR_SEC_G1W		BIT(9)
+> +#define  TEGRA186_GPIO_SCR_SEC_G1R		BIT(1)
+> +#define  TEGRA186_GPIO_FULL_ACCESS		(TEGRA186_GPIO_SCR_SEC_WEN | \
+> +						 TEGRA186_GPIO_SCR_SEC_REN | \
+> +						 TEGRA186_GPIO_SCR_SEC_G1R | \
+> +						 TEGRA186_GPIO_SCR_SEC_G1W)
+> +#define  TEGRA186_GPIO_SCR_SEC_ENABLE		(TEGRA186_GPIO_SCR_SEC_WEN | \
+> +						 TEGRA186_GPIO_SCR_SEC_REN)
+> +
+>  /* control registers */
+>  #define TEGRA186_GPIO_ENABLE_CONFIG 0x00
+>  #define  TEGRA186_GPIO_ENABLE_CONFIG_ENABLE BIT(0)
+> @@ -77,6 +93,7 @@ struct tegra_gpio_soc {
+>  	unsigned int num_irqs_per_bank;
+> =20
+>  	const struct tegra186_pin_range *pin_ranges;
+> +	bool has_vm_support;
+
+You've placed this right between two fields that clearly belong
+together. Best to add new fields towards the end of the structure if
+they are not related to any of the other fields.
+
+>  	unsigned int num_pin_ranges;
+>  	const char *pinmux;
+>  	bool has_gte;
+> @@ -129,6 +146,58 @@ static void __iomem *tegra186_gpio_get_base(struct t=
+egra_gpio *gpio,
+>  	return gpio->base + offset + pin * 0x20;
+>  }
+> =20
+> +static void __iomem *tegra186_gpio_get_secure_base(struct tegra_gpio *gp=
+io,
+> +					    unsigned int pin)
+> +{
+> +	const struct tegra_gpio_port *port;
+> +	unsigned int offset;
+> +
+> +	port =3D tegra186_gpio_get_port(gpio, &pin);
+> +	if (!port)
+> +		return NULL;
+> +
+> +	offset =3D port->bank * 0x1000 + port->port * TEGRA186_GPIO_SCR_PORT_SI=
+ZE;
+> +
+> +	return gpio->secure + offset + pin * TEGRA186_GPIO_SCR_PIN_SIZE;
+> +}
+> +
+> +static inline bool tegra186_gpio_is_accessible(struct tegra_gpio *gpio, =
+u32 pin)
+
+Pin offsets are "unsigned int" in the rest of the driver, so please
+stick to that here as well.
+
+> +{
+> +	void __iomem *secure;
+> +	u32 val;
+
+The drivers uses "u32 value;" everywhere else, so best stick to that for
+consistency.
+
+> +
+> +	secure =3D tegra186_gpio_get_secure_base(gpio, pin);
+> +
+> +	if (gpio->soc->has_vm_support) {
+> +		val =3D readl(secure + TEGRA186_GPIO_VM);
+> +		if ((val & TEGRA186_GPIO_VM_RW_MASK) !=3D TEGRA186_GPIO_VM_RW_MASK)
+> +			return false;
+> +	}
+> +
+> +	val =3D __raw_readl(secure + TEGRA186_GPIO_SCR);
+> +
+> +	if ((val & TEGRA186_GPIO_SCR_SEC_ENABLE) =3D=3D 0)
+> +		return true;
+> +
+> +	if ((val & TEGRA186_GPIO_FULL_ACCESS) =3D=3D TEGRA186_GPIO_FULL_ACCESS)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +static int tegra186_init_valid_mask(struct gpio_chip *chip,
+> +		unsigned long *valid_mask, unsigned int ngpios)
+> +{
+> +	struct tegra_gpio *gpio =3D gpiochip_get_data(chip);
+> +	int j;
+
+Make that unsigned int to match the type of ngpios.
+
+> +
+> +	for (j =3D 0; j < ngpios; j++) {
+> +		if (!tegra186_gpio_is_accessible(gpio, j))
+> +			clear_bit(j, valid_mask);
+> +	}
+> +	return 0;
+> +}
+> +
+>  static int tegra186_gpio_get_direction(struct gpio_chip *chip,
+>  				       unsigned int offset)
+>  {
+> @@ -763,6 +832,7 @@ static int tegra186_gpio_probe(struct platform_device=
+ *pdev)
+>  	gpio->soc =3D device_get_match_data(&pdev->dev);
+>  	gpio->gpio.label =3D gpio->soc->name;
+>  	gpio->gpio.parent =3D &pdev->dev;
+> +	gpio->gpio.init_valid_mask =3D tegra186_init_valid_mask;
+
+Maybe slot this in before the gpio->gpio.add_pin_ranges assignment
+further below in this function to keep things ordered a bit better.
+
+> =20
+>  	/* count the number of banks in the controller */
+>  	for (i =3D 0; i < gpio->soc->num_ports; i++)
+> @@ -1042,6 +1112,7 @@ static const struct tegra_gpio_soc tegra194_main_so=
+c =3D {
+>  	.num_pin_ranges =3D ARRAY_SIZE(tegra194_main_pin_ranges),
+>  	.pin_ranges =3D tegra194_main_pin_ranges,
+>  	.pinmux =3D "nvidia,tegra194-pinmux",
+> +	.has_vm_support =3D true,
+>  };
+> =20
+>  #define TEGRA194_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
+> @@ -1067,6 +1138,7 @@ static const struct tegra_gpio_soc tegra194_aon_soc=
+ =3D {
+>  	.instance =3D 1,
+>  	.num_irqs_per_bank =3D 8,
+>  	.has_gte =3D true,
+> +	.has_vm_support =3D false,
+>  };
+> =20
+>  #define TEGRA234_MAIN_GPIO_PORT(_name, _bank, _port, _pins)	\
+> @@ -1111,6 +1183,7 @@ static const struct tegra_gpio_soc tegra234_main_so=
+c =3D {
+>  	.name =3D "tegra234-gpio",
+>  	.instance =3D 0,
+>  	.num_irqs_per_bank =3D 8,
+> +	.has_vm_support =3D true,
+>  };
+> =20
+>  #define TEGRA234_AON_GPIO_PORT(_name, _bank, _port, _pins)	\
+> @@ -1136,6 +1209,7 @@ static const struct tegra_gpio_soc tegra234_aon_soc=
+ =3D {
+>  	.name =3D "tegra234-gpio-aon",
+>  	.instance =3D 1,
+>  	.num_irqs_per_bank =3D 8,
+> +	.has_vm_support =3D false,
+
+It's not technically necessary to initialize 0/false fields because
+that's what they end up with if you don't initialize them at all. I do
+like to be explicit, so no objection from me on this. However, since we
+are being explicit, we should set this new field for Tegra186 and
+Tegra241 as well.
+
+Thierry
+
+--wIueMpqElCFwwyGl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmM+tlwACgkQ3SOs138+
+s6Ez+w/9FpeFqssyODdvFPPaSJVoQhx8Avcx4WK/cItqBnM+tB1fygrgpl6A2sh5
+XvZKOzhET0TCtFLpftfonlG+3elynFYdOEqugG9vcFTcS7vffxXt9dj5tJX62k7X
+7dbonYK9jvNhy26oEjOe2NOaRk6BOR4KNVC8TYwXZcJizq4Z6m/8apk8hiYLIzd8
+vonhilY/oeA7ac4QtL2JOtN1zmIzUKc0Gmz55ZwOMAhJAZag3zJpsE1dBLDQc96k
+ncDV+v99WFsghH9hdwWGLXf9rvvPkoQFWzayeE6kKMlFVLRnTZE5sYomAAfJfFF1
+TfDcW6P3aj32VCCBq6Jtrlq0Z3LLgbBZyPTJKqTMj1JK+7a7ruDa9RObMCrifPcC
+C4hb1R/F3t7NF/FJOjA3DnWilMwNZV8Ez8ux6FTiVWVMPPyBKnLns7YbFYpOyWd/
+LjD2yKuWhEfAUA0te8GlRBvO4fgm8VxaJqbfK3aOwRZT+n1ZiSCrR1PQMih9GSbE
+PzunC2qRpyr28AoUpII1IqCAYzs/Xz3FBh7XipIQSH1vEQPSzJwwdQXGyhmZTKvl
+aMPL6CAngZsnntATEEMtatiZPnGcJHl63J74cxYXkMrAY9AbEZCaxrjKInOhnIcL
+hEWwUhEXlVozq1FlSZSicZ2YpLNb8tQcF5Sr4N1S/Quu3tVuuR0=
+=wN8V
+-----END PGP SIGNATURE-----
+
+--wIueMpqElCFwwyGl--
