@@ -2,177 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AAA95F779B
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 13:47:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 043F95F781F
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 14:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbiJGLrB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 07:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58738 "EHLO
+        id S229579AbiJGMnu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 08:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiJGLrA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 07:47:00 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F619E0DF
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Oct 2022 04:46:59 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1oglof-0001AS-BC; Fri, 07 Oct 2022 13:46:57 +0200
-Received: from [2a0a:edc0:0:1101:1d::28] (helo=dude02.red.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1ogloe-0005lQ-2k; Fri, 07 Oct 2022 13:46:56 +0200
-Received: from sha by dude02.red.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <sha@pengutronix.de>)
-        id 1oglod-00BXDN-98; Fri, 07 Oct 2022 13:46:55 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-gpio@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, kernel@pengutronix.de,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH v5 2/2] dt-bindings: gpio: Add gpio-latch binding document
-Date:   Fri,  7 Oct 2022 13:46:47 +0200
-Message-Id: <20221007114647.2723457-3-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221007114647.2723457-1-s.hauer@pengutronix.de>
-References: <20221007114647.2723457-1-s.hauer@pengutronix.de>
+        with ESMTP id S229481AbiJGMnu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 08:43:50 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D98A4CA890;
+        Fri,  7 Oct 2022 05:43:48 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id b2so11080366eja.6;
+        Fri, 07 Oct 2022 05:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=I0tzMj8HZWZ88Pvlv1sPYkG81c5uF1cjDyqGb2ZsiQk=;
+        b=RFskFc9lenVJPeQ1UbCk4NriqcIUAGWTaqrqkecrY73Sk7sGMyvtAxthwMY0hYEwNX
+         EbwFjRHdP3H23BIU8BKWFAImB++mw7TONsldnubK2Lse9Jv3BQQMzR1OKja3nhWYqE9G
+         nM0H5zyLJuJ35IabxHPgayUZgF1Lswxv91ptsyQNRML6ptBbmQ3PUcWscCNK7lKqlp/v
+         x/F1Bm9W/fp6fzc7xftQQznGx/gmz6Fm22s7+++JrtqdhT1u9MEquKgTgnUhCi1yJeUh
+         MUXPEB2J2tk4tZYRXArveRvP2L0dkT10+WybmwNESUGeWpNcaIdDzzfv4shEIzfi9wWW
+         hivw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=I0tzMj8HZWZ88Pvlv1sPYkG81c5uF1cjDyqGb2ZsiQk=;
+        b=jptZiRW2NbYgB9mq97wg2h+SZUBN9J41jn/Sw+Pt0I3xYaAJYMccFa2YaRqCnVgXKJ
+         pjBz4cd8hRj72pY5Ew/GZlH/2UqZiCL9ahzSlYFgEJbStxhqudaYyrmpxGakjKwfwLny
+         +UjcxUChlotypJn5kjmqFNZcBX0PwwxWfHCDhf/j7r7LMbtCy1isLMOs5UM74gnTS7ZA
+         1AboF1/bMjXdRt1a6X7EvUzIFtmjNcl/xSsSdaxG7XXeSHoWvxUuJeiLUqpKLjx5n7fA
+         axcSSboRl73nh4gexXj5Pc+GOpmxRbHjQvExKpXo17hX46gze5Hxm+io26i+r+FS3sGF
+         s0Cg==
+X-Gm-Message-State: ACrzQf3DQmB5b36TRN6Uei3N9nJUh4Bv/tYus2GbNmOWVo5pl/uPNynB
+        Kkw3mDM6NWkgw34d0/z/0rE=
+X-Google-Smtp-Source: AMsMyM6Dtsj6UDrj1l9WTDelpdwpLjj6rLKnsvySBaZ4BfN3keNpmQdH+U6zZBANuFGitZA31R5J1g==
+X-Received: by 2002:a17:906:ee89:b0:73d:70c5:1a4e with SMTP id wt9-20020a170906ee8900b0073d70c51a4emr3767197ejb.683.1665146627297;
+        Fri, 07 Oct 2022 05:43:47 -0700 (PDT)
+Received: from [192.168.74.101] ([77.78.20.135])
+        by smtp.gmail.com with ESMTPSA id kx1-20020a170907774100b00738467f743dsm1209601ejc.5.2022.10.07.05.43.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Oct 2022 05:43:46 -0700 (PDT)
+Message-ID: <b30ce02b-ae60-4841-6a04-46eae019e41e@gmail.com>
+Date:   Fri, 7 Oct 2022 15:43:44 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH 06/34] dt-bindings: pinctrl: qcom,sm6115: use common TLMM
+ schema
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221006140637.246665-1-krzysztof.kozlowski@linaro.org>
+ <20221006140637.246665-7-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+In-Reply-To: <20221006140637.246665-7-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a binding for a GPIO multiplexer driver based on latches
-connected to other GPIOs.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
 
-Notes:
-    Changes since v3:
-    - Introduce delays between GPIO toggles as suggested by Serge Semin
-    
-    Changes since v1:
-    - Add license to binding file
+On 10/6/22 17:06, Krzysztof Kozlowski wrote:
+> Reference common Qualcomm TLMM pin controller schema, to bring common
+> properties, other pinctrl schemas and additional checks, like function
+> required only for GPIOs.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
- .../devicetree/bindings/gpio/gpio-latch.yaml  | 94 +++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-latch.yaml b/Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-new file mode 100644
-index 0000000000000..1ed82a2cebdaa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-latch.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/gpio-latch.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: GPIO latch controller
-+
-+maintainers:
-+  - Sascha Hauer <s.hauer@pengutronix.de>
-+
-+description: |
-+  This binding describes a GPIO multiplexer based on latches connected to
-+  other GPIOs, like this:
-+
-+  CLK0 ----------------------.        ,--------.
-+  CLK1 -------------------.  `--------|>    #0 |
-+                          |           |        |
-+  OUT0 ----------------+--|-----------|D0    Q0|-----|<
-+  OUT1 --------------+-|--|-----------|D1    Q1|-----|<
-+  OUT2 ------------+-|-|--|-----------|D2    Q2|-----|<
-+  OUT3 ----------+-|-|-|--|-----------|D3    Q3|-----|<
-+  OUT4 --------+-|-|-|-|--|-----------|D4    Q4|-----|<
-+  OUT5 ------+-|-|-|-|-|--|-----------|D5    Q5|-----|<
-+  OUT6 ----+-|-|-|-|-|-|--|-----------|D6    Q6|-----|<
-+  OUT7 --+-|-|-|-|-|-|-|--|-----------|D7    Q7|-----|<
-+         | | | | | | | |  |           `--------'
-+         | | | | | | | |  |
-+         | | | | | | | |  |           ,--------.
-+         | | | | | | | |  `-----------|>    #1 |
-+         | | | | | | | |              |        |
-+         | | | | | | | `--------------|D0    Q0|-----|<
-+         | | | | | | `----------------|D1    Q1|-----|<
-+         | | | | | `------------------|D2    Q2|-----|<
-+         | | | | `--------------------|D3    Q3|-----|<
-+         | | | `----------------------|D4    Q4|-----|<
-+         | | `------------------------|D5    Q5|-----|<
-+         | `--------------------------|D6    Q6|-----|<
-+         `----------------------------|D7    Q7|-----|<
-+                                      `--------'
-+
-+  The number of clk-gpios and latched-gpios is not fixed. The actual number
-+  of number of latches and the number of inputs per latch is derived from
-+  the number of GPIOs given in the corresponding device tree properties.
-+
-+properties:
-+  compatible:
-+    const: gpio-latch
-+  "#gpio-cells":
-+    const: 2
-+
-+  clk-gpios:
-+    description: Array of GPIOs to be used to clock a latch
-+
-+  latched-gpios:
-+    description: Array of GPIOs to be used as inputs per latch
-+
-+  setup-duration-ns:
-+    description: Delay in nanoseconds to wait after the latch inputs have been
-+      set up
-+
-+  clock-duration-ns:
-+    description: Delay in nanoseconds to wait between clock output changes
-+
-+  gpio-controller: true
-+
-+  gpio-line-names: true
-+
-+required:
-+  - compatible
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - clk-gpios
-+  - latched-gpios
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    gpio-latch {
-+        #gpio-cells = <2>;
-+        pinctrl-names = "default";
-+        pinctrl-0 = <&pinctrl_di_do_leds>;
-+        compatible = "gpio-latch";
-+        gpio-controller;
-+        setup-duration-ns = <100>;
-+        clock-duration-ns = <100>;
-+
-+        clk-gpios = <&gpio3 7 0>, <&gpio3 8 0>;
-+        latched-gpios = <&gpio3 21 0>, <&gpio3 22 0>,
-+                       <&gpio3 23 0>, <&gpio3 24 0>,
-+                       <&gpio3 25 0>, <&gpio3 26 0>,
-+                       <&gpio3 27 0>, <&gpio3 28 0>;
-+    };
--- 
-2.30.2
-
+Reviewed-by: Iskren Chernev <iskren.chernev@gmail.com>
