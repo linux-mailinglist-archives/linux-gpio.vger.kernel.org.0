@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43DDD5F80D4
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 00:38:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A8185F80FA
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 00:48:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbiJGWib (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 18:38:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44856 "EHLO
+        id S229672AbiJGWsq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 18:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiJGWia (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 18:38:30 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC7782620;
-        Fri,  7 Oct 2022 15:38:29 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id bj12so14075668ejb.13;
-        Fri, 07 Oct 2022 15:38:29 -0700 (PDT)
+        with ESMTP id S229791AbiJGWsZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 18:48:25 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2E4511C27C;
+        Fri,  7 Oct 2022 15:48:13 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id o21so14129692ejm.11;
+        Fri, 07 Oct 2022 15:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t8oJ8uBoYKbakm2xp42zEcxh+wgG/wSoLfz35djbU/4=;
-        b=DlXrTOSDvLfazgkLEPef9AnZOEtZ2+YrtJpz/sXI0zMUAGn+P43fOVtQw7m5zh5AJP
-         J5BoGFHRMDuHCdSDabqg75/Vkr0abZMyuZ92GS1xGGM1L/bWJ3HwEJz59JtbCO3Z9cX+
-         4DKOF2YepJNhP0Bup72VAgQjXUtE9bnX4WIVkiGMm2BuaFVY6GspNJCIGayp62lXnJ/k
-         ZXEVqctH62gTEbk0iVdVtadkYHe/i9tKR6S/hEE+Tc1v0k+wiXt4vw6bEnPcSQ8rn9bI
-         fF0W835PXI/vMaDE5zcUno1W39B+FEjaY7pyydh3stU2WqqaKacBd3KqG+CSv5Q1y/Sh
-         TVIQ==
+        bh=fJDQxjYM1KZNjTuhU3CIC9yELCWgPJ3RRsqUfE7thb4=;
+        b=XJ581ZUsegVtmZCBO3f8b+PLbnMfgJl0xkktEvW2S/5nfxBuA7CnP6k5XoUOGIf467
+         G8B8As32VLppyAZmWFAfH/L0FqdsLYq7F8HnuePzISQcX9jkmKOwZKPngO46R+xHRP36
+         tWdRJZBYtuyB5VecepH6jwO2CrMu+4D34VVNOQU0bb2kC+iG40demSUsMDInuYWcI8Lo
+         MwiC1Bj3UPGVelh1atfvuttBF8Av9yqZYcMBuT92jCIeeOWwqlbw5VWrioevg+rTRvrw
+         771fLaaD/d356gS1+jnPbuVCtLYyYwwBrdsJbUO6CMvleAu6C++XxdGDsxsVVkzStWIT
+         nyXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=t8oJ8uBoYKbakm2xp42zEcxh+wgG/wSoLfz35djbU/4=;
-        b=H1yrslxuKtm+yHmZCDZ0c8n74atKakNUISI/tRqd3eaFjTm6I7XxfIe8hlNbjCndeX
-         ZF5RUXwnwcIumHgoqv4ZSVBOU6kYacrRnnd3jRmps55Jl+aywb5SnUD1NttZL5p76mSd
-         K8usgNnFCOH+FlFMDyysnSlnfW15lVZ5wHrJPDVDT4WcD0AXnjZhfI0D/oWZ2znuiwEt
-         wtj1cl7f4Z4sqnXcTBJOWGEOahno+RSuvpZSxpCj5ErdXnCE3Nn17tD0Y8Ec0P8ovo/8
-         kEMXJfc1hXkH470R6tNhrHaWu16qcCpYvuZugffLaY7cvRRfhOI0b+3Mz/2mRWiIEJ4N
-         xpmQ==
-X-Gm-Message-State: ACrzQf2iYkrDgBSB/Slhzrgx3XIe5C+IqQE2e7i4FQKbLPXpZ0motVpg
-        KGMxMj7KGpzFk04/KGhUFCU=
-X-Google-Smtp-Source: AMsMyM7yo7t/qh9RZubKlbdW93yEvgrdgtZYdCAstPJOKqo34tY4aTvR8YCrjuTk9B3Li4qp36C9KQ==
-X-Received: by 2002:a17:907:7629:b0:776:a147:8524 with SMTP id jy9-20020a170907762900b00776a1478524mr5806800ejc.632.1665182308244;
-        Fri, 07 Oct 2022 15:38:28 -0700 (PDT)
+        bh=fJDQxjYM1KZNjTuhU3CIC9yELCWgPJ3RRsqUfE7thb4=;
+        b=R3H48Wrs8C0YVQbEQZsMlUOyZkHB9zOv7VOjZlg4YNMIar0nbGmhV0eXqe/CFUjEuE
+         3bMF1JejEPFUj63IXGRQ5IbWz65T6kZ8ErreGtBvN2JQz64VuD9XcpgzUius8AWI14k3
+         oyNZ8/K3EpYXGnKgy3LSa455gRt3eEP67IPaPzDvAM9niWmMLf9ehWmKJLTXQjSpjZGp
+         ludez+qvkPF5fubJs5EFX/SboETiGNKgIq81e3yg5AYYH3J6IADwRBT5iaqm/KDywT4P
+         EK6wJXOu09p1Zy/H76NgKPcPodKS+LFe/IhbDZz00QQ/EX4sANDYs2YRH7yvyRjkgt5T
+         29vQ==
+X-Gm-Message-State: ACrzQf03sGDsmGiNtQEPRgMOLi14Uze9KKRB+D1+0CWVzYy2f1hBSyse
+        11+48KGt1UupxO1JPsK2rDk=
+X-Google-Smtp-Source: AMsMyM5u9idp1WGwqZ+ohxM42s/jR9JQylMJtbPdybnGyMhq9l+rQdd6Ikr1qeu0NW1UM8ObI4to2w==
+X-Received: by 2002:a17:906:6a2a:b0:782:35ca:c2bc with SMTP id qw42-20020a1709066a2a00b0078235cac2bcmr5825958ejc.556.1665182891568;
+        Fri, 07 Oct 2022 15:48:11 -0700 (PDT)
 Received: from skbuf ([188.27.184.197])
-        by smtp.gmail.com with ESMTPSA id s26-20020a056402165a00b00456d40f6b73sm2223299edx.87.2022.10.07.15.38.25
+        by smtp.gmail.com with ESMTPSA id a19-20020a509b53000000b004590b29d8afsm2257363edj.84.2022.10.07.15.48.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 15:38:26 -0700 (PDT)
-Date:   Sat, 8 Oct 2022 01:38:24 +0300
+        Fri, 07 Oct 2022 15:48:10 -0700 (PDT)
+Date:   Sat, 8 Oct 2022 01:48:08 +0300
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     Colin Foster <colin.foster@in-advantage.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -70,15 +70,15 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Andrew Lunn <andrew@lunn.ch>
 Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
  ocelot-ext documentation
-Message-ID: <20221007223824.xf7aga3rs74fmcup@skbuf>
+Message-ID: <20221007224808.dgksesjbiptwmqj7@skbuf>
 References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
  <20220926002928.2744638-13-colin.foster@in-advantage.com>
  <20220927202600.hy5dr2s6j4jnmfpg@skbuf>
- <Y0CPmuxTRr799AR5@euler>
+ <YzN3P6NaDhjA1Qrk@colin-ia-desktop>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y0CPmuxTRr799AR5@euler>
+In-Reply-To: <YzN3P6NaDhjA1Qrk@colin-ia-desktop>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -89,37 +89,66 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 07, 2022 at 01:44:10PM -0700, Colin Foster wrote:
-> With regards to the interrupts - I don't really have a concept of how
-> those will work, since there isn't a processor for those lines to
-> interrupt. So while there is this for the 7514:
+On Tue, Sep 27, 2022 at 03:20:47PM -0700, Colin Foster wrote:
+> > The mfd driver can use these resources or can choose to ignore them, but
+> > I don't see a reason why the dt-bindings should diverge from vsc7514,
+> > its closest cousin.
 > 
-> interrupts = <18 21 16>;
-> interrupt-names = "ptp_rdy", "xtr", "fdma";
+> This one I can answer. (from November 2021). Also I'm not saying that my
+> interpretation is correct. Historically when there are things up for
+> interpretation, I choose the incorrect path. (case in point... the other
+> part of this email)
 > 
-> it seems like there isn't anything to add there.
+> https://patchwork.kernel.org/project/netdevbpf/patch/20211125201301.3748513-4-colin.foster@in-advantage.com/#24620755
 > 
-> That is, unless there's something deeper that is going on that I don't
-> fully understand yet. It wouldn't be the first time and, realistically,
-> won't be the last. I'll copy the 7514 for now, as I plan to send out an
-> RFC shortly with all these updates.
+> '''
+> The thing with putting the targets in the device tree is that you're
+> inflicting yourself unnecessary pain. Take a look at
+> Documentation/devicetree/bindings/net/mscc-ocelot.txt, and notice that
+> they mark the "ptp" target as optional because it wasn't needed when
+> they first published the device tree, and now they need to maintain
+> compatibility with those old blobs. To me that is one of the sillier
+> reasons why you would not support PTP, because you don't know where your
+> registers are. And that document is not even up to date, it hasn't been
+> updated when VCAP ES0, IS1, IS2 were added. I don't think that Horatiu
+> even bothered to maintain backwards compatibility when he initially
+> added tc-flower offload for VCAP IS2, and as a result, I did not bother
+> either when extending it for the S0 and S1 targets. At some point
+> afterwards, the Microchip people even stopped complaining and just went
+> along with it. (the story is pretty much told from memory, I'm sorry if
+> I mixed up some facts). It's pretty messy, and that's what you get for
+> creating these micro-maps of registers spread through the guts of the
+> SoC and then a separate reg-name for each. When we worked on the device
+> tree for LS1028A and then T1040, it was very much a conscious decision
+> for the driver to have a single, big register map and split it up pretty
+> much in whichever way it wants to. In fact I think we wouldn't be
+> having the discussion about how to split things right now if we didn't
+> have that flexibility.
+> '''
+> 
+> I'm happy to go any way. The two that make the most sense might be:
+> 
+> micro-maps to make the VSC7512 "switch" portion match the VSC7514. The
+> ethernet switch portion might still have to ignore these...
+> 
+> A 'mega-map' that would also be ignored by the switch. It would be less
+> arbitrary than the <0 0> that I went with. Maybe something like
+> <0x70000000 0x02000000> to at least point to some valid region.
 
-I was under the impression that the interrupt controller could be
-configured to route the interrupts to external destinations EXT_DST0 or
-EXT_DST1, which have the indices 2 and 3, respectively, in the DST_INTR_*
-set of registers of the ICPU_CFG:INTR block. I could be wrong, though,
-maybe this is just for PCIe, I never looked at the pinout of this chip
-to study whether it's possible to use these as I expect, but normally
-for things like PTP TX timestamping, you'd expect that the switch
-notifies the external host when a packet has been timestamped and that
-timestamp is available in the FIFO. The interrupts out of this switch
-could also be useful for the PHY state machine, to disable polling.
+A mega-map for the switch makes a lot more sense to me, if feasible
+(it should not overlap with the regions of any other peripherals).
+Something isn't quite right to me in having 20 reg-names for a single
+device tree node, and I still stand for just describing the whole range
+and letting the driver split it up according to its needs. I don't know
+why this approach wasn't chosen for the ocelot switch and I did not have
+the patience to map out the addresses that the peripherals use in the
+Microchip SoCs relative to each other, so see if what I'm proposing is
+possible.
 
-Although in the general sense I agree with you, it's better not to add
-anything than to add something and be wrong about it. This is where the
-limitations start showing for the idea that "device tree describes
-hardware, which is independent of software implementation". It's all too
-easy to say this when you have an implementation already written.
-Anyway.  DT doesn't describe hardware, but what software wants to
-understand of it, and that makes it inseparable to some degree from
-software implementation.
+But on the other hand this also needs to be balanced with the fact that
+one day, someone might come along with a mscc,vsc7514-switch that's SPI
+controlled, and expect that the dt-bindings for it in DSA mode expect
+the same reg-names that they do in switchdev mode. Or maybe they
+wouldn't expect that, I don't know. In any case, for NXP switches I
+didn't have a compatibility issue with switchdev-mode Ocelot to concern
+myself with, so I went with what made the most sense.
