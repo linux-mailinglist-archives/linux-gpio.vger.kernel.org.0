@@ -2,145 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7464F5F7494
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 09:09:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97A045F7669
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 11:45:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbiJGHJa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 03:09:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
+        id S229501AbiJGJpN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 05:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbiJGHJ2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 03:09:28 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7424C0980
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Oct 2022 00:09:26 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id f9so4670399ljk.12
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Oct 2022 00:09:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=vCRWEF8VLHqnCH4WBhxkAT6aRcv54BJkl/Tn8yVW2Vo=;
-        b=YBCTZw+sBWRkMCPLBQGtFEceujBSXZWXcLmkOGTiGGhC1iaXwMDvi+POzPsWx4Ap7t
-         wCAwtKl8t+hGOjeBbv46LMXu1KvFbSA0dfm7465ub1uRvvWWw4hS/XwJu4VOlrrMX0vC
-         N5iTFAzwKQ9sUHCPaNmCR1IXFYtX/gnGpCoX8rKqgdubi28+PHHNe3I3nCiApNJFSl1k
-         PDpuz9XR4RGndtX1sfwzmsD4U9gCv0JHEtR08MmodI1grunwrhhzQTDD+/zBjJvSDOmt
-         wWPku9B8B1gqyM2Ws4wjYahT3fekc9wMvlYM1MVl0kK6XPpy+ehoFvHfDx0UcHVYwvN2
-         Q6zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=vCRWEF8VLHqnCH4WBhxkAT6aRcv54BJkl/Tn8yVW2Vo=;
-        b=IcwKW7FZ3Jgg2LnN4FpCNzv7u2MVyRQQ4G3PMl1qe8OW6OPPJJvDDnFYU8OuKFWx7i
-         7aOtfLH10GwnU1f5gJ77icbR6TrN53EK/JlV7zB47wOnIMWmrXb2IeCdLdB/QMjdiFFe
-         w7njjYn6COIsYCYvKjxEfBVdz3jqJiie5KkhjWpbvBEVnXcvhWB8xa6qzAz3gBqNkQ0W
-         R/qZSaXN0AYa3BRWdcZp1/cxyCq1e67EJA/1uCeYICzjf/5b6zfEvImTKfZltMeDoxH+
-         u/nYpmY9HWggXb02xyRCbnBbcX8TA7Ee+CF1TBR6bgUJiDAv9JJJmekqBy+22IlaX/Dx
-         kUSQ==
-X-Gm-Message-State: ACrzQf0MXftTWutanG9o2MxGvcTBtnkEsiH8hosd33MYl393X3IIlpHQ
-        pm8PSanqmIZ4NOLG69MDm5ZRkA==
-X-Google-Smtp-Source: AMsMyM69vs7GHGx7R6YuBNKkrQI65YrlPF7aY1rqRVO/tA8YuRScsTIIQAfzVZEErv0M3FWeYVzSQA==
-X-Received: by 2002:a2e:bba2:0:b0:26b:e2d6:fe44 with SMTP id y34-20020a2ebba2000000b0026be2d6fe44mr1139102lje.286.1665126565048;
-        Fri, 07 Oct 2022 00:09:25 -0700 (PDT)
-Received: from [192.168.0.21] (78-11-189-27.static.ip.netia.com.pl. [78.11.189.27])
-        by smtp.gmail.com with ESMTPSA id v26-20020ac2559a000000b0049964f68457sm172995lfg.262.2022.10.07.00.09.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Oct 2022 00:09:24 -0700 (PDT)
-Message-ID: <da10e24f-3512-c111-13f0-a22851a99062@linaro.org>
-Date:   Fri, 7 Oct 2022 09:09:23 +0200
+        with ESMTP id S229487AbiJGJpM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 05:45:12 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B00B933E1D;
+        Fri,  7 Oct 2022 02:45:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1665135907; x=1696671907;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0Ire7ZsaBoZrk4q5Oev/H2q9lfYP9QG/ubwbSlN/mx4=;
+  b=NsHPj4dsFVOU2E5pS5w05ScN77haCPJiMIdM8KO5dYtvb2glhB8oDCoo
+   KtoBFz+sRjG3mCM3Jkdsf/5HV64H2ks20v5dk1Mop7R+/8uvnDP94Y2wX
+   9fttYgFXEs33ANQbF+fI+AXF5CLl/OrzV/O1tDSzJ3q1i9wuLELBkWB4s
+   W1bpohE4EviVWzkinwl5UfcKLQfI8fymqIUhcDO7DmFzwHbqz0b4oMyJo
+   V0PkEpv7NsaPL+vEupR5s5jTAcnNayUxc6Bq1CuGEKpUxTT8gqNhsEEul
+   sQ2YIEdUj8OKxo1Z0k6LI8QEIPNbPi+sBVN8yZ9VRdX0etWYhoRmGkIFR
+   A==;
+X-IronPort-AV: E=Sophos;i="5.95,166,1661842800"; 
+   d="scan'208";a="183703352"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Oct 2022 02:45:06 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Fri, 7 Oct 2022 02:45:06 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex04.mchp-main.com
+ (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
+ Transport; Fri, 7 Oct 2022 02:45:05 -0700
+Date:   Fri, 7 Oct 2022 11:49:38 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Michael Walle <michael@walle.cc>
+CC:     <UNGLinuxDriver@microchip.com>, <andy.shevchenko@gmail.com>,
+        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] pinctrl: ocelot: Fix interrupt controller
+Message-ID: <20221007094938.qqf7exuthvz5gkdq@soft-dev3-1.localhost>
+References: <20220909145942.844102-1-horatiu.vultur@microchip.com>
+ <20220920120642.690340-1-michael@walle.cc>
+ <20220920193033.bpmyt6pdob5b45id@soft-dev3-1.localhost>
+ <683fc322fddebe39a93a46aefcd5e2dd@walle.cc>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v8 1/3] dt-bindings: pinctrl: qcom: add sdm670 pinctrl
-Content-Language: en-US
-To:     Richard Acayan <mailingradian@gmail.com>,
-        linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-References: <20221006232219.37505-1-mailingradian@gmail.com>
- <20221006232219.37505-2-mailingradian@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221006232219.37505-2-mailingradian@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <683fc322fddebe39a93a46aefcd5e2dd@walle.cc>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/10/2022 01:22, Richard Acayan wrote:
-> There is a new driver for the Snapdragon 670 TLMM (Top-Level Mode
-> Multiplexer). Document it.
+The 10/06/2022 13:43, Michael Walle wrote:
+
+Hi Walle,
+
+> Seeing 20 was definitely fishy, seeing two instead of one maybe not
+> so much. I guess it will create one spurious interrupt if none of
+> the registered handlers will care.
 > 
-> Adapted from qcom,sm6350-pinctrl.yaml.
+> OTOH, the code below won't work in all cases anyway, right? It's just
+> best effort.
+
+I was expecting to work in all cases, but if you found some cases that
+would not work, please point them out.
+
 > 
-> Signed-off-by: Richard Acayan <mailingradian@gmail.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> ---
->  .../bindings/pinctrl/qcom,sdm670-tlmm.yaml    | 129 ++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
+> > Below I have a diff that I tried with LAN8814 PHYs and I could see that
+> > count in /proc/interrupts is increasing correctly.
+> > 
+> > > I've verified that there is only one low pulse on the interrupt line.
+> > > I've
+> > > noticed though, that the number of interrupts seem to be correlating
+> > > with
+> > > the length of the low pulse.
+> > ---
+> > diff --git a/drivers/pinctrl/pinctrl-ocelot.c
+> > b/drivers/pinctrl/pinctrl-ocelot.c
+> > index c7df8c5fe5854..105771ff82e62 100644
+> > --- a/drivers/pinctrl/pinctrl-ocelot.c
+> > +++ b/drivers/pinctrl/pinctrl-ocelot.c
+> > @@ -1863,19 +1863,28 @@ static void ocelot_irq_unmask_level(struct
+> > irq_data *data)
+> >       if (val & bit)
+> >               ack = true;
+> > 
+> > +     /* Try to clear any rising edges */
+> > +     if (!active && ack)
+> > +             regmap_write_bits(info->map, REG(OCELOT_GPIO_INTR, info, gpio),
+> > +                               bit, bit);
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
-> new file mode 100644
-> index 000000000000..e2f563ae6bbf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
-> @@ -0,0 +1,129 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sdm670-tlmm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SDM670 TLMM block
-> +
-> +maintainers:
-> +  - Richard Acayan <mailingradian@gmail.com>
-> +
-> +description: |
-> +  This binding describes the Top Level Mode Multiplexer (TLMM) block found
-> +  in the SDM670 platform.
+> Might we lose interrupts here, if the line would go active again right
+> after the read of the line state and before reading the "ack" bit?
 
-Drop "This bindings describes the"
+We lose the interrupt here, as the HW will not generate another one
+but at later point we read again the line status. And if the line is
+active then we kick again the interrupt handler again.
 
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
+> 
+> > +
+> >       /* Enable the interrupt now */
+> >       gpiochip_enable_irq(chip, gpio);
+> >       regmap_update_bits(info->map, REG(OCELOT_GPIO_INTR_ENA, info, gpio),
+> >                          bit, bit);
+> > 
+> >       /*
+> > -      * In case the interrupt line is still active and the interrupt
+> > -      * controller has not seen any changes in the interrupt line, then it
+> > -      * means that there happen another interrupt while the line was
+> > active.
+> > +      * In case the interrupt line is still active then it means that
+> > +      * there happen another interrupt while the line was active.
+> >        * So we missed that one, so we need to kick the interrupt again
+> >        * handler.
+> >        */
+> > -     if (active && !ack) {
+> > +     regmap_read(info->map, REG(OCELOT_GPIO_IN, info, gpio), &val);
+> > +     if ((!(val & bit) && trigger_level == IRQ_TYPE_LEVEL_LOW) ||
+> > +           (val & bit && trigger_level == IRQ_TYPE_LEVEL_HIGH))
+> > +             active = true;
+> 
+> Why do you read the line state twice? What happens if the line state
+> changes right after you've read it?
 
-Drop.
+Here we need to read again the status because we might have clear the
+ack of interrupt.
+If the line becomes active right after this read, then the HW will
+generate another interrupt as the interrupt is enabled and ack is
+cleared.
 
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sdm670-tlmm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  '#interrupt-cells': true
+> 
+> > +
+> > +     if (active) {
+> >               struct ocelot_irq_work *work;
+> > 
+> >               work = kmalloc(sizeof(*work), GFP_ATOMIC);
+> 
+> So yes, maybe the trade-off that there will be two interrupts are
+> better than this additional patch. But it should be documented
+> somewhere, even if it's just a comment in this driver.
+> 
+> -michael
 
-Use consistent " everywhere.
-
-Best regards,
-Krzysztof
-
+-- 
+/Horatiu
