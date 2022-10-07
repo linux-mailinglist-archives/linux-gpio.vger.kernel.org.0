@@ -2,47 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 476AB5F7E40
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 21:43:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC7845F7E5F
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 21:59:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbiJGTnR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 15:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46306 "EHLO
+        id S229481AbiJGT7R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 15:59:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbiJGTnR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 15:43:17 -0400
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F1AB40C4;
-        Fri,  7 Oct 2022 12:43:15 -0700 (PDT)
-Received: from [192.168.1.101] (95.49.30.201.neoplus.adsl.tpnet.pl [95.49.30.201])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 39D5A200A6;
-        Fri,  7 Oct 2022 21:43:13 +0200 (CEST)
-Message-ID: <4bd98fa8-6721-8b4b-9e84-12d732bc34bd@somainline.org>
-Date:   Fri, 7 Oct 2022 21:43:12 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sm8150: align TLMM pin
- configuration with DT schema
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
+        with ESMTP id S229638AbiJGT7R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 15:59:17 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E37108DF7
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Oct 2022 12:59:15 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id j16so8738641wrh.5
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Oct 2022 12:59:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xLhn5O0s6mSFDFd2G8Z0EYT0Ydw1EQtGD2+/PxXPLis=;
+        b=QAmNy9rf42OQPRWeyaysdE9sgBqnfT0EsiVmNqxUApUpcD3JoyNd7oY+okGu+mnnLM
+         sp30NA+bhqg+RJe7YB10fP5yJK3O6UN+WCMjk74ABVldfWTk4bixkP7VlA9rC6A4pvrE
+         44jHcH0NTct8Qenh18oHGNa9Hxc8g4d678HevrOY1R7eV8lV7yfztZcwP1vUQwnfRlnt
+         qHRRTaA37jbrWv5dgmlziYpf8jBtgx/61PBB4uU5DNMgV16wj7CxiF63vjSdPxyZe+tU
+         O9j/02HCOJdNI36FaWfIBiq0ZJG4L5QNYj4fb+Hn2/QEx3kGMyoJSxmMrKb82T59i4iR
+         v+CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xLhn5O0s6mSFDFd2G8Z0EYT0Ydw1EQtGD2+/PxXPLis=;
+        b=lv5cdI0HxgJfEX/clF0zva2em81Rcobdab8rAyMBsiD81S6odv1OW/PnpIxKG2itKb
+         Wx1qcO6aunX9Zn/wlXQTKRMzvTGSmoPyNp0pP1BcGdSmX4pr+AxF68aQME+lbY//buPc
+         YzrgA7aIjj7dgvAi11fz8SoBWM9EkMf+FNZoPZBfhioScbDBEuxE7+ZtQdhv4B7LopZe
+         zqp/38P2/QagNlqbFATUey7cyZY3Kr1PcSMW1/r0PtnqI4oot1aSv8bnRngZxzTd7qdg
+         Ym2xFUEx3qr3Xta6M48nRtE+VY5nLNfKkT/N+dmn9gvCdygvCubamZ+qFYXCKPAKCizP
+         HLPg==
+X-Gm-Message-State: ACrzQf3sJvSPV5VflRbiJt8RcksoFsCTHOJBQKzsKVZ0+D1NtdCjy2+v
+        pm4goI/Khsnk3shq1cy7X6VP2A==
+X-Google-Smtp-Source: AMsMyM7DROCnW8ScMO/J45oKbClHQqsXWFqyJIf/V5IJUedp9vgiyPVmWDXDPg/NuZQfWba29WTqcA==
+X-Received: by 2002:adf:e309:0:b0:22c:c332:9af7 with SMTP id b9-20020adfe309000000b0022cc3329af7mr4411249wrj.217.1665172754033;
+        Fri, 07 Oct 2022 12:59:14 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5a9e:bab6:45e8:abe8])
+        by smtp.gmail.com with ESMTPSA id u9-20020a5d4349000000b0022cdb687bf9sm3720822wrr.0.2022.10.07.12.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Oct 2022 12:59:13 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221006144518.256956-1-krzysztof.kozlowski@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-In-Reply-To: <20221006144518.256956-1-krzysztof.kozlowski@linaro.org>
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [GIT PULL] gpio: updates for v6.1-rc1
+Date:   Fri,  7 Oct 2022 21:59:06 +0200
+Message-Id: <20221007195906.350225-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,765 +70,187 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Linus,
 
+Here's the main pull-request from the GPIO subsystem for this merge window.
+We have a single new driver, support for a bunch of new models, improvements
+in drivers and core gpiolib code as well device-tree bindings changes.
 
-On 6.10.2022 16:45, Krzysztof Kozlowski wrote:
-> DT schema expects TLMM pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sa8155p-adp.dts      |  60 ++-
->  .../dts/qcom/sm8150-microsoft-surface-duo.dts |   2 +-
->  arch/arm64/boot/dts/qcom/sm8150.dtsi          | 376 ++++++------------
->  3 files changed, 157 insertions(+), 281 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> index 87ab0e1ecd16..06d0b6edd48a 100644
-> --- a/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sa8155p-adp.dts
-> @@ -477,26 +477,26 @@ &pcie1_phy {
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>;
->  
-> -	sdc2_on: sdc2_on {
-> -		clk {
-> +	sdc2_on: sdc2-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			bias-disable;		/* No pull */
->  			drive-strength = <16>;	/* 16 MA */
-I think these comments could go as well? The properties are rather self-explanatory.
+Details are in the signed tag.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+Please pull.
+Bartosz Golaszewski
 
-Konrad
->  		};
->  
-> -		cmd {
-> +		cmd-pins {
->  			pins = "sdc2_cmd";
->  			bias-pull-up;		/* pull up */
->  			drive-strength = <16>;	/* 16 MA */
->  		};
->  
-> -		data {
-> +		data-pins {
->  			pins = "sdc2_data";
->  			bias-pull-up;		/* pull up */
->  			drive-strength = <16>;	/* 16 MA */
->  		};
->  
-> -		sd-cd {
-> +		sd-cd-pins {
->  			pins = "gpio96";
->  			function = "gpio";
->  			bias-pull-up;		/* pull up */
-> @@ -504,26 +504,26 @@ sd-cd {
->  		};
->  	};
->  
-> -	sdc2_off: sdc2_off {
-> -		clk {
-> +	sdc2_off: sdc2-off-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			bias-disable;		/* No pull */
->  			drive-strength = <2>;	/* 2 MA */
->  		};
->  
-> -		cmd {
-> +		cmd-pins {
->  			pins = "sdc2_cmd";
->  			bias-pull-up;		/* pull up */
->  			drive-strength = <2>;	/* 2 MA */
->  		};
->  
-> -		data {
-> +		data-pins {
->  			pins = "sdc2_data";
->  			bias-pull-up;		/* pull up */
->  			drive-strength = <2>;	/* 2 MA */
->  		};
->  
-> -		sd-cd {
-> +		sd-cd-pins {
->  			pins = "gpio96";
->  			function = "gpio";
->  			bias-pull-up;		/* pull up */
-> @@ -531,66 +531,62 @@ sd-cd {
->  		};
->  	};
->  
-> -	usb2phy_ac_en1_default: usb2phy_ac_en1_default {
-> -		mux {
-> -			pins = "gpio113";
-> -			function = "usb2phy_ac";
-> -			bias-disable;
-> -			drive-strength = <2>;
-> -		};
-> +	usb2phy_ac_en1_default: usb2phy-ac-en1-default-state {
-> +		pins = "gpio113";
-> +		function = "usb2phy_ac";
-> +		bias-disable;
-> +		drive-strength = <2>;
->  	};
->  
-> -	usb2phy_ac_en2_default: usb2phy_ac_en2_default {
-> -		mux {
-> -			pins = "gpio123";
-> -			function = "usb2phy_ac";
-> -			bias-disable;
-> -			drive-strength = <2>;
-> -		};
-> +	usb2phy_ac_en2_default: usb2phy-ac-en2-default-state {
-> +		pins = "gpio123";
-> +		function = "usb2phy_ac";
-> +		bias-disable;
-> +		drive-strength = <2>;
->  	};
->  
-> -	ethernet_defaults: ethernet-defaults {
-> -		mdc {
-> +	ethernet_defaults: ethernet-defaults-state {
-> +		mdc-pins {
->  			pins = "gpio7";
->  			function = "rgmii";
->  			bias-pull-up;
->  		};
->  
-> -		mdio {
-> +		mdio-pins {
->  			pins = "gpio59";
->  			function = "rgmii";
->  			bias-pull-up;
->  		};
->  
-> -		rgmii-rx {
-> +		rgmii-rx-pins {
->  			pins = "gpio117", "gpio118", "gpio119", "gpio120", "gpio115", "gpio116";
->  			function = "rgmii";
->  			bias-disable;
->  			drive-strength = <2>;
->  		};
->  
-> -		rgmii-tx {
-> +		rgmii-tx-pins {
->  			pins = "gpio122", "gpio4", "gpio5", "gpio6", "gpio114", "gpio121";
->  			function = "rgmii";
->  			bias-pull-up;
->  			drive-strength = <16>;
->  		};
->  
-> -		phy-intr {
-> +		phy-intr-pins {
->  			pins = "gpio124";
->  			function = "emac_phy";
->  			bias-disable;
->  			drive-strength = <8>;
->  		};
->  
-> -		pps {
-> +		pps-pins {
->  			pins = "gpio81";
->  			function = "emac_pps";
->  			bias-disable;
->  			drive-strength = <8>;
->  		};
->  
-> -		phy-reset {
-> +		phy-reset-pins {
->  			pins = "gpio79";
->  			function = "gpio";
->  			bias-pull-up;
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts b/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-> index bb278ecac3fa..5397fba9417b 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-> +++ b/arch/arm64/boot/dts/qcom/sm8150-microsoft-surface-duo.dts
-> @@ -475,7 +475,7 @@ &pon_resin {
->  &tlmm {
->  	gpio-reserved-ranges = <126 4>;
->  
-> -	da7280_intr_default: da7280-intr-default {
-> +	da7280_intr_default: da7280-intr-default-state {
->  		pins = "gpio42";
->  		function = "gpio";
->  		bias-pull-up;
-> diff --git a/arch/arm64/boot/dts/qcom/sm8150.dtsi b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> index cef8c4f4f0ff..18195ae2d021 100644
-> --- a/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sm8150.dtsi
-> @@ -2276,422 +2276,302 @@ tlmm: pinctrl@3100000 {
->  			#interrupt-cells = <2>;
->  			wakeup-parent = <&pdc>;
->  
-> -			qup_i2c0_default: qup-i2c0-default {
-> -				mux {
-> -					pins = "gpio0", "gpio1";
-> -					function = "qup0";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio0", "gpio1";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c0_default: qup-i2c0-default-state {
-> +				pins = "gpio0", "gpio1";
-> +				function = "qup0";
-> +				drive-strength = <0x02>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi0_default: qup-spi0-default {
-> +			qup_spi0_default: qup-spi0-default-state {
->  				pins = "gpio0", "gpio1", "gpio2", "gpio3";
->  				function = "qup0";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c1_default: qup-i2c1-default {
-> -				mux {
-> -					pins = "gpio114", "gpio115";
-> -					function = "qup1";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio114", "gpio115";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c1_default: qup-i2c1-default-state {
-> +				pins = "gpio114", "gpio115";
-> +				function = "qup1";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi1_default: qup-spi1-default {
-> +			qup_spi1_default: qup-spi1-default-state {
->  				pins = "gpio114", "gpio115", "gpio116", "gpio117";
->  				function = "qup1";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c2_default: qup-i2c2-default {
-> -				mux {
-> -					pins = "gpio126", "gpio127";
-> -					function = "qup2";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio126", "gpio127";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c2_default: qup-i2c2-default-state {
-> +				pins = "gpio126", "gpio127";
-> +				function = "qup2";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi2_default: qup-spi2-default {
-> +			qup_spi2_default: qup-spi2-default-state {
->  				pins = "gpio126", "gpio127", "gpio128", "gpio129";
->  				function = "qup2";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c3_default: qup-i2c3-default {
-> -				mux {
-> -					pins = "gpio144", "gpio145";
-> -					function = "qup3";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio144", "gpio145";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c3_default: qup-i2c3-default-state {
-> +				pins = "gpio144", "gpio145";
-> +				function = "qup3";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi3_default: qup-spi3-default {
-> +			qup_spi3_default: qup-spi3-default-state {
->  				pins = "gpio144", "gpio145", "gpio146", "gpio147";
->  				function = "qup3";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c4_default: qup-i2c4-default {
-> -				mux {
-> -					pins = "gpio51", "gpio52";
-> -					function = "qup4";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio51", "gpio52";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c4_default: qup-i2c4-default-state {
-> +				pins = "gpio51", "gpio52";
-> +				function = "qup4";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi4_default: qup-spi4-default {
-> +			qup_spi4_default: qup-spi4-default-state {
->  				pins = "gpio51", "gpio52", "gpio53", "gpio54";
->  				function = "qup4";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c5_default: qup-i2c5-default {
-> -				mux {
-> -					pins = "gpio121", "gpio122";
-> -					function = "qup5";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio121", "gpio122";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c5_default: qup-i2c5-default-state {
-> +				pins = "gpio121", "gpio122";
-> +				function = "qup5";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi5_default: qup-spi5-default {
-> +			qup_spi5_default: qup-spi5-default-state {
->  				pins = "gpio119", "gpio120", "gpio121", "gpio122";
->  				function = "qup5";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c6_default: qup-i2c6-default {
-> -				mux {
-> -					pins = "gpio6", "gpio7";
-> -					function = "qup6";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio6", "gpio7";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c6_default: qup-i2c6-default-state {
-> +				pins = "gpio6", "gpio7";
-> +				function = "qup6";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi6_default: qup-spi6_default {
-> +			qup_spi6_default: qup-spi6_default-state {
->  				pins = "gpio4", "gpio5", "gpio6", "gpio7";
->  				function = "qup6";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c7_default: qup-i2c7-default {
-> -				mux {
-> -					pins = "gpio98", "gpio99";
-> -					function = "qup7";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio98", "gpio99";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c7_default: qup-i2c7-default-state {
-> +				pins = "gpio98", "gpio99";
-> +				function = "qup7";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi7_default: qup-spi7_default {
-> +			qup_spi7_default: qup-spi7_default-state {
->  				pins = "gpio98", "gpio99", "gpio100", "gpio101";
->  				function = "qup7";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c8_default: qup-i2c8-default {
-> -				mux {
-> -					pins = "gpio88", "gpio89";
-> -					function = "qup8";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio88", "gpio89";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c8_default: qup-i2c8-default-state {
-> +				pins = "gpio88", "gpio89";
-> +				function = "qup8";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi8_default: qup-spi8-default {
-> +			qup_spi8_default: qup-spi8-default-state {
->  				pins = "gpio88", "gpio89", "gpio90", "gpio91";
->  				function = "qup8";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c9_default: qup-i2c9-default {
-> -				mux {
-> -					pins = "gpio39", "gpio40";
-> -					function = "qup9";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio39", "gpio40";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c9_default: qup-i2c9-default-state {
-> +				pins = "gpio39", "gpio40";
-> +				function = "qup9";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi9_default: qup-spi9-default {
-> +			qup_spi9_default: qup-spi9-default-state {
->  				pins = "gpio39", "gpio40", "gpio41", "gpio42";
->  				function = "qup9";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c10_default: qup-i2c10-default {
-> -				mux {
-> -					pins = "gpio9", "gpio10";
-> -					function = "qup10";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio9", "gpio10";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c10_default: qup-i2c10-default-state {
-> +				pins = "gpio9", "gpio10";
-> +				function = "qup10";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi10_default: qup-spi10-default {
-> +			qup_spi10_default: qup-spi10-default-state {
->  				pins = "gpio9", "gpio10", "gpio11", "gpio12";
->  				function = "qup10";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c11_default: qup-i2c11-default {
-> -				mux {
-> -					pins = "gpio94", "gpio95";
-> -					function = "qup11";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio94", "gpio95";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c11_default: qup-i2c11-default-state {
-> +				pins = "gpio94", "gpio95";
-> +				function = "qup11";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi11_default: qup-spi11-default {
-> +			qup_spi11_default: qup-spi11-default-state {
->  				pins = "gpio92", "gpio93", "gpio94", "gpio95";
->  				function = "qup11";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c12_default: qup-i2c12-default {
-> -				mux {
-> -					pins = "gpio83", "gpio84";
-> -					function = "qup12";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio83", "gpio84";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c12_default: qup-i2c12-default-state {
-> +				pins = "gpio83", "gpio84";
-> +				function = "qup12";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi12_default: qup-spi12-default {
-> +			qup_spi12_default: qup-spi12-default-state {
->  				pins = "gpio83", "gpio84", "gpio85", "gpio86";
->  				function = "qup12";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c13_default: qup-i2c13-default {
-> -				mux {
-> -					pins = "gpio43", "gpio44";
-> -					function = "qup13";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio43", "gpio44";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c13_default: qup-i2c13-default-state {
-> +				pins = "gpio43", "gpio44";
-> +				function = "qup13";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi13_default: qup-spi13-default {
-> +			qup_spi13_default: qup-spi13-default-state {
->  				pins = "gpio43", "gpio44", "gpio45", "gpio46";
->  				function = "qup13";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c14_default: qup-i2c14-default {
-> -				mux {
-> -					pins = "gpio47", "gpio48";
-> -					function = "qup14";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio47", "gpio48";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c14_default: qup-i2c14-default-state {
-> +				pins = "gpio47", "gpio48";
-> +				function = "qup14";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi14_default: qup-spi14-default {
-> +			qup_spi14_default: qup-spi14-default-state {
->  				pins = "gpio47", "gpio48", "gpio49", "gpio50";
->  				function = "qup14";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c15_default: qup-i2c15-default {
-> -				mux {
-> -					pins = "gpio27", "gpio28";
-> -					function = "qup15";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio27", "gpio28";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c15_default: qup-i2c15-default-state {
-> +				pins = "gpio27", "gpio28";
-> +				function = "qup15";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi15_default: qup-spi15-default {
-> +			qup_spi15_default: qup-spi15-default-state {
->  				pins = "gpio27", "gpio28", "gpio29", "gpio30";
->  				function = "qup15";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c16_default: qup-i2c16-default {
-> -				mux {
-> -					pins = "gpio86", "gpio85";
-> -					function = "qup16";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio86", "gpio85";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c16_default: qup-i2c16-default-state {
-> +				pins = "gpio86", "gpio85";
-> +				function = "qup16";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi16_default: qup-spi16-default {
-> +			qup_spi16_default: qup-spi16-default-state {
->  				pins = "gpio83", "gpio84", "gpio85", "gpio86";
->  				function = "qup16";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c17_default: qup-i2c17-default {
-> -				mux {
-> -					pins = "gpio55", "gpio56";
-> -					function = "qup17";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio55", "gpio56";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c17_default: qup-i2c17-default-state {
-> +				pins = "gpio55", "gpio56";
-> +				function = "qup17";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi17_default: qup-spi17-default {
-> +			qup_spi17_default: qup-spi17-default-state {
->  				pins = "gpio55", "gpio56", "gpio57", "gpio58";
->  				function = "qup17";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c18_default: qup-i2c18-default {
-> -				mux {
-> -					pins = "gpio23", "gpio24";
-> -					function = "qup18";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio23", "gpio24";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c18_default: qup-i2c18-default-state {
-> +				pins = "gpio23", "gpio24";
-> +				function = "qup18";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi18_default: qup-spi18-default {
-> +			qup_spi18_default: qup-spi18-default-state {
->  				pins = "gpio23", "gpio24", "gpio25", "gpio26";
->  				function = "qup18";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			qup_i2c19_default: qup-i2c19-default {
-> -				mux {
-> -					pins = "gpio57", "gpio58";
-> -					function = "qup19";
-> -				};
-> -
-> -				config {
-> -					pins = "gpio57", "gpio58";
-> -					drive-strength = <0x02>;
-> -					bias-disable;
-> -				};
-> +			qup_i2c19_default: qup-i2c19-default-state {
-> +				pins = "gpio57", "gpio58";
-> +				function = "qup19";
-> +				drive-strength = <2>;
-> +				bias-disable;
->  			};
->  
-> -			qup_spi19_default: qup-spi19-default {
-> +			qup_spi19_default: qup-spi19-default-state {
->  				pins = "gpio55", "gpio56", "gpio57", "gpio58";
->  				function = "qup19";
->  				drive-strength = <6>;
->  				bias-disable;
->  			};
->  
-> -			pcie0_default_state: pcie0-default {
-> -				perst {
-> +			pcie0_default_state: pcie0-default-state {
-> +				perst-pins {
->  					pins = "gpio35";
->  					function = "gpio";
->  					drive-strength = <2>;
->  					bias-pull-down;
->  				};
->  
-> -				clkreq {
-> +				clkreq-pins {
->  					pins = "gpio36";
->  					function = "pci_e0";
->  					drive-strength = <2>;
->  					bias-pull-up;
->  				};
->  
-> -				wake {
-> +				wake-pins {
->  					pins = "gpio37";
->  					function = "gpio";
->  					drive-strength = <2>;
-> @@ -2699,22 +2579,22 @@ wake {
->  				};
->  			};
->  
-> -			pcie1_default_state: pcie1-default {
-> -				perst {
-> +			pcie1_default_state: pcie1-default-state {
-> +				perst-pins {
->  					pins = "gpio102";
->  					function = "gpio";
->  					drive-strength = <2>;
->  					bias-pull-down;
->  				};
->  
-> -				clkreq {
-> +				clkreq-pins {
->  					pins = "gpio103";
->  					function = "pci_e1";
->  					drive-strength = <2>;
->  					bias-pull-up;
->  				};
->  
-> -				wake {
-> +				wake-pins {
->  					pins = "gpio104";
->  					function = "gpio";
->  					drive-strength = <2>;
+The following changes since commit 568035b01cfb107af8d2e4bd2fb9aea22cf5b868:
+
+  Linux 6.0-rc1 (2022-08-14 15:50:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-updates-for-v6.1-rc1
+
+for you to fetch changes up to 3c92506d86785967fd7e7933e04491b9276c2f00:
+
+  gpio: tc3589x: Make irqchip immutable (2022-10-03 20:56:46 +0200)
+
+----------------------------------------------------------------
+gpio updates for v6.1-rc1
+
+New drivers:
+- add a new driver for the IMX System Controller Unit GPIOs
+
+GPIO core:
+- add fdinfo output for the GPIO character device file descriptors (allows
+  user-space to determine which processes own which GPIO lines)
+- improvements to OF GPIO code
+- new quirk for Asus UM325UAZ in gpiolib-acpi
+- new quirk for Freescale SPI in gpiolib-of
+
+Driver improvements:
+- add a new macro that reduces the amount of boilerplate code in ISA drivers
+  and use it in relevant drivers
+- support two new models in gpio-pca953x
+- support new model in gpio-f7188x
+- convert more drivers to use immutable irq chips
+- other minor tweaks
+
+Device-tree bindings:
+- add DT bindings for gpio-imx-scu
+- convert Xilinx GPIO bindings to YAML
+- reference the properties from the SPI peripheral device-tree bindings
+  instead of providing custom ones in the GPIO controller document
+- add parsing of GPIO hog nodes to the DT bindings for gpio-mpfs-gpio
+- relax the node name requirements in gpio-stmpe
+- add new models for gpio-rcar and gpio-pxa95xx
+- add a new vendor prefix: Diodes (for Diodes, Inc.)
+
+Misc:
+- pulled in the immutable branch from the x86 platform drivers tree including
+  support for a new simatic board that depends on GPIO changes
+
+----------------------------------------------------------------
+Bartosz Golaszewski (3):
+      Merge tag 'platform-drivers-x86-simatec-1' of git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86 into gpio/for-next
+      Merge tag 'intel-gpio-v6.1-1' of gitolite.kernel.org:pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+      gpiolib: cdev: add fdinfo output for line request file descriptors
+
+Conor Dooley (1):
+      dt-bindings: gpio: mpfs-gpio: allow parsing of hog child nodes.
+
+Dmitry Torokhov (5):
+      gpiolib: make fwnode_get_named_gpiod() static
+      gpiolib: of: do not ignore requested index when applying quirks
+      gpiolib: of: make Freescale SPI quirk similar to all others
+      gpiolib: rework quirk handling in of_find_gpio()
+      gpiolib: of: factor out conversion from OF flags
+
+Francesco Dolcini (1):
+      dt-bindings: gpio: stmpe: Remove node name requirement
+
+Geert Uytterhoeven (1):
+      dt-bindings: gpio: renesas,rcar-gpio: Add r8a779g0 support
+
+Henning Schild (7):
+      gpio-f7188x: switch over to using pr_fmt
+      gpio-f7188x: add a prefix to macros to keep gpio namespace clean
+      gpio-f7188x: Add GPIO support for Nuvoton NCT6116
+      gpio-f7188x: use unique labels for banks/chips
+      leds: simatic-ipc-leds-gpio: add new model 227G
+      platform/x86: simatic-ipc: enable watchdog for 227G
+      platform/x86: simatic-ipc: add new model 427G
+
+Jeffy Chen (1):
+      gpio/rockchip: Convert to generic_handle_domain_irq()
+
+Krzysztof Kozlowski (1):
+      dt-bindings: gpio: fairchild,74hc595: use spi-peripheral-props.yaml
+
+Linus Walleij (2):
+      gpio: ucb1400: Use proper header
+      gpio: tc3589x: Make irqchip immutable
+
+Mario Limonciello (2):
+      gpiolib: acpi: Add support to ignore programming an interrupt
+      gpiolib: acpi: Add a quirk for Asus UM325UAZ
+
+Martyn Welch (5):
+      dt-bindings: vendor-prefixes: add Diodes
+      dt-bindings: gpio: pca95xx: add entry for pcal6534 and PI4IOE5V6534Q
+      gpio: pca953x: Fix pca953x_gpio_set_pull_up_down()
+      gpio: pca953x: Swap if statements to save later complexity
+      gpio: pca953x: Add support for PCAL6534
+
+Michael Walle (1):
+      gpiolib: fix OOB access in quirk callbacks
+
+Nate Drude (2):
+      dt-bindings: gpio: pca95xx: add entry for pcal6408
+      gpio: pca953x: introduce support for nxp,pcal6408
+
+Qingtao Cao (1):
+      gpio: exar: access MPIO registers on cascaded chips
+
+Sergio Paracuellos (1):
+      gpio: mt7621: Switch to use platform_get_irq() function
+
+Shenwei Wang (3):
+      dt-bindings: gpio: Add imx scu gpio driver bindings
+      dt-bindings: firmware: imx: Add imx-scu gpio node
+      gpio: imx-scu: add imx-scu GPIO driver
+
+Srinivas Neeli (1):
+      dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi gpio binding to YAML
+
+Uwe Kleine-König (1):
+      gpio: twl4030: Reorder functions which allows to drop a forward declaraion
+
+William Breathitt Gray (6):
+      isa: Introduce the module_isa_driver_with_irq helper macro
+      counter: 104-quad-8: Ensure number of irq matches number of base
+      gpio: 104-dio-48e: Ensure number of irq matches number of base
+      gpio: 104-idi-48: Ensure number of irq matches number of base
+      gpio: 104-idio-16: Ensure number of irq matches number of base
+      gpio: ws16c48: Ensure number of irq matches number of base
+
+ .../devicetree/bindings/firmware/fsl,scu.yaml      |   5 +
+ .../bindings/gpio/fairchild,74hc595.yaml           |   7 +-
+ .../bindings/gpio/fsl,imx8qxp-sc-gpio.yaml         |  39 +++
+ .../devicetree/bindings/gpio/gpio-pca95xx.yaml     |  99 ++++----
+ .../devicetree/bindings/gpio/gpio-stmpe.txt        |   3 +-
+ .../devicetree/bindings/gpio/gpio-xilinx.txt       |  48 ----
+ .../bindings/gpio/microchip,mpfs-gpio.yaml         |  18 ++
+ .../bindings/gpio/renesas,rcar-gpio.yaml           |   1 +
+ .../devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 154 ++++++++++++
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ drivers/counter/104-quad-8.c                       |   5 +-
+ drivers/gpio/Kconfig                               |   7 +-
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-104-dio-48e.c                    |   5 +-
+ drivers/gpio/gpio-104-idi-48.c                     |   5 +-
+ drivers/gpio/gpio-104-idio-16.c                    |   5 +-
+ drivers/gpio/gpio-exar.c                           |  40 ++-
+ drivers/gpio/gpio-f7188x.c                         | 275 ++++++++++++---------
+ drivers/gpio/gpio-imx-scu.c                        | 139 +++++++++++
+ drivers/gpio/gpio-mt7621.c                         |   7 +-
+ drivers/gpio/gpio-pca953x.c                        | 177 ++++++++++---
+ drivers/gpio/gpio-rockchip.c                       |  21 +-
+ drivers/gpio/gpio-tc3589x.c                        |   8 +-
+ drivers/gpio/gpio-twl4030.c                        |  26 +-
+ drivers/gpio/gpio-ucb1400.c                        |   1 +
+ drivers/gpio/gpio-ws16c48.c                        |   5 +-
+ drivers/gpio/gpiolib-acpi.c                        |  38 ++-
+ drivers/gpio/gpiolib-cdev.c                        |  18 ++
+ drivers/gpio/gpiolib-of.c                          | 184 ++++++--------
+ drivers/gpio/gpiolib.c                             | 132 +++++-----
+ drivers/leds/simple/simatic-ipc-leds-gpio.c        |  42 +++-
+ drivers/platform/x86/simatic-ipc.c                 |  10 +-
+ include/linux/gpio/consumer.h                      |  13 -
+ include/linux/isa.h                                |  52 +++-
+ include/linux/platform_data/x86/simatic-ipc-base.h |   1 +
+ include/linux/platform_data/x86/simatic-ipc.h      |   2 +
+ include/linux/ucb1400.h                            |   2 +-
+ 37 files changed, 1089 insertions(+), 508 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/fsl,imx8qxp-sc-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-xilinx.txt
+ create mode 100644 Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+ create mode 100644 drivers/gpio/gpio-imx-scu.c
