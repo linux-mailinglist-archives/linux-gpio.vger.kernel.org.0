@@ -2,36 +2,36 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51CD25F732F
-	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 05:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF9D35F7341
+	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 05:19:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiJGDRp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 6 Oct 2022 23:17:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46470 "EHLO
+        id S229816AbiJGDTG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 6 Oct 2022 23:19:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbiJGDRi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 23:17:38 -0400
+        with ESMTP id S229747AbiJGDSV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 6 Oct 2022 23:18:21 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082D6C513A;
-        Thu,  6 Oct 2022 20:17:36 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301CF115C35;
+        Thu,  6 Oct 2022 20:18:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6EFD7B821FE;
-        Fri,  7 Oct 2022 03:17:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1C6C433D6;
-        Fri,  7 Oct 2022 03:17:33 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3AB2DB821FE;
+        Fri,  7 Oct 2022 03:18:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA012C433D6;
+        Fri,  7 Oct 2022 03:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665112654;
-        bh=yJn3965pphyURtiQeShKNWUDw4sZ2SzH+L8WiApurxU=;
+        s=k20201202; t=1665112678;
+        bh=h1blTJr+JpQGieoE+GfzLHaegoCpTolhkU+YqBTdIxk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y27TUp0PFp3+7mo2yiZMVKDGD2inz/vEPDEkMp+0a/Ynn/OAc4N9rpk7DXrX2Y+vu
-         TNQ8qGuvqdmGs1Nsd4D3eyz3VP+5rBevMbAfbjVYSAHF6R880R4E0VBxWNcmcrxq0E
-         61lDgvDufOcsWw6ICOj0AzFdVaa1GjZf+lLm36k/zp6SKnLnay/9iMHRW4gx1XGlSU
-         Nfl7owjniobMasH/FWyS1iH1XUrWoC5vG4zwYqfpcZiZEBamGQFl8KGYSv4vSBPcc3
-         GVRakKiSEKJ4LZNDd54h1gvNYmR2lcqMHkbP6/7IiCZMNDp8OArRW8zCqdL6pggQv4
-         r6b519G664NvQ==
-Date:   Thu, 6 Oct 2022 22:17:31 -0500
+        b=NMNd+ZdL2rZ/81SkDZRQKha2X+HA7DK3QvKi+We2FpJTqE2nLvjsAvT3J7+cLCUSI
+         UM2ZxfmEHK+Ji3VGnGxg3BvOHfbQS4OPUvqqO/rCIeBR5d7oeDCuFKEKKbPe2gaQcd
+         UtbrFm7rjE43ZMLXOph0/W3oE31ghiNEe5tRdRoItgbsEPvVYmCGwP+Njf6AHJdB35
+         T+wrVhsjY9SiH16r4/CzFpKhAwvN6MjGgDk2+60WoeyKakl6mbNPXGk6/9aU1LU38R
+         sxeI7G+QZd8iwWunVdHr0cncfryC+NTM69N3PkLb/kp1V3OCta7EDo+dE1bMKvkvnu
+         0nEkwTpNhl1zw==
+Date:   Thu, 6 Oct 2022 22:17:55 -0500
 From:   Bjorn Andersson <andersson@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -42,15 +42,15 @@ Cc:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 14/16] dt-bindings: pinctrl: qcom,sm8250: add
- input-enable
-Message-ID: <20221007031731.2okgwtr67jghzzfh@builder.lan>
+Subject: Re: [PATCH v2 15/16] dt-bindings: pinctrl: qcom,sc7280: add
+ bias-bus-hold and input-enable
+Message-ID: <20221007031755.p6lng3ib27thz4ip@builder.lan>
 References: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
- <20220930192954.242546-15-krzysztof.kozlowski@linaro.org>
+ <20220930192954.242546-16-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220930192954.242546-15-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220930192954.242546-16-krzysztof.kozlowski@linaro.org>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,9 +60,9 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 09:29:52PM +0200, Krzysztof Kozlowski wrote:
-> The SM8250 pinctrl driver supports input-enable and DTS already use it
-> (sm8250-sony-xperia-edo-pdx203).
+On Fri, Sep 30, 2022 at 09:29:53PM +0200, Krzysztof Kozlowski wrote:
+> The SC7280 pinctrl driver supports bias-bus-hold and input-enable, and
+> DTS already use it (sc7280-idp).
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > Acked-by: Rob Herring <robh@kernel.org>
@@ -70,21 +70,29 @@ On Fri, Sep 30, 2022 at 09:29:52PM +0200, Krzysztof Kozlowski wrote:
 Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
 > ---
->  .../devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml         | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml    | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-> index 131eb8c981f8..fb753fd8bbee 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm8250-pinctrl.yaml
-> @@ -119,6 +119,7 @@ $defs:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
+> index 4606ca980dc4..1db05c43d58c 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7280-pinctrl.yaml
+> @@ -117,13 +117,11 @@ $defs:
+>            Selects the drive strength for the specified pins, in mA.
+>  
 >        bias-pull-down: true
+> -
 >        bias-pull-up: true
+> -
+> +      bias-bus-hold: true
 >        bias-disable: true
+> -
 > +      input-enable: true
 >        output-high: true
+> -
 >        output-low: true
 >  
+>      required:
 > -- 
 > 2.34.1
 > 
