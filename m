@@ -2,62 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB2AD5F7A0B
+	by mail.lfdr.de (Postfix) with ESMTP id 48BC65F7A0A
 	for <lists+linux-gpio@lfdr.de>; Fri,  7 Oct 2022 16:55:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiJGOzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S229879AbiJGOzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Fri, 7 Oct 2022 10:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59802 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229882AbiJGOzj (ORCPT
+        with ESMTP id S229880AbiJGOzj (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 10:55:39 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA78C923D9
-        for <linux-gpio@vger.kernel.org>; Fri,  7 Oct 2022 07:55:31 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id bu30so7653619wrb.8
-        for <linux-gpio@vger.kernel.org>; Fri, 07 Oct 2022 07:55:31 -0700 (PDT)
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE11372FCD
+        for <linux-gpio@vger.kernel.org>; Fri,  7 Oct 2022 07:55:32 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id bv10so4105489wrb.4
+        for <linux-gpio@vger.kernel.org>; Fri, 07 Oct 2022 07:55:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=x9+bmcFR0M/o1Us5OXg3oO8d0KJXF2xDpETDGgj5DVM=;
-        b=x+LSTkD5corC65k8WjVZU/c1WkfGBn41p5tCkxHDLMEpMdfL8ohaLzsN6UiOaDeLZc
-         mkPLXsh0fG3AUJqgSwgWw/BtABNbpPZeA9V9uGoXtIt4a5hqSHRsKjXGYFrdJDs83U1+
-         zYRNkg9dct5XYDBgfCXucOZ9BOPAAgb0Fo2v+Lca0gmBbhsVVrWgMB1XJ+1Tjqh9gl2h
-         yfkpt0MrYImY6dhMWP6T/oV2lzKBbvezoRns1ARJtES9CyIF4RodLccQFNndwKXtNrSl
-         0XEqEGTIwXLQASIb2d1RH/k32okpMAJUjcug8qPev24C6kbP92WcjESxluDvh+t6YEdG
-         PE3w==
+        bh=EZHOCh49tSWcbSrqJSmKjjm+v/BrYvy77iFDZU56+Rc=;
+        b=klLOf+0DtvVfqnk+kHrpPU/aZf56EDr/Eaw+KUB0aWWhyv2vRiNN9tJ5POW1f8QeNh
+         xuMoAcFkEm1EaCbAh64SImXOxBGtablNrp5c5Pu0mrTk5sCmnub0db5kEb7f8I0SIgBc
+         CAmAy6vs6CGi6ntGkMD+hA7Z0cbZdakpEJn2hCO2LLDv1rR21XTnRoBaAAc8gfYBqrco
+         tmnvo0TwDVgw01fclqMh/0X49CVNVyz+bWDNag0uhNRRVgnL2u7XgSMEt2lstUKV6z8R
+         y2NZZR+jrxrEv98n+OPJzNommWzFUL/W93JukXAGcJXF8uGLIDTDYfY2o/N1JM3P7ifQ
+         8Nkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=x9+bmcFR0M/o1Us5OXg3oO8d0KJXF2xDpETDGgj5DVM=;
-        b=5OI1JHNWbS15Z8gzuROy26Uqp7/obFqlIRkIbPqFqUomrt/Dp5sk+MkqyPzqw2iN//
-         8TFRYnTzodyQSqFyT1oLuD4RCeMNO7yp9hSgOvU1EnW/qHZfhIhpndkm+uSy6lvrX/G4
-         s4GumnUljMCjRt706tjXQXSHUoOBIpWriaNQC6NsxIikfXQpHn+ph+OvW52qCMZegLkj
-         zGzcsccrm52H9l01GOlNfJpC9eN3BYlfKbe3Tf2buQAfEaN0EIK+z5S/w/6n4EjJgftW
-         nbGrjNbHZ5L92r0TXw54IFc8XfTiVJt3/BKffy9q4At/7DOpaQxkyQSc6ABsE9DT6MEF
-         YwOw==
-X-Gm-Message-State: ACrzQf2vxHgPLo5PJoyF6Q0KNJ7/+pFVl7s38kNd1U7NZ7tqLmoYb9Gz
-        W1GB6CtJEmmpckm/LjS4VnIylQ==
-X-Google-Smtp-Source: AMsMyM6zYjKCSuKq9Uds0rKgPcGXER+CsBodKtuh6RM0il2ehZYL1ioocjoyRmjpRTlOIsVg+wwY9Q==
-X-Received: by 2002:adf:f04b:0:b0:22e:3a85:59bf with SMTP id t11-20020adff04b000000b0022e3a8559bfmr3342226wro.683.1665154529762;
-        Fri, 07 Oct 2022 07:55:29 -0700 (PDT)
+        bh=EZHOCh49tSWcbSrqJSmKjjm+v/BrYvy77iFDZU56+Rc=;
+        b=o6AnL0LSBAXe1/+CQVko7aP9voeIJ/F0PvbiYuKL5s9WywPcGg0upYGV7IEwFezzWa
+         JEShmfkF43Bgn+KsVo7r8yv1CwLZYJLLanRQLup7dgmiSAujjMb36ZpcN3ANDiOPjvkq
+         fRI/TgURB0Tsxou8dPnuDfyBFvLlWG2XHOLxGZTVbukd+1Dd232+0t+M8wMu9/NAsqV/
+         CBLOm/sOz7k7Bossu6xDMn6JbkIJxnWv+DY/hx35Dd+Jrp9WySFZDUJWRXcStwQyQEpe
+         WtS4DdJJeZtQOmitBwaW+Sf4KMIudIEw36kHsfqgq1um/5MXld739TeS74J7foiUSvVv
+         5zlA==
+X-Gm-Message-State: ACrzQf0TrMoQcBajPmdooa0CML+mRygOmCOFQTrf6ohvq9AqrGCLbYsg
+        lhPSRf6qcespQo1oc/HusxHGZg==
+X-Google-Smtp-Source: AMsMyM624uqYZCsnVgamzKzD3OBypObJh9SLeYahhiWqyCN0RnbqPN9cb/+2nV/XI8LPAzAKPx+eXA==
+X-Received: by 2002:a5d:48c4:0:b0:22e:3908:9783 with SMTP id p4-20020a5d48c4000000b0022e39089783mr3364872wrs.284.1665154530762;
+        Fri, 07 Oct 2022 07:55:30 -0700 (PDT)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5a9e:bab6:45e8:abe8])
-        by smtp.gmail.com with ESMTPSA id f8-20020a5d50c8000000b0022e36c1113fsm2294707wrt.13.2022.10.07.07.55.28
+        by smtp.gmail.com with ESMTPSA id f8-20020a5d50c8000000b0022e36c1113fsm2294707wrt.13.2022.10.07.07.55.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 07:55:29 -0700 (PDT)
+        Fri, 07 Oct 2022 07:55:30 -0700 (PDT)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [libgpiod v2][PATCH v3 3/4] bindings: python: add tests
-Date:   Fri,  7 Oct 2022 16:55:20 +0200
-Message-Id: <20221007145521.329614-4-brgl@bgdev.pl>
+Subject: [libgpiod v2][PATCH v3 4/4] bindings: python: implement python bindings for libgpiod v2
+Date:   Fri,  7 Oct 2022 16:55:21 +0200
+Message-Id: <20221007145521.329614-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221007145521.329614-1-brgl@bgdev.pl>
 References: <20221007145521.329614-1-brgl@bgdev.pl>
@@ -72,304 +72,668 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a test-suite for python bindings based on the gpio-sim kernel
-module.
+This adds python bindings for libgpiod v2. As opposed to v1, they are
+mostly written in python with just low-level elements written in C and
+interfacing with libgpiod.so.
+
+We've also added setup.py which will allow to use pip for managing the
+bindings and split them into a separate meta-openembedded recipe.
 
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 ---
- bindings/python/tests/Makefile.am            |  17 +
- bindings/python/tests/__init__.py            |  17 +
- bindings/python/tests/__main__.py            |  16 +
- bindings/python/tests/gpiosim/Makefile.am    |   7 +
- bindings/python/tests/gpiosim/__init__.py    |   4 +
- bindings/python/tests/gpiosim/chip.py        |  66 +++
- bindings/python/tests/gpiosim/ext.c          | 345 ++++++++++++++
- bindings/python/tests/helpers.py             |  16 +
- bindings/python/tests/tests_chip.py          | 231 ++++++++++
- bindings/python/tests/tests_chip_info.py     |  52 +++
- bindings/python/tests/tests_edge_event.py    | 219 +++++++++
- bindings/python/tests/tests_info_event.py    | 189 ++++++++
- bindings/python/tests/tests_line_info.py     | 101 +++++
- bindings/python/tests/tests_line_request.py  | 449 +++++++++++++++++++
- bindings/python/tests/tests_line_settings.py |  79 ++++
- bindings/python/tests/tests_module.py        |  59 +++
- 16 files changed, 1867 insertions(+)
- create mode 100644 bindings/python/tests/Makefile.am
- create mode 100644 bindings/python/tests/__init__.py
- create mode 100644 bindings/python/tests/__main__.py
- create mode 100644 bindings/python/tests/gpiosim/Makefile.am
- create mode 100644 bindings/python/tests/gpiosim/__init__.py
- create mode 100644 bindings/python/tests/gpiosim/chip.py
- create mode 100644 bindings/python/tests/gpiosim/ext.c
- create mode 100644 bindings/python/tests/helpers.py
- create mode 100644 bindings/python/tests/tests_chip.py
- create mode 100644 bindings/python/tests/tests_chip_info.py
- create mode 100644 bindings/python/tests/tests_edge_event.py
- create mode 100644 bindings/python/tests/tests_info_event.py
- create mode 100644 bindings/python/tests/tests_line_info.py
- create mode 100644 bindings/python/tests/tests_line_request.py
- create mode 100644 bindings/python/tests/tests_line_settings.py
- create mode 100644 bindings/python/tests/tests_module.py
+ bindings/python/.gitignore                |   8 +
+ bindings/python/Makefile.am               |  35 ++
+ bindings/python/gpiod/Makefile.am         |  17 +
+ bindings/python/gpiod/__init__.py         |  53 +++
+ bindings/python/gpiod/chip.py             | 308 +++++++++++++++++
+ bindings/python/gpiod/chip_info.py        |  21 ++
+ bindings/python/gpiod/edge_event.py       |  46 +++
+ bindings/python/gpiod/exception.py        |  20 ++
+ bindings/python/gpiod/ext/Makefile.am     |  11 +
+ bindings/python/gpiod/ext/chip.c          | 335 ++++++++++++++++++
+ bindings/python/gpiod/ext/common.c        |  92 +++++
+ bindings/python/gpiod/ext/internal.h      |  20 ++
+ bindings/python/gpiod/ext/line-config.c   | 133 +++++++
+ bindings/python/gpiod/ext/line-settings.c | 130 +++++++
+ bindings/python/gpiod/ext/module.c        | 193 +++++++++++
+ bindings/python/gpiod/ext/request.c       | 402 ++++++++++++++++++++++
+ bindings/python/gpiod/info_event.py       |  33 ++
+ bindings/python/gpiod/internal.py         |  19 +
+ bindings/python/gpiod/line.py             |  56 +++
+ bindings/python/gpiod/line_info.py        |  73 ++++
+ bindings/python/gpiod/line_request.py     | 258 ++++++++++++++
+ bindings/python/gpiod/line_settings.py    |  62 ++++
+ bindings/python/setup.py                  |  47 +++
+ configure.ac                              |   3 +
+ 24 files changed, 2375 insertions(+)
+ create mode 100644 bindings/python/.gitignore
+ create mode 100644 bindings/python/Makefile.am
+ create mode 100644 bindings/python/gpiod/Makefile.am
+ create mode 100644 bindings/python/gpiod/__init__.py
+ create mode 100644 bindings/python/gpiod/chip.py
+ create mode 100644 bindings/python/gpiod/chip_info.py
+ create mode 100644 bindings/python/gpiod/edge_event.py
+ create mode 100644 bindings/python/gpiod/exception.py
+ create mode 100644 bindings/python/gpiod/ext/Makefile.am
+ create mode 100644 bindings/python/gpiod/ext/chip.c
+ create mode 100644 bindings/python/gpiod/ext/common.c
+ create mode 100644 bindings/python/gpiod/ext/internal.h
+ create mode 100644 bindings/python/gpiod/ext/line-config.c
+ create mode 100644 bindings/python/gpiod/ext/line-settings.c
+ create mode 100644 bindings/python/gpiod/ext/module.c
+ create mode 100644 bindings/python/gpiod/ext/request.c
+ create mode 100644 bindings/python/gpiod/info_event.py
+ create mode 100644 bindings/python/gpiod/internal.py
+ create mode 100644 bindings/python/gpiod/line.py
+ create mode 100644 bindings/python/gpiod/line_info.py
+ create mode 100644 bindings/python/gpiod/line_request.py
+ create mode 100644 bindings/python/gpiod/line_settings.py
+ create mode 100644 bindings/python/setup.py
 
-diff --git a/bindings/python/tests/Makefile.am b/bindings/python/tests/Makefile.am
+diff --git a/bindings/python/.gitignore b/bindings/python/.gitignore
 new file mode 100644
-index 0000000..7dcdebb
+index 0000000..b603068
 --- /dev/null
-+++ b/bindings/python/tests/Makefile.am
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++++ b/bindings/python/.gitignore
+@@ -0,0 +1,8 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+SUBDIRS = gpiosim
-+
-+EXTRA_DIST = \
-+	helpers.py \
-+	__init__.py \
-+	__main__.py \
-+	tests_chip_info.py \
-+	tests_chip.py \
-+	tests_edge_event.py \
-+	tests_info_event.py \
-+	tests_line_info.py \
-+	tests_line_request.py \
-+	tests_line_settings.py \
-+	tests_module.py
-diff --git a/bindings/python/tests/__init__.py b/bindings/python/tests/__init__.py
++build/
++__pycache__/
++dist/
++gpiod.egg-info/
++*.so
+diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
 new file mode 100644
-index 0000000..2bf14e6
+index 0000000..3212a8f
 --- /dev/null
-+++ b/bindings/python/tests/__init__.py
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import os
-+import unittest
-+
-+from packaging import version
-+
-+required_kernel_version = "5.19.0"
-+current_version = os.uname().release.split("-")[0]
-+
-+if version.parse(current_version) < version.parse(required_kernel_version):
-+    raise NotImplementedError(
-+        "linux kernel version must be at least {} - got {}".format(
-+            required_kernel_version, current_version
-+        )
-+    )
-diff --git a/bindings/python/tests/__main__.py b/bindings/python/tests/__main__.py
-new file mode 100644
-index 0000000..b5d7f0a
---- /dev/null
-+++ b/bindings/python/tests/__main__.py
-@@ -0,0 +1,16 @@
-+#!/usr/bin/python3
++++ b/bindings/python/Makefile.am
+@@ -0,0 +1,35 @@
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+import unittest
++EXTRA_DIST = setup.py
 +
-+from .tests_chip import *
-+from .tests_chip_info import *
-+from .tests_edge_event import *
-+from .tests_info_event import *
-+from .tests_line_info import *
-+from .tests_line_settings import *
-+from .tests_module import *
-+from .tests_line_request import *
++if WITH_TESTS
 +
-+unittest.main()
-diff --git a/bindings/python/tests/gpiosim/Makefile.am b/bindings/python/tests/gpiosim/Makefile.am
++BUILD_TESTS = 1
++
++endif
++
++all-local:
++	GPIOD_VERSION_STRING=$(VERSION_STR) \
++	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
++	$(PYTHON) setup.py build_ext --inplace \
++		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
++		--library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
++
++install-exec-local:
++	GPIOD_WITH_TESTS= \
++	$(PYTHON) setup.py install --prefix=$(prefix)
++
++SUBDIRS = gpiod
++
++if WITH_TESTS
++
++SUBDIRS += tests
++
++endif
++
++if WITH_EXAMPLES
++
++SUBDIRS += examples
++
++endif
+diff --git a/bindings/python/gpiod/Makefile.am b/bindings/python/gpiod/Makefile.am
 new file mode 100644
-index 0000000..7004f3a
+index 0000000..b0f4126
 --- /dev/null
-+++ b/bindings/python/tests/gpiosim/Makefile.am
-@@ -0,0 +1,7 @@
++++ b/bindings/python/gpiod/Makefile.am
+@@ -0,0 +1,17 @@
 +# SPDX-License-Identifier: LGPL-2.1-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
++SUBDIRS = ext
++
 +EXTRA_DIST = \
++	chip_info.py \
 +	chip.py \
-+	ext.c \
-+	__init__.py
-diff --git a/bindings/python/tests/gpiosim/__init__.py b/bindings/python/tests/gpiosim/__init__.py
++	edge_event.py \
++	exception.py \
++	info_event.py \
++	__init__.py \
++	internal.py \
++	line_info.py \
++	line.py \
++	line_request.py \
++	line_settings.py 
+diff --git a/bindings/python/gpiod/__init__.py b/bindings/python/gpiod/__init__.py
 new file mode 100644
-index 0000000..f65e413
+index 0000000..7854cfd
 --- /dev/null
-+++ b/bindings/python/tests/gpiosim/__init__.py
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
++++ b/bindings/python/gpiod/__init__.py
+@@ -0,0 +1,53 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
++"""
++Python bindings for libgpiod.
++
++This module wraps the native C API of libgpiod in a set of python classes.
++"""
++
++from . import _ext
++from . import line
 +from .chip import Chip
-diff --git a/bindings/python/tests/gpiosim/chip.py b/bindings/python/tests/gpiosim/chip.py
++from .chip_info import ChipInfo
++from .edge_event import EdgeEvent
++from .exception import ChipClosedError, RequestReleasedError
++from .info_event import InfoEvent
++from .line_request import LineRequest
++from .line_settings import LineSettings
++
++__version__ = _ext.__version__
++
++
++def is_gpiochip_device(path: str) -> bool:
++    """
++    Check if the file pointed to by path is a GPIO chip character device.
++
++    Args:
++      path
++        Path to the file that should be checked.
++
++    Returns:
++      Returns true if so, False otherwise.
++    """
++    return _ext.is_gpiochip_device(path)
++
++
++def request_lines(path: str, *args, **kwargs) -> LineRequest:
++    """
++    Open a GPIO chip pointed to by 'path', request lines according to the
++    configuration arguments, close the chip and return the request object.
++
++    Args:
++      path
++        Path to the GPIO character device file.
++      *args
++      **kwargs
++        See Chip.request_lines() for configuration arguments.
++
++    Returns:
++      Returns a new LineRequest object.
++    """
++    with Chip(path) as chip:
++        return chip.request_lines(*args, **kwargs)
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
 new file mode 100644
-index 0000000..65c5af1
+index 0000000..7896958
 --- /dev/null
-+++ b/bindings/python/tests/gpiosim/chip.py
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
++++ b/bindings/python/gpiod/chip.py
+@@ -0,0 +1,308 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
 +from . import _ext
-+from enum import Enum
-+from typing import Optional
++from .chip_info import ChipInfo
++from .exception import ChipClosedError
++from .info_event import InfoEvent
++from .internal import poll_fd
++from .line_info import LineInfo
++from .line_settings import LineSettings, _line_settings_to_ext_line_settings
++from .line_request import LineRequest
++from datetime import timedelta
++from errno import ENOENT
++from select import select
++from typing import Union, Optional
 +
 +
 +class Chip:
 +    """
-+    Represents a simulated GPIO chip.
++    Represents a GPIO chip.
++
++    Chip object manages all resources associated with the GPIO chip it represents.
++
++    The gpiochip device file is opened during the object's construction. The Chip
++    object's constructor takes the path to the GPIO chip device file
++    as the only argument.
++
++    Callers must close the chip by calling the close() method when it's no longer
++    used.
++
++    Example:
++
++        chip = gpiod.Chip(\"/dev/gpiochip0\")
++        do_something(chip)
++        chip.close()
++
++    The gpiod.Chip class also supports controlled execution ('with' statement).
++
++    Example:
++
++        with gpiod.Chip(path="/dev/gpiochip0") as chip:
++            do_something(chip)
 +    """
 +
-+    class Pull(Enum):
-+        DOWN = _ext.PULL_DOWN
-+        UP = _ext.PULL_UP
++    def __init__(self, path: str):
++        """
++        Open a GPIO device.
 +
-+    class Value(Enum):
-+        INACTIVE = _ext.VALUE_INACTIVE
-+        ACTIVE = _ext.VALUE_ACTIVE
++        Args:
++          path:
++            Path to the GPIO character device file.
++        """
++        self._chip = _ext.Chip(path)
 +
-+    class Direction(Enum):
-+        INPUT = _ext.DIRECTION_INPUT
-+        OUTPUT_HIGH = _ext.DIRECTION_OUTPUT_HIGH
-+        OUTPUT_LOW = _ext.DIRECTION_OUTPUT_LOW
++    def __bool__(self) -> bool:
++        """
++        Boolean conversion for GPIO chips.
++
++        Returns:
++          True if the chip is open and False if it's closed.
++        """
++        return True if self._chip else False
++
++    def __enter__(self):
++        """
++        Controlled execution enter callback.
++        """
++        self._check_closed()
++        return self
++
++    def __exit__(self, exc_type, exc_value, traceback) -> None:
++        """
++        Controlled execution exit callback.
++        """
++        self.close()
++
++    def _check_closed(self) -> None:
++        if not self._chip:
++            raise ChipClosedError()
++
++    def close(self) -> None:
++        """
++        Close the associated GPIO chip descriptor. The chip object must no
++        longer be used after this method is called.
++        """
++        self._check_closed()
++        self._chip.close()
++        self._chip = None
++
++    def get_info(self) -> ChipInfo:
++        """
++        Get the information about the chip.
++
++        Returns:
++          New gpiod.ChipInfo object.
++        """
++        self._check_closed()
++        return self._chip.get_info()
++
++    def map_line(self, id: Union[str, int]) -> int:
++        """
++        Map a line's identifier to its offset within the chip.
++
++        Args:
++          id:
++            Name of the GPIO line, its offset as a string or its offset as an
++            integer.
++
++        Returns:
++          If id is an integer - it's returned as is (unless it's out of range
++          for this chip). If it's a string, the method tries to interpret it as
++          the name of the line first and tries too perform a name lookup within
++          the chip. If it fails, it tries to convert the string to an integer
++          and check if it represents a valid offset within the chip and if
++          so - returns it.
++        """
++        self._check_closed()
++
++        if not isinstance(id, int):
++            try:
++                return self._chip.map_line(id)
++            except OSError as ex:
++                if ex.errno == ENOENT:
++                    try:
++                        offset = int(id)
++                    except ValueError:
++                        raise ex
++                else:
++                    raise ex
++        else:
++            offset = id
++
++        if offset >= self.get_info().num_lines:
++            raise ValueError("line offset of out range")
++
++        return offset
++
++    def _get_line_info(self, line: Union[int, str], watch: bool) -> LineInfo:
++        self._check_closed()
++        return self._chip.get_line_info(self.map_line(line), watch)
++
++    def get_line_info(self, line: Union[int, str]) -> LineInfo:
++        """
++        Get the snapshot of information about the line at given offset.
++
++        Args:
++          line:
++            Offset or name of the GPIO line to get information for.
++
++        Returns:
++          New LineInfo object.
++        """
++        return self._get_line_info(line, watch=False)
++
++    def watch_line_info(self, line: Union[int, str]) -> LineInfo:
++        """
++        Get the snapshot of information about the line at given offset and
++        start watching it for future changes.
++
++        Args:
++          line:
++            Offset or name of the GPIO line to get information for.
++
++        Returns:
++          New gpiod.LineInfo object.
++        """
++        return self._get_line_info(line, watch=True)
++
++    def unwatch_line_info(self, line: Union[int, str]) -> None:
++        """
++        Stop watching a line for status changes.
++
++        Args:
++          line:
++            Offset or name of the line to stop watching.
++        """
++        self._check_closed()
++        return self._chip.unwatch_line_info(self.map_line(line))
++
++    def wait_info_event(
++        self, timeout: Optional[Union[timedelta, float]] = None
++    ) -> bool:
++        """
++        Wait for line status change events on any of the watched lines on the
++        chip.
++
++        Args:
++          timeout:
++            Wait time limit represented as either a datetime.timedelta object
++            or the number of seconds stored in a float.
++
++        Returns:
++          True if an info event is ready to be read from the chip, False if the
++          wait timed out without any events.
++        """
++        self._check_closed()
++
++        return poll_fd(self.fd, timeout)
++
++    def read_info_event(self) -> InfoEvent:
++        """
++        Read a single line status change event from the chip.
++
++        Returns:
++          New gpiod.InfoEvent object.
++
++        Note:
++          This function may block if there are no available events in the queue.
++        """
++        self._check_closed()
++        return self._chip.read_info_event()
++
++    def request_lines(
++        self,
++        config: dict[tuple[Union[int, str]], Optional[LineSettings]],
++        consumer: Optional[str] = None,
++        event_buffer_size: Optional[int] = None,
++    ) -> LineRequest:
++        """
++        Request a set of lines for exclusive usage.
++
++        Args:
++          config:
++            Dictionary mapping offsets or names (or tuples thereof) to
++            LineSettings. If None is passed as the value of the mapping,
++            default settings are used.
++          consumer:
++            Consumer string to use for this request.
++          event_buffer_size:
++            Size of the kernel edge event buffer to configure for this request.
++
++        Returns:
++          New LineRequest object.
++        """
++        self._check_closed()
++
++        line_cfg = _ext.LineConfig()
++
++        for lines, settings in config.items():
++            offsets = list()
++            name_map = dict()
++            offset_map = dict()
++
++            if isinstance(lines, int) or isinstance(lines, str):
++                lines = (lines,)
++
++            for line in lines:
++                offset = self.map_line(line)
++                offsets.append(offset)
++                if isinstance(line, str):
++                    name_map[line] = offset
++                    offset_map[offset] = line
++
++            if settings is None:
++                settings = LineSettings()
++
++            line_cfg.add_line_settings(
++                offsets, _line_settings_to_ext_line_settings(settings)
++            )
++
++        req_internal = self._chip.request_lines(line_cfg, consumer, event_buffer_size)
++        request = LineRequest(req_internal)
++
++        request._offsets = req_internal.offsets
++        request._name_map = name_map
++        request._offset_map = offset_map
++
++        request._lines = list()
++        for off in request.offsets:
++            request._lines.append(offset_map[off] if off in offset_map else off)
++
++        return request
++
++    def __repr__(self) -> str:
++        """
++        Return a string that can be used to re-create this chip object.
++        """
++        if not self._chip:
++            return "<Chip CLOSED>"
++
++        return 'Chip("{}")'.format(self.path)
++
++    def __str__(self) -> str:
++        """
++        Return a user-friendly, human-readable description of this chip.
++        """
++        if not self._chip:
++            return "<Chip CLOSED>"
++
++        return '<Chip path="{}" fd={} info={}>'.format(
++            self.path, self.fd, self.get_info()
++        )
++
++    @property
++    def path(self) -> str:
++        """
++        Filesystem path used to open this chip.
++        """
++        self._check_closed()
++        return self._chip.path
++
++    @property
++    def fd(self) -> int:
++        """
++        File descriptor associated with this chip.
++        """
++        self._check_closed()
++        return self._chip.fd
+diff --git a/bindings/python/gpiod/chip_info.py b/bindings/python/gpiod/chip_info.py
+new file mode 100644
+index 0000000..a506b55
+--- /dev/null
++++ b/bindings/python/gpiod/chip_info.py
+@@ -0,0 +1,21 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++
++from dataclasses import dataclass
++
++
++@dataclass(frozen=True, repr=False)
++class ChipInfo:
++    """
++    Snapshot of a chip's status.
++    """
++
++    name: str
++    label: str
++    num_lines: int
++
++    def __str__(self):
++        return '<ChipInfo name="{}" label="{}" num_lines={}>'.format(
++            self.name, self.label, self.num_lines
++        )
+diff --git a/bindings/python/gpiod/edge_event.py b/bindings/python/gpiod/edge_event.py
+new file mode 100644
+index 0000000..88f8e9b
+--- /dev/null
++++ b/bindings/python/gpiod/edge_event.py
+@@ -0,0 +1,46 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++from . import _ext
++from dataclasses import dataclass
++from enum import Enum
++
++
++@dataclass(frozen=True, init=False, repr=False)
++class EdgeEvent:
++    """
++    Immutable object containing data about a single edge event.
++    """
++
++    class Type(Enum):
++        RISING_EDGE = _ext.EDGE_EVENT_TYPE_RISING
++        FALLING_EDGE = _ext.EDGE_EVENT_TYPE_FALLING
++
++    event_type: Type
++    timestamp_ns: int
++    line_offset: int
++    global_seqno: int
++    line_seqno: int
 +
 +    def __init__(
 +        self,
-+        /,
-+        label: Optional[str] = None,
-+        num_lines: Optional[int] = None,
-+        line_names: Optional[dict[int, str]] = None,
-+        hogs: Optional[dict[int, tuple[str, Direction]]] = None,
++        event_type: int,
++        timestamp_ns: int,
++        line_offset: int,
++        global_seqno: int,
++        line_seqno: int,
 +    ):
-+        self._chip = _ext.Chip()
++        object.__setattr__(self, "event_type", EdgeEvent.Type(event_type))
++        object.__setattr__(self, "timestamp_ns", timestamp_ns)
++        object.__setattr__(self, "line_offset", line_offset)
++        object.__setattr__(self, "global_seqno", global_seqno)
++        object.__setattr__(self, "line_seqno", line_seqno)
 +
-+        if label:
-+            self._chip.set_label(label)
-+
-+        if num_lines:
-+            self._chip.set_num_lines(num_lines)
-+
-+        if line_names:
-+            for off, name in line_names.items():
-+                self._chip.set_line_name(off, name)
-+
-+        if hogs:
-+            for off, (name, direction) in hogs.items():
-+                self._chip.set_hog(off, name, direction.value)
-+
-+        self._chip.enable()
-+
-+    def get_value(self, offset: int) -> Value:
-+        val = self._chip.get_value(offset)
-+        return Chip.Value(val)
-+
-+    def set_pull(self, offset: int, pull: Pull) -> None:
-+        self._chip.set_pull(offset, pull.value)
-+
-+    @property
-+    def dev_path(self) -> str:
-+        return self._chip.dev_path
-+
-+    @property
-+    def name(self) -> str:
-+        return self._chip.name
-diff --git a/bindings/python/tests/gpiosim/ext.c b/bindings/python/tests/gpiosim/ext.c
++    def __str__(self):
++        return "<EdgeEvent type={} timestamp_ns={} line_offset={} global_seqno={} line_seqno={}>".format(
++            self.event_type,
++            self.timestamp_ns,
++            self.line_offset,
++            self.global_seqno,
++            self.line_seqno,
++        )
+diff --git a/bindings/python/gpiod/exception.py b/bindings/python/gpiod/exception.py
 new file mode 100644
-index 0000000..6671352
+index 0000000..07ffaa6
 --- /dev/null
-+++ b/bindings/python/tests/gpiosim/ext.c
-@@ -0,0 +1,345 @@
++++ b/bindings/python/gpiod/exception.py
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++
++class ChipClosedError(Exception):
++    """
++    Error raised when an already closed chip is used.
++    """
++
++    def __init__(self):
++        super().__init__("I/O operation on closed chip")
++
++
++class RequestReleasedError(Exception):
++    """
++    Error raised when a released request is used.
++    """
++
++    def __init__(self):
++        super().__init__("GPIO lines have been released")
+diff --git a/bindings/python/gpiod/ext/Makefile.am b/bindings/python/gpiod/ext/Makefile.am
+new file mode 100644
+index 0000000..9c81b17
+--- /dev/null
++++ b/bindings/python/gpiod/ext/Makefile.am
+@@ -0,0 +1,11 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++EXTRA_DIST = \
++	chip.c \
++	common.c \
++	internal.h \
++	line-config.c \
++	line-settings.c \
++	module.c \
++	request.c
+diff --git a/bindings/python/gpiod/ext/chip.c b/bindings/python/gpiod/ext/chip.c
+new file mode 100644
+index 0000000..47d5455
+--- /dev/null
++++ b/bindings/python/gpiod/ext/chip.c
+@@ -0,0 +1,335 @@
 +// SPDX-License-Identifier: LGPL-2.1-or-later
 +// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+#include <gpiosim.h>
-+#include <Python.h>
-+
-+struct module_const {
-+	const char *name;
-+	long val;
-+};
-+
-+static const struct module_const module_constants[] = {
-+	{
-+		.name = "PULL_DOWN",
-+		.val = GPIOSIM_PULL_DOWN,
-+	},
-+	{
-+		.name = "PULL_UP",
-+		.val = GPIOSIM_PULL_UP,
-+	},
-+	{
-+		.name = "VALUE_INACTIVE",
-+		.val = GPIOSIM_VALUE_INACTIVE,
-+	},
-+	{
-+		.name = "VALUE_ACTIVE",
-+		.val = GPIOSIM_VALUE_ACTIVE,
-+	},
-+	{
-+		.name = "DIRECTION_INPUT",
-+		.val = GPIOSIM_HOG_DIR_INPUT,
-+	},
-+	{
-+		.name = "DIRECTION_OUTPUT_HIGH",
-+		.val = GPIOSIM_HOG_DIR_OUTPUT_HIGH,
-+	},
-+	{
-+		.name = "DIRECTION_OUTPUT_LOW",
-+		.val = GPIOSIM_HOG_DIR_OUTPUT_LOW,
-+	},
-+	{ }
-+};
-+
-+struct module_state {
-+	struct gpiosim_ctx *sim_ctx;
-+};
-+
-+static void free_module_state(void *mod)
-+{
-+	struct module_state *state = PyModule_GetState((PyObject *)mod);
-+
-+	if (state->sim_ctx)
-+		gpiosim_ctx_unref(state->sim_ctx);
-+}
-+
-+static PyModuleDef module_def = {
-+	PyModuleDef_HEAD_INIT,
-+	.m_name = "gpiosim._ext",
-+	.m_size = sizeof(struct module_state),
-+	.m_free = free_module_state,
-+};
++#include "internal.h"
 +
 +typedef struct {
-+	PyObject_HEAD
-+	struct gpiosim_dev *dev;
-+	struct gpiosim_bank *bank;
++	PyObject_HEAD;
++	struct gpiod_chip *chip;
 +} chip_object;
 +
-+static int chip_init(chip_object *self,
-+		     PyObject *Py_UNUSED(ignored0),
-+		     PyObject *Py_UNUSED(ignored1))
++static int
++chip_init(chip_object *self, PyObject *args, PyObject *Py_UNUSED(ignored))
 +{
-+	struct module_state *state;
-+	PyObject *mod;
++	char *path;
++	int ret;
 +
-+	mod = PyState_FindModule(&module_def);
-+	if (!mod)
++	ret = PyArg_ParseTuple(args, "s", &path);
++	if (!ret)
 +		return -1;
 +
-+	state = PyModule_GetState(mod);
-+
-+	self->dev = gpiosim_dev_new(state->sim_ctx);
-+	if (!self->dev) {
-+		PyErr_SetFromErrno(PyExc_OSError);
-+		return -1;
-+	}
-+
-+	self->bank = gpiosim_bank_new(self->dev);
-+	if (!self->bank) {
-+		PyErr_SetFromErrno(PyExc_OSError);
++	Py_BEGIN_ALLOW_THREADS;
++	self->chip = gpiod_chip_open(path);
++	Py_END_ALLOW_THREADS;
++	if (!self->chip) {
++		Py_gpiod_SetErrFromErrno();
 +		return -1;
 +	}
 +
@@ -378,18 +742,321 @@ index 0000000..6671352
 +
 +static void chip_finalize(chip_object *self)
 +{
-+	if (self->bank)
-+		gpiosim_bank_unref(self->bank);
-+
-+	if (self->dev) {
-+		if (gpiosim_dev_is_live(self->dev))
-+			gpiosim_dev_disable(self->dev);
-+
-+		gpiosim_dev_unref(self->dev);
-+	}
++	if (self->chip)
++		PyObject_CallMethod((PyObject *)self, "close", "");
 +}
 +
-+static void chip_dealloc(PyObject *self)
++static PyObject *chip_path(chip_object *self, void *Py_UNUSED(ignored))
++{
++	return PyUnicode_FromString(gpiod_chip_get_path(self->chip));
++}
++
++static PyObject *chip_fd(chip_object *self, void *Py_UNUSED(ignored))
++{
++	return PyLong_FromLong(gpiod_chip_get_fd(self->chip));
++}
++
++static PyGetSetDef chip_getset[] = {
++	{
++		.name = "path",
++		.get = (getter)chip_path,
++	},
++	{
++		.name = "fd",
++		.get = (getter)chip_fd,
++	},
++	{ }
++};
++
++static PyObject *chip_close(chip_object *self, PyObject *Py_UNUSED(ignored))
++{
++	Py_BEGIN_ALLOW_THREADS;
++	gpiod_chip_close(self->chip);
++	Py_END_ALLOW_THREADS;
++	self->chip = NULL;
++
++	Py_RETURN_NONE;
++}
++
++static PyObject *chip_get_info(chip_object *self, PyObject *Py_UNUSED(ignored))
++{
++	struct gpiod_chip_info *info;
++	PyObject *type, *ret;
++
++	type = Py_gpiod_GetGlobalType("ChipInfo");
++	if (!type)
++		return NULL;
++
++	info = gpiod_chip_get_info(self->chip);
++	if (!info)
++		return PyErr_SetFromErrno(PyExc_OSError);
++
++	 ret = PyObject_CallFunction(type, "ssI",
++				     gpiod_chip_info_get_name(info),
++				     gpiod_chip_info_get_label(info),
++				     gpiod_chip_info_get_num_lines(info));
++	 gpiod_chip_info_free(info);
++	 return ret;
++}
++
++static PyObject *make_line_info(struct gpiod_line_info *info)
++{
++	PyObject *type;
++
++	type = Py_gpiod_GetGlobalType("LineInfo");
++	if (!type)
++		return NULL;
++
++	return PyObject_CallFunction(type, "IsOsiOiiiiOi",
++				gpiod_line_info_get_offset(info),
++				gpiod_line_info_get_name(info),
++				gpiod_line_info_is_used(info) ?
++							Py_True : Py_False,
++				gpiod_line_info_get_consumer(info),
++				gpiod_line_info_get_direction(info),
++				gpiod_line_info_is_active_low(info) ?
++							Py_True : Py_False,
++				gpiod_line_info_get_bias(info),
++				gpiod_line_info_get_drive(info),
++				gpiod_line_info_get_edge_detection(info),
++				gpiod_line_info_get_event_clock(info),
++				gpiod_line_info_is_debounced(info) ?
++							Py_True : Py_False,
++				gpiod_line_info_get_debounce_period_us(info));
++}
++
++static PyObject *chip_get_line_info(chip_object *self, PyObject *args)
++{
++	struct gpiod_line_info *info;
++	unsigned int offset;
++	PyObject *info_obj;
++	int ret, watch;
++
++	ret = PyArg_ParseTuple(args, "Ip", &offset, &watch);
++	if (!ret)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	if (watch)
++		info = gpiod_chip_watch_line_info(self->chip, offset);
++	else
++		info = gpiod_chip_get_line_info(self->chip, offset);
++	Py_END_ALLOW_THREADS;
++	if (!info)
++		return Py_gpiod_SetErrFromErrno();
++
++	info_obj = make_line_info(info);
++	gpiod_line_info_free(info);
++	return info_obj;
++}
++
++static PyObject *
++chip_unwatch_line_info(chip_object *self, PyObject *args)
++{
++	unsigned int offset;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "I", &offset);
++	if (!ret)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	ret = gpiod_chip_unwatch_line_info(self->chip, offset);
++	Py_END_ALLOW_THREADS;
++	if (ret)
++		return Py_gpiod_SetErrFromErrno();
++
++	Py_RETURN_NONE;
++}
++
++static PyObject *
++chip_read_info_event(chip_object *self, PyObject *Py_UNUSED(ignored))
++{
++	PyObject *type, *info_obj, *event_obj;
++	struct gpiod_info_event *event;
++	struct gpiod_line_info *info;
++
++	type = Py_gpiod_GetGlobalType("InfoEvent");
++	if (!type)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	event = gpiod_chip_read_info_event(self->chip);
++	Py_END_ALLOW_THREADS;
++	if (!event)
++		return Py_gpiod_SetErrFromErrno();
++
++	info = gpiod_info_event_get_line_info(event);
++
++	info_obj = make_line_info(info);
++	if (!info_obj) {
++		gpiod_info_event_free(event);
++		return NULL;
++	}
++
++	event_obj = PyObject_CallFunction(type, "iKO",
++				gpiod_info_event_get_event_type(event),
++				gpiod_info_event_get_timestamp_ns(event),
++				info_obj);
++	Py_DECREF(info_obj);
++	gpiod_info_event_free(event);
++	return event_obj;
++}
++
++static PyObject *chip_map_line(chip_object *self, PyObject *args)
++{
++	int ret, offset;
++	char *name;
++
++	ret = PyArg_ParseTuple(args, "s", &name);
++	if (!ret)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	offset = gpiod_chip_get_line_offset_from_name(self->chip, name);
++	Py_END_ALLOW_THREADS;
++	if (offset < 0)
++		return Py_gpiod_SetErrFromErrno();
++
++	return PyLong_FromLong(offset);
++}
++
++static struct gpiod_request_config *
++make_request_config(PyObject *consumer_obj, PyObject *event_buffer_size_obj)
++{
++	struct gpiod_request_config *req_cfg;
++	size_t event_buffer_size;
++	const char *consumer;
++
++	req_cfg = gpiod_request_config_new();
++	if (!req_cfg) {
++		Py_gpiod_SetErrFromErrno();
++		return NULL;
++	}
++
++	if (consumer_obj != Py_None) {
++		consumer = PyUnicode_AsUTF8(consumer_obj);
++		if (!consumer) {
++			gpiod_request_config_free(req_cfg);
++			return NULL;
++		}
++
++		gpiod_request_config_set_consumer(req_cfg, consumer);
++	}
++
++	if (event_buffer_size_obj != Py_None) {
++		event_buffer_size = PyLong_AsSize_t(event_buffer_size_obj);
++		if (PyErr_Occurred()) {
++			gpiod_request_config_free(req_cfg);
++			return NULL;
++		}
++
++		gpiod_request_config_set_event_buffer_size(req_cfg,
++							   event_buffer_size);
++	}
++
++	return req_cfg;
++}
++
++static PyObject *chip_request_lines(chip_object *self, PyObject *args)
++{
++	PyObject *line_config, *consumer, *event_buffer_size, *req_obj;
++	struct gpiod_request_config *req_cfg;
++	struct gpiod_line_config *line_cfg;
++	struct gpiod_line_request *request;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "OOO",
++			       &line_config, &consumer, &event_buffer_size);
++	if (!ret)
++		return NULL;
++
++	line_cfg = Py_gpiod_LineConfigGetData(line_config);
++	if (!line_cfg)
++		return NULL;
++
++	req_cfg = make_request_config(consumer, event_buffer_size);
++	if (!req_cfg)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	request = gpiod_chip_request_lines(self->chip, req_cfg, line_cfg);
++	Py_END_ALLOW_THREADS;
++	gpiod_request_config_free(req_cfg);
++	if (!request)
++		return Py_gpiod_SetErrFromErrno();
++
++	req_obj = Py_gpiod_MakeRequestObject(request);
++	if (!req_obj)
++		gpiod_line_request_release(request);
++
++	return req_obj;
++}
++
++static PyMethodDef chip_methods[] = {
++	{
++		.ml_name = "close",
++		.ml_meth = (PyCFunction)chip_close,
++		.ml_flags = METH_NOARGS,
++	},
++	{
++		.ml_name = "get_info",
++		.ml_meth = (PyCFunction)chip_get_info,
++		.ml_flags = METH_NOARGS,
++	},
++	{
++		.ml_name = "get_line_info",
++		.ml_meth = (PyCFunction)chip_get_line_info,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "unwatch_line_info",
++		.ml_meth = (PyCFunction)chip_unwatch_line_info,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "read_info_event",
++		.ml_meth = (PyCFunction)chip_read_info_event,
++		.ml_flags = METH_NOARGS,
++	},
++	{
++		.ml_name = "map_line",
++		.ml_meth = (PyCFunction)chip_map_line,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "request_lines",
++		.ml_meth = (PyCFunction)chip_request_lines,
++		.ml_flags = METH_VARARGS,
++	},
++	{ }
++};
++
++PyTypeObject chip_type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name = "gpiod._ext.Chip",
++	.tp_basicsize = sizeof(chip_object),
++	.tp_flags = Py_TPFLAGS_DEFAULT,
++	.tp_new = PyType_GenericNew,
++	.tp_init = (initproc)chip_init,
++	.tp_finalize = (destructor)chip_finalize,
++	.tp_dealloc = (destructor)Py_gpiod_dealloc,
++	.tp_getset = chip_getset,
++	.tp_methods = chip_methods,
++};
+diff --git a/bindings/python/gpiod/ext/common.c b/bindings/python/gpiod/ext/common.c
+new file mode 100644
+index 0000000..7e53c02
+--- /dev/null
++++ b/bindings/python/gpiod/ext/common.c
+@@ -0,0 +1,92 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include "internal.h"
++
++/* Generic dealloc callback for all gpiod objects. */
++void Py_gpiod_dealloc(PyObject *self)
 +{
 +	int ret;
 +
@@ -400,193 +1067,548 @@ index 0000000..6671352
 +	PyObject_Del(self);
 +}
 +
-+static PyObject *chip_dev_path(chip_object *self, void *Py_UNUSED(ignored))
++PyObject *_Py_gpiod_SetErrFromErrno(const char *filename)
 +{
-+	return PyUnicode_FromString(gpiosim_bank_get_dev_path(self->bank));
++	PyObject *exc;
++
++	if (errno == ENOMEM)
++		return PyErr_NoMemory();
++
++	switch (errno) {
++	case EINVAL:
++		exc = PyExc_ValueError;
++		break;
++	case EOPNOTSUPP:
++		exc = PyExc_NotImplementedError;
++		break;
++	case EPIPE:
++		exc = PyExc_BrokenPipeError;
++		break;
++	case ECHILD:
++		exc = PyExc_ChildProcessError;
++		break;
++	case EINTR:
++		exc = PyExc_InterruptedError;
++		break;
++	case EEXIST:
++		exc = PyExc_FileExistsError;
++		break;
++	case ENOENT:
++		exc = PyExc_FileNotFoundError;
++		break;
++	case EISDIR:
++		exc = PyExc_IsADirectoryError;
++		break;
++	case ENOTDIR:
++		exc = PyExc_NotADirectoryError;
++		break;
++	case EPERM:
++		exc = PyExc_PermissionError;
++		break;
++	case ETIMEDOUT:
++		exc = PyExc_TimeoutError;
++		break;
++	default:
++		exc = PyExc_OSError;
++		break;
++	}
++
++	return PyErr_SetFromErrnoWithFilename(exc, filename);
 +}
 +
-+static PyObject *chip_name(chip_object *self, void *Py_UNUSED(ignored))
++PyObject *Py_gpiod_GetGlobalType(const char *type_name)
 +{
-+	return PyUnicode_FromString(gpiosim_bank_get_chip_name(self->bank));
++	PyObject *globals;
++
++	globals = PyEval_GetGlobals();
++	if (!globals)
++		return NULL;
++
++	return PyDict_GetItemString(globals, type_name);
 +}
 +
-+static PyGetSetDef chip_getset[] = {
++unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong)
++{
++	unsigned long tmp;
++
++	tmp = PyLong_AsUnsignedLong(pylong);
++	if (PyErr_Occurred())
++		return 0;
++
++	if (tmp > UINT_MAX) {
++		PyErr_SetString(PyExc_ValueError, "value exceeding UINT_MAX");
++		return 0;
++	}
++
++	return tmp;
++}
+diff --git a/bindings/python/gpiod/ext/internal.h b/bindings/python/gpiod/ext/internal.h
+new file mode 100644
+index 0000000..ed80034
+--- /dev/null
++++ b/bindings/python/gpiod/ext/internal.h
+@@ -0,0 +1,20 @@
++/* SPDX-License-Identifier: LGPL-2.1-or-later */
++/* SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl> */
++
++#ifndef __LIBGPIOD_PYTHON_MODULE_H__
++#define __LIBGPIOD_PYTHON_MODULE_H__
++
++#include <gpiod.h>
++#include <Python.h>
++
++PyObject *_Py_gpiod_SetErrFromErrno(const char *filename);
++#define Py_gpiod_SetErrFromErrno() _Py_gpiod_SetErrFromErrno(__FILE__)
++
++PyObject *Py_gpiod_GetGlobalType(const char *type_name);
++unsigned int Py_gpiod_PyLongAsUnsignedInt(PyObject *pylong);
++void Py_gpiod_dealloc(PyObject *self);
++PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request);
++struct gpiod_line_config *Py_gpiod_LineConfigGetData(PyObject *obj);
++struct gpiod_line_settings *Py_gpiod_LineSettingsGetData(PyObject *obj);
++
++#endif /* __LIBGPIOD_PYTHON_MODULE_H__ */
+diff --git a/bindings/python/gpiod/ext/line-config.c b/bindings/python/gpiod/ext/line-config.c
+new file mode 100644
+index 0000000..173ca6b
+--- /dev/null
++++ b/bindings/python/gpiod/ext/line-config.c
+@@ -0,0 +1,133 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include "internal.h"
++
++typedef struct {
++	PyObject_HEAD;
++	struct gpiod_line_config *cfg;
++} line_config_object;
++
++static int line_config_init(line_config_object *self,
++		       PyObject *Py_UNUSED(args), PyObject *Py_UNUSED(ignored))
++{
++	self->cfg = gpiod_line_config_new();
++	if (!self->cfg) {
++		Py_gpiod_SetErrFromErrno();
++		return -1;
++	}
++
++	return 0;
++}
++
++static void line_config_finalize(line_config_object *self)
++{
++	if (self->cfg)
++		gpiod_line_config_free(self->cfg);
++}
++
++static unsigned int *make_offsets(PyObject *obj, Py_ssize_t len)
++{
++	unsigned int *offsets;
++	PyObject *offset;
++	Py_ssize_t i;
++
++	offsets = PyMem_Calloc(len, sizeof(unsigned int));
++	if (!offsets)
++		return (unsigned int *)PyErr_NoMemory();
++
++	for (i = 0; i < len; i++) {
++		offset = PyList_GetItem(obj, i);
++		if (!offset) {
++			PyMem_Free(offsets);
++			return NULL;
++		}
++
++		offsets[i] = Py_gpiod_PyLongAsUnsignedInt(offset);
++		if (PyErr_Occurred()) {
++			PyMem_Free(offsets);
++			return NULL;
++		}
++	}
++
++	return offsets;
++}
++
++static PyObject *
++line_config_add_line_settings(line_config_object *self, PyObject *args)
++{
++	PyObject *offsets_obj, *settings_obj;
++	struct gpiod_line_settings *settings;
++	unsigned int *offsets;
++	Py_ssize_t num_offsets;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "OO", &offsets_obj, &settings_obj);
++	if (!ret)
++		return NULL;
++
++	num_offsets = PyObject_Size(offsets_obj);
++	if (num_offsets < 0)
++		return NULL;
++
++	offsets = make_offsets(offsets_obj, num_offsets);
++	if (!offsets)
++		return NULL;
++
++	settings = Py_gpiod_LineSettingsGetData(settings_obj);
++	if (!settings) {
++		PyMem_Free(offsets);
++		return NULL;
++	}
++
++	ret = gpiod_line_config_add_line_settings(self->cfg, offsets,
++						  num_offsets, settings);
++	PyMem_Free(offsets);
++	if (ret)
++		return Py_gpiod_SetErrFromErrno();
++
++	Py_RETURN_NONE;
++}
++
++static PyMethodDef line_config_methods[] = {
 +	{
-+		.name = "dev_path",
-+		.get = (getter)chip_dev_path,
-+	},
-+	{
-+		.name = "name",
-+		.get = (getter)chip_name,
++		.ml_name = "add_line_settings",
++		.ml_meth = (PyCFunction)line_config_add_line_settings,
++		.ml_flags = METH_VARARGS,
 +	},
 +	{ }
 +};
 +
-+static PyObject *chip_set_label(chip_object *self, PyObject *args)
-+{
-+	const char *label;
-+	int ret;
-+
-+	ret = PyArg_ParseTuple(args, "s", &label);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = gpiosim_bank_set_label(self->bank, label);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyObject *chip_set_num_lines(chip_object *self, PyObject *args)
-+{
-+	unsigned int num_lines;
-+	int ret;
-+
-+	ret = PyArg_ParseTuple(args, "I", &num_lines);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = gpiosim_bank_set_num_lines(self->bank, num_lines);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyObject *chip_set_line_name(chip_object *self, PyObject *args)
-+{
-+	unsigned int offset;
-+	const char *name;
-+	int ret;
-+
-+	ret = PyArg_ParseTuple(args, "Is", &offset, &name);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = gpiosim_bank_set_line_name(self->bank, offset, name);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyObject *chip_set_hog(chip_object *self, PyObject *args)
-+{
-+	unsigned int offset;
-+	const char *name;
-+	int ret, dir;
-+
-+	ret = PyArg_ParseTuple(args, "Isi", &offset, &name, &dir);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = gpiosim_bank_hog_line(self->bank, offset, name, dir);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyObject *chip_enable(chip_object *self, PyObject *Py_UNUSED(args))
-+{
-+	int ret;
-+
-+	ret = gpiosim_dev_enable(self->dev);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyObject *chip_get_value(chip_object *self, PyObject *args)
-+{
-+	unsigned int offset;
-+	int ret, val;
-+
-+	ret = PyArg_ParseTuple(args, "I", &offset);
-+	if (!ret)
-+		return NULL;
-+
-+	val = gpiosim_bank_get_value(self->bank, offset);
-+	if (val < 0)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	return PyLong_FromLong(val);
-+}
-+
-+static PyObject *chip_set_pull(chip_object *self, PyObject *args)
-+{
-+	unsigned int offset;
-+	int ret, pull;
-+
-+	ret = PyArg_ParseTuple(args, "II", &offset, &pull);
-+	if (!ret)
-+		return NULL;
-+
-+	ret = gpiosim_bank_set_pull(self->bank, offset, pull);
-+	if (ret)
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+
-+	Py_RETURN_NONE;
-+}
-+
-+static PyMethodDef chip_methods[] = {
-+	{
-+		.ml_name = "set_label",
-+		.ml_meth = (PyCFunction)chip_set_label,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{
-+		.ml_name = "set_num_lines",
-+		.ml_meth = (PyCFunction)chip_set_num_lines,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{
-+		.ml_name = "set_line_name",
-+		.ml_meth = (PyCFunction)chip_set_line_name,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{
-+		.ml_name = "set_hog",
-+		.ml_meth = (PyCFunction)chip_set_hog,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{
-+		.ml_name = "enable",
-+		.ml_meth = (PyCFunction)chip_enable,
-+		.ml_flags = METH_NOARGS,
-+	},
-+	{
-+		.ml_name = "get_value",
-+		.ml_meth = (PyCFunction)chip_get_value,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{
-+		.ml_name = "set_pull",
-+		.ml_meth = (PyCFunction)chip_set_pull,
-+		.ml_flags = METH_VARARGS,
-+	},
-+	{ }
-+};
-+
-+static PyTypeObject chip_type = {
++PyTypeObject line_config_type = {
 +	PyVarObject_HEAD_INIT(NULL, 0)
-+	.tp_name = "gpiosim.Chip",
-+	.tp_basicsize = sizeof(chip_object),
++	.tp_name = "gpiod._ext.LineConfig",
++	.tp_basicsize = sizeof(line_config_object),
 +	.tp_flags = Py_TPFLAGS_DEFAULT,
 +	.tp_new = PyType_GenericNew,
-+	.tp_init = (initproc)chip_init,
-+	.tp_finalize = (destructor)chip_finalize,
-+	.tp_dealloc = (destructor)chip_dealloc,
-+	.tp_methods = chip_methods,
-+	.tp_getset = chip_getset,
++	.tp_init = (initproc)line_config_init,
++	.tp_finalize = (destructor)line_config_finalize,
++	.tp_dealloc = (destructor)Py_gpiod_dealloc,
++	.tp_methods = line_config_methods,
++};
++
++struct gpiod_line_config *Py_gpiod_LineConfigGetData(PyObject *obj)
++{
++	line_config_object *line_cfg;
++	PyObject *type;
++
++	type = PyObject_Type(obj);
++	if (!type)
++		return NULL;
++
++	if ((PyTypeObject *)type != &line_config_type) {
++		PyErr_SetString(PyExc_TypeError,
++				"not a gpiod._ext.LineConfig object");
++		Py_DECREF(type);
++		return NULL;
++	}
++	Py_DECREF(type);
++
++	line_cfg = (line_config_object *)obj;
++
++	return line_cfg->cfg;
++}
+diff --git a/bindings/python/gpiod/ext/line-settings.c b/bindings/python/gpiod/ext/line-settings.c
+new file mode 100644
+index 0000000..bd2a66a
+--- /dev/null
++++ b/bindings/python/gpiod/ext/line-settings.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include "internal.h"
++
++typedef struct {
++	PyObject_HEAD;
++	struct gpiod_line_settings *settings;
++} line_settings_object;
++
++static int set_int_prop(struct gpiod_line_settings *settings, int val,
++			int (*func)(struct gpiod_line_settings *, int))
++{
++	int ret;
++
++	ret = func(settings, val);
++	if (ret) {
++		Py_gpiod_SetErrFromErrno();
++		return -1;
++	}
++
++	return 0;
++}
++
++static int
++line_settings_init(line_settings_object *self, PyObject *args, PyObject *kwargs)
++{
++	static char *kwlist[] = {
++		"direction",
++		"edge_detection",
++		"bias",
++		"drive",
++		"active_low",
++		"debounce_period",
++		"event_clock",
++		"output_value",
++		NULL
++	};
++
++	int direction, edge, bias, drive, active_low, event_clock, output_value,
++	    ret;
++	unsigned long debounce_period;
++
++	ret = PyArg_ParseTupleAndKeywords(args, kwargs, "IIIIpdII", kwlist,
++			&direction, &edge, &bias, &drive, &active_low,
++			&debounce_period, &event_clock, &output_value);
++	if (!ret)
++		return -1;
++
++	self->settings = gpiod_line_settings_new();
++	if (!self->settings) {
++		Py_gpiod_SetErrFromErrno();
++		return -1;
++	}
++
++	ret = set_int_prop(self->settings, direction,
++			   gpiod_line_settings_set_direction);
++	if (ret)
++		return -1;
++
++	ret = set_int_prop(self->settings, edge,
++			   gpiod_line_settings_set_edge_detection);
++	if (ret)
++		return -1;
++
++	ret = set_int_prop(self->settings, bias,
++			   gpiod_line_settings_set_bias);
++	if (ret)
++		return -1;
++
++	ret = set_int_prop(self->settings, drive,
++			   gpiod_line_settings_set_drive);
++	if (ret)
++		return -1;
++
++	gpiod_line_settings_set_active_low(self->settings, active_low);
++	gpiod_line_settings_set_debounce_period_us(self->settings,
++						   debounce_period);
++
++	ret = set_int_prop(self->settings, edge,
++			   gpiod_line_settings_set_edge_detection);
++	if (ret)
++		return -1;
++
++	ret = set_int_prop(self->settings, output_value,
++			   gpiod_line_settings_set_output_value);
++	if (ret)
++		return -1;
++
++	return 0;
++}
++
++static void line_settings_finalize(line_settings_object *self)
++{
++	if (self->settings)
++		gpiod_line_settings_free(self->settings);
++}
++
++PyTypeObject line_settings_type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name = "gpiod._ext.LineSettings",
++	.tp_basicsize = sizeof(line_settings_object),
++	.tp_flags = Py_TPFLAGS_DEFAULT,
++	.tp_new = PyType_GenericNew,
++	.tp_init = (initproc)line_settings_init,
++	.tp_finalize = (destructor)line_settings_finalize,
++	.tp_dealloc = (destructor)Py_gpiod_dealloc,
++};
++
++struct gpiod_line_settings *Py_gpiod_LineSettingsGetData(PyObject *obj)
++{
++	line_settings_object *settings;
++	PyObject *type;
++
++	type = PyObject_Type(obj);
++	if (!type)
++		return NULL;
++
++	if ((PyTypeObject *)type != &line_settings_type) {
++		PyErr_SetString(PyExc_TypeError,
++				"not a gpiod._ext.LineSettings object");
++		Py_DECREF(type);
++		return NULL;
++	}
++	Py_DECREF(type);
++
++	settings = (line_settings_object *)obj;
++
++	return settings->settings;
++}
+diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod/ext/module.c
+new file mode 100644
+index 0000000..8725ef2
+--- /dev/null
++++ b/bindings/python/gpiod/ext/module.c
+@@ -0,0 +1,193 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++#include <gpiod.h>
++#include <Python.h>
++
++struct module_const {
++	const char *name;
++	long val;
++};
++
++static const struct module_const module_constants[] = {
++	{
++		.name = "VALUE_INACTIVE",
++		.val = GPIOD_LINE_VALUE_INACTIVE,
++	},
++	{
++		.name = "VALUE_ACTIVE",
++		.val = GPIOD_LINE_VALUE_ACTIVE,
++	},
++	{
++		.name = "DIRECTION_AS_IS",
++		.val = GPIOD_LINE_DIRECTION_AS_IS,
++	},
++	{
++		.name = "DIRECTION_INPUT",
++		.val = GPIOD_LINE_DIRECTION_INPUT,
++	},
++	{
++		.name = "DIRECTION_OUTPUT",
++		.val = GPIOD_LINE_DIRECTION_OUTPUT,
++	},
++	{
++		.name = "BIAS_AS_IS",
++		.val = GPIOD_LINE_BIAS_AS_IS,
++	},
++	{
++		.name = "BIAS_UNKNOWN",
++		.val = GPIOD_LINE_BIAS_UNKNOWN,
++	},
++	{
++		.name = "BIAS_DISABLED",
++		.val = GPIOD_LINE_BIAS_DISABLED,
++	},
++	{
++		.name = "BIAS_PULL_UP",
++		.val = GPIOD_LINE_BIAS_PULL_UP,
++	},
++	{
++		.name = "BIAS_PULL_DOWN",
++		.val = GPIOD_LINE_BIAS_PULL_DOWN,
++	},
++	{
++		.name = "DRIVE_PUSH_PULL",
++		.val = GPIOD_LINE_DRIVE_PUSH_PULL,
++	},
++	{
++		.name = "DRIVE_OPEN_DRAIN",
++		.val = GPIOD_LINE_DRIVE_OPEN_DRAIN,
++	},
++	{
++		.name = "DRIVE_OPEN_SOURCE",
++		.val = GPIOD_LINE_DRIVE_OPEN_SOURCE,
++	},
++	{
++		.name = "EDGE_NONE",
++		.val = GPIOD_LINE_EDGE_NONE,
++	},
++	{
++		.name = "EDGE_FALLING",
++		.val = GPIOD_LINE_EDGE_FALLING,
++	},
++	{
++		.name = "EDGE_RISING",
++		.val = GPIOD_LINE_EDGE_RISING,
++	},
++	{
++		.name = "EDGE_BOTH",
++		.val = GPIOD_LINE_EDGE_BOTH,
++	},
++	{
++		.name = "CLOCK_MONOTONIC",
++		.val = GPIOD_LINE_EVENT_CLOCK_MONOTONIC,
++	},
++	{
++		.name = "CLOCK_REALTIME",
++		.val = GPIOD_LINE_EVENT_CLOCK_REALTIME,
++	},
++	{
++		.name = "CLOCK_HTE",
++		.val = GPIOD_LINE_EVENT_CLOCK_HTE,
++	},
++	{
++		.name = "EDGE_EVENT_TYPE_RISING",
++		.val = GPIOD_EDGE_EVENT_RISING_EDGE,
++	},
++	{
++		.name = "EDGE_EVENT_TYPE_FALLING",
++		.val = GPIOD_EDGE_EVENT_FALLING_EDGE,
++	},
++	{
++		.name = "INFO_EVENT_TYPE_LINE_REQUESTED",
++		.val = GPIOD_INFO_EVENT_LINE_REQUESTED,
++	},
++	{
++		.name = "INFO_EVENT_TYPE_LINE_RELEASED",
++		.val = GPIOD_INFO_EVENT_LINE_RELEASED,
++	},
++	{
++		.name = "INFO_EVENT_TYPE_LINE_CONFIG_CHANGED",
++		.val = GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED,
++	},
++	{ }
++};
++
++static PyObject *
++module_is_gpiochip_device(PyObject *Py_UNUSED(self), PyObject *args)
++{
++	const char *path;
++	int ret;
++
++	ret =  PyArg_ParseTuple(args, "s", &path);
++	if (!ret)
++		return NULL;
++
++	return PyBool_FromLong(gpiod_is_gpiochip_device(path));
++}
++
++static PyMethodDef module_methods[] = {
++	{
++		.ml_name = "is_gpiochip_device",
++		.ml_meth = (PyCFunction)module_is_gpiochip_device,
++		.ml_flags = METH_VARARGS,
++	},
++	{ }
++};
++
++static PyModuleDef module_def = {
++	PyModuleDef_HEAD_INIT,
++	.m_name = "gpiod._ext",
++	.m_methods = module_methods,
++};
++
++extern PyTypeObject chip_type;
++extern PyTypeObject line_config_type;
++extern PyTypeObject line_settings_type;
++extern PyTypeObject request_type;
++
++static PyTypeObject *types[] = {
++	&chip_type,
++	&line_config_type,
++	&line_settings_type,
++	&request_type,
++	NULL,
 +};
 +
 +PyMODINIT_FUNC PyInit__ext(void)
 +{
 +	const struct module_const *modconst;
-+	struct module_state *state;
++	PyTypeObject **type;
 +	PyObject *module;
 +	int ret;
 +
@@ -594,24 +1616,19 @@ index 0000000..6671352
 +	if (!module)
 +		return NULL;
 +
-+	ret = PyState_AddModule(module, &module_def);
++	ret = PyModule_AddStringConstant(module, "__version__",
++					 gpiod_version_string());
 +	if (ret) {
 +		Py_DECREF(module);
 +		return NULL;
 +	}
 +
-+	state = PyModule_GetState(module);
-+
-+	state->sim_ctx = gpiosim_ctx_new();
-+	if (!state->sim_ctx) {
-+		Py_DECREF(module);
-+		return PyErr_SetFromErrno(PyExc_OSError);
-+	}
-+
-+	ret = PyModule_AddType(module, &chip_type);
-+	if (ret) {
-+		Py_DECREF(module);
-+		return NULL;
++	for (type = types; *type; type++) {
++		ret = PyModule_AddType(module, *type);
++		if (ret) {
++			Py_DECREF(module);
++			return NULL;
++		}
 +	}
 +
 +	for (modconst = module_constants; modconst->name; modconst++) {
@@ -621,1459 +1638,1024 @@ index 0000000..6671352
 +			Py_DECREF(module);
 +			return NULL;
 +		}
-+ 	}
++	}
 +
 +	return module;
 +}
-diff --git a/bindings/python/tests/helpers.py b/bindings/python/tests/helpers.py
+diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/ext/request.c
 new file mode 100644
-index 0000000..f9a15e8
+index 0000000..36b5b48
 --- /dev/null
-+++ b/bindings/python/tests/helpers.py
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++++ b/bindings/python/gpiod/ext/request.c
+@@ -0,0 +1,402 @@
++// SPDX-License-Identifier: LGPL-2.1-or-later
++// SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+import os
++#include "internal.h"
 +
++typedef struct {
++	PyObject_HEAD;
++	struct gpiod_line_request *request;
++	unsigned int *offsets;
++	int *values;
++	size_t num_lines;
++} request_object;
 +
-+class LinkGuard:
-+    def __init__(self, src, dst):
-+        self.src = src
-+        self.dst = dst
++static int request_init(PyObject *Py_UNUSED(ignored0),
++			PyObject *Py_UNUSED(ignored1),
++			PyObject *Py_UNUSED(ignored2))
++{
++	PyErr_SetString(PyExc_NotImplementedError,
++			"_ext.LineRequest cannot be instantiated");
 +
-+    def __enter__(self):
-+        os.symlink(self.src, self.dst)
++	return -1;
++}
 +
-+    def __exit__(self, type, val, tb):
-+        os.unlink(self.dst)
-diff --git a/bindings/python/tests/tests_chip.py b/bindings/python/tests/tests_chip.py
++static void request_finalize(request_object *self)
++{
++	if (self->request)
++		PyObject_CallMethod((PyObject *)self, "release", "");
++
++	if (self->offsets)
++		PyMem_Free(self->offsets);
++
++	if (self->values)
++		PyMem_Free(self->values);
++}
++
++static PyObject *
++request_num_lines(request_object *self, void *Py_UNUSED(ignored))
++{
++	return PyLong_FromUnsignedLong(
++			gpiod_line_request_get_num_lines(self->request));
++}
++
++static PyObject *request_offsets(request_object *self, void *Py_UNUSED(ignored))
++{
++	PyObject *lines, *line;
++	unsigned int *offsets;
++	size_t num_lines, i;
++	int ret;
++
++	num_lines = gpiod_line_request_get_num_lines(self->request);
++
++	offsets = PyMem_Calloc(num_lines, sizeof(unsigned int));
++	if (!offsets)
++		return PyErr_NoMemory();
++
++	gpiod_line_request_get_offsets(self->request, offsets);
++
++	lines = PyList_New(num_lines);
++	if (!lines) {
++		PyMem_Free(offsets);
++		return NULL;
++	}
++
++	for (i = 0; i < num_lines; i++) {
++		line = PyLong_FromUnsignedLong(offsets[i]);
++		if (!lines) {
++			Py_DECREF(lines);
++			PyMem_Free(offsets);
++			return NULL;
++		}
++
++		ret = PyList_SetItem(lines, i, line);
++		if (ret) {
++			Py_DECREF(line);
++			Py_DECREF(lines);
++			PyMem_Free(offsets);
++			return NULL;
++		}
++	}
++
++	PyMem_Free(offsets);
++	return lines;
++}
++
++static PyObject *request_fd(request_object *self, void *Py_UNUSED(ignored))
++{
++	return PyLong_FromLong(gpiod_line_request_get_fd(self->request));
++}
++
++static PyGetSetDef request_getset[] = {
++	{
++		.name = "num_lines",
++		.get = (getter)request_num_lines,
++	},
++	{
++		.name = "offsets",
++		.get = (getter)request_offsets,
++	},
++	{
++		.name = "fd",
++		.get = (getter)request_fd,
++	},
++	{ }
++};
++
++static PyObject *
++request_release(request_object *self, PyObject *Py_UNUSED(ignored))
++{
++	Py_BEGIN_ALLOW_THREADS;
++	gpiod_line_request_release(self->request);
++	Py_END_ALLOW_THREADS;
++	self->request = NULL;
++
++	Py_RETURN_NONE;
++}
++
++static void clear_buffers(request_object *self)
++{
++	memset(self->offsets, 0, self->num_lines * sizeof(unsigned int));
++	memset(self->values, 0, self->num_lines * sizeof(int));
++}
++
++static PyObject *request_get_values(request_object *self, PyObject *args)
++{
++	PyObject *offsets, *values, *val, *type, *iter, *next;
++	Py_ssize_t num_offsets;
++	unsigned int pos;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "OO", &offsets, &values);
++	if (!ret)
++		return NULL;
++
++	num_offsets = PyObject_Size(offsets);
++	if (num_offsets < 0)
++		return NULL;
++
++	type = Py_gpiod_GetGlobalType("Value");
++	if (!type)
++		return NULL;
++
++	iter = PyObject_GetIter(offsets);
++	if (!iter)
++		return NULL;
++
++	clear_buffers(self);
++
++	for (pos = 0;; pos++) {
++		next = PyIter_Next(iter);
++		if (!next) {
++			Py_DECREF(iter);
++			break;
++		}
++
++		self->offsets[pos] = Py_gpiod_PyLongAsUnsignedInt(next);
++		Py_DECREF(next);
++		if (PyErr_Occurred()) {
++			Py_DECREF(iter);
++			return NULL;
++		}
++	}
++
++	Py_BEGIN_ALLOW_THREADS;
++	ret = gpiod_line_request_get_values_subset(self->request,
++						   self->num_lines,
++						   self->offsets,
++						   self->values);
++	Py_END_ALLOW_THREADS;
++	if (ret)
++		return Py_gpiod_SetErrFromErrno();
++
++	for (pos = 0; pos < num_offsets; pos++) {
++		val = PyObject_CallFunction(type, "i", self->values[pos]);
++		if (!val)
++			return NULL;
++
++		ret = PyList_SetItem(values, pos, val);
++		if (ret) {
++			Py_DECREF(val);
++			return NULL;
++		}
++	}
++
++	Py_RETURN_NONE;
++}
++
++static PyObject *request_set_values(request_object *self, PyObject *args)
++{
++	PyObject *values, *key, *val, *val_stripped;
++	Py_ssize_t pos = 0;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "O", &values);
++	if (!ret)
++		return NULL;
++
++	clear_buffers(self);
++
++	while (PyDict_Next(values, &pos, &key, &val)) {
++		self->offsets[pos] = Py_gpiod_PyLongAsUnsignedInt(key);
++		if (PyErr_Occurred())
++			return NULL;
++
++		val_stripped = PyObject_GetAttrString(val, "value");
++		if (!val_stripped)
++			return NULL;
++
++		self->values[pos] = PyLong_AsLong(val_stripped);
++		Py_DECREF(val_stripped);
++		if (PyErr_Occurred())
++			return NULL;
++	}
++
++	Py_BEGIN_ALLOW_THREADS;
++	ret = gpiod_line_request_set_values_subset(self->request,
++						   self->num_lines,
++						   self->offsets,
++						   self->values);
++	Py_END_ALLOW_THREADS;
++	if (ret)
++		return Py_gpiod_SetErrFromErrno();
++
++	Py_RETURN_NONE;
++}
++
++static PyObject *request_reconfigure_lines(request_object *self, PyObject *args)
++{
++	struct gpiod_line_config *line_cfg;
++	PyObject *line_cfg_obj;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "O", &line_cfg_obj);
++	if (!ret)
++		return NULL;
++
++	line_cfg = Py_gpiod_LineConfigGetData(line_cfg_obj);
++	if (!line_cfg)
++		return NULL;
++
++	Py_BEGIN_ALLOW_THREADS;
++	ret = gpiod_line_request_reconfigure_lines(self->request, line_cfg);
++	Py_END_ALLOW_THREADS;
++	if (ret)
++		return Py_gpiod_SetErrFromErrno();
++
++	Py_RETURN_NONE;
++}
++
++static PyObject *request_read_edge_event(request_object *self, PyObject *args)
++{
++	PyObject *max_events_obj, *event_obj, *events, *type;
++	struct gpiod_edge_event_buffer *buffer;
++	size_t max_events, num_events, i;
++	struct gpiod_edge_event *event;
++	int ret;
++
++	ret = PyArg_ParseTuple(args, "O", &max_events_obj);
++	if (!ret)
++		return NULL;
++
++	if (max_events_obj != Py_None) {
++		max_events = PyLong_AsSize_t(max_events_obj);
++		if (PyErr_Occurred())
++			return NULL;
++	} else {
++		max_events = 64;
++	}
++
++	type = Py_gpiod_GetGlobalType("EdgeEvent");
++	if (!type)
++		return NULL;
++
++	buffer = gpiod_edge_event_buffer_new(max_events);
++	if (!buffer)
++		return Py_gpiod_SetErrFromErrno();
++
++	Py_BEGIN_ALLOW_THREADS;
++	ret = gpiod_line_request_read_edge_event(self->request,
++						 buffer, max_events);
++	Py_END_ALLOW_THREADS;
++	if (ret < 0) {
++		gpiod_edge_event_buffer_free(buffer);
++		return NULL;
++	}
++
++	num_events = ret;
++
++	events = PyList_New(num_events);
++	if (!events) {
++		gpiod_edge_event_buffer_free(buffer);
++		return NULL;
++	}
++
++	for (i = 0; i < num_events; i++) {
++		event = gpiod_edge_event_buffer_get_event(buffer, i);
++		if (!event) {
++			gpiod_edge_event_buffer_free(buffer);
++			Py_DECREF(events);
++			return NULL;
++		}
++
++		event_obj = PyObject_CallFunction(type, "iKiii",
++				gpiod_edge_event_get_event_type(event),
++				gpiod_edge_event_get_timestamp_ns(event),
++				gpiod_edge_event_get_line_offset(event),
++				gpiod_edge_event_get_global_seqno(event),
++				gpiod_edge_event_get_line_seqno(event));
++		if (!event_obj) {
++			gpiod_edge_event_buffer_free(buffer);
++			Py_DECREF(events);
++			return NULL;
++		}
++
++		ret = PyList_SetItem(events, i, event_obj);
++		if (ret) {
++			gpiod_edge_event_buffer_free(buffer);
++			Py_DECREF(event_obj);
++			Py_DECREF(events);
++			return NULL;
++		}
++	}
++
++	gpiod_edge_event_buffer_free(buffer);
++
++	return events;
++}
++
++static PyMethodDef request_methods[] = {
++	{
++		.ml_name = "release",
++		.ml_meth = (PyCFunction)request_release,
++		.ml_flags = METH_NOARGS,
++	},
++	{
++		.ml_name = "get_values",
++		.ml_meth = (PyCFunction)request_get_values,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "set_values",
++		.ml_meth = (PyCFunction)request_set_values,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "reconfigure_lines",
++		.ml_meth = (PyCFunction)request_reconfigure_lines,
++		.ml_flags = METH_VARARGS,
++	},
++	{
++		.ml_name = "read_edge_event",
++		.ml_meth = (PyCFunction)request_read_edge_event,
++		.ml_flags = METH_VARARGS,
++	},
++	{ }
++};
++
++PyTypeObject request_type = {
++	PyVarObject_HEAD_INIT(NULL, 0)
++	.tp_name = "gpiod._ext.Request",
++	.tp_basicsize = sizeof(request_object),
++	.tp_flags = Py_TPFLAGS_DEFAULT,
++	.tp_new = PyType_GenericNew,
++	.tp_init = (initproc)request_init,
++	.tp_finalize = (destructor)request_finalize,
++	.tp_dealloc = (destructor)Py_gpiod_dealloc,
++	.tp_getset = request_getset,
++	.tp_methods = request_methods,
++};
++
++PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request)
++{
++	request_object *req_obj;
++	unsigned int *offsets;
++	size_t num_lines;
++	int *values;
++
++	num_lines = gpiod_line_request_get_num_lines(request);
++
++	req_obj = PyObject_New(request_object, &request_type);
++	if (!req_obj)
++		return NULL;
++
++	offsets = PyMem_Calloc(num_lines, sizeof(unsigned int));
++	if (!offsets) {
++		Py_DECREF(req_obj);
++		return NULL;
++	}
++
++	values = PyMem_Calloc(num_lines, sizeof(int));
++	if (!values) {
++		PyMem_Free(offsets);
++		Py_DECREF(req_obj);
++		return NULL;
++	}
++
++	req_obj->request = request;
++	req_obj->offsets = offsets;
++	req_obj->values = values;
++	req_obj->num_lines = num_lines;
++
++	return (PyObject *)req_obj;
++}
+diff --git a/bindings/python/gpiod/info_event.py b/bindings/python/gpiod/info_event.py
 new file mode 100644
-index 0000000..0d1effe
+index 0000000..78b1459
 --- /dev/null
-+++ b/bindings/python/tests/tests_chip.py
-@@ -0,0 +1,231 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import errno
-+import gpiod
-+import os
-+
-+from . import gpiosim
-+from .helpers import LinkGuard
-+from unittest import TestCase
-+
-+
-+class ChipConstructor(TestCase):
-+    def test_open_existing_chip(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path):
-+            pass
-+
-+    def test_open_existing_chip_with_keyword(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(path=sim.dev_path):
-+            pass
-+
-+    def test_open_chip_by_link(self):
-+        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        sim = gpiosim.Chip()
-+
-+        with LinkGuard(sim.dev_path, link):
-+            with gpiod.Chip(link):
-+                pass
-+
-+    def test_open_nonexistent_chip(self):
-+        with self.assertRaises(OSError) as ex:
-+            gpiod.Chip("/dev/nonexistent")
-+
-+        self.assertEqual(ex.exception.errno, errno.ENOENT)
-+
-+    def test_open_not_a_character_device(self):
-+        with self.assertRaises(OSError) as ex:
-+            gpiod.Chip("/tmp")
-+
-+        self.assertEqual(ex.exception.errno, errno.ENOTTY)
-+
-+    def test_open_not_a_gpio_device(self):
-+        with self.assertRaises(OSError) as ex:
-+            gpiod.Chip("/dev/null")
-+
-+        self.assertEqual(ex.exception.errno, errno.ENODEV)
-+
-+    def test_missing_path(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.Chip()
-+
-+    def test_invalid_type_for_path(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.Chip(4)
-+
-+
-+class ChipBooleanConversion(TestCase):
-+    def test_chip_bool(self):
-+        sim = gpiosim.Chip()
-+        chip = gpiod.Chip(sim.dev_path)
-+        self.assertTrue(chip)
-+        chip.close()
-+        self.assertFalse(chip)
-+
-+
-+class ChipProperties(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip()
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        self.sim = None
-+
-+    def test_get_chip_path(self):
-+        self.assertEqual(self.sim.dev_path, self.chip.path)
-+
-+    def test_get_fd(self):
-+        self.assertGreaterEqual(self.chip.fd, 0)
-+
-+    def test_properties_are_immutable(self):
-+        with self.assertRaises(AttributeError):
-+            self.chip.path = "foobar"
-+
-+        with self.assertRaises(AttributeError):
-+            self.chip.fd = 4
-+
-+
-+class ChipDevPathFromLink(TestCase):
-+    def test_dev_path_open_by_link(self):
-+        sim = gpiosim.Chip()
-+        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+
-+        with LinkGuard(sim.dev_path, link):
-+            with gpiod.Chip(link) as chip:
-+                self.assertEqual(chip.path, link)
-+
-+
-+class ChipMapLine(TestCase):
-+    def test_lookup_by_name_good(self):
-+        sim = gpiosim.Chip(
-+            num_lines=8, line_names={1: "foo", 2: "bar", 4: "baz", 5: "xyz"}
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            self.assertEqual(chip.map_line("baz"), 4)
-+
-+    def test_lookup_by_name_good_keyword_argument(self):
-+        sim = gpiosim.Chip(
-+            num_lines=8, line_names={1: "foo", 2: "bar", 4: "baz", 5: "xyz"}
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            self.assertEqual(chip.map_line(id="baz"), 4)
-+
-+    def test_lookup_bad_name(self):
-+        sim = gpiosim.Chip(
-+            num_lines=8, line_names={1: "foo", 2: "bar", 4: "baz", 5: "xyz"}
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            with self.assertRaises(FileNotFoundError):
-+                chip.map_line("nonexistent")
-+
-+    def test_lookup_bad_offset(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            with self.assertRaises(ValueError):
-+                chip.map_line(4)
-+
-+    def test_lookup_bad_offset_as_string(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            with self.assertRaises(ValueError):
-+                chip.map_line("4")
-+
-+    def test_duplicate_names(self):
-+        sim = gpiosim.Chip(
-+            num_lines=8, line_names={1: "foo", 2: "bar", 4: "baz", 5: "bar"}
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            self.assertEqual(chip.map_line("bar"), 2)
-+
-+    def test_integer_offsets(self):
-+        sim = gpiosim.Chip(num_lines=8, line_names={1: "foo", 2: "bar", 6: "baz"})
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            self.assertEqual(chip.map_line(4), 4)
-+            self.assertEqual(chip.map_line(1), 1)
-+
-+    def test_offsets_as_string(self):
-+        sim = gpiosim.Chip(num_lines=8, line_names={1: "foo", 2: "bar", 7: "6"})
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            self.assertEqual(chip.map_line("2"), 2)
-+            self.assertEqual(chip.map_line("6"), 7)
-+
-+
-+class ClosedChipCannotBeUsed(TestCase):
-+    def test_close_chip_and_try_to_use_it(self):
-+        sim = gpiosim.Chip(label="foobar")
-+
-+        chip = gpiod.Chip(sim.dev_path)
-+        chip.close()
-+
-+        with self.assertRaises(gpiod.ChipClosedError):
-+            chip.path
-+
-+    def test_close_chip_and_try_controlled_execution(self):
-+        sim = gpiosim.Chip()
-+
-+        chip = gpiod.Chip(sim.dev_path)
-+        chip.close()
-+
-+        with self.assertRaises(gpiod.ChipClosedError):
-+            with chip:
-+                chip.fd
-+
-+    def test_close_chip_twice(self):
-+        sim = gpiosim.Chip(label="foobar")
-+        chip = gpiod.Chip(sim.dev_path)
-+        chip.close()
-+
-+        with self.assertRaises(gpiod.ChipClosedError):
-+            chip.close()
-+
-+
-+class StringRepresentation(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=4, label="foobar")
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        self.sim = None
-+
-+    def test_repr(self):
-+        self.assertEqual(repr(self.chip), 'Chip("{}")'.format(self.sim.dev_path))
-+
-+    def test_str(self):
-+        info = self.chip.get_info()
-+        self.assertEqual(
-+            str(self.chip),
-+            '<Chip path="{}" fd={} info=<ChipInfo name="{}" label="foobar" num_lines=4>>'.format(
-+                self.sim.dev_path, self.chip.fd, info.name
-+            ),
-+        )
-+
-+
-+class StringRepresentationClosed(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=4, label="foobar")
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.sim = None
-+
-+    def test_repr_closed(self):
-+        self.chip.close()
-+        self.assertEqual(repr(self.chip), "<Chip CLOSED>")
-+
-+    def test_str_closed(self):
-+        self.chip.close()
-+        self.assertEqual(str(self.chip), "<Chip CLOSED>")
-diff --git a/bindings/python/tests/tests_chip_info.py b/bindings/python/tests/tests_chip_info.py
-new file mode 100644
-index 0000000..d392ec3
---- /dev/null
-+++ b/bindings/python/tests/tests_chip_info.py
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import gpiod
-+
-+from . import gpiosim
-+from unittest import TestCase
-+
-+
-+class ChipInfoProperties(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(label="foobar", num_lines=16)
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+        self.info = self.chip.get_info()
-+
-+    def tearDown(self):
-+        self.info = None
-+        self.chip.close()
-+        self.chip = None
-+        self.sim = None
-+
-+    def test_chip_info_name(self):
-+        self.assertEqual(self.info.name, self.sim.name)
-+
-+    def test_chip_info_label(self):
-+        self.assertEqual(self.info.label, "foobar")
-+
-+    def test_chip_info_num_lines(self):
-+        self.assertEqual(self.info.num_lines, 16)
-+
-+    def test_chip_info_properties_are_immutable(self):
-+        with self.assertRaises(AttributeError):
-+            self.info.name = "foobar"
-+
-+        with self.assertRaises(AttributeError):
-+            self.info.num_lines = 4
-+
-+        with self.assertRaises(AttributeError):
-+            self.info.label = "foobar"
-+
-+
-+class ChipInfoStringRepresentation(TestCase):
-+    def test_chip_info_str(self):
-+        sim = gpiosim.Chip(label="foobar", num_lines=16)
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            info = chip.get_info()
-+
-+            self.assertEqual(
-+                str(info),
-+                '<ChipInfo name="{}" label="foobar" num_lines=16>'.format(sim.name),
-+            )
-diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
-new file mode 100644
-index 0000000..8d52fdd
---- /dev/null
-+++ b/bindings/python/tests/tests_edge_event.py
-@@ -0,0 +1,219 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import gpiod
-+import time
-+
-+from . import gpiosim
-+from datetime import timedelta
-+from functools import partial
-+from gpiod.line import Direction, Edge
-+from threading import Thread
-+from unittest import TestCase
-+
-+EventType = gpiod.EdgeEvent.Type
-+Pull = gpiosim.Chip.Pull
-+
-+
-+class EdgeEventWaitTimeout(TestCase):
-+    def test_event_wait_timeout(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.request_lines(
-+            sim.dev_path,
-+            {0: gpiod.LineSettings(edge_detection=Edge.BOTH)},
-+        ) as req:
-+            self.assertEqual(req.wait_edge_event(timedelta(microseconds=10000)), False)
-+
-+    def test_event_wait_timeout_float(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.request_lines(
-+            sim.dev_path,
-+            {0: gpiod.LineSettings(edge_detection=Edge.BOTH)},
-+        ) as req:
-+            self.assertEqual(req.wait_edge_event(0.01), False)
-+
-+
-+class EdgeEventInvalidConfig(TestCase):
-+    def test_output_mode_and_edge_detection(self):
-+        sim = gpiosim.Chip()
-+
-+        with self.assertRaises(ValueError):
-+            gpiod.request_lines(
-+                sim.dev_path,
-+                {
-+                    0: gpiod.LineSettings(
-+                        direction=Direction.OUTPUT, edge_detection=Edge.BOTH
-+                    )
-+                },
-+            )
-+
-+
-+class WaitingForEdgeEvents(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+        self.thread = None
-+
-+    def tearDown(self):
-+        if self.thread:
-+            self.thread.join()
-+            del self.thread
-+        self.sim = None
-+
-+    def trigger_falling_and_rising_edge(self, offset):
-+        time.sleep(0.05)
-+        self.sim.set_pull(offset, Pull.UP)
-+        time.sleep(0.05)
-+        self.sim.set_pull(offset, Pull.DOWN)
-+
-+    def trigger_rising_edge_events_on_two_offsets(self, offset0, offset1):
-+        time.sleep(0.05)
-+        self.sim.set_pull(offset0, Pull.UP)
-+        time.sleep(0.05)
-+        self.sim.set_pull(offset1, Pull.UP)
-+
-+    def test_both_edge_events(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {2: gpiod.LineSettings(edge_detection=Edge.BOTH)}
-+        ) as req:
-+            self.thread = Thread(
-+                target=partial(self.trigger_falling_and_rising_edge, 2)
-+            )
-+            self.thread.start()
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.RISING_EDGE)
-+            self.assertEqual(event.line_offset, 2)
-+            ts_rising = event.timestamp_ns
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.FALLING_EDGE)
-+            self.assertEqual(event.line_offset, 2)
-+            ts_falling = event.timestamp_ns
-+
-+            self.assertGreater(ts_falling, ts_rising)
-+
-+    def test_rising_edge_event(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {6: gpiod.LineSettings(edge_detection=Edge.RISING)}
-+        ) as req:
-+            self.thread = Thread(
-+                target=partial(self.trigger_falling_and_rising_edge, 6)
-+            )
-+            self.thread.start()
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.RISING_EDGE)
-+            self.assertEqual(event.line_offset, 6)
-+
-+            self.assertFalse(req.wait_edge_event(timedelta(microseconds=10000)))
-+
-+    def test_rising_edge_event(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {6: gpiod.LineSettings(edge_detection=Edge.FALLING)}
-+        ) as req:
-+            self.thread = Thread(
-+                target=partial(self.trigger_falling_and_rising_edge, 6)
-+            )
-+            self.thread.start()
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.FALLING_EDGE)
-+            self.assertEqual(event.line_offset, 6)
-+
-+            self.assertFalse(req.wait_edge_event(timedelta(microseconds=10000)))
-+
-+    def test_sequence_numbers(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {(2, 4): gpiod.LineSettings(edge_detection=Edge.BOTH)}
-+        ) as req:
-+            self.thread = Thread(
-+                target=partial(self.trigger_rising_edge_events_on_two_offsets, 2, 4)
-+            )
-+            self.thread.start()
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.RISING_EDGE)
-+            self.assertEqual(event.line_offset, 2)
-+            self.assertEqual(event.global_seqno, 1)
-+            self.assertEqual(event.line_seqno, 1)
-+
-+            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
-+            events = req.read_edge_event()
-+            self.assertEqual(len(events), 1)
-+            event = events[0]
-+            self.assertEqual(event.event_type, EventType.RISING_EDGE)
-+            self.assertEqual(event.line_offset, 4)
-+            self.assertEqual(event.global_seqno, 2)
-+            self.assertEqual(event.line_seqno, 1)
-+
-+
-+class ReadingMultipleEdgeEvents(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+        self.request = gpiod.request_lines(
-+            self.sim.dev_path, {1: gpiod.LineSettings(edge_detection=Edge.BOTH)}
-+        )
-+        self.line_seqno = 1
-+        self.global_seqno = 1
-+        self.sim.set_pull(1, Pull.UP)
-+        time.sleep(0.05)
-+        self.sim.set_pull(1, Pull.DOWN)
-+        time.sleep(0.05)
-+        self.sim.set_pull(1, Pull.UP)
-+        time.sleep(0.05)
-+
-+    def tearDown(self):
-+        self.request.release()
-+        del self.request
-+        del self.sim
-+
-+    def test_read_multiple_events(self):
-+        self.assertTrue(self.request.wait_edge_event(timedelta(seconds=1)))
-+        events = self.request.read_edge_event()
-+        self.assertEqual(len(events), 3)
-+
-+        for event in events:
-+            self.assertEqual(event.line_offset, 1)
-+            self.assertEqual(event.line_seqno, self.line_seqno)
-+            self.assertEqual(event.global_seqno, self.global_seqno)
-+            self.line_seqno += 1
-+            self.global_seqno += 1
-+
-+    # TODO buffer capacity
-+    # def test_read_over_buffer_capacity(self):
-+    #     buf = gpiod.EdgeEventBuffer(2)
-+    #     self.assertTrue(self.request.wait_edge_event(datetime.timedelta(seconds=1)))
-+    #     self.assertEqual(self.request.read_edge_event(buf), 2)
-+    #     self.assertEqual(len(buf), 2)
-+
-+
-+class EdgeEventStringRepresentation(TestCase):
-+    def test_edge_event_str(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.request_lines(
-+            path=sim.dev_path, config={0: gpiod.LineSettings(edge_detection=Edge.BOTH)}
-+        ) as req:
-+            sim.set_pull(0, Pull.UP)
-+            event = req.read_edge_event()[0]
-+            self.assertRegex(
-+                str(event),
-+                "<EdgeEvent type=Type\.RISING_EDGE timestamp_ns=[0-9]+ line_offset=0 global_seqno=1 line_seqno=1>",
-+            )
-diff --git a/bindings/python/tests/tests_info_event.py b/bindings/python/tests/tests_info_event.py
-new file mode 100644
-index 0000000..f3926d9
---- /dev/null
-+++ b/bindings/python/tests/tests_info_event.py
-@@ -0,0 +1,189 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import datetime
-+import errno
-+import gpiod
-+import threading
-+import time
-+import unittest
-+
-+from . import gpiosim
-+from dataclasses import FrozenInstanceError
-+from functools import partial
-+from gpiod.line import Direction
-+from unittest import TestCase
-+
-+EventType = gpiod.InfoEvent.Type
-+
-+
-+class InfoEventDataclassBehavior(TestCase):
-+    def test_info_event_props_are_frozen(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            chip.watch_line_info(0)
-+            with chip.request_lines(config={0: None}) as request:
-+                self.assertTrue(chip.wait_info_event(datetime.timedelta(seconds=1)))
-+                event = chip.read_info_event()
-+
-+                with self.assertRaises(FrozenInstanceError):
-+                    event.event_type = 4
-+
-+                with self.assertRaises(FrozenInstanceError):
-+                    event.timestamp_ns = 4
-+
-+                with self.assertRaises(FrozenInstanceError):
-+                    event.line_info = 4
-+
-+
-+def request_reconfigure_release_line(chip, offset):
-+    time.sleep(0.1)
-+    with chip.request_lines(config={offset: None}) as request:
-+        time.sleep(0.1)
-+        request.reconfigure_lines(
-+            config={offset: gpiod.LineSettings(direction=Direction.OUTPUT)}
-+        )
-+        time.sleep(0.1)
-+
-+
-+class WatchingInfoEventWorks(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8, line_names={4: "foobar"})
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+        self.thread = None
-+
-+    def tearDown(self):
-+        if self.thread:
-+            self.thread.join()
-+            self.thread = None
-+
-+        self.chip.close()
-+        self.chip = None
-+        self.sim = None
-+
-+    def test_watch_line_info_returns_line_info(self):
-+        info = self.chip.watch_line_info(7)
-+        self.assertEqual(info.offset, 7)
-+
-+    def test_watch_line_info_keyword_argument(self):
-+        info = self.chip.watch_line_info(line=7)
-+
-+    def test_watch_line_info_offset_out_of_range(self):
-+        with self.assertRaises(ValueError):
-+            self.chip.watch_line_info(8)
-+
-+    def test_watch_line_info_no_arguments(self):
-+        with self.assertRaises(TypeError):
-+            self.chip.watch_line_info()
-+
-+    def test_watch_line_info_by_line_name(self):
-+        self.chip.watch_line_info("foobar")
-+
-+    def test_watch_line_info_invalid_argument_type(self):
-+        with self.assertRaises(TypeError):
-+            self.chip.watch_line_info(None)
-+
-+    def test_wait_for_event_timeout(self):
-+        info = self.chip.watch_line_info(7)
-+        self.assertFalse(
-+            self.chip.wait_info_event(datetime.timedelta(microseconds=10000))
-+        )
-+
-+    def test_request_reconfigure_release_events(self):
-+        info = self.chip.watch_line_info(7)
-+        self.assertEqual(info.direction, Direction.INPUT)
-+
-+        self.thread = threading.Thread(
-+            target=partial(request_reconfigure_release_line, self.chip, 7)
-+        )
-+        self.thread.start()
-+
-+        self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
-+        event = self.chip.read_info_event()
-+        self.assertEqual(event.event_type, EventType.LINE_REQUESTED)
-+        self.assertEqual(event.line_info.offset, 7)
-+        self.assertEqual(event.line_info.direction, Direction.INPUT)
-+        ts_req = event.timestamp_ns
-+
-+        # Check that we can use a float directly instead of datetime.timedelta.
-+        self.assertTrue(self.chip.wait_info_event(1.0))
-+        event = self.chip.read_info_event()
-+        self.assertEqual(event.event_type, EventType.LINE_CONFIG_CHANGED)
-+        self.assertEqual(event.line_info.offset, 7)
-+        self.assertEqual(event.line_info.direction, Direction.OUTPUT)
-+        ts_rec = event.timestamp_ns
-+
-+        self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
-+        event = self.chip.read_info_event()
-+        self.assertEqual(event.event_type, EventType.LINE_RELEASED)
-+        self.assertEqual(event.line_info.offset, 7)
-+        self.assertEqual(event.line_info.direction, Direction.OUTPUT)
-+        ts_rel = event.timestamp_ns
-+
-+        # No more events.
-+        self.assertFalse(
-+            self.chip.wait_info_event(datetime.timedelta(microseconds=10000))
-+        )
-+
-+        # Check timestamps are really monotonic.
-+        self.assertGreater(ts_rel, ts_rec)
-+        self.assertGreater(ts_rec, ts_req)
-+
-+
-+class UnwatchingLineInfo(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8, line_names={4: "foobar"})
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        self.chip = None
-+        self.sim = None
-+
-+    def test_unwatch_line_info(self):
-+        self.chip.watch_line_info(0)
-+        with self.chip.request_lines(config={0: None}) as request:
-+            self.assertTrue(self.chip.wait_info_event(datetime.timedelta(seconds=1)))
-+            event = self.chip.read_info_event()
-+            self.assertEqual(event.event_type, EventType.LINE_REQUESTED)
-+            self.chip.unwatch_line_info(0)
-+
-+        self.assertFalse(
-+            self.chip.wait_info_event(datetime.timedelta(microseconds=10000))
-+        )
-+
-+    def test_unwatch_not_watched_line(self):
-+        with self.assertRaises(OSError) as ex:
-+            self.chip.unwatch_line_info(2)
-+
-+        self.assertEqual(ex.exception.errno, errno.EBUSY)
-+
-+    def test_unwatch_line_info_no_argument(self):
-+        with self.assertRaises(TypeError):
-+            self.chip.unwatch_line_info()
-+
-+    def test_unwatch_line_info_by_line_name(self):
-+        self.chip.watch_line_info(4)
-+        with self.chip.request_lines(config={4: None}) as request:
-+            self.assertIsNotNone(self.chip.read_info_event())
-+            self.chip.unwatch_line_info("foobar")
-+
-+        self.assertFalse(
-+            self.chip.wait_info_event(datetime.timedelta(microseconds=10000))
-+        )
-+
-+
-+class InfoEventStringRepresentation(TestCase):
-+    def test_info_event_str(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            chip.watch_line_info(0)
-+            with chip.request_lines(config={0: None}) as request:
-+                self.assertTrue(chip.wait_info_event(datetime.timedelta(seconds=1)))
-+                event = chip.read_info_event()
-+                self.assertRegex(
-+                    str(event),
-+                    '<InfoEvent type=Type\.LINE_REQUESTED timestamp_ns=[0-9]+ line_info=<LineInfo offset=0 name="None" used=True consumer="\?" direction=Direction\.INPUT active_low=False bias=Bias\.UNKNOWN drive=Drive\.PUSH_PULL edge_detection=Edge\.NONE event_clock=Clock\.MONOTONIC debounced=False debounce_period=0:00:00>>',
-+                )
-diff --git a/bindings/python/tests/tests_line_info.py b/bindings/python/tests/tests_line_info.py
-new file mode 100644
-index 0000000..2779e7a
---- /dev/null
-+++ b/bindings/python/tests/tests_line_info.py
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import errno
-+import gpiod
-+import unittest
-+
-+from . import gpiosim
-+from gpiod.line import Direction, Bias, Drive, Clock
-+
-+HogDir = gpiosim.Chip.Direction
-+
-+
-+class GetLineInfo(unittest.TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(
-+            num_lines=4,
-+            line_names={0: "foobar"},
-+        )
-+
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        self.chip = None
-+        self.sim = None
-+
-+    def test_get_line_info_by_offset(self):
-+        self.chip.get_line_info(0)
-+
-+    def test_get_line_info_by_offset_keyword(self):
-+        self.chip.get_line_info(line=0)
-+
-+    def test_get_line_info_by_name(self):
-+        self.chip.get_line_info("foobar")
-+
-+    def test_get_line_info_by_name_keyword(self):
-+        self.chip.get_line_info(line="foobar")
-+
-+    def test_get_line_info_by_offset_string(self):
-+        self.chip.get_line_info("2")
-+
-+    def test_offset_out_of_range(self):
-+        with self.assertRaises(ValueError) as ex:
-+            self.chip.get_line_info(4)
-+
-+    def test_no_offset(self):
-+        with self.assertRaises(TypeError):
-+            self.chip.get_line_info()
-+
-+
-+class LinePropertiesCanBeRead(unittest.TestCase):
-+    def test_basic_properties(self):
-+        sim = gpiosim.Chip(
-+            num_lines=8,
-+            line_names={1: "foo", 2: "bar", 4: "baz", 5: "xyz"},
-+            hogs={3: ("hog3", HogDir.OUTPUT_HIGH), 4: ("hog4", HogDir.OUTPUT_LOW)},
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            info4 = chip.get_line_info(4)
-+            info6 = chip.get_line_info(6)
-+
-+            self.assertEqual(info4.offset, 4)
-+            self.assertEqual(info4.name, "baz")
-+            self.assertTrue(info4.used)
-+            self.assertEqual(info4.consumer, "hog4")
-+            self.assertEqual(info4.direction, Direction.OUTPUT)
-+            self.assertFalse(info4.active_low)
-+            self.assertEqual(info4.bias, Bias.UNKNOWN)
-+            self.assertEqual(info4.drive, Drive.PUSH_PULL)
-+            self.assertEqual(info4.event_clock, Clock.MONOTONIC)
-+            self.assertFalse(info4.debounced)
-+            self.assertEqual(info4.debounce_period.total_seconds(), 0.0)
-+
-+            self.assertEqual(info6.offset, 6)
-+            self.assertEqual(info6.name, None)
-+            self.assertFalse(info6.used)
-+            self.assertEqual(info6.consumer, None)
-+            self.assertEqual(info6.direction, Direction.INPUT)
-+            self.assertFalse(info6.active_low)
-+            self.assertEqual(info6.bias, Bias.UNKNOWN)
-+            self.assertEqual(info6.drive, Drive.PUSH_PULL)
-+            self.assertEqual(info6.event_clock, Clock.MONOTONIC)
-+            self.assertFalse(info6.debounced)
-+            self.assertEqual(info6.debounce_period.total_seconds(), 0.0)
-+
-+
-+class LineInfoStringRepresentation(unittest.TestCase):
-+    def test_line_info_str(self):
-+        sim = gpiosim.Chip(
-+            line_names={0: "foo"}, hogs={0: ("hogger", HogDir.OUTPUT_HIGH)}
-+        )
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            info = chip.get_line_info(0)
-+
-+            self.assertEqual(
-+                str(info),
-+                '<LineInfo offset=0 name="foo" used=True consumer="hogger" direction=Direction.OUTPUT active_low=False bias=Bias.UNKNOWN drive=Drive.PUSH_PULL edge_detection=Edge.NONE event_clock=Clock.MONOTONIC debounced=False debounce_period=0:00:00>',
-+            )
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-new file mode 100644
-index 0000000..045ace6
---- /dev/null
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -0,0 +1,449 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-+
-+import errno
-+import gpiod
-+
-+from . import gpiosim
-+from gpiod.line import Direction, Edge, Value
-+from unittest import TestCase
-+
-+Pull = gpiosim.Chip.Pull
-+SimVal = gpiosim.Chip.Value
-+
-+
-+class ChipLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        del self.chip
-+        del self.sim
-+
-+    def test_passing_invalid_types_as_configs(self):
-+        with self.assertRaises(AttributeError):
-+            self.chip.request_lines("foobar")
-+
-+        with self.assertRaises(AttributeError):
-+            self.chip.request_lines(None, "foobar")
-+
-+    def test_duplicate_offsets(self):
-+        with self.chip.request_lines(config={(2, 5, 1, 7, 5): None}) as req:
-+            self.assertEqual(req.offsets, [2, 5, 1, 7])
-+
-+    def test_offset_out_of_range(self):
-+        with self.assertRaises(ValueError):
-+            self.chip.request_lines(config={(1, 0, 4, 8): None})
-+
-+    def test_line_name_not_found(self):
-+        with self.assertRaises(FileNotFoundError):
-+            self.chip.request_lines(config={"foo": None})
-+
-+    def test_request_no_arguments(self):
-+        with self.assertRaises(TypeError):
-+            self.chip.request_lines()
-+
-+
-+class ModuleLineRequestsBehaveCorrectlyWithInvalidArguments(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+
-+    def tearDown(self):
-+        del self.sim
-+
-+    def test_passing_invalid_types_as_configs(self):
-+        with self.assertRaises(AttributeError):
-+            gpiod.request_lines(self.sim.dev_path, "foobar")
-+
-+        with self.assertRaises(AttributeError):
-+            gpiod.request_lines(self.sim.dev_path, None, "foobar")
-+
-+    def test_duplicate_offsets(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, config={(2, 5, 1, 7, 5): None}
-+        ) as req:
-+            self.assertEqual(req.offsets, [2, 5, 1, 7])
-+
-+    def test_offset_out_of_range(self):
-+        with self.assertRaises(ValueError):
-+            gpiod.request_lines(self.sim.dev_path, config={(1, 0, 4, 8): None})
-+
-+    def test_line_name_not_found(self):
-+        with self.assertRaises(FileNotFoundError):
-+            gpiod.request_lines(self.sim.dev_path, config={"foo": None})
-+
-+    def test_request_no_arguments(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.request_lines()
-+
-+
-+class ChipLineRequestWorks(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8, line_names={5: "foo", 7: "bar"})
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        del self.chip
-+        del self.sim
-+
-+    def test_request_with_positional_arguments(self):
-+        with self.chip.request_lines({(0, 5, 3, 1): None}, "foobar", 32) as req:
-+            self.assertEqual(req.offsets, [0, 5, 3, 1])
-+            self.assertEqual(self.chip.get_line_info(0).consumer, "foobar")
-+
-+    def test_request_with_keyword_arguments(self):
-+        with self.chip.request_lines(
-+            config={(0, 5, 6): None},
-+            consumer="foobar",
-+            event_buffer_size=16,
-+        ) as req:
-+            self.assertEqual(req.offsets, [0, 5, 6])
-+            self.assertEqual(self.chip.get_line_info(0).consumer, "foobar")
-+
-+    def test_request_single_offset_as_int(self):
-+        with self.chip.request_lines(config={4: None}) as req:
-+            self.assertEqual(req.offsets, [4])
-+
-+    def test_request_single_offset_as_tuple(self):
-+        with self.chip.request_lines(config={(4): None}) as req:
-+            self.assertEqual(req.offsets, [4])
-+
-+    def test_request_by_name(self):
-+        with self.chip.request_lines(config={(1, 2, "foo", "bar"): None}) as req:
-+            self.assertEqual(req.offsets, [1, 2, 5, 7])
-+
-+    def test_request_single_line_by_name(self):
-+        with self.chip.request_lines(config={"foo": None}) as req:
-+            self.assertEqual(req.offsets, [5])
-+
-+
-+class ModuleLineRequestWorks(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8, line_names={5: "foo", 7: "bar"})
-+
-+    def tearDown(self):
-+        del self.sim
-+
-+    def test_request_with_positional_arguments(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {(0, 5, 3, 1): None}, "foobar", 32
-+        ) as req:
-+            self.assertEqual(req.offsets, [0, 5, 3, 1])
-+            with gpiod.Chip(self.sim.dev_path) as chip:
-+                self.assertEqual(chip.get_line_info(5).consumer, "foobar")
-+
-+    def test_request_with_keyword_arguments(self):
-+        with gpiod.request_lines(
-+            path=self.sim.dev_path,
-+            config={(0, 5, 6): None},
-+            consumer="foobar",
-+            event_buffer_size=16,
-+        ) as req:
-+            self.assertEqual(req.offsets, [0, 5, 6])
-+            with gpiod.Chip(self.sim.dev_path) as chip:
-+                self.assertEqual(chip.get_line_info(5).consumer, "foobar")
-+
-+    def test_request_single_offset_as_int(self):
-+        with gpiod.request_lines(path=self.sim.dev_path, config={4: None}) as req:
-+            self.assertEqual(req.offsets, [4])
-+
-+    def test_request_single_offset_as_tuple(self):
-+        with gpiod.request_lines(path=self.sim.dev_path, config={(4): None}) as req:
-+            self.assertEqual(req.offsets, [4])
-+
-+    def test_request_by_name(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, {(1, 2, "foo", "bar"): None}
-+        ) as req:
-+            self.assertEqual(req.offsets, [1, 2, 5, 7])
-+
-+
-+class LineRequestGettingValues(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+        self.req = gpiod.request_lines(
-+            self.sim.dev_path,
-+            {(0, 1, 2, 3): gpiod.LineSettings(direction=Direction.INPUT)},
-+        )
-+
-+    def tearDown(self):
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_get_single_value(self):
-+        self.sim.set_pull(1, Pull.UP)
-+
-+        self.assertEqual(self.req.get_values([1]), [Value.ACTIVE])
-+
-+    def test_get_single_value_helper(self):
-+        self.sim.set_pull(1, Pull.UP)
-+
-+        self.assertEqual(self.req.get_value(1), Value.ACTIVE)
-+
-+    def test_get_values_for_subset_of_lines(self):
-+        self.sim.set_pull(0, Pull.UP)
-+        self.sim.set_pull(1, Pull.DOWN)
-+        self.sim.set_pull(3, Pull.UP)
-+
-+        self.assertEqual(
-+            self.req.get_values([0, 1, 3]), [Value.ACTIVE, Value.INACTIVE, Value.ACTIVE]
-+        )
-+
-+    def test_get_all_values(self):
-+        self.sim.set_pull(0, Pull.DOWN)
-+        self.sim.set_pull(1, Pull.UP)
-+        self.sim.set_pull(2, Pull.UP)
-+        self.sim.set_pull(3, Pull.UP)
-+
-+        self.assertEqual(
-+            self.req.get_values(),
-+            [Value.INACTIVE, Value.ACTIVE, Value.ACTIVE, Value.ACTIVE],
-+        )
-+
-+    def test_get_values_invalid_offset(self):
-+        with self.assertRaises(ValueError):
-+            self.req.get_values([9])
-+
-+    def test_get_values_invalid_argument_type(self):
-+        with self.assertRaises(TypeError):
-+            self.req.get_values(True)
-+
-+
-+class LineRequestGettingValuesByName(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=4, line_names={2: "foo", 3: "bar", 1: "baz"})
-+        self.req = gpiod.request_lines(
-+            self.sim.dev_path,
-+            {(0, "baz", "bar", "foo"): gpiod.LineSettings(direction=Direction.INPUT)},
-+        )
-+
-+    def tearDown(self):
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_get_values_by_name(self):
-+        self.sim.set_pull(1, Pull.UP)
-+        self.sim.set_pull(2, Pull.DOWN)
-+        self.sim.set_pull(3, Pull.UP)
-+
-+        self.assertEqual(
-+            self.req.get_values(["foo", "bar", 1]),
-+            [Value.INACTIVE, Value.ACTIVE, Value.ACTIVE],
-+        )
-+
-+    def test_get_values_by_bad_name(self):
-+        with self.assertRaises(ValueError):
-+            self.req.get_values(["xyz"])
-+
-+
-+class LineRequestSettingValues(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+        self.req = gpiod.request_lines(
-+            self.sim.dev_path,
-+            {(0, 1, 2, 3): gpiod.LineSettings(direction=Direction.OUTPUT)},
-+        )
-+
-+    def tearDown(self):
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_set_single_value(self):
-+        self.req.set_values({1: Value.ACTIVE})
-+        self.assertEqual(self.sim.get_value(1), SimVal.ACTIVE)
-+
-+    def test_set_single_value_helper(self):
-+        self.req.set_value(1, Value.ACTIVE)
-+        self.assertEqual(self.sim.get_value(1), SimVal.ACTIVE)
-+
-+    def test_set_values_for_subset_of_lines(self):
-+        self.req.set_values({0: Value.ACTIVE, 1: Value.INACTIVE, 3: Value.ACTIVE})
-+
-+        self.assertEqual(self.sim.get_value(0), SimVal.ACTIVE)
-+        self.assertEqual(self.sim.get_value(1), SimVal.INACTIVE)
-+        self.assertEqual(self.sim.get_value(3), SimVal.ACTIVE)
-+
-+    def test_set_values_invalid_offset(self):
-+        with self.assertRaises(ValueError):
-+            self.req.set_values({9: Value.ACTIVE})
-+
-+
-+class LineRequestSettingValuesByName(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=4, line_names={2: "foo", 3: "bar", 1: "baz"})
-+        self.req = gpiod.request_lines(
-+            self.sim.dev_path,
-+            {(0, "baz", "bar", "foo"): gpiod.LineSettings(direction=Direction.OUTPUT)},
-+        )
-+
-+    def tearDown(self):
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_set_values_by_name(self):
-+        self.req.set_values(
-+            {"foo": Value.INACTIVE, "bar": Value.ACTIVE, 1: Value.ACTIVE}
-+        )
-+
-+        self.assertEqual(self.sim.get_value(2), SimVal.INACTIVE)
-+        self.assertEqual(self.sim.get_value(1), SimVal.ACTIVE)
-+        self.assertEqual(self.sim.get_value(3), SimVal.ACTIVE)
-+
-+    def test_set_values_by_bad_name(self):
-+        with self.assertRaises(ValueError):
-+            self.req.set_values({"xyz": Value.ACTIVE})
-+
-+
-+class LineRequestPropertiesWork(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=16, line_names={0: "foo", 2: "bar", 5: "baz"})
-+
-+    def tearDown(self):
-+        del self.sim
-+
-+    def test_property_fd(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path,
-+            config={
-+                0: gpiod.LineSettings(
-+                    direction=Direction.INPUT, edge_detection=Edge.BOTH
-+                )
-+            },
-+        ) as req:
-+            self.assertGreaterEqual(req.fd, 0)
-+
-+    def test_property_num_lines(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, config={(0, 2, 3, 5, 6, 8, 12): None}
-+        ) as req:
-+            self.assertEqual(req.num_lines, 7)
-+
-+    def test_property_offsets(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, config={(1, 6, 12, 4): None}
-+        ) as req:
-+            self.assertEqual(req.offsets, [1, 6, 12, 4])
-+
-+    def test_property_lines(self):
-+        with gpiod.request_lines(
-+            self.sim.dev_path, config={("foo", 1, "bar", 4, "baz"): None}
-+        ) as req:
-+            self.assertEqual(req.lines, ["foo", 1, "bar", 4, "baz"])
-+
-+
-+class LineRequestConsumerString(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=4)
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        del self.chip
-+        del self.sim
-+
-+    def test_custom_consumer(self):
-+        with self.chip.request_lines(
-+            consumer="foobar", config={(2, 3): None}
-+        ) as request:
-+            info = self.chip.get_line_info(2)
-+            self.assertEqual(info.consumer, "foobar")
-+
-+    def test_empty_consumer(self):
-+        with self.chip.request_lines(consumer="", config={(2, 3): None}) as request:
-+            info = self.chip.get_line_info(2)
-+            self.assertEqual(info.consumer, "?")
-+
-+    def test_default_consumer(self):
-+        with self.chip.request_lines(config={(2, 3): None}) as request:
-+            info = self.chip.get_line_info(2)
-+            self.assertEqual(info.consumer, "?")
-+
-+
-+class ReconfigureRequestedLines(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8, line_names={3: "foo", 4: "bar", 6: "baz"})
-+        self.chip = gpiod.Chip(self.sim.dev_path)
-+        self.req = self.chip.request_lines(
-+            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=Direction.OUTPUT)}
-+        )
-+
-+    def tearDown(self):
-+        self.chip.close()
-+        del self.chip
-+        self.req.release()
-+        del self.req
-+        del self.sim
-+
-+    def test_reconfigure_by_offsets(self):
-+        info = self.chip.get_line_info(2)
-+        self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.req.reconfigure_lines(
-+            {(0, 2, 3, 6): gpiod.LineSettings(direction=Direction.INPUT)}
-+        )
-+        info = self.chip.get_line_info(2)
-+        self.assertEqual(info.direction, Direction.INPUT)
-+
-+    def test_reconfigure_by_names(self):
-+        info = self.chip.get_line_info(2)
-+        self.assertEqual(info.direction, Direction.OUTPUT)
-+        self.req.reconfigure_lines(
-+            {(0, 2, "foo", "baz"): gpiod.LineSettings(direction=Direction.INPUT)}
-+        )
-+        info = self.chip.get_line_info(2)
-+        self.assertEqual(info.direction, Direction.INPUT)
-+
-+
-+class ReleasedLineRequestCannotBeUsed(TestCase):
-+    def test_using_released_line_request(self):
-+        sim = gpiosim.Chip()
-+
-+        with gpiod.Chip(sim.dev_path) as chip:
-+            req = chip.request_lines(config={0: None})
-+            req.release()
-+
-+            with self.assertRaises(gpiod.RequestReleasedError):
-+                req.fd
-+
-+
-+class LineRequestSurvivesParentChip(TestCase):
-+    def test_line_request_survives_parent_chip(self):
-+        sim = gpiosim.Chip()
-+
-+        chip = gpiod.Chip(sim.dev_path)
-+        try:
-+            req = chip.request_lines(
-+                config={0: gpiod.LineSettings(direction=Direction.INPUT)}
-+            )
-+        except:
-+            chip.close()
-+            raise
-+
-+        chip.close()
-+        self.assertEqual(req.get_values([0]), [Value.INACTIVE])
-+
-+
-+class LineRequestStringRepresentation(TestCase):
-+    def setUp(self):
-+        self.sim = gpiosim.Chip(num_lines=8)
-+
-+    def tearDown(self):
-+        del self.sim
-+
-+    def test_str(self):
-+        with gpiod.request_lines(self.sim.dev_path, config={(2, 6, 4, 1): None}) as req:
-+            self.assertEqual(
-+                str(req),
-+                "<LineRequest num_lines=4 offsets=[2, 6, 4, 1] fd={}>".format(req.fd),
-+            )
-+
-+    def test_str_released(self):
-+        req = gpiod.request_lines(self.sim.dev_path, config={(2, 6, 4, 1): None})
-+        req.release()
-+        self.assertEqual(str(req), "<LineRequest RELEASED>")
-diff --git a/bindings/python/tests/tests_line_settings.py b/bindings/python/tests/tests_line_settings.py
-new file mode 100644
-index 0000000..36dda6d
---- /dev/null
-+++ b/bindings/python/tests/tests_line_settings.py
-@@ -0,0 +1,79 @@
++++ b/bindings/python/gpiod/info_event.py
+@@ -0,0 +1,33 @@
 +# SPDX-License-Identifier: LGPL-2.1-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+import gpiod
-+
-+from . import gpiosim
-+from datetime import timedelta
-+from gpiod.line import Direction, Edge, Bias, Drive, Value, Clock
-+from unittest import TestCase
++from . import _ext
++from .line_info import LineInfo
++from dataclasses import dataclass
++from enum import Enum
 +
 +
-+class LineSettingsConstructor(TestCase):
-+    def test_default_values(self):
-+        settings = gpiod.LineSettings()
++@dataclass(frozen=True, init=False, repr=False)
++class InfoEvent:
++    """
++    Immutable object containing data about a single line info event.
++    """
 +
-+        self.assertEqual(settings.direction, Direction.AS_IS)
-+        self.assertEqual(settings.edge_detection, Edge.NONE)
-+        self.assertEqual(settings.bias, Bias.AS_IS)
-+        self.assertEqual(settings.drive, Drive.PUSH_PULL)
-+        self.assertFalse(settings.active_low)
-+        self.assertEqual(settings.debounce_period.total_seconds(), 0.0)
-+        self.assertEqual(settings.event_clock, Clock.MONOTONIC)
-+        self.assertEqual(settings.output_value, Value.INACTIVE)
++    class Type(Enum):
++        LINE_REQUESTED = _ext.INFO_EVENT_TYPE_LINE_REQUESTED
++        LINE_RELEASED = _ext.INFO_EVENT_TYPE_LINE_RELEASED
++        LINE_CONFIG_CHANGED = _ext.INFO_EVENT_TYPE_LINE_CONFIG_CHANGED
 +
-+    def test_keyword_arguments(self):
-+        settings = gpiod.LineSettings(
-+            direction=Direction.INPUT,
-+            edge_detection=Edge.BOTH,
-+            bias=Bias.PULL_UP,
-+            event_clock=Clock.REALTIME,
++    event_type: Type
++    timestamp_ns: int
++    line_info: LineInfo
++
++    def __init__(self, event_type: int, timestamp_ns: int, line_info: LineInfo):
++        object.__setattr__(self, "event_type", InfoEvent.Type(event_type))
++        object.__setattr__(self, "timestamp_ns", timestamp_ns)
++        object.__setattr__(self, "line_info", line_info)
++
++    def __str__(self):
++        return "<InfoEvent type={} timestamp_ns={} line_info={}>".format(
++            self.event_type, self.timestamp_ns, self.line_info
 +        )
-+
-+        self.assertEqual(settings.direction, Direction.INPUT)
-+        self.assertEqual(settings.edge_detection, Edge.BOTH)
-+        self.assertEqual(settings.bias, Bias.PULL_UP)
-+        self.assertEqual(settings.drive, Drive.PUSH_PULL)
-+        self.assertFalse(settings.active_low)
-+        self.assertEqual(settings.debounce_period.total_seconds(), 0.0)
-+        self.assertEqual(settings.event_clock, Clock.REALTIME)
-+        self.assertEqual(settings.output_value, Value.INACTIVE)
-+
-+
-+class LineSettingsAttributes(TestCase):
-+    def test_line_settings_attributes_are_mutable(self):
-+        settings = gpiod.LineSettings()
-+
-+        settings.direction = Direction.INPUT
-+        settings.edge_detection = Edge.BOTH
-+        settings.bias = Bias.DISABLED
-+        settings.debounce_period = timedelta(microseconds=3000)
-+        settings.event_clock = Clock.HTE
-+
-+        self.assertEqual(settings.direction, Direction.INPUT)
-+        self.assertEqual(settings.edge_detection, Edge.BOTH)
-+        self.assertEqual(settings.bias, Bias.DISABLED)
-+        self.assertEqual(settings.drive, Drive.PUSH_PULL)
-+        self.assertFalse(settings.active_low)
-+        self.assertEqual(settings.debounce_period.total_seconds(), 0.003)
-+        self.assertEqual(settings.event_clock, Clock.HTE)
-+        self.assertEqual(settings.output_value, Value.INACTIVE)
-+
-+
-+class LineSettingsStringRepresentation(TestCase):
-+    def setUp(self):
-+        self.settings = gpiod.LineSettings(
-+            direction=Direction.OUTPUT, drive=Drive.OPEN_SOURCE, active_low=True
-+        )
-+
-+    def test_repr(self):
-+        self.assertEqual(
-+            repr(self.settings),
-+            "LineSettings(direction=Direction.OUTPUT, edge_detection=Edge.NONE bias=Bias.AS_IS drive=Drive.OPEN_SOURCE active_low=True debounce_period=datetime.timedelta(0) event_clock=Clock.MONOTONIC output_value=Value.INACTIVE)",
-+        )
-+
-+    def test_str(self):
-+        self.assertEqual(
-+            str(self.settings),
-+            "<LineSettings direction=Direction.OUTPUT edge_detection=Edge.NONE bias=Bias.AS_IS drive=Drive.OPEN_SOURCE active_low=True debounce_period=0:00:00 event_clock=Clock.MONOTONIC output_value=Value.INACTIVE>",
-+        )
-diff --git a/bindings/python/tests/tests_module.py b/bindings/python/tests/tests_module.py
+diff --git a/bindings/python/gpiod/internal.py b/bindings/python/gpiod/internal.py
 new file mode 100644
-index 0000000..4eeae76
+index 0000000..37e8b62
 --- /dev/null
-+++ b/bindings/python/tests/tests_module.py
-@@ -0,0 +1,59 @@
++++ b/bindings/python/gpiod/internal.py
+@@ -0,0 +1,19 @@
 +# SPDX-License-Identifier: GPL-2.0-or-later
 +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
-+import gpiod
-+import os
-+import re
-+import unittest
-+
-+from . import gpiosim
-+from .helpers import LinkGuard
-+from unittest import TestCase
++from datetime import timedelta
++from select import select
++from typing import Optional, Union
 +
 +
-+class IsGPIOChip(TestCase):
-+    def test_is_gpiochip_bad(self):
-+        self.assertFalse(gpiod.is_gpiochip_device("/dev/null"))
-+        self.assertFalse(gpiod.is_gpiochip_device("/dev/nonexistent"))
++def poll_fd(fd: int, timeout: Optional[Union[timedelta, float]] = None) -> bool:
++    if timeout is None:
++        timeout = 0.0
 +
-+    def test_is_gpiochip_invalid_argument(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.is_gpiochip_device(4)
++    if isinstance(timeout, timedelta):
++        sec = timeout.total_seconds()
++    else:
++        sec = timeout
 +
-+    def test_is_gpiochip_superfluous_argument(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.is_gpiochip_device("/dev/null", 4)
-+
-+    def test_is_gpiochip_missing_argument(self):
-+        with self.assertRaises(TypeError):
-+            gpiod.is_gpiochip_device()
-+
-+    def test_is_gpiochip_good(self):
-+        sim = gpiosim.Chip()
-+        self.assertTrue(gpiod.is_gpiochip_device(sim.dev_path))
-+
-+    def test_is_gpiochip_good_keyword_argument(self):
-+        sim = gpiosim.Chip()
-+        self.assertTrue(gpiod.is_gpiochip_device(path=sim.dev_path))
-+
-+    def test_is_gpiochip_link_good(self):
-+        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+        sim = gpiosim.Chip()
-+
-+        with LinkGuard(sim.dev_path, link):
-+            self.assertTrue(gpiod.is_gpiochip_device(link))
-+
-+    def test_is_gpiochip_link_bad(self):
-+        link = "/tmp/gpiod-py-test-link.{}".format(os.getpid())
-+
-+        with LinkGuard("/dev/null", link):
-+            self.assertFalse(gpiod.is_gpiochip_device(link))
++    readable, _, _ = select([fd], [], [], sec)
++    return True if fd in readable else False
+diff --git a/bindings/python/gpiod/line.py b/bindings/python/gpiod/line.py
+new file mode 100644
+index 0000000..c5d5ddf
+--- /dev/null
++++ b/bindings/python/gpiod/line.py
+@@ -0,0 +1,56 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
 +
 +
-+class VersionString(TestCase):
-+    def test_version_string(self):
-+        self.assertTrue(
-+            re.match(
-+                "^[0-9][1-9]?\\.[0-9][1-9]?([\\.0-9]?|\\-devel)$", gpiod.__version__
-+            )
++from . import _ext
++from enum import Enum
++
++
++class Value(Enum):
++    """Logical line states."""
++
++    INACTIVE = _ext.VALUE_INACTIVE
++    ACTIVE = _ext.VALUE_ACTIVE
++
++
++class Direction(Enum):
++    """Direction settings."""
++
++    AS_IS = _ext.DIRECTION_AS_IS
++    INPUT = _ext.DIRECTION_INPUT
++    OUTPUT = _ext.DIRECTION_OUTPUT
++
++
++class Bias(Enum):
++    """Internal bias settings."""
++
++    AS_IS = _ext.BIAS_AS_IS
++    UNKNOWN = _ext.BIAS_UNKNOWN
++    DISABLED = _ext.BIAS_DISABLED
++    PULL_UP = _ext.BIAS_PULL_UP
++    PULL_DOWN = _ext.BIAS_PULL_DOWN
++
++
++class Drive(Enum):
++    """Drive settings."""
++
++    PUSH_PULL = _ext.DRIVE_PUSH_PULL
++    OPEN_DRAIN = _ext.DRIVE_OPEN_DRAIN
++    OPEN_SOURCE = _ext.DRIVE_OPEN_SOURCE
++
++
++class Edge(Enum):
++    """Edge detection settings."""
++
++    NONE = _ext.EDGE_NONE
++    RISING = _ext.EDGE_RISING
++    FALLING = _ext.EDGE_FALLING
++    BOTH = _ext.EDGE_BOTH
++
++
++class Clock(Enum):
++    """Event clock settings."""
++
++    MONOTONIC = _ext.CLOCK_MONOTONIC
++    REALTIME = _ext.CLOCK_REALTIME
++    HTE = _ext.CLOCK_HTE
+diff --git a/bindings/python/gpiod/line_info.py b/bindings/python/gpiod/line_info.py
+new file mode 100644
+index 0000000..9a6c9bf
+--- /dev/null
++++ b/bindings/python/gpiod/line_info.py
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++from . import _ext
++from dataclasses import dataclass
++from datetime import timedelta
++from gpiod.line import Direction, Bias, Drive, Edge, Clock
++
++
++@dataclass(frozen=True, init=False, repr=False)
++class LineInfo:
++    """
++    Snapshot of a line's status.
++    """
++
++    offset: int
++    name: str
++    used: bool
++    consumer: str
++    direction: Direction
++    active_low: bool
++    bias: Bias
++    drive: Drive
++    edge_detection: Edge
++    event_clock: Clock
++    debounced: bool
++    debounce_period: timedelta
++
++    def __init__(
++        self,
++        offset: int,
++        name: str,
++        used: bool,
++        consumer: str,
++        direction: int,
++        active_low: bool,
++        bias: int,
++        drive: int,
++        edge_detection: int,
++        event_clock: int,
++        debounced: bool,
++        debounce_period_us: int,
++    ):
++        object.__setattr__(self, "offset", offset)
++        object.__setattr__(self, "name", name)
++        object.__setattr__(self, "used", used)
++        object.__setattr__(self, "consumer", consumer)
++        object.__setattr__(self, "direction", Direction(direction))
++        object.__setattr__(self, "active_low", active_low)
++        object.__setattr__(self, "bias", Bias(bias))
++        object.__setattr__(self, "drive", Drive(drive))
++        object.__setattr__(self, "edge_detection", Edge(edge_detection))
++        object.__setattr__(self, "event_clock", Clock(event_clock))
++        object.__setattr__(self, "debounced", debounced)
++        object.__setattr__(
++            self, "debounce_period", timedelta(microseconds=debounce_period_us)
 +        )
++
++    def __str__(self):
++        return '<LineInfo offset={} name="{}" used={} consumer="{}" direction={} active_low={} bias={} drive={} edge_detection={} event_clock={} debounced={} debounce_period={}>'.format(
++            self.offset,
++            self.name,
++            self.used,
++            self.consumer,
++            self.direction,
++            self.active_low,
++            self.bias,
++            self.drive,
++            self.edge_detection,
++            self.event_clock,
++            self.debounced,
++            self.debounce_period,
++        )
+diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
+new file mode 100644
+index 0000000..a3ee392
+--- /dev/null
++++ b/bindings/python/gpiod/line_request.py
+@@ -0,0 +1,258 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++from . import _ext
++from .edge_event import EdgeEvent
++from .exception import RequestReleasedError
++from .internal import poll_fd
++from .line import Value
++from .line_settings import LineSettings, _line_settings_to_ext_line_settings
++from collections.abc import Iterable
++from datetime import timedelta
++from typing import Optional, Union
++
++
++class LineRequest:
++    """
++    Stores the context of a set of requested GPIO lines.
++    """
++
++    def __init__(self, req: _ext.Request):
++        """
++        DON'T USE
++
++        LineRequest objects can only be instantiated by a Chip parent. This is
++        not part of stable API.
++        """
++        self._req = req
++
++    def __bool__(self) -> bool:
++        """
++        Boolean conversion for GPIO line requests.
++
++        Returns:
++          True if the request is live and False if it's been released.
++        """
++        return True if self._req else False
++
++    def __enter__(self):
++        """
++        Controlled execution enter callback.
++        """
++        self._check_released()
++        return self
++
++    def __exit__(self, exc_type, exc_value, traceback):
++        """
++        Controlled execution exit callback.
++        """
++        self.release()
++
++    def _check_released(self) -> None:
++        if not self._req:
++            raise RequestReleasedError()
++
++    def release(self) -> None:
++        """
++        Release this request and free all associated resources. The object must
++        not be used after a call to this method.
++        """
++        self._check_released()
++        self._req.release()
++        self._req = None
++
++    def get_value(self, line: Union[int, str]) -> Value:
++        """
++        Get a single GPIO line value.
++
++        Args:
++          line:
++            Offset or name of the line to get value for.
++
++        Returns:
++          Logical value of the line.
++        """
++        return self.get_values([line])[0]
++
++    def get_values(
++        self, lines: Optional[Iterable[Union[int, str]]] = None
++    ) -> list[Value]:
++        """
++        Get values of a set of GPIO lines.
++
++        Args:
++          lines:
++            List of names or offsets of GPIO lines to get values for. Can be
++            None in which case all requested lines will be read.
++
++        Returns:
++          List of logical line values.
++        """
++        self._check_released()
++
++        if lines is None:
++            lines = self._lines
++
++        offsets = [None] * len(lines)
++
++        for i, line in enumerate(lines):
++            if isinstance(line, str):
++                if line not in self._name_map:
++                    raise ValueError("unknown line name: {}".format(line))
++
++                offsets[i] = self._name_map[line]
++            else:
++                offsets[i] = line
++
++        buf = [None] * len(lines)
++
++        self._req.get_values(offsets, buf)
++        return buf
++
++    def set_value(self, line: Union[int, str], value: Value) -> None:
++        """
++        Set the value of a single GPIO line.
++
++        Args:
++          line:
++            Offset or name of the line to set.
++          value:
++            New value.
++        """
++        self.set_values({line: value})
++
++    def set_values(self, values: dict[Union[int, str], Value]) -> None:
++        """
++        Set the values of a subset of GPIO lines.
++
++        Args:
++          values:
++            Dictionary mapping line offsets or names to desired values.
++        """
++        self._check_released()
++
++        mapped = dict()
++        for i, line in enumerate(values):
++            if isinstance(line, str):
++                if line not in self._name_map:
++                    raise ValueError("unknown line name: {}".format(line))
++
++                mapped[self._name_map[line]] = values[line]
++            else:
++                mapped[line] = values[line]
++
++        self._req.set_values(mapped)
++
++    def reconfigure_lines(
++        self, config: dict[tuple[Union[int, str]], LineSettings]
++    ) -> None:
++        """
++        Reconfigure requested lines.
++
++        Args:
++          config
++            Dictionary mapping offsets or names (or tuples thereof) to
++            LineSettings. If None is passed as the value of the mapping,
++            default settings are used.
++        """
++        self._check_released()
++
++        line_cfg = _ext.LineConfig()
++
++        for lines, settings in config.items():
++            if isinstance(lines, int) or isinstance(lines, str):
++                lines = [lines]
++
++            offsets = [None] * len(lines)
++
++            for i, line in enumerate(lines):
++                if isinstance(line, str):
++                    if line not in self._name_map:
++                        raise ValueError("unknown line name: {}".format(line))
++
++                    offsets[i] = self._name_map[line]
++                else:
++                    offsets[i] = line
++
++            line_cfg.add_line_settings(
++                offsets, _line_settings_to_ext_line_settings(settings)
++            )
++
++        self._req.reconfigure_lines(line_cfg)
++
++    def wait_edge_event(
++        self, timeout: Optional[Union[timedelta, float]] = None
++    ) -> bool:
++        """
++        Wait for edge events on any of the requested lines.
++
++        Args:
++          timeout:
++            Wait time limit expressed as either a datetime.timedelta object
++            or the number of seconds stored in a float.
++
++        Returns:
++          True if events are ready to be read. False on timeout.
++        """
++        self._check_released()
++
++        return poll_fd(self.fd, timeout)
++
++    def read_edge_event(self, max_events: Optional[int] = None) -> list[EdgeEvent]:
++        """
++        Read a number of edge events from a line request.
++
++        Args:
++          max_events:
++            Maximum number of events to read.
++
++        Returns:
++          List of read EdgeEvent objects.
++        """
++        self._check_released()
++
++        return self._req.read_edge_event(max_events)
++
++    def __str__(self):
++        """
++        Return a user-friendly, human-readable description of this request.
++        """
++        if not self._req:
++            return "<LineRequest RELEASED>"
++
++        return "<LineRequest num_lines={} offsets={} fd={}>".format(
++            self.num_lines, self.offsets, self.fd
++        )
++
++    @property
++    def num_lines(self) -> int:
++        """
++        Number of requested lines.
++        """
++        self._check_released()
++        return len(self._offsets)
++
++    @property
++    def offsets(self) -> list[int]:
++        """
++        List of requested offsets. Lines requested by name are mapped to their
++        offsets.
++        """
++        self._check_released()
++        return self._offsets
++
++    @property
++    def lines(self) -> list[Union[int, str]]:
++        """
++        List of requested lines. Lines requested by name are listed as such.
++        """
++        self._check_released()
++        return self._lines
++
++    @property
++    def fd(self) -> int:
++        """
++        File descriptor associated with this request.
++        """
++        self._check_released()
++        return self._req.fd
+diff --git a/bindings/python/gpiod/line_settings.py b/bindings/python/gpiod/line_settings.py
+new file mode 100644
+index 0000000..1315b0c
+--- /dev/null
++++ b/bindings/python/gpiod/line_settings.py
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: LGPL-2.1-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++from . import _ext
++from dataclasses import dataclass
++from datetime import timedelta
++from gpiod.line import Direction, Bias, Drive, Edge, Clock, Value
++
++
++@dataclass(repr=False)
++class LineSettings:
++    """
++    Stores a set of line properties.
++    """
++
++    direction: Direction = Direction.AS_IS
++    edge_detection: Edge = Edge.NONE
++    bias: Bias = Bias.AS_IS
++    drive: Drive = Drive.PUSH_PULL
++    active_low: bool = False
++    debounce_period: timedelta = timedelta()
++    event_clock: Clock = Clock.MONOTONIC
++    output_value: Value = Value.INACTIVE
++
++    # __repr__ generated by @dataclass uses repr for enum members resulting in
++    # an unusable representation as those are of the form: <NAME: $value>
++    def __repr__(self):
++        return "LineSettings(direction={}, edge_detection={} bias={} drive={} active_low={} debounce_period={} event_clock={} output_value={})".format(
++            str(self.direction),
++            str(self.edge_detection),
++            str(self.bias),
++            str(self.drive),
++            self.active_low,
++            repr(self.debounce_period),
++            str(self.event_clock),
++            str(self.output_value),
++        )
++
++    def __str__(self):
++        return "<LineSettings direction={} edge_detection={} bias={} drive={} active_low={} debounce_period={} event_clock={} output_value={}>".format(
++            self.direction,
++            self.edge_detection,
++            self.bias,
++            self.drive,
++            self.active_low,
++            self.debounce_period,
++            self.event_clock,
++            self.output_value,
++        )
++
++
++def _line_settings_to_ext_line_settings(settings: LineSettings) -> _ext.LineSettings:
++    return _ext.LineSettings(
++        direction=settings.direction.value,
++        edge_detection=settings.edge_detection.value,
++        bias=settings.bias.value,
++        drive=settings.drive.value,
++        active_low=settings.active_low,
++        debounce_period=int(settings.debounce_period.total_seconds() * 1000000),
++        event_clock=settings.event_clock.value,
++        output_value=settings.output_value.value,
++    )
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+new file mode 100644
+index 0000000..ec8f99d
+--- /dev/null
++++ b/bindings/python/setup.py
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: GPL-2.0-or-later
++# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
++
++from os import environ
++from setuptools import setup, Extension, find_packages
++
++gpiod_ext = Extension(
++    "gpiod._ext",
++    sources=[
++        "gpiod/ext/chip.c",
++        "gpiod/ext/common.c",
++        "gpiod/ext/line-config.c",
++        "gpiod/ext/line-settings.c",
++        "gpiod/ext/module.c",
++        "gpiod/ext/request.c",
++    ],
++    define_macros=[("_GNU_SOURCE", "1")],
++    libraries=["gpiod"],
++    extra_compile_args=["-Wall", "-Wextra"],
++)
++
++gpiosim_ext = Extension(
++    "tests.gpiosim._ext",
++    sources=["tests/gpiosim/ext.c"],
++    define_macros=[("_GNU_SOURCE", "1")],
++    libraries=["gpiosim"],
++    extra_compile_args=["-Wall", "-Wextra"],
++)
++
++extensions = [gpiod_ext]
++with_tests = bool(environ["GPIOD_WITH_TESTS"])
++if with_tests:
++    extensions.append(gpiosim_ext)
++
++# FIXME Find a better way to get the version
++version = None
++try:
++    version = environ["GPIOD_VERSION_STR"]
++except KeyError:
++    pass
++
++setup(
++    name="gpiod",
++    packages=find_packages(include=["gpiod"]),
++    ext_modules=extensions,
++    version=version,
++)
+diff --git a/configure.ac b/configure.ac
+index 6ac1d8e..048b2ac 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -244,8 +244,11 @@ AC_CONFIG_FILES([Makefile
+ 		 bindings/cxx/examples/Makefile
+ 		 bindings/cxx/tests/Makefile
+ 		 bindings/python/Makefile
++		 bindings/python/gpiod/Makefile
++		 bindings/python/gpiod/ext/Makefile
+ 		 bindings/python/examples/Makefile
+ 		 bindings/python/tests/Makefile
++		 bindings/python/tests/gpiosim/Makefile
+ 		 man/Makefile])
+ 
+ AC_OUTPUT
 -- 
 2.34.1
 
