@@ -2,87 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A68B5F8166
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 02:00:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64C025F829C
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 04:58:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbiJHAAZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 20:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
+        id S229468AbiJHC6P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 22:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbiJHAAX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 20:00:23 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5354E633;
-        Fri,  7 Oct 2022 17:00:20 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id r17so14394242eja.7;
-        Fri, 07 Oct 2022 17:00:20 -0700 (PDT)
+        with ESMTP id S229510AbiJHC6P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 22:58:15 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336685F991;
+        Fri,  7 Oct 2022 19:58:14 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id ot12so14894304ejb.1;
+        Fri, 07 Oct 2022 19:58:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WVLnZqvhTBfdrD/rpbk8s88lKhxzuxRMhD6iuSoTzTM=;
-        b=VLxjm/ZwMrut0hC++7v1tTJAnrNGKahiWLQBqfsd2W4jl8ikED+YZG44JDvqx0Zgrz
-         v6lRpUHVIMISd7B/Aj0/1yWAc8BqBAwu+IKQ9CemkaNLT3GR4iZDeHogXu5SKfrWMTX+
-         kiE6Mfxi/medNFcxkNBG0UmENEct0Y5VU2VGxtAQw/zW2UiyiMkfRjFWGlnh/se2H9Ow
-         EK0vf2iS7Pt7DRoQykhc0MnNSsFX2UL0Un/ika0P45uFcygSVpNHWuDAw4wUmVAAE1/l
-         f/Lb131/8dPXeTQ0E19YJv/aQCJIzRVAdSNIS7pzygqQkuhY5v4+VsUtY00Bfm7I8AT+
-         2/Kw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ajMDfq9ox0mU2sX/ueFv0xaV5X0UEUZFKaNpdeAj+T8=;
+        b=WQe/X+SvTNp/8WqHmhmGQWHM75qZNgoD+YWKgIwzfMFKe0iB6OiIi5Veg/KWZraj5+
+         v9TyA/C0Q/tir4IsW4+Jf2lkIM2Dp56OmYFp0eqpaKqraNypL/UAJtsIZpB5wQPltYir
+         0tnT5GQ8ApmWeFf04mj/clQ6Y7fRsk+omxChV7MptymxVTUjplqFxap180KFTiX7irzJ
+         VwV67kDtxjoUIiLBJ+fXgYkLuWXbIaNye9h4oNO7gEL26Fpx2icUMCTeRUUI7Gvt6cSi
+         svX/9gIDbjhj/e5ZsdHHVFpvUrQsmrU0hwVy2Oz2Wwooyo1cD7YfqvsQS0ACYYOTQaVz
+         B1fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WVLnZqvhTBfdrD/rpbk8s88lKhxzuxRMhD6iuSoTzTM=;
-        b=698r61SUk3yfo3k9qA4JujjX3GiMHgOnaM0HYQxEecaYhShWVBQJ3yhIgiCA2HSwDA
-         KLFsLHNqda2WQlFUUK5cvOUn/LmgQYWb2yXmV6VEYZNhDk6KgTGlGEAF/JbuKsWJg4v4
-         jkEMSsBAnGMf1rK5DCymRyTAPK0XP3UR0XzEIvEPlyDMjaDr16+iJRZEUbxutU4xaag0
-         TCbp6av9qE0Gp9FRX6WLsF4/g1KxUFRC5Sx6hTUNJaVsWeYQ7pkFo/QJs2iZQ6cnsD2I
-         o1KBn6mlNwQthmfVHK+Sgt7STMvLEMCSGbtXBVcDrl40WrKqf53k9zuo/la3zv6KCKZ2
-         4fGA==
-X-Gm-Message-State: ACrzQf1IuhOCZkSryvzdELH30V2ylMITrSVzHlD5RAB06Rcm7fE4Lyf1
-        TGCafpnXQTzYM8pZUrHWgQs=
-X-Google-Smtp-Source: AMsMyM5Rcptdf4eV1AtZvS8RHnOOeft9a4CH02/JzQgia/qPCzUEiKoiwmlr43qTEV96ulG7+aJvmw==
-X-Received: by 2002:a17:907:2d8e:b0:783:8d26:645 with SMTP id gt14-20020a1709072d8e00b007838d260645mr5663741ejc.535.1665187218711;
-        Fri, 07 Oct 2022 17:00:18 -0700 (PDT)
-Received: from skbuf ([188.27.184.197])
-        by smtp.gmail.com with ESMTPSA id 10-20020a170906310a00b0078d01a38cc8sm1911884ejx.35.2022.10.07.17.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 17:00:17 -0700 (PDT)
-Date:   Sat, 8 Oct 2022 03:00:14 +0300
-From:   Vladimir Oltean <olteanv@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Colin Foster <colin.foster@in-advantage.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        UNGLinuxDriver@microchip.com,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
- ocelot-ext documentation
-Message-ID: <20221008000014.vs2m3vei5la2r2nd@skbuf>
-References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
- <20220926002928.2744638-13-colin.foster@in-advantage.com>
- <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
- <YzzLCYHmTcrHbZcH@colin-ia-desktop>
- <455e31be-dc87-39b3-c7fe-22384959c556@linaro.org>
- <Yz2mSOXf68S16Xg/@colin-ia-desktop>
- <28b4d9f9-f41a-deca-aa61-26fb65dcc873@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ajMDfq9ox0mU2sX/ueFv0xaV5X0UEUZFKaNpdeAj+T8=;
+        b=xbhmsuYipNSxgIdqUn5LbDX68s//iaPa4iZutltE4kNsPQG3wCZ7Yy3TYUMUtyklUn
+         htt9k7DBAhPFdIKCIFpXcFTcS3xtBH+PEX24IaTjDTnO1Cj5WS+yU4Bdco42yYHjPf0p
+         RAmuJNHAwCXaezZjeP3R8uHFaCnmt8gD3ih+xFulJO6vpp1Swl08jrOjS2skdIiU5fH7
+         5jiEX2Zh6oslzHGOXFS7AU1zR2EMAeO/UTiQ+l9hZbk108KqZSmEj+3OFn+200qvdKkf
+         aQ1Kw1Pzp8VbDwOJtvRxbxTzLx0hXliIdz6gt2MvsfoEV+M6WI7bJxXGjw88C/jCZQcH
+         LZNA==
+X-Gm-Message-State: ACrzQf3qlX9p/ySL3yScsGkv2IYRKPAJ1QLEHi9HkEwKpZvxwNK0n6o5
+        w203ogXZuxRX877gtm7MvNtSKkP5cDq75Bzdcdlo++r69eY=
+X-Google-Smtp-Source: AMsMyM4gVGrEmWFLMnMMldsV0FjyqGtDZKHHoLhezKAMdGOnHaIInFDeNevoM2F2Z2wjD8/sUPiZWdheLTAI8/bHJpk=
+X-Received: by 2002:a17:907:7dab:b0:782:fe13:6102 with SMTP id
+ oz43-20020a1709077dab00b00782fe136102mr6296796ejc.617.1665197892671; Fri, 07
+ Oct 2022 19:58:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28b4d9f9-f41a-deca-aa61-26fb65dcc873@linaro.org>
+References: <20220930082405.1761-1-zhang.lyra@gmail.com> <20220930082405.1761-3-zhang.lyra@gmail.com>
+ <727a540d-0ca9-ade3-894d-f1774d10a681@linaro.org>
+In-Reply-To: <727a540d-0ca9-ade3-894d-f1774d10a681@linaro.org>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Sat, 8 Oct 2022 10:57:35 +0800
+Message-ID: <CAAfSe-u4y84kjjksv-Y7=zyosV=34M-=_wrDQC9884znvx9V4Q@mail.gmail.com>
+Subject: Re: [PATCH V2 2/3] dt-bindings: gpio: Convert Unisoc EIC controller
+ binding to yaml
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -93,63 +75,59 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 05, 2022 at 06:09:59PM +0200, Krzysztof Kozlowski wrote:
-> >> I don't understand how your answer relates to "reg=<0 0>;". How is it
-> >> going to become 0x71010000 if there is no other reg/ranges set in parent
-> >> nodes. The node has only one IO address, but you say the switch has 20
-> >> addresses...
-> >>
-> >> Are we talking about same hardware?
-> > 
-> > Yes. The switch driver for both the VSC7512 and VSC7514 use up to ~20 regmaps
-> > depending on what capabilities it is to have. In the 7514 they are all
-> > memory-mapped from the device tree. While the 7512 does need these
-> > regmaps, they are managed by the MFD, not the device tree. So there
-> > isn't a _need_ for them to be here, since at the end of the day they're
-> > ignored.
-> > 
-> > The "reg=<0 0>;" was my attempt to indicate that they are ignored, but I
-> > understand that isn't desired. So moving forward I'll add all the
-> > regmaps back into the device tree.
-> 
-> You need to describe the hardware. If hardware has IO address space, how
-> does it matter that some driver needs or needs not something?
-
-What do you mean by IO address space exactly? It is a SPI device with registers.
-Does that constitute an IO address space to you?
-
-The driver need matters because you don't usually see DT nodes of SPI,
-I2C, MDIO devices describing the address space of their registers, and
-having child nodes with unit addresses in that address space. Only when
-those devices are so complex that the need arises to identify smaller
-building blocks is when you will end up needing that. And this is an
-implementation detail which shapes how the dt-bindings will look like.
-
-> You mentioned that address space is mapped to regmaps. Regmap is Linux
-> specific implementation detail, so this does not answer at all about
-> hardware.
+On Fri, 30 Sept 2022 at 19:09, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
-> On the other hand, if your DTS design requires this is a child of
-> something else and by itself it does not have address space, it would be
-> understandable to skip unit address entirely... but so far it is still
-> confusing, especially that you use arguments related to implementation
-> to justify the DTS.
+> On 30/09/2022 10:24, Chunyan Zhang wrote:
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Convert the Unisoc EIC controller binding to DT schema format.
+> > Update the maxItems of 'reg' property, since the current gpio-eic-sprd
+> > driver supports 3 reg items. Also remove three redundant examples.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> > ---
+> >  .../bindings/gpio/gpio-eic-sprd.txt           |  97 --------------
+> >  .../bindings/gpio/sprd,gpio-eic.yaml          | 119 ++++++++++++++++++
+> >  2 files changed, 119 insertions(+), 97 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
 
-If Colin skips the unit address entirely, then how could he distinguish
-between the otherwise identical MDIO controllers mdio@7107009c and
-mdio@710700c0 from Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml?
-The ethernet-switch node added here is on the same hierarchical level
-with the MDIO controller nodes, so it must have a unit address just like
-them.
+[snip]
 
-But I don't support Colin's choice of "reg=<0 0>;" either. A choice must
-be made between 2 options:
-- mapping all 20 regions of the SPI address space into "reg" values
-- mapping a single region from the smallest until the largest address of
-  those 20, and hope nothing overlaps with some other peripheral, or
-  worse, that this region will never need to be expanded to the left.
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +    soc {
+> > +        #address-cells = <2>;
+> > +        #size-cells = <2>;
+> > +
+> > +        eic_debounce: gpio@40210000 {
+> > +            compatible = "sprd,sc9860-eic-debounce";
+> > +            reg = <0 0x40210000 0 0x80>;
+> > +            gpio-controller;
+> > +            #gpio-cells = <2>;
+> > +            interrupt-controller;
+> > +            #interrupt-cells = <2>;
+> > +            interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> > +        };
+> > +    };
+> > +
+> > +    sc2730_pmic {
+>
+> If you insisted to keep it, at least should be correct, so just pmic.
+>
+> > +        #address-cells = <1>;
+> > +        #size-cells = <0>;
+> > +
+> > +        pmic_eic: gpio@300 {
+>
+> It's exactly the same example as above - all same properties. Drop it or
+> bring some differences.
 
-What information do you need to provide some best practices that can be
-applied here and are more useful than "you need to describe the
-hardware"? Verilog/VHDL is what the hardware description that's
-independent of software implementation is, good luck parsing that.
+The differences are on #address-cells and #size-cells.
+
+Thanks for the review,
+Chunyan
