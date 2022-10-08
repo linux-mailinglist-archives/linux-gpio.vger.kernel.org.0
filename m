@@ -2,132 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C025F829C
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 04:58:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F4D95F82AD
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 05:18:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbiJHC6P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 22:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
+        id S229624AbiJHDSw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 23:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbiJHC6P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 22:58:15 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336685F991;
-        Fri,  7 Oct 2022 19:58:14 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id ot12so14894304ejb.1;
-        Fri, 07 Oct 2022 19:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ajMDfq9ox0mU2sX/ueFv0xaV5X0UEUZFKaNpdeAj+T8=;
-        b=WQe/X+SvTNp/8WqHmhmGQWHM75qZNgoD+YWKgIwzfMFKe0iB6OiIi5Veg/KWZraj5+
-         v9TyA/C0Q/tir4IsW4+Jf2lkIM2Dp56OmYFp0eqpaKqraNypL/UAJtsIZpB5wQPltYir
-         0tnT5GQ8ApmWeFf04mj/clQ6Y7fRsk+omxChV7MptymxVTUjplqFxap180KFTiX7irzJ
-         VwV67kDtxjoUIiLBJ+fXgYkLuWXbIaNye9h4oNO7gEL26Fpx2icUMCTeRUUI7Gvt6cSi
-         svX/9gIDbjhj/e5ZsdHHVFpvUrQsmrU0hwVy2Oz2Wwooyo1cD7YfqvsQS0ACYYOTQaVz
-         B1fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ajMDfq9ox0mU2sX/ueFv0xaV5X0UEUZFKaNpdeAj+T8=;
-        b=xbhmsuYipNSxgIdqUn5LbDX68s//iaPa4iZutltE4kNsPQG3wCZ7Yy3TYUMUtyklUn
-         htt9k7DBAhPFdIKCIFpXcFTcS3xtBH+PEX24IaTjDTnO1Cj5WS+yU4Bdco42yYHjPf0p
-         RAmuJNHAwCXaezZjeP3R8uHFaCnmt8gD3ih+xFulJO6vpp1Swl08jrOjS2skdIiU5fH7
-         5jiEX2Zh6oslzHGOXFS7AU1zR2EMAeO/UTiQ+l9hZbk108KqZSmEj+3OFn+200qvdKkf
-         aQ1Kw1Pzp8VbDwOJtvRxbxTzLx0hXliIdz6gt2MvsfoEV+M6WI7bJxXGjw88C/jCZQcH
-         LZNA==
-X-Gm-Message-State: ACrzQf3qlX9p/ySL3yScsGkv2IYRKPAJ1QLEHi9HkEwKpZvxwNK0n6o5
-        w203ogXZuxRX877gtm7MvNtSKkP5cDq75Bzdcdlo++r69eY=
-X-Google-Smtp-Source: AMsMyM4gVGrEmWFLMnMMldsV0FjyqGtDZKHHoLhezKAMdGOnHaIInFDeNevoM2F2Z2wjD8/sUPiZWdheLTAI8/bHJpk=
-X-Received: by 2002:a17:907:7dab:b0:782:fe13:6102 with SMTP id
- oz43-20020a1709077dab00b00782fe136102mr6296796ejc.617.1665197892671; Fri, 07
- Oct 2022 19:58:12 -0700 (PDT)
+        with ESMTP id S229570AbiJHDSv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 23:18:51 -0400
+Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D7D7F099;
+        Fri,  7 Oct 2022 20:18:42 -0700 (PDT)
+X-QQ-mid: bizesmtp81t1665199102tpuhbm7o
+Received: from [192.168.0.179] ( [113.85.219.225])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Sat, 08 Oct 2022 11:18:20 +0800 (CST)
+X-QQ-SSF: 0100000000000060B000000A0000000
+X-QQ-FEAT: Xz3VOcA7Mr3FZ3OhgK4//97wG8mXezqudifr+ShDF71jo6ZVNegJFLWSbQFjs
+        41Jkwc4FOs1oe/FY1u2vbwzyJsrWi07okA/K9Kw8EcCWxzXCDMZjCtIecmdYWkahSCFZmq2
+        FlZUaOWjGBheO9+8V1nF8nJLhkK0tq1vOo2Y865x5+gXgoM+figV3SUenuKBQBYi2ppIYYt
+        zbUI+FFvvQwk1WTagPRUVB8dtcleD3gu0azJcoLMfx49m0J8R5r3y4EK17gIkJR0yc1c+UG
+        0ia8wSy9vJGL0dNANOgjtjEu6Or+njZqd8XIbyahDoFBISbvIxLs9uVPIdQnfhor+THm8xL
+        NaZwtBbKzX7gkQpcg1bdYyZpa4QAljGfhbt9pfnHJUJbPI+HtcKLhzm2vIcyg==
+X-QQ-GoodBg: 0
+Message-ID: <98CA462042A5283C+38a7a131-b02a-e4a2-180d-1e64cb788af3@linux.starfivetech.com>
+Date:   Sat, 8 Oct 2022 11:18:19 +0800
 MIME-Version: 1.0
-References: <20220930082405.1761-1-zhang.lyra@gmail.com> <20220930082405.1761-3-zhang.lyra@gmail.com>
- <727a540d-0ca9-ade3-894d-f1774d10a681@linaro.org>
-In-Reply-To: <727a540d-0ca9-ade3-894d-f1774d10a681@linaro.org>
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-Date:   Sat, 8 Oct 2022 10:57:35 +0800
-Message-ID: <CAAfSe-u4y84kjjksv-Y7=zyosV=34M-=_wrDQC9884znvx9V4Q@mail.gmail.com>
-Subject: Re: [PATCH V2 2/3] dt-bindings: gpio: Convert Unisoc EIC controller
- binding to yaml
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v1 00/30] Basic StarFive JH7110 RISC-V SoC support
+Content-Language: en-US
+To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <CAJM55Z8zg=-meSGhFnVh4Tb4=5M3sHis1oapzXCEipyDkuyvyg@mail.gmail.com>
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+In-Reply-To: <CAJM55Z8zg=-meSGhFnVh4Tb4=5M3sHis1oapzXCEipyDkuyvyg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Sept 2022 at 19:09, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 30/09/2022 10:24, Chunyan Zhang wrote:
-> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+On Wed, 5 Oct 2022 15:05:45 +0200, Emil Renner Berthing wrote:
+> On Thu, 29 Sept 2022 at 16:34, Hal Feng <hal.feng@linux.starfivetech.com> wrote:
+> > This series adds basic support for the StarFive JH7110 RISC-V SoC to
+> > boot up and get a serial console. This series includes basic clock,
+> > reset, pinctrl and uart drivers, which are necessary for booting.
+> > It's should be noted that the reset and clock driver codes of JH7110
+> > are partly common with those of JH7100, so the common codes are
+> > factored out and can be reused by drivers of JH7110 and other more
+> > SoCs from StarFive.
 > >
-> > Convert the Unisoc EIC controller binding to DT schema format.
-> > Update the maxItems of 'reg' property, since the current gpio-eic-sprd
-> > driver supports 3 reg items. Also remove three redundant examples.
+> > The JH7110 is the upgraded version of JH7100 and also the first official
+> > released version of JH71XX series SoCs from StarFive Technology Ltd.
+> > The VisionFive 2 boards equipped with JH7110 SoCs are launched
+> > recently [1]. More information and support can visit RVspace wiki [2].
 > >
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-> > ---
-> >  .../bindings/gpio/gpio-eic-sprd.txt           |  97 --------------
-> >  .../bindings/gpio/sprd,gpio-eic.yaml          | 119 ++++++++++++++++++
-> >  2 files changed, 119 insertions(+), 97 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
-> >  create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
+> > This series is also available at
+> > https://github.com/hal-feng/linux/commits/visionfive2-minimal
+> >
+> > [1] https://www.cnx-software.com/2022/08/23/starfive-visionfive-2-quad-core-risc-v-sbc-linux/
+> > [2] https://wiki.rvspace.org/
+> 
+> Hi Hal,
+> 
+> Firstly thanks for working on this! And sorry about the late reply. On
+> the next version could you please cc
+> emil.renner.berthing@canonical.com since it seems to handle the
+> mailing list a bit better.
 
-[snip]
+OK, I will cc to your new email instead on v2.
 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    soc {
-> > +        #address-cells = <2>;
-> > +        #size-cells = <2>;
-> > +
-> > +        eic_debounce: gpio@40210000 {
-> > +            compatible = "sprd,sc9860-eic-debounce";
-> > +            reg = <0 0x40210000 0 0x80>;
-> > +            gpio-controller;
-> > +            #gpio-cells = <2>;
-> > +            interrupt-controller;
-> > +            #interrupt-cells = <2>;
-> > +            interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-> > +        };
-> > +    };
-> > +
-> > +    sc2730_pmic {
->
-> If you insisted to keep it, at least should be correct, so just pmic.
->
-> > +        #address-cells = <1>;
-> > +        #size-cells = <0>;
-> > +
-> > +        pmic_eic: gpio@300 {
->
-> It's exactly the same example as above - all same properties. Drop it or
-> bring some differences.
+Best Regards,
+Hal
 
-The differences are on #address-cells and #size-cells.
+> I see you've changed the clock/reset and pinctrl quite a bit, so I'll
+> comment on that separatel
 
-Thanks for the review,
-Chunyan
