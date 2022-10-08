@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BACE5F810A
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 01:10:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A68B5F8166
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 02:00:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbiJGXKT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 19:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39850 "EHLO
+        id S229547AbiJHAAZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 20:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbiJGXKS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 19:10:18 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7099B6685C;
-        Fri,  7 Oct 2022 16:10:15 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id b2so14291298eja.6;
-        Fri, 07 Oct 2022 16:10:15 -0700 (PDT)
+        with ESMTP id S229491AbiJHAAX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 20:00:23 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5354E633;
+        Fri,  7 Oct 2022 17:00:20 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id r17so14394242eja.7;
+        Fri, 07 Oct 2022 17:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Ff2Jx6NqQG39IX2GQ6H1L2VLrUXyrTBZ4zR3/wpS5c=;
-        b=TQ5hNUCStSck7y6p1Whdcoa73KeayH7AuFrs4Vax9jNIbKtGXCBkCEef+hIQ6xnu6w
-         aY6IcLczj5cWmILYkbZMZaw6BHtJhX2V8pDIHgxKM1RCwqIWlJ6tztZ+WHlvDEn4BbOF
-         4BehIlne49rE5evLVCO4K6HEIE6T82rct3LWJ4v4FWAdYL7dtxuWU7GHfd3EGTZ0rIJd
-         QiMBMCxMdf1KlekypSIKA9AqbHlSHjBwglLu93SNbeCKQT3cHDSyNB60YyHvYAk7Kkiy
-         aQGHJkPQhA20ArdgC6nmOEzUQn/wlcvveoO0fUq86m528h50e1qBUJEhMuMLTpfmMtCh
-         padQ==
+        bh=WVLnZqvhTBfdrD/rpbk8s88lKhxzuxRMhD6iuSoTzTM=;
+        b=VLxjm/ZwMrut0hC++7v1tTJAnrNGKahiWLQBqfsd2W4jl8ikED+YZG44JDvqx0Zgrz
+         v6lRpUHVIMISd7B/Aj0/1yWAc8BqBAwu+IKQ9CemkaNLT3GR4iZDeHogXu5SKfrWMTX+
+         kiE6Mfxi/medNFcxkNBG0UmENEct0Y5VU2VGxtAQw/zW2UiyiMkfRjFWGlnh/se2H9Ow
+         EK0vf2iS7Pt7DRoQykhc0MnNSsFX2UL0Un/ika0P45uFcygSVpNHWuDAw4wUmVAAE1/l
+         f/Lb131/8dPXeTQ0E19YJv/aQCJIzRVAdSNIS7pzygqQkuhY5v4+VsUtY00Bfm7I8AT+
+         2/Kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Ff2Jx6NqQG39IX2GQ6H1L2VLrUXyrTBZ4zR3/wpS5c=;
-        b=7KtqB7u6rZyMXOrE20nHvO9nkLIHuKEoFYYyHeSMWNrO5ZDeKmJvxcyuVNtl+gpfrb
-         Q1jSAJuplmro0uiEAVcXHjQLe362R7x2HsK6F9Ee+JGCCnitr4POIxgDq2bWR6fBr6bJ
-         ulu17P2WBdONpPSnyHZlF194juVD52d6u8YDrdDcn0yx7ZXqP44WqaoEzF3RqfEeRooY
-         fRlVhfKywDwl4tYdngAEwoiaXtWQpdBOCLBfvp6nlaFH94sFlRNPBT3F4obTffdOaER4
-         15cqSU9dgBORxF+CnhNjMn37PJs9JVa2boOqZHrV3GYv0nfMH+TniwIj9D1A/0de98T3
-         ki5A==
-X-Gm-Message-State: ACrzQf2nhXbgBs+/AGjk4+D5d6uXBPZ9MJOGKZm+C+4x7Nrkpi5ZRdI7
-        Bcy0ch6bm9SaD+koQGbpEVk=
-X-Google-Smtp-Source: AMsMyM66DYwy3KBDvU1hRrO+OD2oPJcipG0iAaxGdBoANV2842BWfe3qlyxCBJ8EjIHQNyZFVsfo6Q==
-X-Received: by 2002:a17:907:3da2:b0:78d:3b45:11d9 with SMTP id he34-20020a1709073da200b0078d3b4511d9mr5812419ejc.87.1665184213952;
-        Fri, 07 Oct 2022 16:10:13 -0700 (PDT)
+        bh=WVLnZqvhTBfdrD/rpbk8s88lKhxzuxRMhD6iuSoTzTM=;
+        b=698r61SUk3yfo3k9qA4JujjX3GiMHgOnaM0HYQxEecaYhShWVBQJ3yhIgiCA2HSwDA
+         KLFsLHNqda2WQlFUUK5cvOUn/LmgQYWb2yXmV6VEYZNhDk6KgTGlGEAF/JbuKsWJg4v4
+         jkEMSsBAnGMf1rK5DCymRyTAPK0XP3UR0XzEIvEPlyDMjaDr16+iJRZEUbxutU4xaag0
+         TCbp6av9qE0Gp9FRX6WLsF4/g1KxUFRC5Sx6hTUNJaVsWeYQ7pkFo/QJs2iZQ6cnsD2I
+         o1KBn6mlNwQthmfVHK+Sgt7STMvLEMCSGbtXBVcDrl40WrKqf53k9zuo/la3zv6KCKZ2
+         4fGA==
+X-Gm-Message-State: ACrzQf1IuhOCZkSryvzdELH30V2ylMITrSVzHlD5RAB06Rcm7fE4Lyf1
+        TGCafpnXQTzYM8pZUrHWgQs=
+X-Google-Smtp-Source: AMsMyM5Rcptdf4eV1AtZvS8RHnOOeft9a4CH02/JzQgia/qPCzUEiKoiwmlr43qTEV96ulG7+aJvmw==
+X-Received: by 2002:a17:907:2d8e:b0:783:8d26:645 with SMTP id gt14-20020a1709072d8e00b007838d260645mr5663741ejc.535.1665187218711;
+        Fri, 07 Oct 2022 17:00:18 -0700 (PDT)
 Received: from skbuf ([188.27.184.197])
-        by smtp.gmail.com with ESMTPSA id p17-20020a17090653d100b0078d175d6dc5sm1815909ejo.201.2022.10.07.16.10.11
+        by smtp.gmail.com with ESMTPSA id 10-20020a170906310a00b0078d01a38cc8sm1911884ejx.35.2022.10.07.17.00.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Oct 2022 16:10:12 -0700 (PDT)
-Date:   Sat, 8 Oct 2022 02:10:09 +0300
+        Fri, 07 Oct 2022 17:00:17 -0700 (PDT)
+Date:   Sat, 8 Oct 2022 03:00:14 +0300
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Colin Foster <colin.foster@in-advantage.com>,
@@ -71,18 +71,18 @@ Cc:     Colin Foster <colin.foster@in-advantage.com>,
         Andrew Lunn <andrew@lunn.ch>
 Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
  ocelot-ext documentation
-Message-ID: <20221007231009.qgcirfezgib5vu6y@skbuf>
+Message-ID: <20221008000014.vs2m3vei5la2r2nd@skbuf>
 References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
  <20220926002928.2744638-13-colin.foster@in-advantage.com>
  <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
- <20221004121517.4j5637hnioepsxgd@skbuf>
- <6444e5d1-0fc9-03e2-9b2a-ec19fa1e7757@linaro.org>
- <20221004160135.lqugs6cf5b7fwkxq@skbuf>
- <cae8e149-ef1e-66c6-20f5-067e3fd8c586@linaro.org>
+ <YzzLCYHmTcrHbZcH@colin-ia-desktop>
+ <455e31be-dc87-39b3-c7fe-22384959c556@linaro.org>
+ <Yz2mSOXf68S16Xg/@colin-ia-desktop>
+ <28b4d9f9-f41a-deca-aa61-26fb65dcc873@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cae8e149-ef1e-66c6-20f5-067e3fd8c586@linaro.org>
+In-Reply-To: <28b4d9f9-f41a-deca-aa61-26fb65dcc873@linaro.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -93,70 +93,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 05, 2022 at 10:09:06AM +0200, Krzysztof Kozlowski wrote:
-> > The /spi/soc@0 node actually has a compatible of "mscc,vsc7512" which
-> > Colin did not show in the example (it is not "simple-bus"). It is covered
-> > by Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml. Still waiting
-> > for a better suggestion for how to name the mfd container node.
+On Wed, Oct 05, 2022 at 06:09:59PM +0200, Krzysztof Kozlowski wrote:
+> >> I don't understand how your answer relates to "reg=<0 0>;". How is it
+> >> going to become 0x71010000 if there is no other reg/ranges set in parent
+> >> nodes. The node has only one IO address, but you say the switch has 20
+> >> addresses...
+> >>
+> >> Are we talking about same hardware?
+> > 
+> > Yes. The switch driver for both the VSC7512 and VSC7514 use up to ~20 regmaps
+> > depending on what capabilities it is to have. In the 7514 they are all
+> > memory-mapped from the device tree. While the 7512 does need these
+> > regmaps, they are managed by the MFD, not the device tree. So there
+> > isn't a _need_ for them to be here, since at the end of the day they're
+> > ignored.
+> > 
+> > The "reg=<0 0>;" was my attempt to indicate that they are ignored, but I
+> > understand that isn't desired. So moving forward I'll add all the
+> > regmaps back into the device tree.
 > 
-> Then still the /spi node does not seem related. If I understand
-> correctly, your device described in this bindings is a child of soc@0.
-> Sounds fine. How that soc@0 is connected to the parent - via SPI or
-> whatever - is not related to this binding, is it? It is related to the
-> soc binding, but not here.
+> You need to describe the hardware. If hardware has IO address space, how
+> does it matter that some driver needs or needs not something?
 
-It's an example, it's meant to be informative. It is the first DSA
-driver of its kind. When everybody else ATM puts the ethernet-switch node
-under the &spi controller node, this puts it under &spi/soc@<chip-select>/,
-for reasons that have to do with scalability. If the examples aren't a
-good place to make this more obvious, I don't know why we don't just
-tell people to RTFD.
+What do you mean by IO address space exactly? It is a SPI device with registers.
+Does that constitute an IO address space to you?
 
-> > Unrelated to your "existing soc example" (the VSC9953), but relevant and
-> > you may want to share your opinion on this:
-> > 
-> > The same hardware present in the VSC7514 SoC can also be driven by an
-> > integrated MIPS processor, and in that case, it is indeed expected that
-> > the same dt-bindings cover both the /soc and the /spi/soc@0/ relative
-> > positioning of their OF node. This is true for simpler peripherals like
-> > "mscc,ocelot-miim", "mscc,ocelot-pinctrl", "mscc,ocelot-sgpio". However
-> > it is not true for the main switching IP of the SoC itself.
-> > 
-> > When driven by a switchdev driver, by the internal MIPS processor (the
-> > DMA engine is what is used for packet I/O), the switching IP follows the
-> > Documentation/devicetree/bindings/net/mscc,vsc7514-switch.yaml binding
-> > document.
-> > 
-> > When driven by a DSA driver (external processor, host frames are
-> > redirected through an Ethernet port instead of DMA controller),
-> > the switching IP follows the Documentation/devicetree/bindings/net/dsa/mscc,ocelot.yaml
-> > document.
-> > 
-> > The switching IP is special in this regard because the hardware is not
-> > used in the same way. The DSA dt-binding also needs the 'ethernet'
-> > phandle to be present in a port node. The different placement of the
-> > bindings according to the use case of the hardware is a bit awkward, but
-> > is a direct consequence of the separation between DSA and pure switchdev
-> > drivers that has existed thus far (and the fact that DSA has its own
-> > folder in the dt-bindings, with common properties in dsa.yaml and
-> > dsa-port.yaml etc). It is relatively uncommon for a switching IP to have
-> > provisioning to be used in both modes, and for Linux to support both
-> > modes (using different drivers), yet this is what we have here.
-> 
-> Is there a question here to me? What shall I do with this paragraph? You
-> know, I do not have a problem of lack of material to read...
+The driver need matters because you don't usually see DT nodes of SPI,
+I2C, MDIO devices describing the address space of their registers, and
+having child nodes with unit addresses in that address space. Only when
+those devices are so complex that the need arises to identify smaller
+building blocks is when you will end up needing that. And this is an
+implementation detail which shapes how the dt-bindings will look like.
 
-For mscc,vsc7514-switch we have a switchdev driver. For mscc,vsc7512-switch,
-Colin is working on a DSA driver. Their dt-bindings currently live in
-different folders. The mscc,vsc7514-switch can also be used together
-with a DSA driver, and support for that will inevitably be added. When
-it will, how and where do you recommend the dt-bindings should be added?
-In net/dsa/mscc,ocelot.yaml, together with the other switches used in
-DSA mode, or in net/mscc,vsc7514-switch.yaml, because its compatible
-string already exists there? We can't have a compatible string present
-in multiple schemas, right?
+> You mentioned that address space is mapped to regmaps. Regmap is Linux
+> specific implementation detail, so this does not answer at all about
+> hardware.
+>
+> On the other hand, if your DTS design requires this is a child of
+> something else and by itself it does not have address space, it would be
+> understandable to skip unit address entirely... but so far it is still
+> confusing, especially that you use arguments related to implementation
+> to justify the DTS.
 
-This matters because it has implications upon what Colin should do with
-the mscc,vsc7512-switch. If your answer to my question is "add $ref: dsa.yaml#
-to net/mscc,vsc7514-switch.yaml", then I don't see why we wouldn't do
-that now, and wait until the vsc7514 to make that move anyway.
+If Colin skips the unit address entirely, then how could he distinguish
+between the otherwise identical MDIO controllers mdio@7107009c and
+mdio@710700c0 from Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml?
+The ethernet-switch node added here is on the same hierarchical level
+with the MDIO controller nodes, so it must have a unit address just like
+them.
+
+But I don't support Colin's choice of "reg=<0 0>;" either. A choice must
+be made between 2 options:
+- mapping all 20 regions of the SPI address space into "reg" values
+- mapping a single region from the smallest until the largest address of
+  those 20, and hope nothing overlaps with some other peripheral, or
+  worse, that this region will never need to be expanded to the left.
+
+What information do you need to provide some best practices that can be
+applied here and are more useful than "you need to describe the
+hardware"? Verilog/VHDL is what the hardware description that's
+independent of software implementation is, good luck parsing that.
