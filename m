@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4D95F82AD
-	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 05:18:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF2D5F82D1
+	for <lists+linux-gpio@lfdr.de>; Sat,  8 Oct 2022 05:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbiJHDSw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 7 Oct 2022 23:18:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
+        id S229641AbiJHDp2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 7 Oct 2022 23:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbiJHDSv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 23:18:51 -0400
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D7D7F099;
-        Fri,  7 Oct 2022 20:18:42 -0700 (PDT)
-X-QQ-mid: bizesmtp81t1665199102tpuhbm7o
+        with ESMTP id S229481AbiJHDpS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 7 Oct 2022 23:45:18 -0400
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570883385D;
+        Fri,  7 Oct 2022 20:45:10 -0700 (PDT)
+X-QQ-mid: bizesmtp83t1665200686tzpdo9vx
 Received: from [192.168.0.179] ( [113.85.219.225])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Sat, 08 Oct 2022 11:18:20 +0800 (CST)
-X-QQ-SSF: 0100000000000060B000000A0000000
-X-QQ-FEAT: Xz3VOcA7Mr3FZ3OhgK4//97wG8mXezqudifr+ShDF71jo6ZVNegJFLWSbQFjs
-        41Jkwc4FOs1oe/FY1u2vbwzyJsrWi07okA/K9Kw8EcCWxzXCDMZjCtIecmdYWkahSCFZmq2
-        FlZUaOWjGBheO9+8V1nF8nJLhkK0tq1vOo2Y865x5+gXgoM+figV3SUenuKBQBYi2ppIYYt
-        zbUI+FFvvQwk1WTagPRUVB8dtcleD3gu0azJcoLMfx49m0J8R5r3y4EK17gIkJR0yc1c+UG
-        0ia8wSy9vJGL0dNANOgjtjEu6Or+njZqd8XIbyahDoFBISbvIxLs9uVPIdQnfhor+THm8xL
-        NaZwtBbKzX7gkQpcg1bdYyZpa4QAljGfhbt9pfnHJUJbPI+HtcKLhzm2vIcyg==
+        id ; Sat, 08 Oct 2022 11:44:44 +0800 (CST)
+X-QQ-SSF: 0100000000000070B000000A0000000
+X-QQ-FEAT: 5q30pvLz2icsEuufAGCipRcNEAph5F1NreXxmwTiOB81pjLvIeHTUCJHoejvj
+        xszPS/H7HnRPCCwPI76Wy6OgloCXqv3WBfz+JCNR6CvwHY8jIiK7OaSs4BSz3FHgyDWm18M
+        oaRfvlN9I9TAJ/2luWIMMslqd4pAJ145pQsI/sT7o95rfvr4YXDu0luZFoV6fOraDZRqXO0
+        L26Ewd0+jc8P1Z3CUfFEnzxgZ9lx63QvxRxuB6Dz+LQUh7b5oTbz6pQNde69BTIYZ8u+HBX
+        Ci8t6uuccQ+2QZ4hm7IqzvkW5164wMP8NVGAMap/WQup2FhDKWi5GRwuHDBVd1GVM0KjYIT
+        s3RB1I3QAnJPYSb7Io2o/DVdiLtoOjnthc396jbELnR/+r20Y1tyoa9xl8g70IipdeIRQDt
 X-QQ-GoodBg: 0
-Message-ID: <98CA462042A5283C+38a7a131-b02a-e4a2-180d-1e64cb788af3@linux.starfivetech.com>
-Date:   Sat, 8 Oct 2022 11:18:19 +0800
+Message-ID: <394AB2D3535D9461+093b7754-53cb-87c7-8f0e-68326a1ab3c5@linux.starfivetech.com>
+Date:   Sat, 8 Oct 2022 11:44:43 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH v1 00/30] Basic StarFive JH7110 RISC-V SoC support
+Subject: Re: [PATCH v1 01/30] dt-bindings: riscv: Add StarFive JH7110 bindings
 Content-Language: en-US
-To:     Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -51,55 +51,55 @@ Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         Emil Renner Berthing <kernel@esmil.dk>,
         linux-kernel@vger.kernel.org
 References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <CAJM55Z8zg=-meSGhFnVh4Tb4=5M3sHis1oapzXCEipyDkuyvyg@mail.gmail.com>
+ <20220929143225.17907-2-hal.feng@linux.starfivetech.com>
+ <5cd77839-d75b-9290-5d34-90d6464938d6@linaro.org>
 From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <CAJM55Z8zg=-meSGhFnVh4Tb4=5M3sHis1oapzXCEipyDkuyvyg@mail.gmail.com>
+In-Reply-To: <5cd77839-d75b-9290-5d34-90d6464938d6@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_NONE,T_SPF_HELO_TEMPERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 5 Oct 2022 15:05:45 +0200, Emil Renner Berthing wrote:
-> On Thu, 29 Sept 2022 at 16:34, Hal Feng <hal.feng@linux.starfivetech.com> wrote:
-> > This series adds basic support for the StarFive JH7110 RISC-V SoC to
-> > boot up and get a serial console. This series includes basic clock,
-> > reset, pinctrl and uart drivers, which are necessary for booting.
-> > It's should be noted that the reset and clock driver codes of JH7110
-> > are partly common with those of JH7100, so the common codes are
-> > factored out and can be reused by drivers of JH7110 and other more
-> > SoCs from StarFive.
-> >
-> > The JH7110 is the upgraded version of JH7100 and also the first official
-> > released version of JH71XX series SoCs from StarFive Technology Ltd.
-> > The VisionFive 2 boards equipped with JH7110 SoCs are launched
-> > recently [1]. More information and support can visit RVspace wiki [2].
-> >
-> > This series is also available at
-> > https://github.com/hal-feng/linux/commits/visionfive2-minimal
-> >
-> > [1] https://www.cnx-software.com/2022/08/23/starfive-visionfive-2-quad-core-risc-v-sbc-linux/
-> > [2] https://wiki.rvspace.org/
+On Thu, 29 Sep 2022 16:34:22 +0200, Krzysztof Kozlowski wrote:
+> On 29/09/2022 16:31, Hal Feng wrote:
+> > From: Emil Renner Berthing <kernel@esmil.dk>
 > 
-> Hi Hal,
-> 
-> Firstly thanks for working on this! And sorry about the late reply. On
-> the next version could you please cc
-> emil.renner.berthing@canonical.com since it seems to handle the
-> mailing list a bit better.
+> Drop last "bindings" from subject, it's redundant.
 
-OK, I will cc to your new email instead on v2.
+Will fix. Thanks.
+
+> 
+> > 
+> > Add device tree bindings for the StarFive JH7110 RISC-V SoC and the
+> > VisionFive2 board for it.
+> > 
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+> > ---
+> >  Documentation/devicetree/bindings/riscv/starfive.yaml | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/riscv/starfive.yaml b/Documentation/devicetree/bindings/riscv/starfive.yaml
+> > index 5b36243fd674..543be573921d 100644
+> > --- a/Documentation/devicetree/bindings/riscv/starfive.yaml
+> > +++ b/Documentation/devicetree/bindings/riscv/starfive.yaml
+> > @@ -21,6 +21,9 @@ properties:
+> >        - items:
+> >            - const: beagle,beaglev-starlight-jh7100-r0
+> >            - const: starfive,jh7100
+> 
+> Blank line.
+
+Will fix. Thanks.
 
 Best Regards,
 Hal
-
-> I see you've changed the clock/reset and pinctrl quite a bit, so I'll
-> comment on that separatel
 
