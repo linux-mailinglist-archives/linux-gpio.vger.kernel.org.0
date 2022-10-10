@@ -2,146 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AE875F9BB2
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 11:13:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17FD15F9CC4
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 12:29:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbiJJJNe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 05:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53238 "EHLO
+        id S231823AbiJJK3K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 06:29:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbiJJJNc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 05:13:32 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77EAD5B79A;
-        Mon, 10 Oct 2022 02:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1665393211; x=1696929211;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FSafgwpHtjewaVf768ABQg/kdcKmfRXlnif/dgM4eK0=;
-  b=q9GkwMyi9188gqlzRm7/2Xm4A8jkSgm8/SmpmXTbA97ZXWnIJphQz5yK
-   leIPiiRDq2unEjNPRpF6JcuqKG0S/E+54KwKOEvpOlRN5EuqdG27ZTigy
-   lyfuVExSTNRPFh4XgELVqZDRbClmz2SzFKSZdlgHE0ZcnqNoUO5l32cP+
-   +gBUa9/S7r1G+ZQMxA6htHm2UMnHYEBYPhkUNjBXenxlNWyuNaWxNPBVI
-   UsKaMTFe4W8D8Dc3O6cQgUHDtkzz9aJTFeR88RSFGcg25RezvDP4PXYNy
-   1mCiKvprcIIt2fZeQdXwO3RlD//2p7i4x/ZjNm7TzZLn+a18/KW8HH2G5
-   A==;
-X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
-   d="scan'208";a="177929212"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Oct 2022 02:13:31 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Mon, 10 Oct 2022 02:13:28 -0700
-Received: from [10.12.72.60] (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
- Transport; Mon, 10 Oct 2022 02:13:26 -0700
-Message-ID: <8a335e97-c880-d42f-a455-9ea8f3e65267@microchip.com>
-Date:   Mon, 10 Oct 2022 11:13:26 +0200
+        with ESMTP id S231817AbiJJK3J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 06:29:09 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1464817A88
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 03:29:05 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id mx8so6861339qvb.8
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 03:29:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ty/SQ7ZQb5ub5WO9P8Lo7LRFzcBze++LmcsjSK0IUs=;
+        b=SbUTQwNXF6cpHzOUKB1Eotm+CoeI6DGaiOBfiJR4e3h/fAZDpIg7aILfdKMDA7cuZ2
+         lVgKfsv1H2ABJopnsyON6w/78z9cAG6qCBDxeb+xv+qsH5Ae5hM9/zYYhjDmZXtVvHmT
+         cjwJ1yl/iiaIam9sgblVmhCopRSn343SeiRhqXlevol+G4H7qZxKe5/P27SoylDLb7TY
+         uSbwxOcqb1DQdZHWDar/g+e0SMWVS8pBHiWlYMyzpysuKRekYoo+JYTMHbYOWD0VGtFV
+         ws85HrSHx8Chltg2HsfdtngDRSJi71AD3GraHpDqJ/kp62kGFUZKNFpUHuYeNsAomiI3
+         5O1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Ty/SQ7ZQb5ub5WO9P8Lo7LRFzcBze++LmcsjSK0IUs=;
+        b=WSg2ktwxo/ycGIDR2+Hu/CxRquaHaPeCpi7gK4lRsLziTtrPwttt7J0fiQiGujbPmq
+         Se7fuSLNIGh+J8fdIGiw0wqTark+H7QOya0ePyHO6lbSBVDTj7euehAbUKOetn4RR3rb
+         eSAww9mHLTzympBIQmdAonWMc1LD4vjqPYCSoZAfPNNi7x56WZ+q/l8R3Dq5TqYHv2T5
+         lezk+O4dMDie8q9/jpF6s/hKBMovCni79yKZveMLb7jBGJ0YH8zENgJlxDmaSSpXAI6u
+         MdjG8UNrWL8E9pEdM1BQQnRh3SO2U8XMm3CnXdG6vd1GixQSclCetYHf9z1ZDtd7uvWG
+         Tc1Q==
+X-Gm-Message-State: ACrzQf2Mdml/9QxQnH6Ewwq6t5VtkpLYyvgxS9c5OCfqrgdQB8BTtAjQ
+        taOllUBIgdDCU9EtSbCTl1gEQQ==
+X-Google-Smtp-Source: AMsMyM4UpI8bhDJqFqWEygDw1Ur2ePekgUCEnUAFdHhbnnGN696lz2RnVs4cGmw1vQYo2W2/TttGqw==
+X-Received: by 2002:a05:6214:2b05:b0:4b1:d595:3a24 with SMTP id jx5-20020a0562142b0500b004b1d5953a24mr14514640qvb.71.1665397744246;
+        Mon, 10 Oct 2022 03:29:04 -0700 (PDT)
+Received: from [192.168.1.57] (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id h3-20020a05620a244300b006d94c499d8fsm9930615qkn.50.2022.10.10.03.29.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Oct 2022 03:29:03 -0700 (PDT)
+Message-ID: <d97b7d32-6e27-5a04-336b-0af6bd92c83c@linaro.org>
+Date:   Mon, 10 Oct 2022 06:26:52 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 1/2] pinctrl: at91-pio4: Add configuration to userspace
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v2 34/40] arm64: dts: qcom: sm6125: align TLMM pin
+ configuration with DT schema
 Content-Language: en-US
-To:     <Ryan.Wanner@microchip.com>, <linus.walleij@linaro.org>,
-        <alexandre.belloni@bootlin.com>, <claudiu.beznea@microchip.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <ludovic.desroches@microchip.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20221007151647.98222-1-Ryan.Wanner@microchip.com>
- <20221007151647.98222-2-Ryan.Wanner@microchip.com>
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-Organization: microchip
-In-Reply-To: <20221007151647.98222-2-Ryan.Wanner@microchip.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To:     Marijn Suijten <marijn.suijten@somainline.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
+ <20220912061746.6311-35-krzysztof.kozlowski@linaro.org>
+ <20221009174621.ecamh76faoibuykv@SoMainline.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221009174621.ecamh76faoibuykv@SoMainline.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 07/10/2022 at 17:16, Ryan.Wanner@microchip.com wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
+On 09/10/2022 13:46, Marijn Suijten wrote:
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+>> index 8c582a9e4ada..1fe3fa3ad877 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
+>> @@ -387,19 +387,19 @@ tlmm: pinctrl@500000 {
+>>  			#interrupt-cells = <2>;
+>>  
+>>  			sdc2_off_state: sdc2-off-state {
+>> -				clk {
+>> +				clk-pins {
+>>  					pins = "sdc2_clk";
+>>  					drive-strength = <2>;
+>>  					bias-disable;
+>>  				};
+>>  
+>> -				cmd {
+>> +				cmd-pins {
+>>  					pins = "sdc2_cmd";
+>>  					drive-strength = <2>;
+>>  					bias-pull-up;
+>>  				};
+>>  
+>> -				data {
+>> +				data-pins {
+>>  					pins = "sdc2_data";
+>>  					drive-strength = <2>;
+>>  					bias-pull-up;
+>> @@ -413,13 +413,13 @@ clk {
+>>  					bias-disable;
+>>  				};
+>>  
+>> -				cmd {
+>> +				cmd-pins-pins {
 > 
-> Adding support for line bias flags that have been implented in gpio API.
-
-Typo: implemented
-
-> There are functions in the gpiod library that can control line bias from
-> userspace this adds that functionality to this driver.
+> Is this double -pins-pins suffix intended?
 > 
-> Adding .pin_config_set allows the driver's pin configuration to be
-> accessed from userspace. The general idea for this as been taken from
-> stm32, intel, and rockchip drivers that have userspace access for bias
-> flags.
-> 
-> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Tested-by: Nicolas Ferre <nicolas.ferre@microchip.com> # on sama5d27 som1 ek
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+No, thanks for noticing it.
 
-Thanks, best regards,
-   Nicolas
+Best regards,
+Krzysztof
 
-> ---
->   drivers/pinctrl/pinctrl-at91-pio4.c | 22 ++++++++++++++++++++++
->   1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-> index 517f2a6330ad..13b77f1eb6e2 100644
-> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
-> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-> @@ -902,6 +902,25 @@ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
->   	return 0;
->   }
->   
-> +static int atmel_conf_pin_config_set(struct pinctrl_dev *pctldev,
-> +				     unsigned pin,
-> +				     unsigned long *configs,
-> +				     unsigned num_configs)
-> +{
-> +	struct atmel_group *grp = atmel_pctl_find_group_by_pin(pctldev, pin);
-> +
-> +	return atmel_conf_pin_config_group_set(pctldev, grp->pin, configs, num_configs);
-> +}
-> +
-> +static int atmel_conf_pin_config_get(struct pinctrl_dev *pctldev,
-> +				     unsigned pin,
-> +				     unsigned long *configs)
-> +{
-> +	struct atmel_group *grp = atmel_pctl_find_group_by_pin(pctldev, pin);
-> +
-> +	return atmel_conf_pin_config_group_get(pctldev, grp->pin, configs);
-> +}
-> +
->   static void atmel_conf_pin_config_dbg_show(struct pinctrl_dev *pctldev,
->   					   struct seq_file *s,
->   					   unsigned int pin_id)
-> @@ -949,6 +968,8 @@ static const struct pinconf_ops atmel_confops = {
->   	.pin_config_group_get	= atmel_conf_pin_config_group_get,
->   	.pin_config_group_set	= atmel_conf_pin_config_group_set,
->   	.pin_config_dbg_show	= atmel_conf_pin_config_dbg_show,
-> +	.pin_config_set	        = atmel_conf_pin_config_set,
-> +	.pin_config_get	        = atmel_conf_pin_config_get,
->   };
->   
->   static struct pinctrl_desc atmel_pinctrl_desc = {
-> @@ -1139,6 +1160,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
->   	atmel_pioctrl->gpio_chip->label = dev_name(dev);
->   	atmel_pioctrl->gpio_chip->parent = dev;
->   	atmel_pioctrl->gpio_chip->names = atmel_pioctrl->group_names;
-> +	atmel_pioctrl->gpio_chip->set_config = gpiochip_generic_config;
->   
->   	atmel_pioctrl->pm_wakeup_sources = devm_kcalloc(dev,
->   			atmel_pioctrl->nbanks,
-
-
--- 
-Nicolas Ferre
