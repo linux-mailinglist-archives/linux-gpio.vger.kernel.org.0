@@ -2,81 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AADD5F9A71
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 09:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C515F9A85
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 09:56:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232538AbiJJHvX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 03:51:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38756 "EHLO
+        id S231345AbiJJH4E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 03:56:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231953AbiJJHuy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 03:50:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0BE917E05;
-        Mon, 10 Oct 2022 00:49:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0017E60E75;
-        Mon, 10 Oct 2022 07:49:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64026C433D6;
-        Mon, 10 Oct 2022 07:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665388192;
-        bh=XzSPUlFclW0ZT9yGjU4jJfL3cyzm5SGlmsXOFLYFHS0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FEfi9vyV9guaQaHEIdM695B2FrzfkFzQTIO4Ay1e0PeVo5hvT7bCPVw91eW+m1hBR
-         gogYIj1z3Drml0eEpCzJdRb4hpixLpfiVUzcgy9vmbJQuZ6wwEIu+Rvc21mpVKUX6p
-         T2vSFb5+6j4b0IqjTxq8osZDLu6EGYTOY0sAIFj3fH524B7r3PLpBairUX1JuCLntr
-         m/tzIA/nR4C6e/Eig1rFmxkdBqeR4K/EQct/JcBa3BcZVDxKnWAYSUAj6nr27LguKn
-         wmg2kjRwF7Ji3kFdTC7jmQgUNFSjbduoFQBH67ZWO9X7/kgRTtJZ6bm8X3hmzgGQ3d
-         ixznRVnddti4A==
-Date:   Mon, 10 Oct 2022 08:49:45 +0100
-From:   Lee Jones <lee@kernel.org>
-To:     Richard Acayan <mailingradian@gmail.com>
-Cc:     linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        with ESMTP id S230486AbiJJH4D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 03:56:03 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77FCC13EA1;
+        Mon, 10 Oct 2022 00:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665388562; x=1696924562;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=HID0mHHHZgyVwH5oNtP1G2gM2V0I0iEupf35hgDLXWE=;
+  b=Ku7iFvkQshmi5NFsWXovCE9T8N3YrrftUm4omdB+JxYv7KiXdibHFZ6V
+   BqGWfE5HoUEgcVyK40nD0QrwbZRYdU6ET8N1Z4Q3+sbjhKmtxKN+eZG92
+   ckyv8fxXQeIHbBaA7uSmLjdc6Kra9iEuhfO1n90bXrlQ+eiKmX6K6fs8R
+   JqXHmzB19FlqA2F7MHTteT6TU68wI+cyp+tA811ko9QB4liGfca+0igQH
+   +zBX2AfINU2iuA2Ndgn+qc2jhzxMNdy/V96Pxb8zPFaLytepYD1Cuy0Zl
+   UGvJBXvC8hKiQieY/Nc7g/LgyPwCN7tT9q4IMJC0CcdbMQalZQgchgxBi
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10495"; a="305762231"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="305762231"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 00:56:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10495"; a="694539307"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="694539307"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Oct 2022 00:55:59 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 614561E0; Mon, 10 Oct 2022 10:56:20 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH v9 0/3] SDM670 Pin Control Driver
-Message-ID: <Y0POmQ+xrQ/HT7RF@google.com>
-References: <20221007213241.84962-1-mailingradian@gmail.com>
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Patrice Chotard <patrice.chotard@foss.st.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: [PATCH v1 1/1] pinctrl: st: Switch to use fwnode instead of of_node
+Date:   Mon, 10 Oct 2022 10:56:15 +0300
+Message-Id: <20221010075615.43244-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221007213241.84962-1-mailingradian@gmail.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 07 Oct 2022, Richard Acayan wrote:
-> Richard Acayan (3):
->   dt-bindings: pinctrl: qcom: add sdm670 pinctrl
->   pinctrl: qcom: do not reinitialize gpio valid mask
->   pinctrl: qcom: add sdm670 pinctrl
-> 
->  .../bindings/pinctrl/qcom,sdm670-tlmm.yaml    |  127 ++
->  drivers/pinctrl/qcom/Kconfig                  |    9 +
->  drivers/pinctrl/qcom/Makefile                 |    1 +
->  drivers/pinctrl/qcom/pinctrl-msm.c            |    3 +-
->  drivers/pinctrl/qcom/pinctrl-sdm670.c         | 1345 +++++++++++++++++
+The OF node in the GPIO library is deprecated and soon
+will be removed.
 
-And I'm receiving this because ... ?
+GPIO library now accepts fwnode as a firmware node, so
+switch the driver to use it.
 
->  5 files changed, 1483 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm670-tlmm.yaml
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-sdm670.c
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-st.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+index cf7f9cbe6044..987878c83349 100644
+--- a/drivers/pinctrl/pinctrl-st.c
++++ b/drivers/pinctrl/pinctrl-st.c
+@@ -1175,7 +1175,7 @@ static int st_pctl_dt_calculate_pin(struct st_pinctrl *info,
+ 
+ 	for (i = 0; i < info->nbanks; i++) {
+ 		chip = &info->banks[i].gpio_chip;
+-		if (chip->of_node == np) {
++		if (chip->fwnode == of_fwnode_handle(np)) {
+ 			if (offset < chip->ngpio)
+ 				retval = chip->base + offset;
+ 			break;
+@@ -1518,7 +1518,7 @@ static int st_gpiolib_register_bank(struct st_pinctrl *info,
+ 	bank->gpio_chip = st_gpio_template;
+ 	bank->gpio_chip.base = bank_num * ST_GPIO_PINS_PER_BANK;
+ 	bank->gpio_chip.ngpio = ST_GPIO_PINS_PER_BANK;
+-	bank->gpio_chip.of_node = np;
++	bank->gpio_chip.fwnode = of_fwnode_handle(np);
+ 	bank->gpio_chip.parent = dev;
+ 	spin_lock_init(&bank->lock);
+ 
 -- 
-Lee Jones [李琼斯]
+2.35.1
+
