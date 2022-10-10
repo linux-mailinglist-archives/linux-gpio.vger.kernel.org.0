@@ -2,233 +2,342 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F38345F9F51
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 15:23:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 650665F9F81
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 15:37:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbiJJNXe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 09:23:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38894 "EHLO
+        id S229492AbiJJNhb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 09:37:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiJJNXd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 09:23:33 -0400
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70052.outbound.protection.outlook.com [40.107.7.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1696963FCC
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 06:23:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hCc/jRyGrt5Zv9WfqNV8MoXpMJpA2MIZKLBtjTvRI2Tz4PiApPrFNvwL45VqmZkxOzYx9Zg71kj+N9XV2pYLwmxcomUaaL0JkHez13EDke6ZY8JMnu6iSgn4Lp0e8Vtm3GN+BT80E7WyKYcpEmOuxwciey8nUw8pU+dOEteD56tmhNh0SvYVF/fBfGVcxuHJ3R+IZifS4eFfiA+MhiuDgXDIuN9joyppXZ5yQhiAohhTtF/hFZQvovEwz86ncUXhBiVbFRo7wqCBd0nkCjXC8XSoi1WNGxmMpJHnbSYEc/V4G3/04E/AY2Ry/UMwCQfl028Gw6iLEIOjgJBmckI8Hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aG/e0Dq/1lOEMGVNNeuFslqD1LArNL5Ezfxq71bR0lc=;
- b=bLckGeDlBClD33nPIBZcaQ6BzAdmSVIHgATJZmj7zPiT53xqSvut1qQwEcDixfUp9exrk4OPdhay4NhHPfG9UA+aiusnZtRT/d6f7FQB7RyDJx0diq7cZixot7U2hE43yaebDAqDAiI6Sviy0NGc3rrw26Y3Pa2dggJKUrA0Kni7mJJ+OUPZ98wEgmCrTshXQJBrq3DxBYa0mWgAyYxBTg2ChUk6NFI8nYIbkR0MHqe/C0WOmJMnR5Vu4chEDpbzAzNE0ep+QXoFAyxuUaeoaobiRVlWnIFAegHQveGXJ1b6PNd0aHI9A8aLM8rW/hhsRGtigIpvnUHC++J+2X7M/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
- dkim=pass header.d=eilabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aG/e0Dq/1lOEMGVNNeuFslqD1LArNL5Ezfxq71bR0lc=;
- b=AGeVEBMB9zPsHrcxpvjjzE22V8PXkMDwXUe9pippmlxdJ4qvH+PArLw5ZU3LTfWQQSUt3DVXHh+6OR3qSEtq73zqpSHeQbwLLUrgnfpSlon7bP7fdmmtgwjWKfqcrCAsLia62+TJ8+Ahv/asXcbPHQuTwgltE93AqGhWkZ2j75I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=eilabs.com;
-Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
- by VI1P194MB0656.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:144::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5709.15; Mon, 10 Oct
- 2022 13:23:24 +0000
-Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- ([fe80::8dfd:7542:7a0c:1f04]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- ([fe80::8dfd:7542:7a0c:1f04%6]) with mapi id 15.20.5709.015; Mon, 10 Oct 2022
- 13:23:24 +0000
-From:   =?UTF-8?q?Levente=20R=C3=A9v=C3=A9sz?= <levente.revesz@eilabs.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org,
-        =?UTF-8?q?Levente=20R=C3=A9v=C3=A9sz?= <levente.revesz@eilabs.com>
-Subject: [PATCH 2/2] gpio: pca953x: Add interrupt mask support for chips with the standard register set
-Date:   Mon, 10 Oct 2022 15:20:07 +0200
-Message-Id: <20221010132007.924810-3-levente.revesz@eilabs.com>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221010132007.924810-1-levente.revesz@eilabs.com>
-References: <20221010132007.924810-1-levente.revesz@eilabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1PR06CA0146.eurprd06.prod.outlook.com
- (2603:10a6:803:a0::39) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:800:147::21)
+        with ESMTP id S229463AbiJJNha (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 09:37:30 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6F85B068
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 06:37:27 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id bb5so1110079qtb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 06:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vkuK5BKe2xjQkr/RcXbg8y9N+ayQn7NQBCiNKHV/VJ4=;
+        b=Cc9dsYY3Ns5gpbAsjA9eoNHsK/PdkfsTRAQYm4d7Yxa28pltyytcsPDOyAbjEb4Vfy
+         fV9CvxhHZ+QohzNZCH40PwvqEKQpZ/DBQHFHR2r+NsS1/GU9rCLfuGykRtsjkBYpittF
+         4sUiieWnV2SpWKMy/6umjJ1sx6XQH88UXKtgi4jhNTsr2YrNTdoEEqIvteHJk/AnIvbe
+         Se1g7yK7eKDoyaUJ6zXRjsTMJMDKqmAoe8A2dVsbVTpITeHV7bDerqUzdhU0uMzAXucq
+         BWT6u7k1zoX21YeXr1VSSo3FEKteHLUx8EL2micF0LUjCBuK6DUIj1UM7AobCdNRbqas
+         p4lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vkuK5BKe2xjQkr/RcXbg8y9N+ayQn7NQBCiNKHV/VJ4=;
+        b=zibpexcN3hOyrby7xxzR97LLJuWP5GGUITmJ54TOn87IZGEIer1cF9wghZi1FWq9g/
+         peBLfb9GXggVb5/V9WWzb+IxEty9waasRh+rH9dd2P2pEuaO2CUrMY9B9edQNBI1CpdE
+         QJnbVF3nWl0/rHCgwr/iQ2t+ucquayxAg8yqrMrafyMfk7gOTg0HEPO/8aUoJ+k4vNxg
+         OUBBNImrLxAUkaJAZ0alrirRwUBt1hAnfuslbYxGHTrdk7NdRiJRZxtJW65pi7aovJcL
+         juiuUvaHzysZ+vZmup8Eyws2pCAonrkdz9e3ozAsmocRZcYeQ4DHsHV+/srYC5FL8m/X
+         b81w==
+X-Gm-Message-State: ACrzQf0DwlBTc4BJppfWG9k4+ksj2xz9ZFtEOoOr3U/Av9ZBxNSSdus9
+        7ZiWlsEF1mP9Hl9S7aQ7j20nXA==
+X-Google-Smtp-Source: AMsMyM5B2PMSgTHUQeRVmWgnVQAXgXXfhmXI03btwQHLLUhnuKk8abdqNAj1w+SE3UvwJDKnlBB8eA==
+X-Received: by 2002:ac8:580d:0:b0:35c:3fcc:2442 with SMTP id g13-20020ac8580d000000b0035c3fcc2442mr14849984qtg.501.1665409046788;
+        Mon, 10 Oct 2022 06:37:26 -0700 (PDT)
+Received: from [192.168.1.57] (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id x14-20020a05620a448e00b006b949afa980sm10390657qkp.56.2022.10.10.06.37.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Oct 2022 06:37:26 -0700 (PDT)
+Message-ID: <d27d7740-bf35-b8d4-d68c-bb133513fa19@linaro.org>
+Date:   Mon, 10 Oct 2022 09:37:23 -0400
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|VI1P194MB0656:EE_
-X-MS-Office365-Filtering-Correlation-Id: c1b1021d-4872-41a4-9a59-08daaac29bd0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R5QjPe44fsgx4CUSS7LKSD2Gb3xm9ZDjn5MvgL0YcBlwE85pmnG3oUJXg/fLk6dh4wKR9ol5raSKUcBj7y4qDWrlEShQI4gKfUSTokNwy0dWxaTFGye8TaOdTnf4LutPHWn4svd6akFPxahoyvMgNDYTkn2nZv+tOUi0D8XPH4GI0JMvv3bZVjzdr6SJJ9MTVUjiVLIgDanfmiGqaEI4PSB7wRmEGhGO23FONu6p4ncBpgsvvZjXWqIzWZzE//MKnI/4sO8zCE2x5tCrd6QxuZIA7eVH/jFpJmbq4ChFN4bQYF5vhJZUwv65yDL8Hm333QIRnSf7hWfBG8nU+OkXpzeVNFyk/EDE4BHZbD6nzx3wlWkAYsQPKefUSy+P4kvSfjXWbTNq36t3v+dnDi2W04AJYMVzYExSfWn5qxW65PP8WB+IrzCdEJpBH6drkQeLK2DiXAnrbOS4//xOyv/3pyp3VDNkQBthZ9pPmJu/ncwxcanKJe+mMDZyNWF+qcoYXSoHxyqWY0yrXtZUefvb03odReFEVlRvaEdB3Gow/I5a20QQiaeXrft5yUbqOSRy69LtcIh3ZdivOz2fUNlkuvP1yKBQbQzbFmA488wycMukQB/E/ewxsidDQfWB7LRC6E15h9aVH8K4zki4H3WN9yQUK+41eVDNw+Hkuexi7sNYDpfdNVROm8UCr3AnSPdo5hm6gf54CyByzOGkzGg1HlAZ4mIlDHkMYoEuFwq/DzLdYKQg3PqespDCNvmJwRxxSfm39JRcbr0OfE3b7BETIg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(366004)(346002)(136003)(39830400003)(396003)(376002)(451199015)(66556008)(316002)(66946007)(86362001)(66476007)(4326008)(36756003)(2906002)(5660300002)(8936002)(8676002)(110136005)(41300700001)(83380400001)(2616005)(1076003)(186003)(38100700002)(6506007)(38350700002)(478600001)(6486002)(52116002)(26005)(6512007)(6666004)(107886003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bUpUUjk4OVl2THFVOXVnV1lIUjV3Sktjbm5XMlNTZElrejNxQitLS1hoVDBa?=
- =?utf-8?B?KzA1bFdRRzljM1BMZXh3ZDFFYWNtK0hydzd1dXZQSjJjSXByREhDQXZQQ2Zp?=
- =?utf-8?B?OFZPTU9oMkRrRzhtb1l5cEVLbHdMRHE0bFBDK2tEczlEMTY5QXN5aDNFSERh?=
- =?utf-8?B?ZlRyelVnRnhaMm8rV0F0K1gwMzk5czZ0czk4WmN2bVNUdlpocmViNHk5UVJL?=
- =?utf-8?B?bGdUWW9mdWRnWDNCaTdGOEZHQ3dXSWdGem03SnFYbDJmeWhzYktTM3E5TW5m?=
- =?utf-8?B?K2hlQlhueVo4eDRnYmRUSGQ4NU1Ub1VScVdzTXgwMVQyZDBMeVBNU1Q3dmMx?=
- =?utf-8?B?KzdTRFN3U1NqaXpTWlFVZDV0VG1qYllveklLTStaYm5XMWU3dTYrTUxUN1Bi?=
- =?utf-8?B?YmxOekNVa3M1QWl6Y2o3bHRMSFdKTXFOdjFnK2dxL1ZXTGNFUWd5TC9ReWZk?=
- =?utf-8?B?RXp1UlBrZ0YwQzZDbDdyS0J6MnRxMDU4K1dWVmpqZm43aytGN3pZTXJZL3ds?=
- =?utf-8?B?eHhlcDZQMDZCNENtbTlsT1gyS3dYalZnbUdxYlVMWU1BbTZhdUNOdU9ReE4w?=
- =?utf-8?B?NnBqREIreUhneG5MZEx1WVRVVjJhL2RBdnNTUk1xQnVxdXJCdERpWjI3WExx?=
- =?utf-8?B?c0dnNDN2aHVTOTBFS1BSVEZtNEorWDBqc2tvQXdldjhoODBUS0hjRGZMZzlv?=
- =?utf-8?B?ZzJqdTNZbjVyZjFUcTVBS1lDd1pZeVFyYWlUZ2lsQWNVSGdpdUtsUHpKbTI3?=
- =?utf-8?B?K0kwMm1LTmEyRHA4dVZrMzYweDlickdUMVhuRVRER1JPWkZ0TS9hKy9rSndT?=
- =?utf-8?B?Snd3UGYwYXFrTVZUMXl4bGp0MW16dFJLTmZpUXVuN1YyaXRIR1UvanBMa1FH?=
- =?utf-8?B?SEtYK0REVkV1TmhkYjFCaWlzNTh4S2ZlV0FaejVOSkpvZ1p3Slh1WWxBTko4?=
- =?utf-8?B?blVKcUhwMnVsU2owTWdNR1E3RVhrZjdOTS9oN3JtNDJ5ajJ4M2FLelluOUQy?=
- =?utf-8?B?ck13UEFDMGU0NmJCRmpIZXZyRHNPa09ONE5RU1FaWTYyZExoMklOTUttL0c2?=
- =?utf-8?B?bjBPajluRUhSamJaNlJMUHc1Wk02dlllK1U3N2I1WWRFMjByRWI4ejVKR1pz?=
- =?utf-8?B?aXJVeHpjNXI2WVk3U1JhSy8rV0c1NDRMUmhhbDgrOXl2TVVBNjZabjZEVm5X?=
- =?utf-8?B?Sm1yWUt0OXVqeW41T0VMTnZ6S2owTDViOEdHYUk5QS8rMHNOUmNyUkRObS9W?=
- =?utf-8?B?Y3g4ay9JdjVFZGM1ZEhOTXFyWitWb1VkMEVQaXVPaGtoTkM0REVaK20rUHJH?=
- =?utf-8?B?aXNFd0g0YUVkSUErd1JNb2VJYVhCSGtFYktnd2w1cmtVMTZMS0lMODNiQk05?=
- =?utf-8?B?RGhnNUpaMnJyUlgyRk43S0dJMjdORWQ1V0oyaXBydVg3VlVuYzVWdWN1SDZk?=
- =?utf-8?B?a1MwcEMyWTJsOXEzOUx0Ti9KR2VLc2F3eEJYUVF0UjN2MXdWdlhFMmNrSXVW?=
- =?utf-8?B?NHl1WktXZTZuV3diTHFPY2tMWk5iTkdReFN3dzVlUmp0VGtieEMxS1hjbXJT?=
- =?utf-8?B?VGZiMk1POCtRcGNTZmZSQ0IvbTkzUEFxTkRvK0tsa012d1dGQXA0MHpQdUlN?=
- =?utf-8?B?Q0lXUDJZcXZYQnoyTmJHYkdSYnBpWVpGZFY3RWV4TWpiU3ZGSmpoY0RVT3R2?=
- =?utf-8?B?clJOYnZNOXpyOEVUd2dTcWRkTEo2OUM1QnpwdXYyb2RkK1phbGVKNzlmMDA1?=
- =?utf-8?B?aXZRdjAzNVlkUVFFWnBWVmRGRFkrM3Q5azNvd1FqYTh1MzhtNWovYjFzVm9C?=
- =?utf-8?B?VUxrMGxQd2cyTTFJMS9WeHlkVlR0UlVmTk1kNEFTMkwzdmJLTVQyMEo1L2J6?=
- =?utf-8?B?WFZwS2pRYTNWa0RDcE1oak0wcU5ScXJ2enJZUFRybERHa1phNUI3Y1FyR2Nk?=
- =?utf-8?B?TzdwT1JCR2RtQ3ZYM3Fzb3JVV1JhNXpVb1hOT0I4N2xIUmliNlBuUjZmWHhN?=
- =?utf-8?B?bEdKaDRTMWdIOWNpMTM3YlMwRGpiNGlCNmdZVU1jN3F3T082L2lCcDdVbnJS?=
- =?utf-8?B?aEdMK2N3TGNhRTVpSkNMbGVHYVhRSmlNRExGK0xLZVdxQXVnUWFuWktDMHZi?=
- =?utf-8?B?OFhqQXRjYytLN1VCSWVqK29ycUZoQjFORmduVWNaVGZoNjNuQnYreFdUQkp3?=
- =?utf-8?B?d3c9PQ==?=
-X-OriginatorOrg: eilabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1b1021d-4872-41a4-9a59-08daaac29bd0
-X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2022 13:23:24.1957
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uyPU885szZqfIf+j5fHQsOhHVVawUVehE4YE3tC4EGO7F9v68o+o93MjhVAb4YxQPSKF2Oe5Wp5l0t0MwDqytOJ8QEOCWnS50IEPBY6NOBg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P194MB0656
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: [PATCH v3 net-next 12/14] dt-bindings: net: dsa: ocelot: add
+ ocelot-ext documentation
+Content-Language: en-US
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Colin Foster <colin.foster@in-advantage.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        UNGLinuxDriver@microchip.com,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Lee Jones <lee@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>
+References: <20220926002928.2744638-1-colin.foster@in-advantage.com>
+ <20220926002928.2744638-13-colin.foster@in-advantage.com>
+ <ec63b5aa-3dec-3c27-e987-25e36b1632ba@linaro.org>
+ <YzzLCYHmTcrHbZcH@colin-ia-desktop>
+ <455e31be-dc87-39b3-c7fe-22384959c556@linaro.org>
+ <Yz2mSOXf68S16Xg/@colin-ia-desktop>
+ <28b4d9f9-f41a-deca-aa61-26fb65dcc873@linaro.org>
+ <20221008000014.vs2m3vei5la2r2nd@skbuf>
+ <c9ce1d83-d1ca-4640-bba2-724e18e6e56b@linaro.org>
+ <20221010130707.6z63hsl43ipd5run@skbuf>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221010130707.6z63hsl43ipd5run@skbuf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Some chips in the pca953x family in addition to the standard 4
-registers have a fifth interrupt mask register:
+On 10/10/2022 09:07, Vladimir Oltean wrote:
+> On Sun, Oct 09, 2022 at 12:14:22PM -0400, Krzysztof Kozlowski wrote:
+>> On 08/10/2022 02:00, Vladimir Oltean wrote:
+>>> On Wed, Oct 05, 2022 at 06:09:59PM +0200, Krzysztof Kozlowski wrote:
+>>>>>> I don't understand how your answer relates to "reg=<0 0>;". How is it
+>>>>>> going to become 0x71010000 if there is no other reg/ranges set in parent
+>>>>>> nodes. The node has only one IO address, but you say the switch has 20
+>>>>>> addresses...
+>>>>>>
+>>>>>> Are we talking about same hardware?
+>>>>>
+>>>>> Yes. The switch driver for both the VSC7512 and VSC7514 use up to ~20 regmaps
+>>>>> depending on what capabilities it is to have. In the 7514 they are all
+>>>>> memory-mapped from the device tree. While the 7512 does need these
+>>>>> regmaps, they are managed by the MFD, not the device tree. So there
+>>>>> isn't a _need_ for them to be here, since at the end of the day they're
+>>>>> ignored.
+>>>>>
+>>>>> The "reg=<0 0>;" was my attempt to indicate that they are ignored, but I
+>>>>> understand that isn't desired. So moving forward I'll add all the
+>>>>> regmaps back into the device tree.
+>>>>
+>>>> You need to describe the hardware. If hardware has IO address space, how
+>>>> does it matter that some driver needs or needs not something?
+>>>
+>>> What do you mean by IO address space exactly? It is a SPI device with registers.
+>>> Does that constitute an IO address space to you?
+>>
+>> By IO I meant MMIO (or similar) which resides in reg (thus in unit
+>> address). The SPI devices have only chip-select as reg, AFAIR.
+> 
+> Again, the SPI device (soc@0) has a unit address that describes the chip
+> select, yes. The children of the SPI device have a unit address that
+> describes the address space of the SPI registers of the mini-peripherals
+> within that SPI device.
+> 
+>>> The driver need matters because you don't usually see DT nodes of SPI,
+>>> I2C, MDIO devices describing the address space of their registers, and
+>>> having child nodes with unit addresses in that address space. Only when
+>>> those devices are so complex that the need arises to identify smaller
+>>> building blocks is when you will end up needing that. And this is an
+>>> implementation detail which shapes how the dt-bindings will look like.
+>>
+>> So probably I misunderstood here. If this is I2C or SPI device, then of
+>> course reg and unit address do not represent registers.
+> 
+> Except we're not talking about the SPI device, I'm reminding you that we
+> are talking about "reg = <0 0>" which Colin used to describe the
+> /spi/soc@0/ethernet-switch node.
+> 
+> Colin made the incorrect decision to describe "reg = <0 0>" for the
+> switch OF node in an attempt to point out that "reg" will *not* be used
+> by his implementation, whatever value it has. You may want to revisit
+> some of the things that were said.
+> 
+> What *is* used in the implementation is the array of resources from
+> struct mfd_cell vsc7512_devs[] in drivers/mfd/ocelot-core.c, because MFD
+> allows you to do this (and I suppose because it is more convenient than
+> to rely on the DT). Colin's entire confusion comes from the fact that he
+> thought it wouldn't be necessary to describe the unit addresses of MFD
+> children if those addresses won't be retrieved from DT.
+> 
+>>>> You mentioned that address space is mapped to regmaps. Regmap is Linux
+>>>> specific implementation detail, so this does not answer at all about
+>>>> hardware.
+>>>>
+>>>> On the other hand, if your DTS design requires this is a child of
+>>>> something else and by itself it does not have address space, it would be
+>>>> understandable to skip unit address entirely... but so far it is still
+>>>> confusing, especially that you use arguments related to implementation
+>>>> to justify the DTS.
+>>>
+>>> If Colin skips the unit address entirely, then how could he distinguish
+>>> between the otherwise identical MDIO controllers mdio@7107009c and
+>>> mdio@710700c0 from Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml?
+>>> The ethernet-switch node added here is on the same hierarchical level
+>>> with the MDIO controller nodes, so it must have a unit address just like
+>>> them.
+>>
+>> So what is @710700c0?
+> 
+> @710700c0 is VSC7512_MIIM1_RES_START, i.e. the base address of the
+> second MDIO controller embedded within the SoC (accessed over whatever;
+> SPI or MMIO).
+> 
+>> It's not chip-select, but MMIO or some other bus (specific to the
+>> device), right?
+> 
+> Yes, it is not chip select. Think of the /spi/soc@0 node as an AHB to
+> SPI bridge (it is possibly not quite that, but for the sake of imagination
+> it's a good enough description), and the children of /spi/soc@0 are
+> nodes whose registers are accessed through that AHB to SPI bridge.
+> The same addresses can also be accessed via direct MMIO by the processor
+> *inside* the switch SoC, which in some cases can also run Linux
+> (although not here in VSC7512, but in VSC7514).
+> 
+>> The mscc,ocelot.yaml has a soc@0 SPI device. Children of soc@0 use unit
+>> addresses/reg meaningful for that soc@0.
+> 
+> Which they do.
+> 
+>>> But I don't support Colin's choice of "reg=<0 0>;" either. A choice must
+>>> be made between 2 options:
+>>> - mapping all 20 regions of the SPI address space into "reg" values
+>>> - mapping a single region from the smallest until the largest address of
+>>>   those 20, and hope nothing overlaps with some other peripheral, or
+>>>   worse, that this region will never need to be expanded to the left.
+>>
+>> Yeah, at least to my limited knowledge of this hardware.
+> 
+> Yeah what? That a decision must be made?
 
-    0: INPUT
-    1: OUTPUT
-    2: POLARITY
-    3: CONFIGURATION
-    4: INTERRUPT MASK
+Yep. That's it. You ask me to learn this hardware, read datasheet and
+design it instead of Colin or other people working on it. I can give you
+generic guidelines how it should look, but that's it.
 
-Chips with this register:
+> 
+>>> What information do you need to provide some best practices that can be
+>>> applied here and are more useful than "you need to describe the
+>>> hardware"? 
+>>
+>> Describe the hardware properties in terms of it fit in to the whole
+>> system - so some inputs (clocks, GPIOs), outputs (interrupts),
+>> characteristics of a device (e.g. clock provider -> clock cells) and
+>> properties configuring hardware per specific implementation.
+>>
+>> But mostly this argument "describe hardware" should be understood like:
+>> do not describe software (Linux drivers) and software policies (driver
+>> choices)...
+> 
+> Let's bring this back on track. The discussion started with you saying:
+> 
+> | soc in spi is a bit confusing.
+> 
+> which I completely agree with, it really is. But it's also not wrong
+> (or at least you didn't point out reasons why it would be, despite being
+> asked to), and very descriptive of what actually takes place here:
+> SoC registers are being accessed over SPI by an external host.
 
-    - pca9505
-    - pca9506
-    - pca9698
+My comment was not only about this. My comment was about soc@0 not
+having reg. And then having ethernet@0 with reg=<0,0> which is unusual,
+because - as you explained - it is not a SPI device.
 
-Otherwise the interrupt mask register works exactly the same as the
-corresponding register in the already supported pcal chips.
+> 
+> If you're going to keep giving mechanical review to this, my fear is
+> that a very complex set of schemas is going to fall through the cracks
+> of bureaucracy, and while it will end up being formally correct,
+> absolutely no one will understand what is actually required when
+> piecing everything together.
+> 
+> In your review of the example provided by Colin here, you first have
+> this comment about "soc in spi" being confusing, then you seem to forget
+> everything about that, and ask "How is this example different than
+> previous one (existing soc example)?"
 
-Add PCA_953X_INT_MASK register. Use it as the interrupt register of
-(non-pcal) pca953x chips.
+That one was a different topic, but we stopped discussing it. You
+explained the differences and its fine.
 
-Set pca9505 and pca9506 to use this register.
+> 
+> There are more things to unpack in order to answer that.
+> 
+> The main point is that we wanted to reuse the existing MMIO-based
+> drivers when accessing the devices over SPI. So the majority of
+> peripherals have the same dt-bindings whether they are on /soc or on
+> /spi/soc. Linux also provides us with the mfd and regmap abstractions,
+> so all is good there. So you are not completely wrong to expect that an
+> ethernet-switch with the "mscc,vsc7512-switch" compatible string should
+> have the same bindings regardless of whatever its parent is.
+> 
+> Except this is not actually true, and the risk is that this will appear
+> as seamless as just that when it actually isn't.
+> 
+> First (and here Colin is also wrong), the switch Colin adds support for
+> is not directly comparable with "the existing soc example" (vsc9953).
+> That is different (NXP) hardware which just happens to be supported by
+> the same driver (drivers/net/dsa/ocelot). 
 
-Signed-off-by: Levente Révész <levente.revesz@eilabs.com>
----
- drivers/gpio/gpio-pca953x.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+If it is different hardware, then you have different compatible, so why
+this is a problem?
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 71bfc38c3930..bb8355540a46 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -28,6 +28,7 @@
- #define PCA953X_OUTPUT		0x01
- #define PCA953X_INVERT		0x02
- #define PCA953X_DIRECTION	0x03
-+#define PCA953X_INT_MASK	0x04
- 
- #define REG_ADDR_MASK		GENMASK(5, 0)
- #define REG_ADDR_EXT		BIT(6)
-@@ -76,8 +77,8 @@
- static const struct i2c_device_id pca953x_id[] = {
- 	{ "pca6408", 8  | PCA953X_TYPE | PCA_INT, },
- 	{ "pca6416", 16 | PCA953X_TYPE | PCA_INT, },
--	{ "pca9505", 40 | PCA953X_TYPE | PCA_INT, },
--	{ "pca9506", 40 | PCA953X_TYPE | PCA_INT, },
-+	{ "pca9505", 40 | PCA953X_TYPE | PCA_MASKED_INT, },
-+	{ "pca9506", 40 | PCA953X_TYPE | PCA_MASKED_INT, },
- 	{ "pca9534", 8  | PCA953X_TYPE | PCA_INT, },
- 	{ "pca9535", 16 | PCA953X_TYPE | PCA_INT, },
- 	{ "pca9536", 4  | PCA953X_TYPE, },
-@@ -187,6 +188,7 @@ static const struct pca953x_reg_config pca953x_regs = {
- 	.output = PCA953X_OUTPUT,
- 	.input = PCA953X_INPUT,
- 	.invert = PCA953X_INVERT,
-+	.int_mask = PCA953X_INT_MASK,
- };
- 
- static const struct pca953x_reg_config pcal953x_regs = {
-@@ -240,6 +242,7 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
- #define PCA953x_BANK_OUTPUT	BIT(1)
- #define PCA953x_BANK_POLARITY	BIT(2)
- #define PCA953x_BANK_CONFIG	BIT(3)
-+#define PCA953x_BANK_INT_MASK	BIT(4)
- 
- #define PCA957x_BANK_INPUT	BIT(0)
- #define PCA957x_BANK_POLARITY	BIT(1)
-@@ -261,6 +264,8 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
-  *     Output port			0x00 + 1 * bank_size	RW
-  *     Polarity Inversion port		0x00 + 2 * bank_size	RW
-  *     Configuration port		0x00 + 3 * bank_size	RW
-+ *   - Some chips have the standard layout with additional interrupt mask:
-+ *     Interrupt Mask port		0x00 + 4 * bank_size	RW
-  *   - PCA957x with mixed up registers
-  *     Input port			0x00 + 0 * bank_size	R
-  *     Polarity Inversion port		0x00 + 1 * bank_size	RW
-@@ -374,6 +379,8 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
- 				PCAL9xxx_BANK_PULL_SEL |
- 				PCAL9xxx_BANK_IRQ_MASK |
- 				PCAL9xxx_BANK_IRQ_STAT;
-+		else if (chip->driver_data & PCA_HAS_INT_MASK)
-+			bank |= PCA953x_BANK_INT_MASK;
- 	}
- 
- 	return chip->check_reg(chip, reg, bank);
-@@ -396,6 +403,8 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
- 				PCAL9xxx_BANK_PULL_EN |
- 				PCAL9xxx_BANK_PULL_SEL |
- 				PCAL9xxx_BANK_IRQ_MASK;
-+		else if (chip->driver_data & PCA_HAS_INT_MASK)
-+			bank |= PCA953x_BANK_INT_MASK;
- 	}
- 
- 	return chip->check_reg(chip, reg, bank);
-@@ -1342,8 +1351,8 @@ static int pca953x_resume(struct device *dev)
- static const struct of_device_id pca953x_dt_ids[] = {
- 	{ .compatible = "nxp,pca6408", .data = OF_953X(8, PCA_INT), },
- 	{ .compatible = "nxp,pca6416", .data = OF_953X(16, PCA_INT), },
--	{ .compatible = "nxp,pca9505", .data = OF_953X(40, PCA_INT), },
--	{ .compatible = "nxp,pca9506", .data = OF_953X(40, PCA_INT), },
-+	{ .compatible = "nxp,pca9505", .data = OF_953X(40, PCA_MASKED_INT), },
-+	{ .compatible = "nxp,pca9506", .data = OF_953X(40, PCA_MASKED_INT), },
- 	{ .compatible = "nxp,pca9534", .data = OF_953X( 8, PCA_INT), },
- 	{ .compatible = "nxp,pca9535", .data = OF_953X(16, PCA_INT), },
- 	{ .compatible = "nxp,pca9536", .data = OF_953X( 4, 0), },
--- 
-2.37.3
+> It's worth reiterating that
+> dissimilar hardware driven by a common driver should not necessarily
+> have the same dt-bindings.
+
+Which is obvious...
+
+> Case in point, the NXP switches have a single
+> (larger) "reg", because the SoC integration was tidier and the switch
+> doesn't have 20 regions spread out through the SoC's guts, which overlap
+> with other peripherals as in the case of VSC7512/VSC7514.
+> 
+> Anyway, Colin's SPI-controlled VSC7512 switch is most similar to
+> mscc,vsc7514-switch.yaml (to the point of the hardware being identical),
+> and I believe that this is the schema he should append his information to,
+> rather than what he's currently proposing in his patches.
+> 
+> *But* accessing an Ethernet switch over SPI is not functionally
+> identical to accessing it over MMIO, unless you want to have an Ethernet
+> throughput in the order of tens of bits per second.
+> 
+> This is where implementation starts to matter, and while mscc,vsc7514-switch.yaml
+
+Not really, implementation still does not matter to the bindings and
+that argument proves nothing. No one forces you to model it as SPI in
+bindings...
+
+> describes a switch where packets are sent and received over MMIO (which
+> wouldn't be feasible over SPI), Colin's VSC7512 schema describes a
+> switch used in DSA mode (packets are sent/received over a host Ethernet
+> port, fact which helps overcome the bandwidth limitations of SPI).
+> To make matters worse, even VSC7514 can be used in DSA mode. When used
+> in DSA mode, a *different* driver, with *different* dt-bindings (because
+> of different histories) controls it.
+
+The histories also do not matter here - you can deprecate bindings, e.g.
+with a new compatible, and write everything a bit more generic (to cover
+different setups).
+
+> 
+> So what must be done is that mscc,vsc7514-switch.yaml must incorporate
+> *elements* of dsa.yaml, but *only* when it is not accessed using MMIO
+> (i.e. the Linux on the MIPS VSC7514 doesn't support an external host
+> driving the switch in DSA mode).
+
+Yes and? You write such stuff like there was any objection from my side...
+
+> 
+> I was kind of expecting this discussion to converge towards ways in
+> which we can modify mscc,vsc7514-switch.yaml to support a switch used
+> in DSA mode or in switchdev mode. Most notable in dsa-port.yaml is the
+> presence of an 'ethernet' phandle, but there are also other subtle
+> differences, like the 'label' property which mscc,vsc7514-switch.yaml
+> does not have (and which in the switchdev implementation at
+> drivers/net/ethernet/mscc/ does not support, either).
+
+What stops you from doing that? What do you need from me?
+
+
+Best regards,
+Krzysztof
 
