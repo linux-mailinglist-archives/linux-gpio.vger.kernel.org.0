@@ -2,33 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E627F5F9F50
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 15:23:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F38345F9F51
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 15:23:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229445AbiJJNXb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 09:23:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38884 "EHLO
+        id S229520AbiJJNXe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 09:23:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiJJNXa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 09:23:30 -0400
+        with ESMTP id S229475AbiJJNXd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 09:23:33 -0400
 Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-eopbgr70052.outbound.protection.outlook.com [40.107.7.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D02D761D89
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 06:23:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1696963FCC
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 06:23:31 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YtthNjOhbSIU62UIfBcNVuQu8ZvEuty+lNBRfSzaGG3X2rf7ddv0OM9ctpycCtjnJbhOX3339yqSQD6W+/Hrbq49om27Etz7Makhm/OGaZyKlZZ874nZ4xJWI+uLw3H2jh2/c4x2eemSkxOwriOBPRI8znunG2QRpp+LUK/Kx1BbP4pmmhuSFRDktFddOJuaL+tKnTmdkhKTDADLrneDtb1jCZeMRBNkEQcnvYVWLsyEv54GYpC4xIp7RtGkjiEU/8B/vgMfDBkgxYCyppFp4ONSOcYWlS5FLszeDvpteMvjZal4bLEjGd7zGP7CSqYRraf9PxKMW9NDDMBg00HmiQ==
+ b=hCc/jRyGrt5Zv9WfqNV8MoXpMJpA2MIZKLBtjTvRI2Tz4PiApPrFNvwL45VqmZkxOzYx9Zg71kj+N9XV2pYLwmxcomUaaL0JkHez13EDke6ZY8JMnu6iSgn4Lp0e8Vtm3GN+BT80E7WyKYcpEmOuxwciey8nUw8pU+dOEteD56tmhNh0SvYVF/fBfGVcxuHJ3R+IZifS4eFfiA+MhiuDgXDIuN9joyppXZ5yQhiAohhTtF/hFZQvovEwz86ncUXhBiVbFRo7wqCBd0nkCjXC8XSoi1WNGxmMpJHnbSYEc/V4G3/04E/AY2Ry/UMwCQfl028Gw6iLEIOjgJBmckI8Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yXbzpbzMcICvshXte+nHJTbzEN9QlZRaUP8NeUbAunI=;
- b=EFduYJKq6X7PwiUJ4FpugEkEC5ICmIqBFVPCbPbS/PAY/RwgSkKdT57w1DarSTDITNwzgORUH1Ya/MBHbwNktYezSrCOrqokZokfb8EYz5cj1TWrivOMQjMj+LQ1RhffLcXsU20Q1X9ueQKi9+VPpgP3tLJUoJRmL97/87Oe5J4tVNGAO6EHjnTLWH4ZQUg915UZ9kl/ASjMMNy+2rrMk/ZVYAaxDXOGqHreGH/j1tIoDZRgQu2ipU7oBrNMfFx6bWM9q+B7qLgCccoW9UEdGsDuWw9E8OBcD0mZ9A6jp9JYH4zuG726wsWVHfROgCSP21anV2Zsp2VWYbHf8OAviQ==
+ bh=aG/e0Dq/1lOEMGVNNeuFslqD1LArNL5Ezfxq71bR0lc=;
+ b=bLckGeDlBClD33nPIBZcaQ6BzAdmSVIHgATJZmj7zPiT53xqSvut1qQwEcDixfUp9exrk4OPdhay4NhHPfG9UA+aiusnZtRT/d6f7FQB7RyDJx0diq7cZixot7U2hE43yaebDAqDAiI6Sviy0NGc3rrw26Y3Pa2dggJKUrA0Kni7mJJ+OUPZ98wEgmCrTshXQJBrq3DxBYa0mWgAyYxBTg2ChUk6NFI8nYIbkR0MHqe/C0WOmJMnR5Vu4chEDpbzAzNE0ep+QXoFAyxuUaeoaobiRVlWnIFAegHQveGXJ1b6PNd0aHI9A8aLM8rW/hhsRGtigIpvnUHC++J+2X7M/g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
  dkim=pass header.d=eilabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yXbzpbzMcICvshXte+nHJTbzEN9QlZRaUP8NeUbAunI=;
- b=Yp/q/C3ols8VN4blEWHz4uMyKW/YZ9/hoNpQEdGHBzpRTNrZU4OppECCOBvQowQuG6BIF5sllaZjBhV82DJ+KBPZiuMz5DWJpvmQ7+gBXlJWu2Dte3v5NCQOV/jyHaQ3uWFyvnVhUJD3IiuocYu/xyTxUWIZwRYFJ4nlBXq85Hw=
+ bh=aG/e0Dq/1lOEMGVNNeuFslqD1LArNL5Ezfxq71bR0lc=;
+ b=AGeVEBMB9zPsHrcxpvjjzE22V8PXkMDwXUe9pippmlxdJ4qvH+PArLw5ZU3LTfWQQSUt3DVXHh+6OR3qSEtq73zqpSHeQbwLLUrgnfpSlon7bP7fdmmtgwjWKfqcrCAsLia62+TJ8+Ahv/asXcbPHQuTwgltE93AqGhWkZ2j75I=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=eilabs.com;
 Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
@@ -45,9 +45,9 @@ To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     linux-gpio@vger.kernel.org,
         =?UTF-8?q?Levente=20R=C3=A9v=C3=A9sz?= <levente.revesz@eilabs.com>
-Subject: [PATCH 1/2] gpio: pca953x: Generalize interrupt mask register handling
-Date:   Mon, 10 Oct 2022 15:20:06 +0200
-Message-Id: <20221010132007.924810-2-levente.revesz@eilabs.com>
+Subject: [PATCH 2/2] gpio: pca953x: Add interrupt mask support for chips with the standard register set
+Date:   Mon, 10 Oct 2022 15:20:07 +0200
+Message-Id: <20221010132007.924810-3-levente.revesz@eilabs.com>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20221010132007.924810-1-levente.revesz@eilabs.com>
 References: <20221010132007.924810-1-levente.revesz@eilabs.com>
@@ -59,60 +59,60 @@ X-ClientProxiedBy: VI1PR06CA0146.eurprd06.prod.outlook.com
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|VI1P194MB0656:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2e4dfaed-95b8-4597-8b46-08daaac29b9e
+X-MS-Office365-Filtering-Correlation-Id: c1b1021d-4872-41a4-9a59-08daaac29bd0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mwSpxjfkLbZWf1IUfk8A5finhQbtCC3yFHF+359b2rCY1/JVlNta28PY9bUY2Tt/P9obXmaB5Yk6ol9LNLB5KkLRebbXN69SW+PSKlv0KEKABTumkH313d8VkgTLIF935CkqWz726xDLCQY2F6/1H4VwfbBwC7mEkUru3/xEZwZDzP3URDEPr0o3OyLwOQcJ3Kb1xwzZ7wxB9PCMz9RLaXCjgwTnXkrxxJx9pE4NGtZG4OejX8Wp/EUklKuvaTgB3Dgg55GuVrexm6cK/qwDXk80ntE+zoJ+noy/vARGF2U7Bf69AHoM31+QN0rvW24+i4ZVPX2u3wMo/ca5XSVKDJYwY4pNmiE5WxSiEGshdiLSJdR8NcCeZj1ip46OD7Z9VLPYVP0zB8nsoGWdN7IPcMp65ea5RTFh5jQEBKjd3T6BozJU+T7/oSp0rWpPMe/RuH3ocWwRwSJLABqbZHtOywDV9h6Qz4JW/EO/TqRfiNN1DDhy9VfNv44/gOQ7tMS5Hu9W+E0Cp0VOgAv4zQQYvWAjKnyevevtuc1aYLsn9IZs+jb0H7PfQICdgr68p7cclOkkbVwc79/lY9ogd1npMPC4YwGu/qj4FjBa+c4xtNiQgUYpkoCex/9sUUmmZey9uFCdfyO/zpAZAC6YLArRQSKQQ9KzNN+5ZUA7//HgIzRx2r9ybDG60BI1ubja4DUp4pMU3ssyXWs4z4w6K3XMMwIROt72T6YA+ZLnbgVVRrvZz4EFQ0jbNYRcIUwiUtUK83yKtdAkRhWu1G5snvwbdg==
+X-Microsoft-Antispam-Message-Info: R5QjPe44fsgx4CUSS7LKSD2Gb3xm9ZDjn5MvgL0YcBlwE85pmnG3oUJXg/fLk6dh4wKR9ol5raSKUcBj7y4qDWrlEShQI4gKfUSTokNwy0dWxaTFGye8TaOdTnf4LutPHWn4svd6akFPxahoyvMgNDYTkn2nZv+tOUi0D8XPH4GI0JMvv3bZVjzdr6SJJ9MTVUjiVLIgDanfmiGqaEI4PSB7wRmEGhGO23FONu6p4ncBpgsvvZjXWqIzWZzE//MKnI/4sO8zCE2x5tCrd6QxuZIA7eVH/jFpJmbq4ChFN4bQYF5vhJZUwv65yDL8Hm333QIRnSf7hWfBG8nU+OkXpzeVNFyk/EDE4BHZbD6nzx3wlWkAYsQPKefUSy+P4kvSfjXWbTNq36t3v+dnDi2W04AJYMVzYExSfWn5qxW65PP8WB+IrzCdEJpBH6drkQeLK2DiXAnrbOS4//xOyv/3pyp3VDNkQBthZ9pPmJu/ncwxcanKJe+mMDZyNWF+qcoYXSoHxyqWY0yrXtZUefvb03odReFEVlRvaEdB3Gow/I5a20QQiaeXrft5yUbqOSRy69LtcIh3ZdivOz2fUNlkuvP1yKBQbQzbFmA488wycMukQB/E/ewxsidDQfWB7LRC6E15h9aVH8K4zki4H3WN9yQUK+41eVDNw+Hkuexi7sNYDpfdNVROm8UCr3AnSPdo5hm6gf54CyByzOGkzGg1HlAZ4mIlDHkMYoEuFwq/DzLdYKQg3PqespDCNvmJwRxxSfm39JRcbr0OfE3b7BETIg==
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(366004)(346002)(136003)(39830400003)(396003)(376002)(451199015)(66556008)(316002)(66946007)(86362001)(66476007)(4326008)(36756003)(2906002)(5660300002)(8936002)(8676002)(110136005)(41300700001)(83380400001)(2616005)(1076003)(186003)(38100700002)(6506007)(38350700002)(478600001)(6486002)(52116002)(26005)(6512007)(6666004)(107886003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YnQ4cUFpbys2RmpTeW9QNHdLNGxDVmtSMzNCL0RJck9XOGhwY2NhMkR4cFhN?=
- =?utf-8?B?ZEE0Qll6SXNDUVBKZDNPMGZQQUtZOUJ6YUtFUnl6bHhUSUJaYkxCa3dRQ0hh?=
- =?utf-8?B?RWhBTXhjc3B0UjdxbVJJeWwvSUJFKzQxZ2pQZVI2bnk3ZWR0UUs1eFc4SDdp?=
- =?utf-8?B?aVRlcHJxUW44aDkvM1hPSGw3dFJpNkVUcVU3MndsaEZtcGlldzNpQ0MzQkQy?=
- =?utf-8?B?b3J1bGxZTnM1bGJHMVJFSitSNlVwbHUxdXlhVXVRbklQWldkZ05JaTBYWnU1?=
- =?utf-8?B?dVY2U21OcXBhOTNUeCtqY2loTHdKeHU3NHpGczdyVTdUUUszY0VBQUk1SjFQ?=
- =?utf-8?B?Nllya1VGeGpIUnpHZnVxc0pCQjROOHpmM3RFdG84TzdsdUhLampyTjNPSWJF?=
- =?utf-8?B?akFkMVQ3bERFOWR0L08vaGROeFBqbmdVL3NFbXROWXgvZHI5WlhqZDR5MXNi?=
- =?utf-8?B?Z2E2WEN4R3R2QjVqYUlTajN2V3d3Wk5JdU5XZkZYbkRISUg4NmhkZ045Uzk0?=
- =?utf-8?B?ZFFhQVgwRGdOeWd2b1FoaXZPNERaTGs0MHVXYlgvR1k3b2hHckljMXM2UFNG?=
- =?utf-8?B?aXE2TUpzNjlBMWN2MU9xbnF6dzZsK2l4Nk5RZk9rSWVLNzVDQzByMU00M2Z3?=
- =?utf-8?B?QzNIQkJUQSs5SEg4Sm1qRURMdDVad3JFSW1weVhsWHZPQmo0bFVFWlFDbTMr?=
- =?utf-8?B?RzJwTXBpQkxMZ01nQUtCQzMwY2dhbStmcjRuVDhjYStXSHZ1R214THkxcmJV?=
- =?utf-8?B?dDFNRjRmVWFxcXk1elRSQkk5cTZHVForOHJ0ZWhEdm5XQ2FKMHQ3eDUzL0Rr?=
- =?utf-8?B?QWwxSUZvWGMzOGFoVkMxL2tRN0d1b0dhUGNvcDB6MVlDTnk0bWFvaGxyUzZ3?=
- =?utf-8?B?VzJlME1TNGNCVkU0Ui82NUhJKzd4d1dLR0p2VjYybVpWbHp0RHpQeTBEZDZw?=
- =?utf-8?B?YU1iWlpwejlNK1ZHUFRmd0VKZk10V0UyU1BLN1ArYzNCdHFmYi9xdUVKMW9l?=
- =?utf-8?B?aTRFZ0IwSEZPM0FiSGZzZUJubjM3cXZKQXpkaUMzRVhnS1VZSTlQcWNhKzlm?=
- =?utf-8?B?VnFmMjh4TkxOOHIxMnYzWnVjZmNkR3hrRkdIRStSQlVCdFlnWDBuby83REFE?=
- =?utf-8?B?SldEak9UL29HSXI4cW1TYXI1anhMZmozVUIwdVlrQXpFMk1xU01RMmhray8x?=
- =?utf-8?B?YTl1Y1VhdVpFU1oyNzgvVFVVZ0Q3ZUpKMUV5Mk5vY21tYUdZbTBjdng3T0FG?=
- =?utf-8?B?bGR3cGlZTHYyazhwUWY0SCs5UEVUVXcrS2E2ZzR3Q3Z1Z0R1L21YT2hYN0I4?=
- =?utf-8?B?ZU9WbWtrakMxQ1IycWltMHFCclQrN3NkREhSOG4xSEZQQzJhc0VYWFYyWHov?=
- =?utf-8?B?RGJLa08yOE1qRzZUczVaRk1TNnZ1bG0yMGlOanZWQnJSRkFsa0VpTWxzdHJV?=
- =?utf-8?B?U1lxS01FM3paZmlFeVVPUloxdWRuQlp2TDV3WjF2TVZSM0QwbHRoM2NnSVp0?=
- =?utf-8?B?QUppa2ppMHBXWFBwNENxdlpqQzNpUVU2bU1nNjlpVysyTHhSUjZNeld0bFp0?=
- =?utf-8?B?TkZqb0RqSWZsSVkybG1NTXN1N05ZN0VoQ2o3K3QyTzgvZzhaOWNpZW5wSlR3?=
- =?utf-8?B?WXZKRmR3MlFIZE5GbmRSZjlXYXo4NGU0cVcyNk5QRnRuQ0ZLeHI0c3lLMlpz?=
- =?utf-8?B?VnBod1Q1SnJONWRpdGlDaEc2a1lrU0JjZzhvQkxEN2VWQUp1aEt4NUVId1Z0?=
- =?utf-8?B?TjJzODVWQU1ROU1LV3hBemlKWUJlQkZWVi9yU2pIMzRPMlZtK3IvcVRGMnpn?=
- =?utf-8?B?eDFPcmpZT2xqZ2FGMDYxQ2U3b09WQkZqZGw0WHF5WDZjQzNmekZOTzhDdEkr?=
- =?utf-8?B?MUhVNEMrUFlKLzdqQXh2TlB3SjYyb3kzMXo2NzdoOVA5M0d3T1JlMzZYTjlO?=
- =?utf-8?B?STJ0L1JlRzNWbUkzc3hJaW9oWGVZZkczR091ZTh2c2MrVGp3WlhZRGpRK2Jo?=
- =?utf-8?B?Qlp6Wmo4TXhteUUxbW5yTWc2d3R1NDhzdmpqcks3eHVQdFdFaHRNYURpczFp?=
- =?utf-8?B?WnVpM09pNHNRSlBrNnAzREg0WmJIYzhDTzMvVnhUZW45VlF2RzBzOVo1NVJN?=
- =?utf-8?B?eitBUWI4RjFDL3ZST1BFTWJOV2JQejZodDZGeGxyZytITStkK0Z6TU5xbVJJ?=
- =?utf-8?B?Znc9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bUpUUjk4OVl2THFVOXVnV1lIUjV3Sktjbm5XMlNTZElrejNxQitLS1hoVDBa?=
+ =?utf-8?B?KzA1bFdRRzljM1BMZXh3ZDFFYWNtK0hydzd1dXZQSjJjSXByREhDQXZQQ2Zp?=
+ =?utf-8?B?OFZPTU9oMkRrRzhtb1l5cEVLbHdMRHE0bFBDK2tEczlEMTY5QXN5aDNFSERh?=
+ =?utf-8?B?ZlRyelVnRnhaMm8rV0F0K1gwMzk5czZ0czk4WmN2bVNUdlpocmViNHk5UVJL?=
+ =?utf-8?B?bGdUWW9mdWRnWDNCaTdGOEZHQ3dXSWdGem03SnFYbDJmeWhzYktTM3E5TW5m?=
+ =?utf-8?B?K2hlQlhueVo4eDRnYmRUSGQ4NU1Ub1VScVdzTXgwMVQyZDBMeVBNU1Q3dmMx?=
+ =?utf-8?B?KzdTRFN3U1NqaXpTWlFVZDV0VG1qYllveklLTStaYm5XMWU3dTYrTUxUN1Bi?=
+ =?utf-8?B?YmxOekNVa3M1QWl6Y2o3bHRMSFdKTXFOdjFnK2dxL1ZXTGNFUWd5TC9ReWZk?=
+ =?utf-8?B?RXp1UlBrZ0YwQzZDbDdyS0J6MnRxMDU4K1dWVmpqZm43aytGN3pZTXJZL3ds?=
+ =?utf-8?B?eHhlcDZQMDZCNENtbTlsT1gyS3dYalZnbUdxYlVMWU1BbTZhdUNOdU9ReE4w?=
+ =?utf-8?B?NnBqREIreUhneG5MZEx1WVRVVjJhL2RBdnNTUk1xQnVxdXJCdERpWjI3WExx?=
+ =?utf-8?B?c0dnNDN2aHVTOTBFS1BSVEZtNEorWDBqc2tvQXdldjhoODBUS0hjRGZMZzlv?=
+ =?utf-8?B?ZzJqdTNZbjVyZjFUcTVBS1lDd1pZeVFyYWlUZ2lsQWNVSGdpdUtsUHpKbTI3?=
+ =?utf-8?B?K0kwMm1LTmEyRHA4dVZrMzYweDlickdUMVhuRVRER1JPWkZ0TS9hKy9rSndT?=
+ =?utf-8?B?Snd3UGYwYXFrTVZUMXl4bGp0MW16dFJLTmZpUXVuN1YyaXRIR1UvanBMa1FH?=
+ =?utf-8?B?SEtYK0REVkV1TmhkYjFCaWlzNTh4S2ZlV0FaejVOSkpvZ1p3Slh1WWxBTko4?=
+ =?utf-8?B?blVKcUhwMnVsU2owTWdNR1E3RVhrZjdOTS9oN3JtNDJ5ajJ4M2FLelluOUQy?=
+ =?utf-8?B?ck13UEFDMGU0NmJCRmpIZXZyRHNPa09ONE5RU1FaWTYyZExoMklOTUttL0c2?=
+ =?utf-8?B?bjBPajluRUhSamJaNlJMUHc1Wk02dlllK1U3N2I1WWRFMjByRWI4ejVKR1pz?=
+ =?utf-8?B?aXJVeHpjNXI2WVk3U1JhSy8rV0c1NDRMUmhhbDgrOXl2TVVBNjZabjZEVm5X?=
+ =?utf-8?B?Sm1yWUt0OXVqeW41T0VMTnZ6S2owTDViOEdHYUk5QS8rMHNOUmNyUkRObS9W?=
+ =?utf-8?B?Y3g4ay9JdjVFZGM1ZEhOTXFyWitWb1VkMEVQaXVPaGtoTkM0REVaK20rUHJH?=
+ =?utf-8?B?aXNFd0g0YUVkSUErd1JNb2VJYVhCSGtFYktnd2w1cmtVMTZMS0lMODNiQk05?=
+ =?utf-8?B?RGhnNUpaMnJyUlgyRk43S0dJMjdORWQ1V0oyaXBydVg3VlVuYzVWdWN1SDZk?=
+ =?utf-8?B?a1MwcEMyWTJsOXEzOUx0Ti9KR2VLc2F3eEJYUVF0UjN2MXdWdlhFMmNrSXVW?=
+ =?utf-8?B?NHl1WktXZTZuV3diTHFPY2tMWk5iTkdReFN3dzVlUmp0VGtieEMxS1hjbXJT?=
+ =?utf-8?B?VGZiMk1POCtRcGNTZmZSQ0IvbTkzUEFxTkRvK0tsa012d1dGQXA0MHpQdUlN?=
+ =?utf-8?B?Q0lXUDJZcXZYQnoyTmJHYkdSYnBpWVpGZFY3RWV4TWpiU3ZGSmpoY0RVT3R2?=
+ =?utf-8?B?clJOYnZNOXpyOEVUd2dTcWRkTEo2OUM1QnpwdXYyb2RkK1phbGVKNzlmMDA1?=
+ =?utf-8?B?aXZRdjAzNVlkUVFFWnBWVmRGRFkrM3Q5azNvd1FqYTh1MzhtNWovYjFzVm9C?=
+ =?utf-8?B?VUxrMGxQd2cyTTFJMS9WeHlkVlR0UlVmTk1kNEFTMkwzdmJLTVQyMEo1L2J6?=
+ =?utf-8?B?WFZwS2pRYTNWa0RDcE1oak0wcU5ScXJ2enJZUFRybERHa1phNUI3Y1FyR2Nk?=
+ =?utf-8?B?TzdwT1JCR2RtQ3ZYM3Fzb3JVV1JhNXpVb1hOT0I4N2xIUmliNlBuUjZmWHhN?=
+ =?utf-8?B?bEdKaDRTMWdIOWNpMTM3YlMwRGpiNGlCNmdZVU1jN3F3T082L2lCcDdVbnJS?=
+ =?utf-8?B?aEdMK2N3TGNhRTVpSkNMbGVHYVhRSmlNRExGK0xLZVdxQXVnUWFuWktDMHZi?=
+ =?utf-8?B?OFhqQXRjYytLN1VCSWVqK29ycUZoQjFORmduVWNaVGZoNjNuQnYreFdUQkp3?=
+ =?utf-8?B?d3c9PQ==?=
 X-OriginatorOrg: eilabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e4dfaed-95b8-4597-8b46-08daaac29b9e
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1b1021d-4872-41a4-9a59-08daaac29bd0
 X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2022 13:23:23.8676
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Oct 2022 13:23:24.1957
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bORIAN33yOdPqW6pFGsp9gKb6HXJ8AvnnaGNJNloxJXlrGNuzXiPbWBuEQjNh9QHeZLhV5guHY6f6aCUoc0b4EkZG/kHI7/01Mz0TEt7uoE=
+X-MS-Exchange-CrossTenant-UserPrincipalName: uyPU885szZqfIf+j5fHQsOhHVVawUVehE4YE3tC4EGO7F9v68o+o93MjhVAb4YxQPSKF2Oe5Wp5l0t0MwDqytOJ8QEOCWnS50IEPBY6NOBg=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P194MB0656
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -124,175 +124,111 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This change is necessary for a following patch, which introduces an
-interrupt mask register different from what is already in the driver.
+Some chips in the pca953x family in addition to the standard 4
+registers have a fifth interrupt mask register:
 
-Currenty the only interrupt mask register the driver handles is
-PCAL953x_INT_MASK present in the pcal chips. The functions handling
-this register can easily be made generic enough to handle the interrupt
-mask register of other chips that do not use the pcal register set,
-and have their interrupt mask register at a different address.
+    0: INPUT
+    1: OUTPUT
+    2: POLARITY
+    3: CONFIGURATION
+    4: INTERRUPT MASK
 
-Add bit flag PCA_HAS_INT_MASK, which is set for each chip with an
-interrupt mask register (including pcal chips).
+Chips with this register:
 
-Define a convenience bitmask PCA_MASKED_INT similar to PCA_LATCH_INT.
+    - pca9505
+    - pca9506
+    - pca9698
 
-Add an int_mask member to struct pca953x_reg_config. This way interrupt
-mask handling code can work with registers at different addresses.
+Otherwise the interrupt mask register works exactly the same as the
+corresponding register in the already supported pcal chips.
 
-Add separate pca953x_reg_config for pcal953x chips. This differs from
-the pca953x_regs in the new int_mask field.
+Add PCA_953X_INT_MASK register. Use it as the interrupt register of
+(non-pcal) pca953x chips.
 
-In pca953x_readable_register and pca953x_writeable_register only check for
-PCA_PCAL if the chip is not PCA957X_TYPE. No chip is both pca957x and pcal.
-This makes logic for adding a different interrupt mask register
-cleaner.
+Set pca9505 and pca9506 to use this register.
 
 Signed-off-by: Levente Révész <levente.revesz@eilabs.com>
 ---
- drivers/gpio/gpio-pca953x.c | 64 +++++++++++++++++++++++++------------
- 1 file changed, 43 insertions(+), 21 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 61e874c0cde4..71bfc38c3930 100644
+index 71bfc38c3930..bb8355540a46 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -63,7 +63,9 @@
+@@ -28,6 +28,7 @@
+ #define PCA953X_OUTPUT		0x01
+ #define PCA953X_INVERT		0x02
+ #define PCA953X_DIRECTION	0x03
++#define PCA953X_INT_MASK	0x04
  
- #define PCA_INT			BIT(8)
- #define PCA_PCAL		BIT(9)
--#define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
-+#define PCA_HAS_INT_MASK	BIT(10)
-+#define PCA_MASKED_INT		(PCA_HAS_INT_MASK | PCA_INT)
-+#define PCA_LATCH_INT		(PCA_PCAL | PCA_MASKED_INT)
- #define PCA953X_TYPE		BIT(12)
- #define PCA957X_TYPE		BIT(13)
- #define PCAL653X_TYPE		BIT(14)
-@@ -177,6 +179,7 @@ struct pca953x_reg_config {
- 	int output;
- 	int input;
- 	int invert;
-+	int int_mask;
- };
- 
- static const struct pca953x_reg_config pca953x_regs = {
-@@ -186,6 +189,14 @@ static const struct pca953x_reg_config pca953x_regs = {
+ #define REG_ADDR_MASK		GENMASK(5, 0)
+ #define REG_ADDR_EXT		BIT(6)
+@@ -76,8 +77,8 @@
+ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "pca6408", 8  | PCA953X_TYPE | PCA_INT, },
+ 	{ "pca6416", 16 | PCA953X_TYPE | PCA_INT, },
+-	{ "pca9505", 40 | PCA953X_TYPE | PCA_INT, },
+-	{ "pca9506", 40 | PCA953X_TYPE | PCA_INT, },
++	{ "pca9505", 40 | PCA953X_TYPE | PCA_MASKED_INT, },
++	{ "pca9506", 40 | PCA953X_TYPE | PCA_MASKED_INT, },
+ 	{ "pca9534", 8  | PCA953X_TYPE | PCA_INT, },
+ 	{ "pca9535", 16 | PCA953X_TYPE | PCA_INT, },
+ 	{ "pca9536", 4  | PCA953X_TYPE, },
+@@ -187,6 +188,7 @@ static const struct pca953x_reg_config pca953x_regs = {
+ 	.output = PCA953X_OUTPUT,
+ 	.input = PCA953X_INPUT,
  	.invert = PCA953X_INVERT,
++	.int_mask = PCA953X_INT_MASK,
  };
  
-+static const struct pca953x_reg_config pcal953x_regs = {
-+	.direction = PCA953X_DIRECTION,
-+	.output = PCA953X_OUTPUT,
-+	.input = PCA953X_INPUT,
-+	.invert = PCA953X_INVERT,
-+	.int_mask = PCAL953X_INT_MASK,
-+};
-+
- static const struct pca953x_reg_config pca957x_regs = {
- 	.direction = PCA957X_CFG,
- 	.output = PCA957X_OUT,
-@@ -356,12 +367,13 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
- 	} else {
- 		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
- 		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
--	}
+ static const struct pca953x_reg_config pcal953x_regs = {
+@@ -240,6 +242,7 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
+ #define PCA953x_BANK_OUTPUT	BIT(1)
+ #define PCA953x_BANK_POLARITY	BIT(2)
+ #define PCA953x_BANK_CONFIG	BIT(3)
++#define PCA953x_BANK_INT_MASK	BIT(4)
  
--	if (chip->driver_data & PCA_PCAL) {
--		bank |= PCAL9xxx_BANK_IN_LATCH | PCAL9xxx_BANK_PULL_EN |
--			PCAL9xxx_BANK_PULL_SEL | PCAL9xxx_BANK_IRQ_MASK |
--			PCAL9xxx_BANK_IRQ_STAT;
-+		if (chip->driver_data & PCA_PCAL)
-+			bank |= PCAL9xxx_BANK_IN_LATCH |
-+				PCAL9xxx_BANK_PULL_EN |
-+				PCAL9xxx_BANK_PULL_SEL |
-+				PCAL9xxx_BANK_IRQ_MASK |
-+				PCAL9xxx_BANK_IRQ_STAT;
+ #define PCA957x_BANK_INPUT	BIT(0)
+ #define PCA957x_BANK_POLARITY	BIT(1)
+@@ -261,6 +264,8 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
+  *     Output port			0x00 + 1 * bank_size	RW
+  *     Polarity Inversion port		0x00 + 2 * bank_size	RW
+  *     Configuration port		0x00 + 3 * bank_size	RW
++ *   - Some chips have the standard layout with additional interrupt mask:
++ *     Interrupt Mask port		0x00 + 4 * bank_size	RW
+  *   - PCA957x with mixed up registers
+  *     Input port			0x00 + 0 * bank_size	R
+  *     Polarity Inversion port		0x00 + 1 * bank_size	RW
+@@ -374,6 +379,8 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
+ 				PCAL9xxx_BANK_PULL_SEL |
+ 				PCAL9xxx_BANK_IRQ_MASK |
+ 				PCAL9xxx_BANK_IRQ_STAT;
++		else if (chip->driver_data & PCA_HAS_INT_MASK)
++			bank |= PCA953x_BANK_INT_MASK;
  	}
  
  	return chip->check_reg(chip, reg, bank);
-@@ -378,11 +390,13 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
- 	} else {
- 		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
- 			PCA953x_BANK_CONFIG;
--	}
- 
--	if (chip->driver_data & PCA_PCAL)
--		bank |= PCAL9xxx_BANK_IN_LATCH | PCAL9xxx_BANK_PULL_EN |
--			PCAL9xxx_BANK_PULL_SEL | PCAL9xxx_BANK_IRQ_MASK;
-+		if (chip->driver_data & PCA_PCAL)
-+			bank |= PCAL9xxx_BANK_IN_LATCH |
-+				PCAL9xxx_BANK_PULL_EN |
-+				PCAL9xxx_BANK_PULL_SEL |
-+				PCAL9xxx_BANK_IRQ_MASK;
-+	}
+@@ -396,6 +403,8 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
+ 				PCAL9xxx_BANK_PULL_EN |
+ 				PCAL9xxx_BANK_PULL_SEL |
+ 				PCAL9xxx_BANK_IRQ_MASK;
++		else if (chip->driver_data & PCA_HAS_INT_MASK)
++			bank |= PCA953x_BANK_INT_MASK;
+ 	}
  
  	return chip->check_reg(chip, reg, bank);
- }
-@@ -764,14 +778,16 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
- 	int level;
- 
--	if (chip->driver_data & PCA_PCAL) {
--		/* Enable latch on interrupt-enabled inputs */
--		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
--
-+	if (chip->driver_data & PCA_HAS_INT_MASK) {
- 		bitmap_complement(irq_mask, chip->irq_mask, gc->ngpio);
- 
- 		/* Unmask enabled interrupts */
--		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
-+		pca953x_write_regs(chip, chip->regs->int_mask, irq_mask);
-+	}
-+
-+	if (chip->driver_data & PCA_PCAL) {
-+		/* Enable latch on interrupt-enabled inputs */
-+		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
- 	}
- 
- 	/* Switch direction to input if needed */
-@@ -1171,7 +1187,11 @@ static int pca953x_probe(struct i2c_client *client,
- 		chip->regs = &pca957x_regs;
- 		ret = device_pca957x_init(chip, invert);
- 	} else {
--		chip->regs = &pca953x_regs;
-+		if (chip->driver_data & PCA_PCAL)
-+			chip->regs = &pcal953x_regs;
-+		else
-+			chip->regs = &pca953x_regs;
-+
- 		ret = device_pca95xx_init(chip, invert);
- 	}
- 	if (ret)
-@@ -1245,21 +1265,23 @@ static int pca953x_regcache_sync(struct device *dev)
- 	}
- 
- #ifdef CONFIG_GPIO_PCA953X_IRQ
--	if (chip->driver_data & PCA_PCAL) {
--		regaddr = chip->recalc_addr(chip, PCAL953X_IN_LATCH, 0);
-+	if (chip->driver_data & PCA_HAS_INT_MASK) {
-+		regaddr = pca953x_recalc_addr(chip, chip->regs->int_mask, 0);
- 		ret = regcache_sync_region(chip->regmap, regaddr,
- 					   regaddr + NBANK(chip) - 1);
- 		if (ret) {
--			dev_err(dev, "Failed to sync INT latch registers: %d\n",
-+			dev_err(dev, "Failed to sync INT mask registers: %d\n",
- 				ret);
- 			return ret;
- 		}
-+	}
- 
--		regaddr = chip->recalc_addr(chip, PCAL953X_INT_MASK, 0);
-+	if (chip->driver_data & PCA_PCAL) {
-+		regaddr = chip->recalc_addr(chip, PCAL953X_IN_LATCH, 0);
- 		ret = regcache_sync_region(chip->regmap, regaddr,
- 					   regaddr + NBANK(chip) - 1);
- 		if (ret) {
--			dev_err(dev, "Failed to sync INT mask registers: %d\n",
-+			dev_err(dev, "Failed to sync INT latch registers: %d\n",
- 				ret);
- 			return ret;
- 		}
+@@ -1342,8 +1351,8 @@ static int pca953x_resume(struct device *dev)
+ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "nxp,pca6408", .data = OF_953X(8, PCA_INT), },
+ 	{ .compatible = "nxp,pca6416", .data = OF_953X(16, PCA_INT), },
+-	{ .compatible = "nxp,pca9505", .data = OF_953X(40, PCA_INT), },
+-	{ .compatible = "nxp,pca9506", .data = OF_953X(40, PCA_INT), },
++	{ .compatible = "nxp,pca9505", .data = OF_953X(40, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pca9506", .data = OF_953X(40, PCA_MASKED_INT), },
+ 	{ .compatible = "nxp,pca9534", .data = OF_953X( 8, PCA_INT), },
+ 	{ .compatible = "nxp,pca9535", .data = OF_953X(16, PCA_INT), },
+ 	{ .compatible = "nxp,pca9536", .data = OF_953X( 4, 0), },
 -- 
 2.37.3
 
