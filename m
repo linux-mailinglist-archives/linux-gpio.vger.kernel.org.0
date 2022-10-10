@@ -2,134 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F0DB65F9D9C
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 13:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B14145F9DEA
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 13:48:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbiJJLcC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 07:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39024 "EHLO
+        id S230454AbiJJLsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 07:48:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231348AbiJJLcB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 07:32:01 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6934728E25
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 04:32:00 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id w28so4308048qtv.9
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 04:32:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=udkTcYsMkDl++4/6q7yNQSkg4/Iz9OjgmrKT1oZP0DQ=;
-        b=sEerDYita79azCEkmkfrIkb1QxpBkJWvCzAxx5CGwyvQ8JL5VV9RqncCYEXf8gmnQD
-         JQFPIkP5l4N0eBSJzhsfQLDzqsa097vXeE+K1DD3qT2rge7QeEeGKpURYqcw/dddMqhX
-         lbvuMeKXmnUA2ZLbLSUgS+0cib/hQ9302zgLfkg2y+Uhm8Aeyb9P0dRTSbBY+hI/bx+d
-         wt/xbPSTzEX4cz/0uDLWnBn05sH+TA087TrvuxGHkZdCOBgqJjn6PWp3WuC4SkTpXJzC
-         ArI3NEOIPkNl+2KTnkzYO+THinNE669S3U66thuLq9p8/hu5IP1ephvD08AJcZdz8uNl
-         znSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=udkTcYsMkDl++4/6q7yNQSkg4/Iz9OjgmrKT1oZP0DQ=;
-        b=orFa4mIzPjPtL0O6tbPwgQE4DnmdSD3wkuKY/zsJjXoqshivlc1JrvfLFv9y9hsPI+
-         4ha7iU4pY7so6aPIO+xz7a+Bb5cnSHUQmTD4akvy9kOOBJ/Cgq1VFBiHmowW1EkQGBa7
-         yXSgvVT5F0OW4eCb1xYU7kaA5jznUhu3PJ1XHHYsl40fycJJfuo/rvmBdmuIY6du37pX
-         gsnt0TNSUTC5t9qqIYs25t7/ajJRoJXiTmKrPC9yAasCLMwaPtKXiOMbbQBS6m2lKaB1
-         4nyUI0o+GxzUzH+ZgoHs7Qlmm9MMFK24aEqzhcKk+e/Q0unpAHk70dgIfR2oP4dY6wAI
-         uiig==
-X-Gm-Message-State: ACrzQf2Nq79N92KgzQ02IxpxeEyPOdJC3HizDqxZHV8ByON6iIwxuKLm
-        TFNTHl9gIkbbprOQge3WD5qCSSzoTIFFXg==
-X-Google-Smtp-Source: AMsMyM6iDYU0n449yi/Poervh+Wt+/XsqG8kherp0ZrmI4+Cj/yOkKE+y4HGbuPzT3U81A0Ak8GACw==
-X-Received: by 2002:a05:622a:58d:b0:394:9d68:edc2 with SMTP id c13-20020a05622a058d00b003949d68edc2mr14696370qtb.230.1665401519621;
-        Mon, 10 Oct 2022 04:31:59 -0700 (PDT)
-Received: from [192.168.1.57] (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
-        by smtp.gmail.com with ESMTPSA id bs10-20020ac86f0a000000b0038d9555b580sm5056528qtb.44.2022.10.10.04.31.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Oct 2022 04:31:58 -0700 (PDT)
-Message-ID: <d6765e12-715a-066e-c6c3-63e0962ee3af@linaro.org>
-Date:   Mon, 10 Oct 2022 07:31:31 -0400
+        with ESMTP id S231422AbiJJLsC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 07:48:02 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3577199C;
+        Mon, 10 Oct 2022 04:47:51 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 23B6966022A5;
+        Mon, 10 Oct 2022 12:47:21 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1665402441;
+        bh=7tuh7nNoMmOTC8qASx41d6YAap5Q04ANum0eL2sT7cg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=K/FhvlBlG72ChQicSlXdO8lwTUkOREPEwjtokn6anOxhxLmFaeEz5VtF9F44pbpwU
+         kaQHKZaYgD43S0I0lmkC084+gORg1sNtW7mcHyQD4Cv/pJl/y5dpmskHblM7egL4XK
+         WZoUEpORhFb2flqRsO421UkWnJ8EPtuourLcqSwITMhP1FIMEvv54IpzLkK98NfiqC
+         hiaZXxtsKV4aX53M/aLzt+COaE7KK0lARzWbkw1Epo/b2/mN5pwtLE+UO3bBxOtG0U
+         lCaGiTAzPlF/FVSlx6AMuohJ3YkHGXjV8NsGTz8BCzThnLvn/POE+Ofebr3ooN91sN
+         +/nps6Ggx09NA==
+Message-ID: <6c889c7e-4c5a-a201-e37c-bf95b6826584@collabora.com>
+Date:   Mon, 10 Oct 2022 13:47:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2 34/40] arm64: dts: qcom: sm6125: align TLMM pin
- configuration with DT schema
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v3 05/10] dt-bindings: pinctrl: mediatek,pinctrl-mt6795:
+ Fix interrupt count
 Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Marijn Suijten <marijn.suijten@somainline.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Yassine Oudjana <yassine.oudjana@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Iskren Chernev <iskren.chernev@gmail.com>,
-        Martin Botka <martin.botka@somainline.org>,
-        Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>
+Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-References: <20220912061746.6311-1-krzysztof.kozlowski@linaro.org>
- <20220912061746.6311-35-krzysztof.kozlowski@linaro.org>
- <20221009174621.ecamh76faoibuykv@SoMainline.org>
- <d97b7d32-6e27-5a04-336b-0af6bd92c83c@linaro.org>
-In-Reply-To: <d97b7d32-6e27-5a04-336b-0af6bd92c83c@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+References: <20221007125904.55371-1-y.oudjana@protonmail.com>
+ <20221007125904.55371-6-y.oudjana@protonmail.com>
+ <0769c6c8-567d-68c0-323a-9aaee1241e13@linaro.org>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <0769c6c8-567d-68c0-323a-9aaee1241e13@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/10/2022 06:26, Krzysztof Kozlowski wrote:
-> On 09/10/2022 13:46, Marijn Suijten wrote:
->>> diff --git a/arch/arm64/boot/dts/qcom/sm6125.dtsi b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> index 8c582a9e4ada..1fe3fa3ad877 100644
->>> --- a/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sm6125.dtsi
->>> @@ -387,19 +387,19 @@ tlmm: pinctrl@500000 {
->>>  			#interrupt-cells = <2>;
->>>  
->>>  			sdc2_off_state: sdc2-off-state {
->>> -				clk {
->>> +				clk-pins {
->>>  					pins = "sdc2_clk";
->>>  					drive-strength = <2>;
->>>  					bias-disable;
->>>  				};
->>>  
->>> -				cmd {
->>> +				cmd-pins {
->>>  					pins = "sdc2_cmd";
->>>  					drive-strength = <2>;
->>>  					bias-pull-up;
->>>  				};
->>>  
->>> -				data {
->>> +				data-pins {
->>>  					pins = "sdc2_data";
->>>  					drive-strength = <2>;
->>>  					bias-pull-up;
->>> @@ -413,13 +413,13 @@ clk {
->>>  					bias-disable;
->>>  				};
->>>  
->>> -				cmd {
->>> +				cmd-pins-pins {
+Il 10/10/22 13:13, Krzysztof Kozlowski ha scritto:
+> On 07/10/2022 08:58, Yassine Oudjana wrote:
+>> From: Yassine Oudjana <y.oudjana@protonmail.com>
 >>
->> Is this double -pins-pins suffix intended?
+>> The document currently states a maximum of 1 interrupt, but the DT
+>> has 2 specified causing a dtbs_check error. Replace the maximum limit
+>> with a minimum and add per-interrupt descriptions to pass the check.
 >>
+>> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+>> ---
+>>   .../devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml | 5 ++++-
+>>   1 file changed, 4 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+>> index 73ae6e11410b..a3a3f7fb9605 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+>> @@ -47,7 +47,10 @@ properties:
+>>   
+>>     interrupts:
+>>       description: The interrupt outputs to sysirq.
+>> -    maxItems: 1
+>> +    minItems: 1
+>> +    items:
+>> +      - description: EINT interrupt
+>> +      - description: EINT event_b interrupt
 > 
-> No, thanks for noticing it.
+> Is second interrupt really optional or you just wanted to silence the
+> warning?
+> 
 
-Wait, you commented on patch which was already merged. Fix is here already:
-https://lore.kernel.org/linux-devicetree/20220930192954.242546-11-krzysztof.kozlowski@linaro.org/
+The event_b interrupt exists (and fires on certain events, if configured to do so),
+but it's currently unused.
 
-Best regards,
-Krzysztof
+It's really optional.
+
+> Best regards,
+> Krzysztof
+> 
+
 
