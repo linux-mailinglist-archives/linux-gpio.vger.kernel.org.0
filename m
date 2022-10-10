@@ -2,82 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 034795F9AD4
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 10:16:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 280035F9B9F
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 11:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231926AbiJJIQj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 04:16:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40628 "EHLO
+        id S230196AbiJJJJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 05:09:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231687AbiJJIQb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 04:16:31 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B0858167;
-        Mon, 10 Oct 2022 01:16:27 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 75AC76601F8A;
-        Mon, 10 Oct 2022 09:16:25 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1665389786;
-        bh=vX8WuTcGmZQQi2FEkejP1m5jJ7GqHjh+hXb5bT7HhlE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=CEtKX4TxEwViw4bOnrqnH4onywyArvaRNfXNMjRV+59rzD37k4YTAsSUNt2ihsPw2
-         9dO8YKVE/c8E3ijClv4cGZ1HJHVGC0+PklVMRhrirgKYJr+sG/L1MWa1nltEIX3Ulw
-         rGHhXnCrLNFNjcijYAILuaPTDNDt4nEPHVsz4j1+eoSlktOj+NsdLBioJiyu0pV3+o
-         l79vQdJkSCBXQyCl0p6CFPySmYBzhwSFFU3wA0zaoTDzBgmbs9KDnNzxisXFpRz3bJ
-         KsaxETPKt8yhjiKsFAgCMouO2reTv0NdgOwuBNWwdSzdKaH4H4Rv76oRhID/kuzXXP
-         rZs62HzkuIQBQ==
-Message-ID: <5ca9f6a8-f1ec-d3e8-f5f6-5c11a9aa615c@collabora.com>
-Date:   Mon, 10 Oct 2022 10:16:22 +0200
+        with ESMTP id S231469AbiJJJJA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 05:09:00 -0400
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8553D46616;
+        Mon, 10 Oct 2022 02:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1665392939; x=1696928939;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=KiaXUf4gF15Ux8A6qcf1bYa4KmiVRrNsO45czAps/+g=;
+  b=hJqj5hp+12U97GXG1TVowCIn5JV0BWe/Ov65beFLxMbctFD/qb/dEsV7
+   Oz2gZJ80iZNGO0iWIIIvS1kWWv6AfwL+mKrexyg072Oqd6cOGxTTxDjgV
+   HwEGvazx+g/3UretsE+h1IZwE77NNDyuQSHngkdfkgIjaMoR6UCgpKoAC
+   SLlwjNr0TK+QYWtK66iQ2zbfwkSkk56z1rQ+iU+5rNosq2HyMvB5EZZy9
+   JJ3daSChyscIcoZSI6aMa0FJdOf7mBVzg+arBiN5fG/JodwRwQGs5TbcK
+   UgUfbpg0jPDHc/yn69qMOppfmsLstWku/SL8nOdcEX6kjfHHKRxOQkqQo
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="194657043"
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Oct 2022 02:08:58 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.12; Mon, 10 Oct 2022 02:08:41 -0700
+Received: from [10.12.72.60] (10.10.115.15) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.12 via Frontend
+ Transport; Mon, 10 Oct 2022 02:08:40 -0700
+Message-ID: <11901f5c-a1c8-1470-8bf5-82f73c1ace01@microchip.com>
+Date:   Mon, 10 Oct 2022 11:08:39 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 02/10] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Improve description
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 2/2] pinctrl: at91-pio4: Add persist state case in config
 Content-Language: en-US
-To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>
-Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20221007125904.55371-1-y.oudjana@protonmail.com>
- <20221007125904.55371-3-y.oudjana@protonmail.com>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20221007125904.55371-3-y.oudjana@protonmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     <Ryan.Wanner@microchip.com>, <ludovic.desroches@microchip.com>,
+        <linus.walleij@linaro.org>, <alexandre.belloni@bootlin.com>,
+        <claudiu.beznea@microchip.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221007151647.98222-1-Ryan.Wanner@microchip.com>
+ <20221007151647.98222-3-Ryan.Wanner@microchip.com>
+From:   Nicolas Ferre <nicolas.ferre@microchip.com>
+Organization: microchip
+In-Reply-To: <20221007151647.98222-3-Ryan.Wanner@microchip.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 07/10/22 14:58, Yassine Oudjana ha scritto:
-> From: Yassine Oudjana <y.oudjana@protonmail.com>
+On 07/10/2022 at 17:16, Ryan.Wanner@microchip.com wrote:
+> From: Ryan Wanner <Ryan.Wanner@microchip.com>
 > 
-> The current description mentions having to put the pin controller
-> node under a syscon node, but this is not the case in the current
-> MT6779 device tree. This is not actually needed, so replace the
-> current description with something more generic that describes
-> the use of the hardware block.
+> Adding persist state case to atmel_conf_pin_config_group_set() function.
+> After adding configuration support for userspace gpiod api, there was an
+> extra flag PIN_CONFIG_PERSIST_STATE that was not passed in before.
 > 
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Based on other drivers like TI drivers, added a switch case and return
+> ENOTSUPP in that case.
+> 
+> Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+
+Thanks, best regards,
+   Nicolas
+
+> ---
+>   drivers/pinctrl/pinctrl-at91-pio4.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+> index 13b77f1eb6e2..40f1b9397767 100644
+> --- a/drivers/pinctrl/pinctrl-at91-pio4.c
+> +++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+> @@ -780,6 +780,8 @@ static int atmel_conf_pin_config_group_get(struct pinctrl_dev *pctldev,
+>   			return -EINVAL;
+>   		arg = (res & ATMEL_PIO_DRVSTR_MASK) >> ATMEL_PIO_DRVSTR_OFFSET;
+>   		break;
+> +	case PIN_CONFIG_PERSIST_STATE:
+> +		return -ENOTSUPP;
+>   	default:
+>   		return -ENOTSUPP;
+>   	}
+> @@ -888,6 +890,8 @@ static int atmel_conf_pin_config_group_set(struct pinctrl_dev *pctldev,
+>   				dev_warn(pctldev->dev, "drive strength not updated (incorrect value)\n");
+>   			}
+>   			break;
+> +		case PIN_CONFIG_PERSIST_STATE:
+> +			return -ENOTSUPP;
+>   		default:
+>   			dev_warn(pctldev->dev,
+>   				 "unsupported configuration parameter: %u\n",
 
 
+-- 
+Nicolas Ferre
