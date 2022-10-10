@@ -2,111 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B14145F9DEA
-	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 13:48:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D9B4D5F9EDB
+	for <lists+linux-gpio@lfdr.de>; Mon, 10 Oct 2022 14:52:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230454AbiJJLsT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 07:48:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49056 "EHLO
+        id S230083AbiJJMwJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 10 Oct 2022 08:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbiJJLsC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 07:48:02 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3577199C;
-        Mon, 10 Oct 2022 04:47:51 -0700 (PDT)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 23B6966022A5;
-        Mon, 10 Oct 2022 12:47:21 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1665402441;
-        bh=7tuh7nNoMmOTC8qASx41d6YAap5Q04ANum0eL2sT7cg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=K/FhvlBlG72ChQicSlXdO8lwTUkOREPEwjtokn6anOxhxLmFaeEz5VtF9F44pbpwU
-         kaQHKZaYgD43S0I0lmkC084+gORg1sNtW7mcHyQD4Cv/pJl/y5dpmskHblM7egL4XK
-         WZoUEpORhFb2flqRsO421UkWnJ8EPtuourLcqSwITMhP1FIMEvv54IpzLkK98NfiqC
-         hiaZXxtsKV4aX53M/aLzt+COaE7KK0lARzWbkw1Epo/b2/mN5pwtLE+UO3bBxOtG0U
-         lCaGiTAzPlF/FVSlx6AMuohJ3YkHGXjV8NsGTz8BCzThnLvn/POE+Ofebr3ooN91sN
-         +/nps6Ggx09NA==
-Message-ID: <6c889c7e-4c5a-a201-e37c-bf95b6826584@collabora.com>
-Date:   Mon, 10 Oct 2022 13:47:18 +0200
+        with ESMTP id S229986AbiJJMwI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 08:52:08 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB4C52DC0;
+        Mon, 10 Oct 2022 05:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665406327; x=1696942327;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JHiNEn1VO1XjaqbGRbNtJMKQOanLaGLJSkjjUAgEfvs=;
+  b=jfk/0B2BdOKmb2vCJamDAG+La+k8g438xd4ozEFXIge5jSUNH/WXikGQ
+   Ys4nC1JxN6IUivCZHnHNLt1Ahd5LFHghoiitnvAXxqOO1K+bV9qkZq3xD
+   fzlc4xQ3K0LNMaXgz5O5X+laEd9yj0spT3Moxc6plGYDehuSYAcThdXd+
+   gpajC0fUMHZQf3EHfT1oWFSS9smmlnldu8HafPVcnSRTrrCCu71tVvuGJ
+   Sd6H2EfywBXjmIkY1cTSjB+663nc0+i1g96M0LDlleLFVvC6dMGm/1QP9
+   /uK0p6STU4p34A+YBHiFMUuptM2y6q1ShZb7C+/nZwCv9m7dpWNLfwZtK
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="366181070"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="366181070"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Oct 2022 05:52:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10496"; a="628266211"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="628266211"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Oct 2022 05:52:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id EA3512B0; Mon, 10 Oct 2022 15:52:24 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] pinctrl: cy8c95x0: Extract cy8c95x0_set_mode() helper
+Date:   Mon, 10 Oct 2022 15:52:20 +0300
+Message-Id: <20221010125221.28275-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 05/10] dt-bindings: pinctrl: mediatek,pinctrl-mt6795:
- Fix interrupt count
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Yassine Oudjana <yassine.oudjana@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>
-Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20221007125904.55371-1-y.oudjana@protonmail.com>
- <20221007125904.55371-6-y.oudjana@protonmail.com>
- <0769c6c8-567d-68c0-323a-9aaee1241e13@linaro.org>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <0769c6c8-567d-68c0-323a-9aaee1241e13@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 10/10/22 13:13, Krzysztof Kozlowski ha scritto:
-> On 07/10/2022 08:58, Yassine Oudjana wrote:
->> From: Yassine Oudjana <y.oudjana@protonmail.com>
->>
->> The document currently states a maximum of 1 interrupt, but the DT
->> has 2 specified causing a dtbs_check error. Replace the maximum limit
->> with a minimum and add per-interrupt descriptions to pass the check.
->>
->> Suggested-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
->> ---
->>   .../devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml | 5 ++++-
->>   1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
->> index 73ae6e11410b..a3a3f7fb9605 100644
->> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
->> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
->> @@ -47,7 +47,10 @@ properties:
->>   
->>     interrupts:
->>       description: The interrupt outputs to sysirq.
->> -    maxItems: 1
->> +    minItems: 1
->> +    items:
->> +      - description: EINT interrupt
->> +      - description: EINT event_b interrupt
-> 
-> Is second interrupt really optional or you just wanted to silence the
-> warning?
-> 
+The code in newly introduced cy8c95x0_set_mode() helper may be
+used later on by another function.
 
-The event_b interrupt exists (and fires on certain events, if configured to do so),
-but it's currently unused.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-It's really optional.
-
-> Best regards,
-> Krzysztof
-> 
-
+diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
+index 68509a2301b8..33eba7ad87f4 100644
+--- a/drivers/pinctrl/pinctrl-cy8c95x0.c
++++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
+@@ -1124,9 +1124,7 @@ static int cy8c95x0_get_function_groups(struct pinctrl_dev *pctldev, unsigned in
+ 	return 0;
+ }
+ 
+-static int cy8c95x0_pinmux_cfg(struct cy8c95x0_pinctrl *chip,
+-			       unsigned int val,
+-			       unsigned long off)
++static int cy8c95x0_set_mode(struct cy8c95x0_pinctrl *chip, unsigned int off, bool mode)
+ {
+ 	u8 port = cypress_get_port(chip, off);
+ 	u8 bit = cypress_get_pin_mask(chip, off);
+@@ -1137,7 +1135,20 @@ static int cy8c95x0_pinmux_cfg(struct cy8c95x0_pinctrl *chip,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = regmap_write_bits(chip->regmap, CY8C95X0_PWMSEL, bit, val ? bit : 0);
++	return regmap_write_bits(chip->regmap, CY8C95X0_PWMSEL, bit, mode ? bit : 0);
++}
++
++static int cy8c95x0_pinmux_mode(struct cy8c95x0_pinctrl *chip,
++				unsigned int selector, unsigned int group)
++{
++	u8 port = cypress_get_port(chip, group);
++	u8 bit = cypress_get_pin_mask(chip, group);
++	int ret;
++
++	if (selector == 0)
++		return cy8c95x0_set_mode(chip, group, false);
++
++	ret = cy8c95x0_set_mode(chip, group, true);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -1156,7 +1167,7 @@ static int cy8c95x0_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
+ 	int ret;
+ 
+ 	mutex_lock(&chip->i2c_lock);
+-	ret = cy8c95x0_pinmux_cfg(chip, selector, group);
++	ret = cy8c95x0_pinmux_mode(chip, selector, group);
+ 	mutex_unlock(&chip->i2c_lock);
+ 
+ 	return ret;
+-- 
+2.35.1
 
