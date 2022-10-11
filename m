@@ -2,106 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BF455FBA1B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:07:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E4F5FBA46
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:24:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbiJKSHj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Oct 2022 14:07:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34738 "EHLO
+        id S229703AbiJKSYG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 14:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiJKSHi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:07:38 -0400
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570202AC58
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Oct 2022 11:07:35 -0700 (PDT)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3321c2a8d4cso135000097b3.5
-        for <linux-gpio@vger.kernel.org>; Tue, 11 Oct 2022 11:07:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b7nMl+IIoVXIZCC/DKHT3CXI2Xf2HP4geGz0+dJZi9s=;
-        b=FG0qA4ikAjxVKa3sHpnmD3r0ovEhAB/bTmLX8VaAqEoTpZLQ8gI6+KCa2X7rXzcUx3
-         rJST5MEvmq0VI70J8hjHeW0BnsDmXHjn1DU19Jfy8L1wC2sLYsljtxyV47EilRh2TLtC
-         9cB+K0rCTEfq02tPXJzGGRr2QF9LJd3mCke8WtuRcb9fZqpXu9hc5PKyEH03JR7y3FCa
-         fR9MC0LDUvDah73tE2PvE3mCpnHEUVEXCgJH/S+cEMd13lcLv9SWquKndDYNyeOjDrAV
-         6YYxGSJpZ+hIfCaCTY2Nyncsf03owIdhplfLFZJjPMseBggOY0NJfZkPV3LWUppYNKkJ
-         0fRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b7nMl+IIoVXIZCC/DKHT3CXI2Xf2HP4geGz0+dJZi9s=;
-        b=b0rkJPZaHtwR5siptCKo8NZ/v+D8CdiH7S0eJtnzCDAiVczZFy+oj+xZ2XlyrCA50c
-         iVvHd68m8Y+fyN51srn1ZadH3HTWIErwZTdj87zB9hF98aSluHT7mpo7Y4r/2KP6su58
-         fSGCpjTcvtnZn93iodaUbMuDJ5RkcTFG9QOEMPPyf+yzzakJNMtKrSC7QtXUDwdL1Y57
-         coAkkPa+qWRNrqULdMkR12Q2ydZeyBcWnaIXIFXFvtx2axpMX5aYB3QlDL9eLDMIoBCF
-         sUZe8C5MxWxtS2HSY8yM4tVWK8HGUqE6uRc0isGmMfzxznq+u1EPnzPflKsi+zR6PygV
-         qlZA==
-X-Gm-Message-State: ACrzQf3zvSS8Pi+wpci6jo2hQnIb265067Zo3Td4LYFd0WyWYZunaMKK
-        IXL7kSz99/WIp9YpHa24l6IvgqLWzR5Qs4BdUjY=
-X-Google-Smtp-Source: AMsMyM6OCvagOVxxxTEsfErq9xBhIJJgtNqp5+7CYXRzAiyXlU45PahqHzXqTx5VO8MUR+9wqIhH0LJTIZYEhX9SSJw=
-X-Received: by 2002:a81:6907:0:b0:34a:51ce:3b38 with SMTP id
- e7-20020a816907000000b0034a51ce3b38mr23284332ywc.151.1665511654327; Tue, 11
- Oct 2022 11:07:34 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a05:7000:1749:b0:3c5:f473:56e4 with HTTP; Tue, 11 Oct 2022
- 11:07:33 -0700 (PDT)
-Reply-To: illuminatiinitiationcenter56@gmail.com
-From:   Garry Lee <johnalinda8@gmail.com>
-Date:   Tue, 11 Oct 2022 21:07:33 +0300
-Message-ID: <CA+Dt0k_wprVPDRPoDepuruBYd2vtSZ60hGqdrTRy=NsRMSYouA@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_FILL_THIS_FORM_SHORT,
-        UNDISC_FREEM,UPPERCASE_75_100 autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:1135 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [illuminatiinitiationcenter56[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [johnalinda8[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [johnalinda8[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 UPPERCASE_75_100 message body is 75-100% uppercase
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
-        *      information
-X-Spam-Level: *****
+        with ESMTP id S230523AbiJKSWh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:22:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B378BDE;
+        Tue, 11 Oct 2022 11:22:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2653561267;
+        Tue, 11 Oct 2022 18:22:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B266C43143;
+        Tue, 11 Oct 2022 18:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665512530;
+        bh=Pg7LsPeRm+DrParGzVWTDfUCb4Osp6UwQq6LYQn9Eww=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=cwp2hev6Cu1BQquMlWOhfF/uHt+R58+VAPN0KSgp4whYqocXk93wICWa3+8sgVG8g
+         xEtiQrYAeQYA5ppsxDizjRB/MevOq9+SRaA/BX4pm70+E1twWDPCKAmuvc8dzPSp3y
+         SlKK4DGp78C3yoEe7zsfdPn/6xXwYu6McqL9VHAeCq9RoIQkRo+m1zlEx6lNpwDrsi
+         rQ80y6V4X19bVH6fyKwE1GaXgkCMlN35JTpFZqsVVRteY8KV5Mkinnj5zL8UuyFRje
+         c4dl7Hs+K0Gm7ASFMhGh34cY/LeMxEqmD8Hru7SW5hVuXZVSQ3fdgNxWXxg2q9codw
+         EWenTMQEeV1xw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 794A0E29F36;
+        Tue, 11 Oct 2022 18:22:10 +0000 (UTC)
+Subject: Re: [GIT PULL] bulk pin control changes for v6.1
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
+References: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.1-1
+X-PR-Tracked-Commit-Id: 9d157c89c5569f0ef560b7a5b2d7bf59ae98499c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 979bb59016aed7c7c58baca2307d9d13890cc6ab
+Message-Id: <166551253049.20259.14807089664246189853.pr-tracker-bot@kernel.org>
+Date:   Tue, 11 Oct 2022 18:22:10 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The pull request you sent on Mon, 10 Oct 2022 23:03:34 +0200:
+
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.1-1
+
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/979bb59016aed7c7c58baca2307d9d13890cc6ab
+
+Thank you!
+
 -- 
-DO YOU WANT TO BE RICH AND FAMOUS? JOIN THE GREAT ILLUMINATI ORDER OF
-RICHES, POWER/FAME  NOW AND ACHIEVE ALL YOUR DREAMS? IF YES EMAIL US :
-MAIL: illuminatiinitiationcenter56@gmail.com
-YOUR FULL NAME:
-PHONE NUMBER :
-COUNTRY :
-GENDER:
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
