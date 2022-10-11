@@ -2,37 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD4755FB9EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 19:52:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB065FBA06
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:01:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiJKRwg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Oct 2022 13:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56904 "EHLO
+        id S229446AbiJKSBa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 14:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229825AbiJKRwf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 13:52:35 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D79940037;
-        Tue, 11 Oct 2022 10:52:31 -0700 (PDT)
-X-QQ-mid: bizesmtp67t1665510739tbwjqr9m
+        with ESMTP id S229453AbiJKSB3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:01:29 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DAC6B67F;
+        Tue, 11 Oct 2022 11:01:27 -0700 (PDT)
+X-QQ-mid: bizesmtp76t1665511278t5i75y1k
 Received: from [192.168.1.231] ( [113.72.146.141])
         by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 12 Oct 2022 01:52:18 +0800 (CST)
+        id ; Wed, 12 Oct 2022 02:01:16 +0800 (CST)
 X-QQ-SSF: 0100000000200090B000B00A0000000
-X-QQ-FEAT: eSZ1CZgv+JDpbz+8SZtFjGpBaoHZNJKphrrKecDmH7nFw9yOYamWc6tnUXtiK
-        5hqBaXLrf5CuIHQTdb0xFyaOht6w2j/pHl/eluwYwBsXw/EYe1upcfnk8v/ClL+IhgLqg1D
-        NQWyxjYe2HsuXrYs0WZNLcSpZYVdZC7iJCx0Pruqa/KnemRMSq9WYz9/OtaPqOrh8r+eFrn
-        77a4bV7aFLfWOzNgU3oekYrgRNUegBHk8OhXbHqYfwIPeC6kkc1nuw7f+NPrXtWJIpCEjy+
-        W+lDWWcd1xXRXOz8KqzeDSadVBRMPFcB3o8T9bdwfcYhDvuaEE8pihJHU/taIhOdmcCRC/r
-        CpfCAVlKq4JPAfRbyNoY0rHYmdeAA==
+X-QQ-FEAT: Xz3VOcA7Mr1IeMy5YkFr3EQysBY1c40hmsRb8FmCb9HYXwFMzxuV3pNPfW+Oo
+        Yy88ZEliVWGfuHpA9UsW0WR3SsrAgYJ/mLN08uP1rAii9nv3hF0/fAVMKfE3oSRBi5IuKh1
+        U6iVYMZ3Oc63DZX1BtdGiS6TE0gZ/iCK7uw8lKbdAavr8+ly9R+pW+ggB1N5PXseqyAuvtP
+        CQ5imFaDSqNGkNvpJomvgk7Yuz920GfcMiAaVEb9dS2p81f/c1PCl1SnWT6u2mFa2/jR0OI
+        ZLu6IQl++hK59OYWwKDqXiBU88HgVfhBH1w3vnz3X3JsZGmpxtML80nMfBf8/QW6eFJzT60
+        IDiKhi5WSKdJtJ5KxPm5ABHVKtfOqPAfUvAblZJzbb5ix17+Uo=
 X-QQ-GoodBg: 0
-Message-ID: <6BB36B91BD2046FD+e637d229-f656-a548-c45a-8d62a0c7928d@linux.starfivetech.com>
-Date:   Wed, 12 Oct 2022 01:52:18 +0800
+Message-ID: <950768A5571BD396+4cf106df-5127-4646-5879-a516a002760c@linux.starfivetech.com>
+Date:   Wed, 12 Oct 2022 02:01:16 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH v1 17/30] dt-bindings: clock: Add
- starfive,jh7110-clkgen-sys bindings
+Subject: Re: [PATCH v1 20/30] dt-bindings: clock: Add
+ starfive,jh7110-clkgen-aon bindings
+Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -51,58 +52,47 @@ Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
         Emil Renner Berthing <kernel@esmil.dk>,
         linux-kernel@vger.kernel.org
 References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220929222647.23816-1-hal.feng@linux.starfivetech.com>
- <c99f6552-db04-fe30-ed69-4a08b0af5276@linaro.org>
-Content-Language: en-US
+ <20220930055632.5136-1-hal.feng@linux.starfivetech.com>
+ <ff493398-7786-db0d-ae94-b52207e2a56c@linaro.org>
 From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <c99f6552-db04-fe30-ed69-4a08b0af5276@linaro.org>
+In-Reply-To: <ff493398-7786-db0d-ae94-b52207e2a56c@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-QQ-SENDSIZE: 520
 Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
 X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Sep 2022 12:58:12 +0200, Krzysztof Kozlowski wrote:
-> On 30/09/2022 00:26, Hal Feng wrote:
+On Fri, 30 Sep 2022 12:59:01 +0200, Krzysztof Kozlowski wrote:
+> On 30/09/2022 07:56, Hal Feng wrote:
 > > From: Emil Renner Berthing <kernel@esmil.dk>
 > > 
-> > Add bindings for the system clock generator on the JH7110
+> > Add bindings for the always-on clock generator on the JH7110
 > > RISC-V SoC by StarFive Technology Ltd.
 > > 
-> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
 > 
 > (...)
 > 
-> > +  '#clock-cells':
-> > +    const: 1
-> > +    description:
-> > +      See <dt-bindings/clock/starfive-jh7110-sys.h> for valid indices.
-> > +
-> > +required:
-> > +  - compatible
-> > +  - clocks
-> > +  - clock-names
-> > +  - '#clock-cells'
 > > +
 > > +additionalProperties: false
 > > +
 > > +examples:
 > > +  - |
-> > +    syscrg_clk: clock-controller@13020000 {
+> > +    #include <dt-bindings/clock/starfive-jh7110-sys.h>
+> > +
+> > +    aoncrg: clock-controller@17000000 {
 > 
 > Does not look like you tested the bindings. Please run `make
 > dt_binding_check` (see
 > Documentation/devicetree/bindings/writing-schema.rst for instructions).
-
 Will rewrite the bindings and test them. Thanks.
 
 Best regards,
 Hal
+
