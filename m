@@ -2,117 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB3CD5FBA68
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F42F5FBA81
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:38:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbiJKScl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Oct 2022 14:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
+        id S229613AbiJKSiT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 14:38:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiJKSck (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:32:40 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BE9543CB;
-        Tue, 11 Oct 2022 11:32:38 -0700 (PDT)
-X-QQ-mid: bizesmtp62t1665513144tf8jdyjh
-Received: from [192.168.1.231] ( [113.72.146.141])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 12 Oct 2022 02:32:23 +0800 (CST)
-X-QQ-SSF: 0100000000200090B000B00A0000000
-X-QQ-FEAT: 7jw2iSiCazqbQ5tBRQTa4DP92tBGuiXW2qhhi7so1L8YQTSdLsD6bEm6SpfGf
-        AnLtfynvp3KCljyxHGLpZg2svKBE3NjLJqiOsJHbZqld0xi6C2tJUr+vygbGy7/40QEmzCJ
-        b3f2i3KLv3z8jeB9gNzUGEUETkotyseEm/DVu5pRoWsUhq8aaVNMc0szqOJEHy3h3fnaeiu
-        Gqqlcg3e52/CIKA3DquCxhklE6WNgDPEmbUue3dxy/d+2kCYK7OnxiLfSATsD7w3EQPslOc
-        96vgfeGembZqkA73X+Wqniwr1+sDqMuKSdXKnW2uns/wYmP/O7tsErQt50YdkmtPfV1IVGE
-        qs9V4wuExJV4i6tgmUMBOT/AtDG7mdEkioM7aScva/zOmRh7J11AhCpLh2GcQ==
-X-QQ-GoodBg: 0
-Message-ID: <BC2E1E01B669A06E+eb3ccb04-e930-9aa4-08b9-27621410bbd3@linux.starfivetech.com>
-Date:   Wed, 12 Oct 2022 02:32:22 +0800
+        with ESMTP id S229496AbiJKSiS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:38:18 -0400
+Received: from mail-io1-xd34.google.com (mail-io1-xd34.google.com [IPv6:2607:f8b0:4864:20::d34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60BAA62AA2;
+        Tue, 11 Oct 2022 11:38:16 -0700 (PDT)
+Received: by mail-io1-xd34.google.com with SMTP id o65so11591632iof.4;
+        Tue, 11 Oct 2022 11:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yzz7HPfd9lZbybLpIqjBSIyTMfCLBxbv1l1ZEl4GhoA=;
+        b=Qk8QJCIatrsXIrxE/1a4v6fwYn2G9ANRwZ/uX2kjiTr0NSt5poOiPAzTxoj7e31W5K
+         IxvyMMHhBnGzATsf2wbexpgSf4zz/Wkt0/SEY0PEw2afmrFu0B1UJxD0pEVx8Wy1mHPg
+         lH6Z4XxiwccfnyyEQJYRweI8lQYUEA8DQOpmcsouqwJl7HmSm8uLgjV2FkkljSHscw3T
+         fn6teUcifNDJ7ie9w8jtZ6nqiygnDbEYlU4dNv2o/pTOmZrXH2975YeOdjVmaMZTzrGk
+         yL0XXjeYRtGF47M/8oNKAqys/gANbdBwVKroEMOaKef47BWqV1hbWsW2s9G/kDLIEWE1
+         8dIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yzz7HPfd9lZbybLpIqjBSIyTMfCLBxbv1l1ZEl4GhoA=;
+        b=RBUWEPJncbllp7NdDpzODxwZqNzMpxDciKKcx7eos4OP5dPuvpp3X5NA/jX7pmjz7n
+         tVIQInk9i9OvSUsIoMBWOaGOBshwucSjuxwPhv1zuxGJvvtT9kn2g+SNqiCZuXkoDj+t
+         kFclitraEDBTW8llh3vGyauda/5yiM4L+P+xB+pUYPglMdSVCXYzGlmBf4nt1aIr/Ifb
+         rX+apHaSi7CQ8uYRcHA28oiA62vXfaohXSAx4Eyqm5wzhiS0byPogHKwOuEFPt5SxIHV
+         xUHoPP1zLMSVdxqsDv25/mgMxdFAUmFCeiPLSsOugiHn9u+92y1YeU4zQGSaqWp4GHM8
+         53yQ==
+X-Gm-Message-State: ACrzQf0s2nQOBM6TRf3yrsUjfR5DwUfWM+dhWzAb/7ALLwfDdY3rqcYC
+        HZ+foYn2JZt6o+j7/Wf6UlgeWJBsNZNgAhlyKws=
+X-Google-Smtp-Source: AMsMyM6K6r8LdVzpVWYq8QtcvBsfHdBteWilO2KZnECnX0n0rcAd1mM+RWpr1skNfc7yA9u6pPfyByjCewD57Mlv1r4=
+X-Received: by 2002:a05:6638:2494:b0:363:db4f:c870 with SMTP id
+ x20-20020a056638249400b00363db4fc870mr1579414jat.65.1665513494686; Tue, 11
+ Oct 2022 11:38:14 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v1 30/30] RISC-V: Add StarFive JH7100 and JH7110 SoC
- Kconfig options
-Content-Language: en-US
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+References: <20221009181338.2896660-1-lis8215@gmail.com> <20221009181338.2896660-8-lis8215@gmail.com>
+ <Y0R+q7BdxtFqeiT1@kroah.com>
+In-Reply-To: <Y0R+q7BdxtFqeiT1@kroah.com>
+From:   Siarhei Volkau <lis8215@gmail.com>
+Date:   Tue, 11 Oct 2022 21:38:03 +0300
+Message-ID: <CAKNVLfaNJjdVCeVCrOOw5xjsJ=gzJ2uFxAjgMA9tWHE=qFEECA@mail.gmail.com>
+Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
+ JZ4750/JZ4755 SoCs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220930122318.9244-1-hal.feng@linux.starfivetech.com>
- <YzbjCIfoxjsFCuD1@wendy>
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <YzbjCIfoxjsFCuD1@wendy>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no
-        version=3.4.6
+        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Sep 2022 13:37:28 +0100, Conor Dooley wrote:
-> On Fri, Sep 30, 2022 at 08:23:18PM +0800, Hal Feng wrote:
-> > Add Kconfig options to select the specified StarFive SoC. Select
-> > necessary Kconfig options required by the specified SoC for booting.
-> > 
-> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
-> > ---
-> >  arch/riscv/Kconfig.socs               | 27 ++++++++++++++++++++++++++-
-> >  arch/riscv/boot/dts/starfive/Makefile |  4 ++--
-> >  drivers/clk/starfive/Kconfig          | 14 ++++++--------
-> >  drivers/pinctrl/starfive/Kconfig      |  6 ++----
-> >  drivers/reset/Kconfig                 |  1 -
-> 
-> Firstly, you cannot change all of these files in one commit, sorry.
-> 
-> >  5 files changed, 36 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-> > index 10f68a4359f9..321c448e7b6f 100644
-> > --- a/arch/riscv/Kconfig.socs
-> > +++ b/arch/riscv/Kconfig.socs
-> > @@ -22,10 +22,35 @@ config SOC_STARFIVE
-> >  	bool "StarFive SoCs"
-> >  	select PINCTRL
-> >  	select RESET_CONTROLLER
-> > +	select RESET_STARFIVE
-> 
-> Secondly, we are trying to get rid of selects in arch/riscv at the
-> moment, not add them. use "default SOC_STARFIVE" in
-> drivers/reset/kconfig instead please.
-> 
-> > +	help
-> > +	  This enables support for StarFive SoC platform hardware.
-> > +
-> > +if SOC_STARFIVE
-> 
-> I don't think we want to have per soc selection menus in arch code,
-> I think this should move to drivers/soc (a la Renesas) if you want to
-> have a per soc selection menu or else just do "default SOC_STARFIVE"
-> for both clock and pinctrl drivers in the clk and pinctrl Kconfig
-> entries.
+=D0=BF=D0=BD, 10 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 23:20, Greg Kroah-=
+Hartman <gregkh@linuxfoundation.org>:
+> What does "clkdiv" mean here?
 
-Thanks for your helpful comments. I will drop this patch.
+That means a clock divisor between the input oscillator and UART
+peripheral clock source. Most Ingenic SoCs don't have that divisor,
+so 1 is always in effect for them.
+However, the JZ4750 and JZ4755 have switchable /2 clock divisor.
 
-Best regards,
-Hal
+> If you only have 1 or 2 as an option
 
+Yes, it is.
+
+> just have 2 functions instead please.
+
+Got it, will do that.
+
+Thank you.
