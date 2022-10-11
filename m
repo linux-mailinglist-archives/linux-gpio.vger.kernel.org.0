@@ -2,162 +2,327 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E991E5FB80B
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 18:14:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCEDB5FB856
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 18:38:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbiJKQOw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Oct 2022 12:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51628 "EHLO
+        id S229734AbiJKQi0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 12:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiJKQOs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 12:14:48 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3B42F003;
-        Tue, 11 Oct 2022 09:14:45 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id v12so2565050edc.6;
-        Tue, 11 Oct 2022 09:14:45 -0700 (PDT)
+        with ESMTP id S229508AbiJKQiX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 12:38:23 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9246A222E
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Oct 2022 09:38:21 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id c23so4591244qtw.8
+        for <linux-gpio@vger.kernel.org>; Tue, 11 Oct 2022 09:38:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QY6WyTHOtNVOWNT2T4wR6tUw0MK2Z6zU5+UbTJRR4tc=;
+        b=LEg8IGV5qy1f4Ls0uTv3AByar4HiiDxIwsDKEhd1O3xBrraCFAScNYyn0CRQWX99TD
+         ShlqA8pojnv0xNOdhZlj4K0NCqWlqdzblrcblq+HuJTHZvC2J4F5cn7BFcbgHDPYWHF7
+         qHzdA9/fr79n+ObD0DllHTbQB4OH2+jcfYrj5heT+Ssk0cmsq6BGxhVAbWgyU/bZ1OBJ
+         4Xw56h8FS775SUNOojVN+hK9z/twXXMQ0SkXkM2b2ZkT1df9zEBBJAXBMmFIflHUu2FR
+         joWqB9dh6xRCkeK83NAvUkRsL6Ti980Daj99a6FoHp3T66M9ZlQbAQjF8tq15WmLfmFd
+         LjIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:reply-to:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gcCjfDN4mDKfmx6uTh8+bavSggaZhIbJoPNugTf0yYI=;
-        b=JMFnbtPjwrDpGhFMR1mf2dgkS3as4HvfFlzlExRVkpiEmbI7t8GMtE3sbMlBCEUMi8
-         d4HZXbGJEhNcNK/Rlt2vTgJmHJHrGV/nnM/iVvZI5oDgJwZPPnl1f0l1qJvLijXvdgQW
-         rG+Wbm7agFfsi9DJ/0WD1Zab7mpgfMcXuW4A0objUlrVTg/Fya+eKYfFfXFbE0clcUKd
-         bHaqHmnFl6JpnN8tP0q5+IxwEGGA/NUDXiE7hj/mED1GNfOgPDJGDGG5tbyOE2DbWYC2
-         B39U7weAETlxZy0DJ2IlJpVM6gXKJVSokML7jcc2Wi6ipQC8MC4jbLSBQpCrr/eZMbAI
-         7Log==
-X-Gm-Message-State: ACrzQf0dGMMPUNn295rp50aTfJQZyVHCFkWsUrlsQoJUU8BLKfcF+oZB
-        DXcZPf505Cjzdio1Tiho8s3h7y0iidQnCB3a
-X-Google-Smtp-Source: AMsMyM7ZqUp8nr4UTSkIePDm3PChCTNq8ODcC9u6v+t1VPzyVXQm6vECSYNxICUxkk5mMNcW3biFhw==
-X-Received: by 2002:a05:6402:4313:b0:45a:b150:6796 with SMTP id m19-20020a056402431300b0045ab1506796mr18367378edc.246.1665504883732;
-        Tue, 11 Oct 2022 09:14:43 -0700 (PDT)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com. [209.85.221.51])
-        by smtp.gmail.com with ESMTPSA id l1-20020a1709060cc100b007402796f065sm2884993ejh.132.2022.10.11.09.14.41
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QY6WyTHOtNVOWNT2T4wR6tUw0MK2Z6zU5+UbTJRR4tc=;
+        b=28LkEKQsSbbLip85oKSP2XcxnRvqR5K1nd6GJ59SBdkav8kQaFJ84dzyHyzQazsM/B
+         DjOiCbr1H2eU6JUObmYiRL7IVKc3wOF/pgWFM45V2kGRfn4EnUENGT8qbcRhX/u0omYK
+         w8ZIbLMBEFdZoxiHU/972LUFkXvfJXWZSto0GXUrH4u68Twq9eEr615Ay1bHMflG26B0
+         HKJEw2Kvf42sJpnhKfiVNUZ9ALRnL+BKuphoE5IgmqFxSTXgfpHDM0srYB96fzBQ3KRC
+         PaGiqZR4PSyByClPb6z4rHmLiQSYZflOnA0nEmDf2R3qWmUKA7NVVkCZWWE6bjdPN+ip
+         yeHw==
+X-Gm-Message-State: ACrzQf2natXw5V3WFz10d/tj2fjCAxa9Gaq1PtAcrJ7cIx9jgxt+bGSK
+        Fvm07D3HLG5qA+R+ZgGu/DnSnA==
+X-Google-Smtp-Source: AMsMyM6ZR0Jj5RCA2gjlIscZ4R49LE0rwlWp+wlpIGZOb1PmOQmoWN5UpcMrnDWhs1cwnY4FWY3c0w==
+X-Received: by 2002:a05:622a:2c6:b0:39c:42ee:932d with SMTP id a6-20020a05622a02c600b0039c42ee932dmr3355086qtx.156.1665506300783;
+        Tue, 11 Oct 2022 09:38:20 -0700 (PDT)
+Received: from [192.168.1.57] (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id i11-20020a05620a404b00b006a5d2eb58b2sm13979752qko.33.2022.10.11.09.38.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Oct 2022 09:14:42 -0700 (PDT)
-Received: by mail-wr1-f51.google.com with SMTP id u10so22398844wrq.2;
-        Tue, 11 Oct 2022 09:14:41 -0700 (PDT)
-X-Received: by 2002:adf:eb84:0:b0:22a:917e:1c20 with SMTP id
- t4-20020adfeb84000000b0022a917e1c20mr15144886wrn.223.1665504881328; Tue, 11
- Oct 2022 09:14:41 -0700 (PDT)
+        Tue, 11 Oct 2022 09:38:20 -0700 (PDT)
+Message-ID: <2f1d1afd-3c97-6ce0-8247-6e1c4a24e548@linaro.org>
+Date:   Tue, 11 Oct 2022 12:36:08 -0400
 MIME-Version: 1.0
-References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com> <20221010201453.77401-8-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221010201453.77401-8-andriy.shevchenko@linux.intel.com>
-Reply-To: wens@csie.org
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 12 Oct 2022 00:14:28 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65EuTdS3uvr6EgpiiK25PeYrVh+itte2wHz_wM=E1S4OA@mail.gmail.com>
-Message-ID: <CAGb2v65EuTdS3uvr6EgpiiK25PeYrVh+itte2wHz_wM=E1S4OA@mail.gmail.com>
-Subject: Re: [PATCH v2 07/36] pinctrl: axp209: Add missed header(s)
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Billy Tsai <billy_tsai@aspeedtech.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v1 12/30] dt-bindings: reset: Add starfive,jh7110-reset
+ bindings
+Content-Language: en-US
+To:     Hal Feng <hal.feng@linux.starfivetech.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Chen-Yu Tsai <wenst@chromium.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-rpi-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-omap@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
         Emil Renner Berthing <kernel@esmil.dk>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220929175147.19749-1-hal.feng@linux.starfivetech.com>
+ <20220929184349.GA2551443-robh@kernel.org>
+ <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 4:16 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Do not imply that some of the generic headers may be always included.
-> Instead, include explicitly what we are direct user of.
->
-> While at it, sort headers alphabetically.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 11/10/2022 11:30, Hal Feng wrote:
+> On Thu, 29 Sep 2022 13:43:49 -0500, Rob Herring wrote:
+>> On Fri, Sep 30, 2022 at 01:51:47AM +0800, Hal Feng wrote:
+>>> Add bindings for the reset controller on the JH7110 RISC-V
+>>> SoC by StarFive Technology Ltd.
+>>>
+>>> Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+>>> ---
+>>>  .../bindings/reset/starfive,jh7110-reset.yaml | 54 +++++++++++++++++++
+>>>  1 file changed, 54 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml b/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
+>>> new file mode 100644
+>>> index 000000000000..bb0010c200f9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
+>>> @@ -0,0 +1,54 @@
+>>> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/reset/starfive,jh7110-reset.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: StarFive JH7110 SoC Reset Controller Device Tree Bindings
+>>> +
+>>> +maintainers:
+>>> +  - Emil Renner Berthing <kernel@esmil.dk>
+>>> +  - Hal Feng <hal.feng@linux.starfivetech.com>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    enum:
+>>> +      - starfive,jh7110-reset
+>>
+>> 'reg' needed? Is this a sub-block of something else?
+> 
+> Yes, the reset node is a child node of the syscon node, see patch 27 for detail.
+> You might not see the complete patches at that time due to technical issue of
+> our smtp email server. Again, I feel so sorry about that.
+> 
+> 	syscrg: syscrg@13020000 {
+> 		compatible = "syscon", "simple-mfd";
+> 		reg = <0x0 0x13020000 0x0 0x10000>;
+> 
+> 		syscrg_clk: clock-controller@13020000 {
+> 			compatible = "starfive,jh7110-clkgen-sys";
+> 			clocks = <&osc>, <&gmac1_rmii_refin>,
+> 				 <&gmac1_rgmii_rxin>,
+> 				 <&i2stx_bclk_ext>, <&i2stx_lrck_ext>,
+> 				 <&i2srx_bclk_ext>, <&i2srx_lrck_ext>,
+> 				 <&tdm_ext>, <&mclk_ext>;
+> 			clock-names = "osc", "gmac1_rmii_refin",
+> 				"gmac1_rgmii_rxin",
+> 				"i2stx_bclk_ext", "i2stx_lrck_ext",
+> 				"i2srx_bclk_ext", "i2srx_lrck_ext",
+> 				"tdm_ext", "mclk_ext";
+> 			#clock-cells = <1>;
+> 		};
+> 
+> 		syscrg_rst: reset-controller@13020000 {
+> 			compatible = "starfive,jh7110-reset";
+> 			#reset-cells = <1>;
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+So the answer to the "reg needed?" is what? You have unit address but no
+reg, so this is not correct.
+
+> 			starfive,assert-offset = <0x2F8>;
+> 			starfive,status-offset= <0x308>;
+> 			starfive,nr-resets = <JH7110_SYSRST_END>;
+> 		};
+> 	};
+> 
+> In this case, we get the memory mapped space through the parent node with syscon
+> APIs. You can see patch 13 for detail.
+> 
+> static int reset_starfive_register(struct platform_device *pdev, const u32 *asserted)
+> {
+
+
+(...)
+
+> 
+>>
+>>> +
+>>> +  "#reset-cells":
+>>> +    const: 1
+>>> +
+>>> +  starfive,assert-offset:
+>>> +    description: Offset of the first ASSERT register
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +
+>>> +  starfive,status-offset:
+>>> +    description: Offset of the first STATUS register
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>
+>> These can't be implied from the compatible string?
+> 
+> These two properties are the key differences among different reset controllers.
+
+Different as in different compatibles? Please answer the questions...
+
+> There are five memory regions for clock and reset in StarFive JH7110 SoC. They
+> are "syscrg", "aoncrg", "stgcrg", "ispcrg" and "voutcrg". Each memory region
+> has different reset ASSERT/STATUS register offset and different number of reset
+> signals. 
+
+Then these are not exactly the same devices, so using one compatible for
+them does not look correct.
+
+> After storing them in dt, the reset driver can register all reset
+> controllers with the same compatible string. 
+
+Which is not how the compatible should be used...
+
+> All we expect is that all reset
+> controllers in a single SoC use the same compatible string for matching and the
+> reset driver can be applied to all StarFive SoCs using different compatible strings.
+
+Keep driver out of the talks.
+
+> Just like
+
+Existing bad pattern is not an argument to keep it going. Fix bad
+patterns instead.
+
+> 
+> arch/riscv/boot/dts/starfive/jh7100.dtsi:
+> 
+> 	rstgen: reset-controller@11840000 {
+> 		compatible = "starfive,jh7100-reset";
+> 		reg = <0x0 0x11840000 0x0 0x10000>;
+> 		#reset-cells = <1>;
+> 		starfive,assert-offset = <0x0>;
+> 		starfive,status-offset= <0x10>;
+> 		starfive,nr-resets = <JH7100_RSTN_END>;
+> 	};
+> 
+> arch/riscv/boot/dts/starfive/jh7110.dtsi:
+> 
+> 	syscrg: syscrg@13020000 {
+> 		compatible = "syscon", "simple-mfd";
+> 		reg = <0x0 0x13020000 0x0 0x10000>;
+> 
+> 		syscrg_clk: clock-controller@13020000 {
+> 			compatible = "starfive,jh7110-clkgen-sys";
+> 			...
+> 		};
+> 
+> 		syscrg_rst: reset-controller@13020000 {
+> 			compatible = "starfive,jh7110-reset";
+> 			#reset-cells = <1>;
+> 			starfive,assert-offset = <0x2F8>;
+> 			starfive,status-offset= <0x308>;
+> 			starfive,nr-resets = <JH7110_SYSRST_END>;
+> 		};
+> 	};
+> 
+> 	aoncrg: aoncrg@17000000 {
+> 		compatible = "syscon", "simple-mfd";
+> 		reg = <0x0 0x17000000 0x0 0x10000>;
+> 
+> 		aoncrg_clk: clock-controller@17000000 {
+> 			compatible = "starfive,jh7110-clkgen-aon";
+> 			...
+> 		};
+> 
+> 		aoncrg_rst: reset-controller@17000000 {
+> 			compatible = "starfive,jh7110-reset";
+> 			#reset-cells = <1>;
+> 			starfive,assert-offset = <0x38>;
+> 			starfive,status-offset= <0x3C>;
+> 			starfive,nr-resets = <JH7110_AONRST_END>;
+> 		};
+> 	};
+> 
+> 	stgcrg: stgcrg@10230000 {	//Not submmited yet
+> 		compatible = "syscon", "simple-mfd";
+> 		reg = <0x0 0x10230000 0x0 0x10000>;
+> 
+> 		stgcrg_clk: clock-controller@10230000 {
+> 			compatible = "starfive,jh7110-clkgen-stg";
+> 			...
+> 		};
+> 
+> 		stgcrg_rst: reset-controller@10230000 {
+> 			compatible = "starfive,jh7110-reset";
+> 			#reset-cells = <1>;
+> 			starfive,assert-offset = <0x74>;
+> 			starfive,status-offset= <0x78>;
+> 			starfive,nr-resets = <JH7110_STGRST_END>;
+> 		};
+> 	};
+> 	...
+> 
+>>
+>>> +
+>>> +  starfive,nr-resets:
+>>> +    description: Number of reset signals
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>
+>> Why do you need this? Most bindings don't. If just to validate 'resets' 
+>> args, then don't.
+> 
+> Can be removed. Instead, the reset driver should includes some related
+> binding headers or defines some macros for pointing out the number of
+> reset signals of each reset controller.
+> 
+> Best regards,
+> Hal
+> 
+>>
+>>
+>>> +
+>>> +required:
+>>> +  - compatible
+>>> +  - "#reset-cells"
+>>> +  - starfive,assert-offset
+>>> +  - starfive,status-offset
+>>> +  - starfive,nr-resets
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +    #include <dt-bindings/reset/starfive-jh7110.h>
+>>> +
+>>> +    syscrg_rst: reset-controller@13020000 {
+
+Please test your patches.
+
+
+Best regards,
+Krzysztof
+
