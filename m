@@ -2,73 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E4F5FBA46
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:24:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB3CD5FBA68
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 20:32:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbiJKSYG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 11 Oct 2022 14:24:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
+        id S229635AbiJKScl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 14:32:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiJKSWh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:22:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A22B378BDE;
-        Tue, 11 Oct 2022 11:22:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2653561267;
-        Tue, 11 Oct 2022 18:22:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8B266C43143;
-        Tue, 11 Oct 2022 18:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665512530;
-        bh=Pg7LsPeRm+DrParGzVWTDfUCb4Osp6UwQq6LYQn9Eww=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=cwp2hev6Cu1BQquMlWOhfF/uHt+R58+VAPN0KSgp4whYqocXk93wICWa3+8sgVG8g
-         xEtiQrYAeQYA5ppsxDizjRB/MevOq9+SRaA/BX4pm70+E1twWDPCKAmuvc8dzPSp3y
-         SlKK4DGp78C3yoEe7zsfdPn/6xXwYu6McqL9VHAeCq9RoIQkRo+m1zlEx6lNpwDrsi
-         rQ80y6V4X19bVH6fyKwE1GaXgkCMlN35JTpFZqsVVRteY8KV5Mkinnj5zL8UuyFRje
-         c4dl7Hs+K0Gm7ASFMhGh34cY/LeMxEqmD8Hru7SW5hVuXZVSQ3fdgNxWXxg2q9codw
-         EWenTMQEeV1xw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 794A0E29F36;
-        Tue, 11 Oct 2022 18:22:10 +0000 (UTC)
-Subject: Re: [GIT PULL] bulk pin control changes for v6.1
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
-References: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdY1Z1xZQ2PDDn7gvbY4C04wbX9GwkDqGM-gzQsN+QkxdA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.1-1
-X-PR-Tracked-Commit-Id: 9d157c89c5569f0ef560b7a5b2d7bf59ae98499c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 979bb59016aed7c7c58baca2307d9d13890cc6ab
-Message-Id: <166551253049.20259.14807089664246189853.pr-tracker-bot@kernel.org>
-Date:   Tue, 11 Oct 2022 18:22:10 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229459AbiJKSck (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 14:32:40 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57BE9543CB;
+        Tue, 11 Oct 2022 11:32:38 -0700 (PDT)
+X-QQ-mid: bizesmtp62t1665513144tf8jdyjh
+Received: from [192.168.1.231] ( [113.72.146.141])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Wed, 12 Oct 2022 02:32:23 +0800 (CST)
+X-QQ-SSF: 0100000000200090B000B00A0000000
+X-QQ-FEAT: 7jw2iSiCazqbQ5tBRQTa4DP92tBGuiXW2qhhi7so1L8YQTSdLsD6bEm6SpfGf
+        AnLtfynvp3KCljyxHGLpZg2svKBE3NjLJqiOsJHbZqld0xi6C2tJUr+vygbGy7/40QEmzCJ
+        b3f2i3KLv3z8jeB9gNzUGEUETkotyseEm/DVu5pRoWsUhq8aaVNMc0szqOJEHy3h3fnaeiu
+        Gqqlcg3e52/CIKA3DquCxhklE6WNgDPEmbUue3dxy/d+2kCYK7OnxiLfSATsD7w3EQPslOc
+        96vgfeGembZqkA73X+Wqniwr1+sDqMuKSdXKnW2uns/wYmP/O7tsErQt50YdkmtPfV1IVGE
+        qs9V4wuExJV4i6tgmUMBOT/AtDG7mdEkioM7aScva/zOmRh7J11AhCpLh2GcQ==
+X-QQ-GoodBg: 0
+Message-ID: <BC2E1E01B669A06E+eb3ccb04-e930-9aa4-08b9-27621410bbd3@linux.starfivetech.com>
+Date:   Wed, 12 Oct 2022 02:32:22 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v1 30/30] RISC-V: Add StarFive JH7100 and JH7110 SoC
+ Kconfig options
+Content-Language: en-US
+To:     Conor Dooley <conor.dooley@microchip.com>
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220930122318.9244-1-hal.feng@linux.starfivetech.com>
+ <YzbjCIfoxjsFCuD1@wendy>
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+In-Reply-To: <YzbjCIfoxjsFCuD1@wendy>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Mon, 10 Oct 2022 23:03:34 +0200:
+On Fri, 30 Sep 2022 13:37:28 +0100, Conor Dooley wrote:
+> On Fri, Sep 30, 2022 at 08:23:18PM +0800, Hal Feng wrote:
+> > Add Kconfig options to select the specified StarFive SoC. Select
+> > necessary Kconfig options required by the specified SoC for booting.
+> > 
+> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+> > ---
+> >  arch/riscv/Kconfig.socs               | 27 ++++++++++++++++++++++++++-
+> >  arch/riscv/boot/dts/starfive/Makefile |  4 ++--
+> >  drivers/clk/starfive/Kconfig          | 14 ++++++--------
+> >  drivers/pinctrl/starfive/Kconfig      |  6 ++----
+> >  drivers/reset/Kconfig                 |  1 -
+> 
+> Firstly, you cannot change all of these files in one commit, sorry.
+> 
+> >  5 files changed, 36 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> > index 10f68a4359f9..321c448e7b6f 100644
+> > --- a/arch/riscv/Kconfig.socs
+> > +++ b/arch/riscv/Kconfig.socs
+> > @@ -22,10 +22,35 @@ config SOC_STARFIVE
+> >  	bool "StarFive SoCs"
+> >  	select PINCTRL
+> >  	select RESET_CONTROLLER
+> > +	select RESET_STARFIVE
+> 
+> Secondly, we are trying to get rid of selects in arch/riscv at the
+> moment, not add them. use "default SOC_STARFIVE" in
+> drivers/reset/kconfig instead please.
+> 
+> > +	help
+> > +	  This enables support for StarFive SoC platform hardware.
+> > +
+> > +if SOC_STARFIVE
+> 
+> I don't think we want to have per soc selection menus in arch code,
+> I think this should move to drivers/soc (a la Renesas) if you want to
+> have a per soc selection menu or else just do "default SOC_STARFIVE"
+> for both clock and pinctrl drivers in the clk and pinctrl Kconfig
+> entries.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.1-1
+Thanks for your helpful comments. I will drop this patch.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/979bb59016aed7c7c58baca2307d9d13890cc6ab
+Best regards,
+Hal
 
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
