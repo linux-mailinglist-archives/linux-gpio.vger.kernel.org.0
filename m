@@ -2,193 +2,320 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E7C5FAAD0
-	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 04:56:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D77065FAB97
+	for <lists+linux-gpio@lfdr.de>; Tue, 11 Oct 2022 06:17:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJKC4q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 10 Oct 2022 22:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54454 "EHLO
+        id S229454AbiJKEQ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 11 Oct 2022 00:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbiJKC4n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 10 Oct 2022 22:56:43 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 387805C9F9
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 19:56:40 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id c24so12000041plo.3
-        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 19:56:40 -0700 (PDT)
+        with ESMTP id S229464AbiJKEQ5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 11 Oct 2022 00:16:57 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08D231DC5
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 21:16:55 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id f23so12108003plr.6
+        for <linux-gpio@vger.kernel.org>; Mon, 10 Oct 2022 21:16:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eY6/yimYvoONiMO8pWSoqGtMa9qBuMUAo/bdP9lOba0=;
-        b=St4FezU9O7eQJTgTbgQ3mlkvzUgcaFOmGoS6fdofTzsS1eKPT2mljImssPXI+Y1Rqc
-         WAtcVBQFwcJWAI1Xn0kmEDfsOWpPTM1rwy9e0/jweWYZhcW3bSRihweGkMgkFrf49L/S
-         ougV8x2YLvsuSHJVWbHPxAjymhZlrdBRSfbPMetPXI3d8528oLanaqszgIjsyWcJxCec
-         RplspHGcXRVrZHhm3YLHBP2MThUZYt1l+u3w6nNEbK/gAalPObii9Y23LTB9h+xo5MZL
-         Q2olX6pqHr7fnJjbkDUcbicgWKLEOHuxY/ZmaY8NhBASe9hAP1FfwULvv+vyB/p7aAJi
-         dcZA==
+        bh=g6kiMC99I01rEu9wjNrq3xjnWd2NMws2Sc9s8b4yqX8=;
+        b=Bqu8pvrgtFGSy9oEcKgvNaW1JNeT6SqxwKWVujFya1NAn4NH4wxPGvq2cD7yP3id/Y
+         KbxojSkHMmM/9SyJqsvGDpAt0VTB+5wh3wqqB7TpNfYbx60gr2pxq1IGrX2K0rPG3ema
+         cTbgXW6HXG6BX26BsssED4TlFLdlFhoOyXqvaMxZsW3Msi8RfUTyW9yYzf2Tc0F3kKLE
+         d/NFc68T5YgU7UsnJQoxh7XV+w4zP1jrOSEANEVaETEOPsioFtPOd2QTIL4NSkXQbg72
+         xrC1SuAb6WMQ0/xyaDUyJZc0r0TYmwstbkCfJIVoaRaFdraAUmJfNedqUqSSmF3U1ut+
+         AeSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=eY6/yimYvoONiMO8pWSoqGtMa9qBuMUAo/bdP9lOba0=;
-        b=ycLUUk6TvFrMTtoWYleo2DnjnwL0mfYF64pHGnLKQ3qhHpEFdH8FEu7LXLCfdaHEAg
-         0TzSYjoTSpRH/ueWd+pS7fxA8BckVhDCt1GlcWqTmFTxxztEbw+Xf8tTkpKTgxK9amhL
-         P/HV72BnFBYFdiqiOENFINmDz/1aCLeLVLJlCNNdjLL5Risnni8eD4Gl2TQgeCGE1A+t
-         btGlZYMaDTea5a6H1PZHRI5ASjrW+73cVCNZtdi+JiO9S0L6XLpScKUja1/Ub/omI/M9
-         PHuoofI0uklo2P46KaJUUq3OS9CAZ0gtqui7pDASUKyC2nI1+mRpxiyUxcId1H9Ei1Cy
-         xg9Q==
-X-Gm-Message-State: ACrzQf3ECcrxRYKrcsJZpEZkWEd5L9aDnKzRRZYGyxUIb7kqor0FCPK8
-        Xl1qR8YMd6oxZWKQSfRiKAHL4Q==
-X-Google-Smtp-Source: AMsMyM5hXN0QiS8uqUcGpHD6JFZFALVhwI9j6zQ14TE/WoAuVWWVc4TcEEwMdmsILP6ZiXwLtzx0bQ==
-X-Received: by 2002:a17:90a:ad82:b0:20c:feb2:bceb with SMTP id s2-20020a17090aad8200b0020cfeb2bcebmr15457131pjq.93.1665456999661;
-        Mon, 10 Oct 2022 19:56:39 -0700 (PDT)
+        bh=g6kiMC99I01rEu9wjNrq3xjnWd2NMws2Sc9s8b4yqX8=;
+        b=aBgJZEJup78oVzkwCm4V3BiaD3v6CJlqoZse2YDw5Nx6F+qALHU64BezicqE8IcFrw
+         baQTAQIYpDEchTPVapbTnNNOSQvqz1wj/E8TxI0OhgAPW/JEdYThq5pDu/KyDl54lkht
+         rKq3upv9+Y+uAvGJoF40Pn4tq03Y9z1P26O/LTwLGctuC8E6KJmH6WMxRrOhQq6NUGpq
+         g+8SjxQZ9qGvpD0nBg2T0zKFCLm2J899dXzoGE0lweRxjTt2fpIWKABluhYVII1n5865
+         wVHGpqdNnG8rDgxDdZfxOIsRHH7TXZnnF7RIIr+m2DJHl45RnQhzp2z5IoPfVs6oqgi/
+         3rkA==
+X-Gm-Message-State: ACrzQf0/KLi1oe6x/+N6NBVfCjRwHx8CI/2eadmF6XS96616xyxdESpo
+        AuIZuwUD6eXg8vyYKGTPj8GTQQ==
+X-Google-Smtp-Source: AMsMyM5emnr6GSUKLTV98Tqb5BDZUREpXKFEbM3yuLVg9k2rSll2IjGeNgtc1/3tl4gyFSiSIed07Q==
+X-Received: by 2002:a17:90a:e7d0:b0:20c:169f:7503 with SMTP id kb16-20020a17090ae7d000b0020c169f7503mr19878706pjb.175.1665461814875;
+        Mon, 10 Oct 2022 21:16:54 -0700 (PDT)
 Received: from localhost ([122.172.86.128])
-        by smtp.gmail.com with ESMTPSA id z17-20020aa79911000000b005623df48a39sm7942588pff.13.2022.10.10.19.56.38
+        by smtp.gmail.com with ESMTPSA id s10-20020a17090a6e4a00b0020af2bab83fsm6865132pjm.23.2022.10.10.21.16.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 19:56:39 -0700 (PDT)
-Date:   Tue, 11 Oct 2022 08:26:36 +0530
+        Mon, 10 Oct 2022 21:16:54 -0700 (PDT)
+Date:   Tue, 11 Oct 2022 09:46:51 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Billy Tsai <billy_tsai@aspeedtech.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Chen-Yu Tsai <wenst@chromium.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Fabien Dessenne <fabien.dessenne@foss.st.com>,
-        Prathamesh Shete <pshete@nvidia.com>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-media@vger.kernel.org, linux-actions@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-rpi-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
-        patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-omap@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        Sean Wang <sean.wang@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 22/36] pinctrl: spear: Add missed header(s)
-Message-ID: <20221011025636.glm7wxtg4oo6c2j2@vireshk-i7>
-References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com>
- <20221010201453.77401-23-andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+Message-ID: <20221011041651.amibtu24kcgm67e7@vireshk-i7>
+References: <CAMRc=MfWs6Rmn3i6c_pygfJ4zG_3=LUOnnqPeVDq0u6DFWtEPA@mail.gmail.com>
+ <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+ <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
+ <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
+ <20220928111043.bs2ihopdxduavcsq@vireshk-i7>
+ <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+ <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
+ <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+ <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221010201453.77401-23-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10-10-22, 23:14, Andy Shevchenko wrote:
-> Do not imply that some of the generic headers may be always included.
-> Instead, include explicitly what we are direct user of.
-> 
-> While at it, sort headers alphabetically.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pinctrl/spear/pinctrl-spear.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/spear/pinctrl-spear.c b/drivers/pinctrl/spear/pinctrl-spear.c
-> index e0543c1ad641..18de2e70ea50 100644
-> --- a/drivers/pinctrl/spear/pinctrl-spear.c
-> +++ b/drivers/pinctrl/spear/pinctrl-spear.c
-> @@ -19,11 +19,13 @@
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/slab.h>
-> +
->  #include <linux/pinctrl/machine.h>
->  #include <linux/pinctrl/pinctrl.h>
->  #include <linux/pinctrl/pinmux.h>
-> -#include <linux/platform_device.h>
-> -#include <linux/slab.h>
->  
->  #include "pinctrl-spear.h"
+On 29-09-22, 15:55, Miguel Ojeda wrote:
+> It looks like a container whose elements get invalidated, so
+> `read_edge_event` could require an exclusive reference to `buffer` in
+> Rust, that way you cannot keep borrows to its elements like `ev` if
+> you want to call it. But of course this requires tying the lifetime of
+> the events to that of the buffer.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+What about the below code changes on top of V6 ?
+
+Changes:
+- Removed BufferInternal.
+- Event contains a reference to the Buffer now, with lifetime.
+- read_edge_event() expects a mutable reference to buffer, to make it
+  exclusive, i.e. disallow any previous Event references to exist at
+  compilation itself.
+
+diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/libgpiod/src/edge_event.rs
+index ce583916a2e3..f5426459d779 100644
+--- a/bindings/rust/libgpiod/src/edge_event.rs
++++ b/bindings/rust/libgpiod/src/edge_event.rs
+@@ -3,12 +3,11 @@
+ // Copyright 2022 Linaro Ltd. All Rights Reserved.
+ //     Viresh Kumar <viresh.kumar@linaro.org>
+ 
+-use std::sync::Arc;
+ use std::time::Duration;
+ 
+ use vmm_sys_util::errno::Error as Errno;
+ 
+-use super::{edge::event::BufferInternal, gpiod, EdgeKind, Error, Offset, OperationType, Result};
++use super::{edge::event::Buffer, gpiod, EdgeKind, Error, Offset, OperationType, Result};
+ 
+ /// Line edge events handling
+ ///
+@@ -22,15 +21,15 @@ use super::{edge::event::BufferInternal, gpiod, EdgeKind, Error, Offset, Operati
+ /// number of events are being read.
+ 
+ #[derive(Debug, Eq, PartialEq)]
+-pub struct Event {
+-    ibuffer: Option<Arc<BufferInternal>>,
++pub struct Event<'b> {
++    buffer: Option<&'b Buffer>,
+     event: *mut gpiod::gpiod_edge_event,
+ }
+ 
+-impl Event {
++impl<'b> Event<'b> {
+     /// Get an event stored in the buffer.
+-    pub(crate) fn new(ibuffer: &Arc<BufferInternal>, index: u64) -> Result<Self> {
+-        let event = unsafe { gpiod::gpiod_edge_event_buffer_get_event(ibuffer.buffer(), index) };
++    pub(crate) fn new(buffer: &'b Buffer, index: u64) -> Result<Self> {
++        let event = unsafe { gpiod::gpiod_edge_event_buffer_get_event(buffer.buffer(), index) };
+         if event.is_null() {
+             return Err(Error::OperationFailed(
+                 OperationType::EdgeEventBufferGetEvent,
+@@ -39,7 +38,7 @@ impl Event {
+         }
+ 
+         Ok(Self {
+-            ibuffer: Some(ibuffer.clone()),
++            buffer: Some(buffer),
+             event,
+         })
+     }
+@@ -54,7 +53,7 @@ impl Event {
+         }
+ 
+         Ok(Self {
+-            ibuffer: None,
++            buffer: None,
+             event,
+         })
+     }
+@@ -91,11 +90,11 @@ impl Event {
+     }
+ }
+ 
+-impl Drop for Event {
++impl<'b> Drop for Event<'b> {
+     /// Free the edge event.
+     fn drop(&mut self) {
+         // Free the event only if a copy is made
+-        if self.ibuffer.is_none() {
++        if self.buffer.is_none() {
+             unsafe { gpiod::gpiod_edge_event_free(self.event) };
+         }
+     }
+diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
+index e272e7aa9e9d..11c8b5e1d7c9 100644
+--- a/bindings/rust/libgpiod/src/event_buffer.rs
++++ b/bindings/rust/libgpiod/src/event_buffer.rs
+@@ -4,7 +4,6 @@
+ //     Viresh Kumar <viresh.kumar@linaro.org>
+ 
+ use std::os::raw::c_ulong;
+-use std::sync::Arc;
+ 
+ use vmm_sys_util::errno::Error as Errno;
+ 
+@@ -12,11 +11,11 @@ use super::{edge, gpiod, Error, OperationType, Result};
+ 
+ /// Line edge events buffer
+ #[derive(Clone, Debug, Eq, PartialEq)]
+-pub(crate) struct BufferInternal {
++pub struct Buffer {
+     buffer: *mut gpiod::gpiod_edge_event_buffer,
+ }
+ 
+-impl BufferInternal {
++impl Buffer {
+     /// Create a new edge event buffer.
+     ///
+     /// If capacity equals 0, it will be set to a default value of 64. If
+@@ -37,36 +36,6 @@ impl BufferInternal {
+     pub(crate) fn buffer(&self) -> *mut gpiod::gpiod_edge_event_buffer {
+         self.buffer
+     }
+-}
+-
+-impl Drop for BufferInternal {
+-    /// Free the edge event buffer and release all associated resources.
+-    fn drop(&mut self) {
+-        unsafe { gpiod::gpiod_edge_event_buffer_free(self.buffer) };
+-    }
+-}
+-
+-/// Line edge events buffer
+-#[derive(Clone, Debug, Eq, PartialEq)]
+-pub struct Buffer {
+-    ibuffer: Arc<BufferInternal>,
+-}
+-
+-impl Buffer {
+-    /// Create a new edge event buffer.
+-    ///
+-    /// If capacity equals 0, it will be set to a default value of 64. If
+-    /// capacity is larger than 1024, it will be limited to 1024.
+-    pub fn new(capacity: usize) -> Result<Self> {
+-        Ok(Self {
+-            ibuffer: Arc::new(BufferInternal::new(capacity)?),
+-        })
+-    }
+-
+-    /// Private helper, Returns gpiod_edge_event_buffer
+-    pub(crate) fn buffer(&self) -> *mut gpiod::gpiod_edge_event_buffer {
+-        self.ibuffer.buffer()
+-    }
+ 
+     /// Get the capacity of the event buffer.
+     pub fn capacity(&self) -> usize {
+@@ -75,7 +44,7 @@ impl Buffer {
+ 
+     /// Read an event stored in the buffer.
+     pub fn event(&self, index: u64) -> Result<edge::Event> {
+-        edge::Event::new(&self.ibuffer, index)
++        edge::Event::new(self, index)
+     }
+ 
+     /// Get the number of events the buffer contains.
+@@ -88,3 +57,10 @@ impl Buffer {
+         self.len() == 0
+     }
+ }
++
++impl Drop for Buffer {
++    /// Free the edge event buffer and release all associated resources.
++    fn drop(&mut self) {
++        unsafe { gpiod::gpiod_edge_event_buffer_free(self.buffer) };
++    }
++}
+diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
+index 617efaa34d58..e4ff951aef29 100644
+--- a/bindings/rust/libgpiod/src/line_request.rs
++++ b/bindings/rust/libgpiod/src/line_request.rs
+@@ -218,7 +218,7 @@ impl Request {
+     /// Get a number of edge events from a line request.
+     ///
+     /// This function will block if no event was queued for the line.
+-    pub fn read_edge_events(&self, buffer: &edge::event::Buffer) -> Result<u32> {
++    pub fn read_edge_events(&self, buffer: &mut edge::event::Buffer) -> Result<u32> {
+         let ret = unsafe {
+             gpiod::gpiod_line_request_read_edge_event(
+                 self.request,
+
+
+And here is an example where we get compilation error on the commented
+line:
+
+fn main() -> Result<()> {
+    let mut lsettings = line::Settings::new()?;
+    let lconfig = line::Config::new()?;
+    let offsets = vec![1, 2];
+
+    lsettings.set_prop(&[SettingVal::EdgeDetection(Some(Edge::Both))])?;
+    lconfig.add_line_settings(&offsets, lsettings)?;
+
+    let path = "/dev/gpiochip0".to_string();
+    let chip = Chip::open(&path)?;
+
+    let rconfig = request::Config::new()?;
+
+    let mut buffer = edge::event::Buffer::new(2)?;
+    let request = chip.request_lines(&rconfig, &lconfig)?;
+
+    loop {
+        match request.wait_edge_event(None) {
+            Err(x) => {
+                println!("{:?}", x);
+                return Err(Error::InvalidArguments);
+            }
+
+            Ok(false) => {
+                // This shouldn't happen as the call is blocking.
+                panic!();
+            }
+            Ok(true) => (),
+        }
+
+        request.read_edge_events(&mut buffer)?;
+        let event0 = buffer.event(0)?;
+        let event1 = buffer.event(1)?;
+
+        println!("{:?}", (event0.line_offset(), event1.line_offset()));
+        drop(event0);
+
+        // This fails to compile
+        // request.read_edge_events(&mut buffer)?;
+
+        drop(event1);
+        // This compiles fine
+        request.read_edge_events(&mut buffer)?;
+    }
+}
 
 -- 
 viresh
