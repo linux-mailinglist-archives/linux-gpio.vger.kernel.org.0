@@ -2,377 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5ACA5FC191
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 10:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 032865FC2D6
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 11:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbiJLIB4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 04:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50858 "EHLO
+        id S229811AbiJLJQN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 05:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbiJLIBz (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 04:01:55 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 934A6B1BBC
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 01:01:54 -0700 (PDT)
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4CD6B3F592
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 08:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1665561710;
-        bh=pPu9MmXkeNI2LOd8j8J0zuYhlY1BtgVw8LblJb0SHAk=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=F1mbsIVAKIMQU6KGVDzXmSyy+3BAXNl2VXmZ38UhmBNDt+NbYirACDPfS1PMWXSYh
-         A3MwxtMT9v32nWCx6wwzC+YaBDsdU/x4imJ0qw4/CHCVljQ92jOsM+GENZkwEx7vHu
-         V/ihaM1jw7wsQ/3jD8zsp0I8JLGVMl431QSHsB3OsOmNGF9E8pbKj2kpSNW4xvb7k6
-         pustVKmzvO8kEKSy+oROIXetlY93S975XA1Es9oHxupQDI/Yrkdh7gA//i9DG/6YsW
-         LVQ+hSPPDFUMsVZytiVCWCmjV1S5/KZZhtQnxIokVhx8HgnYlCFV7KQ8NWD4gIci+6
-         cmPrERBpiCmzA==
-Received: by mail-qk1-f199.google.com with SMTP id w10-20020a05620a444a00b006ce9917ea1fso13631142qkp.16
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 01:01:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pPu9MmXkeNI2LOd8j8J0zuYhlY1BtgVw8LblJb0SHAk=;
-        b=14Xp9ol8ic2oax7Ne7kLW4zdWeRO6ZUhhiTIrjmoH06IfBGTa8N3OmaYXmWAmvMA3w
-         ltYLlARTGciLrE6Y4UFNxHsakR63jINXSdpAw88nMrcXJvYVr7T54cdPmoSqclQDX0wf
-         LYqCIbhQv3ZE6WaTUsMb20c4tWOGCpJ9YJ89SZOUNLQ/MY8o2tcWUHUz6beNnlIhCYtS
-         8UseNuqgvQuyYv2SZIbD/HQyTLdsSK+C6ok4/5rb/w9qX9fK5/OsE82OFpN6wCU+NVka
-         HpCd5tKMoaMl7wClEMoKesqV2/yT1mObRpbfuz164+wqaRCLRFWiVCbtDU5TG3TjdmPB
-         RM5g==
-X-Gm-Message-State: ACrzQf36GEb1m8Q8FeFTAQ8fW85mMCXrCcqte6Udk5ILQ2GTGmu2wuI4
-        yairPkV3Cd6cLEfsNzaj9GPaAHEeBVz+RtSYWFalfOYPYup0ytXePeYzkwwPRlntxNZB90jS858
-        DKNXYWRtiMXXsIOB4tC3gymKtvTiW/1wLZB1p8klJFX+8b9spmUByR/U=
-X-Received: by 2002:a05:6214:2301:b0:498:9f6f:28d with SMTP id gc1-20020a056214230100b004989f6f028dmr22305179qvb.5.1665561708941;
-        Wed, 12 Oct 2022 01:01:48 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM4BjVdcXzAwhXOcUXbaOEBSXPtiNTrEjbg/sZEuK9myUumUG1dG5KFTbU9zJywZ/QJNO+Cw30ztSSVCjbByWhU=
-X-Received: by 2002:a05:6214:2301:b0:498:9f6f:28d with SMTP id
- gc1-20020a056214230100b004989f6f028dmr22305160qvb.5.1665561708558; Wed, 12
- Oct 2022 01:01:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220929175147.19749-1-hal.feng@linux.starfivetech.com> <20220929184349.GA2551443-robh@kernel.org>
- <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
-In-Reply-To: <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
-From:   Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Date:   Wed, 12 Oct 2022 10:01:32 +0200
-Message-ID: <CAJM55Z9HwxTmgnPGvFpM_CtaghP0d_kc55bZcrFs3Q0fAEXPng@mail.gmail.com>
-Subject: Re: [PATCH v1 12/30] dt-bindings: reset: Add starfive,jh7110-reset bindings
-To:     Hal Feng <hal.feng@linux.starfivetech.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        with ESMTP id S229890AbiJLJQL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 05:16:11 -0400
+Received: from aposti.net (aposti.net [89.234.176.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960597331F;
+        Wed, 12 Oct 2022 02:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1665566157; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s+g0+ssYTgL3cZkE5/H6taOX78xERs3DGn3pyH5uewU=;
+        b=q1TTDkSv+2wywK6AIXiGaOkH7iZ2YU3VEKYOBAZiyQM7JBPfmc8c6P2ZhHrYUGYo8pdYOS
+        dts7t4kZKIQ9e1u3iLHUzQuRMcbtwmO5Z8KpYm4wJCUKd79SLah8Tf9+RyDQWaVWq5AUrm
+        d0C/wxgx1Yk/JFU/GDZxLIKL5vEmKNw=
+Date:   Wed, 12 Oct 2022 10:15:29 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 11/36] pinctrl: ingenic: Add missed header(s)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        =?iso-8859-2?q?Rafa=B3_Mi=B3ecki?= <rafal@milecki.pl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        Andreas =?iso-8859-1?q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
         Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Message-Id: <T1VMJR.YAQIRYFT8EC22@crapouillou.net>
+In-Reply-To: <20221010201453.77401-12-andriy.shevchenko@linux.intel.com>
+References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com>
+        <20221010201453.77401-12-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 11 Oct 2022 at 18:21, Hal Feng <hal.feng@linux.starfivetech.com> wrote:
->
-> On Thu, 29 Sep 2022 13:43:49 -0500, Rob Herring wrote:
-> > On Fri, Sep 30, 2022 at 01:51:47AM +0800, Hal Feng wrote:
-> > > Add bindings for the reset controller on the JH7110 RISC-V
-> > > SoC by StarFive Technology Ltd.
-> > >
-> > > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
-> > > ---
-> > >  .../bindings/reset/starfive,jh7110-reset.yaml | 54 +++++++++++++++++++
-> > >  1 file changed, 54 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml b/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
-> > > new file mode 100644
-> > > index 000000000000..bb0010c200f9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/reset/starfive,jh7110-reset.yaml
-> > > @@ -0,0 +1,54 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/reset/starfive,jh7110-reset.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: StarFive JH7110 SoC Reset Controller Device Tree Bindings
-> > > +
-> > > +maintainers:
-> > > +  - Emil Renner Berthing <kernel@esmil.dk>
-> > > +  - Hal Feng <hal.feng@linux.starfivetech.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - starfive,jh7110-reset
-> >
-> > 'reg' needed? Is this a sub-block of something else?
->
-> Yes, the reset node is a child node of the syscon node, see patch 27 for detail.
-> You might not see the complete patches at that time due to technical issue of
-> our smtp email server. Again, I feel so sorry about that.
->
->         syscrg: syscrg@13020000 {
->                 compatible = "syscon", "simple-mfd";
->                 reg = <0x0 0x13020000 0x0 0x10000>;
->
->                 syscrg_clk: clock-controller@13020000 {
->                         compatible = "starfive,jh7110-clkgen-sys";
->                         clocks = <&osc>, <&gmac1_rmii_refin>,
->                                  <&gmac1_rgmii_rxin>,
->                                  <&i2stx_bclk_ext>, <&i2stx_lrck_ext>,
->                                  <&i2srx_bclk_ext>, <&i2srx_lrck_ext>,
->                                  <&tdm_ext>, <&mclk_ext>;
->                         clock-names = "osc", "gmac1_rmii_refin",
->                                 "gmac1_rgmii_rxin",
->                                 "i2stx_bclk_ext", "i2stx_lrck_ext",
->                                 "i2srx_bclk_ext", "i2srx_lrck_ext",
->                                 "tdm_ext", "mclk_ext";
->                         #clock-cells = <1>;
->                 };
->
->                 syscrg_rst: reset-controller@13020000 {
->                         compatible = "starfive,jh7110-reset";
->                         #reset-cells = <1>;
->                         starfive,assert-offset = <0x2F8>;
->                         starfive,status-offset= <0x308>;
->                         starfive,nr-resets = <JH7110_SYSRST_END>;
->                 };
->         };
->
-> In this case, we get the memory mapped space through the parent node with syscon
-> APIs. You can see patch 13 for detail.
->
-> static int reset_starfive_register(struct platform_device *pdev, const u32 *asserted)
-> {
->         struct starfive_reset *data;
->         int ret;
->
->         data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->         if (!data)
->                 return -ENOMEM;
->
->         data->regmap = device_node_to_regmap(pdev->dev.of_node);                  //for JH7100
->         if (IS_ERR(data->regmap)) {
->                 data->regmap = syscon_node_to_regmap(pdev->dev.of_node->parent);  //for JH7110
->                 if (IS_ERR(data->regmap)) {
->                         dev_err(&pdev->dev, "failed to get regmap (error %ld)\n",
->                                 PTR_ERR(data->regmap));
->                         return PTR_ERR(data->regmap);
->                 }
->         }
->         ...
-> }
->
-> We use this method to avoid errors when remapping the same address in two
-> different drivers, because clock and reset of StarFive JH7110 share a common
-> register address region. For similar implementation, refer to file [1] and [2].
->
-> [1] arch/riscv/boot/dts/canaan/k210.dtsi
->
->         sysctl: syscon@50440000 {
->                 compatible = "canaan,k210-sysctl",
->                              "syscon", "simple-mfd";
->                 reg = <0x50440000 0x100>;
->                 clocks = <&sysclk K210_CLK_APB1>;
->                 clock-names = "pclk";
->
->                 sysclk: clock-controller {
->                         #clock-cells = <1>;
->                         compatible = "canaan,k210-clk";
->                         clocks = <&in0>;
->                 };
->
->                 sysrst: reset-controller {
->                         compatible = "canaan,k210-rst";
->                         #reset-cells = <1>;
->                 };
->
->                 reboot: syscon-reboot {
->                         compatible = "syscon-reboot";
->                         regmap = <&sysctl>;
->                         offset = <48>;
->                         mask = <1>;
->                         value = <1>;
->                 };
->         };
->
-> [2] drivers/reset/reset-k210.c
 
-Here the syscon makes a little more sense since the same memory area
-does at least 3 different things, but on the JH7110 it is a dedicated
-"clock and reset generator", CRG. So this is much better modelled with
-a single driver taking care of both the clock and resets like the
-original driver did. If you do
 
-git grep reset_controller_register drivers/clk
+Le lun., oct. 10 2022 at 23:14:27 +0300, Andy Shevchenko=20
+<andriy.shevchenko@linux.intel.com> a =E9crit :
+> Do not imply that some of the generic headers may be always included.
+> Instead, include explicitly what we are direct user of.
+>=20
+> While at it, sort headers alphabetically.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-..you can see that there are lots of other drivers for such
-peripherals that combine clock and reset.
+Reviewed-by: Paul Cercueil <paul@crapouillou.net>
 
-> >
-> > > +
-> > > +  "#reset-cells":
-> > > +    const: 1
-> > > +
-> > > +  starfive,assert-offset:
-> > > +    description: Offset of the first ASSERT register
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +
-> > > +  starfive,status-offset:
-> > > +    description: Offset of the first STATUS register
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > These can't be implied from the compatible string?
->
-> These two properties are the key differences among different reset controllers.
-> There are five memory regions for clock and reset in StarFive JH7110 SoC. They
-> are "syscrg", "aoncrg", "stgcrg", "ispcrg" and "voutcrg". Each memory region
-> has different reset ASSERT/STATUS register offset and different number of reset
-> signals. After storing them in dt, the reset driver can register all reset
-> controllers with the same compatible string. All we expect is that all reset
-> controllers in a single SoC use the same compatible string for matching and the
-> reset driver can be applied to all StarFive SoCs using different compatible strings.
-> Just like
->
-> arch/riscv/boot/dts/starfive/jh7100.dtsi:
->
->         rstgen: reset-controller@11840000 {
->                 compatible = "starfive,jh7100-reset";
->                 reg = <0x0 0x11840000 0x0 0x10000>;
->                 #reset-cells = <1>;
->                 starfive,assert-offset = <0x0>;
->                 starfive,status-offset= <0x10>;
->                 starfive,nr-resets = <JH7100_RSTN_END>;
->         };
->
-> arch/riscv/boot/dts/starfive/jh7110.dtsi:
->
->         syscrg: syscrg@13020000 {
->                 compatible = "syscon", "simple-mfd";
->                 reg = <0x0 0x13020000 0x0 0x10000>;
->
->                 syscrg_clk: clock-controller@13020000 {
->                         compatible = "starfive,jh7110-clkgen-sys";
->                         ...
->                 };
->
->                 syscrg_rst: reset-controller@13020000 {
->                         compatible = "starfive,jh7110-reset";
->                         #reset-cells = <1>;
->                         starfive,assert-offset = <0x2F8>;
->                         starfive,status-offset= <0x308>;
->                         starfive,nr-resets = <JH7110_SYSRST_END>;
->                 };
->         };
->
->         aoncrg: aoncrg@17000000 {
->                 compatible = "syscon", "simple-mfd";
->                 reg = <0x0 0x17000000 0x0 0x10000>;
->
->                 aoncrg_clk: clock-controller@17000000 {
->                         compatible = "starfive,jh7110-clkgen-aon";
->                         ...
->                 };
->
->                 aoncrg_rst: reset-controller@17000000 {
->                         compatible = "starfive,jh7110-reset";
->                         #reset-cells = <1>;
->                         starfive,assert-offset = <0x38>;
->                         starfive,status-offset= <0x3C>;
->                         starfive,nr-resets = <JH7110_AONRST_END>;
->                 };
->         };
->
->         stgcrg: stgcrg@10230000 {       //Not submmited yet
->                 compatible = "syscon", "simple-mfd";
->                 reg = <0x0 0x10230000 0x0 0x10000>;
->
->                 stgcrg_clk: clock-controller@10230000 {
->                         compatible = "starfive,jh7110-clkgen-stg";
->                         ...
->                 };
->
->                 stgcrg_rst: reset-controller@10230000 {
->                         compatible = "starfive,jh7110-reset";
->                         #reset-cells = <1>;
->                         starfive,assert-offset = <0x74>;
->                         starfive,status-offset= <0x78>;
->                         starfive,nr-resets = <JH7110_STGRST_END>;
->                 };
->         };
->         ...
->
-> >
-> > > +
-> > > +  starfive,nr-resets:
-> > > +    description: Number of reset signals
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> >
-> > Why do you need this? Most bindings don't. If just to validate 'resets'
-> > args, then don't.
->
-> Can be removed. Instead, the reset driver should includes some related
-> binding headers or defines some macros for pointing out the number of
-> reset signals of each reset controller.
->
-> Best regards,
-> Hal
->
-> >
-> >
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - "#reset-cells"
-> > > +  - starfive,assert-offset
-> > > +  - starfive,status-offset
-> > > +  - starfive,nr-resets
-> > > +
-> > > +additionalProperties: false
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    #include <dt-bindings/reset/starfive-jh7110.h>
-> > > +
-> > > +    syscrg_rst: reset-controller@13020000 {
-> > > +        compatible = "starfive,jh7110-reset";
-> > > +        #reset-cells = <1>;
-> > > +        starfive,assert-offset = <0x2F8>;
-> > > +        starfive,status-offset= <0x308>;
-> > > +        starfive,nr-resets = <JH7110_SYSRST_END>;
-> > > +    };
-> > > +
-> > > +...
-> > > --
-> > > 2.17.1
-> > >
-> > >
-> >
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+Cheers,
+-Paul
+
+> ---
+>  drivers/pinctrl/pinctrl-ingenic.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-ingenic.c=20
+> b/drivers/pinctrl/pinctrl-ingenic.c
+> index 7e732076dedf..dbc25a60fbff 100644
+> --- a/drivers/pinctrl/pinctrl-ingenic.c
+> +++ b/drivers/pinctrl/pinctrl-ingenic.c
+> @@ -14,16 +14,18 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/of.h>
+> -#include <linux/pinctrl/pinctrl.h>
+> -#include <linux/pinctrl/pinmux.h>
+> -#include <linux/pinctrl/pinconf.h>
+> -#include <linux/pinctrl/pinconf-generic.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  #include <linux/regmap.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/slab.h>
+>=20
+> +#include <linux/pinctrl/consumer.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinmux.h>
+> +
+>  #include "core.h"
+>  #include "pinconf.h"
+>  #include "pinmux.h"
+> --
+> 2.35.1
+>=20
+
+
