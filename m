@@ -2,85 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D90AE5FC408
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 12:54:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1DD95FC422
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 13:10:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229896AbiJLKyr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 06:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        id S229646AbiJLLKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 07:10:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbiJLKyX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 06:54:23 -0400
-Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5301C149C
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 03:54:03 -0700 (PDT)
-Received: by mail-yb1-xb2a.google.com with SMTP id j7so19590798ybb.8
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 03:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5N+aMihLorZXBHcklDfHgYNT/W4ZQvt0cLc1vwY1KVE=;
-        b=IFZQqXKZFuu4ERlIj5mnPUX4TEK9Q30/TnV67vZ7ut6qmrkfIhgvNOK1apQrKhFWRD
-         6TmuTXGRhQru75qBFlOFVZoKX9HhGaVyihmtiN/+/3IcCN+o1xkyyOIfxKkb/8kKyOuC
-         zdVe5mmhIcLQaliXWgRcUqkHMkO3QRGz0h+Tl/3OG39+d5T3kK+GjMHhqPx4E1KtmRqO
-         ruVGf5yc7eWfQmBKWRrF00PAaT1o7Gson+UnzZNh/ls5QBEyP+Lfnerf8HAhzttJ4vYF
-         CVNZ6OCnLTh9i2Vp0qbqJIG9AhmwLg3nIKRhgnnyHSbcqQ/cQPI+O8+55KdXKmDz4pXG
-         6vIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5N+aMihLorZXBHcklDfHgYNT/W4ZQvt0cLc1vwY1KVE=;
-        b=tFmH05Igaec7x08ej9FkHT7Wt1vqXJBfdB2YBxEDaV4rss7i8V4xV+rHT5O/hjRAHo
-         LWK15wQhaiWzdYMMhBC3qfhViqDehUWno/+uZWg6JFrHH9oNDsfyLadRH/uaGlEcfUVz
-         +S1wTKLyS7KxKwgIYz2P4xyZqvNDLlG+trENDfbQm/H6KKqylmP9b/osBnVkyCjgNJrj
-         Ido8J68Mtz/olm+YMi0fG8m/7A7R48FGzi1JQwg4sfTc9qyFGf+VrvwOGBp4juVPNCHn
-         EdTqgcS7HApvycP/w3WZouTtynDyQqVPeRLQe7waiBqXMLXFLvUPGWN2q4GvpqpI8kk9
-         vSjw==
-X-Gm-Message-State: ACrzQf1U2hriV6DDr4OT7sLr2ALvSIkhLEuSWuskg7xzYpMKeINqxvl2
-        HeahCweaYpNs69Jm+lxOL4Xk1wozpDIK6+2tDbI=
-X-Google-Smtp-Source: AMsMyM6fStb7pr3FM08EVwpu8dPCFXrrMrwOIgL/3tjf45R4wpV/gdq5Uf9FKFLT0FPB2WWyUKkgna6DZ/Y9+4z+/zI=
-X-Received: by 2002:a05:6902:13c7:b0:695:84d9:c5da with SMTP id
- y7-20020a05690213c700b0069584d9c5damr27984624ybu.650.1665572042872; Wed, 12
- Oct 2022 03:54:02 -0700 (PDT)
+        with ESMTP id S229610AbiJLLKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 07:10:43 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4169A926A;
+        Wed, 12 Oct 2022 04:10:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665573042; x=1697109042;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q7v71ZQ6SrTwwIFCLSZGjWB6QaC6SnhQ7675+Q8eeQw=;
+  b=mmiwtnkgTXD1KCWWETqWuvuGBaBcjyZDeQ/0v3ASFyVNzwoCALJXh2XE
+   2SNl+QjU6JzHyLrktY6Sn8rhQRMqlY9BMQRFYB60WC9Ua+FcLxupwav3T
+   IJZKySypD0eFk+dtSC+6VI+d8yG5Bg4OjENH4dXOjYJKW/GIO1/F4TiFz
+   GzZju+vqgFZTK22ym8gSNbkSRgeMGz2yXUlhsfY7P9APRax2fKQo+gMVd
+   QDL87MkZUB26XYgTQm0MhLS0OE5XrFJ7LmvUkHVJLVMPXL625HzLK7BNn
+   BUxJiMTKXTEA0kS4T4jNUTzEQ6+j05dFG45/MPghNWrHuKIW700B1enQt
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="288032305"
+X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
+   d="scan'208";a="288032305"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 04:10:42 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="659892843"
+X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
+   d="scan'208";a="659892843"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 12 Oct 2022 04:10:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oiZdG-005nZ6-0q;
+        Wed, 12 Oct 2022 14:10:38 +0300
+Date:   Wed, 12 Oct 2022 14:10:37 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 6/7] gpiolib: of: factor out code overriding gpio line
+ polarity
+Message-ID: <Y0agrWGm5CR3Rk5e@smile.fi.intel.com>
+References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com>
+ <20221011-gpiolib-quirks-v1-6-e01d9d3e7b29@gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:7000:5a85:b0:3c0:6a39:890a with HTTP; Wed, 12 Oct 2022
- 03:54:02 -0700 (PDT)
-Reply-To: jennifermbaya036@gmail.com
-From:   "Mrs.Jennifer Mbaya" <issakak65@gmail.com>
-Date:   Wed, 12 Oct 2022 11:54:02 +0100
-Message-ID: <CAMwbs2CDdeNJnMj+hyC2+oR=QsANZDeGuXUAF+8EjEz-iW0=YA@mail.gmail.com>
-Subject: Edunsaaja
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221011-gpiolib-quirks-v1-6-e01d9d3e7b29@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Edunsaaja
+On Tue, Oct 11, 2022 at 03:19:34PM -0700, Dmitry Torokhov wrote:
+> There are several instances where we use a separate property to
+> override polarity specified in gpio property. Factor it out into
+> a separate function.
 
-Nimess=C3=A4si on palkinto Yhdistyneilt=C3=A4 Kansakunnilta ja Maailman
-terveysj=C3=A4rjest=C3=B6lt=C3=A4, joka on osa kansainv=C3=A4list=C3=A4 val=
-uuttarahastoa, johon
-s=C3=A4hk=C3=B6postisi, osoite ja raha on luovutettu meille siirtoa varten,
-vahvista yst=C3=A4v=C3=A4llisesti tietosi siirtoa varten.
-Meit=C3=A4 kehotettiin siirt=C3=A4m=C3=A4=C3=A4n kaikki vireill=C3=A4 oleva=
-t tapahtumat
-seuraavien kahden aikana, mutta jos olet vastaanottanut rahasi, j=C3=A4t=C3=
-=A4
-t=C3=A4m=C3=A4 viesti huomioimatta, jos et toimi heti.
-Tarvitsemme kiireellist=C3=A4 vastausta t=C3=A4h=C3=A4n viestiin, t=C3=A4m=
-=C3=A4 ei ole yksi
-niist=C3=A4 Internet-huijareista, se on pandemiaapu.
-Jennifer
+...
+
+>  static void of_gpio_flags_quirks(const struct device_node *np,
+>  				 const char *propname,
+>  				 enum of_gpio_flags *flags,
+> @@ -145,7 +167,7 @@ static void of_gpio_flags_quirks(const struct device_node *np,
+>  	     (!(strcmp(propname, "enable-gpio") &&
+>  		strcmp(propname, "enable-gpios")) &&
+>  	      of_device_is_compatible(np, "regulator-gpio")))) {
+> -		bool active_low = !of_property_read_bool(np,
+> +		bool active_high = of_property_read_bool(np,
+
+Defining
+
+	bool active_high;
+
+at the top of the function will save you a few ugly indented code lines here
+and in the next patch.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
