@@ -2,121 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C8F25FC84D
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 17:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C10B5FC85A
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 17:25:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiJLPVc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 11:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52846 "EHLO
+        id S229484AbiJLPZR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 11:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbiJLPVb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 11:21:31 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.155.67.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 222B9DD8B8;
-        Wed, 12 Oct 2022 08:21:28 -0700 (PDT)
-X-QQ-mid: bizesmtp67t1665588064t60qpwjk
-Received: from [192.168.1.231] ( [113.72.146.141])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 12 Oct 2022 23:21:03 +0800 (CST)
-X-QQ-SSF: 01000000002000B09000B00A0000000
-X-QQ-FEAT: KIY2vMteGsnGVHU+ba51y7vPyCbSJaIaZ6gxnecS9ihrQQ367JLoPxBIpdNbj
-        wlbEPxPu/5ajoHlIXg6QhPtejOg4CZ7gCycgNWfh5YL1hPaCldCSGwcN6tzEdQwtt0Pr9Ni
-        EHf5nhCGXvAqQZwRBK6+j/D0a1NzK+cx+/yMLFVXaJtCvhCAA9EAfVSX0aXACTP7JCIWGEi
-        zLa/M2SnrL+l3WF4guJJCAFD34U02adfqy1bp+/cmQ7HopUnq286iLGRUvjhJ4FHPw9qgZM
-        xd3wdNV8fJd5Yj7u3UohYqwngziPBVBtQySkNPR5BDl9THlQ6wlemfyQN6hWSQfR8nSE1Hs
-        GDKWyWS5XvLtuegT39Q/5HzwV9YEC2RplY1tsVI9ueMMcOt9sqmZrMeQiBFbQ==
-X-QQ-GoodBg: 0
-Message-ID: <3BC97E98404F6FB8+c46d2e75-a2ce-96a2-04bd-f37a7f63ff31@linux.starfivetech.com>
-Date:   Wed, 12 Oct 2022 23:21:02 +0800
+        with ESMTP id S229701AbiJLPZQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 11:25:16 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE5523CBE4;
+        Wed, 12 Oct 2022 08:25:11 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id b15so15575645pje.1;
+        Wed, 12 Oct 2022 08:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6sAsGYX3J2Ywp9AFoeC19lv0Q2JC+XewfioV1XazBfU=;
+        b=jgi1xr+4QST0cSoTuy8B71zEhLRujUBFMmA2BVNnhFBYOrwMJYkfeGc+6ZKyPK+TNP
+         nrUdJF6SJsfr5h6R7MiA4nbWoy0HzA9PCrTVyvV9y+QArbRRkVxsINbjyDLNKtN9JJB0
+         ewlXtu5d0yyASUjtnHtEOgR/zp17y8ysYLSwtChvEvoTi9+l1S1VAxlKIXQH1zA3yGGq
+         8+6gTLZEpp6stncaM5fPBF7g0yEogepFARSQPunLTD0jEH7U81tP69d6lGXWS2vnK69m
+         fNVz3iUv9qxziIiHeCIZpId3kwaWXT9HoUuqLQqejdX9/ribfs9Zjro6fFOgAE7oOkIh
+         /Nbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6sAsGYX3J2Ywp9AFoeC19lv0Q2JC+XewfioV1XazBfU=;
+        b=InZC9m1KGm48uIGVnVgHimTwPtCp6UaZoCkcPvl4SCpkl1NxXOrj4JHLzzt8Sk5vIy
+         qe0Qug7Ce2nEADgyiHRRo94cHvCU/QypiPZV/6/sa3nvpGzjRn4Pf7ZcHAAjo5W/fnfW
+         KLma6+IQyluOHAn8ivQ0seDSfZKPGREgCLkTexKbob4lhxJmLxvkVdynrHLCLDbFE5aa
+         EpnwpINXv/qjixo/HR7ux3SdKtH36dl/SDu3Hcu0+2rjEs9hG93mhGnvugnwGc853yhS
+         XLoFTNsqOE5YUXVnq37EroSbx5+F6NmYGJG4Flq8ZYZLCnd8hNqOkpF2LyxStAq07v7j
+         AsKQ==
+X-Gm-Message-State: ACrzQf1vAiK4Xj+AdBec2vfN1gaZcmVnKBm6Ib/KXc0dzRW2XR/sv/6U
+        vYLb+9RcVVAY3y5rbZ54tcw=
+X-Google-Smtp-Source: AMsMyM5q5hLAeKBSRDeDIPS3wFojXBXzDAqLX57Ia7Z5Bbj+fAAsK05mNKIES79/ba29CBEIihr7/A==
+X-Received: by 2002:a17:902:d589:b0:181:d0e4:3306 with SMTP id k9-20020a170902d58900b00181d0e43306mr19405557plh.28.1665588310827;
+        Wed, 12 Oct 2022 08:25:10 -0700 (PDT)
+Received: from ?IPv6:::1? ([2607:fb90:370a:3fc:ad3:2951:4f00:9866])
+        by smtp.gmail.com with ESMTPSA id u186-20020a6260c3000000b00561c6a4c1b0sm11536115pfb.176.2022.10.12.08.25.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Oct 2022 08:25:09 -0700 (PDT)
+Date:   Wed, 12 Oct 2022 08:25:06 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-arm-kernel@lists.infradead.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_7/7=5D_gpiolib=3A_of=3A_add_quirk_for?= =?US-ASCII?Q?_phy_reset_polarity_for_Freescale_Ethernet?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <12081856.O9o76ZdvQC@steina-w>
+References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com> <20221011-gpiolib-quirks-v1-7-e01d9d3e7b29@gmail.com> <12081856.O9o76ZdvQC@steina-w>
+Message-ID: <9266C00F-0F8F-4DE2-B4DD-08B2D7B1EE4E@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v1 12/30] dt-bindings: reset: Add starfive,jh7110-reset
- bindings
-Content-Language: en-US
-To:     Conor Dooley <conor.dooley@microchip.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220929175147.19749-1-hal.feng@linux.starfivetech.com>
- <20220929184349.GA2551443-robh@kernel.org>
- <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
- <2f1d1afd-3c97-6ce0-8247-6e1c4a24e548@linaro.org>
- <4769BE3503398017+b1699221-ccc9-a0c1-0b11-141ce9644d74@linux.starfivetech.com>
- <9f04267d-2592-b303-9b79-9cef672c970a@linaro.org> <Y0bJkGQklX+eOGyW@wendy>
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <Y0bJkGQklX+eOGyW@wendy>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 12 Oct 2022 15:05:04 +0100, Conor Dooley wrote:
-> Hey Hal Feng,
-> 
-> On Wed, Oct 12, 2022 at 09:33:42AM -0400, Krzysztof Kozlowski wrote:
-> > >>> These two properties are the key differences among different reset controllers.
-> > >>
-> > >> Different as in different compatibles? Please answer the questions..> 
-> > >>> There are five memory regions for clock and reset in StarFive JH7110 SoC. They
-> > >>> are "syscrg", "aoncrg", "stgcrg", "ispcrg" and "voutcrg". Each memory region
-> > >>> has different reset ASSERT/STATUS register offset and different number of reset
-> > >>> signals. 
-> > >>
-> > >> Then these are not exactly the same devices, so using one compatible for
-> > >> them does not look correct.
-> > > 
-> > > One compatible can just be matched by one device? I think this is what
-> > > confuses me.
-> > 
-> > I don't understand the question.
-> 
-> If two SoCs have exactly the same device/peripheral then they _can_ use
-> the same compatible. If they share some common, viable feature-set then
-> one can "fall back" to the other depending on what your Venn diagram of
-> common features looks like. I've not been following this too closely,
-> but I think what Krzysztof is suggesting is that you have a jh7100 and
-> a jh7110 compatible. Then in your driver you just "know" that if you
-> match against jh7110 which values to use for register offsets & vice
-> versa for a match against the jh7100. There's many examples over the
-> tree for how to handle this sort of thing rather than including it in
-> the devicetree.
-> 
-> Maybe Rob and Krzysztof will scream at me for this description, but
-> devicetree is about how periperhals etc are connected together in the
-> system not about the internals of a given peripheral.
-> 
-> Following that logic, the devicetree should not contain register offsets
-> etc that are a known quanitity once you've determined that you are running
-> on vendor,soc-foo.
-> 
-> Hopefully that helps with your confusion somewhat?
-> Conor.
+On October 11, 2022 11:14:46 PM PDT, Alexander Stein <alexander=2Estein@ew=
+=2Etq-group=2Ecom> wrote:
+>Am Mittwoch, 12=2E Oktober 2022, 00:19:35 CEST schrieb Dmitry Torokhov:
+>> Bindings for Freescale Fast Ethernet Controller use a separate
+>> property "phy-reset-active-high" to specify polarity of its phy
+>> gpio line=2E To allow converting the driver to gpiod API we need
+>> to add this quirk to gpiolib=2E
+>>=20
+>> Signed-off-by: Dmitry Torokhov <dmitry=2Etorokhov@gmail=2Ecom>
+>> ---
+>>  drivers/gpio/gpiolib-of=2Ec | 27 +++++++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>=20
+>> diff --git a/drivers/gpio/gpiolib-of=2Ec b/drivers/gpio/gpiolib-of=2Ec
+>> index 3200d705fbe3=2E=2Ec3d3fe4d927c 100644
+>> --- a/drivers/gpio/gpiolib-of=2Ec
+>> +++ b/drivers/gpio/gpiolib-of=2Ec
+>> @@ -231,6 +231,33 @@ static void of_gpio_flags_quirks(const struct
+>> device_node *np, !strcmp(propname, "snps,reset-gpio") &&
+>>  	    of_property_read_bool(np, "snps,reset-active-low"))
+>>  		*flags |=3D OF_GPIO_ACTIVE_LOW;
+>> +
+>> +	/*
+>> +	 * Freescale Fast Ethernet Controller uses a separate property to
+>> +	 * describe polarity of the phy reset line=2E
+>> +	 */
+>> +	if (IS_ENABLED(CONFIG_FEC)) {
+>> +		static const char * const fec_devices[] =3D {
+>> +			"fsl,imx25-fec",
+>> +			"fsl,imx27-fec",
+>> +			"fsl,imx28-fec",
+>> +			"fsl,imx6q-fec",
+>> +			"fsl,mvf600-fec",
+>> +			"fsl,imx6sx-fec",
+>> +			"fsl,imx6ul-fec",
+>
+>> +			"fsl,imx6mq-fec",
+>> +			"fsl,imx6qm-fec",
+>
+>These two should be 'fsl,imx8mq-fec' & 'fsl,imx8qm-fec' (imx8 instead of=
+=20
+>imx6)=2E
 
-Yes, anyway, thank you for the detailed reply.
+Thank you for noticing this=2E I'll fix it up in the next version=2E
 
-Best regards,
-Hal
+Thanks=2E
+
+--=20
+Dmitry
