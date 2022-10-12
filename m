@@ -2,63 +2,24 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8261A5FC9FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 19:42:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 695665FCACF
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 20:41:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229548AbiJLRmj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 13:42:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36210 "EHLO
+        id S229871AbiJLSlD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 14:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbiJLRmg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 13:42:36 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A44FBFBCE9
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 10:42:35 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id fy4so3097522ejc.5
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 10:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F+/oGLzREG21Yj0uftDYL1IyCwSjsexCNfPmeCYYK5U=;
-        b=j7mlJDdtav9g6vWHhzB0NwAdum8QysC2za2V7GrivI/Px5eW1urR25/m6DIOgTwa2z
-         N7Do86PkEu10oKl5S4Dl/HsMgMoPZmu1QdafheG/q9BqAeH/4gWGmms7wQNlGqFWSZMr
-         xCP/NgrU2d8KsGwj/W4HbnB42/mUWL68QTz2c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F+/oGLzREG21Yj0uftDYL1IyCwSjsexCNfPmeCYYK5U=;
-        b=srN0PvT7Y+eUHZBdewqOfqt42XOvZZk20RErUq1fRhDioctM7RVF63q2ExCgQO1ccQ
-         Y5ZpgoAhbkuQO0Jg0Q17jev3r8scTpeIOr2boX6oVWkQ7R5x8K9Nw4UUGCUxfdRIPBOl
-         WzweDqfCKD2OFksbfV5GIlqVKKvsTu5NfTD7SkWFq2fFkkDomCC4uxqWxWd0xIQZYRnO
-         2ANrGFd+S/diRdUQ9Uavem7G1nHtig2wJc4C4rBY9siXl6tFMUwtEpXUZN99Q/W/NDy+
-         iEX15HbZRbYAZBmUAFzlBshf/RAdiX92KmOg4/3cYHEc6bA+f1WogOzDiWj/9GilFRGO
-         2Szg==
-X-Gm-Message-State: ACrzQf29TV9StkPK6SCmrBXc1dFYSeFZi7Oyq7DWUC3iabhZPmTTy3Sq
-        vki8SdXyk9T9yJSwA794LkWgVLSLWMaIG9yM
-X-Google-Smtp-Source: AMsMyM6ZX/69mcn3ezTVis7VMyEgBzG43lUUv6matzmYGEpOi/8ITr5izEG24S9aS8FJSFp3VqYx0Q==
-X-Received: by 2002:a17:906:6791:b0:78d:4051:969f with SMTP id q17-20020a170906679100b0078d4051969fmr24053313ejp.171.1665596553799;
-        Wed, 12 Oct 2022 10:42:33 -0700 (PDT)
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
-        by smtp.gmail.com with ESMTPSA id fj19-20020a1709069c9300b0078c213ad441sm1591462ejc.101.2022.10.12.10.42.31
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Oct 2022 10:42:32 -0700 (PDT)
-Received: by mail-wr1-f43.google.com with SMTP id j7so27299573wrr.3
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 10:42:31 -0700 (PDT)
-X-Received: by 2002:adf:dd0c:0:b0:22e:4bf6:6c08 with SMTP id
- a12-20020adfdd0c000000b0022e4bf66c08mr19368307wrm.617.1665596551460; Wed, 12
- Oct 2022 10:42:31 -0700 (PDT)
+        with ESMTP id S229841AbiJLSlC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 14:41:02 -0400
+Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [IPv6:2001:4b7a:2000:18::165])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33791A0306;
+        Wed, 12 Oct 2022 11:40:59 -0700 (PDT)
+Received: from cp.tophost.it (vm1054.cs12.seeweb.it [217.64.195.253])
+        by m-r1.th.seeweb.it (Postfix) with ESMTPA id 5B1F320645;
+        Wed, 12 Oct 2022 20:40:55 +0200 (CEST)
 MIME-Version: 1.0
-References: <20221007145116.46554-1-krzysztof.kozlowski@linaro.org> <20221007145116.46554-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221007145116.46554-2-krzysztof.kozlowski@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 12 Oct 2022 10:42:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WN+9DJp-3Ny04NmOLau2RYibeJayEtB7x0uT-YoizFQA@mail.gmail.com>
-Message-ID: <CAD=FV=WN+9DJp-3Ny04NmOLau2RYibeJayEtB7x0uT-YoizFQA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] dt-bindings: pinctrl: qcom,sc7180: convert to dtschema
+Date:   Wed, 12 Oct 2022 20:27:15 +0200
+From:   konrad.dybcio@somainline.org
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Bjorn Andersson <andersson@kernel.org>,
         Andy Gross <agross@kernel.org>,
@@ -68,33 +29,428 @@ Cc:     Bjorn Andersson <andersson@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: msm8994: Align TLMM pin
+ configuration with DT schema
+In-Reply-To: <20221012165712.93053-2-krzysztof.kozlowski@linaro.org>
+References: <20221012165712.93053-1-krzysztof.kozlowski@linaro.org>
+ <20221012165712.93053-2-krzysztof.kozlowski@linaro.org>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <908877458e34e83b90b799a7018c094d@somainline.org>
+X-Sender: konrad.dybcio@somainline.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 2022-10-12 18:57, Krzysztof Kozlowski wrote:
+> DT schema expects TLMM pin configuration nodes to be named with
+> '-state' suffix and their optional children with '-pins' suffix.
+> 
+> Order the "function" and "pins" property to match other DTS.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 
-On Fri, Oct 7, 2022 at 7:51 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> +      drive-strength:
-> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +        default: 2
-> +        description:
-> +          Selects the drive strength for the specified pins, in mA.
-
-The "default" of 2 is not correct. Please see commit 768f8d8e45f9
-("dt-bindings: pinctrl: drive-strength doesn't default to 2 if
-unspecified")
-
-In fact, are you sure this even needs to be replicated here? This is
-part of the common "qcom,tlmm-common.yaml" bindings file, isn't it?
-
--Doug
+Konrad
+>  .../dts/qcom/msm8994-msft-lumia-octagon.dtsi  |   8 +-
+>  .../qcom/msm8994-sony-xperia-kitakami.dtsi    |   6 +-
+>  arch/arm64/boot/dts/qcom/msm8994.dtsi         | 130 +++++++++---------
+>  3 files changed, 74 insertions(+), 70 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon.dtsi
+> b/arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon.dtsi
+> index f9d8bd09e074..63568f73e9d3 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-msft-lumia-octagon.dtsi
+> @@ -881,28 +881,28 @@ &sdhc2 {
+>  };
+> 
+>  &tlmm {
+> -	grip_default: grip-default {
+> +	grip_default: grip-default-state {
+>  		pins = "gpio39";
+>  		function = "gpio";
+>  		drive-strength = <6>;
+>  		bias-pull-down;
+>  	};
+> 
+> -	grip_sleep: grip-sleep {
+> +	grip_sleep: grip-sleep-state {
+>  		pins = "gpio39";
+>  		function = "gpio";
+>  		drive-strength = <2>;
+>  		bias-pull-down;
+>  	};
+> 
+> -	hall_front_default: hall-front-default {
+> +	hall_front_default: hall-front-default-state {
+>  		pins = "gpio42";
+>  		function = "gpio";
+>  		drive-strength = <2>;
+>  		bias-disable;
+>  	};
+> 
+> -	hall_back_default: hall-back-default {
+> +	hall_back_default: hall-back-default-state {
+>  		pins = "gpio75";
+>  		function = "gpio";
+>  		drive-strength = <2>;
+> diff --git
+> a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+> b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+> index ff60b7004d26..a390af54c715 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-sony-xperia-kitakami.dtsi
+> @@ -477,15 +477,17 @@ &sdhc2 {
+>  };
+> 
+>  &tlmm {
+> -	ts_int_active: ts-int-active {
+> +	ts_int_active: ts-int-active-state {
+>  		pins = "gpio42";
+> +		function = "gpio";
+>  		drive-strength = <2>;
+>  		bias-disable;
+>  		input-enable;
+>  	};
+> 
+> -	ts_reset_active: ts-reset-active {
+> +	ts_reset_active: ts-reset-active-state {
+>  		pins = "gpio109";
+> +		function = "gpio";
+>  		drive-strength = <2>;
+>  		bias-disable;
+>  		output-low;
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> index 7a582a5fe3a8..ba687e64ba3c 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> @@ -773,254 +773,256 @@ tlmm: pinctrl@fd510000 {
+>  			interrupt-controller;
+>  			#interrupt-cells = <2>;
+> 
+> -			blsp1_uart2_default: blsp1-uart2-default {
+> -				function = "blsp_uart2";
+> +			blsp1_uart2_default: blsp1-uart2-default-state {
+>  				pins = "gpio4", "gpio5";
+> +				function = "blsp_uart2";
+>  				drive-strength = <16>;
+>  				bias-disable;
+>  			};
+> 
+> -			blsp1_uart2_sleep: blsp1-uart2-sleep {
+> -				function = "gpio";
+> +			blsp1_uart2_sleep: blsp1-uart2-sleep-state {
+>  				pins = "gpio4", "gpio5";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-pull-down;
+>  			};
+> 
+> -			blsp2_uart2_default: blsp2-uart2-default {
+> +			blsp2_uart2_default: blsp2-uart2-default-state {
+> +				pins = "gpio45", "gpio46", "gpio47", "gpio48";
+>  				function = "blsp_uart8";
+> -				pins = "gpio45", "gpio46",
+> -						"gpio47", "gpio48";
+>  				drive-strength = <16>;
+>  				bias-disable;
+>  			};
+> 
+> -			blsp2_uart2_sleep: blsp2-uart2-sleep {
+> +			blsp2_uart2_sleep: blsp2-uart2-sleep-state {
+> +				pins = "gpio45", "gpio46", "gpio47", "gpio48";
+>  				function = "gpio";
+> -				pins = "gpio45", "gpio46",
+> -						"gpio47", "gpio48";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c1_default: i2c1-default {
+> -				function = "blsp_i2c1";
+> +			i2c1_default: i2c1-default-state {
+>  				pins = "gpio2", "gpio3";
+> +				function = "blsp_i2c1";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c1_sleep: i2c1-sleep {
+> -				function = "gpio";
+> +			i2c1_sleep: i2c1-sleep-state {
+>  				pins = "gpio2", "gpio3";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c2_default: i2c2-default {
+> -				function = "blsp_i2c2";
+> +			i2c2_default: i2c2-default-state {
+>  				pins = "gpio6", "gpio7";
+> +				function = "blsp_i2c2";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c2_sleep: i2c2-sleep {
+> -				function = "gpio";
+> +			i2c2_sleep: i2c2-sleep-state {
+>  				pins = "gpio6", "gpio7";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c4_default: i2c4-default {
+> -				function = "blsp_i2c4";
+> +			i2c4_default: i2c4-default-state {
+>  				pins = "gpio19", "gpio20";
+> +				function = "blsp_i2c4";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c4_sleep: i2c4-sleep {
+> -				function = "gpio";
+> +			i2c4_sleep: i2c4-sleep-state {
+>  				pins = "gpio19", "gpio20";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-pull-down;
+>  				input-enable;
+>  			};
+> 
+> -			i2c5_default: i2c5-default {
+> -				function = "blsp_i2c5";
+> +			i2c5_default: i2c5-default-state {
+>  				pins = "gpio23", "gpio24";
+> +				function = "blsp_i2c5";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c5_sleep: i2c5-sleep {
+> -				function = "gpio";
+> +			i2c5_sleep: i2c5-sleep-state {
+>  				pins = "gpio23", "gpio24";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c6_default: i2c6-default {
+> -				function = "blsp_i2c6";
+> +			i2c6_default: i2c6-default-state {
+>  				pins = "gpio28", "gpio27";
+> +				function = "blsp_i2c6";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c6_sleep: i2c6-sleep {
+> -				function = "gpio";
+> +			i2c6_sleep: i2c6-sleep-state {
+>  				pins = "gpio28", "gpio27";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c7_default: i2c7-default {
+> -				function = "blsp_i2c7";
+> +			i2c7_default: i2c7-default-state {
+>  				pins = "gpio44", "gpio43";
+> +				function = "blsp_i2c7";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c7_sleep: i2c7-sleep {
+> -				function = "gpio";
+> +			i2c7_sleep: i2c7-sleep-state {
+>  				pins = "gpio44", "gpio43";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			blsp2_spi10_default: blsp2-spi10-default {
+> -				default {
+> -					function = "blsp_spi10";
+> +			blsp2_spi10_default: blsp2-spi10-default-state {
+> +				default-pins {
+>  					pins = "gpio53", "gpio54", "gpio55";
+> +					function = "blsp_spi10";
+>  					drive-strength = <10>;
+>  					bias-pull-down;
+>  				};
+> -				cs {
+> -					function = "gpio";
+> +
+> +				cs-pins {
+>  					pins = "gpio67";
+> +					function = "gpio";
+>  					drive-strength = <2>;
+>  					bias-disable;
+>  				};
+>  			};
+> 
+> -			blsp2_spi10_sleep: blsp2-spi10-sleep {
+> +			blsp2_spi10_sleep: blsp2-spi10-sleep-state {
+>  				pins = "gpio53", "gpio54", "gpio55";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c11_default: i2c11-default {
+> -				function = "blsp_i2c11";
+> +			i2c11_default: i2c11-default-state {
+>  				pins = "gpio83", "gpio84";
+> +				function = "blsp_i2c11";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			i2c11_sleep: i2c11-sleep {
+> -				function = "gpio";
+> +			i2c11_sleep: i2c11-sleep-state {
+>  				pins = "gpio83", "gpio84";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			blsp1_spi1_default: blsp1-spi1-default {
+> -				default {
+> -					function = "blsp_spi1";
+> +			blsp1_spi1_default: blsp1-spi1-default-state {
+> +				default-pins {
+>  					pins = "gpio0", "gpio1", "gpio3";
+> +					function = "blsp_spi1";
+>  					drive-strength = <10>;
+>  					bias-pull-down;
+>  				};
+> -				cs {
+> -					function = "gpio";
+> +
+> +				cs-pins {
+>  					pins = "gpio8";
+> +					function = "gpio";
+>  					drive-strength = <2>;
+>  					bias-disable;
+>  				};
+>  			};
+> 
+> -			blsp1_spi1_sleep: blsp1-spi1-sleep {
+> +			blsp1_spi1_sleep: blsp1-spi1-sleep-state {
+>  				pins = "gpio0", "gpio1", "gpio3";
+> +				function = "gpio";
+>  				drive-strength = <2>;
+>  				bias-disable;
+>  			};
+> 
+> -			sdc1_clk_on: clk-on {
+> +			sdc1_clk_on: clk-on-state {
+>  				pins = "sdc1_clk";
+>  				bias-disable;
+>  				drive-strength = <16>;
+>  			};
+> 
+> -			sdc1_clk_off: clk-off {
+> +			sdc1_clk_off: clk-off-state {
+>  				pins = "sdc1_clk";
+>  				bias-disable;
+>  				drive-strength = <2>;
+>  			};
+> 
+> -			sdc1_cmd_on: cmd-on {
+> +			sdc1_cmd_on: cmd-on-state {
+>  				pins = "sdc1_cmd";
+>  				bias-pull-up;
+>  				drive-strength = <8>;
+>  			};
+> 
+> -			sdc1_cmd_off: cmd-off {
+> +			sdc1_cmd_off: cmd-off-state {
+>  				pins = "sdc1_cmd";
+>  				bias-pull-up;
+>  				drive-strength = <2>;
+>  			};
+> 
+> -			sdc1_data_on: data-on {
+> +			sdc1_data_on: data-on-state {
+>  				pins = "sdc1_data";
+>  				bias-pull-up;
+>  				drive-strength = <8>;
+>  			};
+> 
+> -			sdc1_data_off: data-off {
+> +			sdc1_data_off: data-off-state {
+>  				pins = "sdc1_data";
+>  				bias-pull-up;
+>  				drive-strength = <2>;
+>  			};
+> 
+> -			sdc1_rclk_on: rclk-on {
+> +			sdc1_rclk_on: rclk-on-state {
+>  				pins = "sdc1_rclk";
+>  				bias-pull-down;
+>  			};
+> 
+> -			sdc1_rclk_off: rclk-off {
+> +			sdc1_rclk_off: rclk-off-state {
+>  				pins = "sdc1_rclk";
+>  				bias-pull-down;
+>  			};
+> 
+> -			sdc2_clk_on: sdc2-clk-on {
+> +			sdc2_clk_on: sdc2-clk-on-state {
+>  				pins = "sdc2_clk";
+>  				bias-disable;
+>  				drive-strength = <10>;
+>  			};
+> 
+> -			sdc2_clk_off: sdc2-clk-off {
+> +			sdc2_clk_off: sdc2-clk-off-state {
+>  				pins = "sdc2_clk";
+>  				bias-disable;
+>  				drive-strength = <2>;
+>  			};
+> 
+> -			sdc2_cmd_on: sdc2-cmd-on {
+> +			sdc2_cmd_on: sdc2-cmd-on-state {
+>  				pins = "sdc2_cmd";
+>  				bias-pull-up;
+>  				drive-strength = <10>;
+>  			};
+> 
+> -			sdc2_cmd_off: sdc2-cmd-off {
+> +			sdc2_cmd_off: sdc2-cmd-off-state {
+>  				pins = "sdc2_cmd";
+>  				bias-pull-up;
+>  				drive-strength = <2>;
+>  			};
+> 
+> -			sdc2_data_on: sdc2-data-on {
+> +			sdc2_data_on: sdc2-data-on-state {
+>  				pins = "sdc2_data";
+>  				bias-pull-up;
+>  				drive-strength = <10>;
+>  			};
+> 
+> -			sdc2_data_off: sdc2-data-off {
+> +			sdc2_data_off: sdc2-data-off-state {
+>  				pins = "sdc2_data";
+>  				bias-pull-up;
+>  				drive-strength = <2>;
