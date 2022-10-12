@@ -2,99 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1DD95FC422
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 13:10:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 572975FC519
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 14:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbiJLLKr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 07:10:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47312 "EHLO
+        id S229796AbiJLMQX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 08:16:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbiJLLKn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 07:10:43 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4169A926A;
-        Wed, 12 Oct 2022 04:10:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1665573042; x=1697109042;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q7v71ZQ6SrTwwIFCLSZGjWB6QaC6SnhQ7675+Q8eeQw=;
-  b=mmiwtnkgTXD1KCWWETqWuvuGBaBcjyZDeQ/0v3ASFyVNzwoCALJXh2XE
-   2SNl+QjU6JzHyLrktY6Sn8rhQRMqlY9BMQRFYB60WC9Ua+FcLxupwav3T
-   IJZKySypD0eFk+dtSC+6VI+d8yG5Bg4OjENH4dXOjYJKW/GIO1/F4TiFz
-   GzZju+vqgFZTK22ym8gSNbkSRgeMGz2yXUlhsfY7P9APRax2fKQo+gMVd
-   QDL87MkZUB26XYgTQm0MhLS0OE5XrFJ7LmvUkHVJLVMPXL625HzLK7BNn
-   BUxJiMTKXTEA0kS4T4jNUTzEQ6+j05dFG45/MPghNWrHuKIW700B1enQt
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="288032305"
-X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
-   d="scan'208";a="288032305"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 04:10:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10497"; a="659892843"
-X-IronPort-AV: E=Sophos;i="5.95,179,1661842800"; 
-   d="scan'208";a="659892843"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 12 Oct 2022 04:10:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oiZdG-005nZ6-0q;
-        Wed, 12 Oct 2022 14:10:38 +0300
-Date:   Wed, 12 Oct 2022 14:10:37 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 6/7] gpiolib: of: factor out code overriding gpio line
- polarity
-Message-ID: <Y0agrWGm5CR3Rk5e@smile.fi.intel.com>
-References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com>
- <20221011-gpiolib-quirks-v1-6-e01d9d3e7b29@gmail.com>
+        with ESMTP id S229741AbiJLMQW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 08:16:22 -0400
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48D4B56F0
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 05:16:20 -0700 (PDT)
+Received: by mail-vs1-xe2e.google.com with SMTP id h3so9400054vsa.4
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 05:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t6nwrNU0AH4f7iCQlXPH/XS5dC6On4VeTBI659GaqJI=;
+        b=vevTxUPJ2H0KTi9Wj8buza5iEeGLeor1UI2UWdrrpCMTE+DPKtQpmTr/qCgdCaTpnD
+         PKtrkvmeN0PUN+qp17dND8u3B53TnuB6ULTZZhuie1exOK1kIBFIrZarMlMi011S0M4A
+         aKPbJanToEx38erRU7yddVnzxN8iVY85fV13fjsqj6cG0XvMHXiWIm8AqFyCn0H4UlxD
+         oC7COYN2cKGobE38hxJW/AaxuzP3E54BVrXDDlxl5ssaj87qc+UqEceiufL39e9RtXeG
+         Eqiu/FsrLPSe1v3edH28VxJIqn7qDKb92oOpYlKUvMx8Fx7fysJaQqZbJWtpD6RJZEni
+         /I5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t6nwrNU0AH4f7iCQlXPH/XS5dC6On4VeTBI659GaqJI=;
+        b=QC6u83gvmLS3tEXYHD2eVQJTxhGdr67XbEGzs5HC6sHfxHLfIp5a3DViu+ScpSibek
+         aC5fgSN55ZDNnjcZ3skwJL2+a4XxO51fqgwEnHiNVi+DZnZlbKtaUhU1+HBrvJwezBZC
+         0Sxz/+tF2JDhjgpVhMsOruJ+XhaWLNYw9kHUuKqyKUPrIbjcyyheGH31/Yk9bn0Y6dMZ
+         Ljigr4e+TuOyMctF117RlAt4h2Bk4S4ZQrvtLcHnJOt65NNTyU/YUI+YHraeYRl8hy46
+         Xj90CIf82RP6LXIXG74+dMMIhOdPKjaoMG4hqOhgOTE5PoznICUmeI6HJYBEpMXxZMDT
+         xxgg==
+X-Gm-Message-State: ACrzQf1Fa5I7nuq7xWoy17LrSbqhviu++5m15RfpIOo6RH2k014SxdX6
+        jsoKVVlDA/iB4aFhq93d2dRS+UMAGkW5dgLHyYOK3w==
+X-Google-Smtp-Source: AMsMyM5GtV8SqwPGtpPeISERi9xTPcmdjX0MLuusrG/da9K3IRfi7wYwFUiAPDgNHQKn9pqqOg4yJTNzZYhNh7+fxm4=
+X-Received: by 2002:a67:ead5:0:b0:3a6:e463:4b0e with SMTP id
+ s21-20020a67ead5000000b003a6e4634b0emr13782590vso.61.1665576979909; Wed, 12
+ Oct 2022 05:16:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221011-gpiolib-quirks-v1-6-e01d9d3e7b29@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20221005145746.172138-1-m.zatovic1@gmail.com> <20221005145746.172138-4-m.zatovic1@gmail.com>
+In-Reply-To: <20221005145746.172138-4-m.zatovic1@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 12 Oct 2022 14:16:08 +0200
+Message-ID: <CAMRc=MfogAnGPL7BQp6r9_BpnJPPQ=DunqErfLrn2Ci960c=sg@mail.gmail.com>
+Subject: Re: [RFCv2 PATCH 4/4] gpio: add Wiegand GPIO driver
+To:     =?UTF-8?B?TWFydGluIFphxaVvdmnEjQ==?= <m.zatovic1@gmail.com>
+Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, gregkh@linuxfoundation.org,
+        jeffrey.l.hugo@gmail.com, andersson@kernel.org,
+        Michael.Srba@seznam.cz, saravanak@google.com, mani@kernel.org,
+        hemantk@codeaurora.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 03:19:34PM -0700, Dmitry Torokhov wrote:
-> There are several instances where we use a separate property to
-> override polarity specified in gpio property. Factor it out into
-> a separate function.
+On Wed, Oct 5, 2022 at 4:58 PM Martin Za=C5=A5ovi=C4=8D <m.zatovic1@gmail.c=
+om> wrote:
+>
+> Wiegand GPIO driver uses GPIO lines defined in the devicetree to
+> transmit data following the Wiegand protocol.
+>
+> Signed-off-by: Martin Za=C5=A5ovi=C4=8D <m.zatovic1@gmail.com>
+> ---
 
-...
+[snip]
 
->  static void of_gpio_flags_quirks(const struct device_node *np,
->  				 const char *propname,
->  				 enum of_gpio_flags *flags,
-> @@ -145,7 +167,7 @@ static void of_gpio_flags_quirks(const struct device_node *np,
->  	     (!(strcmp(propname, "enable-gpio") &&
->  		strcmp(propname, "enable-gpios")) &&
->  	      of_device_is_compatible(np, "regulator-gpio")))) {
-> -		bool active_low = !of_property_read_bool(np,
-> +		bool active_high = of_property_read_bool(np,
+> +
+> +DEVICE_ATTR_RW(pulse_len);
+> +DEVICE_ATTR_RW(interval_len);
+> +DEVICE_ATTR_RW(frame_gap);
+> +DEVICE_ATTR_RW(format);
+> +DEVICE_ATTR_RW(payload_len);
+> +
 
-Defining
+We don't really allow GPIO drivers to define all kinds of custom
+device attributes. Also: this driver does not register a GPIO provider
+- rather it's a GPIO consumer.
 
-	bool active_high;
+For what you're trying to achieve: have you tried using libgpiod and
+controlling the lines from user-space? If that's too slow, then I'd
+say this driver should go somewhere else. Maybe you'd need a whole new
+protocol sub-system for that. In any case - this subsystem is not the
+right place.
 
-at the top of the function will save you a few ugly indented code lines here
-and in the next patch.
+Bartosz
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+[snip]
