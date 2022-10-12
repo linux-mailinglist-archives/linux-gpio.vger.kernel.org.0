@@ -2,68 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C10B5FC85A
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 17:25:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A2615FC869
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 17:30:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiJLPZR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 11:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59556 "EHLO
+        id S229714AbiJLPaw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 11:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229701AbiJLPZQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 11:25:16 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE5523CBE4;
-        Wed, 12 Oct 2022 08:25:11 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id b15so15575645pje.1;
-        Wed, 12 Oct 2022 08:25:11 -0700 (PDT)
+        with ESMTP id S229526AbiJLPau (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 11:30:50 -0400
+Received: from mail-pg1-x52c.google.com (mail-pg1-x52c.google.com [IPv6:2607:f8b0:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B70D8263D;
+        Wed, 12 Oct 2022 08:30:49 -0700 (PDT)
+Received: by mail-pg1-x52c.google.com with SMTP id f193so15883418pgc.0;
+        Wed, 12 Oct 2022 08:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:references
          :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=6sAsGYX3J2Ywp9AFoeC19lv0Q2JC+XewfioV1XazBfU=;
-        b=jgi1xr+4QST0cSoTuy8B71zEhLRujUBFMmA2BVNnhFBYOrwMJYkfeGc+6ZKyPK+TNP
-         nrUdJF6SJsfr5h6R7MiA4nbWoy0HzA9PCrTVyvV9y+QArbRRkVxsINbjyDLNKtN9JJB0
-         ewlXtu5d0yyASUjtnHtEOgR/zp17y8ysYLSwtChvEvoTi9+l1S1VAxlKIXQH1zA3yGGq
-         8+6gTLZEpp6stncaM5fPBF7g0yEogepFARSQPunLTD0jEH7U81tP69d6lGXWS2vnK69m
-         fNVz3iUv9qxziIiHeCIZpId3kwaWXT9HoUuqLQqejdX9/ribfs9Zjro6fFOgAE7oOkIh
-         /Nbw==
+        bh=jgmSGKWiIJIpmvQ8q/p+qHWdSAvJyDT4YhTIosvbO2U=;
+        b=lqsttROg2cCrxJ2Bl9FcBPLiU2PO77JZxmRbQppEIbCw40JE4Hma4eaNUJqJWvDFef
+         biMxcw/yw2mQRgVWJmG6KxiT2VHCyW9lGM1aIbvpGRRiM3VXkE9a5WiIHcmKBmLoGt9c
+         JFofXzrbgVTrOf5WuGZ8hR1Ns6Il9XhkEpqojHHVfFroxh+wWOyfQKTW/c7y4cLQrqM5
+         h4he8xr48itJH2jTAcB9z1IVynBEV43U81JlyfbC5L6DD+xMq8LSKYu8SlhqlbM4CD9c
+         cbSs1zJ+tP/qPabTWWo8xNUYYI3rh5zzNwOmqGNxXx47PNMZlV6EBm65mtCMXxEDSAU+
+         kCyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:references
          :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6sAsGYX3J2Ywp9AFoeC19lv0Q2JC+XewfioV1XazBfU=;
-        b=InZC9m1KGm48uIGVnVgHimTwPtCp6UaZoCkcPvl4SCpkl1NxXOrj4JHLzzt8Sk5vIy
-         qe0Qug7Ce2nEADgyiHRRo94cHvCU/QypiPZV/6/sa3nvpGzjRn4Pf7ZcHAAjo5W/fnfW
-         KLma6+IQyluOHAn8ivQ0seDSfZKPGREgCLkTexKbob4lhxJmLxvkVdynrHLCLDbFE5aa
-         EpnwpINXv/qjixo/HR7ux3SdKtH36dl/SDu3Hcu0+2rjEs9hG93mhGnvugnwGc853yhS
-         XLoFTNsqOE5YUXVnq37EroSbx5+F6NmYGJG4Flq8ZYZLCnd8hNqOkpF2LyxStAq07v7j
-         AsKQ==
-X-Gm-Message-State: ACrzQf1vAiK4Xj+AdBec2vfN1gaZcmVnKBm6Ib/KXc0dzRW2XR/sv/6U
-        vYLb+9RcVVAY3y5rbZ54tcw=
-X-Google-Smtp-Source: AMsMyM5q5hLAeKBSRDeDIPS3wFojXBXzDAqLX57Ia7Z5Bbj+fAAsK05mNKIES79/ba29CBEIihr7/A==
-X-Received: by 2002:a17:902:d589:b0:181:d0e4:3306 with SMTP id k9-20020a170902d58900b00181d0e43306mr19405557plh.28.1665588310827;
-        Wed, 12 Oct 2022 08:25:10 -0700 (PDT)
+        bh=jgmSGKWiIJIpmvQ8q/p+qHWdSAvJyDT4YhTIosvbO2U=;
+        b=upAhsZvrcHnvgC1VSNeXXILVfOOcMOGpMii7hzP1QtilNl6go0NAdcgqDBwELHzHso
+         WkInX151zb7RRSivIs07lO+LGpcY6FOLIFmYfBXGHNnFcSplG1+P3YgeQ5Gs/wnVwAHT
+         W0Z8CZfmeqUuwGhe7/rdwPfHe4GMyS330XJRp5DjoJWsDgNxPPR+Nr1XRIKU6q3guLDy
+         Jp+buEsQsIRz4CMuQjUINy49v05MoW4QMJ0paA6j73NXSHRX+q3tfZpG2b/IXnbz0p38
+         oiNkBz060BDeTeTDZYeDMRi1csWla4IMjbzULXlJRyV/+LIKNlkHN56mXWpdB3oeyah6
+         bu4w==
+X-Gm-Message-State: ACrzQf2kGChsmbU1qL2OQtuY2ADODg+v9neTNueO2stDjSDxBKl2/YYW
+        d6ZiHIhEJTG2aeQE4pp21ns=
+X-Google-Smtp-Source: AMsMyM4Rme9GP63iTEYp6GDtI8cANT8/bRXLd6LmA4Ak4TfcpODAEz3uYTWmpmRdtSuWInqPN4hvmQ==
+X-Received: by 2002:a63:2c6:0:b0:43c:1f18:a475 with SMTP id 189-20020a6302c6000000b0043c1f18a475mr25922948pgc.186.1665588648509;
+        Wed, 12 Oct 2022 08:30:48 -0700 (PDT)
 Received: from ?IPv6:::1? ([2607:fb90:370a:3fc:ad3:2951:4f00:9866])
-        by smtp.gmail.com with ESMTPSA id u186-20020a6260c3000000b00561c6a4c1b0sm11536115pfb.176.2022.10.12.08.25.09
+        by smtp.gmail.com with ESMTPSA id a67-20020a621a46000000b0055f98a2c64bsm11804430pfa.142.2022.10.12.08.30.47
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Oct 2022 08:25:09 -0700 (PDT)
-Date:   Wed, 12 Oct 2022 08:25:06 -0700
+        Wed, 12 Oct 2022 08:30:47 -0700 (PDT)
+Date:   Wed, 12 Oct 2022 08:30:45 -0700
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 CC:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org,
         Daniel Thompson <daniel.thompson@linaro.org>,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_7/7=5D_gpiolib=3A_of=3A_add_quirk_for?= =?US-ASCII?Q?_phy_reset_polarity_for_Freescale_Ethernet?=
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_6/7=5D_gpiolib=3A_of=3A_factor_o?= =?US-ASCII?Q?ut_code_overriding_gpio_line_polarity?=
 User-Agent: K-9 Mail for Android
-In-Reply-To: <12081856.O9o76ZdvQC@steina-w>
-References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com> <20221011-gpiolib-quirks-v1-7-e01d9d3e7b29@gmail.com> <12081856.O9o76ZdvQC@steina-w>
-Message-ID: <9266C00F-0F8F-4DE2-B4DD-08B2D7B1EE4E@gmail.com>
+In-Reply-To: <Y0agrWGm5CR3Rk5e@smile.fi.intel.com>
+References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com> <20221011-gpiolib-quirks-v1-6-e01d9d3e7b29@gmail.com> <Y0agrWGm5CR3Rk5e@smile.fi.intel.com>
+Message-ID: <6D279EC4-6124-45C2-BCBB-D6CBB3385024@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
@@ -78,52 +76,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On October 11, 2022 11:14:46 PM PDT, Alexander Stein <alexander=2Estein@ew=
-=2Etq-group=2Ecom> wrote:
->Am Mittwoch, 12=2E Oktober 2022, 00:19:35 CEST schrieb Dmitry Torokhov:
->> Bindings for Freescale Fast Ethernet Controller use a separate
->> property "phy-reset-active-high" to specify polarity of its phy
->> gpio line=2E To allow converting the driver to gpiod API we need
->> to add this quirk to gpiolib=2E
->>=20
->> Signed-off-by: Dmitry Torokhov <dmitry=2Etorokhov@gmail=2Ecom>
->> ---
->>  drivers/gpio/gpiolib-of=2Ec | 27 +++++++++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>=20
->> diff --git a/drivers/gpio/gpiolib-of=2Ec b/drivers/gpio/gpiolib-of=2Ec
->> index 3200d705fbe3=2E=2Ec3d3fe4d927c 100644
->> --- a/drivers/gpio/gpiolib-of=2Ec
->> +++ b/drivers/gpio/gpiolib-of=2Ec
->> @@ -231,6 +231,33 @@ static void of_gpio_flags_quirks(const struct
->> device_node *np, !strcmp(propname, "snps,reset-gpio") &&
->>  	    of_property_read_bool(np, "snps,reset-active-low"))
->>  		*flags |=3D OF_GPIO_ACTIVE_LOW;
->> +
->> +	/*
->> +	 * Freescale Fast Ethernet Controller uses a separate property to
->> +	 * describe polarity of the phy reset line=2E
->> +	 */
->> +	if (IS_ENABLED(CONFIG_FEC)) {
->> +		static const char * const fec_devices[] =3D {
->> +			"fsl,imx25-fec",
->> +			"fsl,imx27-fec",
->> +			"fsl,imx28-fec",
->> +			"fsl,imx6q-fec",
->> +			"fsl,mvf600-fec",
->> +			"fsl,imx6sx-fec",
->> +			"fsl,imx6ul-fec",
+On October 12, 2022 4:10:37 AM PDT, Andy Shevchenko <andriy=2Eshevchenko@li=
+nux=2Eintel=2Ecom> wrote:
+>On Tue, Oct 11, 2022 at 03:19:34PM -0700, Dmitry Torokhov wrote:
+>> There are several instances where we use a separate property to
+>> override polarity specified in gpio property=2E Factor it out into
+>> a separate function=2E
 >
->> +			"fsl,imx6mq-fec",
->> +			"fsl,imx6qm-fec",
+>=2E=2E=2E
 >
->These two should be 'fsl,imx8mq-fec' & 'fsl,imx8qm-fec' (imx8 instead of=
-=20
->imx6)=2E
+>>  static void of_gpio_flags_quirks(const struct device_node *np,
+>>  				 const char *propname,
+>>  				 enum of_gpio_flags *flags,
+>> @@ -145,7 +167,7 @@ static void of_gpio_flags_quirks(const struct devic=
+e_node *np,
+>>  	     (!(strcmp(propname, "enable-gpio") &&
+>>  		strcmp(propname, "enable-gpios")) &&
+>>  	      of_device_is_compatible(np, "regulator-gpio")))) {
+>> -		bool active_low =3D !of_property_read_bool(np,
+>> +		bool active_high =3D of_property_read_bool(np,
+>
+>Defining
+>
+>	bool active_high;
+>
+>at the top of the function will save you a few ugly indented code lines h=
+ere
+>and in the next patch=2E
+>
 
-Thank you for noticing this=2E I'll fix it up in the next version=2E
+Indeed, but I think the idea was to keep the quirks as independent as poss=
+ible=2E
+I guess I could split it further into separate functions, like the other q=
+uirk handling=2E=20
 
-Thanks=2E
+Bartosz, Linus, any preference here?=20
+
+Thanks=2E=20
 
 --=20
 Dmitry
