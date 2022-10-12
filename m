@@ -2,175 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F825FC7CB
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 16:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3CA55FC81C
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 17:16:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbiJLOxf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 10:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52788 "EHLO
+        id S229911AbiJLPQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 11:16:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbiJLOxd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 10:53:33 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AFDCDFB58;
-        Wed, 12 Oct 2022 07:53:28 -0700 (PDT)
-X-QQ-mid: bizesmtp71t1665586398tra1mkxv
-Received: from [192.168.1.231] ( [113.72.146.141])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Wed, 12 Oct 2022 22:53:16 +0800 (CST)
-X-QQ-SSF: 01000000002000B09000B00A0000000
-X-QQ-FEAT: Q5/H4pNog203Q26Mis4ciWl055ow0ajIHrfB0/XOCwC8VcIHMdhaaI4V2fyX5
-        38PXgbepu+GYSoJRIEnLYHasPwO576mbxLyyxYxDkIO3Qw9oRGRQdZuJ2loRlBNAlLYa4GC
-        Fe+8gZoqavoauj1vW0xHE78oo2iqq2+cw8NXHLUdXPwnZJHwjI3NCU9uTyyd9q8Syv/it57
-        YDbbiYP6xv4roDawpnlNaUae9FRYYd5YYPOVF0DdNLTzxh1E1Xu5Pe4Xc86a0ZsqFHpzRFq
-        zm5FoEZ/4ykbN4upH9ePaGwcaLB7QSWpTvLuzL7jdF4iI6D4JyI+hX7L+LsV15tDF8xW20K
-        JP4yr4EUXaQ0kGaX7P3G/xDArMOjMLvRBV0UxClxJyD8bd/Gx17YK1V0B2ZeWUXM8fTgJcS
-        9yyANqHDAGk=
-X-QQ-GoodBg: 0
-Message-ID: <14D22B831DDCFAED+14879d26-5d3a-3487-07ef-3b64e775e43f@linux.starfivetech.com>
-Date:   Wed, 12 Oct 2022 22:53:15 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v1 12/30] dt-bindings: reset: Add starfive,jh7110-reset
- bindings
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+        with ESMTP id S229893AbiJLPQb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 11:16:31 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8DB165AF
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 08:16:30 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id f22so6388639qto.3
+        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 08:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=izSN7xRQqssnM767hbIgGLtwY0E8L+UfBxDaexTRlTs=;
+        b=M6wQigtVJrVPC9MwqwM9yRS8mMnzbDo6SepkFNF7b3AsYFewTcyUeL3vcV4h+D+WpM
+         pLguOZaXQsbK6Z3z1g4PoKakPvUekqRZW/Aed7X2BddyI3OnNFQC2C4jZTtrduwAxRL8
+         18lYklKksityuqtq3tayqZoN3deGG/Rs5lARuQ8wLNpqi1rKhqU+NFCYmj6xRSAhbGA7
+         JU1234EIygn3hHBiz1aZw69wp93zU3ad5rt4WsxUyDy7os+Arjh8HdsqSldJEJ5whTfJ
+         v08dZ1v2nL2WCJ99Ml6LTrOVVZqiZDUxkbQrcwidd79EGs+XjVJsioSDEP6tnmggJvqY
+         ZozQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=izSN7xRQqssnM767hbIgGLtwY0E8L+UfBxDaexTRlTs=;
+        b=SwnY89hw+Vjz6aYgkepgvD0ubIj2rTlrPCMHVOOHEdn4Xfp3I0IOa+QZgMHEW3o7Am
+         h6W0P5FXU6kM7hZx612F13Kbx0m9r1tX0gQBIDA3Y/z38/+4T8HM+yoJLtxIemI4Fjbm
+         1Wbb901JyAwbdZTaLB4Vc7nq3fp0tq5VjS9GzT2zVhnrRuHE4LhYXAlxH5VeXHOAdhmC
+         yx+a8OXJmwx+/7zZJmQCsEEgo+laOc2QS4v7oDnpqh3rmPXF1y2doj9oMakaLtCFe7MS
+         2QoZUOcg4m0bsDCa2bW2w+VwNbQz62XIAZ4O19x7zdCb6YZgYnfxtX99k8RGgAprV4pW
+         yONA==
+X-Gm-Message-State: ACrzQf0LJOox4qp0tD7VJ6HRzmndbc3PlPjb8BDD3CefssdUHPAGv6yx
+        kfJa5JK+5E9p9Vbf8Pyaz02c/xZ2BIEuuA==
+X-Google-Smtp-Source: AMsMyM7jBS8OcjxwxEwcD4uNNieiG8sP6kVEP5POfNJ+BoROi19TVVYwpicNF8ld4KbkfuPlccRzOw==
+X-Received: by 2002:a05:622a:1788:b0:35c:bf57:caa7 with SMTP id s8-20020a05622a178800b0035cbf57caa7mr23920283qtk.470.1665587779925;
+        Wed, 12 Oct 2022 08:16:19 -0700 (PDT)
+Received: from krzk-bin.home (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id u2-20020a05620a454200b006af0ce13499sm16671612qkp.115.2022.10.12.08.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Oct 2022 08:16:19 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220929175147.19749-1-hal.feng@linux.starfivetech.com>
- <20220929184349.GA2551443-robh@kernel.org>
- <8BEAFAD2C4CE6E4A+0a00376c-1e3e-f597-bcf6-106ff294859a@linux.starfivetech.com>
- <2f1d1afd-3c97-6ce0-8247-6e1c4a24e548@linaro.org>
- <4769BE3503398017+b1699221-ccc9-a0c1-0b11-141ce9644d74@linux.starfivetech.com>
- <9f04267d-2592-b303-9b79-9cef672c970a@linaro.org>
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <9f04267d-2592-b303-9b79-9cef672c970a@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 1/4] arm64: dts: qcom: msm8998: add gpio-ranges to TLMM
+Date:   Wed, 12 Oct 2022 11:14:13 -0400
+Message-Id: <20221012151416.38645-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 12 Oct 2022 09:33:42 -0400, Krzysztof Kozlowski wrote:
-> On 12/10/2022 09:16, Hal Feng wrote:
->>>>>> +properties:
->>>>>> +  compatible:
->>>>>> +    enum:
->>>>>> +      - starfive,jh7110-reset
->>>>>
->>>>> 'reg' needed? Is this a sub-block of something else?
->>>>
->>>> Yes, the reset node is a child node of the syscon node, see patch 27 for detail.
->>>> You might not see the complete patches at that time due to technical issue of
->>>> our smtp email server. Again, I feel so sorry about that.
->>>>
->>>> 	syscrg: syscrg@13020000 {
->>>> 		compatible = "syscon", "simple-mfd";
->>>> 		reg = <0x0 0x13020000 0x0 0x10000>;
->>>>
->>>> 		syscrg_clk: clock-controller@13020000 {
->>>> 			compatible = "starfive,jh7110-clkgen-sys";
->>>> 			clocks = <&osc>, <&gmac1_rmii_refin>,
->>>> 				 <&gmac1_rgmii_rxin>,
->>>> 				 <&i2stx_bclk_ext>, <&i2stx_lrck_ext>,
->>>> 				 <&i2srx_bclk_ext>, <&i2srx_lrck_ext>,
->>>> 				 <&tdm_ext>, <&mclk_ext>;
->>>> 			clock-names = "osc", "gmac1_rmii_refin",
->>>> 				"gmac1_rgmii_rxin",
->>>> 				"i2stx_bclk_ext", "i2stx_lrck_ext",
->>>> 				"i2srx_bclk_ext", "i2srx_lrck_ext",
->>>> 				"tdm_ext", "mclk_ext";
->>>> 			#clock-cells = <1>;
->>>> 		};
->>>>
->>>> 		syscrg_rst: reset-controller@13020000 {
->>>> 			compatible = "starfive,jh7110-reset";
->>>> 			#reset-cells = <1>;
->>>
->>> So the answer to the "reg needed?" is what? You have unit address but no
->>> reg, so this is not correct.
->> 
->> Not needed in the reset-controller node, but needed in its parent node. 
-> 
-> We do not talk about parent node. Rob's question was in this bindings.
-> Is this document a binding for the parent node or for this node?
+Qualcomm pinctrl bindings and drivers expect gpio-ranges property.
 
-This node. So not needed.
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
->> I am sorry
->> for missing description to point it out in the bindings. I will rewrite all bindings
->> for the next version. Unit address here should be deleted.
->> 
->>>
->>>> 			starfive,assert-offset = <0x2F8>;
->>>> 			starfive,status-offset= <0x308>;
->>>> 			starfive,nr-resets = <JH7110_SYSRST_END>;
->>>> 		};
->>>> 	};
->>>>
->>>> In this case, we get the memory mapped space through the parent node with syscon
->>>> APIs. You can see patch 13 for detail.
->>>>
->>>> static int reset_starfive_register(struct platform_device *pdev, const u32 *asserted)
->>>> {
->>>
->>>
->>> (...)
->>>
->>>>
->>>>>
->>>>>> +
->>>>>> +  "#reset-cells":
->>>>>> +    const: 1
->>>>>> +
->>>>>> +  starfive,assert-offset:
->>>>>> +    description: Offset of the first ASSERT register
->>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>> +
->>>>>> +  starfive,status-offset:
->>>>>> +    description: Offset of the first STATUS register
->>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>>
->>>>> These can't be implied from the compatible string?
->> 
->> Definitely can. We do this is for simplifying the reset driver.
-> 
-> The role of the bindings is not to simplify some specific driver in some
-> specific OS...
-> 
->> Otherwise, we may need to define more compatibles because there
->> are multiple reset blocks in JH7110. Another case can be found at
->> https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bindings/reset/altr,rst-mgr.yaml
-> 
-> And why is this a problem? You have different hardware, so should have
-> different compatibles. Otherwise we would have a compatible
-> "all,everything" and use it in all possible devices.
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index f05f16ac5cc1..2c4acf227253 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1056,6 +1056,7 @@ tlmm: pinctrl@3400000 {
+ 			compatible = "qcom,msm8998-pinctrl";
+ 			reg = <0x03400000 0xc00000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-ranges = <&tlmm 0 0 150>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-- 
+2.34.1
 
-Okay, I get it. Thanks a lot.
-
-Best regards,
-Hal
