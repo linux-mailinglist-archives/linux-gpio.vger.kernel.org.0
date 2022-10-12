@@ -2,73 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 983255FCAF8
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 20:51:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4E915FCB1B
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 20:54:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbiJLSu7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 14:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        id S230003AbiJLSys (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 14:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbiJLSu6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 14:50:58 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D98AEE070C
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 11:50:53 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id bu30so27512376wrb.8
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 11:50:53 -0700 (PDT)
+        with ESMTP id S229694AbiJLSy2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 14:54:28 -0400
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48323FF201;
+        Wed, 12 Oct 2022 11:54:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iQhlZRnJ0m4X2vc4+2LyXOMiawQABMxJ/mhVJlXpyFg=;
-        b=xMNjvf+iP47KsXXvWRx0u3fSGwg+++0J4Fte26zqd3QXweAzJju6VUxhJ1ncoFer3c
-         hdU6ZC2WmqVvyYCdZp+mOpqsallTsYpcTVbfTQFQOS/TboZ5uPi2kS6rhiUbtgYx8vB3
-         MRJ1SpNH4IewAGwM8G/NifGm+kufLzutUHEFoRggbVmFdJGwROdqLdIV4L+1wbHlqj4R
-         3wI/1RjABzR+HSCzU/xl3lwEm8xjPPsw5IPHLR2mZiZp05hLNVOi/tXnMf9guAVQyyIU
-         MeIRe9HUG3bMm2JhRMXi2v1NL0mjlX39lbFS1iH469C4CQhF1vVfUe1s6z1qRbuKxn8i
-         aRMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iQhlZRnJ0m4X2vc4+2LyXOMiawQABMxJ/mhVJlXpyFg=;
-        b=DzrGnzHK/udtQht9uxmo92j6WklF3Kr7SoOoCgnlfTtF1GbFGi9zypSl0QwzfcFu3X
-         bzWs6s+GSFcQMQ2bsJy/0KtdPZ8qrZT+TkmYjeDNWJNoG1x4mOyh6s9phSkT3Wps70q0
-         yitWbDEv0FsWkWADDnU3vREG/whDB5ZI9KhUOi19W4olTWU1xoi7bGMUhms3BOY004gt
-         UI8vnXUF/E4P0Oc0fnJo0bsaev7sFwPU+qW8rEs0Gwf2Xn41ru70J/Nf7OOiusysrzZf
-         NKot1Os6zzGKIAM7h3+3OMzZPnZnzY85MISNvQHBISN/urCE6WCKMMXW8cvyyeSLpPuB
-         sCFg==
-X-Gm-Message-State: ACrzQf0r2CR/jEFJFSrPrsLdlQuuPGpcB3oN1c+vkGoVLWXT0WdhYx0e
-        WTyLfkG0xfnmvaObpE5HvP7ecw==
-X-Google-Smtp-Source: AMsMyM7kipgPbjIt6m4K8/GYYZTCjos7DxuGJh1RnAl0Ye38UQ60uXZy6uGh5XzIscj6pI9IK+JR6g==
-X-Received: by 2002:a5d:6701:0:b0:22e:6545:995d with SMTP id o1-20020a5d6701000000b0022e6545995dmr18944278wru.301.1665600652184;
-        Wed, 12 Oct 2022 11:50:52 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id s14-20020adfecce000000b0022e653f5abbsm332083wro.69.2022.10.12.11.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Oct 2022 11:50:51 -0700 (PDT)
-Date:   Wed, 12 Oct 2022 19:50:49 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/7] gpiolib: of: add a quirk for reset line for Marvell
- NFC controller
-Message-ID: <Y0cMibfIomw3S5dc@maple.lan>
-References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com>
- <20221011-gpiolib-quirks-v1-4-e01d9d3e7b29@gmail.com>
- <Y0aW7vDxfNa/8bAk@maple.lan>
- <Y0cLLraNFVXtD2/k@google.com>
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1665600862; x=1697136862;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=He66nZ0SvfJpXphGYaH54qTUAxIcYXyRMnszZBlbJo8=;
+  b=on8hhA7tLXiAQBbfCWjCIt3eNB2Wp6+7iAzKZWRefOsxQMcJcw0pfyHZ
+   BiXXGzm54z+78L4rTbPwTX95+cgWvsaW/1qmIfVhavOnpw7MM8ktlcDOH
+   kZFpsSX05u4fBosagynUDt5PZa4luGVg0isusYyOWBmu2MPJc1SPtOjLD
+   4=;
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 12 Oct 2022 11:54:21 -0700
+X-QCInternal: smtphost
+Received: from nasanex01b.na.qualcomm.com ([10.46.141.250])
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Oct 2022 11:54:21 -0700
+Received: from [10.134.66.255] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.29; Wed, 12 Oct
+ 2022 11:54:21 -0700
+Message-ID: <2f9237cf-1ce2-47ed-4aea-b7b3a890da16@quicinc.com>
+Date:   Wed, 12 Oct 2022 11:54:20 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0cLLraNFVXtD2/k@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH 2/2] pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
+To:     Bjorn Andersson <andersson@kernel.org>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221001030546.28220-1-quic_molvera@quicinc.com>
+ <20221001030546.28220-3-quic_molvera@quicinc.com>
+ <20221006015047.4ten7sjsth7sw6s7@baldur>
+Content-Language: en-US
+From:   Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <20221006015047.4ten7sjsth7sw6s7@baldur>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,27 +67,113 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 11:45:02AM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 12, 2022 at 11:29:02AM +0100, Daniel Thompson wrote:
-> > On Tue, Oct 11, 2022 at 03:19:32PM -0700, Dmitry Torokhov wrote:
-> > > The controller is using non-standard "reset-n-io" name for its reset
-> > > gpio property, whereas gpiod API expects "<name>-gpios". Add a quirk
-> > > so that gpiod API will still work on unmodified DTSes.
-> > >
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> >
-> > How/when has/will the DT bindings documentation for this hardware be
-> > updated to describe the new bindings?
-> >
-> > Delivering the quirks ahead of driver updates is great for avoiding
-> > merge conflicts but it also conceals the rename from reviewers so
-> > risks neglecting to update the bindings.
+
+
+On 10/5/2022 6:50 PM, Bjorn Andersson wrote:
+> On Fri, Sep 30, 2022 at 08:05:46PM -0700, Melody Olvera wrote:
+> [..]
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.c b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
+>> new file mode 100644
+>> index 000000000000..8b931ff80bb4
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/qcom/pinctrl-qdru1000.c
+>> @@ -0,0 +1,59 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright (c) 2021, The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pinctrl/pinctrl.h>
+>> +
+>> +#include "pinctrl-msm.h"
+>> +#include "pinctrl-qdru1000.h"
+>> +
+>> +static const struct msm_pinctrl_soc_data qdru1000_tlmm = {
+>> +	.pins = qdru1000_pins,
+>> +	.npins = ARRAY_SIZE(qdru1000_pins),
+>> +	.functions = qdru1000_functions,
+>> +	.nfunctions = ARRAY_SIZE(qdru1000_functions),
+>> +	.groups = qdru1000_groups,
+>> +	.ngroups = ARRAY_SIZE(qdru1000_groups),
+>> +	.ngpios = 151,
+>> +};
+>> +
+>> +static int qdru1000_tlmm_probe(struct platform_device *pdev)
+>> +{
+>> +	return msm_pinctrl_probe(pdev, &qdru1000_tlmm);
+>> +}
+>> +
+>> +static const struct of_device_id qdru1000_tlmm_of_match[] = {
+>> +	{ .compatible = "qcom,qdu1000-tlmm", },
+>> +	{ .compatible = "qcom,qru1000-tlmm", },
+>> +	{ },
+>> +};
+>> +
+>> +static struct platform_driver qdru1000_tlmm_driver = {
+>> +	.driver = {
+>> +		.name = "qdru1000-tlmm",
+>> +		.of_match_table = qdru1000_tlmm_of_match,
+>> +	},
+>> +	.probe = qdru1000_tlmm_probe,
+>> +	.remove = msm_pinctrl_remove,
+>> +};
+>> +
+>> +static int __init qdru1000_tlmm_init(void)
+>> +{
+>> +	return platform_driver_register(&qdru1000_tlmm_driver);
+>> +}
+>> +arch_initcall(qdru1000_tlmm_init);
+>> +
+>> +static void __exit qdru1000_tlmm_exit(void)
+>> +{
+>> +	platform_driver_unregister(&qdru1000_tlmm_driver);
+>> +}
+>> +module_exit(qdru1000_tlmm_exit);
+>> +
+>> +MODULE_DESCRIPTION("QTI QDRU1000 TLMM driver");
+>> +MODULE_LICENSE("GPL v2");
+> "GPL" only please.
+Ack.
 >
-> I was planning on sending binding updates once driver patches land.
-
-I'd have a (weak) preference for them being shared in the same patchset.
-Maintainers can either ack or the changes can land seperately but
-having them in the same patchset helps avoid having to quibble or check!
-
-
-Daniel.
+>> +MODULE_DEVICE_TABLE(of, qdru1000_tlmm_of_match);
+> Please add this next to qdru1000_tlmm_of_match.
+Ack.
+>
+>> diff --git a/drivers/pinctrl/qcom/pinctrl-qdru1000.h b/drivers/pinctrl/qcom/pinctrl-qdru1000.h
+> I'm not able to see why this is in a header file and the commit message
+> doesn't give a clue. Please align with the customary form, or motivate
+> your choice.
+Will use customary form instead of header file.
+>
+> [..]
+>> +
+>> +enum qdru1000_functions {
+>> +	msm_mux_gpio,
+>> +	msm_mux_CMO_PRI,
+>> +	msm_mux_SI5518_INT,
+>> +	msm_mux_atest_char_start,
+>> +	msm_mux_atest_char_status0,
+>> +	msm_mux_atest_char_status1,
+>> +	msm_mux_atest_char_status2,
+>> +	msm_mux_atest_char_status3,
+> For anything that denotes different pins in one function, please drop
+> the suffix and make this a list of functions.
+Got it.
+>
+> [..]
+>> +	msm_mux_qspi_data_0,
+>> +	msm_mux_qspi_data_1,
+>> +	msm_mux_qspi_data_2,
+>> +	msm_mux_qspi_data_3,
+>> +	msm_mux_qup0_se0_l0,
+> E.g. msm_mux_qup0_se0 is enough, giving each pin its own function means
+> that we need to define each pin separate in DT.
+Going to switch to qupN format per another thread.
+> Regards,
+> Bjorn
+Thanks,
+Melody
