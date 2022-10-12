@@ -2,212 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B41D95FC9EC
-	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 19:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 123CC5FC8EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 12 Oct 2022 18:11:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbiJLRbC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 13:31:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46778 "EHLO
+        id S229867AbiJLQLX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 12:11:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbiJLRbA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 13:31:00 -0400
-X-Greylist: delayed 4199 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 12 Oct 2022 10:30:59 PDT
-Received: from 19.mo581.mail-out.ovh.net (19.mo581.mail-out.ovh.net [178.33.251.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C95F6684D
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 10:30:59 -0700 (PDT)
-Received: from player788.ha.ovh.net (unknown [10.109.143.246])
-        by mo581.mail-out.ovh.net (Postfix) with ESMTP id D5D5024FDC
-        for <linux-gpio@vger.kernel.org>; Wed, 12 Oct 2022 14:25:43 +0000 (UTC)
-Received: from sk2.org (82-65-25-201.subs.proxad.net [82.65.25.201])
-        (Authenticated sender: steve@sk2.org)
-        by player788.ha.ovh.net (Postfix) with ESMTPSA id 5AC742F9B390F;
-        Wed, 12 Oct 2022 14:25:39 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-102R0049184b12f-2b4e-4dcb-9236-01c8d45e0aad,
-                    75377E6B882747309559AE06BD3DFEEF97A89409) smtp.auth=steve@sk2.org
-X-OVh-ClientIp: 82.65.25.201
-From:   Stephen Kitt <steve@sk2.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Stephen Kitt <steve@sk2.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers/gpio: use simple i2c probe
-Date:   Wed, 12 Oct 2022 16:25:23 +0200
-Message-Id: <20221012142524.3920266-1-steve@sk2.org>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S229734AbiJLQLV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 12:11:21 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915EDA033F;
+        Wed, 12 Oct 2022 09:11:20 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id qw20so38431670ejc.8;
+        Wed, 12 Oct 2022 09:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B17w69Iz2NdYtUdmzCUWZNwrLTOOl7h6wkcqw6Cxh6Y=;
+        b=nnmYhgT6yHUjLg00VqhHteLb5AO8Pdjt/70ZiPO1TpGKF8Ig4Dpf1Tstm3q96mNDeG
+         YbB+YCO5g/au6QhZIkNblqIPL2ltJdNgUg+p+VeJYDYPDoKilk088OIIOSxXYL/afPWp
+         ekwTzNNdx6rvRXNp+eoKwF0zH50fjbQ+pyKxJNquzDMK0YA1vJa4bevNF8gCrq9w/xQp
+         VNl5NKACtAFkEzoDWNGOcqE5kUhIarG24q1o0d/5wjl6L8DWNa/ijd2FzMj5PJ4dHOVa
+         koS/wTN6shEZRFyuhRwqvQCTjTYOM2AqglTtnEYzGuEnv/jED3y1ocZHWOWKsosM/zjC
+         zXNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B17w69Iz2NdYtUdmzCUWZNwrLTOOl7h6wkcqw6Cxh6Y=;
+        b=sjnibrLD/mTm7ML7JmXDG68bJ9XUsPbXhytQqgSCJholNd/eJrKBFicPRmuKQUpwQW
+         aPy33a//fMvEaxag5xx+GR4LYAh4B9TPzFJ+7I5wmRQPMP/Ql2n3rDwMRMlrsvxz5S5e
+         HZyy5sIirzRJ+bufM9GS/8zgGuSLz15Z10A1tacg0mRNZOWygtZw5GzzunQ7GCsviTnx
+         nBsDzHXm3alE7vfRx6mUwIekxyBycwOW+MbTNTi8gYACgwjH66OAJhslczcHy04gDrYm
+         nGZC+IyEYKJFPwYGIUhjTjnLTyWNTJQugIglTs/Le7HtfL1i1YDIXTxCAOoyJDtVIy2/
+         S62A==
+X-Gm-Message-State: ACrzQf1ljsBwgYKGwAxZnGIm8Drz/Q7j+G2NWhs6zrxomk99VzBW27VH
+        VUmZ+EQ7JJ3tAbS9HRQA6PcrcgY92OKyGSRO/YKVfXPdlWVQjw==
+X-Google-Smtp-Source: AMsMyM6TEL6eeZKt8sdOki9RvQU7WssLXUhEdZuXfciNBAxs+hiMJqvFhMHxQS02jfK1Jhm5S7yAUYuA/DK1kFA+j48=
+X-Received: by 2002:a17:906:cc56:b0:78d:98c3:8714 with SMTP id
+ mm22-20020a170906cc5600b0078d98c38714mr17354646ejb.445.1665591078973; Wed, 12
+ Oct 2022 09:11:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 14872856296705656539
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejkedgjeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufhtvghphhgvnhcumfhithhtuceoshhtvghvvgesshhkvddrohhrgheqnecuggftrfgrthhtvghrnhepleegteeujeffjeefjeevhfdtudefjefgteelgedtudekleeiledvvdetudevjedtnecukfhppeduvdejrddtrddtrddupdekvddrieehrddvhedrvddtudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehsthgvvhgvsehskhdvrdhorhhgqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheekuddpmhhouggvpehsmhhtphhouhht
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20221011172358.69043-1-krzysztof.kozlowski@linaro.org> <20221011172358.69043-24-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221011172358.69043-24-krzysztof.kozlowski@linaro.org>
+From:   Iskren Chernev <iskren.chernev@gmail.com>
+Date:   Wed, 12 Oct 2022 19:11:06 +0300
+Message-ID: <CAL7jhicvj2mH6eMG0q=YcUW99ngz7tedQO0U4HsHkAuVKhrJrw@mail.gmail.com>
+Subject: Re: [PATCH v2 23/34] dt-bindings: pinctrl: qcom,sm6115-tlmm: minor
+ style cleanups
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Martin Botka <martin.botka@somainline.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All these drivers have an i2c probe function which doesn't use the
-"struct i2c_device_id *id" parameter, so they can trivially be
-converted to the "probe_new" style of probe with a single argument.
+On Tue, Oct 11, 2022 at 8:26 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Drop "binding" from description (and align it with other Qualcomm
+> pinctrl bindings), use double quotes consistently, drop redundant
+> quotes and rename file to match compatible (to match coding convention).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Iskren Chernev <iskren.chernev@gmail.com>
 
-This is part of an ongoing transition to single-argument i2c probe
-functions. Old-style probe functions involve a call to i2c_match_id:
-in drivers/i2c/i2c-core-base.c,
-
-         /*
-          * When there are no more users of probe(),
-          * rename probe_new to probe.
-          */
-         if (driver->probe_new)
-                 status = driver->probe_new(client);
-         else if (driver->probe)
-                 status = driver->probe(client,
-                                        i2c_match_id(driver->id_table, client));
-         else
-                 status = -EINVAL;
-
-Drivers which don't need the second parameter can be declared using
-probe_new instead, avoiding the call to i2c_match_id. Drivers which do
-can still be converted to probe_new-style, calling i2c_match_id
-themselves (as is done currently for of_match_id).
-
-This change was done using the following Coccinelle script, and fixed
-up for whitespace changes:
-
-@ rule1 @
-identifier fn;
-identifier client, id;
-@@
-
-- static int fn(struct i2c_client *client, const struct i2c_device_id *id)
-+ static int fn(struct i2c_client *client)
-{
-...when != id
-}
-
-@ rule2 depends on rule1 @
-identifier rule1.fn;
-identifier driver;
-@@
-
-struct i2c_driver driver = {
--       .probe
-+       .probe_new
-                =
-(
-                   fn
-|
--                  &fn
-+                  fn
-)
-                ,
-};
-
-Signed-off-by: Stephen Kitt <steve@sk2.org>
----
- drivers/gpio/gpio-gw-pld.c   | 5 ++---
- drivers/gpio/gpio-max7300.c  | 5 ++---
- drivers/gpio/gpio-tpic2810.c | 5 ++---
- drivers/gpio/gpio-ts4900.c   | 5 ++---
- 4 files changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/gpio/gpio-gw-pld.c b/drivers/gpio/gpio-gw-pld.c
-index 2109803ffb38..5057fa9ad610 100644
---- a/drivers/gpio/gpio-gw-pld.c
-+++ b/drivers/gpio/gpio-gw-pld.c
-@@ -67,8 +67,7 @@ static void gw_pld_set8(struct gpio_chip *gc, unsigned offset, int value)
- 	gw_pld_output8(gc, offset, value);
- }
- 
--static int gw_pld_probe(struct i2c_client *client,
--			const struct i2c_device_id *id)
-+static int gw_pld_probe(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct gw_pld *gw;
-@@ -126,7 +125,7 @@ static struct i2c_driver gw_pld_driver = {
- 		.name = "gw_pld",
- 		.of_match_table = gw_pld_dt_ids,
- 	},
--	.probe = gw_pld_probe,
-+	.probe_new = gw_pld_probe,
- 	.id_table = gw_pld_id,
- };
- module_i2c_driver(gw_pld_driver);
-diff --git a/drivers/gpio/gpio-max7300.c b/drivers/gpio/gpio-max7300.c
-index 43da381a4d7e..cf482f4f0098 100644
---- a/drivers/gpio/gpio-max7300.c
-+++ b/drivers/gpio/gpio-max7300.c
-@@ -28,8 +28,7 @@ static int max7300_i2c_read(struct device *dev, unsigned int reg)
- 	return i2c_smbus_read_byte_data(client, reg);
- }
- 
--static int max7300_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+static int max7300_probe(struct i2c_client *client)
- {
- 	struct max7301 *ts;
- 
-@@ -63,7 +62,7 @@ static struct i2c_driver max7300_driver = {
- 	.driver = {
- 		.name = "max7300",
- 	},
--	.probe = max7300_probe,
-+	.probe_new = max7300_probe,
- 	.remove = max7300_remove,
- 	.id_table = max7300_id,
- };
-diff --git a/drivers/gpio/gpio-tpic2810.c b/drivers/gpio/gpio-tpic2810.c
-index d642c35cb97c..349c5fbd9b02 100644
---- a/drivers/gpio/gpio-tpic2810.c
-+++ b/drivers/gpio/gpio-tpic2810.c
-@@ -98,8 +98,7 @@ static const struct of_device_id tpic2810_of_match_table[] = {
- };
- MODULE_DEVICE_TABLE(of, tpic2810_of_match_table);
- 
--static int tpic2810_probe(struct i2c_client *client,
--			  const struct i2c_device_id *id)
-+static int tpic2810_probe(struct i2c_client *client)
- {
- 	struct tpic2810 *gpio;
- 	int ret;
-@@ -144,7 +143,7 @@ static struct i2c_driver tpic2810_driver = {
- 		.name = "tpic2810",
- 		.of_match_table = tpic2810_of_match_table,
- 	},
--	.probe = tpic2810_probe,
-+	.probe_new = tpic2810_probe,
- 	.remove = tpic2810_remove,
- 	.id_table = tpic2810_id_table,
- };
-diff --git a/drivers/gpio/gpio-ts4900.c b/drivers/gpio/gpio-ts4900.c
-index 416725c26e94..43e8b66e04f7 100644
---- a/drivers/gpio/gpio-ts4900.c
-+++ b/drivers/gpio/gpio-ts4900.c
-@@ -136,8 +136,7 @@ static const struct of_device_id ts4900_gpio_of_match_table[] = {
- };
- MODULE_DEVICE_TABLE(of, ts4900_gpio_of_match_table);
- 
--static int ts4900_gpio_probe(struct i2c_client *client,
--			const struct i2c_device_id *id)
-+static int ts4900_gpio_probe(struct i2c_client *client)
- {
- 	struct ts4900_gpio_priv *priv;
- 	u32 ngpio;
-@@ -186,7 +185,7 @@ static struct i2c_driver ts4900_gpio_driver = {
- 		.name = "ts4900-gpio",
- 		.of_match_table = ts4900_gpio_of_match_table,
- 	},
--	.probe = ts4900_gpio_probe,
-+	.probe_new = ts4900_gpio_probe,
- 	.id_table = ts4900_gpio_id_table,
- };
- module_i2c_driver(ts4900_gpio_driver);
-
-base-commit: 833477fce7a14d43ae4c07f8ddc32fa5119471a2
--- 
-2.30.2
-
+>  ...qcom,sm6115-pinctrl.yaml => qcom,sm6115-tlmm.yaml} | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+>  rename Documentation/devicetree/bindings/pinctrl/{qcom,sm6115-pinctrl.yaml => qcom,sm6115-tlmm.yaml} (95%)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml
+> similarity index 95%
+> rename from Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+> rename to Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml
+> index 3f5f5229a86c..ed68c4ee032f 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/pinctrl/qcom,sm6115-pinctrl.yaml#
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm6115-tlmm.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  title: Qualcomm Technologies, Inc. SM6115, SM4250 TLMM block
+> @@ -10,8 +10,8 @@ maintainers:
+>    - Iskren Chernev <iskren.chernev@gmail.com>
+>
+>  description:
+> -  This binding describes the Top Level Mode Multiplexer block found in the
+> -  SM4250/6115 platforms.
+> +  Top Level Mode Multiplexer pin controller in Qualcomm SM4250 and SM6115
+> +  SoCs.
+>
+>  properties:
+>    compatible:
+> @@ -36,9 +36,8 @@ properties:
+>    gpio-reserved-ranges: true
+>    wakeup-parent: true
+>
+> -#PIN CONFIGURATION NODES
+>  patternProperties:
+> -  '-state$':
+> +  "-state$":
+>      oneOf:
+>        - $ref: "#/$defs/qcom-sm6115-tlmm-state"
+>        - patternProperties:
+> @@ -46,7 +45,7 @@ patternProperties:
+>              $ref: "#/$defs/qcom-sm6115-tlmm-state"
+>          additionalProperties: false
+>
+> -'$defs':
+> +$defs:
+>    qcom-sm6115-tlmm-state:
+>      type: object
+>      description:
+> --
+> 2.34.1
+>
