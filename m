@@ -2,47 +2,47 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FFB05FCF69
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 02:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 013F95FCFE9
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 02:24:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbiJMASI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 20:18:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39442 "EHLO
+        id S229926AbiJMAYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 20:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiJMARe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 20:17:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0833918C94A;
-        Wed, 12 Oct 2022 17:16:57 -0700 (PDT)
+        with ESMTP id S230221AbiJMAXD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 20:23:03 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C04A26386;
+        Wed, 12 Oct 2022 17:19:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3D52EB81CBD;
-        Thu, 13 Oct 2022 00:16:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26D80C433B5;
-        Thu, 13 Oct 2022 00:16:50 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2908EB81CBD;
+        Thu, 13 Oct 2022 00:19:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25119C433C1;
+        Thu, 13 Oct 2022 00:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620210;
-        bh=K2Xoq5rlaMLID2O4KyNLJ/b1JhQLeVEtxovtTAbRceU=;
+        s=k20201202; t=1665620378;
+        bh=pmWOWDJYR5SGomkgV//bEm7u1P1MRTxlvb6qhk2QzdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HqdEqOKwsERCTK9UJbZsvVkk3UOBq0olVyhUp5zC2C+iJ9fdbGWfPvJmUOegXb7J7
-         NgbXB61hvSTIu9cr5e2DK8jJyXc+N6yj1HMhSmWr0m6WBzpYFkYPaKc7s1/QdbNN6P
-         nBgiij8lJdtLMy02ghatc+RyWVCd49lmJqMK49+chJiM+snepFtOkIlGN9mogZbQIW
-         Zcl3He/xcnqeewmz3lRJlpe64XGSa2DqQ0x4U9igFyv7Wc91V3BOPnYpl1OdE9Yscb
-         71Z+8KepJEDnwFEHXcGU/wPCTAlOFcNd60/UClY4wxMmeuHdC5lX0mFC3FXo+BaEhT
-         NkWeu+oXW/b0w==
+        b=BnoVQqcO1OtUHGVNWV/cabkeDstIz6bBJGvkxE9NuRfw5OH7qG8iVX0OhVX8sQdDu
+         ehik3RTFAGYetgAaSIEqiH/rbA3qRzjxt3CZE9iOREFNyAjgXtfACVu/V6axVuaKh0
+         +lzwfceNRW3RwUkjSk8SU/mze+CYsWFQB1n+yPbmNWFqJLGdn2dSZPOmpmQDesTsZd
+         n6FCrt96QSPm4Y6LloYom2uEkhhZDfYe98/jRtLQX0Ucx2PgB9HxlqzKCEdetoobM3
+         S+PTuWVsLg1I18Bub4Ks3qnn4lnzFvRA2fYY8uSPhVesgOanmzy2NnHxISXmyQsw5R
+         7+rQpymbOURrQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 23/67] gpiolib: rework quirk handling in of_find_gpio()
-Date:   Wed, 12 Oct 2022 20:15:04 -0400
-Message-Id: <20221013001554.1892206-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.19 21/63] gpiolib: of: do not ignore requested index when applying quirks
+Date:   Wed, 12 Oct 2022 20:17:55 -0400
+Message-Id: <20221013001842.1893243-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013001554.1892206-1-sashal@kernel.org>
-References: <20221013001554.1892206-1-sashal@kernel.org>
+In-Reply-To: <20221013001842.1893243-1-sashal@kernel.org>
+References: <20221013001842.1893243-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,172 +58,126 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit a2b5e207cade33b4d2dfd920f783f13b1f173e78 ]
+[ Upstream commit 98c3c940ea5c3957056717e8b77a91c7d94536ad ]
 
-Instead of having a string of "if" statements let's put all quirks into
-an array and iterate over them.
+We should not ignore index passed into of_find_gpio() when handling
+quirks. While in practice this change will not have any effect, it
+will allow consolidate quirk handling.
 
 Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 62 ++++++++++++++++-----------------------
- 1 file changed, 26 insertions(+), 36 deletions(-)
+ drivers/gpio/gpiolib-of.c | 32 +++++++++++++++++++-------------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 30b89b694530..097e948c1d49 100644
+index de100b0217da..b43c8bec24c2 100644
 --- a/drivers/gpio/gpiolib-of.c
 +++ b/drivers/gpio/gpiolib-of.c
-@@ -372,14 +372,12 @@ EXPORT_SYMBOL_GPL(gpiod_get_from_of_node);
+@@ -369,7 +369,9 @@ EXPORT_SYMBOL_GPL(gpiod_get_from_of_node);
   * properties should be named "foo-gpios" so we have this special kludge for
   * them.
   */
--static struct gpio_desc *of_find_spi_gpio(struct device *dev,
-+static struct gpio_desc *of_find_spi_gpio(struct device_node *np,
- 					  const char *con_id,
- 					  unsigned int idx,
+-static struct gpio_desc *of_find_spi_gpio(struct device *dev, const char *con_id,
++static struct gpio_desc *of_find_spi_gpio(struct device *dev,
++					  const char *con_id,
++					  unsigned int idx,
  					  enum of_gpio_flags *of_flags)
  {
  	char prop_name[32]; /* 32 is max size of property name */
--	const struct device_node *np = dev->of_node;
--	struct gpio_desc *desc;
- 
- 	/*
- 	 * Hopefully the compiler stubs the rest of the function if this
-@@ -395,8 +393,7 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev,
+@@ -390,7 +392,7 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev, const char *con_id
  	/* Will be "gpio-sck", "gpio-mosi" or "gpio-miso" */
  	snprintf(prop_name, sizeof(prop_name), "%s-%s", "gpio", con_id);
  
--	desc = of_get_named_gpiod_flags(np, prop_name, idx, of_flags);
--	return desc;
-+	return of_get_named_gpiod_flags(np, prop_name, idx, of_flags);
+-	desc = of_get_named_gpiod_flags(np, prop_name, 0, of_flags);
++	desc = of_get_named_gpiod_flags(np, prop_name, idx, of_flags);
+ 	return desc;
  }
  
- /*
-@@ -404,13 +401,11 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev,
-  * lines rather than "cs-gpios" like all other SPI hardware. Account for this
-  * with a special quirk.
-  */
--static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
-+static struct gpio_desc *of_find_spi_cs_gpio(struct device_node *np,
- 					     const char *con_id,
- 					     unsigned int idx,
- 					     enum of_gpio_flags *of_flags)
- {
--	const struct device_node *np = dev->of_node;
--
- 	if (!IS_ENABLED(CONFIG_SPI_MASTER))
- 		return ERR_PTR(-ENOENT);
- 
-@@ -428,7 +423,7 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
- 	 * uses just "gpios" so translate to that when "cs-gpios" is
- 	 * requested.
- 	 */
--	return of_get_named_gpiod_flags(dev->of_node, "gpios", idx, of_flags);
-+	return of_get_named_gpiod_flags(np, "gpios", idx, of_flags);
- }
- 
- /*
-@@ -436,7 +431,7 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
+@@ -431,7 +433,9 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
   * properties should be named "foo-gpios" so we have this special kludge for
   * them.
   */
--static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
-+static struct gpio_desc *of_find_regulator_gpio(struct device_node *np,
- 						const char *con_id,
- 						unsigned int idx,
+-static struct gpio_desc *of_find_regulator_gpio(struct device *dev, const char *con_id,
++static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
++						const char *con_id,
++						unsigned int idx,
  						enum of_gpio_flags *of_flags)
-@@ -447,8 +442,6 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
- 		"wlf,ldo1ena", /* WM8994 */
- 		"wlf,ldo2ena", /* WM8994 */
- 	};
--	const struct device_node *np = dev->of_node;
--	struct gpio_desc *desc;
- 	int i;
- 
- 	if (!IS_ENABLED(CONFIG_REGULATOR))
-@@ -461,11 +454,10 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
+ {
+ 	/* These are the connection IDs we accept as legacy GPIO phandles */
+@@ -454,12 +458,13 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev, const char *
  	if (i < 0)
  		return ERR_PTR(-ENOENT);
  
--	desc = of_get_named_gpiod_flags(np, con_id, idx, of_flags);
--	return desc;
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
+-	desc = of_get_named_gpiod_flags(np, con_id, 0, of_flags);
++	desc = of_get_named_gpiod_flags(np, con_id, idx, of_flags);
+ 	return desc;
  }
  
--static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
-+static struct gpio_desc *of_find_arizona_gpio(struct device_node *np,
+ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
  					      const char *con_id,
- 					      unsigned int idx,
++					      unsigned int idx,
  					      enum of_gpio_flags *of_flags)
-@@ -476,10 +468,10 @@ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
+ {
+ 	if (!IS_ENABLED(CONFIG_MFD_ARIZONA))
+@@ -468,17 +473,18 @@ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
  	if (!con_id || strcmp(con_id, "wlf,reset"))
  		return ERR_PTR(-ENOENT);
  
--	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
+-	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
++	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
  }
  
--static struct gpio_desc *of_find_usb_gpio(struct device *dev,
-+static struct gpio_desc *of_find_usb_gpio(struct device_node *np,
+ static struct gpio_desc *of_find_usb_gpio(struct device *dev,
  					  const char *con_id,
- 					  unsigned int idx,
++					  unsigned int idx,
  					  enum of_gpio_flags *of_flags)
-@@ -495,14 +487,27 @@ static struct gpio_desc *of_find_usb_gpio(struct device *dev,
+ {
+ 	/*
+-	 * Currently this USB quirk is only for the Fairchild FUSB302 host which is using
+-	 * an undocumented DT GPIO line named "fcs,int_n" without the compulsory "-gpios"
+-	 * suffix.
++	 * Currently this USB quirk is only for the Fairchild FUSB302 host
++	 * which is using an undocumented DT GPIO line named "fcs,int_n"
++	 * without the compulsory "-gpios" suffix.
+ 	 */
+ 	if (!IS_ENABLED(CONFIG_TYPEC_FUSB302))
+ 		return ERR_PTR(-ENOENT);
+@@ -486,7 +492,7 @@ static struct gpio_desc *of_find_usb_gpio(struct device *dev,
  	if (!con_id || strcmp(con_id, "fcs,int_n"))
  		return ERR_PTR(-ENOENT);
  
--	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
+-	return of_get_named_gpiod_flags(dev->of_node, con_id, 0, of_flags);
++	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
  }
  
-+typedef struct gpio_desc *(*of_find_gpio_quirk)(struct device_node *np,
-+						const char *con_id,
-+						unsigned int idx,
-+						enum of_gpio_flags *of_flags);
-+static const of_find_gpio_quirk of_find_gpio_quirks[] = {
-+	of_find_spi_gpio,
-+	of_find_spi_cs_gpio,
-+	of_find_regulator_gpio,
-+	of_find_arizona_gpio,
-+	of_find_usb_gpio,
-+};
-+
  struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
- 			       unsigned int idx, unsigned long *flags)
- {
- 	char prop_name[32]; /* 32 is max size of property name */
- 	enum of_gpio_flags of_flags;
-+	const of_find_gpio_quirk *q;
- 	struct gpio_desc *desc;
- 	unsigned int i;
+@@ -515,7 +521,7 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
  
-@@ -522,24 +527,9 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
- 			break;
+ 	if (gpiod_not_found(desc)) {
+ 		/* Special handling for SPI GPIOs if used */
+-		desc = of_find_spi_gpio(dev, con_id, &of_flags);
++		desc = of_find_spi_gpio(dev, con_id, idx, &of_flags);
  	}
  
--	if (gpiod_not_found(desc)) {
--		/* Special handling for SPI GPIOs if used */
--		desc = of_find_spi_gpio(dev, con_id, idx, &of_flags);
--	}
--
--	if (gpiod_not_found(desc))
--		desc = of_find_spi_cs_gpio(dev, con_id, idx, &of_flags);
--
--	if (gpiod_not_found(desc)) {
--		/* Special handling for regulator GPIOs if used */
--		desc = of_find_regulator_gpio(dev, con_id, idx, &of_flags);
--	}
--
--	if (gpiod_not_found(desc))
--		desc = of_find_arizona_gpio(dev, con_id, idx, &of_flags);
--
--	if (gpiod_not_found(desc))
--		desc = of_find_usb_gpio(dev, con_id, idx, &of_flags);
-+	/* Properly named GPIO was not found, try workarounds */
-+	for (q = of_find_gpio_quirks; gpiod_not_found(desc) && *q; q++)
-+		desc = (*q)(dev->of_node, con_id, idx, &of_flags);
+ 	if (gpiod_not_found(desc)) {
+@@ -527,14 +533,14 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+ 
+ 	if (gpiod_not_found(desc)) {
+ 		/* Special handling for regulator GPIOs if used */
+-		desc = of_find_regulator_gpio(dev, con_id, &of_flags);
++		desc = of_find_regulator_gpio(dev, con_id, idx, &of_flags);
+ 	}
+ 
+ 	if (gpiod_not_found(desc))
+-		desc = of_find_arizona_gpio(dev, con_id, &of_flags);
++		desc = of_find_arizona_gpio(dev, con_id, idx, &of_flags);
+ 
+ 	if (gpiod_not_found(desc))
+-		desc = of_find_usb_gpio(dev, con_id, &of_flags);
++		desc = of_find_usb_gpio(dev, con_id, idx, &of_flags);
  
  	if (IS_ERR(desc))
  		return desc;
