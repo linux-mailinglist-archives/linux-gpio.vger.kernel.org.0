@@ -2,231 +2,168 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C07D5FD23D
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 03:09:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82DC05FD279
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 03:23:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231462AbiJMBJS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 12 Oct 2022 21:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37452 "EHLO
+        id S229578AbiJMBXX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 12 Oct 2022 21:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232513AbiJMBIv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 21:08:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54547EE88A;
-        Wed, 12 Oct 2022 18:06:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 37CE8B81CE1;
-        Thu, 13 Oct 2022 00:22:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22C46C433C1;
-        Thu, 13 Oct 2022 00:22:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665620539;
-        bh=JGLTKbsD/sdAt4qMN1vPrUfBqXQvtOwEO0dsNfJFF40=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KZ1Yx1++3iVsZyrfow5NMvWL2nNYEcqwIWQvQvBen1P03QT+y6pd4mibcR34yTQ0M
-         1f4FDeQBUzRr29CM/M5OodF2jUpjw0eDM9+esPDYWOu8iVH/M03vmfj4puIEsvxWhN
-         b1ZnBGVaHoJkv4Np2TsZxTnPZrEhFITSHbCCgSTgR0bKv9nQroQpqRSaljDmwJJrpR
-         fmFFVD1MzT9LdJyX+DYWKCq+uDt1YvoYLghko833wNWiiOz37va5NoREdlbhyEU2cA
-         JNuIfB1r3E6AGetXYY9jn3FokrriSENFFmy0/QhqdyhctfFz1PB9hJpCzcA2QgXg1d
-         iaZpJawOhF1og==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Sasha Levin <sashal@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 18/47] gpiolib: rework quirk handling in of_find_gpio()
-Date:   Wed, 12 Oct 2022 20:20:53 -0400
-Message-Id: <20221013002124.1894077-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221013002124.1894077-1-sashal@kernel.org>
-References: <20221013002124.1894077-1-sashal@kernel.org>
+        with ESMTP id S229489AbiJMBXV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 12 Oct 2022 21:23:21 -0400
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53076D77DA;
+        Wed, 12 Oct 2022 18:23:16 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=98;SR=0;TI=SMTPD_---0VS19mRS_1665624179;
+Received: from 30.97.48.54(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VS19mRS_1665624179)
+          by smtp.aliyun-inc.com;
+          Thu, 13 Oct 2022 09:23:04 +0800
+Message-ID: <b7c8afe1-af89-9b5a-2c2c-82a2810ca9f1@linux.alibaba.com>
+Date:   Thu, 13 Oct 2022 09:23:27 +0800
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH v2 23/36] pinctrl: sprd: Add missed header(s)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com>
+ <20221010201453.77401-24-andriy.shevchenko@linux.intel.com>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20221010201453.77401-24-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-10.4 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit a2b5e207cade33b4d2dfd920f783f13b1f173e78 ]
 
-Instead of having a string of "if" statements let's put all quirks into
-an array and iterate over them.
+On 10/11/2022 4:14 AM, Andy Shevchenko wrote:
+> Do not imply that some of the generic headers may be always included.
+> Instead, include explicitly what we are direct user of.
+> 
+> While at it, sort headers alphabetically.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpiolib-of.c | 62 ++++++++++++++++-----------------------
- 1 file changed, 26 insertions(+), 36 deletions(-)
+LGTM. Thanks.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index fe34061d918b..77fa14776078 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -369,14 +369,12 @@ EXPORT_SYMBOL_GPL(gpiod_get_from_of_node);
-  * properties should be named "foo-gpios" so we have this special kludge for
-  * them.
-  */
--static struct gpio_desc *of_find_spi_gpio(struct device *dev,
-+static struct gpio_desc *of_find_spi_gpio(struct device_node *np,
- 					  const char *con_id,
- 					  unsigned int idx,
- 					  enum of_gpio_flags *of_flags)
- {
- 	char prop_name[32]; /* 32 is max size of property name */
--	const struct device_node *np = dev->of_node;
--	struct gpio_desc *desc;
- 
- 	/*
- 	 * Hopefully the compiler stubs the rest of the function if this
-@@ -392,8 +390,7 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev,
- 	/* Will be "gpio-sck", "gpio-mosi" or "gpio-miso" */
- 	snprintf(prop_name, sizeof(prop_name), "%s-%s", "gpio", con_id);
- 
--	desc = of_get_named_gpiod_flags(np, prop_name, idx, of_flags);
--	return desc;
-+	return of_get_named_gpiod_flags(np, prop_name, idx, of_flags);
- }
- 
- /*
-@@ -401,13 +398,11 @@ static struct gpio_desc *of_find_spi_gpio(struct device *dev,
-  * lines rather than "cs-gpios" like all other SPI hardware. Account for this
-  * with a special quirk.
-  */
--static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
-+static struct gpio_desc *of_find_spi_cs_gpio(struct device_node *np,
- 					     const char *con_id,
- 					     unsigned int idx,
- 					     enum of_gpio_flags *of_flags)
- {
--	const struct device_node *np = dev->of_node;
--
- 	if (!IS_ENABLED(CONFIG_SPI_MASTER))
- 		return ERR_PTR(-ENOENT);
- 
-@@ -425,7 +420,7 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
- 	 * uses just "gpios" so translate to that when "cs-gpios" is
- 	 * requested.
- 	 */
--	return of_get_named_gpiod_flags(dev->of_node, "gpios", idx, of_flags);
-+	return of_get_named_gpiod_flags(np, "gpios", idx, of_flags);
- }
- 
- /*
-@@ -433,7 +428,7 @@ static struct gpio_desc *of_find_spi_cs_gpio(struct device *dev,
-  * properties should be named "foo-gpios" so we have this special kludge for
-  * them.
-  */
--static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
-+static struct gpio_desc *of_find_regulator_gpio(struct device_node *np,
- 						const char *con_id,
- 						unsigned int idx,
- 						enum of_gpio_flags *of_flags)
-@@ -444,8 +439,6 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
- 		"wlf,ldo1ena", /* WM8994 */
- 		"wlf,ldo2ena", /* WM8994 */
- 	};
--	const struct device_node *np = dev->of_node;
--	struct gpio_desc *desc;
- 	int i;
- 
- 	if (!IS_ENABLED(CONFIG_REGULATOR))
-@@ -458,11 +451,10 @@ static struct gpio_desc *of_find_regulator_gpio(struct device *dev,
- 	if (i < 0)
- 		return ERR_PTR(-ENOENT);
- 
--	desc = of_get_named_gpiod_flags(np, con_id, idx, of_flags);
--	return desc;
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
- }
- 
--static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
-+static struct gpio_desc *of_find_arizona_gpio(struct device_node *np,
- 					      const char *con_id,
- 					      unsigned int idx,
- 					      enum of_gpio_flags *of_flags)
-@@ -473,10 +465,10 @@ static struct gpio_desc *of_find_arizona_gpio(struct device *dev,
- 	if (!con_id || strcmp(con_id, "wlf,reset"))
- 		return ERR_PTR(-ENOENT);
- 
--	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
- }
- 
--static struct gpio_desc *of_find_usb_gpio(struct device *dev,
-+static struct gpio_desc *of_find_usb_gpio(struct device_node *np,
- 					  const char *con_id,
- 					  unsigned int idx,
- 					  enum of_gpio_flags *of_flags)
-@@ -492,14 +484,27 @@ static struct gpio_desc *of_find_usb_gpio(struct device *dev,
- 	if (!con_id || strcmp(con_id, "fcs,int_n"))
- 		return ERR_PTR(-ENOENT);
- 
--	return of_get_named_gpiod_flags(dev->of_node, con_id, idx, of_flags);
-+	return of_get_named_gpiod_flags(np, con_id, idx, of_flags);
- }
- 
-+typedef struct gpio_desc *(*of_find_gpio_quirk)(struct device_node *np,
-+						const char *con_id,
-+						unsigned int idx,
-+						enum of_gpio_flags *of_flags);
-+static const of_find_gpio_quirk of_find_gpio_quirks[] = {
-+	of_find_spi_gpio,
-+	of_find_spi_cs_gpio,
-+	of_find_regulator_gpio,
-+	of_find_arizona_gpio,
-+	of_find_usb_gpio,
-+};
-+
- struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
- 			       unsigned int idx, unsigned long *flags)
- {
- 	char prop_name[32]; /* 32 is max size of property name */
- 	enum of_gpio_flags of_flags;
-+	const of_find_gpio_quirk *q;
- 	struct gpio_desc *desc;
- 	unsigned int i;
- 
-@@ -519,24 +524,9 @@ struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
- 			break;
- 	}
- 
--	if (gpiod_not_found(desc)) {
--		/* Special handling for SPI GPIOs if used */
--		desc = of_find_spi_gpio(dev, con_id, idx, &of_flags);
--	}
--
--	if (gpiod_not_found(desc))
--		desc = of_find_spi_cs_gpio(dev, con_id, idx, &of_flags);
--
--	if (gpiod_not_found(desc)) {
--		/* Special handling for regulator GPIOs if used */
--		desc = of_find_regulator_gpio(dev, con_id, idx, &of_flags);
--	}
--
--	if (gpiod_not_found(desc))
--		desc = of_find_arizona_gpio(dev, con_id, idx, &of_flags);
--
--	if (gpiod_not_found(desc))
--		desc = of_find_usb_gpio(dev, con_id, idx, &of_flags);
-+	/* Properly named GPIO was not found, try workarounds */
-+	for (q = of_find_gpio_quirks; gpiod_not_found(desc) && *q; q++)
-+		desc = (*q)(dev->of_node, con_id, idx, &of_flags);
- 
- 	if (IS_ERR(desc))
- 		return desc;
--- 
-2.35.1
-
+> ---
+>   drivers/pinctrl/sprd/pinctrl-sprd.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> index dca7a505d413..c1806b7dcf78 100644
+> --- a/drivers/pinctrl/sprd/pinctrl-sprd.c
+> +++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+> @@ -13,12 +13,14 @@
+>   #include <linux/of.h>
+>   #include <linux/of_device.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/pinctrl/consumer.h>
+>   #include <linux/pinctrl/machine.h>
+> -#include <linux/pinctrl/pinconf.h>
+>   #include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinconf.h>
+>   #include <linux/pinctrl/pinctrl.h>
+>   #include <linux/pinctrl/pinmux.h>
+> -#include <linux/slab.h>
+>   
+>   #include "../core.h"
+>   #include "../pinmux.h"
