@@ -2,99 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C0BE5FE249
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 20:59:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 928CD5FE2F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 21:50:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbiJMS7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Oct 2022 14:59:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37012 "EHLO
+        id S229684AbiJMTuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Oct 2022 15:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbiJMS6y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 14:58:54 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA30827928;
-        Thu, 13 Oct 2022 11:57:06 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id q11so1431005ilj.10;
-        Thu, 13 Oct 2022 11:57:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aU4v5j25jcA4b2/jV12oaXw7opkB9OVDvdOu4hkOSkY=;
-        b=QhFO5qgSaKUMRml2Jd5VUmeEmiC9AF9BZmoWzw8uxvh3OpKZoYPyVVGYi4p2MDAlFa
-         +hMoMa8jTFYXU93+Kr/LdS9ATml85nFb2/ErVZ6DUkcki6WLco1sdO0u0MUr7zdLcb50
-         U8gM9fCJcsogz5Lw6B9QRyxGaZ8d9HJ75FXki6+24oVpcN9wE3GBgQinDmZm8oG27DKl
-         xfaeeT3GBBYthIwZkrCiBgC8M40Lo3rPe4nJ2ES38QAj1B8OCrI9b5eQNKJsi5wChNTd
-         b60m4fcAQbwUuQngvLcY0Luy7sOWRSIr/XRLCS5wpz0wbDJKImI5VlSnEwoWCcuyaX5y
-         1YLA==
+        with ESMTP id S229648AbiJMTuF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 15:50:05 -0400
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2ED03AE40;
+        Thu, 13 Oct 2022 12:50:03 -0700 (PDT)
+Received: by mail-oi1-f181.google.com with SMTP id g10so2871357oif.10;
+        Thu, 13 Oct 2022 12:50:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aU4v5j25jcA4b2/jV12oaXw7opkB9OVDvdOu4hkOSkY=;
-        b=K4VQ24JcmhHFUeTtBBqWcn+HkAA1v3Z0OiUu56pd0rz/g+xDSvNXZo7hV7kxoMIvCF
-         BYZebeejThbZ2ftg78MEZ6seU/N5oUCUEdJ/oOA6faZyr7hKHd+5NSATgqVASKbQsAeR
-         +2fpEUNTpWS9NGcRMF4H0RdXqtwlS96n0ZDs4gBJhSjdvP94QmottMTze+OAk6HnDPjN
-         IRR+JAIAuXKrVDCfa9rTl6nAMspyX9L7uPqGF1qripGfnadyogAr4rjOoFsSVhmZuUEw
-         dGrZRK/xsA4BidXcpOFaK7iygGbwug9gAXeplOKtMQ6I3wuMNDPoRHhFaPUOCSe2M1dK
-         sswQ==
-X-Gm-Message-State: ACrzQf0CddUJX4PziJN2cc9gi4EcyODUXt73ToCo/0WlWWscv8MSmnhO
-        Uq3AB6wLtq1kqWXFO5G7E8WGvQcsjqKHxfKjIDk=
-X-Google-Smtp-Source: AMsMyM4tAkBUHy+Lv4iPEVX7fI3kq/6F/ptm2DyftFBCewja+gWmdmjL6xlLgaH6l9cZUi7njV1AcafirE2fwO2o+eY=
-X-Received: by 2002:a05:6e02:20ea:b0:2fa:bf8:300a with SMTP id
- q10-20020a056e0220ea00b002fa0bf8300amr696533ilv.309.1665687426081; Thu, 13
- Oct 2022 11:57:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
- <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
- <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com> <GSPOJR.M4XZ4D03G60F@crapouillou.net>
-In-Reply-To: <GSPOJR.M4XZ4D03G60F@crapouillou.net>
-From:   Siarhei Volkau <lis8215@gmail.com>
-Date:   Thu, 13 Oct 2022 21:56:54 +0300
-Message-ID: <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
-Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
- JZ4750/JZ4755 SoCs
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
-        kbuild-all@lists.01.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zZvNjVbW4zowPy3Z/cAsr56lUs0ewtVKh94UUwuwhmA=;
+        b=zXuCWNUzjKY5lXlQfE4wGOP5C0Hc0hpRZNhJ392roq/K8ZP0wot0VsWv3q1Rup3OS8
+         XsNVtaAwtrO2ivaTYernMmAePHe5x4h3aukZVmejbgVCfFrv2KLjTelZvm4VZNHXr45L
+         BuEPQop+EvCrcsPKevgD2SmdptjjECG5eaymNcbs2e0rIQ+3IbTFxMPgPOJEIfl2JKfh
+         3tlbbyD/Jaj544gqH4ozALq9+zQor6ep7kJMe07Fv4ks2oQxKfV57JEkHivWD2E7q69/
+         oR4IAKnPaBk4GSxBhf3s2J+mEJcbchknvdxpvLVCXKqynlFZj5srrZJ0m3Ks4g3qoRuU
+         dYnw==
+X-Gm-Message-State: ACrzQf3E5dgcuE+jndXqRyylGx2atqO2IbkUWwH7AdJnJ3S0eaHRL7J7
+        K+R9y1C3NhOlDkKedIDdpQ==
+X-Google-Smtp-Source: AMsMyM55LbRP2E0YJcAZc7Ufq9gCBsA12TsQGbf58KBfsqxY0ISPmjy8+9HI4HKCzOMeF8uSp7WLww==
+X-Received: by 2002:a05:6808:1208:b0:351:9ff:795f with SMTP id a8-20020a056808120800b0035109ff795fmr703115oil.231.1665690603233;
+        Thu, 13 Oct 2022 12:50:03 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id bb18-20020a056808169200b00354d732ed87sm234339oib.36.2022.10.13.12.50.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Oct 2022 12:50:02 -0700 (PDT)
+Received: (nullmailer pid 150868 invoked by uid 1000);
+        Thu, 13 Oct 2022 19:50:03 -0000
+Date:   Thu, 13 Oct 2022 14:50:03 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Chunyan Zhang <zhang.lyra@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Cixi Geng <cixi.geng1@unisoc.com>, linux-gpio@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 2/3] dt-bindings: gpio: Convert Unisoc EIC controller
+ binding to yaml
+Message-ID: <166569060298.150817.4539198070843655655.robh@kernel.org>
+References: <20221010053338.22580-1-zhang.lyra@gmail.com>
+ <20221010053338.22580-3-zhang.lyra@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221010053338.22580-3-zhang.lyra@gmail.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=D1=87=D1=82, 13 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 12:17, Paul Cercue=
-il <paul@crapouillou.net>:
->
-> Just disable the divider in ingenic_fixup_fdt() in
-> arch/mips/generic/board-ingenic.c.
->
-> Cheers,
-> -Paul
->
+On Mon, 10 Oct 2022 13:33:37 +0800, Chunyan Zhang wrote:
+> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> 
+> Convert the Unisoc EIC controller binding to DT schema format.
+> Update the maxItems of 'reg' property, since the current gpio-eic-sprd
+> driver supports 3 reg items. Also removed a few similar examples.
+> 
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> ---
+>  .../bindings/gpio/gpio-eic-sprd.txt           |  97 -----------------
+>  .../bindings/gpio/sprd,gpio-eic.yaml          | 103 ++++++++++++++++++
+>  2 files changed, 103 insertions(+), 97 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-eic-sprd.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpio/sprd,gpio-eic.yaml
+> 
 
-Looks reasonable, I hope the bootloader initialized peripherals can handle
-doubled frequency, till re-initialization completes. I'll check that.
-
-Thank you all, guys.
+Reviewed-by: Rob Herring <robh@kernel.org>
