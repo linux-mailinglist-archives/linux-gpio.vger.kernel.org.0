@@ -2,75 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCF8D5FD9C0
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 15:00:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA585FDB55
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 15:45:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbiJMNAz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Oct 2022 09:00:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56146 "EHLO
+        id S229640AbiJMNpi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Oct 2022 09:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229652AbiJMNAy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 09:00:54 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C467CE99B
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 06:00:50 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id c7-20020a05600c0ac700b003c6cad86f38so3197492wmr.2
-        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 06:00:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e090UptYvOlwk2o/spWxT+a1kzobKHCjkmTW/8q9c3w=;
-        b=F93eWzPL++XtQDy3a+zXwCE1abMBEHhZZC5fk/G5lRAZN1p3fw0BJzCSRf1JxVOu7E
-         elk+ogcpjyjt0BJaW1qA7Bf1QwT5SOdBIxRdpsMN19BHaa1o+q35gUZk9ao/5jly7Us9
-         bVJFBbIlaj9Pbwrogy+r+lvxcswsp7V/YFm7Y/YRtQHDM7NYVkQLQRl1Wgj09iJ82lJS
-         tNxno/D2gJt/GRKM6SJoloEDoFDKI6sIIh9hlZfqvKTIFvS/1Agac/4U7sENZ9zSO5bm
-         FJoRM6/sVmjvHYzN9GK/zIModIXYZIW2y/aMWHCVMYiN2oEYl7B2MA8JSShQ9OADH32q
-         Yl7Q==
+        with ESMTP id S229548AbiJMNph (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 09:45:37 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 176CDC97F5
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 06:45:31 -0700 (PDT)
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 2CDD13F472
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 13:45:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1665668730;
+        bh=oZ6CYTlr9nmUWE7+jRrggJImi8t0ASm4Ymm/aHcOngU=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=FuxOBTZvfPYRD4b9DW6Z0gIWw2h8Nxd4Hm1Lvaiq8n5MhUS4sV6O7RyVfZMH/zoJF
+         p3oI76FMTpag0hEqCi63j6biHT1oesowp+Yu65sU3DfCgjuqhkV8Msp0pyVNfwMHNa
+         UuRMd6/dX0u9UoBuwwqM9pa6baiUIHZX+p7OzAM3VxGg2fGHwltBpfocnQ1i0HoGbM
+         aOe6MCXUzZK18meLy4alz6MZwQCNuF8n2JUUSK/2aXKIKNwIY3K8yoNt7D0XzlYzBg
+         jwGz0aLT1570xmU0DcgyFhiQAMPir3pJqxM6TNeCk8kVQtoEB03cmWHbmYNX1FaiPp
+         Y6GrNISN5qPpw==
+Received: by mail-qt1-f198.google.com with SMTP id d1-20020ac80601000000b00388b0fc84beso1214013qth.3
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 06:45:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e090UptYvOlwk2o/spWxT+a1kzobKHCjkmTW/8q9c3w=;
-        b=g3ICbL6KRPdJeqMy2MoUgCKTWvp0l/J2Rvk7elBoRGYiALcLBBE/9Abuil3nsCnGak
-         EVFZvrmVnCjEmdxkjxZaDEmfkEGd7sgmc1emcZbzLjAjhDwmRsnm9n2+XiKtTbJs4ojn
-         +sMSCtylqZJV17skiPnTPUMALkJPwhm2O4BjNJiZKzboKmqWoNiayqLPhagGWnvFmGmB
-         U3JPewg8fqyWnrwRsuSSU0pmN1o7V8EOzSzkDtzcn2XdnVFcXvQadO8ilRZKf9INJBWd
-         4VUqnq/uff79R2k6FUBcWUds8BrdWPPRD88vC5DIto0AOuiXq1mQMT8aYfCxi5IOCdNl
-         9Quw==
-X-Gm-Message-State: ACrzQf3g0zlYSv/v0FpTZKSqJe9lGUkGTy1Jk6pKmbQtMCS9osuKpZjJ
-        DXFn0GFYp+IPRUn+1P4qooiUKA==
-X-Google-Smtp-Source: AMsMyM5/qlMI5/7Jp1jEd/FpZ/9JWGz4x3dWQG9gJzlvxn/ShMXACpcKdGSWC8DNtFHlxSjfNttBLQ==
-X-Received: by 2002:a1c:2543:0:b0:3c6:b7bd:a474 with SMTP id l64-20020a1c2543000000b003c6b7bda474mr6110469wml.95.1665666049068;
-        Thu, 13 Oct 2022 06:00:49 -0700 (PDT)
-Received: from maple.lan (cpc141216-aztw34-2-0-cust174.18-1.cable.virginm.net. [80.7.220.175])
-        by smtp.gmail.com with ESMTPSA id c3-20020a1c3503000000b003a6125562e1sm4333524wma.46.2022.10.13.06.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 06:00:48 -0700 (PDT)
-Date:   Thu, 13 Oct 2022 14:00:46 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 4/7] gpiolib: of: add a quirk for reset line for Marvell
- NFC controller
-Message-ID: <Y0gL/tdaCFOq98uo@maple.lan>
-References: <20221011-gpiolib-quirks-v1-0-e01d9d3e7b29@gmail.com>
- <20221011-gpiolib-quirks-v1-4-e01d9d3e7b29@gmail.com>
- <Y0aW7vDxfNa/8bAk@maple.lan>
- <Y0cLLraNFVXtD2/k@google.com>
- <Y0cMibfIomw3S5dc@maple.lan>
- <Y0cNqBKm7LhZd28t@google.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oZ6CYTlr9nmUWE7+jRrggJImi8t0ASm4Ymm/aHcOngU=;
+        b=0JG0j91fs3EB/NcX4hTAZ/LIaZ7YSm1lrW+LAne+IkETQuWTrqKM2LoqwG5toUr+co
+         d2KcJbdUwXs2vuLhnikFbblhGjlXcx4ghF9Tt3ANvMs031uUkACwMzU01dRKlrO9mc/o
+         +x799Wnvz5nzFoTeVGcuSqx7wVyEl/19TSQUK3hjebMPas2JanzUw8k/1IdmuG+XJOXw
+         F/aMCYztXYj+IdXWe83z0JscUbJwr5WbUXI2XL0dbZHOZ724P73VgywKaP4wdSVAnrzm
+         qH4W9wr6nibUjWbsd48U67Hnu1PJxhx5eOi3W/fp3NfoEu+CUfu+J9DjTdLfjMhfsYL7
+         yYfw==
+X-Gm-Message-State: ACrzQf2YCKjLq0An/6ozqyOqSgWxGMmbD26Z4Cq+lhGG+N/WIcK5LDRC
+        eVHB9Ju4rtVQ1m+1AA+hxKhj+UFKUqXUQWRzYwOnXgdWFFfFTGzLOcN4pxKWxRwI6RhCnGIgb/7
+        ukBq1Vw4EQBfPGBAh3h5XIdZOZi9vpZbXwUM+raYjIVbxahaz0oqnZQY=
+X-Received: by 2002:a17:902:e547:b0:178:2aee:ab1d with SMTP id n7-20020a170902e54700b001782aeeab1dmr34472937plf.29.1665668718318;
+        Thu, 13 Oct 2022 06:45:18 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM78ePohGhlrfbrYkXpKivNlFC+CQIg8yVU6ZbPumGZajp4N0UnQTsqgfJE8Lxw5R7/it6j1tWtvQQpctBkLJMY=
+X-Received: by 2002:a17:902:e547:b0:178:2aee:ab1d with SMTP id
+ n7-20020a170902e54700b001782aeeab1dmr34472899plf.29.1665668717972; Thu, 13
+ Oct 2022 06:45:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0cNqBKm7LhZd28t@google.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+References: <20221012221028.4817-1-mario.limonciello@amd.com> <20221012221028.4817-2-mario.limonciello@amd.com>
+In-Reply-To: <20221012221028.4817-2-mario.limonciello@amd.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 13 Oct 2022 21:45:06 +0800
+Message-ID: <CAAd53p4sKdFL-DcPet2srtisiX_Qr9qpiV159Xj9YSUM9yiLPw@mail.gmail.com>
+Subject: Re: [PATCH 1/1] pinctrl: amd: Add dynamic debugging for active GPIOs
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Mark Pearson <mpearson@lenovo.com>,
+        Pananchikkal Renjith <Renjith.Pananchikkal@amd.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,34 +78,86 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 12, 2022 at 11:55:36AM -0700, Dmitry Torokhov wrote:
-> On Wed, Oct 12, 2022 at 07:50:49PM +0100, Daniel Thompson wrote:
-> > On Wed, Oct 12, 2022 at 11:45:02AM -0700, Dmitry Torokhov wrote:
-> > > On Wed, Oct 12, 2022 at 11:29:02AM +0100, Daniel Thompson wrote:
-> > > > On Tue, Oct 11, 2022 at 03:19:32PM -0700, Dmitry Torokhov wrote:
-> > > > > The controller is using non-standard "reset-n-io" name for its reset
-> > > > > gpio property, whereas gpiod API expects "<name>-gpios". Add a quirk
-> > > > > so that gpiod API will still work on unmodified DTSes.
-> > > > >
-> > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > >
-> > > > How/when has/will the DT bindings documentation for this hardware be
-> > > > updated to describe the new bindings?
-> > > >
-> > > > Delivering the quirks ahead of driver updates is great for avoiding
-> > > > merge conflicts but it also conceals the rename from reviewers so
-> > > > risks neglecting to update the bindings.
-> > >
-> > > I was planning on sending binding updates once driver patches land.
-> >
-> > I'd have a (weak) preference for them being shared in the same patchset.
-> > Maintainers can either ack or the changes can land seperately but
-> > having them in the same patchset helps avoid having to quibble or check!
+On Thu, Oct 13, 2022 at 6:10 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 >
-> OK, so how about once we agree and land this patchset to gpiolib I can
-> blast driver patches + binding patches together?
+> Some laptops have been reported to wake up from s2idle when plugging
+> in the AC adapter or by closing the lid.  This is a surprising
+> behavior that is further clarified by commit cb3e7d624c3ff ("PM:
+> wakeup: Add extra debugging statement for multiple active IRQs").
+>
+> With that commit in place the following interaction can be seen
+> when the lid is closed:
+>
+> [   28.946038] PM: suspend-to-idle
+> [   28.946083] ACPI: EC: ACPI EC GPE status set
+> [   28.946101] ACPI: PM: Rearming ACPI SCI for wakeup
+> [   28.950152] Timekeeping suspended for 3.320 seconds
+> [   28.950152] PM: Triggering wakeup from IRQ 9
+> [   28.950152] ACPI: EC: ACPI EC GPE status set
+> [   28.950152] ACPI: EC: ACPI EC GPE dispatched
+> [   28.995057] ACPI: EC: ACPI EC work flushed
+> [   28.995075] ACPI: PM: Rearming ACPI SCI for wakeup
+> [   28.995131] PM: Triggering wakeup from IRQ 9
+> [   28.995271] ACPI: EC: ACPI EC GPE status set
+> [   28.995291] ACPI: EC: ACPI EC GPE dispatched
+> [   29.098556] ACPI: EC: ACPI EC work flushed
+> [   29.207020] ACPI: EC: ACPI EC work flushed
+> [   29.207037] ACPI: PM: Rearming ACPI SCI for wakeup
+> [   29.211095] Timekeeping suspended for 0.739 seconds
+> [   29.211095] PM: Triggering wakeup from IRQ 9
+> [   29.211079] PM: Triggering wakeup from IRQ 7
+> [   29.211095] ACPI: PM: ACPI non-EC GPE wakeup
+> [   29.211095] PM: resume from suspend-to-idle
+>
+> * IRQ9 on this laptop is used for the ACPI SCI.
+> * IRQ7 on this laptop is used for the GPIO controller.
+>
+> What has occurred is when the lid was closed the EC woke up the
+> SoC from it's deepest sleep state and the kernel's s2idle loop
+> processed all EC events.  When it was finished processing EC events,
+> it checked for any other reasons to wake (break the s2idle loop).
+>
+> The IRQ for the GPIO controller was active so the loop broke, and
+> then this IRQ was processed.  This is not a kernel bug but it is
+> certainly a surprising behavior, and to better debug it we should
+> have a dynamic debugging message that we can enact to catch it.
+>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-That's good for me!
+This is very useful, thanks for the patch!
 
+Acked-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Daniel.
+> ---
+>  drivers/pinctrl/pinctrl-amd.c | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+> index 4691a33bc374f..8378b4115ec0d 100644
+> --- a/drivers/pinctrl/pinctrl-amd.c
+> +++ b/drivers/pinctrl/pinctrl-amd.c
+> @@ -628,13 +628,16 @@ static bool do_amd_gpio_irq_handler(int irq, void *dev_id)
+>                 /* Each status bit covers four pins */
+>                 for (i = 0; i < 4; i++) {
+>                         regval = readl(regs + i);
+> -                       /* caused wake on resume context for shared IRQ */
+> -                       if (irq < 0 && (regval & BIT(WAKE_STS_OFF))) {
+> +
+> +                       if (regval & BIT(WAKE_STS_OFF) ||
+> +                           regval & BIT(INTERRUPT_STS_OFF))
+>                                 dev_dbg(&gpio_dev->pdev->dev,
+> -                                       "Waking due to GPIO %d: 0x%x",
+> +                                       "GPIO %d is active: 0x%x",
+>                                         irqnr + i, regval);
+> +
+> +                       /* caused wake on resume context for shared IRQ */
+> +                       if (irq < 0 && (regval & BIT(WAKE_STS_OFF)))
+>                                 return true;
+> -                       }
+>
+>                         if (!(regval & PIN_IRQ_PENDING) ||
+>                             !(regval & BIT(INTERRUPT_MASK_OFF)))
+> --
+> 2.34.1
+>
