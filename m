@@ -2,92 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18AD95FE389
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 22:53:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCBB95FE3C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 23:09:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229462AbiJMUxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Oct 2022 16:53:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60500 "EHLO
+        id S229746AbiJMVJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Oct 2022 17:09:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229607AbiJMUxB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 16:53:01 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E4730569;
-        Thu, 13 Oct 2022 13:53:00 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id n83so3043860oif.11;
-        Thu, 13 Oct 2022 13:53:00 -0700 (PDT)
+        with ESMTP id S229586AbiJMVJm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 17:09:42 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5EEDC0
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 14:09:36 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id df9so2083471qvb.9
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 14:09:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ZtwkVcmFeREjbHg2IbPGzv0D1AjraFsKLqfRNwOXEg=;
+        b=lbcDaLLV+xm5LcT+W0wx6GXTIgptRh6dkXO+NcZm9QvxjMqPiP39TwEtUDdyKMTNdg
+         hVAbQ/50igQ+ib9K7XIQAiQ1V503ZzsMkTxyrr3qQYfm5sw21Ld+nCv9tfXEaWcCZJ92
+         MWzvRa6wQZKGmaPLn3kyDAbLNQ5IuAT7peEVk2HnewgxUDQWa7kBMzM+THX/NK5rY0yv
+         fiXU2+D0uT2cJgHJicR+sXJb87ygy9/2hYg3hzKofMzDxSlFa3Xlpu2GmIBA/B0vWLfz
+         U8Njr+g+fxPdsCCVLJCZoHXULf7OeWGXQ8FOCN2M1Ij4lJIQphydAT8xLdZazqH0OwqA
+         NT4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wEa8MzuBXqW8d10/nVywQl6OG+GmLxQIsROSS6dBhAI=;
-        b=460D+JcotfrfTz8vvabr/FIMhyqUDEbdD+L69A9j9lSxIEKSvkevuFHEb0eAhQJHF1
-         AWIm8GOeXa2Ryri64i3tN6WkfxIme27jztzpqyclzA5FGMVUVefwABfWbUfORLnJCSjQ
-         PToLrx0mNcBnOxGoIxQFJk+lQDsomvRU5Z3PCW797jM1TyLRPJfWgA1PJDmzCYW7r/Ed
-         jmaNw+M1zwUZBt6zLmi9gZ9eL9FX3X0LfsfZCo90bkT0q8h0RKzidFbItKBN3SrUv9sG
-         ag9IidmjqKX9qZeEwgNoBlMoWFLt3yQOAAhxcfbnqmo2tunU8k3s4DQQSZ32tyIUddCE
-         Ah5A==
-X-Gm-Message-State: ACrzQf2NjRMPn+bENWO+FxSFKMyayCz/103URY665hm3C9W51uXpLok4
-        0cY2HrM6cVOfDxINfxSWCg==
-X-Google-Smtp-Source: AMsMyM7zy1cDs+EvWqGR047HtGCXe5RqsaoGQbolt9KFGr83b3U6GRoXUxT7cZmKfKuxpyIdO1ihEw==
-X-Received: by 2002:a05:6808:d53:b0:354:ba42:bc51 with SMTP id w19-20020a0568080d5300b00354ba42bc51mr873968oik.186.1665694379881;
-        Thu, 13 Oct 2022 13:52:59 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id t12-20020a4adbcc000000b0044884c40c8asm199965oou.30.2022.10.13.13.52.59
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ZtwkVcmFeREjbHg2IbPGzv0D1AjraFsKLqfRNwOXEg=;
+        b=N5jkYpH/e9DhriF9c/juSm0wuFZAMlhNMrB4Qg+zF/kKwQtfbxgXsDI+bCZCqyEWqX
+         OVReBgvWpHlZiaJ+DnrfOfkC6cZ5RfXBM014F+roumCUlbq65eHTROt1ewQGEWGaMeuE
+         HbYFGvuhdkG3YES/gvQwdrzCzTkv+2aKpuRvrqvdxsvxXwU/dp8GKvALtEchXneNYkQ4
+         RldL1v/HDk4l3vY0y2WFiCS6kWut0Mrd/dZUpJ293gB+zE+jXFzzX8RzZXO+BuL5oPdc
+         sXgVNkWOFlLuhjplQASZSEfgNthyJXEubgWx5psi4VH3l8szmgiX7Ky+b2ojTGFWBH93
+         bFkQ==
+X-Gm-Message-State: ACrzQf1+/OvUhjxwZtZDbaZzTf3UxkI8j8gDjaguj0Ul30SLylUWh87h
+        QZT7n4H0FAqlKVf59KF5e0O/LUtwHNu/cA==
+X-Google-Smtp-Source: AMsMyM6RCSD1qWQGnAsB4pqDhnvQApT/yPvDVpgXn8cnvEzh/BiDwCvG7xnQYonqqGfLSlZojmgEGg==
+X-Received: by 2002:a05:6214:d06:b0:4b4:6bdb:27a with SMTP id 6-20020a0562140d0600b004b46bdb027amr1492425qvh.53.1665695375487;
+        Thu, 13 Oct 2022 14:09:35 -0700 (PDT)
+Received: from krzk-bin.home (cpe-72-225-192-120.nyc.res.rr.com. [72.225.192.120])
+        by smtp.gmail.com with ESMTPSA id s1-20020a05620a29c100b006eeb3165554sm753071qkp.19.2022.10.13.14.08.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 13:52:59 -0700 (PDT)
-Received: (nullmailer pid 198040 invoked by uid 1000);
-        Thu, 13 Oct 2022 20:53:00 -0000
-Date:   Thu, 13 Oct 2022 15:53:00 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Thu, 13 Oct 2022 14:08:54 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] dt-bindings: pinctrl: qcom,msm8994: convert to
- dtschema
-Message-ID: <166569437976.198001.10995993679277186924.robh@kernel.org>
-References: <20221013185314.91266-1-krzysztof.kozlowski@linaro.org>
- <20221013185314.91266-3-krzysztof.kozlowski@linaro.org>
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 1/4] arm64: dts: qcom: msm8998: add gpio-ranges to TLMM
+Date:   Thu, 13 Oct 2022 17:06:09 -0400
+Message-Id: <20221013210612.95994-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221013185314.91266-3-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 13 Oct 2022 14:53:14 -0400, Krzysztof Kozlowski wrote:
-> Convert Qualcomm MSM8994 pin controller bindings to DT schema.  Keep the
-> parsing of pin configuration subnodes consistent with other Qualcomm
-> schemas (children named with '-state' suffix, their children with
-> '-pins').
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Drop default:2 for drive strength
-> ---
->  .../bindings/pinctrl/qcom,msm8994-pinctrl.txt | 186 ------------------
->  .../pinctrl/qcom,msm8994-pinctrl.yaml         | 166 ++++++++++++++++
->  2 files changed, 166 insertions(+), 186 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8994-pinctrl.yaml
-> 
+Qualcomm pinctrl bindings and drivers expect gpio-ranges property.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
+
+Changes since v2:
+1. None
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index f05f16ac5cc1..2c4acf227253 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -1056,6 +1056,7 @@ tlmm: pinctrl@3400000 {
+ 			compatible = "qcom,msm8998-pinctrl";
+ 			reg = <0x03400000 0xc00000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
++			gpio-ranges = <&tlmm 0 0 150>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+-- 
+2.34.1
+
