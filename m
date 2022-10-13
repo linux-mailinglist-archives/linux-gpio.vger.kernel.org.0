@@ -2,108 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 026735FD6D9
-	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 11:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DEEB5FD744
+	for <lists+linux-gpio@lfdr.de>; Thu, 13 Oct 2022 11:47:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiJMJRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Oct 2022 05:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54634 "EHLO
+        id S229516AbiJMJrr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 13 Oct 2022 05:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbiJMJRW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 05:17:22 -0400
-Received: from aposti.net (aposti.net [89.234.176.197])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E925FBC;
-        Thu, 13 Oct 2022 02:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1665652637; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QfKF6P//aPtt3yXkddZGb8gQhNXBSYeBQmboxbZCJlU=;
-        b=Ip0NSVDD1AM8ZgtvW/VD87fTHoRfAC5ZKR4g5vCDTryKzaGimlZJoh+FC5CRuxEyrYuyOV
-        zFio5aFohd39Q+mWiqCJyJxM7qdFhkFObmPHLG9/o7LYmzxzlFG4La4/m47ImlJB8FwZ5u
-        kKRpu9SSwogossEIyH7SeLGOjn8wS2U=
-Date:   Thu, 13 Oct 2022 10:17:04 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
- JZ4750/JZ4755 SoCs
-To:     Siarhei Volkau <lis8215@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
-        kbuild-all@lists.01.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        with ESMTP id S229475AbiJMJrq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 05:47:46 -0400
+Received: from relay06.th.seeweb.it (relay06.th.seeweb.it [IPv6:2001:4b7a:2000:18::167])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5874C103255
+        for <linux-gpio@vger.kernel.org>; Thu, 13 Oct 2022 02:47:45 -0700 (PDT)
+Received: from SoMainline.org (D57D4C6E.static.ziggozakelijk.nl [213.125.76.110])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id 7E1383F270;
+        Thu, 13 Oct 2022 11:47:43 +0200 (CEST)
+Date:   Thu, 13 Oct 2022 11:47:42 +0200
+From:   Marijn Suijten <marijn.suijten@somainline.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
-Message-Id: <GSPOJR.M4XZ4D03G60F@crapouillou.net>
-In-Reply-To: <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com>
-References: <20221009181338.2896660-8-lis8215@gmail.com>
-        <202210100607.YdxoR0tD-lkp@intel.com>
-        <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
-        <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com>
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 10/16] arm64: dts: qcom: sm6125: align TLMM pin
+ configuration with DT schema
+Message-ID: <20221013094742.fftcbdkjipkw3pub@SoMainline.org>
+References: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
+ <20220930192954.242546-11-krzysztof.kozlowski@linaro.org>
+ <20221011074512.anifehocqjnxuf35@SoMainline.org>
+ <112ada96-f742-8d06-dc90-a422d3636e06@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <112ada96-f742-8d06-dc90-a422d3636e06@linaro.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On 2022-10-11 08:06:55, Krzysztof Kozlowski wrote:
+> On 11/10/2022 03:45, Marijn Suijten wrote:
+> > On 2022-09-30 21:29:48, Krzysztof Kozlowski wrote:
+> >> DT schema expects TLMM pin configuration nodes to be named with
+> >> '-state' suffix and their optional children with '-pins' suffix.
+> >>
+> >> Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > 
+> > Thanks!
+> > 
+> > Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+> > 
+> > Perhaps mention more clearly that this is fixing up an earlier patch
+> > that tried to address missing `-pins`?
+> 
+> It is not fixing only that patch, but also nodes added later without suffix.
 
-Le jeu., oct. 13 2022 at 08:46:39 +0200, Arnd Bergmann <arnd@arndb.de>=20
-a =C3=A9crit :
-> On Thu, Oct 13, 2022, at 8:37 AM, Siarhei Volkau wrote:
->>  =D0=BF=D0=BD, 10 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 01:29, kernel =
-test robot=20
->> <lkp@intel.com>:
->>>  config: ia64-allyesconfig
->>>  config: arm64-randconfig-r035-20221010
->>=20
->>>   > 142  #define CGU_REG_CPCCR   ((void *)CKSEG1ADDR(0x10000000))
->>=20
->>>  0-DAY CI Kernel Test Service
->>=20
->>  I know CKSEG1ADDR is MIPS specific, might be it needed to disable=20
->> COMPILE_TEST
->>  on the driver?
->>  Since early syscon isn't mainlined yet I don't see any other way at=20
->> the moment.
->>=20
->>  Any suggestions on that, folks?
->=20
-> This looks like some setup that belongs into the bootloader. If you=20
-> are
-> handing over the console from bootloader to kernel, the hardware=20
-> should
-> already be in a working state, with no need to touch it during early
-> boot.
->=20
-> If you are dealing with broken bootloaders that are not under your=20
-> control,
-> having this code in the architecture specific early boot as a fixup
-> would be better than putting it into the driver.
+Afaik the node was already there when [1] was applied, it just
+accidentally added -pins to cmd twice instead of once to clk and cmd
+separately.  But feel free to stick to a generic commit message.
 
-Agreed. I am not fond of having a driver poking into an unrelated=20
-subsystem's memory area.
+[1]: https://lore.kernel.org/all/20220912061746.6311-35-krzysztof.kozlowski@linaro.org/
 
-Just disable the divider in ingenic_fixup_fdt() in=20
-arch/mips/generic/board-ingenic.c.
-
-Cheers,
--Paul
-
-
+- Marijn
