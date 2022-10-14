@@ -2,93 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA185FE790
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 05:25:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2011C5FEA6D
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 10:23:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbiJNDZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 13 Oct 2022 23:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37398 "EHLO
+        id S229560AbiJNIXp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 04:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbiJNDZ3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 13 Oct 2022 23:25:29 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA8CA9243;
-        Thu, 13 Oct 2022 20:25:25 -0700 (PDT)
-X-QQ-mid: bizesmtp70t1665717897tggdurz9
-Received: from [192.168.50.235] ( [113.72.147.11])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 14 Oct 2022 11:24:55 +0800 (CST)
-X-QQ-SSF: 01000000000000B09000000A0000000
-X-QQ-FEAT: Sm8l2YSuDykwx9zlf9aLJ0pyGRo8hfvyvKRxpLKx+MBlrJvD5pae//UyWDAHW
-        na+5Zc7KD3nH6kxeXh6Yqpsg0LCAFrZLbmfKzGrO0BDwerR9xpCu/dFNr2efEUDZBpPls6y
-        0LDmtH/jgCC728s/PbjIVFaNySz6J0mJm1iSKu6MrWK0k1EGan9i1YWZUUWi3EDBHYOAgW7
-        2LECSrZ7SDNEbTiafYaBMYy8np1WuK2EYswgPqtX9OxtcVauKnhg8LPOPxBNgvYoa5exsQ9
-        wQooaViwTDRQvilIPnMdhtemhJTHDS6oTPIW3h1NeNCTDhUYflKHmS7yqFkhvESXqWXhT27
-        dc07HIQ4XYHjmjFWxc2ve/5cGaJHF6vbiVpGk7z6+CQyfKG3JElOgvjk2WIIg==
-X-QQ-GoodBg: 0
-Message-ID: <7CB1B79E00E38D81+9631ccf1-48b5-9ffa-e5cd-b0c9a7c50a56@linux.starfivetech.com>
-Date:   Fri, 14 Oct 2022 11:24:44 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v1 29/30] RISC-V: defconfig: Enable CONFIG_SERIAL_8250_DW
-Content-Language: en-US
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        with ESMTP id S229518AbiJNIXo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 04:23:44 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 495CBA98DA;
+        Fri, 14 Oct 2022 01:23:42 -0700 (PDT)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 29E8NL0w091226;
+        Fri, 14 Oct 2022 03:23:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1665735801;
+        bh=caQP+xhdENHxbYMLUB9kynmLwJgSaibC+jH2dXJ2b7c=;
+        h=From:To:CC:Subject:Date;
+        b=XX0/wemrapcy1C1/flBxmKy+Im4jvtqo9DAOyL9LpQItbCMo6+PbSwI7Ps0W/SWWP
+         rCI0M5XGqta4iMKSceD2B3N5SXvyU690p61InXpNfLaQ0NEuPypPwo3gHrq6vl92Wz
+         ecJHhuciq6NYZ5vNHMGtbCz7tgA4wzQMfj0riCjM=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 29E8NLBL066300
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Oct 2022 03:23:21 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Fri, 14
+ Oct 2022 03:23:21 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Fri, 14 Oct 2022 03:23:21 -0500
+Received: from LT5CD112GSQZ.ent.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 29E8NFmT021645;
+        Fri, 14 Oct 2022 03:23:16 -0500
+From:   Apurva Nandan <a-nandan@ti.com>
+To:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220930090653.7449-1-hal.feng@linux.starfivetech.com>
- <01c658ad-7f73-20fc-03c0-c82dcd820aa4@codethink.co.uk>
- <Yzdig6GepDx34u1j@spud>
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <Yzdig6GepDx34u1j@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=no
-        autolearn_force=no version=3.4.6
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Apurva Nandan <a-nandan@ti.com>, Hari Nagalla <hnagalla@ti.com>
+Subject: [PATCH v2 0/4] Add initial support for J784S4 SoC
+Date:   Fri, 14 Oct 2022 13:53:10 +0530
+Message-ID: <20221014082314.118361-1-a-nandan@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Sep 2022 22:41:23 +0100, Conor Dooley wrote:
-> On Fri, Sep 30, 2022 at 09:54:14PM +0100, Ben Dooks wrote:
-> > On 30/09/2022 10:06, Hal Feng wrote:
-> > > Add CONFIG_SERIAL_8250_DW=y, which is a necessary option for
-> > > StarFive JH7110 and JH7100 SoCs to boot with serial ports.
-> > > 
-> > > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
-> > 
-> > That might be useful for other users at some point an I don't
-> > think it adds much code.
-> 
-> Honestly I think this should be applied for 6.1, for parity with the
-> other SoCs that have their serial console enabled by default.
-> 
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+The J784S4 SoC belongs to the K3 Multicore SoC architecture
+platform, providing advanced system integration in automotive,
+ADAS and industrial applications requiring AI at the network edge.
+This SoC extends the K3 Jacinto 7 family of SoCs with focus on
+raising performance and integration while providing interfaces,
+memory architecture and compute performance for multi-sensor, high
+concurrency applications.
 
-Could this patch be pulled out and applied for v6.1? So the JH7100
-and the coming JH7110 can enable serial console by default when
-booting. Thanks.
+Some highlights of this SoC are:
+* Up to 8 Cortex-A72s, four clusters of lockstep capable dual Cortex-R5F MCUs,
+  4 C7x floating point vector DSPs with Matrix Multiply Accelerator(MMA) for
+  deep learning and CNN.
+* 3D GPU: Automotive grade IMG BXS-4-64
+* Vision Processing Accelerator (VPAC) with image signal processor and Depth
+  and Motion Processing Accelerator (DMPAC)
+* Three CSI2.0 4L RX plus two CSI2.0 4L TX, two DSI Tx, one eDP/DP and one
+  DPI interface.
+* Integrated gigabit ethernet switch, up to 8 ports (TDA4VH), two ports
+  support 10Gb USXGMII; Two 4 lane PCIe-GEN3 controllers, USB3.0 Dual-role
+  device subsystems, Up to 20 MCANs, among other peripherals.
 
-Best regards,
-Hal
+See J784S4 Technical Reference Manual (SPRUJ52 - JUNE 2022)
+for further details: http://www.ti.com/lit/zip/spruj52
+
+bootlog: https://pastebin.ubuntu.com/p/XzbP9mHkKF/plain/
+
+Changelog:
+- Disabled all the IPs that are not mandatory for booting up the SoC by
+  default in the dtsi, and thus this gives a minimal SoC boot devicetree.
+- Moved no-1-8-v property from the k3-j784s4-evm.dts file to
+  k3-j784s4-main.dtsi file.
+- Naming changes (hwlock, regulator) and commit description changes.
+- Added device specific compatible for j721e system controller.
+- Dropped bootargs completely.
+
+Apurva Nandan (4):
+  dt-bindings: arm: ti: Add bindings for J784s4 SoC
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions for J784s4
+  arm64: dts: ti: Add initial support for J784S4 SoC
+  arm64: dts: ti: Add support for J784S4 EVM board
+
+ .../devicetree/bindings/arm/ti/k3.yaml        |    6 +
+ arch/arm64/boot/dts/ti/Makefile               |    2 +
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  199 ++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 1010 +++++++++++++++++
+ .../boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi     |  318 ++++++
+ arch/arm64/boot/dts/ti/k3-j784s4.dtsi         |  287 +++++
+ include/dt-bindings/pinctrl/k3.h              |    3 +
+ 7 files changed, 1825 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4.dtsi
+
+-- 
+2.17.1
+
