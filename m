@@ -2,705 +2,185 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 495955FEEF1
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 15:48:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E9D05FEFF0
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 16:13:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJNNsp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 09:48:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54884 "EHLO
+        id S229822AbiJNON1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 10:13:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbiJNNsm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 09:48:42 -0400
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [IPv6:2001:4b7a:2000:18::165])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2FF41CFF3A
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 06:48:37 -0700 (PDT)
-Received: from [192.168.1.101] (95.49.31.41.neoplus.adsl.tpnet.pl [95.49.31.41])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id 282031FECE;
-        Fri, 14 Oct 2022 15:48:34 +0200 (CEST)
-Message-ID: <6d0b6b84-9dfe-8956-5973-38f1b30aecea@somainline.org>
-Date:   Fri, 14 Oct 2022 15:48:33 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: msm8998: align TLMM pin
- configuration with DT schema
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+        with ESMTP id S229863AbiJNON1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 10:13:27 -0400
+Received: from FRA01-PR2-obe.outbound.protection.outlook.com (mail-eopbgr120087.outbound.protection.outlook.com [40.107.12.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837931D2F74;
+        Fri, 14 Oct 2022 07:13:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ClIJjXcv+UK98eOb5h657C9NLw3fN4Q4XPw5TE6LE+XujqnlrJm37HO6ojTZDsgXKhJQWEBq2rM7+FC0L282iL5FmM2QiO+h+1vqZon6zlmhKO6dyMUQ0Zb8dgyXO+xCfnI3LNaioOYxsu02aNEj+lm014o5cfI2ERue8JS3eWdIxuZdgNUYbQkKhTmKAZ0c7JUZV141Ev0ePlJ6rK+QNzQn1LCtAmxuvsW4y+R2QbWgLsb7Nj1ms1AGhV0HIX6+/8LbHp/ov5TbYldkWe/Bsxx3lnWA44vxVfWi4+d5PdeuI1Qid1eFwVhbi1Q/tzxatppR8LVEghq4GKGwuxlg7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mceC29l5+ymhj75Oa1TPnuL2rE5w3rijgZK53PzPVGs=;
+ b=TrRuHxm0Au0Chex6IL+TkkloWnvIEB/KE/jhTf/H+N1TRTuamw7zxa6Eg4bzLRm81EwPJUfyldXobA/3rqMquGYQ97UmD19V/w7dXO7UtOQjgZ5lBdlrby/UGG5UWbe5nbRGlLxqjpbKuGWQERCTpAhMCmMa9DcSlTF4iEtlB/wNuOtQctbOTrYGXVIImh0YhnkNCuZp/Yim+624Y3XXjm+qvtqbcEkQzL04ZnO0MrT7K2Kawnxewq64vhCrloEwhabWil4Pigx1O0qrNJxoXLO6pXiXPB+YuzGCCBt25kunQlYeUiabaH+en5dpNrGDsA+CQwRgjvcmEV4ucpVarQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=csgroup.eu; dmarc=pass action=none header.from=csgroup.eu;
+ dkim=pass header.d=csgroup.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=csgroup.eu;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mceC29l5+ymhj75Oa1TPnuL2rE5w3rijgZK53PzPVGs=;
+ b=Xdq2GsMqJsYqAvJKZeFQ3iOO+y6C6m1TrH1z8rfmIUtg17Caya8DjSnqi+FZilJbuPcsyJ4vBFGnqkRC//Ktd9XmxZlQ5G0yTcZGd7uBZXJmrkvW9bje5Mzy88wuD2QyyicMpsuUM3NUCVaC2dy733DsDS8e4GcFyrMUiSwrqYfAnApa2Og6b7l3ixp/IXyYjBqbh0+oUqN0d2GFjcULpLr7upKjnwD7knKE8tZcieD3k/Rf1s08C92as4YJ+qsmVACPRhaGK2wqHqNY6jnCzHzQfPqjdxEBjrRmpe4kHnbNMkbww80VQNnGw/xAWI5vbaFu554SL5EB37naOM4SHQ==
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:31::15)
+ by MRZP264MB3210.FRAP264.PROD.OUTLOOK.COM (2603:10a6:501:1b::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Fri, 14 Oct
+ 2022 14:13:20 +0000
+Received: from MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c854:380d:c901:45af]) by MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::c854:380d:c901:45af%6]) with mapi id 15.20.5723.029; Fri, 14 Oct 2022
+ 14:13:20 +0000
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+To:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221013210612.95994-1-krzysztof.kozlowski@linaro.org>
- <20221013210612.95994-3-krzysztof.kozlowski@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@somainline.org>
-In-Reply-To: <20221013210612.95994-3-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
+Thread-Topic: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
+Thread-Index: AQHYvsmBxynpZuGTuEmTfLBqWwtXK63Twy4AgAAEhACACyiggIAABvgAgC85UAA=
+Date:   Fri, 14 Oct 2022 14:13:20 +0000
+Message-ID: <da8e0775-7d3e-d6fa-e1ff-395769d35614@csgroup.eu>
+References: <cover.1662116601.git.christophe.leroy@csgroup.eu>
+ <CAMRc=MehcpT84-ucLbYmdVTAjT86bNb9NEfV6npCmPZHqbsArw@mail.gmail.com>
+ <b348a306-3043-4ccc-9067-81759ab29143@www.fastmail.com>
+ <CACRpkdbazHcUassRMqZ2oHmama3nWEZ3U3bB-y-3dmo3jgFPWg@mail.gmail.com>
+ <a7cb856c-8a3f-4737-ae9e-b75c306ad88e@www.fastmail.com>
+In-Reply-To: <a7cb856c-8a3f-4737-ae9e-b75c306ad88e@www.fastmail.com>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=csgroup.eu;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MRZP264MB2988:EE_|MRZP264MB3210:EE_
+x-ms-office365-filtering-correlation-id: cff2d154-6f72-4f52-40f0-08daadee3faa
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pnh7Q/ExjYvIUvqM+ilPIbCPe0v737CzKRreG/4XPoyKr7bn0ufZMzm4nKNPBJJDFI3ThqR/zohqp5MpJ4D1ClM6fLrYOGgO0GfxEWDznIcbd5Eu4Tx25DkUQe8MkhrR/YObidW63SFTUG8OwT6x88VFO3rFrG36NQAdp2x4Y82Mtln5VhbNwUV4FanX4Vcd9fGIxQu0ojYPEGfdxrdYpA4lTebzqL0aQSjBfx/H25sgZwt1Tu4LRh+bvNF0v7UejylIxeLef8uO2hxNT65zT6+O4kbNhSeL5I2F8GRGi29/PYAd1BBc++JRDm0MABwUYPtd4NGYQTT8YW5SAYkds8XtPrRTF4+fGBii4q1PsHQfWoV1mh3wbSuHxlu/IuvRAy7auqVa470H27zOvMLgVhdk7hXieI+Ypy59PLrhKqRQs04gSg7pGysdItwSYv+qD2hPl4VUMVxNxVPfwu7zidf5i0HiTYxKNEhlbdfqn6AAgnEd5mIKWlpxW8s98NN0DpL6k7xvfCVKLfIBUzS/eJQxMZS6bWN3W23618VZ4BAIN9/+dcILcDNz5UZK6f6hzTKa+y+qTYmbEJ3KPncRH57u/VfBGVXM1Xh1M0wPkUg/Eg4ic8FPIif3K5jt7WJe4qUjm29c50W5sKNqiTNQ9Vq5NApiR9djN1L7IXD/lE3/oV0q6IThnph/p8ClIYCTQ6GfU9Sbw153PL0DEFB//X273zQESYgSFn/Tv/CXh24vuxi3sNbXHjmOd4janrcH/EljFfkMprBEqMYAzQ+WMc3+Hj60O76rPjFa8ABAfRXKSj6BzWnyRLBsRD4S6G+9mUe7eeMMNxcuJaWTsG522U8FEwgGbLYV53Cu6kMlaMS8AGz3kzsa+5iaIkrfLg7gIxrz5t6ethBwTEy/p0ZZ9A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(366004)(376002)(39860400002)(346002)(396003)(451199015)(8676002)(2906002)(31686004)(8936002)(76116006)(316002)(41300700001)(4326008)(66946007)(66556008)(66476007)(91956017)(110136005)(54906003)(66446008)(64756008)(71200400001)(478600001)(966005)(6486002)(38100700002)(122000001)(6506007)(26005)(53546011)(6512007)(2616005)(7416002)(5660300002)(44832011)(83380400001)(31696002)(86362001)(38070700005)(36756003)(186003)(26583001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?U2d2bmltMXJ4Z2xxa040bzZaNUo1cGU0VUtIZ1ZoRngzMll3UDIvakV0YUY2?=
+ =?utf-8?B?YnZ4QXdCZ0RjWG1HbDB3eGhkVWlvc290dS9USHJQaGtkekFSbVREck5sUkVs?=
+ =?utf-8?B?emIrQUNXa2orUHUxVGxrT1k2ZjhXN1h5bWlsRks0MDBYWGNZN3k4V1kyQUZl?=
+ =?utf-8?B?OUxEYXhkUzk2YXBDaGlkWW9YQlprcGtvYjZLSkVuaXdJWW93ODZEdVlZZ3U2?=
+ =?utf-8?B?Ly8wUW5VMkRmZ2FjczcwdHBvQnJzR0t2d3ZQQ01sdjdFYjRtUGtXRHA2c3hO?=
+ =?utf-8?B?QlVmNEJkcm81WXIwRFphN0lTZEFaZWl0NDhiOU5sdDhlaUt0OXdkYmUvS3ZU?=
+ =?utf-8?B?bVIrU1BXQnE0VFQ2OWNvK0NqcnZlQWk5MGQvempqb01oZ1Nod2l4SnErREhv?=
+ =?utf-8?B?VUhaNHZOVnZXYm5nVjdWOERxRWN3Nk1ycTJJQnV2aVBSVU1IVk5tV2dYbHQ4?=
+ =?utf-8?B?cXYrQTBOTVRpek1vM2h5THJsWXNUcmlxNnRMSmtab2ZGU0NUdHczSXVUZGlD?=
+ =?utf-8?B?SzVhZHIwMTRwWmpmWndsOHIwSmJTeG42bWFld2x0STByR1ZBQXF5Wm9UdSs4?=
+ =?utf-8?B?SFliVkVCYzFwSzVWU2ZKSGx2V3loWGdVbFlRWXVmbjVBdm9NMzd2dUFaQU9Q?=
+ =?utf-8?B?R041UjlYcG5WRExnekE2c2dzc09seXIvS1hpUmR5VkQ5QWtxYktoSXJQSDNz?=
+ =?utf-8?B?cnVHY0xBMVREQzBJN1pEYnpMQXRNeWMrVHBmY29aY0FzZm4yV3Uva1gyYkRq?=
+ =?utf-8?B?RWJhOFY1SEJwV0kxcGNML1dvZldMUjhtOEZWazk0SkJ6UnJ4S1I1TUVBTUhw?=
+ =?utf-8?B?dld4NnNoeGdtUDVJZHkxeVBsdVhTMkxEYlExcUEvYllxSVFoUk82dC9ONmlw?=
+ =?utf-8?B?WmNJZU5XYi8rQlcwR1ZKeEptZnIvMW1EbE1DS2ljQkw3OEJIbUx2bmt6VE9T?=
+ =?utf-8?B?U3ZDYTRYa3JXT3ljYWlBZUh4TTBBdDdRSnN4dHpCZlE2dTBEMEJNQXRiQjRa?=
+ =?utf-8?B?WE9GYkk4anpUbWk1OHZON1Nid1dCOEJYelhYcmZ2RzZTRnN0NGlSL0Y0K0lm?=
+ =?utf-8?B?YW1vNUs3eW9udEo4TElrMklHZUkrdjJnNWdwVURuUnE2U09kbldaQVlsWE5P?=
+ =?utf-8?B?bFpwMWhQak16Z3UxbGQrckgzV3ZTM1g2ak13dEY0NUJXdlVJTVJqbDRpUG5z?=
+ =?utf-8?B?UzkvcmpDc2sxVnBvNjl5ZUJJOFo5T01jTGpZSWc5bDJCYTYrYXZ2Z0Q2ZGxa?=
+ =?utf-8?B?QVE5Nlk4Mnh5ckpra00xRGt6bnBIZDVhelJaMDZtWndCNFpFWGZkbnJYSUJJ?=
+ =?utf-8?B?Rm8rTy9OeE1LV0pUWHBCVEt1NEhuUFhWTDgxSmlNK2RhUlhVb1ZXZnltNE9v?=
+ =?utf-8?B?YWExNzk2dmVzUG9QUEczMnJQYXE5SXZHYTBkUThWYkpMSlNld0xQZkZBMmwy?=
+ =?utf-8?B?Tis3R2dQcXdsd0xDaVNLa2l5YllQWFlsQy9RcmJ6UmdSOXAzSVE5cVJBSGll?=
+ =?utf-8?B?OVlIRFE5MWROMnJ4VEtFbEpTYndSMWQvTnR4U29VSFYrTnNtd3EvZVFZZ2th?=
+ =?utf-8?B?ZG5PM2ROZnNkU2dvUFEvSkxKdFNuZmVBamh6UUdFaUtOaitiQURXTGc4ekYx?=
+ =?utf-8?B?blVRNUgzWEZWY2JuWW02NmxYNmRGa2UvQzJmM2hhRDZ2ZnNPZklWYURVQUJZ?=
+ =?utf-8?B?RmxQMjkraVpJVEJKbG9SdW11SDlNOW1ZaWh4UzU0ZGc1MnZJR0gxZ0x2eDMx?=
+ =?utf-8?B?aDljaXduaUdlcm03RDRBYkhxNDhlUVhMS1JkdWVwTmtVQkNrMVg2NlBSMzBo?=
+ =?utf-8?B?Q2lrRUZCcDJOT2J1Zi9GN1ZmY0VIdjJtUW90cEdJTm9UU3YrY1FNRVg4QlM5?=
+ =?utf-8?B?ODBjTWR2QjlxNXJaTUpra0hKa1Fjd05MampvT0wyUkNoVkZqbmFPK3pnODB4?=
+ =?utf-8?B?SlNDdFNyeG1sT09qRml0WEpDNjlRc1pZUDFPY2hKa05SMFdYdG9PSkVxa0Ey?=
+ =?utf-8?B?enVzVWs5dVQvaSt6RTdmeUpzVnd6WkE4ZkZsNjhWbUhvSG93MWJVSm1HQURt?=
+ =?utf-8?B?K3pMZHhpaWJwVW5SNlBnQUtjT3JaYWNGVnVpZzhRQTlCcE1BbHBsaEttMEds?=
+ =?utf-8?B?dUQ5ZEpjNUdjTmxVdmlYdVhLaHptSldjS1VsSFNBL0dNL05RTWQzMU9uUm1v?=
+ =?utf-8?Q?CL6+KHr2CbnbiKiERGS1U8c=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <125723A7FC9FE54B999FDF3F8EA579EA@FRAP264.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: csgroup.eu
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MRZP264MB2988.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: cff2d154-6f72-4f52-40f0-08daadee3faa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Oct 2022 14:13:20.7665
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 9914def7-b676-4fda-8815-5d49fb3b45c8
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7r0RjZtKTCMKUBATE4QdMTTgJzOIup5JwRVVBU+DbjaXaFijaTwPdtBXbm3REAasd7PyrAssAzCjvPIAJC5AS8UdW7GHEcgw5AUSvCSTYU8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MRZP264MB3210
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 13.10.2022 23:06, Krzysztof Kozlowski wrote:
-> DT schema expects TLMM pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
-
-Konrad
-> 
-> Changes since v2:
-> 1. None
-> ---
->  .../boot/dts/qcom/msm8998-clamshell.dtsi      |  7 +-
->  .../boot/dts/qcom/msm8998-fxtec-pro1.dts      | 16 ++--
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dts      |  4 +-
->  .../dts/qcom/msm8998-oneplus-cheeseburger.dts | 10 +--
->  .../boot/dts/qcom/msm8998-oneplus-common.dtsi | 14 ++--
->  .../dts/qcom/msm8998-sony-xperia-yoshino.dtsi | 30 ++++----
->  arch/arm64/boot/dts/qcom/msm8998.dtsi         | 76 +++++++++----------
->  7 files changed, 78 insertions(+), 79 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> index 7928b8197474..16685fadd3e1 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
-> @@ -35,7 +35,7 @@ bluetooth {
->  };
->  
->  &blsp1_uart3_on {
-> -	rx {
-> +	rx-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-up on 45 (RX). This is needed to
-> @@ -46,7 +46,7 @@ rx {
->  		bias-pull-up;
->  	};
->  
-> -	cts {
-> +	cts-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-down on 47 (CTS) to match the pull
-> @@ -357,8 +357,9 @@ &sdhc2 {
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>, <81 4>;
->  
-> -	touchpad: touchpad-pin {
-> +	touchpad: touchpad-pin-state {
->  		pins = "gpio123";
-> +		function = "gpio";
->  		bias-pull-up;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-fxtec-pro1.dts b/arch/arm64/boot/dts/qcom/msm8998-fxtec-pro1.dts
-> index 429ba57e20f7..5fc0564664cf 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-fxtec-pro1.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-fxtec-pro1.dts
-> @@ -216,7 +216,7 @@ bluetooth {
->  };
->  
->  &blsp1_uart3_on {
-> -	rx {
-> +	rx-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-up on 45 (RX). This is needed to
-> @@ -227,7 +227,7 @@ rx {
->  		bias-pull-up;
->  	};
->  
-> -	cts {
-> +	cts-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-down on 47 (CTS) to match the pull
-> @@ -615,14 +615,14 @@ &remoteproc_slpi {
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>;
->  
-> -	mdp_vsync_n: mdp-vsync-n {
-> +	mdp_vsync_n: mdp-vsync-n-state {
->  		pins = "gpio10";
->  		function = "mdp_vsync_a";
->  		bias-pull-down;
->  		drive-strength = <2>;
->  	};
->  
-> -	gpio_kb_pins_extra: gpio-kb-pins-extra {
-> +	gpio_kb_pins_extra: gpio-kb-pins-extra-state {
->  		pins = "gpio21", "gpio32", "gpio33", "gpio114",
->  		       "gpio128", "gpio129";
->  		function = "gpio";
-> @@ -630,21 +630,21 @@ gpio_kb_pins_extra: gpio-kb-pins-extra {
->  		bias-pull-up;
->  	};
->  
-> -	ts_vio_default: ts-vio-def {
-> +	ts_vio_default: ts-vio-def-state {
->  		pins = "gpio81";
->  		function = "gpio";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	ts_rst_n: ts-rst-n {
-> +	ts_rst_n: ts-rst-n-state {
->  		pins = "gpio89";
->  		function = "gpio";
->  		bias-pull-up;
->  		drive-strength = <8>;
->  	};
->  
-> -	hall_sensor1_default: hall-sensor1-def {
-> +	hall_sensor1_default: hall-sensor1-def-state {
->  		pins = "gpio124";
->  		function = "gpio";
->  		bias-disable;
-> @@ -652,7 +652,7 @@ hall_sensor1_default: hall-sensor1-def {
->  		input-enable;
->  	};
->  
-> -	ts_int_n: ts-int-n {
-> +	ts_int_n: ts-int-n-state {
->  		pins = "gpio125";
->  		function = "gpio";
->  		bias-disable;
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dts b/arch/arm64/boot/dts/qcom/msm8998-mtp.dts
-> index a3ca58100aee..61f5a827a8d7 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dts
-> @@ -46,7 +46,7 @@ bluetooth {
->  };
->  
->  &blsp1_uart3_on {
-> -	rx {
-> +	rx-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-up on 45 (RX). This is needed to
-> @@ -57,7 +57,7 @@ rx {
->  		bias-pull-up;
->  	};
->  
-> -	cts {
-> +	cts-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-down on 47 (CTS) to match the pull
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-oneplus-cheeseburger.dts b/arch/arm64/boot/dts/qcom/msm8998-oneplus-cheeseburger.dts
-> index 122f6c25220e..b951f98d1b7b 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-oneplus-cheeseburger.dts
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-oneplus-cheeseburger.dts
-> @@ -33,11 +33,9 @@ button-backlight {
->  
->  &pmi8998_gpio {
->  	button_backlight_default: button-backlight-state {
-> -		pinconf {
-> -			pins = "gpio5";
-> -			function = "gpio";
-> -			bias-pull-down;
-> -			qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-> -		};
-> +		pins = "gpio5";
-> +		function = "gpio";
-> +		bias-pull-down;
-> +		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
->  	};
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-oneplus-common.dtsi b/arch/arm64/boot/dts/qcom/msm8998-oneplus-common.dtsi
-> index 62bda23791bb..748de88d5d57 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-oneplus-common.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-oneplus-common.dtsi
-> @@ -233,7 +233,7 @@ bluetooth {
->  };
->  
->  &blsp1_uart3_on {
-> -	rx {
-> +	rx-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-up on 46 (RX). This is needed to
-> @@ -244,7 +244,7 @@ rx {
->  		bias-pull-up;
->  	};
->  
-> -	cts {
-> +	cts-pins {
->  		/delete-property/ bias-disable;
->  		/*
->  		 * Configure a pull-down on 47 (CTS) to match the pull
-> @@ -492,7 +492,7 @@ vreg_bob: bob {
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>, <81 4>;
->  
-> -	hall_sensor_default: hall-sensor-default {
-> +	hall_sensor_default: hall-sensor-default-state {
->  		pins = "gpio124";
->  		function = "gpio";
->  		drive-strength = <2>;
-> @@ -500,28 +500,28 @@ hall_sensor_default: hall-sensor-default {
->  		input-enable;
->  	};
->  
-> -	ts_int_active: ts-int-active {
-> +	ts_int_active: ts-int-active-state {
->  		pins = "gpio125";
->  		function = "gpio";
->  		drive-strength = <8>;
->  		bias-pull-up;
->  	};
->  
-> -	ts_reset_active: ts-reset-active {
-> +	ts_reset_active: ts-reset-active-state {
->  		pins = "gpio89";
->  		function = "gpio";
->  		drive-strength = <8>;
->  		bias-pull-up;
->  	};
->  
-> -	nfc_int_active: nfc-int-active {
-> +	nfc_int_active: nfc-int-active-state {
->  		pins = "gpio92";
->  		function = "gpio";
->  		drive-strength = <6>;
->  		bias-pull-up;
->  	};
->  
-> -	nfc_enable_active: nfc-enable-active {
-> +	nfc_enable_active: nfc-enable-active-state {
->  		pins = "gpio12", "gpio116";
->  		function = "gpio";
->  		drive-strength = <6>;
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi b/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-> index d08639082247..440f2b2d2b2e 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-sony-xperia-yoshino.dtsi
-> @@ -565,14 +565,14 @@ &sdhc2 {
->  &tlmm {
->  	gpio-reserved-ranges = <0 4>, <81 4>;
->  
-> -	mdp_vsync_n: mdp-vsync-n {
-> +	mdp_vsync_n: mdp-vsync-n-state {
->  		pins = "gpio10";
->  		function = "mdp_vsync_a";
->  		drive-strength = <2>;
->  		bias-pull-down;
->  	};
->  
-> -	nfc_ven: nfc-ven {
-> +	nfc_ven: nfc-ven-state {
->  		pins = "gpio12";
->  		function = "gpio";
->  		bias-disable;
-> @@ -580,42 +580,42 @@ nfc_ven: nfc-ven {
->  		output-low;
->  	};
->  
-> -	msm_mclk0_default: msm-mclk0-active {
-> +	msm_mclk0_default: msm-mclk0-active-state {
->  		pins = "gpio13";
->  		function = "cam_mclk";
->  		drive-strength = <2>;
->  		bias-disable;
->  	};
->  
-> -	msm_mclk1_default: msm-mclk1-active {
-> +	msm_mclk1_default: msm-mclk1-active-state {
->  		pins = "gpio14";
->  		function = "cam_mclk";
->  		drive-strength = <2>;
->  		bias-disable;
->  	};
->  
-> -	cci0_default: cci0-default {
-> +	cci0_default: cci0-default-state {
->  		pins = "gpio18", "gpio19";
->  		function = "cci_i2c";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	cci1_default: cci1-default {
-> +	cci1_default: cci1-default-state {
->  		pins = "gpio19", "gpio20";
->  		function = "cci_i2c";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	cam0_vdig_default: cam0-vdig-default {
-> +	cam0_vdig_default: cam0-vdig-default-state {
->  		pins = "gpio21";
->  		function = "gpio";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	tof_int: tof-int {
-> +	tof_int: tof-int-state {
->  		pins = "gpio22";
->  		function = "gpio";
->  		bias-pull-up;
-> @@ -623,28 +623,28 @@ tof_int: tof-int {
->  		input-enable;
->  	};
->  
-> -	cam1_vdig_default: cam1-vdig-default {
-> +	cam1_vdig_default: cam1-vdig-default-state {
->  		pins = "gpio25";
->  		function = "gpio";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	usb_extcon_active: usb-extcon-active {
-> +	usb_extcon_active: usb-extcon-active-state {
->  		pins = "gpio38";
->  		function = "gpio";
->  		bias-disable;
->  		drive-strength = <16>;
->  	};
->  
-> -	tof_reset: tof-reset {
-> +	tof_reset: tof-reset-state {
->  		pins = "gpio27";
->  		function = "gpio";
->  		bias-disable;
->  		drive-strength = <2>;
->  	};
->  
-> -	hall_sensor0_default: acc-cover-open {
-> +	hall_sensor0_default: acc-cover-open-state {
->  		pins = "gpio124";
->  		function = "gpio";
->  		bias-disable;
-> @@ -652,14 +652,14 @@ hall_sensor0_default: acc-cover-open {
->  		input-enable;
->  	};
->  
-> -	ts_int_n: ts-int-n {
-> +	ts_int_n: ts-int-n-state {
->  		pins = "gpio125";
->  		function = "gpio";
->  		drive-strength = <8>;
->  		bias-pull-up;
->  	};
->  
-> -	usb_vbus_active: usb-vbus-active {
-> +	usb_vbus_active: usb-vbus-active-state {
->  		pins = "gpio128";
->  		function = "gpio";
->  		bias-disable;
-> @@ -667,7 +667,7 @@ usb_vbus_active: usb-vbus-active {
->  		output-low;
->  	};
->  
-> -	ts_vddio_en: ts-vddio-en-default {
-> +	ts_vddio_en: ts-vddio-en-default-state {
->  		pins = "gpio133";
->  		function = "gpio";
->  		bias-disable;
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 2c4acf227253..9650670eae05 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -1062,76 +1062,76 @@ tlmm: pinctrl@3400000 {
->  			interrupt-controller;
->  			#interrupt-cells = <2>;
->  
-> -			sdc2_on: sdc2-on {
-> -				clk {
-> +			sdc2_on: sdc2-on-state {
-> +				clk-pins {
->  					pins = "sdc2_clk";
->  					drive-strength = <16>;
->  					bias-disable;
->  				};
->  
-> -				cmd {
-> +				cmd-pins {
->  					pins = "sdc2_cmd";
->  					drive-strength = <10>;
->  					bias-pull-up;
->  				};
->  
-> -				data {
-> +				data-pins {
->  					pins = "sdc2_data";
->  					drive-strength = <10>;
->  					bias-pull-up;
->  				};
->  			};
->  
-> -			sdc2_off: sdc2-off {
-> -				clk {
-> +			sdc2_off: sdc2-off-state {
-> +				clk-pins {
->  					pins = "sdc2_clk";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
->  
-> -				cmd {
-> +				cmd-pins {
->  					pins = "sdc2_cmd";
->  					drive-strength = <2>;
->  					bias-pull-up;
->  				};
->  
-> -				data {
-> +				data-pins {
->  					pins = "sdc2_data";
->  					drive-strength = <2>;
->  					bias-pull-up;
->  				};
->  			};
->  
-> -			sdc2_cd: sdc2-cd {
-> +			sdc2_cd: sdc2-cd-state {
->  				pins = "gpio95";
->  				function = "gpio";
->  				bias-pull-up;
->  				drive-strength = <2>;
->  			};
->  
-> -			blsp1_uart3_on: blsp1-uart3-on {
-> -				tx {
-> +			blsp1_uart3_on: blsp1-uart3-on-state {
-> +				tx-pins {
->  					pins = "gpio45";
->  					function = "blsp_uart3_a";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
->  
-> -				rx {
-> +				rx-pins {
->  					pins = "gpio46";
->  					function = "blsp_uart3_a";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
->  
-> -				cts {
-> +				cts-pins {
->  					pins = "gpio47";
->  					function = "blsp_uart3_a";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
->  
-> -				rfr {
-> +				rfr-pins {
->  					pins = "gpio48";
->  					function = "blsp_uart3_a";
->  					drive-strength = <2>;
-> @@ -1139,168 +1139,168 @@ rfr {
->  				};
->  			};
->  
-> -			blsp1_i2c1_default: blsp1-i2c1-default {
-> +			blsp1_i2c1_default: blsp1-i2c1-default-state {
->  				pins = "gpio2", "gpio3";
->  				function = "blsp_i2c1";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c1_sleep: blsp1-i2c1-sleep {
-> +			blsp1_i2c1_sleep: blsp1-i2c1-sleep-state-state {
->  				pins = "gpio2", "gpio3";
->  				function = "blsp_i2c1";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp1_i2c2_default: blsp1-i2c2-default {
-> +			blsp1_i2c2_default: blsp1-i2c2-default-state {
->  				pins = "gpio32", "gpio33";
->  				function = "blsp_i2c2";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c2_sleep: blsp1-i2c2-sleep {
-> +			blsp1_i2c2_sleep: blsp1-i2c2-sleep-state-state {
->  				pins = "gpio32", "gpio33";
->  				function = "blsp_i2c2";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp1_i2c3_default: blsp1-i2c3-default {
-> +			blsp1_i2c3_default: blsp1-i2c3-default-state {
->  				pins = "gpio47", "gpio48";
->  				function = "blsp_i2c3";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c3_sleep: blsp1-i2c3-sleep {
-> +			blsp1_i2c3_sleep: blsp1-i2c3-sleep-state {
->  				pins = "gpio47", "gpio48";
->  				function = "blsp_i2c3";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp1_i2c4_default: blsp1-i2c4-default {
-> +			blsp1_i2c4_default: blsp1-i2c4-default-state {
->  				pins = "gpio10", "gpio11";
->  				function = "blsp_i2c4";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c4_sleep: blsp1-i2c4-sleep {
-> +			blsp1_i2c4_sleep: blsp1-i2c4-sleep-state {
->  				pins = "gpio10", "gpio11";
->  				function = "blsp_i2c4";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp1_i2c5_default: blsp1-i2c5-default {
-> +			blsp1_i2c5_default: blsp1-i2c5-default-state {
->  				pins = "gpio87", "gpio88";
->  				function = "blsp_i2c5";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c5_sleep: blsp1-i2c5-sleep {
-> +			blsp1_i2c5_sleep: blsp1-i2c5-sleep-state {
->  				pins = "gpio87", "gpio88";
->  				function = "blsp_i2c5";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp1_i2c6_default: blsp1-i2c6-default {
-> +			blsp1_i2c6_default: blsp1-i2c6-default-state {
->  				pins = "gpio43", "gpio44";
->  				function = "blsp_i2c6";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp1_i2c6_sleep: blsp1-i2c6-sleep {
-> +			blsp1_i2c6_sleep: blsp1-i2c6-sleep-state {
->  				pins = "gpio43", "gpio44";
->  				function = "blsp_i2c6";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  			/* 6 interfaces per QUP, BLSP2 indexes are numbered (n)+6 */
-> -			blsp2_i2c1_default: blsp2-i2c1-default {
-> +			blsp2_i2c1_default: blsp2-i2c1-default-state {
->  				pins = "gpio55", "gpio56";
->  				function = "blsp_i2c7";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c1_sleep: blsp2-i2c1-sleep {
-> +			blsp2_i2c1_sleep: blsp2-i2c1-sleep-state {
->  				pins = "gpio55", "gpio56";
->  				function = "blsp_i2c7";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp2_i2c2_default: blsp2-i2c2-default {
-> +			blsp2_i2c2_default: blsp2-i2c2-default-state {
->  				pins = "gpio6", "gpio7";
->  				function = "blsp_i2c8";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c2_sleep: blsp2-i2c2-sleep {
-> +			blsp2_i2c2_sleep: blsp2-i2c2-sleep-state {
->  				pins = "gpio6", "gpio7";
->  				function = "blsp_i2c8";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp2_i2c3_default: blsp2-i2c3-default {
-> +			blsp2_i2c3_default: blsp2-i2c3-default-state {
->  				pins = "gpio51", "gpio52";
->  				function = "blsp_i2c9";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c3_sleep: blsp2-i2c3-sleep {
-> +			blsp2_i2c3_sleep: blsp2-i2c3-sleep-state {
->  				pins = "gpio51", "gpio52";
->  				function = "blsp_i2c9";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp2_i2c4_default: blsp2-i2c4-default {
-> +			blsp2_i2c4_default: blsp2-i2c4-default-state {
->  				pins = "gpio67", "gpio68";
->  				function = "blsp_i2c10";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c4_sleep: blsp2-i2c4-sleep {
-> +			blsp2_i2c4_sleep: blsp2-i2c4-sleep-state {
->  				pins = "gpio67", "gpio68";
->  				function = "blsp_i2c10";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp2_i2c5_default: blsp2-i2c5-default {
-> +			blsp2_i2c5_default: blsp2-i2c5-default-state {
->  				pins = "gpio60", "gpio61";
->  				function = "blsp_i2c11";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c5_sleep: blsp2-i2c5-sleep {
-> +			blsp2_i2c5_sleep: blsp2-i2c5-sleep-state {
->  				pins = "gpio60", "gpio61";
->  				function = "blsp_i2c11";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
->  
-> -			blsp2_i2c6_default: blsp2-i2c6-default {
-> +			blsp2_i2c6_default: blsp2-i2c6-default-state {
->  				pins = "gpio83", "gpio84";
->  				function = "blsp_i2c12";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
->  
-> -			blsp2_i2c6_sleep: blsp2-i2c6-sleep {
-> +			blsp2_i2c6_sleep: blsp2-i2c6-sleep-state {
->  				pins = "gpio83", "gpio84";
->  				function = "blsp_i2c12";
->  				drive-strength = <2>;
+SGkgTGludXMsDQoNCkxlIDE0LzA5LzIwMjIgw6AgMTU6MDMsIEFybmQgQmVyZ21hbm4gYSDDqWNy
+aXTCoDoNCj4gT24gV2VkLCBTZXAgMTQsIDIwMjIsIGF0IDI6MzggUE0sIExpbnVzIFdhbGxlaWog
+d3JvdGU6DQo+PiBPbiBXZWQsIFNlcCA3LCAyMDIyIGF0IDEyOjE1IFBNIEFybmQgQmVyZ21hbm4g
+PGFybmRAYXJuZGIuZGU+IHdyb3RlOg0KPj4+Pj4gICBkcml2ZXJzL2dwaW8vZ3Bpby1zdGEyeDEx
+LmMgICAgICAgICAgICAgIHwgNDExIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiAoLi4uKQ0K
+Pj4+IHN0YTJ4MTEgaXMgYW4geDg2IGRyaXZlciwgc28gbm90IG15IGFyZWEsIGJ1dCBJIHRoaW5r
+IGl0IHdvdWxkIGJlDQo+Pj4gYmVzdCB0byBraWxsIG9mZiB0aGUgZW50aXJlIHBsYXRmb3JtIHJh
+dGhlciB0aGFuIGp1c3QgaXRzIGdwaW8NCj4+PiBkcml2ZXIsIHNpbmNlIGV2ZXJ5dGhpbmcgbmVl
+ZHMgdG8gd29yayB0b2dldGhlciBhbmQgaXQncyBjbGVhcmx5DQo+Pj4gbm90IGZ1bmN0aW9uYWwg
+YXQgdGhlIG1vbWVudC4NCj4+Pg0KPj4+ICQgZ2l0IGdyZXAgLWwgU1RBMlgxMQ0KPj4+IERvY3Vt
+ZW50YXRpb24vYWRtaW4tZ3VpZGUvbWVkaWEvcGNpLWNhcmRsaXN0LnJzdA0KPj4+IGFyY2gveDg2
+L0tjb25maWcNCj4+PiBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9zdGEyeDExLmgNCj4+PiBhcmNoL3g4
+Ni9wY2kvTWFrZWZpbGUNCj4+PiBhcmNoL3g4Ni9wY2kvc3RhMngxMS1maXh1cC5jDQo+Pj4gZHJp
+dmVycy9hdGEvYWhjaS5jDQo+Pj4gZHJpdmVycy9ncGlvL0tjb25maWcNCj4+PiBkcml2ZXJzL2dw
+aW8vTWFrZWZpbGUNCj4+PiBkcml2ZXJzL2dwaW8vZ3Bpby1zdGEyeDExLmMNCj4+PiBkcml2ZXJz
+L2kyYy9idXNzZXMvS2NvbmZpZw0KPj4+IGRyaXZlcnMvbWVkaWEvcGNpL01ha2VmaWxlDQo+Pj4g
+ZHJpdmVycy9tZWRpYS9wY2kvc3RhMngxMS9LY29uZmlnDQo+Pj4gZHJpdmVycy9tZWRpYS9wY2kv
+c3RhMngxMS9NYWtlZmlsZQ0KPj4+IGRyaXZlcnMvbWVkaWEvcGNpL3N0YTJ4MTEvc3RhMngxMV92
+aXAuYw0KPj4+IGRyaXZlcnMvbWVkaWEvcGNpL3N0YTJ4MTEvc3RhMngxMV92aXAuaA0KPj4+IGRy
+aXZlcnMvbWZkL0tjb25maWcNCj4+PiBkcml2ZXJzL21mZC9NYWtlZmlsZQ0KPj4+IGRyaXZlcnMv
+bWZkL3N0YTJ4MTEtbWZkLmMNCj4+PiBpbmNsdWRlL2xpbnV4L21mZC9zdGEyeDExLW1mZC5oDQo+
+Pj4NCj4+PiBSZW1vdmluZyB0aGUgb3RoZXIgc3RhMngxMSBiaXRzIChtZmQsIG1lZGlhLCB4ODYp
+IHNob3VsZA0KPj4+IHByb2JhYmx5IGJlIGRvbmUgdGhyb3VnaCB0aGUgcmVzcGVjdGl2ZSB0cmVl
+LCBidXQgaXQgd291bGQNCj4+PiBiZSBnb29kIG5vdCB0byBmb3JnZXQgdGhvc2UuDQo+Pg0KPj4g
+QW5keSBpcyBwcmV0dHkgbXVjaCBkZWZhdWx0IHg4NiBwbGF0Zm9ybSBkZXZpY2UgbWFpbnRhaW5l
+ciwgbWF5YmUNCj4+IGhlIGNhbiBBQ0sgb3IgYnJpZWYgdXMgb24gd2hhdCBoZSBrbm93cyBhYm91
+dCB0aGUgc3RhdHVzIG9mDQo+PiBTVEEyeDExPw0KPiANCj4gSSB0aGluayB0aGUgZXhwbGFuYXRp
+b24gZ2l2ZW4gYnkgRGF2aWRlIGFuZCBBbGVzc2FuZHJvDQo+IHdhcyByYXRoZXIgZGV0YWlsZWQg
+YWxyZWFkeToNCj4gDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvWXczTFFqaFpXbVph
+VTJOMUBhcmNhbmEuaS5nbnVkZC5jb20vDQo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwv
+WXczREtDdURvUGtDYXF4RUBhcmNhbmEuaS5nbnVkZC5jb20vDQo+IA0KDQpJIGNhbid0IHNlZSB0
+aGlzIHNlcmllcyBpbiBuZWl0aGVyIGxpbnVzIHRyZWUgbm9yIGxpbnV4LW5leHQuDQoNCkZvbGxv
+d2luZyB0aGUgQUNLIGZyb20gQW5keSArIHRoZSBhYm92ZSBleHBsYW5hdGlvbnMgZnJvbSBBcm5k
+LCBkbyB5b3UgDQpwbGFuIHRvIG1lcmdlIHRoaXMgc2VyaWVzIGFueXRpbWUgc29vbiA/DQoNCkRv
+IHlvdSBuZWVkIGFueXRoaW5nIG1vcmUgZnJvbSBtZSA/DQoNClRoYW5rcw0KQ2hyaXN0b3BoZQ==
