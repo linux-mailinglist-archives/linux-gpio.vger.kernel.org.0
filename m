@@ -2,90 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59F015FEB9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:28:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEA645FEBEA
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbiJNJ2u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 05:28:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52258 "EHLO
+        id S230194AbiJNJmE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 05:42:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230133AbiJNJ2f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:28:35 -0400
-Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA101C7D46
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:28:27 -0700 (PDT)
-Received: by mail-vk1-xa2f.google.com with SMTP id bj23so1899196vkb.4
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:28:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oMKephT0DO36b58uiumO9iVQmJHAbKITY1Dq80O5li0=;
-        b=hJ3wlaBR1rmsjyX6U3m2vET/5mRwyv6ddsDpTpVYugRoBeDvlX/p+VXFVnDEq+goeA
-         H220fsvoQR02ho5MrVXrF5VUB2nJUDf+7vEXVl+NO6Ih718lxLNDS8hsbq4J2vLk42Fj
-         A0XmR+JkhkQLxWuTlDSyAxMDy3njZoJ2bpjt8YpYjjUqDwFaftZu7y8qbuq3QicLw7jU
-         G1sUdlF0czC9iOy504QpnMUYFfAoqri9ny8xQfpNNVWtI5ljIwZqRsXSGVsYNemDpBst
-         +8bjLix7If5sLgDodiruYPHTstQeVRXouC5nRwpaInX6U9MGlC8ZJEZkSQNujnsTFxA8
-         dOeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oMKephT0DO36b58uiumO9iVQmJHAbKITY1Dq80O5li0=;
-        b=Fm29Tuipexa0Gw2rEWV87ppqDS3mUeR3gZHwsBl/L6ywmn5F5TlDL4tMG0pbFRW29F
-         XO6RUSamcs0r3a1oKZHJajdGlYefrr/fuKmYHA8e94cLCEBqBA16clcgyRZpjaPmBaYG
-         MOKmMQgwylVHUt7FIVlM2ipdjNWySvqm//QrXLSNjwMOXOjrP0ojsrA5jGSGR7rqAnXc
-         jx1/t/ZrXAbWMtzKKh+AXGHLaddRdaDXbouUog+vwvlwXH82oO/13Zm/Roj6dfZwYdPg
-         nYbvMraEMIR8XQhYLFz+230aS3i0YCO2BzSVSCBRTl8pKpyKEcb+6yeFl+raxAgHCGeq
-         rFRA==
-X-Gm-Message-State: ACrzQf2u9dz5/3ioLhEl+cX9Qz7BvgxSZL5eNM1ETXiQ27lAj3UaL5GF
-        1drZ27QE5/zj/vdtosADOQfH0GRhmZH5nTQp41UCqg==
-X-Google-Smtp-Source: AMsMyM51FP2p+iGF6rMOAh0E6lwlo48EM4GPcGJK+taDJA7BV+nQsXvedDxZnWyvtZJJhInF2liOhopGMZyt+xnp0tU=
-X-Received: by 2002:a05:6122:4f8:b0:3ae:21f7:28da with SMTP id
- s24-20020a05612204f800b003ae21f728damr2011503vkf.33.1665739705609; Fri, 14
- Oct 2022 02:28:25 -0700 (PDT)
+        with ESMTP id S229948AbiJNJls (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:41:48 -0400
+Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D331C69D3;
+        Fri, 14 Oct 2022 02:41:43 -0700 (PDT)
+X-QQ-mid: bizesmtp84t1665740487ti9mbcvl
+Received: from [192.168.125.106] ( [113.72.147.11])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Fri, 14 Oct 2022 17:41:25 +0800 (CST)
+X-QQ-SSF: 01000000000000B09000000A0000000
+X-QQ-FEAT: DRnj/z+Sqafxf60URcKpJmk3M9Gtaudnpmqzg0zvN20ZC3tpAxv/lIwk8P1wS
+        m3l8EGZwu41bnQWypYQttWJDjQollXss8UsSl7cBIrVzT4b2g1DLEzT6ShKt5LbH7wTJvbB
+        wnV6vB9ISg9d+1i8dVp6ZSVyhLHjBIyNy8pikp+orY7/fvzwbsVz3jlVEv7YYJ3sYOrJu9b
+        OeueYAFz3GEopWBDXvo3vXn/pUGS0z1q4/GBW46Glh3/Ka/a0zrm/TwoUJF1+BkhrmkyOXX
+        ZxIFM8Exh+BnZy0bIKFTeqaKBBRV2zEKbkCjXUnJ/l6ayU0xgCDWxzIE1cDq93qjBGZt774
+        2QRI7gNwsyj49o/sZ1rlblUSoWEsKmVvt3n57IDmpRlBdY4uZ7o1KnqNdTr0Ze5A/Zzruj6
+X-QQ-GoodBg: 0
+Message-ID: <B1817962D78CFE67+41b72968-e452-3fa9-c1ba-054cb1642de4@linux.starfivetech.com>
+Date:   Fri, 14 Oct 2022 17:41:15 +0800
 MIME-Version: 1.0
-References: <20221013001842.1893243-1-sashal@kernel.org> <20221013001842.1893243-22-sashal@kernel.org>
-In-Reply-To: <20221013001842.1893243-22-sashal@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 14 Oct 2022 11:28:14 +0200
-Message-ID: <CAMRc=Md25wNapmU4ZxNfTPAOgCpSkW6Z7Oen6NFKj-kURaupAQ@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.19 22/63] gpiolib: of: make Freescale SPI quirk
- similar to all others
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v1 27/30] RISC-V: Add initial StarFive JH7110 device tree
+Content-Language: en-US
+To:     Conor Dooley <conor@kernel.org>
+Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
+ <20220930074914.6757-1-hal.feng@linux.starfivetech.com>
+ <Yzgb0GzpLsV3RJyk@spud>
+From:   Hal Feng <hal.feng@linux.starfivetech.com>
+In-Reply-To: <Yzgb0GzpLsV3RJyk@spud>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
+        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 2:19 AM Sasha Levin <sashal@kernel.org> wrote:
->
-> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->
-> [ Upstream commit 984914ec4f4bfa9ee8f067b06293bc12bef20137 ]
->
-> There is no need for of_find_spi_cs_gpio() to be different from other
-> quirks: the only variant of property actually used in DTS is "gpios"
-> (plural) so we can use of_get_named_gpiod_flags() instead of recursing
-> into of_find_gpio() again.
->
-> This will allow us consolidate quirk handling down the road.
->
+On Sat, 1 Oct 2022 11:52:00 +0100, Conor Dooley wrote:
+> On Fri, Sep 30, 2022 at 03:49:14PM +0800, Hal Feng wrote:
+> > From: Emil Renner Berthing <kernel@esmil.dk>
+> > 
+> > Add initial device tree for the JH7110 RISC-V SoC by
+> > StarFive Technology Ltd.
+> > 
+> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
+> > Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
+> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
+> 
+> There's little point reviewing this dt since there's a load of issues
+> that you can trivially find by running dtbs_check/dt_binding_check, but
+> this SoB change is wrong - if Emil wrote the patch, then Jianlong's SoB
+> is either redundant or should be accompanied by a Co-developed-by tag.
+> 
+> Ditto for patch 28/30 "RISC-V: Add StarFive JH7110 VisionFive2 board
+> device tree".
 
-Sasha,
+Will add Co-developed-by tag for Jianlong. Thanks.
 
-This is not a fix, it's code refactoring. Definitely not stable material.
+> 
+> > ---
+> >  arch/riscv/boot/dts/starfive/jh7110.dtsi | 449 +++++++++++++++++++++++
+> >  1 file changed, 449 insertions(+)
+> >  create mode 100644 arch/riscv/boot/dts/starfive/jh7110.dtsi
+> > 
+> > diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> > new file mode 100644
+> > index 000000000000..46f418d4198a
+> > --- /dev/null
+> > +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
+> 
+> > +
+> > +	osc: osc {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +	};
+> > +
+> > +	clk_rtc: clk_rtc {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +	};
+> > +
+> > +	gmac0_rmii_refin: gmac0_rmii_refin {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <50000000>;
+> 
+> I assume, given osc has it's frequency set in the board dts, that these
+> are all oscillators on the SoC?
 
-Bartosz
+These are all on the board. Should move all "clock-frequency" to the board dts.
+I will recheck and modify this patch.
 
-PS Same for the rest of the backports of the three patches I commented on.
+Best regards,
+Hal
