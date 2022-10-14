@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BD145FEB82
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:27:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9657D5FEB87
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:27:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229992AbiJNJ1S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 05:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S229978AbiJNJ1q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 05:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbiJNJ1K (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:27:10 -0400
-Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DE2B1BBEC2
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:27:09 -0700 (PDT)
-Received: by mail-vk1-xa29.google.com with SMTP id u204so1963969vkb.13
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:27:09 -0700 (PDT)
+        with ESMTP id S229576AbiJNJ1p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:27:45 -0400
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F03C9167EB
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:27:44 -0700 (PDT)
+Received: by mail-vs1-xe31.google.com with SMTP id d187so4285773vsd.6
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:27:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LLgktRizxyiSlwLKUxpQrKAYFD0bpIdLB68C0J0ci5Q=;
-        b=SOH9kLRJs09NOGGSf1tXxzGQfwSN+h5ohkSyeeMIWFv0toX7xszn6IguWhPHsvZSgF
-         5J3nKvRA/xGz64vOzukVoVG5ZiWfdBDbmzbAz+ovNxfJpMSfdPkEYQIgbOOJ0MZ1eTlg
-         DlNnSG8698LwLXwIG7zpnhshTuHS7LeiUoIQboN3yfWfu0AKucsktS2P2kMiBykz7mph
-         YnY1ehXE9BMkONDUH9RigTii0NDDiCh14Jy/DXvrVdTU2MzXyuOn2WbS1hTGMI7WVuij
-         tJ152ND9Er9fOQioSk6vmJ07o8lrKS32E2qLjaslpJLn8mTdxK2osJTu3aL4m3ePDy/c
-         LBcw==
+        bh=cjnW4tf9c8x2Kot+4dsA36tSE1A+nkdrr9pQjeRPHo4=;
+        b=e/8Eg6T4sL2d/8ZnDiMjNkRy01w2HUG9WQlOFFimobkyf+lC2UbteN4wD+9hgX5kqL
+         YTFyWdsvdUE2puoNRHdJ7gsClx0sb46fqYhuZRG+zQHTIrkRGK6I72RPinw6QqXSiVTg
+         2vZbnYUxvOyZxMlvQOTfgU9AfHuTdjGCiZ3+SkuXiNFPEe3WYNqFozCjMt7+70jIcQz/
+         ogcbPTHZeq6TGS4OUwFpfW2VcXDYfdv1AcMDryMyK9EI+9haZfQZdr82q5hJD6ZRg+rb
+         9rhsPWE0aTRRp7RF/jfDVKcYOqmHrbq066AnWQPTjer+YGaqWEUwmzKqrp6b5edWz4+v
+         b/OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LLgktRizxyiSlwLKUxpQrKAYFD0bpIdLB68C0J0ci5Q=;
-        b=MTwp/G9ft9PjRfC7ZEQPkWLihA56JNmphrbMs7WnxwzBeQxtXx2t0z2Ly8DTFsP8Oe
-         EUDz0vFul1CHJyGFVXLpLho8wsuhCi3EJWDSWguz/o9ChzJuOtX8UnaIjdSVDlbh5qki
-         R5s9oNhrgveMY8TfhzSCOuhfRsv68Vblnlsb9NuSYYhx1HnnHRb0HmLZJfmFh3ZjmME1
-         H/WOZewB27CYaERr8yOlAZISdoY66O7q0BNjxFZcmeMW8mtjGnBKIQGfBioSPcAhxd4y
-         U8PbmXdebtztw0fDc5ZoYgGg8/FtwiBmsinguKzIrlNs7Q2LMJy4AH4vo1L4YvV45sQY
-         3Xig==
-X-Gm-Message-State: ACrzQf3dHqpaR1OGUOlR1QiR3j10jj9EGSfk/XDOmMZltndC2w/DdYtz
-        PM3TRJWEQQwA0pVlg7Cn7ZzrTBCyhdbVJaXg0xecbg==
-X-Google-Smtp-Source: AMsMyM4pd7ei8k7Iee4vxwNY7YzxX4DvVMIzjklo8h8WqSBzwNC+7Mw/jT7qdxsx6E9wPShJqgRTRnHU7iFar8UNzYs=
-X-Received: by 2002:a1f:e944:0:b0:3ab:334d:2896 with SMTP id
- g65-20020a1fe944000000b003ab334d2896mr2056953vkh.5.1665739628732; Fri, 14 Oct
- 2022 02:27:08 -0700 (PDT)
+        bh=cjnW4tf9c8x2Kot+4dsA36tSE1A+nkdrr9pQjeRPHo4=;
+        b=3M+xsxy8o2JbFH6TBaDxF96Rg33rTNq5tpebflxwcIPesrf0ottqB0WH57PuTiSD6A
+         V8vWZUluOC5nY4f2RnMPgWnTXFBR/ifwToftrEUoZup47Y1G8AOW6DnSyV0SzPit3ENg
+         5XC9gP32K80IeMndQm4ywCkaA/Oxcvo1X7jo9v0eyVxeNLzY6dlQUVnZo0n2dhkahhP8
+         rfspWPHHKGW5N4x9RP9t07zNNlU4Vbw+7X4IC2jzigqq8SWL6CqxxHNHVAEkkrqHvzA5
+         0qQQVUQ9G4x+JShVwdDzpfRqwuzAcCsleRbDv8FbAgVCnvwjkqwaaJM7ApSdMjyhDgEF
+         u+kA==
+X-Gm-Message-State: ACrzQf0SRMBDyUJmQadHyzwN+k59uBhMrxar3koHVXlqYWeofQkeFGRk
+        tx6mId0f4kz8VaenV5fkH31TWn1FckDGQZogVSN8dA==
+X-Google-Smtp-Source: AMsMyM6cJ+8YudU/hDCymz25EyARZ8r+Qou4Z3HxJ+UPdqodRApASZer9YjNLOs6CCe1LBlOtcI3yHLb/56Zzr4CEZw=
+X-Received: by 2002:a67:cb07:0:b0:3a6:f64f:4627 with SMTP id
+ b7-20020a67cb07000000b003a6f64f4627mr2269436vsl.47.1665739664146; Fri, 14 Oct
+ 2022 02:27:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221013001842.1893243-1-sashal@kernel.org> <20221013001842.1893243-23-sashal@kernel.org>
-In-Reply-To: <20221013001842.1893243-23-sashal@kernel.org>
+References: <20221013001842.1893243-1-sashal@kernel.org> <20221013001842.1893243-21-sashal@kernel.org>
+In-Reply-To: <20221013001842.1893243-21-sashal@kernel.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 14 Oct 2022 11:26:57 +0200
-Message-ID: <CAMRc=McRO9p5y9SGoE=z-_d_AkdNijxL_xoSczXN1JBo=b9_-A@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 5.19 23/63] gpiolib: rework quirk handling in of_find_gpio()
+Date:   Fri, 14 Oct 2022 11:27:33 +0200
+Message-ID: <CAMRc=MebwvKv28084YHihnNGYGTz9FEBcDA8EPmsgqoEif6fzg@mail.gmail.com>
+Subject: Re: [PATCH AUTOSEL 5.19 21/63] gpiolib: of: do not ignore requested
+ index when applying quirks
 To:     Sasha Levin <sashal@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
@@ -71,16 +72,12 @@ On Thu, Oct 13, 2022 at 2:19 AM Sasha Levin <sashal@kernel.org> wrote:
 >
 > From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 >
-> [ Upstream commit a2b5e207cade33b4d2dfd920f783f13b1f173e78 ]
+> [ Upstream commit 98c3c940ea5c3957056717e8b77a91c7d94536ad ]
 >
-> Instead of having a string of "if" statements let's put all quirks into
-> an array and iterate over them.
+> We should not ignore index passed into of_find_gpio() when handling
+> quirks. While in practice this change will not have any effect, it
+> will allow consolidate quirk handling.
 >
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
 
 Sasha,
 
