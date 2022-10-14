@@ -2,65 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEA645FEBEA
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:42:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0CE05FEC03
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 11:45:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbiJNJmE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 05:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60436 "EHLO
+        id S229498AbiJNJpd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 05:45:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229948AbiJNJls (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:41:48 -0400
-Received: from bg4.exmail.qq.com (bg4.exmail.qq.com [43.154.221.58])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D331C69D3;
-        Fri, 14 Oct 2022 02:41:43 -0700 (PDT)
-X-QQ-mid: bizesmtp84t1665740487ti9mbcvl
-Received: from [192.168.125.106] ( [113.72.147.11])
-        by bizesmtp.qq.com (ESMTP) with 
-        id ; Fri, 14 Oct 2022 17:41:25 +0800 (CST)
-X-QQ-SSF: 01000000000000B09000000A0000000
-X-QQ-FEAT: DRnj/z+Sqafxf60URcKpJmk3M9Gtaudnpmqzg0zvN20ZC3tpAxv/lIwk8P1wS
-        m3l8EGZwu41bnQWypYQttWJDjQollXss8UsSl7cBIrVzT4b2g1DLEzT6ShKt5LbH7wTJvbB
-        wnV6vB9ISg9d+1i8dVp6ZSVyhLHjBIyNy8pikp+orY7/fvzwbsVz3jlVEv7YYJ3sYOrJu9b
-        OeueYAFz3GEopWBDXvo3vXn/pUGS0z1q4/GBW46Glh3/Ka/a0zrm/TwoUJF1+BkhrmkyOXX
-        ZxIFM8Exh+BnZy0bIKFTeqaKBBRV2zEKbkCjXUnJ/l6ayU0xgCDWxzIE1cDq93qjBGZt774
-        2QRI7gNwsyj49o/sZ1rlblUSoWEsKmVvt3n57IDmpRlBdY4uZ7o1KnqNdTr0Ze5A/Zzruj6
-X-QQ-GoodBg: 0
-Message-ID: <B1817962D78CFE67+41b72968-e452-3fa9-c1ba-054cb1642de4@linux.starfivetech.com>
-Date:   Fri, 14 Oct 2022 17:41:15 +0800
+        with ESMTP id S229462AbiJNJpb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 05:45:31 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE732AA345
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:45:30 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id a66so2004318vkc.3
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 02:45:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VdrO7mtmH1DUJFW63UXShj5ag8RgWaG1H1XRoRcxtTs=;
+        b=sMxDTqBcwK2dgKQ5w/9inhL7fMhTlzLHS90sVSa7GMjeOyg+mgQHfqNgVCerfFR1gw
+         3CYGW2raBpTbXs47jCdM0JfcNJqZ8HlfISkErR0on4C53FTbPojNevUGECTtIymIVaYa
+         LRoeWfi2sWVzV5yTpQkilg34qS1tAZb8f9uuSa54IEjQRS5A+b6vEs/s85peI5aCZZlj
+         PvTXrSB/tmvKxRa1tyZ5Xv74liLMV23Ubk9xWgJG1hYJA2PQrXiysYNYU5BUQeWlmY36
+         habGYudhQ0UqL4Ra5G8+u+u+Zc0y1aSFbA78+snZRtNjjfXzVPzxSjShQFxf08OkFlNY
+         Jj2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VdrO7mtmH1DUJFW63UXShj5ag8RgWaG1H1XRoRcxtTs=;
+        b=2VQrNl4TWwx0MCsKHruovRXaakS79skpFHH3MRzoMSlXNfhgBgsYrWuW5WXs9S5+YQ
+         U79hKAPhFhhdOrAUVRAdfIBQOjMMo/qOevfZJME5jofnEMZUnBMJh4nLp0pAFrio5sWi
+         L9oPngudZIyRWfn/7Iyaany5c6oywQciOzNgkKs74DDOliJfVmWxDqwpdmcJ2QkIkTHZ
+         W6+lX0zY5brr+mX2uLO1KApF/PFWBba3o2R/JM6UkDd8e4ZA2RoGRsnX7Hn++LCuIDrs
+         JO4svjKucdhsYLMGTWFwvYW78E17ZRr1K0hqXqG/daC8JuZN4g7cexd5GAcMy53RuVxH
+         OZLA==
+X-Gm-Message-State: ACrzQf0SjTmgVr1SXv14i69MbslfX/Hjc0fLQ8KZjRxQbeJcTAtsNFYp
+        CLBAkcdwB8axr7/g3PYKiC0cdYZMeuegJfHkHd7oOcRWpJA=
+X-Google-Smtp-Source: AMsMyM68twGM7x8UfT+97HqbkocKaOFaTG7GCm/lGpezFjTURb8VMAnqbIQlZJkICu7XoFk9ReaF1rrtzzmfeH/iDJ0=
+X-Received: by 2002:a1f:4843:0:b0:3ae:c4a3:d653 with SMTP id
+ v64-20020a1f4843000000b003aec4a3d653mr1758316vka.1.1665740729534; Fri, 14 Oct
+ 2022 02:45:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v1 27/30] RISC-V: Add initial StarFive JH7110 device tree
-Content-Language: en-US
-To:     Conor Dooley <conor@kernel.org>
-Cc:     linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
+References: <CAKohponphOwaPOoc50fPX=3p+fHbbvP5wJqLYCXfrjeX_nLkpA@mail.gmail.com>
+ <CAMRc=Md4AmweW-p0f+RfwzOH0S3zPhK-60+di8BzSp6oVHvcYA@mail.gmail.com>
+ <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
+ <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+ <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+ <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
+ <20221011041651.amibtu24kcgm67e7@vireshk-i7> <20221013061204.hu2vn24g42egybbl@vireshk-i7>
+In-Reply-To: <20221013061204.hu2vn24g42egybbl@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 14 Oct 2022 11:45:18 +0200
+Message-ID: <CAMRc=MfNjCARhhG1yGDKU0HYUmsHkN_MihWy-+pg+SY0T9WERg@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com>
- <20220930074914.6757-1-hal.feng@linux.starfivetech.com>
- <Yzgb0GzpLsV3RJyk@spud>
-From:   Hal Feng <hal.feng@linux.starfivetech.com>
-In-Reply-To: <Yzgb0GzpLsV3RJyk@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtp:linux.starfivetech.com:qybglogicsvr:qybglogicsvr2
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,FORGED_MUA_MOZILLA,
-        NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,60 +77,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 1 Oct 2022 11:52:00 +0100, Conor Dooley wrote:
-> On Fri, Sep 30, 2022 at 03:49:14PM +0800, Hal Feng wrote:
-> > From: Emil Renner Berthing <kernel@esmil.dk>
-> > 
-> > Add initial device tree for the JH7110 RISC-V SoC by
-> > StarFive Technology Ltd.
-> > 
-> > Signed-off-by: Emil Renner Berthing <kernel@esmil.dk>
-> > Signed-off-by: Jianlong Huang <jianlong.huang@starfivetech.com>
-> > Signed-off-by: Hal Feng <hal.feng@linux.starfivetech.com>
-> 
-> There's little point reviewing this dt since there's a load of issues
-> that you can trivially find by running dtbs_check/dt_binding_check, but
-> this SoB change is wrong - if Emil wrote the patch, then Jianlong's SoB
-> is either redundant or should be accompanied by a Co-developed-by tag.
-> 
-> Ditto for patch 28/30 "RISC-V: Add StarFive JH7110 VisionFive2 board
-> device tree".
+On Thu, Oct 13, 2022 at 8:12 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 11-10-22, 09:46, Viresh Kumar wrote:
+> > What about the below code changes on top of V6 ?
+> >
+> > Changes:
+> > - Removed BufferInternal.
+> > - Event contains a reference to the Buffer now, with lifetime.
+> > - read_edge_event() expects a mutable reference to buffer, to make it
+> >   exclusive, i.e. disallow any previous Event references to exist at
+> >   compilation itself.
+>
+> Bartosz, should I send a V7 now with these changes ? I hope everything
+> is settled ?
+>
 
-Will add Co-developed-by tag for Jianlong. Thanks.
+Maybe also add chained mutators everywhere? To be able to do
+settings.set_direction().set_edge() etc.?
 
-> 
-> > ---
-> >  arch/riscv/boot/dts/starfive/jh7110.dtsi | 449 +++++++++++++++++++++++
-> >  1 file changed, 449 insertions(+)
-> >  create mode 100644 arch/riscv/boot/dts/starfive/jh7110.dtsi
-> > 
-> > diff --git a/arch/riscv/boot/dts/starfive/jh7110.dtsi b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-> > new file mode 100644
-> > index 000000000000..46f418d4198a
-> > --- /dev/null
-> > +++ b/arch/riscv/boot/dts/starfive/jh7110.dtsi
-> 
-> > +
-> > +	osc: osc {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	clk_rtc: clk_rtc {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +	};
-> > +
-> > +	gmac0_rmii_refin: gmac0_rmii_refin {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <50000000>;
-> 
-> I assume, given osc has it's frequency set in the board dts, that these
-> are all oscillators on the SoC?
+And I would still love a thorough API review from someone who actually
+knows rust too. :(
 
-These are all on the board. Should move all "clock-frequency" to the board dts.
-I will recheck and modify this patch.
+But I will play some more with v7 so do send it.
 
-Best regards,
-Hal
+Bartosz
