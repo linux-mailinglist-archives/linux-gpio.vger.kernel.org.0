@@ -2,130 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA6BE5FF045
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 16:25:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEC8B5FF0DC
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 17:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbiJNOZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 10:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
+        id S229887AbiJNPLp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 11:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230346AbiJNOZo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 10:25:44 -0400
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E03B9A2A4
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:25:43 -0700 (PDT)
-Received: by mail-vk1-xa33.google.com with SMTP id v81so2330720vkv.5
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bqHsgShuxjT2vPGUUUfT6YZKYir4qAsxYTqAexZuz6U=;
-        b=rOeP67hG70prJ82JmknaecJG/Te4FkU1X0VK87NPWp6Zhc8R2IQGMKvz+jvJKVj5QK
-         z0Qn8eHx1jbuC23JKzjQyy6KMtoJOjZemVz+YB9cAwCYhDORbX2uCfToJsnIU5x58C2x
-         l+5YbRRllh4WfZDUzwN/TAQXO7NSXMttDb/4TYL9H5LXwlgpMwg6CaInShNnQTzF8F18
-         lYhm0dhTtiKDBsi4PqF3/kzfuAKHgmHUcGUm1qfe/vYDZYcf0byUyxMRbROuetHo+S8e
-         LpccEF26tMSnPGlr9HQWcZ3CV6mXNyMgYnoWK9Bkm+qDFydfSLDx0fNgXcoepJY3Lmdy
-         9yUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bqHsgShuxjT2vPGUUUfT6YZKYir4qAsxYTqAexZuz6U=;
-        b=2WJ3MleWkkTt0x+1CVOiCdo8dNdF6wM4ZTKs6MLrIdFIYQanq7sG+KOT0stuUbTuu0
-         qpFDCMhUkBEjRbctmfR4qI3QOeLWvtYu3aym4tB18fkheJ6dAdrwVgXukLw9tsbZyuix
-         LWdtneeAuik0BerroP5YRk0lVgtPgYzlI7V5BlDh7B/uUTtJyNonHe1BMFkl7vTD696u
-         I3zbcU2HyPUyTmCwO8IBBX9CMltmt++92h1ktDaKaoFksw9alNba8XMXHGtWHm4r5f7o
-         VwPnFwkH70rSDDZredm4SHPuXeavRJPokhUv/YLthyXSi0fzI5Nuza0Lni4zDT4JMC65
-         2q0w==
-X-Gm-Message-State: ACrzQf2VwloHt+PvXXQ4ho/cRckxsG2J8jO3Q/KB9YOKrxl0yIYVBDPM
-        MfOq/4asrw6qW81iboMTxcZTuW9+VlJsv2ZmuU/1OQ==
-X-Google-Smtp-Source: AMsMyM4S5SQEyZ+bGCoFl4SKzjF8TKEnqUZzdbpEflFLFG5eXg4MP5I2qQzQAOPSihuECqB1k6XvCcy9/2vpQuB2ZOw=
-X-Received: by 2002:a1f:e944:0:b0:3ab:334d:2896 with SMTP id
- g65-20020a1fe944000000b003ab334d2896mr2715172vkh.5.1665757542269; Fri, 14 Oct
- 2022 07:25:42 -0700 (PDT)
+        with ESMTP id S229942AbiJNPLn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 11:11:43 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C871CF54B;
+        Fri, 14 Oct 2022 08:11:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665760302; x=1697296302;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=N/njfTWM92urhDh1tc8kt06mInCQV3hTHb5sdf7xqk0=;
+  b=bYM9g6tVvtVxav3WaIrakhmyROkTIIboxfH+Snti7Ci8xFZNO4FolujL
+   thOBhsuC2TfFHL04DoRxG5S2eUY/pAV0ZXb0LWpYmunDj/ubmUPdfkPSY
+   lNHnGkeaZMzKLb684jH0zXNvWWJdgTnh0v0EcW4qCAjgpfJ+TBq5lwWg2
+   1euRJ0TRDrJx5ddSw44StElwH8iUvgQNGC6z3xIaZe9/ef+zoNkL0R21m
+   AGZv/jOUPRKHS0+dy0loDJ4uj3Bzkmpsh04Qo5X4rRcPoI2vhFmADfEF4
+   D/1eSZezcYNv2aMlKCnX02TtPb5jFtE3vkhoYLsQg15GaZf6PSNlwT/Er
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="369587630"
+X-IronPort-AV: E=Sophos;i="5.95,184,1661842800"; 
+   d="scan'208";a="369587630"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2022 08:11:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="660758830"
+X-IronPort-AV: E=Sophos;i="5.95,184,1661842800"; 
+   d="scan'208";a="660758830"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 14 Oct 2022 08:11:36 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ojMLW-006yCQ-0e;
+        Fri, 14 Oct 2022 18:11:34 +0300
+Date:   Fri, 14 Oct 2022 18:11:33 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+        linux-actions@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        openbmc@lists.ozlabs.org, linux-rpi-kernel@lists.infradead.org,
+        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+        linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [rft, PATCH v2 00/36] pinctrl: Clean up and add missed headers
+Message-ID: <Y0l8JTQQvLzRejk1@smile.fi.intel.com>
+References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com>
+ <0684f480-2092-d520-2c8e-bd9a2dca47e3@gmail.com>
+ <CAHp75VdDjyUAZBTaoPOe5oA3f_5xRznAooq08=Eff4F1AZyVOQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
- <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
- <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
- <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
- <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
- <20221011041651.amibtu24kcgm67e7@vireshk-i7> <20221013061204.hu2vn24g42egybbl@vireshk-i7>
- <CAMRc=MfNjCARhhG1yGDKU0HYUmsHkN_MihWy-+pg+SY0T9WERg@mail.gmail.com> <20221014095724.ajajkp3ysdfxd2f2@vireshk-i7>
-In-Reply-To: <20221014095724.ajajkp3ysdfxd2f2@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 14 Oct 2022 16:25:31 +0200
-Message-ID: <CAMRc=Mc5qVJfcPoVit8zgnoAPKqWY3qb1MQwtfP7FNJ53O=UjA@mail.gmail.com>
-Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdDjyUAZBTaoPOe5oA3f_5xRznAooq08=Eff4F1AZyVOQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 11:57 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 14-10-22, 11:45, Bartosz Golaszewski wrote:
-> > Maybe also add chained mutators everywhere? To be able to do
-> > settings.set_direction().set_edge() etc.?
->
-> Based on Kent's suggestion earlier, what I have implemented is
-> set_prop(), to which one can pass all settings and it will apply them
-> in a loop.
->
->     pub fn set_prop(&mut self, values: &[SettingVal]) -> Result<()> {
->         for value in values {
->             match value {
->                 SettingVal::Direction(val) => self.set_direction(*val)?,
->                 SettingVal::EdgeDetection(val) => self.set_edge_detection(*val)?,
->                 SettingVal::Bias(val) => self.set_bias(*val)?,
->                 SettingVal::Drive(val) => self.set_drive(*val)?,
->                 SettingVal::ActiveLow(val) => self.set_active_low(*val),
->                 SettingVal::DebouncePeriod(val) => self.set_debounce_period(*val),
->                 SettingVal::EventClock(val) => self.set_event_clock(*val)?,
->                 SettingVal::OutputValue(val) => self.set_output_value(*val)?,
->             }
->         }
->
->         Ok(())
->     }
->
-> I think that replaces the need of nested ones ? And if we want to add
-> those later, we can always come back and add them. But I am not sure
-> it would be required.
->
+On Wed, Oct 12, 2022 at 01:04:10PM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 11, 2022 at 11:56 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> > On 10/10/2022 1:14 PM, Andy Shevchenko wrote:
+> > > Currently the header inclusion inside the pinctrl headers seems more arbitrary
+> > > than logical. This series is basically out of two parts:
+> > > - add missed headers to the pin control drivers / users
+> > > - clean up the headers of pin control subsystem
+> > >
+> > > The idea is to have this series to be pulled after -rc1 by the GPIO and
+> > > pin control subsystems, so all new drivers will utilize cleaned up headers
+> > > of the pin control.
+> > >
+> > > Please, review and comment.
+> >
+> > Did you really need to split this on a per-driver basis as opposed to
+> > just a treewide drivers/pinctrl, drivers/media and drivers/gpiolib patch
+> > set?
+> >
+> > 36 patches seems needlessly high when 4 patches could have achieve the
+> > same outcome.
+> 
+> I can combine them if maintainers ask for that, nevertheless for Intel
+> pin control and GPIO drivers, which I care more about, I would like to
+> leave as separate changes (easy to see in history what was done).
 
-I cannot find Kent's comment on that - what was the reasoning behind this?
+I can now tell why I don't like to combine. While doing a revert (it's not
+related to GPIO nor to pin control), it appears that I reverted extra bits
+as merge conflict resolution. This is per se is not an issue, but when
+I tried to find and reapply that missed piece I can't, because the patch
+is combined and Git simply ignores to have
+`git cherry-pick _something in the past_` done.
 
-> > And I would still love a thorough API review from someone who actually
-> > knows rust too. :(
->
-> Well, Kent did a very good job earlier. I am not sure if he has extra
-> cycles to review this once again, though not a lot has changed since
-> last time.
->
+But again, up to maintainers.
 
-Yeah sorry Kent, I forgot we're at v6 already and you did review the
-previous iterations. :)
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bart
 
-> > But I will play some more with v7 so do send it.
->
-> Great.
->
-> --
-> viresh
