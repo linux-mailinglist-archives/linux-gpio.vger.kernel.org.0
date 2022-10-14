@@ -2,153 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9B3A5FF036
-	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 16:22:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA6BE5FF045
+	for <lists+linux-gpio@lfdr.de>; Fri, 14 Oct 2022 16:25:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbiJNOWa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 14 Oct 2022 10:22:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53898 "EHLO
+        id S229616AbiJNOZz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 14 Oct 2022 10:25:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiJNOW3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 10:22:29 -0400
-Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4508F1D5E2D
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:22:27 -0700 (PDT)
-Received: by mail-vs1-xe33.google.com with SMTP id 128so4999486vsz.12
-        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:22:27 -0700 (PDT)
+        with ESMTP id S230346AbiJNOZo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 14 Oct 2022 10:25:44 -0400
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E03B9A2A4
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:25:43 -0700 (PDT)
+Received: by mail-vk1-xa33.google.com with SMTP id v81so2330720vkv.5
+        for <linux-gpio@vger.kernel.org>; Fri, 14 Oct 2022 07:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Fco4aoSGDktPeCUQicKuShHwB8ASsS0GQpxb9h8fR+w=;
-        b=WLXwQ39TkUO4zir3sdYOz4kTOtMQMK6kFCLHeTi79EsXnhwm5TzOUnwgAqFPNy0ZeU
-         lDfGHpClHjUkKEYxAUXCH0ihZpc3VDr8Adk0vPdkfTKnEYMXyspZOJDBz7f1PCM01DOa
-         1uSmwa8uzl2D3UxAkcTWx/3lTbS6221jVqnqnlJk9iG1JE4CS0Gn1ZqPEdFNw0FvwJ4u
-         d9FgmuxsF/0uycvSfhOpIMCEWn8vQ0yiSy/4YKWNJtvDQUE8Uys0lxy6x1NN7Sl678R6
-         3MpinPGP/Wzt4jF6tsuqQSH/E+eJtZBpWkqtNEoAd4uh+BTt9daXwLOCmrQPOt/5oZiV
-         /7GA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bqHsgShuxjT2vPGUUUfT6YZKYir4qAsxYTqAexZuz6U=;
+        b=rOeP67hG70prJ82JmknaecJG/Te4FkU1X0VK87NPWp6Zhc8R2IQGMKvz+jvJKVj5QK
+         z0Qn8eHx1jbuC23JKzjQyy6KMtoJOjZemVz+YB9cAwCYhDORbX2uCfToJsnIU5x58C2x
+         l+5YbRRllh4WfZDUzwN/TAQXO7NSXMttDb/4TYL9H5LXwlgpMwg6CaInShNnQTzF8F18
+         lYhm0dhTtiKDBsi4PqF3/kzfuAKHgmHUcGUm1qfe/vYDZYcf0byUyxMRbROuetHo+S8e
+         LpccEF26tMSnPGlr9HQWcZ3CV6mXNyMgYnoWK9Bkm+qDFydfSLDx0fNgXcoepJY3Lmdy
+         9yUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fco4aoSGDktPeCUQicKuShHwB8ASsS0GQpxb9h8fR+w=;
-        b=N13dmV3hkWdwaAIjnI5PWw9khiPGZSgzGQpIcgssnDxfBQRVAflu3S5P4GUexkC+8y
-         CuFraoSICOGQEZ1WB9wtRNdadkaiq8wFO6C1tO7M/dXt7nhuMcssPuoN0mNRkdZV5Blc
-         4TezVvLpUMuDSFw54be3zZamijyi+U8FZSvhy1Dz/APGO1Yu6rgSGV976EauS9yHrY2J
-         arD1woxZf+0XYo2Z4zgo67WN6DVsUPzoYQuuEwEppH7jriWSHL+Mg9DZWN2JXPbWdjuL
-         l7scZ5vQXxcW7E8pJ3OeJe+nPhrN1CiFWrLKbvgLx8mu5pEQ37HP2iu5K1uPvCfkH61P
-         oODA==
-X-Gm-Message-State: ACrzQf0m/3F8TVcnK1tItMuxp6QSM/0e61YNnS8DBjX9lDidnLwrT+of
-        VbrXmXXD+thtywZwhuZ26ktGCIYU2W95gS5NbzAn4w==
-X-Google-Smtp-Source: AMsMyM6l+fGo9Wf4J2FUIvmKXM0/HI/acOrBBzHdAxkVC3nVrGupoi+dtA71v8gOFQ/HUJfxOEjWC90jrAxWlg/FdjE=
-X-Received: by 2002:a67:ac09:0:b0:39a:eab8:a3a6 with SMTP id
- v9-20020a67ac09000000b0039aeab8a3a6mr2594681vse.9.1665757346338; Fri, 14 Oct
- 2022 07:22:26 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bqHsgShuxjT2vPGUUUfT6YZKYir4qAsxYTqAexZuz6U=;
+        b=2WJ3MleWkkTt0x+1CVOiCdo8dNdF6wM4ZTKs6MLrIdFIYQanq7sG+KOT0stuUbTuu0
+         qpFDCMhUkBEjRbctmfR4qI3QOeLWvtYu3aym4tB18fkheJ6dAdrwVgXukLw9tsbZyuix
+         LWdtneeAuik0BerroP5YRk0lVgtPgYzlI7V5BlDh7B/uUTtJyNonHe1BMFkl7vTD696u
+         I3zbcU2HyPUyTmCwO8IBBX9CMltmt++92h1ktDaKaoFksw9alNba8XMXHGtWHm4r5f7o
+         VwPnFwkH70rSDDZredm4SHPuXeavRJPokhUv/YLthyXSi0fzI5Nuza0Lni4zDT4JMC65
+         2q0w==
+X-Gm-Message-State: ACrzQf2VwloHt+PvXXQ4ho/cRckxsG2J8jO3Q/KB9YOKrxl0yIYVBDPM
+        MfOq/4asrw6qW81iboMTxcZTuW9+VlJsv2ZmuU/1OQ==
+X-Google-Smtp-Source: AMsMyM4S5SQEyZ+bGCoFl4SKzjF8TKEnqUZzdbpEflFLFG5eXg4MP5I2qQzQAOPSihuECqB1k6XvCcy9/2vpQuB2ZOw=
+X-Received: by 2002:a1f:e944:0:b0:3ab:334d:2896 with SMTP id
+ g65-20020a1fe944000000b003ab334d2896mr2715172vkh.5.1665757542269; Fri, 14 Oct
+ 2022 07:25:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1662116601.git.christophe.leroy@csgroup.eu>
- <CAMRc=MehcpT84-ucLbYmdVTAjT86bNb9NEfV6npCmPZHqbsArw@mail.gmail.com>
- <b348a306-3043-4ccc-9067-81759ab29143@www.fastmail.com> <CACRpkdbazHcUassRMqZ2oHmama3nWEZ3U3bB-y-3dmo3jgFPWg@mail.gmail.com>
- <a7cb856c-8a3f-4737-ae9e-b75c306ad88e@www.fastmail.com> <da8e0775-7d3e-d6fa-e1ff-395769d35614@csgroup.eu>
-In-Reply-To: <da8e0775-7d3e-d6fa-e1ff-395769d35614@csgroup.eu>
+References: <CAKohpomwhkKL9_mhmvH1C1WmHG50M5tL-Gy25Y2gVsbBuWGdiw@mail.gmail.com>
+ <CAMRc=MebN1VwSzGtdGcYAeiN45D-e59oi6in-n7JYKqyqcum1Q@mail.gmail.com>
+ <20220928111043.bs2ihopdxduavcsq@vireshk-i7> <CAMRc=MfA7SYS2FWZ+HHmqjTe=0EtedncJ5fRLB9CT4NiR0U8SA@mail.gmail.com>
+ <20220928151716.3hhbcrjwskvwvajh@vireshk-i7> <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+ <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
+ <20221011041651.amibtu24kcgm67e7@vireshk-i7> <20221013061204.hu2vn24g42egybbl@vireshk-i7>
+ <CAMRc=MfNjCARhhG1yGDKU0HYUmsHkN_MihWy-+pg+SY0T9WERg@mail.gmail.com> <20221014095724.ajajkp3ysdfxd2f2@vireshk-i7>
+In-Reply-To: <20221014095724.ajajkp3ysdfxd2f2@vireshk-i7>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 14 Oct 2022 16:22:15 +0200
-Message-ID: <CAMRc=MdNnUS72cSARv8dAVUsujkUM9jyjutJsty9o+=LOkOefg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+Date:   Fri, 14 Oct 2022 16:25:31 +0200
+Message-ID: <CAMRc=Mc5qVJfcPoVit8zgnoAPKqWY3qb1MQwtfP7FNJ53O=UjA@mail.gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Davide Ciminaghi <ciminaghi@gnudd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 4:13 PM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
+On Fri, Oct 14, 2022 at 11:57 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> Hi Linus,
+> On 14-10-22, 11:45, Bartosz Golaszewski wrote:
+> > Maybe also add chained mutators everywhere? To be able to do
+> > settings.set_direction().set_edge() etc.?
 >
-> Le 14/09/2022 =C3=A0 15:03, Arnd Bergmann a =C3=A9crit :
-> > On Wed, Sep 14, 2022, at 2:38 PM, Linus Walleij wrote:
-> >> On Wed, Sep 7, 2022 at 12:15 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>>   drivers/gpio/gpio-sta2x11.c              | 411 ------------------=
------
-> >> (...)
-> >>> sta2x11 is an x86 driver, so not my area, but I think it would be
-> >>> best to kill off the entire platform rather than just its gpio
-> >>> driver, since everything needs to work together and it's clearly
-> >>> not functional at the moment.
-> >>>
-> >>> $ git grep -l STA2X11
-> >>> Documentation/admin-guide/media/pci-cardlist.rst
-> >>> arch/x86/Kconfig
-> >>> arch/x86/include/asm/sta2x11.h
-> >>> arch/x86/pci/Makefile
-> >>> arch/x86/pci/sta2x11-fixup.c
-> >>> drivers/ata/ahci.c
-> >>> drivers/gpio/Kconfig
-> >>> drivers/gpio/Makefile
-> >>> drivers/gpio/gpio-sta2x11.c
-> >>> drivers/i2c/busses/Kconfig
-> >>> drivers/media/pci/Makefile
-> >>> drivers/media/pci/sta2x11/Kconfig
-> >>> drivers/media/pci/sta2x11/Makefile
-> >>> drivers/media/pci/sta2x11/sta2x11_vip.c
-> >>> drivers/media/pci/sta2x11/sta2x11_vip.h
-> >>> drivers/mfd/Kconfig
-> >>> drivers/mfd/Makefile
-> >>> drivers/mfd/sta2x11-mfd.c
-> >>> include/linux/mfd/sta2x11-mfd.h
-> >>>
-> >>> Removing the other sta2x11 bits (mfd, media, x86) should
-> >>> probably be done through the respective tree, but it would
-> >>> be good not to forget those.
-> >>
-> >> Andy is pretty much default x86 platform device maintainer, maybe
-> >> he can ACK or brief us on what he knows about the status of
-> >> STA2x11?
-> >
-> > I think the explanation given by Davide and Alessandro
-> > was rather detailed already:
-> >
-> > https://lore.kernel.org/lkml/Yw3LQjhZWmZaU2N1@arcana.i.gnudd.com/
-> > https://lore.kernel.org/lkml/Yw3DKCuDoPkCaqxE@arcana.i.gnudd.com/
-> >
+> Based on Kent's suggestion earlier, what I have implemented is
+> set_prop(), to which one can pass all settings and it will apply them
+> in a loop.
 >
-> I can't see this series in neither linus tree nor linux-next.
+>     pub fn set_prop(&mut self, values: &[SettingVal]) -> Result<()> {
+>         for value in values {
+>             match value {
+>                 SettingVal::Direction(val) => self.set_direction(*val)?,
+>                 SettingVal::EdgeDetection(val) => self.set_edge_detection(*val)?,
+>                 SettingVal::Bias(val) => self.set_bias(*val)?,
+>                 SettingVal::Drive(val) => self.set_drive(*val)?,
+>                 SettingVal::ActiveLow(val) => self.set_active_low(*val),
+>                 SettingVal::DebouncePeriod(val) => self.set_debounce_period(*val),
+>                 SettingVal::EventClock(val) => self.set_event_clock(*val)?,
+>                 SettingVal::OutputValue(val) => self.set_output_value(*val)?,
+>             }
+>         }
 >
-> Following the ACK from Andy + the above explanations from Arnd, do you
-> plan to merge this series anytime soon ?
+>         Ok(())
+>     }
 >
-> Do you need anything more from me ?
+> I think that replaces the need of nested ones ? And if we want to add
+> those later, we can always come back and add them. But I am not sure
+> it would be required.
 >
-> Thanks
-> Christophe
 
-I will take it after v6.1-rc1 is tagged.
+I cannot find Kent's comment on that - what was the reasoning behind this?
+
+> > And I would still love a thorough API review from someone who actually
+> > knows rust too. :(
+>
+> Well, Kent did a very good job earlier. I am not sure if he has extra
+> cycles to review this once again, though not a lot has changed since
+> last time.
+>
+
+Yeah sorry Kent, I forgot we're at v6 already and you did review the
+previous iterations. :)
 
 Bart
+
+> > But I will play some more with v7 so do send it.
+>
+> Great.
+>
+> --
+> viresh
