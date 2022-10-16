@@ -2,217 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E4345FFB71
-	for <lists+linux-gpio@lfdr.de>; Sat, 15 Oct 2022 19:26:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB1455FFF29
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 14:30:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbiJOR0X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 15 Oct 2022 13:26:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56920 "EHLO
+        id S229737AbiJPMaD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Oct 2022 08:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbiJOR0V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 15 Oct 2022 13:26:21 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08BEA4E1AB;
-        Sat, 15 Oct 2022 10:26:20 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id g1so11666191lfu.12;
-        Sat, 15 Oct 2022 10:26:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ofI77/STIqcgCTX1UfSBDtJXg6xnDwj4qtGg8HWhc6c=;
-        b=PggJZTpO5oBLldNOFuPDX2BEIEiTvD4Lgy1RkrzkdvbocbKaDR+JR4kKhtT043Klvp
-         bVqBnxvKsxmmkhxo3Cp4YGa0/yQZfy2Ev4L6v+wta/pmBYjjrqZrrGJfVr3HW38EDzes
-         G3X17+Ez/zFezT5RiPQwlQCEQcGp5qDY8AFTSMir2110BxEdio59pLGQlTUpoqwCSbdI
-         +5QShMOFDJwl4dg885MTmF+poB0qbnb5gdBwurdqIuBca2abrOjuOHrhdgIMgg1VktVM
-         KkqOq+CBemHPF2CFHgq8lxrQ6u8edA9ShViVb6dB7abKFl42yZnNMnpZ5Uh4aL8agM+7
-         oSXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ofI77/STIqcgCTX1UfSBDtJXg6xnDwj4qtGg8HWhc6c=;
-        b=0MCs63NRMlAPQDUVk2hdlu1AY9nhmY0Elprm3YxFRlTHo7TNyX1YQEoSe3GfZUaikl
-         fLLkaK8Phy0tZyIU0zaBrgVRlLko0JxIJcHL620BPny4sbbJLXZnukx92tofQ9OUt/Op
-         o7wWhLn6fUVKXCLiSDMWdyxFguAz7wxk9x8/mmtvQ2OPcnUiGNHZEMTpzsT/Zm/9bzSY
-         Q7bgXyFDfCV3Cd+3yQFUMrL5IVO7QceaxAkH6CXIVrbyPGuaqf4Eb3qG3qj3yLnaV6HT
-         EppmMa/bM7NyMYr21PWTF3D58+tkDgK11JzHU9PwTS0R9TE/yidlD+yRRNfnvsi6e7xS
-         YO4g==
-X-Gm-Message-State: ACrzQf1bKGp/bmpV+F2sfHMj8q3XcI8EETFHjnBB1DGDqvQL8bAnpSYe
-        Iu3oPXULz1a2NCF295NeEl8=
-X-Google-Smtp-Source: AMsMyM4Ud9YkinMU/TQXE2oDxe4QsmjNs4NZuxikP+Lp2p9NOscgfX6dwk63T43yb2JSKutkyc0Elg==
-X-Received: by 2002:a05:6512:3702:b0:4a2:6bd3:78ce with SMTP id z2-20020a056512370200b004a26bd378cemr1312889lfr.674.1665854778112;
-        Sat, 15 Oct 2022 10:26:18 -0700 (PDT)
-Received: from localhost.localdomain ([188.163.112.76])
-        by smtp.gmail.com with ESMTPSA id a9-20020a056512200900b00494747ba5f7sm790308lfb.272.2022.10.15.10.26.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Oct 2022 10:26:17 -0700 (PDT)
-From:   Svyatoslav Ryhel <clamor95@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/1] gpio: tegra: Convert to immutable irq chip
-Date:   Sat, 15 Oct 2022 20:26:02 +0300
-Message-Id: <20221015172602.84855-2-clamor95@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221015172602.84855-1-clamor95@gmail.com>
-References: <20221015172602.84855-1-clamor95@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229666AbiJPMaC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 08:30:02 -0400
+X-Greylist: delayed 600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 16 Oct 2022 05:29:59 PDT
+Received: from mx-out1.startmail.com (mx-out1.startmail.com [145.131.90.139])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0C423EA2;
+        Sun, 16 Oct 2022 05:29:59 -0700 (PDT)
+Date:   Sun, 16 Oct 2022 07:14:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=startmail.com;
+        s=2020-07; t=1665922451;
+        bh=2wOu7XLm05TbSnVzXovoExNBJRMcjwL5pNnKx5LChU4=;
+        h=Date:From:To:Subject:Message-ID:Mime-Version:Content-Type:
+         Content-Disposition:From:Subject:To:Date:Sender:Content-Type:
+         Content-Transfer-Encoding:Content-Disposition:Mime-Version:
+         Reply-To:In-Reply-To:References:Message-Id:Autocrypt;
+        b=iDF5srejuL3G3xjYYqQp8b9JnNwctI2HAu22mnf2OgBFHAfNdiXK5BmqNb+OfeeHB
+         LMa3nos1VIdamua+ktoGNk3i9PF0sIKat3kud88V8F8HshOy8I0Gq+HdtbXj6sWkUM
+         cF6UYcpEDrUrjHsF9tmDgGkKsOhiTeJd56ltjX8fbizqvmC1IySr9mKiyym27mWMT7
+         OJEvi0OsPvJBY1UF8GzpkXjk6490HgpGPvopwKEjl5vwaP08Fk/KWlFM+dJFRc4kl+
+         zdVcbijv2CdytHMdlx5JVAmuqxjDBF7IFrOnTlqMHKwZkHdg/2w7O3SAMffI4RkvnU
+         WWaLYOm/Rwqww==
+From:   "Marty E. Plummer" <hanetzer@startmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        tony@atomide.com, haojian.zhuang@linaro.org,
+        linus.walleij@linaro.org
+Subject: pinconf-single: pinctrl-single,bias-pull{up,down} bits
+ help/explanation
+Message-ID: <20221016121406.co3qixzcbfke4ye7@proprietary-killer.gsrm.network>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Update the driver to use an immutable IRQ chip to fix this warning:
+Greetings.
 
-    "not an immutable chip, please consider fixing it!"
+Working on setting up a dts for a new soc/board, along with the drivers
+associated with it. The soc in question has four pinctrl/pinconf-single
+blocks, which, as far as I can tell, use the exact same format for their
+bitfields in the registers (could be one or more differ but that would
+be an error of reading on my part).
 
-Preserve per-chip labels by adding an ->irq_print_chip() callback.
+The basic layout is thus, for each 32-bit field in the address space:
 
-Tested-by: Svyatoslav Ryhel <clamor95@gmail.com> # TF201 T30
-Tested-by: Robert Eckelmann <longnoserob@gmail.com> # TF101 T20
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
----
-Changes since V1:
-- Added tested-by info from testers
-- Patch itself is same, it had no review for 3 weeks
-- Test robot is triggering for pm_sleep_ptr, should not it be used to omit CONFIG_PM_SLEEP ifdefs?
+[31:11] reserved
+[10:10] Level conversion rate control. The value 0 indicates a fast
+        level conversion rate. The value 1 indicates a slow level
+		conversion rate.
+[9:9]	Pull-up resistor enable, active high.
+[8:8]	Pull-down resistor enable, active high.
+[7:4]   Drive capability.
+[3:0]   Function select.
 
- drivers/gpio/gpio-tegra.c | 56 ++++++++++++++++++++++++++++-----------
- 1 file changed, 40 insertions(+), 16 deletions(-)
+All of the registers are the same for bits [10:8]. Drive capability
+given in several 'levels', which can have 4, 8, or 16 different values,
+but that's not much of an issue. Given a specific register, iocfg_reg55,
+and iocfg_reg56, which handles UART0_RXD and UART0_TXD, drive capability
+values of 0-3 correspond to IO drive capablity IO_LEVEL1-4, respectively.
+Their respective function select bits are:
+0: GPIO5_4
+1: UART0_RXD
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index e4fb4cb38a0f..6b469253fad8 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -18,6 +18,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/module.h>
-+#include <linux/seq_file.h>
- #include <linux/irqdomain.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/pinctrl/consumer.h>
-@@ -94,7 +95,6 @@ struct tegra_gpio_info {
- 	struct tegra_gpio_bank			*bank_info;
- 	const struct tegra_gpio_soc_config	*soc;
- 	struct gpio_chip			gc;
--	struct irq_chip				ic;
- 	u32					bank_count;
- 	unsigned int				*irqs;
- };
-@@ -288,6 +288,7 @@ static void tegra_gpio_irq_mask(struct irq_data *d)
- 	unsigned int gpio = d->hwirq;
- 
- 	tegra_gpio_mask_write(tgi, GPIO_MSK_INT_ENB(tgi, gpio), gpio, 0);
-+	gpiochip_disable_irq(chip, gpio);
- }
- 
- static void tegra_gpio_irq_unmask(struct irq_data *d)
-@@ -296,6 +297,7 @@ static void tegra_gpio_irq_unmask(struct irq_data *d)
- 	struct tegra_gpio_info *tgi = gpiochip_get_data(chip);
- 	unsigned int gpio = d->hwirq;
- 
-+	gpiochip_enable_irq(chip, gpio);
- 	tegra_gpio_mask_write(tgi, GPIO_MSK_INT_ENB(tgi, gpio), gpio, 1);
- }
- 
-@@ -598,10 +600,43 @@ static void tegra_gpio_irq_release_resources(struct irq_data *d)
- 	tegra_gpio_enable(tgi, d->hwirq);
- }
- 
-+static void tegra_gpio_irq_print_chip(struct irq_data *d, struct seq_file *s)
-+{
-+	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
-+
-+	seq_printf(s, dev_name(chip->parent));
-+}
-+
-+static const struct irq_chip tegra_gpio_irq_chip = {
-+	.irq_shutdown		= tegra_gpio_irq_shutdown,
-+	.irq_ack		= tegra_gpio_irq_ack,
-+	.irq_mask		= tegra_gpio_irq_mask,
-+	.irq_unmask		= tegra_gpio_irq_unmask,
-+	.irq_set_type		= tegra_gpio_irq_set_type,
-+	.irq_set_wake		= pm_sleep_ptr(tegra_gpio_irq_set_wake),
-+	.irq_print_chip		= tegra_gpio_irq_print_chip,
-+	.irq_request_resources	= tegra_gpio_irq_request_resources,
-+	.irq_release_resources	= tegra_gpio_irq_release_resources,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+};
-+
-+static const struct irq_chip tegra210_gpio_irq_chip = {
-+	.irq_shutdown		= tegra_gpio_irq_shutdown,
-+	.irq_ack		= tegra_gpio_irq_ack,
-+	.irq_mask		= tegra_gpio_irq_mask,
-+	.irq_unmask		= tegra_gpio_irq_unmask,
-+	.irq_set_affinity	= tegra_gpio_irq_set_affinity,
-+	.irq_set_type		= tegra_gpio_irq_set_type,
-+	.irq_set_wake		= pm_sleep_ptr(tegra_gpio_irq_set_wake),
-+	.irq_print_chip		= tegra_gpio_irq_print_chip,
-+	.irq_request_resources	= tegra_gpio_irq_request_resources,
-+	.irq_release_resources	= tegra_gpio_irq_release_resources,
-+	.flags			= IRQCHIP_IMMUTABLE,
-+};
-+
- #ifdef	CONFIG_DEBUG_FS
- 
- #include <linux/debugfs.h>
--#include <linux/seq_file.h>
- 
- static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
- {
-@@ -689,18 +724,6 @@ static int tegra_gpio_probe(struct platform_device *pdev)
- 	tgi->gc.ngpio			= tgi->bank_count * 32;
- 	tgi->gc.parent			= &pdev->dev;
- 
--	tgi->ic.name			= "GPIO";
--	tgi->ic.irq_ack			= tegra_gpio_irq_ack;
--	tgi->ic.irq_mask		= tegra_gpio_irq_mask;
--	tgi->ic.irq_unmask		= tegra_gpio_irq_unmask;
--	tgi->ic.irq_set_type		= tegra_gpio_irq_set_type;
--	tgi->ic.irq_shutdown		= tegra_gpio_irq_shutdown;
--#ifdef CONFIG_PM_SLEEP
--	tgi->ic.irq_set_wake		= tegra_gpio_irq_set_wake;
--#endif
--	tgi->ic.irq_request_resources	= tegra_gpio_irq_request_resources;
--	tgi->ic.irq_release_resources	= tegra_gpio_irq_release_resources;
--
- 	platform_set_drvdata(pdev, tgi);
- 
- 	if (tgi->soc->debounce_supported)
-@@ -733,7 +756,6 @@ static int tegra_gpio_probe(struct platform_device *pdev)
- 	}
- 
- 	irq = &tgi->gc.irq;
--	irq->chip = &tgi->ic;
- 	irq->fwnode = of_node_to_fwnode(pdev->dev.of_node);
- 	irq->child_to_parent_hwirq = tegra_gpio_child_to_parent_hwirq;
- 	irq->populate_parent_alloc_arg = tegra_gpio_populate_parent_fwspec;
-@@ -752,7 +774,9 @@ static int tegra_gpio_probe(struct platform_device *pdev)
- 		if (!irq->parent_domain)
- 			return -EPROBE_DEFER;
- 
--		tgi->ic.irq_set_affinity = tegra_gpio_irq_set_affinity;
-+		gpio_irq_chip_set_chip(irq, &tegra210_gpio_irq_chip);
-+	} else {
-+		gpio_irq_chip_set_chip(irq, &tegra_gpio_irq_chip);
- 	}
- 
- 	tgi->regs = devm_platform_ioremap_resource(pdev, 0);
--- 
-2.34.1
+and
 
+0: GPIO5_5
+1: UART0_TXD
+
+Given a desire to mux this to uart0, I'd use the following dts/header snippet:
+
+// header include/dt-bindings/pinctrl/hisi.h
+
+/* iomg bit definition */
+#define MUX_M0		0
+#define MUX_M1		1
+#define MUX_M2		2
+#define MUX_M3		3
+#define MUX_M4		4
+#define MUX_M5		5
+#define MUX_M6		6
+#define MUX_M7		7
+
+--- snip ---
+
+// my additions
+/* drive strength definition for hi3516dv300 */
+#define IO_LEVEL_MASK	(15 << 4)
+#define IO2_LEVEL1		(0 << 4)
+#define IO2_LEVEL2		(1 << 4)
+#define IO2_LEVEL3		(2 << 4)
+#define IO2_LEVEL4		(3 << 4)
+
+--- snip ---
+
+// hi3516dv300-pinctrl.dtsi snippet
+	pmx1: pinmux@111f0000 {
+		compatible = "pinconf-single";
+		reg = <0x111f0000 0x34>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+		#pinctrl-cells = <1>;
+		#gpio-range-cells = <3>;
+		ranges;
+
+		pinctrl-single,register-width = <32>;
+		pinctrl-single,function-mask = <7>;
+
+		uart0_cfg_func: uart0_cfg_func {
+			pinctrl-single,pins = <
+				0x0010 MUX_M1 /* U21 UART0_RXD (iocfg_reg55)*/
+				0x0014 MUX_M1 /* T20 UART0_TXD (iocfg_reg56)*/
+			>;
+			pinctrl-single,drive-strength = <
+				IO2_LEVEL4 IO_LEVEL_MASK
+			>;
+		};
+	};
+
+All in all pretty simple.
+What I'm having issue with is the pinctrl-single,bias-pull values. From
+commit abe4e4675dfc62b7f2328e2c4bce8b5bdcdff7c0 I get a bit of it, and I
+think I have it mostly figured out:
+
+// <[input] [enabled] [disabled] [mask]>;
+pinctrl-single,bias-pullup = <? 1 0 0x100>;
+pinctrl-single,bias-pulldown = <? 1 0 0x200>;
+
+using mask 0x100 to single out bit 8 and mask 0x200 to single out bit 9,
+enable values being simple binary on/off. What I don't get is how the
+input value is determined/calculated.
+
+Aside from the above mentioned commit for the am335x-pocketbeagle.dts,
+which uses a differing pullup control scheme, the only users I can find
+in the tree are a handful of hisi socs which I don't have a datasheet
+for to map their usage to register definitions and puzzle this out.
+
+Hope someone can point out what I'm missing. I guarantee it'll be quite
+obvious once it is but for the moment I'm stumped.
+
+Regards,
+Marty
