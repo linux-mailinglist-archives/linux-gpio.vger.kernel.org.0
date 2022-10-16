@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC715600136
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 18:23:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810A0600152
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 18:30:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbiJPQXj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Oct 2022 12:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57674 "EHLO
+        id S229774AbiJPQaO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Oct 2022 12:30:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbiJPQXd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 12:23:33 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C494933E22
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:23:31 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id o2so5389877qkk.10
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:23:31 -0700 (PDT)
+        with ESMTP id S229716AbiJPQaM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 12:30:12 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8529121274
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:30:09 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id df9so6214215qvb.9
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:30:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MX65gOaIT08XY4M5cn1g7cbmh/RnvIq8wli6SwXMtBg=;
-        b=p66SBm+jxcoSdZGKJv7ohAq+81+Wn8YhnMz8iueTmtobse4/DkXueovkEUAUaCkUu6
-         WVm/9HPU515u6TG0YAJiCNF1ofIRPqDK8Q9CyDVKliN69cgHRFabsOCxYaeuk4+rLYMz
-         Uh6IwFRMQQakirGwlhoxDQ8k5+w4YxLuaaHMs+zwPgBjDY5+lUr7nUiNuGJIgAyK7KSO
-         k9XhPBuImxFy62joLKYvUVC8icWt2L6w4AK/jqbKNg8a0V52eod7KTVCgYXp5rYKKWQ3
-         z/+kWcCPQg/y2JNutjffp7bFIhMhUNHM0GhPHh4vsLeRMaMCaF3eyGrcM+Qh0rztXVP2
-         q0rQ==
+        bh=RLCLC6l28ICU61ZnkvKWzFsSdviEqb8/d437SYfHEsU=;
+        b=vXo9/lRaSIWx/kxotVGOjg4r7JjB2OFbP2QRA6HDJIPG/sOxBY1wGyAc6lABBOpNxn
+         xngWfaVyc5NAZ569gS40OX7ZHOgmvvbOV4s9BaR5gtySUasE0MshJ7HhqeXIPWO2JzH0
+         WatHzyQtFddsySVB9cVchCX0frIrRqrAvGHa6pRP0g++BV0D73BoYCPP3z1pJVtRSZx0
+         SJsOjZxJeV48sFvRzkYeSsIxxeMdOIAxvMPtPqXhPYla5NeWhOgNwLgkN8m9AuYOkfA3
+         JG0dqDIrnHlfg5l0AHRM6ToIJ2KLhDbY+gASCv6xGdHQmF8H7tGFvpLCj+GuSYrzPxkq
+         jk/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MX65gOaIT08XY4M5cn1g7cbmh/RnvIq8wli6SwXMtBg=;
-        b=0ZDqWEuXNToXcPjtTNyu8c1Ox6CSSsrDIcz5PUCHJoNIU5BrrNqvC/lToJmib0y6DQ
-         SUKHX9XmBj6xBd8f8gy3UZ7ZgqwL+s30MX9qQMCyVRUkBbw7gKbP4B6pUQbP7YO24fnM
-         zUjGh6UpyapbrHdgasE3y+Rul0M9hEtqhz1zByHk7xBJPgV9PSCPl3Cn/tJwmqAwij6E
-         rqkzYEbf8sTALkJBddnGOB3uu95/F8PbQHkwIxv2WCU6zbPkeN7bs+TXCk2y8Gj9zPkU
-         D3exGjkkMvRunA8nlu/Q9HghLAOUipcD5Zt5g/57BIKUznjU8BaN2ebAEs0sLstWsX7u
-         YGmg==
-X-Gm-Message-State: ACrzQf0T7CQ2O/kP6Jchf8VRafarzaJFPv+EGf4qb5mhStbwsrXqg80r
-        pJ2LI2c0LgD/UoNsu23128rMlQ==
-X-Google-Smtp-Source: AMsMyM7Fe2XdLHMwVi3SxpUC+8uRYLyaZr1loOQzqOHB/PYzX8BlQ7wQ8d2rt0Y1ba72gdby5qnCjw==
-X-Received: by 2002:a37:2d04:0:b0:6e7:4f3f:140e with SMTP id t4-20020a372d04000000b006e74f3f140emr4930915qkh.187.1665937410874;
-        Sun, 16 Oct 2022 09:23:30 -0700 (PDT)
+        bh=RLCLC6l28ICU61ZnkvKWzFsSdviEqb8/d437SYfHEsU=;
+        b=XFC+Nlpgc2OmauTR5zlFz8wjdXANrds97u8YzMXmihNhdtxGjlBivBdULUbhB2J0FI
+         xkv5SfhcKikd8r2G4iH+i66xI1NoX+QROyZn/YEFygylVY0nCEmfEMjR4f05T6X2/EAh
+         wHrgVRV15ZkxemEpI8LtmertIxLoynY1Qylk+vOMTF96bo7kq/gAaW1JDRmyMtTQFO4m
+         yeCSMg5AksbjjSA0mtTVSt5C6kYLT8QBW5/YfHvJj3L/MVimfXbVqGkiIIx6+2CeLRKt
+         e6AI5fMiXHxG4OSGNE2paZoVGnYYP8WA1hTxY9Ji4XDdPbnoA2hWRpXXGLeEEF2i5sSr
+         Cf6A==
+X-Gm-Message-State: ACrzQf0Awg+uLPYYEOE1oGG2MIgkhmNhL8+dOH8TY7re50P4VujjeQhQ
+        mqY2MfpKHJlp25/amfcLBwEpn6yZgQanRw==
+X-Google-Smtp-Source: AMsMyM5F3K5BfFAzBBmvcY1mpeisDu1Tejr9nvTu8Q6o7f7Gi9HiOPuItDv1dTpBKnyfUvDK/3kKNA==
+X-Received: by 2002:ad4:5f4f:0:b0:4b1:db1e:6c01 with SMTP id p15-20020ad45f4f000000b004b1db1e6c01mr5707261qvg.100.1665937808692;
+        Sun, 16 Oct 2022 09:30:08 -0700 (PDT)
 Received: from ?IPV6:2601:42:0:3450:9b13:d679:7b5b:6921? ([2601:42:0:3450:9b13:d679:7b5b:6921])
-        by smtp.gmail.com with ESMTPSA id bb33-20020a05622a1b2100b00399fe4aac3esm6042064qtb.50.2022.10.16.09.23.28
+        by smtp.gmail.com with ESMTPSA id 74-20020a37084d000000b006ee7923c187sm7099928qki.42.2022.10.16.09.30.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Oct 2022 09:23:29 -0700 (PDT)
-Message-ID: <fe7a6720-1bf6-bc66-22d2-225cb6e575ff@linaro.org>
-Date:   Sun, 16 Oct 2022 12:23:28 -0400
+        Sun, 16 Oct 2022 09:30:07 -0700 (PDT)
+Message-ID: <01bc7712-30c8-ab6d-c795-abd0f941cea0@linaro.org>
+Date:   Sun, 16 Oct 2022 12:30:06 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.2
-Subject: Re: [PATCH v2 2/3] arm64: dts: qcom: sc7180: align TLMM pin
- configuration with DT schema
+Subject: Re: [PATCH v2 3/3] dt-bindings: pinctrl: qcom,sc7180: convert to
+ dtschema
 Content-Language: en-US
 To:     Doug Anderson <dianders@chromium.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -65,163 +65,182 @@ Cc:     Andy Gross <agross@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh@kernel.org>
 References: <20221013184700.87260-1-krzysztof.kozlowski@linaro.org>
- <20221013184700.87260-2-krzysztof.kozlowski@linaro.org>
- <CAD=FV=VyrCA4jNkfVGwRw2Zf-sCwJe21dRHidtZnJyb73i_UrQ@mail.gmail.com>
+ <20221013184700.87260-3-krzysztof.kozlowski@linaro.org>
+ <CAD=FV=UvuiU2GhjTwSxu-SK8C6ovLTwyakf55GRs_g-8b+caUQ@mail.gmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAD=FV=VyrCA4jNkfVGwRw2Zf-sCwJe21dRHidtZnJyb73i_UrQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=UvuiU2GhjTwSxu-SK8C6ovLTwyakf55GRs_g-8b+caUQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/10/2022 13:50, Doug Anderson wrote:
+On 14/10/2022 14:02, Doug Anderson wrote:
 > Hi,
 > 
 > On Thu, Oct 13, 2022 at 11:49 AM Krzysztof Kozlowski
 > <krzysztof.kozlowski@linaro.org> wrote:
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
->> index eae22e6e97c1..37abe131951c 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml
+>> new file mode 100644
+>> index 000000000000..464f1031d15d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml
 > 
 > [ ... cut ... ]
 > 
->>  &spi0 {
->> -       pinctrl-0 = <&qup_spi0_cs_gpio_init_high>, <&qup_spi0_cs_gpio>;
->> +       pinctrl-0 = <&qup_spi0_cs_gpio_init_high>, <&qup_spi0_spi>;
->>         cs-gpios = <&tlmm 37 GPIO_ACTIVE_LOW>;
->>  };
-> 
-> Something still looks wrong with the above. I would have expected:
-> 
->   <&qup_spi0_cs_gpio_init_high>, <&qup_spi0_spi>, <&qup_spi0_cs_gpio>;
-
-Yes, you're right.
-
-> 
-> Specifically the old commit e440e30e26dd ("arm64: dts: qcom: sc7180:
-> Avoid glitching SPI CS at bootup on trogdor") only worked correctly
-> because "qup_spi0_cs_gpio_init_high" didn't specify a "function".
-> That meant it was guaranteed to _just_ set the GPIO output to be
-> high without changing the mux. Then later we'd change the mux and
-> the output would already be high and we'd have no glitch.
-> 
-> As I mentioned earlier, I didn't love that solution but I didn't
-> see a better way. Specifically, I don't think that the properties
-> within a device tree node are ordered. Thus with your new definition:
-> 
->   qup_spi0_cs_gpio_init_high: qup-spi0-cs-gpio-init-high-state {
->     pins = "gpio37";
->     function = "gpio";
->     output-high;
->   };
-> 
-> Nothing tells the pinctrl subsystem whether it should apply the
-> 'output-high' before the 'function = "gpio"' or vice versa. From
-> my previous investigation it seemed to set the function first
-> and then the output to be high. Maybe that's because I happened
-> to list the function first, but I wouldn't have thought it was
-> legal to rely on the ordering of properties.
-> 
-> On the other hand, values within a property _are_ ordered. That
-> means that when we specify:
-> 
->  <&qup_spi0_cs_gpio_init_high>, <&qup_spi0_spi>, <&qup_spi0_cs_gpio>;
-> 
-> The pinctrl subsystem can see that we want "init_high" done first,
-> then the SPI pins setup, and then the GPIO setup.
-> 
-> I confirmed that with your patches applied that the EC was reporting
-> a glitch, though I haven't (yet) managed to reproduce the cros-ec
-> probe failure that we were seeing in the past.
-> 
-> Unfortunately, I then reverted your patches and the EC was _still_
-> glitching. :( It looks like things broke in commit b991f8c3622c ("pinctrl:
-> core: Handling pinmux and pinconf separately"). :( Sure enough,
-> reverting that patch fixes the glitching.
-
-Regardless of this issue, binding requiring a function does not allow to
-keep the pin in previous state. Your glitch-workaround was actually an
-use-case for such keep-old-function feature.
-
-Yet, I am not sure if we should keep such ability. The firmware could
-configure the pin to whatever. Firmware behavior could also change it
-making the OS behavior non-predictable.
-
-> 
-> OK, several hours later and I've come up with a proposed solution [1].
-> Assuming that solution lands, then I think the answer is:
-> 
-> a) Totally get rid of the '_init_high' entries.
-> b) trogdor should just specify:
->    <&qup_spi0_spi>, <&qup_spi0_cs_gpio>;
-
-Yes.
-
-> 
-> [ ... cut ... ]
-> 
->> +&qup_spi0_spi {
->> +       drive-strength = <2>;
->> +       bias-disable;
->>  };
->>
->>  &qup_spi0_cs_gpio {
->> -       pinconf {
->> -               pins = "gpio34", "gpio35", "gpio36", "gpio37";
->> -               drive-strength = <2>;
->> -               bias-disable;
->> -       };
->> +       drive-strength = <2>;
->> +       bias-disable;
->> +};
+>> @@ -0,0 +1,162 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pinctrl/qcom,sc7180-pinctrl.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 >> +
->> +&qup_spi6_spi {
->> +       drive-strength = <2>;
->> +       bias-disable;
->>  };
->>
->>  &qup_spi6_cs_gpio {
->> -       pinconf {
->> -               pins = "gpio59", "gpio60", "gpio61", "gpio62";
->> -               drive-strength = <2>;
->> -               bias-disable;
->> -       };
->> +       drive-strength = <2>;
->> +       bias-disable;
->> +};
+>> +title: Qualcomm SC7180 TLMM pin controller
 >> +
->> +&qup_spi10_spi {
->> +       drive-strength = <2>;
->> +       bias-disable;
->>  };
->>
->>  &qup_spi10_cs_gpio {
->> -       pinconf {
->> -               pins = "gpio86", "gpio87", "gpio88", "gpio89";
->> -               drive-strength = <2>;
->> -               bias-disable;
->> -       };
->> +       drive-strength = <2>;
->> +       bias-disable;
->>  };
+>> +maintainers:
+>> +  - Bjorn Andersson <andersson@kernel.org>
+>> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> +
+>> +description:
+>> +  Top Level Mode Multiplexer pin controller in Qualcomm SC7180 SoC.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,sc7180-pinctrl
+>> +
+>> +  reg:
+>> +    maxItems: 3
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: west
+>> +      - const: north
+>> +      - const: south
+>> +
+>> +  interrupts: true
+>> +  interrupt-controller: true
+>> +  "#interrupt-cells": true
+>> +  gpio-controller: true
+>> +  "#gpio-cells": true
+>> +  gpio-ranges: true
+>> +  wakeup-parent: true
 > 
-> Mostly addressed by the above, but it should be noted that in your
-> patch you were specifying settings in the trogdor.dtsi file for
-> "qup_spi#_cs_gpio" but then never using it (it used the _init_high
-> versions).
+> Do you need interrupts/interrupt-controller/.../... ? Below you
+> include allOf "/schemas/pinctrl/qcom,tlmm-common.yaml". Won't you
+> magically get those from there? Why do you need to duplicate this?
+
+There is additionalProperties:false, so every property from referenced
+schema has to be included.
+
+The true solution would be to switch to unevaluatedProperties:false but
+then we accept all properties from:
+1. qcom,tlmm-common.yaml - not a problem, we already mention all of them
+here with :true
+2. pinctrl.yaml - we would now allow to use pinctrl-use-default.
+3. any other future common properties.
+
 > 
-> [1] https://lore.kernel.org/r/20221014103217.1.I656bb2c976ed626e5d37294eb252c1cf3be769dc@changeid
+> 
+>> +  gpio-reserved-ranges:
+>> +    minItems: 1
+>> +    maxItems: 60
+>> +
+>> +  gpio-line-names:
+>> +    maxItems: 119
+>> +
+>> +patternProperties:
+>> +  "-state$":
+>> +    oneOf:
+>> +      - $ref: "#/$defs/qcom-sc7180-tlmm-state"
+>> +      - patternProperties:
+>> +          "-pins$":
+>> +            $ref: "#/$defs/qcom-sc7180-tlmm-state"
+>> +        additionalProperties: false
+>> +
+>> +$defs:
+>> +  qcom-sc7180-tlmm-state:
+>> +    type: object
+>> +    description:
+>> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+>> +      Client device subnodes use below standard properties.
+>> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+>> +
+>> +    properties:
+>> +      pins:
+>> +        description:
+>> +          List of gpio pins affected by the properties specified in this
+>> +          subnode.
+>> +        items:
+>> +          oneOf:
+>> +            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-8])$"
+>> +            - enum: [ sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk,
+>> +                      sdc2_cmd, sdc2_data, ufs_reset ]
+>> +        minItems: 1
+>> +        maxItems: 36
+>> +
+>> +      function:
+>> +        description:
+>> +          Specify the alternative function to be configured for the specified
+>> +          pins.
+>> +
+>> +        enum: [ adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
+>> +                atest_char1, atest_char2, atest_char3, atest_tsens,
+>> +                atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
+>> +                atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21,
+>> +                atest_usb22, atest_usb23, audio_ref, btfm_slimbus, cam_mclk,
+>> +                cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2,
+>> +                cci_timer3, cci_timer4, cri_trng, dbg_out, ddr_bist, ddr_pxi0,
+>> +                ddr_pxi1, ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1,
+>> +                gcc_gp2, gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
+>> +                jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
+>> +                mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0, mi2s_1,
+>> +                mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag, PLL_BIST,
+>> +                pll_bypassnl, pll_reset, prng_rosc, qdss, qdss_cti,
+>> +                qlink_enable, qlink_request, qspi_clk, qspi_cs, qspi_data,
+>> +                qup00, qup01, qup02_i2c, qup02_uart, qup03, qup04_i2c,
+>> +                qup04_uart, qup05, qup10, qup11_i2c, qup11_uart, qup12,
+>> +                qup13_i2c, qup13_uart, qup14, qup15, sdc1_tb, sdc2_tb,
+>> +                sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3,
+>> +                tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt, usb_phy, vfr_1,
+>> +                _V_GPIO, _V_PPS_IN, _V_PPS_OUT, vsense_trigger, wlan1_adc0,
+>> +                wlan1_adc1, wlan2_adc0, wlan2_adc1 ]
+>> +
+>> +      drive-strength:
+>> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
+>> +        description:
+>> +          Selects the drive strength for the specified pins, in mA.
+> 
+> Again, why do you need to duplicate. The yaml is weak in me, but I
+> think you're effectively subclassing
+> "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state", right? It has the
+> exact same definition of drive-strength. Why duplicate it?
+
+Yes, this can be dropped.
+
+> 
+> 
+>> +      bias-pull-down: true
+>> +      bias-pull-up: true
+>> +      bias-disable: true
+>> +      input-enable: true
+>> +      output-high: true
+>> +      output-low: true
+> 
+> Again, maybe the above properties aren't needed? Don't you inherit
+> them from tlmm-common?
+
+From tlmm-common yes, however without this and
+additionalProperties:false we would accept everything from pincfg-node
+which too much. The binding/hardware does not support all of them, I think.
 
 Best regards,
 Krzysztof
