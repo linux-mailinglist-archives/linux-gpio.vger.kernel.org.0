@@ -2,246 +2,192 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 810A0600152
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 18:30:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40AEE600181
+	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 19:01:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229774AbiJPQaO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Oct 2022 12:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
+        id S229635AbiJPRBR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Oct 2022 13:01:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbiJPQaM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 12:30:12 -0400
-Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8529121274
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:30:09 -0700 (PDT)
-Received: by mail-qv1-xf2f.google.com with SMTP id df9so6214215qvb.9
-        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 09:30:09 -0700 (PDT)
+        with ESMTP id S229683AbiJPRBQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 13:01:16 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA26932AB3
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 10:01:14 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id l28so6524277qtv.4
+        for <linux-gpio@vger.kernel.org>; Sun, 16 Oct 2022 10:01:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RLCLC6l28ICU61ZnkvKWzFsSdviEqb8/d437SYfHEsU=;
-        b=vXo9/lRaSIWx/kxotVGOjg4r7JjB2OFbP2QRA6HDJIPG/sOxBY1wGyAc6lABBOpNxn
-         xngWfaVyc5NAZ569gS40OX7ZHOgmvvbOV4s9BaR5gtySUasE0MshJ7HhqeXIPWO2JzH0
-         WatHzyQtFddsySVB9cVchCX0frIrRqrAvGHa6pRP0g++BV0D73BoYCPP3z1pJVtRSZx0
-         SJsOjZxJeV48sFvRzkYeSsIxxeMdOIAxvMPtPqXhPYla5NeWhOgNwLgkN8m9AuYOkfA3
-         JG0dqDIrnHlfg5l0AHRM6ToIJ2KLhDbY+gASCv6xGdHQmF8H7tGFvpLCj+GuSYrzPxkq
-         jk/w==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oKWTzuIQ+UY7Vl2aQL/YutH5RFr6mmoFL47bEWvwb5E=;
+        b=TrvYmb1rvRW3Zcbp3ShULpfNM4Z8vU9dzlqLH58nTvu1nLSXFTMLxwbrS4LyYaJjFM
+         B40lkW0rhAaZJjfm82OWQ9h7VniqIRkbb08RbRMKBrYak8tN+QoBiBad3MZzfW5cWlIZ
+         kW3klK6Xmq3GE/dJql/pxnoyaG//eBGJP4ClJvifdaMKyjY2vL6Quwi5eevC1KOR5ojx
+         5vACME6fywo3d0H2qbej6bQGrEHAxH9S2rCYdQ4D2VZpvpY/RWX8k3wKjsNSeiAVVWa3
+         jSDPO1uWasXQdWmSeftEEOz5Cxr6jh7LrJChQOIsOO3shqnch8xHFarShUA+3e4yelIm
+         IIeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RLCLC6l28ICU61ZnkvKWzFsSdviEqb8/d437SYfHEsU=;
-        b=XFC+Nlpgc2OmauTR5zlFz8wjdXANrds97u8YzMXmihNhdtxGjlBivBdULUbhB2J0FI
-         xkv5SfhcKikd8r2G4iH+i66xI1NoX+QROyZn/YEFygylVY0nCEmfEMjR4f05T6X2/EAh
-         wHrgVRV15ZkxemEpI8LtmertIxLoynY1Qylk+vOMTF96bo7kq/gAaW1JDRmyMtTQFO4m
-         yeCSMg5AksbjjSA0mtTVSt5C6kYLT8QBW5/YfHvJj3L/MVimfXbVqGkiIIx6+2CeLRKt
-         e6AI5fMiXHxG4OSGNE2paZoVGnYYP8WA1hTxY9Ji4XDdPbnoA2hWRpXXGLeEEF2i5sSr
-         Cf6A==
-X-Gm-Message-State: ACrzQf0Awg+uLPYYEOE1oGG2MIgkhmNhL8+dOH8TY7re50P4VujjeQhQ
-        mqY2MfpKHJlp25/amfcLBwEpn6yZgQanRw==
-X-Google-Smtp-Source: AMsMyM5F3K5BfFAzBBmvcY1mpeisDu1Tejr9nvTu8Q6o7f7Gi9HiOPuItDv1dTpBKnyfUvDK/3kKNA==
-X-Received: by 2002:ad4:5f4f:0:b0:4b1:db1e:6c01 with SMTP id p15-20020ad45f4f000000b004b1db1e6c01mr5707261qvg.100.1665937808692;
-        Sun, 16 Oct 2022 09:30:08 -0700 (PDT)
-Received: from ?IPV6:2601:42:0:3450:9b13:d679:7b5b:6921? ([2601:42:0:3450:9b13:d679:7b5b:6921])
-        by smtp.gmail.com with ESMTPSA id 74-20020a37084d000000b006ee7923c187sm7099928qki.42.2022.10.16.09.30.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Oct 2022 09:30:07 -0700 (PDT)
-Message-ID: <01bc7712-30c8-ab6d-c795-abd0f941cea0@linaro.org>
-Date:   Sun, 16 Oct 2022 12:30:06 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v2 3/3] dt-bindings: pinctrl: qcom,sc7180: convert to
- dtschema
-Content-Language: en-US
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oKWTzuIQ+UY7Vl2aQL/YutH5RFr6mmoFL47bEWvwb5E=;
+        b=E49+PdVO6O41AK8g3t42dAWwk/WJdnVUXn5+qUb4MihVKdyCg3/l9uDi6RPODrgtsk
+         fSY2C/GI8+I0TffLAe0uLLuAH1q1aVPaOlvIekm3xtZMipvhLp98/Ao1quzHsrjS79aH
+         HDsRr0omhlgyEH4GDXbqNsR/SiZNBHoh2zv1svpORkq9llwZWfTZxPzFUTKwggYsWwC/
+         muSu+71Py550xpkHOGXUUYSrx8zL8C8dzue6x7gttmZp6qgxbpMfh4hLfiy0KozHkcoa
+         PXWBHWsoN5ZY2R8zhiqfecWDEzuXzTHHOignzjEAdkxZniTljjyH0Tujo69TFLMmSnzm
+         nPvQ==
+X-Gm-Message-State: ACrzQf2upuIL8NA+PcVRnQJ+8XSMXMH45VD/HE5osFVbyE9SVL9Hg8D1
+        wlAhNX9ktRnk98cptvATk3kZWQ==
+X-Google-Smtp-Source: AMsMyM6w8w/mwUZmNLo6F7MwrJthXFsOG4ohNvdOIFZo+F7hNq5BOjJTakGx+dvaMpw0KoicpDAsIQ==
+X-Received: by 2002:ac8:5908:0:b0:39c:d7dd:14e9 with SMTP id 8-20020ac85908000000b0039cd7dd14e9mr5848176qty.623.1665939673837;
+        Sun, 16 Oct 2022 10:01:13 -0700 (PDT)
+Received: from krzk-bin.hsd1.pa.comcast.net ([2601:42:0:3450:9b13:d679:7b5b:6921])
+        by smtp.gmail.com with ESMTPSA id q6-20020a05620a0d8600b006ce7bb8518bsm7539967qkl.5.2022.10.16.10.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Oct 2022 10:01:12 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        Sivaprakash Murugesan <sivaprak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-References: <20221013184700.87260-1-krzysztof.kozlowski@linaro.org>
- <20221013184700.87260-3-krzysztof.kozlowski@linaro.org>
- <CAD=FV=UvuiU2GhjTwSxu-SK8C6ovLTwyakf55GRs_g-8b+caUQ@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <CAD=FV=UvuiU2GhjTwSxu-SK8C6ovLTwyakf55GRs_g-8b+caUQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v5 00/34] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM pinctrl schema warnings (third set)
+Date:   Sun, 16 Oct 2022 13:00:01 -0400
+Message-Id: <20221016170035.35014-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/10/2022 14:02, Doug Anderson wrote:
-> Hi,
-> 
-> On Thu, Oct 13, 2022 at 11:49 AM Krzysztof Kozlowski
-> <krzysztof.kozlowski@linaro.org> wrote:
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml
->> new file mode 100644
->> index 000000000000..464f1031d15d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sc7180-pinctrl.yaml
-> 
-> [ ... cut ... ]
-> 
->> @@ -0,0 +1,162 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,sc7180-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm SC7180 TLMM pin controller
->> +
->> +maintainers:
->> +  - Bjorn Andersson <andersson@kernel.org>
->> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> +
->> +description:
->> +  Top Level Mode Multiplexer pin controller in Qualcomm SC7180 SoC.
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,sc7180-pinctrl
->> +
->> +  reg:
->> +    maxItems: 3
->> +
->> +  reg-names:
->> +    items:
->> +      - const: west
->> +      - const: north
->> +      - const: south
->> +
->> +  interrupts: true
->> +  interrupt-controller: true
->> +  "#interrupt-cells": true
->> +  gpio-controller: true
->> +  "#gpio-cells": true
->> +  gpio-ranges: true
->> +  wakeup-parent: true
-> 
-> Do you need interrupts/interrupt-controller/.../... ? Below you
-> include allOf "/schemas/pinctrl/qcom,tlmm-common.yaml". Won't you
-> magically get those from there? Why do you need to duplicate this?
+Hi,
 
-There is additionalProperties:false, so every property from referenced
-schema has to be included.
+Changes since v4
+================
+1. Drop drive-strength (included by common TLMM node).
 
-The true solution would be to switch to unevaluatedProperties:false but
-then we accept all properties from:
-1. qcom,tlmm-common.yaml - not a problem, we already mention all of them
-here with :true
-2. pinctrl.yaml - we would now allow to use pinctrl-use-default.
-3. any other future common properties.
+Changes since v3
+================
+1. All patches with subject: "use common TLMM schema":
+   Drop properties and required items which are already provided by common TLMM
+   schema.
+   The change against v3 is non-trivial, however I retained reviewed-by tags.
+2. Add Rb tags.
 
-> 
-> 
->> +  gpio-reserved-ranges:
->> +    minItems: 1
->> +    maxItems: 60
->> +
->> +  gpio-line-names:
->> +    maxItems: 119
->> +
->> +patternProperties:
->> +  "-state$":
->> +    oneOf:
->> +      - $ref: "#/$defs/qcom-sc7180-tlmm-state"
->> +      - patternProperties:
->> +          "-pins$":
->> +            $ref: "#/$defs/qcom-sc7180-tlmm-state"
->> +        additionalProperties: false
->> +
->> +$defs:
->> +  qcom-sc7180-tlmm-state:
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        items:
->> +          oneOf:
->> +            - pattern: "^gpio([0-9]|[1-9][0-9]|10[0-9]|11[0-8])$"
->> +            - enum: [ sdc1_rclk, sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk,
->> +                      sdc2_cmd, sdc2_data, ufs_reset ]
->> +        minItems: 1
->> +        maxItems: 36
->> +
->> +      function:
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +
->> +        enum: [ adsp_ext, agera_pll, aoss_cti, atest_char, atest_char0,
->> +                atest_char1, atest_char2, atest_char3, atest_tsens,
->> +                atest_tsens2, atest_usb1, atest_usb10, atest_usb11,
->> +                atest_usb12, atest_usb13, atest_usb2, atest_usb20, atest_usb21,
->> +                atest_usb22, atest_usb23, audio_ref, btfm_slimbus, cam_mclk,
->> +                cci_async, cci_i2c, cci_timer0, cci_timer1, cci_timer2,
->> +                cci_timer3, cci_timer4, cri_trng, dbg_out, ddr_bist, ddr_pxi0,
->> +                ddr_pxi1, ddr_pxi2, ddr_pxi3, dp_hot, edp_lcd, gcc_gp1,
->> +                gcc_gp2, gcc_gp3, gpio, gp_pdm0, gp_pdm1, gp_pdm2, gps_tx,
->> +                jitter_bist, ldo_en, ldo_update, lpass_ext, mdp_vsync,
->> +                mdp_vsync0, mdp_vsync1, mdp_vsync2, mdp_vsync3, mi2s_0, mi2s_1,
->> +                mi2s_2, mss_lte, m_voc, pa_indicator, phase_flag, PLL_BIST,
->> +                pll_bypassnl, pll_reset, prng_rosc, qdss, qdss_cti,
->> +                qlink_enable, qlink_request, qspi_clk, qspi_cs, qspi_data,
->> +                qup00, qup01, qup02_i2c, qup02_uart, qup03, qup04_i2c,
->> +                qup04_uart, qup05, qup10, qup11_i2c, qup11_uart, qup12,
->> +                qup13_i2c, qup13_uart, qup14, qup15, sdc1_tb, sdc2_tb,
->> +                sd_write, sp_cmu, tgu_ch0, tgu_ch1, tgu_ch2, tgu_ch3,
->> +                tsense_pwm1, tsense_pwm2, uim1, uim2, uim_batt, usb_phy, vfr_1,
->> +                _V_GPIO, _V_PPS_IN, _V_PPS_OUT, vsense_trigger, wlan1_adc0,
->> +                wlan1_adc1, wlan2_adc0, wlan2_adc1 ]
->> +
->> +      drive-strength:
->> +        enum: [2, 4, 6, 8, 10, 12, 14, 16]
->> +        description:
->> +          Selects the drive strength for the specified pins, in mA.
-> 
-> Again, why do you need to duplicate. The yaml is weak in me, but I
-> think you're effectively subclassing
-> "qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state", right? It has the
-> exact same definition of drive-strength. Why duplicate it?
+Changes since v2
+================
+1. ipq6018-cp01-c1: do not switch to blsp1 (Robert).
+2. pinctrl: qcom,ipq6018: correct BLSP6->BLSP0 functions: new patch.
+3. Drop quotes from $ref when not needed (Rob).
+4. Add Rb tags. Few patches from v1 got review from Rob, but I changed them in
+   v2 significantly, so I did not keep these Rb tags.
 
-Yes, this can be dropped.
+Changes since v1
+================
+v1: https://lore.kernel.org/linux-devicetree/20220924080459.13084-1-krzysztof.kozlowski@linaro.org/T/#t
+1. As Stephan suggested, move check for function on non-GPIO pins to common
+   TLMM schema.  This affects few commits in the set named:
+   "use common TLMM schema"
+   "do not require function on non-GPIOs"
 
-> 
-> 
->> +      bias-pull-down: true
->> +      bias-pull-up: true
->> +      bias-disable: true
->> +      input-enable: true
->> +      output-high: true
->> +      output-low: true
-> 
-> Again, maybe the above properties aren't needed? Don't you inherit
-> them from tlmm-common?
+Overview
+========
+This is the third, independent patchset around Qualcomm pinctrl in recent days:
+1. First round of TLMM fixes: merged
+2. LPASS fixes:
+   https://lore.kernel.org/linux-devicetree/20220927153429.55365-1-krzysztof.kozlowski@linaro.org/T/#t
+3. ARMv7 TLMM fixes: *THIS PATCHSET*
+4. ARMv8 remaining TLMM fixes:
+   https://lore.kernel.org/linux-devicetree/20220930192954.242546-1-krzysztof.kozlowski@linaro.org/
+5. Fifth clean - styles and using common TLMM schema:
+   https://lore.kernel.org/linux-arm-msm/20221011172358.69043-1-krzysztof.kozlowski@linaro.org/T/#m277d25a5f3e9d10ca8221a7fba62ca468a67a60b
 
-From tlmm-common yes, however without this and
-additionalProperties:false we would accept everything from pincfg-node
-which too much. The binding/hardware does not support all of them, I think.
+Dependencies
+============
+1. No dependencies.
+2. dt-bindings are independent of DTS patches.
 
 Best regards,
 Krzysztof
+
+Krzysztof Kozlowski (34):
+  arm64: dts: qcom: ipq6018-cp01-c1: use BLSPI1 pins
+  arm64: dts: qcom: ipq6018: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: sdx55: add gpio-ranges to TLMM pinctrl
+  ARM: dts: qcom: sdx55: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8226: align TLMM pin configuration with DT schema
+  ARM: dts: qcom: msm8974: align TLMM pin configuration with DT schema
+  dt-bindings: pinctrl: qcom,tlmm-common: add common check for function
+  dt-bindings: pinctrl: qcom,ipq6018: add qpic_pad function
+  dt-bindings: pinctrl: qcom,ipq6018: correct BLSP6->BLSP0 functions
+  dt-bindings: pinctrl: qcom,ipq6018: increase number of pins in pinmux
+  dt-bindings: pinctrl: qcom,ipq6018: fix matching pin config
+  dt-bindings: pinctrl: qcom,ipq6018: use common TLMM schema
+  dt-bindings: pinctrl: qcom,ipq6018: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8226: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8226: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8226: add functions and input-enable
+  dt-bindings: pinctrl: qcom,msm8226: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,msm8909-tlmm: fix indentation in example
+  dt-bindings: pinctrl: qcom,msm8953: fix matching pin config
+  dt-bindings: pinctrl: qcom,msm8953: use common TLMM schema
+  dt-bindings: pinctrl: qcom,msm8953: fix indentation in example
+  dt-bindings: pinctrl: qcom,mdm9607: do not require function on
+    non-GPIOs
+  dt-bindings: pinctrl: qcom,mdm9607: fix indentation in example
+  dt-bindings: pinctrl: qcom,qcm2290: fix matching pin config
+  dt-bindings: pinctrl: qcom,qcm2290: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx55: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sdx55: fix indentation in example
+  dt-bindings: pinctrl: qcom,sdx65: fix matching pin config
+  dt-bindings: pinctrl: qcom,sdx65: use common TLMM schema
+  dt-bindings: pinctrl: qcom,sc7280: fix matching pin config
+  dt-bindings: pinctrl: qcom,sc8280xp: fix indentation in example
+    (remaining piece)
+
+ .../pinctrl/qcom,ipq6018-pinctrl.yaml         | 106 +++++++-----------
+ .../pinctrl/qcom,mdm9607-pinctrl.yaml         |  23 ++--
+ .../pinctrl/qcom,msm8226-pinctrl.yaml         |  98 +++++++---------
+ .../bindings/pinctrl/qcom,msm8909-tlmm.yaml   |  64 +++++------
+ .../pinctrl/qcom,msm8953-pinctrl.yaml         |  92 ++++++---------
+ .../pinctrl/qcom,qcm2290-pinctrl.yaml         |  52 ++-------
+ .../bindings/pinctrl/qcom,sc7280-pinctrl.yaml |  14 ++-
+ .../pinctrl/qcom,sc8280xp-pinctrl.yaml        |   4 +-
+ .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml  |  90 ++++++---------
+ .../bindings/pinctrl/qcom,sdx65-pinctrl.yaml  |  50 +++------
+ .../bindings/pinctrl/qcom,tlmm-common.yaml    |  20 +++-
+ arch/arm/boot/dts/qcom-apq8026-lg-lenok.dts   |   6 +-
+ arch/arm/boot/dts/qcom-msm8226.dtsi           |  24 ++--
+ .../qcom-msm8974-lge-nexus5-hammerhead.dts    |  30 ++---
+ .../boot/dts/qcom-sdx55-telit-fn980-tlb.dts   |  45 +++-----
+ arch/arm/boot/dts/qcom-sdx55.dtsi             |   1 +
+ arch/arm64/boot/dts/qcom/ipq6018-cp01-c1.dts  |   6 +-
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi         |   4 +-
+ 18 files changed, 296 insertions(+), 433 deletions(-)
+
+-- 
+2.34.1
 
