@@ -2,110 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B2176002E8
-	for <lists+linux-gpio@lfdr.de>; Sun, 16 Oct 2022 20:40:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E251600404
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 00:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbiJPSkC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 16 Oct 2022 14:40:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33412 "EHLO
+        id S229763AbiJPW6V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 16 Oct 2022 18:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbiJPSkC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 14:40:02 -0400
-Received: from mail-io1-xd2c.google.com (mail-io1-xd2c.google.com [IPv6:2607:f8b0:4864:20::d2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0565620994;
-        Sun, 16 Oct 2022 11:40:00 -0700 (PDT)
-Received: by mail-io1-xd2c.google.com with SMTP id y80so7580407iof.3;
-        Sun, 16 Oct 2022 11:39:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=er//qg/gl4dGP2tGaPp0ROa9zLnweqgMmV1YWZYYP7c=;
-        b=VLlF0F3ix3yIubo5GyNOzrxMT9uWk3plyHN40JmolDouSrQ6S1EkrNOya03i9KYYee
-         Pdev33Tl7wz7AOBvwkIWQLGgDzO0xQkh+PhQREIzD1GZPnPRO/lcMf1VWMop9hq358fl
-         aXOTiHnPm7vzpKXFYAJcnkfoGhLNd0RFOM2wNTECtw4VAB3Z8WkZM6t4+8EN3t5JCW4L
-         0kDq5AgEHKFhEyBJPfvXQmLC4Jb6kCZhJVx/oy7N6XuJqZhwJVR2VkREM2wKA0uzh8Fk
-         UIavRDjcsJugiUVfEo2acS8siEp0mDsbdgjZfIVNnTI51xK3B2T9kTvnL0L4+W4wKQoU
-         tMlA==
+        with ESMTP id S229759AbiJPW6U (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 16 Oct 2022 18:58:20 -0400
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6512132B9B;
+        Sun, 16 Oct 2022 15:58:19 -0700 (PDT)
+Received: by mail-oi1-f180.google.com with SMTP id j188so10488728oih.4;
+        Sun, 16 Oct 2022 15:58:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=er//qg/gl4dGP2tGaPp0ROa9zLnweqgMmV1YWZYYP7c=;
-        b=mMm23AdkgG1EnOyPnxxR3zgNWvxXWVThECAzYiCnBKBHI4P1kJb3NzA6i4MoP/lMwZ
-         7JhImFN/QqoBXAJDvFKDvRE8LPpgyIETuDJpCWD0QMjtwlAOgb4sOzYI+944OFg2vR1v
-         K5L5Vx7Lc+SG+ofpWwVy7Hwb8T6MqtCZGK+3CGRYqvuDz33bLIpzqOBSNa03IAUb0cuK
-         4/xzn9SsV8M/giTZWHVbz+5WYu1t1cn9EubagMfDP5w/V60Ba6Rbcyuo5GJAvg2nr6/q
-         i8gJP5ztRH2MWFsJXEUUDwO1fe2Hv4cYA10hbDY6S0c2qFUvW6njcP10nOAi0gNZSH0t
-         Frew==
-X-Gm-Message-State: ACrzQf0NAfdEwFvVIzjl/8Zkhf/RGf6li8JtmtP9Y23bXc8eg/b5UADb
-        UnNtauaM8lW9uK2lQ+9kW1aEB3/2GEv5EPnV0Ps=
-X-Google-Smtp-Source: AMsMyM418IYKdUWCL2jLsEzw/ZxVzVBP8CpmwVFc41Ps8SCy1jto6Dznc6/8LG+UqyyPQURKmvlBPoxB8eZ05lpVVqA=
-X-Received: by 2002:a6b:6716:0:b0:6bc:113c:22a2 with SMTP id
- b22-20020a6b6716000000b006bc113c22a2mr3022066ioc.12.1665945599378; Sun, 16
- Oct 2022 11:39:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
- <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
- <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com> <GSPOJR.M4XZ4D03G60F@crapouillou.net>
- <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
-In-Reply-To: <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
-From:   Siarhei Volkau <lis8215@gmail.com>
-Date:   Sun, 16 Oct 2022 21:39:48 +0300
-Message-ID: <CAKNVLfbePJQN07GfhqAs-opm23poWsL0o-DkV=n-f9+H7Y7rpg@mail.gmail.com>
-Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
- JZ4750/JZ4755 SoCs
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
-        kbuild-all@lists.01.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wMcEKLfXHC8WJ/8bltP/oPm7ijzPBMVfJNcHQbbtBk4=;
+        b=5NWGXJBh6bSFE9QNAb26hhjiJ4OJcCbGGGddDk4pgstJKttKTf3J2akzmgrNhkLN/0
+         YRCUF2nJa4w0lpPLg2Uk9B1AYRZubYdJezj+Fo63ft2ZujvISRGD+0vPQQtxDGyyU13B
+         iFCTDYNASznxaIkmOZmZx+i0okl6Z/R7ikuR8knWIzMriePvfM8G5bOACSrMB8It3Znc
+         U4QYzlbFZTL6K5OUt/ITpK6TQLflRXVwg5IYUbuafEpUcuLQzuYI4Eha8tTGNzVllrQo
+         Z0f3XnNS8aP95vOR5ayhUd9HYRo8LhxzQccMJm+g4UkmJAw0qOlDy9nfli2y60s60zg3
+         i7yw==
+X-Gm-Message-State: ACrzQf3HqnUjTbwz16uTIv88z3M3XfjbyPtpSiMRXYZS3SABTGAB8kyI
+        rTeiunL2VhaFr8y4k58HqA==
+X-Google-Smtp-Source: AMsMyM47PgOfX4a6lPlMXQ+9FQITCwnpDl6EyT85QPDJkXmddUdx8FkDK8hCRY5jZJ8NHfKlLhEdZg==
+X-Received: by 2002:a05:6808:1305:b0:355:13bc:288c with SMTP id y5-20020a056808130500b0035513bc288cmr3763809oiv.213.1665961098459;
+        Sun, 16 Oct 2022 15:58:18 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id 52-20020a9d0bb7000000b006619f38a686sm4099451oth.56.2022.10.16.15.58.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Oct 2022 15:58:17 -0700 (PDT)
+Received: (nullmailer pid 3904623 invoked by uid 1000);
+        Sun, 16 Oct 2022 22:58:18 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Melody Olvera <quic_molvera@quicinc.com>
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-mips@vger.kernel.org,
-        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>
+In-Reply-To: <20221014221025.7372-2-quic_molvera@quicinc.com>
+References: <20221014221025.7372-1-quic_molvera@quicinc.com> <20221014221025.7372-2-quic_molvera@quicinc.com>
+Message-Id: <166596080219.3896198.11795282837604799595.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and QRU1000 pinctrl bindings
+Date:   Sun, 16 Oct 2022 17:58:18 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-=D1=87=D1=82, 13 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 21:56, Siarhei Vol=
-kau <lis8215@gmail.com>:
+On Fri, 14 Oct 2022 15:10:24 -0700, Melody Olvera wrote:
+> Add documentation details for device tree bindings for QDU1000 and QRU1000
+> TLMM devices.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  .../pinctrl/qcom,qdu1000-pinctrl.yaml         | 159 ++++++++++++++++++
+>  1 file changed, 159 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-pinctrl.yaml
+> 
 
-> > Just disable the divider in ingenic_fixup_fdt() in
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> I'll check that.
+yamllint warnings/errors:
 
-I checked that approach: serial seems to be working as expected,
-but not all the time: there's a time period when the CGU driver
-started but serial console driver is still early one.
-In my case UART produces garbage at that period since CGU
-needs to enable clock divider back: ext is 24MHz but 12MHz
-required for audio codec and USB to function properly.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-pinctrl.example.dts:23.26-59.11: Warning (unit_address_format): /example-0/pinctrl@03000000: unit name should not have leading 0s
+Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-pinctrl.example.dtb:0:0: /example-0/pinctrl@03000000: failed to match any schema with compatible: ['qcom,qdu1000-pinctrl']
 
-So I think Arnd's approach:
+doc reference errors (make refcheckdocs):
 
-> the hardware should already be in a working state,
-> with no need to touch it during early boot.
+See https://patchwork.ozlabs.org/patch/
 
-shall resolve the problem, although I can't check it on all supported
-hardware.
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
 
-BR,
-Siarhei
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
+
