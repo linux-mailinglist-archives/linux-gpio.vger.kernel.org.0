@@ -2,121 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED87560156C
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 19:32:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F0E601668
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 20:35:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJQRcD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 13:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51646 "EHLO
+        id S230334AbiJQSfo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 14:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230240AbiJQRbw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 13:31:52 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3CAC2037C
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 10:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666027900; x=1697563900;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=fVLesEFrGXpUNhbt8j4xIAYsHW9EviRnKYXAfLQyiV4=;
-  b=SdPQQJJkdc+MtJ+3/GXaqs65X9NIxW4d/BH03UfNFRaIiVXey8UnaBF1
-   FU0rG54VIhwt7x46yQ52uDoUOeAPiCNWOyjN4/qwMjsxfgZB8tiQYrWeY
-   ibTm42kZkzFzyH9AG27svCzs901xyv2RMjMedqKDd8W4YjaqX4NkxDE43
-   zaFOJYuj7r5IF9XKXygDb9/OpoUjV2EnmqvZfMmH/MreO6U7zvLVdEmMz
-   RF+YABInQylHP8TeKSzKhO+TCPHVV7bofCnpAUgv9yuIwBMlPwIMDsQgg
-   /24XpJO2LHdJHS3SbWs8e7cDBA6of30+lKfI1xRJefvz3pLNCU6p2cwJQ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="392172113"
-X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="392172113"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 10:31:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="873551962"
-X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="873551962"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Oct 2022 10:31:06 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1okTxA-008wTA-0p;
-        Mon, 17 Oct 2022 20:31:04 +0300
-Date:   Mon, 17 Oct 2022 20:31:04 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Nate Drude <nate.d@variscite.com>,
-        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Peter Robinson <pbrobinson@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/2] gpio: pca953x: Add interrupt mask support for
- pca953x chips
-Message-ID: <Y02RWJVvybzvNbaA@smile.fi.intel.com>
-References: <20221010132007.924810-1-levente.revesz@eilabs.com>
- <CACRpkdbVCw=b-Hot83UpqmzaBSYGT0VY0g3QcgHNaPke4=grgA@mail.gmail.com>
+        with ESMTP id S229973AbiJQSfn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 14:35:43 -0400
+Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFCF6C942;
+        Mon, 17 Oct 2022 11:35:42 -0700 (PDT)
+Received: by mail-ot1-f47.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so6303680otu.7;
+        Mon, 17 Oct 2022 11:35:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aOFeRgc8x0+ScO8vLGWZow6v2G5REBOQcbT+S+kaKbM=;
+        b=BI8jNRiVYBoKSDk1eW9VnkA+6UEvIMnQwx5FdIWMdjmxCQA3GWlr7ysU6zgl72kpia
+         hki9TXhS/8i+7NFQ9bQ1iQ3mIqnVo8IIrclUkVZkqWLAy8gW1/c2msy1iPQQokeltRd7
+         3REGCvsl/lmY8iMkPCtKsTfpUMMWyjefgA0UHnn7NxCfL85tjdnl253dRwAZxKNFVCA0
+         Q8ehwIb7MN3pp7/lRBcFvI7MOB3iDeT+ZXHpmQE1kEbD09r/1aEnv53F9eTDHB8elgCA
+         EWZXiDJ4cA0DfIwZtCP9Ot0iwNZMy7iq4vGzO0XrA1AWeOLHuD8bb7pTf6HpojyJilTc
+         P9iw==
+X-Gm-Message-State: ACrzQf3Py5J67aIID54sG29WDHu5/aj7z4JXaUtbL2K9N9/hlwPlVSNI
+        3Juxi3yGSolTUxdi+qxoXw==
+X-Google-Smtp-Source: AMsMyM67dYJeLL/IE6ygb43XYBBFNxbd3kYg7iYHm2CZ++WJg8fR+93mmKUh6kMD67+Rzq4Y4l4YDA==
+X-Received: by 2002:a05:6830:246b:b0:661:b802:41e4 with SMTP id x43-20020a056830246b00b00661b80241e4mr5605066otr.56.1666031741270;
+        Mon, 17 Oct 2022 11:35:41 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i9-20020aca2b09000000b00354b1edb60fsm4593995oik.32.2022.10.17.11.35.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 11:35:40 -0700 (PDT)
+Received: (nullmailer pid 2256306 invoked by uid 1000);
+        Mon, 17 Oct 2022 18:35:41 -0000
+Date:   Mon, 17 Oct 2022 13:35:41 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom: drop minItems equal to
+ maxItems
+Message-ID: <166603174058.2256267.12966526494787404406.robh@kernel.org>
+References: <20221016173625.53769-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbVCw=b-Hot83UpqmzaBSYGT0VY0g3QcgHNaPke4=grgA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221016173625.53769-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 12:02:16PM +0200, Linus Walleij wrote:
-> On Mon, Oct 10, 2022 at 3:23 PM Levente Révész
-> <levente.revesz@eilabs.com> wrote:
+On Sun, 16 Oct 2022 13:36:25 -0400, Krzysztof Kozlowski wrote:
+> If minItems are missing, they are implicitly equal to maxItems.
+> Dropping redundant minItems simplifies a bit the binding.
 > 
-> > Some chips in the pca953x family have an interrupt mask register in
-> > addition to the standard 4 registers:
-> >
-> >     0: INPUT
-> >     1: OUTPUT
-> >     2: POLARITY
-> >     3: CONFIGURATION
-> >     4: INTERRUPT MASK
-> >
-> > Chips with this register:
-> >
-> >     - pca9505
-> >     - pca9506
-> >     - pca9698
-> >
-> > The interrupt mask register defaults to all interrupts disabled, so
-> > interrupts are unusable unless the driver sets this register.
-> >
-> > Interrupt masking is already implemented for pcal chips. That
-> > implementation could be extended to support this register as well.
-> >
-> > This patch series adds support for the interrupt mask register in
-> > mentioned pca chips.
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml          | 1 -
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml  | 1 -
+>  2 files changed, 2 deletions(-)
 > 
-> Added some PCA953x users to the To-line, lots of people use
-> this driver so please review!
 
-Thank you for Cc'ing me!
-
-At first glance I think this needs two prerequisite patches:
-
-1) convert _TYPE from bits to plain numbers, so we will have room
-   for up to 16 types;
-
-2) Introducing PCAL953X_TYPE.
-
-After this is done, the current series will be neater.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Acked-by: Rob Herring <robh@kernel.org>
