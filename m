@@ -2,213 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFF3601191
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 16:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98457601309
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 17:54:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230002AbiJQOvs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 10:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56212 "EHLO
+        id S231164AbiJQPyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 11:54:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiJQOvr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 10:51:47 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FD7B66A53;
-        Mon, 17 Oct 2022 07:51:47 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-132fb4fd495so13477702fac.12;
-        Mon, 17 Oct 2022 07:51:47 -0700 (PDT)
+        with ESMTP id S230513AbiJQPyG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 11:54:06 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951F26D9D1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 08:54:04 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id i20so4516162ual.4
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 08:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=U0zCDwy7x1U1zGqBki4r/ZJvsmrn+/rT/617UOGKydA=;
+        b=xzC0hJbznC20qMGVOeCudS0llCE2+Ji0tvm6pdOruXKD29fMTuywYm4XmoM2/1SbJT
+         8VINsy/d6/G1VA4cYVHU7CByaEQupiUxde1xH6gl28lkQSjda+EfoD52Qz4iJap+6Q5V
+         bCy+gPRuQi20G9i7lfNBidBB4HM2d+QAzdcMwkJpJHQAbfBgSVa/UklOxsigzsz0xjvF
+         t6AJKiNRDDxc9P/1wfyZF8NL18xzCLQf6sHcknF9J/zzb5QbFTWDd7tj/t260vUV1RrG
+         6BSi6ENCLkkHRMzk4pU4aeA9koYr+fJNfqONZEz45D1EH42BJwwXzdfyCUfYj2hC0p/m
+         68ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IQmjr/EyIPHY20SWOjqqwfn8Tg3ceyCJTg73Ix2QS18=;
-        b=X2hfTdHHyG/hQukgD4uFSWnxgkmqQ/s2O7LWr8EyCAjSGIrp+oGze3HLSqiLSa3btr
-         KQRtdB9yZT8nxfdEeVF9cbkMKFo9vHLi+Dn/Y2McFQ6kv4PMVAPe0ml0PuSvCqep+uoq
-         9fhSFdWRIwfUL2tqYEgw9yncPJ0OVtj1+O7lQ7gIiG9SCbz4Y2a6qFasIT3YOPsLEWfN
-         3BMSuI4cDxHruZC8l1SWpCab3/J/XG1FSZ3KFNweBjYYQ8HeGtBAoyH+0UfPXznZa6Ga
-         qyGiXNNqyI+7VD3MI5sCzrzLICxFVWU/rS+IA87a83QOhk60MAwHcp0snrOT37oZOWw3
-         +ZIw==
-X-Gm-Message-State: ACrzQf3F9J+cg4VDIHyU5rNUC0nMxKPuKtoiCOrmO4dKKcTiNei6WlKd
-        aqWLvk0YirN/mVsMwKJoUw==
-X-Google-Smtp-Source: AMsMyM75yYgNPRfaW7vnMPaMOyYJ/gLX0sihjW+W+vJh+8oI6JnRBro8AFX5LC0ESfiV4GGaJIpMpA==
-X-Received: by 2002:a05:6870:4798:b0:12c:fdf7:e948 with SMTP id c24-20020a056870479800b0012cfdf7e948mr5546720oaq.247.1666018306227;
-        Mon, 17 Oct 2022 07:51:46 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id h7-20020a9d61c7000000b00661c3846b4csm4883335otk.27.2022.10.17.07.51.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 07:51:45 -0700 (PDT)
-Received: (nullmailer pid 1450524 invoked by uid 1000);
-        Mon, 17 Oct 2022 14:51:46 -0000
-Date:   Mon, 17 Oct 2022 09:51:46 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] dt-bindings: soc: qcom: convert non-smd RPM
- bindings to dt-schema
-Message-ID: <20221017145146.GA1438783-robh@kernel.org>
-References: <20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org>
- <20221005-mdm9615-pinctrl-yaml-v2-5-639fe67a04be@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U0zCDwy7x1U1zGqBki4r/ZJvsmrn+/rT/617UOGKydA=;
+        b=RL2SzFkmOowRYRroMncq7msHh4jr+PqskMKADhAdIJQj0HlIJZm+e+aVNkyY7HZHqD
+         rvgxu1bjcMze776JghNdyN9M1i9FqoYMZWLlr5wiq3bBqf9iaVMFr51S6+a4omIdK7Rs
+         /84dgdKLTG5PHTJ6hMScOE7N4em/YWdfKVD9rU8mYocHlG/RRvmIe8+WNptaOJEHEqim
+         +rfE/9kxhZhaC3aMbXG9GlzMZK/LdJbGKddyGiHjd0WwFp3bJ5Fu6mQ7xFerTU9GBMdN
+         3+ON3WZ6Ep3Z/14zpuEma9MKooObkEJ2KTxIcT60KvDUQYOtALoBeF3L0qhuCPeCAVdI
+         8SHg==
+X-Gm-Message-State: ACrzQf3/iKDTYK6hjASJKoaRfgXjjYhjHXTfSZZvn0UEk8eOUoQViQgO
+        UZzXqWTcr5DutcLr49R+VAMqH/wjYv0+pZXO3Chpcg==
+X-Google-Smtp-Source: AMsMyM51VL4l4nyGUXkeiT1H5avDBYQm2Ghz5SIs90qVIihLLLuxaHmDDGQNNMMn/ROM4Z6bIP/sMpIN+8asYaYnWq8=
+X-Received: by 2002:ab0:39d9:0:b0:3e2:39a9:a986 with SMTP id
+ g25-20020ab039d9000000b003e239a9a986mr5171247uaw.81.1666022043596; Mon, 17
+ Oct 2022 08:54:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v2-5-639fe67a04be@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20221007145521.329614-1-brgl@bgdev.pl> <20221007145521.329614-3-brgl@bgdev.pl>
+ <Y0eBbUkzryyJZKwq@sol> <CAMRc=MfpGFUPntmBNKsyuheD7Enqxq=K+K2hsp24ru18mn0x2A@mail.gmail.com>
+ <Y01GcJbDKPdctduH@sol> <Y01dg+vTDKbdjcOI@smile.fi.intel.com>
+ <Y01hlUvj7cSdpCcx@sol> <Y01kYc8K8oStLz3g@smile.fi.intel.com>
+In-Reply-To: <Y01kYc8K8oStLz3g@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 17 Oct 2022 17:53:52 +0200
+Message-ID: <CAMRc=MfAVVpc_k9ZsAib1s5WCyThgmfTb46VCx7P8iuDKBpuoA@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v3 2/4] bindings: python: add examples
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 12:23:09PM +0200, Neil Armstrong wrote:
-> Convert the non-SMD RPM node bindings to dt-schema, the old txt bindings
-> are now removed since all bindings were converted.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 283 ---------------------
->  .../devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml |  99 +++++++
->  2 files changed, 99 insertions(+), 283 deletions(-)
+On Mon, Oct 17, 2022 at 4:19 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Oct 17, 2022 at 10:07:17PM +0800, Kent Gibson wrote:
+> > On Mon, Oct 17, 2022 at 04:49:55PM +0300, Andy Shevchenko wrote:
+> > > On Mon, Oct 17, 2022 at 08:11:28PM +0800, Kent Gibson wrote:
+> > > > On Mon, Oct 17, 2022 at 02:00:15PM +0200, Bartosz Golaszewski wrote:
+> > > > > On Thu, Oct 13, 2022 at 5:09 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > > On Fri, Oct 07, 2022 at 04:55:19PM +0200, Bartosz Golaszewski wrote:
+>
+> ...
+>
+> > > > > >         lvs = [ arg.split('=') for arg in sys.argv[2:] ]
+> > > >             lvs = [ (x,int(y)) for (x,y) in lvs ]
+> > > > > >         lines = [ x[0] for x in lvs ]
+> > > > > >         values = dict(lvs)
+> > > > >
+> > > >
+> > > > An extra pass to fix the int values.
+> > >
+> > > In Python we have map(), which I think is the best for that kind of job.
+> > >
+> >
+> > My understanding is map/filter is old school and list comprehensions
+> > have replaced map, as generators have replaced filter.
+> >
+> > i.e.
+> >     list(map(function, iterable))
+> > becomes
+> >     [function(x) for x in iterable]
+>
+> Definitely it does not cover all the cases map() is taking care of.
+> So it can't be old school :-)
+>
+> * Yes, in this particular case it may be map() or list comprehension.
+>   But I think with map() the two lines can become one.
+>
+> > Either way, what we are missing here is a parser function that gives us
+> > exactly the (offset,value) output we want from the command line string.
+> >
+> > Oh, and we need both the lines list and the values dict, both of which
+> > are easily created from the interim lvs.
+> >
+> > > > You could do it in one with a more appropriate parser function.
+> > >
+> > > It seems we need some Python guru to revisit the code, because to me
+> > > it looks a bit C:ish :-)
+> >
+> > The for loop or the list comprehension?
+> > Last I checked only one of those is available in C.
+> > And yeah, the for loop version reads as C, so not at all Pythonic,
+> > which is why I suggested the list comprehension.
+>
+> Yes, but I believe it does not utilize the powerfulness of the current Python.
+> Anyway, I'm not a Py guru, take my remarks with a grain of salt.
+>
 
+How about this?
 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml
-> new file mode 100644
-> index 000000000000..4e9df94ecd44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml
-> @@ -0,0 +1,99 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,ipc-rpm.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Resource Power Manager (RPM) over IPC
-> +
-> +description: |
+    lvs = list(
+        map(
+            lambda val: [val[0], Value(int(val[1]))],
+            [arg.split("=") for arg in sys.argv[2:]],
+        )
+    )
+    lines = [x[0] for x in lvs]
+    values = dict(lvs)
 
-Don't need '|' if no formatting to preserve.
+It's so much less readable but at least it's pythonic, look at those
+lambdas and comprehension lists and even a map! :)
 
-> +  This driver is used to interface with the Resource Power Manager (RPM) found
-> +  in various Qualcomm platforms. The RPM allows each component in the system
-> +  to vote for state of the system resources, such as clocks, regulators and bus
-> +  frequencies.
-> +
-> +maintainers:
-> +  - Bjorn Andersson <andersson@kernel.org>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,rpm-apq8064
-> +      - qcom,rpm-msm8660
-> +      - qcom,rpm-msm8960
-> +      - qcom,rpm-ipq8064
-> +      - qcom,rpm-mdm9615
-> +
-> +  reg: true
+Anyway - unlike the programming interface - these are just
+implementation details that can be always improved later.
 
-Need to define how many entries.
-
-> +
-> +  interrupts:
-> +    minItems: 3
-
-maxItems instead.
-
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: ack
-> +      - const: err
-> +      - const: wakeup
-> +
-> +  qcom,ipc:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +      - items:
-> +          - description: phandle to a syscon node representing the APCS registers
-> +          - description: u32 representing offset to the register within the syscon
-> +          - description: u32 representing the ipc bit within the register
-> +    description:
-> +      Three entries specifying the outgoing ipc bit used for signaling the RPM.
-> +
-> +patternProperties:
-> +  "(regulators|-regulators)$":
-
-Can be simplified to this:
-
-'-?regulators$'
-
-However, as there is no constraint as to what comes before the r or -, 
-the '-?' doesn't do anything. Either drop it or try to define the 
-preceeding part. Perhaps '^([a-z]+-)?regulators$' is what you wanted if 
-just 'regulators' is one case?
-
-
-> +    type: object
-> +    $ref: /schemas/regulator/qcom,ipc-rpm-regulator.yaml#
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-names
-> +  - qcom,ipc
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/mfd/qcom-rpm.h>
-> +
-> +    rpm@108000 {
-> +      compatible = "qcom,rpm-msm8960";
-> +      reg = <0x108000 0x1000>;
-> +      qcom,ipc = <&apcs 0x8 2>;
-> +
-> +      interrupts = <GIC_SPI 19 IRQ_TYPE_NONE>, <GIC_SPI 21 IRQ_TYPE_NONE>, <GIC_SPI 22 IRQ_TYPE_NONE>;
-> +      interrupt-names = "ack", "err", "wakeup";
-> +
-> +      regulators {
-> +        compatible = "qcom,rpm-pm8921-regulators";
-> +        vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
-> +
-> +        s1 {
-> +          regulator-min-microvolt = <1225000>;
-> +          regulator-max-microvolt = <1225000>;
-> +
-> +          bias-pull-down;
-> +
-> +          qcom,switch-mode-frequency = <3200000>;
-> +        };
-> +
-> +        pm8921_s4: s4 {
-> +          regulator-min-microvolt = <1800000>;
-> +          regulator-max-microvolt = <1800000>;
-> +
-> +          qcom,switch-mode-frequency = <1600000>;
-> +          bias-pull-down;
-> +
-> +          qcom,force-mode = <QCOM_RPM_FORCE_MODE_AUTO>;
-> +        };
-> +      };
-> +    };
-> 
-> -- 
-> b4 0.10.1
-> 
+Bart
