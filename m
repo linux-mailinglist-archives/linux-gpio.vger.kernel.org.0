@@ -2,84 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38F0E601668
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 20:35:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30D6E601674
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 20:38:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbiJQSfo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 14:35:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
+        id S230293AbiJQSil (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 14:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbiJQSfn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 14:35:43 -0400
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BFCF6C942;
-        Mon, 17 Oct 2022 11:35:42 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so6303680otu.7;
-        Mon, 17 Oct 2022 11:35:42 -0700 (PDT)
+        with ESMTP id S230110AbiJQSik (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 14:38:40 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E35C7295E;
+        Mon, 17 Oct 2022 11:38:39 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1364357a691so14251644fac.7;
+        Mon, 17 Oct 2022 11:38:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aOFeRgc8x0+ScO8vLGWZow6v2G5REBOQcbT+S+kaKbM=;
-        b=BI8jNRiVYBoKSDk1eW9VnkA+6UEvIMnQwx5FdIWMdjmxCQA3GWlr7ysU6zgl72kpia
-         hki9TXhS/8i+7NFQ9bQ1iQ3mIqnVo8IIrclUkVZkqWLAy8gW1/c2msy1iPQQokeltRd7
-         3REGCvsl/lmY8iMkPCtKsTfpUMMWyjefgA0UHnn7NxCfL85tjdnl253dRwAZxKNFVCA0
-         Q8ehwIb7MN3pp7/lRBcFvI7MOB3iDeT+ZXHpmQE1kEbD09r/1aEnv53F9eTDHB8elgCA
-         EWZXiDJ4cA0DfIwZtCP9Ot0iwNZMy7iq4vGzO0XrA1AWeOLHuD8bb7pTf6HpojyJilTc
-         P9iw==
-X-Gm-Message-State: ACrzQf3Py5J67aIID54sG29WDHu5/aj7z4JXaUtbL2K9N9/hlwPlVSNI
-        3Juxi3yGSolTUxdi+qxoXw==
-X-Google-Smtp-Source: AMsMyM67dYJeLL/IE6ygb43XYBBFNxbd3kYg7iYHm2CZ++WJg8fR+93mmKUh6kMD67+Rzq4Y4l4YDA==
-X-Received: by 2002:a05:6830:246b:b0:661:b802:41e4 with SMTP id x43-20020a056830246b00b00661b80241e4mr5605066otr.56.1666031741270;
-        Mon, 17 Oct 2022 11:35:41 -0700 (PDT)
+        bh=pM3Q3f2MnZ8Z3WgbxgHNgXPo0UnewxJXWkTQ3zu0TKQ=;
+        b=pNHlpJ6lmXqccKVXwzPnfIvF0RulDBbIVHbwTUNxyIWbD5Dhizlwoaq7eFF70AUY5t
+         acrXTtT9adal+oTyNDxNDvgQfiTWWS+smnSBWXU5fHQd6pAid07RNuD5R5nCJWz0qzR5
+         kMBAEQL1K6mnWFNgN8S36YixkmXb9/0PuJMNTFbxDS43AofL0LKoZYvpwI+Ese5aDTAR
+         evVVzsPLWBxVfY8HxEgBBimejv8nxNV0Ju6X3yrwybTjma3zOsvfqPNbsdPk3fXSuS7f
+         FW+lu1+b4dNY77zXnUd+z3+zJpBmv0L8QDhbHjhhm4MUf2ZwadKg9sAPBahB3I/e4qUH
+         3v4w==
+X-Gm-Message-State: ACrzQf2SrdeQxIO194ybETF5gQHa5xOgFk129UkCJrU/ugtSk0GbE5OA
+        SRbkCg4PqIVdltPUVD4osA==
+X-Google-Smtp-Source: AMsMyM6C+zeBBGZJCSwfY+2iIcyKtK+G52QfVwFRQWUOEop7c93WviJ7T/Dd5+I8Mhwj/kHB2jpgvw==
+X-Received: by 2002:a05:6870:c222:b0:133:3666:2047 with SMTP id z34-20020a056870c22200b0013336662047mr16592884oae.120.1666031918866;
+        Mon, 17 Oct 2022 11:38:38 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id i9-20020aca2b09000000b00354b1edb60fsm4593995oik.32.2022.10.17.11.35.39
+        by smtp.gmail.com with ESMTPSA id cn5-20020a056830658500b00661af2f9a1asm5142944otb.49.2022.10.17.11.38.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 11:35:40 -0700 (PDT)
-Received: (nullmailer pid 2256306 invoked by uid 1000);
-        Mon, 17 Oct 2022 18:35:41 -0000
-Date:   Mon, 17 Oct 2022 13:35:41 -0500
+        Mon, 17 Oct 2022 11:38:38 -0700 (PDT)
+Received: (nullmailer pid 2259604 invoked by uid 1000);
+        Mon, 17 Oct 2022 18:38:38 -0000
+Date:   Mon, 17 Oct 2022 13:38:38 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+Cc:     linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <andersson@kernel.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Iskren Chernev <iskren.chernev@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom: drop minItems equal to
- maxItems
-Message-ID: <166603174058.2256267.12966526494787404406.robh@kernel.org>
-References: <20221016173625.53769-1-krzysztof.kozlowski@linaro.org>
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,msm8974: convert to
+ dtschema
+Message-ID: <166603191824.2259548.13748226985219678312.robh@kernel.org>
+References: <20221017012225.8579-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221016173625.53769-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+In-Reply-To: <20221017012225.8579-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 16 Oct 2022 13:36:25 -0400, Krzysztof Kozlowski wrote:
-> If minItems are missing, they are implicitly equal to maxItems.
-> Dropping redundant minItems simplifies a bit the binding.
+On Sun, 16 Oct 2022 21:22:24 -0400, Krzysztof Kozlowski wrote:
+> Convert Qualcomm MSM8974 pin controller bindings to DT schema.  Keep the
+> parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, their children with
+> '-pins').
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  .../bindings/pinctrl/qcom,sc7280-lpass-lpi-pinctrl.yaml          | 1 -
->  Documentation/devicetree/bindings/pinctrl/qcom,sm6115-tlmm.yaml  | 1 -
->  2 files changed, 2 deletions(-)
+>  .../bindings/pinctrl/qcom,msm8974-pinctrl.txt | 121 ------------
+>  .../pinctrl/qcom,msm8974-pinctrl.yaml         | 179 ++++++++++++++++++
+>  2 files changed, 179 insertions(+), 121 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8974-pinctrl.yaml
 > 
 
-Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
