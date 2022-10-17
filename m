@@ -2,65 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91A7E600E71
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:01:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2A8B600E74
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229630AbiJQMA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 08:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
+        id S229959AbiJQMBe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 08:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbiJQMAn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:00:43 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928F356006
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:00:27 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id x66so2509835vsb.3
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:00:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=km+V5E5aIzDS+IP1JvWDTAhGFYlrvl+I0V8b88NktU0=;
-        b=guwOOyKsOlA8KiNFTYhIEfCh2tmNd8tGgCf1Tmc5A5GA7re9GuJfbvsBW0iwTGqzyE
-         sgo4mVVkoyxWlFJj7MSJFFO+y7xgFyr49rqojchP5sBOiu+7zY4t0OiBsctl6RRvj5z9
-         mdIWvQuAbxrnDigOYZDQnTCFU6ixQnTpaCEprk9PZJrKwL8BI6xB1R71R34mJYAZ46Pu
-         nfM0Jyuar1+zD4sUgzG8DjuzHTls/Bf+YGY2fhm6d6JoRlqQIIGiFv/WPCVmhPL3ZROS
-         rpHiWSzaBBdBygmXzeUivqRyXLIbsRaWb1YSZmC16Wpokb6uUVOmqggYYrZC5sXIJa7m
-         4HGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=km+V5E5aIzDS+IP1JvWDTAhGFYlrvl+I0V8b88NktU0=;
-        b=QaGAoWvPq4GGgxUIyN9uk5/sBrZWhX6tlMsFg3+r4jmv2HudSdBPqqUQSf9McvA3Wq
-         h9O9yOCLZG0udp8/Z8TYUjLtS6aOE6UmkHIi+706tzSjaFm+yJMKIzDv98WWTz0mQCj8
-         JeuYYeCEoV8ITzDTAFeJk6BPByonmomP7w9Utu7N0A96E3kYBdE9/moXmXMvIIufl+ns
-         rs6UzHrozI0ekfR8EeBcswKnDMZBLJMspdAzXaESErPnnROkgnKd5RQAPPH+gEPCWUCK
-         LOG5PCw9uIm8c1bVgKn3vleBxpNIg55BaYdNoEhO8Q9nCq4YtAkaYos0vTqE4rkbhset
-         JcOA==
-X-Gm-Message-State: ACrzQf0L2tvFZbLD3Uade7wTwSXl3zJ5dVBvJJQuUMC6cEd7clpyxiWD
-        PF3l3GTRR6XyE7lDvQqcvYGbK/saQBhf4R8kxXz6sA==
-X-Google-Smtp-Source: AMsMyM4yvZNVB0M8le9FPMgsekoVSi8wpRbuYIGHdapHZ5b/p7wycmfv4hS9klAtIliLNBYgti3K31X9Onji6ieiGuo=
-X-Received: by 2002:a67:ab46:0:b0:3a7:d2b6:121b with SMTP id
- k6-20020a67ab46000000b003a7d2b6121bmr3990461vsh.16.1666008026461; Mon, 17 Oct
- 2022 05:00:26 -0700 (PDT)
+        with ESMTP id S229984AbiJQMBa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:01:30 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09B38402C0;
+        Mon, 17 Oct 2022 05:01:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CrblE1KA36o3k22Tk/7VTrg3h3nkw1R7zFFfKq72frACo6zouqlRZ8Em8sJYDWCuuWA7i2SqFOAieMZM9eVdiIleuWibhvYKqfUQ4Bi+qvFDkEvFjFpdIu4oAkyfpvV86nwJ89zXAUzHZX11PxMmT7H/LZRj7k1Ka94AKWfbdMn5TGkQMpvStyq2wrNaR0sc4lFn8UrpYwjwPo2opHHzKWx+EF/vsVWQTElS7B1m2zsZypaN9/6j6DVS010q5dw9cjky0vV0Pr5DkfA6sFp8v/eRyhEydxIBqV1sCwcprQsDdCk2bAiG/MIyFE8eOt6pDsiac+KBSCkCzTqTWcu3IA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hW6MGak5wVW/gsGOjv+UoYaSYBjqCnOBg3DukYJGVrE=;
+ b=ifAMjPYPzuzOAxZPIidvvtUrqxx8BCmvrRIqkrXEjdTq3sisthiV6pXjyTZGS+QTJ65vpnEA9tIF9Zj9dnH09UiZOs4lZiH4/ghA5aS7hdWf97FURZ96XLmuV1jbate+oCrRBhS4ofCWM+Q10SlxKe4JoBa1L/6+ryKNH44ZO/rSlIlaTO+ugpEMh+OhaT4Hxudyx1i5dWZbQbbTb/CDs6VSh6RPkdQunxINGKtj4jc4aAXJa1Vi4vHK7flBWGfuSVYx8TkTcU0QhUKmrm6fJ093MS0RDya/XQZ0uW2bKVq/9v8BWnGKeK2uIhGQWOnx4EcINnEclx8tDX+ruMy8dA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hW6MGak5wVW/gsGOjv+UoYaSYBjqCnOBg3DukYJGVrE=;
+ b=eXAYuna50WeZ3gleBKnNxl4iBgzDO/298ub5+A0j+7wlZ2EzpV1abU/glCWwUZscnAhM8S5Ku4CPZTcy5fmxXDKBJQno8Vzx8mPskey4s6gU2Hhbzo8wGZnUpb6fnoAjKrNwMcmADTyl7iPUW3hPhDi8ylzd7TAPX6Z06/MPgmA=
+Received: from DM6PR01CA0024.prod.exchangelabs.com (2603:10b6:5:296::29) by
+ PH7PR12MB5926.namprd12.prod.outlook.com (2603:10b6:510:1d9::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5723.29; Mon, 17 Oct 2022 12:01:25 +0000
+Received: from DM6NAM11FT090.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:296:cafe::1f) by DM6PR01CA0024.outlook.office365.com
+ (2603:10b6:5:296::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.20 via Frontend
+ Transport; Mon, 17 Oct 2022 12:01:25 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ DM6NAM11FT090.mail.protection.outlook.com (10.13.172.184) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5723.20 via Frontend Transport; Mon, 17 Oct 2022 12:01:25 +0000
+Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 17 Oct
+ 2022 07:01:24 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB07.amd.com
+ (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 17 Oct
+ 2022 05:01:24 -0700
+Received: from xhdlakshmis40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
+ Transport; Mon, 17 Oct 2022 07:01:21 -0500
+From:   Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
+CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <saikrishna12468@gmail.com>, <git@amd.com>,
+        Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+Subject: [PATCH 0/2] pinctrl: pinctrl-zynqmp: Revert output-enable and bias-high-impedance support
+Date:   Mon, 17 Oct 2022 17:30:58 +0530
+Message-ID: <20221017120100.21549-1-sai.krishna.potthuri@amd.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20221007145521.329614-1-brgl@bgdev.pl> <20221007145521.329614-3-brgl@bgdev.pl>
- <Y0eBbUkzryyJZKwq@sol>
-In-Reply-To: <Y0eBbUkzryyJZKwq@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 17 Oct 2022 14:00:15 +0200
-Message-ID: <CAMRc=MfpGFUPntmBNKsyuheD7Enqxq=K+K2hsp24ru18mn0x2A@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v3 2/4] bindings: python: add examples
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT090:EE_|PH7PR12MB5926:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27fc7ba6-da55-45f0-452c-08dab03750ee
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XH5W+J8UJZJqMFxKlKQ8jY+gpwDR8lsoLf25Pjefbp2Ou9e2IhdWWNNGqOySWP9ZE/Tnhymxx5UnNzZWgi6mo8bdwW5MgyxntQ453z5JyERBbPWdBmzKEe+jobfITnITB/MLiXhscdtGj608jjVyBkwOkmQAW8fibPlLyGop+Q52LWzFnxPXmMDXASmJWj4R6D32lDMA8ylfW5FBpiqNGVXdJ8SRuB/erNCO2nok+yVcDtpxg+dzgGy6kD1Na9M94GcJVOjOVzSSt6GI0ZZgN1vEKUWrV40MUZaRY6Y8pBSOdnB8k0H0C/mx6ugpcCOYpv2xcrDN6AfjdAMBAT5F49XDbixUdQaSXetZJodOPhujqlP2VxXfrw/o33wdxTNCWc9v6/qaBJMTtrFVxz1clDwEg8fxp4defMHHSnsdhVx76ARX+LzTYQIix4P0F4dVDIK1agRcHw/6IgxJNBMvhR1uCWVhwdfwQ+55MJz0sBV7MGNTvCOSElvhuQwphrOxU9ZKnk/Nrp9pHpIPxzGXPYPAZ2Qd7uBJThzulUF7gEnD6nvEGtNSGwd0HdGWDZ0nkyCJFun0G76BUyU+qcBSmtxzw/HE3ExHhpI17ttu9kQWjPkVK0NOPLOzM6+z3AQ6GKB8+mgvgVKJ5U3P5TI3H0zNqScDarRg+u3rLS6Gp7ZRPeG00ntnxyMAogH+WWvGD4lP33U+UwDYdT8ZkrT5bm40hymVJw1nCVty9lnc5Bv0+LlILk5nMLbt/LcBnIHluGJgu2tqCEM1H3LgtB7ZekXwVolg+Crd325LUMl2dxezhHBupTi3Z/3h+gzouwHt
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(376002)(346002)(39860400002)(451199015)(46966006)(36840700001)(40470700004)(86362001)(2616005)(110136005)(478600001)(4744005)(40480700001)(316002)(54906003)(8936002)(36860700001)(81166007)(70206006)(70586007)(8676002)(4326008)(82310400005)(5660300002)(41300700001)(356005)(26005)(83380400001)(103116003)(47076005)(40460700003)(426003)(82740400003)(36756003)(6666004)(2906002)(186003)(336012)(1076003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 12:01:25.3047
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27fc7ba6-da55-45f0-452c-08dab03750ee
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT090.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5926
+X-Spam-Status: No, score=0.0 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,305 +104,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 5:09 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Oct 07, 2022 at 04:55:19PM +0200, Bartosz Golaszewski wrote:
-> > This adds the regular set of example programs implemented using libgpiod
-> > python bindings.
-> >
-> > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > ---
-> >  bindings/python/examples/Makefile.am   | 10 +++++++
-> >  bindings/python/examples/gpiodetect.py | 17 ++++++++++++
-> >  bindings/python/examples/gpiofind.py   | 20 ++++++++++++++
-> >  bindings/python/examples/gpioget.py    | 31 +++++++++++++++++++++
-> >  bindings/python/examples/gpioinfo.py   | 35 ++++++++++++++++++++++++
-> >  bindings/python/examples/gpiomon.py    | 28 +++++++++++++++++++
-> >  bindings/python/examples/gpioset.py    | 37 ++++++++++++++++++++++++++
-> >  7 files changed, 178 insertions(+)
-> >  create mode 100644 bindings/python/examples/Makefile.am
-> >  create mode 100755 bindings/python/examples/gpiodetect.py
-> >  create mode 100755 bindings/python/examples/gpiofind.py
-> >  create mode 100755 bindings/python/examples/gpioget.py
-> >  create mode 100755 bindings/python/examples/gpioinfo.py
-> >  create mode 100755 bindings/python/examples/gpiomon.py
-> >  create mode 100755 bindings/python/examples/gpioset.py
-> >
-> > diff --git a/bindings/python/examples/Makefile.am b/bindings/python/examples/Makefile.am
-> > new file mode 100644
-> > index 0000000..f42b80e
-> > --- /dev/null
-> > +++ b/bindings/python/examples/Makefile.am
-> > @@ -0,0 +1,10 @@
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +EXTRA_DIST = \
-> > +     gpiodetect.py \
-> > +     gpiofind.py \
-> > +     gpioget.py \
-> > +     gpioinfo.py \
-> > +     gpiomon.py \
-> > +     gpioset.py
-> > diff --git a/bindings/python/examples/gpiodetect.py b/bindings/python/examples/gpiodetect.py
-> > new file mode 100755
-> > index 0000000..c32014f
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpiodetect.py
-> > @@ -0,0 +1,17 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Reimplementation of the gpiodetect tool in Python."""
-> > +
-> > +import gpiod
-> > +import os
-> > +
-> > +if __name__ == "__main__":
-> > +    for entry in os.scandir("/dev/"):
-> > +        if gpiod.is_gpiochip_device(entry.path):
->
-> Add a helper generator function that returns the available chip paths?
-> And in order might be nice too.
->
-> > +            with gpiod.Chip(entry.path) as chip:
-> > +                info = chip.get_info()
-> > +                print(
-> > +                    "{} [{}] ({} lines)".format(info.name, info.label, info.num_lines)
-> > +                )
-> > diff --git a/bindings/python/examples/gpiofind.py b/bindings/python/examples/gpiofind.py
-> > new file mode 100755
-> > index 0000000..2f30445
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpiofind.py
-> > @@ -0,0 +1,20 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Reimplementation of the gpiofind tool in Python."""
-> > +
-> > +import gpiod
-> > +import os
-> > +import sys
-> > +
-> > +if __name__ == "__main__":
-> > +    for entry in os.scandir("/dev/"):
-> > +        if gpiod.is_gpiochip_device(entry.path):
-> > +            with gpiod.Chip(entry.path) as chip:
-> > +                offset = chip.map_line(sys.argv[1])
->
->                             chip.offset_from_id(...
->
-> > +                if offset is not None:
-> > +                    print("{} {}".format(chip.get_info().name, offset))
-> > +                    sys.exit(0)
-> > +
-> > +    sys.exit(1)
-> > diff --git a/bindings/python/examples/gpioget.py b/bindings/python/examples/gpioget.py
-> > new file mode 100755
-> > index 0000000..d441535
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpioget.py
-> > @@ -0,0 +1,31 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Simplified reimplementation of the gpioget tool in Python."""
-> > +
-> > +import gpiod
-> > +import sys
-> > +
-> > +from gpiod.line import Direction
-> > +
-> > +if __name__ == "__main__":
-> > +    if len(sys.argv) < 3:
-> > +        raise TypeError("usage: gpioget.py <gpiochip> <offset1> <offset2> ...")
-> > +
-> > +    path = sys.argv[1]
-> > +    lines = []
-> > +    for line in sys.argv[2:]:
-> > +        lines.append(int(line) if line.isdigit() else line)
-> > +
->
-> Just leave the line ids as string?
->
-> else use a list comprehension:
->
->     lines = [ int(id) if id.isdigit() else id for id in sys.argv[2:] ]
->
-> Similarly elsewhere.
->
-> > +    request = gpiod.request_lines(
-> > +        path,
-> > +        consumer="gpioget.py",
-> > +        config={tuple(lines): gpiod.LineSettings(direction=Direction.INPUT)},
-> > +    )
-> > +
-> > +    vals = request.get_values()
-> > +
-> > +    for val in vals:
-> > +        print("{} ".format(val.value), end="")
-> > +    print()
-> > diff --git a/bindings/python/examples/gpioinfo.py b/bindings/python/examples/gpioinfo.py
-> > new file mode 100755
-> > index 0000000..e8c7d46
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpioinfo.py
-> > @@ -0,0 +1,35 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Simplified reimplementation of the gpioinfo tool in Python."""
-> > +
-> > +import gpiod
-> > +import os
-> > +
-> > +if __name__ == "__main__":
-> > +    for entry in os.scandir("/dev/"):
-> > +        if gpiod.is_gpiochip_device(entry.path):
-> > +            with gpiod.Chip(entry.path) as chip:
-> > +                cinfo = chip.get_info()
-> > +                print("{} - {} lines:".format(cinfo.name, cinfo.num_lines))
-> > +
-> > +                for offset in range(0, cinfo.num_lines):
-> > +                    linfo = chip.get_line_info(offset)
-> > +                    offset = linfo.offset
-> > +                    name = linfo.name
-> > +                    consumer = linfo.consumer
-> > +                    direction = linfo.direction
->
->                     is_input = linfo.direction == gpiod.line.Direction.INPUT
->
-> That is for space saving below.
-> Drop the others as they are only referenced once (if you follow the
-> suggestion below).
->
-> > +                    active_low = linfo.active_low
-> > +
-> > +                    print(
-> > +                        "\tline {:>3}: {:>18} {:>12} {:>8} {:>10}".format(
-> > +                            offset,
-> > +                            "unnamed" if name is None else name,
-> > +                            "unused" if consumer is None else consumer,
-> > +                            "input"
-> > +                            if direction == gpiod.line.Direction.INPUT
-> > +                            else "output",
-> > +                            "active-low" if active_low else "active-high",
->                         linfo.offset,
->                         linfo.name or "unnamed",
->                         linfo.consumer or "unused",
->                         is_input and "input" or "output",
->                         linfo.active_low and "active_low" or "active-high",
->
-> > +                        )
-> > +                    )
-> > diff --git a/bindings/python/examples/gpiomon.py b/bindings/python/examples/gpiomon.py
-> > new file mode 100755
-> > index 0000000..e0db16f
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpiomon.py
-> > @@ -0,0 +1,28 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Simplified reimplementation of the gpiomon tool in Python."""
-> > +
-> > +import gpiod
-> > +import sys
-> > +
-> > +from gpiod.line import Edge
-> > +
-> > +if __name__ == "__main__":
-> > +    if len(sys.argv) < 3:
-> > +        raise TypeError("usage: gpiomon.py <gpiochip> <offset1> <offset2> ...")
-> > +
-> > +    path = sys.argv[1]
-> > +    lines = []
-> > +    for line in sys.argv[2:]:
-> > +        lines.append(int(line) if line.isdigit() else line)
-> > +
-> > +    with gpiod.request_lines(
-> > +        path,
-> > +        consumer="gpiomon.py",
-> > +        config={tuple(lines): gpiod.LineSettings(edge_detection=Edge.BOTH)},
-> > +    ) as request:
-> > +        while True:
-> > +            for event in request.read_edge_event():
-> > +                print(event)
-> > diff --git a/bindings/python/examples/gpioset.py b/bindings/python/examples/gpioset.py
-> > new file mode 100755
-> > index 0000000..f0b0681
-> > --- /dev/null
-> > +++ b/bindings/python/examples/gpioset.py
-> > @@ -0,0 +1,37 @@
-> > +#!/usr/bin/env python3
-> > +# SPDX-License-Identifier: GPL-2.0-or-later
-> > +# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> > +
-> > +"""Simplified reimplementation of the gpioset tool in Python."""
-> > +
-> > +import gpiod
-> > +import sys
-> > +
-> > +from gpiod.line import Direction, Value
-> > +
-> > +if __name__ == "__main__":
-> > +    if len(sys.argv) < 3:
-> > +        raise TypeError(
-> > +            "usage: gpioset.py <gpiochip> <offset1>=<value1> <offset2>=<value2> ..."
-> > +        )
-> > +
-> > +    path = sys.argv[1]
-> > +    values = dict()
-> > +    lines = []
-> > +    for arg in sys.argv[2:]:
-> > +        arg = arg.split("=")
-> > +        key = int(arg[0]) if arg[0].isdigit() else arg[0]
-> > +        val = int(arg[1])
-> > +
-> > +        lines.append(key)
-> > +        values[key] = Value(val)
-> > +
->
->         lvs = [ arg.split('=') for arg in sys.argv[2:] ]
->         lines = [ x[0] for x in lvs ]
->         values = dict[lvs]
+Having support for output-enable and bias-high-impedance properties
+causing system hang with older Xilinx ZynqMP Platform Management Firmware
+because there is missing autodetection feature.
+When this feature is implemented, support for these two properties should
+bring back.
 
-It must be dict(lvs) but even then values are still strings, not their
-enum integer representations, so we still need to convert them to ints
-before passing them to set_values(). I'd leave it as it is now.
+Sai Krishna Potthuri (2):
+  Revert "pinctrl: pinctrl-zynqmp: Add support for output-enable and
+    bias-high-impedance"
+  Revert "dt-bindings: pinctrl-zynqmp: Add output-enable configuration"
 
->
-> > +    request = gpiod.request_lines(
-> > +        path,
-> > +        consumer="gpioset.py",
-> > +        config={tuple(lines): gpiod.LineSettings(direction=Direction.OUTPUT)},
-> > +    )
-> > +
-> > +    vals = request.set_values(values)
-> > +
-> > +    input()
-> > --
->
-> No gpiowatch?
->
+ .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 4 ----
+ drivers/pinctrl/pinctrl-zynqmp.c                         | 9 ---------
+ 2 files changed, 13 deletions(-)
 
-There's no gpiowatch yet in the main set of tools, I'll add them once they land.
+-- 
+2.17.1
 
-> Add some examples for features the tools don't use, like requests with
-> both inputs and outputs, and reconfigure?
->
-
-These are already covered in tests. I may add them in the future but
-don't want to add a lot of code that's not routinely run as part of
-tests.
-
-Bart
-
-> Cheers,
-> Kent.
