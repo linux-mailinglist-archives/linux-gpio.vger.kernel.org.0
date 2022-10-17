@@ -2,135 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9327E600E7B
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04175600E92
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:11:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230081AbiJQMBh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 08:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55230 "EHLO
+        id S229920AbiJQML1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 08:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229977AbiJQMBf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:01:35 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2069.outbound.protection.outlook.com [40.107.223.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD8BD95BF;
-        Mon, 17 Oct 2022 05:01:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dm3382lfl0Ap71nybvNx9a++MpjrjeDqaYpsewjvL/ZEi2jHh0Iib0FPsB34IzNYt3SCGJrpBHJ0EGgh7v2k6+RyhzZNV24vfaW7ihZ1Ze04YfRQzJoxZiBtnhJAWYyNRGURVS61u7Ua98aQF3S4ElWwXOQPDCVqOTjvQFOmIvg5G+1SUn/VKUQ8kMEfejn0QXV9dnX/t/3pAA60T2xMacxHbkAFJpaJyha7pumtMY7DrL4gqEIZ1YAMCaz05GTfgAX0PsIO5Atz2fzVPglL7yefd2exSGMs8au7OVieiObfu0dkzmiPvwPRDXy9iDyrofztCRurEq1lQsnLZqyGag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tXyi38GmDsjYCDWYgL0HGT0+QMDi6MLggAkwmRwSPic=;
- b=j5uCXTL5usdOdmOH1cTMXYTUA33VrNDHaULIvE8wzgCFtqGaQvo+tYsdb3k0xhbi0kdyVs6RQOcY79T3ndwNhqn4d7panXHsu4cWQKQT/fGvYeUMU6soBmV8jVB6sN2VOatpfJ3K40hI9ilqAYY+BEM/L15o1kkIWB1JDel76zjpE4uK8kimQZ94vDvbHpHOQYIHdR/OcypPDhw/yciybT74IikS50VzKCyve1GQlu0bHOquZmAJ5jZh9hhxSpVt5YB4MJc3woqi+vwk6CG5Cj8ECgfn0VCulTNp56cmwh8wO+CtiCnYCBfjhARft+OYfnRNed5o7tTTVF3V2Ut0tg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tXyi38GmDsjYCDWYgL0HGT0+QMDi6MLggAkwmRwSPic=;
- b=TQbBZi/gT69e8nrYb9QX2BApbZimuRMKoTuhgmYI/g/KpjIw6YMoDB4fGq/+JhIOJGLm8jYMeBVn4udxQC3sNHbpPvCYXprG3eAdq0lQ24JwDo0jvUyAXo6OcpjxfObUbZ3omEZEfP3YdC6Yq13g6+P0kNIoy6QtYZWVhJ0M9Us=
-Received: from DM6PR07CA0117.namprd07.prod.outlook.com (2603:10b6:5:330::32)
- by DM6PR12MB4514.namprd12.prod.outlook.com (2603:10b6:5:2a7::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.32; Mon, 17 Oct
- 2022 12:01:31 +0000
-Received: from DM6NAM11FT042.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:330:cafe::46) by DM6PR07CA0117.outlook.office365.com
- (2603:10b6:5:330::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30 via Frontend
- Transport; Mon, 17 Oct 2022 12:01:31 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DM6NAM11FT042.mail.protection.outlook.com (10.13.173.165) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Mon, 17 Oct 2022 12:01:31 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 17 Oct
- 2022 07:01:30 -0500
-Received: from xhdlakshmis40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2375.31 via Frontend
- Transport; Mon, 17 Oct 2022 07:01:28 -0500
-From:   Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <saikrishna12468@gmail.com>, <git@amd.com>,
-        Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-Subject: [PATCH 2/2] Revert "dt-bindings: pinctrl-zynqmp: Add output-enable configuration"
-Date:   Mon, 17 Oct 2022 17:31:00 +0530
-Message-ID: <20221017120100.21549-3-sai.krishna.potthuri@amd.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221017120100.21549-1-sai.krishna.potthuri@amd.com>
-References: <20221017120100.21549-1-sai.krishna.potthuri@amd.com>
+        with ESMTP id S229817AbiJQML0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:11:26 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00161616D;
+        Mon, 17 Oct 2022 05:11:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666008686; x=1697544686;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vw+vsrxvR88sMwvNZcFQAh9PSKUEFTkb+Zwafmh+7Zc=;
+  b=fWOZnyW+oiYTGSuZbbfMz3vA0vqVNmuyt4y769FIYAh6qzXNqEx7ykFf
+   IOiAwtIIYAEbev+TI3Rhlsz6lx7/wDwqV6gjFfT53m/+VV23p5ygT8Tk+
+   7LIlE5FD+f42MAZkXbiPtXh2C3wmxm0kuO/aggOloMoUd5qua4aS21/Jy
+   rtKBM3uLRELeYcC5pzfwERkdGUahEgPqpcCycb2k1RL/Vm69oPVaMqE4S
+   slspkDgAXrVVDSvSW9Ru0AjW/jkHA1tlPihIxTCUaQ6wOh2cxSJ2E4nhs
+   1E9FY6wUB+UNDV6acnwluNZy7LvOjjsA7Z+UT8CJlCwKWTLPqWNMSJJJb
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10502"; a="306860556"
+X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
+   d="scan'208";a="306860556"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 05:11:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10502"; a="691335698"
+X-IronPort-AV: E=Sophos;i="5.95,191,1661842800"; 
+   d="scan'208";a="691335698"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Oct 2022 05:11:20 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1okOxh-008mX9-1M;
+        Mon, 17 Oct 2022 15:11:17 +0300
+Date:   Mon, 17 Oct 2022 15:11:17 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Davide Ciminaghi <ciminaghi@gnudd.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
+Message-ID: <Y01GZV/RHezVaGdC@smile.fi.intel.com>
+References: <cover.1662116601.git.christophe.leroy@csgroup.eu>
+ <CAMRc=MehcpT84-ucLbYmdVTAjT86bNb9NEfV6npCmPZHqbsArw@mail.gmail.com>
+ <b348a306-3043-4ccc-9067-81759ab29143@www.fastmail.com>
+ <CACRpkdbazHcUassRMqZ2oHmama3nWEZ3U3bB-y-3dmo3jgFPWg@mail.gmail.com>
+ <a7cb856c-8a3f-4737-ae9e-b75c306ad88e@www.fastmail.com>
+ <da8e0775-7d3e-d6fa-e1ff-395769d35614@csgroup.eu>
+ <CAMRc=MdNnUS72cSARv8dAVUsujkUM9jyjutJsty9o+=LOkOefg@mail.gmail.com>
+ <CAMRc=MeZUap-h=NZm1L0BfN2=ms6VeOJA+05HPyLq_hE8kVuEQ@mail.gmail.com>
+ <CACRpkdYPCZ9QAwNripOXGuFgvtnC+vzQ5EbYaWJEF1u9E_x4Yw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT042:EE_|DM6PR12MB4514:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2094b5a7-fab3-4ea7-67b1-08dab03754ca
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: q+3oHppZzXiuIFdD2On9XejyqSftkJvNy6+2IAR7lnJ/JrggF2O3MAt3226WmEZZlOJX9haTswK3yGsXWeAMHMlZ5T0AdpuxtQgf1YCdGNKYh529XYGvMbp5miye2o/v3+ts/wbQSptoXVudLfei9p9pZof67Ko2TQ8PDh+GwXkYVsfxB4qBDAMv5V5DLCCPTifVGOvOOlQcWt+eDB23LWwEMZhmBdtNxdUI2qQ6DHAV5s7zQN+hn3GAQYeHi6M2ujrC8yxYJsa1vRE/llagMNsRdSl5VGPknhZLRpocVECKVMSy45pmTJdsprJrRY5v3FcpNl/INBAGcZg3rYgwNdBfFfk4UG3SJdTV/4g3GW8Agv2nJfH0nV/03S767YQ4gpiHhQc8FkJrRd0vHOb85hV+aSaE7hykk6yavsCIkH6qnbnMrRAQ4g9TZaeQ60PBtNNRyMrmaEhW4b9iasrQAxQGabNq+VyuBWntO8J3UGBicPAaSO8oejDCYyDe8OJY1oZVbXSM34jrfHmvEHaFyO6H7NmPOzzs/l0l+p9HZ1Q6j8jDcwV1HM3h3/GEOp+iYFc2EcXPMW/HaRYkelVo8ZmNK/5QEGgd0T9yE8ese0dyQieCFDXqtMg3Xfp30gN01Ik6JVv1ZEDxUAoSAp8vbUqwYm2pYIDmFuCZfmh1NFEn3Hm7jfGu9sh9SwvwIGKSliWmKBkgoXTFIBZpdLJzD9bH5aUebR2ZRuxukox5SFR3S7SPOXmIenjPgzPHAJQYYUjmczzMwPTCVEGmAzVczP4s0aGEk5RoLVS3rKex3/pivA5JifaX7hyEfPZY3rmq
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(39860400002)(136003)(396003)(451199015)(46966006)(36840700001)(40470700004)(110136005)(4326008)(6666004)(54906003)(316002)(478600001)(70586007)(70206006)(2616005)(8676002)(336012)(1076003)(5660300002)(2906002)(186003)(41300700001)(8936002)(82740400003)(36756003)(356005)(81166007)(82310400005)(26005)(47076005)(426003)(83380400001)(36860700001)(40480700001)(40460700003)(86362001)(103116003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 12:01:31.7806
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2094b5a7-fab3-4ea7-67b1-08dab03754ca
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT042.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4514
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYPCZ9QAwNripOXGuFgvtnC+vzQ5EbYaWJEF1u9E_x4Yw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This reverts commit 133ad0d9af99bdca90705dadd8d31c20bfc9919f.
+On Mon, Oct 17, 2022 at 11:06:49AM +0200, Linus Walleij wrote:
+> On Mon, Oct 17, 2022 at 11:05 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-On systems with older PMUFW (Xilinx ZynqMP Platform Management Firmware)
-using these pinctrl properties can cause system hang because there is
-missing feature autodetection.
-When this feature is implemented, support for these two properties should
-bring back.
+...
 
-Signed-off-by: Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
----
- .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml      | 4 ----
- 1 file changed, 4 deletions(-)
+> Let's test it in linux-next we need wide coverage for this.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-index 1e2b9b627b12..2722dc7bb03d 100644
---- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
-@@ -274,10 +274,6 @@ patternProperties:
-           slew-rate:
-             enum: [0, 1]
- 
--          output-enable:
--            description:
--              This will internally disable the tri-state for MIO pins.
--
-           drive-strength:
-             description:
-               Selects the drive strength for MIO pins, in mA.
+Yes, I believe the best if we can have this in the Linux Next as long as
+possible before going to upstream. This is good change that needs good testing
+coverage.
+
+Speaking of the latter, and a bit of offtopic, I want to send a PR of cleaning
+up the headers in pin control subsystem as soon as possible with the same
+rationale underneath, i.e. testing and new drivers using a cleaned up headers..
+
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
