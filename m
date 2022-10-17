@@ -2,72 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 421A3600E95
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B832D600EDF
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:17:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbiJQMLh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 08:11:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48962 "EHLO
+        id S230424AbiJQMRD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 08:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbiJQMLg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:11:36 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42D2E51A30
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:11:34 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id n7so10602497plp.1
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:11:34 -0700 (PDT)
+        with ESMTP id S230423AbiJQMQz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:16:55 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A399B303D6;
+        Mon, 17 Oct 2022 05:16:37 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id hh9so7500046qtb.13;
+        Mon, 17 Oct 2022 05:16:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3JKXrLu+SqYfmHiz833G3l+MI8fCppqecn7cjNxb5w=;
-        b=BJmIPZB3u6CSgAqChh3rTHda69yr9VjmlnFab10vARDeibGDHaLGUyxb1hBfJzCeZ0
-         j56qLde7XHce0j7cKDHpiA8e+bQIQBYBPCTneQRqAfRZzuzDgG9FiFC4A/3owG05tbJg
-         VHPnxF1SQw3wk31N8ug78aIhnsYMUQd/vfhqsOxG1E1dS/BL2lLfZLUSxJiBQWeHfqX4
-         EcOAz5YEO+bFdr8bM28d2YGe0UmmsINxc0qoJbhUZCkdsyLa/sArDOT7w0jOibsswd3h
-         NKTr/Sd6CEuG7DlRyUEfGE+Qm9aUyVa2u48bTbcFHOicThUnkBWPpftSv3acyLZfR8ed
-         cxpQ==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FViSSKwYNLFy/8i7voLq1fvEAiC2E4b3lKUtg6bhSNs=;
+        b=G4XBw7OtjlEVYhvq3ujakfFtUjrlMIkd5uVVPI4L3fSHgn9r2dYLTBKR1DSk55qy8/
+         vjDDH2t4lQErUrsZ81N0WmnCPAq1TAG4psbIGjoQRhntN5Cmq1aF/T5qp0/euyInLZPZ
+         /K8bnHyxQYrmvZCrh75klmy5Bz15Y/XvsM73Xs3LGuMo2izmCHPf5UYpUMbW37BEsOEV
+         sVucDgXlyB1YZt4pqPGa9U7E85eMuIK9JN+tGTbAMfTNB3gqhaNnxWOxBOHdWu8HWlhw
+         4OAFcfWlF4Cka/k2IMLMYdJ1w8Emhfeq9FKglqB57GbZ26ff4iD6Qp74edFo/4+10u7I
+         pv7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o3JKXrLu+SqYfmHiz833G3l+MI8fCppqecn7cjNxb5w=;
-        b=4twnw+AbUMsyf8ijTtOi42AumMxUnqvPQ2tNu+asGicc6lWhXxxQyciDL5vb8+Z7lb
-         IZKjr4PQO+eELnB/hhKhzKxtbhcaQ25WBQoa1tuC+LzaWhPgK0tFjWGdE/FixrED78kf
-         8LCEeT/nqL2J/2pd5Mitt3U+7F7B8ovckFl9uWTMOAu1XFOnGzROlHkHlPZMaZls3EHk
-         Yu2naLqabcqVJ0csk1u6b095rVdiXFYwQAESejYgy3S7oia8QP2EbyywPB8391fPaSXe
-         cN/eGZYeUSAyB1T5X1OUmiXFUrSW0VQ52DtaZ7kTkcq5+nt1GfLCnC5CoUJe7BznqTx3
-         60Sw==
-X-Gm-Message-State: ACrzQf0TWYpp3F0iNzqLJbZ1xo3HIVKj8Jxanza9iqOHg5SKbk5yr613
-        Yg1e6TyhYajMWklES76CHKk=
-X-Google-Smtp-Source: AMsMyM7sqNLrNKNXfq8mF9UeM24K2Fmjf9gmUjB3S+QlXbmLiVzFyH7+swisaf+61MfUUpgT5E9mGA==
-X-Received: by 2002:a17:90a:e7ca:b0:20a:966e:8480 with SMTP id kb10-20020a17090ae7ca00b0020a966e8480mr32492785pjb.100.1666008693825;
-        Mon, 17 Oct 2022 05:11:33 -0700 (PDT)
-Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
-        by smtp.gmail.com with ESMTPSA id w10-20020a170902e88a00b0015e8d4eb26esm6481557plg.184.2022.10.17.05.11.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 05:11:33 -0700 (PDT)
-Date:   Mon, 17 Oct 2022 20:11:28 +0800
-From:   Kent Gibson <warthog618@gmail.com>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FViSSKwYNLFy/8i7voLq1fvEAiC2E4b3lKUtg6bhSNs=;
+        b=AAgtD54KEeZFbwm+oOvkLgsBQA+x0mXOOq8HKr3JmD301Fv88h2r/dCg2FZqGKAuHw
+         u9TZ8olr7fknnyGDdK4AfeHHaW1OH2/GC7BIxB09oPjkLu6ZCxebJh5Jz7KQmAzYeP/W
+         YW2rMmNbPHwUnmczKpzZRdB4C7djbCN71eAC1Vk5TlknqjKvG+2gLn19WJoHa5RCTP2Z
+         mfVVO3SJVEzn1+DmVnOCnJffseT6fKqC+a8sl0tqWssuaA+Hs7pO+XGQK4v1Og9O+bUw
+         PpDmtfVys4+DN/VusMrgh3gRXrHfoh7kk2wUxK74WxUlZJmzhyo3MXV7mg2SfSGPSQmx
+         tY7Q==
+X-Gm-Message-State: ACrzQf2fG3WplF/DT9RBcjwPQNdWSA2zBpq5ogSsY+RINJZVC5zim57c
+        lhipM419ewLfqhagTHylvrqmy4mKAWYfQYLcK+A=
+X-Google-Smtp-Source: AMsMyM5ONAbRwJ0mRV8lFkFN/+yOIGgrHcLBILWbhUW8XaqfnSolfxdkiScuiVdMZUaqcXP+J2a9nYR4SqM8sa8eRyQ=
+X-Received: by 2002:a05:622a:1045:b0:39c:e2e1:dc59 with SMTP id
+ f5-20020a05622a104500b0039ce2e1dc59mr7379719qte.195.1666008987610; Mon, 17
+ Oct 2022 05:16:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221010201453.77401-1-andriy.shevchenko@linux.intel.com>
+ <20221010201453.77401-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbdzFR-a_xh8EjLMAshTeesOYhD3-_Bkc=vi7iK72ZKtA@mail.gmail.com> <CAMRc=MexjuQw+hUDDfCVxiBEJ573jNb3Ko9SyOU-xJ03wOe8cQ@mail.gmail.com>
+In-Reply-To: <CAMRc=MexjuQw+hUDDfCVxiBEJ573jNb3Ko9SyOU-xJ03wOe8cQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 17 Oct 2022 15:15:51 +0300
+Message-ID: <CAHp75VftkwPB-+jhCrhCdPRN0hLm5DLADMyAO45eBTRFfxiNuQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/36] gpiolib: tegra186: Add missed header(s)
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v3 2/4] bindings: python: add examples
-Message-ID: <Y01GcJbDKPdctduH@sol>
-References: <20221007145521.329614-1-brgl@bgdev.pl>
- <20221007145521.329614-3-brgl@bgdev.pl>
- <Y0eBbUkzryyJZKwq@sol>
- <CAMRc=MfpGFUPntmBNKsyuheD7Enqxq=K+K2hsp24ru18mn0x2A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfpGFUPntmBNKsyuheD7Enqxq=K+K2hsp24ru18mn0x2A@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Marc Zyngier <maz@kernel.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Chen-Yu Tsai <wenst@chromium.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Fabien Dessenne <fabien.dessenne@foss.st.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-media@vger.kernel.org, linux-actions@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-rpi-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+        patches@opensource.cirrus.com, linux-mediatek@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Patrice Chotard <patrice.chotard@foss.st.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Joel Stanley <joel@jms.id.au>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Sean Wang <sean.wang@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>, soc@kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Emil Renner Berthing <kernel@esmil.dk>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,35 +157,28 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 02:00:15PM +0200, Bartosz Golaszewski wrote:
-> On Thu, Oct 13, 2022 at 5:09 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Mon, Oct 17, 2022 at 12:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> On Mon, Oct 17, 2022 at 10:52 AM Linus Walleij <linus.walleij@linaro.org>=
+ wrote:
+>>=C2=B7On Mon, Oct 10, 2022 at 10:15 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > On Fri, Oct 07, 2022 at 04:55:19PM +0200, Bartosz Golaszewski wrote:
-> > > This adds the regular set of example programs implemented using libgpiod
-> > > python bindings.
+> > > Do not imply that some of the generic headers may be always included.
+> > > Instead, include explicitly what we are direct user of.
 > > >
-> > > Signed-off-by: Bartosz Golaszewski <brgl@bgdev.pl>
-> > > +    path = sys.argv[1]
-> > > +    values = dict()
-> > > +    lines = []
-> > > +    for arg in sys.argv[2:]:
-> > > +        arg = arg.split("=")
-> > > +        key = int(arg[0]) if arg[0].isdigit() else arg[0]
-> > > +        val = int(arg[1])
-> > > +
-> > > +        lines.append(key)
-> > > +        values[key] = Value(val)
-> > > +
+> > > While at it, sort headers alphabetically.
+> > >
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > >
-> >         lvs = [ arg.split('=') for arg in sys.argv[2:] ]
-            lvs = [ (x,int(y)) for (x,y) in lvs ]
-> >         lines = [ x[0] for x in lvs ]
-> >         values = dict(lvs)
-> 
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-An extra pass to fix the int values.
-You could do it in one with a more appropriate parser function.
+> Andy: are you going to send it together with the corresponding pinctrl
+> changes in a separate PR?
 
-Cheers,
-Kent.
+Yes, this is the plan, but I want first to push it to Linux Next (via
+my tree) for a couple of days, so we will be sure there are no
+compilation issues.
 
+--=20
+With Best Regards,
+Andy Shevchenko
