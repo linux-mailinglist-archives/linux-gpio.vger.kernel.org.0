@@ -2,749 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72229600E19
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 13:48:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27FD9600DDB
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 13:34:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230285AbiJQLsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 07:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46646 "EHLO
+        id S230143AbiJQLeR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 07:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbiJQLsT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 07:48:19 -0400
-Received: from relay02.th.seeweb.it (relay02.th.seeweb.it [5.144.164.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB1653D37;
-        Mon, 17 Oct 2022 04:48:09 -0700 (PDT)
-Received: from cp.tophost.it (vm1054.cs12.seeweb.it [217.64.195.253])
-        by m-r1.th.seeweb.it (Postfix) with ESMTPA id 3AB0F1F54F;
-        Mon, 17 Oct 2022 13:48:07 +0200 (CEST)
-MIME-Version: 1.0
-Date:   Mon, 17 Oct 2022 13:33:38 +0200
-From:   konrad.dybcio@somainline.org
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        with ESMTP id S230155AbiJQLeP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 07:34:15 -0400
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96B88371AD
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 04:34:13 -0700 (PDT)
+Received: by mail-pj1-x102b.google.com with SMTP id o9-20020a17090a0a0900b0020ad4e758b3so10675380pjo.4
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 04:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G6Qcvla8PHIerX3OGyF5GQYNvPlzAZ4TPdY5Ov4+ekU=;
+        b=p7sb4WZ3XBMtfht1uzyY3Lx3kQv2spj2cqDX4aMjBEXZFFprfPhEQNLMmGHfFSuGLU
+         VyR3c5QBpV5HNA7FCk8Ej9szu25FPw5xKJoAU2xOUSSLrd4jbOkfSasyfCiS21IWjRTH
+         OkI0H1VYuugiXi+f5ayI2SfAGz/hF7cSWNOpOeuMOEg/DrYe7YHUGuDYjtkBEVUrfm7s
+         ioIWzBWhyjQuLjWlDmBV8RomeTey5Tk67U5MggmkzlkFYS67pmGFzxL+qMzrQKuFInBO
+         tebMTiGuLj2fOKzs0LKGV7EE2Gk66Z5A2pW0P4aQLeOHeW701A11EP8CfZcYcysE5ZXE
+         DnoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G6Qcvla8PHIerX3OGyF5GQYNvPlzAZ4TPdY5Ov4+ekU=;
+        b=NsR0RQirxR8O6hRBWQPesqu3BjoL8HTzAKKc/0Rg9FEpBjukBY0XcfzujvuRacvWh4
+         8FOxVlhgA6UOeEbgAtf5YTWu1UcWoNPBn4rN9WC7Q0qRteYDPct9PZIAhBBzscXvE+Y6
+         YkG9rH0nfDa7s5lDXgAPTNPrSQU9wddwJq3KEVFdyNyocBdxFqXUMsi2d0LcUAM22mUB
+         ON+pg/aDGvUsJwH7eez+IXGWQxbsvRWPmz+ZP9rR2UHlRCyQTpi7WiZ5OI9HrirTO1VP
+         Q6OwvaDWGvQMNk6Zyt0wzxgTBrTjVnjS28SYcSSohUGhiQTsP8FrG6pQ6LxzKTgaGPZW
+         KIYA==
+X-Gm-Message-State: ACrzQf1XOBcZF08cMce2MZMAgPvKjUIbzYwrwSy12N49lzqnWoPUC6a0
+        tOm7y+tHcgbXZ5iKcUppfVE=
+X-Google-Smtp-Source: AMsMyM4cbiC3pRUlTZRWu3ZZi30rlAbbYzdg0CwOqmFCuDGe/ck8CjEkAzheyd6EYZjSK94hGujbbA==
+X-Received: by 2002:a17:903:1110:b0:178:9f67:b543 with SMTP id n16-20020a170903111000b001789f67b543mr11602502plh.131.1666006452957;
+        Mon, 17 Oct 2022 04:34:12 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id u6-20020a17090a1d4600b0020669c8bd87sm6037090pju.36.2022.10.17.04.34.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 04:34:12 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 19:34:06 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ARM: dts: qcom: msm8974: align TLMM pin configuration
- with DT schema
-In-Reply-To: <20221017012225.8579-2-krzysztof.kozlowski@linaro.org>
-References: <20221017012225.8579-1-krzysztof.kozlowski@linaro.org>
- <20221017012225.8579-2-krzysztof.kozlowski@linaro.org>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <496385df3b2d3da7b16ca35d43d70ba3@somainline.org>
-X-Sender: konrad.dybcio@somainline.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V6 3/8] libgpiod: Add rust wrapper crate
+Message-ID: <Y009rqtA1h00ZVN5@sol>
+References: <20220928151716.3hhbcrjwskvwvajh@vireshk-i7>
+ <CAMRc=McHusz7kK2v-H5Ccdrj1X6M7gTj7oaMuQoyuHhDVXekYw@mail.gmail.com>
+ <CANiq72mvLzoNConYzqRYYq9M9Wr6iyo28VQ7Dt0FpfFiHUwzhg@mail.gmail.com>
+ <20221011041651.amibtu24kcgm67e7@vireshk-i7>
+ <20221013061204.hu2vn24g42egybbl@vireshk-i7>
+ <CAMRc=MfNjCARhhG1yGDKU0HYUmsHkN_MihWy-+pg+SY0T9WERg@mail.gmail.com>
+ <20221014095724.ajajkp3ysdfxd2f2@vireshk-i7>
+ <CAMRc=Mc5qVJfcPoVit8zgnoAPKqWY3qb1MQwtfP7FNJ53O=UjA@mail.gmail.com>
+ <Y0mJC8lVM/cgBLyi@sol>
+ <20221017112625.sobgfiist7t6w5zz@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221017112625.sobgfiist7t6w5zz@vireshk-i7>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-10-17 03:22, Krzysztof Kozlowski wrote:
-> DT schema expects TLMM pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.  All
-> nodes for GPIOs must also define the function property.
+On Mon, Oct 17, 2022 at 04:56:25PM +0530, Viresh Kumar wrote:
+> On 15-10-22, 00:06, Kent Gibson wrote:
+> > If the mutators for each field still exist they may as well be pub.
+> > 
+> > And they should return Result<&mut Self> so they can be chained, as you
+> > suggest.
+> > 
+> > Wrt the values param (which I would prefer was called props)
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
-Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
+> Is this fine now ? Rebased over v7.
+> 
+> diff --git a/bindings/rust/libgpiod/src/line_settings.rs b/bindings/rust/libgpiod/src/line_settings.rs
+> index 2c3090132ea5..be50b5b41c5a 100644
+> --- a/bindings/rust/libgpiod/src/line_settings.rs
+> +++ b/bindings/rust/libgpiod/src/line_settings.rs
+> @@ -70,18 +70,18 @@ impl Settings {
+>      }
+> 
+>      /// Set line prop setting.
+> -    pub fn set_prop(&mut self, values: &[SettingVal]) -> Result<()> {
+> -        for value in values {
+> -            match value {
+> -                SettingVal::Direction(val) => self.set_direction(*val)?,
+> -                SettingVal::EdgeDetection(val) => self.set_edge_detection(*val)?,
+> -                SettingVal::Bias(val) => self.set_bias(*val)?,
+> -                SettingVal::Drive(val) => self.set_drive(*val)?,
+> -                SettingVal::ActiveLow(val) => self.set_active_low(*val),
+> -                SettingVal::DebouncePeriod(val) => self.set_debounce_period(*val),
+> -                SettingVal::EventClock(val) => self.set_event_clock(*val)?,
+> -                SettingVal::OutputValue(val) => self.set_output_value(*val)?,
+> -            }
+> +    pub fn set_prop(&mut self, props: &[SettingVal]) -> Result<()> {
+                                                                  ^   
+                                                        also &mut Self
 
-Konrad
->  .../arm/boot/dts/qcom-apq8074-dragonboard.dts | 14 ++--
->  .../dts/qcom-msm8974-sony-xperia-rhine.dtsi   | 16 ++--
->  arch/arm/boot/dts/qcom-msm8974.dtsi           | 77 ++++++++++---------
->  .../dts/qcom-msm8974pro-fairphone-fp2.dts     | 20 ++---
->  .../boot/dts/qcom-msm8974pro-samsung-klte.dts | 36 ++++-----
->  ...-msm8974pro-sony-xperia-shinano-castor.dts | 31 ++++----
->  6 files changed, 98 insertions(+), 96 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> index 91716298ec5e..dc04f315026d 100644
-> --- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> +++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-> @@ -272,34 +272,34 @@ &sdhc_2 {
->  };
-> 
->  &tlmm {
-> -	sdc1_on: sdc1-on {
-> -		clk {
-> +	sdc1_on: sdc1-on-state {
-> +		clk-pins {
->  			pins = "sdc1_clk";
->  			drive-strength = <16>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc1_cmd", "sdc1_data";
->  			drive-strength = <10>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	sdc2_on: sdc2-on {
-> -		clk {
-> +	sdc2_on: sdc2-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			drive-strength = <10>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc2_cmd", "sdc2_data";
->  			drive-strength = <6>;
->  			bias-pull-up;
->  		};
-> 
-> -		cd {
-> +		cd-pins {
->  			pins = "gpio62";
->  			function = "gpio";
->  			drive-strength = <2>;
-> diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-rhine.dtsi
-> b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-rhine.dtsi
-> index 5a70683d9103..221a11e1d17d 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-rhine.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-rhine.dtsi
-> @@ -442,7 +442,7 @@ &smbb {
->  };
-> 
->  &tlmm {
-> -	ts_int_pin: touch-int {
-> +	ts_int_pin: touch-int-state {
->  		pins = "gpio61";
->  		function = "gpio";
->  		drive-strength = <2>;
-> @@ -450,34 +450,34 @@ ts_int_pin: touch-int {
->  		input-enable;
->  	};
-> 
-> -	sdc1_on: sdc1-on {
-> -		clk {
-> +	sdc1_on: sdc1-on-state {
-> +		clk-pins {
->  			pins = "sdc1_clk";
->  			drive-strength = <16>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc1_cmd", "sdc1_data";
->  			drive-strength = <10>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	sdc2_on: sdc-on {
-> -		clk {
-> +	sdc2_on: sdc-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			drive-strength = <10>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc2_cmd", "sdc2_data";
->  			drive-strength = <6>;
->  			bias-pull-up;
->  		};
-> 
-> -		cd {
-> +		cd-pins {
->  			pins = "gpio62";
->  			function = "gpio";
->  			drive-strength = <2>;
-> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> index 7a9be0acf3f5..3b0072f13a97 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> @@ -1253,61 +1253,62 @@ tlmm: pinctrl@fd510000 {
->  			#interrupt-cells = <2>;
->  			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> -			sdc1_off: sdc1-off {
-> -				clk {
-> +			sdc1_off: sdc1-off-state {
-> +				clk-pins {
->  					pins = "sdc1_clk";
->  					bias-disable;
->  					drive-strength = <2>;
->  				};
-> 
-> -				cmd {
-> +				cmd-pins {
->  					pins = "sdc1_cmd";
->  					bias-pull-up;
->  					drive-strength = <2>;
->  				};
-> 
-> -				data {
-> +				data-pins {
->  					pins = "sdc1_data";
->  					bias-pull-up;
->  					drive-strength = <2>;
->  				};
->  			};
-> 
-> -			sdc2_off: sdc2-off {
-> -				clk {
-> +			sdc2_off: sdc2-off-state {
-> +				clk-pins {
->  					pins = "sdc2_clk";
->  					bias-disable;
->  					drive-strength = <2>;
->  				};
-> 
-> -				cmd {
-> +				cmd-pins {
->  					pins = "sdc2_cmd";
->  					bias-pull-up;
->  					drive-strength = <2>;
->  				};
-> 
-> -				data {
-> +				data-pins {
->  					pins = "sdc2_data";
->  					bias-pull-up;
->  					drive-strength = <2>;
->  				};
-> 
-> -				cd {
-> +				cd-pins {
->  					pins = "gpio54";
-> +					function = "gpio";
->  					bias-disable;
->  					drive-strength = <2>;
->  				};
->  			};
-> 
-> -			blsp1_uart2_default: blsp1-uart2-default {
-> -				rx {
-> +			blsp1_uart2_default: blsp1-uart2-default-state {
-> +				rx-pins {
->  					pins = "gpio5";
->  					function = "blsp_uart2";
->  					drive-strength = <2>;
->  					bias-pull-up;
->  				};
-> 
-> -				tx {
-> +				tx-pins {
->  					pins = "gpio4";
->  					function = "blsp_uart2";
->  					drive-strength = <4>;
-> @@ -1315,15 +1316,15 @@ tx {
->  				};
->  			};
-> 
-> -			blsp2_uart1_default: blsp2-uart1-default {
-> -				tx-rts {
-> +			blsp2_uart1_default: blsp2-uart1-default-state {
-> +				tx-rts-pins {
->  					pins = "gpio41", "gpio44";
->  					function = "blsp_uart7";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
-> 
-> -				rx-cts {
-> +				rx-cts-pins {
->  					pins = "gpio42", "gpio43";
->  					function = "blsp_uart7";
->  					drive-strength = <2>;
-> @@ -1331,22 +1332,22 @@ rx-cts {
->  				};
->  			};
-> 
-> -			blsp2_uart1_sleep: blsp2-uart1-sleep {
-> +			blsp2_uart1_sleep: blsp2-uart1-sleep-state {
->  				pins = "gpio41", "gpio42", "gpio43", "gpio44";
->  				function = "gpio";
->  				drive-strength = <2>;
->  				bias-pull-down;
->  			};
-> 
-> -			blsp2_uart4_default: blsp2-uart4-default {
-> -				tx-rts {
-> +			blsp2_uart4_default: blsp2-uart4-default-state {
-> +				tx-rts-pins {
->  					pins = "gpio53", "gpio56";
->  					function = "blsp_uart10";
->  					drive-strength = <2>;
->  					bias-disable;
->  				};
-> 
-> -				rx-cts {
-> +				rx-cts-pins {
->  					pins = "gpio54", "gpio55";
->  					function = "blsp_uart10";
->  					drive-strength = <2>;
-> @@ -1354,42 +1355,42 @@ rx-cts {
->  				};
->  			};
-> 
-> -			blsp1_i2c1_default: blsp1-i2c1-default {
-> +			blsp1_i2c1_default: blsp1-i2c1-default-state {
->  				pins = "gpio2", "gpio3";
->  				function = "blsp_i2c1";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp1_i2c1_sleep: blsp1-i2c1-sleep {
-> +			blsp1_i2c1_sleep: blsp1-i2c1-sleep-state {
->  				pins = "gpio2", "gpio3";
->  				function = "blsp_i2c1";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
-> 
-> -			blsp1_i2c2_default: blsp1-i2c2-default {
-> +			blsp1_i2c2_default: blsp1-i2c2-default-state {
->  				pins = "gpio6", "gpio7";
->  				function = "blsp_i2c2";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp1_i2c2_sleep: blsp1-i2c2-sleep {
-> +			blsp1_i2c2_sleep: blsp1-i2c2-sleep-state {
->  				pins = "gpio6", "gpio7";
->  				function = "blsp_i2c2";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
-> 
-> -			blsp1_i2c3_default: blsp1-i2c3-default {
-> +			blsp1_i2c3_default: blsp1-i2c3-default-state {
->  				pins = "gpio10", "gpio11";
->  				function = "blsp_i2c3";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp1_i2c3_sleep: blsp1-i2c3-sleep {
-> +			blsp1_i2c3_sleep: blsp1-i2c3-sleep-state {
->  				pins = "gpio10", "gpio11";
->  				function = "blsp_i2c3";
->  				drive-strength = <2>;
-> @@ -1400,14 +1401,14 @@ blsp1_i2c3_sleep: blsp1-i2c3-sleep {
-> 
->  			/* BLSP1_I2C5 info is missing */
-> 
-> -			blsp1_i2c6_default: blsp1-i2c6-default {
-> +			blsp1_i2c6_default: blsp1-i2c6-default-state {
->  				pins = "gpio29", "gpio30";
->  				function = "blsp_i2c6";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp1_i2c6_sleep: blsp1-i2c6-sleep {
-> +			blsp1_i2c6_sleep: blsp1-i2c6-sleep-state {
->  				pins = "gpio29", "gpio30";
->  				function = "blsp_i2c6";
->  				drive-strength = <2>;
-> @@ -1417,14 +1418,14 @@ blsp1_i2c6_sleep: blsp1-i2c6-sleep {
-> 
->  			/* BLSP2_I2C1 info is missing */
-> 
-> -			blsp2_i2c2_default: blsp2-i2c2-default {
-> +			blsp2_i2c2_default: blsp2-i2c2-default-state {
->  				pins = "gpio47", "gpio48";
->  				function = "blsp_i2c8";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp2_i2c2_sleep: blsp2-i2c2-sleep {
-> +			blsp2_i2c2_sleep: blsp2-i2c2-sleep-state {
->  				pins = "gpio47", "gpio48";
->  				function = "blsp_i2c8";
->  				drive-strength = <2>;
-> @@ -1435,48 +1436,48 @@ blsp2_i2c2_sleep: blsp2-i2c2-sleep {
-> 
->  			/* BLSP2_I2C4 info is missing */
-> 
-> -			blsp2_i2c5_default: blsp2-i2c5-default {
-> +			blsp2_i2c5_default: blsp2-i2c5-default-state {
->  				pins = "gpio83", "gpio84";
->  				function = "blsp_i2c11";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp2_i2c5_sleep: blsp2-i2c5-sleep {
-> +			blsp2_i2c5_sleep: blsp2-i2c5-sleep-state {
->  				pins = "gpio83", "gpio84";
->  				function = "blsp_i2c11";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
-> 
-> -			blsp2_i2c6_default: blsp2-i2c6-default {
-> +			blsp2_i2c6_default: blsp2-i2c6-default-state {
->  				pins = "gpio87", "gpio88";
->  				function = "blsp_i2c12";
->  				drive-strength = <2>;
->  				bias-disable;
->  			};
-> 
-> -			blsp2_i2c6_sleep: blsp2-i2c6-sleep {
-> +			blsp2_i2c6_sleep: blsp2-i2c6-sleep-state {
->  				pins = "gpio87", "gpio88";
->  				function = "blsp_i2c12";
->  				drive-strength = <2>;
->  				bias-pull-up;
->  			};
-> 
-> -			spi8_default: spi8_default {
-> -				mosi {
-> +			spi8_default: spi8_default-state {
-> +				mosi-pins {
->  					pins = "gpio45";
->  					function = "blsp_spi8";
->  				};
-> -				miso {
-> +				miso-pins {
->  					pins = "gpio46";
->  					function = "blsp_spi8";
->  				};
-> -				cs {
-> +				cs-pins {
->  					pins = "gpio47";
->  					function = "blsp_spi8";
->  				};
-> -				clk {
-> +				clk-pins {
->  					pins = "gpio48";
->  					function = "blsp_spi8";
->  				};
-> diff --git a/arch/arm/boot/dts/qcom-msm8974pro-fairphone-fp2.dts
-> b/arch/arm/boot/dts/qcom-msm8974pro-fairphone-fp2.dts
-> index ff6e0066768b..3e32685d8cf8 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974pro-fairphone-fp2.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974pro-fairphone-fp2.dts
-> @@ -408,36 +408,36 @@ &smbb {
->  };
-> 
->  &tlmm {
-> -	sdc1_on: sdc1-on {
-> -		clk {
-> +	sdc1_on: sdc1-on-state {
-> +		clk-pins {
->  			pins = "sdc1_clk";
->  			drive-strength = <16>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc1_cmd", "sdc1_data";
->  			drive-strength = <10>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	sdc2_on: sdc2-on {
-> -		clk {
-> +	sdc2_on: sdc2-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			drive-strength = <10>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc2_cmd", "sdc2_data";
->  			drive-strength = <6>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	wcnss_pin_a: wcnss-pin-active {
-> -		wlan {
-> +	wcnss_pin_a: wcnss-pin-active-state {
-> +		wlan-pins {
->  			pins =  "gpio36", "gpio37", "gpio38", "gpio39", "gpio40";
->  			function = "wlan";
-> 
-> @@ -445,7 +445,7 @@ wlan {
->  			bias-pull-down;
->  		};
-> 
-> -		bt {
-> +		bt-pins {
->  			pins = "gpio35", "gpio43", "gpio44";
->  			function = "bt";
-> 
-> @@ -453,7 +453,7 @@ bt {
->  			bias-pull-down;
->  		};
-> 
-> -		fm {
-> +		fm-pins {
->  			pins = "gpio41", "gpio42";
->  			function = "fm";
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974pro-samsung-klte.dts
-> b/arch/arm/boot/dts/qcom-msm8974pro-samsung-klte.dts
-> index 983e10c3d863..5bbdd5eb183b 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974pro-samsung-klte.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974pro-samsung-klte.dts
-> @@ -706,57 +706,57 @@ &sdhc_3 {
-> 
->  &tlmm {
->  	/* This seems suspicious, but somebody with this device should look
-> into it. */
-> -	blsp2_uart2_pins_active: blsp2-uart2-pins-active {
-> +	blsp2_uart2_pins_active: blsp2-uart2-pins-active-state {
->  		pins = "gpio45", "gpio46", "gpio47", "gpio48";
->  		function = "blsp_uart8";
->  		drive-strength = <8>;
->  		bias-disable;
->  	};
-> 
-> -	blsp2_uart2_pins_sleep: blsp2-uart2-pins-sleep {
-> +	blsp2_uart2_pins_sleep: blsp2-uart2-pins-sleep-state {
->  		pins = "gpio45", "gpio46", "gpio47", "gpio48";
->  		function = "gpio";
->  		drive-strength = <2>;
->  		bias-pull-down;
->  	};
-> 
-> -	bt_pins: bt-pins {
-> -		hostwake {
-> +	bt_pins: bt-pins-state {
-> +		hostwake-pins {
->  			pins = "gpio75";
->  			function = "gpio";
->  			drive-strength = <16>;
->  			input-enable;
->  		};
-> 
-> -		devwake {
-> +		devwake-pins {
->  			pins = "gpio91";
->  			function = "gpio";
->  			drive-strength = <2>;
->  		};
->  	};
-> 
-> -	sdc1_on: sdhc1-on {
-> -		clk {
-> +	sdc1_on: sdhc1-on-state {
-> +		clk-pins {
->  			pins = "sdc1_clk";
->  			drive-strength = <4>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc1_cmd", "sdc1_data";
->  			drive-strength = <4>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	sdc3_on: sdc3-on {
-> +	sdc3_on: sdc3-on-state {
->  		pins = "gpio35", "gpio36", "gpio37", "gpio38", "gpio39", "gpio40";
->  		function = "sdc3";
->  		drive-strength = <8>;
->  		bias-disable;
->  	};
-> 
-> -	sdhc3_cd_pin: sdc3-cd-on {
-> +	sdhc3_cd_pin: sdc3-cd-on-state {
->  		pins = "gpio62";
->  		function = "gpio";
-> 
-> @@ -764,49 +764,49 @@ sdhc3_cd_pin: sdc3-cd-on {
->  		bias-disable;
->  	};
-> 
-> -	sdc2_on: sdhc2-on {
-> -		clk {
-> +	sdc2_on: sdhc2-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			drive-strength = <6>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc2_cmd", "sdc2_data";
->  			drive-strength = <6>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	i2c_touchkey_pins: i2c-touchkey {
-> +	i2c_touchkey_pins: i2c-touchkey-state {
->  		pins = "gpio95", "gpio96";
->  		function = "gpio";
->  		input-enable;
->  		bias-pull-up;
->  	};
-> 
-> -	i2c_led_gpioex_pins: i2c-led-gpioex {
-> +	i2c_led_gpioex_pins: i2c-led-gpioex-state {
->  		pins = "gpio120", "gpio121";
->  		function = "gpio";
->  		input-enable;
->  		bias-pull-down;
->  	};
-> 
-> -	gpioex_pin: gpioex {
-> +	gpioex_pin: gpioex-state {
->  		pins = "gpio145";
->  		function = "gpio";
->  		bias-pull-up;
->  		drive-strength = <2>;
->  	};
-> 
-> -	wifi_pin: wifi {
-> +	wifi_pin: wifi-state {
->  		pins = "gpio92";
->  		function = "gpio";
->  		input-enable;
->  		bias-pull-down;
->  	};
-> 
-> -	panel_te_pin: panel {
-> +	panel_te_pin: panel-state {
->  		pins = "gpio12";
->  		function = "mdp_vsync";
->  		drive-strength = <2>;
-> diff --git
-> a/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> b/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> index 3f45f5c5d37b..d446ac1f75ea 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> +++ b/arch/arm/boot/dts/qcom-msm8974pro-sony-xperia-shinano-castor.dts
-> @@ -548,41 +548,42 @@ &smbb {
->  };
-> 
->  &tlmm {
-> -	lcd_backlight_en_pin_a: lcd-backlight-vddio {
-> +	lcd_backlight_en_pin_a: lcd-backlight-vddio-state {
->  		pins = "gpio69";
-> +		function = "gpio";
->  		drive-strength = <10>;
->  		output-low;
->  		bias-disable;
->  	};
-> 
-> -	sdc1_on: sdc1-on {
-> -		clk {
-> +	sdc1_on: sdc1-on-state {
-> +		clk-pins {
->  			pins = "sdc1_clk";
->  			drive-strength = <16>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc1_cmd", "sdc1_data";
->  			drive-strength = <10>;
->  			bias-pull-up;
->  		};
->  	};
-> 
-> -	sdc2_on: sdc2-on {
-> -		clk {
-> +	sdc2_on: sdc2-on-state {
-> +		clk-pins {
->  			pins = "sdc2_clk";
->  			drive-strength = <6>;
->  			bias-disable;
->  		};
-> 
-> -		cmd-data {
-> +		cmd-data-pins {
->  			pins = "sdc2_cmd", "sdc2_data";
->  			drive-strength = <6>;
->  			bias-pull-up;
->  		};
-> 
-> -		cd {
-> +		cd-pins {
->  			pins = "gpio62";
->  			function = "gpio";
->  			drive-strength = <2>;
-> @@ -590,22 +591,22 @@ cd {
->  		};
->  	};
-> 
-> -	sdc3_on: sdc3-on {
-> -		clk {
-> +	sdc3_on: sdc3-on-state {
-> +		clk-pins {
->  			pins = "gpio40";
->  			function = "sdc3";
->  			drive-strength = <10>;
->  			bias-disable;
->  		};
-> 
-> -		cmd {
-> +		cmd-pins {
->  			pins = "gpio39";
->  			function = "sdc3";
->  			drive-strength = <10>;
->  			bias-pull-up;
->  		};
-> 
-> -		data {
-> +		data-pins {
->  			pins = "gpio35", "gpio36", "gpio37", "gpio38";
->  			function = "sdc3";
->  			drive-strength = <10>;
-> @@ -613,7 +614,7 @@ data {
->  		};
->  	};
-> 
-> -	ts_int_pin: ts-int-pin {
-> +	ts_int_pin: ts-int-pin-state {
->  		pins = "gpio86";
->  		function = "gpio";
->  		drive-strength = <2>;
-> @@ -621,7 +622,7 @@ ts_int_pin: ts-int-pin {
->  		input-enable;
->  	};
-> 
-> -	bt_host_wake_pin: bt-host-wake {
-> +	bt_host_wake_pin: bt-host-wake-state {
->  		pins = "gpio95";
->  		function = "gpio";
->  		drive-strength = <2>;
-> @@ -629,7 +630,7 @@ bt_host_wake_pin: bt-host-wake {
->  		output-low;
->  	};
-> 
-> -	bt_dev_wake_pin: bt-dev-wake {
-> +	bt_dev_wake_pin: bt-dev-wake-state {
->  		pins = "gpio96";
->  		function = "gpio";
->  		drive-strength = <2>;
+Apart from that, yeah that is what I had in mind, as also noted in my
+forthcoming v7 review.
+
+Cheers,
+Kent.
+
