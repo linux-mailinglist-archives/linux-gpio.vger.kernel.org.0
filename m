@@ -2,104 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1362D600F2A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:26:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97896600FA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 14:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbiJQM0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 08:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33262 "EHLO
+        id S230459AbiJQM7p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 08:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229894AbiJQM0o (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:26:44 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2076.outbound.protection.outlook.com [40.107.244.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D7092098F;
-        Mon, 17 Oct 2022 05:26:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d17zNReKFSEC0DR02/Caf3VeLq8dwKgkAmwUpyK1VbXhjr5X5IGLSD3sYxgPNdtoE6hjUE7V93uszgQc+g3WCDUAiYgjJ6P5wb+6pRDq8v4XIXqBVxvxpplYXFhetuJ3YBQkmIUBK0Vr1NPMFa1CYDGN6ENqirbH6BOnEBPBUDzK56SF5lyRLJ4sCZblh4ipVUtrEczWhiGRty6/tk4q5Jzru2SMUFhwgrxXn4PlR8japbHA4gIjMd4ZLjVLhX5fSNEZlhpZ0oBAuDknCftzNBRGXF+pIFFRR2zw2B/lJ+/X0EM45gTdG8NvJEJ+giuGR1kIHsbYJ0qLkLQq6qWFFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JWDOr67QRC6pLz/lQMMJVLDg67CjlVLohWNTWtaNBCs=;
- b=GE3zqjAQatQ0pfjqy2Dk8SsTkeVWGCkBIMaSvc6ZZUJhBdY2DXXf/NgtG4wBCe/hBB6KsJ+gnwm8tZeyDakgOoaHajeg1iYAKSylcQE3GaoBd6e9qboqDRYOFM9zNp3i2rSyv7YxhtruDSrtL0lAWxA0s1EEv8VesRau1R2RcQJalXsXFPbQU0ALsdhnaGDlRDJig2HDqPMyVpktGUNmZzVTBXrolmy1Y+HKFiEcjaWnmXpaXoC/LWUQJ/SNY/1AYHQ47qLwq2tDtVj6ajX2RAPatRS+5iuB1+ifbY5fUbHV7HRPmZZQgonRXaZlnonSIsqEYop1dBa6OGhAEWIP5g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JWDOr67QRC6pLz/lQMMJVLDg67CjlVLohWNTWtaNBCs=;
- b=l7MRxfhO0pcsTnws21wlHB46Gmccb/QOx7aEpRXQtDo4UurLcWmANGS5T31G8qx4yI8tm/CcUuZvFKhFyR6+I0v30ckyK3yZZSGTsOntDoKeaPepfGDWPbD53uA3fcG9/3kb2dxtgom8MtO85ux3t/XNBl44KaA8ErOjeRJ66vw=
-Received: from MW4P223CA0009.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::14)
- by BL1PR12MB5335.namprd12.prod.outlook.com (2603:10b6:208:317::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Mon, 17 Oct
- 2022 12:26:40 +0000
-Received: from CO1NAM11FT078.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:80:cafe::2d) by MW4P223CA0009.outlook.office365.com
- (2603:10b6:303:80::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30 via Frontend
- Transport; Mon, 17 Oct 2022 12:26:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT078.mail.protection.outlook.com (10.13.175.177) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Mon, 17 Oct 2022 12:26:40 +0000
-Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 17 Oct
- 2022 07:26:32 -0500
-Message-ID: <1f4770bb-ed99-230d-1f4f-44210bd36280@amd.com>
-Date:   Mon, 17 Oct 2022 14:26:03 +0200
+        with ESMTP id S230490AbiJQM7l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 08:59:41 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8546A2DCE
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:59:30 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id f23so10686374plr.6
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 05:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xlta7sJlnDqsevTtvx8gjdcxKxEATI5K8JaCCSdSPZU=;
+        b=DDLYkzuZ7JDAMKTLOrAZ2on1+1bc6GyeOR5EKmTc1pveWeXoHZag22lkG00OgL+XbJ
+         W6gLDQ8ylOFSbTrRjXrSNfiEKnvdFuVAXOzOxAk2YaV57Ablnk2VrmyAYIRNIqSTxoOc
+         QXJFRBrSGi+NVWpV5Bb4BNNuNvcfPDoGJYkQR3TzxMh11xkfzrYHxfYLPYNBLmuindMv
+         FDSAhQjcrS19Udc8DgpEtbtEXRU/jMt5XHdDK5ZW6Nk9DA0xRH+VCOxTmbn0cmI+whyH
+         Mvcf/msAXYnNgsdRFCtfUBpG3N2EK+cDKg4bgwF23BB8Sfnx+EDqMzkXHSJl95n65kS/
+         GlmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xlta7sJlnDqsevTtvx8gjdcxKxEATI5K8JaCCSdSPZU=;
+        b=KtoAC26bSs6di2V4kc3UhzjgL4nqms1dRAqEPsApUlcEtKITJ2GwvYqcPVRUgUI3Q8
+         nGZmr0QlHu7vX24OxsB0S/NaPKm2PnnffVG0uEAWCjVn28GlEhPeLzEPxc++CCiSF+34
+         nEYYgppZdN1/gPGAdzz1lcwFvGdNylKHyQZ/1XY2sXu2ODHZuGcW0ngdL3JEOcI/p3sR
+         YbUzkzamW/+++VQU9fMNh2/qW43HR/mXqmi76mtgyl/vE66iqxWH8KxWclzuA33IxBum
+         GwAKHjVN5uaaJ0GeWYalC9bvto5f/OKO8n9btewiFVjGgLoxuTy2dLouVRmKjjq2hTnQ
+         lCoA==
+X-Gm-Message-State: ACrzQf3VgaoZPzqT8dkZ3PZfd53S0Gw4RsiLnoBlsZ1m/QFoO3zIUZpX
+        g34Y++qb5CTWApoONDic84s=
+X-Google-Smtp-Source: AMsMyM7YQI+gazB9qt8nU8ZA2c5F7KhjNU+jModB+PsSWTSAeelUEIkjakfSbSM3WeynSEEXp+fBUA==
+X-Received: by 2002:a17:902:cec6:b0:185:4f82:922e with SMTP id d6-20020a170902cec600b001854f82922emr7054201plg.152.1666011569291;
+        Mon, 17 Oct 2022 05:59:29 -0700 (PDT)
+Received: from sol (110-174-58-111.static.tpgi.com.au. [110.174.58.111])
+        by smtp.gmail.com with ESMTPSA id e15-20020a170902784f00b0017a09ebd1e2sm6525156pln.237.2022.10.17.05.59.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 05:59:28 -0700 (PDT)
+Date:   Mon, 17 Oct 2022 20:59:22 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V7 1/8] libgpiod: Add libgpiod-sys rust crate
+Message-ID: <Y01RqjgZINnkcyIC@sol>
+References: <cover.1665744170.git.viresh.kumar@linaro.org>
+ <c8ef89c343a0c31e4132cc6757fdff8dec0d1669.1665744170.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH 0/2] pinctrl: pinctrl-zynqmp: Revert output-enable and
- bias-high-impedance support
-Content-Language: en-US
-To:     Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <saikrishna12468@gmail.com>, <git@amd.com>
-References: <20221017120100.21549-1-sai.krishna.potthuri@amd.com>
-From:   Michal Simek <michal.simek@amd.com>
-In-Reply-To: <20221017120100.21549-1-sai.krishna.potthuri@amd.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT078:EE_|BL1PR12MB5335:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2d9808e-12de-4d11-5648-08dab03ad7eb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: psk/gt8pNXrbF/XZn/SeezKBGVVCc55bpfN7t6Uj1MF9nKzNNh5CMAx/uueC8KH67BXa/I60G30cfVjBk8RRm+jUbiIo9wvcxH5IxwfYy1k0mXwxCX7+7VlCRbed5zrXSUDV66F4mwKyZl2FzYqIyy7NqYjs/Y7jAtD4sGl3er6uEWeQDtkPGeOuG2tvpHZPuHf0/FLblydqB9JfRNMMvOfoNtl/MVc1A2cSzEqnKkmdfW740sOpM2j6UOQexJVwToOLjA60LBL4Jx9AIgRI3CMGnMV1DR+GZanAab7zouXoHwCAMiHhG4hCAET1p+jX/SUtVkIVczXlJYfWiOAIAaA2FoGpYTk/O/cZlSd1HSCN3dNstxkVpF3w78P9BGnKeMcsQscVHt6+GqeQ/QcGrO7d83cali4Yywrh4PUT3cO2Aeq6X9NAZijPVNGlhbOXIrehwN02rSuV7NFIjXFKsKpynJyT0ZCcUdKgiUHfenazhpr+PPqjXFuokc3i2BwGvOMuBJcmGU8zzDuiKGMgCXHA+G00WT21X0nIEHlBs2PYvuB0NBVjqP99z99IwGeQd4UKzH57wKVeNqNnyAe2wWCQILO+2N4kzfwX3q9tzg8XLTx0/kp8YC/1oWJbx/GcbhDti5tV7G4gcc7rfVMSvHfPJSGry88tCgmL2bRBoSJ2SSPPWeY8kOD5lFx86n2GK4MGRiKqQfTlihnEgNFizQsw3d6NbaSDtxnhulyNVY78Fsm/QHqm470ckUoP/aX5auQK+ZcWu7cf8C6VqQkF7Up+upuW061+uCKMN0uocZ9lHqqimHeyd6XeRPKLDAUcsDxqJi1+LgNf7fHgSrdyrw==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(346002)(39860400002)(136003)(451199015)(46966006)(36840700001)(40470700004)(2616005)(336012)(426003)(16526019)(47076005)(186003)(83380400001)(356005)(81166007)(31696002)(86362001)(36860700001)(82740400003)(5660300002)(4744005)(2906002)(44832011)(41300700001)(4326008)(82310400005)(8936002)(40480700001)(8676002)(40460700003)(6666004)(478600001)(53546011)(26005)(316002)(16576012)(70206006)(70586007)(54906003)(110136005)(36756003)(31686004)(36900700001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Oct 2022 12:26:40.1744
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2d9808e-12de-4d11-5648-08dab03ad7eb
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT078.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5335
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8ef89c343a0c31e4132cc6757fdff8dec0d1669.1665744170.git.viresh.kumar@linaro.org>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -107,26 +78,153 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 10/17/22 14:00, Sai Krishna Potthuri wrote:
-> Having support for output-enable and bias-high-impedance properties
-> causing system hang with older Xilinx ZynqMP Platform Management Firmware
-> because there is missing autodetection feature.
-> When this feature is implemented, support for these two properties should
-> bring back.
-> 
-> Sai Krishna Potthuri (2):
->    Revert "pinctrl: pinctrl-zynqmp: Add support for output-enable and
->      bias-high-impedance"
->    Revert "dt-bindings: pinctrl-zynqmp: Add output-enable configuration"
-> 
->   .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml | 4 ----
->   drivers/pinctrl/pinctrl-zynqmp.c                         | 9 ---------
->   2 files changed, 13 deletions(-)
+On Fri, Oct 14, 2022 at 04:17:18PM +0530, Viresh Kumar wrote:
+> This adds libgpiod-sys rust crate, which provides FFI (foreign function
+> interface) bindings for libgpiod APIs.
 > 
 
-You should CC stable to get it to stable kernels too.
+For the whole series: 
 
-Thanks,
-Michal
+Mail subject should start with [libgpiod v2]
+
+Commits should begin with "bindings: rust: ", rather than "libgpiod:" as
+the latter is self-evident.
+
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  .gitignore                            |  5 ++++
+>  bindings/rust/Cargo.toml              |  5 ++++
+>  bindings/rust/libgpiod-sys/Cargo.toml | 15 ++++++++++
+>  bindings/rust/libgpiod-sys/build.rs   | 41 +++++++++++++++++++++++++++
+>  bindings/rust/libgpiod-sys/src/lib.rs | 13 +++++++++
+>  5 files changed, 79 insertions(+)
+>  create mode 100644 bindings/rust/Cargo.toml
+>  create mode 100644 bindings/rust/libgpiod-sys/Cargo.toml
+>  create mode 100644 bindings/rust/libgpiod-sys/build.rs
+>  create mode 100644 bindings/rust/libgpiod-sys/src/lib.rs
+> 
+> diff --git a/.gitignore b/.gitignore
+> index 6c08415b390d..9f2fcf440c5d 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -35,3 +35,8 @@ stamp-h1
+>  # profiling
+>  *.gcda
+>  *.gcno
+> +
+> +# Added by cargo
+> +
+> +target
+> +Cargo.lock
+> diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+> new file mode 100644
+> index 000000000000..d0b3a3c88ff1
+> --- /dev/null
+> +++ b/bindings/rust/Cargo.toml
+> @@ -0,0 +1,5 @@
+> +[workspace]
+> +
+> +members = [
+> +    "libgpiod-sys",
+> +]
+> diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+> new file mode 100644
+> index 000000000000..77f82719d269
+> --- /dev/null
+> +++ b/bindings/rust/libgpiod-sys/Cargo.toml
+> @@ -0,0 +1,15 @@
+> +[package]
+> +name = "libgpiod-sys"
+> +version = "0.1.0"
+> +edition = "2018"
+> +
+
+Add license and other relevant keys as per the link you helpfully include...
+
+> +# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+> +
+> +[dependencies]
+> +
+> +[features]
+> +generate = [ "bindgen" ]
+> +
+> +[build-dependencies]
+> +bindgen = { version = "0.59.1", optional = true }
+> +cc = "1.0.46"
+> diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
+> new file mode 100644
+> index 000000000000..98863686c7af
+> --- /dev/null
+> +++ b/bindings/rust/libgpiod-sys/build.rs
+> @@ -0,0 +1,41 @@
+> +#[cfg(feature = "generate")]
+> +extern crate bindgen;
+> +#[cfg(feature = "generate")]
+> +use std::env;
+> +#[cfg(feature = "generate")]
+> +use std::path::PathBuf;
+> +
+> +#[cfg(feature = "generate")]
+> +fn generate_bindings() {
+> +    // Tell cargo to invalidate the built crate whenever following files change
+> +    println!("cargo:rerun-if-changed=../../../include/gpiod.h");
+> +
+> +    // The bindgen::Builder is the main entry point
+> +    // to bindgen, and lets you build up options for
+> +    // the resulting bindings.
+> +    let bindings = bindgen::Builder::default()
+> +        // The input header we would like to generate
+> +        // bindings for.
+> +        .header("../../../include/gpiod.h")
+> +        // Tell cargo to invalidate the built crate whenever any of the
+> +        // included header files changed.
+> +        .parse_callbacks(Box::new(bindgen::CargoCallbacks))
+> +        // Finish the builder and generate the bindings.
+> +        .generate()
+> +        // Unwrap the Result and panic on failure.
+> +        .expect("Unable to generate bindings");
+> +
+> +    // Write the bindings to the $OUT_DIR/bindings.rs file.
+> +    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+> +    bindings
+> +        .write_to_file(out_path.join("bindings.rs"))
+> +        .expect("Couldn't write bindings!");
+> +}
+> +
+> +fn main() {
+> +    #[cfg(feature = "generate")]
+> +    generate_bindings();
+> +
+> +    println!("cargo:rustc-link-search=./../../lib/.libs/");
+> +    println!("cargo:rustc-link-lib=static=gpiod");
+> +}
+> diff --git a/bindings/rust/libgpiod-sys/src/lib.rs b/bindings/rust/libgpiod-sys/src/lib.rs
+> new file mode 100644
+> index 000000000000..1ca355b5f5ac
+> --- /dev/null
+> +++ b/bindings/rust/libgpiod-sys/src/lib.rs
+> @@ -0,0 +1,13 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+
+GPL-2.0?
+
+Elsewhere you use Apache 2.0 AND BSD-3-Clause for rust code.
+
+Cheers,
+Kent.
+
+> +#[allow(non_camel_case_types, non_upper_case_globals)]
+> +#[cfg_attr(test, allow(deref_nullptr, non_snake_case))]
+> +
+> +mod bindings_raw {
+> +    #[cfg(feature = "generate")]
+> +    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+> +
+> +    #[cfg(not(feature = "generate"))]
+> +    include!("bindings.rs");
+> +}
+> +pub use bindings_raw::*;
+> -- 
+> 2.31.1.272.g89b43f80a514
+> 
