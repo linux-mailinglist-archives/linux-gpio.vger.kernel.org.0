@@ -2,113 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D745760141F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 18:57:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BBB4601443
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 19:05:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbiJQQ5l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 12:57:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45666 "EHLO
+        id S229675AbiJQRFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 13:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbiJQQ5k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 12:57:40 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17D35F23D
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 09:57:39 -0700 (PDT)
+        with ESMTP id S229765AbiJQRFy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 13:05:54 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDFE370E65;
+        Mon, 17 Oct 2022 10:05:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666025859; x=1697561859;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sPIOnJ19//Gx1SeB5b8IPuMSfi4XRu9v5r8ZmVBRzl4=;
-  b=H99NXW0Y4YNa77OoZjkLlhvnZwEH0GerLXWmRct5+hha0zRe+9vCyFr3
-   O09j1yONi8JsT/eLy6HfBoJWYHQy0ffsYsCdOoJjrinc3A07qsdSZCP6I
-   xaYk5a7R92J+FrOIfXA9qjxGPWzMMLmif/CMmE0rjf70gyoCRZm8layZ6
-   9zEExcBAxdvverB0+3p/d3JjOsOZO4C4sem0CBGN5pMjPoC0Os5K2P6r3
-   EktTF2jPDaXe2/T5Htl4XQJdAE5c6vn8cd2Zl2zHmzridIfOt26Voig/q
-   sbFtyWxuHq8l0X6Ss/TKXXAnUkahQUD3Pzm/Q5NE0cOd8a4PbdPK5U2dy
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="286249708"
+  t=1666026349; x=1697562349;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=A3GSK7UcppYiZrTEXbYQcILOnGqIDRlwIG2L6adHdKY=;
+  b=nZHyNW03gs6s5nsdIB4W6BnVmiouwKVTdAgJMvL1SdyoUBonQ/6JOKK8
+   RqjqmwtWZ9cj3BXLFLOzosZTjjvRKp457oANs2IcKDXbhoWIHuHB7wHvW
+   3sYWdsb3QNnGf39pjeoynsnegIErHEU/uiuJGRTbOZHjNjWe7xyhpw34j
+   x9XZQ0JTiqeZt9ueCXIhiHc+RPyMBblq9Bj/RURg5z9/eYv/MRzuJk0jW
+   Mgcv3PJuld6+xn+pddG6hBMJKWCMs3guVOGLjYF0MO3SNh6JppCjbVRxl
+   AzOrFOpK434pMu2Tk8ShxzM1hWdDH0IazeYxXPrRTT7cs5Z+FRdstjKDg
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="289154494"
 X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="286249708"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 09:57:39 -0700
+   d="scan'208";a="289154494"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Oct 2022 10:05:44 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="691435374"
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="628374303"
 X-IronPort-AV: E=Sophos;i="5.95,192,1661842800"; 
-   d="scan'208";a="691435374"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Oct 2022 09:57:38 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1okTQm-008vjL-1m;
-        Mon, 17 Oct 2022 19:57:36 +0300
-Date:   Mon, 17 Oct 2022 19:57:36 +0300
+   d="scan'208";a="628374303"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 17 Oct 2022 10:05:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 11E2F26D; Mon, 17 Oct 2022 20:06:03 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v3 2/4] bindings: python: add examples
-Message-ID: <Y02JgEXQyjNryfkF@smile.fi.intel.com>
-References: <Y0eBbUkzryyJZKwq@sol>
- <CAMRc=MfpGFUPntmBNKsyuheD7Enqxq=K+K2hsp24ru18mn0x2A@mail.gmail.com>
- <Y01GcJbDKPdctduH@sol>
- <Y01dg+vTDKbdjcOI@smile.fi.intel.com>
- <Y01hlUvj7cSdpCcx@sol>
- <Y01kYc8K8oStLz3g@smile.fi.intel.com>
- <CAMRc=MfAVVpc_k9ZsAib1s5WCyThgmfTb46VCx7P8iuDKBpuoA@mail.gmail.com>
- <Y01+JhOMc53Dhps1@sol>
- <Y02Awqv4w3oC1Yib@sol>
- <Y02JDbeZbPJ6VftG@smile.fi.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Qingtao Cao <qingtao.cao.au@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH v1 1/1] gpio: exar: Allow IO port access
+Date:   Mon, 17 Oct 2022 20:06:00 +0300
+Message-Id: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y02JDbeZbPJ6VftG@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 07:55:41PM +0300, Andy Shevchenko wrote:
-> On Tue, Oct 18, 2022 at 12:20:18AM +0800, Kent Gibson wrote:
-> > On Tue, Oct 18, 2022 at 12:09:10AM +0800, Kent Gibson wrote:
+It's possible that PCI device can provide an IO port resource for
+the device. regmap MMIO currently uses MMIO by default. With an
+additional flag we enable support for IO port accesses.
 
-...
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpio-exar.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > Oh, btw, the parser fn version would be something like:
-> > 
-> > def parse_value(arg):
-> >      (x,y) = arg.split("=")
-> >      return (x, Value(int(y)))
-> 
-> Not a lisp, no need for too many parentheses. Also, we could use splices:
-> 
-> 	eqidx = arg.index('=')
-> 	return arg[:eqidx], Value(int(arg[eqidx + 1:]))
-> 
-> or with split()
-> 
-> 	l, v = arg.split('=')
-> 	return l, Value(int(v))
-> 
-> > lvs = [ parse_value(arg) for arg in sys.argv[2:]
-> 
-> Dunno why you put spaces inside outer [], but okay.
-
-and this actually can be directly put to the dict constructor:
-
-	values = OrderedDict(parse_value(arg) for arg in sys.argv[2:])
-
-This looks short enough and readable.
-
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index 482f678c893e..df1bdaae441c 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -141,6 +141,7 @@ static const struct regmap_config exar_regmap_config = {
+ 	.name		= "exar-gpio",
+ 	.reg_bits	= 16,
+ 	.val_bits	= 8,
++	.io_port	= true,
+ };
+ 
+ static int gpio_exar_probe(struct platform_device *pdev)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
