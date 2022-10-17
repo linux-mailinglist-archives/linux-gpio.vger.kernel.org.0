@@ -2,83 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4305A6009E6
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 11:07:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D357F600A38
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 11:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbiJQJHF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 05:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47780 "EHLO
+        id S231260AbiJQJP0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 05:15:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiJQJHE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 05:07:04 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DCB017883
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:07:02 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id m16so15080724edc.4
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:07:02 -0700 (PDT)
+        with ESMTP id S231281AbiJQJOc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 05:14:32 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D908650BAB
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:13:44 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id y14so23372807ejd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Xdq9xbr020A2zlmiuY2oondIvU96505rZYEMIN0lgIc=;
-        b=GQIN4/WooCJ2OHKtHJosN8lSPTtVrRlJUqL5rWCcbAtfINFwAcGTT3/6CWdSDRQhkN
-         u08q1uJifA+ieXvytc2J235H5xj2pRj14qr6eGRclva/4HFNCBf9x4klZ/hypeWxAr+/
-         IHoIjZNek7ko6Kt5zdIQfRRJzv+oaBEapjTS+34iMfq8OhyFkGdFPtbxPnJD5iN6wvhk
-         Ye/d4Lo22A95RZZnHhTvk+PRePMxvhEJ13Lh7lS3BR+hQU19DtV2LNYBZZpGkU5niTSV
-         qPFQ2EVOuZ3duTve/gA5uoizzqmQHfnVNPLAYQSXT5apgL85JDw9WzKe0zkZFNXrb/eD
-         1G9w==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qUk1uQhdbMxD0/T/au1bW4ciWhKciAmc4+RpG6d2heA=;
+        b=vfbDFYPQeOsjqvmBqlSXKZrnbw9dcBRMtC/z267YLsxGP7mXixqCCr+FChTkCxH2+o
+         q3AHwbpjoL8JJpkxbEv/rgopQpF5cvOOK1ZCvu72+2HzXSIqfHPH3tJ8WEvs/yPMGRH8
+         qnJbKsMekd6FtUlkPibir5Uw0cccXqTbmDC1b4ArqomJu1rL6mLzqZAksH3TUGP99UOk
+         cfbj2n9R7ZH3M6ntyMZKftT9U+7tudK4NdC45uKeF2SH5eLuGtYfHk8QqcKwHw5JdHI3
+         qU5QdFL6/bXHhXJ9ZKWumQrA4raDTMkyQdppjDfvAjnairo4MLHq81zqZIWlTNe39XFj
+         rbgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Xdq9xbr020A2zlmiuY2oondIvU96505rZYEMIN0lgIc=;
-        b=GS7u/VKWvOOvkth2xQkt0M/aIF7qvdIp8CqSkndAjMdtpvSIWg8McJ9yyE0A/ItLyV
-         Sxt4g4ecu8ec5X1VZ7tjUUZgBGOAOeZGjUucZRiG3GDNRqkgXuyUQJDs5XeJdVSDBWeN
-         pNpvHLsrbpfRNDWNt30hMhWHQ9UThiRaVHYC/O9I0K/JUFytyQMe9TbaKJ7w+ZD+0g0P
-         5X5uQoeEqPEOweVP5pZuUHwvqZwePNNbKgrDbXNgroKIv/G9DFFAlFJB+gLROHb4KkPt
-         yGg0Zj6ZNqDgs/YQl3xwTCpHrsJxcKCjj1a9txNbTjM91fUimKIFOl3zjF62EKvKHUG8
-         rWvw==
-X-Gm-Message-State: ACrzQf2z1vLfhSVlSloIroq7wRzoEYSa6/FhqxLRNpzKGtcWhS1JBwJw
-        o4fEOSFJlWzOcb9GjqtDhQCZC55dk1prk9vYD8zJyQ==
-X-Google-Smtp-Source: AMsMyM62S+E/GWBTiUhHThKnM675pxwyWJv1uxbW8J4NBHMS/gSep3jb96h+Z5CpyjMuz54kCYuFjJzngCAyMipwfTQ=
-X-Received: by 2002:a05:6402:2694:b0:45c:a035:34bc with SMTP id
- w20-20020a056402269400b0045ca03534bcmr9197352edd.158.1665997621080; Mon, 17
- Oct 2022 02:07:01 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qUk1uQhdbMxD0/T/au1bW4ciWhKciAmc4+RpG6d2heA=;
+        b=mEDGKHsyhsjrHKScBVTwE77TEHGgFYY5AP7p+4x78T/1egLi16/df+8Wng067CT/4k
+         zP/Le3aJCsz7+7fD0XMMeE6gFWGPV4IKuWSHeHWq/zee9xJ5eR62MWkUHQfj+0x1Cn0c
+         14C3lAtpfypKJi5VbNnJuoOiapl2ILku5fmBLhztPjZDy0JQ3EinMKs65TlOLm07U3y8
+         QDY20nLSV8IyezfS/au//bQrIFrNvFKbanlQh/di6HF1Go1bakdFuv2E2e+DrWLsAaZT
+         P2Umvhke49NhtpfmZHh4+WE3RjiohriGs13eMPWhv/IFDrg88ZRdKHC700qh/pHajS2H
+         T8rQ==
+X-Gm-Message-State: ACrzQf3egvCdu8l2u0tXRnf/1hd0UYC3xhbDUg+11HysPwmlVA/ORjxb
+        BE/BJamHnQM46oIOcTdjTfi+R7wDzB04BQv0sbJJmw==
+X-Google-Smtp-Source: AMsMyM5IcaB+/89z7lKy2GkwDgaJrMZTmiPyWfiVGfk2VKHOuGBwhZczAZ2NNHz84JySZqBRAKhaHChWmfkTPCymXmg=
+X-Received: by 2002:a17:907:7606:b0:78e:61d:757e with SMTP id
+ jx6-20020a170907760600b0078e061d757emr7442664ejc.690.1665998019502; Mon, 17
+ Oct 2022 02:13:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1662116601.git.christophe.leroy@csgroup.eu>
- <CAMRc=MehcpT84-ucLbYmdVTAjT86bNb9NEfV6npCmPZHqbsArw@mail.gmail.com>
- <b348a306-3043-4ccc-9067-81759ab29143@www.fastmail.com> <CACRpkdbazHcUassRMqZ2oHmama3nWEZ3U3bB-y-3dmo3jgFPWg@mail.gmail.com>
- <a7cb856c-8a3f-4737-ae9e-b75c306ad88e@www.fastmail.com> <da8e0775-7d3e-d6fa-e1ff-395769d35614@csgroup.eu>
- <CAMRc=MdNnUS72cSARv8dAVUsujkUM9jyjutJsty9o+=LOkOefg@mail.gmail.com> <CAMRc=MeZUap-h=NZm1L0BfN2=ms6VeOJA+05HPyLq_hE8kVuEQ@mail.gmail.com>
-In-Reply-To: <CAMRc=MeZUap-h=NZm1L0BfN2=ms6VeOJA+05HPyLq_hE8kVuEQ@mail.gmail.com>
+References: <20221007125904.55371-1-y.oudjana@protonmail.com>
+In-Reply-To: <20221007125904.55371-1-y.oudjana@protonmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Oct 2022 11:06:49 +0200
-Message-ID: <CACRpkdYPCZ9QAwNripOXGuFgvtnC+vzQ5EbYaWJEF1u9E_x4Yw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] gpio: Get rid of ARCH_NR_GPIOS (v2)
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Keerthy <j-keerthy@ti.com>, Russell King <linux@armlinux.org.uk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Davide Ciminaghi <ciminaghi@gnudd.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
+Date:   Mon, 17 Oct 2022 11:13:28 +0200
+Message-ID: <CACRpkdb9b6Vckv3kVRWkB9dfTWetG5u6YkxMb7Re0O+EgH5QtA@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] MediaTek pinctrl DT binding cleanup and MT6735
+ pinctrl support
+To:     Yassine Oudjana <yassine.oudjana@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -89,83 +76,26 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 11:05 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> On Fri, Oct 14, 2022 at 4:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
-> >
-> > On Fri, Oct 14, 2022 at 4:13 PM Christophe Leroy
-> > <christophe.leroy@csgroup.eu> wrote:
-> > >
-> > > Hi Linus,
-> > >
-> > > Le 14/09/2022 =C3=A0 15:03, Arnd Bergmann a =C3=A9crit :
-> > > > On Wed, Sep 14, 2022, at 2:38 PM, Linus Walleij wrote:
-> > > >> On Wed, Sep 7, 2022 at 12:15 PM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
-> > > >>>>>   drivers/gpio/gpio-sta2x11.c              | 411 --------------=
----------
-> > > >> (...)
-> > > >>> sta2x11 is an x86 driver, so not my area, but I think it would be
-> > > >>> best to kill off the entire platform rather than just its gpio
-> > > >>> driver, since everything needs to work together and it's clearly
-> > > >>> not functional at the moment.
-> > > >>>
-> > > >>> $ git grep -l STA2X11
-> > > >>> Documentation/admin-guide/media/pci-cardlist.rst
-> > > >>> arch/x86/Kconfig
-> > > >>> arch/x86/include/asm/sta2x11.h
-> > > >>> arch/x86/pci/Makefile
-> > > >>> arch/x86/pci/sta2x11-fixup.c
-> > > >>> drivers/ata/ahci.c
-> > > >>> drivers/gpio/Kconfig
-> > > >>> drivers/gpio/Makefile
-> > > >>> drivers/gpio/gpio-sta2x11.c
-> > > >>> drivers/i2c/busses/Kconfig
-> > > >>> drivers/media/pci/Makefile
-> > > >>> drivers/media/pci/sta2x11/Kconfig
-> > > >>> drivers/media/pci/sta2x11/Makefile
-> > > >>> drivers/media/pci/sta2x11/sta2x11_vip.c
-> > > >>> drivers/media/pci/sta2x11/sta2x11_vip.h
-> > > >>> drivers/mfd/Kconfig
-> > > >>> drivers/mfd/Makefile
-> > > >>> drivers/mfd/sta2x11-mfd.c
-> > > >>> include/linux/mfd/sta2x11-mfd.h
-> > > >>>
-> > > >>> Removing the other sta2x11 bits (mfd, media, x86) should
-> > > >>> probably be done through the respective tree, but it would
-> > > >>> be good not to forget those.
-> > > >>
-> > > >> Andy is pretty much default x86 platform device maintainer, maybe
-> > > >> he can ACK or brief us on what he knows about the status of
-> > > >> STA2x11?
-> > > >
-> > > > I think the explanation given by Davide and Alessandro
-> > > > was rather detailed already:
-> > > >
-> > > > https://lore.kernel.org/lkml/Yw3LQjhZWmZaU2N1@arcana.i.gnudd.com/
-> > > > https://lore.kernel.org/lkml/Yw3DKCuDoPkCaqxE@arcana.i.gnudd.com/
-> > > >
-> > >
-> > > I can't see this series in neither linus tree nor linux-next.
-> > >
-> > > Following the ACK from Andy + the above explanations from Arnd, do yo=
-u
-> > > plan to merge this series anytime soon ?
-> > >
-> > > Do you need anything more from me ?
-> > >
-> > > Thanks
-> > > Christophe
-> >
-> > I will take it after v6.1-rc1 is tagged.
-> >
-> > Bart
+On Fri, Oct 7, 2022 at 2:59 PM Yassine Oudjana
+<yassine.oudjana@gmail.com> wrote:
+
+> From: Yassine Oudjana <y.oudjana@protonmail.com>
 >
-> Now queued.
+> This series adds a driver for the pin controller found on the MediaTek MT6735
+> and MT6735M SoCs. The two differ in the last 6 physical pins, which are used
+> for MSDC2 on MT6735 but don't exist on MT6735M (since MSDC2 doesn't exist on it
+> to begin with). In preparation to document DT bindings for this pin controller,
+> the existing documents for MT67xx SoCs are combined into one in order to
+> eliminate duplicate property definitions and standardize pin configuration node
+> names. Necessary cleanup is done along the way.
+>
+> Changes since v2:
 
-Thanks for reviewing and applying this!
+v3 is already looking very good!
 
-Let's test it in linux-next we need wide coverage for this.
+Please fix up the remaining comments, then rebase on kernel
+v6.1-rc1 and resend, I think we can get the final reviews and apply
+it after that.
 
 Yours,
 Linus Walleij
