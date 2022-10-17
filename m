@@ -2,104 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8E8860088F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 10:16:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE64D6008CE
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 10:37:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbiJQIP7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 04:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58912 "EHLO
+        id S229783AbiJQIhX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 04:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbiJQIPt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 04:15:49 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4A25D0F0
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 01:15:36 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id f11so17240941wrm.6
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 01:15:36 -0700 (PDT)
+        with ESMTP id S229606AbiJQIhX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 04:37:23 -0400
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73FA82BC1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 01:37:22 -0700 (PDT)
+Received: by mail-vk1-xa35.google.com with SMTP id u204so4983045vkb.13
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 01:37:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=chyTRJd/zu2wMefOogTI+JN+hqlETu6Y/krLKJJpbOo=;
-        b=PE+FnW2udTmrXGv3Fni/4qREGdhAX5SkbZmazDacBs1sZAJPjDF2PscVxtoYpmzQD8
-         fqjURqxkPRQ0YbHcX3vE4rNrRr2xL43A3/CIWNObRij1R6q6XMRx5mcVJQHF0AdQi8if
-         g+Q7nxV2FpHemxTFH2ji6fqE0T3WuzHvOjATK/VqYlQMCxj58COPbLiXisxkRSwfOR+H
-         NLMMajcr+/gkLCo43qYoQr7t44CYxcdu04PpFPWlMGL8dbTwb8cid1qYHWm8+s6VDK7U
-         JXHLGyGJ2LaTcr69r1A8haphquTKbKp5uKCDpaoPs6DD+9AadobcS9AoUlqhOdkLa0+Z
-         H52g==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pj7Uc+fSGuW/+mV3e7UOaQy8Kb79Jdamd+/ilxCpkZw=;
+        b=xiZlR3Pc5tBEzG91zAIHwuiZGKTyeUq9cEMI3/Xn2i3C7Iuf+pZglnH71uppem/8cK
+         zwmHqSpGwhlQVxmTq2unMPgkYSWX1eD1A3YbTu2ZlQJzFQlZDxRxaylKJeHsmhlkVzwc
+         EClQPPKQrh+gnwsYv+Ke3xGOwj78DuLWIgd9QVkQ4NqiCK/Zzfn/AGTdiqEmnecinhJg
+         zJtplrZ+RqHiPspQoNIxjsPfzfz+TYLgQK9FFkLKnC9Q8kYTqYDH3cl5Reu4akdcixOg
+         yDk7tDsvSyLHNgy+eUZCz1RapXamXRXPtBMYs8zIvZv17K9WSrccdhhEUg2P+rvZV3sp
+         qazA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:reply-to
-         :references:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=chyTRJd/zu2wMefOogTI+JN+hqlETu6Y/krLKJJpbOo=;
-        b=BUFEhePdkLwTRxrZllsr6+McfjmIomc8xoUfRXA610/LktH3b0efe5PvgpSz8r1OL8
-         X6/8vQYgdg9LgkloqtxJicmZ1asZfK7jPUYzTnmpAtq6mxdFMxWk0vnhOAFMcFk6rQr0
-         63L9sdtPJ/EW/4HVSKqjkb/ZGV7dr3ivCbY3c3dRTOmzIofe6yz3dxyljtihTWbijTC2
-         nYaWJ/Az99GyFidP2iDxFmKgmxrDPZjNQw+V1FYQCKQXa9GTUrBOGFZa+/iCoEFeIM1H
-         gcnI/Eyl6Qu7tIeUKbkUUTk7dtq3fbLqjLvfoTWU4aZ8bfv9oAvnAnyyWr8ImZgBO6d3
-         KEzA==
-X-Gm-Message-State: ACrzQf28aLZfjZDdffW8nkE5c0pjnYAWW9HHizX9BGKLFPXhiXa8h3u5
-        CQ1+j3vE89zMQYrFEfOQgNJe1Q==
-X-Google-Smtp-Source: AMsMyM4BqGqMMgBxzNmXrMF5rPUfLJTlxQ0iRboNlR6IUeo1h1WSwLpqY1Zpak7T2rUjVtGSuBi8kA==
-X-Received: by 2002:a05:6000:10cc:b0:22e:39a:efe4 with SMTP id b12-20020a05600010cc00b0022e039aefe4mr5629182wrx.256.1665994534859;
-        Mon, 17 Oct 2022 01:15:34 -0700 (PDT)
-Received: from [192.168.27.65] (home.beaume.starnux.net. [82.66.176.246])
-        by smtp.gmail.com with ESMTPSA id g17-20020a05600c4ed100b003b4ac05a8a4sm19260114wmq.27.2022.10.17.01.15.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Oct 2022 01:15:34 -0700 (PDT)
-Message-ID: <5339f5ef-2f51-5ecb-4046-524c6aeaea5e@linaro.org>
-Date:   Mon, 17 Oct 2022 10:15:32 +0200
+        bh=pj7Uc+fSGuW/+mV3e7UOaQy8Kb79Jdamd+/ilxCpkZw=;
+        b=5pJIVjKgC9DbzXWxscZN3wE2uTSt7mIOV8QEf+S4qCohyVPdYmd9iTfjOWN+iAT+Ig
+         5edj4V3Kn8XS2U0gmnDxAkUBwsAebQIKnkVOOLirWRxiy0KFJhABcq2maDSJ80rPB9/s
+         g1gnUppb5gL/mIZKI4vPxJ0wHYuSLwA1oCBlmEvCkSRVI3zDbWxDZCpGmzAkTw8O2h/J
+         i7c9rldY82Q8ju8Hvdu+3gzInf+SmjDaUoFkeywHtNHfDxO/DrctkVispwKPnsYD7qF1
+         QZAiSvjdL7b0G45/EShFJyYqXx143JSIUZ72r3qxkBHZJH4vDpBC6RhBzHbn/jB3hf0E
+         Bolw==
+X-Gm-Message-State: ACrzQf3GsmA10B7zbO/v60EbZD+dfNxSmxJ4I0TG1zgEosEFGSi3gIc8
+        RtGOotMJw2KT1aYGjDl/f/Wn1S2Ga5S/UhGuOluIvg==
+X-Google-Smtp-Source: AMsMyM5EZ2b9+Zx72MJSwKkYOy7MT/QARvjzpmiU3mdDvJS2ktuldu+FvRcODe0gy2jIi/6xnqW3k6EYXp/fkIQhiaA=
+X-Received: by 2002:a1f:4843:0:b0:3ae:c4a3:d653 with SMTP id
+ v64-20020a1f4843000000b003aec4a3d653mr3457835vka.1.1665995841549; Mon, 17 Oct
+ 2022 01:37:21 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: msm8998: align TLMM pin
- configuration with DT schema
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221012151416.38645-1-krzysztof.kozlowski@linaro.org>
- <20221012151416.38645-3-krzysztof.kozlowski@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Organization: Linaro Developer Services
-In-Reply-To: <20221012151416.38645-3-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20221012142524.3920266-1-steve@sk2.org>
+In-Reply-To: <20221012142524.3920266-1-steve@sk2.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 17 Oct 2022 10:37:10 +0200
+Message-ID: <CAMRc=MeVBJAcMx8pR5gY2j2LZcZqs6sP3XXnREXDd=5xKDbYkw@mail.gmail.com>
+Subject: Re: [PATCH] drivers/gpio: use simple i2c probe
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 12/10/2022 17:14, Krzysztof Kozlowski wrote:
-> DT schema expects TLMM pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+On Wed, Oct 12, 2022 at 4:25 PM Stephen Kitt <steve@sk2.org> wrote:
+>
+> All these drivers have an i2c probe function which doesn't use the
+> "struct i2c_device_id *id" parameter, so they can trivially be
+> converted to the "probe_new" style of probe with a single argument.
+>
+> This is part of an ongoing transition to single-argument i2c probe
+> functions. Old-style probe functions involve a call to i2c_match_id:
+> in drivers/i2c/i2c-core-base.c,
+>
+>          /*
+>           * When there are no more users of probe(),
+>           * rename probe_new to probe.
+>           */
+>          if (driver->probe_new)
+>                  status = driver->probe_new(client);
+>          else if (driver->probe)
+>                  status = driver->probe(client,
+>                                         i2c_match_id(driver->id_table, client));
+>          else
+>                  status = -EINVAL;
+>
+> Drivers which don't need the second parameter can be declared using
+> probe_new instead, avoiding the call to i2c_match_id. Drivers which do
+> can still be converted to probe_new-style, calling i2c_match_id
+> themselves (as is done currently for of_match_id).
+>
+> This change was done using the following Coccinelle script, and fixed
+> up for whitespace changes:
+>
+> @ rule1 @
+> identifier fn;
+> identifier client, id;
+> @@
+>
+> - static int fn(struct i2c_client *client, const struct i2c_device_id *id)
+> + static int fn(struct i2c_client *client)
+> {
+> ...when != id
+> }
+>
+> @ rule2 depends on rule1 @
+> identifier rule1.fn;
+> identifier driver;
+> @@
+>
+> struct i2c_driver driver = {
+> -       .probe
+> +       .probe_new
+>                 =
+> (
+>                    fn
+> |
+> -                  &fn
+> +                  fn
+> )
+>                 ,
+> };
+>
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 > ---
->   .../boot/dts/qcom/msm8998-clamshell.dtsi      |  7 +-
->   .../boot/dts/qcom/msm8998-fxtec-pro1.dts      | 16 ++--
->   arch/arm64/boot/dts/qcom/msm8998-mtp.dts      |  4 +-
->   .../dts/qcom/msm8998-oneplus-cheeseburger.dts | 10 +--
->   .../boot/dts/qcom/msm8998-oneplus-common.dtsi | 14 ++--
->   .../dts/qcom/msm8998-sony-xperia-yoshino.dtsi | 30 ++++----
->   arch/arm64/boot/dts/qcom/msm8998.dtsi         | 76 +++++++++----------
->   7 files changed, 78 insertions(+), 79 deletions(-)
-> 
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+Applied, thanks!
 
+Bart
