@@ -2,112 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7043B6016D9
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 21:02:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A036016E0
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 21:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbiJQTCv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 15:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        id S229923AbiJQTEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 15:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiJQTCu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 15:02:50 -0400
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E29D733CA;
-        Mon, 17 Oct 2022 12:02:49 -0700 (PDT)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-134072c15c1so14367168fac.2;
-        Mon, 17 Oct 2022 12:02:49 -0700 (PDT)
+        with ESMTP id S229597AbiJQTEj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 15:04:39 -0400
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0D812D28;
+        Mon, 17 Oct 2022 12:04:37 -0700 (PDT)
+Received: by mail-oi1-f182.google.com with SMTP id g10so13166526oif.10;
+        Mon, 17 Oct 2022 12:04:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TfuFTCnT41Vf+yqme8MYS5/WX6SrCU7lrQN9QbMWIls=;
-        b=MkqeHj5QCt7tEWSFxbnrTlLKLTmU3P2z+mf2gLBVYwicqrZwG9PK3K3Eg97p6IK2NF
-         BmAiA8iwvuKcnBwMGxmHsPbftLSfz0ivgyAsL+UFkISwMfGH6NOZnG7h25EkgIH1lhtN
-         7HjHjCsIPgCRvnWNMDdt2Lk9aO5s6jqr7/Bm7LvVNV6C5P7ut5QcQE495h1TvTtn//lv
-         gDxHWNmjfKtFTl6A0qbWU8lAR0mVrDpENoAz8m5ItPVSqasVtQlCOKBM5Frjb86ua3JS
-         xukDPODn2Gs1xiD0+qqU3DJhQ3D6G2J7ya4JO38ogvqGEjiwnfV1n5TLG6u/UT1kxNAN
-         ebRA==
-X-Gm-Message-State: ACrzQf2NXpgUsK9R5jloHfCpvmYWW9ZhTRpTHikKhWPTb+g8VylXGckh
-        BeymTTe0OY3xAwhNTBDbdSFXjgzhPA==
-X-Google-Smtp-Source: AMsMyM6TiiRCJTJ7FzW9bmZbAhlcf3b8Miwh+vNx6cQ9k0vDAhf98IuGy/E94LDfTJcqf99R7R6jfA==
-X-Received: by 2002:a05:6870:e0c9:b0:132:2090:20f7 with SMTP id a9-20020a056870e0c900b00132209020f7mr6312682oab.277.1666033368584;
-        Mon, 17 Oct 2022 12:02:48 -0700 (PDT)
+        bh=JOP2b9Nau8iEeSvyNn6E8PPEtGHiAXX+/w7I4SFcS4I=;
+        b=OduiD0zzbEOMnP2ZwdY4/guD8sC4rcIy/61h5b8yHSXBL+l4lF/ZRrybU4YCMz7A+f
+         DscnnV0ZyDP3zqp6wE88gUF2UeLaL3kZnJA68z7rafF1A9WYYJIwmhb3PLUMwVf30rOk
+         s6FKSpI7CY6a5WE56uNIdelcSbR6JpTlGCdbe7KHD+W4jFl3XsD9gWGwGEI8xer7xa9X
+         77DUJbsQvuOqVL/CQlfSF9ugBMDiC+RMGWq3HXdTduD1wUiTRTt0G7H/KVrTVq/Nfmvk
+         7xRJqRgulLFxZLak63y+dRjMGJVxrhKnvwrwt7t6UbYqLzJ4NYkztipO9AW5zk7oTVp2
+         B+jQ==
+X-Gm-Message-State: ACrzQf3J8GnapUK/Th95LitqKjVvV05S+NKsIhxHed38AYCO5ahT/3zT
+        CeZdmgQC58IqGbiwa0tMVQ==
+X-Google-Smtp-Source: AMsMyM7gUX9iEsWtrsviepRzM8t4rKYICHZWOu6v02gWK7pLfbAlZLF73bl7W7Fn55GknUxce5Z62w==
+X-Received: by 2002:aca:5808:0:b0:350:9790:7fe with SMTP id m8-20020aca5808000000b00350979007femr14498202oib.79.1666033476307;
+        Mon, 17 Oct 2022 12:04:36 -0700 (PDT)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id m8-20020a9d73c8000000b00655c6b2655esm5038320otk.68.2022.10.17.12.02.46
+        by smtp.gmail.com with ESMTPSA id 94-20020a9d0de7000000b006619295af60sm5026981ots.70.2022.10.17.12.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 12:02:47 -0700 (PDT)
-Received: (nullmailer pid 2285363 invoked by uid 1000);
-        Mon, 17 Oct 2022 19:02:47 -0000
-Date:   Mon, 17 Oct 2022 14:02:47 -0500
+        Mon, 17 Oct 2022 12:04:35 -0700 (PDT)
+Received: (nullmailer pid 2292539 invoked by uid 1000);
+        Mon, 17 Oct 2022 19:04:36 -0000
+Date:   Mon, 17 Oct 2022 14:04:36 -0500
 From:   Rob Herring <robh@kernel.org>
 To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Lee Jones <lee@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
+Cc:     devicetree@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] dt-bindings: regulators: convert non-smd RPM
- Regulators bindings to dt-schema
-Message-ID: <20221017190247.GA2284064-robh@kernel.org>
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-gpio@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: convert
+ qcom,mdm9615-pinctrl.txt to dt-schema
+Message-ID: <166603347554.2292483.5082356726414220368.robh@kernel.org>
 References: <20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org>
- <20221005-mdm9615-pinctrl-yaml-v2-4-639fe67a04be@linaro.org>
- <20221017143951.GA1434507-robh@kernel.org>
- <9b5df679-3561-b51b-7127-bf8bdc8cb65f@linaro.org>
+ <20221005-mdm9615-pinctrl-yaml-v2-1-639fe67a04be@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9b5df679-3561-b51b-7127-bf8bdc8cb65f@linaro.org>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v2-1-639fe67a04be@linaro.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 04:47:44PM +0200, Neil Armstrong wrote:
-> Hi,
+On Mon, 17 Oct 2022 12:23:05 +0200, Neil Armstrong wrote:
+> Convert the MDM9515 pinctrl bindings to dt-schema.
+> Keep the parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, optional children with '-pins').
 > 
-> On 17/10/2022 16:39, Rob Herring wrote:
-> > On Mon, Oct 17, 2022 at 12:23:08PM +0200, Neil Armstrong wrote:
-> > > Convert the non-SMD Regulators bindings to dt-schema, the old text based
-> > > bindings will be deleted later since the RPM bindings are not yet converted.
-> > > 
-> > > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > > ---
-> > >   .../bindings/regulator/qcom,ipc-rpm-regulator.yaml | 127 +++++++++++++++++++++
-> > >   1 file changed, 127 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/regulator/qcom,ipc-rpm-regulator.yaml b/Documentation/devicetree/bindings/regulator/qcom,ipc-rpm-regulator.yaml
-> > > new file mode 100644
-> > > index 000000000000..e18bb8b87c43
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/regulator/qcom,ipc-rpm-regulator.yaml
-> > > @@ -0,0 +1,127 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/regulator/qcom,ipc-rpm-regulator.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: QCOM IPC RPM REGULATOR
-> > 
-> > Fix your capslock.
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
+>  .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 120 +++++++++++++++
+>  2 files changed, 120 insertions(+), 161 deletions(-)
 > 
-> It's literally taken from Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.yaml:
-> 
-> title: QCOM SMD RPM REGULATOR
 
-Plenty of bad examples to follow.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
