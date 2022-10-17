@@ -2,127 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53EE2600C1F
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 12:17:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5B79600C3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 12:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230013AbiJQKQa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 06:16:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55584 "EHLO
+        id S229957AbiJQKXO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 06:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbiJQKQD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 06:16:03 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A7C46D92
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 03:16:02 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id d26so23744066ejc.8
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 03:16:02 -0700 (PDT)
+        with ESMTP id S229826AbiJQKXO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 06:23:14 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E63B35FDE8
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 03:23:11 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id j7so17746193wrr.3
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 03:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jxk2s2ANmZp2WKA9YJugV44UvSaSYVmLt/4gqo1RPrQ=;
-        b=oRgOe04VturqaPQ5sDuGc6PwP/W6m2unf1BiwREtowfWriAyr/tM8BdpGur5T/Tn+l
-         LCpm3jhUgKaM0MayF1eKAcNyOtZ4QOB5ogQFO6RSOw25pAI67b4SWo1tSHyYBF/YQ/d+
-         dAsCqCTsNnwWa9BLA02mNE+GAYL8opQtM1QIOLIlltTVPSDxPeVeO0KmGCTkcBcRcoDu
-         xtnXtkuuv76dxwjB7llqBeAc+BTosvOd7nDGIDN7UzmMDfZbj9xSeRcC2mbxoiVaZJl2
-         X4P9Mdo0TRUTBUzY/PCs8+0Lxqqmc5yIWX2F4W4CBTIhXlgurOfPGUhCse1uLVaTUsbY
-         iwiQ==
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=2tBc5BJTUK0yJeikdsN9lehq8jKJ6hu9VScPZU4a2kI=;
+        b=bdMMl9zH0j03ibTEKy/zCqWIwlETzDUo9ooO5EvQAFnx3iYPS7HdIgwALI5bam0aqB
+         oQigPd/nYpgC6M+zBK7std6ZLqh0IMHxfvfD3xsD8Cy2AwY2f+OeiAenUJkm/q/GT4T4
+         9yN6Z/Cx1MEG2N27/Y0mUbcE9WEOk0KOHAyCSIpPeg/4Oukpt4Qs73+o1e0nPKbL8f4w
+         r0wIsQog9ltsUwx9mWhTTYcW1cfalMKdBDX57UH1jyb3eE8HlCNB/au0hlw5J8p17nvd
+         YcWDoD85oh0zwnWHDofdDICQbN3JmeekfkKGVLMdXfjQalQNGM1e51Yb0yD2RSJAeWGu
+         pivw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jxk2s2ANmZp2WKA9YJugV44UvSaSYVmLt/4gqo1RPrQ=;
-        b=xIiIDI6PE8GrvW7ketSq6eO6oydYDR0dvfwPCqtJrzqKizgzDa2vqF0SnWptgzNltj
-         I6hutOF2Se66aTFlmFzJIEqIyWz+msWwiRd0pF7Q2ERJie3IJ9zDfRWtDLPwaqW8Ouj8
-         n07WqKN+nq+xxzU2XKf/PSRPZaGZ3K3MmUSf7x1WORio5TZXrCTq1l2rGdsf6j5Zj/cl
-         BDSTIVo6UE4D1E8H/QDlEKagTN6WY1NZJqfq4x8v2XeLSScK6asmv0BuHr9iki6uUNhA
-         HCrWHqvC9nkTR8nz1fbJr/rZmpFbpl1LzIG5XngEC6IUMXbSH2m3Z1OwiHZWmBIhz89j
-         tbvw==
-X-Gm-Message-State: ACrzQf0AI9fBJHKJmKAT4AH9BQ0RB3LVeGzU0DtINyoUcQeflf2fkwVM
-        ZiCtV4GPZOv2AaYx3loNuus1wUWAWMY41U6dPPGCMw==
-X-Google-Smtp-Source: AMsMyM6WdhHd+FbdZ9YUr/vApG/7uuVhXLcczqk65Dc+MgIVSXr5iMfAcTj+FxRTgy5ZrMgkQjCJeg6f3wRiPT0eY04=
-X-Received: by 2002:a17:907:1624:b0:78d:d61c:2b4a with SMTP id
- hb36-20020a170907162400b0078dd61c2b4amr7894907ejc.208.1666001760814; Mon, 17
- Oct 2022 03:16:00 -0700 (PDT)
+        bh=2tBc5BJTUK0yJeikdsN9lehq8jKJ6hu9VScPZU4a2kI=;
+        b=e8+C7+Y/W62jxskWv4K5VgVlm+ZcRyo1IapPVl4Q7m+eRjh0nPUSntxVd4V1qPr4JX
+         kCyfCoN+uB8e6YPRirOD/skfPks2EGUMpD9lu49fpW0ByQem7jdjE4hnchUdtgR7p5V6
+         50b4/u8MogLEx3FCiSB2ep03IX1K0KaxxSE+tF8ofTimChz0ZEmI0Aqn+G/zxGSIQ/wQ
+         wmPafoE6rOWPkB5bGIIAAlkN/HM9/7qZyMphdJFXnNURKL1QPWXhkllX/8tSsQcSXM7C
+         6dB2JUoF9UcbXxoSgEeWzJNZJqPEut8pNAzQMNlHLbgHPXU6AZgJ6L5mKNMXCEVFLre+
+         FC9w==
+X-Gm-Message-State: ACrzQf1TO/SMw74k9kDfZ/FoViYSleWFrKdJWunTTp7tdJCk1LHaYKH5
+        y7JsL25jbFj4cguBgIkr4RQQvA==
+X-Google-Smtp-Source: AMsMyM4Z0GGBbYxrURvlW1Ga67cbnXc5JvAoUjdO9dpW/aCtJK2zoDhG4xwgBxeVvDxyl5t3Z0wVAg==
+X-Received: by 2002:adf:9dd0:0:b0:22c:d6cc:b387 with SMTP id q16-20020adf9dd0000000b0022cd6ccb387mr6109316wre.353.1666002190182;
+        Mon, 17 Oct 2022 03:23:10 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
+        by smtp.gmail.com with ESMTPSA id t9-20020a05600c198900b003b4fe03c881sm15590707wmq.48.2022.10.17.03.23.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 03:23:09 -0700 (PDT)
+Subject: [PATCH v2 0/5] arm: qcom: mdm9615: second round of bindings and DT fixes
 MIME-Version: 1.0
-References: <20221013134729.5592-1-mario.limonciello@amd.com> <20221013134729.5592-2-mario.limonciello@amd.com>
-In-Reply-To: <20221013134729.5592-2-mario.limonciello@amd.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Oct 2022 12:15:49 +0200
-Message-ID: <CACRpkdamdnBDrieoxxEcxRjPUqKXgOj4=P8Z1044NrMHd8DB2A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] pinctrl: amd: Add dynamic debugging for active GPIOs
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-        Mark Pearson <mpearson@lenovo.com>,
-        Pananchikkal Renjith <Renjith.Pananchikkal@amd.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAAgtTWMC/4WNQQqDMBBFryKz7pRJrNJ21XuULsaY6kBMZGIFEe/e0At09Xkf3v87ZK/iM9yrHd
+ SvkiXFAvZUgRs5Dh6lLwyWrDVEDU79dGtNg7NEt2jAjaeApn43zlz50tcMRe04e+yUoxuLHD8hlHKU
+ vCTdflerKfH8s7oaJCTXOaLWW67pESSypnPSAV7HcXwBdEbIaL4AAAA=
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Mon, 17 Oct 2022 12:23:04 +0200
+Message-Id: <20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org>
+To:     Lee Jones <lee@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        devicetree@vger.kernel.org
+X-Mailer: b4 0.10.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 13, 2022 at 3:47 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
+This is a second round of bindings & DT fixes for the MDM9615 platform.
 
-> Some laptops have been reported to wake up from s2idle when plugging
-> in the AC adapter or by closing the lid.  This is a surprising
-> behavior that is further clarified by commit cb3e7d624c3ff ("PM:
-> wakeup: Add extra debugging statement for multiple active IRQs").
->
-> With that commit in place the following interaction can be seen
-> when the lid is closed:
->
-> [   28.946038] PM: suspend-to-idle
-> [   28.946083] ACPI: EC: ACPI EC GPE status set
-> [   28.946101] ACPI: PM: Rearming ACPI SCI for wakeup
-> [   28.950152] Timekeeping suspended for 3.320 seconds
-> [   28.950152] PM: Triggering wakeup from IRQ 9
-> [   28.950152] ACPI: EC: ACPI EC GPE status set
-> [   28.950152] ACPI: EC: ACPI EC GPE dispatched
-> [   28.995057] ACPI: EC: ACPI EC work flushed
-> [   28.995075] ACPI: PM: Rearming ACPI SCI for wakeup
-> [   28.995131] PM: Triggering wakeup from IRQ 9
-> [   28.995271] ACPI: EC: ACPI EC GPE status set
-> [   28.995291] ACPI: EC: ACPI EC GPE dispatched
-> [   29.098556] ACPI: EC: ACPI EC work flushed
-> [   29.207020] ACPI: EC: ACPI EC work flushed
-> [   29.207037] ACPI: PM: Rearming ACPI SCI for wakeup
-> [   29.211095] Timekeeping suspended for 0.739 seconds
-> [   29.211095] PM: Triggering wakeup from IRQ 9
-> [   29.211079] PM: Triggering wakeup from IRQ 7
-> [   29.211095] ACPI: PM: ACPI non-EC GPE wakeup
-> [   29.211095] PM: resume from suspend-to-idle
->
-> * IRQ9 on this laptop is used for the ACPI SCI.
-> * IRQ7 on this laptop is used for the GPIO controller.
->
-> What has occurred is when the lid was closed the EC woke up the
-> SoC from it's deepest sleep state and the kernel's s2idle loop
-> processed all EC events.  When it was finished processing EC events,
-> it checked for any other reasons to wake (break the s2idle loop).
->
-> The IRQ for the GPIO controller was active so the loop broke, and
-> then this IRQ was processed.  This is not a kernel bug but it is
-> certainly a surprising behavior, and to better debug it we should
-> have a dynamic debugging message that we can enact to catch it.
->
-> Acked-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> Acked-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
-> v1->v2:
->  * Use PIN_IRQ_PENDING instead
->  * Add Acks
+This second round focuses on less trivial changes like pinctrl & regulators bindings,
+the remaining work will mainly be fixing the qcom,kpss-timer/qcom,msm-timer situation and
+add bindings for qcom,lcc-mdm9615, qcom,kpss-gcc & swir,mangoh-iotport-spi.
 
-Patch applied!
+Dependencies:
+- patch 1-2, 4-5: None
+- patch 3: bindings dependency on 20221005-mdm9615-sx1509q-yaml-v2-0-a4a5b8eecc7b@linaro.org
 
-Yours,
-Linus Walleij
+To: Bjorn Andersson <andersson@kernel.org>
+To: Andy Gross <agross@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@somainline.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Lee Jones <lee@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+---
+Changes in v2:
+- Rebased on v6.1-rc1
+- Patch 1: Fixed bindings and aligned with Krysztof's series
+- Patch 2: Rewrote patch title and added reviewed-by tag
+- Patch 3: Added reviewed-by tag
+- Patch 4: Moved to end, added support for (regulators|-regulators) sudnode
+- Patch 5: Fixed schema description and added missing unevaluatedProperties in patternProperties
+- Patch 6: Dropped & squashed with patch 4
+- Link to v1: https://lore.kernel.org/r/20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org
+
+---
+Neil Armstrong (5):
+      dt-bindings: pinctrl: convert qcom,mdm9615-pinctrl.txt to dt-schema
+      arm: dts: qcom: mdm9615: align pinctrl subnodes with dt-schema bindings
+      arm: dts: qcom: mdm9615: wp8548-mangoh-green: fix sx150xq node names and probe-reset property
+      dt-bindings: regulators: convert non-smd RPM Regulators bindings to dt-schema
+      dt-bindings: soc: qcom: convert non-smd RPM bindings to dt-schema
+
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 283 ---------------------
+ .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ------------
+ .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 120 +++++++++
+ .../bindings/regulator/qcom,ipc-rpm-regulator.yaml | 127 +++++++++
+ .../devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml |  99 +++++++
+ .../boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts  |  20 +-
+ arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi         |  22 +-
+ 7 files changed, 367 insertions(+), 465 deletions(-)
+---
+base-commit: 19d64985796125c5e3820c3db995c5df6d13d6dc
+change-id: 20221005-mdm9615-pinctrl-yaml-13f5c18a4d3a
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
