@@ -2,65 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07F0A600B2A
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 11:41:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A200600B83
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 11:47:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230498AbiJQJl5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 05:41:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46828 "EHLO
+        id S231528AbiJQJrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 05:47:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230366AbiJQJl4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 05:41:56 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4309713E83
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:41:55 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id e18so15181292edj.3
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:41:55 -0700 (PDT)
+        with ESMTP id S231391AbiJQJri (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 05:47:38 -0400
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDDE5E337
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:47:01 -0700 (PDT)
+Received: by mail-lf1-x136.google.com with SMTP id g7so11799773lfv.5
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 02:47:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=VQ/HSgI2YgnyJT47jhmeTT6yW7UCxZ0jSNWzQkI0FEw=;
-        b=kBn4OiBZ1cWeTnBRzDnVts1O6YM1bzUTlkmnUk6qzbv03LVlaFoqC7VeVSIK+1ayXf
-         8spqbtyKS/eFcrq3aFMvy+6AujV5KLTJTcUjgtC2C2LMyKuTdoejQpZXM49XKD2LVU3M
-         UHHvwZa3PfzWjUqKut3gBTgwZFmoc2g4mwyhfLJCpEVyux70EJkqElrWfi0+qlbqUlL/
-         rEdFsn2lQxqKi12JtQuQsU6ceDTInMEi3VPcUVxR7rKKOZZkE2tkhoPhyNODRCnROj/0
-         krEKr1SmKxidWbFJtNDgMMgKc2rbiI1NWRSObYynkKJ/u6tUD8MCVkATz2QuGF7mQ48f
-         aY2g==
+        bh=m28MxXGYXT4qGN7nik464yL/UhJ82SzVaHoLGkQoTpw=;
+        b=pSF9QYPlsSgNQPRR9XdOhQ9tHnI5i7mpZjMTTlvUq8/jBVi240La3CiktdZ9cpYnbg
+         3gzgPCO57wDjxjV7KwmmBFQaXqWqjRqzXTrCgvh8wcmDIVE8Auov0FvGOGYsRXNhpQuR
+         v0uxqa/yDBhbsp7XhTBM5WkFr41VnSeB1B2KgRUcNxVTYYngf4c2n+TJnNslKA3qbycQ
+         3Mg/Pn05b14TDYhsHc6vl/ddFRe80qxr2PLv4DhzicBjcB9Y4NURWiXK++bV44Pf+VSK
+         HuYAflUusNFJlXHC9YSfpGVok3c6YUgICIPANvYBQ/qXi+g9MokQq0B+0qEWWxPhKkC5
+         GQGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VQ/HSgI2YgnyJT47jhmeTT6yW7UCxZ0jSNWzQkI0FEw=;
-        b=03HqXgEdHloF98cwnTiPSbrQje01lnU0zZiaqBgLbv5GpR9XkHMBfeYHrBJFXoqDA7
-         RDeLLBoF60RStEXWhbIoNZQ6/d9FZx8ta041WvUGRa1fe4Paz2g9rpo1um6698vO+d9X
-         FYDX8aiSQt4EcoO5oO8q2RNzdPpNvPSy76vM/8+0A/kmSjVMgywNlVBInhOe+aQIHNOX
-         9mkpImd8EnZCr/IpPv64hTiSr1UaU8kxQ999lCsJJoy+0ajyF58f8e/efBJ0XYw01+Dl
-         Pr8IlNRRec0Tf+4wCslcRXScbzhTIRmya96klhb9Oygn/6VVFR+AI7ND8CnL8ebTWcd5
-         +ZEw==
-X-Gm-Message-State: ACrzQf1gMb4bbTx8Dy87ndmbAo+o3wXIBOOmrHXdMhPaoxgTyhVpLbs0
-        Xzm3SyrtvSo6Zp7RF31dBPfCmfaXiwyjzyVKwL5qPA==
-X-Google-Smtp-Source: AMsMyM5kbAxE5N7tiaNYd1vvW4ZCnpFPQbl0NhkiqKILYLuft/kSjMMpw2mO7Vm4BCjieaOJetA31dCsdLbgxjE4tCs=
-X-Received: by 2002:a05:6402:d0b:b0:458:a244:4e99 with SMTP id
- eb11-20020a0564020d0b00b00458a2444e99mr9489401edb.46.1665999713052; Mon, 17
- Oct 2022 02:41:53 -0700 (PDT)
+        bh=m28MxXGYXT4qGN7nik464yL/UhJ82SzVaHoLGkQoTpw=;
+        b=hB8S/3kChSR1KSXgrq6a863qJnkwNIk9GDsdZpZtuTu134ctB4LCVtlZOseg4JbPqN
+         4BOpflRfn19UW10D5CmwM3EIGb8okalhJCKfS6mcHSvBekiwa8HAGPdawdc8N4H5+Efk
+         gM0mSdYvr6nIrW9JjlwRhmLtepM7Xs9bXBAuOQw5j7mE8yWuo3nL5ksbXnnt1woZMtvV
+         C9N0ncC9quef3cmqhx4IUghITDp0ARJw6hcRX41uNHhTSU5C3qGjWSYBkN6zhkGpJs3S
+         DFpxxVuFArsPQ/d6RTRW9nSNLUcYe6sYUU6I5lNAjXuTbXdGL7zXAlinneJiMOW/iZeb
+         iRZw==
+X-Gm-Message-State: ACrzQf0pixkntMNKl5chTJ07tw1fg6OG2ZPD00FiMqHcr7hSZ9VddXx7
+        ncF/cThRNrg7iI/stGqL9LoXgBzrJv6uEhOhUGLfWu5b1vo=
+X-Google-Smtp-Source: AMsMyM4CGBR28SSkgO6sUfPaGHahhe5lagnYKp+a4Qpc5atANtQAtfZFWQQpanlTqBVMnG93twfz3+YjvG8BYu9pwjI=
+X-Received: by 2002:a17:906:5d04:b0:77f:ca9f:33d1 with SMTP id
+ g4-20020a1709065d0400b0077fca9f33d1mr8038485ejt.526.1666000007686; Mon, 17
+ Oct 2022 02:46:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221008164807.113590-1-linux@fw-web.de>
-In-Reply-To: <20221008164807.113590-1-linux@fw-web.de>
+References: <20221009181338.2896660-1-lis8215@gmail.com> <20221009181338.2896660-6-lis8215@gmail.com>
+In-Reply-To: <20221009181338.2896660-6-lis8215@gmail.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 17 Oct 2022 11:41:41 +0200
-Message-ID: <CACRpkdYNZGJaVN0eRZPmkmWr=it7xZtAPM=qV0EyQWUZgZ68hQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: allow configuring uart rx/tx and
- rts/cts separately
-To:     Frank Wunderlich <linux@fw-web.de>
-Cc:     linux-mediatek@lists.infradead.org,
-        Sam Shih <sam.shih@mediatek.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>
+Date:   Mon, 17 Oct 2022 11:46:36 +0200
+Message-ID: <CACRpkdZL9qWPaoRhCt3h8m1it9DaoS3TJrxPHVOzGZWhL45PNw@mail.gmail.com>
+Subject: Re: [PATCH 5/8] pinctrl: ingenic: JZ4755 minor bug fixes
+To:     Siarhei Volkau <lis8215@gmail.com>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -72,19 +76,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Oct 8, 2022 at 6:48 PM Frank Wunderlich <linux@fw-web.de> wrote:
+On Sun, Oct 9, 2022 at 8:14 PM Siarhei Volkau <lis8215@gmail.com> wrote:
 
-> From: Sam Shih <sam.shih@mediatek.com>
+> Fixes UART1 function bits and mmc groups typo.
 >
-> Some mt7986 boards use uart rts/cts pins as gpio,
-> This patch allows to change rts/cts to gpio mode, but keep
-> rx/tx as UART function.
+> For pins 0x97,0x99 function 0 is designated to PWM3/PWM5
+> respectively, function is 1 designated to the UART1.
 >
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+> Tested-by: Siarhei Volkau <lis8215@gmail.com>
+> Signed-off-by: Siarhei Volkau <lis8215@gmail.com>
 
-No response from maintainers for a week and patch makes sense
-so patch applied for next!
+This patch applied for fixes.
 
 Yours,
 Linus Walleij
