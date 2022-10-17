@@ -2,85 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A036016E0
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 21:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35EB4601889
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 22:08:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiJQTEl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 15:04:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38640 "EHLO
+        id S230263AbiJQUIX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 16:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiJQTEj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 15:04:39 -0400
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0D812D28;
-        Mon, 17 Oct 2022 12:04:37 -0700 (PDT)
-Received: by mail-oi1-f182.google.com with SMTP id g10so13166526oif.10;
-        Mon, 17 Oct 2022 12:04:37 -0700 (PDT)
+        with ESMTP id S229780AbiJQUIW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 16:08:22 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD4375384
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:21 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id i9so8105276qvu.1
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dd//7INOchzF6hK9pPI/LJYoeYVe0d6hpeKVUa4UPnk=;
+        b=WNdtIwr6fN7ajltCaE/9oytsCcRF7h81rRrIW2D+JkaaegKNoPop+tU4uxK7grHf8r
+         5CiyiWskPdlcnZoucP0b1A1eAU4Q3P5oEjSzq779cCJ3OercNORDykUYUZhP8X8ozYO0
+         dP5QyCoyrdwiByrpnp/KT6h5Ym0zCd69fzsCLezcjPcH3qqtxyypqf9eiG5lVT7sN+ls
+         Tb2PsRLrXzAP35w3PFVtogim3yn2F5YYnrpdSmp/lv2KVY2wkfXhxOXM+H+svnZmB/ZU
+         aXPk6JH6DVPBkA0XM9NYs+Gvlz1dNrN3GR5sp+zQ2yh/8qADdxXggyxm2YB6aHmngmmR
+         SwiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JOP2b9Nau8iEeSvyNn6E8PPEtGHiAXX+/w7I4SFcS4I=;
-        b=OduiD0zzbEOMnP2ZwdY4/guD8sC4rcIy/61h5b8yHSXBL+l4lF/ZRrybU4YCMz7A+f
-         DscnnV0ZyDP3zqp6wE88gUF2UeLaL3kZnJA68z7rafF1A9WYYJIwmhb3PLUMwVf30rOk
-         s6FKSpI7CY6a5WE56uNIdelcSbR6JpTlGCdbe7KHD+W4jFl3XsD9gWGwGEI8xer7xa9X
-         77DUJbsQvuOqVL/CQlfSF9ugBMDiC+RMGWq3HXdTduD1wUiTRTt0G7H/KVrTVq/Nfmvk
-         7xRJqRgulLFxZLak63y+dRjMGJVxrhKnvwrwt7t6UbYqLzJ4NYkztipO9AW5zk7oTVp2
-         B+jQ==
-X-Gm-Message-State: ACrzQf3J8GnapUK/Th95LitqKjVvV05S+NKsIhxHed38AYCO5ahT/3zT
-        CeZdmgQC58IqGbiwa0tMVQ==
-X-Google-Smtp-Source: AMsMyM7gUX9iEsWtrsviepRzM8t4rKYICHZWOu6v02gWK7pLfbAlZLF73bl7W7Fn55GknUxce5Z62w==
-X-Received: by 2002:aca:5808:0:b0:350:9790:7fe with SMTP id m8-20020aca5808000000b00350979007femr14498202oib.79.1666033476307;
-        Mon, 17 Oct 2022 12:04:36 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id 94-20020a9d0de7000000b006619295af60sm5026981ots.70.2022.10.17.12.04.35
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dd//7INOchzF6hK9pPI/LJYoeYVe0d6hpeKVUa4UPnk=;
+        b=avKipN341jbKOxdX0nN6KJfICZhaq+DSybpCitQL815+hNpqIFTDHAsrfOl0pPm8lQ
+         wPIk81yci2bcvXvyBVlnmBTO8/6ZQbHVj9VNjwCxzIFaTg9JByFf/sWNDy4wm5LJ9ttN
+         HgZicR/pTSVtqk9t47PixENEJko2o56b0tsrRKvMJwMBGPcpNbrvmxDrpPxtksdbCNuP
+         MbTCdZBROhZmOQQFCpOJ/H7ybzF4x9gvxA0JdCZBeXTFwcvUI2sjuwJHYgsfbukJXmfY
+         OI2BgyDUl61nLjE4t8g9XyLW2zLd6dcOibFR/XKSbA6Xs57vHuA5Bz8bsMQoBRXCG3rx
+         ioTw==
+X-Gm-Message-State: ACrzQf0k0051RjP7c6B0A/fHtkrQVm95B7M7fldcSvbd08g9/dLTPbBo
+        P67sB3VrEvFtwgJ2UJTMz+YRgQ==
+X-Google-Smtp-Source: AMsMyM54d+Qf6Ss2v7cna2oaXkwf1mPpscRTGwfQscVRxFK8xSf1PqTCAe8uwE48SGBOD82CUNXpIQ==
+X-Received: by 2002:a05:6214:234a:b0:474:2318:3f3b with SMTP id hu10-20020a056214234a00b0047423183f3bmr9411583qvb.10.1666037300488;
+        Mon, 17 Oct 2022 13:08:20 -0700 (PDT)
+Received: from localhost.localdomain (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
+        by smtp.gmail.com with ESMTPSA id m13-20020a05620a24cd00b006ce76811a07sm536793qkn.75.2022.10.17.13.08.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 12:04:35 -0700 (PDT)
-Received: (nullmailer pid 2292539 invoked by uid 1000);
-        Mon, 17 Oct 2022 19:04:36 -0000
-Date:   Mon, 17 Oct 2022 14:04:36 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-gpio@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
-        linux-arm-msm@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mon, 17 Oct 2022 13:08:19 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-gpio@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: convert
- qcom,mdm9615-pinctrl.txt to dt-schema
-Message-ID: <166603347554.2292483.5082356726414220368.robh@kernel.org>
-References: <20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org>
- <20221005-mdm9615-pinctrl-yaml-v2-1-639fe67a04be@linaro.org>
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>
+Subject: Re: (subset) [PATCH v2 05/12] dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: fix gpio pattern
+Date:   Mon, 17 Oct 2022 16:07:40 -0400
+Message-Id: <166603728600.4991.13769978430561789417.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220927153429.55365-6-krzysztof.kozlowski@linaro.org>
+References: <20220927153429.55365-1-krzysztof.kozlowski@linaro.org> <20220927153429.55365-6-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v2-1-639fe67a04be@linaro.org>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 17 Oct 2022 12:23:05 +0200, Neil Armstrong wrote:
-> Convert the MDM9515 pinctrl bindings to dt-schema.
-> Keep the parsing of pin configuration subnodes consistent with other Qualcomm
-> schemas (children named with '-state' suffix, optional children with '-pins').
+On Tue, 27 Sep 2022 17:34:22 +0200, Krzysztof Kozlowski wrote:
+> Fix double ']' in GPIO pattern to properly match "pins" property.
+> Otherwise schema for pins state fails.
 > 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
->  .../bindings/pinctrl/qcom,mdm9615-pinctrl.txt      | 161 ---------------------
->  .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     | 120 +++++++++++++++
->  2 files changed, 120 insertions(+), 161 deletions(-)
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied, thanks!
+
+[05/12] dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: fix gpio pattern
+        https://git.kernel.org/krzk/linux-dt/c/793b96bf484d9c8c05266254721ce96534d79800
+
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
