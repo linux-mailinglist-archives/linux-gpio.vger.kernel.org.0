@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A0BC6018C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 22:09:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E72D6018C1
+	for <lists+linux-gpio@lfdr.de>; Mon, 17 Oct 2022 22:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230354AbiJQUJo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 16:09:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34494 "EHLO
+        id S230436AbiJQUJh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 16:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231171AbiJQUJM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 16:09:12 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66637AC1D
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:44 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id s3so8450682qtn.12
-        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:44 -0700 (PDT)
+        with ESMTP id S230500AbiJQUJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 16:09:11 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2EA7AC14
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:45 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id j21so7382743qkk.9
+        for <linux-gpio@vger.kernel.org>; Mon, 17 Oct 2022 13:08:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1ajc1ZcKSbsMi4SYmhXVS9hmvbdI76njIntcxKoO48Q=;
-        b=toNArmnmTyIbV2B9kSivcuekpnbx+OmeGpSkrr8hOYKV25ysxsmly+8XHY0JxKs9Hq
-         idpjJFo4ITl6/f5ndcW+kRj4BSlAYgCkLylvZomY1aTJqRn5lmzc3N+psGBk/I203H6A
-         AkSZw20epabDSH820tEChFFGH9OH1q/f5MJzZqmezuTZWyCg/bKHX13W0FFDlUM4r9tD
-         Bvq1j34eSEEzKfoKd7UgEpeRKn/ufJda7+Z06AqgF2cbU6S5S11oDaC+buAceHNuCQhs
-         UG46S+CPyusk4vAOG5B873axf9+KzRws56F005wUSnZ/2hsPTZR52whupRhmhGFkapKl
-         Jlpw==
+        bh=If++LWwNOyF5ckswXDXoJMcl/1wNn/+tZFQPJ0x9ifc=;
+        b=A/WODgLgG9QisvodAGpil800z8s1QmDZtrFEdgMFl35IIUExH+9pvqPuG9Opg3ToEC
+         KFifzTXak8KK9cVK6UDStGXI24wtzzFlRw4NhTzGG3be9nP46lvpafWfGGh2z+uUkHMm
+         8lWZP1RlTPiLAStaRolll5l3DDb93iKnijY+KFoyZzg+NgUnutShBtv+KfknUNZPUpWl
+         rrAlENki3Xf/tdwIvI2r1kET1g2SFBEtqay44fbqdi/Fb9dT9f6hP1uu/2OCin/qMmL4
+         UEE37E6IWaMr15aFV921WKkJx2+7WAhTVHbXKq6i0C3vgeLvgJV8n5XgbBEUVL7eGNzF
+         mC+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1ajc1ZcKSbsMi4SYmhXVS9hmvbdI76njIntcxKoO48Q=;
-        b=oxlrg0vs65duzxjC0J5Bv75y0ZvRkV+CX02CzKhi0ti+L8SM3sT/seFHxNlBARhPvv
-         8gVCDdEu7sONpHoeSJqXbfKbf7ieuw5S7EGyp4jvgQLUkAIBJQ1GdBuF55MfGZ4TqAXT
-         GPoz9yCK+bqjHvISS9w/CyS/JKkam+PcsCd0fiA/GsrAdA0+DPgg4XUwfgwAdthS9V2Y
-         IeN8llQnmUGEZjNqJWFpfGavvOHda6HA02EQOpsYXQo9Mnw19ixGD0a04TV5RTQb9cD1
-         jrvQtcVhi6GjrWuu0EHYIFtNKqXb+2VRqx0El+AWTAYgVU1X3ocRKCg0blR8GW8MZgGl
-         Fmcg==
-X-Gm-Message-State: ACrzQf16DEotn6oKU8FxoKdKVPoyhi000s8YkB/A/uDpp5fFQ+AJULWM
-        dwVvMjkVn+0FB/afeVIaKCyrlw==
-X-Google-Smtp-Source: AMsMyM653Z+gUmY8Hwg0d6uBzL2wFoY/o3dDcO8lsOSZGL7UQ8XnQnuQpYQcKXyd57cfuGEP7mqOgw==
-X-Received: by 2002:ac8:43d7:0:b0:39c:df0d:266f with SMTP id w23-20020ac843d7000000b0039cdf0d266fmr10171446qtn.574.1666037323118;
-        Mon, 17 Oct 2022 13:08:43 -0700 (PDT)
+        bh=If++LWwNOyF5ckswXDXoJMcl/1wNn/+tZFQPJ0x9ifc=;
+        b=zWX4BkK6qFBe/o+qIuz7z3ouJd7gl3I7m/URtsOqyHHGo5yJ/XCf65MDRgV/OhslNn
+         Q1PqUTUClz6IXSKSRDmoBGpNJYdOiUoPqtXeaE22UCOp3xQ6AnMufMzwKv523S+abc44
+         USERzS04czR0RSJU+Ci9fBz1n55ATaCqmbgKtUO4XMGrApO9xJCwLQsSYW7IjSMpxMND
+         mFYXYIoGB7+57C6y47mQdNe2DVmmTYbkDd5EJRWUtmPGyZb3H6rT1IlXHdKlIeDheL0C
+         wjraeQH4+3oXhleW+Hm7XRX8MNnkU0GifXegRr3aA+2qIk+o0VZPtwh7k369lbipOYH+
+         2ahw==
+X-Gm-Message-State: ACrzQf2zfLnrJPhGq8V9uKzURZtkR+08xRegPDOy7Y7JSoKJFlGzeFzd
+        w/m0XGhNSkr3KTBZaml0/U99GQ==
+X-Google-Smtp-Source: AMsMyM52Y94hvGcj5U2IpCSpWfySJ2gJLLod14skiexkKS76t1cB8Ae+bnM+BJZ2SfT4XWXwOUq5PQ==
+X-Received: by 2002:a05:620a:454e:b0:6ec:61a0:1865 with SMTP id u14-20020a05620a454e00b006ec61a01865mr9205339qkp.414.1666037324435;
+        Mon, 17 Oct 2022 13:08:44 -0700 (PDT)
 Received: from localhost.localdomain (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id m13-20020a05620a24cd00b006ce76811a07sm536793qkn.75.2022.10.17.13.08.40
+        by smtp.gmail.com with ESMTPSA id m13-20020a05620a24cd00b006ce76811a07sm536793qkn.75.2022.10.17.13.08.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 13:08:42 -0700 (PDT)
+        Mon, 17 Oct 2022 13:08:43 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>, Shawn Guo <shawn.guo@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org,
+To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawn.guo@linaro.org>, linux-gpio@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Sivaprakash Murugesan <sivaprak@codeaurora.org>,
-        Bjorn Andersson <andersson@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
         krishna Lanka <quic_vamslank@quicinc.com>,
         linux-kernel@vger.kernel.org,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
@@ -63,12 +63,12 @@ To:     Andy Gross <agross@kernel.org>, Shawn Guo <shawn.guo@linaro.org>,
         devicetree@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Rob Herring <robh@kernel.org>
-Subject: Re: (subset) [PATCH v5 12/34] dt-bindings: pinctrl: qcom,ipq6018: use common TLMM schema
-Date:   Mon, 17 Oct 2022 16:07:53 -0400
-Message-Id: <166603728601.4991.15528471345095985299.b4-ty@linaro.org>
+Subject: Re: (subset) [PATCH v5 13/34] dt-bindings: pinctrl: qcom,ipq6018: fix indentation in example
+Date:   Mon, 17 Oct 2022 16:07:54 -0400
+Message-Id: <166603728601.4991.17627005332347004343.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221016170035.35014-13-krzysztof.kozlowski@linaro.org>
-References: <20221016170035.35014-1-krzysztof.kozlowski@linaro.org> <20221016170035.35014-13-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221016170035.35014-14-krzysztof.kozlowski@linaro.org>
+References: <20221016170035.35014-1-krzysztof.kozlowski@linaro.org> <20221016170035.35014-14-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -82,17 +82,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, 16 Oct 2022 13:00:13 -0400, Krzysztof Kozlowski wrote:
-> Reference common Qualcomm TLMM pin controller schema, to bring common
-> properties, other pinctrl schemas and additional checks, like function
-> required only for GPIOs.
+On Sun, 16 Oct 2022 13:00:14 -0400, Krzysztof Kozlowski wrote:
+> Bindings example should be indented with 4-spaces.
 > 
 > 
 
 Applied, thanks!
 
-[12/34] dt-bindings: pinctrl: qcom,ipq6018: use common TLMM schema
-        https://git.kernel.org/krzk/linux-dt/c/0a1879f298b2d160173994ea34ea0ca096241f48
+[13/34] dt-bindings: pinctrl: qcom,ipq6018: fix indentation in example
+        https://git.kernel.org/krzk/linux-dt/c/4c05adcaa6054a2a6f229b1598615028816aad19
 
 Best regards,
 -- 
