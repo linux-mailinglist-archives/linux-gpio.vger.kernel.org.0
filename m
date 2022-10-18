@@ -2,136 +2,252 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F8660266C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:07:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDB056026A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbiJRIHB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 04:07:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35360 "EHLO
+        id S230381AbiJRIVN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 04:21:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbiJRIHA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:07:00 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2048.outbound.protection.outlook.com [40.107.244.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3CE8559B;
-        Tue, 18 Oct 2022 01:06:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KQbcKXaRU+7Yrc6HBG7JPf0xntSkDviEiUJrhwIRYO7nFqdobC5AqCF65afMLqXgFTm5f6zNv+fG84XUpzIq5QAvWi+lqvCr+XYPn54TBUlkIEXNkaAozRQLL5yuqGs/XQJ9bjbsIzrO2kFc/i86q0DqF9lXLREeWLSNdNOmGQQq3s5+L9ORniyQdn8nrdEIKijME2YHmbLPR+2zRfEcbmhqDifgmx0XZbxpLd8VdJecoCQxLxjmOftMfzff4eUg9lVyVTzMKkqbf9GO8AIto+JB6zQbn2dhmXHHdfUmE0IwxSPglhfbbujrJ89RsjbEUnwr6J0AZsic4G4BeFe90g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zx+yrMDh/vhQhScokhg5AOJCGl5nVvAdCROQs8ZlWNg=;
- b=dPsbtOi6TQpDYqpp4gbbOHGoUbB0VqrPyhjevrDR/9apcfJD0c3b3WiMvIDKTVS09u5p9scMC07NhRxhsWM7vrQugITv0n3LSoFxVFz37EmwYGyYVHxlsnubd3UmkCkIFyURJSC/5HTRySkSlebNhu8Tb1IeR/LDFRBkBjBmSK8XJNX5lyhf0pej2dNHz+mPGpLBnV9ggvh4NG/AVzne5wxcSXlLqyxsANORR4Jfqd92uFuA2g7lpOUCHQeeH3Ds76YKTloS/rSrmrnLlVyhgnb8B2tSynnN+9aEo5Qsehul7ErtgrYXucqvvqlDclJWA6SeTvUleHswzCh9g3FBsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zx+yrMDh/vhQhScokhg5AOJCGl5nVvAdCROQs8ZlWNg=;
- b=mp4V9KvHLqWaQNQf6mkx92Qc7XbqglT7I3Rq49IW9+57CEMrN2JeMRsaecAcLcAZJblwMclBlgqCJgxd3e3AX6KAOAM7sMp05kqy7xwuH0Q+CA5Ts6SpWZueRv52p3DTfQMHSSymtzWEs/H3lYIy87xMj8DowPAlOdfsmyb8oUY=
-Received: from DM6PR07CA0127.namprd07.prod.outlook.com (2603:10b6:5:330::28)
- by PH7PR12MB6658.namprd12.prod.outlook.com (2603:10b6:510:211::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Tue, 18 Oct
- 2022 08:06:57 +0000
-Received: from DM6NAM11FT101.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:330:cafe::f6) by DM6PR07CA0127.outlook.office365.com
- (2603:10b6:5:330::28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.31 via Frontend
- Transport; Tue, 18 Oct 2022 08:06:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT101.mail.protection.outlook.com (10.13.172.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5723.20 via Frontend Transport; Tue, 18 Oct 2022 08:06:57 +0000
-Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Tue, 18 Oct
- 2022 03:06:53 -0500
-Message-ID: <48b5848c-e8f6-a6f7-ba1e-8c914374e6b2@amd.com>
-Date:   Tue, 18 Oct 2022 10:06:50 +0200
+        with ESMTP id S230456AbiJRIVK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:21:10 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 362D5937A2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:21:08 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id t16so124129edd.2
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:21:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tlBhycv0qO+B/UR4Tbs6xf7dolFDGt0VcAQLm0zQj48=;
+        b=zp6/7E5MJU+2hOjkWqKFn5T5NzclrZwRKtR33QDdgbQU9GU/DK4nuUhzzgJmFCVISV
+         C1snUQqK5yO6iIu5z2+dunt2/cpUL5UCyiykb86XSExUduLeKg8q+3CZVI8rO5dkFm/o
+         AxXX6REm1g7izhD3UIJoZHmoWPu+hJuuBnJoGKDdMYI+n5Ferb06C7wisvfia/fzT72z
+         o/Qh5/vpihUt21pJ92VG4s24s54mrQWMvSzd9Dmyosi9NKjEfRbJgqIVXmY2irQPNvgP
+         oTjkhet+p7JEsKus2ynuE2wsYN+EkxVAofaeP8rQw2iVHOeM4jB6lyUx3xlYXTW/UjLL
+         Fn0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tlBhycv0qO+B/UR4Tbs6xf7dolFDGt0VcAQLm0zQj48=;
+        b=qjEFczsmfUnYI3Thk7tVtm6nqDQl7evDmxDvHKUd0KIgyf6+FRWGlxkKQrx2kwd8pz
+         EOHYDnVv3KIw/6aFbkO1Av7XjjVXbXcboI6XF6IcPA14rvTK+zDOfApak5FteXxboDoK
+         2bb74/vkZ3PUpmXsOu4v8uqyG+pzQzYdxfl7RYjgni0Ngx/Cu/K3LGI4wK1JaOd3GHKP
+         PPvY4pMGWucBz2Y+oM2HVOuaruFL8dLkC1X9TB3CKKA3c5Gt/Uy7Ve6fqnhhzppyp/wF
+         v2ruYKZuxh/5Qqutxk+e3wk+q9ETn7MFuksNHGmxTIGvpIDEY8JtwtzffO/JaUMaykZA
+         N+yQ==
+X-Gm-Message-State: ACrzQf3qf0/CMvhDBKehpfVtcHsZPP/RYK/HX0fff3rA+mPZMH/RCC0Q
+        8AAl1wYuaDlmrxSxRXcSMfSWqEQ5IKXCE0qp0S38Wg==
+X-Google-Smtp-Source: AMsMyM4AnR0J5CEoykBYGszN3KnizRR6umUFmm4ObZz5qsZVI/oO361LJtUgvSCoLMQ6J1cgkjH8tEDp7M6FplFNFXk=
+X-Received: by 2002:a05:6402:4029:b0:45b:d50c:b9b0 with SMTP id
+ d41-20020a056402402900b0045bd50cb9b0mr1535489eda.126.1666081266616; Tue, 18
+ Oct 2022 01:21:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH v2 0/2] pinctrl: pinctrl-zynqmp: Revert output-enable and
- bias-high-impedance support
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
-CC:     Michal Simek <michal.simek@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <saikrishna12468@gmail.com>, <git@amd.com>
-References: <20221017130303.21746-1-sai.krishna.potthuri@amd.com>
- <CACRpkdYYvznEKQ0huj5XwNwghMP-FRw5e54Di9FLVdXdsFP3-A@mail.gmail.com>
-From:   Michal Simek <michal.simek@amd.com>
-In-Reply-To: <CACRpkdYYvznEKQ0huj5XwNwghMP-FRw5e54Di9FLVdXdsFP3-A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT101:EE_|PH7PR12MB6658:EE_
-X-MS-Office365-Filtering-Correlation-Id: def1678d-3807-4b6f-e3c0-08dab0dfba1d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1BylaI06f9C+wkNzODEldsRMYJPW71zHd4ymOIBdNtzAoDJwxgkS1DcTgtlPQmK4xB1B2rCsn2r+b7QdwGefiEoHtn8tD671WBaH0dQPfsscU7eOm4vz24qZ+lNxCzFRegO7d3djYKcL6OXFA5I6Vgo6iL+sc20nURqPXRO3DXVFRYaV2EmiJiqre4QvadvDM4OpdBUY1ytSLilvAeIirJHB4HHxBdmIsSLgf0ItK/92L8qOAOTR1CgO5DA6SB/6BzuDVeVvwWqzxoAXXroXcwJkseCV4Wue8zeabxSYnjM7HYKnG3SXVW7dJi0KRitgsJcDvBDKsbLUjbi1B77mz2Y54SVsvMwJ8ofMbRkmLRD714KyJ6kfzioU+e51Ejm7d3stR8zOjdj+l4XItWxeuXl5KwFkbcSf0GrMWxueKnXYx4atePNoB8QsWe2K+N1UBK6hBGvxQ5WXdrhzq/+rHSOPpaKnawUTWNN682/RcWYmzzGrxFtRZT4fvb3rwGbeYPs0CBir/6/sfpmJBEdx4zZw3ijPT2AAnirRTM5ZmrIzO3tH9xi6seEuNa5R6/0z+Irnx2znP4y+Dmcdxo4MfWjdFz2+9m/ZTyjd2lEHkZAM6JRFMC+b74c1iSLZnK2QAp6T8GhbsboNVggVMs4CarKmQiflVwHFeWFQxUCXA0hX3r+NnhqJfoH/E8jPKz9L9qasObmiVP5szZ0T4tHuApadWnGQOi0bC8c254/bGRzQSjRHOPVXTM49Y2Q9LN4YRCPoJOrtR8u3ulgEleOGI4/nw4HwNxjjIwHTYnOn0xiXSuE803HKX3SgRCJYl0c4iJREs7aWIs6HdrQM9vCvzg==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(396003)(346002)(136003)(451199015)(36840700001)(40470700004)(46966006)(66899015)(110136005)(6636002)(316002)(54906003)(478600001)(16526019)(16576012)(186003)(2906002)(336012)(4326008)(70586007)(70206006)(8676002)(8936002)(2616005)(41300700001)(53546011)(44832011)(26005)(4744005)(5660300002)(36756003)(82740400003)(40480700001)(36860700001)(40460700003)(47076005)(86362001)(426003)(31696002)(83380400001)(31686004)(356005)(82310400005)(81166007)(43740500002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 08:06:57.2281
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: def1678d-3807-4b6f-e3c0-08dab0dfba1d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT101.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6658
+References: <20221007152853.838136-1-shenwei.wang@nxp.com> <CACRpkdaKncznz5qej6owA2OGMeqbrif9e_QO3CWN6+sGhEApDw@mail.gmail.com>
+ <PAXPR04MB9185AE67BF20108CFBF0546289299@PAXPR04MB9185.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB9185AE67BF20108CFBF0546289299@PAXPR04MB9185.eurprd04.prod.outlook.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 18 Oct 2022 10:20:55 +0200
+Message-ID: <CACRpkdZ1hCZ1WoTQ0e584bQxEyBWq9gkZKPPFnm85QnMnNyvHQ@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH v2 1/1] gpio: mxc: add suspend/resume support
+ for i.mx8x SoCs
+To:     Shenwei Wang <shenwei.wang@nxp.com>
+Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Oct 17, 2022 at 3:55 PM Shenwei Wang <shenwei.wang@nxp.com> wrote:
+> > On Fri, Oct 7, 2022 at 5:29 PM Shenwei Wang <shenwei.wang@nxp.com> wrote:
+> >
+> > > On i.MX8QM/QXP/DXL SoCs, even a GPIO is selected as the wakeup source,
+> > > the GPIO block will be powered off when system enters into suspend
+> > > state. This can greatly reduce the power consumption of suspend state
+> > > because the whole partition can be shutdown. This is called PAD wakeup
+> > > feature on i.MX8x platform.
+> > >
+> > > This patch enables this wakeup feature on i.MX8QM/QXP/DXL platforms.
+> > >
+> > > Signed-off-by: Shenwei Wang <shenwei.wang@nxp.com>
+> > > ---
+> > >  Changes in v2:
+> > >  - fix a bug when finding the pad index
+> >
+> > This:
+> >
+> > > +#define IMX_SC_PAD_FUNC_GET_WAKEUP     9
+> > > +#define IMX_SC_PAD_FUNC_SET_WAKEUP     4
+> > > +#define IMX_SC_IRQ_GROUP_WAKE           3   /* Wakeup interrupts */
+> > > +#define IMX_SC_IRQ_PAD                 2    /* Pad wakeup */
+> > > +
+> > > +#define IMX_SC_PAD_WAKEUP_OFF          0
+> > > +#define IMX_SC_PAD_WAKEUP_LOW_LVL      4
+> > > +#define IMX_SC_PAD_WAKEUP_FALL_EDGE    5
+> > > +#define IMX_SC_PAD_WAKEUP_RISE_EDGE    6
+> > > +#define IMX_SC_PAD_WAKEUP_HIGH_LVL     7
+> > (...)
+> >
+> > > +const struct mxc_gpio_pad_map imx8qm_pad_map[] = {
+> > > +       /* GPIO0 */
+> > > +       {  0, IMX8QM_SIM0_CLK},
+> > > +       {  1, IMX8QM_SIM0_RST},
+> > > +       {  2, IMX8QM_SIM0_IO},
+> > > +       {  3, IMX8QM_SIM0_PD},
+> >
+> > this is pin control.
+> >
+> > I think you need to think about adding this to the i.MX pin control driver instead,
+> > possibly cooperaring with the GPIO driver.
+> >
+> > I'm not entirely certain about the relationship between MXC and i.MX so correct
+> > me if I get this wrong...
+>
+> This is not pin control.
+
+So when something in a driver starts to enumerate all the pads on a
+system and assign
+them properties, I tend to think it is some kind of pin control.
+
+You have things like this:
+
++const struct mxc_gpio_pad_map imx8qm_pad_map[] = {
++       /* GPIO0 */
++       {  0, IMX8QM_SIM0_CLK},
++       {  1, IMX8QM_SIM0_RST},
++       {  2, IMX8QM_SIM0_IO},
++       {  3, IMX8QM_SIM0_PD},
++       {  4, IMX8QM_SIM0_POWER_EN},
++       {  5, IMX8QM_SIM0_GPIO0_00},
++       {  6, IMX8QM_M40_I2C0_SCL},
++       {  7, IMX8QM_M40_I2C0_SDA},
++       {  8, IMX8QM_M40_GPIO0_00},
++       {  9, IMX8QM_M40_GPIO0_01},
++       { 10, IMX8QM_M41_I2C0_SCL},
+(...)
 
 
-On 10/18/22 09:51, Linus Walleij wrote:
-> On Mon, Oct 17, 2022 at 3:03 PM Sai Krishna Potthuri
-> <sai.krishna.potthuri@amd.com> wrote:
-> 
->> Having support for output-enable and bias-high-impedance properties
->> causing system hang with older Xilinx ZynqMP Platform Management Firmware
->> because there is missing autodetection feature.
->> When this feature is implemented, support for these two properties should
->> bring back.
->>
->> changes in v2:
->> -> Added stable tree tag in 1/2 and 2/2 patches.
-> 
-> Patches applied for fixes!
-> 
-> Thanks for dealing with this, I hope you find a proper way to make
-> it work with all firmwares.
+Which is duplicating the same defines in
+drivers/pinctrl/freescale/pinctrl-imx8qm.c:
 
-The way what pmufw team described is that driver will ask firmware if that 
-feature is available or not. If yes, the current calls will be made. Maybe we 
-could do it via module parameter but this is the cleanest solution for now.
+static const struct pinctrl_pin_desc imx8qm_pinctrl_pads[] = {
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_CLK),
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_RST),
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_IO),
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_PD),
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_POWER_EN),
+        IMX_PINCTRL_PIN(IMX8QM_SIM0_GPIO0_00),
+        IMX_PINCTRL_PIN(IMX8QM_COMP_CTL_GPIO_1V8_3V3_SIM),
+        IMX_PINCTRL_PIN(IMX8QM_M40_I2C0_SCL),
+        IMX_PINCTRL_PIN(IMX8QM_M40_I2C0_SDA),
+        IMX_PINCTRL_PIN(IMX8QM_M40_GPIO0_00),
+        IMX_PINCTRL_PIN(IMX8QM_M40_GPIO0_01),
+        IMX_PINCTRL_PIN(IMX8QM_M41_I2C0_SCL),
+(...)
 
-Thanks,
-Michal
+This is blatant code duplication, at the very least we need to find a way
+to share this pin library, because it is irresponsible to put the same
+information into the kernel twice. You can easily imagine what happens
+if one of these pin tables contain an error and it only gets fixed
+in one of these two places.
 
+> The wakeup function doesn't change any PINCtrl settings.  On i.MX8
+> platform, there is an extra pad wakeup logic and each pin can be configured as the wakeup source
+> during system suspend.
+
+So pads, pins, fingers - all these funny names for things like that - those are
+handled by the pin control subsystem.
+
+> Because GPIO module is powered off on i.MX8 platform in suspend
+> state, the GPIO's native wakeup won't work anymore. This patch just maps a GPIO wakeup to the
+> corresponding PAD wakeup, and this mapping doesn't impact or change any PINCtrl settings.
+> Also the pad wakeup feature here has a great power consumption advantage comparing with the
+> GPIO module's native wakeup.
+>
+> >
+> > To me this looks like two drivers could end up fighting about the control of the
+> > same hardware if you don't.
+> >
+>
+> It won't. This patch doesn't interact with any pinctrl relating registers at all.
+
+It interacts with the i.MX SCU and the i.MX pin control does exactly that.
+
+What it does at the end is to call this RPC to set up the asynchronous pad ring:
+
+ret = imx_scu_call_rpc(ipc_handle, &msg, true);
+
+Consider:
+drivers/pinctrl/freescale/pinctrl-scu.c
+
+Which also issues a while bunch of imx_scu_call_rpc().
+
+What I think you should do is call into the pin control back-end and have
+pinctrl-scu.c handle this for you.
+
+An ordinary vanilla pin controller would use the configs from
+include/linux/pinctrl/pinconf-generic.h
+but I think the i.MX pin config is custom different, so you need to
+figure out what config to pass and how.
+
+drivers/gpio/gpio-mxc.c should however implement gpio line
+configuration, somewhere along the lines of:
+
+port->gc.set_config = gpiochip_generic_config;
+
+Then if you look into gpiochip_generic_config you can see that this will
+call into the pin controller back-end:
+
+int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+                            unsigned long config)
+{
+        return pinctrl_gpio_set_config(gc->gpiodev->base + offset, config);
+}
+
+At this point there must be a mechanism in place to cross-reference
+between GPIO lines and pins, the most common way to solve this is
+to use gpio-ranges, see Documentation/devicetree/bindings/gpio/gpio.txt.
+
+This will hopefully end up in .pin_config_set()->imx_pinconf_set, in
+drivers/pinctrl/freescale/pinctrl-imx.c which looks like this:
+
+static int imx_pinconf_set(struct pinctrl_dev *pctldev,
+                           unsigned pin_id, unsigned long *configs,
+                           unsigned num_configs)
+{
+        struct imx_pinctrl *ipctl = pinctrl_dev_get_drvdata(pctldev);
+        const struct imx_pinctrl_soc_info *info = ipctl->info;
+
+        if (info->flags & IMX_USE_SCU)
+                return info->imx_pinconf_set(pctldev, pin_id,
+                                           configs, num_configs);
+        else
+                return imx_pinconf_set_mmio(pctldev, pin_id,
+                                            configs, num_configs);
+}
+
+Here one path goes down into the SCU, and there your custom wakeup
+config will be handled.
+
+At least this is how I imagine it, the i.MX maintainers need to say how
+this should work in their opinion, but code duplication and two unsyncronized
+clients sending random messages to the SCU surely is not an
+option.
+
+Yours,
+Linus Walleij
