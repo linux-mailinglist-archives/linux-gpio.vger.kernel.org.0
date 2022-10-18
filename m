@@ -2,106 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 058D360276C
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:46:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6AAC60277E
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230368AbiJRIq3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 04:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
+        id S230345AbiJRIt7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 04:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbiJRIq2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:46:28 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79B711D666
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:46:27 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id a67so19386661edf.12
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:46:27 -0700 (PDT)
+        with ESMTP id S231142AbiJRIt4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:49:56 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2C12D13A;
+        Tue, 18 Oct 2022 01:49:27 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id j23so16999399lji.8;
+        Tue, 18 Oct 2022 01:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C8yONvRRUQJPuoavB+xNZ/gSoA3xt5GYZLZQQi+w0go=;
-        b=nRefSusEqx9L/VcO+LJ8/n65ylL2w6HkuK9rQkkyeDbyS5UZrRNnrH4z5iRVhSIwa1
-         GmfmO5Ty085QZKg5899MZYNvWv810eLoSCCENzZxozx3jsIuWqGj8dKFlbmBjRI3x+W5
-         abAGpaKv9c9m24CwSxqIaK9V0LY8YQxstzNRmT51ozZRDh14JbTKuagUE8f8Frq7x/4Q
-         SwHLsIDnrz4JsDPUiaJqDKO3S/oUwvkgS3OdR/SysFKD/sMfaH8fTSGYol384HAid4v+
-         oYHbQAWLMPCB1HetJn6pWEXSceoZPrPQ5keSZlzwHey7EzbJHQCjCdxaU2lm4uhnUDb0
-         m1+g==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ASVdbX1uwutQ8LkCPHmupGy4+8wzihgP/ZAbqQQYpHA=;
+        b=b4m7Xe7OTeZrDyEgwGeokF3uW8vjY4assmR6FL1H8txH1a8jkLZN4sJCp73IJASr0x
+         lcpMC3Fnnkag1twnuNDLoOgTXxjCPm8CF8uj/KiICpVlZHDHgkxKZDHIT1N0375aR4Yu
+         83RBKJKbHCLhDE4KrvEm6ECCZpMxWwLZTAy3z+zozAcW4E+mO9f1KSER/FRnpfswLW2i
+         xUTVL2shoQtbTpfSi3cHVO1Eqjx22oOJCa+Yj/h3RvsQgU8lTaXs7R0TJFW2zPsOpCZ8
+         aVp0Ij45XmO7FrRplXplG9s6KcLHH1znjIQxDllTQkIrroX+xUiWTZjiUCi/dvTQm5eW
+         q+mg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=C8yONvRRUQJPuoavB+xNZ/gSoA3xt5GYZLZQQi+w0go=;
-        b=ZeWSMzXBaAYzxr6NuOu0hAhR0hpGt8oBx88wRjHgfx2O+g8PGavoRpBezyb0+O7D/z
-         gPc68C0P2BfH7S7tzyUfEv22syUuP2q1kQzASHsu786MJXMVqBcHYebmRigG6PvfHjEW
-         VhwBaDApelWDYO6Hz5zvBISG7ihTS+tyhrS4kWx6hxfWdfFEriEJxBrnH3k9rGqu89iV
-         qqcDXgwNhE7LYQ2womE4CDydtelVFc/JsqhJyQ3TFr8/c4U/0kZ26R+8/zGhNjpAaKEI
-         Uq7DnIbnpNOQr0GtLh0daCcsiP1EhWTooKMfCn3+Ayx1yme/VO4sHVPRcE+DTRHLH8JD
-         VSLg==
-X-Gm-Message-State: ACrzQf1cI4y7yFfJXGLDObnGP60G9G7Kug3s0vPOod18bXjLLWhoXvIx
-        mT6kmIvxlX7iyT6C8u5X4ANlyOLyMzs2TbTwlaXHgA==
-X-Google-Smtp-Source: AMsMyM5NcWmisEzHV59uUQHklByRJFIqWOZcpu4+XDbYo0YoIKJjnuyc6uWEd4Ko0V3yzD60DhsEWB+sXpCi358bd/s=
-X-Received: by 2002:a05:6402:448:b0:45c:8de5:4fc with SMTP id
- p8-20020a056402044800b0045c8de504fcmr1612720edw.133.1666082786025; Tue, 18
- Oct 2022 01:46:26 -0700 (PDT)
+        bh=ASVdbX1uwutQ8LkCPHmupGy4+8wzihgP/ZAbqQQYpHA=;
+        b=6jlrGj8LTsiPh2I1k5pgxQvj4n8u7VoZ1jucoz3FhqXg0PRC9BfiIUzy7Q98ki/TJG
+         LbmKFwv+E3gt4otLbN9Xt/sBSpwQoXsExgNN07B2imH5DW3a/WGc3KIWtKX71WJHFWMW
+         kEdNfr+yVedmrg7YkGFZ9oxY8C5kqKj3c0l+pDHe8EwRj5Xj7gJ5spDAnRosND06v4c+
+         qg9QqzdDk4iWUckaOpuWvPqHNSHYCOhBihytQ3a9PX2GCO/rvcGh4p6CS91ZPKIQwMUP
+         rlKcI3hpJfVv4jvITTfAlaMARGi9Rb5aGKNCneIl+XjKf0pRappnhSJm4WQnIajED7q8
+         XM+w==
+X-Gm-Message-State: ACrzQf22AFcZmkOIcpmSCKc4eJWTaIjKLF/0qg7Qb7RJUKmfE6y+g2L3
+        d/aDbVTO5OdJq9uzLkc+WQw=
+X-Google-Smtp-Source: AMsMyM4CUZ5Fp8sE8xJuSbzZ0w/BVMtoUt9oFVWuH5RqKh/1+zq4ocbxiiOeHU3YdoCESH1L9hkMvA==
+X-Received: by 2002:a2e:9181:0:b0:26e:91d8:5796 with SMTP id f1-20020a2e9181000000b0026e91d85796mr708968ljg.398.1666082966108;
+        Tue, 18 Oct 2022 01:49:26 -0700 (PDT)
+Received: from localhost.localdomain ([188.163.112.49])
+        by smtp.gmail.com with ESMTPSA id e10-20020a05651236ca00b004949f7cbb6esm1771890lfs.79.2022.10.18.01.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 01:49:25 -0700 (PDT)
+From:   Svyatoslav Ryhel <clamor95@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] gpio: tegra: Convert to immutable irq chip
+Date:   Tue, 18 Oct 2022 11:49:03 +0300
+Message-Id: <20221018084905.21717-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20221013215946.216184-1-marex@denx.de> <CACRpkdZG4a2SsNiunxz0SHR6kuXLX34LZcYp0dGakDigwbGdHw@mail.gmail.com>
- <86fb901a-ca3a-cfdc-8984-1af9235d5323@denx.de>
-In-Reply-To: <86fb901a-ca3a-cfdc-8984-1af9235d5323@denx.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Oct 2022 10:46:14 +0200
-Message-ID: <CACRpkdaW55-KGKNTTStgbteHn9Kp9E86y1+fTsFBXuV3v3KEiQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock
-To:     Marek Vasut <marex@denx.de>
-Cc:     linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 18, 2022 at 10:33 AM Marek Vasut <marex@denx.de> wrote:
-> On 10/17/22 12:23, Linus Walleij wrote:
-> > On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
-> >
-> >> The driver currently performs register read-modify-write without locking
-> >> in its irqchip part, this could lead to a race condition when configuring
-> >> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
-> >> the register read-modify-write.
-> >>
-> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> >> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
-> >> Signed-off-by: Marek Vasut <marex@denx.de>
-> >
-> > Unrelated, but Marek can you have a look at this MXC patch since
-> > you're obviously working on the platform:
-> > https://lore.kernel.org/linux-gpio/20221007152853.838136-1-shenwei.wang@nxp.com/
->
-> Errrr, that's i.MX8, which is completely different chip than the i.MX8M
-> (except for the naming, which ... oh well). I work on the simpler i.MX8M.
+Update the driver to use an immutable IRQ chip like tegra186
+Switch to new *_PM_OPS and pm_sleep_ptr() macros.
 
-Yeah, I think a part of the problem is that the MXC GPIO is not connected
-to the back-end pin controller for i.MX so one rarely know which SoC
-it is used on.
+Svyatoslav Ryhel (2):
+  gpio: tegra: Convert to immutable irq chip
+  gpio: tegra: Switch to new *_PM_OPS macros
 
-> But looking at the patch, don't we already have a DT property which lets
-> one set GPIO as wake up source, without massive enumeration tables in
-> each GPIO driver ? It seems to me that's what NXP is trying to
-> implement, per GPIO wake up.
+ drivers/gpio/gpio-tegra.c | 60 ++++++++++++++++++++++++++-------------
+ 1 file changed, 41 insertions(+), 19 deletions(-)
 
-I had to bite the bullet and write a longer reply, hoping the i.MX
-and MXC maintainers wake up:
-https://lore.kernel.org/linux-gpio/CACRpkdaKncznz5qej6owA2OGMeqbrif9e_QO3CWN6+sGhEApDw@mail.gmail.com/T/#mac3a8d5399c486657c5e168107ed591694d4b155
+-- 
+2.34.1
 
-Yours,
-Linus Walleij
