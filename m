@@ -2,86 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9FAC6026FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:33:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF81460274C
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:42:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbiJRIdL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 04:33:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41198 "EHLO
+        id S230209AbiJRImu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 04:42:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229900AbiJRIdL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:33:11 -0400
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD52C15728
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:33:09 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id 9773484ADF;
-        Tue, 18 Oct 2022 10:33:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1666081987;
-        bh=3HSTPS6cxL6XD2bzyOJ5Q0O0TX26DJv4Y95cg1+0UII=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=Vr56//e1ad6B4nVmF2XYADFfdU+crE4jHiDSmJr48yoqJ32Bd1Ou/K1m59VDWu/dj
-         1ewge80gDXSS3NXnzFrBeuvwBWaCaaBWlBCf+HtKne9MaOgRjgrkq8JTuLDhwZojjE
-         rncKWr4CS7stINkiRHtKtORDwXR/q5I+Euk4ppD0PFZ2ipZOAx+sKj09DFBGst87ze
-         95Ix/PlRPu/EiC3V56v0iSaIuTQGt7IZzCoAFiibqkverGjKoMIAs1v7uBEcsf9tnr
-         SAiYN0XZkA7vYyVzezlCTdp8hn2wt3VEM9WGCcp0uZl4Alm3AfsNq2YZoHqLFkpLvF
-         v6J2UIlm/0AUQ==
-Message-ID: <86fb901a-ca3a-cfdc-8984-1af9235d5323@denx.de>
-Date:   Tue, 18 Oct 2022 10:33:06 +0200
+        with ESMTP id S229799AbiJRImt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:42:49 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B6E3E76A
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:42:48 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id d26so30460678eje.10
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 01:42:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=iTyZoAG1Msmk9uodk66u2eG085RCcOEtYKv2XNmOQG8=;
+        b=MlC5tIQYknk7saPUItJ2DOuP94f1ZNnZVhQWVtB7n+Kd/Nrm6dfkKJuOKHhHNX7XvH
+         BMXOrBw09ho8M7zMKedLCocv6dzZ0T3Qi9S2canTfhydIYettVdBmRBrwYB92V+8WB+A
+         in9Kh2mh+2rfOW3pkjH4TxzWPIy/TfcIWaJQsCmTnMhDfpZp8tSrJIzGR1xeRzY0JXke
+         k3ZbhSCVZbnjPpUQ91ptQJKPof3ICLYScffpZzxiLbGWqdDDbe5sX0EsWV8dl9GsQhMy
+         bfmaC1aZK3I78SMGxT5CDF9oW5OUlALe61hFdW1/o92t6phVbH5faz1j+mwewEhfxv8+
+         l9Ig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iTyZoAG1Msmk9uodk66u2eG085RCcOEtYKv2XNmOQG8=;
+        b=S9IOkUphm0c7HmKSB0KUnRTIAPeVGloNS+1C8dgaoiyL0sc4ux4210Q4PmgEeupIuV
+         CjgQetmi1Ht/eNnzGnMMnJx5ck0IO5sBDM+qxPXXHwCFkrPK1/6P+h2r/YD1BLxxvAic
+         gk+y2Y9Vs+xh6muu0NJ6LsOlx1sQDxsyIVCTykT3JbM6MbmnkLZoP5/tZGyMCBCXzpJN
+         vekqzUlp9y3owUMeIPGwYE+/hW0KhJvWLzK2aMsoQSY45uAHmEnioRFqXB76Fh4VrsN3
+         vHEkl6VmC3XEgIdmeXhJZhxk9kZkNn0iG7y2hlZfmvUf5ZaBauDLac7IGe35nn32zx95
+         xcfg==
+X-Gm-Message-State: ACrzQf0vDWeTkD7HQs6KDXjXT6lQpv7w2S4G2PTPHx9fm7796pkbcZbZ
+        JqhAwEA0blSsTAWPYGFfvmWmkdXyeIN0G2uJCzkEetmtip0=
+X-Google-Smtp-Source: AMsMyM6eNyhJxObx3NMuafA47nbI/HO2ux80D3ao6jX7hXNxj8sZmF3gpmbTjs8h2VIYXe2WXLts9a8Yo27/FXsiALw=
+X-Received: by 2002:a17:906:5d04:b0:77f:ca9f:33d1 with SMTP id
+ g4-20020a1709065d0400b0077fca9f33d1mr1492290ejt.526.1666082566712; Tue, 18
+ Oct 2022 01:42:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v6 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio
- spinlock
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-References: <20221013215946.216184-1-marex@denx.de>
- <CACRpkdZG4a2SsNiunxz0SHR6kuXLX34LZcYp0dGakDigwbGdHw@mail.gmail.com>
-Content-Language: en-US
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <CACRpkdZG4a2SsNiunxz0SHR6kuXLX34LZcYp0dGakDigwbGdHw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221018070959.1322606-1-horatiu.vultur@microchip.com>
+In-Reply-To: <20221018070959.1322606-1-horatiu.vultur@microchip.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 18 Oct 2022 10:42:35 +0200
+Message-ID: <CACRpkdbP=x_PZfxF+J6RRqEg2jHOrP+KfmrWe=oNvpxqM9zw-Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: ocelot: Fix incorrect trigger of the interrupt.
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andy.shevchenko@gmail.com, michael@walle.cc,
+        UNGLinuxDriver@microchip.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/17/22 12:23, Linus Walleij wrote:
-> On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
-> 
->> The driver currently performs register read-modify-write without locking
->> in its irqchip part, this could lead to a race condition when configuring
->> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
->> the register read-modify-write.
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Reviewed-by: Marc Zyngier <maz@kernel.org>
->> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
->> Signed-off-by: Marek Vasut <marex@denx.de>
-> 
-> Unrelated, but Marek can you have a look at this MXC patch since
-> you're obviously working on the platform:
-> https://lore.kernel.org/linux-gpio/20221007152853.838136-1-shenwei.wang@nxp.com/
+On Tue, Oct 18, 2022 at 9:05 AM Horatiu Vultur
+<horatiu.vultur@microchip.com> wrote:
 
-Errrr, that's i.MX8, which is completely different chip than the i.MX8M 
-(except for the naming, which ... oh well). I work on the simpler i.MX8M.
+> The interrupt controller can detect only link changes. So in case an
+> external device generated a level based interrupt, then the interrupt
+> controller detected correctly the first edge. But the problem was that
+> the interrupt controller was detecting also the edge when the interrupt
+> was cleared. So it would generate another interrupt.
+> The fix for this is to clear the second interrupt but still check the
+> interrupt line status.
+>
+> Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
+> Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-But looking at the patch, don't we already have a DT property which lets 
-one set GPIO as wake up source, without massive enumeration tables in 
-each GPIO driver ? It seems to me that's what NXP is trying to 
-implement, per GPIO wake up.
+Patch applied for fixes!
+
+Yours,
+Linus Walleij
