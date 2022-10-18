@@ -2,61 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25B546027E6
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 11:05:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C07E602A09
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 13:22:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbiJRJF2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 05:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
+        id S229990AbiJRLWJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 07:22:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbiJRJFI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 05:05:08 -0400
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2DCAE64
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 02:04:57 -0700 (PDT)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: marex@denx.de)
-        by phobos.denx.de (Postfix) with ESMTPSA id E99A484461;
-        Tue, 18 Oct 2022 11:04:52 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-        s=phobos-20191101; t=1666083893;
-        bh=2FINBuga9/RKt+gtWqz76Lk3Ab3bC+yY50Z1oDecqVs=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ioueUY1mu7KzwHhotBkPTvT+qumUNezSB24crAfPdpPqSP1VyzByKcyrmdrkyjwJQ
-         Ebd9e8BIFSgYrtKoWr0qr5FtkStGhNXSlYXLssFe3bq4m96wfh/6FI8tU56OJ8mupx
-         OmQcRv+48yiUZodjpC/abMIxZ3hdNj5tPMqgsg4yigfd8uxGqhjJ8cAP11MNaO6Run
-         xD2s/TmPPLfflKQVif/Ms8AkI651/az1fV0fkX+v5nBS6PbMwD/ZYdkkmUApa1/6MX
-         wX5wFWyNuk2xmkrcZ9G5qx+8R7VyOltOh0bqpPm+fN/KhEo7Sl1jwoxU4bENcgWJ2Y
-         tSjMl6FRrXmIw==
-Message-ID: <7054f0cf-6e63-5b8f-4f17-ba7e3303d4cb@denx.de>
-Date:   Tue, 18 Oct 2022 11:04:52 +0200
+        with ESMTP id S229886AbiJRLWJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 07:22:09 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B5C5B14F9
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 04:22:08 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id n18-20020a17090ade9200b0020b0012097cso1491042pjv.0
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 04:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=X3AKmd6DIHHF3xqTa91U9upU8FlJHptBr1lRXYKeXA0=;
+        b=gm7/lZEagVLaXMk8IFbLB1gbKVwfp0eKpD6EzBKXrSdSk5aoEWb95UmAi5FkM5IdSa
+         1irSJKJzDXj9XfjaSji5Yc9A9FJVcVtMGwzAUamvvwJM96xTSQQuu4jr1Swvc8R7TWwr
+         gKEuXkH3CIUvBgDVC7bMh9vJ6K2QVN8wi6n4PfC4JkvR2K5n/VXH9g09x7kDzqiobgRs
+         5yeOWEJtyKyaJdDfvVcIwraKlFpw+koCvGGPjOJkppAPHExPy50kwDkV98INnwOEy5jO
+         45WmZr8le2wJdbedtOfBDwC3taEBQRtYLYKIvp16HFGpoouposS/kQ2tB0sLu9BEXB2A
+         RWig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X3AKmd6DIHHF3xqTa91U9upU8FlJHptBr1lRXYKeXA0=;
+        b=NKGNbtylgpb9N183jMLcoAFiTT0pw7ytbQgo1oUXIBwLqsfujDq5W822s2tHHmMUil
+         NjQZ7vmCrJamXER8Kj87rNmrpq1p5z995U6FsfHb8ri+KWW8h+SCi24hBvDbVJr0WU/h
+         RDlQLlI1ZtMyfAE/qk+wBBe0x4W9oD7dFyXb2oOXrY38uqQhIjurkZ0NOm0ohGuCvXAl
+         gThadZjaJUFdhmwATva97mzHfm51TKinYFwIRlaxCGoinxYWyYQ9Nq0Lit/M7DQDdthh
+         JcRET8kC1KChaa+VBVYGDJQiMG81Fqd9myE25KBxHjLc9ohR9fEBQfu/W6H2C+KVP0DD
+         8EWg==
+X-Gm-Message-State: ACrzQf33v8TPUbQHCV3mggq5701XDmHccfMlX3EUfPH6FC3iIMhlMLRK
+        vzrSply0n69z3OEM4qTGp2+xxg==
+X-Google-Smtp-Source: AMsMyM4ZTLOCVbs53Rrbqg4OG97SIf555gpxi6EQc+A1a97/2o5NxC6q+MCQVlsZFI7LMkyOOnMQ4g==
+X-Received: by 2002:a17:90b:2643:b0:205:bd0d:bdff with SMTP id pa3-20020a17090b264300b00205bd0dbdffmr2974544pjb.99.1666092127908;
+        Tue, 18 Oct 2022 04:22:07 -0700 (PDT)
+Received: from localhost ([122.172.86.128])
+        by smtp.gmail.com with ESMTPSA id a6-20020a170902710600b0016d773aae60sm8398071pll.19.2022.10.18.04.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 04:22:07 -0700 (PDT)
+Date:   Tue, 18 Oct 2022 16:52:04 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V7 1/8] libgpiod: Add libgpiod-sys rust crate
+Message-ID: <20221018112204.l36wnimrqvexnvat@vireshk-i7>
+References: <cover.1665744170.git.viresh.kumar@linaro.org>
+ <c8ef89c343a0c31e4132cc6757fdff8dec0d1669.1665744170.git.viresh.kumar@linaro.org>
+ <Y01RqjgZINnkcyIC@sol>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [PATCH v6 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio
- spinlock
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Loic Poulain <loic.poulain@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
-        Anatolij Gustschin <agust@denx.de>
-References: <20221013215946.216184-1-marex@denx.de>
- <CACRpkdZG4a2SsNiunxz0SHR6kuXLX34LZcYp0dGakDigwbGdHw@mail.gmail.com>
- <86fb901a-ca3a-cfdc-8984-1af9235d5323@denx.de>
- <CACRpkdaW55-KGKNTTStgbteHn9Kp9E86y1+fTsFBXuV3v3KEiQ@mail.gmail.com>
-From:   Marek Vasut <marex@denx.de>
-In-Reply-To: <CACRpkdaW55-KGKNTTStgbteHn9Kp9E86y1+fTsFBXuV3v3KEiQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y01RqjgZINnkcyIC@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,44 +78,55 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 10/18/22 10:46, Linus Walleij wrote:
-> On Tue, Oct 18, 2022 at 10:33 AM Marek Vasut <marex@denx.de> wrote:
->> On 10/17/22 12:23, Linus Walleij wrote:
->>> On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
->>>
->>>> The driver currently performs register read-modify-write without locking
->>>> in its irqchip part, this could lead to a race condition when configuring
->>>> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
->>>> the register read-modify-write.
->>>>
->>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>> Reviewed-by: Marc Zyngier <maz@kernel.org>
->>>> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
->>>> Signed-off-by: Marek Vasut <marex@denx.de>
->>>
->>> Unrelated, but Marek can you have a look at this MXC patch since
->>> you're obviously working on the platform:
->>> https://lore.kernel.org/linux-gpio/20221007152853.838136-1-shenwei.wang@nxp.com/
->>
->> Errrr, that's i.MX8, which is completely different chip than the i.MX8M
->> (except for the naming, which ... oh well). I work on the simpler i.MX8M.
+On 17-10-22, 20:59, Kent Gibson wrote:
+> > diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+> > new file mode 100644
+> > index 000000000000..77f82719d269
+> > --- /dev/null
+> > +++ b/bindings/rust/libgpiod-sys/Cargo.toml
+> > @@ -0,0 +1,15 @@
+> > +[package]
+> > +name = "libgpiod-sys"
+> > +version = "0.1.0"
+> > +edition = "2018"
+> > +
 > 
-> Yeah, I think a part of the problem is that the MXC GPIO is not connected
-> to the back-end pin controller for i.MX so one rarely know which SoC
-> it is used on.
+> Add license and other relevant keys as per the link you helpfully include...
 
-The MXC GPIO is traditionally completely separate from IOMUXC pinmux 
-controller, the MX8 (the non-M and non-X) is just a bit odd and I have 
-little experience with that one.
+Is this enough ?
 
->> But looking at the patch, don't we already have a DT property which lets
->> one set GPIO as wake up source, without massive enumeration tables in
->> each GPIO driver ? It seems to me that's what NXP is trying to
->> implement, per GPIO wake up.
+diff --git a/bindings/rust/libgpiod-sys/Cargo.toml b/bindings/rust/libgpiod-sys/Cargo.toml
+index 77f82719d269..af4098cb137d 100644
+--- a/bindings/rust/libgpiod-sys/Cargo.toml
++++ b/bindings/rust/libgpiod-sys/Cargo.toml
+@@ -1,6 +1,11 @@
+ [package]
+ name = "libgpiod-sys"
+ version = "0.1.0"
++authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
++description = "A rust library for libgpiod public header bindings"
++repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/"
++keywords = ["libgpiod", "gpio"]
++license = "LGPL-2.1-or-later"
+ edition = "2018"
+
+I picked license details from C code, is that what we should be using
+here too ?
+
+> > diff --git a/bindings/rust/libgpiod-sys/src/lib.rs b/bindings/rust/libgpiod-sys/src/lib.rs
+> > new file mode 100644
+> > index 000000000000..1ca355b5f5ac
+> > --- /dev/null
+> > +++ b/bindings/rust/libgpiod-sys/src/lib.rs
+> > @@ -0,0 +1,13 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
 > 
-> I had to bite the bullet and write a longer reply, hoping the i.MX
-> and MXC maintainers wake up:
-> https://lore.kernel.org/linux-gpio/CACRpkdaKncznz5qej6owA2OGMeqbrif9e_QO3CWN6+sGhEApDw@mail.gmail.com/T/#mac3a8d5399c486657c5e168107ed591694d4b155
+> GPL-2.0?
+> 
+> Elsewhere you use Apache 2.0 AND BSD-3-Clause for rust code.
 
-I saw that one, thanks for CCing me, I actually dropped the request from 
-you here yesterday by accident (sorry).
+I would use the same information here too, once decided.
+
+-- 
+viresh
