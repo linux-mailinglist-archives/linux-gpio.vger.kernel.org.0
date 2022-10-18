@@ -2,75 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDB1602E81
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 16:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A13F602F5D
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 17:14:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbiJROa5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 10:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48512 "EHLO
+        id S230045AbiJRPOp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 11:14:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231552AbiJROap (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 10:30:45 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03A9C9C21B;
-        Tue, 18 Oct 2022 07:30:42 -0700 (PDT)
+        with ESMTP id S230144AbiJRPOn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 11:14:43 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CE01F9C6;
+        Tue, 18 Oct 2022 08:14:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666103443; x=1697639443;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zMnzECcq7UsdeairkvqeG/finXKvL3saHPbLkrRI2p8=;
-  b=D3tMwDrAC87FjDBDeRseIhMW3Z1Q6WDbhJrxVqt0UF+2XB4F2HaeQyRI
-   SCcxQGCMZVtjEU44PG/FLjRNS+vVe3xwclzFfUFRAfAvsotewhSxAdh+b
-   wwmSuzYR5dGUBuExh/YtAqXI/R1l9FEv6ZcF58Qa5C5Ro5byxeydD3IBL
-   ZdvocPj85PRGrwlcsdo3XNzZZgnDRWfLGifDQ6Do4U16r3ggXss4yY29f
-   AMU0VkYiFyNVIpKJEHbG0BcJ8AFKgE2/Pm8xjL+LJ24C8bJHvwbq6Qdea
-   arS8RH2a9Wm4RURb+xyO2bErCpvKNZnxaairo3vtRoLS3hCQhSYHb4wW6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="304856150"
+  t=1666106080; x=1697642080;
+  h=from:to:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=XIk8rnYCV/xKkm4yWKJej0Ef26WangurQvbBJaJZ7xU=;
+  b=fberNBkpm+1TKQVfrlAkRQPp5FjDvFdtX0MXLRjqFUWrXaSQvwa1zaEn
+   97mN32b1LM1xkcBMidwhClZdlzD7gGI4T2oe7XWiwhhUUCFQMzOfUk/ld
+   1ExkmXkFDx/wLZ9YL+JSbOPJIPA2gNOEh3dUneygpfcX2KkR0+GpGCZBF
+   QE7PXXJx361zUHl6q73Hs6f9hhvNjkmT2dIjeSyWWTsCjRHR5QEToMxdG
+   oveo632HZ4mpjF2GjOZxw1qa734YMyBT0YlYX7mjYwhkdF8lHLJpNOV5v
+   LpYrNJgQoFOCPDhYrkOXWLvXn6Tr0Rb5cZyoz8roDGznWfNVFu18prgPS
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="332681421"
 X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
-   d="scan'208";a="304856150"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 07:30:41 -0700
+   d="scan'208";a="332681421"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 08:12:07 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="579812239"
+X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="628760333"
 X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
-   d="scan'208";a="579812239"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP; 18 Oct 2022 07:30:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oknc6-009QCm-2Q;
-        Tue, 18 Oct 2022 17:30:38 +0300
-Date:   Tue, 18 Oct 2022 17:30:38 +0300
+   d="scan'208";a="628760333"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 18 Oct 2022 08:12:04 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 5C446B9; Tue, 18 Oct 2022 18:12:25 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpio: merrifield: Use str_enable_disable() helper
-Message-ID: <Y064jqJsss8XCPD2@smile.fi.intel.com>
-References: <20221017171448.63932-1-andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Patrick Rudolph <patrick.rudolph@9elements.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/1] pinctrl: cy8c95x0: Don't use cy8c95x0_set_mode() twice
+Date:   Tue, 18 Oct 2022 18:12:23 +0300
+Message-Id: <20221018151223.80846-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221017171448.63932-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 08:14:48PM +0300, Andy Shevchenko wrote:
-> Use str_enable_disable() helper instead of open coding the same.
+Instead, call it once in cy8c95x0_pinmux_mode() and if selector is 0,
+shortcut the flow by returning 0 immediately.
 
-Pushed to my review and testing queue, thanks!
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinctrl-cy8c95x0.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
+index b44b36be54b3..ee753e080481 100644
+--- a/drivers/pinctrl/pinctrl-cy8c95x0.c
++++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
+@@ -1107,13 +1107,13 @@ static int cy8c95x0_pinmux_mode(struct cy8c95x0_pinctrl *chip,
+ 	u8 bit = cypress_get_pin_mask(chip, group);
+ 	int ret;
+ 
+-	if (selector == 0)
+-		return cy8c95x0_set_mode(chip, group, false);
+-
+-	ret = cy8c95x0_set_mode(chip, group, true);
++	ret = cy8c95x0_set_mode(chip, group, selector);
+ 	if (ret < 0)
+ 		return ret;
+ 
++	if (selector == 0)
++		return 0;
++
+ 	/* Set direction to output & set output to 1 so that PWM can work */
+ 	ret = regmap_write_bits(chip->regmap, CY8C95X0_DIRECTION, bit, bit);
+ 	if (ret < 0)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
