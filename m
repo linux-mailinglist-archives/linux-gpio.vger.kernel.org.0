@@ -2,140 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33054602781
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 10:50:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B546027E6
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 11:05:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbiJRIuA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 04:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57442 "EHLO
+        id S229798AbiJRJF2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 05:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbiJRIt5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 04:49:57 -0400
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AC5FAD4;
-        Tue, 18 Oct 2022 01:49:29 -0700 (PDT)
-Received: by mail-lj1-x236.google.com with SMTP id h8so17010569lja.11;
-        Tue, 18 Oct 2022 01:49:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S11K4vBoZGON508rytYjLm5ClL9jYcwO7synKUjPE5g=;
-        b=f0NcEixTYGOiFkW5GEnnTneNS4jwWS4EYYcTionijTwvaum39D+rS7wbM6VENJOl61
-         YNt/CM+RiaTh28efu7Y3tRH/YvJuseLjdBrutpYSwiSLbQRfcYdACpnL3jqKL6+XTcAO
-         kV4DU83geA8e0ASM96bwoiRjGiXYH+LxJstVPLzkwgGAPIDDXPFJxMNtQ/BY4CF25Tab
-         QrT26rabQ7maetDkzZUE4gjTfLgkDg7ru+61g0AD7wzVHI3XniaTG357bOh0QN/nukLo
-         GQ/seikoPNOMWxq8AK2Mk9jKt399skq1703f64w/2Iih0ij9sA/WA8QK28vLWzzGO98k
-         4etw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S11K4vBoZGON508rytYjLm5ClL9jYcwO7synKUjPE5g=;
-        b=OwlefIaBYMEW1MacG7wT95eYlYXhl+Dbg2c2pfBT25jCGQ+80vEGyMxggIDlEK5yoD
-         ZpL9o+fJJf8MrTmHo9oqdQznw9Vx6u31GOVgqBfqyJxVw54EFNZKL4AcaiuW/02J62xH
-         8lqH5myYrxbY8rZOovaNqjSUe8hdqHl2U+0G6HwcHlqkU61L+1iUa7GpvJw6kwHWc1yK
-         qpKd/+n6eTuk3Dasr9APqfN4mkANivevfXg8Czzc+PyB2+7m5oAbvF3Qqzmfn0cRgLNJ
-         6eKbkNsy6Bb/DyyNnq14a8Qjd/jmfvqTnSkIYo2GC7sbI9/+PqexbmP3MFFcn1LkbpUS
-         SCHA==
-X-Gm-Message-State: ACrzQf2t0HNJSH9XnOiZyZ2JwmfLTRw/nH1uat0vcrnk5pztVNZksUlS
-        Dx7woRHRI7NKdOnRctjCMzY=
-X-Google-Smtp-Source: AMsMyM5VHdezQI9YCEmTQc2Xace8MJV+87YsgDY7LckjQYPayvOv8vkl7HFCXjufgNehAuFnYeyh3g==
-X-Received: by 2002:a2e:92d5:0:b0:26f:a674:94ac with SMTP id k21-20020a2e92d5000000b0026fa67494acmr704419ljh.470.1666082968143;
-        Tue, 18 Oct 2022 01:49:28 -0700 (PDT)
-Received: from localhost.localdomain ([188.163.112.49])
-        by smtp.gmail.com with ESMTPSA id e10-20020a05651236ca00b004949f7cbb6esm1771890lfs.79.2022.10.18.01.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 01:49:27 -0700 (PDT)
-From:   Svyatoslav Ryhel <clamor95@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] gpio: tegra: Switch to new *_PM_OPS macros
-Date:   Tue, 18 Oct 2022 11:49:05 +0300
-Message-Id: <20221018084905.21717-3-clamor95@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221018084905.21717-1-clamor95@gmail.com>
-References: <20221018084905.21717-1-clamor95@gmail.com>
+        with ESMTP id S230177AbiJRJFI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 05:05:08 -0400
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2DCAE64
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 02:04:57 -0700 (PDT)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id E99A484461;
+        Tue, 18 Oct 2022 11:04:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1666083893;
+        bh=2FINBuga9/RKt+gtWqz76Lk3Ab3bC+yY50Z1oDecqVs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ioueUY1mu7KzwHhotBkPTvT+qumUNezSB24crAfPdpPqSP1VyzByKcyrmdrkyjwJQ
+         Ebd9e8BIFSgYrtKoWr0qr5FtkStGhNXSlYXLssFe3bq4m96wfh/6FI8tU56OJ8mupx
+         OmQcRv+48yiUZodjpC/abMIxZ3hdNj5tPMqgsg4yigfd8uxGqhjJ8cAP11MNaO6Run
+         xD2s/TmPPLfflKQVif/Ms8AkI651/az1fV0fkX+v5nBS6PbMwD/ZYdkkmUApa1/6MX
+         wX5wFWyNuk2xmkrcZ9G5qx+8R7VyOltOh0bqpPm+fN/KhEo7Sl1jwoxU4bENcgWJ2Y
+         tSjMl6FRrXmIw==
+Message-ID: <7054f0cf-6e63-5b8f-4f17-ba7e3303d4cb@denx.de>
+Date:   Tue, 18 Oct 2022 11:04:52 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: [PATCH v6 1/2] gpio: mxc: Protect GPIO irqchip RMW with bgpio
+ spinlock
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
+        Anatolij Gustschin <agust@denx.de>
+References: <20221013215946.216184-1-marex@denx.de>
+ <CACRpkdZG4a2SsNiunxz0SHR6kuXLX34LZcYp0dGakDigwbGdHw@mail.gmail.com>
+ <86fb901a-ca3a-cfdc-8984-1af9235d5323@denx.de>
+ <CACRpkdaW55-KGKNTTStgbteHn9Kp9E86y1+fTsFBXuV3v3KEiQ@mail.gmail.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <CACRpkdaW55-KGKNTTStgbteHn9Kp9E86y1+fTsFBXuV3v3KEiQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Since SET_*_PM_OPS() were deprecated, switch to new *_PM_OPS.
+On 10/18/22 10:46, Linus Walleij wrote:
+> On Tue, Oct 18, 2022 at 10:33 AM Marek Vasut <marex@denx.de> wrote:
+>> On 10/17/22 12:23, Linus Walleij wrote:
+>>> On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
+>>>
+>>>> The driver currently performs register read-modify-write without locking
+>>>> in its irqchip part, this could lead to a race condition when configuring
+>>>> interrupt mode setting. Add the missing bgpio spinlock lock/unlock around
+>>>> the register read-modify-write.
+>>>>
+>>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>> Reviewed-by: Marc Zyngier <maz@kernel.org>
+>>>> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
+>>>> Signed-off-by: Marek Vasut <marex@denx.de>
+>>>
+>>> Unrelated, but Marek can you have a look at this MXC patch since
+>>> you're obviously working on the platform:
+>>> https://lore.kernel.org/linux-gpio/20221007152853.838136-1-shenwei.wang@nxp.com/
+>>
+>> Errrr, that's i.MX8, which is completely different chip than the i.MX8M
+>> (except for the naming, which ... oh well). I work on the simpler i.MX8M.
+> 
+> Yeah, I think a part of the problem is that the MXC GPIO is not connected
+> to the back-end pin controller for i.MX so one rarely know which SoC
+> it is used on.
 
-The callbacks that are only useful with CONFIG_PM_SLEEP is enabled,
-are now wrapped with a pm_sleep_ptr().
+The MXC GPIO is traditionally completely separate from IOMUXC pinmux 
+controller, the MX8 (the non-M and non-X) is just a bit odd and I have 
+little experience with that one.
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
----
- drivers/gpio/gpio-tegra.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+>> But looking at the patch, don't we already have a DT property which lets
+>> one set GPIO as wake up source, without massive enumeration tables in
+>> each GPIO driver ? It seems to me that's what NXP is trying to
+>> implement, per GPIO wake up.
+> 
+> I had to bite the bullet and write a longer reply, hoping the i.MX
+> and MXC maintainers wake up:
+> https://lore.kernel.org/linux-gpio/CACRpkdaKncznz5qej6owA2OGMeqbrif9e_QO3CWN6+sGhEApDw@mail.gmail.com/T/#mac3a8d5399c486657c5e168107ed591694d4b155
 
-diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
-index 5b265a6fd3c1..ce17cc1a1cab 100644
---- a/drivers/gpio/gpio-tegra.c
-+++ b/drivers/gpio/gpio-tegra.c
-@@ -461,7 +461,6 @@ static int tegra_gpio_populate_parent_fwspec(struct gpio_chip *chip,
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
- static int tegra_gpio_resume(struct device *dev)
- {
- 	struct tegra_gpio_info *tgi = dev_get_drvdata(dev);
-@@ -569,7 +568,6 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
- 
- 	return 0;
- }
--#endif
- 
- static int tegra_gpio_irq_set_affinity(struct irq_data *data,
- 				       const struct cpumask *dest,
-@@ -613,9 +611,7 @@ static const struct irq_chip tegra_gpio_irq_chip = {
- 	.irq_mask		= tegra_gpio_irq_mask,
- 	.irq_unmask		= tegra_gpio_irq_unmask,
- 	.irq_set_type		= tegra_gpio_irq_set_type,
--#ifdef CONFIG_PM_SLEEP
--	.irq_set_wake		= tegra_gpio_irq_set_wake,
--#endif
-+	.irq_set_wake		= pm_sleep_ptr(tegra_gpio_irq_set_wake),
- 	.irq_print_chip		= tegra_gpio_irq_print_chip,
- 	.irq_request_resources	= tegra_gpio_irq_request_resources,
- 	.irq_release_resources	= tegra_gpio_irq_release_resources,
-@@ -629,9 +625,7 @@ static const struct irq_chip tegra210_gpio_irq_chip = {
- 	.irq_unmask		= tegra_gpio_irq_unmask,
- 	.irq_set_affinity	= tegra_gpio_irq_set_affinity,
- 	.irq_set_type		= tegra_gpio_irq_set_type,
--#ifdef CONFIG_PM_SLEEP
--	.irq_set_wake		= tegra_gpio_irq_set_wake,
--#endif
-+	.irq_set_wake		= pm_sleep_ptr(tegra_gpio_irq_set_wake),
- 	.irq_print_chip		= tegra_gpio_irq_print_chip,
- 	.irq_request_resources	= tegra_gpio_irq_request_resources,
- 	.irq_release_resources	= tegra_gpio_irq_release_resources,
-@@ -681,7 +675,7 @@ static inline void tegra_gpio_debuginit(struct tegra_gpio_info *tgi)
- #endif
- 
- static const struct dev_pm_ops tegra_gpio_pm_ops = {
--	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
- };
- 
- static const struct of_device_id tegra_pmc_of_match[] = {
--- 
-2.34.1
-
+I saw that one, thanks for CCing me, I actually dropped the request from 
+you here yesterday by accident (sorry).
