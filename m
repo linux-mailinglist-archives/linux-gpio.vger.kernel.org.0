@@ -2,121 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE950602B81
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 14:17:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15BD2602BCE
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 14:32:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229674AbiJRMRr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 08:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53614 "EHLO
+        id S229701AbiJRMcF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 08:32:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiJRMRq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 08:17:46 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3939A3450
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 05:17:45 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id a5so8445034qkl.6
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 05:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OlSg04/4Dd8U3EuUogDMELPRpoMqkuY3GumBRBmWFI0=;
-        b=ve3mDns3CqM7+7NxyWsndkD0guUHijbrCAucM26kfe6BL9xq0EPS69ikH1r+oKIwbw
-         XF19Fx7G2EHRFmsZw0LGj8fECAHmCZvQGThIwUQIt+begtsVLgoklhorPzaP/29PfM6p
-         CbgX4BaT+1W5j8RvXp/PFSlhmqG4E0756krQguM19r9lHxvnfdNPEL1ADd3PWBPf2lX7
-         VqVBZyjxaG1DvXLl5HcGzBLSurPLu57Yr+BBfjij4+g2o2/HDhfS9NCdiorCaqhZu76G
-         67b8HuzYk2s6m55RqeHTFjbNyGrPjL1g0zJmENKk6Ke3yLJk7j6oVWxPq2VsyuuW7ng0
-         5RDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OlSg04/4Dd8U3EuUogDMELPRpoMqkuY3GumBRBmWFI0=;
-        b=ZZNC6VkH9e1C6CVokzWHQBc9wMUd/Nt3+urUDnGBK5j7+9Sb9yngjB7wCnbShh/NyN
-         f0kbiSxinotXF3BME4+Y56ON5jpOku7skULffYewAuAyx4qq8OFNQYeUlGZLV/p0Ftsj
-         HmmaHdUPYAxuPAAaCALk6x8AOByAdeN6XXbDon1qPJ4xhPy0Um3cee8FHibDpdEDznki
-         R2B7As6iIFPWRfree9Y32hNsudmFxaEJbaNr79nyABtCYOE3+uY9tQLnVcHNHJb166ym
-         yQ3EME+Y+V69C6vCmU9dZwnjB8MDSeUXR9hFUdO+6F+aJ6tenuk66x+hUYobdQy3jjhX
-         GP0g==
-X-Gm-Message-State: ACrzQf3BrvAgUq+sveA7zXt8Jq5ZOktiioTuLFAm8+TAhQTFp+NFuogD
-        93+dRrbqPYGa8eBg4a681ADgwA==
-X-Google-Smtp-Source: AMsMyM6ZG32yzEaXg8k2oSN/Tpw/jWYy6gTmmM/nXLeLt3qfUN1KFM8aIVURt5SG0G0p7IE4zhw70g==
-X-Received: by 2002:a37:ef0d:0:b0:6bb:4ec8:b312 with SMTP id j13-20020a37ef0d000000b006bb4ec8b312mr1529324qkk.249.1666095464842;
-        Tue, 18 Oct 2022 05:17:44 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id oo12-20020a05620a530c00b006eeae49537bsm2161924qkn.98.2022.10.18.05.17.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 05:17:43 -0700 (PDT)
-Date:   Tue, 18 Oct 2022 08:17:41 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Qingtao Cao <qingtao.cao.au@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpio: exar: Allow IO port access
-Message-ID: <Y06ZZQ4q3Ql0sNkm@fedora>
-References: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbNkPG5KsB47jByseDh=nOt+J2eE_nh5EJqRLAPDp8v8A@mail.gmail.com>
+        with ESMTP id S229506AbiJRMcD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 08:32:03 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4868D27CD8;
+        Tue, 18 Oct 2022 05:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666096323; x=1697632323;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=679yrLLfz5kJkADoDvJtXHkNCdTyNEeZjUBrx5uh7Gg=;
+  b=X7IKGcoJjIBaQCxoOEvI/OEg3aMXzvhnTNAVyT0i+kXGdXUzjH63BOmk
+   0Qpv5qnLwOE+cxhDWnSxouKQO58uMAm7UEoaBq6Hhj9ar23VIb10YqOCf
+   MPCQ52B8DVqwk3as6DHiPQVgy+1gfljdslxS987k3yIXys8QCYuV45j8o
+   2KypPNE3G4VwmkrGaWjx05lTZyIMDb75Gd+gRmaf1XUgwbC8aYs7AyX9B
+   RhCyXjM9M7EixQRkh3nxyINGj54CrwR7dcikk7TLAT7wXnrI0tGcVs3GG
+   npt8IXryVS5tiUdX6Qoxk0LFQYbx/L4cLNumQwfuZGTUjOcsOKEJyPov6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="289384271"
+X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
+   d="scan'208";a="289384271"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 05:32:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10503"; a="733605367"
+X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
+   d="scan'208";a="733605367"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 18 Oct 2022 05:32:00 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1okllG-009M9O-2Q;
+        Tue, 18 Oct 2022 15:31:58 +0300
+Date:   Tue, 18 Oct 2022 15:31:58 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 00/10] gpiolib: more quirks to handle legacy names
+Message-ID: <Y06cvrpcHn0jwZxU@smile.fi.intel.com>
+References: <20221011-gpiolib-quirks-v3-0-eae9cc2ed0a1@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Gqn9ZZgaixBaZ3cX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbNkPG5KsB47jByseDh=nOt+J2eE_nh5EJqRLAPDp8v8A@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221011-gpiolib-quirks-v3-0-eae9cc2ed0a1@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Oct 17, 2022 at 10:41:01PM -0700, Dmitry Torokhov wrote:
+> In preparation to converting several drivers to gpiod API, and to keep
+> existing DTS working, this series adds additional quirks to locate
+> gpio lines with legacy names.
+> 
+> Additionally the quirk handling has been reworked (once again) to pull
+> all simple renames (ones that do not involve change of indices or other
+> complex manipulations) into a single quirk with a table containing
+> transformations. This should make adding new quirks easier.
+> When using legacy names gpiolib will emit a message to nudge users to
+> update DTSes (when possible).
+> 
+> Note that the last patch requires the following change from the OF tree:
+> 
+>         88269151be67 ("of: base: make of_device_compatible_match() accept const device node")
+> 
+> The change is also available in mainline - it has been merged in 6.1
+> merge window.
 
---Gqn9ZZgaixBaZ3cX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I was wondering if we can use the approach that ACPI chose for itself,
+i.e.  the separate data that can be filled by the corresponding driver
+and then GPIO OF common code may use it. In that case each driver knows
+the exact list of compatible strings and associated quirks.
 
-On Tue, Oct 18, 2022 at 10:29:13AM +0200, Linus Walleij wrote:
-> On Mon, Oct 17, 2022 at 7:05 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
->=20
-> > It's possible that PCI device can provide an IO port resource for
-> > the device. regmap MMIO currently uses MMIO by default. With an
-> > additional flag we enable support for IO port accesses.
-> >
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->=20
-> Looks clever to me!
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> I would let William have a look at it as well, as he's worked extensively
-> with port-mapped I/O.
->=20
-> Yours,
-> Linus Walleij
+-- 
+With Best Regards,
+Andy Shevchenko
 
-I love how simple it is to add IO port support to these drivers now. :-)
 
-Acked-by: William Breathitt Gray <william.gray@linaro.org>
-
-I'm hoping to convert several of the port-mapped GPIO drivers to the
-regmap API later this cycle, so it's good to see other modules making
-use of this interface as well.
-
-Thanks,
-
-William Breathitt Gray
-
---Gqn9ZZgaixBaZ3cX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY06ZZQAKCRC1SFbKvhIj
-K4a2AQC5tyMmVg9lmM0Ig4lRNMikOooM39OWgxDsLS6TvV4qaAD+LgrR2MNu2N7+
-UI00cdLogtU8YgtpqEbld147YhZXoQo=
-=vFbp
------END PGP SIGNATURE-----
-
---Gqn9ZZgaixBaZ3cX--
