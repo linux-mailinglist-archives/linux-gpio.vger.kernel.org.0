@@ -2,115 +2,187 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 230946024F7
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 09:06:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 927116025AD
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 09:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiJRHF7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 03:05:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51888 "EHLO
+        id S229869AbiJRH2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 03:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229718AbiJRHF7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 03:05:59 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93F298B2F2;
-        Tue, 18 Oct 2022 00:05:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1666076752; x=1697612752;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WesnfTizQ5udDjJjTAlHXwnfd5NfpD8mjhBShg0jKvU=;
-  b=SjkkjZx2V0CpxDqvYzNmSt1xOFSVzQ+lWcaM0TRw+WCZ9SFm86EXC6Hs
-   SjYC1Cj5gx1SVqN66JaPtIAXsLzTQ3OWXq2OB2cVDi6AHPEIXTJITOg/n
-   MDKOXPCLkWXjvSpL/4WggsYVOlDddbYBJ9TiS3a5fNdQAs0YJ7sBl7LXZ
-   A3ROUEWu8hTC4d9juI5POQbYdpoabFU+Aw1EaeVd9wEsAAhbnuM7JDmhB
-   d247OTHuhVsCMn3MUwjYd/fbiZIzcW8LuT3UCwYqGG4Ub2Q+PYP6II0Kg
-   5luxFpzFDISjEFo7jDYs3f8kqya/AuwnQGJPeMgoTjiqGZIP3DSYSvTRd
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.95,193,1661842800"; 
-   d="scan'208";a="185289415"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 18 Oct 2022 00:05:51 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Tue, 18 Oct 2022 00:05:46 -0700
-Received: from soft-dev3-1.microsemi.net (10.10.115.15) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.12 via Frontend Transport; Tue, 18 Oct 2022 00:05:44 -0700
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-        <michael@walle.cc>, <UNGLinuxDriver@microchip.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>
-Subject: [PATCH] pinctrl: ocelot: Fix incorrect trigger of the interrupt.
-Date:   Tue, 18 Oct 2022 09:09:59 +0200
-Message-ID: <20221018070959.1322606-1-horatiu.vultur@microchip.com>
-X-Mailer: git-send-email 2.38.0
+        with ESMTP id S229796AbiJRH2h (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 03:28:37 -0400
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C4142B60D;
+        Tue, 18 Oct 2022 00:28:36 -0700 (PDT)
+Received: by mail-qk1-f177.google.com with SMTP id a18so8165397qko.0;
+        Tue, 18 Oct 2022 00:28:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WsYcGW4TBn6VK6ga6YeeEhBKt8rBJ4PJ+yBy0r0qvZQ=;
+        b=7cmB9RAZPIb1mm/t378K9BkdtxtQcublOvOnw+87kR7XR9tGnRH/P2ct5e/LcucKun
+         raPupMtNMTDUHqauNh26+tdbVFlYxo7hCofd2ajFUmScwZJBXANF5RB4nIvKhTsSm+Cw
+         YqpBjkLvteCPx2gXJFa5jfPJGUA/0e+4eLvqJ1bycBIug2iOuAUIQjHsubCWSi1tFlSm
+         qfXKWycG3GEh77mXwC0/sL7I2gDIJDuBWPU/ViIqSoW7h5lLY7Ick2mOYUaLk4ZNxDoJ
+         Co2Kz1hGZG3CAR4icOT50aTJOlK4smcus2P/mND9WwAZThje/oaKL/fZnvNYYsRG7LIS
+         t8jQ==
+X-Gm-Message-State: ACrzQf0FdFa4yvmEMSiDc71ODZb1dtTDM0XVOJYxVKyf41jfrd/7F7OC
+        8D0X/hsyYFw6BVJXTyuWpsPKcfSsCgzFTQ==
+X-Google-Smtp-Source: AMsMyM6V6Huror4kr2/bh0w1E6/DBl282o3yPQa2JsHtOMHv0sPFbNrz9WFoVC9yBykk1K8aweAmbw==
+X-Received: by 2002:a05:620a:1523:b0:6ee:4780:4844 with SMTP id n3-20020a05620a152300b006ee47804844mr943848qkk.700.1666078115383;
+        Tue, 18 Oct 2022 00:28:35 -0700 (PDT)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id az13-20020a05620a170d00b006eea461177csm1887335qkb.29.2022.10.18.00.28.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Oct 2022 00:28:35 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id e62so15981257yba.6;
+        Tue, 18 Oct 2022 00:28:34 -0700 (PDT)
+X-Received: by 2002:a25:2:0:b0:6c4:dc1:d37c with SMTP id 2-20020a250002000000b006c40dc1d37cmr1255226yba.380.1666078114683;
+ Tue, 18 Oct 2022 00:28:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20221015172602.84855-1-clamor95@gmail.com> <20221015172602.84855-2-clamor95@gmail.com>
+In-Reply-To: <20221015172602.84855-2-clamor95@gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 18 Oct 2022 09:28:23 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVy2YPY=35tBUj-_p=VvkGpJH4=OrDQLjFvr6+pKv3JRA@mail.gmail.com>
+Message-ID: <CAMuHMdVy2YPY=35tBUj-_p=VvkGpJH4=OrDQLjFvr6+pKv3JRA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] gpio: tegra: Convert to immutable irq chip
+To:     Svyatoslav Ryhel <clamor95@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The interrupt controller can detect only link changes. So in case an
-external device generated a level based interrupt, then the interrupt
-controller detected correctly the first edge. But the problem was that
-the interrupt controller was detecting also the edge when the interrupt
-was cleared. So it would generate another interrupt.
-The fix for this is to clear the second interrupt but still check the
-interrupt line status.
+Hi Svyatoslav,
 
-Fixes: c297561bc98a ("pinctrl: ocelot: Fix interrupt controller")
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
----
- drivers/pinctrl/pinctrl-ocelot.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+On Sat, Oct 15, 2022 at 7:30 PM Svyatoslav Ryhel <clamor95@gmail.com> wrote:
+> Update the driver to use an immutable IRQ chip to fix this warning:
+>
+>     "not an immutable chip, please consider fixing it!"
+>
+> Preserve per-chip labels by adding an ->irq_print_chip() callback.
+>
+> Tested-by: Svyatoslav Ryhel <clamor95@gmail.com> # TF201 T30
+> Tested-by: Robert Eckelmann <longnoserob@gmail.com> # TF101 T20
+> Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index 266fbc9572736..3d5995cbcb782 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -1864,19 +1864,28 @@ static void ocelot_irq_unmask_level(struct irq_data *data)
- 	if (val & bit)
- 		ack = true;
- 
-+	/* Try to clear any rising edges */
-+	if (!active && ack)
-+		regmap_write_bits(info->map, REG(OCELOT_GPIO_INTR, info, gpio),
-+				  bit, bit);
-+
- 	/* Enable the interrupt now */
- 	gpiochip_enable_irq(chip, gpio);
- 	regmap_update_bits(info->map, REG(OCELOT_GPIO_INTR_ENA, info, gpio),
- 			   bit, bit);
- 
- 	/*
--	 * In case the interrupt line is still active and the interrupt
--	 * controller has not seen any changes in the interrupt line, then it
--	 * means that there happen another interrupt while the line was active.
-+	 * In case the interrupt line is still active then it means that
-+	 * there happen another interrupt while the line was active.
- 	 * So we missed that one, so we need to kick the interrupt again
- 	 * handler.
- 	 */
--	if (active && !ack) {
-+	regmap_read(info->map, REG(OCELOT_GPIO_IN, info, gpio), &val);
-+	if ((!(val & bit) && trigger_level == IRQ_TYPE_LEVEL_LOW) ||
-+	      (val & bit && trigger_level == IRQ_TYPE_LEVEL_HIGH))
-+		active = true;
-+
-+	if (active) {
- 		struct ocelot_irq_work *work;
- 
- 		work = kmalloc(sizeof(*work), GFP_ATOMIC);
--- 
-2.38.0
+Thanks for your patch!
 
+Thanks for your patch, which is now commit 6ebd28bd087127ab
+("gpio: tegra: Convert to immutable irq chip") in next-20221018.
+
+noreply@ellerman.id.au reports a build failure introduced by
+this commit on e.g. m68k-allmodconfig:
+
+    drivers/gpio/gpio-tegra.c:616:48: error: 'tegra_gpio_irq_set_wake'
+undeclared here (not in a function); did you mean
+'tegra_gpio_irq_set_type'?
+
+
+> index e4fb4cb38a0f..6b469253fad8 100644
+> --- a/drivers/gpio/gpio-tegra.c
+> +++ b/drivers/gpio/gpio-tegra.c
+
+> @@ -598,10 +600,43 @@ static void tegra_gpio_irq_release_resources(struct irq_data *d)
+>         tegra_gpio_enable(tgi, d->hwirq);
+>  }
+>
+> +static void tegra_gpio_irq_print_chip(struct irq_data *d, struct seq_file *s)
+> +{
+> +       struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+> +
+> +       seq_printf(s, dev_name(chip->parent));
+> +}
+> +
+> +static const struct irq_chip tegra_gpio_irq_chip = {
+> +       .irq_shutdown           = tegra_gpio_irq_shutdown,
+> +       .irq_ack                = tegra_gpio_irq_ack,
+> +       .irq_mask               = tegra_gpio_irq_mask,
+> +       .irq_unmask             = tegra_gpio_irq_unmask,
+> +       .irq_set_type           = tegra_gpio_irq_set_type,
+> +       .irq_set_wake           = pm_sleep_ptr(tegra_gpio_irq_set_wake),
+
+This is an unrelated change, breaking the build if CONFIG_PM_SLEEP
+is not set: the function pointer argument of pm_sleep_ptr() is always
+referenced, so the function definition must not be protected by #ifdef
+CONFIG_PM_SLEEP.
+
+As tegra_gpio_{resume,suspend}() are also in that section, you probably
+want to convert the references to them to the new macros introduced by
+commit 1a3c7bb088266fa2 ("PM: core: Add new *_PM_OPS macros,
+deprecate old ones"), too.
+
+Or just revert this change for now.
+
+> +       .irq_print_chip         = tegra_gpio_irq_print_chip,
+> +       .irq_request_resources  = tegra_gpio_irq_request_resources,
+> +       .irq_release_resources  = tegra_gpio_irq_release_resources,
+> +       .flags                  = IRQCHIP_IMMUTABLE,
+> +};
+> +
+> +static const struct irq_chip tegra210_gpio_irq_chip = {
+> +       .irq_shutdown           = tegra_gpio_irq_shutdown,
+> +       .irq_ack                = tegra_gpio_irq_ack,
+> +       .irq_mask               = tegra_gpio_irq_mask,
+> +       .irq_unmask             = tegra_gpio_irq_unmask,
+> +       .irq_set_affinity       = tegra_gpio_irq_set_affinity,
+> +       .irq_set_type           = tegra_gpio_irq_set_type,
+> +       .irq_set_wake           = pm_sleep_ptr(tegra_gpio_irq_set_wake),
+> +       .irq_print_chip         = tegra_gpio_irq_print_chip,
+> +       .irq_request_resources  = tegra_gpio_irq_request_resources,
+> +       .irq_release_resources  = tegra_gpio_irq_release_resources,
+> +       .flags                  = IRQCHIP_IMMUTABLE,
+> +};
+> +
+>  #ifdef CONFIG_DEBUG_FS
+>
+>  #include <linux/debugfs.h>
+> -#include <linux/seq_file.h>
+>
+>  static int tegra_dbg_gpio_show(struct seq_file *s, void *unused)
+>  {
+> @@ -689,18 +724,6 @@ static int tegra_gpio_probe(struct platform_device *pdev)
+>         tgi->gc.ngpio                   = tgi->bank_count * 32;
+>         tgi->gc.parent                  = &pdev->dev;
+>
+> -       tgi->ic.name                    = "GPIO";
+> -       tgi->ic.irq_ack                 = tegra_gpio_irq_ack;
+> -       tgi->ic.irq_mask                = tegra_gpio_irq_mask;
+> -       tgi->ic.irq_unmask              = tegra_gpio_irq_unmask;
+> -       tgi->ic.irq_set_type            = tegra_gpio_irq_set_type;
+> -       tgi->ic.irq_shutdown            = tegra_gpio_irq_shutdown;
+> -#ifdef CONFIG_PM_SLEEP
+> -       tgi->ic.irq_set_wake            = tegra_gpio_irq_set_wake;
+> -#endif
+> -       tgi->ic.irq_request_resources   = tegra_gpio_irq_request_resources;
+> -       tgi->ic.irq_release_resources   = tegra_gpio_irq_release_resources;
+> -
+>         platform_set_drvdata(pdev, tgi);
+>
+>         if (tgi->soc->debounce_supported)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
