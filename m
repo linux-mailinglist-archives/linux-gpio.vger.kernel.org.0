@@ -2,69 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E84E6030A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 18:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB2F26030A5
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 18:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230351AbiJRQSP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 12:18:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37620 "EHLO
+        id S230489AbiJRQSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 12:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230390AbiJRQSM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 12:18:12 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6699CB7F78
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 09:18:08 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id s17so7779311qkj.12
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 09:18:08 -0700 (PDT)
+        with ESMTP id S230456AbiJRQSO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 12:18:14 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583D5BA925
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 09:18:10 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id bb5so9947194qtb.11
+        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 09:18:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BfXQOph32UX9IYZF7VUKwsVbx3Bfrh0LaQCPntJl1q8=;
-        b=PQ/WUES/0qJkwlPa9kA6G7KxZUIrrXJ850sxea+Rhhz9CMj3m+Qhj80SvntgBcGYvf
-         CdvoFlo6h95P6HPxP+/QfGdvVcRS6YzNt+ZKeanBn37qZl8sUXLAJYUohUiVktqvJsm8
-         ys6eQmNzcujMad4QjP8ncKtLo5fK58O4PrrovqhqEzJ29wsA/knGmdi4qH3NSoT94nwR
-         VBN9eLKZ7G/uT+Jd2vnymmJRUbycnDuWOOOrfkYvwGnQTKjemX6ZqaDAA3CcK6dASZsx
-         7lNBM4t9jp7xp8it/IeGgjwcOmFRIw/znpKsTarOxQQaRkZ7Viwuw/qDlox/5LpfqaTn
-         s8ag==
+        bh=Mz8n0nULnXUq1UCVs2wcXkpsnocCU9N11569El+Afoc=;
+        b=Hc8SCWziT1iXhYnLRoggO4/WW5dX/pI6+yej08xkT1pU8ICLz15uWW/j3uMzp7Qexk
+         yvmJqXViTrF76A70E2OF6ElMaKsh5O1a/0VTPWx6xmykoYCJnvuSXtbDv9YXG1dY/aRi
+         tFjjlt5Y198P5O/cSHuk9/rvMfvlfQDFtwqh73eR8CH4/5PenN/zutGDo6uzF6fyND5i
+         5IMO5k/KESDqCg/lRnxKYwF/FzMa4NhXL24Hrrfkki1syPafI4HuBviePfJ2jIyoeavE
+         VOjnTH/yPUmpTuZC18XXYoa6wUg+lmxqyxCHQe2j9TTN9leXsypuTY6GGz8vDOu/5V6H
+         hDDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BfXQOph32UX9IYZF7VUKwsVbx3Bfrh0LaQCPntJl1q8=;
-        b=OlcL/3SXyx2WpWb+VKE+AN9vUwWgHDI3y2KsjHn64HUp+ilpCq+xApZ4Oj4pPxpf/R
-         jEGSsc1WwnK6q6pLC7uAHw2V/S9u/0PsMXOY/5e/ByYEygw/3XiuB0xv+7QsQvlcNHGp
-         49nk+EcYpgdVGXpmwKMzQ/lKKpX/AwsXZQ/zUabrwWRDLQZ9NFoHML3MRL6bclby91VM
-         65SzFGxUwIyhbHkcLOng+SB2Hs2PQtXpaEwoXWrt3H23F/nr/2dVbDxniIcjeNSrf7Mr
-         foXdcmDDdNVlMr1ASlR+1xihMsTVYHlHQb1aEO1wsueSI0ELSdVcDi3OV7JmgSZsOT1K
-         IfRQ==
-X-Gm-Message-State: ACrzQf3jB3tT24jR2Mh1CHgUP/TsEKpaV5y+I5WQPVZNUBe8hHgL3d+/
-        mGdnRcqPq/JaSj8wMCeyi+/Rig==
-X-Google-Smtp-Source: AMsMyM7QNK67QeiljMHnNlAwUfZ4UtA5jEqr8N9AOLenSRGBYFqVbOuMTVQLDPfwXw4ujTUydRm9ew==
-X-Received: by 2002:a37:5f05:0:b0:6ec:59fe:1ab4 with SMTP id t5-20020a375f05000000b006ec59fe1ab4mr2418722qkb.111.1666109886975;
-        Tue, 18 Oct 2022 09:18:06 -0700 (PDT)
+        bh=Mz8n0nULnXUq1UCVs2wcXkpsnocCU9N11569El+Afoc=;
+        b=WUysm4tgA3SJFm++gj5JPhU9y0bqesIe2dzVOu+IIisvlUsb39OZWZBa6YQSh9igDf
+         +ujin4qx0cd9zYtHg8MMGPd7M+kTGs9BeI6WPbo5G6xNXZIAhIbEWUMw3cebrrRE/pDp
+         F0TbRS2uG8diyesxpdfxdHFqs79M9/bKLQ4VOefAY9cUOExPhDa8XxvnOSBo7WS/Wieh
+         w0eHLoi0IG+WkBxn1HeONnjmPDwKy2UtqHcsWA94gDSXaBHvHel58fvvzK/StOZEmI2L
+         IaBOKnibd/fJ6x82H6XCoX6NUew0JJKhJwCHWFB28FjK/kPy+FFsI4i9VyWk6LITUOJ3
+         rDMg==
+X-Gm-Message-State: ACrzQf3SoQ9MomSEJvZhSLzFY//hem/o+eDTyatHyN2m0V15U+A2o6Nj
+        xpB/7tbQftlRd1vx1XCDHgbsiQ==
+X-Google-Smtp-Source: AMsMyM4SMAabsvAM2AilDWSmKwY2QNp2RDPnJHax5dmRLyjFbjRB+jhKlLbGZtBfsLtAiBxfcot96A==
+X-Received: by 2002:a05:622a:144e:b0:39c:f9a0:c93b with SMTP id v14-20020a05622a144e00b0039cf9a0c93bmr963165qtx.672.1666109888611;
+        Tue, 18 Oct 2022 09:18:08 -0700 (PDT)
 Received: from krzk-bin.MSRM (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id r28-20020ae9d61c000000b006ed30a8fb21sm2636342qkk.76.2022.10.18.09.18.05
+        by smtp.gmail.com with ESMTPSA id r28-20020ae9d61c000000b006ed30a8fb21sm2636342qkk.76.2022.10.18.09.18.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Oct 2022 09:18:06 -0700 (PDT)
+        Tue, 18 Oct 2022 09:18:07 -0700 (PDT)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Andersson <andersson@kernel.org>, linux-gpio@vger.kernel.org,
+To:     Bjorn Andersson <andersson@kernel.org>,
+        krishna Lanka <quic_vamslank@quicinc.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Andy Gross <agross@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Martin Botka <martin.botka@somainline.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Iskren Chernev <iskren.chernev@gmail.com>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,ipq6018: replace maintainer
-Date:   Tue, 18 Oct 2022 12:18:02 -0400
-Message-Id: <166610987888.55974.11426485803039631163.b4-ty@linaro.org>
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/33] pinctrl/arm64: qcom: continued - fix Qualcomm TLMM pinctrl schema warnings (5th set)
+Date:   Tue, 18 Oct 2022 12:18:03 -0400
+Message-Id: <166610987889.55974.15245001765390019579.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220924081312.15068-1-krzysztof.kozlowski@linaro.org>
-References: <20220924081312.15068-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221017230012.47878-1-krzysztof.kozlowski@linaro.org>
+References: <20221017230012.47878-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -78,16 +85,88 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, 24 Sep 2022 10:13:12 +0200, Krzysztof Kozlowski wrote:
-> Emails to codeaurora.org bounce ("Recipient address rejected:
-> undeliverable address: No such user here.").
+On Mon, 17 Oct 2022 18:59:39 -0400, Krzysztof Kozlowski wrote:
+> Patches are organized not by file, but rather type of change
+> 1. First patches is for common TLMM schema and dropping unneeded refs.
+> 2. Last patches are pure cleanups without functional impact.
 > 
+> Changes since v2
+> ================
+> 1. Patch #6 "dt-bindings: pinctrl: qcom,sm6115: use common TLMM schema":
+>    Drop drive-strength.
+> 2. Move "qcom,sc7280: drop checks used in common TLMM" to previous series
+>    (patchset #4 from list below).
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: pinctrl: qcom,ipq6018: replace maintainer
-      https://git.kernel.org/krzk/linux-dt/c/6ec92173475be614cd20f997f9d24135b7ba01e4
+[01/33] dt-bindings: pinctrl: qcom,mdm9607: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/e04f0761325a1d9abbf5b91ae7fd5decac489d5f
+[02/33] dt-bindings: pinctrl: qcom,sc8180x: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/251446a3b032a95512facd97e5f0d5588757f0de
+[03/33] dt-bindings: pinctrl: qcom,sc8180x: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/776b76e048cc2a4d21bb209d0c3e4eb63efbaac9
+[04/33] dt-bindings: pinctrl: qcom,sc8280xp: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/4412a0e5ed7aaa81d2c25010f06b4ebb84b95f69
+[05/33] dt-bindings: pinctrl: qcom,sm6115: use common TLMM schema
+        https://git.kernel.org/krzk/linux-dt/c/3c84d8c243b84dc49bba365cd5d2d7f63c8cf38c
+[06/33] dt-bindings: pinctrl: qcom,sm6125: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/423e46e66010849e9c817960b24493948885d623
+[07/33] dt-bindings: pinctrl: qcom,sm6125: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/58d4fe9ca487bad0f3d2695f3052e9b0f4fe4dd0
+[08/33] dt-bindings: pinctrl: qcom,sm6350: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/661a3fb1f02edd0a1e36e85fc6546810623eb22b
+[09/33] dt-bindings: pinctrl: qcom,sm6350: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/4d947acc060cf8b11a174b11e38dfaa51d00d9cd
+[10/33] dt-bindings: pinctrl: qcom,sm6375-tlmm: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/8870dce580cbc6d813de139d3f13ea332a71f30f
+[11/33] dt-bindings: pinctrl: qcom,sm6375-tlmm: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/b71b285a0fe760f550bc81f070acaecef0556277
+[12/33] dt-bindings: pinctrl: qcom,sm8250: use common TLMM schema
+        https://git.kernel.org/krzk/linux-dt/c/b8d64ea6520cf835940958004f1c7e30af733b29
+[13/33] dt-bindings: pinctrl: qcom,sm8350: drop ref to pinctrl.yaml
+        https://git.kernel.org/krzk/linux-dt/c/c915a9ef30068bee41411cf7fdfb98df213ec18f
+[14/33] dt-bindings: pinctrl: qcom,sm8350: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/e10be82893354ec5e35ee40d2cf7a68c8f423023
+[15/33] dt-bindings: pinctrl: qcom,sm8450: drop checks used in common TLMM
+        https://git.kernel.org/krzk/linux-dt/c/ca1941f8ed433f4418c811b0d33dcd1b71e7fbdf
+[16/33] dt-bindings: pinctrl: qcom,mdm9607-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/73966aa6adc11dac733088b9ff40935cecaed857
+[17/33] dt-bindings: pinctrl: qcom,msm8909-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/7612c2f17f9ea97f737042aea470eb34677003c4
+[18/33] dt-bindings: pinctrl: qcom,qcm2290-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/a869153b2440dc0cce7dc59ffbfe755624221e1a
+[19/33] dt-bindings: pinctrl: qcom,sdx65-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/222ca103b87737eebf9b1a124b3391a8d3747ba8
+[20/33] dt-bindings: pinctrl: qcom,sc8180x-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/e1a31f9897abea87011338a07d66b3bc7af9bf7a
+[21/33] dt-bindings: pinctrl: qcom,sc8280xp-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/7703f13a83f8c45d571baa8907baf42d84d0643d
+[22/33] dt-bindings: pinctrl: qcom,sm6115-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/a095c7e0f0abc052399064ffa5b84d9ac09d68b9
+[23/33] dt-bindings: pinctrl: qcom,sm6125-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/f8c76af267faf6ba890055f49ae686403f80ba25
+[24/33] dt-bindings: pinctrl: qcom,sm6350-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/cf0a3d3106087689b0722490f152c1a92cbbecb1
+[25/33] dt-bindings: pinctrl: qcom,sm6375-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/fb45ee0a77474b289be8e32750dfa48f1d563a2f
+[26/33] dt-bindings: pinctrl: qcom,sm8250: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/4a0c5fb38e6f0dc1197c6258143fe5e5401d33ca
+[27/33] dt-bindings: pinctrl: qcom,sm8350-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/16dc56ebb069c5e8c31a0aee7a8a1a36d21eeee8
+[28/33] dt-bindings: pinctrl: qcom,sm8450-tlmm: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/7ddfbb41820907b6d1d3b52ee506353c4f2d208f
+[29/33] dt-bindings: pinctrl: qcom,sc7280-lpass-lpi: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/aad11c7938e49282ae34cbf39692abd207800fce
+[30/33] dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/e1c3624793397bb97b8bedc67de2a438767337db
+[31/33] dt-bindings: pinctrl: qcom,sm8250-lpass-lpi: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/2740420374119100b0304e41b1b509528fea27df
+[32/33] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: minor style cleanups
+        https://git.kernel.org/krzk/linux-dt/c/fc371f6075cfa4f62496ce03afb8c8dbaac40235
+[33/33] dt-bindings: pinctrl: qcom: adjust description
+        https://git.kernel.org/krzk/linux-dt/c/09f537065c064826a6a892fa0fdfd6521e5bf82a
 
 Best regards,
 -- 
