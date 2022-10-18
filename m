@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8971D6021EC
-	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 05:09:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58CE7602200
+	for <lists+linux-gpio@lfdr.de>; Tue, 18 Oct 2022 05:09:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbiJRDJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 17 Oct 2022 23:09:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34090 "EHLO
+        id S230519AbiJRDJj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 17 Oct 2022 23:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230474AbiJRDH7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 23:07:59 -0400
+        with ESMTP id S231127AbiJRDIS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 17 Oct 2022 23:08:18 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD44889972;
-        Mon, 17 Oct 2022 20:06:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F209AF9D;
+        Mon, 17 Oct 2022 20:07:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 192D36136C;
-        Tue, 18 Oct 2022 03:06:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B919BC43143;
-        Tue, 18 Oct 2022 03:06:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1821761350;
+        Tue, 18 Oct 2022 03:07:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF98C43145;
+        Tue, 18 Oct 2022 03:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666062416;
-        bh=31lfRGStGHv4WO/BVvDNXLMQ8FyKI8OGpuAlLTJAOko=;
+        s=k20201202; t=1666062422;
+        bh=OYhayJdlSMlvNRm/ZPHMeXnWy/RguZHnO0rCT/oKArY=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=OKbAGz4VtGlGCo8spmoL3bAYCzXjeuS2353RpEERQo0B4H4QCGq+OLWBuKjN9r5I7
-         7kQ/qShQJp22yEkWbbNikKizkf7M+V6AGKxozXvlcfjPpTKVzRA1Jl4H/A2/fmfTEK
-         Rb66CM7HlnQp4h8aEn1s7+3H8z1Hbf9MC6pn/Jw/vGRXsuyqM2OGkLqDrM4BxJYdMA
-         kAO3YZw+0yqeItXeskjfHKNmCZ48i1WMxoAysqfxtME5kn1cI3Ym8RD299p/Vk1xOR
-         Cpj2nh6G0wLXJnrFEJ79JEMAMg1g8X/VX4u60dHmNj/mRkhe0CjCc88ZmuiFsLjAQD
-         NlU2HWrE0N7sQ==
+        b=oQ55c1a5ueo/skyg5Z0n6ZI0QllNhpq9xXL/+kkPyM6DDzdkh3lEMRk9oPgz/ucWD
+         fzxfRzr28fmHkUqKFqhk6tAtaqFN/iKWrYQN+IatBv8VEiwquIkukbbqC68wyqWIKT
+         eJF/aFj4EW0HA7ilnB0kX7wGAGiWRgwvygTpq62bn0Yv8S1PHTI+9EBtx1wKotj/+1
+         +gEPFVcF5qhBfqftT5NWJaoLdw5crH/r+pF0ldoFLccu53YRxDgCawclm6AXo0Lvgb
+         JiOi1GPWhawWyA2qV1tK0vwEgLoKMLk6aCxtxy6Xp93qQzY/nzBF5brGQo6XurRCfT
+         Zmqv3Ms2axQXw==
 From:   Bjorn Andersson <andersson@kernel.org>
 To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, agross@kernel.org,
@@ -38,12 +38,12 @@ To:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>
-Subject: Re: (subset) [PATCH 1/2] arm64: dts: qcom: sm8150: align TLMM pin configuration with DT schema
-Date:   Mon, 17 Oct 2022 22:05:30 -0500
-Message-Id: <166606235839.3553294.332512936249945561.b4-ty@kernel.org>
+Subject: Re: (subset) [PATCH v2 00/16] pinctrl/arm64: qcom: 4th set of Qualcomm TLMM pinctrl schema warnings
+Date:   Mon, 17 Oct 2022 22:05:36 -0500
+Message-Id: <166606235840.3553294.16426052412886426024.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221006144518.256956-1-krzysztof.kozlowski@linaro.org>
-References: <20221006144518.256956-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
+References: <20220930192954.242546-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -56,16 +56,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 6 Oct 2022 16:45:17 +0200, Krzysztof Kozlowski wrote:
-> DT schema expects TLMM pin configuration nodes to be named with
-> '-state' suffix and their optional children with '-pins' suffix.
+On Fri, 30 Sep 2022 21:29:38 +0200, Krzysztof Kozlowski wrote:
+> Changes since v1
+> ================
+> 1. Check for function on non-GPIO pins was moved to common TLMM schema, thus
+>    new patch #12: dt-bindings: pinctrl: qcom,sm8250: drop checks used in common
+>    TLMM
 > 
+> 2. Above also makes minor context changes in patch #13 "dt-bindings: pinctrl:
+>    qcom,sm8250: fix matching pin config"
 > 
+> [...]
 
 Applied, thanks!
 
-[1/2] arm64: dts: qcom: sm8150: align TLMM pin configuration with DT schema
-      commit: 028fe09cda0a0d568e6a7d65b0336d32600b480c
+[01/16] arm64: dts: qcom: sm8250: align TLMM pin configuration with DT schema
+        commit: f76361749b607d52cb8eb9a7398999ee6cf17767
+[02/16] arm64: dts: qcom: sm8250-sony-xperia-edo: fix touchscreen bias-disable
+        commit: 7ff4a646fae3697b039c6b684786a1e309e8445c
+[03/16] arm64: dts: qcom: sc8280xp: align TLMM pin configuration with DT schema
+        commit: 91c4431b0204d720bee3062fa8e6c6ac789100b4
+[04/16] arm64: dts: qcom: sc7280: align TLMM pin configuration with DT schema (really)
+        commit: ec0872a68dcf9fba109fd7ac51843a49984f7586
+[05/16] arm64: dts: qcom: sc7280-herobrine: correct number of gpio-line-names
+        commit: 442b13a72a20e30b1883e425a49b337e9fa85069
+[06/16] arm64: dts: qcom: sc7280-idp-ec-h1: add missing QUP GPIO functions
+        commit: d0ca0de64537d129d7f4f7e878a8c20eea751a7c
+[07/16] arm64: dts: qcom: msm8953: align TLMM pin configuration with DT schema
+        commit: 305dd3f89b492de7672bf53e016e7dcf14ba9e85
+[08/16] arm64: dts: qcom: sdm845: align TLMM pin configuration with DT schema
+        commit: 72e69d4d8d3e460806311f2b53b1807e3ca1112a
+[09/16] arm64: dts: qcom: sm6125-sony-xperia: add missing SD CD GPIO functions
+        commit: f20a687fddf42f7d55a4992b9ecc3a663c34a6b7
+[10/16] arm64: dts: qcom: sm6125: align TLMM pin configuration with DT schema
+        commit: 179baddcc6905e6e657c35c3a380afe55b67c98d
 
 Best regards,
 -- 
