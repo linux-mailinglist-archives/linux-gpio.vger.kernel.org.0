@@ -2,99 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7C4A604C0F
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 17:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76B13604C3C
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 17:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232654AbiJSPsG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Oct 2022 11:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43604 "EHLO
+        id S232151AbiJSPxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Oct 2022 11:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229765AbiJSPrX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 11:47:23 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEA41DDC17
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 08:41:56 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id o8so33831qvw.5
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 08:41:56 -0700 (PDT)
+        with ESMTP id S232689AbiJSPwm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 11:52:42 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E81769F36D
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 08:49:48 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id d26so40950660ejc.8
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 08:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0ceYVTwSJB8ccQZxmQCbl2zZtcaTBh+8PZFVFjj7pc=;
-        b=lAPeGU1vVHrIERvJnn6ykIPOI+2UFW7fRoRaqQxRk4IfJzUdXaB62b8qt1ay5U2Kre
-         pezihyOgPFtbxsK27L4+7wB4jDNBD4Uvv4PsVhUVoUXvmu8agK+FkR0NUWKRn2kvIP4W
-         BPz/q5ZlZSbTOqw8A/IshgTa8u8D7NRJC4huz/nhusYlBZWgErPZfdagLh0Xax6qRrrK
-         oDpwjlBrPl7+gVsH0pKXS97jWURZvV8645li3zLPjc5MkzJGDLj7JHN87IrEYN+55FKy
-         6SREwO7qDnAPqpz/S9ZN/iPXfLnx8hxhEx/mU3IB9jk0GBzbG27Dj8qn1xDGUiLcZ0BA
-         XA/g==
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=x/LBGeRA1bR4x/er8ptm3OVF4CHSU/5RYrhJUueSgZE=;
+        b=C1ufBFChd3ta9Bpk6NhYscZbbJ7JDe1ZFQ+hb33zZWt91jdlj+w86KBpTM6vakXu2U
+         Qv0x1YlEOhpT9celq+q/nlE3hxnC7RldNre50cZVo02wJvg8NgB+MdadbWkRBZzB49bQ
+         k6FO3/apf9bvCZYQGYyY9ln1WQ/EFw8vZXsyY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h0ceYVTwSJB8ccQZxmQCbl2zZtcaTBh+8PZFVFjj7pc=;
-        b=YQQ1NriqxGIdyFykUW5wUsVXrWDI5b9dh9Thi+VEpLnJfXeYylF5yHC6P5FA7X0EdN
-         sRvAiJHt9gqbwEwgHFxu+WsLiFVlekwcqGUWmEH+9h7QGZ2+Ohz8BYkoWVz10b0MYbHk
-         ky+PFon/bBflElOUc9rA0VnlJPO4dEWQ38bPz/W0YWH9yBImai44aZk/ebbtfcc6GwlT
-         mEYDmfo7TSZb2Fvy/s5qTc3F2dB7D7VxNKm/4gLxkA4hY5ysld28yZ8G/TXl0iJBJWxW
-         FviF+IxQWUfxkMQCY/cgu9tFjeMVeg6euc/GeydL0q6jvfDWHRxohERwQLl0b5z9HkOO
-         6WQw==
-X-Gm-Message-State: ACrzQf3EE2tTn1/dFkVg2Vh4QRHPaFbq5GuZ26gjyANsOBRZa6/Qgs70
-        YAKNUEzgx4coUvgv1j/cUxAKHg==
-X-Google-Smtp-Source: AMsMyM4690QIj1e5aDq+SATm8Xi8DLIniBPwM5FgSW72DXTEXRxde1H/kFDfoKWVHqvr7oQ14AbQ/Q==
-X-Received: by 2002:a05:6214:2a85:b0:4b4:3f9:2639 with SMTP id jr5-20020a0562142a8500b004b403f92639mr7271033qvb.93.1666194102877;
-        Wed, 19 Oct 2022 08:41:42 -0700 (PDT)
-Received: from krzk-bin.MSRM (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
-        by smtp.gmail.com with ESMTPSA id s7-20020a05620a254700b006ec59941acasm5250673qko.11.2022.10.19.08.41.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 08:41:42 -0700 (PDT)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Matthias Kaehlcke <mka@chromium.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>
-Cc:     Rob Herring <robh@kernel.org>
-Subject: Re: (subset) [PATCH v3 4/4] dt-bindings: pinctrl: qcom,sc7180: convert to dtschema
-Date:   Wed, 19 Oct 2022 11:41:40 -0400
-Message-Id: <166619409804.178762.14168255120927060733.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221019001351.1630089-5-krzysztof.kozlowski@linaro.org>
-References: <20221019001351.1630089-1-krzysztof.kozlowski@linaro.org> <20221019001351.1630089-5-krzysztof.kozlowski@linaro.org>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=x/LBGeRA1bR4x/er8ptm3OVF4CHSU/5RYrhJUueSgZE=;
+        b=Gx0bUX/pLdK8LsdfzqpH8xEHzpSFwx7HusuZDA6DAqy9zBFmzlcoUjzGskQaLvYtWs
+         dPIX9q3m7wVpLsB4NubCHC+1f2KbyjZ3PkqdKu6Z+kecVuLd1mUc732savOpuKWM7yNw
+         W1+fFj13WWafDyQV9Bq1JOICIwDtLMpNehY1s9AFiKWva18PeC+Fvv5S8LOUW+nqh+hk
+         vAnDRZnZESNCIBQhrio2bXtQemLbwwQppBJ8Y5N9KrdtQsvr140CCvYKqRkxNGPxH2Tw
+         gvGWu+x/tXgrhhfwLPs1XPKkbZFb3gDkhWS1pWp3VB8TEiwtvqK7Egs6PJJvPteixzsx
+         xTWg==
+X-Gm-Message-State: ACrzQf3TFE59zts/+Eqir01TUT8KP8k+hD7VPVvhFMsWDYUro+Sz8kF5
+        Js3HLX1QPQ2mpkr50vbvtOuWaKK+5bS+kQ==
+X-Google-Smtp-Source: AMsMyM5pendeECZk/VfMAk1hPA2/wE4N7jFkiQSWdDvz3mOwD5vkKqgyz1pG3w6IYR83fARg56ZNJQ==
+X-Received: by 2002:a17:906:8a47:b0:78d:b6d8:f531 with SMTP id gx7-20020a1709068a4700b0078db6d8f531mr7382883ejc.287.1666194500899;
+        Wed, 19 Oct 2022 08:48:20 -0700 (PDT)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
+        by smtp.gmail.com with ESMTPSA id m13-20020aa7c2cd000000b004580b26e32esm10763468edp.81.2022.10.19.08.48.19
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Oct 2022 08:48:19 -0700 (PDT)
+Received: by mail-wm1-f41.google.com with SMTP id y10so13220461wma.0
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 08:48:19 -0700 (PDT)
+X-Received: by 2002:a05:600c:4b19:b0:3c6:cc7c:763c with SMTP id
+ i25-20020a05600c4b1900b003c6cc7c763cmr6355432wmp.57.1666194498976; Wed, 19
+ Oct 2022 08:48:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20221019001351.1630089-1-krzysztof.kozlowski@linaro.org> <20221019001351.1630089-3-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221019001351.1630089-3-krzysztof.kozlowski@linaro.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 19 Oct 2022 08:48:04 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UriVs4-=KCg5TkzCuQaS=LEZS=CDOH0=69GsYjhPcu_g@mail.gmail.com>
+Message-ID: <CAD=FV=UriVs4-=KCg5TkzCuQaS=LEZS=CDOH0=69GsYjhPcu_g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] arm64: dts: qcom: sc7180: revert "arm64: dts:
+ qcom: sc7180: Avoid glitching SPI CS at bootup on trogdor"
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 18 Oct 2022 20:13:51 -0400, Krzysztof Kozlowski wrote:
-> Convert Qualcomm SC7180 pin controller bindings to DT schema.  Keep the
-> parsing of pin configuration subnodes consistent with other Qualcomm
-> schemas (children named with '-state' suffix, their children with
-> '-pins').
-> 
-> 
+Hi,
 
-Applied, thanks!
+On Tue, Oct 18, 2022 at 5:14 PM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> This reverts commit e440e30e26dd6b0424002ad0ddcbbcea783efd85 because it
+> is not a reliable way of fixing SPI CS glitch and it depends on specific
+> Linux kernel pin controller driver behavior.
+>
+> This behavior of kernel driver was changed in commit b991f8c3622c
+> ("pinctrl: core: Handling pinmux and pinconf separately") thus
+> effectively the DTS fix stopped being effective.
+>
+> Proper solution for the glitching SPI chip select must be implemented in
+> the drivers, not via ordering of entries in DTS.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> ---
+>
+> Changes since v2:
+> 1. New patch
+>
+> Not tested on hardware.
+>
+> Cc: Doug Anderson <dianders@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi | 27 +++-----------------
+>  1 file changed, 3 insertions(+), 24 deletions(-)
 
-[4/4] dt-bindings: pinctrl: qcom,sc7180: convert to dtschema
-      https://git.kernel.org/krzk/linux-dt/c/ee3d25dff30ca1a4a2afa66da81465accf2b045a
+It would have been nice for the commit message to mention the fix in
+the driver, which has already landed as commit d21f4b7ffc22 ("pinctrl:
+qcom: Avoid glitching lines when we first mux to output").
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In any case:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+I've confirmed that this patch is fine after taking the pinctrl fix.
+
+Tested-by: Douglas Anderson <dianders@chromium.org>
