@@ -2,60 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD2C6037AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 03:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C8B7603801
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 04:26:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbiJSBwQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 18 Oct 2022 21:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        id S229839AbiJSC0Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 18 Oct 2022 22:26:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbiJSBwP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 21:52:15 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B680390801
-        for <linux-gpio@vger.kernel.org>; Tue, 18 Oct 2022 18:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666144334; x=1697680334;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9NQMFGUUGshGzCweGGtC44O/XvI/d+JDVbsHM+odt7M=;
-  b=NnKg46H3lkL6bS8xQmfjz4Ahtr4ra8gXsQSp+fIgtmlHkIxAX14l10jD
-   X2j6LfaKrtkxrMIjvlnEmXM/zxzn1js9oxV5gUEzsAYjuKkMQQf+ANIsz
-   8Rpj5DyTK3tn6ciYdFq6g2FD1/ACpwBRhVTLcxlEXOlp7WWuZ4jH1aOlF
-   y40OqZ0+/R0lZuc/shr2+Wc2WeaxL/qoqvRfZM5YIGPT9l+u4fC0K/jEi
-   nW293Z/j+E0XCAPIh0VEjVFOk50ozINO/B9tFbv051SnD7DymtiZp/aPy
-   t49aWjF1ZSR/SXWaV2NfGpH3s6BmToBJk7mJ1SFB33VqBHjJ8wc7JCT0B
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="368334374"
-X-IronPort-AV: E=Sophos;i="5.95,194,1661842800"; 
-   d="scan'208";a="368334374"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Oct 2022 18:52:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10504"; a="606843833"
-X-IronPort-AV: E=Sophos;i="5.95,194,1661842800"; 
-   d="scan'208";a="606843833"
-Received: from lkp-server01.sh.intel.com (HELO 8381f64adc98) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 18 Oct 2022 18:52:13 -0700
-Received: from kbuild by 8381f64adc98 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1okyFg-0002Fz-1G;
-        Wed, 19 Oct 2022 01:52:12 +0000
-Date:   Wed, 19 Oct 2022 09:51:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 60031704a7942f81a0cbcbe4dafbb69a25aa9d62
-Message-ID: <634f581e.Y9NZZwBGCXXITf13%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        with ESMTP id S229906AbiJSC0M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 18 Oct 2022 22:26:12 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5321D6D54A;
+        Tue, 18 Oct 2022 19:26:11 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id h12so15823851pjk.0;
+        Tue, 18 Oct 2022 19:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=er/1qGyGPvy6leNV/3q4zAE8W98J7263JUcIKC3pW08=;
+        b=kGTujcOB3B+7jMN5o1Z99H9KU3GHkeaI9cm8VoIcbyq2/AO6Qc6EA2YrA24w+7YQ2Z
+         twmL8+DIJycKjL5ZmO9D/Zi5SzxfKKJK2Oz6IyftXGFLD/Pl3pKqCz85Y366E7VH8Yf8
+         adXGCEHt5eyafr3niacj1kpwnnBluq72pG5eda2vjXp6/bx22V1U7uakYwH73YArQ/nJ
+         8CZf3oKvqEiWRgRtQxifyvJ3EWNtt3ikzMlvYqnC08a6FVJ34YToX2AL8XQ92+X5G89P
+         FhhvK1PCCTmUyoOvLLFazppu2D3kYRdes33+qT23DYlAnSSOntlZa/Gp6B+ZE/NKxegw
+         tGfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=er/1qGyGPvy6leNV/3q4zAE8W98J7263JUcIKC3pW08=;
+        b=rw30vO825f6KE0NzMmZqOqAW8EE2RUpMVyLoos1Hq6zYb6jv0mSYfqCpCefTilbYz7
+         vEDHBBbytcG9LNU1yD3Ff98KwD6yNxZUey2GcfvKabyWCzvDA8FI0ixMZ1rbNPOS5J/2
+         heCCKgeP32O4A274yz6TZdjeMnkaZwGMmVhtIUdy+QL67Ov3clFmSvjgYrLrK/NaM3C6
+         VCckJvoZGasko/WY4bYHyG2AIj5B5H5QG65S9wTh+iDbT8hJx+4Eil2FVYYZcKe/XKr4
+         0z1f+CX9ClGywyJYERdQjEpel4/f9tda2z5ihKl00IOkp+v50AsEBLrpvqMzr1syHS8/
+         kPeg==
+X-Gm-Message-State: ACrzQf06hj3GnDK70tO46JMb9uCgdNeWjmKfntNkWJECzYlxfNjMV7xN
+        FMGI0QmUuTLDBUciOn2PA5HA3ll+hjFI
+X-Google-Smtp-Source: AMsMyM7Yurvg98ZqCVYDyHQO86dBDHZRnNHEf77YxFX38kvUJi7qaSIEHQwsDWnCc3YMDOZ5kQtC9w==
+X-Received: by 2002:a17:903:2c2:b0:182:df88:e6d3 with SMTP id s2-20020a17090302c200b00182df88e6d3mr5980937plk.81.1666146370650;
+        Tue, 18 Oct 2022 19:26:10 -0700 (PDT)
+Received: from localhost.localdomain ([106.104.115.142])
+        by smtp.gmail.com with ESMTPSA id x185-20020a6263c2000000b00562a526cd2esm9855880pfb.55.2022.10.18.19.26.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Oct 2022 19:26:10 -0700 (PDT)
+From:   chengwei <foxfly.lai.tw@gmail.com>
+X-Google-Original-From: chengwei <larry.lai@yunjingtech.com>
+To:     lee@kernel.org, broonie@kernel.org, rafael@kernel.org,
+        mika.westerberg@linux.intel.com, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-gpio@vger.kernel.org, GaryWang@aaeon.com.tw,
+        musa.lin@yunjingtech.com, jack.chang@yunjingtech.com,
+        chengwei <larry.lai@yunjingtech.com>
+Subject: [PATCH 0/5] Add support control UP board CPLD/FPGA pin control
+Date:   Wed, 19 Oct 2022 10:24:45 +0800
+Message-Id: <20221019022450.16851-1-larry.lai@yunjingtech.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,161 +71,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 60031704a7942f81a0cbcbe4dafbb69a25aa9d62  Merge branch 'devel' into for-next
+The UP board <http://www.upboard.com> is the computer board for 
+Professional Makers and Industrial Applications. We want to upstream 
+the UP board 40-pin GP-bus Kernel driver for giving the users better 
+experience on the software release. (not just download from UP board 
+github)
 
-elapsed time: 721m
+These patches are generated from the Linux kernel mainline tag v6.0.
 
-configs tested: 136
-configs skipped: 4
+(1) PATCH 1 (mfd: Add support for UP board CPLD/FPGA)
+We did git send-email this patch to maintainer on 2022/10/11 for reviewing.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+(2) PATCH 2 (regmap: Expose regmap_writable function to check if a register is
+    writable)
+The regmap patch expose the regmap_writeable function for pinctrl-upboard 
+reference.
 
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-s390                                defconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-s390                             allyesconfig
-x86_64                           rhel-8.3-kvm
-i386                             allyesconfig
-i386                                defconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-arc                  randconfig-r043-20221018
-s390                 randconfig-r044-20221018
-riscv                randconfig-r042-20221018
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-s390                             allmodconfig
-arc                                 defconfig
-alpha                               defconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-m68k                             allyesconfig
-arm                        cerfcube_defconfig
-sh                  sh7785lcr_32bit_defconfig
-mips                           jazz_defconfig
-arm                         lpc18xx_defconfig
-powerpc                     asp8347_defconfig
-mips                  maltasmvp_eva_defconfig
-i386                          randconfig-c001
-xtensa                  audio_kc705_defconfig
-arc                           tb10x_defconfig
-openrisc                 simple_smp_defconfig
-sh                   sh7724_generic_defconfig
-ia64                          tiger_defconfig
-microblaze                      mmu_defconfig
-powerpc                      ppc6xx_defconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-sparc                             allnoconfig
-powerpc                     tqm8541_defconfig
-powerpc                     stx_gp3_defconfig
-powerpc                   currituck_defconfig
-powerpc                 mpc834x_mds_defconfig
-arm                        trizeps4_defconfig
-powerpc                 linkstation_defconfig
-m68k                        mvme16x_defconfig
-ia64                                defconfig
-arm                        mvebu_v7_defconfig
-nios2                               defconfig
-m68k                          amiga_defconfig
-openrisc                         alldefconfig
-arm                      jornada720_defconfig
-ia64                             allmodconfig
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20221018
-powerpc                      ep88xc_defconfig
-csky                              allnoconfig
-arm                            mps2_defconfig
-arm                       imx_v6_v7_defconfig
-sparc                       sparc64_defconfig
-m68k                       m5475evb_defconfig
-arm                          gemini_defconfig
-arc                  randconfig-r043-20221017
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arm                        spear6xx_defconfig
-arm                         assabet_defconfig
-mips                 decstation_r4k_defconfig
-sh                          r7780mp_defconfig
-arm                         axm55xx_defconfig
-ia64                        generic_defconfig
-arm                           tegra_defconfig
-powerpc                      chrp32_defconfig
-mips                         db1xxx_defconfig
-powerpc                  storcenter_defconfig
-powerpc                 canyonlands_defconfig
-sh                          urquell_defconfig
-m68k                                defconfig
-sh                 kfr2r09-romimage_defconfig
-s390                       zfcpdump_defconfig
-openrisc                            defconfig
-powerpc                     tqm8548_defconfig
-openrisc                  or1klitex_defconfig
-loongarch                           defconfig
-loongarch                         allnoconfig
-loongarch                        allmodconfig
+(3) PATCH 3 (ACPI: acpi_node_add_pin_mapping added to header file)
+Declare acpi_node_add_pin_mapping added in header file.
 
-clang tested configs:
-i386                 randconfig-a013-20221017
-i386                 randconfig-a015-20221017
-i386                 randconfig-a016-20221017
-i386                 randconfig-a011-20221017
-i386                 randconfig-a014-20221017
-i386                 randconfig-a012-20221017
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-k001
-x86_64                        randconfig-c007
-mips                 randconfig-c004-20221018
-i386                          randconfig-c001
-s390                 randconfig-c005-20221018
-arm                  randconfig-c002-20221018
-riscv                randconfig-c006-20221018
-powerpc              randconfig-c003-20221018
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-arm                      tct_hammer_defconfig
-riscv                             allnoconfig
-arm                      pxa255-idp_defconfig
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-powerpc                 mpc832x_mds_defconfig
-powerpc                      ppc44x_defconfig
-mips                        maltaup_defconfig
-arm                                 defconfig
-mips                           rs90_defconfig
+(4) PATCH 4 (GPIO ACPI: Add support to map GPIO resources to ranges)
+Add a pin mapping for named GPIO resources for pinctrl-upboard 
+reference.
 
+(3) PATCH 5 (pinctrl: Add support pin control for UP board CPLD/FPGA)
+The UP board implements certain features (pin control) through an on-board CPLD.
+** This patch depends on PATCH 1 (mfd: Add support for UP board CPLD/FPGA).
+** This patch depends on PATCH 2 to refer to regmap_writeable function.
+** This patch depends on PATCH 3 and PATCH 4 to refer to acpi_node_add_pin_mapping 
+function.
+
+chengwei (5):
+  mfd: Add support for UP board CPLD/FPGA
+  regmap: Expose regmap_writeable function to check if a register is
+    writable
+  ACPI: acpi_node_add_pin_mapping added to header file
+  GPIO ACPI: Add support to map GPIO resources to ranges
+  pinctrl: Add support pin control for UP board CPLD/FPGA
+
+ drivers/base/regmap/internal.h    |    5 -
+ drivers/base/regmap/regmap.c      |    5 +
+ drivers/gpio/gpiolib-acpi.c       |   88 ++-
+ drivers/mfd/Kconfig               |   12 +
+ drivers/mfd/Makefile              |    1 +
+ drivers/mfd/upboard-fpga.c        |  482 ++++++++++++++
+ drivers/pinctrl/Kconfig           |   15 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/pinctrl-upboard.c | 1003 +++++++++++++++++++++++++++++
+ include/linux/acpi.h              |   14 +
+ include/linux/mfd/upboard-fpga.h  |   49 ++
+ include/linux/regmap.h            |    6 +
+ 12 files changed, 1659 insertions(+), 22 deletions(-)
+ create mode 100644 drivers/mfd/upboard-fpga.c
+ create mode 100644 drivers/pinctrl/pinctrl-upboard.c
+ create mode 100644 include/linux/mfd/upboard-fpga.h
+
+
+base-commit: 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.17.1
+
