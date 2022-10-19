@@ -2,172 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16E44604B26
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 17:22:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB70F604B4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 17:27:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbiJSPWc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Oct 2022 11:22:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        id S232002AbiJSP1X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Oct 2022 11:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232459AbiJSPWG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 11:22:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E1F1D63B5;
-        Wed, 19 Oct 2022 08:15:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 91C21B8223A;
-        Wed, 19 Oct 2022 15:14:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2D8C433C1;
-        Wed, 19 Oct 2022 15:14:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666192466;
-        bh=oHhISD/CzMUmkWxHqFyoeUe7ZEcONDoFgdgwOoTRBYs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imyorfygSIZT3yoeStIWjdN3TSeMWYmRlMZ5hnwx97K39seFcDJYd12q38IubJHar
-         1qrliULXdMJdBzD5H0lBgje3cgh9fKgzmKm4mmkoitABTbXSrSenqG4Du4mGdkCj6R
-         Wn6IkxkwMKWuT548PQqxHvxw/bhQ29df97xDZuYoLgvpp+0D/u8+7i/dReAFeNWd+U
-         mmLXsM3WmS/lCICWEOP6bwONhJVCnEU8Bsnrde/lmLFVsqZr//Su2g18+OPbQpY1Zl
-         OjFSCLOTXrexFqt3heo6E0QaYXRZJcmJO+mewQ7KPxHOke+LQVWjIHVJm+vd5vyluI
-         5VpU7GS7gJshA==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Lennert Buytenhek <buytenh@wantstofly.org>,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 11/17] gpio: remove iop driver
-Date:   Wed, 19 Oct 2022 17:03:33 +0200
-Message-Id: <20221019150410.3851944-11-arnd@kernel.org>
-X-Mailer: git-send-email 2.29.2
-In-Reply-To: <20221019150410.3851944-1-arnd@kernel.org>
-References: <20221019144119.3848027-1-arnd@kernel.org>
- <20221019150410.3851944-1-arnd@kernel.org>
+        with ESMTP id S232171AbiJSP1D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 11:27:03 -0400
+Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C75A14C527;
+        Wed, 19 Oct 2022 08:19:53 -0700 (PDT)
+Received: by mail-io1-xd36.google.com with SMTP id i65so14770074ioa.0;
+        Wed, 19 Oct 2022 08:19:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KiAtnv3O8MX8nL+R91UDkC4RH0kfqHF5HE/wVPNVO9E=;
+        b=j/plf1bJ20J4G8S6RNOuUW/ahXCuyTBOVehUugkYj9HW+bWZp3E288RhnrDTBBLtg5
+         9XHeMaz5bL09MTVZ66Foxxkam2kIGyuF05IHkTbommDvOd2M/KS3nrfyZWnE9ynFfd9l
+         ZDorP9vGnGy/hXRENdDoE27Wi4rpKfO7FnX3k3Ezx5FtwrN/MlaUUrA8jpkV5+kzfRbT
+         nFsTfArSDT1wk8d1GqtiX1lVqrWg/uC0P5JaJ66VouWgEihLxjW5jUNdd/wc9uOaYByT
+         sENKdwS5+l6L4gkskVqUlxLN4ZcQetjAGTlbgMYexcyKNLPPNSF2ZyFpf1DJpYWs5Z+D
+         +WGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KiAtnv3O8MX8nL+R91UDkC4RH0kfqHF5HE/wVPNVO9E=;
+        b=jbjZqL5FXDm/Q3q57sjj+mkK0QCEN7ACC9rmMt4k0v4mjIuhebRYvRLV4pTkBG/jMP
+         1pUwGPMGvbj7O5yXofieqyu9t0tyNOcBwfH/8FSELRNe2kHdp8BZpezZEv+Ad9PGTtFG
+         L0dsOpNCZDp5tPnrmKNdl85lnyOujZLQu7kyzuWsy+IDOvomj01Ly8TkA2+ZYtLMRwfB
+         +vA+RYdnYUj9tsLkfZIBL7QSyFEsFOBNQF9Hg030iUOd9iTu2HW6InIix8lYznVJ74kA
+         7gCxlhlhxv/jGtT4qsZ/fOCHOMEk0jB1dNSYbRilYg7eA8D2g4ecVlEtcyAnkMGVWys7
+         sR/g==
+X-Gm-Message-State: ACrzQf1QYd0C4uHAmM0ynySBTHgLJ7XBuxu/iKWkRIMskRoqhHY0nrCz
+        eN+vEx3NtJ/WL4DGvQRm+Ez1AYwgtiGutolCLyU=
+X-Google-Smtp-Source: AMsMyM5qPsQtuBvKyPQMnBZjaxeLYE52tYSFcHWWnB70BrncG/Hn51NZd/lN2AWIwQJCxd/unWoBGJKg26X7wKRspXA=
+X-Received: by 2002:a05:6638:3452:b0:363:69f8:549f with SMTP id
+ q18-20020a056638345200b0036369f8549fmr6938721jav.190.1666192765289; Wed, 19
+ Oct 2022 08:19:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221009181338.2896660-8-lis8215@gmail.com> <202210100607.YdxoR0tD-lkp@intel.com>
+ <CAKNVLfaFvge4A8-QUzeq-JManpuYMGvyHXCJi-ew==CWN8-M=A@mail.gmail.com>
+ <bb9f79d4-82a9-4790-b849-d517333ea2d4@app.fastmail.com> <GSPOJR.M4XZ4D03G60F@crapouillou.net>
+ <CAKNVLfZukazKx2yDBrLZc7J9=3cCvMgZbdghtt1YO7WivdPjvw@mail.gmail.com>
+ <CAKNVLfbePJQN07GfhqAs-opm23poWsL0o-DkV=n-f9+H7Y7rpg@mail.gmail.com> <555WJR.ESJD0KDHOG3S@crapouillou.net>
+In-Reply-To: <555WJR.ESJD0KDHOG3S@crapouillou.net>
+From:   Siarhei Volkau <lis8215@gmail.com>
+Date:   Wed, 19 Oct 2022 18:19:13 +0300
+Message-ID: <CAKNVLfZ0ndwGUUq0VX3vdvxfDK6Shf61WS_dC5WocChKeYSWJg@mail.gmail.com>
+Subject: Re: [PATCH 7/8] serial: 8250/ingenic: Add support for the
+ JZ4750/JZ4755 SoCs
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kernel test robot <lkp@intel.com>,
+        kbuild-all@lists.01.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mips@vger.kernel.org,
+        GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+=D0=BF=D0=BD, 17 =D0=BE=D0=BA=D1=82. 2022 =D0=B3. =D0=B2 12:32, Paul Cercue=
+il <paul@crapouillou.net>:
+> > I checked that approach: serial seems to be working as expected,
+> > but not all the time: there's a time period when the CGU driver
+> > started but serial console driver is still early one.
+> > In my case UART produces garbage at that period since CGU
+> > needs to enable clock divider back: ext is 24MHz but 12MHz
+> > required for audio codec and USB to function properly.
+>
+> What I'd do, is just force-enable it to 12 MHz in ingenic_fixup_fdt(),
+> since the programming manual basically says that 24 MHz does not work
+> properly.
+>
+> Then in the earlycon setup code hardcode the /2 divider with a big fat
+> comment about why it's there.
 
-The iop32x platform was removed, and its gpio driver is now
-orphaned.
+Agree, the vendor's kernel does that as well.
 
-Cc: Lennert Buytenhek <buytenh@wantstofly.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpio/Kconfig    | 10 -------
- drivers/gpio/Makefile   |  1 -
- drivers/gpio/gpio-iop.c | 59 -----------------------------------------
- 3 files changed, 70 deletions(-)
- delete mode 100644 drivers/gpio/gpio-iop.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a01af1180616..30a2b4214472 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -345,16 +345,6 @@ config GPIO_IMX_SCU
-        def_bool y
-        depends on IMX_SCU
- 
--config GPIO_IOP
--	tristate "Intel IOP GPIO"
--	depends on ARCH_IOP32X || COMPILE_TEST
--	select GPIO_GENERIC
--	help
--	  Say yes here to support the GPIO functionality of a number of Intel
--	  IOP32X or IOP33X series of chips.
--
--	  If unsure, say N.
--
- config GPIO_IXP4XX
- 	bool "Intel IXP4xx GPIO"
- 	depends on ARCH_IXP4XX
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 29e3beb6548c..b8c2ebc4bc87 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -70,7 +70,6 @@ obj-$(CONFIG_GPIO_I8255)		+= gpio-i8255.o
- obj-$(CONFIG_GPIO_ICH)			+= gpio-ich.o
- obj-$(CONFIG_GPIO_IDT3243X)		+= gpio-idt3243x.o
- obj-$(CONFIG_GPIO_IMX_SCU)		+= gpio-imx-scu.o
--obj-$(CONFIG_GPIO_IOP)			+= gpio-iop.o
- obj-$(CONFIG_GPIO_IT87)			+= gpio-it87.o
- obj-$(CONFIG_GPIO_IXP4XX)		+= gpio-ixp4xx.o
- obj-$(CONFIG_GPIO_JANZ_TTL)		+= gpio-janz-ttl.o
-diff --git a/drivers/gpio/gpio-iop.c b/drivers/gpio/gpio-iop.c
-deleted file mode 100644
-index 7390b5ca09e3..000000000000
---- a/drivers/gpio/gpio-iop.c
-+++ /dev/null
-@@ -1,59 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- * arch/arm/plat-iop/gpio.c
-- * GPIO handling for Intel IOP3xx processors.
-- *
-- * Copyright (C) 2006 Lennert Buytenhek <buytenh@wantstofly.org>
-- */
--
--#include <linux/err.h>
--#include <linux/module.h>
--#include <linux/gpio/driver.h>
--#include <linux/platform_device.h>
--
--#define IOP3XX_GPOE	0x0000
--#define IOP3XX_GPID	0x0004
--#define IOP3XX_GPOD	0x0008
--
--static int iop3xx_gpio_probe(struct platform_device *pdev)
--{
--	struct gpio_chip *gc;
--	void __iomem *base;
--	int err;
--
--	gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
--	if (!gc)
--		return -ENOMEM;
--
--	base = devm_platform_ioremap_resource(pdev, 0);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
--
--	err = bgpio_init(gc, &pdev->dev, 1, base + IOP3XX_GPID,
--			 base + IOP3XX_GPOD, NULL, NULL, base + IOP3XX_GPOE, 0);
--	if (err)
--		return err;
--
--	gc->base = 0;
--	gc->owner = THIS_MODULE;
--	gc->label = "gpio-iop";
--
--	return devm_gpiochip_add_data(&pdev->dev, gc, NULL);
--}
--
--static struct platform_driver iop3xx_gpio_driver = {
--	.driver = {
--		.name = "gpio-iop",
--	},
--	.probe = iop3xx_gpio_probe,
--};
--
--static int __init iop3xx_gpio_init(void)
--{
--	return platform_driver_register(&iop3xx_gpio_driver);
--}
--arch_initcall(iop3xx_gpio_init);
--
--MODULE_DESCRIPTION("GPIO handling for Intel IOP3xx processors");
--MODULE_AUTHOR("Lennert Buytenhek <buytenh@wantstofly.org>");
--MODULE_LICENSE("GPL");
--- 
-2.29.2
-
+Also I found that:
+1. Many other drivers compile the early console only when
+CONFIG_SERIAL_8250_CONSOLE is set.
+2. All the early ingenic_ functions can be labeled as __init.
+Shall I fix that while I'm already here?
