@@ -2,136 +2,156 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D272A604542
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 14:28:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 682D36046B7
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 15:18:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231641AbiJSM2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Oct 2022 08:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46368 "EHLO
+        id S231887AbiJSNSt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Oct 2022 09:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231571AbiJSM2d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 08:28:33 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC92CF41B7
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 05:04:59 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id e129so16040769pgc.9
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 05:04:58 -0700 (PDT)
+        with ESMTP id S230082AbiJSNSZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 09:18:25 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18E9486F83
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 06:04:14 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id q19so25145601edd.10
+        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 06:04:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Px1WsXpL4faLN2alPUKDz/PRF3Z0jmy0dRofcoecjLE=;
-        b=QdYGaOyqG0DpgmQl1UtVRj+Gja1uZdlqporhPmSoec9fRYSrklkfkrTWkUNc5gtJB8
-         zGkuRE0l5TCmnIZ+5RoPon7jQfNORvTaZ+grgwQEvur7fbvkY8fDPHwpEGw8oLcFeABC
-         qRb+0EKeeZvd8tzFnIZQlN8UrOIIbCx8Hg7ggqB+q6MMg3KGJu1B56Z/Z4leQCsugSFB
-         U5oagk9K6cwV3peSNtVybPPAmcBiPYbUwo07w0KBEgbDr2RVEKcEr8uxan3xRLLM2EF+
-         m8A15AfFqreYO0DykeXBUSqm7BWfqSpVdWZKXUh3vp6X0BXju6OQr1hTf1cKB2bIrtUH
-         gaDw==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=d3VL/mzhi5Wm2xdWGUHIAE4nO6Fe2O8bP7Z+pi4mNnY=;
+        b=qLKOVrL36vYKIVJTbr+QmsymiwkoR0GnSstj+Db1nLKXqpZRqq95w0cOa6xrAwfFWy
+         fetrIS3OK5N+eAV02l5JS7xZuQEiLu370QZ7tCHxYTlM92JEMueSMojPeYwG7MA7O+AQ
+         swLdq/zj690ykUqj4E09trLyIhnDuo/o83EmHYYg+p3hzUTbl/eICv3AVLQwwwXJq48b
+         xDzqa2HkMFKBXiy8CZC4XfOKwFY9aaIZlhIhfsVGX6ThS9Ltat8V/8mnqzrh/DNWKDSQ
+         n2BKxJTmCQ3EpSnO+QlTQeOHlRhvOCM72M/BAYZPQreiiucvl8GvLEafViCbNBK28OUp
+         GV3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Px1WsXpL4faLN2alPUKDz/PRF3Z0jmy0dRofcoecjLE=;
-        b=3zCkBMkiG9zTMCWQXTfpHHxJehqThvwpUqneWCgKUxSww0bWGezEq4h5GXfChXf/wj
-         a41Gs/r87tC6KFO/XAeMXfajDskrPRYIzZS+UihxctpxodcDKUL5LjtACGNkRR04vuWi
-         5TNfYKhW0hqh8vuuU5ALGadyBGc4MsobVXlkFWFCzQvP4qkYhaB9c4mTqAYbkyJ4BppD
-         vhG+T4O8lMfFrOm4A0N3U8ts62m1TskokWOeGy1331rPVqNMmGdHWeCuxTNQt8UKs9gy
-         XcLAUywhgJIRL7E7xceQyBMU7JqXGK4BulG1dd96Hm7Ssr3mUmJPe7BOSaftOohXx5nI
-         ji/Q==
-X-Gm-Message-State: ACrzQf0491iTU21NV2haBvWT3FZoftmY0hmmTRU44o0aqK7pmcJ3eacf
-        UU+qD4hvj8lWarBckcZDLSI=
-X-Google-Smtp-Source: AMsMyM7CRx5tOkoG7fiANlWnSYdFILkH9I2aPIad3KZeRfQcqYuiOdJqG2EmCmin42IX8ogwQqxh0A==
-X-Received: by 2002:a63:c104:0:b0:459:c6a1:15c0 with SMTP id w4-20020a63c104000000b00459c6a115c0mr6693081pgf.588.1666180924250;
-        Wed, 19 Oct 2022 05:02:04 -0700 (PDT)
-Received: from sol (14-203-42-90.tpgi.com.au. [14.203.42.90])
-        by smtp.gmail.com with ESMTPSA id y23-20020aa78f37000000b00562a5f29ac1sm11236949pfr.100.2022.10.19.05.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Oct 2022 05:02:03 -0700 (PDT)
-Date:   Wed, 19 Oct 2022 20:01:57 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Subject: Re: [PATCH V7 1/8] libgpiod: Add libgpiod-sys rust crate
-Message-ID: <Y0/nNRu0OOXXfq/h@sol>
-References: <cover.1665744170.git.viresh.kumar@linaro.org>
- <c8ef89c343a0c31e4132cc6757fdff8dec0d1669.1665744170.git.viresh.kumar@linaro.org>
- <Y01RqjgZINnkcyIC@sol>
- <20221018112204.l36wnimrqvexnvat@vireshk-i7>
- <Y06S5GCFYeaPEW9E@sol>
- <20221019064612.p4gu33dm65rnjwl6@vireshk-i7>
- <Y0+lZ9qcNGX1Q/Of@sol>
- <20221019112251.oyfek3gjodyt67lh@vireshk-i7>
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=d3VL/mzhi5Wm2xdWGUHIAE4nO6Fe2O8bP7Z+pi4mNnY=;
+        b=2u3XEUgj2xBlBOVwYNTKDWxAXIHwS8ZxtrIyhr2w+7xLCicraSa0K4CdYMiegqU6vK
+         Nbpv64OvsCTj5YZvOi45ol2UkSYGxIfm9Zro7LR90kHSo4IszY/jvFpvNcHJRg0Xkaax
+         VSHxbTw02MSp2LJnGIiJVfl0+doBm8FU6ov4aXPE45kLoBFO305QjopyQSLjCVV1L71i
+         sJR/ezpdk+euhyc0usB1FM8m4RWd1byzsLqhKANdsZce1pI4HE/OTiFKK1+vMXAibcrl
+         PuW0SrkrMHY/kKeLs4QffZDDjqPg1PZu6YKvZS9lAat8GJkaZVDGv41mEOAVWQQujti7
+         2oNw==
+X-Gm-Message-State: ACrzQf1VqfyeY9H6Wwz8E3MSkBO2n3wSa6Yu3xsavEb03mx51oo1mYJE
+        pQTvK+AYeEzl5l2XHATXr5HD5cljEaku6eXavA5TYg==
+X-Google-Smtp-Source: AMsMyM4hCSd4KMgo27A24eMkRwBD6tvC/jw40UALp2dVxz0XOx3StHwqY07dyLHa/kPw1NNkhDsD2df6Cb1WLoz831o=
+X-Received: by 2002:a05:6402:5419:b0:457:c955:a40f with SMTP id
+ ev25-20020a056402541900b00457c955a40fmr7132566edb.391.1666184629159; Wed, 19
+ Oct 2022 06:03:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221019112251.oyfek3gjodyt67lh@vireshk-i7>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 19 Oct 2022 18:33:37 +0530
+Message-ID: <CA+G9fYsfNsZs1ktOn1StM2PVgc+o1QEjKvMJ1gxEqwtgw8Dzkg@mail.gmail.com>
+Subject: drivers/pinctrl/freescale/pinctrl-imx1-core.c:209:2: error: implicit
+ declaration of function 'seq_printf'; did you mean 'scnprintf'? [-Werror=implicit-function-declaration]
+To:     NXP Linux Team <linux-imx@nxp.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 04:52:51PM +0530, Viresh Kumar wrote:
-> On 19-10-22, 15:21, Kent Gibson wrote:
-> > That doesn't really work - you get a link to the files in github, not
-> > as a web site.  You need somewhere that will host those generated files
-> > as a web site.  You could do that with github-pages if you don't have other
-> > options.
-> 
-> I don't have other options for now, so it is github.
-> 
-> > When I've done that I would commit the docs to a separate
-> > branch, just for the docs, and have github-pages host that branch.
-> 
-> Okay.
-> 
-> > If you eventually publish your crate to crates.io you get documentation on
-> > docs.rs for free - and you can skip the documentation key in that case too
-> > - it defaults to the appropriate page on docs.rs.
-> 
-> Right, that I knew.
-> 
-> > I assume that would be the case long term - you just need to find
-> > someway to host them in the meantime.
-> 
-> I wonder if we should be doing this at all right now, or if required
-> only Bartosz should do it instead of me, once this is merged ?
-> 
+[ Please ignore if this has been reported already ]
+Following build warnings / errors noticed on Linux next-20221018 and
+20221019 tags while building for arm.
 
-I was assuming it was an interim solution, so it doesn't matter so much.
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=arm
+CROSS_COMPILE=arm-linux-gnueabihf- 'CC=sccache
+arm-linux-gnueabihf-gcc' 'HOSTCC=sccache gcc' multi_v5_defconfig
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=arm
+CROSS_COMPILE=arm-linux-gnueabihf- 'CC=sccache
+arm-linux-gnueabihf-gcc' 'HOSTCC=sccache gcc'
+drivers/pinctrl/freescale/pinctrl-imx1-core.c: In function 'imx1_pin_dbg_show':
+drivers/pinctrl/freescale/pinctrl-imx1-core.c:209:2: error: implicit
+declaration of function 'seq_printf'; did you mean 'scnprintf'?
+[-Werror=implicit-function-declaration]
+  209 |  seq_printf(s, "GPIO %d, function %d, direction %d, oconf %d,
+iconfa %d, iconfb %d",
+      |  ^~~~~~~~~~
+      |  scnprintf
+drivers/pinctrl/freescale/pinctrl-imx1-core.c: In function
+'imx1_pinconf_group_dbg_show':
+drivers/pinctrl/freescale/pinctrl-imx1-core.c:434:2: error: implicit
+declaration of function 'seq_puts'
+[-Werror=implicit-function-declaration]
+  434 |  seq_puts(s, "\n");
+      |  ^~~~~~~~
+cc1: some warnings being treated as errors
 
-I'd be happy with docs.rs once libgpiod v2 is released and the bindings
-published to crates.io, and I'm personally good with looking at the
-generated docs locally in the meantime.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-It would be easier for others to take a look if the docs were hosted,
-but I don't have any feel as to whether that is worth the effort or not.
+## Build
+* kernel: 6.1.0-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+* git branch: master
+* git commit: a72b55bc981b62f7186600d06d1824f1d0612b27
+* git describe: next-20221019
+* test details:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221019
 
-> Maybe we need a libgpiod username for that on github ? To make it
-> independent of personal usernames ? From what I saw, the website name
-> will be username.github.io eventually.
-> 
+## Test Regressions (compared to next-20221017)
+* arm, build
+  - clang-11-imx_v4_v5_defconfig
+  - clang-11-multi_v5_defconfig
+  - clang-11-mxs_defconfig
+  - clang-12-imx_v4_v5_defconfig
+  - clang-12-multi_v5_defconfig
+  - clang-12-mxs_defconfig
+  - clang-13-imx_v4_v5_defconfig
+  - clang-13-multi_v5_defconfig
+  - clang-13-mxs_defconfig
+  - clang-14-imx_v4_v5_defconfig
+  - clang-14-multi_v5_defconfig
+  - clang-14-multi_v5_defconfig-65236a87
+  - clang-14-mxs_defconfig
+  - clang-nightly-imx_v4_v5_defconfig
+  - clang-nightly-multi_v5_defconfig
+  - clang-nightly-multi_v5_defconfig-65236a87
+  - clang-nightly-mxs_defconfig
+  - gcc-10-imx_v4_v5_defconfig
+  - gcc-10-multi_v5_defconfig
+  - gcc-10-mxs_defconfig
+  - gcc-11-imx_v4_v5_defconfig
+  - gcc-11-multi_v5_defconfig
+  - gcc-11-multi_v5_defconfig-65236a87
+  - gcc-11-mxs_defconfig
+  - gcc-12-imx_v4_v5_defconfig
+  - gcc-12-multi_v5_defconfig
+  - gcc-12-multi_v5_defconfig-65236a87
+  - gcc-12-mxs_defconfig
+  - gcc-8-imx_v4_v5_defconfig
+  - gcc-8-multi_v5_defconfig
+  - gcc-8-mxs_defconfig
+  - gcc-9-imx_v4_v5_defconfig
+  - gcc-9-multi_v5_defconfig
+  - gcc-9-mxs_defconfig
 
-A libgpiod group account might be useful.
+Build link
+https://builds.tuxbuild.com/2GKpciP8HzSjXDbeqau9HpFlipH/
 
-And it would be nice to have a libgpiod space somewhere, not just
-piggybacking on the gpio mailing list.  Not sure if github is the best
-place - but I haven't given it much thought.
 
-Bart, do you have any opinions?
-
-Cheers,
-Kent.
+--
+Linaro LKFT
+https://lkft.linaro.org
