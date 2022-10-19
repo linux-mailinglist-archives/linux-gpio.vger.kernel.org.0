@@ -2,117 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9F3E6044BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 14:14:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CBD86045EF
+	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 14:52:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231643AbiJSMOd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Oct 2022 08:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47204 "EHLO
+        id S232468AbiJSMwO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Oct 2022 08:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232874AbiJSMOA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 08:14:00 -0400
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13331A2086;
-        Wed, 19 Oct 2022 04:50:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Hr6GqhiNot3Wp0AyCg0faopd7+PRJ3WvXflOrKZONA4=; b=YFxyjHqd72qFv1ZmqquSjQj3Ni
-        D3wXXvK6M3WA1rk7s4+NX15Uz6XwiHA8v4FNuggbDx5WYXp54ANzsSwSuOZMgMQbrJixNWjYc5M9Y
-        UIFKPUj4d16f7o4LNoZ2EyKDedNZAK/z6bu5xJpI2vvu2zpyFRVWjrxOjAarxcMzPsvpJ9NDMmblH
-        P7L50yGZjjEqvCOICBap4c2fxBzrest7PZ4oh7k0nYwLCa6lw67T1MJkkxDCIsLXE9o+djXQEx5DX
-        BmUCmODre+YPvgPq0s67x3crjTk2KRr4w0v9FlaReFO11py7jYHZ2DTuIRNfB0VHsgoZlYL3FXxL4
-        zVAJ4jjw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34794)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ol7ZF-0005bK-1u; Wed, 19 Oct 2022 12:49:02 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ol7Z9-00027o-Rf; Wed, 19 Oct 2022 12:48:55 +0100
-Date:   Wed, 19 Oct 2022 12:48:55 +0100
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Hector Martin <marcan@marcan.st>, Petr Mladek <pmladek@suse.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH 4/7] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Y0/kJwpbvbeul8n3@shell.armlinux.org.uk>
-References: <YxdInl2qzQWM+3bs@shell.armlinux.org.uk>
- <E1oVYUS-005CmS-IA@rmk-PC.armlinux.org.uk>
- <Y0/Kt9CW5vYcxHhK@alley>
+        with ESMTP id S233455AbiJSMv3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 08:51:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFD918C412;
+        Wed, 19 Oct 2022 05:33:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E04660ECC;
+        Wed, 19 Oct 2022 11:57:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2652C433D6;
+        Wed, 19 Oct 2022 11:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666180664;
+        bh=xN0ViNDIEFlvZ8cpBkJuaRDJox/j4tz1IrTtAUrllF8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GeCWefPnlnA1NzGiDEQ8qxrAzj7yyeV1+E0QxSdNxvJIjQzteSG9pJ94aYhk29CKc
+         JfJOjZV2IaoIGAjeo1Wv+eVg9jkNLK10jDKy+Pye0Q1Qw0wgDFd12UGrdX1FPPmfa8
+         A46q8Lg2jRXxqy9g1hNCcBtzoS/OYF59n2yBn8jXX1BZMH30+S12CeY4qvgg47okT+
+         k5G4vzXe/jr8HGoPhwJVJ5H4vGGTNYgppEd+5aY2N3VtQPNtjsb7iANuMrT6R2Fq6+
+         7TPEAvR8BNtq9QvEXaZqiFQp/UO+jO9stdeg+D0skw9+1v5lllzeDnImNgzVrPpHON
+         6/cjZ3lYbfVyg==
+Date:   Wed, 19 Oct 2022 12:57:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     chengwei <foxfly.lai.tw@gmail.com>
+Cc:     lee@kernel.org, rafael@kernel.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, lenb@kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
+        jack.chang@yunjingtech.com, chengwei <larry.lai@yunjingtech.com>,
+        Nicola Lunghi <nicola.lunghi@emutex.com>
+Subject: Re: [PATCH 2/5] regmap: Expose regmap_writeable function to check if
+ a register is writable
+Message-ID: <Y0/mMeVSTEKfOgBN@sirena.org.uk>
+Mail-Followup-To: chengwei <foxfly.lai.tw@gmail.com>, lee@kernel.org,
+        rafael@kernel.org, mika.westerberg@linux.intel.com,
+        andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, lenb@kernel.org,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
+        jack.chang@yunjingtech.com, chengwei <larry.lai@yunjingtech.com>,
+        Nicola Lunghi <nicola.lunghi@emutex.com>
+References: <20221019022450.16851-1-larry.lai@yunjingtech.com>
+ <20221019022450.16851-3-larry.lai@yunjingtech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5xY9Nrn608s6AE+Z"
 Content-Disposition: inline
-In-Reply-To: <Y0/Kt9CW5vYcxHhK@alley>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221019022450.16851-3-larry.lai@yunjingtech.com>
+X-Cookie: I like your SNOOPY POSTER!!
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 12:00:23PM +0200, Petr Mladek wrote:
-> On Tue 2022-09-06 14:19:44, Russell King wrote:
-> > From: Hector Martin <marcan@marcan.st>
-> > 
-... 
-> > +Generic FourCC code
-> > +-------------------
-> > +
-> > +::
-> > +	%p4c[hnbl]	gP00 (0x67503030)
-> > +
-> > +Print a generic FourCC code, as both ASCII characters and its numerical
-> > +value as hexadecimal.
-> > +
-> > +The additional ``h``, ``r``, ``b``, and ``l`` specifiers are used to specify
-> > +host, reversed, big or little endian order data respectively. Host endian
-> > +order means the data is interpreted as a 32-bit integer and the most
-> > +significant byte is printed first; that is, the character code as printed
-> > +matches the byte order stored in memory on big-endian systems, and is reversed
-> > +on little-endian systems.
-> > +
-> > +Passed by reference.
-> > +
-> > +Examples for a little-endian machine, given &(u32)0x67503030::
-> > +
-> > +	%p4ch	gP00 (0x67503030)
-> > +	%p4cl	gP00 (0x67503030)
-> > +	%p4cb	00Pg (0x30305067)
-> > +	%p4cr	00Pg (0x30305067)
-> 
-> Nit: I would prefer to keep the same order (h,r,b,l) everywhere.
-> 
->      I guess that you wanted to show exactly the same results next
->      to each other. But it is not the case on big-endian anyway.
 
-This is straight from the Asahi kernel tree, and is unmodified. I'm
-guessing you're use of "you" here refers to Hector rather than me.
+--5xY9Nrn608s6AE+Z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So, Hector, any opinions on Petr's comments please?
+On Wed, Oct 19, 2022 at 10:24:47AM +0800, chengwei wrote:
 
-Thanks.
+> Expose the regmap_writeable function for pinctrl-upboard reference.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+Why?  A driver should understand the register map of the device it is
+controlling.
+
+--5xY9Nrn608s6AE+Z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNP5jAACgkQJNaLcl1U
+h9AnLAf/e9cHb/Ezq1Fzitr9dlOLq7JJm0v46MICOJKH6ri06LpV+vfWzLr1/JBX
+K8C/R3y+hcMe6UB6h+SK5+m4rXDTb+sD4so/z7eON/19lPtzFUw+mP2A5k31G2Yt
+mfUM/QfbkAexC5DejtdPb5+mO1MA3YzqLtYVV89CqXBby1VNWZwXDlBheweApkv1
+FTpGg1hbDK+490mA5UCzswq4qDHfaPJagao1isGEFFAVLHCSaj4c9tOATkrW6/y2
+cZLgDN9nh5W+uktXyS7vShXXjmkZlXE4+kjnpszP8s6ZcMba8n+aVYlRsh+gRXon
+KW/zSVfzuxwZbmmjBzd4WUxQer60TQ==
+=rCvO
+-----END PGP SIGNATURE-----
+
+--5xY9Nrn608s6AE+Z--
