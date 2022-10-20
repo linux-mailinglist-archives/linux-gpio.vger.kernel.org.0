@@ -2,68 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C2D1606A08
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 23:05:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 337F2606B6F
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 00:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbiJTVFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Oct 2022 17:05:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51682 "EHLO
+        id S229999AbiJTWpD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Oct 2022 18:45:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbiJTVFM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 17:05:12 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFAF86DAE8
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 14:05:01 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id i9so598962ilv.9
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 14:05:00 -0700 (PDT)
+        with ESMTP id S229972AbiJTWon (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 18:44:43 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6445FBF76
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 15:44:22 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id mx8so683596qvb.8
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 15:44:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vujdm73i8ZyKNIoJLaYhjSAixqeQyXLxPyQJKAuf9fo=;
-        b=WYqxcU1TXmyLkxjvGQ3G/bEGI3knQjHQKYY5E76J3dt9tnFnCNwXtcNfzIC10FqTwS
-         0wrn9pxm8gOnuEVRYc7KFDCp+6XM5L4yc7x0IJ/qh98/PfxFKM3bojZGuzeHqBMoUMip
-         UtYeYSGXbKQVYp735EZfUCQY8cRuXmXFhKmzT9oaC8qk1iXIH7Hn96C0vnMGTgNiXjhy
-         WeqdRJmKxsv0tg1ovF99T2O0QIqZc/4AyEFxLsp5k2EMlxLB6bXrnAdUm1mHTPeV2mwf
-         hPfafVp2QhU0ibyJVsiZryOZjrVRxrLFJ31wq0jMBW0C3rOWUVWlWMuiS0JcAUDpIov/
-         n09g==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QUNEnkUVOtrIsNl0Nn0NKbwDCPKMSvaAN/1K8+cyLSY=;
+        b=r2d2QkHovGMl1Zem1CpccoVHttUcwvFlTg0rirAmDiVERKbjrrgzo4/UfSzYprr9Kk
+         PW0hUb7ntj65mtKNnz65qkJ4i/VBYdwwA+ZaFCoyRPGvN6/yKGRmTDZNNlHjfIxX8LSK
+         XAyapw2XJcjeH57uFDTkRx7rnLSZwiyArnTkKipxfdrCSwf90tRfi3OSo6pNv73LVJ4H
+         3qZS4kGUdgX9VVVjQTN8umKghN8OiG38BFVYRvprmAslCnrkBMbIKNSsnFyQ1k92q7Ee
+         iD2GaHrVmWb1BAY7Pag8Yg6ChA3vibFLwZ5KAW/XKSdAlMdmK2CVCDhTo/3r79pVXKgq
+         ddVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vujdm73i8ZyKNIoJLaYhjSAixqeQyXLxPyQJKAuf9fo=;
-        b=uRUNeIw9THmyxB8SRAnHDsmOqXmpLKaQhKkXTEVaazaPVhArq6Izc+Etq1ycR8WDeZ
-         +K8VNE97jiYMRu5PP/tg9iz3LPzccAaNLb/9qYhHPztEWszQ3nFJgAq+d8yQm8xGxiMV
-         2og7EjB7gyQ2SaemaEXcK+V48mb7sRhBH47/fKp0ySaHR2wPHtrwx7wTpnyqRkBkMjyn
-         p9ipZCVJwkPcVmMy5QeqEO0qiPM3cyBtV7A9A7gwnGM53QdpEafgQsZKDM3Q3OrjW+Hv
-         FHuzEmHwAfXDmDqVCslNe3u1rZDpp5T5cLVBF5ssNWMJ5wSJlad1tHFowh+z9KoAS8rh
-         lCIw==
-X-Gm-Message-State: ACrzQf19c11vnv4G9BR38eyheOn/E6SaGXxAyXI+UFkQm7fZEn3Zg28l
-        Hk44NpR5ymGIzXHvL1jxMAA=
-X-Google-Smtp-Source: AMsMyM52LrRkvR9qM17va5ixCNgDNbU8Kw5R2qeY5Me9p8w3XtvpMOn0x0pUzsiZumnvxNyltgOXHw==
-X-Received: by 2002:a05:6e02:194d:b0:2fc:3d91:5389 with SMTP id x13-20020a056e02194d00b002fc3d915389mr11883979ilu.294.1666299899948;
-        Thu, 20 Oct 2022 14:04:59 -0700 (PDT)
-Received: from localhost ([2607:fea8:a2e2:2d00::cb3])
-        by smtp.gmail.com with UTF8SMTPSA id t4-20020a92ca84000000b002fab1376ba0sm3381071ilo.85.2022.10.20.14.04.58
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QUNEnkUVOtrIsNl0Nn0NKbwDCPKMSvaAN/1K8+cyLSY=;
+        b=n3FBUwmiFqDjREgBNZ6l/x1k+sv3zzznm4Acb0IB85cJmnArNLJLG8zG4s7WMal2TF
+         PoUqJSJkMbg19K9klRfYqEewEuzPd/wlX5n6hyRRVwA8FkPZ1jZWyMzAUdihJYm/6S64
+         90LVbcbfV6RqQZhfR6bRB5Q0mDVL821o86CpCEjPoU/GNREaPFaTcOZFKhLal7kk6Tea
+         0NFXA1Wd8Zm2xx5nf00aiymssn3DvXg7GUReQh4hEnolR2zVWr2R//F9iQquPAlDl3Uk
+         wYS9FkuqLqfvFqcRP4sT9lZrV/C9cG2R6gIycpkyw14LTC72o2OY4sGJnu5OeWc82pZb
+         vvrQ==
+X-Gm-Message-State: ACrzQf3ZCYtg58ibr1fcJDx9ZajXlGkyWJVTSVs62KhaiRFCJmSIN5jP
+        voBK7/dInx3GCFzpyD6sCW6MCg==
+X-Google-Smtp-Source: AMsMyM5nSoTED+lWd7YlYhQDXH09NsprD8SDwk/FXfeSS5sTtNCuOPFK21N2b1/JUvVl1ah0z3kQ1g==
+X-Received: by 2002:a05:6214:212e:b0:4b8:56d2:d0f5 with SMTP id r14-20020a056214212e00b004b856d2d0f5mr4805771qvc.4.1666305861749;
+        Thu, 20 Oct 2022 15:44:21 -0700 (PDT)
+Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
+        by smtp.gmail.com with ESMTPSA id do35-20020a05620a2b2300b006b95b0a714esm1280506qkb.17.2022.10.20.15.44.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 14:04:59 -0700 (PDT)
-From:   Richard Acayan <mailingradian@gmail.com>
-To:     Yang Yingliang <yangyingliang@huawei.com>
-Cc:     linux-gpio@vger.kernel.org, mailingradian@gmail.com,
-        linus.walleij@linaro.org
-Subject: [PATCH -next] pinctrl: qcom: sdma670: change sdm670_reserved_gpios to static
-Date:   Thu, 20 Oct 2022 17:04:44 -0400
-Message-Id: <20221020210444.3736-1-mailingradian@gmail.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221020075650.1031228-1-yangyingliang@huawei.com>
-References: <20221020075650.1031228-1-yangyingliang@huawei.com>
+        Thu, 20 Oct 2022 15:44:20 -0700 (PDT)
+Message-ID: <d2f71dd3-bd0a-b85e-32d6-5bb6411442bb@linaro.org>
+Date:   Thu, 20 Oct 2022 18:44:18 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v3 3/4] arm64: dts: qcom: sc7180: align TLMM pin
+ configuration with DT schema
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221019001351.1630089-1-krzysztof.kozlowski@linaro.org>
+ <20221019001351.1630089-4-krzysztof.kozlowski@linaro.org>
+ <CAD=FV=VsFbei4h_cwhJhReUi8Pk_C-qHu_8iDqfzf_e=C8QnXg@mail.gmail.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CAD=FV=VsFbei4h_cwhJhReUi8Pk_C-qHu_8iDqfzf_e=C8QnXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,53 +85,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> sdm670_reserved_gpios is only used in pinctrl-sdm670.c now, change it
-> to static.
+On 19/10/2022 11:48, Doug Anderson wrote:
+>>  .../dts/qcom/sc7180-trogdor-wormdingler.dtsi  |  72 +-
+>>  arch/arm64/boot/dts/qcom/sc7180-trogdor.dtsi  | 629 +++++++-----------
+>>  arch/arm64/boot/dts/qcom/sc7180.dtsi          | 597 +++++++++--------
+>>  18 files changed, 776 insertions(+), 1137 deletions(-)
 > 
-> Fixes: 61164d220f52 ("pinctrl: qcom: add sdm670 pinctrl")
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-
-The email headers could maybe use a little work.
-
-	From: Yang Yingliang <yangyingliang@huawei.com>
-	To: <linux-gpio@vger.kernel.org>
-	CC: <mailingradian@gmail.com>, <linus.walleij@linaro.org>,
-		<yangyingliang@huawei.com>
-	Subject: [PATCH -next] pinctrl: qcom: sdma670: change sdm670_reserved_gpios to static
-
-You don't need to remove people's names from their email addresses; they can go
-together like so (not a strict requirement, but a nice touch in everyone's
-mailboxes):
-
-	CC: Richard Acayan <mailingradian@gmail.com>,
-		Linus Walleij <linus.walleij@linaro.org>,
-		Yang Yingliang <yangyingliang@huawei.com>
-
-For this patch, there is a typo in the subject:
-
--Subject: [PATCH -next] pinctrl: qcom: sdma670: change sdm670_reserved_gpios to static
-+Subject: [PATCH -next] pinctrl: qcom: sdm670: change sdm670_reserved_gpios to static
-
-Otherwise, it looks good.
-
-Acked-by: Richard Acayan <mailingradian@gmail.com>
-
-> ---
->  drivers/pinctrl/qcom/pinctrl-sdm670.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> You probably should send a v4 since this now conflicts with commit
+> c24c9d53e001 ("arm64: dts: qcom: correct white-space before {"), which
+> has landed.
 > 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm670.c b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-> index 4c3c3782fef8..b888bca7ecd7 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-sdm670.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-> @@ -1294,7 +1294,7 @@ static const struct msm_pingroup sdm670_groups[] = {
->  	SDC_QDSD_PINGROUP(sdc2_data, 0x9a000, 9, 0),
->  };
->  
-> -const int sdm670_reserved_gpios[] = {
-> +static const int sdm670_reserved_gpios[] = {
->  	58, 59, 60, 61, 62, 63, 64, 69, 70, 71, 72, 73, 74, 104, -1
->  };
->  
-> -- 
-> 2.25.1
+
+Indeed.
+
+> In any case, this looks nice to me.
+> 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
+> FWIW I put this on a sc7180-trogdor-coachz and the device booted up to
+> the browser. I didn't do massive amounts of tests, but I'm OK with:
+> 
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+
+Thanks!
+
+Best regards,
+Krzysztof
+
