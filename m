@@ -2,123 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1B6F6061A1
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 15:29:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 310B0606238
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 15:51:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229583AbiJTN3t (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Oct 2022 09:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39934 "EHLO
+        id S229816AbiJTNvK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Oct 2022 09:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229556AbiJTN3s (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 09:29:48 -0400
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6F252DE5
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 06:29:46 -0700 (PDT)
-Date:   Thu, 20 Oct 2022 13:29:31 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1666272580; x=1666531780;
-        bh=1lXUG2xsTh8VbK1cbkG+aOMJyflUtJoIR5XHhaoXsOM=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID;
-        b=zUXOI+DCTpbN2FGdkraBTsqANNnVNvtEWo/k72Ix5J0R2BY9eCqJzEINtFaWX57C7
-         DzClPXNSLLzNRzp6pOjOvA069R6LQ6RaAWFsBabac9CBzKU4FUgv7SgzX2pj7PHuSI
-         0WhETJWLwUiCitAt0Bn1Mp+09U31M5L9uMA67n/lvMQoSYvShA9s1jRN1hc8hNvCuz
-         k5tTLAD8aVj6KTr5ChcTcRzjwwStDoMRn1mpH0CG/PhB2GWaRbWteVn20iBps0pBEZ
-         VxQYsQJzpE+reNNx7UMomc5rBeiMzJDcayhHJCkVXrShqC7LHlIar+uUnlk8zZDMoN
-         GQQwDq+qt8shQ==
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-From:   =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Subject: Re: [PATCH V7 0/8] libgpiod: Add Rust bindings
-Message-ID: <F4hN01T_BkoMFY7LNhQlmQPrXGv3a2byhEuDLleJfpWlfF98Dopa2FPrl4JDEoER8y7bN41KMkmWqM50YAIBK0BowT_9skmLKY8gsqYEJBc=@protonmail.com>
-In-Reply-To: <CANiq72m_9RK7viLpaREMGiMLuWs9m1oy9N78ok1d7uzC+18zNg@mail.gmail.com>
-References: <cover.1665744170.git.viresh.kumar@linaro.org> <CANiq72m_9RK7viLpaREMGiMLuWs9m1oy9N78ok1d7uzC+18zNg@mail.gmail.com>
-Feedback-ID: 27884398:user:proton
+        with ESMTP id S229552AbiJTNvJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 09:51:09 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19F72181D81;
+        Thu, 20 Oct 2022 06:51:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666273865; x=1697809865;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RLLFKLdR8QHeqJ8ykIP9osVfd7AvWCqdb2p3WTU8Lqs=;
+  b=hQ9zEkIZVCwNiaPW37LG0NLo1nLXql1raxN1PgsjoYwxbH4dH3SB0D3h
+   QPT+MCnoh7u9ZZ/V50+JyyaNCqwIq4eo3oa2CsXHPO3FVw6BDzoufPj82
+   all6Gjk/0dRfmex9Yhjda1mlms9IWhgsSJEQDU2bU+CGg3gEF9SceUcxx
+   pO7Luh5V7//V4cIT5LgAsMYMLDUMkb9UAWBB/nlXuLJBCUoCDIwsjbbsV
+   4pS+LLGRMZaO5eJrgoCS6eS9Nh69bh/gpKR+tdayuIkfgfi9u3Bc2GXyh
+   cs/RxkLAvJLCbMPd33mQcVqWvAHG1eu4OEJ1Lm5KVsPcAEMIWMZFXPnRZ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="290017264"
+X-IronPort-AV: E=Sophos;i="5.95,198,1661842800"; 
+   d="scan'208";a="290017264"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 06:51:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="719070007"
+X-IronPort-AV: E=Sophos;i="5.95,198,1661842800"; 
+   d="scan'208";a="719070007"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Oct 2022 06:51:02 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1olVwq-00AZVW-2M;
+        Thu, 20 Oct 2022 16:51:00 +0300
+Date:   Thu, 20 Oct 2022 16:51:00 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Xiang Yang <xiangyang3@huawei.com>,
+        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] gpiolib: acpi: Use METHOD_NAME__AEI macro for
+ acpi_walk_resources
+Message-ID: <Y1FSRJC9s+7cvJI3@smile.fi.intel.com>
+References: <20221020014426.188667-1-xiangyang3@huawei.com>
+ <CAMRc=Md6nseghBwfiRCL0KQ1BJ0WE7MH9QENf=HdJdnC1Xz1Fg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md6nseghBwfiRCL0KQ1BJ0WE7MH9QENf=HdJdnC1Xz1Fg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Friday, October 14th, 2022 at 19:03, Miguel Ojeda <miguel.ojeda.sandonis=
-@gmail.com> wrote:
+On Thu, Oct 20, 2022 at 03:23:27PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Oct 20, 2022 at 3:48 AM Xiang Yang <xiangyang3@huawei.com> wrote:
+> >
+> > Using the METHOD_NAME__AEI macro instead of using "_AEI" directly.
+> >
+> > Signed-off-by: Xiang Yang <xiangyang3@huawei.com>
+> > ---
+> >  drivers/gpio/gpiolib-acpi.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> > index a7d2358736fe..064ba5150fd4 100644
+> > --- a/drivers/gpio/gpiolib-acpi.c
+> > +++ b/drivers/gpio/gpiolib-acpi.c
+> > @@ -512,7 +512,7 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+> >         if (ACPI_FAILURE(status))
+> >                 return;
+> >
+> > -       acpi_walk_resources(handle, "_AEI",
+> > +       acpi_walk_resources(handle, METHOD_NAME__AEI,
+> >                             acpi_gpiochip_alloc_event, acpi_gpio);
+> 
+> This line dates back to 2018 so why -next in your PATCH tag?
 
-> On Fri, Oct 14, 2022 at 12:47 PM Viresh Kumar viresh.kumar@linaro.org wro=
-te:
->=20
-> > Here is another version of rust bindings for libgpiod v2.0, based of th=
-e
-> > next/libgpiod-2.0.
-> >=20
-> > Pushed here:
-> >=20
-> > https://github.com/vireshk/libgpiod v7
-> >=20
-> > [I have pushed v6 and v5 there too, in case someone wants to look at th=
-e
-> > changes].
+This means "for Linux next cycle". It has roots in the net subsystem where
+it's a requirement to mark each patch either net or net-next, because they
+have a huge traffic of patches.
 
-It looks pretty good to me. I do have a couple of minor suggestions though.
+> That being said - patch applied (unless Andy wants to take it directly).
 
-https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad51220c4=
-b4e90e/bindings/rust/libgpiod/Cargo.toml#L10 should use 0.2.39 without >=3D=
- to ensure that publishing a 0.3 version of libc with breaking changes won'=
-t break the build. Cargo treats "0.2.39" as ">=3D0.2.39, <0.3".
+I think I will take it. Care to provide your tag?
 
-At https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad5122=
-0c4b4e90e/bindings/rust/libgpiod/Cargo.toml#L13 the vmm-sys-utils dependenc=
-y should be unpinned from "=3D0.10.0" to "0.10.0". Otherwise having any cra=
-te depend on a newer semver compatible version will cause a build error. Wh=
-ile Cargo allows multiple semver incompatible versions of a crate, it doesn=
-'t allow multiple semver compatible versions as it wouldn't know which vers=
-ion to use for a crate that says it works with both versions.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-At https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad5122=
-0c4b4e90e/bindings/rust/libgpiod/src/lib.rs#L469 and elsewhere you might wa=
-nt to use `CStr::from_ptr(version)`. This does the `strlen` call for you an=
-d you can convert it to an `&str` using `.to_str()`.
 
-At https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad5122=
-0c4b4e90e/bindings/rust/libgpiod/src/chip.rs#L171 you could use `CString` a=
-nd use the `.as_ptr()` method to get a null-terminated string. Not sure if =
-it would be nicer that what you currently have though.
-
-At https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad5122=
-0c4b4e90e/bindings/rust/libgpiod/src/edge_event.rs#L46 the lifetimes are un=
-clear. Is Event allowed to outlive the buffer? Can you add a lifetime annot=
-ation like fn event_clone<'a>(event: &Event<'a>) -> Result<Event<'a>> if it=
- isn't allowed to outlive the buffer or fn event_clone<'a, 'b>(event: &Even=
-t<'a>) -> Result<Event<'b>> if it is allowed to outlive the buffer. I'm not=
- sure which of the two the lifetime elision rules cause the current code to=
- be equivalent of, but even if it is correct, explicitly stating the lifeti=
-me here is clearer IMHO.
-
-As for the question about test skipping elsewhere in this thread, rust has =
-the #[ignore] attribute to ignore tests at compile time (with a command lin=
-e flag to run ignored tests anyway), but nothing to ignore tests at runtime=
- unfortunately.
-
-Cheers,
-Bj=C3=B6rn
-
-nb: I can't reply to a mail I didn't receive directly right now due to mail=
- provider limitations. I'm working on sorting this out, but for now I'm goi=
-ng to reply to the mail I did receive directly.
