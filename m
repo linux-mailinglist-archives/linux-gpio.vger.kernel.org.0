@@ -2,107 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E27EE6051E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 19 Oct 2022 23:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE241605529
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 03:48:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230049AbiJSVV3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 19 Oct 2022 17:21:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59430 "EHLO
+        id S229917AbiJTBsJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 19 Oct 2022 21:48:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231165AbiJSVVZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 17:21:25 -0400
-Received: from smtp.smtpout.orange.fr (smtp-26.smtpout.orange.fr [80.12.242.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA2D816D553
-        for <linux-gpio@vger.kernel.org>; Wed, 19 Oct 2022 14:21:23 -0700 (PDT)
-Received: from sopl295.home ([109.220.248.156])
-        by smtp.orange.fr with ESMTPA
-        id lGNoo1NB2g7y2lGNpocFOd; Wed, 19 Oct 2022 23:13:51 +0200
-X-ME-Helo: sopl295.home
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Wed, 19 Oct 2022 23:13:51 +0200
-X-ME-IP: 109.220.248.156
-From:   Robert Jarzmik <jarzmik.robert@orange.fr>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        stern@rowland.harvard.edu, alexandre.belloni@bootlin.com,
-        brgl@bgdev.pl, damien.lemoal@opensource.wdc.com,
-        dmitry.torokhov@gmail.com, linux@dominikbrodowski.net,
-        balbi@kernel.org, gregkh@linuxfoundation.org, deller@gmx.de,
-        perex@perex.cz, jingoohan1@gmail.com, lee@kernel.org,
-        kernel@wantstofly.org, lgirdwood@gmail.com,
-        linus.walleij@linaro.org, marek.vasut@gmail.com,
-        broonie@kernel.org, mkpetch@internode.on.net,
-        miquel.raynal@bootlin.com, lost.distance@yahoo.com,
-        philipp.zabel@gmail.com, linux@armlinux.org.uk, sre@kernel.org,
-        slapin@ossfans.org, s.shtylyov@omp.ru, sudipm.mukherjee@gmail.com,
-        tiwai@suse.com, ulf.hansson@linaro.org, vigneshr@ti.com,
-        viresh.kumar@linaro.org, wsa+renesas@sang-engineering.com,
-        linux-pm@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-input@vger.kernel.org,
-        patches@opensource.cirrus.com, linux-leds@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-rtc@vger.kernel.org,
-        linux-usb@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 00/30] ARM: pxa: remove all unused boards&drivers
-In-Reply-To: <20221019161831.3864786-1-arnd@kernel.org> (Arnd Bergmann's
-        message of "Wed, 19 Oct 2022 18:17:53 +0200")
-References: <20221019161831.3864786-1-arnd@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.1 (darwin)
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Wed, 19 Oct 2022 23:13:48 +0200
-Message-ID: <m2r0z3h5yr.fsf@sopl295.home>
+        with ESMTP id S231479AbiJTBsG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 19 Oct 2022 21:48:06 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 500F41D2B58;
+        Wed, 19 Oct 2022 18:48:05 -0700 (PDT)
+Received: from canpemm500004.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Mt9NX6S1yzVhkK;
+        Thu, 20 Oct 2022 09:43:24 +0800 (CST)
+Received: from ubuntu1604.huawei.com (10.67.174.160) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 20 Oct 2022 09:48:02 +0800
+From:   Xiang Yang <xiangyang3@huawei.com>
+To:     <mika.westerberg@linux.intel.com>,
+        <andriy.shevchenko@linux.intel.com>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>
+CC:     <linux-gpio@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH -next] gpiolib: acpi: Use METHOD_NAME__AEI macro for acpi_walk_resources
+Date:   Thu, 20 Oct 2022 09:44:26 +0800
+Message-ID: <20221020014426.188667-1-xiangyang3@huawei.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.160]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ canpemm500004.china.huawei.com (7.192.104.92)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Arnd Bergmann <arnd@kernel.org> writes:
+Using the METHOD_NAME__AEI macro instead of using "_AEI" directly.
 
-> From: Arnd Bergmann <arnd@arndb.de>
-...zip...
+Signed-off-by: Xiang Yang <xiangyang3@huawei.com>
+---
+ drivers/gpio/gpiolib-acpi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> A good number of drivers become impossible to select after this, so
-> each of these also get dropped. I'm including the driver patches in the
-> series here and can either merge them through the soc tree, or they
-> can get picked up by the individual subsystem maintainers. Since both
-> the platform and the drivers get removed, the order should not matter.
-This part is a bit ... bothering.
-I at least identified these :
->  delete mode 100644 drivers/input/touchscreen/wm9705.c
->  delete mode 100644 drivers/input/touchscreen/wm9712.c
->  delete mode 100644 drivers/input/touchscreen/wm9713.c
->  delete mode 100644 drivers/input/touchscreen/wm97xx-core.c
->  delete mode 100644 drivers/mfd/wm97xx-core.c
->  delete mode 100644 sound/ac97/bus.c
->  delete mode 100644 sound/ac97/codec.c
->  delete mode 100644 sound/ac97/snd_ac97_compat.c
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index a7d2358736fe..064ba5150fd4 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -512,7 +512,7 @@ void acpi_gpiochip_request_interrupts(struct gpio_chip *chip)
+ 	if (ACPI_FAILURE(status))
+ 		return;
+ 
+-	acpi_walk_resources(handle, "_AEI",
++	acpi_walk_resources(handle, METHOD_NAME__AEI,
+ 			    acpi_gpiochip_alloc_event, acpi_gpio);
+ 
+ 	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
+-- 
+2.22.0
 
-For the existing platforms working with devicetree support (mioa701 for
-example), the wm9713 was properly used, providing both sound support and input
-touchscreen.
-So was the a97 part, providing a framework to make the wm9713 work.
-
-So I'm wondering how the choice to chop these drivers was done, and it is
-necessary to remove them. If so, maybe pxa support in the kernel should be
-removed all together, as people playing with it loose part of the working DT
-platforms they had.
-
-As for the removal of defconfigs and arch-pxa, sure, this was PXA's destiny.
-
-Cheers.
-
---
-Robert
-
-PS: If this mail is sent twice, sorry in advance, my mailer is a bad mood
-lately.
