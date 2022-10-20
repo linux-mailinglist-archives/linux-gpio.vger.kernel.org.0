@@ -2,74 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B4DD605929
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 09:58:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10CCC605936
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 10:00:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230289AbiJTH6H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Oct 2022 03:58:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
+        id S231194AbiJTIAe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Oct 2022 04:00:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbiJTH6G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 03:58:06 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF5417FD7D
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 00:58:03 -0700 (PDT)
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MtKcy1m59zpVm3;
-        Thu, 20 Oct 2022 15:54:42 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 20 Oct 2022 15:57:39 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
- 2022 15:57:38 +0800
-From:   Yang Yingliang <yangyingliang@huawei.com>
-To:     <linux-gpio@vger.kernel.org>
-CC:     <mailingradian@gmail.com>, <linus.walleij@linaro.org>,
-        <yangyingliang@huawei.com>
-Subject: [PATCH -next] pinctrl: qcom: sdma670: change sdm670_reserved_gpios to static
-Date:   Thu, 20 Oct 2022 15:56:50 +0800
-Message-ID: <20221020075650.1031228-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S231234AbiJTIAW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 04:00:22 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E5673C22
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 01:00:14 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id ot12so45524723ejb.1
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 01:00:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+NnDDSUoFW1p/YYrT8o2AeBUy64LBLrL7TXVJeeJNsE=;
+        b=gfr0OOmHN/gW3+VUUkPNe/rvNFvWe/J4sFvkKffbWA5/GqgpDet+i9JcOu2BgYUH7m
+         XMd7ff8HCmtgLsp9eWw/fBmMwQV1CAZ20wlTwEEF4G3My0AShqzcjsKBVwjcst+B5YLk
+         PjW62HVCCYc4hIRkke7Kjrkq6kxJrHs1/RwT+Wj+cpri1LPkQ2AlokEfELqfp7SbPoVt
+         lyCPrxFNsa6CBSLg1l1ua0LxY9qI901W8XPqD8zx2SkE7y7izLcdWfzLThr1zry8i3fR
+         F29uO/Af2cKghsHzOLsagW3Z2GErdjA+GmGWN63MQtkxdj6PwvLdKcceQyIi3usk8cDR
+         nYUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+NnDDSUoFW1p/YYrT8o2AeBUy64LBLrL7TXVJeeJNsE=;
+        b=Ce6L/JlWzJDKdjQ5LGJMjmxMGgeGP9fw0/okWbqju9xY1lduODnKKEXfWBYZMYS8O0
+         GlQ5c7mnBDA1F7VJhv5VFx7CdudGn8fpNtjg2s8m2xAFjo4p7SQ/oTu5bubil/KA1zwN
+         j3WwltpE9duNpqVgR7Jb27LoY1+wzuC7oF11Lo0YJf14WOo7HX7g5iupa1C49M/nl0cF
+         mguCTkWm/NRGKXx8VU1XqKFEFmXsuHeio70aNxEpQiiZ4mULvyB7ySd4j1gpMKgQNZDg
+         N2AUWaelQdsmrxCRmSQuFN7fLLIuIMxEQ631o3FgC19qX5dUP0basD6BfSYoNVHLSDNM
+         NMhA==
+X-Gm-Message-State: ACrzQf33ltfiFJ/6+avh1DDvefeFV1b/c2fBSVdf8Dnv9quYzra4uNSW
+        Pbav0l5oP0dGuB7jQ2XiYtUzjuQjvCFsY8GxWjrV+w==
+X-Google-Smtp-Source: AMsMyM5+Lku99gTMJI4bG6h/y7MjMSoqz4+WMa283TgV9DaUiQdCWvkKvZptj29nYoZKCK1khdCO9NPvJqUu05LPkgg=
+X-Received: by 2002:a17:907:7606:b0:78e:61d:757e with SMTP id
+ jx6-20020a170907760600b0078e061d757emr9365136ejc.690.1666252812748; Thu, 20
+ Oct 2022 01:00:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.103.91]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221011-gpiolib-quirks-v3-0-eae9cc2ed0a1@gmail.com>
+ <Y06cvrpcHn0jwZxU@smile.fi.intel.com> <CACRpkdZZZp5Li7OSybv8F7a8F5iik_gRumwR__BAwpWddfctxQ@mail.gmail.com>
+ <Y0/cot711ad/hG/o@smile.fi.intel.com>
+In-Reply-To: <Y0/cot711ad/hG/o@smile.fi.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 20 Oct 2022 10:00:01 +0200
+Message-ID: <CACRpkda_BbpNa+OLz=9vYuMbBNyWi4RBfoDS8F_gtc+vP_Fgyg@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpiolib: more quirks to handle legacy names
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-sdm670_reserved_gpios is only used in pinctrl-sdm670.c now, change it
-to static.
+On Wed, Oct 19, 2022 at 1:16 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Wed, Oct 19, 2022 at 12:56:31PM +0200, Linus Walleij wrote:
+> > On Tue, Oct 18, 2022 at 2:32 PM Andy Shevchenko
 
-Fixes: 61164d220f52 ("pinctrl: qcom: add sdm670 pinctrl")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- drivers/pinctrl/qcom/pinctrl-sdm670.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > I was wondering if we can use the approach that ACPI chose for itself,
+> > > i.e.  the separate data that can be filled by the corresponding driver
+> > > and then GPIO OF common code may use it. In that case each driver knows
+> > > the exact list of compatible strings and associated quirks.
+> >
+> > I actually deliverately chose the other way around, to centralize all quirks,
+> > so that drivers look nice and simple and the ugly historical errors of the
+> > device tree be hidden away in gpiolib-of.c.
+>
+> This makes sense if and only if we may guarantee no quirks will appear in the
+> future. So, it may be true for DT, but I'm quite skeptical about ACPI...
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sdm670.c b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-index 4c3c3782fef8..b888bca7ecd7 100644
---- a/drivers/pinctrl/qcom/pinctrl-sdm670.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sdm670.c
-@@ -1294,7 +1294,7 @@ static const struct msm_pingroup sdm670_groups[] = {
- 	SDC_QDSD_PINGROUP(sdc2_data, 0x9a000, 9, 0),
- };
- 
--const int sdm670_reserved_gpios[] = {
-+static const int sdm670_reserved_gpios[] = {
- 	58, 59, 60, 61, 62, 63, 64, 69, 70, 71, 72, 73, 74, 104, -1
- };
- 
--- 
-2.25.1
+Right, the idea is to stop more idiomatic DT bindings from coming into existance
+by review and formal verification of the reviewed bindings by using
+YAML schemas.
 
+ACPI is somewhat lacking public review of "bindings" and DSDT tables, and I
+don't know if there is some counterpart to the schema validation, so that
+makes for more new bugs. But maybe ACPI has some tricks up its sleeve that I
+don't know about. To me it seems like bugs in ACPI are discovered by developers
+after the devices are already produced :/
+
+There are bindings and device trees which lack public review too, most notably
+Apple Mac, so especially for them we are redefining new bindings and
+who knows, maybe Apple will pick them up eventually!
+
+Yours,
+Linus Walleij
