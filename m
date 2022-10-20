@@ -2,85 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C817D60590C
-	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 09:53:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B4DD605929
+	for <lists+linux-gpio@lfdr.de>; Thu, 20 Oct 2022 09:58:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231143AbiJTHxT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 20 Oct 2022 03:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
+        id S230289AbiJTH6H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 20 Oct 2022 03:58:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbiJTHxQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 03:53:16 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E11311A953
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 00:53:11 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id l22so28678665edj.5
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 00:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bm0vkM5wr/+4Mm+pAGk2CVcFWiT+KtN810ewhbWr3To=;
-        b=k1F6m8aKrE0u5jIHlQvKNPLuWT7u5rAEc9STRhQZuGg/PpVEKyeE4MRPuXsKE+CRpH
-         IVLO2FMM48bx4NY8Vz/KT/lf3Zo6mQVnM1hd2nUgENUb0fNFZ+aCm235DXe35t+WQ3hf
-         KvcrsvmyVcRibgPbXoJyiEwnw89TKA9S4PcDDiBZEra1EnV/962+giTTY2sDh3gdlQxa
-         mzk1mywj0VMVTWPi1QrjU8XF57xZbiNznVNepBFyEd7q7K68KPHrqFGzfPjolIW9x4qn
-         rUtAt9Dp7vEje60e0vgmUKe5T5D16IFxEaxiYh1ZlO9KsT9zNQNkQuRmKfvf5FPxc2bL
-         BdlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Bm0vkM5wr/+4Mm+pAGk2CVcFWiT+KtN810ewhbWr3To=;
-        b=4bhFbMflHvP5AmJptPkclbHC/+Kbz0yy9y30KrqbfOhx1aBxzL+l0gO2L2j+Y/eRD5
-         HLclIio4rZlQiPwve3ZeZ0f2rL3nsdS4u2KlSixPmwTOofcBSlcR2aHbF2JAtFYj6M4I
-         zZ4cWJgjiKrLA1/2ERGouLn//Ue1ZN4W0HKYXkiLOpR2ovKLF//70GzEQ5XUrpvUiWIl
-         cGTLhS0aR6dxcuPEwLy7wrtyGoyupmccOo2LqtNsdi0l/eAHYaSvwItMADtbhN4f+mAE
-         aP8pxQL5VJljE5/ZTQX4GMq2JheTXzMotDPXD/hkSXy5ZiuYppS+EKK+3F3ZP8z3Ij+1
-         Weng==
-X-Gm-Message-State: ACrzQf0PkQJ6+FYCmySzvXXKR6C3FrgB0NtNytgN7X5n7TyYhqpeG6R0
-        KLmLWrwD4gdLeiB3YYIPVCbUvmwFceSc+efegXG0LQ==
-X-Google-Smtp-Source: AMsMyM7iQ6iIBDDVAXsPhM8E+fezmoZGOwJ6Ju/JfiEYC8PUXsNKfHAhSd2QOln4f84lV6Rlp8g3QqkYDLF9qMQzxMI=
-X-Received: by 2002:a05:6402:4029:b0:45b:d50c:b9b0 with SMTP id
- d41-20020a056402402900b0045bd50cb9b0mr10931422eda.126.1666252389406; Thu, 20
- Oct 2022 00:53:09 -0700 (PDT)
+        with ESMTP id S229542AbiJTH6G (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 20 Oct 2022 03:58:06 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF5417FD7D
+        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 00:58:03 -0700 (PDT)
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MtKcy1m59zpVm3;
+        Thu, 20 Oct 2022 15:54:42 +0800 (CST)
+Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 20 Oct 2022 15:57:39 +0800
+Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
+ (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 20 Oct
+ 2022 15:57:38 +0800
+From:   Yang Yingliang <yangyingliang@huawei.com>
+To:     <linux-gpio@vger.kernel.org>
+CC:     <mailingradian@gmail.com>, <linus.walleij@linaro.org>,
+        <yangyingliang@huawei.com>
+Subject: [PATCH -next] pinctrl: qcom: sdma670: change sdm670_reserved_gpios to static
+Date:   Thu, 20 Oct 2022 15:56:50 +0800
+Message-ID: <20221020075650.1031228-1-yangyingliang@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20221019144119.3848027-1-arnd@kernel.org> <20221019150410.3851944-1-arnd@kernel.org>
- <20221019150410.3851944-11-arnd@kernel.org>
-In-Reply-To: <20221019150410.3851944-11-arnd@kernel.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 20 Oct 2022 09:52:58 +0200
-Message-ID: <CACRpkdaU8rHipXO+Lv9uwOd0AyBHtnKNikjQKXUYWV94+Dj_CQ@mail.gmail.com>
-Subject: Re: [PATCH 11/17] gpio: remove iop driver
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Lennert Buytenhek <buytenh@wantstofly.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.103.91]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpemm500007.china.huawei.com (7.185.36.183)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 5:14 PM Arnd Bergmann <arnd@kernel.org> wrote:
+sdm670_reserved_gpios is only used in pinctrl-sdm670.c now, change it
+to static.
 
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The iop32x platform was removed, and its gpio driver is now
-> orphaned.
->
-> Cc: Lennert Buytenhek <buytenh@wantstofly.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Fixes: 61164d220f52 ("pinctrl: qcom: add sdm670 pinctrl")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+---
+ drivers/pinctrl/qcom/pinctrl-sdm670.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+diff --git a/drivers/pinctrl/qcom/pinctrl-sdm670.c b/drivers/pinctrl/qcom/pinctrl-sdm670.c
+index 4c3c3782fef8..b888bca7ecd7 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sdm670.c
++++ b/drivers/pinctrl/qcom/pinctrl-sdm670.c
+@@ -1294,7 +1294,7 @@ static const struct msm_pingroup sdm670_groups[] = {
+ 	SDC_QDSD_PINGROUP(sdc2_data, 0x9a000, 9, 0),
+ };
+ 
+-const int sdm670_reserved_gpios[] = {
++static const int sdm670_reserved_gpios[] = {
+ 	58, 59, 60, 61, 62, 63, 64, 69, 70, 71, 72, 73, 74, 104, -1
+ };
+ 
+-- 
+2.25.1
 
-Yours,
-Linus Walleij
