@@ -2,18 +2,18 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBFF6070D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 09:17:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C72ED6070CD
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 09:17:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbiJUHR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 03:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
+        id S230132AbiJUHQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 03:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230220AbiJUHRZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 03:17:25 -0400
+        with ESMTP id S229838AbiJUHQ6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 03:16:58 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB2981F9A34;
-        Fri, 21 Oct 2022 00:17:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A1691F9A22;
+        Fri, 21 Oct 2022 00:16:50 -0700 (PDT)
 Received: from loongson.cn (unknown [10.180.13.64])
         by gateway (Coremail) with SMTP id _____8DxvreJ9VFjH0YBAA--.991S3;
         Fri, 21 Oct 2022 09:27:37 +0800 (CST)
@@ -56,8 +56,7 @@ X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy8Kr4fJF43AFW8JFb_yoW5urW8pF
         UvcSsGvfC2KfnxnUUI43ZEXa7IU8cBMtUUUUU==
 X-Gw-Check: 27be656114213f6f
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
