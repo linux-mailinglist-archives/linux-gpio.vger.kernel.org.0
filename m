@@ -2,198 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDED6079AC
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 16:35:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2230607A9C
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 17:29:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbiJUOfI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 10:35:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
+        id S230293AbiJUP27 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 11:28:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230188AbiJUOfF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 10:35:05 -0400
-X-Greylist: delayed 90312 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Oct 2022 07:34:58 PDT
-Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A03C3D581
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 07:34:53 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 14:34:44 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-        s=protonmail3; t=1666362892; x=1666622092;
-        bh=zrqEAyUabzDqvGKOhjdFgLb4LMmkwnETvoeParHnDAI=;
-        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-         Message-ID;
-        b=eAs75HATfvflsQrDnC4HwrHI5ehhLruWiRJsJhg+tFhn0qtoNTaBpNHNIQjDpGd6P
-         LDPWTFfRt5Zn5yZVz6q5bFhTY3WCBJ93OxSQmeb7hLZ8iBtifv+bs6GYvOS4rpGACk
-         DohGjQTs6xZz/qxhjml1DyEvWj48TwgbX4HhjIm40h+4YMAJVcGe8CcMLUT6f8thp3
-         LNq5rN2DTka/yPz1sABDWAl9ylQnqbFM23gpqUHw3pTS9JR1sv7jjTyS9dJ3VT0M8W
-         I9AQwuEimRwus1i9Da+KjM07yFXuNwf85D60WnGwcd5BDhni5gihpq8yA6kqaG9dEX
-         KA9AGFKTirtzA==
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-From:   =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Subject: Re: [PATCH V7 0/8] libgpiod: Add Rust bindings
-Message-ID: <YsZTLXUUjsBT-SzPWsI4ppoDBT_lGn0yfhF2r-5wfqcYxxeWWcdL2yIUcMMBmMTB-TjVUZkSqpMsvWNKTcSwoun5wzT4bbPi-ijZXUt8HWM=@protonmail.com>
-In-Reply-To: <20221021093911.vj5todjdfqptdy7d@vireshk-i7>
-References: <cover.1665744170.git.viresh.kumar@linaro.org> <CANiq72m_9RK7viLpaREMGiMLuWs9m1oy9N78ok1d7uzC+18zNg@mail.gmail.com> <F4hN01T_BkoMFY7LNhQlmQPrXGv3a2byhEuDLleJfpWlfF98Dopa2FPrl4JDEoER8y7bN41KMkmWqM50YAIBK0BowT_9skmLKY8gsqYEJBc=@protonmail.com> <20221021093911.vj5todjdfqptdy7d@vireshk-i7>
-Feedback-ID: 27884398:user:proton
+        with ESMTP id S230382AbiJUP2o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 11:28:44 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B3F27A31C
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 08:27:57 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id a3so5560679wrt.0
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 08:27:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ykf9HWPkQddpY0wzWOTNMdHcI+0FLQ+ZFPIJCxSFMvY=;
+        b=wNU5j3vfnVig9JLrA+OOPWyaVwQi2WEInCO54P+B9TG66cgx5kHTonqdWyRC9hCEtR
+         SAAD2VAWWfwVOzprh1AgTPS278M3br03Zp3f8u8iMnLMy4EGEDlid3wjwdVKtFKwzL9B
+         cHkhdIWgM0Peh3/Ahj/1pH9uXXa4C7NMyQ6W4cSgwMLxYP1dF0x61t6nbtteqMBUXffR
+         BYVxIqMGgg4RhodL2dOL+/0pjtYenAwc5+ptbWFmbfxNXS1lSxMdc6WWrAwNKKzpz8oR
+         WJ4qvb3OkN8rPSfAzYmWcXUWMNYhLZXHb7EfVb9odwz2SpK4jDUxWcJkyLGI8QguY76l
+         pcvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
+         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ykf9HWPkQddpY0wzWOTNMdHcI+0FLQ+ZFPIJCxSFMvY=;
+        b=GpDKqLjeOk0Kl1EwWpz/7xSYkKM3kC5XwtBUCR3UDywWtdlzTskCsgwdT/OuSEP0TJ
+         LSDw8tk6nldXO9zKqy/XSnqotXxLYO6QS16n46p74IWbEzETHiUGQzuzELc94CmlrUce
+         HRWaYeh/+XDzgnZI7jSA2ciPqC9KHsyJ3GqkDfLCk8Al/0euikDde5pvXgdP8srIl/52
+         EvoTb4wKLDv2WVzQ31/O02qzf/Z4VVnaxolvVBOp9eGnkrHvR9tZz3eLV1rFp1MWKMpx
+         HOX5rErhkyvKTAN49f5fYCEDZXCs84RARkKH5npSZI75jEdjxoGDxYgrqkyKUtyog+gC
+         VJ3A==
+X-Gm-Message-State: ACrzQf0eIjBVrx9IG2FO7kWK95owsnRMuVBICKfDk0MFJSYPhwnto6eU
+        kgeAaFibqJQghIHPOKKmzMrIpA==
+X-Google-Smtp-Source: AMsMyM43ZN0lBozH8SQQXg1i9ZhUI7Lb/oIHhMsRUEoatIC3ZMKV1RQf2rJHTbiqdgXkUHkH94EvlQ==
+X-Received: by 2002:a5d:47c7:0:b0:22e:37c6:3d7d with SMTP id o7-20020a5d47c7000000b0022e37c63d7dmr12548369wrc.163.1666366075694;
+        Fri, 21 Oct 2022 08:27:55 -0700 (PDT)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id j8-20020a05600c1c0800b003c6b7f5567csm10706169wms.0.2022.10.21.08.27.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Oct 2022 08:27:55 -0700 (PDT)
+Subject: [PATCH v3 0/5] arm: qcom: mdm9615: second round of bindings and DT fixes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-b4-tracking: H4sIAHi6UmMC/43NQQ7CIBAF0KsY1o4ZoEXrynsYFwOlLQkFA5WkaXp3iTtXupr8n/w3G8s2OZvZ9b
+ CxZIvLLoYa5PHAzERhtOD6mplAIThiC3M/d4q38HTBLMnDSrMHLofW8As1vSRWp5qyBZ0omKmOw8v7
+ Wk4uLzGtn1eF13P/oRYOCGi0QVRWkMSbd4FSPMU0skcVi/hHEVVRshusOhM22n4p+76/ARRIk0AEAQ AA
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Fri, 21 Oct 2022 17:27:52 +0200
+Message-Id: <20221005-mdm9615-pinctrl-yaml-v3-0-e5e045644971@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>
+Cc:     Neil Armstrong <neil.armstrong@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+X-Mailer: b4 0.10.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Friday, October 21st, 2022 at 11:39, Viresh Kumar <viresh.kumar@linaro.o=
-rg> wrote:
+This is a second round of bindings & DT fixes for the MDM9615 platform.
 
-> Hi Bj=C3=B6rn,
->=20
-> I have bounced (mutt's feature) the initial emails to your and other
-> email ids that Miguel added. The patches should be in your inbox now.
+This second round focuses on less trivial changes like pinctrl & regulators bindings,
+the remaining work will mainly be fixing the qcom,kpss-timer/qcom,msm-timer situation and
+add bindings for qcom,lcc-mdm9615, qcom,kpss-gcc & swir,mangoh-iotport-spi.
 
-Thanks! I receive the patches.
+Dependencies:
+- patch 1,3-4: None
+- patch 2: bindings dependency on 20221005-mdm9615-sx1509q-yaml-v2-0-a4a5b8eecc7b@linaro.org
 
->=20
-> On 20-10-22, 13:29, Bj=C3=B6rn Roy Baron wrote:
->=20
-> > At
-> > https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad512=
-20c4b4e90e/bindings/rust/libgpiod/src/lib.rs#L469
-> > and elsewhere you might want to use `CStr::from_ptr(version)`. This
-> > does the `strlen` call for you and you can convert it to an `&str`
-> > using `.to_str()`.
->=20
-> > At
-> > https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad512=
-20c4b4e90e/bindings/rust/libgpiod/src/chip.rs#L171
-> > you could use `CString` and use the `.as_ptr()` method to get a
-> > null-terminated string. Not sure if it would be nicer that what you
-> > currently have though.
->=20
->=20
-> These two were nice. Thanks.
->=20
-> > At
-> > https://github.com/vireshk/libgpiod/blob/3e7fb99173856a3995360fc3fad512=
-20c4b4e90e/bindings/rust/libgpiod/src/edge_event.rs#L46
-> > the lifetimes are unclear. Is Event allowed to outlive the buffer?
-> > Can you add a lifetime annotation like fn event_clone<'a>(event:
-> > &Event<'a>) -> Result<Event<'a>> if it isn't allowed to outlive the
-> > buffer or fn event_clone<'a, 'b>(event: &Event<'a>) ->
-> > Result<Event<'b>> if it is allowed to outlive the buffer. I'm not
-> > sure which of the two the lifetime elision rules cause the current
-> > code to be equivalent of, but even if it is correct, explicitly
-> > stating the lifetime here is clearer IMHO.
->=20
->=20
-> An Event created using Event::new() can't outlive the buffer, though
-> an Event created using Event::event_clone() can.
->=20
-> I tried to play around it based on your suggestion and here is the
-> diff, does it make sense ?
->=20
-> diff --git a/bindings/rust/libgpiod/src/edge_event.rs b/bindings/rust/lib=
-gpiod/src/edge_event.rs
-> index b36c23601bb4..0d328ebb2b03 100644
-> --- a/bindings/rust/libgpiod/src/edge_event.rs
-> +++ b/bindings/rust/libgpiod/src/edge_event.rs
-> @@ -33,7 +33,7 @@ pub struct Event<'b> {
->=20
->=20
-> impl<'b> Event<'b> {
->=20
-> /// Get an event stored in the buffer.
-> - pub(crate) fn new(buffer: &'b Buffer, index: usize) -> Result<Self> {
->=20
-> + pub(crate) fn new(buffer: &'b Buffer, index: usize) -> Result<Event<'b>=
-> {
+To: Bjorn Andersson <andersson@kernel.org>
+To: Andy Gross <agross@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@somainline.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Lee Jones <lee@kernel.org>
+To: Liam Girdwood <lgirdwood@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 
-This looks good to me.
+---
+Changes in v3:
+- Path 1: Removed from serie because applied
+- Path 2: None
+- Path 3: Added reviewed-by tag
+- Path 4: Fixed dt-schema title and added unevaluatedProperties
+- Path 5: Various schema fixes, uses same naming as other dt-schema for qcom regulators
+- New patch added changing regulators names of msm8660 to conform to bindings
+- Link to v2: https://lore.kernel.org/r/20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org
 
->=20
-> // SAFETY: The `gpiod_edge_event` returned by libgpiod is guaranteed to l=
-ive as long
-> // as the `struct Event`.
-> let event =3D unsafe {
-> @@ -52,22 +52,6 @@ impl<'b> Event<'b> {
->=20
-> })
-> }
->=20
-> - pub fn event_clone(event: &Event) -> Result<Self> {
->=20
-> - // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
-> - let event =3D unsafe { gpiod::gpiod_edge_event_copy(event.event) };
-> - if event.is_null() {
-> - return Err(Error::OperationFailed(
-> - OperationType::EdgeEventCopy,
-> - Errno::last(),
-> - ));
-> - }
-> -
-> - Ok(Self {
-> - buffer: None,
-> - event,
-> - })
-> - }
-> -
-> /// Get the event type.
-> pub fn event_type(&self) -> Result<EdgeKind> {
->=20
-> // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
-> @@ -105,6 +89,27 @@ impl<'b> Event<'b> {
->=20
-> }
-> }
->=20
-> +impl<'e, 'b> Event<'e> {
->=20
-> + pub fn event_clone(event: &Event<'b>) -> Result<Event<'e>>
->=20
-> + where
-> + 'e: 'b,
+Changes in v2:
+- Rebased on v6.1-rc1
+- Patch 1: Fixed bindings and aligned with Krysztof's series
+- Patch 2: Rewrote patch title and added reviewed-by tag
+- Patch 3: Added reviewed-by tag
+- Patch 4: Moved to end, added support for (regulators|-regulators) sudnode
+- Patch 5: Fixed schema description and added missing unevaluatedProperties in patternProperties
+- Patch 6: Dropped & squashed with patch 4
+- Link to v1: https://lore.kernel.org/r/20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org
 
-Using `Event<'b>` on both sides should work fine. `Event` is covariant in i=
-t's lifetime parameter, so `Event<'b>` can be turned into `Event<'e>` with =
-`'e` being a shorter lifetime than `'b`. What you wrote here is not incorre=
-ct, so if you prefer keeping it this way that is fine with me.
+---
+Neil Armstrong (5):
+      arm: dts: qcom: mdm9615: align pinctrl subnodes with dt-schema bindings
+      arm: dts: qcom: mdm9615: wp8548-mangoh-green: fix sx150xq node names and probe-reset property
+      dt-bindings: regulators: convert non-smd RPM Regulators bindings to dt-schema
+      dt-bindings: soc: qcom: convert non-smd RPM bindings to dt-schema
+      arm: dts: qcom-msm8660: align RPM regulators node name with bindings
 
-> + {
-> + // SAFETY: `gpiod_edge_event` is guaranteed to be valid here.
-> + let event =3D unsafe { gpiod::gpiod_edge_event_copy(event.event) };
-> + if event.is_null() {
-> + return Err(Error::OperationFailed(
-> + OperationType::EdgeEventCopy,
-> + Errno::last(),
-> + ));
-> + }
-> +
-> + Ok(Self {
-> + buffer: None,
-> + event,
-> + })
-> + }
-> +}
-> +
->=20
-> --
-> viresh
+ Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 283 ---------------------
+ .../bindings/regulator/qcom,ipc-rpm-regulator.yaml | 128 ++++++++++
+ .../devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml | 101 ++++++++
+ .../boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts  |  20 +-
+ arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi         |  22 +-
+ arch/arm/boot/dts/qcom-msm8660.dtsi                |   4 +-
+ 6 files changed, 252 insertions(+), 306 deletions(-)
+---
+base-commit: 19d64985796125c5e3820c3db995c5df6d13d6dc
+change-id: 20221005-mdm9615-pinctrl-yaml-13f5c18a4d3a
 
-Cheers,
-Bj=C3=B6rn
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
