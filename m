@@ -2,213 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C72ED6070CD
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 09:17:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 026D36070DF
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 09:22:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbiJUHQ7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 03:16:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55598 "EHLO
+        id S229720AbiJUHWK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 03:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229838AbiJUHQ6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 03:16:58 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A1691F9A22;
-        Fri, 21 Oct 2022 00:16:50 -0700 (PDT)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8DxvreJ9VFjH0YBAA--.991S3;
-        Fri, 21 Oct 2022 09:27:37 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeCC9VFjxFUCAA--.9496S3;
-        Fri, 21 Oct 2022 09:27:35 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v1 2/2] dt-bindings: pinctrl: add loongson2 pinctrl
-Date:   Fri, 21 Oct 2022 09:27:28 +0800
-Message-Id: <20221021012728.22373-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221021012728.22373-1-zhuyinbo@loongson.cn>
-References: <20221021012728.22373-1-zhuyinbo@loongson.cn>
+        with ESMTP id S229535AbiJUHWJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 03:22:09 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2049.outbound.protection.outlook.com [40.107.93.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4704B245EB6;
+        Fri, 21 Oct 2022 00:22:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eA/V9y7t8ILJg2TLWXjNkqwtFmKILH+BEliY6uj0w4SGvJLSDshIsMcy7Y4s87r0lFR3i57KTbuOcgTEA2fdupCfJmUdDcm7PRNJvKp9EoZ0j7jB4TOfkOrTrYgLCV3912VnVojsEf581uWtUy8lABlLWXToZj7ZXk1bNdgrGbBiDgpmQL8R1iHYA9ypoLGOqOaLxqMvqXbeyULceED5tGLAPJhb/T6qg90XNBo8eMvnJkXcPdW+eU0aSAfaAZYT3+zqduXnJgRaJ9Zx8+D8Tu66HpBhLVy/A+21KvjEHSueTeXIYtJl5fFnE4lgJD+I5Z7ml+IkO2IBawP+o5Mymw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=c4SBe+bvO9rqwXRLYXMZeJacmY3qcaIu13dFi/JDQGw=;
+ b=I7R5gNe1gNwdEzpIZJnLXXM0+8eTc3rEDjOYC5e3tJ4ZitkvmK4jzRqDCaMTYudfMo+XmeyQxvceEZZBiUhPYR3C0c6EdsMaZnqZXGL7SNDufuUuTemC2WN6JbOjTJRJSGz8fr019n03j1bF5qTHmFkRtOrUVIYKFX3bRPoty0xXkocGKDroHmGiXLKLpPWeCUi5rh04sWhNX9skWgFk1EW6dWqAVS0O87OrSaO1GIuCZZornr5f8y9tvGkw/jcRYBJY0r4XLah1KANE/J84CI3kBMqOXbXTdeIBo8jHLdInjjPGgyg/yNi7iXutdWQnPqosOvXnS+BzlC8Jo0eeCQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=c4SBe+bvO9rqwXRLYXMZeJacmY3qcaIu13dFi/JDQGw=;
+ b=z91on0AeKP1vxxyKn5Cz49V4kRAR5+HR2p69uRiC3Sn9ZPCGV3AegOgfLmspaZEua4S5QbCkI0rD4OwTzhRNXHp5hrZUhxOasaZZ385ED0NoDsVVXdeR62o/MChkM5vHcHvbRfEObbghYnxrW9HphKMO99kF7A/TEQmDhMRhHjc=
+Received: from MW3PR06CA0017.namprd06.prod.outlook.com (2603:10b6:303:2a::22)
+ by CH0PR12MB5185.namprd12.prod.outlook.com (2603:10b6:610:b8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34; Fri, 21 Oct
+ 2022 07:22:05 +0000
+Received: from CO1NAM11FT078.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:2a:cafe::a1) by MW3PR06CA0017.outlook.office365.com
+ (2603:10b6:303:2a::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33 via Frontend
+ Transport; Fri, 21 Oct 2022 07:22:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT078.mail.protection.outlook.com (10.13.175.177) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.5746.16 via Frontend Transport; Fri, 21 Oct 2022 07:22:04 +0000
+Received: from [10.254.241.52] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 21 Oct
+ 2022 02:21:59 -0500
+Message-ID: <7383e705-6b8a-9e3e-ee94-6c59d8173779@amd.com>
+Date:   Fri, 21 Oct 2022 09:21:54 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxLeCC9VFjxFUCAA--.9496S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy8Kr4fJF43AFW8JFb_yoW5urW8pF
-        4fC3sxGF1xtF4xX39xCa40vw1fGan7AF9rCasFv34jqr4Dta4vvay5Krn0q3yDCF43ArW5
-        WFy5u342qF1UAw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        b78Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM2
-        8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l
-        57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-        vE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-        r2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026x
-        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
-        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
-        1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
-        Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
-        UvcSsGvfC2KfnxnUUI43ZEXa7IU8cBMtUUUUU==
-X-Gw-Check: 27be656114213f6f
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH v2 2/2] Revert "dt-bindings: pinctrl-zynqmp: Add
+ output-enable configuration"
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>,
+        Sai Krishna Potthuri <sai.krishna.potthuri@amd.com>
+CC:     Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <saikrishna12468@gmail.com>, <git@amd.com>,
+        <stable@vger.kernel.org>
+References: <20221017130303.21746-1-sai.krishna.potthuri@amd.com>
+ <20221017130303.21746-3-sai.krishna.potthuri@amd.com>
+ <20221021011125.GA2104528-robh@kernel.org>
+From:   Michal Simek <michal.simek@amd.com>
+In-Reply-To: <20221021011125.GA2104528-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT078:EE_|CH0PR12MB5185:EE_
+X-MS-Office365-Filtering-Correlation-Id: 561a32e8-c510-4598-0f3c-08dab334f49d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: rAwI2oKME07/Y/lrrzu14GGUs5a4lndntHiMSOi2hZqVyg6pDHFfDeSLYfxGlXPeL0Feuy+KzB76UrTThrfHAMDZu6gReQhKNHohIAMHFXqbQOwGr1ihiSJ5X3673x5llmREoTzy7zXLQtQcz5aYy2Xp2r+2nQu2mTEN1by3gtxE7s5J8cgJad+JCr9+edEozRQqz7UgHBPXvBbDWxbI74qImpbMh2KOwHAtdvNto5cxH62I3lTVSrSlbJobgq9KU5zD+8L8QT5hTTpMQ6TjY844gIUSbS+sC+LXLXCUkyFDWVHA0MDzFq9eIntQDJ6TtTHgPl4C4tDZqLu4bljRIB6I+op0ijz33OKwg9UdAQ1tdHDD0GjIEdvZTvaMh1khvLxvNDZX51MkwrkdvyW1lDFXX1AxD+q3T55E8e/ZmBNNWpmgFxQSE0nqo2ccv5HWBC08owBjoxjvrC4UbVjHYkyDtn0cCnch3LHTogbvsL3ckCw7F55BYhMwxNplZJAxRWuzKj8vYDOy4jtA5DD7MKO8CBEjgISt8THhVqEeH2N2aygJaOzAiKBKKyDukX0Jn3VW+UbQ0RGXIwGF7Ap7HzA94ax5f0OtnzFU+PdVZ4CqjLOjGR7KeitibPmcXTr7sLHjqP9WKmFsPLCzUOriPhE/RyuMY9H1haxq+nGpTHbuqnLCrESHBmWYjep9rMnXEY4NdYzpCc57ur+Iy2wLitpG5ke2uIQTKSjaz7Uyox1F+8elTRHN9aSm9GAssZsrFEllrhnA8szr9ikgAhWiMIZu+lmzsqO/GNH+pc3HfvnytaFn+M2+rfwtMRiJL8N9kGm1zA3FvtP63gahLaMKxw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(376002)(396003)(39860400002)(451199015)(46966006)(40470700004)(36840700001)(31686004)(36756003)(82310400005)(86362001)(82740400003)(356005)(41300700001)(31696002)(426003)(36860700001)(53546011)(40460700003)(336012)(47076005)(83380400001)(2616005)(81166007)(16526019)(186003)(5660300002)(40480700001)(6666004)(478600001)(2906002)(6636002)(16576012)(316002)(70206006)(8936002)(8676002)(4326008)(44832011)(4744005)(26005)(110136005)(70586007)(54906003)(43740500002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2022 07:22:04.8232
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 561a32e8-c510-4598-0f3c-08dab334f49d
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT078.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5185
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the loongson2 pinctrl binding with DT schema format using
-json-schema.
+Hi Rob,
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
- .../pinctrl/loongson,ls2k-pinctrl.yaml        | 118 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 119 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+On 10/21/22 03:11, Rob Herring wrote:
+> On Mon, Oct 17, 2022 at 06:33:03PM +0530, Sai Krishna Potthuri wrote:
+>> This reverts commit 133ad0d9af99bdca90705dadd8d31c20bfc9919f.
+>>
+>> On systems with older PMUFW (Xilinx ZynqMP Platform Management Firmware)
+>> using these pinctrl properties can cause system hang because there is
+>> missing feature autodetection.
+>> When this feature is implemented, support for these two properties should
+>> bring back.
+> 
+> So I'm going to get to review the revert of the revert at some point?
+> Why do the properties need to be removed from the binding? They work on
+> 'not older' firmware, right? Isn't just removing the driver support or
+> removing from .dts files enough?
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-new file mode 100644
-index 000000000000..038d38ad1785
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-@@ -0,0 +1,118 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson2 SoC Pinctrl Controller
-+
-+maintainers:
-+  - zhanghongchen <zhanghongchen@loongson.cn>
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+    patternProperties:
-+      'pinmux$':
-+        type: object
-+        description: node for pinctrl.
-+        $ref: pinmux-node.yaml#
-+
-+    properties:
-+      groups:
-+        description:
-+          One or more groups of pins to mux to a certain function
-+        items:
-+          enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                 nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
-+                 dvo0]
-+      function:
-+        description:
-+          The function that a group of pins is muxed to
-+        items:
-+          enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                 nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
-+                 dvo0]
-+
-+    dependencies:
-+      groups: [function]
-+      function: [groups]
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pctrl: pinctrl@1fe00420 {
-+           compatible = "loongson,ls2k-pinctrl";
-+           reg = <0x1fe00420 0x18>;
-+           sdio_pins_default: sdio-pins {
-+                sdio-pinmux {
-+                        groups ="sdio";
-+                        function ="sdio";
-+                };
-+
-+                sdio-det-pinmux {
-+                        groups ="pwm2";
-+                        function ="gpio";
-+                };
-+           };
-+
-+           pwm1_pins_default: pwm1-pins {
-+                        pinmux {
-+                                groups ="pwm1";
-+                                function ="pwm1";
-+                        };
-+           };
-+
-+           pwm0_pins_default: pwm0-pins {
-+                        pinmux {
-+                                groups ="pwm0";
-+                                function ="pwm0";
-+                        };
-+           };
-+
-+           i2c1_pins_default: i2c1-pins {
-+                        pinmux {
-+                                groups ="i2c1";
-+                                function ="i2c1";
-+                        };
-+           };
-+
-+           i2c0_pins_default: i2c0-pins {
-+                        pinmux {
-+                                groups ="i2c0";
-+                                function ="i2c0";
-+                        };
-+           };
-+
-+           nand_pins_default: nand-pins {
-+                        pinmux {
-+                                groups ="nand";
-+                                function ="nand";
-+                        };
-+           };
-+
-+           hda_pins_default: hda-pins {
-+                        grp0-pinmux {
-+                                groups ="hda";
-+                                function ="hda";
-+                        };
-+
-+                        grp1-pinmux {
-+                                groups ="i2s";
-+                                function ="gpio";
-+                        };
-+           };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c9883f145acb..2d002509fc65 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11927,6 +11927,7 @@ M:	zhanghongchen <zhanghongchen@loongson.cn>
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
- F:	drivers/pinctrl/pinctrl-loongson2.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
--- 
-2.20.1
+Removing functionality should be IMHO enough. Maybe make sense to inform users 
+that there is missing functionality where they define these properties via DT.
 
+Thanks,
+Michal
