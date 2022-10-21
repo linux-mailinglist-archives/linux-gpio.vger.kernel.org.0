@@ -2,69 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68008607751
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 14:53:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8E1D607869
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 15:30:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229752AbiJUMxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 08:53:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35194 "EHLO
+        id S230446AbiJUNaK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 09:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiJUMxn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 08:53:43 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327462639E3;
-        Fri, 21 Oct 2022 05:53:42 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id f8-20020a17090a664800b00212464cd49fso2770270pjm.4;
-        Fri, 21 Oct 2022 05:53:42 -0700 (PDT)
+        with ESMTP id S230000AbiJUNaG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 09:30:06 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD458537D3
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 06:29:48 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id z30so1949829qkz.13
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 06:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pT1o9kqIltk7ZKL7Tu5WfqsXDrhfDokaIOWcgHyIEiw=;
-        b=ZrsfS3xN6RCS5WKPg2c5leRsUt4fdfk//OoFozxjvdPQKLGMhmtD8rI9ngnbfwRyIW
-         dzabdvxvxLQSQW43SBr5Dg/Ge/m86ce+2ZKFj0modIcUtkRoz+mAPjXGHBlbF0AfO9PC
-         IH2MxVcecWmhIEOlD/0ERURbDVz9+ne7wJv6mDloodOfGjzQjZGlV53aKQq99lXPK+2W
-         tI7tVWp4muVk8Q/R6z81Se48tgOVYQY/CmvDbuRsVVIziQXyYSTmf8hvqQ8KlXBPgmM3
-         ch7U0hmR3vQsjSPxQMkx8xr2BRyBtvOpzHvIxuM11DdaZdIiJXPXgZwuxnKsGgKl58Ox
-         DiiQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lgmt7nX6KnPzXNdpGQ1k+hkZnzm82SWjZ6hn9mW6e3c=;
+        b=xr+TMhCKaZJAadtHo5DyF6AA9DgxE3djgXCTUSuVRQVI99HB05PRFlUK7JbxsDdB9U
+         KWOGNVGcw/Aam6KS0Ozgrike/GSKkTvE5HAlwusw/kP2BuzaY4HUm0jmRMDnY0Poaab0
+         a8HC756E50eZYCC5Vozd6ptbzZ9HjvebIZB3nloY20qNVskfJ9v54c1t5eX/PZrVNiI/
+         Wspo+nzsVyDKmTZ7KkymlIW27d5rWGFonjmyN7AgnX/q8TScevKtJIM71k0L5L+759uY
+         k87KqkidWvfogd1eNR9aeYfHeFSoR/u900Trg+ZXidttiBRSI3V57z8+tMkKh/izeSb6
+         7l/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pT1o9kqIltk7ZKL7Tu5WfqsXDrhfDokaIOWcgHyIEiw=;
-        b=jLsjwlAQKsIMAVqDMebO07A27V7zL5vZiNZZI3kbhdaBC38nc8J4htBYDntx5lBg3V
-         3dgMZA01Kb1O9Xu1p+y9slfR5a5Zi13iuX/C6WsxkiK5H7/XIWqtKfadi6eEGypf6Zeg
-         BPnuKkVzMaEbr7e8vwjF/cTiUqvZyLMWnXlBLNdIRVko7xExv+r4XDHQWazJ0ih49QUp
-         RiP6PTW76h4Y3Af7W+BhyvjsTAmuEY3xQd406aK7qN1U9tPZdQ33QbDTkEaHskRp8gLD
-         iOlEZ/1AD5VIBVl3GHPDTQTqB6pjhCH4THp8IDctBMznZsspKLST5Q+wu8bmCG6SrXdS
-         AspA==
-X-Gm-Message-State: ACrzQf3CHRpLxZ6ml6FDwRrlHo4CCPRfmftvt1ONiXCCJ3pkHnWS6EUb
-        upsJI14uHBbJmGuRKhFkhpg=
-X-Google-Smtp-Source: AMsMyM5YPBLfSlrT7YSI2ggdctMXp08tYqatA2M13f6pm4t/Bd0vHCQcZzkmbJBxDUBeaQ1wlnEamg==
-X-Received: by 2002:a17:90b:1a88:b0:20d:8df0:ac64 with SMTP id ng8-20020a17090b1a8800b0020d8df0ac64mr21787422pjb.140.1666356821683;
-        Fri, 21 Oct 2022 05:53:41 -0700 (PDT)
-Received: from sol (14-203-42-90.tpgi.com.au. [14.203.42.90])
-        by smtp.gmail.com with ESMTPSA id i13-20020a170902c94d00b0017f48a9e2d6sm14826611pla.292.2022.10.21.05.53.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 05:53:41 -0700 (PDT)
-Date:   Fri, 21 Oct 2022 20:53:36 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Fix typo in kernel doc for struct
- line
-Message-ID: <Y1KWULsdyTvmuN/k@sol>
-References: <20221020153914.63260-1-andriy.shevchenko@linux.intel.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lgmt7nX6KnPzXNdpGQ1k+hkZnzm82SWjZ6hn9mW6e3c=;
+        b=0+nq4o349Ebi5wQ9cxz07hhmCnkEE7KEiSE9tDXTyS4Xs1FfMYvZRyzocfQbyEKl6d
+         cW4HZcpY2PSCwdHqIA4AWrFVwtnQmXU54jlW4IGmfXNVPGP8VpdgYjUfXFg/ER/cOMDk
+         08JL+W/X4ZduRIz5fCwWR+kZnq5CxfFiSjAqph0wqZKe9xwpD+aOr2WD71VjqBSb48ec
+         eQ05D0xYmpqXxEBVaeIVXFt2hwLHXwPpcVnzQ13A6FdM9XrCWkU5LWRvqIVZPy/YmvmL
+         Jzs6lL5m6uNmwCxeGkHnWhlkowX5W9IQBJQ1bYIu8odT4Hv6T9xM+hA7d0VbZN9oiAs+
+         Xl5g==
+X-Gm-Message-State: ACrzQf10SGDQVjrzm0Uh3QtU4ZZVfrGSdokNrYk3+0wHAwbGCzjTZ0or
+        4ttuuQtWpG2sKg4r7iPzn8vF6A==
+X-Google-Smtp-Source: AMsMyM4+fNbWa8PnJwC+vhPTrYPkrSEaC9qcEkdYKxP2CS6JIj+Y1IzK+0h04dZ17WcWzPrz0ZR7hg==
+X-Received: by 2002:a05:620a:12fb:b0:6ee:79f2:3716 with SMTP id f27-20020a05620a12fb00b006ee79f23716mr13688432qkl.348.1666358986973;
+        Fri, 21 Oct 2022 06:29:46 -0700 (PDT)
+Received: from [192.168.10.124] (pool-72-83-177-149.washdc.east.verizon.net. [72.83.177.149])
+        by smtp.gmail.com with ESMTPSA id hf8-20020a05622a608800b0039cbbcc7da8sm7837080qtb.7.2022.10.21.06.29.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Oct 2022 06:29:46 -0700 (PDT)
+Message-ID: <e13c5fc4-c631-fbb5-f3cf-a8e569fbd752@linaro.org>
+Date:   Fri, 21 Oct 2022 09:29:45 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221020153914.63260-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,ipq6018: replace maintainer
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20220924081312.15068-1-krzysztof.kozlowski@linaro.org>
+ <CACRpkdbvo5vyqpfP3EJvFRhK1hzq4uH=vzoq-H6q6hwJ0Bkc4w@mail.gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <CACRpkdbvo5vyqpfP3EJvFRhK1hzq4uH=vzoq-H6q6hwJ0Bkc4w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,32 +80,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 06:39:14PM +0300, Andy Shevchenko wrote:
-> When eflags has been renamed to the edflags, the kernel doc change were
-> missed. Update kernel doc accordingly.
+On 21/10/2022 04:09, Linus Walleij wrote:
+> On Sat, Sep 24, 2022 at 10:13 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
 > 
-> Fixes: b1a92e94560d ("gpiolib: cdev: consolidate edge detector configuration flags")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>>  maintainers:
+>> -  - Sricharan R <sricharan@codeaurora.org>
+>> +  - Bjorn Andersson <andersson@kernel.org>
+> 
+> This is fine, but what about adding yourself as co-maintainer on *all*
+> Qualcomm bindings? I think it would offload Bjorn a bit. Just a suggestion.
 
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
+It's up to Bjorn, if he wants to make it more official. I just added
+myself to Qualcomm pinctrl ones, because I spent some time to understand
+them. Actually I could do the same for the Qualcomm remote-proc bindings
+(SMD, Glink) as some days ago I was refactoring them as well.
 
-> ---
->  drivers/gpio/gpiolib-cdev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 0c84b011a64a..f9288e41e3a7 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -412,7 +412,7 @@ static int linehandle_create(struct gpio_device *gdev, void __user *ip)
->   * @desc: the GPIO descriptor for this line.
->   * @req: the corresponding line request
->   * @irq: the interrupt triggered in response to events on this GPIO
-> - * @eflags: the edge flags, GPIO_V2_LINE_FLAG_EDGE_RISING and/or
-> + * @edflags: the edge flags, GPIO_V2_LINE_FLAG_EDGE_RISING and/or
->   * GPIO_V2_LINE_FLAG_EDGE_FALLING, indicating the edge detection applied
->   * @timestamp_ns: cache for the timestamp storing it between hardirq and
->   * IRQ thread, used to bring the timestamp close to the actual event
-> -- 
-> 2.35.1
-> 
+I am anyway getting all such patches as a DT bindings maintainer.
+
+Best regards,
+Krzysztof
+
