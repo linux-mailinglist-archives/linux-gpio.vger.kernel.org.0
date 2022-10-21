@@ -2,62 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2230607A9C
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 17:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2378C607A9E
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 17:29:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbiJUP27 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 11:28:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48606 "EHLO
+        id S230354AbiJUP3B (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 11:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230382AbiJUP2o (ORCPT
+        with ESMTP id S230383AbiJUP2o (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 11:28:44 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B3F27A31C
-        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 08:27:57 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id a3so5560679wrt.0
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6521B279D4A
+        for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 08:27:58 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id a10so4921002wrm.12
         for <linux-gpio@vger.kernel.org>; Fri, 21 Oct 2022 08:27:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ykf9HWPkQddpY0wzWOTNMdHcI+0FLQ+ZFPIJCxSFMvY=;
-        b=wNU5j3vfnVig9JLrA+OOPWyaVwQi2WEInCO54P+B9TG66cgx5kHTonqdWyRC9hCEtR
-         SAAD2VAWWfwVOzprh1AgTPS278M3br03Zp3f8u8iMnLMy4EGEDlid3wjwdVKtFKwzL9B
-         cHkhdIWgM0Peh3/Ahj/1pH9uXXa4C7NMyQ6W4cSgwMLxYP1dF0x61t6nbtteqMBUXffR
-         BYVxIqMGgg4RhodL2dOL+/0pjtYenAwc5+ptbWFmbfxNXS1lSxMdc6WWrAwNKKzpz8oR
-         WJ4qvb3OkN8rPSfAzYmWcXUWMNYhLZXHb7EfVb9odwz2SpK4jDUxWcJkyLGI8QguY76l
-         pcvg==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E6w6wyU+dRkLa1kli5D9X2hxBFzXMiHiBuCpH2iVcFY=;
+        b=TW7tZXzMYsOrzlDZU+eD3UvAx/Vpnu5IvPFUtFRmaQBJXY0ftWaNOCt9iyTsM8Jljm
+         D4pPpaZD9KnL5bczM/mORkzCEE1Za4lQ6BLWfJvTh9dQOA5gCMGfJRrqOhfZR0l7ewf6
+         BBUFVKHO/qiFhqweiwCwbXgBcZGmkonSmENez3a8a6hnWpB7o48m5e4DJyCVsD8iB/fS
+         j2MzFT0GrO8t5rBZiDGiMToFSXtPFLjRXl5/PpJn6ttb9ZwQR7Y7/ZvTAlYjZy1rpYsX
+         buTArDeQG2SpUMfwwsNwMFsQ43Y5FXkUpwqSaVDKXtbPw/8JK2p0QAY1GWnqYqDkxkBE
+         WD3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
-         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ykf9HWPkQddpY0wzWOTNMdHcI+0FLQ+ZFPIJCxSFMvY=;
-        b=GpDKqLjeOk0Kl1EwWpz/7xSYkKM3kC5XwtBUCR3UDywWtdlzTskCsgwdT/OuSEP0TJ
-         LSDw8tk6nldXO9zKqy/XSnqotXxLYO6QS16n46p74IWbEzETHiUGQzuzELc94CmlrUce
-         HRWaYeh/+XDzgnZI7jSA2ciPqC9KHsyJ3GqkDfLCk8Al/0euikDde5pvXgdP8srIl/52
-         EvoTb4wKLDv2WVzQ31/O02qzf/Z4VVnaxolvVBOp9eGnkrHvR9tZz3eLV1rFp1MWKMpx
-         HOX5rErhkyvKTAN49f5fYCEDZXCs84RARkKH5npSZI75jEdjxoGDxYgrqkyKUtyog+gC
-         VJ3A==
-X-Gm-Message-State: ACrzQf0eIjBVrx9IG2FO7kWK95owsnRMuVBICKfDk0MFJSYPhwnto6eU
-        kgeAaFibqJQghIHPOKKmzMrIpA==
-X-Google-Smtp-Source: AMsMyM43ZN0lBozH8SQQXg1i9ZhUI7Lb/oIHhMsRUEoatIC3ZMKV1RQf2rJHTbiqdgXkUHkH94EvlQ==
-X-Received: by 2002:a5d:47c7:0:b0:22e:37c6:3d7d with SMTP id o7-20020a5d47c7000000b0022e37c63d7dmr12548369wrc.163.1666366075694;
-        Fri, 21 Oct 2022 08:27:55 -0700 (PDT)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E6w6wyU+dRkLa1kli5D9X2hxBFzXMiHiBuCpH2iVcFY=;
+        b=fJ60YhniYJ/TFVhR+7dL50HP2ledpT9OsNJgjZ/w5ZPPhpDAfo6kxJrSY0j0uuZyyv
+         x6dwMFHBxjHyI+CM3G875LKY3I4V77GvFYlTJ40cWV+/k36aiyHloxGlTf+w8hjLoipk
+         H/EsWAl3l6TerB/seQ6zOufxWhcS4r1UJq6t76riTW0IW6GGXh2t2sAYYxJ+HF5csG7o
+         a7uTV9BGw8c2/wRV21+vjfMxayunMC3GQw1E84U2HtjLTY1LrpSewsFWpClKBPxJj71C
+         lwZZfS3GGN1S3Q+ZiTSBOGLirqnNonBYWOSZjXqZh7Hm4Y7xCIes+S0EbZojpIFtZiE3
+         x1bw==
+X-Gm-Message-State: ACrzQf0KV3nxq+JQMeFBFEpv8VhDdRfiu/OOzTwfxeO6KBaMZ9P9aNyO
+        453Mp1BRKTW5cui7WW+CXc7zQw==
+X-Google-Smtp-Source: AMsMyM6Y/7sAFHf+r3nlLv9sFfKk5duwed5w1nBiBAqmdhdOtHPt4c7Vo/kAxlLlbazTJsHAg9NccQ==
+X-Received: by 2002:a05:6000:904:b0:21a:3dca:4297 with SMTP id bz4-20020a056000090400b0021a3dca4297mr12644864wrb.487.1666366076549;
+        Fri, 21 Oct 2022 08:27:56 -0700 (PDT)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id j8-20020a05600c1c0800b003c6b7f5567csm10706169wms.0.2022.10.21.08.27.54
+        by smtp.gmail.com with ESMTPSA id j8-20020a05600c1c0800b003c6b7f5567csm10706169wms.0.2022.10.21.08.27.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 08:27:55 -0700 (PDT)
-Subject: [PATCH v3 0/5] arm: qcom: mdm9615: second round of bindings and DT fixes
+        Fri, 21 Oct 2022 08:27:56 -0700 (PDT)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Fri, 21 Oct 2022 17:27:53 +0200
+Subject: [PATCH v3 1/5] arm: dts: qcom: mdm9615: align pinctrl subnodes with
+ dt-schema bindings
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-b4-tracking: H4sIAHi6UmMC/43NQQ7CIBAF0KsY1o4ZoEXrynsYFwOlLQkFA5WkaXp3iTtXupr8n/w3G8s2OZvZ9b
- CxZIvLLoYa5PHAzERhtOD6mplAIThiC3M/d4q38HTBLMnDSrMHLofW8As1vSRWp5qyBZ0omKmOw8v7
- Wk4uLzGtn1eF13P/oRYOCGi0QVRWkMSbd4FSPMU0skcVi/hHEVVRshusOhM22n4p+76/ARRIk0AEAQ AA
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Fri, 21 Oct 2022 17:27:52 +0200
-Message-Id: <20221005-mdm9615-pinctrl-yaml-v3-0-e5e045644971@linaro.org>
+Message-Id: <20221005-mdm9615-pinctrl-yaml-v3-1-e5e045644971@linaro.org>
+References: <20221005-mdm9615-pinctrl-yaml-v3-0-e5e045644971@linaro.org>
+In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v3-0-e5e045644971@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -82,70 +83,110 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This is a second round of bindings & DT fixes for the MDM9615 platform.
+Align the MDM9615 DT to the expected subnodes namings in the dt-schema
+bindings.
 
-This second round focuses on less trivial changes like pinctrl & regulators bindings,
-the remaining work will mainly be fixing the qcom,kpss-timer/qcom,msm-timer situation and
-add bindings for qcom,lcc-mdm9615, qcom,kpss-gcc & swir,mangoh-iotport-spi.
-
-Dependencies:
-- patch 1,3-4: None
-- patch 2: bindings dependency on 20221005-mdm9615-sx1509q-yaml-v2-0-a4a5b8eecc7b@linaro.org
-
-To: Bjorn Andersson <andersson@kernel.org>
-To: Andy Gross <agross@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@somainline.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-To: Rob Herring <robh+dt@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Lee Jones <lee@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Reviewed-by: Konrad Dybcio <konrad.dybcio@somainline.org>
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-
 ---
-Changes in v3:
-- Path 1: Removed from serie because applied
-- Path 2: None
-- Path 3: Added reviewed-by tag
-- Path 4: Fixed dt-schema title and added unevaluatedProperties
-- Path 5: Various schema fixes, uses same naming as other dt-schema for qcom regulators
-- New patch added changing regulators names of msm8660 to conform to bindings
-- Link to v2: https://lore.kernel.org/r/20221005-mdm9615-pinctrl-yaml-v2-0-639fe67a04be@linaro.org
+ .../boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts  |  8 ++++----
+ arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi         | 22 +++++++++++-----------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-Changes in v2:
-- Rebased on v6.1-rc1
-- Patch 1: Fixed bindings and aligned with Krysztof's series
-- Patch 2: Rewrote patch title and added reviewed-by tag
-- Patch 3: Added reviewed-by tag
-- Patch 4: Moved to end, added support for (regulators|-regulators) sudnode
-- Patch 5: Fixed schema description and added missing unevaluatedProperties in patternProperties
-- Patch 6: Dropped & squashed with patch 4
-- Link to v1: https://lore.kernel.org/r/20221005-mdm9615-pinctrl-yaml-v1-0-0cbc006e2a30@linaro.org
+diff --git a/arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts b/arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts
+index 4e53b3d70195..30a110984597 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts
++++ b/arch/arm/boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts
+@@ -45,8 +45,8 @@ &msmgpio {
+ 	 * - 42: IOT0_GPIO1 and SD Card Detect
+ 	 */
+ 
+-	gpioext1_pins: gpioext1_pins {
+-		pins {
++	gpioext1_pins: gpioext1-state {
++		gpioext1-pins {
+ 			pins = "gpio2";
+ 			function = "gpio";
+ 			input-enable;
+@@ -54,8 +54,8 @@ pins {
+ 		};
+ 	};
+ 
+-	sdc_cd_pins: sdc_cd_pins {
+-		pins {
++	sdc_cd_pins: sdc-cd-state {
++		sdc-cd-pins {
+ 			pins = "gpio42";
+ 			function = "gpio";
+ 			drive-strength = <2>;
+diff --git a/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi b/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
+index 2fe8693dc3cd..92c8003dac25 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi
+@@ -22,8 +22,8 @@ &msmgpio {
+ 	pinctrl-0 = <&reset_out_pins>;
+ 	pinctrl-names = "default";
+ 
+-	gsbi3_pins: gsbi3_pins {
+-		mux {
++	gsbi3_pins: gsbi3-state {
++		gsbi3-pins {
+ 			pins = "gpio8", "gpio9", "gpio10", "gpio11";
+ 			function = "gsbi3";
+ 			drive-strength = <8>;
+@@ -31,8 +31,8 @@ mux {
+ 		};
+ 	};
+ 
+-	gsbi4_pins: gsbi4_pins {
+-		mux {
++	gsbi4_pins: gsbi4-state {
++		gsbi4-pins {
+ 			pins = "gpio12", "gpio13", "gpio14", "gpio15";
+ 			function = "gsbi4";
+ 			drive-strength = <8>;
+@@ -40,15 +40,15 @@ mux {
+ 		};
+ 	};
+ 
+-	gsbi5_i2c_pins: gsbi5_i2c_pins {
+-		pin16 {
++	gsbi5_i2c_pins: gsbi5-i2c-state {
++		sda-pins {
+ 			pins = "gpio16";
+ 			function = "gsbi5_i2c";
+ 			drive-strength = <8>;
+ 			bias-disable;
+ 		};
+ 
+-		pin17 {
++		scl-pins {
+ 			pins = "gpio17";
+ 			function = "gsbi5_i2c";
+ 			drive-strength = <2>;
+@@ -56,8 +56,8 @@ pin17 {
+ 		};
+ 	};
+ 
+-	gsbi5_uart_pins: gsbi5_uart_pins {
+-		mux {
++	gsbi5_uart_pins: gsbi5-uart-state {
++		gsbi5-uart-pins {
+ 			pins = "gpio18", "gpio19";
+ 			function = "gsbi5_uart";
+ 			drive-strength = <8>;
+@@ -65,8 +65,8 @@ mux {
+ 		};
+ 	};
+ 
+-	reset_out_pins: reset_out_pins {
+-		pins {
++	reset_out_pins: reset-out-state {
++		reset-out-pins {
+ 			pins = "gpio66";
+ 			function = "gpio";
+ 			drive-strength = <2>;
 
----
-Neil Armstrong (5):
-      arm: dts: qcom: mdm9615: align pinctrl subnodes with dt-schema bindings
-      arm: dts: qcom: mdm9615: wp8548-mangoh-green: fix sx150xq node names and probe-reset property
-      dt-bindings: regulators: convert non-smd RPM Regulators bindings to dt-schema
-      dt-bindings: soc: qcom: convert non-smd RPM bindings to dt-schema
-      arm: dts: qcom-msm8660: align RPM regulators node name with bindings
-
- Documentation/devicetree/bindings/mfd/qcom-rpm.txt | 283 ---------------------
- .../bindings/regulator/qcom,ipc-rpm-regulator.yaml | 128 ++++++++++
- .../devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml | 101 ++++++++
- .../boot/dts/qcom-mdm9615-wp8548-mangoh-green.dts  |  20 +-
- arch/arm/boot/dts/qcom-mdm9615-wp8548.dtsi         |  22 +-
- arch/arm/boot/dts/qcom-msm8660.dtsi                |   4 +-
- 6 files changed, 252 insertions(+), 306 deletions(-)
----
-base-commit: 19d64985796125c5e3820c3db995c5df6d13d6dc
-change-id: 20221005-mdm9615-pinctrl-yaml-13f5c18a4d3a
-
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+b4 0.10.1
