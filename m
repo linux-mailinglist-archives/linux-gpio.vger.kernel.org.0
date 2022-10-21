@@ -2,223 +2,214 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B092606F4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 07:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CBFF6070D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 21 Oct 2022 09:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229664AbiJUFQd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 21 Oct 2022 01:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
+        id S229597AbiJUHR2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 21 Oct 2022 03:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbiJUFQd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 01:16:33 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C640116F40E
-        for <linux-gpio@vger.kernel.org>; Thu, 20 Oct 2022 22:16:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666329391; x=1697865391;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=WxUXijgpsmlzQFm8nzMJTUxQaiJYNqfwpLmOHeyjgMY=;
-  b=ghse8fyDAWPuTnAPj/LeFGCINuUVUFmH4ZxpQSpL7/OEY0XEtbJ5o1rn
-   vwpsKUH3tCoe04LCXcKIlMtwnvZq8grl2xDKVrYTZGGgIuB6zwe0SHXKF
-   6nQNAOr2qmwVg8wO7K0ksoKsjjxqinKhepMgfFr81US1Y9/usHxkCO9Aw
-   Oam+8dh3wbXXln999L4NU1BKkt6bENycwcI6flaUBplE/PCwK7pnyxosS
-   s/bNlCjMqhHsw2nBv9EEGNwqPVAdEUZ3TNlhyZf0c1DfT2jgt+F9AoLKz
-   9l2VBLiajJQorSzYAitXWxHoJj+RuIi58QXMgL+nU277kGD0W0k6h/HP5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="306904714"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="306904714"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Oct 2022 22:16:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10506"; a="875464856"
-X-IronPort-AV: E=Sophos;i="5.95,200,1661842800"; 
-   d="scan'208";a="875464856"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by fmsmga006.fm.intel.com with ESMTP; 20 Oct 2022 22:16:30 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1olkOT-0002FA-2p;
-        Fri, 21 Oct 2022 05:16:29 +0000
-Date:   Fri, 21 Oct 2022 13:15:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-current] BUILD SUCCESS
- 7d1aa08aff0621a595c1b42efb493c475eefeeb3
-Message-ID: <63522b07.YOP5AjoxykQgiaUl%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S230220AbiJUHRZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 21 Oct 2022 03:17:25 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB2981F9A34;
+        Fri, 21 Oct 2022 00:17:15 -0700 (PDT)
+Received: from loongson.cn (unknown [10.180.13.64])
+        by gateway (Coremail) with SMTP id _____8DxvreJ9VFjH0YBAA--.991S3;
+        Fri, 21 Oct 2022 09:27:37 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.180.13.64])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxLeCC9VFjxFUCAA--.9496S3;
+        Fri, 21 Oct 2022 09:27:35 +0800 (CST)
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        zhanghongchen <zhanghongchen@loongson.cn>,
+        Yinbo Zhu <zhuyinbo@loongson.cn>
+Subject: [PATCH v1 2/2] dt-bindings: pinctrl: add loongson2 pinctrl
+Date:   Fri, 21 Oct 2022 09:27:28 +0800
+Message-Id: <20221021012728.22373-2-zhuyinbo@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20221021012728.22373-1-zhuyinbo@loongson.cn>
+References: <20221021012728.22373-1-zhuyinbo@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8DxLeCC9VFjxFUCAA--.9496S3
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy8Kr4fJF43AFW8JFb_yoW5urW8pF
+        4fC3sxGF1xtF4xX39xCa40vw1fGan7AF9rCasFv34jqr4Dta4vvay5Krn0q3yDCF43ArW5
+        WFy5u342qF1UAw7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        b78Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUGVWUXwA2ocxC64
+        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
+        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+        57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026x
+        CaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_
+        JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r
+        1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_
+        Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+        UvcSsGvfC2KfnxnUUI43ZEXa7IU8cBMtUUUUU==
+X-Gw-Check: 27be656114213f6f
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-branch HEAD: 7d1aa08aff0621a595c1b42efb493c475eefeeb3  gpio: tegra: Convert to immutable irq chip
+Add the loongson2 pinctrl binding with DT schema format using
+json-schema.
 
-elapsed time: 1041m
+Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+---
+ .../pinctrl/loongson,ls2k-pinctrl.yaml        | 118 ++++++++++++++++++
+ MAINTAINERS                                   |   1 +
+ 2 files changed, 119 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
 
-configs tested: 138
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-alpha                               defconfig
-powerpc                          allmodconfig
-mips                             allyesconfig
-s390                             allmodconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-s390                                defconfig
-i386                                defconfig
-s390                             allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-i386                             allyesconfig
-x86_64                               rhel-8.3
-x86_64                        randconfig-a002
-arm                                 defconfig
-x86_64                           allyesconfig
-x86_64                        randconfig-a004
-arc                  randconfig-r043-20221020
-x86_64                        randconfig-a006
-s390                 randconfig-r044-20221020
-arm                              allyesconfig
-m68k                             allyesconfig
-x86_64                        randconfig-a013
-arc                  randconfig-r043-20221018
-x86_64                        randconfig-a011
-m68k                             allmodconfig
-arm64                            allyesconfig
-riscv                randconfig-r042-20221020
-arc                              allyesconfig
-riscv                randconfig-r042-20221018
-x86_64                        randconfig-a015
-alpha                            allyesconfig
-s390                 randconfig-r044-20221018
-powerpc                      ppc6xx_defconfig
-sh                   rts7751r2dplus_defconfig
-m68k                       m5475evb_defconfig
-powerpc                   currituck_defconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-i386                          randconfig-a005
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-sh                ecovec24-romimage_defconfig
-arm                      footbridge_defconfig
-sh                     magicpanelr2_defconfig
-arm                          gemini_defconfig
-mips                  maltasmvp_eva_defconfig
-um                               alldefconfig
-powerpc                  iss476-smp_defconfig
-sh                         apsh4a3a_defconfig
-csky                                defconfig
-sh                             shx3_defconfig
-i386                          randconfig-c001
-openrisc                         alldefconfig
-powerpc                       holly_defconfig
-m68k                         apollo_defconfig
-arc                        vdk_hs38_defconfig
-sh                           se7712_defconfig
-mips                 randconfig-c004-20221020
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arm                        oxnas_v6_defconfig
-m68k                            q40_defconfig
-powerpc                     tqm8541_defconfig
-arm                           stm32_defconfig
-powerpc                      chrp32_defconfig
-xtensa                              defconfig
-sparc                            alldefconfig
-arm                          badge4_defconfig
-sh                           se7750_defconfig
-sh                           se7343_defconfig
-nios2                         10m50_defconfig
-loongarch                           defconfig
-loongarch                         allnoconfig
-loongarch                        allmodconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-x86_64                        randconfig-c001
-arm                  randconfig-c002-20221019
-mips                           ci20_defconfig
-m68k                        mvme147_defconfig
-openrisc                            defconfig
-mips                       bmips_be_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a001
-hexagon              randconfig-r041-20221020
-x86_64                        randconfig-a003
-hexagon              randconfig-r045-20221020
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20221018
-hexagon              randconfig-r045-20221018
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-s390                 randconfig-r044-20221019
-hexagon              randconfig-r045-20221019
-riscv                randconfig-r042-20221019
-hexagon              randconfig-r041-20221019
-x86_64                        randconfig-k001
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-powerpc                    gamecube_defconfig
-x86_64                        randconfig-c007
-mips                 randconfig-c004-20221019
-i386                          randconfig-c001
-s390                 randconfig-c005-20221019
-arm                  randconfig-c002-20221019
-riscv                randconfig-c006-20221019
-powerpc              randconfig-c003-20221019
-mips                          ath79_defconfig
-arm                         shannon_defconfig
-mips                     cu1830-neo_defconfig
-arm                          ep93xx_defconfig
-powerpc                 mpc836x_rdk_defconfig
-mips                       lemote2f_defconfig
-powerpc                    socrates_defconfig
-arm                         orion5x_defconfig
-powerpc                     tqm8560_defconfig
-powerpc                     kmeter1_defconfig
-arm                           omap1_defconfig
-mips                      malta_kvm_defconfig
-arm                                 defconfig
-arm                        magician_defconfig
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-arm                       mainstone_defconfig
-arm                  colibri_pxa300_defconfig
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+new file mode 100644
+index 000000000000..038d38ad1785
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+@@ -0,0 +1,118 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Loongson2 SoC Pinctrl Controller
++
++maintainers:
++  - zhanghongchen <zhanghongchen@loongson.cn>
++  - Yinbo Zhu <zhuyinbo@loongson.cn>
++
++properties:
++  compatible:
++    const: loongson,ls2k-pinctrl
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++patternProperties:
++  '-pins$':
++    type: object
++    patternProperties:
++      'pinmux$':
++        type: object
++        description: node for pinctrl.
++        $ref: pinmux-node.yaml#
++
++    properties:
++      groups:
++        description:
++          One or more groups of pins to mux to a certain function
++        items:
++          enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
++                 nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
++                 dvo0]
++      function:
++        description:
++          The function that a group of pins is muxed to
++        items:
++          enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
++                 nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
++                 dvo0]
++
++    dependencies:
++      groups: [function]
++      function: [groups]
++
++additionalProperties: false
++
++examples:
++  - |
++    pctrl: pinctrl@1fe00420 {
++           compatible = "loongson,ls2k-pinctrl";
++           reg = <0x1fe00420 0x18>;
++           sdio_pins_default: sdio-pins {
++                sdio-pinmux {
++                        groups ="sdio";
++                        function ="sdio";
++                };
++
++                sdio-det-pinmux {
++                        groups ="pwm2";
++                        function ="gpio";
++                };
++           };
++
++           pwm1_pins_default: pwm1-pins {
++                        pinmux {
++                                groups ="pwm1";
++                                function ="pwm1";
++                        };
++           };
++
++           pwm0_pins_default: pwm0-pins {
++                        pinmux {
++                                groups ="pwm0";
++                                function ="pwm0";
++                        };
++           };
++
++           i2c1_pins_default: i2c1-pins {
++                        pinmux {
++                                groups ="i2c1";
++                                function ="i2c1";
++                        };
++           };
++
++           i2c0_pins_default: i2c0-pins {
++                        pinmux {
++                                groups ="i2c0";
++                                function ="i2c0";
++                        };
++           };
++
++           nand_pins_default: nand-pins {
++                        pinmux {
++                                groups ="nand";
++                                function ="nand";
++                        };
++           };
++
++           hda_pins_default: hda-pins {
++                        grp0-pinmux {
++                                groups ="hda";
++                                function ="hda";
++                        };
++
++                        grp1-pinmux {
++                                groups ="i2s";
++                                function ="gpio";
++                        };
++           };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c9883f145acb..2d002509fc65 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11927,6 +11927,7 @@ M:	zhanghongchen <zhanghongchen@loongson.cn>
+ M:	Yinbo Zhu <zhuyinbo@loongson.cn>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+ F:	drivers/pinctrl/pinctrl-loongson2.c
+ 
+ LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.20.1
+
