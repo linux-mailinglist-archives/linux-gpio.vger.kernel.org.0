@@ -2,82 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35921608DFF
-	for <lists+linux-gpio@lfdr.de>; Sat, 22 Oct 2022 17:19:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 726B8608E5F
+	for <lists+linux-gpio@lfdr.de>; Sat, 22 Oct 2022 18:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbiJVPTF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 22 Oct 2022 11:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S229583AbiJVQJL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 22 Oct 2022 12:09:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiJVPS7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Oct 2022 11:18:59 -0400
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C7E1399C8
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-13b103a3e5dso7122392fac.2
-        for <linux-gpio@vger.kernel.org>; Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
+        with ESMTP id S229484AbiJVQJL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 22 Oct 2022 12:09:11 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58515640F
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Oct 2022 09:09:10 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id f14so3883017qvo.3
+        for <linux-gpio@vger.kernel.org>; Sat, 22 Oct 2022 09:09:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gz0LxUsOUlJDcIAW5bPu+WDjpQGro2FyWxGKpu7r8bo=;
-        b=gWrs34NeTJPV2fQ1MVoQY+zpFojHR3D/A6fVxaEOoPyaG1lz86TK/RINtSik3ihs6m
-         epr6PhFlnoD33CCeTfWoNQCRee99kzlwRupaR937A3VU5HU4OTIvs/zluF82SMnywl6D
-         HdEJ7m7PbwxapFaNOFa9ppWW4y91iGtKkwoLpnocgDPBTYKE8ItremNKc8YrHhceRIZp
-         h3VMtehI1AqTwZwEWQcTgFOjDVRQQngjmAnbv2gz4Ef/Bbck+zcB6GCOTs8PKUKrqPeL
-         49sPdfcCEYUyqTEphtRdJczJc984b2NmTshEFvs/XiFALWDOPilFuaMHYm7NR6Fhz+qX
-         X9nQ==
+        bh=eGwq4mTX+Jyhw/AulcJVeuFBhkqv+kuR8AmKOxA4g1Y=;
+        b=crGI2grvfuGSaC1Jaj5m3B54vfeagFND39Y95Ji6+QRaCWIYaSvKM3MX7LqGVhAmFE
+         TQAmjXu5hP+J3ecalMT2XDxoYVQEG737PhirvzvD4rjZT9SOfzB2MOuW9ZEDQHzikTkO
+         eMDaQausgqqEghYiAYnpPypu2ScO+eX25kpHXcqEqHp3rLjVmgP1Nr9kVNw8pm32ElsV
+         JsuGpz6TRY6UG9Um1i9xHWVr/ygg4yDXJSRu8MUaoB88U+7fpFM5LrL3QKPUrrjB0Q4z
+         C0ZzgI05hj9jU1VXdJNokjwoRl/XTzES0BZeiGhGl9o9UoFDxVGMRB+T+NFzdSH456Po
+         181g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gz0LxUsOUlJDcIAW5bPu+WDjpQGro2FyWxGKpu7r8bo=;
-        b=JnxzZfdC8LzdL0DaZxYePkl8MN8cTyTBdezxR/xDShRHnTg0PiGldyur0RVDN239h7
-         HZ9jg2aI+QQ6yOvui918wn8tnAZzFGMpt/kTVG6WaqY62MEcTD0Q16aopdIYWWyPtDfQ
-         JvX2tojZn82mXvuwTQR+3oTrEwHckZDMVw+kxU3c3wk1eEsF2jLWM+Zu1GtYr3tpTdwo
-         3s14QUQGSYPSuXO1QwavpMyP8ObwACyBZX/B/hpMqGCTvrP4XgZ31FxeuMRLP813Y6mH
-         2ZnVGaAJtQRBr0HRpTQir2BNuopEx4OhDB/gP5gK/IJ/Oza1k+4Jv3qhX08nEZE06i6/
-         fKVg==
-X-Gm-Message-State: ACrzQf1sOSW2t27in1qs4IlicUXq6fihPxGmhjZSSBv09GXzutJ5k61U
-        Di/tbZUrI1FRb4QJ04TZySI+vg==
-X-Google-Smtp-Source: AMsMyM4Ums0et6AQMZox+xdB7Wz2plUu78klbaMd0EOzV1OnnwGbhhl8/BymyNDqbBFL+Y+cBT/t0g==
-X-Received: by 2002:a05:6870:f288:b0:131:de71:3eb6 with SMTP id u8-20020a056870f28800b00131de713eb6mr31239483oap.63.1666451935002;
-        Sat, 22 Oct 2022 08:18:55 -0700 (PDT)
+        bh=eGwq4mTX+Jyhw/AulcJVeuFBhkqv+kuR8AmKOxA4g1Y=;
+        b=G+5tEX2Z7sKeK2tKczqL7PDl5ePOwun4YZqHELcXVgB7XWYRSz3YR9XdfgvExjuxms
+         D7R/xXmHGkBMdkvYnshrSwUSKNM7E1FGF9e/uq5C3QR/jVxsF3JuZBWqAM8WPUp9BwC9
+         UYqEUVIOUZr1F0B5EJHTPZtIQEpyyOumeHBu7gTv/5g+TD7jC91ipjvZB7x8LzfqiR0Y
+         4Hxr39MKB9SIBBnYk90MNxhhrl8I8BvBGABH5xe2RxLYzfO7qrqGYyKDKJFY/wgwvX0o
+         DndIdAzqxgHUG1siRtb7cP2PndaHDRR+SMP8WDPxfWb0I6C9V4X4xKyPaAeLzdTQZ4bK
+         xRnw==
+X-Gm-Message-State: ACrzQf2AkZAQlaSpdFLhme3uLS3Sat4eWN/gzXUkP1kZKSD4XL6v8G7X
+        Ge1vxllRT98Al45227Q/lOagdw==
+X-Google-Smtp-Source: AMsMyM4ljkHEqnzzLpxZ+mQ1vXCLGqeVVJF7Fq6+dWT+UIpDKaGCbakQy2u37OmYs48bPc6GWCUH+A==
+X-Received: by 2002:a05:6214:2349:b0:4b4:11bf:a743 with SMTP id hu9-20020a056214234900b004b411bfa743mr21915486qvb.95.1666454949573;
+        Sat, 22 Oct 2022 09:09:09 -0700 (PDT)
 Received: from [10.203.8.70] ([205.153.95.177])
-        by smtp.gmail.com with ESMTPSA id v5-20020a056870310500b00136c20b1c59sm11538284oaa.43.2022.10.22.08.18.50
+        by smtp.gmail.com with ESMTPSA id bz12-20020a05622a1e8c00b0039a1146e0e1sm9892269qtb.33.2022.10.22.09.09.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 22 Oct 2022 08:18:54 -0700 (PDT)
-Message-ID: <e7ace68a-98e5-63c8-7dd7-a35d0eba1c6e@linaro.org>
-Date:   Sat, 22 Oct 2022 11:18:49 -0400
+        Sat, 22 Oct 2022 09:09:08 -0700 (PDT)
+Message-ID: <122af550-f565-32eb-524b-b4ecfa96c3a2@linaro.org>
+Date:   Sat, 22 Oct 2022 12:09:07 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [PATCH 00/21] ARM: s3c: clean out obsolete platforms
-To:     Arnd Bergmann <arnd@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-pwm@vger.kernel.org
-References: <20221021202254.4142411-1-arnd@kernel.org>
+Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: rockchip: further increase max
+ amount of device functions
 Content-Language: en-US
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        kernel@collabora.com
+References: <20221021172012.87954-1-sebastian.reichel@collabora.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221021202254.4142411-1-arnd@kernel.org>
+In-Reply-To: <20221021172012.87954-1-sebastian.reichel@collabora.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -91,26 +80,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/10/2022 16:22, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> The s3c24xx platform was marked as deprecated a while ago,
-> and for the s3c64xx platform, we marked all except one legacy
-> board file as unused.
-> 
-> This series removes all of those, leaving only s3c64xx support
-> for DT based boots as well as the cragg6410 board file.
-> 
-> About half of the s3c specific drivers were only used on
-> the now removed machines, so these drivers can be retired
-> as well. I can either merge the driver removal patches through
-> the soc tree along with the board file patches, or subsystem
-> maintainers can pick them up into their own trees, whichever
-> they prefer.
+On 21/10/2022 13:20, Sebastian Reichel wrote:
+> Apparently RK3588 pinctrl has 13 different device functions, but dt-validate
+> only checks for pin configuration being referenced so I did not notice.
 
-Just to be sure - do you expect me to ack the series, or rather as usual
-pick them up?
+I think the "but ..." part can be skipped, as it is not really relevant
+to the issue being fixed here.
 
+> 
+> Fixes: ed1f77b78322 ("dt-bindings: pinctrl: rockchip: increase max amount of device functions")
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
