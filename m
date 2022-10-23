@@ -2,147 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA0E609255
-	for <lists+linux-gpio@lfdr.de>; Sun, 23 Oct 2022 12:56:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3F660924D
+	for <lists+linux-gpio@lfdr.de>; Sun, 23 Oct 2022 12:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbiJWK4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 23 Oct 2022 06:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
+        id S230301AbiJWKZd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 23 Oct 2022 06:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbiJWK4h (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Oct 2022 06:56:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B635A8DB;
-        Sun, 23 Oct 2022 03:56:37 -0700 (PDT)
+        with ESMTP id S230293AbiJWKZb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 23 Oct 2022 06:25:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1DF15F7E1;
+        Sun, 23 Oct 2022 03:25:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A888B60B61;
-        Sun, 23 Oct 2022 10:56:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D14D3C433C1;
-        Sun, 23 Oct 2022 10:56:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5621C60B78;
+        Sun, 23 Oct 2022 10:25:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6A2C433C1;
+        Sun, 23 Oct 2022 10:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666522596;
-        bh=lyTdIKeZjwi6PoGVvjTDLmW7YJbAZtMOfj7JmOF6Gmw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NYPN8VkGrvo19tKNOorOnl8MKQZvblC5h8iXLPadyri41aTPyDui7E+JY5laKk+DL
-         HLXoCzTDhLStJFiOsTWS7Ncr1r0Q1BZF8UMrxr8FSNQw10fyEnSJvTK9KVZipqgMvu
-         Pm06NM/KwM3bDnwN6EgJ5sg+pW6tCqZcRnCOZ3HBg5qOnzkoejcMbW072nABaLReYu
-         mx60T4xZD0Lx1O0iMQEHmgnQ0Pbc4lwiMYYdl2OZ0wlBlNfEKSUk3/FlhgO4qHfiUT
-         gdTCJn9FaCuXP6NgrgH/Q35es00kmSD38ewz/SOd9ZOWo/MCEdOnPw5IlbI+dJeBFy
-         MqZCizIzCf3Tg==
-Date:   Sat, 25 Jun 2022 14:32:53 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Cosmin Tanislav <demonsingur@gmail.com>,
+        s=k20201202; t=1666520728;
+        bh=xHTDzXr6yMemliNn/X5wJr/+HKi1d/u3kKmHEczRJ6c=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=PNETu/wg6gI+HfefOSjm98ZXp1gaCUwQ282BKWbhbPtErarhdWqGOAMOR3aexaBG0
+         e2Mv5TIbvMcQ2vKcU5kJd4VrYC7MPfTkifXDUIEB6JGQfzmL9SP4ECvnCDlU0efGUc
+         1blQfkU7chk8nuMXdWPwD++UHOz5C/tiqcBHRIwlWBXfvG/bGL8ChARWeeEqNsvpl+
+         3nl3RX/X0IGQP4WMFo7cd5l2Yu3PMBNwehajgllCQF35U5UeJceW8u80wezQiRXqOw
+         RgqYck/Of9/WHyvNe/fdVlNfWIgDt2h/SVYUPCtjRaWctBEkyPgScNj3/1B/O6Iimy
+         7tk62+vROPffA==
+Date:   Sun, 23 Oct 2022 11:25:26 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Hal Feng <hal.feng@linux.starfivetech.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
         Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Michael Turquette <mturquette@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Cosmin Tanislav <cosmin.tanislav@analog.com>
-Subject: Re: [PATCH v5 2/2] iio: adc: ad4130: add AD4130 driver
-Message-ID: <20220625143253.0c022fcd@jic23-huawei>
-In-Reply-To: <CAHp75VeRgnCLP0YqiOe8OkW3hQ178ia+Y3PjFtCMW4Sh7JfCZQ@mail.gmail.com>
-References: <20220620162059.1097264-1-cosmin.tanislav@analog.com>
-        <20220620162059.1097264-3-cosmin.tanislav@analog.com>
-        <CAHp75VcBJkQ+CwyoDaTJ_AD+mv9d0tEd_txqHwkPRy4-xvnyKg@mail.gmail.com>
-        <2aa93eab-de6d-866b-a829-36b47ff00982@gmail.com>
-        <CAHp75Vc_fcAP6gGwMkYZUoMM6jKeUoQr8J+zYCUz8inSHnTF_w@mail.gmail.com>
-        <54bfff70-938f-16e1-198d-47ed9ba95db4@gmail.com>
-        <CAHp75VeRgnCLP0YqiOe8OkW3hQ178ia+Y3PjFtCMW4Sh7JfCZQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        Emil Renner Berthing <kernel@esmil.dk>,
+        linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_15/30=5D_clk=3A_starfive=3A_?= =?US-ASCII?Q?Use_regmap_APIs_to_operate_registers?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <07B628ED6CABEF1D+932737cc-7d4b-4071-531e-82f88d89a872@linux.starfivetech.com>
+References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com> <20220929175602.19946-1-hal.feng@linux.starfivetech.com> <20220930214824.A14ACC433D6@smtp.kernel.org> <CAJM55Z8xxrKqaN64KAP9miTis4wFbL2S9uhV5h-SOiYjbYng+g@mail.gmail.com> <20221012230525.C6E58C433D7@smtp.kernel.org> <07B628ED6CABEF1D+932737cc-7d4b-4071-531e-82f88d89a872@linux.starfivetech.com>
+Message-ID: <4AF0F174-CB35-447A-9F22-7D300B225011@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_96_XX,
-        DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 23 Jun 2022 19:33:45 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-> On Thu, Jun 23, 2022 at 6:14 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:
-> > On 6/23/22 18:39, Andy Shevchenko wrote:  
-> > > On Thu, Jun 23, 2022 at 5:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:  
-> > >> On 6/20/22 21:29, Andy Shevchenko wrote:  
-> > >>> On Mon, Jun 20, 2022 at 6:27 PM Cosmin Tanislav <demonsingur@gmail.com> wrote:  
-> 
-> ...
-> 
-> > >>>> +       /*
-> > >>>> +        * DMA (thus cache coherency maintenance) requires the
-> > >>>> +        * transfer buffers to live in their own cache lines.
-> > >>>> +        */  
-> > >>>
-> > >>> This is a good comment, but what fields does it apply to?  
-> > >>
-> > >> Whatever is below it, grouped together. This is not hard to
-> > >> understand.  
-> > >
-> > > It's hard to understand what exactly is DMA-aware here. I see only one
-> > > buffer that is aligned properly for DMA, the rest are not, except the
-> > > case if all of them are going in one DMA transaction. Is this the case
-> > > here?
-> > >  
-> > >>>> +       u8                      reset_buf[AD4130_RESET_BUF_SIZE] __aligned(IIO_DMA_MINALIGN);  
-> > >
-> > > This is aligned.
-> > >  
-> > >>>> +       u8                      reg_write_tx_buf[4];  
-> > >
-> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0).
-> > >  
-> > >>>> +       u8                      reg_read_tx_buf[1];  
-> > >
-> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4).
-> > >  
-> > >>>> +       u8                      reg_read_rx_buf[3];  
-> > >
-> > > This one is aligned + offset (== AD4130_RESET_BUF_SIZE + 0 + 4 + 1).
-> > > And this is Rx.
-> > >  
-> > >>>> +       u8                      fifo_tx_buf[2];  
-> > >
-> > > Here is Tx again which is most likely is not aligned...
-> > >  
-> > >>>> +       u8                      fifo_rx_buf[AD4130_FIFO_SIZE *
-> > >>>> +                                           AD4130_FIFO_MAX_SAMPLE_SIZE];
-> > >>>> +};  
-> > >  
-> >
-> > This has been mentioned before by Jonathan as a reply to V6 of my
-> > AD74413R driver.
-> >  
-> >  > I'm surprised I didn't mention this before but you only need to  
-> > ensure  > that any memory used for DMA is not in a cacheline with memory
-> > used  
-> >  > for other things that might change concurrently.  
-> >
-> > To my understanding, as long as the DMA buffers will all be accessed by
-> > the same DMA-compatible SPI controller, you only need to align them so
-> > they're not in the same cacheline with memory that will not be accessed
-> > by the SPI controller.  
-> 
-> SPI is synchronous by nature, what will happen if the Tx and Rx
-> buffers are sharing the same cache line? Anybody to shed a light here?
-> 
-> (I.o.w. I'm not sure that we don't need to split the Rx and Tx buffers
-> of the same transfer.)
 
-My understanding is that any device that stamps on itself is considered broken
-and needs to do it's own bounce buffering.  We just need to ensure no
-CPU writes hit stuff in the same cacheline whilst DMA is in progress.
+On 23 October 2022 05:11:41 IST, Hal Feng <hal=2Efeng@linux=2Estarfivetech=
+=2Ecom> wrote:
+>On Wed, 12 Oct 2022 16:05:23 -0700, Stephen Boyd wrote:
+>> Quoting Emil Renner Berthing (2022-10-05 06:14:44)
+>> > > > @@ -295,11 +296,13 @@ static int __init clk_starfive_jh7100_probe=
+(struct platform_device *pdev)
+>> > > >         if (!priv)
+>> > > >                 return -ENOMEM;
+>> > > >
+>> > > > -       spin_lock_init(&priv->rmw_lock);
+>> > > >         priv->dev =3D &pdev->dev;
+>> > > > -       priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+>> > > > -       if (IS_ERR(priv->base))
+>> > > > -               return PTR_ERR(priv->base);
+>> > > > +       priv->regmap =3D device_node_to_regmap(priv->dev->of_node=
+);
+>> > >
+>> > > This is sad=2E Why do we need to make a syscon? Can we instead use =
+the
+>> > > auxiliary bus to make a reset device that either gets a regmap made=
+ here
+>> > > in this driver or uses a void __iomem * mapped with ioremap
+>> > > (priv->base)?
+>> >=20
+>> > In my original code the clock driver just registers the resets too
+>> > similar to other combined clock and reset drivers=2E I wonder what yo=
+u
+>> > think about that approach:
+>> > https://github=2Ecom/esmil/linux/commit/36f15e1b827b02d7f493dc5fce310=
+60b21976e68
+>> > and
+>> > https://github=2Ecom/esmil/linux/commit/4ccafadb72968480aa3dd28c227fc=
+ccae411c13b#diff-ffec81f902f810cb210012c25e8d88217ea5b4021419a4206d1fd4dd19=
+edfce8R471
+>>=20
+>> I think we should use auxiliary bus and split the driver logically into
+>> a reset driver in drivers/reset and a clk driver in drivers/clk=2E That
+>> way the appropriate maintainers can review the code=2E There is only on=
+e
+>> platform device with a single reg property and node in DT, but there ar=
+e
+>> two drivers=2E=20
+>
+>Yes, I agree that the reset driver and the clock driver should be split=
+=2E
+>However, I think using auxiliary bus is a little bit complicated in this
+>case, because the reset is not a part of functionality of the clock in=20
+>JH7110=2E They just share a common register base address=2E I think it is=
+=20
+>better to use ioremap for the same address, and the dt will be like
+>
+>syscrg_clk: clock-controller@13020000 {
+>	compatible =3D "starfive,jh7110-clkgen-sys";
+>	reg =3D <0x0 0x13020000 0x0 0x10000>;
+>	=2E=2E=2E
+>};
+>syscrg_rst: reset-controller@13020000 {
+>	compatible =3D "starfive,jh7110-reset-sys";
+>	reg =3D <0x0 0x13020000 0x0 0x10000>;
+>	=2E=2E=2E
+>};
+>
+>What do you think of this approach? I would appreciate your suggestions=
+=2E
 
-A clarification to the comment to say that it covers all the buffers at the
-end of the structure would be a good addition.
-
-Jonathan
-
+No, the dtb checks will all start warning for this=2E
+Aux bus is not that difficult, you can likely copy much of what I did rece=
+ntly in clk-mpfs=2Ec
+>
+>Best regards,
+>Hal
