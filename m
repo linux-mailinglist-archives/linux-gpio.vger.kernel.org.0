@@ -2,137 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 112FE60AF25
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 17:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C32F560ADC8
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 16:34:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbiJXPhF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Oct 2022 11:37:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55220 "EHLO
+        id S236603AbiJXOel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Oct 2022 10:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231475AbiJXPgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 11:36:49 -0400
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3BD201A0
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 07:24:40 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id v27so9601927eda.1
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 07:24:40 -0700 (PDT)
+        with ESMTP id S237222AbiJXOeH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 10:34:07 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B6D8112E
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 06:09:20 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id 192so1745152pfx.5
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 06:09:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y2dftzokVagW1NbsihVeFfV7KhU75z+A9+bOluSjCvY=;
-        b=DBx9J7RTxs4jDAz7lRIoDNqosSvctOg1QPzn7FV2aLWeproz1aCaQMKhCB0IC3hflk
-         NkBK2x75an1lKBdpdpEXOFGo1nSZZ8ixYHtLX5Y97Ka4rNU5VVoNmNJCNO5cJqjJFigh
-         a3kVBbm7RGEg8m4dSmaDxAxR5jvwzF0I4+5gRZ/hDu9LEYi1WEteZ+1mSTgB9JxaMrEj
-         y0tUaV5eSigbbQmN1B5fNYYjAgZ+57/ayq/i825n21I9+nNQHL5QjY45JssqSXvH//0a
-         zPX6svt7+vfiE3kC+ETFbQb5Z+KonMp6d1BSctq0aPQux6wvxK8sgqGuTmNjCR+eHyca
-         xwmQ==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh8UQ4JmTZN9hL0/8CXAkNYRnuwMy/n4/v6mITjc4KY=;
+        b=y0W+zUyiBftSd0JgAGoPOqPtmV13guRpqzbMHskUNvLCEuQ6pihIc7oGP6TuC3oQt5
+         NjC6zT2GBgFpwt3TaO3sCktoTg2zHU1fTtWzfcwSmh6ykgmIp95Eot8a0sqsecpFyW7x
+         1HT6dR9s6lU9w8AQMYPhYLXd1Gu3x1edoP1WhBwFF/jIaERMSCG6bAABteTZbOS+Taz8
+         m7SCCh9de8RQXNTOTCxekuN5wUYGpUE+af/pdLsiLsH9H7ozUi1IJplIrGjD7sC4Tf7t
+         s+A+OHtLvPIWSHgE+4xzSs5FzW53+pzJ7Liv/i1SA0R2VvOs5lkPyZK2zhrwcwhQeqwz
+         cUfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Y2dftzokVagW1NbsihVeFfV7KhU75z+A9+bOluSjCvY=;
-        b=VvwE/sJkeV5wsVyk+PGT4VcDjpHBIEBDTK8T++QaLVDzns1t0PGWtKp/wssl2EP2xj
-         1sRJU0gdpjyqzpF8BxIVEW6FO9HH1jUXg/wET1B21ao72yKCmu5vFI13caHqO4Z+4xsQ
-         Kql0Ss5t5Tk6s1S481gcgGr4pIGAVh/xNGIl6IGpn0t16ulAM0k4iokH62JQ540Vwb2s
-         tRVK4MtA8yd2GGlinMwMkjw3qF1cOD020VWW5kRDRunGYcGav7Q2omKGfztE7fLyfyjD
-         mYEH96v7p4Dh4cqjZUJ866qTSydspQT5zdWSMaOg3MXgCZ6ysD68zPeKGLMvDXkoETbD
-         aJkA==
-X-Gm-Message-State: ACrzQf0IwyS2lFyylfsT7yloWPUNMkfS5+PMy0tSHFRiDT5L9vaiZXi1
-        Gj8hGdlNyYpxjTzHAlE/cHMifJ2pXuQe/A==
-X-Google-Smtp-Source: AMsMyM41L8nLr9Hx51j7f3hQp+pQCT+pio/X+snwW/xqXDxG7Hix8S7fRMaXs9FJJRTFfMPF0garoQ==
-X-Received: by 2002:a05:651c:1590:b0:26c:4311:9b84 with SMTP id h16-20020a05651c159000b0026c43119b84mr12835020ljq.152.1666614166054;
-        Mon, 24 Oct 2022 05:22:46 -0700 (PDT)
-Received: from fedora.. ([85.235.10.72])
-        by smtp.gmail.com with ESMTPSA id 6-20020ac24846000000b0048a9b197863sm1858671lfy.235.2022.10.24.05.22.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 05:22:45 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH] soc: fsl: qe: Avoid using gpio_to_desc()
-Date:   Mon, 24 Oct 2022 14:22:41 +0200
-Message-Id: <20221024122241.9463-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jh8UQ4JmTZN9hL0/8CXAkNYRnuwMy/n4/v6mITjc4KY=;
+        b=cWIgkA5pHxita75y2m/3AO4kE99nL++gPW7k0AW5HByJvzKFOUrUmSyUKxoXMIypqn
+         ZIBkBXzKaX2xm/FSfF40q3y2bpeD7RiN9nRDCXGgM590wkbnvRF76xXZpW1ik0FNRgD1
+         e/H6DUW2QrUr036XqNGfEA0PMij2s1yZn24jfaV1JbGB1V18ddkHIJuvckFORYyiz0l6
+         4Arge37xZhx49ADc+uudInsCOt5qDO53ad2QjFKF5cVRlmbaLviI7fdPcCkU/vhHQduW
+         ohnZnugiV57cp/PIrUFYIHR0TbN1WUmUFYig7nHx8/jp2MWAdxDePnaROKIT3jGve2MZ
+         lbdQ==
+X-Gm-Message-State: ACrzQf13bM/EILfBv3qESuuyCXQPV7miB4RH4JOVrm7OUtTKC4Hf/sqD
+        cgjwrCmFNZpsBqzTL9nF4kn7w584RerCVg==
+X-Google-Smtp-Source: AMsMyM64HS96JA+t5NegWTBhGoXrPmUTvN8S9j1oIuC6j5JnhVzd28Edhbio8VxlddWIvdR7T0/thQ==
+X-Received: by 2002:a0c:8ccc:0:b0:4b2:382e:ddaa with SMTP id q12-20020a0c8ccc000000b004b2382eddaamr27200510qvb.33.1666614368794;
+        Mon, 24 Oct 2022 05:26:08 -0700 (PDT)
+Received: from [192.168.1.8] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id u30-20020a37ab1e000000b006ef0350db8asm9109052qke.128.2022.10.24.05.26.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Oct 2022 05:26:08 -0700 (PDT)
+Message-ID: <a354c24d-0355-7c9d-ad05-4c21561af4dc@linaro.org>
+Date:   Mon, 24 Oct 2022 08:26:05 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 02/21] ARM: s3c: remove s3c24xx specific hacks
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
+        Simtec Linux Team <linux@simtec.co.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Sylwester Nawrocki <sylvester.nawrocki@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20221021202254.4142411-1-arnd@kernel.org>
+ <20221021203329.4143397-2-arnd@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221021203329.4143397-2-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We want to get rid of the old GPIO numberspace, so instead of
-calling gpio_to_desc() we get the gpio descriptor for the requested
-line from the device tree directly without passing through the
-GPIO numberspace, and then we get the gpiochip from the descriptor.
+On 21/10/2022 16:27, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> A number of device drivers reference CONFIG_ARM_S3C24XX_CPUFREQ or
+> similar symbols that are no longer available with the platform gone,
+> though the drivers themselves are still used on newer platforms,
+> so remove these hacks.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/soc/fsl/qe/gpio.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 99f7de43c3c6..cc5602b679fe 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -13,10 +13,8 @@
- #include <linux/err.h>
- #include <linux/io.h>
- #include <linux/of.h>
--#include <linux/of_gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
--/* FIXME: needed for gpio_to_chip() get rid of this */
--#include <linux/gpio.h>
- #include <linux/slab.h>
- #include <linux/export.h>
- #include <soc/fsl/qe/qe.h>
-@@ -161,6 +159,7 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	struct qe_pin *qe_pin;
- 	struct gpio_chip *gc;
- 	struct qe_gpio_chip *qe_gc;
-+	struct gpio_desc *gpiod;
- 	int err;
- 	unsigned long flags;
- 
-@@ -170,14 +169,21 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	err = of_get_gpio(np, index);
--	if (err < 0)
-+	gpiod = fwnode_gpiod_get_index(of_fwnode_handle(np), NULL, index, GPIOD_ASIS, "qe");
-+	if (IS_ERR(gpiod)) {
-+		err = PTR_ERR(gpiod);
- 		goto err0;
--	gc = gpio_to_chip(err);
-+	}
-+	if (!gpiod) {
-+		err = -EINVAL;
-+		goto err0;
-+	}
-+	gc = gpiod_to_chip(gpiod);
- 	if (WARN_ON(!gc)) {
- 		err = -ENODEV;
- 		goto err0;
- 	}
-+	gpiod_put(gpiod);
- 
- 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
- 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
--- 
-2.34.1
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
