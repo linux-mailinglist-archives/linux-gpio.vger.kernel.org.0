@@ -2,76 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B64A60B35A
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 19:05:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9115360B3DD
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 19:18:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbiJXRFW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Oct 2022 13:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
+        id S234450AbiJXRSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Oct 2022 13:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234785AbiJXRD7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 13:03:59 -0400
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE31E7B78B
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 08:40:01 -0700 (PDT)
-Received: by mail-qv1-f42.google.com with SMTP id x13so5243465qvn.6
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 08:40:01 -0700 (PDT)
+        with ESMTP id S229716AbiJXRSQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 13:18:16 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F7C2A25F;
+        Mon, 24 Oct 2022 08:53:09 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so10296287wms.0;
+        Mon, 24 Oct 2022 08:53:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=/Vr0nqHCGrm+b68s/C4QPay7OOdjkPPEqnfDL2I3xZ0=;
-        b=A1zile5aaiGOv1/6LYGIIS7rWZdNf/REZ+C9UBtfg9OfpCOGjXnhycbBfjdSe0JOyu
-         v5qzJjdxIPLQzNoFIOLcH8aiLZMksx3Tj6Nur9hpg9fEaWvP7WH1gT5ar8GPUQpgA5lJ
-         DioVkGo5QA/KPc7eezM0ezSfhiofM6Pb9FiueqjTZj7jQ/qNViyLM0EuJoUXoo8FQbGG
-         N7zpmFdBC9U18lnuezv9+We3fEpYv6ZvxzaOMEglGMbyGuOucIIcEoZ1vQEwbdbY0HRA
-         4C9EJiEr8dTf62+r9YQ3C5gn+n6uMmjDlqJSHPRWR60LM6ro/3Du7SUX9hoCoCevjEWv
-         qhdg==
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PbDwJ7wvAUkhD1OcyTr/yjGyh92hqX3W/8ifm0JLlBU=;
+        b=JVyPXgCSH3tJQcxC6yJuJZDLmlQMpY9+7NvO2ibypMYpCzSEhz0PKaeict2Eem7RVq
+         6d4HEnbRMheXvVTm6Nz06d7i2wxAKqO8eqzMXINIWRGibI/qHsNtG4eLybGs/CyJ+K0J
+         lHPngM62fQOS+xMTJjaQ8xthvpx/of07x8qCMLitR5FNMOI0d+/XD2yCSa+7g9BentdN
+         Nl6hs4SFwd2SzyMtgEgYZFMvwhjEw1jnzw3cN8hpJXtIRF6fSHPimoMpDpcarPOv809S
+         zVA0KbYHvJME96+g5zXEAU6MTVH9a8AorP/rs6NFhKKuJCAhCVZ212zZL3+97ZI3+IGA
+         5uNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Vr0nqHCGrm+b68s/C4QPay7OOdjkPPEqnfDL2I3xZ0=;
-        b=j2an5l1tV1GgMqgSWRy6tYqoMjrlFJJ7PdgcuHPP5G6HzDWiQkLWH2It3OxH3jfKNJ
-         VPvvnFG4qlGwBFdINJGVJGa+NW4FZl8hcjPj0xcySDsdKtjbIIterGw4uLVSJlEh/tQB
-         4hVBDdbyKJRsJeW2NUuUlThidbg18B1M+jmwCDp4TSq4GyvrYxAd7OkipXFMKp/y7nFF
-         Zl3itw+HC2BVFCgD4aa5pjJRqX5tDCJ8EqoA2nQCXOFl1kvqyjoAxXUq09ilB+FOzrSB
-         pcsItU/UGKC+NI2pku1p1mxjd8XqM5MRsV6ISQzPCctpu+2MRzqU8v0xh2+maTf9upkK
-         XCKw==
-X-Gm-Message-State: ACrzQf04tck9R9hIh0GjDQTUrgC/0eIMbYIc/vx2+XEFTgZsfTcHhgm/
-        /bKW2mTWiAPdZ1/XWhsVsX7+3o8W150cSw==
-X-Google-Smtp-Source: AMsMyM5X+kIBxudaeRFmJTdkoXGBmNzB+x8RZi8q9kq8BLojbo3cknAZE5oULo3K676hCYZUJgRcwQ==
-X-Received: by 2002:a0c:9151:0:b0:4b1:8375:46d3 with SMTP id q75-20020a0c9151000000b004b1837546d3mr28530283qvq.122.1666618142903;
-        Mon, 24 Oct 2022 06:29:02 -0700 (PDT)
-Received: from [192.168.1.8] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id cn15-20020a05622a248f00b0034305a91aaesm12586522qtb.83.2022.10.24.06.29.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Oct 2022 06:29:02 -0700 (PDT)
-Message-ID: <a7693e48-f16f-9577-8685-417f21706d1b@linaro.org>
-Date:   Mon, 24 Oct 2022 09:29:00 -0400
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PbDwJ7wvAUkhD1OcyTr/yjGyh92hqX3W/8ifm0JLlBU=;
+        b=RW0yHlgUS1CCoJbk8DzrNR5yCIKQulQ7iMSRUZ5vwh2iSHuMOdEbr2SkNWWeJx3Q5o
+         cw/VxbYUrPhnnNfOtPnylFdJZrkbMaDQmMJkeilvwncMcxTGORBHfib8Iw5YDWv2iUjQ
+         kWOGN96pZkpFXGgzKmMcUZ1asFMTA6yUEuOU5Q1MEhZ0iWsi/3vwU54GDf6dDCQtjMw4
+         uDYnq7y9MDLoE7EE6jlhJlIGa8Im8jk/s1i2rWQf6RDNhgHFeuKl1Y3f9J/pvqw1ZR5L
+         mHlCrev7fueS55hir+m8yu8IOd5pueMT5hzbpdnQQMtXauCMIjFGxWu9joNH9BNaJ3GI
+         Odkg==
+X-Gm-Message-State: ACrzQf2t5q92t45IVs6jQK/pCpNAwGKsGjWb21g0NDIs1xRIiwmCBiNb
+        4e5mck0XHYgOybM40iibmyX1A7s91p0=
+X-Google-Smtp-Source: AMsMyM4ibbYeSmYuLZtdL2590VPkTSOLbiPc+BzORbth6dxnpg1pkgkpbVCoY44500sZAF1ZzSvWyw==
+X-Received: by 2002:a1c:f009:0:b0:3b4:9398:49c9 with SMTP id a9-20020a1cf009000000b003b4939849c9mr43310896wmb.174.1666620130862;
+        Mon, 24 Oct 2022 07:02:10 -0700 (PDT)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id n9-20020a05600c3b8900b003b4ff30e566sm20189398wms.3.2022.10.24.07.02.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 07:02:09 -0700 (PDT)
+Date:   Mon, 24 Oct 2022 16:02:07 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Prathamesh Shete <pshete@nvidia.com>
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
+        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
+Subject: Re: [PATCH] gpio: tegra186: Check PMC driver status before any
+ request
+Message-ID: <Y1aa3/oJA2ElSGp0@orome>
+References: <20220912133309.18506-1-pshete@nvidia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH] pinctrl: samsung: remove variable pin
-Content-Language: en-US
-To:     Colin Ian King <colin.i.king@gmail.com>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221024131527.2156810-1-colin.i.king@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221024131527.2156810-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="WWUO7I5ImHJZcyZm"
+Content-Disposition: inline
+In-Reply-To: <20220912133309.18506-1-pshete@nvidia.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,19 +76,93 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24/10/2022 09:15, Colin Ian King wrote:
-> Variable pin is just being incremented and it's never used
-> anywhere else. The variable and the increment are redundant so
-> remove it.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+
+--WWUO7I5ImHJZcyZm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 12, 2022 at 07:03:09PM +0530, Prathamesh Shete wrote:
+> This patch fixes the issue where even if pmc driver
+> status is disabled still we are invoking pmc driver
+> to process some request
+
+s/pmc/PMC/ twice above. Also, this is slightly misleading. We're not
+"invoking" the PMC driver, but rather we're trying to look up the IRQ
+domain that the PMC driver would've registered if it had been enabled.
+So perhaps reword this to more accurately reflect that.
+
+>=20
+> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
 > ---
->  drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  drivers/gpio/gpio-tegra186.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+> index 54d9fa7da9c1..efd508ba07a6 100644
+> --- a/drivers/gpio/gpio-tegra186.c
+> +++ b/drivers/gpio/gpio-tegra186.c
+> @@ -895,7 +895,7 @@ static int tegra186_gpio_probe(struct platform_device=
+ *pdev)
+>  		tegra186_gpio_init_route_mapping(gpio);
+> =20
+>  	np =3D of_find_matching_node(NULL, tegra186_pmc_of_match);
+> -	if (np) {
+> +	if (of_device_is_available(np)) {
+>  		irq->parent_domain =3D irq_find_host(np);
+>  		of_node_put(np);
 
-Thanks for the patch. The file is being in process of dropping (patchset
-is being reviewed), so I think we can skip all the fixes.
+This now leaks a reference to np if np is found but not available. So
+this should be something like:
 
-Best regards,
-Krzysztof
+	if (np) {
+		if (of_device_is_available(np)) {
+			irq->parent_domain =3D irq_find_host(np);
+			of_node_put(np);
 
+			if (!irq->parent_domain)
+				return -EPROBE_DEFER;
+		} else {
+			of_node_put(np);
+		}
+	}
+
+or:
+
+	if (np) {
+		if (of_device_is_available(np))
+			irq->parent_domain =3D irq_find_host(np);
+
+		of_node_put(np);
+
+		if (of_device_is_available(np) && !irq->parent_domain)
+			return -EPROBE_DEFER;
+	}
+
+The former is a little nicer because it doesn't check availability
+twice.
+
+Thierry
+
+--WWUO7I5ImHJZcyZm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNWmt8ACgkQ3SOs138+
+s6FgJRAAnKzSEP41yRfOaOvjtZaYVNHq7iZ+pMv4cuRTh9/5P46v0OcJyAFD6h4M
+HrRrOhhXvJO6gTwylItsVxq0JIhhxzatNRGfVnUt4JhbycWpn7gJ/hdGx9JljdIG
+E5Vd+2uD1y9ZQA+NSEJPQDJLwu6uqR9HuAnH5KB+JUvqDF4GI8W/xlOjrhOISdSH
+YYBPw1kbnZYPfjCdcu9NJR6z8gITIMmlY4WeCS29HmkFgNa2ak3gv9Nvvgx9Q+fQ
+WwGmSfT6G0QcBbVvDL9z7wugbXwKtlppomU0eGwJ61IAlMKCExoEbFEDqW1PoLYc
+a6MXMmH0bVoHvcdH13tDbLlw0T8C29WZs2ZQPpxEvNv+cVbYLJmRhQUsQrBh+6fC
+MeNsnJkoFZVf48sc9+RNi5ThjVHKCkkJ+nQJh+oXrva5gofwD+hPazbZv+Qz3pmz
+/QaGuhMFp2dM7cDcgyHYQLf+R1kujXfS/rUvUBnIOtm110VhH22RV8cBktFP5rzI
+smNqGx9UWoOKUQiSRYv2/r7mxwxUxJm9icexY02TxqVNCss0NPG7z4sGDggiJxhk
+Tg/02gPDOE9t6giIhurr/wvaR2fVcNXTkNUmVygYr/VMcW0O8Zq4AIwkgvAI1skb
+Ik0ZsL6p8LYIYdPy/tNaBPEGHaKR7JuHvxNYlEAPHhKiZtkeIC0=
+=6xUl
+-----END PGP SIGNATURE-----
+
+--WWUO7I5ImHJZcyZm--
