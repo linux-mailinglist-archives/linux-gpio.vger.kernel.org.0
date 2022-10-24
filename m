@@ -2,167 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9115360B3DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 19:18:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1164360B179
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 18:25:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234450AbiJXRSe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Oct 2022 13:18:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55486 "EHLO
+        id S233932AbiJXQZr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Oct 2022 12:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229716AbiJXRSQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 13:18:16 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F7C2A25F;
-        Mon, 24 Oct 2022 08:53:09 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id m29-20020a05600c3b1d00b003c6bf423c71so10296287wms.0;
-        Mon, 24 Oct 2022 08:53:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PbDwJ7wvAUkhD1OcyTr/yjGyh92hqX3W/8ifm0JLlBU=;
-        b=JVyPXgCSH3tJQcxC6yJuJZDLmlQMpY9+7NvO2ibypMYpCzSEhz0PKaeict2Eem7RVq
-         6d4HEnbRMheXvVTm6Nz06d7i2wxAKqO8eqzMXINIWRGibI/qHsNtG4eLybGs/CyJ+K0J
-         lHPngM62fQOS+xMTJjaQ8xthvpx/of07x8qCMLitR5FNMOI0d+/XD2yCSa+7g9BentdN
-         Nl6hs4SFwd2SzyMtgEgYZFMvwhjEw1jnzw3cN8hpJXtIRF6fSHPimoMpDpcarPOv809S
-         zVA0KbYHvJME96+g5zXEAU6MTVH9a8AorP/rs6NFhKKuJCAhCVZ212zZL3+97ZI3+IGA
-         5uNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PbDwJ7wvAUkhD1OcyTr/yjGyh92hqX3W/8ifm0JLlBU=;
-        b=RW0yHlgUS1CCoJbk8DzrNR5yCIKQulQ7iMSRUZ5vwh2iSHuMOdEbr2SkNWWeJx3Q5o
-         cw/VxbYUrPhnnNfOtPnylFdJZrkbMaDQmMJkeilvwncMcxTGORBHfib8Iw5YDWv2iUjQ
-         kWOGN96pZkpFXGgzKmMcUZ1asFMTA6yUEuOU5Q1MEhZ0iWsi/3vwU54GDf6dDCQtjMw4
-         uDYnq7y9MDLoE7EE6jlhJlIGa8Im8jk/s1i2rWQf6RDNhgHFeuKl1Y3f9J/pvqw1ZR5L
-         mHlCrev7fueS55hir+m8yu8IOd5pueMT5hzbpdnQQMtXauCMIjFGxWu9joNH9BNaJ3GI
-         Odkg==
-X-Gm-Message-State: ACrzQf2t5q92t45IVs6jQK/pCpNAwGKsGjWb21g0NDIs1xRIiwmCBiNb
-        4e5mck0XHYgOybM40iibmyX1A7s91p0=
-X-Google-Smtp-Source: AMsMyM4ibbYeSmYuLZtdL2590VPkTSOLbiPc+BzORbth6dxnpg1pkgkpbVCoY44500sZAF1ZzSvWyw==
-X-Received: by 2002:a1c:f009:0:b0:3b4:9398:49c9 with SMTP id a9-20020a1cf009000000b003b4939849c9mr43310896wmb.174.1666620130862;
-        Mon, 24 Oct 2022 07:02:10 -0700 (PDT)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id n9-20020a05600c3b8900b003b4ff30e566sm20189398wms.3.2022.10.24.07.02.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 07:02:09 -0700 (PDT)
-Date:   Mon, 24 Oct 2022 16:02:07 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Prathamesh Shete <pshete@nvidia.com>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jonathanh@nvidia.com,
-        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
-Subject: Re: [PATCH] gpio: tegra186: Check PMC driver status before any
- request
-Message-ID: <Y1aa3/oJA2ElSGp0@orome>
-References: <20220912133309.18506-1-pshete@nvidia.com>
+        with ESMTP id S235258AbiJXQZL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 12:25:11 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3AFB158181
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 08:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666624318; x=1698160318;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=XUdEZsZnv3WYeOxP8dyx9oN3W31Uv8OJUsvCmASdtP4=;
+  b=KvvgtTzGAJ+rJQNhBRXBa/s1KaT9pDrHEqeU81s9UQOlZrzNjYZBM5ZQ
+   RGowXFq8gpcnJOToZkU/8jTmXuSeW5GzHQjD+shIL6BMDldmWRfdixElI
+   5Q9FepPJPX7SIpxL+3FyYzk6F0YDP4Y/k1iDbPEBZ7eg8OPCD7X/Lp2cb
+   R4usRiNUhVA6cHBkL1qBgGefeTtdFh/S6ChpmFVtvR3ILpJx2BwayiQfp
+   Qu4dqqPR8C+j4+/4r8y9AqoIwSmDWjOwKTHDNcYGNXQ41QAuUpq2bVNHD
+   SEb/wMxEvkQPV7ZkqS98W/1bGbq+upu4Z4MxvO4FxXgzPoQW8vBzYs9aa
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="334029540"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="334029540"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 08:06:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="756601564"
+X-IronPort-AV: E=Sophos;i="5.95,209,1661842800"; 
+   d="scan'208";a="756601564"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 24 Oct 2022 08:06:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1omz2S-001VKt-1i;
+        Mon, 24 Oct 2022 18:06:52 +0300
+Date:   Mon, 24 Oct 2022 18:06:52 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linux pin control <linux-gpio@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.1-1
+Message-ID: <Y1aqDPIGwYwoH+B2@smile.fi.intel.com>
+References: <Y1FgAAHJu/cVNAIC@black.fi.intel.com>
+ <CAMRc=Medt_M0h+1TdtRnu=7v1NmGePqfFBS02+zceXGLQ4OV3w@mail.gmail.com>
+ <Y1GItraKIaDqFMjG@smile.fi.intel.com>
+ <Y1GJFakunT78fXmE@smile.fi.intel.com>
+ <CACRpkdbSLbsxyCQUPaW2=W3A-0NxsGz9TFdhqExe=7RwcbNFLA@mail.gmail.com>
+ <Y1WeMf+JQVoY2AAM@smile.fi.intel.com>
+ <CACRpkdZfubwBDBrfRZV+QEU4j=1rgKu4O-QEEkMXoPZ=Y1z85Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="WWUO7I5ImHJZcyZm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220912133309.18506-1-pshete@nvidia.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdZfubwBDBrfRZV+QEU4j=1rgKu4O-QEEkMXoPZ=Y1z85Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Mon, Oct 24, 2022 at 09:16:28AM +0200, Linus Walleij wrote:
+> On Sun, Oct 23, 2022 at 10:04 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Fri, Oct 21, 2022 at 10:02:35AM +0200, Linus Walleij wrote:
+> 
+> > > Bart are you fine with pulling this as-is? (I am.)
+> >
+> > Hold on a bit, I have to rebuild a whole kernel to test if I missed something
+> > (it's already clear I missed lantiq patch, now in my branch, but obviously not
+> >  in that tag, since I called it immutable).
+> 
+> OK I hold my horses waiting for your confirmation, I expect to
+> pull the immutable branch once it is confirmed stable.
 
---WWUO7I5ImHJZcyZm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I hope I found all places under drivers/pinctrl to fix, but let's wait
+a couple of days so Linux Next and CIs may have a chance to exercise it
+a bit.
 
-On Mon, Sep 12, 2022 at 07:03:09PM +0530, Prathamesh Shete wrote:
-> This patch fixes the issue where even if pmc driver
-> status is disabled still we are invoking pmc driver
-> to process some request
+-- 
+With Best Regards,
+Andy Shevchenko
 
-s/pmc/PMC/ twice above. Also, this is slightly misleading. We're not
-"invoking" the PMC driver, but rather we're trying to look up the IRQ
-domain that the PMC driver would've registered if it had been enabled.
-So perhaps reword this to more accurately reflect that.
 
->=20
-> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
-> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
-> ---
->  drivers/gpio/gpio-tegra186.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 54d9fa7da9c1..efd508ba07a6 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -895,7 +895,7 @@ static int tegra186_gpio_probe(struct platform_device=
- *pdev)
->  		tegra186_gpio_init_route_mapping(gpio);
-> =20
->  	np =3D of_find_matching_node(NULL, tegra186_pmc_of_match);
-> -	if (np) {
-> +	if (of_device_is_available(np)) {
->  		irq->parent_domain =3D irq_find_host(np);
->  		of_node_put(np);
-
-This now leaks a reference to np if np is found but not available. So
-this should be something like:
-
-	if (np) {
-		if (of_device_is_available(np)) {
-			irq->parent_domain =3D irq_find_host(np);
-			of_node_put(np);
-
-			if (!irq->parent_domain)
-				return -EPROBE_DEFER;
-		} else {
-			of_node_put(np);
-		}
-	}
-
-or:
-
-	if (np) {
-		if (of_device_is_available(np))
-			irq->parent_domain =3D irq_find_host(np);
-
-		of_node_put(np);
-
-		if (of_device_is_available(np) && !irq->parent_domain)
-			return -EPROBE_DEFER;
-	}
-
-The former is a little nicer because it doesn't check availability
-twice.
-
-Thierry
-
---WWUO7I5ImHJZcyZm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNWmt8ACgkQ3SOs138+
-s6FgJRAAnKzSEP41yRfOaOvjtZaYVNHq7iZ+pMv4cuRTh9/5P46v0OcJyAFD6h4M
-HrRrOhhXvJO6gTwylItsVxq0JIhhxzatNRGfVnUt4JhbycWpn7gJ/hdGx9JljdIG
-E5Vd+2uD1y9ZQA+NSEJPQDJLwu6uqR9HuAnH5KB+JUvqDF4GI8W/xlOjrhOISdSH
-YYBPw1kbnZYPfjCdcu9NJR6z8gITIMmlY4WeCS29HmkFgNa2ak3gv9Nvvgx9Q+fQ
-WwGmSfT6G0QcBbVvDL9z7wugbXwKtlppomU0eGwJ61IAlMKCExoEbFEDqW1PoLYc
-a6MXMmH0bVoHvcdH13tDbLlw0T8C29WZs2ZQPpxEvNv+cVbYLJmRhQUsQrBh+6fC
-MeNsnJkoFZVf48sc9+RNi5ThjVHKCkkJ+nQJh+oXrva5gofwD+hPazbZv+Qz3pmz
-/QaGuhMFp2dM7cDcgyHYQLf+R1kujXfS/rUvUBnIOtm110VhH22RV8cBktFP5rzI
-smNqGx9UWoOKUQiSRYv2/r7mxwxUxJm9icexY02TxqVNCss0NPG7z4sGDggiJxhk
-Tg/02gPDOE9t6giIhurr/wvaR2fVcNXTkNUmVygYr/VMcW0O8Zq4AIwkgvAI1skb
-Ik0ZsL6p8LYIYdPy/tNaBPEGHaKR7JuHvxNYlEAPHhKiZtkeIC0=
-=6xUl
------END PGP SIGNATURE-----
-
---WWUO7I5ImHJZcyZm--
