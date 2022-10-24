@@ -2,33 +2,33 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C929609B70
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 09:36:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B23609BC3
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 09:44:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbiJXHgp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Oct 2022 03:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
+        id S229929AbiJXHou (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Oct 2022 03:44:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229761AbiJXHgn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 03:36:43 -0400
-Received: from mxout4.routing.net (mxout4.routing.net [IPv6:2a03:2900:1:a::9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6404B53A44;
-        Mon, 24 Oct 2022 00:36:42 -0700 (PDT)
+        with ESMTP id S230006AbiJXHo2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 03:44:28 -0400
+Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C5DF4DB3A;
+        Mon, 24 Oct 2022 00:43:57 -0700 (PDT)
 Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-        by mxout4.routing.net (Postfix) with ESMTP id 96266100617;
-        Mon, 24 Oct 2022 07:36:40 +0000 (UTC)
+        by mxout1.routing.net (Postfix) with ESMTP id 16F603FEAE;
+        Mon, 24 Oct 2022 07:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1666597000;
+        s=20200217; t=1666597432;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=Ts+p85/BqXRyImfUTVqMY6V4o9A9GbTrAg9y9bk+otQ=;
-        b=Bnzo/dMhZ3ru0VkT0cM0etoLr3plkBArLkdwePcVuOL7x6I4KeSfAl3yc/OiJghhc9NQlI
-        wIugidlFkNMwYl9F5xj4W69mBS8FhI2kJn9MwzbUg6oGKau+XTi4PUIuamUf9fDEGki6/L
-        zDrqGUMyAwGMLOesf6ueaMQku1QYuZo=
+        bh=PVFntkudDPcDUkrTjdaUD/wKnuxi9MDu9IdQDwEuaUA=;
+        b=lxo5WKqWxAHeKNpqTV3sVds4I5G5Eaq6eYEDf5hOUUpGQFjmNEkIXaHoGgqb/EU4wz5en5
+        9B180I2AsWJUqSc0ONgRXUJg+5O1oEpvhShCle0A8cE1YGDfHz8/iwHKkZlTGmxGvWEat5
+        b6CrTuy/9DDVZ5HtT8w1EKOpFBcWQ0U=
 Received: from frank-G5.. (fttx-pool-80.245.75.40.bambit.de [80.245.75.40])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id A2D534069D;
-        Mon, 24 Oct 2022 07:36:39 +0000 (UTC)
+        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 4FF9A40112;
+        Mon, 24 Oct 2022 07:43:51 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -39,13 +39,13 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: update uart/mmc bindings for MT7986 SoC
-Date:   Mon, 24 Oct 2022 09:36:34 +0200
-Message-Id: <20221024073634.6834-1-linux@fw-web.de>
+Subject: [PATCH] dt-bindings: pinctrl: update pcie/pwm/spi bindings for MT7986 SoC
+Date:   Mon, 24 Oct 2022 09:43:49 +0200
+Message-Id: <20221024074349.7777-1-linux@fw-web.de>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 8d57070a-1742-43ea-bca5-77937089cb9f
+X-Mail-ID: 4cf9fda7-e364-4d0a-b8d2-819af5223c20
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
@@ -57,58 +57,47 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Frank Wunderlich <frank-w@public-files.de>
 
-Add new splitted uart pins and emmc_51.
+Allow multiple items for pcie, pwm and spi function.
 
 Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- .../bindings/pinctrl/mediatek,mt7986-pinctrl.yaml | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ .../bindings/pinctrl/mediatek,mt7986-pinctrl.yaml    | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-index 89b8f3dd67a1..d5ab5e08badc 100644
+index d5ab5e08badc..0a7d130ef112 100644
 --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-@@ -87,6 +87,8 @@ patternProperties:
-           "wifi_led"        "led"       1, 2
-           "i2c"             "i2c"       3, 4
-           "uart1_0"         "uart"      7, 8, 9, 10
-+          "uart1_rx_tx"     "uart"      42, 43
-+          "uart1_cts_rts"   "uart"      44, 45
-           "pcie_clk"        "pcie"      9
-           "pcie_wake"       "pcie"      10
-           "spi1_0"          "spi"       11, 12, 13, 14
-@@ -98,9 +100,11 @@ patternProperties:
-           "emmc_45"         "emmc"      22, 23, 24, 25, 26, 27, 28, 29, 30,
-                                         31, 32
-           "spi1_1"          "spi"       23, 24, 25, 26
--          "uart1_2"         "uart"      29, 30, 31, 32
-+          "uart1_2_rx_tx"   "uart"      29, 30
-+          "uart1_2_cts_rts" "uart"      31, 32
-           "uart1_1"         "uart"      23, 24, 25, 26
--          "uart2_0"         "uart"      29, 30, 31, 32
-+          "uart2_0_rx_tx"   "uart"      29, 30
-+          "uart2_0_cts_rts" "uart"      31, 32
-           "spi0"            "spi"       33, 34, 35, 36
-           "spi0_wp_hold"    "spi"       37, 38
-           "uart1_3_rx_tx"   "uart"      35, 36
-@@ -157,7 +161,7 @@ patternProperties:
+@@ -201,7 +201,9 @@ patternProperties:
              then:
                properties:
                  groups:
--                  enum: [emmc, emmc_rst]
-+                  enum: [emmc, emmc_rst, emmc_51]
+-                  enum: [pcie_clk, pcie_wake, pcie_pereset]
++                  items:
++                    enum: [pcie_clk, pcie_wake, pcie_pereset]
++                  maxItems: 3
            - if:
                properties:
                  function:
-@@ -221,8 +225,9 @@ patternProperties:
+@@ -209,7 +211,9 @@ patternProperties:
              then:
                properties:
                  groups:
--                  enum: [uart1_0, uart1_1, uart1_2, uart1_3_rx_tx,
--                         uart1_3_cts_rts, uart2_0, uart2_1, uart0, uart1, uart2]
-+                  enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1, uart1_2_rx_tx, uart1_2_cts_rts,
-+                         uart1_3_rx_tx, uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts, uart2_1, uart0,
-+                         uart1, uart2]
+-                  enum: [pwm0, pwm1_0, pwm1_1]
++                  items:
++                    enum: [pwm0, pwm1_0, pwm1_1]
++                  maxItems: 2
+           - if:
+               properties:
+                 function:
+@@ -217,7 +221,9 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [spi0, spi0_wp_hold, spi1_0, spi1_1, spi1_2, spi1_3]
++                  items:
++                    enum: [spi0, spi0_wp_hold, spi1_0, spi1_1, spi1_2, spi1_3]
++                  maxItems: 2
            - if:
                properties:
                  function:
