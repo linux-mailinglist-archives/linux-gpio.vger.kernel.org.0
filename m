@@ -2,76 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4815E60ADA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 16:30:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B64A60B35A
+	for <lists+linux-gpio@lfdr.de>; Mon, 24 Oct 2022 19:05:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234156AbiJXOae (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 24 Oct 2022 10:30:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56216 "EHLO
+        id S231295AbiJXRFW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 24 Oct 2022 13:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234904AbiJXO2v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 10:28:51 -0400
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ED92D73C2;
-        Mon, 24 Oct 2022 06:02:17 -0700 (PDT)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-13b23e29e36so10999254fac.8;
-        Mon, 24 Oct 2022 06:02:16 -0700 (PDT)
+        with ESMTP id S234785AbiJXRD7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 24 Oct 2022 13:03:59 -0400
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE31E7B78B
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 08:40:01 -0700 (PDT)
+Received: by mail-qv1-f42.google.com with SMTP id x13so5243465qvn.6
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 08:40:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/Vr0nqHCGrm+b68s/C4QPay7OOdjkPPEqnfDL2I3xZ0=;
+        b=A1zile5aaiGOv1/6LYGIIS7rWZdNf/REZ+C9UBtfg9OfpCOGjXnhycbBfjdSe0JOyu
+         v5qzJjdxIPLQzNoFIOLcH8aiLZMksx3Tj6Nur9hpg9fEaWvP7WH1gT5ar8GPUQpgA5lJ
+         DioVkGo5QA/KPc7eezM0ezSfhiofM6Pb9FiueqjTZj7jQ/qNViyLM0EuJoUXoo8FQbGG
+         N7zpmFdBC9U18lnuezv9+We3fEpYv6ZvxzaOMEglGMbyGuOucIIcEoZ1vQEwbdbY0HRA
+         4C9EJiEr8dTf62+r9YQ3C5gn+n6uMmjDlqJSHPRWR60LM6ro/3Du7SUX9hoCoCevjEWv
+         qhdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+x9joGdXdBFLPPxN1p6d7/jrm+b1E7zu0ZikUl9XbM=;
-        b=kN4xIs/QEGJ+oT9qrn2OjPi/N6FcvGH6BvACP76blbVF103TXYi+7qEU5tINWQ+OJz
-         dApYzrcvxoO2ZIXOFTxb7h3JgOvX67e53Ux9I2wwMvKPIJrbpeDZZobSiNgXQhwqMaF/
-         R3ztR06WTPRqxKei/NzyOWyK9tZuNZ0Cm15uInIPmFb7tUxRSre+3lm52uo1EfezpHK9
-         o9VNCRaweqKifLKL/48NiILy3trNo3072uYGiXhEVisoQwGcZ30ghYt4hAv1vlMBiN/X
-         ltLvQXpHTYGfKkWtuOvorD19U4Zbzkwzp6qZaLG5THbYH133b9fRVRaPubb8xH2WHVbL
-         oPdg==
-X-Gm-Message-State: ACrzQf3i7XkzH7UpZj1xKGIMrADeoCGwSUDmJj0hXhqGuTa4oC2Svjr2
-        vms3XoPp+qtUCiVrBxssV68CXNLJaw==
-X-Google-Smtp-Source: AMsMyM4RB1x55W7tWXLqKMCfn9+yNGKoyP28eeDXqoWuK46CSg7FurAIxSSG6961lNUtLuCZU2W88g==
-X-Received: by 2002:a05:6870:e9a8:b0:133:223f:49a1 with SMTP id r40-20020a056870e9a800b00133223f49a1mr38235091oao.114.1666616434841;
-        Mon, 24 Oct 2022 06:00:34 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id g20-20020a056870c15400b0012796e8033dsm2716705oad.57.2022.10.24.06.00.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 06:00:34 -0700 (PDT)
-Received: (nullmailer pid 1652638 invoked by uid 1000);
-        Mon, 24 Oct 2022 13:00:35 -0000
-Date:   Mon, 24 Oct 2022 08:00:35 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-kernel@vger.kernel.org, Ben Dooks <ben-linux@fluff.org>,
-        Simtec Linux Team <linux@simtec.co.uk>,
-        Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-ide@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-pm@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-watchdog@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 00/21] ARM: s3c: clean out obsolete platforms
-Message-ID: <20221024130035.GA1645003-robh@kernel.org>
-References: <20221021202254.4142411-1-arnd@kernel.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Vr0nqHCGrm+b68s/C4QPay7OOdjkPPEqnfDL2I3xZ0=;
+        b=j2an5l1tV1GgMqgSWRy6tYqoMjrlFJJ7PdgcuHPP5G6HzDWiQkLWH2It3OxH3jfKNJ
+         VPvvnFG4qlGwBFdINJGVJGa+NW4FZl8hcjPj0xcySDsdKtjbIIterGw4uLVSJlEh/tQB
+         4hVBDdbyKJRsJeW2NUuUlThidbg18B1M+jmwCDp4TSq4GyvrYxAd7OkipXFMKp/y7nFF
+         Zl3itw+HC2BVFCgD4aa5pjJRqX5tDCJ8EqoA2nQCXOFl1kvqyjoAxXUq09ilB+FOzrSB
+         pcsItU/UGKC+NI2pku1p1mxjd8XqM5MRsV6ISQzPCctpu+2MRzqU8v0xh2+maTf9upkK
+         XCKw==
+X-Gm-Message-State: ACrzQf04tck9R9hIh0GjDQTUrgC/0eIMbYIc/vx2+XEFTgZsfTcHhgm/
+        /bKW2mTWiAPdZ1/XWhsVsX7+3o8W150cSw==
+X-Google-Smtp-Source: AMsMyM5X+kIBxudaeRFmJTdkoXGBmNzB+x8RZi8q9kq8BLojbo3cknAZE5oULo3K676hCYZUJgRcwQ==
+X-Received: by 2002:a0c:9151:0:b0:4b1:8375:46d3 with SMTP id q75-20020a0c9151000000b004b1837546d3mr28530283qvq.122.1666618142903;
+        Mon, 24 Oct 2022 06:29:02 -0700 (PDT)
+Received: from [192.168.1.8] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id cn15-20020a05622a248f00b0034305a91aaesm12586522qtb.83.2022.10.24.06.29.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Oct 2022 06:29:02 -0700 (PDT)
+Message-ID: <a7693e48-f16f-9577-8685-417f21706d1b@linaro.org>
+Date:   Mon, 24 Oct 2022 09:29:00 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221021202254.4142411-1-arnd@kernel.org>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH] pinctrl: samsung: remove variable pin
+Content-Language: en-US
+To:     Colin Ian King <colin.i.king@gmail.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221024131527.2156810-1-colin.i.king@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221024131527.2156810-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,46 +79,19 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 10:22:28PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On 24/10/2022 09:15, Colin Ian King wrote:
+> Variable pin is just being incremented and it's never used
+> anywhere else. The variable and the increment are redundant so
+> remove it.
 > 
-> The s3c24xx platform was marked as deprecated a while ago,
-> and for the s3c64xx platform, we marked all except one legacy
-> board file as unused.
-> 
-> This series removes all of those, leaving only s3c64xx support
-> for DT based boots as well as the cragg6410 board file.
-> 
-> About half of the s3c specific drivers were only used on
-> the now removed machines, so these drivers can be retired
-> as well. I can either merge the driver removal patches through
-> the soc tree along with the board file patches, or subsystem
-> maintainers can pick them up into their own trees, whichever
-> they prefer.
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/pinctrl/samsung/pinctrl-s3c24xx.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 
-[...]
+Thanks for the patch. The file is being in process of dropping (patchset
+is being reviewed), so I think we can skip all the fixes.
 
->  Documentation/arm/index.rst                   |    1 -
->  Documentation/arm/samsung-s3c24xx/cpufreq.rst |   77 -
->  .../arm/samsung-s3c24xx/eb2410itx.rst         |   59 -
->  Documentation/arm/samsung-s3c24xx/gpio.rst    |  172 --
->  Documentation/arm/samsung-s3c24xx/h1940.rst   |   41 -
->  Documentation/arm/samsung-s3c24xx/index.rst   |   20 -
->  Documentation/arm/samsung-s3c24xx/nand.rst    |   30 -
->  .../arm/samsung-s3c24xx/overview.rst          |  311 ---
->  Documentation/arm/samsung-s3c24xx/s3c2412.rst |  121 -
->  Documentation/arm/samsung-s3c24xx/s3c2413.rst |   22 -
->  .../arm/samsung-s3c24xx/smdk2440.rst          |   57 -
->  Documentation/arm/samsung-s3c24xx/suspend.rst |  137 --
->  .../arm/samsung-s3c24xx/usb-host.rst          |   91 -
->  Documentation/arm/samsung/overview.rst        |   13 -
+Best regards,
+Krzysztof
 
-What about?:
-
-Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
-Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
-Documentation/devicetree/bindings/mtd/samsung-s3c2410.txt
-Documentation/devicetree/bindings/usb/s3c2410-usb.txt
-
-Rob
