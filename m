@@ -2,120 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F11E60C4A6
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 09:03:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A4FD60C5E4
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 09:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231392AbiJYHDK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 03:03:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
+        id S230271AbiJYHz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 03:55:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231486AbiJYHDH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 03:03:07 -0400
-Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF036B517A;
-        Tue, 25 Oct 2022 00:03:03 -0700 (PDT)
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-        by mxout3.routing.net (Postfix) with ESMTP id BB7D062639;
-        Tue, 25 Oct 2022 07:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1666681381;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=jIYRiFA4WqI9vlLRtf7GZM26SSCJYVipWJkDfE5iQSY=;
-        b=CmoCacvj34Ssrs7PCs1PDzIu8ujOWIjc632MnRcroFcpU+RSxfMLbqFjnI/aYItpyKoFuA
-        HucHjd5QO6m+1gYuQu/kF6KS01XNkQ2S6JsmrLQnQC4GhqB4l5rLukLazWnB5qR9UM51UL
-        GADLSBN3ErCtnICNw3S67D6Qd7JkfnM=
-Received: from frank-G5.. (fttx-pool-217.61.152.57.bambit.de [217.61.152.57])
-        by mxbox3.masterlogin.de (Postfix) with ESMTPSA id D8D4B360037;
-        Tue, 25 Oct 2022 07:03:00 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings for MT7986 SoC
-Date:   Tue, 25 Oct 2022 09:02:55 +0200
-Message-Id: <20221025070255.14407-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229877AbiJYHz1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 03:55:27 -0400
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF5213D3E
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:55:26 -0700 (PDT)
+Received: by mail-vs1-xe32.google.com with SMTP id 1so10145789vsx.1
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:55:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Tfgipl2W32fCXV+uOlMVyMjucDz2/Aq47+N7/GJB+g=;
+        b=gvzfu2SlNrsEe6eUbxkKgtRMftuUX/oJ3dXCQyR9STHrCj0cHEd4qctfExPI2UGL9q
+         N4gzNIRjxW4oFoqHIuHpYYu0EucmkX7MxCiTExUJkqYQB+mzUICkJevhYJuVzSsk7EiG
+         jM3jojtETKhRO2+CH9gG7IvkNLbRBbofzFuC7ei159XuCRX14s9FhY8/OIbVw/vqWwX/
+         DE7BoU58B0JQYEKOfzR9btL7D4PouojaaZ7TnELLOxwHSmdPPvzLkyHUzKGGABzuAi0/
+         Ea+fhtIjeAhh+XPvUZhlNf6WJ6u7ApOT0yJil+MVWeEJ05xZ+gFQ7uxvBv2kz1fWayE7
+         JJ0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7Tfgipl2W32fCXV+uOlMVyMjucDz2/Aq47+N7/GJB+g=;
+        b=QZIX34SEJyNoee6fa7B2jAqQJ9NrnSFzROIJ2NF4kM0gPvVDGso9j9kvoCMZyJlEdU
+         SSaCpXMwyinVAmqq4E+JgduwWaMUe7pvAMlxZSm/RwF7+Lqg5kuJZ0i7/cFhBuIdndYN
+         VZQw2qgr7kfAWbcdMQyDH11vNDu15DOV2GTdWb2wuaEtSGhBlhUGdAMaEDYeSCTIwIR3
+         n0GSByk5T+j0jaaMVRh10fyE1gSf2tWSF+IsKGJQXAv3ZV/j1/ATgn9ie0MhzR+7xVyj
+         4VxuNuRana015JOR0+kfd0YSSFEIuOrnOzS3AbeB0XHIC84qhQ2HJKHrwKPR03wZyOUE
+         9tdw==
+X-Gm-Message-State: ACrzQf1nHNusORz5KyTRYT0Wpl5iX02aMxrgWbNMv8unLB2i6LIdItgU
+        U+XNWyBqclE4VtC1H1ldHOMG5JP5giZLHUTYG1b8TWWnCt0=
+X-Google-Smtp-Source: AMsMyM5zRxg+fEgQJ6V2tFDzNpDltr3+HggD/mAVQcby7T/lB+VXVlPL7gdNUGajuczP8J4JlUXyNtHE71CHhklfox0=
+X-Received: by 2002:a05:6102:5788:b0:3a6:764d:1382 with SMTP id
+ dh8-20020a056102578800b003a6764d1382mr21005774vsb.13.1666684525243; Tue, 25
+ Oct 2022 00:55:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 52361692-f7db-4a76-b884-8f2441ad5df9
+References: <20221024080828.3840438-1-jk@codeconstruct.com.au>
+In-Reply-To: <20221024080828.3840438-1-jk@codeconstruct.com.au>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 25 Oct 2022 09:55:14 +0200
+Message-ID: <CAMRc=Mf0cjP_pH=QyJbgtTVtq8P6ufUbZYVZ2SG_ibox8YMO+g@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ftgpio010: use device name for gpiochip name & label
+To:     Jeremy Kerr <jk@codeconstruct.com.au>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Mon, Oct 24, 2022 at 10:08 AM Jeremy Kerr <jk@codeconstruct.com.au> wrote:
+>
+> Currently, we use just the fixed string "FTGPIO010" as the gpiochip name
+> for ftgpio010 drivers. Because it's fixed, this means we cannot
+> distinguish multiple ftgpio010 devices present on a single system.
+>
+> This change uses the dev_name() instead, which should be unique between
+> multiple instances.
+>
+> Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
+> ---
+>  drivers/gpio/gpio-ftgpio010.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
+> index f77a965f5780..2728672ef9f8 100644
+> --- a/drivers/gpio/gpio-ftgpio010.c
+> +++ b/drivers/gpio/gpio-ftgpio010.c
+> @@ -277,7 +277,7 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
+>                 dev_err(dev, "unable to init generic GPIO\n");
+>                 goto dis_clk;
+>         }
+> -       g->gc.label = "FTGPIO010";
+> +       g->gc.label = dev_name(dev);
+>         g->gc.base = -1;
+>         g->gc.parent = dev;
+>         g->gc.owner = THIS_MODULE;
+> --
+> 2.35.1
+>
 
-Add new splitted uart pins and emmc_51
+Applied, thanks!
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-v2:
-- wrap on col 80
----
- .../pinctrl/mediatek,mt7986-pinctrl.yaml         | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-index 75766956cfad..1fe4d2550206 100644
---- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-@@ -87,6 +87,8 @@ patternProperties:
-           "wifi_led"        "led"       1, 2
-           "i2c"             "i2c"       3, 4
-           "uart1_0"         "uart"      7, 8, 9, 10
-+          "uart1_rx_tx"     "uart"      42, 43
-+          "uart1_cts_rts"   "uart"      44, 45
-           "pcie_clk"        "pcie"      9
-           "pcie_wake"       "pcie"      10
-           "spi1_0"          "spi"       11, 12, 13, 14
-@@ -98,9 +100,11 @@ patternProperties:
-           "emmc_45"         "emmc"      22, 23, 24, 25, 26, 27, 28, 29, 30,
-                                         31, 32
-           "spi1_1"          "spi"       23, 24, 25, 26
--          "uart1_2"         "uart"      29, 30, 31, 32
-+          "uart1_2_rx_tx"   "uart"      29, 30
-+          "uart1_2_cts_rts" "uart"      31, 32
-           "uart1_1"         "uart"      23, 24, 25, 26
--          "uart2_0"         "uart"      29, 30, 31, 32
-+          "uart2_0_rx_tx"   "uart"      29, 30
-+          "uart2_0_cts_rts" "uart"      31, 32
-           "spi0"            "spi"       33, 34, 35, 36
-           "spi0_wp_hold"    "spi"       37, 38
-           "uart1_3_rx_tx"   "uart"      35, 36
-@@ -157,7 +161,7 @@ patternProperties:
-             then:
-               properties:
-                 groups:
--                  enum: [emmc, emmc_rst]
-+                  enum: [emmc, emmc_rst, emmc_51]
-           - if:
-               properties:
-                 function:
-@@ -227,8 +231,10 @@ patternProperties:
-             then:
-               properties:
-                 groups:
--                  enum: [uart1_0, uart1_1, uart1_2, uart1_3_rx_tx,
--                         uart1_3_cts_rts, uart2_0, uart2_1, uart0, uart1, uart2]
-+                  enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
-+                         uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
-+                         uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
-+                         uart2_1, uart0, uart1, uart2]
-           - if:
-               properties:
-                 function:
--- 
-2.34.1
-
+Bart
