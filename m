@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4FD60C5E4
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 09:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB29E60C5EF
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 09:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230271AbiJYHz2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 03:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59826 "EHLO
+        id S231483AbiJYH7O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 03:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229877AbiJYHz1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 03:55:27 -0400
-Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FF5213D3E
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:55:26 -0700 (PDT)
-Received: by mail-vs1-xe32.google.com with SMTP id 1so10145789vsx.1
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:55:26 -0700 (PDT)
+        with ESMTP id S229455AbiJYH7N (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 03:59:13 -0400
+Received: from mail-ua1-x92f.google.com (mail-ua1-x92f.google.com [IPv6:2607:f8b0:4864:20::92f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CC2169133
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:59:12 -0700 (PDT)
+Received: by mail-ua1-x92f.google.com with SMTP id c31so1271101uae.10
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 00:59:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Tfgipl2W32fCXV+uOlMVyMjucDz2/Aq47+N7/GJB+g=;
-        b=gvzfu2SlNrsEe6eUbxkKgtRMftuUX/oJ3dXCQyR9STHrCj0cHEd4qctfExPI2UGL9q
-         N4gzNIRjxW4oFoqHIuHpYYu0EucmkX7MxCiTExUJkqYQB+mzUICkJevhYJuVzSsk7EiG
-         jM3jojtETKhRO2+CH9gG7IvkNLbRBbofzFuC7ei159XuCRX14s9FhY8/OIbVw/vqWwX/
-         DE7BoU58B0JQYEKOfzR9btL7D4PouojaaZ7TnELLOxwHSmdPPvzLkyHUzKGGABzuAi0/
-         Ea+fhtIjeAhh+XPvUZhlNf6WJ6u7ApOT0yJil+MVWeEJ05xZ+gFQ7uxvBv2kz1fWayE7
-         JJ0w==
+        bh=POiVnTiHc9X7N8hVY0cMXv0XUMTtBCC7disU+JLan4o=;
+        b=sS4vNS0n1ObcoSX1KrgOv7kqsWOP8qqKvvcpDhyYdEp8fLnwQk2BxRvLpU7gzmmSc+
+         hZx14gwuF+DjP2BfMkdMPQC9FctQS/E4a4QpvWHtf7zSpLZRzE0bgkdYb+BPSRUfimrO
+         0Lnwf9q7gRvDNwoB7G6D6Zd2To+IEwG4bskYtTweJe7o8faaXQ+eVuzMFrApoZnomtVi
+         EcDbaMXi+5Erhwfz8VraQR1rt8UqUFqVWNtWn2hEqkkAC6ORUA+YGkJL29PpDNCaen49
+         CDc8Snlr9b+9GgPoqvgvdbTni7Z370zMJGbzZOV52Ej5GC3M+aMywQzU1pWXKfRl71TB
+         6kdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7Tfgipl2W32fCXV+uOlMVyMjucDz2/Aq47+N7/GJB+g=;
-        b=QZIX34SEJyNoee6fa7B2jAqQJ9NrnSFzROIJ2NF4kM0gPvVDGso9j9kvoCMZyJlEdU
-         SSaCpXMwyinVAmqq4E+JgduwWaMUe7pvAMlxZSm/RwF7+Lqg5kuJZ0i7/cFhBuIdndYN
-         VZQw2qgr7kfAWbcdMQyDH11vNDu15DOV2GTdWb2wuaEtSGhBlhUGdAMaEDYeSCTIwIR3
-         n0GSByk5T+j0jaaMVRh10fyE1gSf2tWSF+IsKGJQXAv3ZV/j1/ATgn9ie0MhzR+7xVyj
-         4VxuNuRana015JOR0+kfd0YSSFEIuOrnOzS3AbeB0XHIC84qhQ2HJKHrwKPR03wZyOUE
-         9tdw==
-X-Gm-Message-State: ACrzQf1nHNusORz5KyTRYT0Wpl5iX02aMxrgWbNMv8unLB2i6LIdItgU
-        U+XNWyBqclE4VtC1H1ldHOMG5JP5giZLHUTYG1b8TWWnCt0=
-X-Google-Smtp-Source: AMsMyM5zRxg+fEgQJ6V2tFDzNpDltr3+HggD/mAVQcby7T/lB+VXVlPL7gdNUGajuczP8J4JlUXyNtHE71CHhklfox0=
-X-Received: by 2002:a05:6102:5788:b0:3a6:764d:1382 with SMTP id
- dh8-20020a056102578800b003a6764d1382mr21005774vsb.13.1666684525243; Tue, 25
- Oct 2022 00:55:25 -0700 (PDT)
+        bh=POiVnTiHc9X7N8hVY0cMXv0XUMTtBCC7disU+JLan4o=;
+        b=2sLC+CuhO4WJlZggoLA6g4DZt727ABOX9MlSpnanNYUAGn/xfeZs7Cu2l5KXs3cqdU
+         aiJK8S53aPgL4mVoOR4v4A7yLoV1SHb7QbdEiv1iv/d7XeSVzUYUWFlodVof+U3pdLF/
+         tJA4R2E3YW3gS5fyCzg69HAjiCArh2vdQnuW2BIqZ+duYOGqSsEV2LwwkZKYOikBPwW2
+         MG7DKbERUn86ZLDuWkv0APuB9Hl73rw+nBeXEshOLRRNA3sNXOGi09IQn39JH39QPkqq
+         gBjFXKT7e0r2Rl6PsqPNPR3okTM4utIkOY6kYx7Q47aN2IsRDPQdE+LVADLlficIcmc/
+         6oqA==
+X-Gm-Message-State: ACrzQf0YhYhHJLpL4z4/6pFKd56n3TI5c+utOjxxpEayBF5TkhF2hl11
+        65LFx7y6hVYFLDntLrPkkuOO2oDXD5lQxIHUgiiX5g==
+X-Google-Smtp-Source: AMsMyM5WwZ0JIsztOelDmz8zAJdIn11gPe0cVi3leN/2y6zZsXO+tB7iaGPpdgiVrkADj0KBOSHP8A6BaA12AQ+FvzA=
+X-Received: by 2002:ab0:2155:0:b0:3e2:bdc:cfa5 with SMTP id
+ t21-20020ab02155000000b003e20bdccfa5mr21311272ual.119.1666684751678; Tue, 25
+ Oct 2022 00:59:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221024080828.3840438-1-jk@codeconstruct.com.au>
-In-Reply-To: <20221024080828.3840438-1-jk@codeconstruct.com.au>
+References: <cover.1663519546.git.william.gray@linaro.org> <80c7fa6ca523b8a62f70aae8758fdf89771b742e.1663519546.git.william.gray@linaro.org>
+In-Reply-To: <80c7fa6ca523b8a62f70aae8758fdf89771b742e.1663519546.git.william.gray@linaro.org>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 25 Oct 2022 09:55:14 +0200
-Message-ID: <CAMRc=Mf0cjP_pH=QyJbgtTVtq8P6ufUbZYVZ2SG_ibox8YMO+g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: ftgpio010: use device name for gpiochip name & label
-To:     Jeremy Kerr <jk@codeconstruct.com.au>
-Cc:     linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Oct 2022 09:59:00 +0200
+Message-ID: <CAMRc=Mc-8W3gW-sXu1NwJ6+QqnbgEDH8Cwf56U3RRmrfZSLfVw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: idio-16: Introduce the ACCES IDIO-16 GPIO
+ library module
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     linus.walleij@linaro.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -65,37 +66,21 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 10:08 AM Jeremy Kerr <jk@codeconstruct.com.au> wrote:
+On Sun, Sep 18, 2022 at 9:54 PM William Breathitt Gray
+<william.gray@linaro.org> wrote:
 >
-> Currently, we use just the fixed string "FTGPIO010" as the gpiochip name
-> for ftgpio010 drivers. Because it's fixed, this means we cannot
-> distinguish multiple ftgpio010 devices present on a single system.
+> Exposes consumer library functions to facilitate communication with
+> devices within the ACCES IDIO-16 family such as the 104-IDIO-16 and
+> the PCI-IDIO-16.
 >
-> This change uses the dev_name() instead, which should be unique between
-> multiple instances.
+> A CONFIG_GPIO_IDIO_16 Kconfig option is introduced by this patch.
+> Modules wanting access to these idio-16 library functions should select
+> this Kconfig option and import the GPIO_IDIO_16 symbol namespace.
 >
-> Signed-off-by: Jeremy Kerr <jk@codeconstruct.com.au>
+> Cc: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
 > ---
->  drivers/gpio/gpio-ftgpio010.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-ftgpio010.c b/drivers/gpio/gpio-ftgpio010.c
-> index f77a965f5780..2728672ef9f8 100644
-> --- a/drivers/gpio/gpio-ftgpio010.c
-> +++ b/drivers/gpio/gpio-ftgpio010.c
-> @@ -277,7 +277,7 @@ static int ftgpio_gpio_probe(struct platform_device *pdev)
->                 dev_err(dev, "unable to init generic GPIO\n");
->                 goto dis_clk;
->         }
-> -       g->gc.label = "FTGPIO010";
-> +       g->gc.label = dev_name(dev);
->         g->gc.base = -1;
->         g->gc.parent = dev;
->         g->gc.owner = THIS_MODULE;
-> --
-> 2.35.1
->
 
-Applied, thanks!
+Queued, thanks!
 
 Bart
