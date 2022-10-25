@@ -2,60 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FC1E60D0DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 17:41:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B40F60D0F6
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 17:48:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbiJYPle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 11:41:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
+        id S230179AbiJYPsP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 11:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231946AbiJYPld (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 11:41:33 -0400
-Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F252CCB9
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:41:31 -0700 (PDT)
-Received: by mail-vk1-xa34.google.com with SMTP id g16so2757603vkl.11
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:41:31 -0700 (PDT)
+        with ESMTP id S231837AbiJYPsO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 11:48:14 -0400
+Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA46C149DF9
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:48:13 -0700 (PDT)
+Received: by mail-vs1-xe2f.google.com with SMTP id d187so11395310vsd.6
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o2pOMA/SurU2JJjiuSZcW9YRE04P1aTpEG8F6C20YQ0=;
-        b=ZzQdGWos0adIaWCOACSx6Jt+Rmu6WWsPokyUGobba/RdilQ5CpzoWIgX2cUnkeyi04
-         my4Tv9o3t9JQ8JtguQShKYAE7udGZxyJ28UH7nyxZznVD3yae3urnRfYTiOfRMLZ8Gmd
-         AcvKThmE+uAAoxvRNtL0gkZ7hf68/2tcTm/O6103smwsdqDYNLmkwyzSqaa97ytjmerd
-         p+yzRD9z4gBfRV9DyTf22o2fhoQloz2bm51r1lr3D6Z6oWKqLjD4EYusra08IWqC78T9
-         qF+ofd6VRHXB/7o3E1zDK3rGSbO5bGj+UoKGEHegilaIjIvdPEhEvTC4U5p3NO1MI5H0
-         jnpQ==
+        bh=DRklvTSahTsKtUv05Ip6fTYXC/GiTk1gTx2Lpsmla4g=;
+        b=et3zIUNtsRafG/x6jhertmWMocfgIbsDsG6SuZQVTS+0lhlV/dEk5ju0yz2311v3y1
+         bmZ7KQJC3YJAR8XlimIvrthFbhbMojRQi7AbML3RsjoAp0YFtyyMwFezdGd7q6KV+S8W
+         CpH7GmHRHFtWO93cznf8+PigdrXNDehDYEEAZW4P1jXHLW0lkKrwkdzRQEA9xqbYSJUu
+         mnYa39ce/5RC9Nj76FpJBOfQuL9QXpIgtjEAUQIehxThxEilqiqvU4CsSuFOwhoCU4ce
+         nzM2XnwceHXWO3/NgOT8d+paexguBqwHWk1RASH/3j2eGgXTmt716TquLKJaWjMwo9uY
+         0J0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=o2pOMA/SurU2JJjiuSZcW9YRE04P1aTpEG8F6C20YQ0=;
-        b=kvLzpb1i0x1B4vP8exNjKR3Hvc3YYviGvvF9bJt2KsZQaygG9iP8SklkuD+8s2Bz6R
-         XE3otVla1MgKjizRS1aKK5Dlhntro3j9jvdXAcfjJD9H6yVFuE8jSGqohftIf/GNSkfL
-         RkqzaAvt9dNBWy4Q+GixjKMiboVmhnCNv4RQ2mB+xWNLNSqtOjJWJvFItaHVqLiCs5zI
-         WpADMN5R5MaCQvIoSVajdwhSI0SR/ewZ69VFUz3B+1fCpLgcnCIcgVTBIvofUrlNPWXp
-         dAbPTiHejce2md7hNtfJisHY70vAscf9NlOaG1umUjHvPbbEJa51WoN7d09AMp/DK2p0
-         55+w==
-X-Gm-Message-State: ACrzQf0bSHwgps9qC15C1tI7j0LHP76jAa3CyTIazMzKvb1BO2gbWaEL
-        Z+pFGiF0woO5GmYiSeVjdEkgQSmJ8JzWzya1lmJh5g==
-X-Google-Smtp-Source: AMsMyM6OSNmdK116cgiqamT2HPTH9aWb6vEoyFq2agbqFxvj0olwj+j7hmmRO7rmqj8ZuEgSgsdGhXf5ClCkaeGZmUA=
-X-Received: by 2002:a1f:d583:0:b0:3aa:9112:570f with SMTP id
- m125-20020a1fd583000000b003aa9112570fmr21071662vkg.3.1666712490282; Tue, 25
- Oct 2022 08:41:30 -0700 (PDT)
+        bh=DRklvTSahTsKtUv05Ip6fTYXC/GiTk1gTx2Lpsmla4g=;
+        b=C2uQ3WmjhoSgCEOw+GU+3lc3rADZGoyYvTVUu14h7lMIU5mgkc5w/VAjyIyWgus6jH
+         OysGn+5qc41alqsAksdEd3YkFvbzpGAknVFLoVdcf7hotCmOYYsNU4s42+hlYeJ9ayU8
+         yWElz8aOriUb3lOx7OMqVlN3Vv4+ptj9nyPRcnfDySn/aWJGDGZYEsg4ldyG2uLuFViD
+         Dw1+xAPltGTZoab5HmWKPwx2KJzrsiPphTSxpulxJWoMqlWPorXWxv8WO8EYvXj5lex1
+         pY2OMBf5kLWOH1UwrJDwlqYN1gk9ABm1Va+WLeVveSFbicZl+Hcg6wcc0YHKxLuihdX5
+         LM2w==
+X-Gm-Message-State: ACrzQf3zl4r+qWR/vemvv0V+a573tdUuCSQIo9bA5KlweKcIzx12aLNx
+        62uH6ok5jZU+EUNJKk1LUmRmUZzhxDJbiBHmh6PG4Q==
+X-Google-Smtp-Source: AMsMyM6BXcmeI5Sp/cpJEziPSJp66D3AaV6wCyDtZq/noXvDUWVjfO9d4hV13GHO3gCutl/S7eeBIMtMWepWhj4tduA=
+X-Received: by 2002:a67:ac0c:0:b0:3a9:e899:3b9b with SMTP id
+ v12-20020a67ac0c000000b003a9e8993b9bmr16130296vse.9.1666712892973; Tue, 25
+ Oct 2022 08:48:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
+References: <20220902-get_gpiod_from_child-remove-v1-0-1e47125df20f@gmail.com>
+ <YyzYKmsjKflqT1xZ@google.com> <Y1aCgJihNIqExUR2@google.com>
+In-Reply-To: <Y1aCgJihNIqExUR2@google.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 25 Oct 2022 17:41:19 +0200
-Message-ID: <CAMRc=MctArjkzcLY23wKUhUBc9kqy5k1ZWuY61OykofRHGQq5g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: exar: Allow IO port access
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Qingtao Cao <qingtao.cao.au@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 25 Oct 2022 17:48:02 +0200
+Message-ID: <CAMRc=McvJ7AvhKdP7cv8K1+rzMf8-ptg2SnU+XOAwERhRx1Eyw@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Get rid of devm_fwnode_get_[index_]gpiod_from_child()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
+        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -66,34 +69,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 7:05 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Oct 24, 2022 at 2:18 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> It's possible that PCI device can provide an IO port resource for
-> the device. regmap MMIO currently uses MMIO by default. With an
-> additional flag we enable support for IO port accesses.
+> On Thu, Sep 22, 2022 at 02:48:26PM -0700, Dmitry Torokhov wrote:
+> > Hi Pavel, Marek,
+> >
+> > On Fri, Sep 02, 2022 at 05:55:24PM -0700, Dmitry Torokhov wrote:
+> > > This drops the last uses of devm_fwnode_get_[index_]gpiod_from_child()
+> > > from the tree and drops the stubs implementing this API on top of
+> > > devm_fwnode_gpiod_get_index().
+> > >
+> > > Note that the bulk of users were converted in 2019, the couple of LED
+> > > drivers are all that have remained.
+> > >
+> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > >
+> > > ---
+> > > Dmitry Torokhov (3):
+> > >       leds: gpio: switch to using devm_fwnode_gpiod_get()
+> > >       leds: lgm-sso: switch to using devm_fwnode_gpiod_get()
+> > >       gpiolib: remove devm_fwnode_get_[index_]gpiod_from_child()
+> > >
+> > >  drivers/leds/blink/leds-lgm-sso.c |  5 ++---
+> > >  drivers/leds/leds-gpio.c          |  5 ++---
+> > >  include/linux/gpio/consumer.h     | 21 ---------------------
+> > >  3 files changed, 4 insertions(+), 27 deletions(-)
+> > > ---
+> > > base-commit: 7fd22855300e693668c3397771b3a2b3948f827a
+> > > change-id: 20220902-get_gpiod_from_child-remove-a62638849e91
+> > >
+> >
+> > Could you please consider picking this up for 6.1? Or would you be OK
+> > with this going through other tree (GPIO maybe)?
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpio-exar.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-> index 482f678c893e..df1bdaae441c 100644
-> --- a/drivers/gpio/gpio-exar.c
-> +++ b/drivers/gpio/gpio-exar.c
-> @@ -141,6 +141,7 @@ static const struct regmap_config exar_regmap_config = {
->         .name           = "exar-gpio",
->         .reg_bits       = 16,
->         .val_bits       = 8,
-> +       .io_port        = true,
->  };
->
->  static int gpio_exar_probe(struct platform_device *pdev)
-> --
-> 2.35.1
+> *ping* Could this go through GPIO tree? Dropping this API helps with
+> some outstanding work that I have...
 >
 
-Applied, thanks!
+Sure! I'll let it wait for another week - it would be great to get an
+ack from Pavel - but in case of no response I'll take it through my
+tree.
 
-Bartosz
+Bart
