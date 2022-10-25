@@ -2,94 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 611DD60C890
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 11:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0B9B60CA34
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 12:37:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231548AbiJYJlU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 05:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
+        id S231808AbiJYKhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 06:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230516AbiJYJlE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 05:41:04 -0400
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 859378FD4D
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 02:39:52 -0700 (PDT)
-Received: by mail-vs1-xe2e.google.com with SMTP id x66so10372006vsb.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 02:39:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fvzvFrxkZV5P4Rxxxs1xdYcVHP1vUjFiEqvZB3LuHYc=;
-        b=EWFYiPtiuAwxNryPnRCRdIyflpxGealCpHT6V1v1VS5B2nqrufxbLRVuz9HSoqUktX
-         PqmO3m4pEjHTLdGWfP5h0AAyyU5sdckU9Tg5iUoYD5Qx4fTa9/rs8qR+qd5hWt+PBudZ
-         3ByNvJ4UWNaldAsahYhisDbIJPzvtUbzLc4ZLg45uu3tZqAO8TABAvjqCp7I6okC133S
-         95EuZFviywanN+sDyivhu50+b+WsacxCtHhxnkgQaGSPz0wDrJ0/QedjGfvIG3nqyt8M
-         BBmFxpQcsZJdUl4SMzO8ZMVTqZNk173vIZhRKJIWqKNvANZIhQAS9lHwuDx0Du9PhKlU
-         YO+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fvzvFrxkZV5P4Rxxxs1xdYcVHP1vUjFiEqvZB3LuHYc=;
-        b=LhJGgiK/q4XfZkx2wuKBh0SdVel2pjZihBSeOn7RhhX3r9XViFP0iSsRebhzoohuZ5
-         5sAVszSjPF3+W8Gxv0lrbYfMKdeKBbigMBdFeqp6/KL228ztpB2Kw0UwnhWQvBXdATkP
-         H7tqJ1H/wdq4WJ5xh4PAzg1nAE6neupXAdivU7Z8XneJFl+yvF4I17JOd2DoDAXoiAIN
-         SEVmEQbcLgnGhN7Gh/GqelryjYCSzHfSZDbJcnrHQiRutAH419Bcy7odPRzUsKI1p4DG
-         pSHSHgMOAxaUssYXFAotc2Iq/YdKGmCe1evD4Bn9wggbyB3GK/x2fcaLrEU+cGag4dKh
-         vGzQ==
-X-Gm-Message-State: ACrzQf1UvTptR8Cbq48PTLGkp13D59RKTdH673iOncfJUKA/YO3kf0gK
-        M5pYAR6NLSsU/Lbc1lwBykut/yEmSPeal2zyiSGzMg==
-X-Google-Smtp-Source: AMsMyM4L+MECpm34SLXLViLyxzAqpAQKmvDH+EK7kDBSeMqrsQMfJ06efXpTiInyduawbLa3Usu+nUlNEKJAlo4Oh8Y=
-X-Received: by 2002:a05:6102:5788:b0:3a6:764d:1382 with SMTP id
- dh8-20020a056102578800b003a6764d1382mr21135112vsb.13.1666690791574; Tue, 25
- Oct 2022 02:39:51 -0700 (PDT)
+        with ESMTP id S232183AbiJYKhN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 06:37:13 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8EFA4B90
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 03:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666694231; x=1698230231;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aZAqewCHTw2HNaPtziPFkWNgPY7+W7a851cfRpyLFC0=;
+  b=i8cLmx7qGYGm73DP45WWLWHsCEcnzQJvDAmyj3b2ZnhVPb4tUrPJuZs5
+   BdmOiDSJ86bRGdiTPMTWPP9FNwLeaI42quhnO9qdcIjRwq5Rs4Nv7fPWL
+   EKAJ31SAi74QvGfDWHfcEfls4H7oWawx3gg0/lxgOdnQqomORnwMdUGAb
+   AMmvt3OQLpBZaZNPUlEYhmBDEvlQbvt3hLKhbW7wU/6AXXpUzuKvf8viR
+   1Jf8yNIhPpZIMmJoIZ8Du/NC/xreAeD2fVHs4C3Ej+nNrjs5JI2sxVB3A
+   L0Ca0AYv/pyjwMepBvLL6qpOjRKyeOUHVYmpZ0Jjria4+40FcF5sioKWp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="369709854"
+X-IronPort-AV: E=Sophos;i="5.95,211,1661842800"; 
+   d="scan'208";a="369709854"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 03:37:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="609527941"
+X-IronPort-AV: E=Sophos;i="5.95,211,1661842800"; 
+   d="scan'208";a="609527941"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 25 Oct 2022 03:37:08 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1onHIx-0006BQ-2b;
+        Tue, 25 Oct 2022 10:37:07 +0000
+Date:   Tue, 25 Oct 2022 18:36:35 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ dbbd909eeb26037fc38a4d29d6d94f7c39631a5e
+Message-ID: <6357bc33.DsKLUpnv7s5nAUZH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20221007114647.2723457-1-s.hauer@pengutronix.de>
-In-Reply-To: <20221007114647.2723457-1-s.hauer@pengutronix.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 25 Oct 2022 11:39:40 +0200
-Message-ID: <CAMRc=MfqvNvq7RLbWivZj7Q4fBBLEAWFHU0Wq+u-086ehK-jLA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] gpio: Add gpio-latch driver
-To:     Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        kernel@pengutronix.de, Serge Semin <fancer.lancer@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 7, 2022 at 1:47 PM Sascha Hauer <s.hauer@pengutronix.de> wrote:
->
-> This series includes the changes requested by Serge Semin for v4.
->
-> Sascha
->
-> Sascha Hauer (2):
->   gpio: Add gpio latch driver
->   dt-bindings: gpio: Add gpio-latch binding document
->
->  .../devicetree/bindings/gpio/gpio-latch.yaml  |  94 ++++++++
->  drivers/gpio/Kconfig                          |   6 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-latch.c                     | 220 ++++++++++++++++++
->  4 files changed, 321 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-latch.yaml
->  create mode 100644 drivers/gpio/gpio-latch.c
->
-> --
-> 2.30.2
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: dbbd909eeb26037fc38a4d29d6d94f7c39631a5e  pinctrl: qcom: sdm670: change sdm670_reserved_gpios to static
 
-I reversed the order of the patches, fixed the strange formatting of
-struct of_device_id and queued the series.
+elapsed time: 726m
 
-Bartosz
+configs tested: 92
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allmodconfig
+m68k                             allyesconfig
+arc                                 defconfig
+alpha                               defconfig
+i386                                defconfig
+ia64                             allmodconfig
+i386                 randconfig-a011-20221024
+x86_64                              defconfig
+s390                                defconfig
+i386                 randconfig-a013-20221024
+s390                             allmodconfig
+i386                 randconfig-a012-20221024
+i386                 randconfig-a016-20221024
+i386                 randconfig-a015-20221024
+x86_64                               rhel-8.3
+i386                 randconfig-a014-20221024
+x86_64                           allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-kvm
+powerpc                           allnoconfig
+s390                             allyesconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                             allyesconfig
+sh                               allmodconfig
+x86_64                         rhel-8.3-kunit
+arm                                 defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arc                  randconfig-r043-20221024
+riscv                randconfig-r042-20221024
+arc                  randconfig-r043-20221023
+s390                 randconfig-r044-20221024
+mips                     decstation_defconfig
+arm                           h5000_defconfig
+arm                       multi_v4t_defconfig
+sh                           se7712_defconfig
+arm                        mini2440_defconfig
+powerpc                      chrp32_defconfig
+sh                          lboxre2_defconfig
+x86_64               randconfig-a014-20221024
+x86_64               randconfig-a013-20221024
+x86_64               randconfig-a012-20221024
+x86_64               randconfig-a011-20221024
+x86_64               randconfig-a015-20221024
+x86_64               randconfig-a016-20221024
+m68k                           sun3_defconfig
+sh                        dreamcast_defconfig
+sh                          urquell_defconfig
+x86_64               randconfig-k001-20221024
+arc                  randconfig-r043-20221025
+sparc                               defconfig
+arm                      footbridge_defconfig
+sh                          landisk_defconfig
+riscv                    nommu_k210_defconfig
+openrisc                            defconfig
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+powerpc                   motionpro_defconfig
+csky                             alldefconfig
+powerpc                 mpc837x_rdb_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+
+clang tested configs:
+x86_64               randconfig-a001-20221024
+x86_64               randconfig-a005-20221024
+i386                 randconfig-a001-20221024
+x86_64               randconfig-a003-20221024
+i386                 randconfig-a002-20221024
+x86_64               randconfig-a004-20221024
+i386                 randconfig-a005-20221024
+x86_64               randconfig-a002-20221024
+i386                 randconfig-a003-20221024
+i386                 randconfig-a004-20221024
+x86_64               randconfig-a006-20221024
+hexagon              randconfig-r045-20221023
+hexagon              randconfig-r041-20221024
+riscv                randconfig-r042-20221023
+hexagon              randconfig-r045-20221024
+i386                 randconfig-a006-20221024
+s390                 randconfig-r044-20221023
+hexagon              randconfig-r041-20221023
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
