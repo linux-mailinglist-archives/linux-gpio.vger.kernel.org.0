@@ -2,215 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E75F60C37D
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 07:51:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF08760C3EC
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 08:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229910AbiJYFvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 01:51:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
+        id S229515AbiJYGmp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 02:42:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230337AbiJYFvG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 01:51:06 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CFCB5D0D8
-        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 22:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666677063; x=1698213063;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LwyUhAbbIGMvj4jkVVtvAIGf6AuB+Layp2twgqyyJA8=;
-  b=mYL3effJtiDxE2KLUWqD+jWByi4isVEfox4rYVrUx7VX7YP6sjYVYXUJ
-   Ti3Rw6smx0jQMxvEy4IQZ+1jfbYQclUfd7oVHDr0qWcJCNscLM/PEzRZw
-   j27B9ctTHJFemAZuSitZG+APPhNxAMFLn+6olpg5afkoQdBPyeJmxMQ0c
-   6WGmzuoskI8nmFz+jwAy8PsiTc9pJkuUyR/08Sg7dNR/TbnWkUAt525tl
-   s7mIRtmtkMr0u0Ld5irL0N6HzFwNcpD8tjaLWt5UpTy1Yepa/rvKmDRPZ
-   EbhwlNpk/Uhwdmo/O9jcsx3aWdPZkq4+6tagHRtihyCZhos5PUOoSRd1x
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="294996276"
-X-IronPort-AV: E=Sophos;i="5.95,211,1661842800"; 
-   d="scan'208";a="294996276"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Oct 2022 22:51:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="960693630"
-X-IronPort-AV: E=Sophos;i="5.95,211,1661842800"; 
-   d="scan'208";a="960693630"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Oct 2022 22:51:01 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1onCq4-0005y0-1f;
-        Tue, 25 Oct 2022 05:51:00 +0000
-Date:   Tue, 25 Oct 2022 13:50:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:gpio-descriptors-media] BUILD SUCCESS
- 8f57d00df1ea3a865f55a2e498170d429c0be6f5
-Message-ID: <6357790c.ktXS38WxedYd5+Lf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229678AbiJYGmp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 02:42:45 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D8A12B372
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 23:42:43 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id e4so7058465pfl.2
+        for <linux-gpio@vger.kernel.org>; Mon, 24 Oct 2022 23:42:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=9aGMzGKPqBEVfIrLOGqtLUQbc8wTlRZwKKRv3h/uh1Y=;
+        b=ipEm13RKu+FU/EZ9zy/204g6kwYWZqCP+48bQzuo+m6iaFz38Jj9pnTLuf+UpD2auX
+         LvuloFnQB+utXMBDD4/Pmbeli11nmOyIfqA3BHzGPBmwV8LrmrMHLuTXnU3WKeMLWiuZ
+         M93kzoCUVM+1KmJlJHcyqOqJq7L732N7Trkmf30YrjH0VbI6WzeBPK/0kifMNvjfgOZV
+         wqIvqlIFqBARzi6djwf66XppkYOsfR9U+kghXq0zFlTxaTPI1vMAA1o/aKxx/uccEXlA
+         YBbaxpUixOJ9o3oH0elh5FfZKrXwBZ3qeK+ADoTtCrFxg9zhuh0lbHoG5n3FZZbALSwi
+         LLbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9aGMzGKPqBEVfIrLOGqtLUQbc8wTlRZwKKRv3h/uh1Y=;
+        b=WUH8tZQijLZPQDEPAkBN9ULeyD16rjXcR5jqz8Y7QZfinLHH2uD6e+Qru6xNmXgT/J
+         CfFWLH+fIlmxtetCqeY3FUQ+njTuO2m+5h2UFlqh0ZU632cEUjihTfjku9KU4wsLrDrI
+         WWu4RyPD+mMhIjI4NvLN0935xOrkup5MmSBwZNVZhMv6g3JDSykqQRKk63fhLjcrBCAv
+         FoXLhDY0hWea/JYQBhZ7Y6QSbREX6MnIiNw6PBuudfyR+L1HqBfLf8Bo/rH2YmjIrlhl
+         bvwxWudFayVnMF0GoF0QO0BthTZdTvSd5Jj54GU7bZoldS1eiZDnnz4lMsSCNPIouRpY
+         SYvw==
+X-Gm-Message-State: ACrzQf1u21B2pREnrRnlTwCqXAInY7jtZtzL+rXXIaaGPCCph0c8WU9i
+        ixoXmj9HD357sBo2fENskbcizg==
+X-Google-Smtp-Source: AMsMyM7XKTnPZLk1ltK1txuOieZm4DyuzW13v8kEpz0kVAZOF3xAM8cofabFFIkokDYzjl/1V8L0+g==
+X-Received: by 2002:a63:1748:0:b0:46f:18be:4880 with SMTP id 8-20020a631748000000b0046f18be4880mr5444319pgx.128.1666680162496;
+        Mon, 24 Oct 2022 23:42:42 -0700 (PDT)
+Received: from localhost ([122.172.87.26])
+        by smtp.gmail.com with ESMTPSA id p6-20020a17090a748600b002130c269b6fsm799623pjk.1.2022.10.24.23.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 23:42:41 -0700 (PDT)
+Date:   Tue, 25 Oct 2022 12:12:39 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [PATCH V7 0/8] libgpiod: Add Rust bindings
+Message-ID: <20221025064239.6dazljljxlprhqus@vireshk-i7>
+References: <cover.1665744170.git.viresh.kumar@linaro.org>
+ <CANiq72m_9RK7viLpaREMGiMLuWs9m1oy9N78ok1d7uzC+18zNg@mail.gmail.com>
+ <F4hN01T_BkoMFY7LNhQlmQPrXGv3a2byhEuDLleJfpWlfF98Dopa2FPrl4JDEoER8y7bN41KMkmWqM50YAIBK0BowT_9skmLKY8gsqYEJBc=@protonmail.com>
+ <20221021093911.vj5todjdfqptdy7d@vireshk-i7>
+ <YsZTLXUUjsBT-SzPWsI4ppoDBT_lGn0yfhF2r-5wfqcYxxeWWcdL2yIUcMMBmMTB-TjVUZkSqpMsvWNKTcSwoun5wzT4bbPi-ijZXUt8HWM=@protonmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YsZTLXUUjsBT-SzPWsI4ppoDBT_lGn0yfhF2r-5wfqcYxxeWWcdL2yIUcMMBmMTB-TjVUZkSqpMsvWNKTcSwoun5wzT4bbPi-ijZXUt8HWM=@protonmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git gpio-descriptors-media
-branch HEAD: 8f57d00df1ea3a865f55a2e498170d429c0be6f5  media: s5k4ecgx: Switch to GPIO descriptors
+On 21-10-22, 14:34, Björn Roy Baron wrote:
+> > impl<'b> Event<'b> {
+> > 
+> > /// Get an event stored in the buffer.
+> > - pub(crate) fn new(buffer: &'b Buffer, index: usize) -> Result<Self> {
+> > 
+> > + pub(crate) fn new(buffer: &'b Buffer, index: usize) -> Result<Event<'b>> {
+> 
+> This looks good to me.
+ 
+> > +impl<'e, 'b> Event<'e> {
+> > 
+> > + pub fn event_clone(event: &Event<'b>) -> Result<Event<'e>>
+> > 
+> > + where
+> > + 'e: 'b,
+> 
+> Using `Event<'b>` on both sides should work fine. `Event` is
+> covariant in it's lifetime parameter, so `Event<'b>` can be turned
+> into `Event<'e>` with `'e` being a shorter lifetime than `'b`. What
+> you wrote here is not incorrect, so if you prefer keeping it this
+> way that is fine with me.
 
-elapsed time: 886m
+That doesn't let the cloned event to live past read_edge_events().
 
-configs tested: 133
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-x86_64                          rhel-8.3-func
-alpha                               defconfig
-x86_64                    rhel-8.3-kselftests
-s390                             allmodconfig
-s390                                defconfig
-s390                             allyesconfig
-arc                  randconfig-r043-20221024
-riscv                randconfig-r042-20221024
-s390                 randconfig-r044-20221024
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-i386                                defconfig
-ia64                             allmodconfig
-i386                 randconfig-a011-20221024
-i386                 randconfig-a013-20221024
-i386                 randconfig-a012-20221024
-x86_64                           rhel-8.3-kvm
-i386                 randconfig-a014-20221024
-i386                 randconfig-a016-20221024
-x86_64                         rhel-8.3-kunit
-i386                 randconfig-a015-20221024
-x86_64                           rhel-8.3-syz
-arm                                 defconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-i386                             allyesconfig
-m68k                             allmodconfig
-x86_64               randconfig-k001-20221024
-arm64                            allyesconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-arm                              allyesconfig
-mips                             allyesconfig
-sh                               allmodconfig
-i386                          randconfig-c001
-powerpc                          allmodconfig
-x86_64               randconfig-a014-20221024
-x86_64               randconfig-a015-20221024
-x86_64               randconfig-a016-20221024
-x86_64               randconfig-a013-20221024
-x86_64               randconfig-a012-20221024
-x86_64               randconfig-a011-20221024
-powerpc                   motionpro_defconfig
-csky                             alldefconfig
-powerpc                 mpc837x_rdb_defconfig
-openrisc                            defconfig
-m68k                            q40_defconfig
-m68k                        m5307c3_defconfig
-powerpc                      cm5200_defconfig
-arm                       omap2plus_defconfig
-powerpc                 mpc85xx_cds_defconfig
-arm                        spear6xx_defconfig
-powerpc                      tqm8xx_defconfig
-powerpc                 mpc834x_mds_defconfig
-mips                            gpr_defconfig
-sh                        sh7763rdp_defconfig
-ia64                             allyesconfig
-sh                             shx3_defconfig
-arc                      axs103_smp_defconfig
-mips                        vocore2_defconfig
-sh                         ap325rxa_defconfig
-ia64                      gensparse_defconfig
-arm                          pxa910_defconfig
-i386                 randconfig-c001-20221024
-arc                  randconfig-r043-20221023
-parisc                generic-64bit_defconfig
-sh                           se7712_defconfig
-arm                        mini2440_defconfig
-powerpc                      chrp32_defconfig
-sh                          lboxre2_defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arc                              alldefconfig
-sh                        dreamcast_defconfig
-sh                          polaris_defconfig
-riscv                    nommu_k210_defconfig
-xtensa                    xip_kc705_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-m68k                       m5249evb_defconfig
-arm                       aspeed_g5_defconfig
-powerpc                  storcenter_defconfig
-powerpc                 canyonlands_defconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-powerpc                     tqm8555_defconfig
-mips                     decstation_defconfig
-arm                           h5000_defconfig
-arm                       multi_v4t_defconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20221024
-hexagon              randconfig-r045-20221024
-x86_64               randconfig-a001-20221024
-x86_64               randconfig-a005-20221024
-x86_64               randconfig-a003-20221024
-x86_64               randconfig-a002-20221024
-x86_64               randconfig-a006-20221024
-x86_64               randconfig-a004-20221024
-i386                 randconfig-a004-20221024
-i386                 randconfig-a006-20221024
-i386                 randconfig-a002-20221024
-i386                 randconfig-a003-20221024
-i386                 randconfig-a001-20221024
-i386                 randconfig-a005-20221024
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-s390                 randconfig-r044-20221023
-hexagon              randconfig-r041-20221023
-riscv                randconfig-r042-20221023
-hexagon              randconfig-r045-20221023
-mips                     loongson2k_defconfig
-arm                          moxart_defconfig
-arm                         s3c2410_defconfig
-i386                          randconfig-a011
-i386                          randconfig-a013
-i386                          randconfig-a015
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
+error[E0502]: cannot borrow `buffer` as mutable because it is also borrowed as immutable
+  --> libgpiod/examples/gpio_events.rs:70:50
+   |
+64 |             let event = buffer.event(0)?;
+   |                         --------------- immutable borrow occurs here
+...
+70 |             let count = request.read_edge_events(&mut buffer)?;
+   |                                                  ^^^^^^^^^^^ mutable borrow occurs here
+...
+86 |         }
+   |         - immutable borrow might be used here, when `cloned_event` is dropped and runs the `Drop` code for type `libgpiod::request::Event`
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+viresh
