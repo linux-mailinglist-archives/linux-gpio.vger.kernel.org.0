@@ -2,66 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B40F60D0F6
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 17:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7995F60D143
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 18:06:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbiJYPsP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 11:48:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
+        id S232323AbiJYQGb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 12:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231837AbiJYPsO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 11:48:14 -0400
-Received: from mail-vs1-xe2f.google.com (mail-vs1-xe2f.google.com [IPv6:2607:f8b0:4864:20::e2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA46C149DF9
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:48:13 -0700 (PDT)
-Received: by mail-vs1-xe2f.google.com with SMTP id d187so11395310vsd.6
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:48:13 -0700 (PDT)
+        with ESMTP id S231523AbiJYQGa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 12:06:30 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121A7182C62
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 09:06:29 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id cr19so7868579qtb.0
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 09:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DRklvTSahTsKtUv05Ip6fTYXC/GiTk1gTx2Lpsmla4g=;
-        b=et3zIUNtsRafG/x6jhertmWMocfgIbsDsG6SuZQVTS+0lhlV/dEk5ju0yz2311v3y1
-         bmZ7KQJC3YJAR8XlimIvrthFbhbMojRQi7AbML3RsjoAp0YFtyyMwFezdGd7q6KV+S8W
-         CpH7GmHRHFtWO93cznf8+PigdrXNDehDYEEAZW4P1jXHLW0lkKrwkdzRQEA9xqbYSJUu
-         mnYa39ce/5RC9Nj76FpJBOfQuL9QXpIgtjEAUQIehxThxEilqiqvU4CsSuFOwhoCU4ce
-         nzM2XnwceHXWO3/NgOT8d+paexguBqwHWk1RASH/3j2eGgXTmt716TquLKJaWjMwo9uY
-         0J0A==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YdYRsJGfP0o692+sENJJoDb7VImvlyzZSXWPyoNbrBE=;
+        b=E5dsJHEWS0QV/kLIRQIT/MTMWU34Rbba8D+H3idaiQhx1qjgKSP2GsQOVpgp3Xq6A9
+         2Qzzf5/vgfDEfv3LSDtU5B/hCM4p0ge2B3h1C3GeQZEhywLr78cgiPIIgQY4xPfTbWOH
+         ceSuvKVUxtN4EbfQQiXk6npaq61LIVNwO6V9+IlUC4IooD7Z3/Goe7Y/7tTtMUd4z1FH
+         QkV6xRLU3ChNnye5LzU14ot5Kf3cqzEus8ux+oTFDFesZIdX8QrfZD6Yxf8AsR++rtuL
+         Nb120S4I2OdJeEYa1suup6xMua9BsUx0lOG1T1+2r5QFpmjf57O7hBfQf2i0Ok5t07CM
+         V4rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DRklvTSahTsKtUv05Ip6fTYXC/GiTk1gTx2Lpsmla4g=;
-        b=C2uQ3WmjhoSgCEOw+GU+3lc3rADZGoyYvTVUu14h7lMIU5mgkc5w/VAjyIyWgus6jH
-         OysGn+5qc41alqsAksdEd3YkFvbzpGAknVFLoVdcf7hotCmOYYsNU4s42+hlYeJ9ayU8
-         yWElz8aOriUb3lOx7OMqVlN3Vv4+ptj9nyPRcnfDySn/aWJGDGZYEsg4ldyG2uLuFViD
-         Dw1+xAPltGTZoab5HmWKPwx2KJzrsiPphTSxpulxJWoMqlWPorXWxv8WO8EYvXj5lex1
-         pY2OMBf5kLWOH1UwrJDwlqYN1gk9ABm1Va+WLeVveSFbicZl+Hcg6wcc0YHKxLuihdX5
-         LM2w==
-X-Gm-Message-State: ACrzQf3zl4r+qWR/vemvv0V+a573tdUuCSQIo9bA5KlweKcIzx12aLNx
-        62uH6ok5jZU+EUNJKk1LUmRmUZzhxDJbiBHmh6PG4Q==
-X-Google-Smtp-Source: AMsMyM6BXcmeI5Sp/cpJEziPSJp66D3AaV6wCyDtZq/noXvDUWVjfO9d4hV13GHO3gCutl/S7eeBIMtMWepWhj4tduA=
-X-Received: by 2002:a67:ac0c:0:b0:3a9:e899:3b9b with SMTP id
- v12-20020a67ac0c000000b003a9e8993b9bmr16130296vse.9.1666712892973; Tue, 25
- Oct 2022 08:48:12 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YdYRsJGfP0o692+sENJJoDb7VImvlyzZSXWPyoNbrBE=;
+        b=fEMd+4IARjYWIZPqvPtCgYgOtap2aj9CXLeIcxDNUHpqIMd566zcLyTa/NFnnJNp5V
+         Hl0PXY2pUxP9kq+4BLIJneBEPLQlQQoFl007N+zlWb/1Ftpv1SeQWYA4voqeQoKkqMVa
+         ONMB03dDe02uIfVKbBKlsrDbYcmbvRX+TwzTQ/aohR8sR9eVWFs+ocX1dUMjKBfzwS+A
+         f6ZFSTWKltp/PlAlu5NYbb6HMoIhrOduNKK12rimA9oC5hw4R6T2q42z/b7nJTCwEyQN
+         +9EJx0OwrbHUV+SkeNN1S8jDeIe5GG0LTlsgruMG2EmTFtg5OAQCRADzvocSQLEKalvu
+         0VUQ==
+X-Gm-Message-State: ACrzQf04aN53tykL+o9q/ctTy/FnKEdsswduxp6w95dLebA4dHHAeb3j
+        /okYIYGLkhoTSxJrHca2c0ElLw==
+X-Google-Smtp-Source: AMsMyM6ZGC4n3kePbJpSDHf8KfIYUGV5TulBZH5aW+O9SAvn5G03fp+CFlFKq01U8uo63pNSOGO3cA==
+X-Received: by 2002:ac8:5e13:0:b0:39d:c27b:b6a7 with SMTP id h19-20020ac85e13000000b0039dc27bb6a7mr19234333qtx.183.1666713988186;
+        Tue, 25 Oct 2022 09:06:28 -0700 (PDT)
+Received: from [192.168.1.11] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id f12-20020a05620a280c00b006ec51f95e97sm2260454qkp.67.2022.10.25.09.06.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Oct 2022 09:06:27 -0700 (PDT)
+Message-ID: <18e982cd-6dd9-71e9-331d-6f4078235c8f@linaro.org>
+Date:   Tue, 25 Oct 2022 12:06:25 -0400
 MIME-Version: 1.0
-References: <20220902-get_gpiod_from_child-remove-v1-0-1e47125df20f@gmail.com>
- <YyzYKmsjKflqT1xZ@google.com> <Y1aCgJihNIqExUR2@google.com>
-In-Reply-To: <Y1aCgJihNIqExUR2@google.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 25 Oct 2022 17:48:02 +0200
-Message-ID: <CAMRc=McvJ7AvhKdP7cv8K1+rzMf8-ptg2SnU+XOAwERhRx1Eyw@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Get rid of devm_fwnode_get_[index_]gpiod_from_child()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v3 2/2] dt-bindings: pinctrl: add loongson2 pinctrl
+Content-Language: en-US
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        zhanghongchen <zhanghongchen@loongson.cn>
+References: <20221024014209.5327-1-zhuyinbo@loongson.cn>
+ <20221024014209.5327-2-zhuyinbo@loongson.cn>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221024014209.5327-2-zhuyinbo@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,46 +79,108 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 2:18 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Thu, Sep 22, 2022 at 02:48:26PM -0700, Dmitry Torokhov wrote:
-> > Hi Pavel, Marek,
-> >
-> > On Fri, Sep 02, 2022 at 05:55:24PM -0700, Dmitry Torokhov wrote:
-> > > This drops the last uses of devm_fwnode_get_[index_]gpiod_from_child()
-> > > from the tree and drops the stubs implementing this API on top of
-> > > devm_fwnode_gpiod_get_index().
-> > >
-> > > Note that the bulk of users were converted in 2019, the couple of LED
-> > > drivers are all that have remained.
-> > >
-> > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > >
-> > > ---
-> > > Dmitry Torokhov (3):
-> > >       leds: gpio: switch to using devm_fwnode_gpiod_get()
-> > >       leds: lgm-sso: switch to using devm_fwnode_gpiod_get()
-> > >       gpiolib: remove devm_fwnode_get_[index_]gpiod_from_child()
-> > >
-> > >  drivers/leds/blink/leds-lgm-sso.c |  5 ++---
-> > >  drivers/leds/leds-gpio.c          |  5 ++---
-> > >  include/linux/gpio/consumer.h     | 21 ---------------------
-> > >  3 files changed, 4 insertions(+), 27 deletions(-)
-> > > ---
-> > > base-commit: 7fd22855300e693668c3397771b3a2b3948f827a
-> > > change-id: 20220902-get_gpiod_from_child-remove-a62638849e91
-> > >
-> >
-> > Could you please consider picking this up for 6.1? Or would you be OK
-> > with this going through other tree (GPIO maybe)?
->
-> *ping* Could this go through GPIO tree? Dropping this API helps with
-> some outstanding work that I have...
->
+On 23/10/2022 21:42, Yinbo Zhu wrote:
+> Add the loongson2 pinctrl binding with DT schema format using
+> json-schema.
+> 
+> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> ---
+> Change in v3:
+> 		1. Drop the quotes in "pinctrl.yaml#".
+> 		2. Remove the items in function node.
+> 		3. Add requird node for "group" and "function" in properties.
+> 
+>  .../pinctrl/loongson,ls2k-pinctrl.yaml        | 129 ++++++++++++++++++
+>  MAINTAINERS                                   |   1 +
+>  2 files changed, 130 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..6284359986de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Loongson2 SoC Pinctrl Controller
+> +
+> +maintainers:
+> +  - zhanghongchen <zhanghongchen@loongson.cn>
+> +  - Yinbo Zhu <zhuyinbo@loongson.cn>
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: loongson,ls2k-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      'pinmux$':
+> +        type: object
+> +        description: node for pinctrl.
+> +        $ref: pinmux-node.yaml#
+> +
+> +        unevaluatedProperties: false
+> +
+> +        properties:
+> +          groups:
+> +            description:
+> +              One or more groups of pins to mux to a certain function
+> +            items:
+> +              enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
+> +                     nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
+> +                     dvo0]
+> +          function:
+> +            description:
+> +              The function that a group of pins is muxed to
+> +            enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
+> +                   nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
+> +                   dvo0]
+> +
+> +        dependencies:
+> +          groups: [function]
+> +          function: [groups]
 
-Sure! I'll let it wait for another week - it would be great to get an
-ack from Pavel - but in case of no response I'll take it through my
-tree.
+Since you added them as required, drop dependencies.
+> +
+> +        required:
+> +          - groups
+> +          - function
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    pctrl: pinctrl@1fe00420 {
+> +        compatible = "loongson,ls2k-pinctrl";
+> +        reg = <0x1fe00420 0x18>;
+> +        sdio_pins_default: sdio-pins {
+> +            sdio-pinmux {
+> +                groups ="sdio";
+> +                function ="sdio";
 
-Bart
+Missing spaces after '='. Applies in other places as well.
+
+
+Best regards,
+Krzysztof
+
