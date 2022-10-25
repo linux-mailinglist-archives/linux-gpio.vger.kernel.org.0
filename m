@@ -2,79 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A382E60CFAE
-	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 16:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FC1E60D0DE
+	for <lists+linux-gpio@lfdr.de>; Tue, 25 Oct 2022 17:41:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231749AbiJYO4m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 25 Oct 2022 10:56:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
+        id S232580AbiJYPle (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 25 Oct 2022 11:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231833AbiJYO4j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 10:56:39 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D1D19B66B
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 07:56:37 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id f8so8217117qkg.3
-        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 07:56:37 -0700 (PDT)
+        with ESMTP id S231946AbiJYPld (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 25 Oct 2022 11:41:33 -0400
+Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F252CCB9
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:41:31 -0700 (PDT)
+Received: by mail-vk1-xa34.google.com with SMTP id g16so2757603vkl.11
+        for <linux-gpio@vger.kernel.org>; Tue, 25 Oct 2022 08:41:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uUiubakIlF1DpxdqyZ7Sj+SDXQ/dw5Cd208ltlbQ02A=;
-        b=m6Ls5iooVS3Fnkf/3NW2w8jTlWMzIYAuv5F4dmXAkmLpai7RaFRizUY3fHggCFdwl5
-         wNKIh8SJ1QFKkm16gP3LAOZv1jhIFM8VOthJwtKYUj7u+hfiqqacrmyK3J3nv7WWy67n
-         nk6SDPJT+ZuvjH/PZNgh4RiUElV6wa2daF+/6EZ1QRgvBMlRUDER9PjT4b0cF+DQ5Cn2
-         h5/CsJRP/W42czQnDTXMBNCxCYztGtpidL+0kI1HLoBjopI6atnNBovzKnl73RsthZSq
-         /ERMjBDo3+OcPDjN+jNYe3P8+tJ362nDh0TLjkUGsQAYRvN+ulX0V1R4C+8hEGXJ2Fdy
-         +ynw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o2pOMA/SurU2JJjiuSZcW9YRE04P1aTpEG8F6C20YQ0=;
+        b=ZzQdGWos0adIaWCOACSx6Jt+Rmu6WWsPokyUGobba/RdilQ5CpzoWIgX2cUnkeyi04
+         my4Tv9o3t9JQ8JtguQShKYAE7udGZxyJ28UH7nyxZznVD3yae3urnRfYTiOfRMLZ8Gmd
+         AcvKThmE+uAAoxvRNtL0gkZ7hf68/2tcTm/O6103smwsdqDYNLmkwyzSqaa97ytjmerd
+         p+yzRD9z4gBfRV9DyTf22o2fhoQloz2bm51r1lr3D6Z6oWKqLjD4EYusra08IWqC78T9
+         qF+ofd6VRHXB/7o3E1zDK3rGSbO5bGj+UoKGEHegilaIjIvdPEhEvTC4U5p3NO1MI5H0
+         jnpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uUiubakIlF1DpxdqyZ7Sj+SDXQ/dw5Cd208ltlbQ02A=;
-        b=gpmFbBEfBP966e3qP+u308BMUXQrWy0fH6aIAQA9hiGF7I3uqki4FTUEwMs1Vt4cvX
-         ZfQgOxtW7fPUkNsbRX43l1EQyTGkKBmJmChS1y9O/nMaMT6HJS6zlPiQ0nxJERHVwz6b
-         qrOjcnKD32XyIO7nUJH8BYuIi9ik2MQa/iMVmHeSrPpJJGS+STQFAZDZ404kPpQts0ej
-         tTmjX/8mGVymI7dk/R04/ZMbDu+HrwNmSFTSFt0mlcNOKcHp+m5gH28YWhCMoenLrM6z
-         UJJL0OQDraa0GrIZYpu/toyZUk9i8unPYt3exI+kUD7KppISBaGV+p1ok/Mp58VUeRmN
-         QQfg==
-X-Gm-Message-State: ACrzQf3DJqjy0zfV51tTaow8md7iOXo/emvuiGRHTqHwaVIlE8A/3390
-        gMOCW0Yfx1wVk13n5iuU4bg3BA==
-X-Google-Smtp-Source: AMsMyM40J8qEW/jyC6caiIqv2XzBMoKkNM1NJBwLdGrCnRdc8istSwcNfzTfcYq3K9r0J522tKA3dg==
-X-Received: by 2002:a05:620a:4514:b0:6ef:e65:bc77 with SMTP id t20-20020a05620a451400b006ef0e65bc77mr18909789qkp.644.1666709796970;
-        Tue, 25 Oct 2022 07:56:36 -0700 (PDT)
-Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id r11-20020a05620a298b00b006bba46e5eeasm2304609qkp.37.2022.10.25.07.56.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Oct 2022 07:56:35 -0700 (PDT)
-Message-ID: <cd2e3ae3-6a30-f6cd-fbbb-9c5c6071fb9b@linaro.org>
-Date:   Tue, 25 Oct 2022 10:56:33 -0400
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o2pOMA/SurU2JJjiuSZcW9YRE04P1aTpEG8F6C20YQ0=;
+        b=kvLzpb1i0x1B4vP8exNjKR3Hvc3YYviGvvF9bJt2KsZQaygG9iP8SklkuD+8s2Bz6R
+         XE3otVla1MgKjizRS1aKK5Dlhntro3j9jvdXAcfjJD9H6yVFuE8jSGqohftIf/GNSkfL
+         RkqzaAvt9dNBWy4Q+GixjKMiboVmhnCNv4RQ2mB+xWNLNSqtOjJWJvFItaHVqLiCs5zI
+         WpADMN5R5MaCQvIoSVajdwhSI0SR/ewZ69VFUz3B+1fCpLgcnCIcgVTBIvofUrlNPWXp
+         dAbPTiHejce2md7hNtfJisHY70vAscf9NlOaG1umUjHvPbbEJa51WoN7d09AMp/DK2p0
+         55+w==
+X-Gm-Message-State: ACrzQf0bSHwgps9qC15C1tI7j0LHP76jAa3CyTIazMzKvb1BO2gbWaEL
+        Z+pFGiF0woO5GmYiSeVjdEkgQSmJ8JzWzya1lmJh5g==
+X-Google-Smtp-Source: AMsMyM6OSNmdK116cgiqamT2HPTH9aWb6vEoyFq2agbqFxvj0olwj+j7hmmRO7rmqj8ZuEgSgsdGhXf5ClCkaeGZmUA=
+X-Received: by 2002:a1f:d583:0:b0:3aa:9112:570f with SMTP id
+ m125-20020a1fd583000000b003aa9112570fmr21071662vkg.3.1666712490282; Tue, 25
+ Oct 2022 08:41:30 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH] dt-bindings: pinctrl: update pcie/pwm/spi bindings for
- MT7986 SoC
-Content-Language: en-US
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20221024074349.7777-1-linux@fw-web.de>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221024074349.7777-1-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+References: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221017170600.88480-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 25 Oct 2022 17:41:19 +0200
+Message-ID: <CAMRc=MctArjkzcLY23wKUhUBc9kqy5k1ZWuY61OykofRHGQq5g@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: exar: Allow IO port access
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Qingtao Cao <qingtao.cao.au@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,16 +66,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24/10/2022 03:43, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
-> 
-> Allow multiple items for pcie, pwm and spi function.
-> 
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+On Mon, Oct 17, 2022 at 7:05 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> It's possible that PCI device can provide an IO port resource for
+> the device. regmap MMIO currently uses MMIO by default. With an
+> additional flag we enable support for IO port accesses.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-exar.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+> index 482f678c893e..df1bdaae441c 100644
+> --- a/drivers/gpio/gpio-exar.c
+> +++ b/drivers/gpio/gpio-exar.c
+> @@ -141,6 +141,7 @@ static const struct regmap_config exar_regmap_config = {
+>         .name           = "exar-gpio",
+>         .reg_bits       = 16,
+>         .val_bits       = 8,
+> +       .io_port        = true,
+>  };
+>
+>  static int gpio_exar_probe(struct platform_device *pdev)
+> --
+> 2.35.1
+>
 
+Applied, thanks!
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+Bartosz
