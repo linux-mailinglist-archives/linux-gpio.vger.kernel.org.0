@@ -2,50 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5BCE60DF6E
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:22:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F48060DF74
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:24:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230025AbiJZLWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 07:22:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38130 "EHLO
+        id S231706AbiJZLYJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 07:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231706AbiJZLWn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:22:43 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80083.outbound.protection.outlook.com [40.107.8.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD11CC8220
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 04:22:42 -0700 (PDT)
+        with ESMTP id S233406AbiJZLYG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:24:06 -0400
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2076.outbound.protection.outlook.com [40.107.247.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C007CABD6
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 04:24:05 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cNSkBbH+Ly/hTMCMa0GrXe1HSlbouUPDlcJvtSevL5j+vQXwHAdXKxO3Xarnn94d6kRZnWmGpMbcXjXVgD9J3hUBqlz3LSXMhXUKTuz8bHVU2HU5+MQcsJRLTM03WNdBp1wgbD59sRQnH7OHaMrPtzzGF+rjGECU7qmqNyCKn2WisEgjHlVc25KoEZf1WRA/BKy7AEyFQyrBae5qNMrRxCqhWeZQAnPdDEYTopyuovy1X9YELe9H1w68RnOdAvgS4S23e1oP2PIyrh9BkGeTGO2K+WngbiembAaItPgaYR4lxayxfcwde6T/oc95aWTJnCfAnRB4BFIzkuNOhi5EHg==
+ b=jpC6PddhwRUgw+a8M9tK7vOf6E545RR87OuSL4KyvwyY1JgdEAuQGXGuW/+EZvhEOjtimfYElGnqM1UI+Zc7YHsXU+nAghgubTKiBGk62drHVLNr9PZPtTqKXlVkAJg2xob05KHpgvm9aMyblqESwIEmJBhJdmClxJ2+QWgBC7EI3ONDqavx2z+Gqyn1ZHvarU1mv9l4kUhgRy75nGIOJKVNmz5CDxr3NJ7NqJFuiyrGYCHoAsS2VCWxy2tM3WH8U3inZJAyq128Vl8RCfB6+6fvbTNrC6ybYFmlPpIhsMccCtL4zvhfg/GB0U/PNQkdtwTuSuVH3w1BhLEfnfYaaQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2mJzuCmw6nf0NLzONA14V+iPRjD5j3F2vAjuS7rT2as=;
- b=kxOo6TNycOZMMT+aUzb5x+JNi/2ryt8XfrFWKvmLvxWLr3SRJsJbWb+ZzgaUtQ0Dy3r83rFJDMYrizrV0tRsVelEu5lcx8zafXFxRBfMYiuiugA00gT7pDOA7X44GToA0aSKrmPe81iqkwW04SZIeQIwXakazzMoFb1NIIx3p1EdlfzsYqw3msueSoEX/wwDwVDmblZV8D3WUdPCOMm1OtPZRKf0tUY361oywKr2mBurDKlF5TF++POTNAnMAxnPEN2CLY9goz9JT0Ub/blY6yKPJQeTcFU4wiCjTzYB6QebgWlLxoRM8eMX6vlJNk6pbfDVLUw5dbkYYRU0aZvUeA==
+ bh=WzvUhLQuo9SVLbZjUHcPJhS2osetlu4Q+7dfGpLvdx8=;
+ b=Na5lZ1mSpEaZLl+JWMHauCU4pYV9XLKeS6gr05pW5TiHgpb7uDatMiHOaVH+b8iNs/EAWalR7LW4WZxg6qQV+wC5M+8kUyV47vJZjpzyiRXu73iB6/K8W2OuySBELW3Aj+TAVlVy+K77UpVLVk1ucd3h2KKYGRQO7qP++fnFAqUcY+M9pbpqzsaMhsxxjvfn2O3WTHu5xw/q9jhW3a4ho0o3B3gdj4SFIunyQQx2YblVvZysZCykf/lm3aU9dueVnwzElojVWUpkEgexV4ZS/WbIIQCZixsbNaAPQoPhg0vuCykFIXL/cT1sMcG0LlJFcUlgRu7t0kVwtcNBojcelg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
  dkim=pass header.d=eilabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2mJzuCmw6nf0NLzONA14V+iPRjD5j3F2vAjuS7rT2as=;
- b=JQQHnq4XUhc1vxOVXHGMaCDZ9l7XHe8CK2r6C85gI+kYNnFqQsr+19SAEc9NsZmyruxLq2ilAWO1lbCitRLr0WRk4nrlDNruN543egXuNWR9od+HRGGAOXNkjQBVRo7LjUhb5n5/i0TZp3SFtBJ8YnHuuxS0mEQNOmzzGjD77m8=
+ bh=WzvUhLQuo9SVLbZjUHcPJhS2osetlu4Q+7dfGpLvdx8=;
+ b=wnlKJGImw9Q1bge7ZVwJCd9xcHSfPh6WgjWMOySCfSOsefbVDr4YK3oo8wcKz/k/H4XOig1CObJJb+axcrCAuQEeWynmSOIH6cgjCqqWuY0oPFU1mf4D1uaB5bdOTy0yTHHAKQbdCGtvKyhGin7rTsXUmHUY01P2wZxfOJkDXa0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=eilabs.com;
 Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
  by PR3P194MB1700.EURP194.PROD.OUTLOOK.COM (2603:10a6:102:17b::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Wed, 26 Oct
- 2022 11:22:40 +0000
+ 2022 11:24:02 +0000
 Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  ([fe80::b164:96e5:86ce:3b9f]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  ([fe80::b164:96e5:86ce:3b9f%7]) with mapi id 15.20.5746.027; Wed, 26 Oct 2022
- 11:22:40 +0000
-Message-ID: <a0b1d922-0bb6-91ec-9b86-b9dc46afe244@eilabs.com>
-Date:   Wed, 26 Oct 2022 13:22:39 +0200
+ 11:24:00 +0000
+Message-ID: <edd3f359-effb-0951-f75f-b03ebb8b7b29@eilabs.com>
+Date:   Wed, 26 Oct 2022 13:23:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: [PATCH v2 3/6] gpio: pca953x: Add helper function to check if chip
- has interrupts
+Subject: [PATCH v2 4/6] gpio: pca953x: Generalize interrupt mask register
+ handling
 Content-Language: en-US
 From:   =?UTF-8?Q?Levente_R=c3=a9v=c3=a9sz?= <levente.revesz@eilabs.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -61,66 +61,66 @@ References: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
 In-Reply-To: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1PR0302CA0003.eurprd03.prod.outlook.com
- (2603:10a6:800:e9::13) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+X-ClientProxiedBy: VI1PR0601CA0029.eurprd06.prod.outlook.com
+ (2603:10a6:800:1e::39) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  (2603:10a6:800:147::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|PR3P194MB1700:EE_
-X-MS-Office365-Filtering-Correlation-Id: 01af3a85-0f61-4e4a-9cb9-08dab74464ce
+X-MS-Office365-Filtering-Correlation-Id: 93eac9d8-6a67-414d-5af0-08dab744947a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /Pzv74x/OykCHQ/BB9SDFpPh08N+Cbuywffwdf4tmUKISSIrkb1bsvj0B89FBsw4H4P1571oSzHquuhmL0uK+OC07YtgMAPKAWWRcQvJPUVd7tUaWjs96Bzlv1lb7N7BrYFeN1rj5KAaoQ6ppE54En1snBbt1scjGJhed8qqVHzXlE0iHToDK/uvuM6XSsN0MA9PoEVDtSOA/50vmV9q1Fbm31l32RC86OXb5qouK9BstMiOwub1GItfdwcLHBFfcGx84x+WDQNALYwRL8OKe5jRGIzf4BYEQll2e2kMbBHga0DuaaRuktrCTChJ44b8/1Tgz7cbFpOkU9ExYPhFfYYUIAYCcjXTrz9k6ItaLDaBcumzj/WCaZIYzIFBZAakHeEkedBS2iTlGYcFc+ffky6I5+VTBax2PGQc4d3/NCcyV+270CYHeqTqkrFtXFE2lvO8gpvJcw/I23/w9EOC1e/52Q1do9f7oExDdcLXlXm6DtlYecJonp+57ZnrNw6m8YLmb0uxRZNwWVzCy2IkJxGngUJdkQAf3obpc/8cyZ31dm9ybqbc+VSATFB9KBHbM08EI5pB415Rja/vpKE/0oWr0bAjddjBVho9EjE4I9MgAnMAf15K3XLEFytqU4YpNbl8pZX3RZWoH0c7rvFj3sD7BV2LLw+5ZhVJqBgpSRg+WTCCRcLSYGfpdQZBud11txRulMwVfLKdMqRo3Kn86MM+yQ1KjaSe6ZSkfE+/31Ag2W4MLUHVarIZv4+dlgj/iTOJckYLRXWismC2/XFk1Wx8c46TaZRyK2G59kJ6RiQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(39830400003)(136003)(346002)(376002)(451199015)(31686004)(478600001)(31696002)(83380400001)(6486002)(86362001)(186003)(66574015)(66556008)(316002)(8676002)(66476007)(66946007)(26005)(6506007)(36756003)(6512007)(7416002)(41300700001)(4326008)(110136005)(5660300002)(8936002)(38100700002)(2906002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: cZ+I5UIXKCKhqetKmiUHizFzo6ewetP8IeykakfbUcAkI8dH2xfFUV+DRbA1xKmJJcKJ4D7EjoZiL5yMYYEYt0TTiHXun0MIrZHY0MHw0f5fjH0HMTw+rJ8kJ/8TR1BKsB+mETieL6b2rrHcphAbvIE7wRbZE8GbH2jhDt6uz/xZIpRb2xUQYLhIAs1N3Tl3nsHP1OzIuUIqi+VKGTLvDvFBHoPiIGtW3WA1OtovyLHSmVBR/zFHDJhuFPjdXUXzaXUpZjp8FfAakRvO47jxNjDEq+xTsl4475gzQ7qBKK+FYF28Cq0BjYTEuuOjrw9sCjg9MrBV3T97EzPbdo+hsLFC5jGu/AQYc4r2onOYMNwbiuF2UrvMuSlhcYwno5IzjJWo7qaTnVW7RWCzpW7D3Uk98sdceBz/wtWe3XIDJubq8qwnHL5YquLMVkTpU6sMVE2iFRtKt84DCdFSxGk6ijW8Sn9q0hyjYpfemxx6WMSl94AONoOt6WLyXUeZp/Dwytezy2GjX5UfGQm6rbqVfFvKrr990vBVtomFxjUZ/d41JRMLQO9GAVemWnmdHTaMc7rwONP0EndS3MoCp5x8+eBQF+xkC+6H6HMPVsMYIH74yxt5kEBEd+WpHoYOxEcKvuUrqH6mII+v8cdQL7HMNe29FY2iQdcVQ/yl6u6P82Y3AphygzbWR1tQbSpAH+0YnNEKJneK4p5b9Ak9wm72ZQRybrkV9fPXmbOOPXhQJIyuHfnQvICyqkGaPIHxk0x5ObPqa7Hsx1NOKnCchm6D0JxOgCIA/YkVT28OJhFhBUc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(39840400004)(136003)(346002)(376002)(451199015)(31686004)(478600001)(31696002)(83380400001)(6486002)(86362001)(186003)(66556008)(316002)(8676002)(66476007)(66946007)(26005)(6506007)(36756003)(6512007)(7416002)(41300700001)(4326008)(110136005)(5660300002)(8936002)(38100700002)(2906002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eUJYNzFsOHNpcC8zbFVRditMaFpjVVBuR0tVMnduNnI3diswNDFHcGNzdFoz?=
- =?utf-8?B?VVJOMzQ1eXpQSXh3M0kvaHNRa0RITE83bVVqWStONzQweXgvU1Nyem8rVnA1?=
- =?utf-8?B?ZHNyVHdGdDViU2dyVWNkUkN3WUE0Skg4ck5BT09YOTltUDI2TzNFSG5DL0Qw?=
- =?utf-8?B?TDM4NklvZng4eHlvTGlTRTZLSXlpSmNqZ3hPWFJRRW5TNDJZK2J4RWt3NFcx?=
- =?utf-8?B?U2QxelgvNG42TWpkYWRiVUs2aWdGMzNkcWU1cVdMZlJoVXV3N3FKdzA3S2pN?=
- =?utf-8?B?M3lCbDk3NFFkbTlsSDUzcndqWXBSL1Q2VUgvOHJ6WTNBbktCYS9zOHRCVHBt?=
- =?utf-8?B?dVR1KzBDcXIrQ2NOK09udUVmVE9NRkVvbFM0cWhrNTdLc3FkcWY0Tk1tMURX?=
- =?utf-8?B?NVMveEJUQTk5MkhXbHVrTWRmbE81dEVhS3JPL1BnTGpNMDRnTFFFV2JIU1BF?=
- =?utf-8?B?dG5ESUZhZTU5U0hZYVQya1M1Y1A0d3U4TWFjaE9lTXRFTjRiUEdRUTlaYUpH?=
- =?utf-8?B?dHVwamZDSkR4UGJqV1M1MzNkZ2dEYUpSMXM3bmpVSkxVeTJ0N0JDUUU3WDl6?=
- =?utf-8?B?Q2NhMGtiQURvT2gwU3JKVVhZYlRodGhHRGxGdVZUejY2ZDBqOWd0cnRKa1RZ?=
- =?utf-8?B?by9wVEJGcVRlNDJUdkdIaFZDZzUzbWdPTnE0STJuL0NydS9pN3VXb1hTcmta?=
- =?utf-8?B?TjFiVEx3aG80MkVJcWZmSG44L3J3REVJUmZrZDY4b2RjbTh4RlBZL0Rna0l6?=
- =?utf-8?B?b1JoSmhCQUZyaEhzQjdhS3hnR1E3aUNFU2h2YXJTMkloUncrSi94L25nVU9Q?=
- =?utf-8?B?MUF0cWZGNHBIbmE3dy9WaFBXRGRWLzJLdzJNVEhGT1lhT3Bpa21UM1ZMNzJ1?=
- =?utf-8?B?TkU2M1JHOWdBNEs5Y3hwMmE4R2U0dTlweENCWHZGd2h6dE1hcHdMMEhWWjJW?=
- =?utf-8?B?SUs2aVVMTXh5VWdrT3ZDNWRuTGgwSHdTcC84OEswcERKN05XSy9jZW04TjZq?=
- =?utf-8?B?L3NNckJ0NjAreTR6L1V6VXZzb0xGK3FpaWd5cytYVjZGU0VxdkVqWFBtZTZ2?=
- =?utf-8?B?MUY1TkI2Nk9SNHpmMXZ3Y1RoblJ3UE5VTnhVSXQzd0htSStsWE5zWWJDbEJQ?=
- =?utf-8?B?bldvbW1JMVpWaTFMZDB5TTRwRDNkUEZTSGRaZGxnUXova25ZemV3eU45ZjVm?=
- =?utf-8?B?WWl1T05HSnd5VUtycDhoYmFTMnNrQ1BYdVphZFdFbGt6TXo3UUZGWHVsdmR0?=
- =?utf-8?B?OWVBRldkWlJ5NGpUeVFJejN0NlQ1Z0xDSG55NGdXelJhNkgwQTUrcnZBdzZO?=
- =?utf-8?B?U0YrSWZ3dUcrY28xbjFHZ2J2WUQ3cjlVbHJXcW93QXlRaUlwaTlvL1Y5RTM0?=
- =?utf-8?B?UjVoWi9kdi81MSt6cFJNRTJreFJMMGhuWmttYVNVWERFeTlJZXF2STVlYlVm?=
- =?utf-8?B?YTMwR0oyRGFlSzFMMFV1TVk2TlBLdGhxcTZtQ1pzcFV3eVJrdEExUThZNnp0?=
- =?utf-8?B?RWYxZmQyRlV3TWN3Y1ZsakUxblBCbklHNFhsWVZFZnVtaGNOM1d6V2lZZmpP?=
- =?utf-8?B?YzN3R0V3cVZxVkJoK3JaUXdvNEx1UVA4cEwwMHZFaTRRSXVqNFovV1cxV09V?=
- =?utf-8?B?UkNtN2k0Q1I5azgvVVFTS29EZWlwV3hVa21TUUt4TjRFMzBPaUc0eHVwRTEv?=
- =?utf-8?B?ZjJtMEREaDNOSmp4QzgvUnRHY0NuMHBSck9NMnBWRzhCSDlZOThQWXp6TDBM?=
- =?utf-8?B?azNLWmZ2cmg0TG1EaEtZcWJyOTJYbVdnQnY2enVpZXljQStBcC9oQkxzWXFp?=
- =?utf-8?B?VUJYL0ZYOTI2ZGl1cDJ6ejhqNGg2dERFdURIT0E3VWJOeWpXcHVUN0VSTnF2?=
- =?utf-8?B?Vjk1MzNSRU43Y3VZQS84MVJPYWt2WGR1Tk9vaTFhVGFpb2VQcVRCQ0dNYWhW?=
- =?utf-8?B?bm1VVGpXUS9tUmZLQTYvQkNwSjg0WllyNlR5L20vWStzZmRQQkh4VEN3TnpW?=
- =?utf-8?B?di9BZUxwS1NpZGo5QmMyQU5wNEpLYjFXaWZXTWhtT3A0N3JwS0hDM05qc3g5?=
- =?utf-8?B?RDNBZlFKdDNqdC9oZUxwVU1RQTBhVnQwMWdpL2M1ZU5md2ZibDAzQStiR1R3?=
- =?utf-8?B?RTBaaEVrZy9yZVpHa2cxOHdZeWtOMzRBbC96alQyUXpZMnFFcVhibnR3Vndn?=
- =?utf-8?B?dXc9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aUhWU3d6TVFGS2ZUTkpJVlM2dUU0b2VHT2pkalR2ZEtsOHF1NDBDeGdPd3F6?=
+ =?utf-8?B?SE5JR2s3SncyTzFCUmd5SzBxSUtEMTF3VkZsVndxSklFSExQcy95aDV0VkZ1?=
+ =?utf-8?B?aGFqVGFIaGZqd2xHMnB1a2Rnb3Fjd2pPM1FoN1Erd3dTWGNOL3psMWtIUVkr?=
+ =?utf-8?B?c2JBVDRVV2VMR1lKWWxSeXRBeHg4NmJQV1NxaTZhNGltK3pYQTFYdXlWclBo?=
+ =?utf-8?B?cE5LMmtzMEc4ODdodS95bXRpdTdsRlowZ0w5N1VHYzJJeS9EU3RVZmlEcnQz?=
+ =?utf-8?B?OWhzdlRYcmh2QkRqdGM3dGw5S01jYXc5YytuU3JzTVdhMTlmUEZQNVZjNEJy?=
+ =?utf-8?B?eVFRSjZVVmZXbmh5RnBrVlJjNWhmTGhMTzZlUjdBOE5BMHB1YzFXRmViK2tU?=
+ =?utf-8?B?V1FkOU44VWNEVExaVTd2aEU5d2FnZ3FaK2w2QkkyTCtZY2ZRS0tadjAvNGJE?=
+ =?utf-8?B?QWpIRGtuVzBQQXNqb2hWZGJSd3NrUS81c1pvUFoyV0VmRUg3U3pmMzA1K1Y3?=
+ =?utf-8?B?RkVaOE1JNGVvaFNGMStvMVVkRXFVVEYzN2NEWGUzcTIwdG16alhnd0xMZFdz?=
+ =?utf-8?B?QXpZYndZellJSWgvRlRKeEYyUDJDOWhHcFhlZHBpRmpjNTdqeWI3QzM3NUM1?=
+ =?utf-8?B?dkNkcGUzTU1SYncveDhBREdFRSsyTFpiVnY5SHFZc1NsZVFrL1FvWWtLWE5m?=
+ =?utf-8?B?ZXVLLzJocHZXbXBxU2Z0M253QXA3TTdiY05rZTczcHVhVzR2eGw4bGUvR0hC?=
+ =?utf-8?B?ZGVMZUxncW5VYjVWeVB6QWt1eFpUZFhzZW9nd1pKZXdtYTJ0ZW1tenQ2Ykt6?=
+ =?utf-8?B?RWR6Uk4wckJjejEvQ0hoaUEzbnhydGc5NG1HN1ZEZVc5aHpZb3R1T3MyNHZi?=
+ =?utf-8?B?SmliQkt1UFYwK3dLZmh1Z09yNi9RZXR3ZGtLbU9zYzNhcmdTc1lXMmdSRk4r?=
+ =?utf-8?B?TjhlN1pxNUx0emhPckpVV2plbG9OTnN2Znk1TjEzcEhodjV2bTY5R0VDeGZ4?=
+ =?utf-8?B?L29lMDBHWDlLczFVRk1SV0xDRGxSdWdvcVVpdlFRcG1NbEdtdDBLNi9vcHFV?=
+ =?utf-8?B?aFR5a1J2QTF2K1lObzE1WDBuL0dTYW9DWjQ4TTRSM2ZOSVlRTFB2UWdNSjgy?=
+ =?utf-8?B?WmVtMjJsMlhEZkEvMnY1TmJ1NHFtb3N2Q0dkOGRhTXg0TXpSOFp6bmg3ejc2?=
+ =?utf-8?B?UHhhRVFyZXZzVDZnRTlFTCtacGc4YUp6SjlaeWxMSktqdkpmL2w3TDJWcjF0?=
+ =?utf-8?B?eCtWRlpjUjRtV3FSOG0rOXAxU0J5cFJibEFHU0J6aXcyT0d6VXZyTi80TU0y?=
+ =?utf-8?B?emE1NEF5a0Ixd2t2d1dLOFltSDJxR1VjSzd1K2ZrbGh4aVRWTXZHRGtuaDNz?=
+ =?utf-8?B?dGhDS1FPMStreHAzZzRIQmtNUVhtZDl0ekVtU25FYStleTYvSmN3MDArMFhu?=
+ =?utf-8?B?YzFHWGwreC9zS1c3VWRYRlZ5REZKRHBNY2NscmR2VWhFdjltY0ptak5lVE50?=
+ =?utf-8?B?aFVPeXYyb0U5OFM5Sjdxcm11S29SRjJybnlJczU3RjlzUjhWTVlZQVNQV1Ir?=
+ =?utf-8?B?SHNQUW1RMTVkVmUxOXhEU3pGTmJlRUN1ZEhQcW9aektsV0hMVXBnR2hVOE1L?=
+ =?utf-8?B?alBJZVhsWEpVbCszc1Q0MXNvRkRpbllENStrQ2JOaHhlaUs1YnEzTU4rUGVz?=
+ =?utf-8?B?SDNvQVMvYy9yT21pVzRiaGVkcVVNTERqUXg0T2QxN3A2bHR0SWZhZlpGazhO?=
+ =?utf-8?B?bStBUVdJV3A3cW9BVkUzM2VId01XYVpQVHJES0JkR3ZCMHRkcEhPNDN2WS9n?=
+ =?utf-8?B?QnBsd25vci9LSlJ1WUU2azJQYURVeXI3dzJkbGRTaFQvMEFUVWFhNGVDcm1S?=
+ =?utf-8?B?NFhLaUpOeG52SEd4VnFqdG9OOFgvUXNEWU4wYnFIQndhT2dUTEpwajgwR0V4?=
+ =?utf-8?B?bVZaZWRNWkVJV2liTjlGZ2k4RVNiTDFIRFMzQXVyY0ZCdjlMQ00vbG41TW5m?=
+ =?utf-8?B?cE9xV09CV1Ixbk1GM1N6a0x3QmU0L3NDbDdHT3IyQ0ZWdEpXMGkyQmZYOW1L?=
+ =?utf-8?B?R21TRnlWNENrL3Z6eXZEeTZZbGlQQjYxTHVMRkJVVitCRGQwWWZ2OWFaU0lU?=
+ =?utf-8?B?b0ppV2MrRElpaVliRmx4MzV1L2Y1SlNhbzVaUDFyVGlzaW1GVm94VDlPWFp3?=
+ =?utf-8?B?QWc9PQ==?=
 X-OriginatorOrg: eilabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01af3a85-0f61-4e4a-9cb9-08dab74464ce
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93eac9d8-6a67-414d-5af0-08dab744947a
 X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 11:22:40.4516
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 11:24:00.4145
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: lgKzkEyJWwdBUBtmqdDmrBB7EZ1syATwVDkchdSPbaXZlTht0OptEBEkT9tuN8MfoaWKEDsF33cngSPVpXCivxXYgvApgL0tpo9Ph7/050g=
+X-MS-Exchange-CrossTenant-UserPrincipalName: csa1BwgKsuwTyrjeQvhD6DnajV/fGqeX0H+uROrAM58cb9kU/0k7lqZld89rLgLQ2nz/TOTiBkBjnsujy3G+Qb0zWeFQX+6F+cfjYRh2Yus=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P194MB1700
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -132,51 +132,208 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pca953x_has_interrupt() function to improve code readability.
+This change is necessary for a following patch, which introduces an
+interrupt mask register different from what is already in the driver.
+
+The driver already handles an interrupt mask register for pcal
+chips, PCAL953x_INT_MASK. Extend this implementation to support
+interrupt mask registers at other addresses.
+
+Add bit flag PCA_HAS_INT_MASK, which is set for each chip with an
+interrupt mask register (including pcal chips).
+
+Define a convenience bitmask PCA_MASKED_INT.
+
+Add an int_mask member to struct pca953x_reg_config. This way interrupt
+mask handling code can work with registers at different addresses.
+
+Add separate pca953x_reg_config for pcal953x chips. This differs from
+the pca953x_regs in the new int_mask field.
 
 Signed-off-by: Levente Révész <levente.revesz@eilabs.com>
 ---
-Changes in v2:
+Changes in v2
 
-    This is a new patch.
+    1. New function pca953x_has_int_mask_reg().
+    2. In pca953x_probe() replaced if-else with a switch.
+	3. Fix recalc_addr inconsistency pointed out by Martyn Welch
 
- drivers/gpio/gpio-pca953x.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Question:
+
+    This patch uses the PCA_HAS_INT_MASK bit to encode if the chip has
+	interrupt register mask. An alternatice approach would be to create
+	a new chip type for PCA953X_TYPE chips with the mask register.
+	What do you think?
+
+ drivers/gpio/gpio-pca953x.c | 84 ++++++++++++++++++++++++-------------
+ 1 file changed, 56 insertions(+), 28 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index dcd508368520..1725c1000445 100644
+index 1725c1000445..2cf9541057a8 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -230,6 +230,11 @@ static inline bool pca953x_is_pcal_type(const struct pca953x_chip *chip)
- 	return chip_type == PCAL953X_TYPE || chip_type == PCAL653X_TYPE;
+@@ -62,6 +62,8 @@
+ #define PCAL_PINCTRL_MASK	GENMASK(6, 5)
+ 
+ #define PCA_INT			BIT(8)
++#define PCA_HAS_INT_MASK	BIT(9)
++#define PCA_MASKED_INT		(PCA_INT | PCA_HAS_INT_MASK)
+ #define PCA953X_TYPE		(0x00 << 12)
+ #define PCAL953X_TYPE		(0x01 << 12)
+ #define PCAL653X_TYPE		(0x02 << 12)
+@@ -89,13 +91,13 @@ static const struct i2c_device_id pca953x_id[] = {
+ 	{ "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
+ 	{ "pca9698", 40 | PCA953X_TYPE, },
+ 
+-	{ "pcal6408", 8 | PCAL953X_TYPE | PCA_INT, },
+-	{ "pcal6416", 16 | PCAL953X_TYPE | PCA_INT, },
+-	{ "pcal6524", 24 | PCAL953X_TYPE | PCA_INT, },
+-	{ "pcal6534", 34 | PCAL653X_TYPE | PCA_INT, },
+-	{ "pcal9535", 16 | PCAL953X_TYPE | PCA_INT, },
+-	{ "pcal9554b", 8  | PCAL953X_TYPE | PCA_INT, },
+-	{ "pcal9555a", 16 | PCAL953X_TYPE | PCA_INT, },
++	{ "pcal6408", 8 | PCAL953X_TYPE | PCA_MASKED_INT, },
++	{ "pcal6416", 16 | PCAL953X_TYPE | PCA_MASKED_INT, },
++	{ "pcal6524", 24 | PCAL953X_TYPE | PCA_MASKED_INT, },
++	{ "pcal6534", 34 | PCAL653X_TYPE | PCA_MASKED_INT, },
++	{ "pcal9535", 16 | PCAL953X_TYPE | PCA_MASKED_INT, },
++	{ "pcal9554b", 8  | PCAL953X_TYPE | PCA_MASKED_INT, },
++	{ "pcal9555a", 16 | PCAL953X_TYPE | PCA_MASKED_INT, },
+ 
+ 	{ "max7310", 8  | PCA953X_TYPE, },
+ 	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
+@@ -176,6 +178,7 @@ struct pca953x_reg_config {
+ 	int output;
+ 	int input;
+ 	int invert;
++	int int_mask;
+ };
+ 
+ static const struct pca953x_reg_config pca953x_regs = {
+@@ -185,6 +188,14 @@ static const struct pca953x_reg_config pca953x_regs = {
+ 	.invert = PCA953X_INVERT,
+ };
+ 
++static const struct pca953x_reg_config pcal953x_regs = {
++	.direction = PCA953X_DIRECTION,
++	.output = PCA953X_OUTPUT,
++	.input = PCA953X_INPUT,
++	.invert = PCA953X_INVERT,
++	.int_mask = PCAL953X_INT_MASK,
++};
++
+ static const struct pca953x_reg_config pca957x_regs = {
+ 	.direction = PCA957X_CFG,
+ 	.output = PCA957X_OUT,
+@@ -235,6 +246,11 @@ static inline bool pca953x_has_interrupt(const struct pca953x_chip *chip)
+ 	return chip->driver_data & PCA_INT;
  }
  
-+static inline bool pca953x_has_interrupt(const struct pca953x_chip *chip)
++static inline bool pca953x_has_int_mask_reg(const struct pca953x_chip *chip)
 +{
-+	return chip->driver_data & PCA_INT;
++	return chip->driver_data & PCA_HAS_INT_MASK;
 +}
 +
  #define PCA953x_BANK_INPUT	BIT(0)
  #define PCA953x_BANK_OUTPUT	BIT(1)
  #define PCA953x_BANK_POLARITY	BIT(2)
-@@ -965,7 +970,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
- 	if (irq_base == -1)
- 		return 0;
+@@ -790,14 +806,16 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
+ 	DECLARE_BITMAP(reg_direction, MAX_LINE);
+ 	int level;
  
--	if (!(chip->driver_data & PCA_INT))
-+	if (!pca953x_has_interrupt(chip))
- 		return 0;
+-	if (pca953x_is_pcal_type(chip)) {
+-		/* Enable latch on interrupt-enabled inputs */
+-		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
+-
++	if (pca953x_has_int_mask_reg(chip)) {
+ 		bitmap_complement(irq_mask, chip->irq_mask, gc->ngpio);
  
- 	ret = pca953x_read_regs(chip, chip->regs->input, irq_stat);
-@@ -1011,7 +1016,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- {
- 	struct i2c_client *client = chip->client;
+ 		/* Unmask enabled interrupts */
+-		pca953x_write_regs(chip, PCAL953X_INT_MASK, irq_mask);
++		pca953x_write_regs(chip, chip->regs->int_mask, irq_mask);
++	}
++
++	if (pca953x_is_pcal_type(chip)) {
++		/* Enable latch on interrupt-enabled inputs */
++		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
+ 	}
  
--	if (client->irq && irq_base != -1 && (chip->driver_data & PCA_INT))
-+	if (client->irq && irq_base != -1 && pca953x_has_interrupt(chip))
- 		dev_warn(&client->dev, "interrupt support not compiled in\n");
+ 	/* Switch direction to input if needed */
+@@ -1193,12 +1211,20 @@ static int pca953x_probe(struct i2c_client *client,
+ 	/* initialize cached registers from their original values.
+ 	 * we can't share this chip with another i2c master.
+ 	 */
+-	if (PCA_CHIP_TYPE(chip->driver_data) == PCA957X_TYPE) {
+-		chip->regs = &pca957x_regs;
+-		ret = device_pca957x_init(chip, invert);
+-	} else {
++	switch (PCA_CHIP_TYPE(chip->driver_data)) {
++	case PCA953X_TYPE:
+ 		chip->regs = &pca953x_regs;
+ 		ret = device_pca95xx_init(chip, invert);
++		break;
++	case PCAL953X_TYPE:
++	case PCAL653X_TYPE:
++		chip->regs = &pcal953x_regs;
++		ret = device_pca95xx_init(chip, invert);
++		break;
++	case PCA957X_TYPE:
++		chip->regs = &pca957x_regs;
++		ret = device_pca957x_init(chip, invert);
++		break;
+ 	}
+ 	if (ret)
+ 		goto err_exit;
+@@ -1264,21 +1290,23 @@ static int pca953x_regcache_sync(struct device *dev)
+ 	}
  
- 	return 0;
+ #ifdef CONFIG_GPIO_PCA953X_IRQ
+-	if (pca953x_is_pcal_type(chip)) {
+-		regaddr = chip->recalc_addr(chip, PCAL953X_IN_LATCH, 0);
++	if (pca953x_has_int_mask_reg(chip)) {
++		regaddr = chip->recalc_addr(chip, chip->regs->int_mask, 0);
+ 		ret = regcache_sync_region(chip->regmap, regaddr,
+ 					   regaddr + NBANK(chip) - 1);
+ 		if (ret) {
+-			dev_err(dev, "Failed to sync INT latch registers: %d\n",
++			dev_err(dev, "Failed to sync INT mask registers: %d\n",
+ 				ret);
+ 			return ret;
+ 		}
++	}
+ 
+-		regaddr = chip->recalc_addr(chip, PCAL953X_INT_MASK, 0);
++	if (pca953x_is_pcal_type(chip)) {
++		regaddr = chip->recalc_addr(chip, PCAL953X_IN_LATCH, 0);
+ 		ret = regcache_sync_region(chip->regmap, regaddr,
+ 					   regaddr + NBANK(chip) - 1);
+ 		if (ret) {
+-			dev_err(dev, "Failed to sync INT mask registers: %d\n",
++			dev_err(dev, "Failed to sync INT latch registers: %d\n",
+ 				ret);
+ 			return ret;
+ 		}
+@@ -1362,13 +1390,13 @@ static const struct of_device_id pca953x_dt_ids[] = {
+ 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
+ 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
+ 
+-	{ .compatible = "nxp,pcal6408", .data = OF_L953X( 8, PCA_INT), },
+-	{ .compatible = "nxp,pcal6416", .data = OF_L953X(16, PCA_INT), },
+-	{ .compatible = "nxp,pcal6524", .data = OF_L953X(24, PCA_INT), },
+-	{ .compatible = "nxp,pcal6534", .data = OF_L653X(34, PCA_INT), },
+-	{ .compatible = "nxp,pcal9535", .data = OF_L953X(16, PCA_INT), },
+-	{ .compatible = "nxp,pcal9554b", .data = OF_L953X( 8, PCA_INT), },
+-	{ .compatible = "nxp,pcal9555a", .data = OF_L953X(16, PCA_INT), },
++	{ .compatible = "nxp,pcal6408", .data = OF_L953X( 8, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal6416", .data = OF_L953X(16, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal6524", .data = OF_L953X(24, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal6534", .data = OF_L653X(34, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal9535", .data = OF_L953X(16, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal9554b", .data = OF_L953X( 8, PCA_MASKED_INT), },
++	{ .compatible = "nxp,pcal9555a", .data = OF_L953X(16, PCA_MASKED_INT), },
+ 
+ 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
+ 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
 -- 
 2.37.3
 
