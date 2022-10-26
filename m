@@ -2,174 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0F8160EA42
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 22:29:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CC28C60EA4D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 22:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234173AbiJZU3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 16:29:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58730 "EHLO
+        id S234371AbiJZUfx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 16:35:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233491AbiJZU3N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 16:29:13 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B36103DBA
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 13:29:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666816152; x=1698352152;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=LqEqYgcAT/bYGK25v4tK4rOA3cscJDAegSAQ9jNVsT0=;
-  b=H1e/5jHNNMWbm5AOWlFPEsl/dXz/y314amRYreKHFP6ZpsuZH3SLk5dm
-   L6Ph1pEsNVydlkzqNfZeyLutIFEO/ZSw4tPbrRvy9J6py7z1f9/xnizX2
-   /MuqP0ZD+CS65XxPOxeMJ8eFwnstEgogDH1fehCOau5ZBgccRPvw2ogxH
-   6JVOW3ZKXOT15X4y8ee8ErTU7kUOqLnWYnF8E1fKLGDbA9dYrNeSVytKM
-   H442lqyEQBasvOiq+PG4r0XGZagyIefafDjPspDXj9VeoOl+2i7YT72Si
-   kBDGvLVr8/nRmbp7Ho4p/sn7m4ZbMGaCSJ41j+LRozDF+q+2khV81bBzk
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="334676169"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="334676169"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 13:29:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="961367785"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="961367785"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 26 Oct 2022 13:29:11 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1onn1S-0007p0-2V;
-        Wed, 26 Oct 2022 20:29:10 +0000
-Date:   Thu, 27 Oct 2022 04:28:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 76f3768132eab2c26c9d67022b452358adc28b2c
-Message-ID: <63599879.Cij9rSBHTnVhqz6a%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S234475AbiJZUfv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 16:35:51 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BB342ADF
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 13:35:47 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id w14so4150968wru.8
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 13:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FCz1RcOc2xs8qG7Gp+iDMnRCgICHSXj66gxuRMR6t6I=;
+        b=zomRMANQ+cwu2r09CO8SZXVV10DCaIGB3fm9Wh+AN9CwrQ1j28r6XrW99nE2SPxR1/
+         zqnYv81XB5GFeCctY2kL2ZcrqxraTn9Q5EZgz0PjkcBptbTU+w3stSpEoKudCpmi0QRW
+         Z9iRgOXrcJbfPtNvjxIqi/rvnn1jKxRA8AoCK1mbX6VwLf/mIJL2ilpFKgr7/Id10lcl
+         op615QJ4Y1dDI5tdLbYXYgFzfMLd40xmGhmd/e5USBsAGcqcY/EZIESGaoOi0WAyBoHm
+         52jLTlBmxlFd1rrmvM3sIQ+r4+Cy4WuH3I7JerY/7GAtif3uA96B1+kK6ZT7z/ZWyS1L
+         zRRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FCz1RcOc2xs8qG7Gp+iDMnRCgICHSXj66gxuRMR6t6I=;
+        b=iPy9u/1KYkOZNxZG4mauRWcHpPV1SG0tLzFQgOAW37a/17UC1Kxi8mDaL58D85NYZb
+         +5hg4ztDXgQC68IMaO/By0nkpwVX5TeGH6e3MPuBqPSXUDqcXfG8Q3G06SM58d8TeC8J
+         NhovVkUv179yeHNgO/PgIl83DzIVgecUon1UtJs6/C+SK8vlMi6T7hotTbLaMarL2fOY
+         fNzqR5WihuC7F0k/8kpe5iqgNVQqtnwrDzFzageDO8SJ5YkCDbcfyqB7qAZnekcV8GAs
+         IuQRQ+hPE0wa4NpdJtikR8N76SIbkyzGLHdrC4aJz7BO9ZlGC3lWS0GoOjlekyodRrQ3
+         2mHA==
+X-Gm-Message-State: ACrzQf0lqzE2Xwdw03CRXX837lC3pYyPLm3Qgy06sRhlNvSMs+sL95md
+        x3Wxmrey5hIgVeHAN18L84RLaQ==
+X-Google-Smtp-Source: AMsMyM6fAWrQIGj8o91qjQ9MfD5BnwyZ3X8V9Sm+uCpdusE+ySrKKsP0GruMppVqpcNMbqM8HCvYdg==
+X-Received: by 2002:adf:f384:0:b0:236:64ad:c958 with SMTP id m4-20020adff384000000b0023664adc958mr15461817wro.174.1666816546422;
+        Wed, 26 Oct 2022 13:35:46 -0700 (PDT)
+Received: from nicolas-Precision-3551.home ([2001:861:5180:dcc0:5e38:f194:7686:c33])
+        by smtp.gmail.com with ESMTPSA id d11-20020a056000114b00b00231893bfdc7sm6129157wrx.2.2022.10.26.13.35.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 13:35:45 -0700 (PDT)
+From:   Nicolas Frayer <nfrayer@baylibre.com>
+To:     j-keerthy@ti.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     khilman@baylibre.com, glaroque@baylibre.com, nfrayer@baylibre.com
+Subject: [PATCH] gpio: davinci: add support of module build
+Date:   Wed, 26 Oct 2022 22:35:39 +0200
+Message-Id: <20221026203539.517886-1-nfrayer@baylibre.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 76f3768132eab2c26c9d67022b452358adc28b2c  Merge tag 'intel-pinctrl-v6.1-2' of git://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/intel into devel
+From: Guillaume La Roque <glaroque@baylibre.com>
 
-elapsed time: 723m
+Added module build support for the davinci gpio driver
 
-configs tested: 92
-configs skipped: 3
+Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
+---
+ drivers/gpio/Kconfig        |  2 +-
+ drivers/gpio/gpio-davinci.c | 15 ++++++---------
+ 2 files changed, 7 insertions(+), 10 deletions(-)
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-ia64                             allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-riscv                randconfig-r042-20221026
-arc                  randconfig-r043-20221026
-x86_64                        randconfig-a002
-arm                                 defconfig
-s390                 randconfig-r044-20221026
-x86_64                           rhel-8.3-syz
-i386                                defconfig
-i386                          randconfig-a001
-x86_64                        randconfig-a004
-i386                          randconfig-a003
-x86_64                        randconfig-a006
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-i386                 randconfig-a011-20221024
-powerpc                          allmodconfig
-i386                 randconfig-a014-20221024
-mips                             allyesconfig
-i386                          randconfig-a005
-powerpc                           allnoconfig
-i386                 randconfig-a013-20221024
-arm                              allyesconfig
-i386                 randconfig-a012-20221024
-i386                 randconfig-a015-20221024
-i386                 randconfig-a016-20221024
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-i386                             allyesconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-sh                               allmodconfig
-xtensa                         virt_defconfig
-arm                          exynos_defconfig
-arm                            qcom_defconfig
-powerpc                       ppc64_defconfig
-ia64                                defconfig
-m68k                           virt_defconfig
-mips                            gpr_defconfig
-arm64                            allyesconfig
-m68k                       m5475evb_defconfig
-powerpc                 mpc837x_mds_defconfig
-sh                 kfr2r09-romimage_defconfig
-sh                          sdk7780_defconfig
-sparc                               defconfig
-arc                              alldefconfig
-arm                            pleb_defconfig
-mips                      maltasmvp_defconfig
-powerpc                    amigaone_defconfig
-sh                           se7724_defconfig
-sh                          rsk7201_defconfig
-i386                          randconfig-c001
-mips                 randconfig-c004-20221026
-powerpc                         wii_defconfig
-arm                        multi_v7_defconfig
-arc                           tb10x_defconfig
-m68k                          sun3x_defconfig
-powerpc                      ppc6xx_defconfig
-arm                        keystone_defconfig
-powerpc                     stx_gp3_defconfig
-arm                         axm55xx_defconfig
-powerpc                     redwood_defconfig
-sh                      rts7751r2d1_defconfig
-mips                        vocore2_defconfig
-
-clang tested configs:
-hexagon              randconfig-r041-20221026
-hexagon              randconfig-r045-20221026
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-x86_64                        randconfig-a005
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index a01af1180616..f8bace51c2d0 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -219,7 +219,7 @@ config GPIO_CLPS711X
+ 	  Say yes here to support GPIO on CLPS711X SoCs.
+ 
+ config GPIO_DAVINCI
+-	bool "TI Davinci/Keystone GPIO support"
++	tristate "TI Davinci/Keystone GPIO support"
+ 	default y if ARCH_DAVINCI
+ 	depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || ARCH_K3)
+ 	help
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index 59c4c48d8296..def87b99691f 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -721,12 +721,9 @@ static struct platform_driver davinci_gpio_driver = {
+ 	},
+ };
+ 
+-/**
+- * GPIO driver registration needs to be done before machine_init functions
+- * access GPIO. Hence davinci_gpio_drv_reg() is a postcore_initcall.
+- */
+-static int __init davinci_gpio_drv_reg(void)
+-{
+-	return platform_driver_register(&davinci_gpio_driver);
+-}
+-postcore_initcall(davinci_gpio_drv_reg);
++module_platform_driver(davinci_gpio_driver);
++
++MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
++MODULE_DESCRIPTION("DAVINCI GPIO driver");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:gpio-davinci");
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.25.1
+
