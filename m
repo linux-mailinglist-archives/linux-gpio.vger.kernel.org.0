@@ -2,132 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B0960E13D
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 14:53:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3D2260E144
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 14:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232903AbiJZMxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 08:53:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
+        id S233509AbiJZM4l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 08:56:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233919AbiJZMxq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 08:53:46 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABD7F5CEC
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666788826; x=1698324826;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=B5rubBoY7gcrNO9YOrzyyfOVtNHKx4bFR7SoaOzcN8I=;
-  b=NFEXeho/U2pziFxago5QOUkb/99cMCgRJzd7HEU/dKPPzUZWD3uG05Z8
-   sNsueCOMATst/sPshmINBYPuSCigmAtqnSKIyF0DXl1UUgvIp6N9aXeL6
-   04NRSLNDPKK5SbeG4dPelH1FuoIyKk3ctcQl0vhpE9dfQRe0/tJSqIXy+
-   kSQCF01Z+2Kk0tcNcIg0UMsBrZU4w8ryxFNvb2ze7/pUFoyKS4X21N8EG
-   PDbe4C/Iy3hYB4gLw5Sf3hwKnt80RIYQKAAIoRCHd2bAoWN0gjXzW1Rjx
-   pM7qrO/FmQTnxewOHqknHNVS7NfralvJeK80J8LWyCyrOnwgaWIAJF+RE
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="288332296"
-X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="288332296"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 05:53:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="774573766"
-X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="774573766"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 26 Oct 2022 05:53:44 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1onfuh-002eRX-0R;
-        Wed, 26 Oct 2022 15:53:43 +0300
-Date:   Wed, 26 Oct 2022 15:53:42 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S233711AbiJZM4j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 08:56:39 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFE5FDAC70
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:56:38 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id b29so10735388pfp.13
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:56:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kBBdtd5XbnYRgaPiLUQ+2ncSzZsGUE36JREFHY95ifg=;
+        b=G3I8jWra1htnZOKFn9IKHlDM+5IwPZQIgloJdYM3sxJLXnDZbkX7OHLtjqZNEYsQa/
+         BIawfCE7b+gZ5vZP4Xw2FgP3Lo0rRgGuUf9YBQ+QbXT8L4N0RX2L8cd3RrXvciKp5Oer
+         QR8PbClFqg2PK4+abmGzWd2RefZYopLYvRDkIwS2teHC7uIbsOxy/Ec/p4jwRo7z4UXP
+         DgdwVl6qnsmlVX5cpAWirBFBlr7eItCdfD9ywfhbXe6wNHsHAHicADDgisztbHjdnBvD
+         94m475HU2+j6p7yRGQENtOxZ5d8j8fGvdWEC+LgEfne+mqcSBxt2vskZLXoVKnm7oseK
+         7qzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kBBdtd5XbnYRgaPiLUQ+2ncSzZsGUE36JREFHY95ifg=;
+        b=VzZFsJM46zIOJNAKxqGpAf45Mr3qSEwxlHckTdc1R+C9M3WA3HVXzZP6HpSo1e/Rs+
+         EEYUOjKEDt+nM7hTEhpXSHDGj5m6aT2qWbswMSqdnTBkytHFZAJpfpWZKvGrGzSsvK+5
+         +Jf0tPHiqI8TXL+xnbQaNxuhRcyBeV8bq8phh5GqPQ11sD6tnCgDLJ+zlwfFfJORT7gW
+         0CQrpkLw1wXPQToP2tJQ4v2OjY+k6P5sHrfSF84N7N9PyGKC5rJIPg/nb8ub6SHrOqgv
+         FsnwEaJBDHIrpAwszzRvfEYJb6Rtua+az/hhLY65Qfo9QuyYEp0a5E2l7hcYMa1mqbQU
+         71yQ==
+X-Gm-Message-State: ACrzQf34OFNDSfCLburDzJUGgFz1erypiwC+MG3IXw8yATR5Ie5UzpkP
+        z7WPBMkFoHJQXgLgv21BsLE=
+X-Google-Smtp-Source: AMsMyM5CRzAiMzCyKn8o4g0m1SG97PH217+KyTtVBkJmrvvAODlMaJE5lj0WS0q6B8BB1coAfkgMaw==
+X-Received: by 2002:a63:ed0e:0:b0:457:4a30:cb8c with SMTP id d14-20020a63ed0e000000b004574a30cb8cmr36583853pgi.161.1666788998068;
+        Wed, 26 Oct 2022 05:56:38 -0700 (PDT)
+Received: from sol (14-203-42-90.tpgi.com.au. [14.203.42.90])
+        by smtp.gmail.com with ESMTPSA id s5-20020a656445000000b00462ae17a1c4sm2789789pgv.33.2022.10.26.05.56.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 05:56:37 -0700 (PDT)
+Date:   Wed, 26 Oct 2022 20:56:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v4 2/4] bindings: python: add examples
-Message-ID: <Y1kt1iHYpbZGaND4@smile.fi.intel.com>
-References: <20221026123425.498912-1-brgl@bgdev.pl>
- <20221026123425.498912-3-brgl@bgdev.pl>
+Subject: Re: [libgpiod v2][PATCH v3 4/4] bindings: python: implement python
+ bindings for libgpiod v2
+Message-ID: <Y1kugFIDyO4mhLVX@sol>
+References: <20221007145521.329614-1-brgl@bgdev.pl>
+ <20221007145521.329614-5-brgl@bgdev.pl>
+ <Y0eBonEvVclIBQS8@sol>
+ <CAMRc=Mf77zXc8_F_nsjyMMoCh6wnO10Lv2k22cS3N5KQ142Dcw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221026123425.498912-3-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=Mf77zXc8_F_nsjyMMoCh6wnO10Lv2k22cS3N5KQ142Dcw@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 02:34:23PM +0200, Bartosz Golaszewski wrote:
-> This adds the regular set of example programs implemented using libgpiod
-> python bindings.
+On Wed, Oct 26, 2022 at 02:32:35PM +0200, Bartosz Golaszewski wrote:
+> On Thu, Oct 13, 2022 at 5:10 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Fri, Oct 07, 2022 at 04:55:21PM +0200, Bartosz Golaszewski wrote:
+> 
+> I agree that the C code should not crash - so it makes sense to not
+> assign self->chip with GIL released. But for thread-safety in general
+> - I don't think the module should care about it. Just like C and C++
+> libs leave it to the user. The only thing we should care about is not
+> keeping any global state that could cause problems in multithreaded
+> apps.
+> 
 
-...
+Yeah, agreed - no locking or thread safety guarantees - we don't want to
+add the overhead of locking, and the user can provide their own locking
+wrapper if they need it, probably at request scope.
+As long we we don't go messing with Python objects outside the GIL, or
+sharing state between requests (and we don't) then we should be fine.
 
-> +if __name__ == "__main__":
-> +    for chip in gpio_chips():
-> +        info = chip.get_info()
-> +        print("{} [{}] ({} lines)".format(info.name, info.label, info.num_lines))
+Sorry for the confusion there on my part - I think I was flipping back
+and forth between Python and Rust and carried some of my Rust Sync
+concerns over to the Python.
 
-In all of them I would prefer to see the main() explicitly, like
-
-def main():
-	...
-
-if __name__ == "__main__":
-    main()
-
-(In this case the module can be imported by another one and main be reused)
-
-Also have you considered use of SystemExit() wrapper?
-
-...
-
-> +                    sys.exit(0)
-> +
-> +    sys.exit(1)
-
-Is it in the original C code?!
-I would expect that no chips -- no error.
-
-...
-
-> +if __name__ == "__main__":
-> +    if len(sys.argv) < 3:
-> +        raise TypeError("usage: gpioget.py <gpiochip> <offset1> <offset2> ...")
-
-	SystemExit(main(sys.argv)) ?
-
-> +    path = sys.argv[1]
-> +    lines = [int(line) if line.isdigit() else line for line in sys.argv[2:]]
-> +
-> +    request = gpiod.request_lines(
-> +        path,
-> +        consumer="gpioget.py",
-> +        config={tuple(lines): gpiod.LineSettings(direction=Direction.INPUT)},
-> +    )
-> +
-> +    vals = request.get_values()
-> +
-> +    for val in vals:
-> +        print("{} ".format(val.value), end="")
-
-> +    print()
-
-Without any conditional it will print an empty line, was it originally in the C
-variant?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+Kent.
