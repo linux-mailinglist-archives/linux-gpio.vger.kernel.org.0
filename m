@@ -2,65 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1A3260DFF2
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0D9960E015
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233599AbiJZLrp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 07:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57924 "EHLO
+        id S233345AbiJZL4P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 07:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233628AbiJZLrb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:47:31 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B33353845E;
-        Wed, 26 Oct 2022 04:46:58 -0700 (PDT)
+        with ESMTP id S231937AbiJZL4O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:56:14 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC92AEA24;
+        Wed, 26 Oct 2022 04:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666784818; x=1698320818;
+  t=1666785373; x=1698321373;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=b06/ixQTvo4yNJzSWIRRf7XvwhiUnFL1NIt+eXhoE1Q=;
-  b=b9shMvIYO54QiiLYPABV9hm1Q//OY4lnZwQzq1Q+/6SUhl/PlYlHbMBX
-   PzePayvuBpLODVMPpFy8Y8AMQyzrm8PVEoqWUdMrPbFqXaJhEK6djErxu
-   CzHcc+bwynyAdxseBBkMhHqVqvN3aKvZXVoyNcCKTR+penrAS/Ue9+drf
-   stU0uOu/4/heUUSrZ6VVlc7nK0rSack4jthZjGXQh+0EQisIso3wOS/wn
-   Rpa7FAhOtafaX2A2AgOTgR/6UEId+ZpJlAaJs8p9L4tjAKL3pWvnf1IrL
-   H/BaAkjOL3p418rn/DAox8DuVAq5fOanVPbkIa0lkHGhZHDHCQiw26o24
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="288319659"
+  bh=oHWjrYPTLePjtfatiI6ltoxxvdXJoi/nWWd7TE5RE9Y=;
+  b=Ps5P7fxvzFEhpzKp4cDXLt7co5ko/l+QKB4OLD+mTu6BOnIfSsrc50lI
+   e9T/fAmxKDLcylXAq4PWUR+tNn2zQfNIxmKexu8eOf8EIG182z5RIp2pP
+   taM79g0VilxHtFXCwDepXZV+VfO/L3dcoToIm6ltASQarFXXdtIH3G4OE
+   aZXXmUvGsx/B5z2e6f9PpvoiUU7TJMsPlNBKQfFH5pJGtMwuWT5h3S/6m
+   ru8B8u61OdsyQdlSYoQ/0Pey0XGJ2SA+8gPfLf8JdXGMXRg0Cjjcn3qAD
+   qEkqFvcKFuysvdcNjsWBzUcHrTdqooG8mhPiUg2xC3Z+/3k84qjkSvq1I
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="307919389"
 X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="288319659"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 04:46:54 -0700
+   d="scan'208";a="307919389"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 04:56:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="634456778"
+X-IronPort-AV: E=McAfee;i="6500,9779,10511"; a="695333083"
 X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
-   d="scan'208";a="634456778"
+   d="scan'208";a="695333083"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 26 Oct 2022 04:46:51 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 26 Oct 2022 04:56:12 -0700
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1onerx-002cjx-2j;
-        Wed, 26 Oct 2022 14:46:49 +0300
-Date:   Wed, 26 Oct 2022 14:46:49 +0300
+        id 1onf11-002d4E-0d;
+        Wed, 26 Oct 2022 14:56:11 +0300
+Date:   Wed, 26 Oct 2022 14:56:10 +0300
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        linux-gpio@vger.kernel.org, git@amd.com,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        robh+dt@kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org
-Subject: Re: [PATCH v5 2/3] gpio: pca9570: add a platform data structure
-Message-ID: <Y1keKRzBhSDi671j@smile.fi.intel.com>
-References: <20220930102259.21918-1-shubhrajyoti.datta@amd.com>
- <20220930102259.21918-3-shubhrajyoti.datta@amd.com>
- <CAMuHMdUAcA=4Xcgr9hHgT5cro=s0mvAQqHmco0-e-NvWKJmrCA@mail.gmail.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/5] pinctrl: alderlake: Deduplicate COMMUNITY macro
+ code
+Message-ID: <Y1kgWnCGpx2RVABH@smile.fi.intel.com>
+References: <20221018223427.43579-1-andriy.shevchenko@linux.intel.com>
+ <Y1TkJ0r6PIM/7ng4@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUAcA=4Xcgr9hHgT5cro=s0mvAQqHmco0-e-NvWKJmrCA@mail.gmail.com>
+In-Reply-To: <Y1TkJ0r6PIM/7ng4@black.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,36 +66,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 12:00:34PM +0200, Geert Uytterhoeven wrote:
-> Hi Shubhrajyoti,
-> On Fri, Sep 30, 2022 at 12:41 PM Shubhrajyoti Datta
-> <shubhrajyoti.datta@amd.com> wrote:
-
-...
-
-> Thanks for your patch, which is now commit 35a4bc94a47f2ea6 ("gpio:
-> pca9570: add a platform data structure") in gpio/gpio/for-next
-> linux-next/master next-20221026
-
-Dunno if Bart rebases his tree...
-
-...
-
-> >  static const struct of_device_id pca9570_of_match_table[] = {
-> > -       { .compatible = "nxp,pca9570", .data = (void *)4 },
-> > -       { .compatible = "nxp,pca9571", .data = (void *)8 },
-> > +       { .compatible = "nxp,pca9570", .data = &pca9570_gpio },
-> > +       { .compatible = "nxp,pca9571", .data = &pca9571_gpio },
+On Sun, Oct 23, 2022 at 09:50:15AM +0300, Mika Westerberg wrote:
+> On Wed, Oct 19, 2022 at 01:34:23AM +0300, Andy Shevchenko wrote:
+> > Define a common COMUNITY macro and supply a variant to it.
+>                   ^^^^^^^^
+> COMMUNITY
 > 
-> This breaks bisection, as .data is still considered to be the number
-> of GPIOs:
+> (ditto for other commit messages)
 > 
->     gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
+> > This removes some verbosity in macros.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-You beat me up to it, I have also noticed this.
-
-> >         { /* sentinel */ }
-> >  };
+All with mentioned typo fix and added tag are pushed to my review and
+testing queue, thanks!
 
 -- 
 With Best Regards,
