@@ -2,49 +2,50 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9814F60DF6A
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:21:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C5BCE60DF6E
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 13:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232740AbiJZLVc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 07:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36720 "EHLO
+        id S230025AbiJZLWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 07:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233395AbiJZLV3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:21:29 -0400
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2048.outbound.protection.outlook.com [40.107.247.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2915FB0B19
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 04:21:27 -0700 (PDT)
+        with ESMTP id S231706AbiJZLWn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 07:22:43 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-eopbgr80083.outbound.protection.outlook.com [40.107.8.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD11CC8220
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 04:22:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KHdhKlAYXvkqfcSL+Q3I8ftCweFXSL1TnOdLsHo1qBU5GVcPgPjRvXKCC342h3Ohg2zzpDUL7hyKAdYcNtr+uNIJr5NYmtNd2tEik9zzXL3nXzByzxPIb6MjH93E9afjGiaSbJqWrun5b/TB7ruxCWYupSMBHhSkBs3bHiLALU2dkoDL77OtO4XPZziogau4KSmDp6XI0DzFrxZm1sZL7Co5ceAYpQlNC/TmEhGou4C6V2lO/KrU1Kazsv9HAllSGr5v4xs5HFqEkAsFHbB4yZHtbSLjqcIkQ3XXEE2SuJVm64mG/Cai9GOU9hTV43Bh++5rLZDaQtARueQJfg5dvA==
+ b=cNSkBbH+Ly/hTMCMa0GrXe1HSlbouUPDlcJvtSevL5j+vQXwHAdXKxO3Xarnn94d6kRZnWmGpMbcXjXVgD9J3hUBqlz3LSXMhXUKTuz8bHVU2HU5+MQcsJRLTM03WNdBp1wgbD59sRQnH7OHaMrPtzzGF+rjGECU7qmqNyCKn2WisEgjHlVc25KoEZf1WRA/BKy7AEyFQyrBae5qNMrRxCqhWeZQAnPdDEYTopyuovy1X9YELe9H1w68RnOdAvgS4S23e1oP2PIyrh9BkGeTGO2K+WngbiembAaItPgaYR4lxayxfcwde6T/oc95aWTJnCfAnRB4BFIzkuNOhi5EHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ixk+qAeUstmrIJgmu07ml61uPaijeCFPtil7Xt/f4mQ=;
- b=lRDFebnJ3vZrqdOQhUGFmcxhPcSXsLOLNo+HjAd6RkN5rwPbexZTxyemCKaVy4zFRFiglRSAs8xOzK0Y+LR1/6rn8uTaslPybQIl2Sk8LgAC5/Q9gWLOUtMo6W8wzbkFFKesr+0xiG9HdJMI5qlrd+wh3izTnHWDSx0FuKvi8n9yrOHmRo43k3zlEijrUpt3wJFbeuSLGlCu2z3L7JtH0nYdSdk8OXZUCdqS1KKAfJYdIslKFmRfY4of0eNwDvUZM5w1vjpy2YK1kzIgJb+UW8GK3CXVwU2A8+z5OGpqNyklT2T2zN5xz4NNVcq8dYCRIqqTlif+tObNNs+7T66o/A==
+ bh=2mJzuCmw6nf0NLzONA14V+iPRjD5j3F2vAjuS7rT2as=;
+ b=kxOo6TNycOZMMT+aUzb5x+JNi/2ryt8XfrFWKvmLvxWLr3SRJsJbWb+ZzgaUtQ0Dy3r83rFJDMYrizrV0tRsVelEu5lcx8zafXFxRBfMYiuiugA00gT7pDOA7X44GToA0aSKrmPe81iqkwW04SZIeQIwXakazzMoFb1NIIx3p1EdlfzsYqw3msueSoEX/wwDwVDmblZV8D3WUdPCOMm1OtPZRKf0tUY361oywKr2mBurDKlF5TF++POTNAnMAxnPEN2CLY9goz9JT0Ub/blY6yKPJQeTcFU4wiCjTzYB6QebgWlLxoRM8eMX6vlJNk6pbfDVLUw5dbkYYRU0aZvUeA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
  dkim=pass header.d=eilabs.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ixk+qAeUstmrIJgmu07ml61uPaijeCFPtil7Xt/f4mQ=;
- b=M+ggHxYLm0LnCnTFGBjl4NwhX3EEqlvj35aW94BdxAu6FLtjqYzDIFXnkhdzYWFwVjkeEDGQmqaw+Q4eD56dx64NFs7LW8pQmNZmoir8+Pn5dGbuJvjAbFIzMIu4WgSArIGP8+hZCPxp24e3b5VpJ8cuvPUP9gBmxjXf4ROfC/c=
+ bh=2mJzuCmw6nf0NLzONA14V+iPRjD5j3F2vAjuS7rT2as=;
+ b=JQQHnq4XUhc1vxOVXHGMaCDZ9l7XHe8CK2r6C85gI+kYNnFqQsr+19SAEc9NsZmyruxLq2ilAWO1lbCitRLr0WRk4nrlDNruN543egXuNWR9od+HRGGAOXNkjQBVRo7LjUhb5n5/i0TZp3SFtBJ8YnHuuxS0mEQNOmzzGjD77m8=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=eilabs.com;
 Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
  by PR3P194MB1700.EURP194.PROD.OUTLOOK.COM (2603:10a6:102:17b::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Wed, 26 Oct
- 2022 11:21:24 +0000
+ 2022 11:22:40 +0000
 Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  ([fe80::b164:96e5:86ce:3b9f]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  ([fe80::b164:96e5:86ce:3b9f%7]) with mapi id 15.20.5746.027; Wed, 26 Oct 2022
- 11:21:24 +0000
-Message-ID: <9bdc962c-1cfe-8240-963c-491f3992b2cb@eilabs.com>
-Date:   Wed, 26 Oct 2022 13:21:23 +0200
+ 11:22:40 +0000
+Message-ID: <a0b1d922-0bb6-91ec-9b86-b9dc46afe244@eilabs.com>
+Date:   Wed, 26 Oct 2022 13:22:39 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: [PATCH v2 2/6] gpio: pca953x: Add PCAL953X as a separate chip type
+Subject: [PATCH v2 3/6] gpio: pca953x: Add helper function to check if chip
+ has interrupts
 Content-Language: en-US
 From:   =?UTF-8?Q?Levente_R=c3=a9v=c3=a9sz?= <levente.revesz@eilabs.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -60,66 +61,66 @@ References: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
 In-Reply-To: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: VI1PR0302CA0007.eurprd03.prod.outlook.com
- (2603:10a6:800:e9::17) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
+X-ClientProxiedBy: VI1PR0302CA0003.eurprd03.prod.outlook.com
+ (2603:10a6:800:e9::13) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
  (2603:10a6:800:147::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|PR3P194MB1700:EE_
-X-MS-Office365-Filtering-Correlation-Id: 54018047-a293-41e7-8766-08dab7443788
+X-MS-Office365-Filtering-Correlation-Id: 01af3a85-0f61-4e4a-9cb9-08dab74464ce
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dFQPkSgn7x1jL/iDSwjBZt43gIPrxhBTamtbmDu8FMjWoZ6Aa5FgGAbvh2XF1ZupL6JovR5+yXBONFUBzjJ7vEzA/3RqfBHPLHbRgH75Nt3p8xgbB/LYRS+qHigJinqxsr6STaqHipgovH/YBDQgKzQF8U4M3EEFWY/orL23qYgsTLTq00l/fY3emvf+/jpL8StX++liZsSX1/zw41QK9qM8dSj7b99bVbvGC8XiWX4KKGppbKCGEhHAWCCWuX7vpB3K93Gn+1LKNQXsbqQAznETo3Zkr4SWj63MYXV6P5KVBNmntMyzU7MDoODmRqNVQcVYBf7RykLejs/3VswVVDIfnDlyGiDKxGy6uuqQq0joksql2qxfSdsrM878S0HO7ZqCUhhGnEQkqG2j5UKaPDDDLqg941Ykuv3uZgYsVOdH/N4FjFFmWBQkAVXMZku4QuQLOG29Ez03lJa63mCK29nChnEGuCvZ/TJXcH5YGWb1i/fmy+rnAm+zZxlyT5J3H00YtLwHw+wRMroOHF20vJ/tqKYwX9AC2vzBUZzlJgsT7tDk16D2Vv8Mbn77TcVC2Alg5BrTZHEL+XFLpU+Pq8Q7lmvyWK+0iVVijxiL7pTOWxe4uiM5P+yS5lt9mlX6b8Tp3n9LJNejpooSARdMKL83I4XfGMyEbYvxoZXBg2/9fy/WGn8vFjwXkWpz6hrPXCZGdHC5vKpxKgWhYflE4933O+KGU/XYN2Ow2a5npSG48RyH69B54l9XArQ+pUXWSqgi0mS8za4n898Jsu75l2QrIf9tfjq279HlW0WJPU4=
+X-Microsoft-Antispam-Message-Info: /Pzv74x/OykCHQ/BB9SDFpPh08N+Cbuywffwdf4tmUKISSIrkb1bsvj0B89FBsw4H4P1571oSzHquuhmL0uK+OC07YtgMAPKAWWRcQvJPUVd7tUaWjs96Bzlv1lb7N7BrYFeN1rj5KAaoQ6ppE54En1snBbt1scjGJhed8qqVHzXlE0iHToDK/uvuM6XSsN0MA9PoEVDtSOA/50vmV9q1Fbm31l32RC86OXb5qouK9BstMiOwub1GItfdwcLHBFfcGx84x+WDQNALYwRL8OKe5jRGIzf4BYEQll2e2kMbBHga0DuaaRuktrCTChJ44b8/1Tgz7cbFpOkU9ExYPhFfYYUIAYCcjXTrz9k6ItaLDaBcumzj/WCaZIYzIFBZAakHeEkedBS2iTlGYcFc+ffky6I5+VTBax2PGQc4d3/NCcyV+270CYHeqTqkrFtXFE2lvO8gpvJcw/I23/w9EOC1e/52Q1do9f7oExDdcLXlXm6DtlYecJonp+57ZnrNw6m8YLmb0uxRZNwWVzCy2IkJxGngUJdkQAf3obpc/8cyZ31dm9ybqbc+VSATFB9KBHbM08EI5pB415Rja/vpKE/0oWr0bAjddjBVho9EjE4I9MgAnMAf15K3XLEFytqU4YpNbl8pZX3RZWoH0c7rvFj3sD7BV2LLw+5ZhVJqBgpSRg+WTCCRcLSYGfpdQZBud11txRulMwVfLKdMqRo3Kn86MM+yQ1KjaSe6ZSkfE+/31Ag2W4MLUHVarIZv4+dlgj/iTOJckYLRXWismC2/XFk1Wx8c46TaZRyK2G59kJ6RiQ=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(39830400003)(136003)(346002)(376002)(451199015)(31686004)(478600001)(31696002)(83380400001)(6486002)(86362001)(186003)(66574015)(66556008)(316002)(8676002)(66476007)(66946007)(26005)(6506007)(36756003)(6512007)(7416002)(41300700001)(4326008)(110136005)(5660300002)(8936002)(38100700002)(2906002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?djdFYVRIZFdTVzJTdXlvQktkazBicXVkYmRvZ1BKV3RVTTRkNDI2MGhnYWdI?=
- =?utf-8?B?YUtxWjZOOGV0bHBxOVd4NlQ4SVhEazB2anh3bS9CcGNjZXlOOThpNGxna2Fa?=
- =?utf-8?B?R2d6d2s3OFR5Nlh6YjJUN3VVeGJvRnRJYWJvSStadzM1cW9hVGZmVG5WSEht?=
- =?utf-8?B?NHpCNDA4UTBzaWgxalRrdC8rRXp1UVllU3NsS3RMRS9GcURQVjZacDcwcnIr?=
- =?utf-8?B?Rm1hMHorWDgrNTByeDJlRzlhQkVQcHZaeHJISUJMbnBKQmpFck5lcCtURmMr?=
- =?utf-8?B?QUVnQ3VlVVVhU0xBa3cyTmZqL3JKbzVURVBXdmdGaWRLSm1kWU0xTGNpVVIy?=
- =?utf-8?B?NDY5SjVPUE9TMjlEVlA2R1hGallaVUVtdVY0T285TEQ2SlltcmZKOTVzN096?=
- =?utf-8?B?VW5YN0dVeVQ1Mi9aWmFQVDE4QkpUWWVQYTJOVWZqV3Fpc3hiVzg5STN2Z2Vq?=
- =?utf-8?B?MDNxdzRIekIxRmlWZllKblZBM3orTXZpckd4TEUwSTFzM2hwTUYvdmh5dFFO?=
- =?utf-8?B?dWNMTVl6VTJpemwycXg5NTFlN0hIaDJFelBkSjBLVVBnbTROeWwyUDRERTZS?=
- =?utf-8?B?blVZMkttdjBrTHM0TkNZeStOTG9ZaW5KR1VXMm5CUjdOenVvS1d3bkoxNHl5?=
- =?utf-8?B?bXdnV1dIT1FsZTZWQXEzVVY4a0pyUjg3T0NsVUlYVE8rb1NZNXd1b0Z5RWQ2?=
- =?utf-8?B?R0dFOFNSSTU3Y1ZmK2hoTW5RaXhWTkd1eHI4azkvbXRGZmRmUEtSSWRkamJy?=
- =?utf-8?B?UUhVbGJxbVdxM1hUZTJ3bUZRZjJ6dUhjbFRCZW1IQ3VwRVR4UlUzSDRQRWZo?=
- =?utf-8?B?UHRndnhCL0QvTDlSenpKenl6cjhhMStUNjNzTmM0QjJUZDJIeEhKNWhiQjlG?=
- =?utf-8?B?dDFWUWw3c3FBY3lKNXo4OVJTV0xsRmNacEF5UCsxbDlnZEZTWU14WW11WFRT?=
- =?utf-8?B?TXUwWGE2NnhpMGFocnRwVFdBRW0rUHJQMndOWW4yV2RsVXZBTTU4aGhiZDRz?=
- =?utf-8?B?cE5lVk1nMUNWeU1QY3dBQ05JM3pCR3JZdVcxLzhzaDFoMTYvV3FWMnhUL3cz?=
- =?utf-8?B?VmhUOWZMeG84bFFiTUErQXFJTE00dlFtY1JaaFFMWlNsUXpaVzE3ZXFBTWI2?=
- =?utf-8?B?eEFkRWJiQXZrKzZVdzJZRFRHckhUQTYrWUd4Zmp6NjN1Y2F0WmROL0tmTE5H?=
- =?utf-8?B?L0w3SzZNWnhvWkxYdit2aWthYk05SEt5U0dLTEVWeWdKQ2dIaDNwQ0h4Q1Y5?=
- =?utf-8?B?T0xvK2I2UTJZVlBhVUprNjN1UXJORXg5c1ovSXRja2t6K2p6YkkrOU13ODJt?=
- =?utf-8?B?dXFIOWYxU0Vva2ZyUU8ranh1dWxFeldPY2VjYzNxREVPUDZqRStsYmFVVnZa?=
- =?utf-8?B?Q2VwZ244R0xRMC9HajFZVkpNT2hDbTlWUG40Q1FhQ05KdldBd2FCYkxBaURv?=
- =?utf-8?B?cDB0NGUxN0hrY0x1bFJ1N29XZTkrOHd1Z05lV3U2ODVvem1XWEd2NDNpR25k?=
- =?utf-8?B?ZUplV3Y3L0xzajIvQWJyUXlPMFZVTVlVenpNSUNjOGVUcnlYOFoyYmgzZEg4?=
- =?utf-8?B?K0NRMVFuYnlLZTRyQ1dFbDlXaHcvYndzd1hUZCs5TUFBd0JQdHF4elhTK0JE?=
- =?utf-8?B?VC8yeEZoOFhqQ3FNWEIwYU1xMENrQVYvUE9ISzFrNmY2THAzRERCNVJXdDRC?=
- =?utf-8?B?RDhaUGJtVStXbWhIRTgwblEvaGJxSHE5L0VmcjFyMTZlSzZqVVhKdi91L2tI?=
- =?utf-8?B?eTlTMVNsU0NLY29PQlVXdXE1WGMrZURnbWtoUXdHLzlhWEgzaGdtNU80ZWIx?=
- =?utf-8?B?ZGlXYWE3TmJvUHNKTzhaazZBSmpmQnhTanVZcTZKTkJETEFYYUlDQUo1bDhK?=
- =?utf-8?B?eFVFd3dLRS8zdjRPSExTL3g1N0ZocGhwRFkwenlyLy9hU1RBazI5OGw4WVNB?=
- =?utf-8?B?Q3dRTE1qb0ZLdlpjSHNzVXI5MnNVL2grTUUxa29wNktZajFta2hWUExTbjRa?=
- =?utf-8?B?UUx6aS9CQnJxMW5paUtHV0pBMDZWaVNhQXNJd3NCS3NpaUZRYXBGQWhhVkE3?=
- =?utf-8?B?YWhkckV1dG1veTY0MVZkN0lMZTA2QlI0dVQ4NGpyY2t2Tmh4b1ZOVk93aTky?=
- =?utf-8?B?Z09mZ2ozb0wwVVNlUVpjMVNwTEpnQ3dab3g5MWl6ZndIaXIwMzlHMkNFckVC?=
- =?utf-8?B?Z1E9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eUJYNzFsOHNpcC8zbFVRditMaFpjVVBuR0tVMnduNnI3diswNDFHcGNzdFoz?=
+ =?utf-8?B?VVJOMzQ1eXpQSXh3M0kvaHNRa0RITE83bVVqWStONzQweXgvU1Nyem8rVnA1?=
+ =?utf-8?B?ZHNyVHdGdDViU2dyVWNkUkN3WUE0Skg4ck5BT09YOTltUDI2TzNFSG5DL0Qw?=
+ =?utf-8?B?TDM4NklvZng4eHlvTGlTRTZLSXlpSmNqZ3hPWFJRRW5TNDJZK2J4RWt3NFcx?=
+ =?utf-8?B?U2QxelgvNG42TWpkYWRiVUs2aWdGMzNkcWU1cVdMZlJoVXV3N3FKdzA3S2pN?=
+ =?utf-8?B?M3lCbDk3NFFkbTlsSDUzcndqWXBSL1Q2VUgvOHJ6WTNBbktCYS9zOHRCVHBt?=
+ =?utf-8?B?dVR1KzBDcXIrQ2NOK09udUVmVE9NRkVvbFM0cWhrNTdLc3FkcWY0Tk1tMURX?=
+ =?utf-8?B?NVMveEJUQTk5MkhXbHVrTWRmbE81dEVhS3JPL1BnTGpNMDRnTFFFV2JIU1BF?=
+ =?utf-8?B?dG5ESUZhZTU5U0hZYVQya1M1Y1A0d3U4TWFjaE9lTXRFTjRiUEdRUTlaYUpH?=
+ =?utf-8?B?dHVwamZDSkR4UGJqV1M1MzNkZ2dEYUpSMXM3bmpVSkxVeTJ0N0JDUUU3WDl6?=
+ =?utf-8?B?Q2NhMGtiQURvT2gwU3JKVVhZYlRodGhHRGxGdVZUejY2ZDBqOWd0cnRKa1RZ?=
+ =?utf-8?B?by9wVEJGcVRlNDJUdkdIaFZDZzUzbWdPTnE0STJuL0NydS9pN3VXb1hTcmta?=
+ =?utf-8?B?TjFiVEx3aG80MkVJcWZmSG44L3J3REVJUmZrZDY4b2RjbTh4RlBZL0Rna0l6?=
+ =?utf-8?B?b1JoSmhCQUZyaEhzQjdhS3hnR1E3aUNFU2h2YXJTMkloUncrSi94L25nVU9Q?=
+ =?utf-8?B?MUF0cWZGNHBIbmE3dy9WaFBXRGRWLzJLdzJNVEhGT1lhT3Bpa21UM1ZMNzJ1?=
+ =?utf-8?B?TkU2M1JHOWdBNEs5Y3hwMmE4R2U0dTlweENCWHZGd2h6dE1hcHdMMEhWWjJW?=
+ =?utf-8?B?SUs2aVVMTXh5VWdrT3ZDNWRuTGgwSHdTcC84OEswcERKN05XSy9jZW04TjZq?=
+ =?utf-8?B?L3NNckJ0NjAreTR6L1V6VXZzb0xGK3FpaWd5cytYVjZGU0VxdkVqWFBtZTZ2?=
+ =?utf-8?B?MUY1TkI2Nk9SNHpmMXZ3Y1RoblJ3UE5VTnhVSXQzd0htSStsWE5zWWJDbEJQ?=
+ =?utf-8?B?bldvbW1JMVpWaTFMZDB5TTRwRDNkUEZTSGRaZGxnUXova25ZemV3eU45ZjVm?=
+ =?utf-8?B?WWl1T05HSnd5VUtycDhoYmFTMnNrQ1BYdVphZFdFbGt6TXo3UUZGWHVsdmR0?=
+ =?utf-8?B?OWVBRldkWlJ5NGpUeVFJejN0NlQ1Z0xDSG55NGdXelJhNkgwQTUrcnZBdzZO?=
+ =?utf-8?B?U0YrSWZ3dUcrY28xbjFHZ2J2WUQ3cjlVbHJXcW93QXlRaUlwaTlvL1Y5RTM0?=
+ =?utf-8?B?UjVoWi9kdi81MSt6cFJNRTJreFJMMGhuWmttYVNVWERFeTlJZXF2STVlYlVm?=
+ =?utf-8?B?YTMwR0oyRGFlSzFMMFV1TVk2TlBLdGhxcTZtQ1pzcFV3eVJrdEExUThZNnp0?=
+ =?utf-8?B?RWYxZmQyRlV3TWN3Y1ZsakUxblBCbklHNFhsWVZFZnVtaGNOM1d6V2lZZmpP?=
+ =?utf-8?B?YzN3R0V3cVZxVkJoK3JaUXdvNEx1UVA4cEwwMHZFaTRRSXVqNFovV1cxV09V?=
+ =?utf-8?B?UkNtN2k0Q1I5azgvVVFTS29EZWlwV3hVa21TUUt4TjRFMzBPaUc0eHVwRTEv?=
+ =?utf-8?B?ZjJtMEREaDNOSmp4QzgvUnRHY0NuMHBSck9NMnBWRzhCSDlZOThQWXp6TDBM?=
+ =?utf-8?B?azNLWmZ2cmg0TG1EaEtZcWJyOTJYbVdnQnY2enVpZXljQStBcC9oQkxzWXFp?=
+ =?utf-8?B?VUJYL0ZYOTI2ZGl1cDJ6ejhqNGg2dERFdURIT0E3VWJOeWpXcHVUN0VSTnF2?=
+ =?utf-8?B?Vjk1MzNSRU43Y3VZQS84MVJPYWt2WGR1Tk9vaTFhVGFpb2VQcVRCQ0dNYWhW?=
+ =?utf-8?B?bm1VVGpXUS9tUmZLQTYvQkNwSjg0WllyNlR5L20vWStzZmRQQkh4VEN3TnpW?=
+ =?utf-8?B?di9BZUxwS1NpZGo5QmMyQU5wNEpLYjFXaWZXTWhtT3A0N3JwS0hDM05qc3g5?=
+ =?utf-8?B?RDNBZlFKdDNqdC9oZUxwVU1RQTBhVnQwMWdpL2M1ZU5md2ZibDAzQStiR1R3?=
+ =?utf-8?B?RTBaaEVrZy9yZVpHa2cxOHdZeWtOMzRBbC96alQyUXpZMnFFcVhibnR3Vndn?=
+ =?utf-8?B?dXc9PQ==?=
 X-OriginatorOrg: eilabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 54018047-a293-41e7-8766-08dab7443788
+X-MS-Exchange-CrossTenant-Network-Message-Id: 01af3a85-0f61-4e4a-9cb9-08dab74464ce
 X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 11:21:24.4324
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Oct 2022 11:22:40.4516
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: beF4t6cQPnxxUTLzmkIjlteoRF+Riq8bqSA6Q1QGeb0o4WJLGOcAsfYM4+X1FU/u/Cn5n9PJk3G9zIwjJ1UdeHyFzpTSC1CNZAL/T7xN7jc=
+X-MS-Exchange-CrossTenant-UserPrincipalName: lgKzkEyJWwdBUBtmqdDmrBB7EZ1syATwVDkchdSPbaXZlTht0OptEBEkT9tuN8MfoaWKEDsF33cngSPVpXCivxXYgvApgL0tpo9Ph7/050g=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3P194MB1700
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -131,15 +132,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The PCAL-ness of a chip can be known from its chip type:
-PCAL953X and PCAL653X chips have the PCAL register set, the others
-do not. It's better to have a separate chip type for PCAL953X chips:
-this encodes that the driver needs to use their extended registers,
-without the need for a separate PCA_PCAL flag in the driver_data.
-
-Remove PCA_PCAL bit and PCA_LATCH_INT bitmask.
-
-Add pca953x_is_pcal_type() function to check if chip is PCAL.
+Add pca953x_has_interrupt() function to improve code readability.
 
 Signed-off-by: Levente Révész <levente.revesz@eilabs.com>
 ---
@@ -147,226 +140,43 @@ Changes in v2:
 
     This is a new patch.
 
- drivers/gpio/gpio-pca953x.c | 87 ++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 39 deletions(-)
+ drivers/gpio/gpio-pca953x.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index bee81101ba28..dcd508368520 100644
+index dcd508368520..1725c1000445 100644
 --- a/drivers/gpio/gpio-pca953x.c
 +++ b/drivers/gpio/gpio-pca953x.c
-@@ -62,9 +62,8 @@
- #define PCAL_PINCTRL_MASK	GENMASK(6, 5)
- 
- #define PCA_INT			BIT(8)
--#define PCA_PCAL		BIT(9)
--#define PCA_LATCH_INT		(PCA_PCAL | PCA_INT)
- #define PCA953X_TYPE		(0x00 << 12)
-+#define PCAL953X_TYPE		(0x01 << 12)
- #define PCAL653X_TYPE		(0x02 << 12)
- #define PCA957X_TYPE		(0x03 << 12)
- #define PCA_TYPE_MASK		GENMASK(15, 12)
-@@ -90,13 +89,13 @@ static const struct i2c_device_id pca953x_id[] = {
- 	{ "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
- 	{ "pca9698", 40 | PCA953X_TYPE, },
- 
--	{ "pcal6408", 8 | PCA953X_TYPE | PCA_LATCH_INT, },
--	{ "pcal6416", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
--	{ "pcal6524", 24 | PCA953X_TYPE | PCA_LATCH_INT, },
--	{ "pcal6534", 34 | PCAL653X_TYPE | PCA_LATCH_INT, },
--	{ "pcal9535", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
--	{ "pcal9554b", 8  | PCA953X_TYPE | PCA_LATCH_INT, },
--	{ "pcal9555a", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
-+	{ "pcal6408", 8 | PCAL953X_TYPE | PCA_INT, },
-+	{ "pcal6416", 16 | PCAL953X_TYPE | PCA_INT, },
-+	{ "pcal6524", 24 | PCAL953X_TYPE | PCA_INT, },
-+	{ "pcal6534", 34 | PCAL653X_TYPE | PCA_INT, },
-+	{ "pcal9535", 16 | PCAL953X_TYPE | PCA_INT, },
-+	{ "pcal9554b", 8  | PCAL953X_TYPE | PCA_INT, },
-+	{ "pcal9555a", 16 | PCAL953X_TYPE | PCA_INT, },
- 
- 	{ "max7310", 8  | PCA953X_TYPE, },
- 	{ "max7312", 16 | PCA953X_TYPE | PCA_INT, },
-@@ -161,7 +160,7 @@ static const struct dmi_system_id pca953x_dmi_acpi_irq_info[] = {
- #endif
- 
- static const struct acpi_device_id pca953x_acpi_ids[] = {
--	{ "INT3491", 16 | PCA953X_TYPE | PCA_LATCH_INT, },
-+	{ "INT3491", 16 | PCAL953X_TYPE | PCA_INT, },
- 	{ }
- };
- MODULE_DEVICE_TABLE(acpi, pca953x_acpi_ids);
-@@ -225,6 +224,12 @@ static int pca953x_bank_shift(struct pca953x_chip *chip)
- 	return fls((chip->gpio_chip.ngpio - 1) / BANK_SZ);
+@@ -230,6 +230,11 @@ static inline bool pca953x_is_pcal_type(const struct pca953x_chip *chip)
+ 	return chip_type == PCAL953X_TYPE || chip_type == PCAL653X_TYPE;
  }
  
-+static inline bool pca953x_is_pcal_type(const struct pca953x_chip *chip)
++static inline bool pca953x_has_interrupt(const struct pca953x_chip *chip)
 +{
-+	int chip_type = PCA_CHIP_TYPE(chip->driver_data);
-+	return chip_type == PCAL953X_TYPE || chip_type == PCAL653X_TYPE;
++	return chip->driver_data & PCA_INT;
 +}
 +
  #define PCA953x_BANK_INPUT	BIT(0)
  #define PCA953x_BANK_OUTPUT	BIT(1)
  #define PCA953x_BANK_POLARITY	BIT(2)
-@@ -279,7 +284,7 @@ static bool pca953x_check_register(struct pca953x_chip *chip, unsigned int reg,
+@@ -965,7 +970,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip, int irq_base)
+ 	if (irq_base == -1)
+ 		return 0;
  
- 	/* Special PCAL extended register check. */
- 	if (reg & REG_ADDR_EXT) {
--		if (!(chip->driver_data & PCA_PCAL))
-+		if (!pca953x_is_pcal_type(chip))
- 			return false;
- 		bank += 8;
- 	}
-@@ -351,10 +356,17 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
+-	if (!(chip->driver_data & PCA_INT))
++	if (!pca953x_has_interrupt(chip))
+ 		return 0;
  
- 	switch (PCA_CHIP_TYPE(chip->driver_data)) {
- 	case PCA953X_TYPE:
--	case PCAL653X_TYPE:
- 		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
- 		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG;
- 		break;
-+	case PCAL953X_TYPE:
-+	case PCAL653X_TYPE:
-+		bank = PCA953x_BANK_INPUT | PCA953x_BANK_OUTPUT |
-+		       PCA953x_BANK_POLARITY | PCA953x_BANK_CONFIG |
-+		       PCAL9xxx_BANK_IN_LATCH | PCAL9xxx_BANK_PULL_EN |
-+		       PCAL9xxx_BANK_PULL_SEL | PCAL9xxx_BANK_IRQ_MASK |
-+		       PCAL9xxx_BANK_IRQ_STAT;
-+		break;
- 	case PCA957X_TYPE:
- 		bank = PCA957x_BANK_INPUT | PCA957x_BANK_OUTPUT |
- 		       PCA957x_BANK_POLARITY | PCA957x_BANK_CONFIG |
-@@ -362,12 +374,6 @@ static bool pca953x_readable_register(struct device *dev, unsigned int reg)
- 		break;
- 	}
+ 	ret = pca953x_read_regs(chip, chip->regs->input, irq_stat);
+@@ -1011,7 +1016,7 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
+ {
+ 	struct i2c_client *client = chip->client;
  
--	if (chip->driver_data & PCA_PCAL) {
--		bank |= PCAL9xxx_BANK_IN_LATCH | PCAL9xxx_BANK_PULL_EN |
--			PCAL9xxx_BANK_PULL_SEL | PCAL9xxx_BANK_IRQ_MASK |
--			PCAL9xxx_BANK_IRQ_STAT;
--	}
--
- 	return chip->check_reg(chip, reg, bank);
- }
+-	if (client->irq && irq_base != -1 && (chip->driver_data & PCA_INT))
++	if (client->irq && irq_base != -1 && pca953x_has_interrupt(chip))
+ 		dev_warn(&client->dev, "interrupt support not compiled in\n");
  
-@@ -378,20 +384,22 @@ static bool pca953x_writeable_register(struct device *dev, unsigned int reg)
- 
- 	switch (PCA_CHIP_TYPE(chip->driver_data)) {
- 	case PCA953X_TYPE:
--	case PCAL653X_TYPE:
- 		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
- 		       PCA953x_BANK_CONFIG;
- 		break;
-+	case PCAL953X_TYPE:
-+	case PCAL653X_TYPE:
-+		bank = PCA953x_BANK_OUTPUT | PCA953x_BANK_POLARITY |
-+		       PCA953x_BANK_CONFIG | PCAL9xxx_BANK_IN_LATCH |
-+		       PCAL9xxx_BANK_PULL_EN | PCAL9xxx_BANK_PULL_SEL |
-+		       PCAL9xxx_BANK_IRQ_MASK;
-+		break;
- 	case PCA957X_TYPE:
- 		bank = PCA957x_BANK_OUTPUT | PCA957x_BANK_POLARITY |
- 		       PCA957x_BANK_CONFIG | PCA957x_BANK_BUSHOLD;
- 		break;
- 	}
- 
--	if (chip->driver_data & PCA_PCAL)
--		bank |= PCAL9xxx_BANK_IN_LATCH | PCAL9xxx_BANK_PULL_EN |
--			PCAL9xxx_BANK_PULL_SEL | PCAL9xxx_BANK_IRQ_MASK;
--
- 	return chip->check_reg(chip, reg, bank);
- }
- 
-@@ -402,17 +410,17 @@ static bool pca953x_volatile_register(struct device *dev, unsigned int reg)
- 
- 	switch (PCA_CHIP_TYPE(chip->driver_data)) {
- 	case PCA953X_TYPE:
--	case PCAL653X_TYPE:
- 		bank = PCA953x_BANK_INPUT;
- 		break;
-+	case PCAL953X_TYPE:
-+	case PCAL653X_TYPE:
-+		bank = PCA953x_BANK_INPUT | PCAL9xxx_BANK_IRQ_STAT;
-+		break;
- 	case PCA957X_TYPE:
- 		bank = PCA957x_BANK_INPUT;
- 		break;
- 	}
- 
--	if (chip->driver_data & PCA_PCAL)
--		bank |= PCAL9xxx_BANK_IRQ_STAT;
--
- 	return chip->check_reg(chip, reg, bank);
- }
- 
-@@ -661,7 +669,7 @@ static int pca953x_gpio_set_pull_up_down(struct pca953x_chip *chip,
- 	 * pull-up/pull-down configuration requires PCAL extended
- 	 * registers
- 	 */
--	if (!(chip->driver_data & PCA_PCAL))
-+	if (!pca953x_is_pcal_type(chip))
- 		return -ENOTSUPP;
- 
- 	mutex_lock(&chip->i2c_lock);
-@@ -777,7 +785,7 @@ static void pca953x_irq_bus_sync_unlock(struct irq_data *d)
- 	DECLARE_BITMAP(reg_direction, MAX_LINE);
- 	int level;
- 
--	if (chip->driver_data & PCA_PCAL) {
-+	if (pca953x_is_pcal_type(chip)) {
- 		/* Enable latch on interrupt-enabled inputs */
- 		pca953x_write_regs(chip, PCAL953X_IN_LATCH, chip->irq_mask);
- 
-@@ -859,7 +867,7 @@ static bool pca953x_irq_pending(struct pca953x_chip *chip, unsigned long *pendin
- 	DECLARE_BITMAP(trigger, MAX_LINE);
- 	int ret;
- 
--	if (chip->driver_data & PCA_PCAL) {
-+	if (pca953x_is_pcal_type(chip)) {
- 		/* Read the current interrupt status from the device */
- 		ret = pca953x_read_regs(chip, PCAL953X_INT_STAT, trigger);
- 		if (ret)
-@@ -1251,7 +1259,7 @@ static int pca953x_regcache_sync(struct device *dev)
- 	}
- 
- #ifdef CONFIG_GPIO_PCA953X_IRQ
--	if (chip->driver_data & PCA_PCAL) {
-+	if (pca953x_is_pcal_type(chip)) {
- 		regaddr = chip->recalc_addr(chip, PCAL953X_IN_LATCH, 0);
- 		ret = regcache_sync_region(chip->regmap, regaddr,
- 					   regaddr + NBANK(chip) - 1);
-@@ -1325,8 +1333,9 @@ static int pca953x_resume(struct device *dev)
- #endif
- 
- /* convenience to stop overlong match-table lines */
--#define OF_653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __int))
- #define OF_953X(__nrgpio, __int) (void *)(__nrgpio | PCA953X_TYPE | __int)
-+#define OF_L953X(__nrgpio, __int) (void *)(__nrgpio | PCAL953X_TYPE | __int)
-+#define OF_L653X(__nrgpio, __int) ((void *)(__nrgpio | PCAL653X_TYPE | __int))
- #define OF_957X(__nrgpio, __int) (void *)(__nrgpio | PCA957X_TYPE | __int)
- 
- static const struct of_device_id pca953x_dt_ids[] = {
-@@ -1348,13 +1357,13 @@ static const struct of_device_id pca953x_dt_ids[] = {
- 	{ .compatible = "nxp,pca9575", .data = OF_957X(16, PCA_INT), },
- 	{ .compatible = "nxp,pca9698", .data = OF_953X(40, 0), },
- 
--	{ .compatible = "nxp,pcal6408", .data = OF_953X(8, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal6416", .data = OF_953X(16, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal6524", .data = OF_953X(24, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal6534", .data = OF_653X(34, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal9535", .data = OF_953X(16, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal9554b", .data = OF_953X( 8, PCA_LATCH_INT), },
--	{ .compatible = "nxp,pcal9555a", .data = OF_953X(16, PCA_LATCH_INT), },
-+	{ .compatible = "nxp,pcal6408", .data = OF_L953X( 8, PCA_INT), },
-+	{ .compatible = "nxp,pcal6416", .data = OF_L953X(16, PCA_INT), },
-+	{ .compatible = "nxp,pcal6524", .data = OF_L953X(24, PCA_INT), },
-+	{ .compatible = "nxp,pcal6534", .data = OF_L653X(34, PCA_INT), },
-+	{ .compatible = "nxp,pcal9535", .data = OF_L953X(16, PCA_INT), },
-+	{ .compatible = "nxp,pcal9554b", .data = OF_L953X( 8, PCA_INT), },
-+	{ .compatible = "nxp,pcal9555a", .data = OF_L953X(16, PCA_INT), },
- 
- 	{ .compatible = "maxim,max7310", .data = OF_953X( 8, 0), },
- 	{ .compatible = "maxim,max7312", .data = OF_953X(16, PCA_INT), },
+ 	return 0;
 -- 
 2.37.3
 
