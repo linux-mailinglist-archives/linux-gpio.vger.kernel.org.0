@@ -2,68 +2,71 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21A0360DD18
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 10:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A396860DE13
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 11:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232865AbiJZIeQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 04:34:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39434 "EHLO
+        id S233274AbiJZJ36 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 05:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233126AbiJZIeQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 04:34:16 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F16C50A5
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:34:14 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id r12so10917066lfp.1
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:34:14 -0700 (PDT)
+        with ESMTP id S233022AbiJZJ35 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 05:29:57 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9F240551
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 02:29:55 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id l32so9782961wms.2
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 02:29:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bNn3eWuA3AWM0RIAow9RlqRwoa5twz63NOiZnmeo3eQ=;
-        b=RF5f23X39jnoHypbuiZJzhbtfAW6XZL6cbsFW1s8Uv7PWpmGdMp/INQMRrzfSmRQ4A
-         fSSt7Eu89X1jYp+RZ45VumtDisnkVcHqQQO74X/hVeLbgXhVtSQXiPd6GQd51xBoOy+O
-         FlmXkZ10naRWifVjfeulWz8ap+47VkkYoSZfbus9ie8WmyyHojDBhHsv6xVqrrBubnKy
-         2zgj70y0L+BazIVI8I3gV4F9HUzGDFtUxu5fM2png+4wPhH/R81/QqU//X2D0C+9maSj
-         fbJ55tgRMf4ncBD0oMJ/BlJrRJ4RAqWorPQv6rDJEDhB3cVfU6vBMiqes+UmbI41fD1l
-         lyRA==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E6H2u9oGK4VXsKGNASBOoMX/dBF+iFbozvBEkuT+Wq4=;
+        b=J/hcPlK3P0/PYAh25MBDjVEkt187l1iYYxU1NZk+huy0jgX0oshlzMSF6CjcOYSU2o
+         dG5pFlczZphLMxv24nIB9lVa2tv7isgeXZhRBgdCn5/cwuqImKY6g+8axch5PZGLL2mZ
+         dSWdNHeoZPXAV59kpgyQnOhHuxZFCj62uqI/VWBma+i0099OJFiJh/kRaGOXWyHxfxQ+
+         hurBoUYM1HQfiAN6kLDAavZL/rDvS7yf+0zMAqurtFQ79tYDcOtnQl1gBIehu2ccb1bc
+         NkJYXeFFPlCgLk/DGUae59LtyoosODTcMChgph6vQogQOq7HvdC/Lr1sO30vBUKTi5yB
+         EgLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bNn3eWuA3AWM0RIAow9RlqRwoa5twz63NOiZnmeo3eQ=;
-        b=qsqP91uNB6DTDpxhOD4jzs7AEOG/UbLAAAb9bgf0EPfN/Gpf18OQQrbQ52B/17qIRT
-         tkEE22LO0DkgG1FJq+DsyE2/jGjAtvHD99pfyEGPZDWoVqY9bkym1G0inMgd/C150TUd
-         wa0XfAsW1P4umodQh0kWh5XHyDF1nfuZtehALIlNufwJwRxQSZ5MbuprQiCmLRiWMpe/
-         ZJndx10l2BvA13Vor0K4MzUBFYgcr8oeKlF48yJDTQT8VHQLcXJJZVNPTspqhf3wTofK
-         htWXdHNX0DxaRA4IHrAU7Bt+MB49avqydS2RB0cGeyJC7UmpkHgFUGOfC+obqYfKPIrM
-         CHvw==
-X-Gm-Message-State: ACrzQf2qq6BAD5zGMq1VzhJ3NsF3VkXjrF8xZma/Se+72I2wR4Tdka3r
-        A1bhmbuIHHB6mlAqbFAhqoaqbQ==
-X-Google-Smtp-Source: AMsMyM7BSY2ZR8CJPxdKa0hNALY8JKlCUFoXG3mwzoQaU+1XeZe6e+usB7xjmYEWbXbXpTlsXWBvlg==
-X-Received: by 2002:a05:6512:1289:b0:4a2:61ca:319a with SMTP id u9-20020a056512128900b004a261ca319amr14584527lfs.428.1666773252759;
-        Wed, 26 Oct 2022 01:34:12 -0700 (PDT)
-Received: from fedora.. ([85.235.10.72])
-        by smtp.gmail.com with ESMTPSA id u5-20020a05651220c500b004a65780e4cfsm761516lfr.106.2022.10.26.01.34.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 01:34:12 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH v2] soc: fsl: qe: Avoid using gpio_to_desc()
-Date:   Wed, 26 Oct 2022 10:33:48 +0200
-Message-Id: <20221026083348.107431-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E6H2u9oGK4VXsKGNASBOoMX/dBF+iFbozvBEkuT+Wq4=;
+        b=g/aUGujJqidjjOcqzIkAo/DCjiLvqT/WCoa6bvz5adzI04vrujeAa1TfLzN0gBaC4z
+         PELoLH9nHMIMOUMr/tX3Iz6HGrQVdGWWY/HEbGrbzZCv05gDAdn22NUzAVc7xy+HRjuo
+         kLiO309J3KkrDlOt3l8M6F42utO8PaThKvITXK+18YobZpM8hHVgnNaUCMAekAxWBRqB
+         W6QCwNIxe9nvNbBd1BVmcb8Et2LXOdj3/mSRZtwypc1Bg//XUKrLfJeUKr9/E2J9otqM
+         KQVH//KR+X1xNXBhyTNbILfnWdrojt29Fq8oxFMxcYUXmArsCjjgyqQ6j57N6WN16Xop
+         r+qg==
+X-Gm-Message-State: ACrzQf3NyjIY39GoyzB9+IsKhBdE//2cXFIe1roj6J4YNnfZ2KiR9zOv
+        jpwWE8d8jPzLiI/+nA7foiCsRA==
+X-Google-Smtp-Source: AMsMyM7q2Of+tpOxmL6S+98KSburHfj8xefTLmFr4ZHGUAH2MsZs2ksElXyw8bypxAEc6yn3vjKRNw==
+X-Received: by 2002:a05:600c:4f0f:b0:3ca:31ba:d77c with SMTP id l15-20020a05600c4f0f00b003ca31bad77cmr1766099wmq.36.1666776594461;
+        Wed, 26 Oct 2022 02:29:54 -0700 (PDT)
+Received: from [192.168.1.115] ([185.126.107.38])
+        by smtp.gmail.com with ESMTPSA id bd14-20020a05600c1f0e00b003b492753826sm1320809wmb.43.2022.10.26.02.29.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Oct 2022 02:29:53 -0700 (PDT)
+Message-ID: <9604b16e-df7d-634b-5c76-3aa6f9071fc0@linaro.org>
+Date:   Wed, 26 Oct 2022 11:29:52 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.0
+Subject: Re: [PATCH] mips: alchemy: gpio: Include the right header
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Ralf Baechle <ralf@linux-mips.org>
+Cc:     linux-mips@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org
+References: <20221026080528.105967-1-linus.walleij@linaro.org>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20221026080528.105967-1-linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,70 +75,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-We want to get rid of the old GPIO numberspace, so instead of
-calling gpio_to_desc() we get the gpio descriptor for the requested
-line from the device tree directly without passing through the
-GPIO numberspace, and then we get the gpiochip from the descriptor.
+On 26/10/22 10:05, Linus Walleij wrote:
+> The local GPIO driver in the MIPS Alchemy is including the legacy
+> <linux/gpio.h> header but what it wants is to implement a GPIO
+> driver so include <linux/gpio/driver.h> instead.
+> 
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: linux-gpio@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>   arch/mips/alchemy/common/gpiolib.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Add back the <linux/of_gpio.h> include: we are using the
-  mm_of_gpio_chip, which should be fixed, but not now.
----
- drivers/soc/fsl/qe/gpio.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
-diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
-index 99f7de43c3c6..68d48430ab33 100644
---- a/drivers/soc/fsl/qe/gpio.c
-+++ b/drivers/soc/fsl/qe/gpio.c
-@@ -14,9 +14,8 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/gpio/driver.h>
--/* FIXME: needed for gpio_to_chip() get rid of this */
--#include <linux/gpio.h>
- #include <linux/slab.h>
- #include <linux/export.h>
- #include <soc/fsl/qe/qe.h>
-@@ -161,6 +160,7 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 	struct qe_pin *qe_pin;
- 	struct gpio_chip *gc;
- 	struct qe_gpio_chip *qe_gc;
-+	struct gpio_desc *gpiod;
- 	int err;
- 	unsigned long flags;
- 
-@@ -170,14 +170,21 @@ struct qe_pin *qe_pin_request(struct device_node *np, int index)
- 		return ERR_PTR(-ENOMEM);
- 	}
- 
--	err = of_get_gpio(np, index);
--	if (err < 0)
-+	gpiod = fwnode_gpiod_get_index(of_fwnode_handle(np), NULL, index, GPIOD_ASIS, "qe");
-+	if (IS_ERR(gpiod)) {
-+		err = PTR_ERR(gpiod);
- 		goto err0;
--	gc = gpio_to_chip(err);
-+	}
-+	if (!gpiod) {
-+		err = -EINVAL;
-+		goto err0;
-+	}
-+	gc = gpiod_to_chip(gpiod);
- 	if (WARN_ON(!gc)) {
- 		err = -ENODEV;
- 		goto err0;
- 	}
-+	gpiod_put(gpiod);
- 
- 	if (!of_device_is_compatible(gc->of_node, "fsl,mpc8323-qe-pario-bank")) {
- 		pr_debug("%s: tried to get a non-qe pin\n", __func__);
--- 
-2.34.1
 
