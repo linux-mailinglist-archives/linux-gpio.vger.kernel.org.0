@@ -2,156 +2,190 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23D0E60E9FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 22:11:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9711B60EA43
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 22:29:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbiJZULW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 16:11:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48142 "EHLO
+        id S234300AbiJZU3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 16:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235118AbiJZULO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 16:11:14 -0400
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 302AB143A74;
-        Wed, 26 Oct 2022 13:11:12 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id d18-20020a05683025d200b00661c6f1b6a4so10703713otu.1;
-        Wed, 26 Oct 2022 13:11:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bxh7/bAaex3YOoW5fejtI6wP7XMx1Bm3idoLs8QD3D4=;
-        b=xSPXhAZZw4fUWNguCX+FMaMAp33yOfzqNRkm3lIOOkaLIsZyhLQXVbXc9jGMVTT9ry
-         HVAu0oQy6uCrJ6EMgRdBdd+KF/ejtQ1eOnRs7rpaq2I7nexcSvzhyUkOm5zJt8KxWwdY
-         yUMMu6depuegT/pOqCQH0JqqnEhUOLeHXamT+N72grd6fsAVPv4lSBRyqAtWapmWzvkn
-         wH6IkZir/FVVI7mEO11X8aHKJISO9vFqP9X5Ln9jqwtd53zKSqbkv6X4xcHNZFCpkY3/
-         chv764CEsOBBdK7fwTMs57umNfUczJhvC/lV3B7MlGIcrUAY5ztvOVNk8S+8P1CwQqFj
-         q5Qg==
-X-Gm-Message-State: ACrzQf0zlVm5EjwYfNejihbWxRwbaXk6AYP6Bza2xu7Z/fYLwJ/pm5wc
-        syOfwYkSU87uGf+sQ5Wm+A==
-X-Google-Smtp-Source: AMsMyM4eINBgPpQ+uYOM1SjWMaqslOU61o8eyuDNV/lbKUULILrGgf1JXyrSpYeSTmLixyx9jsYo6g==
-X-Received: by 2002:a05:6830:3102:b0:661:e1f9:ff75 with SMTP id b2-20020a056830310200b00661e1f9ff75mr22442086ots.207.1666815072153;
-        Wed, 26 Oct 2022 13:11:12 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id q10-20020a05683033ca00b00661a33883b8sm2525809ott.71.2022.10.26.13.11.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 13:11:11 -0700 (PDT)
-Received: (nullmailer pid 1123772 invoked by uid 1000);
-        Wed, 26 Oct 2022 20:11:12 -0000
-Date:   Wed, 26 Oct 2022 15:11:12 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Weilong Chen <chenweilong@huawei.com>
-Cc:     f.fangjian@huawei.com, linus.walleij@linaro.org,
-        yangyicong@hisilicon.com, xuwei5@huawei.com,
-        krzysztof.kozlowski+dt@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH next 2/2] dt-bindings: gpio: add entry for
- hisilicon,gpio-ascend910
-Message-ID: <20221026201112.GA1104486-robh@kernel.org>
-References: <20221026034219.172880-1-chenweilong@huawei.com>
- <20221026034219.172880-2-chenweilong@huawei.com>
+        with ESMTP id S234258AbiJZU3Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 16:29:16 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D099A23F4
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 13:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666816156; x=1698352156;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QToFn/yGbic6YUEtqmLxmyuvhbwVx1KKOijICF1WQyw=;
+  b=L4B6Z8OPOpeWgT37YLhYQXPAUwAZ/11JfQzbq7CAdL6VOQ/+ud/Y+YJj
+   EcFcfxJyYtv1oM6SkEdWqtXeSQOoktDD3tgnALP1cgaFL3Wx9oTBx32po
+   BGPl8uxzRnyii38HkfgwVWNFRfPrvtz/5IQ/Zq71b9B7O4uFmpfhE0FXi
+   JJcZWB+19N2a9duPDHDXKeT9vJAvV3MgFSvFXaVevm9b0rX4M2DgqF98W
+   XVBQoUrAORftCe2qIxJiQocq+alepUW3VBkOzA1DDC725MVhDx5PlTsnJ
+   TDN9rrV8pD2235nfeJNryWEmWS3DWJwCvJyCTOhkrSTstAV92aG4EXXY9
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="334676182"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="334676182"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 13:29:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="807197216"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="807197216"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 26 Oct 2022 13:29:11 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1onn1S-0007p6-2j;
+        Wed, 26 Oct 2022 20:29:10 +0000
+Date:   Thu, 27 Oct 2022 04:28:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ bfe66c8bb35c9307bada60f9563c37fff5ca5d16
+Message-ID: <63599877.is84g48rb3uKYJqG%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221026034219.172880-2-chenweilong@huawei.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 11:42:19AM +0800, Weilong Chen wrote:
-> Add the new compatible for HiSilicon gpio controller driver.
-> 
-> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
-> ---
->  .../gpio/hisilicon,gpio-ascend910.yaml        | 54 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml b/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
-> new file mode 100644
-> index 000000000000..912e4b808cae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
-> @@ -0,0 +1,54 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/hisilicon,gpio-ascend910.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HiSilicon common GPIO controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Jay Fang <f.fangjian@huawei.com>
-> +
-> +properties:
-> +  compatible:
-> +    const: hisilicon,gpio-ascend910
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: bfe66c8bb35c9307bada60f9563c37fff5ca5d16  Merge branch 'devel' into for-next
 
-The normal convention is: vendor,soc-ipblock
+elapsed time: 723m
 
-> +    description:
-> +      The HiSilicon common GPIO controller can be used for many different
-> +      types of SoC such as Huawei Ascend AI series chips.
-> +
-> +  reg:
-> +    description:
-> +      Address and length of the register set for the device.
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 32
-> +
-> +required:
-> +  - compatible
-> +  - gpio-controller
-> +  - reg
-> +  - interrupts
-> +  - ngpios
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    gpio@840d0000 {
-> +      compatible = "hisilicon,gpio-ascend910";
-> +      reg = <0x840d0000 0x1000>;
-> +      ngpios = <0x20>;
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      interrupts = <0x0 33 0x4>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 746becb5fe92..0ec86558cdce 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9212,6 +9212,7 @@ HISILICON GPIO DRIVER
->  M:	Jay Fang <f.fangjian@huawei.com>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
->  F:	drivers/gpio/gpio-hisi.c
->  
->  HISILICON HIGH PERFORMANCE RSA ENGINE DRIVER (HPRE)
-> -- 
-> 2.31.GIT
-> 
-> 
+configs tested: 108
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+alpha                               defconfig
+um                             i386_defconfig
+x86_64                              defconfig
+um                           x86_64_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+powerpc                           allnoconfig
+x86_64                               rhel-8.3
+mips                             allyesconfig
+powerpc                          allmodconfig
+x86_64                           allyesconfig
+ia64                             allmodconfig
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+sh                               allmodconfig
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a001
+arc                              allyesconfig
+i386                          randconfig-a003
+i386                                defconfig
+s390                                defconfig
+x86_64               randconfig-a014-20221024
+x86_64               randconfig-a013-20221024
+arm                                 defconfig
+s390                             allmodconfig
+x86_64               randconfig-a012-20221024
+m68k                             allmodconfig
+x86_64               randconfig-a016-20221024
+x86_64               randconfig-a011-20221024
+m68k                             allyesconfig
+i386                          randconfig-a005
+i386                          randconfig-a014
+x86_64               randconfig-a015-20221024
+arc                  randconfig-r043-20221024
+riscv                randconfig-r042-20221024
+arc                  randconfig-r043-20221023
+s390                 randconfig-r044-20221024
+i386                             allyesconfig
+i386                          randconfig-a012
+i386                          randconfig-a016
+arc                  randconfig-r043-20221026
+s390                 randconfig-r044-20221026
+riscv                randconfig-r042-20221026
+xtensa                         virt_defconfig
+arm                          exynos_defconfig
+arm                            qcom_defconfig
+powerpc                       ppc64_defconfig
+ia64                                defconfig
+m68k                           virt_defconfig
+mips                            gpr_defconfig
+alpha                            allyesconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+s390                             allyesconfig
+m68k                       m5475evb_defconfig
+powerpc                 mpc837x_mds_defconfig
+sh                 kfr2r09-romimage_defconfig
+sh                          sdk7780_defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+sparc                               defconfig
+arc                              alldefconfig
+arm                            pleb_defconfig
+mips                      maltasmvp_defconfig
+powerpc                    amigaone_defconfig
+sh                           se7724_defconfig
+sh                          rsk7201_defconfig
+i386                          randconfig-c001
+mips                 randconfig-c004-20221026
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+powerpc                         wii_defconfig
+arm                        multi_v7_defconfig
+arc                           tb10x_defconfig
+m68k                          sun3x_defconfig
+powerpc                      ppc6xx_defconfig
+arm                        keystone_defconfig
+powerpc                     stx_gp3_defconfig
+arm                         axm55xx_defconfig
+powerpc                     redwood_defconfig
+sh                      rts7751r2d1_defconfig
+mips                        vocore2_defconfig
+
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a004
+hexagon              randconfig-r045-20221023
+i386                          randconfig-a013
+x86_64               randconfig-a001-20221024
+x86_64               randconfig-a005-20221024
+i386                          randconfig-a015
+x86_64               randconfig-a003-20221024
+hexagon              randconfig-r041-20221024
+x86_64               randconfig-a002-20221024
+riscv                randconfig-r042-20221023
+x86_64               randconfig-a006-20221024
+i386                          randconfig-a006
+hexagon              randconfig-r045-20221024
+x86_64               randconfig-a004-20221024
+s390                 randconfig-r044-20221023
+hexagon              randconfig-r041-20221023
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
