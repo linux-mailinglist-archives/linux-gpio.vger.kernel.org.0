@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB8AE60DCBA
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 10:05:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4B9660DCF9
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 10:22:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231937AbiJZIFe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 04:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
+        id S229949AbiJZIWo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 04:22:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiJZIFd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 04:05:33 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 616318C47A
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:05:32 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id j16so7434554lfe.12
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:05:32 -0700 (PDT)
+        with ESMTP id S231597AbiJZIWn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 04:22:43 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6B22C3573
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:22:40 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id ud5so15688749ejc.4
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 01:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZT2RtRVdSe4A/vZjl2soZfExRRC4tFUI2ftnW/OyxcI=;
-        b=lISX1dm2DJj7wZFPa1HV8C2vEB4pYOwWe1OWwHy2MTGzcz9GgV5lgxJun1dAgqAaOY
-         a70ief7EQxbkEhZpwrhvG9vgZPrngGP20z6ds8fiwF+SPIehpova3CEhulOxck89ibOb
-         yUJm6LEQyTuOPqBTT+ISRpvBkYEbWOEA/N8EmZiatLCD/ccW0UrxSeLO8tEPVzJTUdV1
-         UUvRx/H15+Bhebn/fjJ2EOG2wdBnInH37t2CyWhCNoL2gH3K5w8lVHCMDg8zWi1u8fwl
-         l3wAz3bOVvdLMbltmnFeuRo5xfu3nw62jcACldLwEksRurz+goE439ZnLk5Tt81Pp1rr
-         loCg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2fNgfK9QPZpMfAspXaOe8HD4bbKc2oxtDjn7EBlThM=;
+        b=bd4AJmbokpehkjDHWElZ6ytKQrcHydEV8mTwQiXmanDzPQjCC5VzXFfzpqI6BIa8nW
+         GvwPqgo+c6yeLMuy1nq0WqwAOosnDP7VBOfRujXhntOR+FLvCqIH3bJ+L7vAutF01smJ
+         b4UR4vay1gV8O+FWvuwpIvVSFPhBLqQwwjKW/x3MLIuR7NHLKk3lLPobqBMyJU2WVvBO
+         unbriAF/MtkvNNqdJzAxv7wi43KVsVH9bsw8Oc2TjllkBRXn9+J2muq6KWaooX4Zf2Cl
+         DOY3VMxCC9WKbJNty481QhYI1LoyTMeO7Bh0UzsEc36EHXw8uG6e7vdKc0PSH9Nkp4qq
+         jAmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZT2RtRVdSe4A/vZjl2soZfExRRC4tFUI2ftnW/OyxcI=;
-        b=yLI5bGC8oRaHdlCYtKqkyNadCDnvLkVOBpbbXKkhacwDpJLnkEbsdH/oCu5lpt58+p
-         y7Pxq3QLpVQo6FcoI2V8fJVs+HsfdRdAEJoTPWoXcqG/6Uh9y0s8Ljxjg8jagF9v0O1H
-         74TdEXiDj+I1+KZ9yyo8cwxvcVgsvMQC/5vf7e8xBfTnmDDUWMOjPbo9YzxjOw6cr/JF
-         XBTcYf0qgoyQDDdWYVxST1vrIeTPjlITuLEwl7O5efi+JWNBvSRDcTKHe58uPZymOnHW
-         lEW2a8I8AqPTFL3Mo9XwHvK+/Ucb0IENPLYWIqaLhgfYwMs//3kopLNJ6/aT1NOZfP0T
-         XQug==
-X-Gm-Message-State: ACrzQf2HlJpydHxZS8s1nUcFBrqpsJKjGSuAGdZ2VoRkL9yrBzr7QXId
-        XQqaDuPOf4mOEn7lklKVGXw75mAw2ICmWnf9
-X-Google-Smtp-Source: AMsMyM7kRy8yg7rxEFuFWIuyQarh2UEzeIz+Ek640A+laDhZFLsSren6Ycu8zeeVYw2FhvPF84nmUA==
-X-Received: by 2002:a19:5e11:0:b0:4a2:7d32:66 with SMTP id s17-20020a195e11000000b004a27d320066mr15044771lfb.48.1666771530736;
-        Wed, 26 Oct 2022 01:05:30 -0700 (PDT)
-Received: from fedora.. ([85.235.10.72])
-        by smtp.gmail.com with ESMTPSA id d10-20020ac244ca000000b004a1e592837esm750958lfm.140.2022.10.26.01.05.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 01:05:30 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Ralf Baechle <ralf@linux-mips.org>
-Cc:     linux-mips@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: [PATCH] mips: alchemy: gpio: Include the right header
-Date:   Wed, 26 Oct 2022 10:05:28 +0200
-Message-Id: <20221026080528.105967-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        bh=C2fNgfK9QPZpMfAspXaOe8HD4bbKc2oxtDjn7EBlThM=;
+        b=Ax0oQtcqRc46AMBoZiLloaVPceKKZa3U+ZVaR7IpCUgGJGdl7HtxEq48B0D9eSgHP7
+         9JzhRK45tHzEcESYC/vuQRb3WDJKll0BjZsOB16Jza8ahPuruvDNvRK2oA3PdhTvdFhe
+         6FYEwJEbZldxXo5Cne4OIvci7gR5DZscFrdgDktwOWc6TGlzrhtIV7wuEJqLqxHWQKrT
+         3cpRX7ppV7yleI3czvpw8hna/qhy1tuFioV7kZ+y+td0KCKIc30TiJCTXe5wCGp9jUpH
+         qIYVEQzL2eqi60PqDraGXpmwXFGGM3b4mQvXX23rWMtKQz+J/NJ4GJpNB+v9YdpQmRO+
+         fQ+w==
+X-Gm-Message-State: ACrzQf0B42NZn0pj5lW3vQdx9zdoHaKWMs2a2DJIzOHiLjJ+mlccZPVn
+        tLprKx/hAmqPnU/GYLIohgRFfysELKxEKXtHPh4gc6QldK+WAA==
+X-Google-Smtp-Source: AMsMyM7fMMRKy7xD8qYXa6vQyiW50PX/F9cvTUKlPX42BrSM8NMgLv6LjMzeDOr/SKwDH31LwXmz7y6LXgRrLimTktk=
+X-Received: by 2002:a17:907:a06b:b0:78d:d25f:b726 with SMTP id
+ ia11-20020a170907a06b00b0078dd25fb726mr36402448ejc.203.1666772559334; Wed, 26
+ Oct 2022 01:22:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221024080828.3840438-1-jk@codeconstruct.com.au>
+ <CACRpkdYEVHR0LCnxn4q=6Ccvu+vWOzR5XwAoaEtPURkubz71wA@mail.gmail.com> <4407163c91f21fa56f88d069a40b738ed307a812.camel@codeconstruct.com.au>
+In-Reply-To: <4407163c91f21fa56f88d069a40b738ed307a812.camel@codeconstruct.com.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 26 Oct 2022 10:22:28 +0200
+Message-ID: <CACRpkdZM5i74AkP4HcPcswGTF5B09=FxsrtbXPMZq4dvzPhPng@mail.gmail.com>
+Subject: Re: [PATCH] gpio: ftgpio010: use device name for gpiochip name & label
+To:     Jeremy Kerr <jk@codeconstruct.com.au>
+Cc:     linux-gpio@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Matt Johnston <matt@codeconstruct.com.au>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -69,30 +67,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The local GPIO driver in the MIPS Alchemy is including the legacy
-<linux/gpio.h> header but what it wants is to implement a GPIO
-driver so include <linux/gpio/driver.h> instead.
+On Mon, Oct 24, 2022 at 2:45 PM Jeremy Kerr <jk@codeconstruct.com.au> wrote:
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- arch/mips/alchemy/common/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Out of curiosity: what device/SoC are you using this driver with?
+>
+> Thanks for the review.
+>
+> We're using the ftgpio driver for GPIO peripherals on the microwatt CPU
+> implementation; the driver uses a simple & sensible register layout, so
+> we've based the gateware on that:
+>
+>  https://github.com/CodeConstruct/microwatt/commit/03293903
+>
+> That's a fairly arbitrary choice, but it works well as-is.
 
-diff --git a/arch/mips/alchemy/common/gpiolib.c b/arch/mips/alchemy/common/gpiolib.c
-index a17d7a8909c4..1b16daaa86ae 100644
---- a/arch/mips/alchemy/common/gpiolib.c
-+++ b/arch/mips/alchemy/common/gpiolib.c
-@@ -31,7 +31,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
- #include <asm/mach-au1x00/gpio-au1000.h>
- #include <asm/mach-au1x00/gpio-au1300.h>
- 
--- 
-2.34.1
+Haha that was a clever choice, adjust the reality after the map :D
 
+I could have done it myself!
+
+Yours,
+Linus Walleij
