@@ -2,116 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D153860E136
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 14:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B0960E13D
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 14:53:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233817AbiJZMvd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 08:51:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57910 "EHLO
+        id S232903AbiJZMxr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 08:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232903AbiJZMvc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 08:51:32 -0400
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3E79DD891
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:51:30 -0700 (PDT)
-Received: by mail-vk1-xa2c.google.com with SMTP id y129so7795827vkg.8
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MsB4qBPjpgcHYx8+lcYwIXJdnA7utXxH3W08banDjGA=;
-        b=cUNXi01PsdzbRkMp5m1ITjc2gBs2EHihS/51UX4cHPIkUj1fpNEpEHKaBMn2m35GsU
-         uzSPYP81x/0SLimTifYkmX6MTJ+++X4sDUoOllxjzcyBDFTB2V/sc227exQrVW7e39UH
-         baUqytjfMAZpVFxGgqL52HXnZyJMoRhbLyF9qcYO5KApbotQoFDpoPI7qXlANSqWmS6c
-         7Xma+cyEeGFm+xzEQs0wQgHY1p7Bqc4/qUpjJwYLJOkKi4892Oy2BVmglpD93Wx6YeW1
-         06FV8bABkl+I0DrlaKDYEF9VnV4yg+BwxQ0QH2wJpG7Lbn6lMrIU1VkStIGge0XWy0qz
-         mM+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MsB4qBPjpgcHYx8+lcYwIXJdnA7utXxH3W08banDjGA=;
-        b=7gZEJEOpJyM/ap68gqcG6gp0p99xGX6MaVpdVPf5RijNkm/HY5y1+y1SDb+Ra/Xlvq
-         m0DUD2zyeH2UOv/wq9TheVI6FMPtryXYOCvqG656YXjQn5nlS1bLIhAcVo4OTfUuajqH
-         zZNiYOu1AbXPzLD6CG5DGyiRaqvIeQz5u78eZ/2KopjtV+9xEYsoCyzuyy8Wrf+jqH3/
-         +Xs6D3QUv1ron7C5ktL5GoMFWgRhL9fJh+ntX6vxHNWXLApVle1hmGnlpTK5PK8v0gBd
-         yThzHRgDMrvZpLvUx/rLj6F9vPi07ChyTimiBNNGy/F5iCfMub3nbe3p4OXesOa8jDdd
-         l/XA==
-X-Gm-Message-State: ACrzQf1PKw8eMXDKg6F41stQ1dmHaD7/y6HoL9F4AS7EAG72rzmGbZmx
-        AQarhiJtojbxqfHFRrHffa/p2WLdEwcdmcnZ51SJ1AHgNoc=
-X-Google-Smtp-Source: AMsMyM5GucTb1XadTqwakxDzlyW8r6GrVuewHRaRjn8hZX0HjTZCuTijjuXPgFxsmpOVQtP+q5ZH6O3f+Hfa0Ds0KCM=
-X-Received: by 2002:a1f:2455:0:b0:3b7:88a4:c121 with SMTP id
- k82-20020a1f2455000000b003b788a4c121mr5738060vkk.1.1666788689808; Wed, 26 Oct
- 2022 05:51:29 -0700 (PDT)
+        with ESMTP id S233919AbiJZMxq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 08:53:46 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ABD7F5CEC
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 05:53:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666788826; x=1698324826;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=B5rubBoY7gcrNO9YOrzyyfOVtNHKx4bFR7SoaOzcN8I=;
+  b=NFEXeho/U2pziFxago5QOUkb/99cMCgRJzd7HEU/dKPPzUZWD3uG05Z8
+   sNsueCOMATst/sPshmINBYPuSCigmAtqnSKIyF0DXl1UUgvIp6N9aXeL6
+   04NRSLNDPKK5SbeG4dPelH1FuoIyKk3ctcQl0vhpE9dfQRe0/tJSqIXy+
+   kSQCF01Z+2Kk0tcNcIg0UMsBrZU4w8ryxFNvb2ze7/pUFoyKS4X21N8EG
+   PDbe4C/Iy3hYB4gLw5Sf3hwKnt80RIYQKAAIoRCHd2bAoWN0gjXzW1Rjx
+   pM7qrO/FmQTnxewOHqknHNVS7NfralvJeK80J8LWyCyrOnwgaWIAJF+RE
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="288332296"
+X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
+   d="scan'208";a="288332296"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 05:53:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="774573766"
+X-IronPort-AV: E=Sophos;i="5.95,214,1661842800"; 
+   d="scan'208";a="774573766"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 26 Oct 2022 05:53:44 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1onfuh-002eRX-0R;
+        Wed, 26 Oct 2022 15:53:43 +0300
+Date:   Wed, 26 Oct 2022 15:53:42 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod v2][PATCH v4 2/4] bindings: python: add examples
+Message-ID: <Y1kt1iHYpbZGaND4@smile.fi.intel.com>
+References: <20221026123425.498912-1-brgl@bgdev.pl>
+ <20221026123425.498912-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20220930102259.21918-1-shubhrajyoti.datta@amd.com>
- <20220930102259.21918-3-shubhrajyoti.datta@amd.com> <CAMuHMdUAcA=4Xcgr9hHgT5cro=s0mvAQqHmco0-e-NvWKJmrCA@mail.gmail.com>
- <Y1keKRzBhSDi671j@smile.fi.intel.com>
-In-Reply-To: <Y1keKRzBhSDi671j@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 26 Oct 2022 14:51:18 +0200
-Message-ID: <CAMRc=MfR14_Pd57AgqyGTRsghb7OjyPNOyoWmvnae5i=Fnznug@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] gpio: pca9570: add a platform data structure
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
-        linux-gpio@vger.kernel.org, git@amd.com,
-        devicetree@vger.kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        robh+dt@kernel.org, linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221026123425.498912-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 1:46 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Oct 26, 2022 at 12:00:34PM +0200, Geert Uytterhoeven wrote:
-> > Hi Shubhrajyoti,
-> > On Fri, Sep 30, 2022 at 12:41 PM Shubhrajyoti Datta
-> > <shubhrajyoti.datta@amd.com> wrote:
->
-> ...
->
-> > Thanks for your patch, which is now commit 35a4bc94a47f2ea6 ("gpio:
-> > pca9570: add a platform data structure") in gpio/gpio/for-next
-> > linux-next/master next-20221026
->
-> Dunno if Bart rebases his tree...
->
+On Wed, Oct 26, 2022 at 02:34:23PM +0200, Bartosz Golaszewski wrote:
+> This adds the regular set of example programs implemented using libgpiod
+> python bindings.
 
-I will back it out of next. Shubhrajyoti: can you send a fixed version
-of this series?
+...
 
-Bart
+> +if __name__ == "__main__":
+> +    for chip in gpio_chips():
+> +        info = chip.get_info()
+> +        print("{} [{}] ({} lines)".format(info.name, info.label, info.num_lines))
 
-> ...
->
-> > >  static const struct of_device_id pca9570_of_match_table[] = {
-> > > -       { .compatible = "nxp,pca9570", .data = (void *)4 },
-> > > -       { .compatible = "nxp,pca9571", .data = (void *)8 },
-> > > +       { .compatible = "nxp,pca9570", .data = &pca9570_gpio },
-> > > +       { .compatible = "nxp,pca9571", .data = &pca9571_gpio },
-> >
-> > This breaks bisection, as .data is still considered to be the number
-> > of GPIOs:
-> >
-> >     gpio->chip.ngpio = (uintptr_t)device_get_match_data(&client->dev);
->
-> You beat me up to it, I have also noticed this.
->
-> > >         { /* sentinel */ }
-> > >  };
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+In all of them I would prefer to see the main() explicitly, like
+
+def main():
+	...
+
+if __name__ == "__main__":
+    main()
+
+(In this case the module can be imported by another one and main be reused)
+
+Also have you considered use of SystemExit() wrapper?
+
+...
+
+> +                    sys.exit(0)
+> +
+> +    sys.exit(1)
+
+Is it in the original C code?!
+I would expect that no chips -- no error.
+
+...
+
+> +if __name__ == "__main__":
+> +    if len(sys.argv) < 3:
+> +        raise TypeError("usage: gpioget.py <gpiochip> <offset1> <offset2> ...")
+
+	SystemExit(main(sys.argv)) ?
+
+> +    path = sys.argv[1]
+> +    lines = [int(line) if line.isdigit() else line for line in sys.argv[2:]]
+> +
+> +    request = gpiod.request_lines(
+> +        path,
+> +        consumer="gpioget.py",
+> +        config={tuple(lines): gpiod.LineSettings(direction=Direction.INPUT)},
+> +    )
+> +
+> +    vals = request.get_values()
+> +
+> +    for val in vals:
+> +        print("{} ".format(val.value), end="")
+
+> +    print()
+
+Without any conditional it will print an empty line, was it originally in the C
+variant?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
