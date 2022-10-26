@@ -2,104 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6E9E60E669
-	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 19:25:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE18660E69A
+	for <lists+linux-gpio@lfdr.de>; Wed, 26 Oct 2022 19:36:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233567AbiJZRZa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 13:25:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38208 "EHLO
+        id S233940AbiJZRf7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 13:35:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233840AbiJZRZa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 13:25:30 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B16981C8
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 10:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666805129; x=1698341129;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=m3lGQ+DS/DLtVJzqivRs1SmlJy00NLTtXjS71zgaDHw=;
-  b=XCX1JG9YlGeRFlWUT33snt5uT3sLqNt+5fd9vZz78sH5B6AsR5rIXb+A
-   MtshryDgC5j2NvI7a6jTDmHlMSuoo+yzqkASWMMHbK8nCCaXjeL5Vlw4h
-   N95PiN4rOYXUHrGu70MfTcLU2af/r2TDeIGo4WUbOavD3yQFzZAk82Fps
-   s97SHV1AxYlHb9Pb7/r9Kph8IGjp7UI7D5RuMec6BKigBjLBzkJojcvGu
-   v9upPWNUcKA7gTbVVCYmoPXD9dEyJpLTSod8IfxXVEml6jq8/i0FcKJQU
-   O6hTREJ8PVsFW/viLvd49uttEDSqD6lyOD32j5TTQYwHEC5Y/RiDGb5jW
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="308006525"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="308006525"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 10:25:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="737334965"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="737334965"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 26 Oct 2022 10:25:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1onk9c-002lp1-1Z;
-        Wed, 26 Oct 2022 20:25:24 +0300
-Date:   Wed, 26 Oct 2022 20:25:24 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] gpio: pca953x: Add PCAL953X as a separate chip
- type
-Message-ID: <Y1lthH3RNut4m/Wq@smile.fi.intel.com>
-References: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
- <9bdc962c-1cfe-8240-963c-491f3992b2cb@eilabs.com>
+        with ESMTP id S234005AbiJZRfz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 13:35:55 -0400
+Received: from mellanox.co.il (mail-il-dmz.mellanox.com [193.47.165.129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AABCC704A
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 10:35:53 -0700 (PDT)
+Received: from Internal Mail-Server by MTLPINE1 (envelope-from asmaa@mellanox.com)
+        with SMTP; 26 Oct 2022 20:29:06 +0300
+Received: from bu-vnc02.mtbu.labs.mlnx (bu-vnc02.mtbu.labs.mlnx [10.15.2.65])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id 29QHSvL7015424;
+        Wed, 26 Oct 2022 13:28:57 -0400
+Received: (from asmaa@localhost)
+        by bu-vnc02.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id 29QHSrSq027301;
+        Wed, 26 Oct 2022 13:28:53 -0400
+From:   Asmaa Mnebhi <asmaa@nvidia.com>
+To:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com,
+        bgolaszewski@baylibre.com, linux-acpi@vger.kernel.org
+Cc:     Asmaa Mnebhi <asmaa@nvidia.com>
+Subject: [PATCH v1 0/2] Add NVIDIA BlueField-3 GPIO driver and pin controller
+Date:   Wed, 26 Oct 2022 13:28:41 -0400
+Message-Id: <20221026172843.27236-1-asmaa@nvidia.com>
+X-Mailer: git-send-email 2.30.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bdc962c-1cfe-8240-963c-491f3992b2cb@eilabs.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_PASS,SPF_PASS,UNPARSEABLE_RELAY
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 01:21:23PM +0200, Levente Révész wrote:
-> The PCAL-ness of a chip can be known from its chip type:
-> PCAL953X and PCAL653X chips have the PCAL register set, the others
-> do not. It's better to have a separate chip type for PCAL953X chips:
-> this encodes that the driver needs to use their extended registers,
-> without the need for a separate PCA_PCAL flag in the driver_data.
-> 
-> Remove PCA_PCAL bit and PCA_LATCH_INT bitmask.
-> 
-> Add pca953x_is_pcal_type() function to check if chip is PCAL.
+This series of patches addresses maintainers' comments from a
+previous patch which supported the GPIO driver for BlueField-3 SoC:
+"[PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller"
+Instead of creating v2 for that patch, I am creating a new series
+starting patch v1 because there are 2 drivers involved.
 
-Suggested-by: ?
+It was suggested to follow the linux gpio standards, and separate the
+pin controller functionality from the gpio functionality.
+Instead of creating a followup v2 patch, I am creating a new series
+because there are 2 drivers (2 patches) involved now:
+1) NVIDIA BlueField-3 GPIO driver as front end
+2) NVIDIA BlueField-3 pin controller as back end
 
-> Signed-off-by: Levente Révész <levente.revesz@eilabs.com>
+Moved the FW_CONTROL_CLEAR/SET code to the pin controller so that
+there are 2 GPIO mux selectors:
+1) default hardware functionality
+2) gpio functionality where software can control the GPIO value when
+   the direction is set to output.
 
-...
+Removed support to the GPIO sysfs since its use is deprecated and risky.
+Instead, used libgpiod to test this code.
 
-> +static inline bool pca953x_is_pcal_type(const struct pca953x_chip *chip)
-> +{
-> +	int chip_type = PCA_CHIP_TYPE(chip->driver_data);
+Asmaa Mnebhi (2):
+  Support NVIDIA BlueField-3 GPIO controller
+  Support NVIDIA BlueField-3 pinctrl driver
 
-+ blank line
-
-> +	return chip_type == PCAL953X_TYPE || chip_type == PCAL653X_TYPE;
-> +}
+ drivers/gpio/Kconfig            |   7 +
+ drivers/gpio/Makefile           |   1 +
+ drivers/gpio/gpio-mlxbf3.c      | 314 ++++++++++++++++++++++++++++
+ drivers/pinctrl/Kconfig         |   9 +
+ drivers/pinctrl/Makefile        |   1 +
+ drivers/pinctrl/pinctrl-mlxbf.c | 353 ++++++++++++++++++++++++++++++++
+ 6 files changed, 685 insertions(+)
+ create mode 100644 drivers/gpio/gpio-mlxbf3.c
+ create mode 100644 drivers/pinctrl/pinctrl-mlxbf.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.1
 
