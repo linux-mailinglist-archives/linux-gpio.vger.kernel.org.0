@@ -2,171 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C773E60ED83
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 03:37:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E699B60F09A
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 08:51:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233926AbiJ0Bh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 21:37:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
+        id S233099AbiJ0Gv3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 02:51:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233858AbiJ0Bh1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 21:37:27 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E19F418F
-        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 18:37:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666834646; x=1698370646;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JZvChV1aZvUfhUyWjdpuZGuN0Af0y0wHJpDoganPJpM=;
-  b=XyTVm5oRv76uHgzAY1JEqxl06XVsNV+bJVK6KAWMhxP2gSvbO8rTmda7
-   ET7m3DeK5pA8KlnI1I6doM6bvgPjQmVHhcIH2WuqYLHgDpuP0ON2wuhST
-   6ctiq3ckzEN/isrl9lGwhwp3w5La3WwaYVpR4wL7eHYByZRgqCskg/jjf
-   W3he6g5wOQMglc7fjan50Od2qevgGspSBCqtfswPHjfyeeyrPsffnIMLt
-   fey5HnNH3mQhuenK7UTr8Czo0AZOba0VkzuFHhJVdLI6IKVCouyH/1VFN
-   sLOHOfXs0RTh+Sd/gTHJhxlaHy1bC5cdgZdcFOBeqjaxltES9FlAPnCYJ
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="394420543"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="394420543"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 18:37:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="632232087"
-X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
-   d="scan'208";a="632232087"
-Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 26 Oct 2022 18:37:25 -0700
-Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1onrpk-00086C-1d;
-        Thu, 27 Oct 2022 01:37:24 +0000
-Date:   Thu, 27 Oct 2022 09:37:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- b4e83d369015e3045418ca86984c3cd8dcf5a365
-Message-ID: <6359e0bf.1oJjtrbLesTN/qUT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233773AbiJ0Gv2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 02:51:28 -0400
+Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4F1E09A2;
+        Wed, 26 Oct 2022 23:51:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1666853486; x=1698389486;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=FQowr2WuDUlHUVuh8cb7EZP4GgKfYZcz55Rl/V7SGY8=;
+  b=Vxa+qIiuvL7Ghj1eWrLO/F1eOGrFmXUfZDwtwZFhObi7AfB4nqBO1vtn
+   QAJ+7W4mMIjtbEaV0b9F0Yi/9xS+xVsvtzPNG9D9l25DPYekHEDKZxLSP
+   MU5p7Hbli+I9NQjtZXZ7hJHgO5oJrg6bw2Vnu3Rs+0o3p4C5OpKE4eKll
+   A=;
+Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 Oct 2022 23:51:25 -0700
+X-QCInternal: smtphost
+Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 23:51:25 -0700
+Received: from aiquny2-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.29; Wed, 26 Oct 2022 23:51:23 -0700
+From:   Maria Yu <quic_aiquny@quicinc.com>
+To:     <linus.walleij@linaro.org>
+CC:     Maria Yu <quic_aiquny@quicinc.com>, <linux-gpio@vger.kernel.org>,
+        <stable@vger.kernel.org>
+Subject: [PATCH] pinctrl: core: Make p->state in order in pinctrl_commit_state
+Date:   Thu, 27 Oct 2022 14:51:10 +0800
+Message-ID: <20221027065110.9395-1-quic_aiquny@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: b4e83d369015e3045418ca86984c3cd8dcf5a365  gpio: exar: Allow IO port access
+We've got a dump that current cpu is in pinctrl_commit_state, the
+old_state != p->state while the stack is still in the process of
+pinmux_disable_setting. So it means even if the current p->state is
+changed in new state, the settings are not yet up-to-date enabled
+complete yet.
 
-elapsed time: 724m
+Currently p->state in different value to synchronize the
+pinctrl_commit_state behaviors. The p->state will have transaction like
+old_state -> NULL -> new_state. When in old_state, it will try to
+disable all the all state settings. And when after new state settings
+enabled, p->state will changed to the new state after that. So use
+smp_mb to synchronize the p->state variable and the settings in order.
+---
+ drivers/pinctrl/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-configs tested: 90
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-um                             i386_defconfig
-alpha                            allyesconfig
-um                           x86_64_defconfig
-m68k                             allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-ia64                             allmodconfig
-i386                                defconfig
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-i386                          randconfig-a003
-x86_64                        randconfig-a013
-x86_64                           rhel-8.3-kvm
-x86_64                        randconfig-a011
-x86_64                        randconfig-a002
-i386                             allyesconfig
-x86_64                          rhel-8.3-func
-x86_64                        randconfig-a015
-x86_64                    rhel-8.3-kselftests
-i386                          randconfig-a001
-riscv                randconfig-r042-20221026
-arc                  randconfig-r043-20221026
-s390                 randconfig-r044-20221026
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-i386                          randconfig-a014
-i386                          randconfig-a012
-i386                          randconfig-a016
-arm                                 defconfig
-i386                          randconfig-a005
-arm64                            allyesconfig
-arm                              allyesconfig
-m68k                            q40_defconfig
-arm                           imxrt_defconfig
-arm                         assabet_defconfig
-arm                          gemini_defconfig
-sparc                             allnoconfig
-m68k                        m5272c3_defconfig
-xtensa                    smp_lx200_defconfig
-powerpc                    amigaone_defconfig
-sh                           se7724_defconfig
-sh                          rsk7201_defconfig
-i386                          randconfig-c001
-arm                        keystone_defconfig
-powerpc                     stx_gp3_defconfig
-arm                         axm55xx_defconfig
-powerpc                     redwood_defconfig
-sh                      rts7751r2d1_defconfig
-mips                        vocore2_defconfig
-mips                            ar7_defconfig
-arc                            hsdk_defconfig
-arm                             ezx_defconfig
-sh                            migor_defconfig
-nios2                         3c120_defconfig
-mips                 randconfig-c004-20221026
-arm                           h5000_defconfig
-m68k                          hp300_defconfig
-alpha                            alldefconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-mips                  decstation_64_defconfig
-riscv             nommu_k210_sdcard_defconfig
-
-clang tested configs:
-x86_64                        randconfig-a014
-i386                          randconfig-a002
-i386                          randconfig-a004
-hexagon              randconfig-r045-20221026
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-hexagon              randconfig-r041-20221026
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-i386                          randconfig-a006
-x86_64                        randconfig-k001
-
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index 9e57f4c62e60..cd917a5b1a0a 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1256,6 +1256,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 		}
+ 	}
+ 
++	smp_mb();
+ 	p->state = NULL;
+ 
+ 	/* Apply all the settings for the new state - pinmux first */
+@@ -1305,6 +1306,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 			pinctrl_link_add(setting->pctldev, p->dev);
+ 	}
+ 
++	smp_mb();
+ 	p->state = state;
+ 
+ 	return 0;
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.17.1
+
