@@ -2,43 +2,43 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E699B60F09A
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 08:51:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF95360F0A0
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 08:54:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233099AbiJ0Gv3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 02:51:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60346 "EHLO
+        id S233514AbiJ0Gyh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 02:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233773AbiJ0Gv2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 02:51:28 -0400
+        with ESMTP id S234240AbiJ0Gyf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 02:54:35 -0400
 Received: from alexa-out-sd-01.qualcomm.com (alexa-out-sd-01.qualcomm.com [199.106.114.38])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4F1E09A2;
-        Wed, 26 Oct 2022 23:51:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAADFF9;
+        Wed, 26 Oct 2022 23:54:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1666853486; x=1698389486;
+  t=1666853669; x=1698389669;
   h=from:to:cc:subject:date:message-id:mime-version;
   bh=FQowr2WuDUlHUVuh8cb7EZP4GgKfYZcz55Rl/V7SGY8=;
-  b=Vxa+qIiuvL7Ghj1eWrLO/F1eOGrFmXUfZDwtwZFhObi7AfB4nqBO1vtn
-   QAJ+7W4mMIjtbEaV0b9F0Yi/9xS+xVsvtzPNG9D9l25DPYekHEDKZxLSP
-   MU5p7Hbli+I9NQjtZXZ7hJHgO5oJrg6bw2Vnu3Rs+0o3p4C5OpKE4eKll
-   A=;
+  b=p3AQD+a5SWz3SQFuNmxCcjQRZyVtZjn703LMF4tFodYj+ISAIrwNPVdf
+   wIiHL6sDBJJ4zvpPiKTeCkl5sx02ll9wYkYd9zn8V78HoxvaCdLtN9CZL
+   CV364MqiHEcI2FrNXqK5d+TDY4btrYD2niTf/FFmnlIujGS3UZtyiUv/2
+   o=;
 Received: from unknown (HELO ironmsg04-sd.qualcomm.com) ([10.53.140.144])
-  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 Oct 2022 23:51:25 -0700
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 26 Oct 2022 23:54:28 -0700
 X-QCInternal: smtphost
 Received: from unknown (HELO nasanex01a.na.qualcomm.com) ([10.52.223.231])
-  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 23:51:25 -0700
+  by ironmsg04-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 23:54:28 -0700
 Received: from aiquny2-gv.qualcomm.com (10.80.80.8) by
  nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.29; Wed, 26 Oct 2022 23:51:23 -0700
+ 15.2.986.29; Wed, 26 Oct 2022 23:54:27 -0700
 From:   Maria Yu <quic_aiquny@quicinc.com>
 To:     <linus.walleij@linaro.org>
 CC:     Maria Yu <quic_aiquny@quicinc.com>, <linux-gpio@vger.kernel.org>,
-        <stable@vger.kernel.org>
+        <linux-kernel@vger.kernel.org>
 Subject: [PATCH] pinctrl: core: Make p->state in order in pinctrl_commit_state
-Date:   Thu, 27 Oct 2022 14:51:10 +0800
-Message-ID: <20221027065110.9395-1-quic_aiquny@quicinc.com>
+Date:   Thu, 27 Oct 2022 14:54:08 +0800
+Message-ID: <20221027065408.36977-1-quic_aiquny@quicinc.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
