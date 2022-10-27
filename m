@@ -2,100 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AEC560F113
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 09:24:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF67F60F170
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 09:48:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234100AbiJ0HYF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 03:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55062 "EHLO
+        id S234831AbiJ0HsL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 03:48:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233626AbiJ0HYE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 03:24:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 329DC14FD00;
-        Thu, 27 Oct 2022 00:24:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B3E2D621B5;
-        Thu, 27 Oct 2022 07:24:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA96C433D6;
-        Thu, 27 Oct 2022 07:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1666855443;
-        bh=QKx/bBlbgDcgSnVkyP7W7hHWyRc89cVTFvdz2kOrV9s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pU5/NuVQCFs8T2qSP/1Kov3xQBxe55kB9LhgPo89SoqDm7XgDcJSHKWxvTumXmMXu
-         W/8WaeVe7y2vdufbXTaLASh8RiPsHPJKip8frXGHKUQlEkbytwKOtMCdDHCwQwokMO
-         jVgQ/5areQyskDP2FmXhQHiHach3AEYVdYDyyanI=
-Date:   Thu, 27 Oct 2022 09:24:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Maria Yu <quic_aiquny@quicinc.com>
-Cc:     linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: core: Make p->state in order in
- pinctrl_commit_state
-Message-ID: <Y1oyEMYRK8R0dOs1@kroah.com>
-References: <20221027065110.9395-1-quic_aiquny@quicinc.com>
+        with ESMTP id S234909AbiJ0Hrx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 03:47:53 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88D19169CC6;
+        Thu, 27 Oct 2022 00:47:51 -0700 (PDT)
+Received: from canpemm500004.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Myd4Z0JB8zJnLM;
+        Thu, 27 Oct 2022 15:45:02 +0800 (CST)
+Received: from [10.174.179.106] (10.174.179.106) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 27 Oct 2022 15:47:49 +0800
+Subject: Re: [PATCH next 2/2] dt-bindings: gpio: add entry for
+ hisilicon,gpio-ascend910
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <f.fangjian@huawei.com>, <linus.walleij@linaro.org>,
+        <yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
+        <robh+dt@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20221026034219.172880-1-chenweilong@huawei.com>
+ <20221026034219.172880-2-chenweilong@huawei.com>
+ <30b95e7b-b902-babc-ea78-a2112c80ec7e@linaro.org>
+From:   chenweilong <chenweilong@huawei.com>
+Message-ID: <050ab042-d51c-1e9a-eb85-8fbec8020211@huawei.com>
+Date:   Thu, 27 Oct 2022 15:47:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221027065110.9395-1-quic_aiquny@quicinc.com>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <30b95e7b-b902-babc-ea78-a2112c80ec7e@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.179.106]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500004.china.huawei.com (7.192.104.92)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 02:51:10PM +0800, Maria Yu wrote:
-> We've got a dump that current cpu is in pinctrl_commit_state, the
-> old_state != p->state while the stack is still in the process of
-> pinmux_disable_setting. So it means even if the current p->state is
-> changed in new state, the settings are not yet up-to-date enabled
-> complete yet.
-> 
-> Currently p->state in different value to synchronize the
-> pinctrl_commit_state behaviors. The p->state will have transaction like
-> old_state -> NULL -> new_state. When in old_state, it will try to
-> disable all the all state settings. And when after new state settings
-> enabled, p->state will changed to the new state after that. So use
-> smp_mb to synchronize the p->state variable and the settings in order.
-> ---
->  drivers/pinctrl/core.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index 9e57f4c62e60..cd917a5b1a0a 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -1256,6 +1256,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->  		}
->  	}
->  
-> +	smp_mb();
->  	p->state = NULL;
->  
->  	/* Apply all the settings for the new state - pinmux first */
-> @@ -1305,6 +1306,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->  			pinctrl_link_add(setting->pctldev, p->dev);
->  	}
->  
-> +	smp_mb();
->  	p->state = state;
->  
->  	return 0;
-> -- 
-> 2.17.1
-> 
+On 2022/10/26 22:46, Krzysztof Kozlowski wrote:
+> On 25/10/2022 23:42, Weilong Chen wrote:
+>> Add the new compatible for HiSilicon gpio controller driver.
+>>
+>> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+>> ---
+>>  .../gpio/hisilicon,gpio-ascend910.yaml        | 54 +++++++++++++++++++
+>>  MAINTAINERS                                   |  1 +
+>>  2 files changed, 55 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml b/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
+>> new file mode 100644
+>> index 000000000000..912e4b808cae
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/hisilicon,gpio-ascend910.yaml
+>> @@ -0,0 +1,54 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/hisilicon,gpio-ascend910.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: HiSilicon common GPIO controller Device Tree Bindings
+> Drop "Device Tree Bindings"
+>
+>> +
+>> +maintainers:
+>> +  - Jay Fang <f.fangjian@huawei.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: hisilicon,gpio-ascend910
+>> +    description:
+>> +      The HiSilicon common GPIO controller can be used for many different
+>> +      types of SoC such as Huawei Ascend AI series chips.
+> Put this description in top-level description.
+>
+>> +
+>> +  reg:
+>> +    description:
+>> +      Address and length of the register set for the device.
+> Drop description.
+>
+>> +    maxItems: 1
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  gpio-controller: true
+>> +
+>> +  "#gpio-cells":
+>> +    const: 2
+>> +
+>> +  ngpios:
+>> +    minimum: 1
+>> +    maximum: 32
+>> +
+>> +required:
+>> +  - compatible
+>> +  - gpio-controller
+> gpio-cells are not required?
+>
+>> +  - reg
+>> +  - interrupts
+>> +  - ngpios
+>> +
+>> +unevaluatedProperties: false
+> Instead:
+> additionalProperties: false
+>
+>> +
+>> +examples:
+>> +  - |
+>> +    gpio@840d0000 {
+>> +      compatible = "hisilicon,gpio-ascend910";
+>> +      reg = <0x840d0000 0x1000>;
+>> +      ngpios = <0x20>;
+> Convention for counting is to use decimal numbers.
+>
+>> +      gpio-controller;
+>> +      #gpio-cells = <2>;
+>> +      interrupts = <0x0 33 0x4>;
+> This looks like standard IRQ flags, so use respective defines.
 
-<formletter>
+Sorry, I don't get this, you mean like this? :
 
-This is not the correct way to submit patches for inclusion in the
-stable kernel tree.  Please read:
-    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
-for how to do this properly.
+interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
 
-</formletter>
+Thanks.
+
+>
+> Best regards,
+> Krzysztof
+>
+> .
+
+
