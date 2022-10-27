@@ -2,155 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8541460FE44
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 19:03:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 086B560FE3E
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 19:03:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236890AbiJ0RDm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 13:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57952 "EHLO
+        id S236886AbiJ0RDe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 13:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236893AbiJ0RDl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 13:03:41 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A4A6196379
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 10:03:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666890220; x=1698426220;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=/ZdY1xM9lx79qDz7snR9YO+UqOMS2gCTM+WUVrfpqUY=;
-  b=fxJ8DuGfHiAH613hch/cCtb87FkDEXb1sYTmgrX/4Fw/H4aB4N5WHosP
-   ppweiTWSPm1wkEqmvJ5DVU4BBFuCsdP8BWrIY7QLgtOVLOUtzFZKaS/yl
-   F8eX90JYLhyYFeRr6KV5j9G8il4En3cOW1ZnJ1QlSgDzZ/F8VmJKz2nIU
-   yR1uHZNn4hahNa+ToGonVA5isRMQ6DkaenzByhUbcP837ZpGJ12rvl4Nz
-   +Gj4a7Rea0cZimz1qqGsEmCyvR6gopRcEV7b+YpoZuX8xaBaBZFHzDP+W
-   9rvhLA++/XBGLpWYeAd0R1J+wHy0Gv8/TEfLWsFVtyKyx2XnXsN+PyLvO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="307009129"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="307009129"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 10:03:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="961697232"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="961697232"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Oct 2022 10:03:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oo6Hq-003Gwm-08;
-        Thu, 27 Oct 2022 20:03:22 +0300
-Date:   Thu, 27 Oct 2022 20:03:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Martyn Welch <martyn.welch@collabora.com>
-Cc:     Levente =?iso-8859-1?B?Uul26XN6?= <levente.revesz@eilabs.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S236884AbiJ0RDd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 13:03:33 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AEC5193458;
+        Thu, 27 Oct 2022 10:03:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
+        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
+        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Y8BdqvbJQ0ZP6qFbDFad/g/izccohLxbDFvD/ILFVcw=; b=u0CuSKABKNaJAuylnfoDmhH2R2
+        O4KRUsToM1gdBqgmsoAPPrwZ1ZMjkBwoZmWkjFv5Gc1yoHZF/WhrAEU0jOjCVi7marNcUAzLEgdi5
+        uOuThgToV2w7jqG0wadhMzVksYvMB+m/iZ17kZxB5YikDQ7KbLfMMPx+0He9tGnH4eo+6Swss937u
+        gO/btf0eawN40gNbgI23xG2d1dKUt5nxiDjClcv/t5n2r/5t3AZKQ8MQhvJnGYOfVnqzkcZq3Niz/
+        GWZ6AM8/w4e637adlBa8wS+C5QswxpCZuiQDmc7L6teN4VDrV/Ug5zg56T6yI7dciv+jvEOpWHQ9M
+        BPc9aQLg==;
+Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:57110 helo=rmk-PC.armlinux.org.uk)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <rmk@armlinux.org.uk>)
+        id 1oo6Hx-0007K1-FC; Thu, 27 Oct 2022 18:03:29 +0100
+Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <rmk@rmk-PC.armlinux.org.uk>)
+        id 1oo6Hw-00HYp8-Sa; Thu, 27 Oct 2022 18:03:28 +0100
+In-Reply-To: <Y1q5jW8ff0aUdjPd@shell.armlinux.org.uk>
+References: <Y1q5jW8ff0aUdjPd@shell.armlinux.org.uk>
+From:   "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Nate Drude <nate.d@variscite.com>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/6] gpio: pca953x: Add PCAL953X as a separate chip
- type
-Message-ID: <Y1q52efyv93/z8BC@smile.fi.intel.com>
-References: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
- <9bdc962c-1cfe-8240-963c-491f3992b2cb@eilabs.com>
- <Y1luUgS25ddeSCT9@smile.fi.intel.com>
- <8b94b5a6-fac8-5087-b4da-ddba098d2265@eilabs.com>
- <ea34ed6788923b8be496317f7a962d7073946ff4.camel@collabora.com>
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Hector Martin <marcan@marcan.st>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH 1/2] dt-bindings: gpio: add binding for the GPIO block for
+ Apple Mac SMC
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ea34ed6788923b8be496317f7a962d7073946ff4.camel@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Message-Id: <E1oo6Hw-00HYp8-Sa@rmk-PC.armlinux.org.uk>
+Sender: Russell King <rmk@armlinux.org.uk>
+Date:   Thu, 27 Oct 2022 18:03:28 +0100
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 02:54:38PM +0100, Martyn Welch wrote:
-> On Thu, 2022-10-27 at 15:36 +0200, Levente Révész wrote:
-> > Thank you for your guidance, it is much appreciated.
-> > On Wed, 26 Oct, 2022 at 17:29:17 +0000, Andy Shevchenko wrote:
-> > On Wed, 26 Oct, 2022 at 17:32:03 +0000, Andy Shevchenko wrote:
+Add the DT binding for the Apple Mac System Management Controller GPIOs.
 
-...
+Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+---
+ .../devicetree/bindings/gpio/gpio-macsmc.yaml | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
 
-> > If I understand this correctly, this should be a sufficient solution:
-> > 
-> >  #define PCA_PCAL               BIT(9)
-> >  #define PCA_TYPE_MASK          GENMASK(15, 12)
-> > -#define PCA_CHIP_TYPE(x)       ((x) & PCA_TYPE_MASK)
-> > +#define PCA_CHIP_TYPE(x)       (((x) & PCA_TYPE_MASK) >> 11 | ((x) &
-> > PCA_PCAL) >> 9)
-> > +#define PCA_SET_TYPE(x)        ((x) << 11 & PCA_TYPE_MASK | (x) << 9
-> > & PCA_PCAL)
-> > 
-> > Use 5 bits to encode chip type: bit 15..12 and bit 9.
-
-Easier if you move PCA_PCAL to be bit 11 and extend mask by one bit.
-
-
-> > PCA_SET_TYPE() shifts bits of the TYPE to the correct positions in
-> > the id.
-> > PCA_CHIP_TYPE() gathers the bits from the ID to form a nice decimal
-> > number.
-> > 
-> > -#define PCA953X_TYPE           BIT(12)
-> > -#define PCA957X_TYPE           BIT(13)
-> > -#define PCAL653X_TYPE          BIT(14)
-> > +#define PCA953X_TYPE           2
-> > +#define PCA953XM_TYPE          6
-> > +#define PCAL953X_TYPE          3
-> > +#define PCAL653X_TYPE          9
-> > +#define PCA957X_TYPE           4
-> > 
-> > Types are decimal numbers. Values are carefully chosen to leave
-> > existing
-> > IDs unchanged.
-> > 
-> >     * 2 instead of            BIT(12), ID mask remains
-> > 0b0001'0000'0000'0000
-> >     * 4 instead of            BIT(13), ID mask remains
-> > 0b0010'0000'0000'0000
-> >     * 9 instead of BIT(14) | PCA_PCAL, ID mask remains
-> > 0b0100'0010'0000'0000
-> >     * 3 instead of BIT(12) | PCA_PCAL, ID mask remains
-> > 0b0001'0010'0000'0000
-> > 
-> > PCAL chips have odd IDs, which means the PCA_PCAL bit will be set.
-> > 
-> > It seems more natural now to have a separate type, PCA953XM_TYPE for
-> > pca9505,
-> > pca9506 and pca9698 with the [M]ask register. Only PCA953X type chips
-> > can have
-> > this register anyway.
-> > 
-> > What do you think?
-> > 
-> 
-> I don't like the idea of encoding whether a device is PCA or PCAL into
-> the bit offsets. Primarily because it's massively opaque, making
-> successfully adding support for another device that much more prone to
-> issues, especially if that person isn't already intimately familiar
-> with the driver. I'd also like to point out that not all PCAL can be
-> handled the same. The register layout of the PCAL653X_TYPE needs to be
-> handled differently from the PCAL953X_TYPE.
-
-PCA_PCAL is about having latched interrupts, it doesn't suggest the layout. So,
-somebody needs to take a pen and draw the current list of possible combinations
-of the features and layouts and then we can see what can be done as a type and
-what's not.
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+new file mode 100644
+index 000000000000..a3883d62292d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-macsmc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Apple Mac System Management Controller GPIO
++
++maintainers:
++  - Hector Martin <marcan@marcan.st>
++
++description:
++  This describes the binding for the Apple Mac System Management Controller
++  GPIO block.
++
++properties:
++  compatible:
++    allOf:
++      - enum:
++          - apple,t8103-smc
++      - const: apple,smc-gpio
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++additionalProperties: false
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.30.2
 
