@@ -2,78 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51D14610077
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 20:41:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF42D610160
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 21:16:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236072AbiJ0Sla (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 14:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
+        id S236103AbiJ0TQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 15:16:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235686AbiJ0Sl3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 14:41:29 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9534A18A;
-        Thu, 27 Oct 2022 11:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666896088; x=1698432088;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=UZuk/q5fM41E9vtQd97mAMiexoqsdKI6J1hD4x0iZdM=;
-  b=e1wIgULMD5daRi8B5e4fLxIxNd+PfT0zH1oKTW2eBk5Xc6XclqsoJ1jK
-   j8lBJzpc7Y5GNp77R1qNK3QU567KCkXLdapWkpiRbfAKUFrLL3GAkufPb
-   qPY3/su+gobgWxucrtyfRoxDgt2ywD/FEKe/TRabzNNjK6IH6LHD9u4aU
-   8ckpP1p+KY2MMB8gG5bX0dc7KddaOm2iGbH0Jr2Yt7X6H2GoHM1zh7apd
-   vsq4Fi99yut4oKHrKsXUz85Lx3R5gVdPIzpfJKfgbv9+s2szRP5NII+f4
-   P8skRBj4zyT2jjnxQm1ibRljhIhQ4CJ2NDpwI0VbeaNnFj4//H7yvkwSH
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="310007021"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="310007021"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 11:41:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="665788119"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="665788119"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 27 Oct 2022 11:41:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9F4E1D0; Thu, 27 Oct 2022 21:41:47 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        with ESMTP id S236374AbiJ0TQt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 15:16:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8637772EDB;
+        Thu, 27 Oct 2022 12:16:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2672762486;
+        Thu, 27 Oct 2022 19:16:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 209CFC4314B;
+        Thu, 27 Oct 2022 19:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666898206;
+        bh=0FOUDtQQL42lE45KflCMkrX8g3yyb7/p/49sMzexo9U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Pk4iIsApYuq/PVHx2kx9WyUUsO83ow1XiisTenNMn5vip3e6ObhN6NiyWP6QDb2uf
+         w/QJWzsx5pdcnvZiy3ZqNGy0hkzr/fiQDGKL1QAka83OqI/1OLJslcPff3V51bWR0Z
+         cWBR9mxRla+lpB4Cmb+EGTg5TkCxBEyyAnU6HhoCKDbnH0ef+KZtX4HmZOd4wN5B4K
+         7TxCq+kmKjASkGzJQQA99tVeaS3cvPT38piLod5P777eZj9N07utXtaoUXcTxg27b7
+         /rhHp41lxJfg+oIepGu2cgzFdSJMx7GpSr8gXL1YBsO04bdK96fsrxTsFIRrHTaVWk
+         X1V8txzdvMz5Q==
+From:   Nathan Chancellor <nathan@kernel.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Add missed bitfield.h
-Date:   Thu, 27 Oct 2022 21:41:45 +0300
-Message-Id: <20221027184145.2533-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+        Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH -next] pinctrl: qcom: Include bitfield.h in pinctrl-lpass-lpi.c
+Date:   Thu, 27 Oct 2022 12:16:25 -0700
+Message-Id: <20221027191625.1738204-1-nathan@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Previously the cleanup change dropped the bitfield.h from the
-pinctrl-lpass-lpi.h, since it's not used there, but forgot to
-re-instantiate it in the C-file, where users are located.
+When building ARCH=arm allmodconfig, the following error occurs:
 
-Fix this by adding missed bitfield.h to the C-file.
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c: In function ‘lpi_gpio_set_mux’:
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c:102:9: error: implicit declaration of function ‘u32p_replace_bits’ [-Werror=implicit-function-declaration]
+    102 |         u32p_replace_bits(&val, i, LPI_GPIO_FUNCTION_MASK);
+        |         ^~~~~~~~~~~~~~~~~
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c: In function ‘lpi_config_get’:
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c:127:16: error: implicit declaration of function ‘FIELD_GET’ [-Werror=implicit-function-declaration]
+    127 |         pull = FIELD_GET(LPI_GPIO_PULL_MASK, ctl_reg);
+        |                ^~~~~~~~~
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c: In function ‘lpi_config_set’:
+  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c:233:23: error: implicit declaration of function ‘u32_encode_bits’ [-Werror=implicit-function-declaration]
+    233 |                 val = u32_encode_bits(value ? 1 : 0, LPI_GPIO_VALUE_OUT_MASK);
+        |                       ^~~~~~~~~~~~~~~
+  cc1: all warnings being treated as errors
+
+bitfield.h was included via pinctrl-lpass-lpi.h but another change
+removed that include to restrict what was being included. Add bitfield.h
+back to pinctrl-lpass-lpi.c, as it is needed there.
 
 Fixes: aa9430f8a6de ("pinctrl: qcom: Add missing header(s)")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
  drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 1 +
  1 file changed, 1 insertion(+)
@@ -90,6 +91,8 @@ index d5cfa91e2eff..3dc670faa59e 100644
  #include <linux/clk.h>
  #include <linux/gpio/driver.h>
  #include <linux/module.h>
+
+base-commit: 76f3768132eab2c26c9d67022b452358adc28b2c
 -- 
-2.35.1
+2.38.1
 
