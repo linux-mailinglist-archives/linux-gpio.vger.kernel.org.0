@@ -2,139 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6AB460F6FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 14:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE4A60F7FC
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 14:50:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235433AbiJ0MSR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 08:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51304 "EHLO
+        id S234908AbiJ0Muk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 08:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234509AbiJ0MSP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 08:18:15 -0400
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85007A2856
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:18:13 -0700 (PDT)
-Received: by mail-vs1-xe2d.google.com with SMTP id v129so1356146vsb.3
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:18:13 -0700 (PDT)
+        with ESMTP id S234795AbiJ0Muj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 08:50:39 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EB048C82
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:50:37 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id g16so992541qtu.2
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:50:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=c/1v3MDHKmUuMDnZkY9CyXTvRNdsSCP8+f7KKAGBU3Q=;
-        b=Q5H/8HKhffVOo4TlSWhG9ElPAum8MttNHhP8gR0S7zYb/250VLuqrzcu6cbPon5waX
-         ETBLpJgV8U4DWpf59DFum3E5dxaaXJvIwE1b9k3f7RNlk6ww5+qkfsMuBMM4woIncCQn
-         X/ozk5rQQisQuI5ZxWxNY1hZWKQmO+dg+X7wOUpklWITBS0kky2zuQyVEw8QWfYY5xyK
-         mWfQQYny1ThKReVEVnzV3OGqFdIfiqQTMEgSRWlON0TxKaVnpzTylTK9xiVsutdVldZS
-         aiz+Ekh+jhImN0kga33Ip16ZXI6XPS9hDmHlr/BuO0aKCxesgLEtxvELt/hW/1kZ5qEt
-         cp/g==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ybgHkyPF+h7dJ20qYdKfKJv6J92DUAxMTSyFP2z5UJQ=;
+        b=p2QnzXhclEA1PPVQOaTd00ydj0ppMq36WsuzwzleJlv1hDxYCc2YUUj61cmyodPgFR
+         /WOHBYv5NUDLqM+RiQ7r6e+go6BSrrTYbFYADycuCbsbzp7Y+tfqN5UqG5WMPX194zC5
+         2cg3B6OHPmkJsAfI/2DxmVEcOSY390ZthE1I47MvPQHDR7JPA9TVqCcMY09DqzyzrCWm
+         iOwiwCdkmWkszLJ4MFIJkA85Q+nhaMmYChvC8DFdW2vZlUy/uAe+aNX7RNc0AUduuZ7y
+         5aez2rY4+uRci600k1OkhWBxCTIoMMArPI1HfE7WEo5QD6giN/1E/8q9pNy55bjkEOSa
+         l6+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=c/1v3MDHKmUuMDnZkY9CyXTvRNdsSCP8+f7KKAGBU3Q=;
-        b=CtNW4yEnps8+aiTs0IRYTyAU1Rc0X/MqGy9A7zi4NVrp0fRCEvQOiTiAI9eSZBRy1F
-         rrMW0xuRqPupFi+/X1cEk98NFWPGT6xjVmmlv6Pa3rCFqusUJJUe9D2CHvoWEdlPJQhC
-         8bhdOpKIdduydeT+J9INtdssVSef0oCJOiDSpYvJn0PMykNPsBLQulggaOpX3S9HM76z
-         1zD7djNIQAOqDrX53+8qfCQPZu3fnYljbJghO/X/aSXHNeHrQaXeKV6yhAgg44ViV0o8
-         G5vPx7/D5vUkdjFwSYv9stYCHFxF+cYClMfdVK4GId13IXR2j/AW3HBlZJgCg9AEv5D1
-         30EA==
-X-Gm-Message-State: ACrzQf2+ARcm4Yf7W6fzQE2VERNkgHTCpsezKDngJAaEzSpIo02+UVEn
-        PY1lFnXWnWOuaudypiCD451hLfN0OAU3TCv+Pazv8V6rVYM=
-X-Google-Smtp-Source: AMsMyM6120L+UszFvw7eU681Mvz+9iFz5rgQCavi57hJD6b6GDOjXcrssfntw+TYPdqKRjAO2dSRxfC/c6EDn2r+nJs=
-X-Received: by 2002:a67:ac0e:0:b0:3aa:86c3:e6fc with SMTP id
- v14-20020a67ac0e000000b003aa86c3e6fcmr410460vse.9.1666873092599; Thu, 27 Oct
- 2022 05:18:12 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ybgHkyPF+h7dJ20qYdKfKJv6J92DUAxMTSyFP2z5UJQ=;
+        b=lxgPRFaIzq37Y0Fe3/jvwRKdDBQgbetJW2kEYyCLjhtYL89AlyT5HNsWshH0c4eYCP
+         Q9hIEfVsAzbj3M14KJ2B+83M0mlgrSBeTZyg22r5RsCclL2vJt6IE2jXbFiTqOOkgvk1
+         5H55nn4eMGc/pTpxeJ0WO3re6WfEaz1tHwnyk91bOoZ9JLOmRVmjComgvXSYaWxDkXJF
+         St2ydcc3dPLpge8EdF1U/mkjni36HTJuWLPUcQYKkNxCcYeOGo7OOD1lF24ZVKaH+tsP
+         j7G0+tTJoMS+VwF1wI/K60ljZb4ManvJ9MbyxTxPXcrp4n0EDu3Kfj6dsl3jBbW7KZGP
+         vPdg==
+X-Gm-Message-State: ACrzQf0M1eq4k9U8N74ej1PlmQ6LSofJFGYxrGZL7wFSnLt6vWfeTFsp
+        Kdqpaq5pCFYnBYg44N2q8K5+pA==
+X-Google-Smtp-Source: AMsMyM43k6BYP8KnvoNas5bRzwItpSUpFoE8MGkV6xELRyB+O4EgiMZLav4IFjTOal7En6y1teBwqQ==
+X-Received: by 2002:ac8:7d55:0:b0:39b:ef52:a79e with SMTP id h21-20020ac87d55000000b0039bef52a79emr41084801qtb.658.1666875036305;
+        Thu, 27 Oct 2022 05:50:36 -0700 (PDT)
+Received: from [192.168.1.11] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id q11-20020a37f70b000000b006bb0f9b89cfsm895839qkj.87.2022.10.27.05.50.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Oct 2022 05:50:35 -0700 (PDT)
+Message-ID: <bfeefd8a-4ffa-70a3-b0df-48bfb8cd7124@linaro.org>
+Date:   Thu, 27 Oct 2022 08:50:34 -0400
 MIME-Version: 1.0
-References: <cover.1665744170.git.viresh.kumar@linaro.org> <c8ef89c343a0c31e4132cc6757fdff8dec0d1669.1665744170.git.viresh.kumar@linaro.org>
- <Y01RqjgZINnkcyIC@sol> <20221018112204.l36wnimrqvexnvat@vireshk-i7>
- <Y06S5GCFYeaPEW9E@sol> <20221019064612.p4gu33dm65rnjwl6@vireshk-i7>
- <Y0+lZ9qcNGX1Q/Of@sol> <20221019112251.oyfek3gjodyt67lh@vireshk-i7> <Y0/nNRu0OOXXfq/h@sol>
-In-Reply-To: <Y0/nNRu0OOXXfq/h@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 27 Oct 2022 14:18:01 +0200
-Message-ID: <CAMRc=Mc_f2=Qhok3b3FCcu3Hsu4pYhGVo4upow7LtCf-dNRXdg@mail.gmail.com>
-Subject: Re: [PATCH V7 1/8] libgpiod: Add libgpiod-sys rust crate
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v3 1/2] pinctrl: pinctrl-loongson2: add pinctrl driver
+ support
+Content-Language: en-US
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        zhanghongchen <zhanghongchen@loongson.cn>
+References: <20221024014209.5327-1-zhuyinbo@loongson.cn>
+ <a5a5c18f-476c-2f45-8cd0-3c88b3aa509d@linaro.org>
+ <841bad76-e19c-e400-e46a-2a83986c29eb@loongson.cn>
+ <9dfb7434-dd62-64e8-7831-b797687827e7@linaro.org>
+ <542e661c-5aa3-a855-889f-6deb8a74584f@loongson.cn>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <542e661c-5aa3-a855-889f-6deb8a74584f@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 19, 2022 at 2:02 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Wed, Oct 19, 2022 at 04:52:51PM +0530, Viresh Kumar wrote:
-> > On 19-10-22, 15:21, Kent Gibson wrote:
-> > > That doesn't really work - you get a link to the files in github, not
-> > > as a web site.  You need somewhere that will host those generated files
-> > > as a web site.  You could do that with github-pages if you don't have other
-> > > options.
-> >
-> > I don't have other options for now, so it is github.
-> >
-> > > When I've done that I would commit the docs to a separate
-> > > branch, just for the docs, and have github-pages host that branch.
-> >
-> > Okay.
-> >
-> > > If you eventually publish your crate to crates.io you get documentation on
-> > > docs.rs for free - and you can skip the documentation key in that case too
-> > > - it defaults to the appropriate page on docs.rs.
-> >
-> > Right, that I knew.
-> >
-> > > I assume that would be the case long term - you just need to find
-> > > someway to host them in the meantime.
-> >
-> > I wonder if we should be doing this at all right now, or if required
-> > only Bartosz should do it instead of me, once this is merged ?
-> >
->
-> I was assuming it was an interim solution, so it doesn't matter so much.
->
-> I'd be happy with docs.rs once libgpiod v2 is released and the bindings
-> published to crates.io, and I'm personally good with looking at the
-> generated docs locally in the meantime.
->
-> It would be easier for others to take a look if the docs were hosted,
-> but I don't have any feel as to whether that is worth the effort or not.
->
-> > Maybe we need a libgpiod username for that on github ? To make it
-> > independent of personal usernames ? From what I saw, the website name
-> > will be username.github.io eventually.
-> >
->
-> A libgpiod group account might be useful.
->
-> And it would be nice to have a libgpiod space somewhere, not just
-> piggybacking on the gpio mailing list.  Not sure if github is the best
-> place - but I haven't given it much thought.
->
-> Bart, do you have any opinions?
->
+On 27/10/2022 04:20, Yinbo Zhu wrote:
+> You can find these code has a change in this code conext.  I have a 
+> feedback on this code.  but I mistakenly thought helper is dev_err_probe.
+>          res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>          pctrl->reg_base = devm_ioremap_resource(dev, res);
+>          if (IS_ERR(pctrl->reg_base))
+> -               return PTR_ERR(pctrl->reg_base);
+> +               return dev_err_probe(pctrl->dev, PTR_ERR(pctrl->reg_base),
+> +                               "unable to map I/O memory");
+> 
+>          raw_spin_lock_init(&pctrl->lock);
+> 
+>>
+>> There is a helper combining two calls into one. Grep for it in headers
+>> and use it.
+>>
+> You said is that use "devm_platform_get_and_ioremap_resource" as a 
+> helper? sorry, I will do it.
 
-For a long time I tried avoiding github etc. but I think I'll finally
-have to give in and at least set up a git mirror and a discussion
-place. Not sure which one is better, github, gitlab, something else?
+I believe the helper is devm_platform_ioremap_resource(), but I never
+remember the names so just check in the sources.
 
-BTW about crates.io - the python bindings in libgpiod v2 use setup.py
-and I also plan to publish a python package on pypi so
-decentralization is happening this time.
+Best regards,
+Krzysztof
 
-I also plan to split the yocto recipe into libgpiod and python3-libgpiod.
-
-Bart
