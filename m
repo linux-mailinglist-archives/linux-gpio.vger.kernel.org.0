@@ -2,103 +2,171 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C4B760ED6B
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 03:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C773E60ED83
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 03:37:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233911AbiJ0B0P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 26 Oct 2022 21:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46360 "EHLO
+        id S233926AbiJ0Bh2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 26 Oct 2022 21:37:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233849AbiJ0B0J (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 21:26:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F7872FD2;
-        Wed, 26 Oct 2022 18:26:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 29DDCB82487;
-        Thu, 27 Oct 2022 01:26:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6769C433C1;
-        Thu, 27 Oct 2022 01:26:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666833965;
-        bh=hYASDY/RBPj7jGgnN4KncjSFTtzdy9NTDXP3AodJm+4=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iJnBJo5BoHhr4k0kZgdsGd03Rb6LjjifodTow4Ad99tp1iDvTi0lPNFavQN8svbIV
-         1xe8u+gUxpSkbNvVQ+Q6OyZGHH/0WLMnAHJQ2HcVTyq+4GR3huUcpkUZoeh8k68GSg
-         7OCpRGxRk3ECJQ0YphQu2epB/pswj2RLrO9+uNNKwHglmXKp9ZmB7seyKd8ZX0z7C5
-         PsyHMIacUFrHh8MJJUhZb2mMMLjvi7HSz5zo4tbV1hdYYeTuuWHOkL8QGOSSFfrAQm
-         kc9TlU9xam3S2NTxl64v4XtZtBXIwEIk52XIoMZQDoI6pNOCbTvLSl3LFdSJ35kHwz
-         1olplLQyy/lqw==
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S233858AbiJ0Bh1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 26 Oct 2022 21:37:27 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E19F418F
+        for <linux-gpio@vger.kernel.org>; Wed, 26 Oct 2022 18:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1666834646; x=1698370646;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=JZvChV1aZvUfhUyWjdpuZGuN0Af0y0wHJpDoganPJpM=;
+  b=XyTVm5oRv76uHgzAY1JEqxl06XVsNV+bJVK6KAWMhxP2gSvbO8rTmda7
+   ET7m3DeK5pA8KlnI1I6doM6bvgPjQmVHhcIH2WuqYLHgDpuP0ON2wuhST
+   6ctiq3ckzEN/isrl9lGwhwp3w5La3WwaYVpR4wL7eHYByZRgqCskg/jjf
+   W3he6g5wOQMglc7fjan50Od2qevgGspSBCqtfswPHjfyeeyrPsffnIMLt
+   fey5HnNH3mQhuenK7UTr8Czo0AZOba0VkzuFHhJVdLI6IKVCouyH/1VFN
+   sLOHOfXs0RTh+Sd/gTHJhxlaHy1bC5cdgZdcFOBeqjaxltES9FlAPnCYJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="394420543"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="394420543"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2022 18:37:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10512"; a="632232087"
+X-IronPort-AV: E=Sophos;i="5.95,215,1661842800"; 
+   d="scan'208";a="632232087"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 26 Oct 2022 18:37:25 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1onrpk-00086C-1d;
+        Thu, 27 Oct 2022 01:37:24 +0000
+Date:   Thu, 27 Oct 2022 09:37:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ b4e83d369015e3045418ca86984c3cd8dcf5a365
+Message-ID: <6359e0bf.1oJjtrbLesTN/qUT%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <07B628ED6CABEF1D+932737cc-7d4b-4071-531e-82f88d89a872@linux.starfivetech.com>
-References: <20220929143225.17907-1-hal.feng@linux.starfivetech.com> <20220929175602.19946-1-hal.feng@linux.starfivetech.com> <20220930214824.A14ACC433D6@smtp.kernel.org> <CAJM55Z8xxrKqaN64KAP9miTis4wFbL2S9uhV5h-SOiYjbYng+g@mail.gmail.com> <20221012230525.C6E58C433D7@smtp.kernel.org> <07B628ED6CABEF1D+932737cc-7d4b-4071-531e-82f88d89a872@linux.starfivetech.com>
-Subject: Re: [PATCH v1 15/30] clk: starfive: Use regmap APIs to operate registers
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        linux-kernel@vger.kernel.org
-To:     Hal Feng <hal.feng@linux.starfivetech.com>
-Date:   Wed, 26 Oct 2022 18:26:03 -0700
-User-Agent: alot/0.10
-Message-Id: <20221027012605.B6769C433C1@smtp.kernel.org>
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Hal Feng (2022-10-22 21:11:41)
-> On Wed, 12 Oct 2022 16:05:23 -0700, Stephen Boyd wrote:
-> > I think we should use auxiliary bus and split the driver logically into
-> > a reset driver in drivers/reset and a clk driver in drivers/clk. That
-> > way the appropriate maintainers can review the code. There is only one
-> > platform device with a single reg property and node in DT, but there are
-> > two drivers.=20
->=20
-> Yes, I agree that the reset driver and the clock driver should be split.
-> However, I think using auxiliary bus is a little bit complicated in this
-> case, because the reset is not a part of functionality of the clock in=20
-> JH7110. They just share a common register base address.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: b4e83d369015e3045418ca86984c3cd8dcf5a365  gpio: exar: Allow IO port access
 
-That is why auxiliary bus exists.
+elapsed time: 724m
 
-> I think it is=20
-> better to use ioremap for the same address, and the dt will be like
->=20
-> syscrg_clk: clock-controller@13020000 {
->         compatible =3D "starfive,jh7110-clkgen-sys";
->         reg =3D <0x0 0x13020000 0x0 0x10000>;
->         ...
-> };
-> syscrg_rst: reset-controller@13020000 {
->         compatible =3D "starfive,jh7110-reset-sys";
->         reg =3D <0x0 0x13020000 0x0 0x10000>;
->         ...
-> };
->=20
-> What do you think of this approach? I would appreciate your suggestions.
->=20
+configs tested: 90
+configs skipped: 2
 
-We shouldn't have two different nodes with the same reg property. Please
-ioremap in whatever driver probes and creates the auxiliary device(s)
-and then pass the void __iomem * to it.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+s390                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+um                             i386_defconfig
+alpha                            allyesconfig
+um                           x86_64_defconfig
+m68k                             allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+ia64                             allmodconfig
+i386                                defconfig
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+i386                          randconfig-a003
+x86_64                        randconfig-a013
+x86_64                           rhel-8.3-kvm
+x86_64                        randconfig-a011
+x86_64                        randconfig-a002
+i386                             allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                        randconfig-a015
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a001
+riscv                randconfig-r042-20221026
+arc                  randconfig-r043-20221026
+s390                 randconfig-r044-20221026
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arm                                 defconfig
+i386                          randconfig-a005
+arm64                            allyesconfig
+arm                              allyesconfig
+m68k                            q40_defconfig
+arm                           imxrt_defconfig
+arm                         assabet_defconfig
+arm                          gemini_defconfig
+sparc                             allnoconfig
+m68k                        m5272c3_defconfig
+xtensa                    smp_lx200_defconfig
+powerpc                    amigaone_defconfig
+sh                           se7724_defconfig
+sh                          rsk7201_defconfig
+i386                          randconfig-c001
+arm                        keystone_defconfig
+powerpc                     stx_gp3_defconfig
+arm                         axm55xx_defconfig
+powerpc                     redwood_defconfig
+sh                      rts7751r2d1_defconfig
+mips                        vocore2_defconfig
+mips                            ar7_defconfig
+arc                            hsdk_defconfig
+arm                             ezx_defconfig
+sh                            migor_defconfig
+nios2                         3c120_defconfig
+mips                 randconfig-c004-20221026
+arm                           h5000_defconfig
+m68k                          hp300_defconfig
+alpha                            alldefconfig
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+mips                  decstation_64_defconfig
+riscv             nommu_k210_sdcard_defconfig
+
+clang tested configs:
+x86_64                        randconfig-a014
+i386                          randconfig-a002
+i386                          randconfig-a004
+hexagon              randconfig-r045-20221026
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+hexagon              randconfig-r041-20221026
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+i386                          randconfig-a006
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
