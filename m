@@ -2,105 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC17360F174
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 09:48:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9812260F1CF
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 10:06:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbiJ0Hsm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 03:48:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44740 "EHLO
+        id S234847AbiJ0IGS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 04:06:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233622AbiJ0Hsl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 03:48:41 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEF916910C
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 00:48:40 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id 1so695418vsx.1
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 00:48:40 -0700 (PDT)
+        with ESMTP id S234900AbiJ0IGF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 04:06:05 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1DB7E014
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 01:05:59 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id g16so305230vkl.11
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 01:05:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xnaQxq4zW3WZzSqM25BbNrtB1N5IWA5AMAsRHR50yN4=;
-        b=bYLbijAJWss6zP7ofBHhhYKUyYrea4Q3yucApFWFriiEgG9slFrpsOkfxIkKSqi7wc
-         A0x6gfD0vZyeKVNHXIs4K9pgIEWqAd8iGEOO/yJH1djXQymMFEnUGcPGDuhMTXJy55cX
-         MVnnYjVkYdrnbFOO3Fp+N7cDKnSJkKJsxds0izdydhP05zEBEOi/e7dq72xNO/mLq57P
-         yScmBeByj0+CHY7hf6C+OaupABOuvO9acFWWAtsGyT1CYyh4cY+MWXYIbFRIKD0Gjk7H
-         45/eWa9Q82zgQ4kiMFGCWSZhBC4PzbYSTYBUgGpK0dju6lz3TTan5uidG+2uFshEkkkP
-         kwLg==
+        bh=PbjvvTryxfYTd4fXObbLTLqvoSuq5m9bVnDqafRtL6Q=;
+        b=MJnbbJvxrPAY/hEvqiH9wuVnCxgVktvwnSvEAr303cvIhEhA+R6ch2CNUxxPwuF9Lf
+         B+Rstqt+DanGWd5f1bss6ZDP7IUIP7iRhR+FDtMP4NXIfOqz9Iqys34XNqufNlQ32ZIZ
+         Bt43SfYw2biHUF2Gbb1z3RDuiIEgBdU7pK6BBmUn0ixTkiOAPNwtWaW2FJ0LXEkNiPsV
+         bAnuiopds4I0E7YwEl6uzNsMf5MGJn9W0uDZviwd2xmkwruMiaxkXhlTn0Qs+08sh6vO
+         OZqOdROtBmGwvZuCk7Q+NeAjDZ/pFoJgDvTltQi33oQcjQ0LcXnrlT6oqeUGgglMOpwR
+         1m2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=xnaQxq4zW3WZzSqM25BbNrtB1N5IWA5AMAsRHR50yN4=;
-        b=5pluVgNhOKm5gmZQT4u1XIqlcsrD8UsFXbDlCePVBBXzIMnJwo5mW15yFiZ8m9ICum
-         +SNgD68kGd76sQoZT2PKbguOLQGd8g+ECUAlm+w4GmWvjepYVxZHE7iVYfrDBn+YWKBV
-         SpK9HlUbemodIspHARcBfVzAiv5jFio3LjIRMgRRJ3QAbPejQNOHUfD7IDZKui1dLysj
-         8oNinZ+Go9sPy0ytl7Ov2+MhRQqRx5AEqLadGUGn9MpJ53Akp4g8g6W1pmmjVhTjUvFE
-         PLR0Te+NESY835NQ9OQxY0AVmFNUDxPidwrs2EJEZ0wdbd1iWCZ1fmglz7a8OUUOHT0j
-         VkJg==
-X-Gm-Message-State: ACrzQf3wKstrZZSrgE483IB2xowaHO1TGRW8JYQjWdJ/sCau+tMjINc2
-        Rg+xgk5WtBrgkrzdHdxcmg+5VXzzDNJy2VXtzx/Kew==
-X-Google-Smtp-Source: AMsMyM4eUETdCQVNnAWhs8FgtdEirvF+3iu+ChthwgS9Eb2Zc9R3aFI7gkCHoHtwaoMZsiBitdYmBY0NxBZ6+tGX0Fg=
-X-Received: by 2002:a67:ac0e:0:b0:3aa:86c3:e6fc with SMTP id
- v14-20020a67ac0e000000b003aa86c3e6fcmr27706vse.9.1666856919718; Thu, 27 Oct
- 2022 00:48:39 -0700 (PDT)
+        bh=PbjvvTryxfYTd4fXObbLTLqvoSuq5m9bVnDqafRtL6Q=;
+        b=jYIGv4+wjcdl5D7wfQa9ktEVAnpwsIXsh6irmVb2P6QbDjaIwK43kFfBjbcdAU2sac
+         das/VYjHHMUzws0YhMMtOq/Wxe8pywwIpTNG/rc5ZR6pt4foOQu0N6TjCHI+d2zLEs3+
+         7eb9NEWEesunZU6opJ5rr7389J/pKwvIjGIUlED3NwcC/n5reFfMPhrHSvHZD516AQHt
+         TnInhfwGv202cA+WmT2c+F/k9nO9rxqBaQSHt3/mwSp31NDubB0F/j67NY2ilcehF7qo
+         9f8Z/roUFsRjmUM/1qtz53uWnHtTmJqbDGO43NyEJQ+CSFQ8jqORM5gqTYtqYXtiyvfA
+         2FpA==
+X-Gm-Message-State: ACrzQf2AQszAlcwZtHRchgyEh4MZB2FIAa/GzX/vBGFys0u4vFOoeQMu
+        RucHnwfcqjJJKrUuBgPuiFjg5JFX+CEdcxhIuRcgRg==
+X-Google-Smtp-Source: AMsMyM7R6WPx6q5LmdolFABQ4jE7ZWCKIA2uN+JbJAdp/SSzVYMRV8msQR/uxRMqRYJXGsYSoNe5G6Ih4Hh/ypphm6U=
+X-Received: by 2002:a1f:2455:0:b0:3b7:88a4:c121 with SMTP id
+ k82-20020a1f2455000000b003b788a4c121mr7970733vkk.1.1666857958599; Thu, 27 Oct
+ 2022 01:05:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20221026151543.20695-1-shubhrajyoti.datta@amd.com>
-In-Reply-To: <20221026151543.20695-1-shubhrajyoti.datta@amd.com>
+References: <20221026123425.498912-1-brgl@bgdev.pl> <20221026123425.498912-3-brgl@bgdev.pl>
+ <Y1kt1iHYpbZGaND4@smile.fi.intel.com>
+In-Reply-To: <Y1kt1iHYpbZGaND4@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 27 Oct 2022 09:48:28 +0200
-Message-ID: <CAMRc=MfcsKA1V8O6LLZ+uGw6oas5JvXEA_S+VgFtkX__K=0jzQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/3] gpio: pca9570: add slg7xl45106 support
-To:     Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
-Cc:     linux-gpio@vger.kernel.org, git@amd.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        geert@linux-m68k.org
+Date:   Thu, 27 Oct 2022 10:05:47 +0200
+Message-ID: <CAMRc=Mf3_0+w6COjE6zYMP4v6dXEUPwWbcfw98sRehn0N2oFeQ@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v4 2/4] bindings: python: add examples
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Oct 26, 2022 at 5:16 PM Shubhrajyoti Datta
-<shubhrajyoti.datta@amd.com> wrote:
+On Wed, Oct 26, 2022 at 2:53 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
+> On Wed, Oct 26, 2022 at 02:34:23PM +0200, Bartosz Golaszewski wrote:
+> > This adds the regular set of example programs implemented using libgpiod
+> > python bindings.
 >
-> Add Dialog semiconductors SLG7XL45106 GPO expander
+> ...
 >
+> > +if __name__ == "__main__":
+> > +    for chip in gpio_chips():
+> > +        info = chip.get_info()
+> > +        print("{} [{}] ({} lines)".format(info.name, info.label, info.num_lines))
 >
-> Changes in v6:
-> Fix the bisectablity reported by Geert Uytterhoeven
+> In all of them I would prefer to see the main() explicitly, like
 >
-> v4 and v5:
-> Resend as the patches were mangled.
+> def main():
+>         ...
 >
-> Changes in v3:
-> Add ack
-> split the new patch
-> Suggested by Andy Shevchenko
+> if __name__ == "__main__":
+>     main()
 >
-> Changes in v2:
-> add alphabetically
+> (In this case the module can be imported by another one and main be reused)
 >
-> Shubhrajyoti Datta (3):
->   dt-bindings: gpio: pca9570: Add compatible for slg7xl45106
->   gpio: pca9570: add a platform data structure
->   gpio: pca9570: add slg7xl45106 support
+> Also have you considered use of SystemExit() wrapper?
 >
->  .../bindings/gpio/gpio-pca9570.yaml           |  1 +
->  drivers/gpio/gpio-pca9570.c                   | 49 ++++++++++++++++---
->  2 files changed, 44 insertions(+), 6 deletions(-)
+> ...
+>
+> > +                    sys.exit(0)
+> > +
+> > +    sys.exit(1)
+>
+> Is it in the original C code?!
+> I would expect that no chips -- no error.
+>
+> ...
+>
+> > +if __name__ == "__main__":
+> > +    if len(sys.argv) < 3:
+> > +        raise TypeError("usage: gpioget.py <gpiochip> <offset1> <offset2> ...")
+>
+>         SystemExit(main(sys.argv)) ?
+>
+> > +    path = sys.argv[1]
+> > +    lines = [int(line) if line.isdigit() else line for line in sys.argv[2:]]
+> > +
+> > +    request = gpiod.request_lines(
+> > +        path,
+> > +        consumer="gpioget.py",
+> > +        config={tuple(lines): gpiod.LineSettings(direction=Direction.INPUT)},
+> > +    )
+> > +
+> > +    vals = request.get_values()
+> > +
+> > +    for val in vals:
+> > +        print("{} ".format(val.value), end="")
+>
+> > +    print()
+>
+> Without any conditional it will print an empty line, was it originally in the C
+> variant?
 >
 > --
-> 2.17.1
+> With Best Regards,
+> Andy Shevchenko
+>
 >
 
-Reapplied, thanks!
+Thanks Andy but this is unnecessary churn, these are literally just
+code samples. Unless some new issues pop up for the other patches,
+I'll leave it like that and apply it to master. Then we can work on it
+further in there.
 
 Bart
