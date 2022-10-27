@@ -2,107 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE4A60F7FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 14:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDE8560F801
+	for <lists+linux-gpio@lfdr.de>; Thu, 27 Oct 2022 14:51:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234908AbiJ0Muk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 08:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
+        id S235861AbiJ0MvN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 08:51:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234795AbiJ0Muj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 08:50:39 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EB048C82
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:50:37 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id g16so992541qtu.2
-        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:50:37 -0700 (PDT)
+        with ESMTP id S235843AbiJ0MvJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 08:51:09 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6531065031
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:51:07 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id d13so757725qko.5
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 05:51:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ybgHkyPF+h7dJ20qYdKfKJv6J92DUAxMTSyFP2z5UJQ=;
-        b=p2QnzXhclEA1PPVQOaTd00ydj0ppMq36WsuzwzleJlv1hDxYCc2YUUj61cmyodPgFR
-         /WOHBYv5NUDLqM+RiQ7r6e+go6BSrrTYbFYADycuCbsbzp7Y+tfqN5UqG5WMPX194zC5
-         2cg3B6OHPmkJsAfI/2DxmVEcOSY390ZthE1I47MvPQHDR7JPA9TVqCcMY09DqzyzrCWm
-         iOwiwCdkmWkszLJ4MFIJkA85Q+nhaMmYChvC8DFdW2vZlUy/uAe+aNX7RNc0AUduuZ7y
-         5aez2rY4+uRci600k1OkhWBxCTIoMMArPI1HfE7WEo5QD6giN/1E/8q9pNy55bjkEOSa
-         l6+g==
+        bh=ZKBan++e/NKax5xPM6ts6YDMCYkxx2wZgg2+258oy2g=;
+        b=fHGo9BLkiTQpvnUec+fj7FSHRvyDJ9uXdmZl0UzkG5d4qSJZiJ5DTFF0aln6DCJCHT
+         /uRVOl95RZcmeQ6mZQO0PuFqmA6X/ktKFilYOeJ6G9+opG7aVYrY+l3U/v+JcgMa6wpS
+         Z2t147S0OXvKR/8qg47EyqfylCsLaExxePcK47WuR4m2kFlYPIOlsFtiDAc5abkg+yCd
+         +LSzoreO5YDkakJMgC4OsS5aQdrRUR/k7gyo7esuWXwACW8HSagqZdOBqZ1m2KIpfvAh
+         qMD8pefwgbSuidfxg8XwveSXfxZV30NM7GqZYo5KrnIgGi66lRqTXaXaK6RMaof2DA41
+         FDHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ybgHkyPF+h7dJ20qYdKfKJv6J92DUAxMTSyFP2z5UJQ=;
-        b=lxgPRFaIzq37Y0Fe3/jvwRKdDBQgbetJW2kEYyCLjhtYL89AlyT5HNsWshH0c4eYCP
-         Q9hIEfVsAzbj3M14KJ2B+83M0mlgrSBeTZyg22r5RsCclL2vJt6IE2jXbFiTqOOkgvk1
-         5H55nn4eMGc/pTpxeJ0WO3re6WfEaz1tHwnyk91bOoZ9JLOmRVmjComgvXSYaWxDkXJF
-         St2ydcc3dPLpge8EdF1U/mkjni36HTJuWLPUcQYKkNxCcYeOGo7OOD1lF24ZVKaH+tsP
-         j7G0+tTJoMS+VwF1wI/K60ljZb4ManvJ9MbyxTxPXcrp4n0EDu3Kfj6dsl3jBbW7KZGP
-         vPdg==
-X-Gm-Message-State: ACrzQf0M1eq4k9U8N74ej1PlmQ6LSofJFGYxrGZL7wFSnLt6vWfeTFsp
-        Kdqpaq5pCFYnBYg44N2q8K5+pA==
-X-Google-Smtp-Source: AMsMyM43k6BYP8KnvoNas5bRzwItpSUpFoE8MGkV6xELRyB+O4EgiMZLav4IFjTOal7En6y1teBwqQ==
-X-Received: by 2002:ac8:7d55:0:b0:39b:ef52:a79e with SMTP id h21-20020ac87d55000000b0039bef52a79emr41084801qtb.658.1666875036305;
-        Thu, 27 Oct 2022 05:50:36 -0700 (PDT)
+        bh=ZKBan++e/NKax5xPM6ts6YDMCYkxx2wZgg2+258oy2g=;
+        b=gmHOIuaU/qTbf9M6yuKQA6UKdSKjgZCsE5/XT9WOTw2J9vmeiKqk6moaZAMxaayjDX
+         88EhdyCN9EOmPtoeM0Nxwux+P+qV/pH0cohEGQC1f0LCfHkgEQDCewvycKQuExOf3g8c
+         vAqvQNUCU7M+diYMJp9keVA47hg1Qld+o391aTfq6NQQJEX5XqmvnGHQ3ROpS5l1TQ4G
+         AY3r5CGKtbqZMv7AtWiYYLk5ziEvqLEO8dQNDm8ohCSgZVmDj68v5VAhazc9gel9Docc
+         0zs/DaJXDZlaWhb/hW90pjiYhBZ13Ehyn7h6FC2E/tlTAJ7JItbBhRJ3oBhSRZqHYy26
+         Raow==
+X-Gm-Message-State: ACrzQf0t9s38jrG8Smywg3nEoJhoS94hK/tG4szcdpron4l0vOA1Y2TH
+        Hsy3vv6VaJd3Oxdp1nMXfKbWww==
+X-Google-Smtp-Source: AMsMyM7pB0Ni8X+GM/aAPnQjU8pdUglL+U/akOBY2eleP1/ME1c2sv5RPtw2y2WaXFxVkVg95lrBiw==
+X-Received: by 2002:a37:5482:0:b0:6f8:4c19:8697 with SMTP id i124-20020a375482000000b006f84c198697mr8442590qkb.709.1666875066337;
+        Thu, 27 Oct 2022 05:51:06 -0700 (PDT)
 Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id q11-20020a37f70b000000b006bb0f9b89cfsm895839qkj.87.2022.10.27.05.50.34
+        by smtp.gmail.com with ESMTPSA id s71-20020a37454a000000b006ecf030ef15sm904301qka.65.2022.10.27.05.51.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 27 Oct 2022 05:50:35 -0700 (PDT)
-Message-ID: <bfeefd8a-4ffa-70a3-b0df-48bfb8cd7124@linaro.org>
-Date:   Thu, 27 Oct 2022 08:50:34 -0400
+        Thu, 27 Oct 2022 05:51:05 -0700 (PDT)
+Message-ID: <7fbbb805-f215-f079-5e8e-8f5e085da6e9@linaro.org>
+Date:   Thu, 27 Oct 2022 08:51:03 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [PATCH v3 1/2] pinctrl: pinctrl-loongson2: add pinctrl driver
- support
+Subject: Re: [PATCH next 2/2] dt-bindings: gpio: add entry for
+ hisilicon,gpio-ascend910
 Content-Language: en-US
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>
-References: <20221024014209.5327-1-zhuyinbo@loongson.cn>
- <a5a5c18f-476c-2f45-8cd0-3c88b3aa509d@linaro.org>
- <841bad76-e19c-e400-e46a-2a83986c29eb@loongson.cn>
- <9dfb7434-dd62-64e8-7831-b797687827e7@linaro.org>
- <542e661c-5aa3-a855-889f-6deb8a74584f@loongson.cn>
+To:     chenweilong <chenweilong@huawei.com>, f.fangjian@huawei.com,
+        linus.walleij@linaro.org, yangyicong@hisilicon.com,
+        xuwei5@huawei.com, robh+dt@kernel.org, robh@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20221026034219.172880-1-chenweilong@huawei.com>
+ <20221026034219.172880-2-chenweilong@huawei.com>
+ <30b95e7b-b902-babc-ea78-a2112c80ec7e@linaro.org>
+ <050ab042-d51c-1e9a-eb85-8fbec8020211@huawei.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <542e661c-5aa3-a855-889f-6deb8a74584f@loongson.cn>
+In-Reply-To: <050ab042-d51c-1e9a-eb85-8fbec8020211@huawei.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 27/10/2022 04:20, Yinbo Zhu wrote:
-> You can find these code has a change in this code conext.  I have a 
-> feedback on this code.  but I mistakenly thought helper is dev_err_probe.
->          res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->          pctrl->reg_base = devm_ioremap_resource(dev, res);
->          if (IS_ERR(pctrl->reg_base))
-> -               return PTR_ERR(pctrl->reg_base);
-> +               return dev_err_probe(pctrl->dev, PTR_ERR(pctrl->reg_base),
-> +                               "unable to map I/O memory");
-> 
->          raw_spin_lock_init(&pctrl->lock);
-> 
+On 27/10/2022 03:47, chenweilong wrote:
+>> Convention for counting is to use decimal numbers.
 >>
->> There is a helper combining two calls into one. Grep for it in headers
->> and use it.
->>
-> You said is that use "devm_platform_get_and_ioremap_resource" as a 
-> helper? sorry, I will do it.
+>>> +      gpio-controller;
+>>> +      #gpio-cells = <2>;
+>>> +      interrupts = <0x0 33 0x4>;
+>> This looks like standard IRQ flags, so use respective defines.
+> 
+> Sorry, I don't get this, you mean like this? :
+> 
+> interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
 
-I believe the helper is devm_platform_ioremap_resource(), but I never
-remember the names so just check in the sources.
+Yes.
 
 Best regards,
 Krzysztof
