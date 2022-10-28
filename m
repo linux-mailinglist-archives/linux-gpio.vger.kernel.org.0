@@ -2,78 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C16611B55
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 22:02:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FB19611B9F
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 22:37:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbiJ1UCI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Oct 2022 16:02:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
+        id S229450AbiJ1UhJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Oct 2022 16:37:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229839AbiJ1UCH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 16:02:07 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F0B1DCCF7
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:02:01 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id k4so1275640qkj.8
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:02:01 -0700 (PDT)
+        with ESMTP id S229574AbiJ1UhI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 16:37:08 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D4F622EE31
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:37:07 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id a27so918626qtw.10
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=bdMQ1e2RSiY0iFjHTnOY+ZoLlVTTLqoC3Ptqc5DqK0I=;
-        b=PcqZ7PtW5MlDoiLP2IwcD+4RGCbeVZgP8Ksej6kiYupCJ8j+Ee9znOOhCKCd+Xs5m9
-         vHlrKzRJTBMnvo+aNvaGBudhEltguTzoc8Cjo2zBRrlX4Fa0sAuPbHHoHwbF1XXrhIpC
-         uMDPzyHpUpDGsJ7C67l22jfaKS6nIdticRTNFiIZpA1AMRM9Ug3ZQ4oGLGV259rLUVBG
-         6yZwkCzCDTG8IFGZc7HVfOgdCUNE6lGJnd62PKYU08DJA++91R1ZZ3F8cWlWjMRNGtPS
-         5aexMW7upmnpRE6YqJRp5EAYSHk5+YM6N1LumIhWeFSIY8j4fasxqCM5RwRkqgSQMX/F
-         lngg==
+        bh=mLhDGX+PrEvnm4Dlo2lfmgiA3MNJTPSJGxJWbaZR8W8=;
+        b=dP4p4Ok2D32LJTsv+EjZxVrvDh1JmRlkNAmsuKZR7akxXFdrlkTqJLWv1S7zAi0TRe
+         oMsD7dCt5jS2K7AH8aEJ+BvfgYbefW+KgGp9z+BKzh07aWvPulc/Dps+aMxq+EfxkNbT
+         u9FeToJoRFTd0nWVeVpKJbAFsvnQ4hByiUJIYB40hT1xF1q5aiBn8s+kCdDBJg6Z0Lhr
+         r7TN6Z0o5H9hRNWejPbhcpLo/TFiC5+hyBYkiAVuhF/PdZ39EW9sLF+M8Q90CVr3CVVG
+         18rgJO3aOSiY69X9lDt7Nj2pvhLKatYocDrT6TK4/69H5kmjW08JkLz5LnInELBjsvXc
+         Kakg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bdMQ1e2RSiY0iFjHTnOY+ZoLlVTTLqoC3Ptqc5DqK0I=;
-        b=H7HedSpGEA7Rj4Q0hCZb+WKpqNdnOTfs2j010QZZT+Nn7rwo+9Jz4vSQ9z2v3+UhWK
-         E+5Sj8RZhn0Tb2LGZmsn0FA5qoaxoZwQXTW8AwW4chb5GZh8soE0+Ia+ZQOh+fnTE5SI
-         JU+U5xqtfeSoZGtGHgMaQRlTxBL/ARLTdBTQw8S0ynbTNPokxP0/0rxLviziQ40EsHA5
-         zLPMFlRNIcqOcEXSVsv7OLHgpiGFb97WrgbBEh/nyRAg1EGurOOGqu+APdx6wZTS9gII
-         rdhFWeVQ78FhcVde8OQr6YglXbpQkACM/gb13N/waKsjyG/39v2BOurCpK3XgeNIx9mG
-         cTYQ==
-X-Gm-Message-State: ACrzQf3N07/spTa1SjewMXPhUHBlNNZ3ERSfLez5trrqEMMsBunQ6TcW
-        WKEuoNq453767EjYL+h2ej26Jg==
-X-Google-Smtp-Source: AMsMyM5YpeL94Iw48e5O3aOG/3SA+rFA4qewOF0lq3w+vTmwLbFf7lZKx0HynAPmLDSOr4u3Ran9sA==
-X-Received: by 2002:a37:2d02:0:b0:6f1:15cd:1493 with SMTP id t2-20020a372d02000000b006f115cd1493mr769971qkh.131.1666987320813;
-        Fri, 28 Oct 2022 13:02:00 -0700 (PDT)
+        bh=mLhDGX+PrEvnm4Dlo2lfmgiA3MNJTPSJGxJWbaZR8W8=;
+        b=JY0VFVRYph4X1KVhR39Im9rOvMPoaFlihqynaMk8gFOgnK32zIZ3PHf6LlglTmjBN5
+         Eb+WH2xJWC022kvMJjtXRmZYugPWvjiaB3e2ZzdD0qGAsUGQSGUkCX3/lK0DZQB1+6sh
+         rUZlWci6911gdwetnUagSz1ffPxGapZP5Xc7OqJOCTh4npAiG3ibPw2dcssST9Kq2iUh
+         qD6Q+qze5f0+Yv/U+PxwCkzNZvJ3KVd/hidgwuDj0VWd+9eXTqnGpG2/Ao7/VoOdYxKu
+         1Dc9H1rutJS/4FnQeOIDD1I6C0SgtUyUjdmkervA33jD8Z5u6Z/0BL4aeoD2H2PT4y4V
+         9LcA==
+X-Gm-Message-State: ACrzQf2bFpF0l5PLRGRh9m3SKFEV8Z3DNC0lO6LQXsZy8vLRU0qiCIQU
+        cfoSYx+gXZSJYbJru6WprdTeXw==
+X-Google-Smtp-Source: AMsMyM5qKtdHZ8nexHN/YCSovC/f5dnkvPRDrUYXFOY9EAVNFTH5gMukdPnFsDXSX89IzH1T2mH09g==
+X-Received: by 2002:ac8:7f07:0:b0:39c:c64d:852e with SMTP id f7-20020ac87f07000000b0039cc64d852emr1178683qtk.21.1666989426498;
+        Fri, 28 Oct 2022 13:37:06 -0700 (PDT)
 Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id v6-20020a05622a014600b003999d25e772sm2839124qtw.71.2022.10.28.13.01.59
+        by smtp.gmail.com with ESMTPSA id h18-20020ac87d52000000b003998bb7b83asm2827619qtb.90.2022.10.28.13.37.05
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Oct 2022 13:02:00 -0700 (PDT)
-Message-ID: <e34b35f4-4197-3973-0947-14ee577494e9@linaro.org>
-Date:   Fri, 28 Oct 2022 16:01:58 -0400
+        Fri, 28 Oct 2022 13:37:05 -0700 (PDT)
+Message-ID: <ebf10a8f-b2cb-b2d0-0742-1ab7e5d60172@linaro.org>
+Date:   Fri, 28 Oct 2022 16:37:04 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: [PATCH v4 09/13] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Add MT6795
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: add binding for the GPIO block
+ for Apple Mac SMC
 Content-Language: en-US
-To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Hector Martin <marcan@marcan.st>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20221028153505.23741-1-y.oudjana@protonmail.com>
- <20221028153505.23741-10-y.oudjana@protonmail.com>
+        linux-gpio@vger.kernel.org
+References: <Y1vZprz7t1WRW3bz@shell.armlinux.org.uk>
+ <E1ooPSs-00Hb5D-PE@rmk-PC.armlinux.org.uk>
+ <Y1vvoc2x90HnG1E9@shell.armlinux.org.uk>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221028153505.23741-10-y.oudjana@protonmail.com>
+In-Reply-To: <Y1vvoc2x90HnG1E9@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -85,257 +80,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/10/2022 11:35, Yassine Oudjana wrote:
-> From: Yassine Oudjana <y.oudjana@protonmail.com>
+On 28/10/2022 11:05, Russell King (Oracle) wrote:
+> On Fri, Oct 28, 2022 at 02:32:02PM +0100, Russell King (Oracle) wrote:
+>> Add the DT binding for the Apple Mac System Management Controller GPIOs.
+>>
+>> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-macsmc.yaml | 41 +++++++++++++++++++
 > 
-> Combine MT6795 pin controller document into MT6779 one. In the
-> process, amend the example with comments and additional pinctrl
-> nodes from the MT6795 example, replace the current interrupts
-> property description with the one from the MT6795 document since
-> it makes more sense and define its items using conditionals
-> as they now vary between variants. Also use conditionals to define
-> valid values for the drive-strength property for each variant.
+> Sorry, just realised I hadn't renamed this file. I'll do that for v3.
+> Please review assuming I've made that change.
+
+v3 is needed anyway for the tooling/automated checks.
+
 > 
-> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
-> ---
->  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 189 ++++++++++-----
->  .../pinctrl/mediatek,pinctrl-mt6795.yaml      | 227 ------------------
->  2 files changed, 127 insertions(+), 289 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> index 70e4ffa2d897..6f2cffe50b11 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
-> @@ -8,6 +8,7 @@ title: Mediatek MT6779 Pin Controller
->  
->  maintainers:
->    - Andy Teng <andy.teng@mediatek.com>
-> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->    - Sean Wang <sean.wang@kernel.org>
->  
->  description:
-> @@ -18,6 +19,7 @@ properties:
->    compatible:
->      enum:
->        - mediatek,mt6779-pinctrl
-> +      - mediatek,mt6795-pinctrl
->        - mediatek,mt6797-pinctrl
->  
->    reg:
-> @@ -43,9 +45,7 @@ properties:
->    interrupt-controller: true
->  
->    interrupts:
-> -    maxItems: 1
+>>  1 file changed, 41 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+>> new file mode 100644
+>> index 000000000000..2bb8faa2c08c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+>> @@ -0,0 +1,41 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/gpio/gpio-macsmc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Apple Mac System Management Controller GPIO
+>> +
+>> +maintainers:
+>> +  - Hector Martin <marcan@marcan.st>
+>> +
+>> +description:
+>> +  This describes the binding for the Apple Mac System Management Controller
 
-Leave the constraints.
+Missing change. Drop "This describes the binding for". This is a
+description of hardware.
 
-Why? Because now you dropped it for mt6797... You bring here some random
-changes and it is difficult to review it.
+Rest looks good.
 
-> -    description: |
-> -      Specifies the summary IRQ.
-> +    description: Interrupt outputs to the system interrupt controller (sysirq).
->  
->    "#interrupt-cells":
->      const: 2
-> @@ -57,59 +57,6 @@ required:
->    - gpio-controller
->    - "#gpio-cells"
->  
-> -allOf:
-> -  - $ref: "pinctrl.yaml#"
-> -  - if:
-> -      properties:
-
-Make the move of this hunk in your description cleanup patch. Don't mix
-functional changes and some cleanups.
-
-> -        compatible:
-> -          contains:
-> -            const: mediatek,mt6779-pinctrl
-> -    then:
-> -      properties:
-> -        reg:
-> -          minItems: 9
-> -          maxItems: 9
-> -
-> -        reg-names:
-> -          items:
-> -            - const: gpio
-> -            - const: iocfg_rm
-> -            - const: iocfg_br
-> -            - const: iocfg_lm
-> -            - const: iocfg_lb
-> -            - const: iocfg_rt
-> -            - const: iocfg_lt
-> -            - const: iocfg_tl
-> -            - const: eint
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          contains:
-> -            const: mediatek,mt6797-pinctrl
-> -    then:
-> -      properties:
-> -        reg:
-> -          minItems: 5
-> -          maxItems: 5
-> -
-> -        reg-names:
-> -          items:
-> -            - const: gpio
-> -            - const: iocfgl
-> -            - const: iocfgb
-> -            - const: iocfgr
-> -            - const: iocfgt
-> -  - if:
-> -      properties:
-> -        reg-names:
-> -          contains:
-> -            const: eint
-> -    then:
-> -      required:
-> -        - interrupts
-> -        - interrupt-controller
-> -        - "#interrupt-cells"
-> -
->  patternProperties:
->    '-pins$':
->      type: object
-> @@ -169,8 +116,7 @@ patternProperties:
->  
->            input-schmitt-disable: true
->  
-> -          drive-strength:
-> -            enum: [2, 4, 8, 12, 16]
-> +          drive-strength: true
->  
->            slew-rate:
->              enum: [0, 1]
-> @@ -202,6 +148,110 @@ patternProperties:
->  
->          additionalProperties: false
->  
-> +allOf:
-> +  - $ref: "pinctrl.yaml#"
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt6779-pinctrl
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 9
-> +          maxItems: 9
-> +
-> +        reg-names:
-> +          items:
-> +            - const: gpio
-> +            - const: iocfg_rm
-> +            - const: iocfg_br
-> +            - const: iocfg_lm
-> +            - const: iocfg_lb
-> +            - const: iocfg_rt
-> +            - const: iocfg_lt
-> +            - const: iocfg_tl
-> +            - const: eint
-> +
-> +        interrupts:
-> +          items:
-> +            - description: EINT interrupt
-> +
-> +      patternProperties:
-> +        '-pins$':
-> +          patternProperties:
-> +            '^pins':
-> +              properties:
-> +                drive-strength:
-> +                  enum: [2, 4, 8, 12, 16]
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt6795-pinctrl
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 2
-> +          maxItems: 2
-> +
-> +        reg-names:
-> +          items:
-> +            - const: base
-> +            - const: eint
-> +
-> +        interrupts:
-> +          items:
-> +            - description: EINT interrupt
-> +            - description: EINT event_b interrupt
-> +
-> +      patternProperties:
-> +        '-pins$':
-> +          patternProperties:
-> +            '^pins':
-> +              properties:
-> +                drive-strength:
-> +                  enum: [2, 4, 6, 8, 10, 12, 14, 16]
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: mediatek,mt6797-pinctrl
-> +    then:
-> +      properties:
-> +        reg:
-> +          minItems: 5
-> +          maxItems: 5
-> +
-> +        reg-names:
-> +          items:
-> +            - const: gpio
-> +            - const: iocfgl
-> +            - const: iocfgb
-> +            - const: iocfgr
-> +            - const: iocfgt
-> +
-> +      patternProperties:
-> +        '-pins$':
-> +          patternProperties:
-> +            '^pins':
-> +              properties:
-> +                drive-strength:
-> +                  enum: [2, 4, 8, 12, 16]
-> +
-> +  - if:
-> +      properties:
-> +        reg-names:
-> +          contains:
-> +            const: eint
-> +    then:
-> +      required:
-> +        - interrupts
-> +        - interrupt-controller
-> +        - "#interrupt-cells"
-> +
->  additionalProperties: false
->  
->  examples:
-> @@ -237,8 +287,9 @@ examples:
->              #interrupt-cells = <2>;
->              interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
->  
-> -            mmc0_pins_default: mmc0-0 {
-> -                cmd-dat-pins {
-
-How this is related to the patch?
-
-Organize the patches so they are easy for review.
-
+>> +  GPIO block.
 Best regards,
 Krzysztof
 
