@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DFA1611B4B
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 21:58:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C16611B55
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 22:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbiJ1T6i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Oct 2022 15:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59300 "EHLO
+        id S229661AbiJ1UCI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Oct 2022 16:02:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230037AbiJ1T6i (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 15:58:38 -0400
-Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4710241B34
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 12:58:36 -0700 (PDT)
-Received: by mail-qv1-xf30.google.com with SMTP id mi9so4762703qvb.8
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 12:58:36 -0700 (PDT)
+        with ESMTP id S229839AbiJ1UCH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 16:02:07 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F0B1DCCF7
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:02:01 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id k4so1275640qkj.8
+        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 13:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=aYs6O8sCAd1Yea/9WK36sBxcxzTYhp16dbjeEkQIpvU=;
-        b=GMwYTCyNhhvxL7M/8H28CG0ZJZqJATITghpAohr48TgXSrx3Cu1I7QCnzflAzm6xMO
-         FZH8VttvKhVCKQSnR9yKqX2drTx3SWnxC74QoeqtF8GS8MKmBB9eosThRRDNFM3uHVo/
-         b/QFfRWO43LecZMRbb76uakkaqUIzlaWRDz6q9UmY7Rd9yG5PtMJKdBJqUX31m0rY6OY
-         1HyDjAKhzCOjv45RROuNzYFACs4dNxVyGdqjZWnNrmiBu7opy4x67c1tVcg4lI44nM3E
-         q+9BUiY5/7PIGSeomrwHNJaF13Cq7uD/sgxXQPmx9B2hSM2X1UzsM+DTjEx+12hrUHYT
-         g2fg==
+        bh=bdMQ1e2RSiY0iFjHTnOY+ZoLlVTTLqoC3Ptqc5DqK0I=;
+        b=PcqZ7PtW5MlDoiLP2IwcD+4RGCbeVZgP8Ksej6kiYupCJ8j+Ee9znOOhCKCd+Xs5m9
+         vHlrKzRJTBMnvo+aNvaGBudhEltguTzoc8Cjo2zBRrlX4Fa0sAuPbHHoHwbF1XXrhIpC
+         uMDPzyHpUpDGsJ7C67l22jfaKS6nIdticRTNFiIZpA1AMRM9Ug3ZQ4oGLGV259rLUVBG
+         6yZwkCzCDTG8IFGZc7HVfOgdCUNE6lGJnd62PKYU08DJA++91R1ZZ3F8cWlWjMRNGtPS
+         5aexMW7upmnpRE6YqJRp5EAYSHk5+YM6N1LumIhWeFSIY8j4fasxqCM5RwRkqgSQMX/F
+         lngg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aYs6O8sCAd1Yea/9WK36sBxcxzTYhp16dbjeEkQIpvU=;
-        b=l1L+SWRZrxSrxPu9FHzZECms0+OsFld+U9RN19reKSjCyIY8x6f/hxTqIyE3VOPUYS
-         pu5O1mr+nugmsDULJdo77LmwfD+aaGniV8OdK8Y38NiE2ijlB27Ny8d/WnuDIbdL9ca8
-         XkS/5vXawSIswBCK8hOnwBpK93Rm9JELSxKPvMcJZxubdc3hI7ZBKEJw+gYmpmgZmZPG
-         cfAPRSJYX4SW2C7EgsUM7nG+Z0RFIOvhz7mPIlxGMWBlpJe//i0ILleOfv3S1SFNPPzC
-         i+VgU+NevPdsxcVNnWXNrvnDz0ho5U5kSqGHlL0N14nZ1JdBwu1SuKfng8Xs9Wrl6kzr
-         LHyg==
-X-Gm-Message-State: ACrzQf2JtkRQAA/lrOM7M/e7ziohw1kUhw+EoVod5SK5tZscacuJy6Is
-        0JMG+4YF1MyVORXifKL1fUylkQ==
-X-Google-Smtp-Source: AMsMyM7kbGKg2LoTa5P3PUDyV55VGglhVevH4tQbikcvGoq7PA2E2HJpNHqhq5Jo/rwv6oEktoHLVA==
-X-Received: by 2002:a05:6214:2301:b0:498:9f6f:28d with SMTP id gc1-20020a056214230100b004989f6f028dmr985433qvb.5.1666987115862;
-        Fri, 28 Oct 2022 12:58:35 -0700 (PDT)
+        bh=bdMQ1e2RSiY0iFjHTnOY+ZoLlVTTLqoC3Ptqc5DqK0I=;
+        b=H7HedSpGEA7Rj4Q0hCZb+WKpqNdnOTfs2j010QZZT+Nn7rwo+9Jz4vSQ9z2v3+UhWK
+         E+5Sj8RZhn0Tb2LGZmsn0FA5qoaxoZwQXTW8AwW4chb5GZh8soE0+Ia+ZQOh+fnTE5SI
+         JU+U5xqtfeSoZGtGHgMaQRlTxBL/ARLTdBTQw8S0ynbTNPokxP0/0rxLviziQ40EsHA5
+         zLPMFlRNIcqOcEXSVsv7OLHgpiGFb97WrgbBEh/nyRAg1EGurOOGqu+APdx6wZTS9gII
+         rdhFWeVQ78FhcVde8OQr6YglXbpQkACM/gb13N/waKsjyG/39v2BOurCpK3XgeNIx9mG
+         cTYQ==
+X-Gm-Message-State: ACrzQf3N07/spTa1SjewMXPhUHBlNNZ3ERSfLez5trrqEMMsBunQ6TcW
+        WKEuoNq453767EjYL+h2ej26Jg==
+X-Google-Smtp-Source: AMsMyM5YpeL94Iw48e5O3aOG/3SA+rFA4qewOF0lq3w+vTmwLbFf7lZKx0HynAPmLDSOr4u3Ran9sA==
+X-Received: by 2002:a37:2d02:0:b0:6f1:15cd:1493 with SMTP id t2-20020a372d02000000b006f115cd1493mr769971qkh.131.1666987320813;
+        Fri, 28 Oct 2022 13:02:00 -0700 (PDT)
 Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id s13-20020a05620a0bcd00b006cf38fd659asm3594556qki.103.2022.10.28.12.58.33
+        by smtp.gmail.com with ESMTPSA id v6-20020a05622a014600b003999d25e772sm2839124qtw.71.2022.10.28.13.01.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Oct 2022 12:58:35 -0700 (PDT)
-Message-ID: <f5bf36e2-5be2-cec9-510d-bc99bb9b6bda@linaro.org>
-Date:   Fri, 28 Oct 2022 15:58:30 -0400
+        Fri, 28 Oct 2022 13:02:00 -0700 (PDT)
+Message-ID: <e34b35f4-4197-3973-0947-14ee577494e9@linaro.org>
+Date:   Fri, 28 Oct 2022 16:01:58 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: [PATCH v4 08/13] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
- Improve pinctrl subnode and property descriptions
+Subject: Re: [PATCH v4 09/13] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Add MT6795
 Content-Language: en-US
 To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -71,15 +71,14 @@ Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 References: <20221028153505.23741-1-y.oudjana@protonmail.com>
- <20221028153505.23741-9-y.oudjana@protonmail.com>
+ <20221028153505.23741-10-y.oudjana@protonmail.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221028153505.23741-9-y.oudjana@protonmail.com>
+In-Reply-To: <20221028153505.23741-10-y.oudjana@protonmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -89,15 +88,253 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 28/10/2022 11:35, Yassine Oudjana wrote:
 > From: Yassine Oudjana <y.oudjana@protonmail.com>
 > 
-> Change "subnodes" to "subnode" in subnode description for better grammatical
-> accuracy, capitalize pinmux description, wrap all descriptions at 80 characters,
-> and remove literal style indicators from descriptions that don't need their new
-> lines preserved.
+> Combine MT6795 pin controller document into MT6779 one. In the
+> process, amend the example with comments and additional pinctrl
+> nodes from the MT6795 example, replace the current interrupts
+> property description with the one from the MT6795 document since
+> it makes more sense and define its items using conditionals
+> as they now vary between variants. Also use conditionals to define
+> valid values for the drive-strength property for each variant.
 > 
 > Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 > ---
+>  .../pinctrl/mediatek,mt6779-pinctrl.yaml      | 189 ++++++++++-----
+>  .../pinctrl/mediatek,pinctrl-mt6795.yaml      | 227 ------------------
+>  2 files changed, 127 insertions(+), 289 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,pinctrl-mt6795.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> index 70e4ffa2d897..6f2cffe50b11 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> @@ -8,6 +8,7 @@ title: Mediatek MT6779 Pin Controller
+>  
+>  maintainers:
+>    - Andy Teng <andy.teng@mediatek.com>
+> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>    - Sean Wang <sean.wang@kernel.org>
+>  
+>  description:
+> @@ -18,6 +19,7 @@ properties:
+>    compatible:
+>      enum:
+>        - mediatek,mt6779-pinctrl
+> +      - mediatek,mt6795-pinctrl
+>        - mediatek,mt6797-pinctrl
+>  
+>    reg:
+> @@ -43,9 +45,7 @@ properties:
+>    interrupt-controller: true
+>  
+>    interrupts:
+> -    maxItems: 1
 
-I propose to squash it with the one changing description here.
+Leave the constraints.
+
+Why? Because now you dropped it for mt6797... You bring here some random
+changes and it is difficult to review it.
+
+> -    description: |
+> -      Specifies the summary IRQ.
+> +    description: Interrupt outputs to the system interrupt controller (sysirq).
+>  
+>    "#interrupt-cells":
+>      const: 2
+> @@ -57,59 +57,6 @@ required:
+>    - gpio-controller
+>    - "#gpio-cells"
+>  
+> -allOf:
+> -  - $ref: "pinctrl.yaml#"
+> -  - if:
+> -      properties:
+
+Make the move of this hunk in your description cleanup patch. Don't mix
+functional changes and some cleanups.
+
+> -        compatible:
+> -          contains:
+> -            const: mediatek,mt6779-pinctrl
+> -    then:
+> -      properties:
+> -        reg:
+> -          minItems: 9
+> -          maxItems: 9
+> -
+> -        reg-names:
+> -          items:
+> -            - const: gpio
+> -            - const: iocfg_rm
+> -            - const: iocfg_br
+> -            - const: iocfg_lm
+> -            - const: iocfg_lb
+> -            - const: iocfg_rt
+> -            - const: iocfg_lt
+> -            - const: iocfg_tl
+> -            - const: eint
+> -  - if:
+> -      properties:
+> -        compatible:
+> -          contains:
+> -            const: mediatek,mt6797-pinctrl
+> -    then:
+> -      properties:
+> -        reg:
+> -          minItems: 5
+> -          maxItems: 5
+> -
+> -        reg-names:
+> -          items:
+> -            - const: gpio
+> -            - const: iocfgl
+> -            - const: iocfgb
+> -            - const: iocfgr
+> -            - const: iocfgt
+> -  - if:
+> -      properties:
+> -        reg-names:
+> -          contains:
+> -            const: eint
+> -    then:
+> -      required:
+> -        - interrupts
+> -        - interrupt-controller
+> -        - "#interrupt-cells"
+> -
+>  patternProperties:
+>    '-pins$':
+>      type: object
+> @@ -169,8 +116,7 @@ patternProperties:
+>  
+>            input-schmitt-disable: true
+>  
+> -          drive-strength:
+> -            enum: [2, 4, 8, 12, 16]
+> +          drive-strength: true
+>  
+>            slew-rate:
+>              enum: [0, 1]
+> @@ -202,6 +148,110 @@ patternProperties:
+>  
+>          additionalProperties: false
+>  
+> +allOf:
+> +  - $ref: "pinctrl.yaml#"
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mediatek,mt6779-pinctrl
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 9
+> +          maxItems: 9
+> +
+> +        reg-names:
+> +          items:
+> +            - const: gpio
+> +            - const: iocfg_rm
+> +            - const: iocfg_br
+> +            - const: iocfg_lm
+> +            - const: iocfg_lb
+> +            - const: iocfg_rt
+> +            - const: iocfg_lt
+> +            - const: iocfg_tl
+> +            - const: eint
+> +
+> +        interrupts:
+> +          items:
+> +            - description: EINT interrupt
+> +
+> +      patternProperties:
+> +        '-pins$':
+> +          patternProperties:
+> +            '^pins':
+> +              properties:
+> +                drive-strength:
+> +                  enum: [2, 4, 8, 12, 16]
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mediatek,mt6795-pinctrl
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 2
+> +          maxItems: 2
+> +
+> +        reg-names:
+> +          items:
+> +            - const: base
+> +            - const: eint
+> +
+> +        interrupts:
+> +          items:
+> +            - description: EINT interrupt
+> +            - description: EINT event_b interrupt
+> +
+> +      patternProperties:
+> +        '-pins$':
+> +          patternProperties:
+> +            '^pins':
+> +              properties:
+> +                drive-strength:
+> +                  enum: [2, 4, 6, 8, 10, 12, 14, 16]
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mediatek,mt6797-pinctrl
+> +    then:
+> +      properties:
+> +        reg:
+> +          minItems: 5
+> +          maxItems: 5
+> +
+> +        reg-names:
+> +          items:
+> +            - const: gpio
+> +            - const: iocfgl
+> +            - const: iocfgb
+> +            - const: iocfgr
+> +            - const: iocfgt
+> +
+> +      patternProperties:
+> +        '-pins$':
+> +          patternProperties:
+> +            '^pins':
+> +              properties:
+> +                drive-strength:
+> +                  enum: [2, 4, 8, 12, 16]
+> +
+> +  - if:
+> +      properties:
+> +        reg-names:
+> +          contains:
+> +            const: eint
+> +    then:
+> +      required:
+> +        - interrupts
+> +        - interrupt-controller
+> +        - "#interrupt-cells"
+> +
+>  additionalProperties: false
+>  
+>  examples:
+> @@ -237,8 +287,9 @@ examples:
+>              #interrupt-cells = <2>;
+>              interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
+>  
+> -            mmc0_pins_default: mmc0-0 {
+> -                cmd-dat-pins {
+
+How this is related to the patch?
+
+Organize the patches so they are easy for review.
 
 Best regards,
 Krzysztof
