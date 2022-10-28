@@ -2,145 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD256107D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 04:17:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D87C36107F8
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 04:28:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235984AbiJ1CRX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 27 Oct 2022 22:17:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
+        id S236166AbiJ1C21 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 27 Oct 2022 22:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235976AbiJ1CRV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 22:17:21 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C73B8C3D;
-        Thu, 27 Oct 2022 19:17:19 -0700 (PDT)
-Received: from canpemm500004.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Mz5gy25QqzpW3p;
-        Fri, 28 Oct 2022 10:13:50 +0800 (CST)
-Received: from localhost (10.175.101.6) by canpemm500004.china.huawei.com
- (7.192.104.92) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 28 Oct
- 2022 10:17:17 +0800
-From:   Weilong Chen <chenweilong@huawei.com>
-To:     <chenweilong@huawei.com>, <f.fangjian@huawei.com>,
-        <linus.walleij@linaro.org>, <yangyicong@hisilicon.com>,
-        <xuwei5@huawei.com>, <robh+dt@kernel.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH next v2 2/2] dt-bindings: gpio: add entry for hisilicon,ascend910-gpio
-Date:   Fri, 28 Oct 2022 10:24:53 +0800
-Message-ID: <20221028022453.163186-2-chenweilong@huawei.com>
-X-Mailer: git-send-email 2.31.GIT
-In-Reply-To: <20221028022453.163186-1-chenweilong@huawei.com>
-References: <20221028022453.163186-1-chenweilong@huawei.com>
+        with ESMTP id S235701AbiJ1C20 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 27 Oct 2022 22:28:26 -0400
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B58BBE18
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 19:28:25 -0700 (PDT)
+Received: by mail-qv1-xf2e.google.com with SMTP id ml12so3271988qvb.0
+        for <linux-gpio@vger.kernel.org>; Thu, 27 Oct 2022 19:28:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bOA+bVn8OvkIk1DkOSyvlFEja2ERa4lqiJLWDfoSa14=;
+        b=O7v8d8TuS9gfwFW6+u2MrdNqUUDxiF2K6Ysl8z4cX51ihSwPohbAbiNjo3ubadOZ93
+         XryfVRMy9Hp/A/lr8mbynRfw8vmFuSuxE9hcKjCyb4rzTau7spR4RiinbOgW3b6Bjq60
+         yrgJ4e5f9Ob9WdCOwY31Y10/lVJhYVJePAHa7nt2RKp54z5FF1xR84hGzGp1m6Z0zWly
+         G4j3JxGe7jn/lGPBq8R/cmzNp3/oZRRF6cLd5HCFzGXDRzavEhgDJT1LruGCDnoq5lv2
+         MCYozuf1eec+wv7tn6MiQGMown7gzuAJfOCK4eGYaeUsoq067InxjX7+11K/Q10KxBiK
+         roTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bOA+bVn8OvkIk1DkOSyvlFEja2ERa4lqiJLWDfoSa14=;
+        b=poo5TL+I4AFv42EycyrktKCLpaPQDiqDdaU2oeYgmmEbBIvRugbUZr7jD1NU0Qjk8a
+         8Mybv6QvDVebOj68ywp4eOVEXA/kFDwW/AyXc+yg2y83BLsraS7F1N7tb8JnvFsTxkyT
+         vGD2GP5qoVTBMiHx1naSNGrNC/LgvyVC2ZR5VwXrOf2bUBu3GO7/W4IbPI7nAJxAxzq7
+         LXEJSqNMWXqDvfXb9d3abjdo21sg/EGcyEDUtgpzzN50aYmP6uToY4k2K8RoUfM1BW+d
+         m2fNU4KrmzsrgcGUjdnBZrAnO0zthpEG7GEPBaEmyEej2CoChea7E5XKTAAx2y6/W13V
+         EgbA==
+X-Gm-Message-State: ACrzQf2WrKoKwoUns3v+zGWUCKATY7TS6GX9edvjG7LfuP2GhSzT0QuK
+        JXSIb6aOtfR5FVu8J18xgemenA==
+X-Google-Smtp-Source: AMsMyM4WPrzp6zFHE5ps4PvSoUdMTx8E9XwnAIMTPA54sN4w8lZZ3eHwUi62u5a+f3wbuLCEsGIWcQ==
+X-Received: by 2002:a0c:e34f:0:b0:4bb:5d3a:bd25 with SMTP id a15-20020a0ce34f000000b004bb5d3abd25mr26791757qvm.23.1666924104448;
+        Thu, 27 Oct 2022 19:28:24 -0700 (PDT)
+Received: from [192.168.1.11] ([64.57.193.93])
+        by smtp.gmail.com with ESMTPSA id i6-20020ac85e46000000b0035cf0f50d7csm1758139qtx.52.2022.10.27.19.28.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Oct 2022 19:28:23 -0700 (PDT)
+Message-ID: <0737d433-0379-8aba-0ffb-efa278908c22@linaro.org>
+Date:   Thu, 27 Oct 2022 22:28:22 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500004.china.huawei.com (7.192.104.92)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH next v2 2/2] dt-bindings: gpio: add entry for
+ hisilicon,ascend910-gpio
+Content-Language: en-US
+To:     Weilong Chen <chenweilong@huawei.com>, f.fangjian@huawei.com,
+        linus.walleij@linaro.org, yangyicong@hisilicon.com,
+        xuwei5@huawei.com, robh+dt@kernel.org, robh@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20221028022453.163186-1-chenweilong@huawei.com>
+ <20221028022453.163186-2-chenweilong@huawei.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221028022453.163186-2-chenweilong@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the new compatible for HiSilicon gpio controller driver.
+On 27/10/2022 22:24, Weilong Chen wrote:
+> Add the new compatible for HiSilicon gpio controller driver.
+> 
+> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+> ---
+> Change since v1:
 
-Signed-off-by: Weilong Chen <chenweilong@huawei.com>
----
-Change since v1:
-- Drop "Device Tree Bindings" and reg's description
-- Move description in top-level description.
-- Add gpio-cells to required
-- Use additionalProperties and decimal numbers
-- Use IRQ flags
-- Use vendor,soc-ipblock format
-Link: https://lore.kernel.org/lkml/30b95e7b-b902-babc-ea78-a2112c80ec7e@linaro.org/t/#m298c22f175ee09b101d6baca2a959bdd0f90b2c0
+Thank you for your patch. There is something to discuss/improve.
 
- .../gpio/hisilicon,ascend910-gpio.yaml        | 56 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 57 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/hisilicon,ascend910-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: HiSilicon common GPIO controller
+> +
+> +maintainers:
+> +  - Jay Fang <f.fangjian@huawei.com>
+> +
+> +description: |
 
-diff --git a/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml b/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
-new file mode 100644
-index 000000000000..8868838bde3e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
-@@ -0,0 +1,56 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/hisilicon,ascend910-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: HiSilicon common GPIO controller
-+
-+maintainers:
-+  - Jay Fang <f.fangjian@huawei.com>
-+
-+description: |
-+  The HiSilicon common GPIO controller can be used for many different
-+  types of SoC such as Huawei Ascend AI series chips.
-+
-+properties:
-+  compatible:
-+    const: hisilicon,ascend910-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 32
-+
-+required:
-+  - compatible
-+  - gpio-controller
-+  - '#gpio-cells'
-+  - interrupts
-+  - ngpios
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    gpio@840d0000 {
-+      compatible = "hisilicon,ascend910-gpio";
-+      reg = <0x840d0000 0x1000>;
-+      ngpios = <32>;
-+      gpio-controller;
-+      #gpio-cells = <2>;
-+      interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 746becb5fe92..e29aad776ec1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9212,6 +9212,7 @@ HISILICON GPIO DRIVER
- M:	Jay Fang <f.fangjian@huawei.com>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
- F:	drivers/gpio/gpio-hisi.c
- 
- HISILICON HIGH PERFORMANCE RSA ENGINE DRIVER (HPRE)
--- 
-2.31.GIT
+No need for "|". Can be dropped.
+
+> +  The HiSilicon common GPIO controller can be used for many different
+> +  types of SoC such as Huawei Ascend AI series chips.
+> +
+> +properties:
+> +  compatible:
+> +    const: hisilicon,ascend910-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  ngpios:
+> +    minimum: 1
+> +    maximum: 32
+> +
+> +required:
+> +  - compatible
+> +  - gpio-controller
+> +  - '#gpio-cells'
+
+Please use the same style of quotes in entire file - either ' or ".
+
+> +  - interrupts
+> +  - ngpios
+> +  - reg
+
+The same order as appear in "properties:".
+
+> +
+> +additionalProperties: false
+> +
+
+Best regards,
+Krzysztof
 
