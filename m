@@ -2,96 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E56A0610FDC
-	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 13:39:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00A3F6112D0
+	for <lists+linux-gpio@lfdr.de>; Fri, 28 Oct 2022 15:31:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJ1Ljy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 28 Oct 2022 07:39:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56566 "EHLO
+        id S230525AbiJ1Nby (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 28 Oct 2022 09:31:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbiJ1Ljx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 07:39:53 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D616F5208D
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 04:39:51 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id i10so3045898qkl.12
-        for <linux-gpio@vger.kernel.org>; Fri, 28 Oct 2022 04:39:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p5v1tKJSddyKGhjYivr+OzULCBQzysCsAefOBPQNIX8=;
-        b=Dv9ap2PhBbYR9KjHexHomQ8eD83+DrEcXVXfW2l2PXZbPsMznbFUXJkRVTqCMLDgxy
-         9C/M4mUUhQ9NzNyOp81BaardyYDuS5ZOJR3bVlQLeZoiZ3OMLFX2jzbr8AO/XnFBYAip
-         sacPbc3qv5LfP0C6OmvRYw7Nkkc3W4lz8FREFlamIwhupcn9eis1ExPW8Uch7/HiVDoG
-         0gJDPCzqIDOLSFD+LJnpVcgZrAdwZW6I1dlNU+KHStXoVfmc47MoepXZW8tVq5IyIOJA
-         1xt+AXlX+lWK9NPXnwS6hbhaxZbW623bjLlkRTF2ET/VgQY0bLOSVjCcd3G3j9qGjdYt
-         VroA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p5v1tKJSddyKGhjYivr+OzULCBQzysCsAefOBPQNIX8=;
-        b=B1TzDfDzDBwW9Mtmc46cEf6pcuCndk9OBkejBoJnnq/CdsHuMamBgMJ1ZsINF8zhWD
-         XtomFvd9LSJj+r2LhP9b8zeqvN5F5TeW2f2RDoL+TD8ERcfoFrRxVz63JXJtABdp4UDD
-         otrHN0avMI/kU4vx17PuE2NBiKQzRFumkHdKNRS317ZsHGqmmybURy3G6ffeLZTQPB+0
-         0WqkLNJNf8Vg0PsrpG2X/EDblpsrdKyQJJul1lMfkGhsDvXCqkabe950GChDUMGHET5P
-         W6Hnf4DQ98MSzvoMDdJbyaiwnrLjNH0lxx324r9haGJpl90YErS013VEKmO8oPuI7lTs
-         +kFg==
-X-Gm-Message-State: ACrzQf1MzNa0eYqGJdXmvfpHJ/Q00HVDLrcAxCV53oe9Bx4R5OfZqaXM
-        tOLJR4E6ttzUJogUxyKQAz5vLw==
-X-Google-Smtp-Source: AMsMyM63uZYcee2OTH41pbHq2Hm59Cytlr132Z71CDFl7aRdaLWePUSDBtloqb603Lng+qAp4hHpUQ==
-X-Received: by 2002:a05:620a:1999:b0:6fa:9f:458e with SMTP id bm25-20020a05620a199900b006fa009f458emr4217875qkb.252.1666957190982;
-        Fri, 28 Oct 2022 04:39:50 -0700 (PDT)
-Received: from [192.168.1.11] ([64.57.193.93])
-        by smtp.gmail.com with ESMTPSA id n16-20020ac85a10000000b0039cc82a319asm2246325qta.76.2022.10.28.04.39.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Oct 2022 04:39:50 -0700 (PDT)
-Message-ID: <0d38990a-1f05-271a-9800-1deaeac9eb0e@linaro.org>
-Date:   Fri, 28 Oct 2022 07:39:49 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v4 2/2] dt-bindings: pinctrl: add loongson2 pinctrl
-Content-Language: en-US
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S230521AbiJ1Nb1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 28 Oct 2022 09:31:27 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C92C1D3E9D;
+        Fri, 28 Oct 2022 06:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3C5jxyJ1fkO4BUFYy7ofynkZLYw3QgYmInxQIz4BzfU=; b=XcObOtugISXaP07BtV593uo8lM
+        3c0yeg9agdtBF25VYpKGuJ61guYtPwA7w3wNc3Ahg97v8TKj9V4G6O88Sln9GmfLjO69mzpQTnXIi
+        Czcp/Yr6Ry1MJl6c/hsqySWhUZrSp0DKt0POWmPW/T2ce5GyDaxP3tvYluR/N/6y1DjEgWRuJDNAB
+        mVMwS/wxEtqOGeRfXro9eCEyfi5alINO/BJ4f5Ks3jAzv+tm59qMJi4/gTzYOLP+uNAWMH+MdDTc6
+        nERJDqoedivT2Jkg6xfO8TcYCBjPbaa5oYcTFb7VmOC9nM3UgnPm/RPCFVcJSfCbg7g0XI1vf1it2
+        X1FnxNzg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35004)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ooPSC-0008H2-0N; Fri, 28 Oct 2022 14:31:20 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ooPSA-0002bB-F3; Fri, 28 Oct 2022 14:31:18 +0100
+Date:   Fri, 28 Oct 2022 14:31:18 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org, Hector Martin <marcan@marcan.st>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>
-References: <20221028085625.24217-1-zhuyinbo@loongson.cn>
- <20221028085625.24217-2-zhuyinbo@loongson.cn>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221028085625.24217-2-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-gpio@vger.kernel.org
+Subject: [PATCH v2 0/2] Add Apple macsmc GPIO support
+Message-ID: <Y1vZprz7t1WRW3bz@shell.armlinux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/10/2022 04:56, Yinbo Zhu wrote:
-> Add the Loongson-2 pinctrl binding with DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
-> Change in v4:
-> 		1. Replace Loongson2 with Loongson-2.
+Hi,
 
-Where is the rest of the changelog? v2? v3?
+This series adds support for the Apple Mac SMC GPIO driver that was
+previously posted before the last merge window. I believe all previous
+review points have been addressed.
 
-You ignored also my comments, so no - you need to implement them.
+This series is smaller than the previous posting because I'm splitting
+this up to allow progress to be made; this driver is dependent on the
+Apple SMC driver in order to be buildable and usable. It is expected
+that this Apple SMC driver will be merged via Lee's MFD tree. The
+Kconfig dependencies this driver from causing build issues until that
+driver is also merged, so I believe it is appropriate to send this
+separately.
 
-Best regards,
-Krzysztof
+There is no issue if we wish to delay applying this until the core
+driver has been accepted by Lee.
 
+The series is made up of two patches - one patch for the bindings,
+which now include two compatibles, one specific and one generic. The
+second patch adds the actual driver itself.
+
+v2: updated bindings document
+
+ .../devicetree/bindings/gpio/gpio-macsmc.yaml      |  41 ++++
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-macsmc.c                         | 245 +++++++++++++++++++++
+ 4 files changed, 298 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-macsmc.yaml
+ create mode 100644 drivers/gpio/gpio-macsmc.c
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
