@@ -2,107 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFF176128E8
-	for <lists+linux-gpio@lfdr.de>; Sun, 30 Oct 2022 09:05:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA9166129B7
+	for <lists+linux-gpio@lfdr.de>; Sun, 30 Oct 2022 10:49:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiJ3IFZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 30 Oct 2022 04:05:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55784 "EHLO
+        id S229974AbiJ3Jte (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 30 Oct 2022 05:49:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiJ3IFY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Oct 2022 04:05:24 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642A26409
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Oct 2022 01:05:23 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id j15so11922659wrq.3
-        for <linux-gpio@vger.kernel.org>; Sun, 30 Oct 2022 01:05:23 -0700 (PDT)
+        with ESMTP id S229853AbiJ3Jtd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 30 Oct 2022 05:49:33 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AB6DCE3E;
+        Sun, 30 Oct 2022 02:49:32 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id ud5so22812438ejc.4;
+        Sun, 30 Oct 2022 02:49:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ARXWl72zE64W9sxl9KtUP1FXDgSDHyODIedksNa9+0=;
-        b=vrQx0dFI0q1qIYGQiNNtUT2dcuIUQT85jSTM8mpp81vgE6+RoxJs012tJCPK2ocSBQ
-         FCOSgeb2tHVkq90yNV86O8VUZlyimoQ4nEkjQQ+md6G8FXyqmq9wzGkA4Ap4RxcFil13
-         6o5wMzPC05XPmDaKOBv7QqQKZDKvQs3onq9v8Q6jXdaiL9jOvPZnQyoMwGo85V8dWg/T
-         5p6dwikOwNlSYnqQT7BinSFD/DlH9MVs+uuSPyydTiU1aHWzqw9OROoSBS3PrtyQDOhW
-         qciMWhvbMOpqVHPTy9hyDfzITWdrJvJ1EZQqwX1VwhfAxmJ5uMVJdSp/S9D2LmkO4arC
-         rIhw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PrESdhTf+ohvD7xti8OA6Uw5cnHRo0bNkMMZkvXzv/4=;
+        b=XCPPldoPImUrN93VgBHvNuASTcusKXWwI3GrzvHSID9zUSdCg2D2FdY1dlvZIqGpQj
+         t51wbjbN9deBfA2Q9Y6F0FjYilLwY1LAZW7jqAHedeSss1wUNUTwS75nBTPFHsKnet3R
+         SjAhI73Ek+p3W72qWN/+VjVb7R2pw978ObKkS9aX995r3/eNyuaA+5GRJ9CwSL0cvJWL
+         ywh2SzcOLIZQVEaU8QvdE3VaRMfikUtTq02cG7qkWDhW8p2UxLyQ7dHqU4dsQvRFdKcB
+         3CaJkdiQjr6RlItkON76VjXpgFs/7YsuZncPWEWiaoia0Bs0lYVey8X8Lfs1c7TX+a1i
+         rk8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7ARXWl72zE64W9sxl9KtUP1FXDgSDHyODIedksNa9+0=;
-        b=pXPZtg5VGy654whzPRsxsnXLRDZknZ+KMDjvtOjlE7+U9/Z3S2cOpbsVmAqwG8M3m9
-         A16N7Y6uzgLw8vh2eYnnMXFsQ+HUn6xTRSWT0VM5GMt0XQ1wPcrA8JWI+BTnGsxLsN5b
-         5o9xiCkgpxHx8e7yicm67c0QIG8HZ/yWdY5SVzCrCtWqSGBjg2cv5VKovuzdyKV/ijiD
-         zBIjTO8yM6y4F2ZGd0hl+7xxkKw1XpS2KQ68QKQmx+fkZgAFjhRJYa+II3L/d/sLaXcP
-         Dd95+/39R7r46CvJdH5ODSZiP4HH4jXtO12yqhZBqwSX5wdnzFcNHyl6EVUxneFmug9q
-         rtSg==
-X-Gm-Message-State: ACrzQf39SF1X0PSnmIb6+5DGLYrrznmquHhuhA2tZjN681LD06rkuFmD
-        IJULnoHenevKWTUeCWJzN92Pcg==
-X-Google-Smtp-Source: AMsMyM59bXcF2Xy5aurBDcM2CEEgt1J7miWZNJa2HwaL3mprd3DJF8kVBnw4FO1JmE/PYwlCvH11Vw==
-X-Received: by 2002:a05:6000:18a5:b0:231:e0c5:1322 with SMTP id b5-20020a05600018a500b00231e0c51322mr4467314wri.376.1667117121790;
-        Sun, 30 Oct 2022 01:05:21 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:41be:1aed:e53f:b9aa])
-        by smtp.gmail.com with ESMTPSA id w4-20020a05600c098400b003cf6a55d8e8sm2191995wmp.7.2022.10.30.01.05.20
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PrESdhTf+ohvD7xti8OA6Uw5cnHRo0bNkMMZkvXzv/4=;
+        b=xpIosqOKos771w3k6yhsOZVGH84qOlZAT7UigiglZCqjjN16cbYJFpz98ZqOqi+izt
+         RQ7JU90oBA/iwBNUdbJ/gloroeEYAenlT7RSvBXGKGrq2hk/KKFSzAOOEZuTKIoD6OPW
+         TXxt4M6zlCT+c+ByNM/2QFs9Q3skN6yl1IamnHb5lxTmUJ7DP6LJ9M7fzYcmPoChokWP
+         OZd8jo+yOXE1A+5WqWDMcQJZSc4lMhtEXGlH7bAlJnfLuDNb+yd9AvPs1Cc9ARvulRKq
+         dQMBhfewTWzjGQwp/h8iZ1Cp1ybPz6zOMtCzGDeE4i5ChqMsv5iJnsrO+GeR3D2FrMzk
+         oRcQ==
+X-Gm-Message-State: ACrzQf0QTla3Ab0TOa+p5+3R+LVBHumSlC5jABpqjUUGyrgkFY9RLSdC
+        n8iBVMkmEdVfvs0p3C0NNik=
+X-Google-Smtp-Source: AMsMyM7LXJPbJfwCst2+OBeGHE3sUGrmmMgHlv73Xnbhlcz9oB5xVLivRHIDUAjKFEfx4+i0M6n8Kw==
+X-Received: by 2002:a17:907:7e9a:b0:796:7a21:1520 with SMTP id qb26-20020a1709077e9a00b007967a211520mr7581144ejc.236.1667123371124;
+        Sun, 30 Oct 2022 02:49:31 -0700 (PDT)
+Received: from [10.32.3.204] ([95.183.227.98])
+        by smtp.gmail.com with ESMTPSA id 10-20020a170906328a00b007836d075152sm1672391ejw.187.2022.10.30.02.49.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Oct 2022 01:05:21 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.1-rc3
-Date:   Sun, 30 Oct 2022 09:05:19 +0100
-Message-Id: <20221030080519.5467-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.34.1
+        Sun, 30 Oct 2022 02:49:30 -0700 (PDT)
+Date:   Sun, 30 Oct 2022 12:49:16 +0300
+From:   Yassine Oudjana <yassine.oudjana@gmail.com>
+Subject: Re: [PATCH v4 08/13] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Improve pinctrl subnode and property descriptions
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Message-Id: <4M8KKR.ECH2308DQOMN2@gmail.com>
+In-Reply-To: <f5bf36e2-5be2-cec9-510d-bc99bb9b6bda@linaro.org>
+References: <20221028153505.23741-1-y.oudjana@protonmail.com>
+        <20221028153505.23741-9-y.oudjana@protonmail.com>
+        <f5bf36e2-5be2-cec9-510d-bc99bb9b6bda@linaro.org>
+X-Mailer: geary/40.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Linus,
+On Fri, Oct 28 2022 at 15:58:30 -04:00:00, Krzysztof Kozlowski 
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 28/10/2022 11:35, Yassine Oudjana wrote:
+>>  From: Yassine Oudjana <y.oudjana@protonmail.com>
+>> 
+>>  Change "subnodes" to "subnode" in subnode description for better 
+>> grammatical
+>>  accuracy, capitalize pinmux description, wrap all descriptions at 
+>> 80 characters,
+>>  and remove literal style indicators from descriptions that don't 
+>> need their new
+>>  lines preserved.
+>> 
+>>  Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+>>  ---
+> 
+> I propose to squash it with the one changing description here.
 
-Please pull the following fixes for the next rc. There's an update to the
-MAINTAINERS file and another immutable irqchip conversion.
+You mean patch 6 "dt-bindings: pinctrl: mediatek,pinctrl-mt6795: 
+Improve interrupts description"? If yes, would that mean improving 
+descriptions in mediatek,pinctrl-mt6795.yaml then pulling them into 
+mt6779?
 
-Bartosz
 
-The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
 
-  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.1-rc3
-
-for you to fetch changes up to 9ed88fcfb1b08c41bde0381dece84d152d53774c:
-
-  MAINTAINERS: Change myself to a maintainer (2022-10-28 16:50:14 +0200)
-
-----------------------------------------------------------------
-gpio: fixes for v6.1-rc3
-
-- convert gpio-tegra to using an immutable irqchip
-- MAINTAINERS update
-
-----------------------------------------------------------------
-Matti Vaittinen (1):
-      MAINTAINERS: Change myself to a maintainer
-
-Svyatoslav Ryhel (1):
-      gpio: tegra: Convert to immutable irq chip
-
- MAINTAINERS               |  4 ++--
- drivers/gpio/gpio-tegra.c | 60 ++++++++++++++++++++++++++++++++++-------------
- 2 files changed, 46 insertions(+), 18 deletions(-)
