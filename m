@@ -2,39 +2,39 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65DCF613E53
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Oct 2022 20:35:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDE74613E8B
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Oct 2022 20:48:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbiJaTfD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Oct 2022 15:35:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
+        id S230165AbiJaTsA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Oct 2022 15:48:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiJaTfC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Oct 2022 15:35:02 -0400
+        with ESMTP id S230149AbiJaTr7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Oct 2022 15:47:59 -0400
 Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57BC13DF1
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 12:34:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21AE13F40
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 12:47:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=nDxYWCtghrxrph0I3dNOlyeYup/Mq2sFBuYqjAijQQ0=; b=z8pvQUmaHCUvWyJuon0yfDGUvv
-        qw6AIOBJ8T0GOh3g0ZgVYdekhXIRnbL0qKUSFRdB2+gfKt/wwV10j/BrGSZ2ZJsA72yCwEaVuCd1f
-        nR9DpEJbUSXyvwPDfooKqMZjm9Hq3sGZXU7q2pIetPThxGddSo2jPhB4TUfEIXq/5Kx8f/T8NHVgJ
-        Q7pAqCrfblbfN8cMWC/mkV0df0NsGtuZ4ggBTC9/5BS2KbASk32cY4Ibnm75oKQasAKoSEWq2vKOF
-        g8GuK5cyVkD/uAxL6LZO73MV0tx5tcdkHliZhI0m9DtVNI3vv8ks0CfI+v17XyLFHtwvnpA++IxZ5
-        zydnnbkQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35052)
+        bh=PPSPjnWP+DveRpIaSnIkEhVnKd1D9zYt55dwDBIhP3w=; b=wxjWiG/YkQ4dDMRS90avngL/Kk
+        LvdyYn2sbcteyQm2U+y6pCPqwTKnS1Pv1w/1MoPedQQLP85eBmJxMLz5SO9VgYomDaFivIP768TdP
+        tuTZnOUxv1WAEfqF5EZsNqWyJT0IUst2u6DJjReQRphgS2fbQM3ul82agq6K67DFl1RosaZ4Ctaeg
+        wOTRfUaonI1r81tEQ/v0/dQUzZvj6oiUkSwhSGVWxEbtSGx2bNA3jfSg9Lg86zl6/H+58afwO6N6S
+        G1pUdq9iyZLhyK1oJNq5NbvxFLCUX21IDJ+Pn/HR2yEGkf4/UF1+TS+GPm2IM54nuXut/A5hENDGS
+        H64MKKwg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35056)
         by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <linux@armlinux.org.uk>)
-        id 1opaYY-0003Mc-VG; Mon, 31 Oct 2022 19:34:46 +0000
+        id 1opalC-0003Nb-Nt; Mon, 31 Oct 2022 19:47:50 +0000
 Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
         (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1opaYW-0005hr-0d; Mon, 31 Oct 2022 19:34:44 +0000
-Date:   Mon, 31 Oct 2022 19:34:43 +0000
+        id 1opalB-0005it-Hg; Mon, 31 Oct 2022 19:47:49 +0000
+Date:   Mon, 31 Oct 2022 19:47:49 +0000
 From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
 To:     Lee Jones <lee@kernel.org>
 Cc:     Hector Martin <marcan@marcan.st>, Arnd Bergmann <arnd@arndb.de>,
@@ -44,21 +44,21 @@ Cc:     Hector Martin <marcan@marcan.st>, Arnd Bergmann <arnd@arndb.de>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         Sven Peter <sven@svenpeter.dev>
 Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-Message-ID: <Y2AjUz9eGa/GLY5s@shell.armlinux.org.uk>
+Message-ID: <Y2AmZQtttiGwpvth@shell.armlinux.org.uk>
 References: <8f30a490-f970-6605-20cb-c2256daab9de@marcan.st>
  <Yxnv2mKkl1tW4PUp@google.com>
  <82088b05-2a0d-69cc-ba2c-d61c74c9d855@marcan.st>
  <YxrwLwVihe/s9wxN@google.com>
- <a92ca9ac-fbc8-a25f-4865-5bc7adb206e2@marcan.st>
- <Y1+LzpEvVj7xswqb@google.com>
- <dcd692aa-1525-4fc5-5198-37f803725c4f@marcan.st>
- <Y1+VdnmMUfIKTwWF@google.com>
- <4faa5e4c-b43b-12e4-2259-c2595bd55b97@marcan.st>
- <Y2AEgIfURNhCgimr@google.com>
+ <Yx8D8mGCO+1sEaKG@shell.armlinux.org.uk>
+ <Yx8QEkZcnL59qSUM@google.com>
+ <Y1v3EMP6pFZuo0QW@shell.armlinux.org.uk>
+ <Y1+LYbdYLA0otaKF@google.com>
+ <Y1+Y49b6vi2waVN9@shell.armlinux.org.uk>
+ <Y2AE5a/5fY4Pl7YF@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y2AEgIfURNhCgimr@google.com>
+In-Reply-To: <Y2AE5a/5fY4Pl7YF@google.com>
 Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
@@ -69,89 +69,151 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Oct 31, 2022 at 05:23:12PM +0000, Lee Jones wrote:
-> I see that you pass a bunch of function pointers from the RTKit
-> implementation into the SMC.  Which in turn offers an exported
-> (apple_smc_*) API.  In most of the frameworks I have knowledge of, the
-> core provides the Ops structure and it's populated by the client
-> device.
-
-Sorry Lee, I don't get this point. From what I can see, the
-apple_smc_backend_ops struct is owned by the core System Management
-Controller code, and RTKit backend fills in an instance of these ops
-and provides that to the core SMC code. The RTKit backend is just
-how we walk to the System Management Controller. It is not a client.
-
-I don't see this being any different to struct file_operations,
-seq_operations, vm_operations_struct, block_Device_operations,
-and so on and so forth.
-
-Having read your response, I wonder if you're confused about what the
-smc_core and smc_rtkit code actually are - because you seem to think
-that smc_rtkit is a _client_ of the smc_core code. It isn't, as I
-explain above, it's how we talk to the System Management Controller,
-and smc_core provides a uniform interface to the client drivers such
-as GPIO, RTC etc.
-
-Essentially, we have:
-
-Hardware   Backend    Core             Clients
-                                 .---- RTC
-                                / .--- GPIO
-Mailbox -- RTKit -- SMC Core -- MFD -- HID
-                                \ `--- Power
-                                 `---- Reboot
-
-RTKit is just _one_ possible backend, there are other backends that
-can be used to interface to the underlying platform implementation to
-talk to the SMC.
-
-> I'm sure having that clear in my head will go some ways to put me in a
-> position to advise you further.
+On Mon, Oct 31, 2022 at 05:24:53PM +0000, Lee Jones wrote:
+> On Mon, 31 Oct 2022, Russell King (Oracle) wrote:
 > 
-> > > Request the device-wide memory (and other shared resources) here.
+> > On Mon, Oct 31, 2022 at 08:46:25AM +0000, Lee Jones wrote:
+> > > On Fri, 28 Oct 2022, Russell King (Oracle) wrote:
+> > > 
+> > > > On Mon, Sep 12, 2022 at 11:55:14AM +0100, Lee Jones wrote:
+> > > > > > I'm guessing this series is now dead, and Hector needs to re-spin the
+> > > > > > patch set according to your views. I'm guessing this is going to take
+> > > > > > a major re-work of the patch series.
+> > > > > > 
+> > > > > > I suspect my attempt and trying to get this upstream has made things
+> > > > > > more complicated, because I doubt Hector has updated his patch set
+> > > > > > with the review comments that have been made so far... so this is
+> > > > > > now quite a mess. I think, once this is sorted, the entire series
+> > > > > > will need to be re-reviewed entirely afresh.
+> > > > > 
+> > > > > I have no insight into what Hector is doing, or plans to do.
+> > > > 
+> > > > It seems there's no plans by Hector to address this, so it comes down
+> > > > to me.
+> > > > 
+> > > > So, guessing what you're after, would something like the following
+> > > > work for you? I don't see *any* point in creating more yet more
+> > > > platform devices unless we're on a mission to maximise wasted memory
+> > > > resources (which this split will already be doing by creating two
+> > > > small modules instead of one.)
+> > > > 
+> > > > Obviously, this is not an official patch yet, it's just to find out
+> > > > what code structure you are looking for.
+> > > > 
+> > > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > > > index 78c6d9d99c3f..8d4c0508a2c8 100644
+> > > > --- a/drivers/mfd/Makefile
+> > > > +++ b/drivers/mfd/Makefile
+> > > > @@ -18,6 +18,8 @@ obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
+> > > >  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+> > > >  obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
+> > > >  
+> > > > +obj-$(CONFIG_APPLE_SMC)		+= apple-smc.o
+> > > > +
+> > > >  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
+> > > >  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+> > > >  
+> > > > diff --git a/drivers/mfd/apple-smc.c b/drivers/mfd/apple-smc.c
+> > > > new file mode 100644
+> > > > index 000000000000..bc59d1c5e13d
+> > > > --- /dev/null
+> > > > +++ b/drivers/mfd/apple-smc.c
+> > > > @@ -0,0 +1,38 @@
+> > > > +#include <linux/mfd/core.h>
+> > > > +#include <linux/mfd/apple-smc.h>
+> > > > +
+> > > > +static const struct mfd_cell apple_smc_devs[] = {
+> > > > +	{
+> > > > +		.name = "macsmc-gpio",
+> > > > +		.of_compatible = "apple,smc-gpio",
+> > > > +	},
+> > > > +	{
+> > > > +		.name = "macsmc-hid",
+> > > > +	},
+> > > > +	{
+> > > > +		.name = "macsmc-power",
+> > > > +	},
+> > > > +	{
+> > > > +		.name = "macsmc-reboot",
+> > > > +	},
+> > > > +	{
+> > > > +		.name = "macsmc-rtc",
+> > > > +	},
+> > > > +};
+> > > > +
+> > > > +int apple_smc_mfd_probe(struct device *dev)
+> > > > +{
+> > > > +	return mfd_add_devices(dev, -1, apple_smc_devs,
+> > > > +			       ARRAY_SIZE(apple_smc_devs), NULL, 0, NULL);
+> > > > +}
+> > > > +EXPORT_SYMBOL(apple_smc_mfd_probe);
+> > > > +
+> > > > +void apple_smc_mfd_remove(struct device *dev)
+> > > > +{
+> > > > +	mfd_remove_devices(dev);
+> > > > +}
+> > > > +EXPORT_SYMBOL(apple_smc_mfd_remove);
+> > > > +
+> > > > +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+> > > > +MODULE_LICENSE("Dual MIT/GPL");
+> > > > +MODULE_DESCRIPTION("Apple SMC MFD core");
+> > > 
+> > > Conceptually interesting, not seen this one before, but clearly a
+> > > hack, no?  Pretty sure all of the other cores in MFD are represented
+> > > by a Platform Device.
 > > 
-> > That's what smc_rtkit.c does, but you seem not to want that code in mfd.
+> > No one seems to understand what you actually want to see with the
+> > smc-core.c part, so I'm trying to find out what code structure
+> > would suit you.
+> > 
+> > It seemed from the thread that moving smc-core.c to drivers/mfd
+> > wasn't desirable, but there was the desire to move the mfd bits
+> > into there - so that's what I've done with this patch. It doesn't
+> > make any sense what so ever to add yet another platform device
+> > into this structure with all of the complication around what happens
+> > if the user forces it to unbind, so I didn't.
+> > 
+> > > Why not implement the inverse?
+> > 
+> > What do you mean "the inverse" ? The inverse of this patch is moving
+> > everything of smc-core.c except the MFD bits into drivers/mfd leaving
+> > the MFD bits in drivers/platform/apple, which makes no sense.
+> > 
+> > > The Apple SMC is clearly an MFD, in
+> > > Linux terms, so why not move the Platform Device into here, fetch all
+> > > of the global resources, register the sub-devices, then call into the
+> > > rtkit implementation in drivers/platform? 
+> > 
+> > I thought you had previously ruled out the idea of moving the contents
+> > of drivers/platform/apple into drivers/mfd, but maybe your position on
+> > that had changed through the course of the discussion. It's really not
+> > obvious to me what you want from what's been said in this thread.
+> > 
+> > So, I ask the direct question - would moving the code that is in this
+> > patch set from drivers/platform/apple to drivers/mfd then make it
+> > acceptable to you? In other words:
+> > 
+> >  drivers/platform/apple/smc_core.c
+> >  drivers/platform/apple/smc.h
+> >  drivers/platform/apple/smc_rtkit.c
+> > 
+> > If not, then please clearly and fully state what you want to see.
 > 
-> I'm not sure I explicitly said that.
+> Sorry Russell, I'm out of time today.  Please see my recent reply to
+> Hector for now and I'll get back to you first thing.
 
-On Fri, Sep 09, 2022 at 08:50:07AM +0100, Lee Jones wrote:
-| If we were to design and build it up again from scratch, I'd suggest
-| that the MFD part would be the core-driver / entry-point.  That driver
-| should request and initialise shared resources and register the other
-| devices, which is essentially the MFD's mantra.
+Hi Lee,
 
-This is exactly what smc_rtkit is doing, which as I've mentioned above
-is the backend provider of access to the System Management Controller.
-Backend-independent access to the System Management Controller is done
-via smc_core which - at least to me - seems to be entirely correct,
-and it seems entirely appropriate that this should be responsible for
-creating the individual clients that make use of the System Management
-Controller's facilities such as GPIO, RTC etc.
+Thanks - I look forward to it. Having read your response to Hector, I
+am wondering whether there's a misunderstanding of the code, so I'm
+hoping that my attempt in my reply helps to clear up any code
+misunderstandings.
 
-> "call into" was not a good choice of words here.  Simply, let the
-> child devices go about their business and do whatever they were
-> designed to do.
+If you want to ask questions about the code, you know where to find
+me on irc, and I'll more than happily answer anything you want to
+know about the code structure.
 
-... by calling into the code which provides them with access to the
-System Management Controller - that being through smc_core and
-ultimately which ever backend is used to finally communicate with the
-System Management Controller.
-
-At this point, I'm wondering whether you're somehow expecting client
-devices to map memory and read/write some registers. This is not that
-kind of setup. The address space is entirely virtual, through a set
-of four byte keys that indicate to the System Management Controller
-which fine-grained resource one wants to access. That being an
-individual GPIO line or some other parameter of the system.
-
-The memory that you see smc_rtkit claim is for passing messages, none
-of the clients have a right to directly access that memory - indeed,
-doing so would be a total layering violation and really bad bit of
-design.
-
-So, I hope my response helps fill in some of the detail about what
-this code is doing, how it works and how it's been designed.
+Russell.
 
 -- 
 RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
