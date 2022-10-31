@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17A55613212
-	for <lists+linux-gpio@lfdr.de>; Mon, 31 Oct 2022 09:58:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7727B613226
+	for <lists+linux-gpio@lfdr.de>; Mon, 31 Oct 2022 10:03:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbiJaI6S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 31 Oct 2022 04:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40806 "EHLO
+        id S229637AbiJaJDd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 31 Oct 2022 05:03:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbiJaI6P (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Oct 2022 04:58:15 -0400
+        with ESMTP id S229505AbiJaJDd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 31 Oct 2022 05:03:33 -0400
 Received: from mail.marcansoft.com (marcansoft.com [212.63.210.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6B2D2F5
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 01:58:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B022820C
+        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 02:03:31 -0700 (PDT)
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (No client certificate requested)
         (Authenticated sender: marcan@marcan.st)
-        by mail.marcansoft.com (Postfix) with ESMTPSA id E0C6241A42;
-        Mon, 31 Oct 2022 08:58:07 +0000 (UTC)
+        by mail.marcansoft.com (Postfix) with ESMTPSA id 8C62A41A42;
+        Mon, 31 Oct 2022 09:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=marcan.st; s=default;
-        t=1667206690; bh=OTa1+8o7mYyJcDcaIQoNw1DovJ5wxNno2mZ54SxYZDQ=;
-        h=Date:To:Cc:References:From:Subject:In-Reply-To;
-        b=gWkgUAD2ESePZcKbNTSwjn82lNH0L9FCOUk7gOeeLEm6gZ4JTgNeoA11/bNf3VUSe
-         RKve+W/ENMXLrPb/cTh42z3zRHm44WWAq6oywgfZflexJ9qwFre26Mppc/7WEfNNvk
-         LdrkpaQKPPHcVX5TsXIBXZVlC/xP0ndhJDgxAnIKPmB7Qm55uIzUabPOdfBnEEv+no
-         U3VSa2Gp8+zUx2BUvosHpADmSRQFcbFlt2DPrivSoulSeyEPN/NrO+BamcOmfVtZvs
-         8XDhhSBOqHBJW4adPsLUZssMMJQDIan4EZnP+iI4x4oU53opAukw2z4LasFVtlc8c1
-         Ll+TX/rdiI4yw==
-Message-ID: <dcd692aa-1525-4fc5-5198-37f803725c4f@marcan.st>
-Date:   Mon, 31 Oct 2022 17:58:05 +0900
+        t=1667207010; bh=Hno0sFzHCLWhg8Vn0kd1G05Gd57magUPAZpfkYprqfE=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=H8RanM3FS15PG3VITRTgMMO6UO//kUqLbGq2jtc8AnbR8oOzc++Zt1B4ZyQ8lt+LZ
+         IHmb6AmNsJalRIgqDzGCdLR2GKnG2PNmIAEBnNCPF5laB7OgOqoCio2TcBvoqUMQNn
+         XcjOVezJXK1pb4vewofwd06lfRaBx4bJCYa1PF7Vk7euei4ECEYPoB3AkiRLLIZAqt
+         /xnihiiiIHuxFdG8V3WhCEEi2oMPov4yofRnmch5CFRLU1B8m+/dfvryGbDQ48m/Qc
+         caneAopmtTTxcOob8fFMicbzkx3Ti0UqYfA2mVl7BoPZ5nAXG8U8TVgg01K+3sFa+l
+         K55IHskTcXV9Q==
+Message-ID: <0d2f2f56-f68c-2849-c2f6-1c2c2537a162@marcan.st>
+Date:   Mon, 31 Oct 2022 18:03:25 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
+Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
 Content-Language: en-US
-To:     Lee Jones <lee@kernel.org>
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
+To:     Lee Jones <lee@kernel.org>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
         asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         Sven Peter <sven@svenpeter.dev>
-References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
- <E1oTkeW-003t9Y-Ey@rmk-PC.armlinux.org.uk> <YxnK3LeyfacKssLT@google.com>
+References: <YxnK3LeyfacKssLT@google.com>
  <45ed0a37-60ac-3a06-92d1-6b30e18261ff@marcan.st>
  <YxngtlhRLTVBw+iW@google.com>
  <8f30a490-f970-6605-20cb-c2256daab9de@marcan.st>
  <Yxnv2mKkl1tW4PUp@google.com>
  <82088b05-2a0d-69cc-ba2c-d61c74c9d855@marcan.st>
- <YxrwLwVihe/s9wxN@google.com>
- <a92ca9ac-fbc8-a25f-4865-5bc7adb206e2@marcan.st>
- <Y1+LzpEvVj7xswqb@google.com>
+ <YxrwLwVihe/s9wxN@google.com> <Yx8D8mGCO+1sEaKG@shell.armlinux.org.uk>
+ <Yx8QEkZcnL59qSUM@google.com> <Y1v3EMP6pFZuo0QW@shell.armlinux.org.uk>
+ <Y1+LYbdYLA0otaKF@google.com>
 From:   Hector Martin <marcan@marcan.st>
-Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-In-Reply-To: <Y1+LzpEvVj7xswqb@google.com>
+In-Reply-To: <Y1+LYbdYLA0otaKF@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -68,98 +67,120 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 31/10/2022 17.48, Lee Jones wrote:
-> On Sat, 29 Oct 2022, Hector Martin wrote:
+On 31/10/2022 17.46, Lee Jones wrote:
+> On Fri, 28 Oct 2022, Russell King (Oracle) wrote:
 > 
->> On 09/09/2022 16.50, Lee Jones wrote:
->>>> What's the point of just having effectively an array of mfd_cell and
->>>> wrappers to call into the mfd core in the drivers/mfd/ tree and the
->>>> rest of the driver elsewhere?
+>> On Mon, Sep 12, 2022 at 11:55:14AM +0100, Lee Jones wrote:
+>>>> I'm guessing this series is now dead, and Hector needs to re-spin the
+>>>> patch set according to your views. I'm guessing this is going to take
+>>>> a major re-work of the patch series.
+>>>>
+>>>> I suspect my attempt and trying to get this upstream has made things
+>>>> more complicated, because I doubt Hector has updated his patch set
+>>>> with the review comments that have been made so far... so this is
+>>>> now quite a mess. I think, once this is sorted, the entire series
+>>>> will need to be re-reviewed entirely afresh.
 >>>
->>> They should be separate drivers, with MFD registering the Platform.
+>>> I have no insight into what Hector is doing, or plans to do.
 >>
->> Why? What purpose does this serve? I'm still confused. There's one
->> parent device, which provides services to the child devices. There isn't
->> one parent device which wraps a platform service which is used by
->> children. This makes no sense. The platform device is the root, if it
->> exposes MFD services, then it has to be in that direction, not the other
->> way around.
+>> It seems there's no plans by Hector to address this, so it comes down
+>> to me.
 >>
->> Look at how this patch series is architected. There is smc_core.c, which
->> implements SMC helpers and wrappers on top of a generic backend, and
->> registers with the MFD subsystem. And then there is smc_rtkit.c which is
->> the actual platform implementation on top of the RTKit framework, and is
->> the actual platform device entry point.
+>> So, guessing what you're after, would something like the following
+>> work for you? I don't see *any* point in creating more yet more
+>> platform devices unless we're on a mission to maximise wasted memory
+>> resources (which this split will already be doing by creating two
+>> small modules instead of one.)
 >>
->> A priori, the only thing that makes sense to me right now would be to
->> move smc_core.c into drivers/mfd, and leave smc_rtkit.c in platform.
->> That way the mfd registration would be in drivers/mfd (as would be the
->> services offered to sub-drivers), but the actual backend implementation
->> would be in platform/ (and there would eventually be others, e.g. at
->> least two more for x86 systems). That does mean that the driver entry
->> point will be in platform/, with mfd/smc_core.c serving as effectively
->> library code to plumb in the mfd stuff into one of several possible
->> platform devices. Would that work for you?
+>> Obviously, this is not an official patch yet, it's just to find out
+>> what code structure you are looking for.
+>>
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 78c6d9d99c3f..8d4c0508a2c8 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -18,6 +18,8 @@ obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
+>>  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+>>  obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
+>>  
+>> +obj-$(CONFIG_APPLE_SMC)		+= apple-smc.o
+>> +
+>>  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
+>>  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
+>>  
+>> diff --git a/drivers/mfd/apple-smc.c b/drivers/mfd/apple-smc.c
+>> new file mode 100644
+>> index 000000000000..bc59d1c5e13d
+>> --- /dev/null
+>> +++ b/drivers/mfd/apple-smc.c
+>> @@ -0,0 +1,38 @@
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/apple-smc.h>
+>> +
+>> +static const struct mfd_cell apple_smc_devs[] = {
+>> +	{
+>> +		.name = "macsmc-gpio",
+>> +		.of_compatible = "apple,smc-gpio",
+>> +	},
+>> +	{
+>> +		.name = "macsmc-hid",
+>> +	},
+>> +	{
+>> +		.name = "macsmc-power",
+>> +	},
+>> +	{
+>> +		.name = "macsmc-reboot",
+>> +	},
+>> +	{
+>> +		.name = "macsmc-rtc",
+>> +	},
+>> +};
+>> +
+>> +int apple_smc_mfd_probe(struct device *dev)
+>> +{
+>> +	return mfd_add_devices(dev, -1, apple_smc_devs,
+>> +			       ARRAY_SIZE(apple_smc_devs), NULL, 0, NULL);
+>> +}
+>> +EXPORT_SYMBOL(apple_smc_mfd_probe);
+>> +
+>> +void apple_smc_mfd_remove(struct device *dev)
+>> +{
+>> +	mfd_remove_devices(dev);
+>> +}
+>> +EXPORT_SYMBOL(apple_smc_mfd_remove);
+>> +
+>> +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
+>> +MODULE_LICENSE("Dual MIT/GPL");
+>> +MODULE_DESCRIPTION("Apple SMC MFD core");
 > 
-> Yes, sounds sensible.  However, keep all of the abstraction craziness
-> somewhere else and fetch and share all of your shared resources from
-> the MFD (SMC) driver.
+> Conceptually interesting, not seen this one before, but clearly a
+> hack, no?  Pretty sure all of the other cores in MFD are represented
+> by a Platform Device.
+> 
+> Why not implement the inverse?  The Apple SMC is clearly an MFD, in
+> Linux terms, so why not move the Platform Device into here, fetch all
+> of the global resources, register the sub-devices, then call into the
+> rtkit implementation in drivers/platform? 
 
-I'm not sure what you mean by that. The abstraction (smc_core.c) *is*
-the shared resource. All it does is wrap ops callbacks with a mutex and
-add a couple helpers for finding keys. Do you literally want us to just
-have this in drivers/mfd?
+Because the RTKit implementation is *one* of several possible backends,
+and the others aren't even necessarily platform devices, and may have
+their own registration requirements (e.g. probing for ACPI stuff on
+x86). The entry points are completely different depending on the flavor.
+They will have to be different modules that compile on different
+architectures and load based on completely different device IDs.
 
-// SPDX-License-Identifier: GPL-2.0-only OR MIT
-/*
- * Apple SMC MFD wrapper
- * Copyright The Asahi Linux Contributors
- */
+This is common in Linux. There's the core xHCI driver, then an xhci-plat
+wrapper for platform devices, and an xhci-pci wrapper for PCI devices.
+It makes no sense to have the driver entry point be the core and then
+somehow call back out to xhci-pci and xhci-plat when those are different
+drivers with different match lists and different registration requirements.
 
-#include <linux/device.h>
-#include "smc.h"
-
-static const struct mfd_cell apple_smc_devs[] = {
-	{
-		.name = "macsmc-gpio",
-	},
-	{
-		.name = "macsmc-hid",
-	},
-	{
-		.name = "macsmc-power",
-	},
-	{
-		.name = "macsmc-reboot",
-	},
-	{
-		.name = "macsmc-rtc",
-	},
-};
-
-int apple_smc_add_mfd_devices(struct device *dev)
-{
-	ret = mfd_add_devices(dev, -1, apple_smc_devs,
-ARRAY_SIZE(apple_smc_devs), NULL, 0, NULL);
-	if (ret)
-		return dev_err_probe(dev, ret, "Subdevice initialization failed");
-
-	return 0;
-}
-EXPORT_SYMBOL(apple_smc_add_mfd_devices);
-
-int apple_smc_remove_mfd_devices(struct device *dev)
-{
-	mfd_remove_devices(smc->dev);
-
-	return 0;
-}
-EXPORT_SYMBOL(apple_smc_add_mfd_devices);
-
-MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-MODULE_LICENSE("Dual MIT/GPL");
-MODULE_DESCRIPTION("Apple SMC MFD wrapper");
-
-Because this feels *immensely* silly and pointless.
+It sounds like you have a mental model of what you want for MFD that
+doesn't actually fit how hardware works, and you're trying to shoehorn
+this into it without thinking. Linux is perfectly capable of
+representing things in a way that works with this hardware, but you need
+to let go of this idea that "the mfd driver lives in drivers/mfd and is
+the entry point but also I don't want any platform/abstraction/silliness
+in there" because that just doesn't work.
 
 - Hector
