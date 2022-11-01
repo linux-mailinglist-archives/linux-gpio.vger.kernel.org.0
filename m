@@ -2,221 +2,118 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DF82614755
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Nov 2022 10:59:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 899BC6147B1
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Nov 2022 11:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbiKAJ7J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Nov 2022 05:59:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33912 "EHLO
+        id S229756AbiKAK3i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Nov 2022 06:29:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229763AbiKAJ7I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Nov 2022 05:59:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76BBC18E03
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Nov 2022 02:59:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1325C6158D
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Nov 2022 09:59:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE328C433D6;
-        Tue,  1 Nov 2022 09:59:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667296746;
-        bh=uJPqy7FdyJCQ3j/6bfkJujcNB6cscQ3q4+L1Rs0Y5Jk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=arwNIvA1wsqucYpLvARlwfatzTaLVsPmmj8WXh2ihymvc4jyg736y53jBzaB3hi1o
-         q+5fMgrqZ1NPiiagpJltvuRHZ3Rt1ujoC7sCBms/TJ/ejyi1VrdpjglUAeFIyv/228
-         nnlxDzo90LWgL/nl7w+hJkoLOajoY9sG6JvttOszwaBTRNSGWXpdcKAFrqK+aC5Z15
-         4l/v3Te8c+Mgs0YhLRgfFh6kEkHc5UXH7qZYwLvg8dsRuo2bLI2406Hr6ttAxSSJBz
-         1gDSbBQhs4cpEszkGPSUvWoEPLqB88QHtnKuCMe6uEcWAVVsCMA2oKMXwar5yFPMbv
-         KhhrCH4eaCGMg==
-Date:   Tue, 1 Nov 2022 09:59:00 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Hector Martin <marcan@marcan.st>, Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-Message-ID: <Y2Dt5Gp4umPbp2an@google.com>
-References: <Yxnv2mKkl1tW4PUp@google.com>
- <82088b05-2a0d-69cc-ba2c-d61c74c9d855@marcan.st>
- <YxrwLwVihe/s9wxN@google.com>
- <Yx8D8mGCO+1sEaKG@shell.armlinux.org.uk>
- <Yx8QEkZcnL59qSUM@google.com>
- <Y1v3EMP6pFZuo0QW@shell.armlinux.org.uk>
- <Y1+LYbdYLA0otaKF@google.com>
- <Y1+Y49b6vi2waVN9@shell.armlinux.org.uk>
- <Y2AE5a/5fY4Pl7YF@google.com>
- <Y2AmZQtttiGwpvth@shell.armlinux.org.uk>
+        with ESMTP id S229511AbiKAK3g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Nov 2022 06:29:36 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04FDF19022;
+        Tue,  1 Nov 2022 03:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
+        t=1667298568; bh=llVHE5GLaohYprJdz/Wwa2hAREpdRRrX0D42e625sXg=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=kxfAziLxH9jY+uvFYguQT8bTyevy1B7N/nvWp1213fySxSnfWXaAScGRAVmhQiRUs
+         4UFflRdhWz1veWantwUenFxZIe0QiysD9M2It6HzTCTENR/d+EayeuGJcdu1qnDkNQ
+         fwAnlF2DqtSjVUP18hiko72NIOtSwneCq9ZXDqYULOLYpwl1l9EgtDXpA1QsYfu2tC
+         WfXGpRtW2QLIHFyPrheBi9Q/a+l8sC1wpKTQbmMXZpn9X8QSSKBFTy+Gf3v09+9PXP
+         ldnYl+34DL2ryW2DchPgzve42nb8l8PxoVXbut3U+BHdPDEa7FE9ZZggHzOprIJYL+
+         VeOFfhWGJZQHw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from probook ([95.223.44.31]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1M89Kr-1ov1SN2twx-005MKc; Tue, 01
+ Nov 2022 11:29:28 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: nuvoton,wpcm450-supermicro-x9sci-ln4f: Add GPIO line names
+Date:   Tue,  1 Nov 2022 11:29:16 +0100
+Message-Id: <20221101102916.440526-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y2AmZQtttiGwpvth@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PUE/KizgL9d9cQnhr7IpsrDX/mCGPfE/BdLnY3pG7aED8M8rCbT
+ JL0ZTn3+gSbB9ypsqvR75mGyfq3XpfN1GU/JMK1fTMDHAIKKbk0/gq9YNObUsk2odPOT2tx
+ IpssYqTkBxVO+4yggXqrFLZK03nQzRf5YV0Xcusg/SheiaBQe/OxvQKn+dC36i4KR25K6j4
+ Itre+bb4C3f0rQ77qNbUg==
+UI-OutboundReport: notjunk:1;M01:P0:/Tv77Y5Rs5k=;Dn3sWwI3bi+sanQVb4PzkD0REVH
+ D6Pdg4T2BtnfJeFg3JxXLmV7aVQsHCN5OjBdh9R9oNmrQrkn/NEEhQzTmefuirc9SyD62HuuS
+ 6nlcz0AlIB+T4GjnJmcG32lklfBUw0cZSVr/oLptkk+9NtNACH08G85aBdFceSx5ns7KkJ4FN
+ l02DPmrNFMeCiI9TjPKo3Q2vjjE+LuH0+GVXkF3KFN6mJjk6DYNSXze4VNRSgmJY3fGz4pGSU
+ Do5kOBRb1zj3gkflXaJJbjAWapClDzdOxEBLzm5oyN1CgpWUnpJSMieJxFDrFp5RiTeeDjUy1
+ owybtIcmDEfivAatf2DbkCy3la/aJEwrithKcTHsUOhsEdVs1cpsHAMGaBqAar7A5gfQ+WpXg
+ Ej3Jmjb/2nWFOxzhKXEmf6g0iDmvMXJ+zrR9Mnl7lT6KFXU26baAx0Fxf/bsnNob9q0Hq9RHO
+ GlAGnJ9jeMtYvUFEFT/4IElv23Fgp4BJPkrOzWbLxQ4fCgdidAickI2vweDjJKxHTOyU3hjYi
+ /FNg4G1eZnZVhOxTDI+CWHemAduglmvzQg18doaQXbBldt/HPbSzdmvPcjZKkFUNUo8g5MFPF
+ 7WeWPnDIc31nhAb+ZEEPeT+Rax14MJ2EdRuDXUL2SgKQoPocgrQSZpqS8hoohsBnlfrcNBJxJ
+ hAKmLWQ/GwmW83JghPmOhV9ckb6ysWNplobbFPmAmGlgj4UHn5mNqNUd/eiaixBENmWomUnhA
+ BTALrNKrPlUymFFuCuo/kGs8D9XrV6G+QYsdfIrwV/+Qoiq3z68FhDpB2OBjTUr+YCsTm40S/
+ vkjH4Eqpl5jb19hzEEuh3RgrXJ56oGjlHg93j7u7V1GTD5w1Am7dszRy09qfZ+vCfuysraWWL
+ mwThlmjBUyEjP4qrCbg7VzfsX+vsPlKAd9gfLfuBkqxexRk4jyXaz1U6fSzMy6JkMHWiZHI2T
+ G+AthDT6mAmKXF/9GMCFxDdUh6I=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Oct 2022, Russell King (Oracle) wrote:
+To make gpioinfo output more useful and enable gpiofind usage, add line
+names for GPIOs where the function is known.
 
-> On Mon, Oct 31, 2022 at 05:24:53PM +0000, Lee Jones wrote:
-> > On Mon, 31 Oct 2022, Russell King (Oracle) wrote:
-> > 
-> > > On Mon, Oct 31, 2022 at 08:46:25AM +0000, Lee Jones wrote:
-> > > > On Fri, 28 Oct 2022, Russell King (Oracle) wrote:
-> > > > 
-> > > > > On Mon, Sep 12, 2022 at 11:55:14AM +0100, Lee Jones wrote:
-> > > > > > > I'm guessing this series is now dead, and Hector needs to re-spin the
-> > > > > > > patch set according to your views. I'm guessing this is going to take
-> > > > > > > a major re-work of the patch series.
-> > > > > > > 
-> > > > > > > I suspect my attempt and trying to get this upstream has made things
-> > > > > > > more complicated, because I doubt Hector has updated his patch set
-> > > > > > > with the review comments that have been made so far... so this is
-> > > > > > > now quite a mess. I think, once this is sorted, the entire series
-> > > > > > > will need to be re-reviewed entirely afresh.
-> > > > > > 
-> > > > > > I have no insight into what Hector is doing, or plans to do.
-> > > > > 
-> > > > > It seems there's no plans by Hector to address this, so it comes down
-> > > > > to me.
-> > > > > 
-> > > > > So, guessing what you're after, would something like the following
-> > > > > work for you? I don't see *any* point in creating more yet more
-> > > > > platform devices unless we're on a mission to maximise wasted memory
-> > > > > resources (which this split will already be doing by creating two
-> > > > > small modules instead of one.)
-> > > > > 
-> > > > > Obviously, this is not an official patch yet, it's just to find out
-> > > > > what code structure you are looking for.
-> > > > > 
-> > > > > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> > > > > index 78c6d9d99c3f..8d4c0508a2c8 100644
-> > > > > --- a/drivers/mfd/Makefile
-> > > > > +++ b/drivers/mfd/Makefile
-> > > > > @@ -18,6 +18,8 @@ obj-$(CONFIG_MFD_ENE_KB3930)	+= ene-kb3930.o
-> > > > >  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
-> > > > >  obj-$(CONFIG_MFD_GATEWORKS_GSC)	+= gateworks-gsc.o
-> > > > >  
-> > > > > +obj-$(CONFIG_APPLE_SMC)		+= apple-smc.o
-> > > > > +
-> > > > >  obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
-> > > > >  obj-$(CONFIG_HTC_I2CPLD)	+= htc-i2cpld.o
-> > > > >  
-> > > > > diff --git a/drivers/mfd/apple-smc.c b/drivers/mfd/apple-smc.c
-> > > > > new file mode 100644
-> > > > > index 000000000000..bc59d1c5e13d
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/mfd/apple-smc.c
-> > > > > @@ -0,0 +1,38 @@
-> > > > > +#include <linux/mfd/core.h>
-> > > > > +#include <linux/mfd/apple-smc.h>
-> > > > > +
-> > > > > +static const struct mfd_cell apple_smc_devs[] = {
-> > > > > +	{
-> > > > > +		.name = "macsmc-gpio",
-> > > > > +		.of_compatible = "apple,smc-gpio",
-> > > > > +	},
-> > > > > +	{
-> > > > > +		.name = "macsmc-hid",
-> > > > > +	},
-> > > > > +	{
-> > > > > +		.name = "macsmc-power",
-> > > > > +	},
-> > > > > +	{
-> > > > > +		.name = "macsmc-reboot",
-> > > > > +	},
-> > > > > +	{
-> > > > > +		.name = "macsmc-rtc",
-> > > > > +	},
-> > > > > +};
-> > > > > +
-> > > > > +int apple_smc_mfd_probe(struct device *dev)
-> > > > > +{
-> > > > > +	return mfd_add_devices(dev, -1, apple_smc_devs,
-> > > > > +			       ARRAY_SIZE(apple_smc_devs), NULL, 0, NULL);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(apple_smc_mfd_probe);
-> > > > > +
-> > > > > +void apple_smc_mfd_remove(struct device *dev)
-> > > > > +{
-> > > > > +	mfd_remove_devices(dev);
-> > > > > +}
-> > > > > +EXPORT_SYMBOL(apple_smc_mfd_remove);
-> > > > > +
-> > > > > +MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-> > > > > +MODULE_LICENSE("Dual MIT/GPL");
-> > > > > +MODULE_DESCRIPTION("Apple SMC MFD core");
-> > > > 
-> > > > Conceptually interesting, not seen this one before, but clearly a
-> > > > hack, no?  Pretty sure all of the other cores in MFD are represented
-> > > > by a Platform Device.
-> > > 
-> > > No one seems to understand what you actually want to see with the
-> > > smc-core.c part, so I'm trying to find out what code structure
-> > > would suit you.
-> > > 
-> > > It seemed from the thread that moving smc-core.c to drivers/mfd
-> > > wasn't desirable, but there was the desire to move the mfd bits
-> > > into there - so that's what I've done with this patch. It doesn't
-> > > make any sense what so ever to add yet another platform device
-> > > into this structure with all of the complication around what happens
-> > > if the user forces it to unbind, so I didn't.
-> > > 
-> > > > Why not implement the inverse?
-> > > 
-> > > What do you mean "the inverse" ? The inverse of this patch is moving
-> > > everything of smc-core.c except the MFD bits into drivers/mfd leaving
-> > > the MFD bits in drivers/platform/apple, which makes no sense.
-> > > 
-> > > > The Apple SMC is clearly an MFD, in
-> > > > Linux terms, so why not move the Platform Device into here, fetch all
-> > > > of the global resources, register the sub-devices, then call into the
-> > > > rtkit implementation in drivers/platform? 
-> > > 
-> > > I thought you had previously ruled out the idea of moving the contents
-> > > of drivers/platform/apple into drivers/mfd, but maybe your position on
-> > > that had changed through the course of the discussion. It's really not
-> > > obvious to me what you want from what's been said in this thread.
-> > > 
-> > > So, I ask the direct question - would moving the code that is in this
-> > > patch set from drivers/platform/apple to drivers/mfd then make it
-> > > acceptable to you? In other words:
-> > > 
-> > >  drivers/platform/apple/smc_core.c
-> > >  drivers/platform/apple/smc.h
-> > >  drivers/platform/apple/smc_rtkit.c
-> > > 
-> > > If not, then please clearly and fully state what you want to see.
-> > 
-> > Sorry Russell, I'm out of time today.  Please see my recent reply to
-> > Hector for now and I'll get back to you first thing.
-> 
-> Hi Lee,
-> 
-> Thanks - I look forward to it. Having read your response to Hector, I
-> am wondering whether there's a misunderstanding of the code, so I'm
-> hoping that my attempt in my reply helps to clear up any code
-> misunderstandings.
-> 
-> If you want to ask questions about the code, you know where to find
-> me on irc, and I'll more than happily answer anything you want to
-> know about the code structure.
+This patch follows the naming convention defined for OpenBMC, as much as
+possible:
 
-That might be helpful, thanks.
+  https://github.com/openbmc/docs/blob/master/designs/device-tree-gpio-nam=
+ing.md
 
-Let's keep in on-list for now, in case others are following along.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ .../nuvoton-wpcm450-supermicro-x9sci-ln4f.dts  | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-For now, I'll go take a look at your other response.
+diff --git a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts b=
+/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
+index 26fed97f8ff4a..d4472ffdac928 100644
+=2D-- a/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
++++ b/arch/arm/boot/dts/nuvoton-wpcm450-supermicro-x9sci-ln4f.dts
+@@ -58,6 +58,24 @@ heartbeat {
+ 	};
+ };
 
--- 
-Lee Jones [李琼斯]
++&gpio0 {
++	gpio-line-names =3D
++		/* 0 */ "", "host-reset-control-n", "", "", "", "", "", "",
++		/* 8 */ "", "", "", "", "power-chassis-control-n", "", "uid-button", ""=
+;
++};
++
++&gpio1 {
++	gpio-line-names =3D
++		/* 0 */ "", "", "", "", "led-heartbeat", "", "", "led-uid",
++		/* 8 */ "", "", "", "", "", "", "", "";
++};
++
++&gpio4 {
++	gpio-line-names =3D
++		/* 0 */ "", "", "", "", "", "", "", "",
++		/* 8 */ "", "", "", "", "", "", "", "power-chassis-good";
++};
++
+ &pinctrl {
+ 	key_pins: mux-keys {
+ 		groups =3D "gspi", "sspi";
+=2D-
+2.35.1
+
