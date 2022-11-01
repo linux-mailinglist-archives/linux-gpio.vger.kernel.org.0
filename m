@@ -2,123 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 724496144BA
-	for <lists+linux-gpio@lfdr.de>; Tue,  1 Nov 2022 07:39:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2D4D61452C
+	for <lists+linux-gpio@lfdr.de>; Tue,  1 Nov 2022 08:41:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbiKAGju (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Nov 2022 02:39:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56802 "EHLO
+        id S229516AbiKAHl5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 1 Nov 2022 03:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbiKAGjt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Nov 2022 02:39:49 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6D22BF2
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 23:39:48 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id c2so12721364plz.11
-        for <linux-gpio@vger.kernel.org>; Mon, 31 Oct 2022 23:39:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjm6vkcUHHt/WlCFKXrmJ5qjIVeFNMZWxZFTowcFZnw=;
-        b=Egvel5cPdV6oz5Ybxr6963sDu5ZkoxKeSJm0ReR2X/XVaTY8jceFi04dAllG4kv7m4
-         CVoYpqNQTe8oXfblGC3c+scOhoA2YV2dz6LxfTLBShIBueoHF6yruO9Co3g7VeyYWbp6
-         Vdb6iTyU67ewnSWAuEwRo5HzvraT9lajPyc1z3u+7lWTAz7KbrEkK8jfThkVV66UWWLo
-         hBPxc0yPJozwfPzbLYbZtj4cB957sQ9BpLKfKBlg3mIB26gB6oc9XIISoCpe8Qwy0JZs
-         eUWhBUINZzeRUj//JjBA0PSSP+jeznHUQU02W6y7+sxIs5GmJbsY29p8Y+5rm8qQy7T5
-         v48w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zjm6vkcUHHt/WlCFKXrmJ5qjIVeFNMZWxZFTowcFZnw=;
-        b=txwilcr9RCO9bn7PYdXNPFY6zEe4z9vYwjmv55gwqBD1fj7oeXTLJBCkiIly0s7iYf
-         TK0eL4j/oMPgzsZyXkivL5slyvh2HFy/onaS24NQh/oySF76fA/VzCdDEW4eiY5zXBKS
-         wXRD8vaomFkraqym6ZgZYBFlqa04gIqOeByrpXNmElbelfVfe9lE5OvsHmZcuzGjl7Fk
-         CfVmUHMoN2ZD5hPT9/cq50+qJOfsisZzK3kW/XEULu3iklybATveWIh90rmZNFfYMTBl
-         dQEm3sHjGp6zVm6ju6q51SwQ28HUphGkims4vAuSciGndzv7v7xmZX5exKnVBbAtI+fk
-         SLQQ==
-X-Gm-Message-State: ACrzQf18AFbUMTszcynHezVqugbM8hiiQkdD0ALZyCLSaWEmjZPLjVzz
-        bqfDfdAaRPhyCxZwqSdFEXqGaAnmEmxy378I2yLDBw==
-X-Google-Smtp-Source: AMsMyM6Pb3FdPIBUFMBKkraNZxzDYfIcCtv3ngoLrPVf1pM9fGiKb9V9JmB8px+XaD3qqN/P+WmIeH/HrKP8l+lsyKo=
-X-Received: by 2002:a17:902:f686:b0:187:16a0:fd2b with SMTP id
- l6-20020a170902f68600b0018716a0fd2bmr12326009plg.91.1667284788108; Mon, 31
- Oct 2022 23:39:48 -0700 (PDT)
+        with ESMTP id S229475AbiKAHl4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Nov 2022 03:41:56 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64FE917073;
+        Tue,  1 Nov 2022 00:41:55 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N1hmB3dVfzHvVh;
+        Tue,  1 Nov 2022 15:41:30 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 1 Nov 2022 15:41:48 +0800
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <f.fangjian@huawei.com>,
+        <linus.walleij@linaro.org>, <yangyicong@hisilicon.com>,
+        <robh+dt@kernel.org>, <xuwei5@huawei.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <robh@kernel.org>
+Subject: Re: [PATCH next v2 1/2] gpio: hisi: Add initial device tree support
+To:     Weilong Chen <chenweilong@huawei.com>
+References: <20221028022453.163186-1-chenweilong@huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <791619d1-a227-477a-99c6-7ba15b4a28df@huawei.com>
+Date:   Tue, 1 Nov 2022 15:41:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-References: <20221016121406.co3qixzcbfke4ye7@proprietary-killer.gsrm.network> <CAD6h2NSahYuqg1T2oW7tHmAeAfqircfeokYhvJYNRVi5TXEDAA@mail.gmail.com>
-In-Reply-To: <CAD6h2NSahYuqg1T2oW7tHmAeAfqircfeokYhvJYNRVi5TXEDAA@mail.gmail.com>
-From:   Haojian Zhuang <haojian.zhuang@linaro.org>
-Date:   Tue, 1 Nov 2022 14:39:35 +0800
-Message-ID: <CAD6h2NT84eLERrx8T_=4qK7d9jum7Lc9QEMnNvd65cptZRTuoA@mail.gmail.com>
-Subject: Re: pinconf-single: pinctrl-single,bias-pull{up,down} bits help/explanation
-To:     "Marty E. Plummer" <hanetzer@startmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, tony@atomide.com,
-        linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221028022453.163186-1-chenweilong@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 1 Nov 2022 at 14:20, Haojian Zhuang <haojian.zhuang@linaro.org> wrote:
->
-> On Sun, 16 Oct 2022 at 20:14, Marty E. Plummer <hanetzer@startmail.com> wrote:
-> >
-> > Greetings.
-> >
-> > What I'm having issue with is the pinctrl-single,bias-pull values. From
-> > commit abe4e4675dfc62b7f2328e2c4bce8b5bdcdff7c0 I get a bit of it, and I
-> > think I have it mostly figured out:
-> >
-> > // <[input] [enabled] [disabled] [mask]>;
-> > pinctrl-single,bias-pullup = <? 1 0 0x100>;
-> > pinctrl-single,bias-pulldown = <? 1 0 0x200>;
-> >
-> > using mask 0x100 to single out bit 8 and mask 0x200 to single out bit 9,
-> > enable values being simple binary on/off. What I don't get is how the
-> > input value is determined/calculated.
-> >
-> > Aside from the above mentioned commit for the am335x-pocketbeagle.dts,
-> > which uses a differing pullup control scheme, the only users I can find
-> > in the tree are a handful of hisi socs which I don't have a datasheet
-> > for to map their usage to register definitions and puzzle this out.
-> >
-> Excuse me for just noticing the email.
->
-> #define  PULL_DIS     0
-> #define  PULL_UP        0x100
-> #define  PULL_DOWN  0x200
->
-> // <[input] [enabled] [disabled] [mask]>
->
-> // If you want to pull-up, configure the pin as below.
-> pinctrl-single,bias-pullup = <PULL_UP  PULL_UP  0  PULL_UP>
-> // If you want to disable pull-up, configure the pin as below.
-> pinctrl-single,bias-pullup = <0  PULL_UP  0  PULL_UP>
->
-> It seems that the pin configuration in am335x-pocketbeagle.dts is wrong.
-> But I don't have the board to verify it.
->
+Hi Weilong,
 
-Sorry. I didn't check the comments in the commit carefully.
+On 2022/10/28 10:24, Weilong Chen wrote:
+> Add support for HiSilicon GPIO controller in embedded platform, which
+> boot from devicetree.
+> 
+> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+> ---
+> Change since v1:
+> - Rename gpio-ascend910 to ascend910-gpio
+> Link: https://lore.kernel.org/lkml/30b95e7b-b902-babc-ea78-a2112c80ec7e@linaro.org/t/#m39e195979c1f42a6327aba009428316607d033e2
+> 
+>  drivers/gpio/Kconfig     |  2 +-
+>  drivers/gpio/gpio-hisi.c | 15 ++++++++++++++-
+>  2 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index e034f752e7ce..71a7880af59d 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -310,7 +310,7 @@ config GPIO_GRGPIO
+>  
+>  config GPIO_HISI
+>  	tristate "HiSilicon GPIO controller driver"
+> -	depends on (ARM64 && ACPI) || COMPILE_TEST
+> +	depends on ARM64 || COMPILE_TEST
+>  	select GPIO_GENERIC
+>  	select GPIOLIB_IRQCHIP
+>  	help
+> diff --git a/drivers/gpio/gpio-hisi.c b/drivers/gpio/gpio-hisi.c
+> index 3caabef5c7a2..92cf575f2eab 100644
+> --- a/drivers/gpio/gpio-hisi.c
+> +++ b/drivers/gpio/gpio-hisi.c
+> @@ -1,8 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /* Copyright (c) 2020 HiSilicon Limited. */
+> +#include <linux/acpi.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  
+> @@ -215,11 +217,21 @@ static void hisi_gpio_init_irq(struct hisi_gpio *hisi_gpio)
+>  	hisi_gpio_write_reg(chip, HISI_GPIO_INTCOMB_MASK_WX, 1);
+>  }
+>  
+> +#ifdef CONFIG_ACPI
+>  static const struct acpi_device_id hisi_gpio_acpi_match[] = {
+>  	{"HISI0184", 0},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(acpi, hisi_gpio_acpi_match);
+> +#endif
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id hisi_gpio_dts_match[] = {
+> +	{ .compatible = "hisilicon,ascend910-gpio", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, hisi_gpio_dts_match);
+> +#endif
+>  
+>  static void hisi_gpio_get_pdata(struct device *dev,
+>  				struct hisi_gpio *hisi_gpio)
+> @@ -310,7 +322,8 @@ static int hisi_gpio_probe(struct platform_device *pdev)
+>  static struct platform_driver hisi_gpio_driver = {
+>  	.driver		= {
+>  		.name	= HISI_GPIO_DRIVER_NAME,
+> -		.acpi_match_table = hisi_gpio_acpi_match,
+> +		.acpi_match_table = ACPI_PTR(hisi_gpio_acpi_match),
+> +		.of_match_table = of_match_ptr(hisi_gpio_dts_match),
 
-Obviously, the pinctrl definition is totally different in am335x chip.
+Andy has some comments about using of ACPI_PTR/of_match_ptr(), I think they also
+apply here. [*]
 
-bit4 is used to select pull-up or pull-down.
-bit3 is used to enable the pull-up/pull-down.
+The patch itself looks good to me.
 
-In Hisilicon chip, bit9 is used to enable pull-down and bit8 is used
-to enable pull-up.
+[*] https://lore.kernel.org/linux-i2c/d96beadb-5693-6c73-8fee-3ac3b4cb9a44@huawei.com/T/#m51adf2c1480a14ca0882784826f3168ddb83bf62
 
-They're totally different. I suggest you to enable the value in DTS
-file and dump the register
-value  to check for your own silicon.
-
-Best Regards
-Haojian
+>  	},
+>  	.probe		= hisi_gpio_probe,
+>  };
+> 
