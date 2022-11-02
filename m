@@ -2,219 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D119A615E87
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 09:58:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46739615FA2
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 10:25:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbiKBI6a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Nov 2022 04:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
+        id S231218AbiKBJZN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Nov 2022 05:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbiKBI6R (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 04:58:17 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7B9FD27FDC;
-        Wed,  2 Nov 2022 01:58:15 -0700 (PDT)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8Cxq9gmMWJjp_gDAA--.13811S3;
-        Wed, 02 Nov 2022 16:58:14 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtuMeMWJjkssJAA--.29815S3;
-        Wed, 02 Nov 2022 16:58:13 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v6 2/2] dt-bindings: pinctrl: add loongson-2 pinctrl
-Date:   Wed,  2 Nov 2022 16:58:00 +0800
-Message-Id: <20221102085800.28910-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221102085800.28910-1-zhuyinbo@loongson.cn>
-References: <20221102085800.28910-1-zhuyinbo@loongson.cn>
+        with ESMTP id S231280AbiKBJYt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 05:24:49 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5CE92A729
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Nov 2022 02:23:10 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id b2so43653468eja.6
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Nov 2022 02:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=CAWuHkpwgFfj7hhvFV4HxiLR1FE5OMLKHNPDDaCEASU=;
+        b=Gtu0Ihij+nBxhtfx6L2SIRCXBbEoh6Ml8CRcad4tGqp0bDLotvBdDokciS4kkebKf+
+         c7JGqzXn/KB9jct4cDwpgKInbF2y/Jn6Aw0Ja72vQd5X7jQv3zfHK/SMClip4QvPLh0u
+         5CJOgas3x0pDyfEsA/TKs7cAQZyJ7Jmc0qUrE397kgEUCIpjMvyul5oaEQxcgqWJAR5R
+         fvdFGUCLmKgH/eIVIVrnoBKLoXH4zPdimLuNhKZubyR7LGpEgBWJFvwz0Ay10zC/In0D
+         usUXQ0kII5JY0q+QTiTylaJX7guINEk/3sElROzw+akl6ZVOM09N5IhXCxEtOHxRF6aj
+         DmvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CAWuHkpwgFfj7hhvFV4HxiLR1FE5OMLKHNPDDaCEASU=;
+        b=GI1dF+GANWjT1FzltJWmQlbpywv/1mb74i6gBVRy+odvC//JbzI6qRACRDojyvvr5t
+         N8LMCN49zoe2xOSHhjDLZS/KrMSGjInyFZBX9D9+QJbS8pOvrz9Fy98rAUmlmlILZIgB
+         YJ9mMxJSgX/8S7UFzbVRT0wnSjp7rWtSE6vil9vmR2hVqF8FCfmFt2HsDyEiqIMyFwi1
+         iFf7foX6UuvERovIVLG1BemYKyCnlbPf74thPWM1enZqBBl91tAUVHX6+p3ZfeBEXv9M
+         nUwU46dBd+s8ZqIAooGYIW6Jy/crTEfpG5ZTPicu3458NmpYIHsGI9AP9tfrQxVWLD8o
+         zVoQ==
+X-Gm-Message-State: ACrzQf3hNRmTPtJ8NCp/7FZg2dF+77EM0RH+ZAARwpdkAjbutZTFyQM1
+        hKrSBxsP5osvWgLHTMM7tSnmiNxa9YW1eYig3JZuTgoF+cE=
+X-Google-Smtp-Source: AMsMyM4Z+d3FlUYFTaTzsaq4IqvJzKWCQTziKaxgs3wXWXAnaLeMiKS9TGWC3euoNd0VWQleMtvHS7le7gJSoYKCCR4=
+X-Received: by 2002:a17:906:9b86:b0:73d:72cf:72af with SMTP id
+ dd6-20020a1709069b8600b0073d72cf72afmr23201600ejc.440.1667380988923; Wed, 02
+ Nov 2022 02:23:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxtuMeMWJjkssJAA--.29815S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy8Kr4fJF43AFW8JFb_yoW5uw4UpF
-        43C3sxGr1IqF4xX398Ga40v3W3Gan7AF9rCasFv34jqr4Dta4vyay5Krn0q3yDCF47JFW5
-        WFyrury2qF1UCr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        b7AFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487
-        Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-        IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwAC
-        jcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I
-        0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
-        GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
-        0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0
-        rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JV
-        W8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1wZ2DUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221021084708.1109986-1-bchihi@baylibre.com> <7h5yg02bh7.fsf@baylibre.com>
+In-Reply-To: <7h5yg02bh7.fsf@baylibre.com>
+From:   Balsam CHIHI <bchihi@baylibre.com>
+Date:   Wed, 2 Nov 2022 10:22:33 +0100
+Message-ID: <CAGuA+oqWXy-WV3-VFN+Mm8cHnAbr83a4HjE=PuyH2CVV9soZVg@mail.gmail.com>
+Subject: Re: [v2, 0/2] Fix broken SET/CLR mode of a certain number of pins for
+ MediaTek MT8385 SoC
+To:     Kevin Hilman <khilman@kernel.org>
+Cc:     sean.wang@kernel.org, linus.walleij@linaro.org,
+        matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the Loongson-2 pinctrl binding with DT schema format using
-json-schema.
+On Mon, Oct 31, 2022 at 5:40 PM Kevin Hilman <khilman@kernel.org> wrote:
+>
+> Hi Balsam,
+>
+>
+> bchihi@baylibre.com writes:
+>
+> > From: Balsam CHIHI <bchihi@baylibre.com>
+> >
+> > On MT8365, the SET/CLR of the mode is broken and some pins won't set or clear the modes correctly.
+> > To fix this issue, we add a specific callback mt8365_set_clr_mode() for this specific SoC.
+> > This callback uses the main R/W register to read/update/write the modes instead of using the SET/CLR register.
+> >
+> > This is the original patch series proposed by Fabien Parent <fparent@baylibre.com>.
+> > "https://lore.kernel.org/linux-arm-kernel/20220530123425.689459-1-fparent@baylibre.com/"
+> >
+> > Changelog:
+> > Changes in v2 :
+> >         - Rebase on top of 6.1.0-rc1-next-20221020
+> >         - Delete MTK_PINCTRL_MODE_SET_CLR_BROKEN quirk
+> >         - Add mt8365_set_clr_mode() callback
+>
+> nit: subject of cover letter should also include "pinctrl: mediatek:"
+> prefix.  Also note that you're missing the word "PATCH" in all of the
+> subjects.
+>
+> Tip: If you use `git format-patch`, you can just pass `-v2` on the
+> cmdline and it will create the prefixes for you automatically.
+>
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
- .../pinctrl/loongson,ls2k-pinctrl.yaml        | 125 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+Hi Kevin,
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-new file mode 100644
-index 000000000000..34683a4856ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-@@ -0,0 +1,125 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-2 SoC Pinctrl Controller
-+
-+maintainers:
-+  - zhanghongchen <zhanghongchen@loongson.cn>
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+
-+    additionalProperties: false
-+
-+    patternProperties:
-+      'pinmux$':
-+        type: object
-+        description: node for pinctrl.
-+        $ref: pinmux-node.yaml#
-+
-+        unevaluatedProperties: false
-+
-+        properties:
-+          groups:
-+            description:
-+              One or more groups of pins to mux to a certain function
-+            items:
-+              enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                     nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
-+                     dvo0]
-+          function:
-+            description:
-+              The function that a group of pins is muxed to
-+            enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                   nand, sata_led, lio, i2s, hda, uart2, uart1, camera, dv01,
-+                   dvo0]
-+
-+        required:
-+          - groups
-+          - function
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pctrl: pinctrl@1fe00420 {
-+        compatible = "loongson,ls2k-pinctrl";
-+        reg = <0x1fe00420 0x18>;
-+        sdio_pins_default: sdio-pins {
-+            sdio-pinmux {
-+                groups = "sdio";
-+                function = "sdio";
-+            };
-+
-+            sdio-det-pinmux {
-+                groups = "pwm2";
-+                function = "gpio";
-+            };
-+        };
-+
-+        pwm1_pins_default: pwm1-pins {
-+            pinmux {
-+                groups = "pwm1";
-+                function = "pwm1";
-+            };
-+        };
-+
-+        pwm0_pins_default: pwm0-pins {
-+            pinmux {
-+                groups = "pwm0";
-+                function = "pwm0";
-+            };
-+        };
-+
-+        i2c1_pins_default: i2c1-pins {
-+            pinmux {
-+                groups = "i2c1";
-+                function = "i2c1";
-+            };
-+        };
-+
-+        i2c0_pins_default: i2c0-pins {
-+            pinmux {
-+                groups = "i2c0";
-+                function = "i2c0";
-+            };
-+        };
-+
-+        nand_pins_default: nand-pins {
-+            pinmux {
-+                groups = "nand";
-+                function = "nand";
-+            };
-+        };
-+
-+        hda_pins_default: hda-pins {
-+            grp0-pinmux {
-+                groups = "hda";
-+                function = "hda";
-+            };
-+
-+            grp1-pinmux {
-+                groups = "i2s";
-+                function = "gpio";
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f75464dadaaa..c9dc5ddbd9fe 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12038,6 +12038,7 @@ M:	zhanghongchen <zhanghongchen@loongson.cn>
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
- F:	drivers/pinctrl/pinctrl-loongson2.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
--- 
-2.31.1
+Well received.
+I will fix these issues in the next version/resend.
+Thank you so much for the review!
 
+Balsam.
+
+> Kevin
