@@ -2,87 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 294446163FF
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 14:45:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE9B561662A
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 16:29:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbiKBNpq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Nov 2022 09:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41968 "EHLO
+        id S230173AbiKBP3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Nov 2022 11:29:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbiKBNpp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 09:45:45 -0400
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 814AF28729;
-        Wed,  2 Nov 2022 06:45:43 -0700 (PDT)
-Received: by mail-oi1-f171.google.com with SMTP id v81so10554314oie.5;
-        Wed, 02 Nov 2022 06:45:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0bAqvSJEZ+guwj+qloaOt8zYLbUkpNm/7tiGBTvyTWc=;
-        b=mBsqzAH2Ew/EGSfz1FoyUc6WP0Grai43wzyEdkmPNdCLNK26kSJ9/BFpFi5wJxQV4s
-         EY9hZ/GaW+q93PNRd3Ej/yUDcOGYyeYEdhoGhtGN6OuP9AXn/kH6O7AgfLdYsd6kkLkD
-         AN5nyMAzppnIMKLW5BAZH45aglaKFd5R14WT4HJuTD6K5O4X22aztiu7P1KrJhhE9zFG
-         jYFLv0DSEkqE+kWmupwvzjyR9SJHMihOWxd0yxOwCVaVyhWQ2QyjvcSfDtQVt79PasSG
-         SSOUg6ts5wKhoNzCuzbITsPG1ewZ/55NRiyd2wn1ZSuA7HbYGQI8H1pfPAUuXS9tXmuG
-         VJYg==
-X-Gm-Message-State: ACrzQf1GO6m11MDrMeTG22T6yvqBvoJDYE7OqUrOZO3BH7xZgssguQhi
-        uIeWsSIGkabEBl2YuQoOUg==
-X-Google-Smtp-Source: AMsMyM5AcUQiotU2fWCryazKaslO18NGjgudyyG/DGMJmnEewQHVnEqMMgovTr2TkuUjq67AqL/+Tg==
-X-Received: by 2002:a54:438f:0:b0:359:f40e:582 with SMTP id u15-20020a54438f000000b00359f40e0582mr11302800oiv.237.1667396742754;
-        Wed, 02 Nov 2022 06:45:42 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id b11-20020a056870390b00b0013cd709659dsm5100071oap.52.2022.11.02.06.45.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 06:45:42 -0700 (PDT)
-Received: (nullmailer pid 3701804 invoked by uid 1000);
-        Wed, 02 Nov 2022 13:45:44 -0000
-Date:   Wed, 2 Nov 2022 08:45:44 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] dt-bindings: pinctrl: add loongson-2 pinctrl
-Message-ID: <166739671999.3701102.17178567473930656481.robh@kernel.org>
-References: <20221102085800.28910-1-zhuyinbo@loongson.cn>
- <20221102085800.28910-2-zhuyinbo@loongson.cn>
+        with ESMTP id S230465AbiKBP3F (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 11:29:05 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAA2A1D672;
+        Wed,  2 Nov 2022 08:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667402937; x=1698938937;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=e489D8kifr+m/racweh+WkS14YJhuJ+dmY25HGLU1B8=;
+  b=a3NoB4JPS6pOz+bhRc1vdnJ8pdhvfnNj5FVNJlojRR7dBPXGSHA+wcH7
+   NxumtBRisBFr0EY0cuCpJsPGKRPHOy0pKgJfs5F7vu+BTFfxXpEWQRFVc
+   67D6eLjIBcR37C5nRThBYd1nSzKzfdLTUL3TD22JVBG030RJOpmpMdhQT
+   rl8oyLWP8/PnpujhSPeIaFSWfhROqs7/FXXqeqicdcnjXahC0VJMSP9QP
+   zCkTVGpg4HsL/SzeuD4tigZ590PxChuK0BBe0sbM5Q/M8YFd3UN62Kld2
+   Kp8sh7OXVYRAMSXiKFXx19fubi3k/qbhfQj4OHVCwSRVHXnZhiSYgB1oc
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="371532207"
+X-IronPort-AV: E=Sophos;i="5.95,234,1661842800"; 
+   d="scan'208";a="371532207"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Nov 2022 08:28:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="634303822"
+X-IronPort-AV: E=Sophos;i="5.95,234,1661842800"; 
+   d="scan'208";a="634303822"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 02 Nov 2022 08:28:55 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B71CAF7; Wed,  2 Nov 2022 17:29:18 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/2] pinctrl: intel: Use temporary variable for struct device
+Date:   Wed,  2 Nov 2022 17:29:14 +0200
+Message-Id: <20221102152915.22995-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221102085800.28910-2-zhuyinbo@loongson.cn>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Use temporary variable for struct device to make code neater.
 
-On Wed, 02 Nov 2022 16:58:00 +0800, Yinbo Zhu wrote:
-> Add the Loongson-2 pinctrl binding with DT schema format using
-> json-schema.
-> 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  .../pinctrl/loongson,ls2k-pinctrl.yaml        | 125 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/intel/pinctrl-intel.c | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index fe5bf2184cbf..e15629348cb5 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -1522,14 +1522,15 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
+ int intel_pinctrl_probe(struct platform_device *pdev,
+ 			const struct intel_pinctrl_soc_data *soc_data)
+ {
++	struct device *dev = &pdev->dev;
+ 	struct intel_pinctrl *pctrl;
+ 	int i, ret, irq;
+ 
+-	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
++	pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
+ 	if (!pctrl)
+ 		return -ENOMEM;
+ 
+-	pctrl->dev = &pdev->dev;
++	pctrl->dev = dev;
+ 	pctrl->soc = soc_data;
+ 	raw_spin_lock_init(&pctrl->lock);
+ 
+@@ -1538,8 +1539,8 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+ 	 * to the registers.
+ 	 */
+ 	pctrl->ncommunities = pctrl->soc->ncommunities;
+-	pctrl->communities = devm_kcalloc(&pdev->dev, pctrl->ncommunities,
+-				  sizeof(*pctrl->communities), GFP_KERNEL);
++	pctrl->communities = devm_kcalloc(dev, pctrl->ncommunities,
++					  sizeof(*pctrl->communities), GFP_KERNEL);
+ 	if (!pctrl->communities)
+ 		return -ENOMEM;
+ 
+@@ -1603,7 +1604,7 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+ 			offset = (value & CAPLIST_NEXT_MASK) >> CAPLIST_NEXT_SHIFT;
+ 		} while (offset);
+ 
+-		dev_dbg(&pdev->dev, "Community%d features: %#08x\n", i, community->features);
++		dev_dbg(dev, "Community%d features: %#08x\n", i, community->features);
+ 
+ 		/* Read offset of the pad configuration registers */
+ 		offset = readl(regs + PADBAR);
+@@ -1632,14 +1633,13 @@ int intel_pinctrl_probe(struct platform_device *pdev,
+ 		return ret;
+ 
+ 	pctrl->pctldesc = intel_pinctrl_desc;
+-	pctrl->pctldesc.name = dev_name(&pdev->dev);
++	pctrl->pctldesc.name = dev_name(dev);
+ 	pctrl->pctldesc.pins = pctrl->soc->pins;
+ 	pctrl->pctldesc.npins = pctrl->soc->npins;
+ 
+-	pctrl->pctldev = devm_pinctrl_register(&pdev->dev, &pctrl->pctldesc,
+-					       pctrl);
++	pctrl->pctldev = devm_pinctrl_register(dev, &pctrl->pctldesc, pctrl);
+ 	if (IS_ERR(pctrl->pctldev)) {
+-		dev_err(&pdev->dev, "failed to register pinctrl driver\n");
++		dev_err(dev, "failed to register pinctrl driver\n");
+ 		return PTR_ERR(pctrl->pctldev);
+ 	}
+ 
+@@ -1681,10 +1681,11 @@ const struct intel_pinctrl_soc_data *intel_pinctrl_get_soc_data(struct platform_
+ {
+ 	const struct intel_pinctrl_soc_data * const *table;
+ 	const struct intel_pinctrl_soc_data *data = NULL;
++	struct device *dev = &pdev->dev;
+ 
+-	table = device_get_match_data(&pdev->dev);
++	table = device_get_match_data(dev);
+ 	if (table) {
+-		struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
++		struct acpi_device *adev = ACPI_COMPANION(dev);
+ 		unsigned int i;
+ 
+ 		for (i = 0; table[i]; i++) {
+-- 
+2.35.1
 
