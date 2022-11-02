@@ -2,195 +2,204 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C79F616386
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 14:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AFC61638E
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 14:15:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231314AbiKBNNP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 2 Nov 2022 09:13:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S231270AbiKBNPO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Nov 2022 09:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbiKBNND (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 09:13:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 968E52A712
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Nov 2022 06:13:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 45419B822A7
-        for <linux-gpio@vger.kernel.org>; Wed,  2 Nov 2022 13:13:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869CDC433C1;
-        Wed,  2 Nov 2022 13:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667394778;
-        bh=JuzdzoZQv7vx3g4XLThOhs8ysZfBBda2DUoWLO5jrQw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ShqS8vce3zJSYQHz986Lcb8b1A4C+a5Cfdtrqa+Cfg+H4aDm6iqVp2CEkhLwtUCgZ
-         EsvnoxPMYkzOb5qIUHwG8gPu5V5lLa09QbqoRpNZsZ+svDiuWeAfAfSjf9/CARFGFA
-         NZ38eYXCEhAh/IZPoS8araweWXwQK2I9jsFdFSXlFhgoLD8yAU7E53f91e0yyZ+yNN
-         Cl08KmvPM2SkQIxLcVV6GHWgyOK/nEfLbImosWEHC6gASiZZ25pldDlA1MahVgU8DS
-         d43veR4iZCA2UAhhztusfvzh4he2WZnYNnHIaJHBY9mdS6u3Zn3xH9+q+eaif9+sYb
-         q2cLLYL3knpGA==
-Date:   Wed, 2 Nov 2022 13:12:53 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Hector Martin <marcan@marcan.st>, Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH 4/6] platform/apple: Add new Apple Mac SMC driver
-Message-ID: <Y2Js1ZhIlr9dimHw@google.com>
-References: <Yxnv2mKkl1tW4PUp@google.com>
- <82088b05-2a0d-69cc-ba2c-d61c74c9d855@marcan.st>
- <YxrwLwVihe/s9wxN@google.com>
- <a92ca9ac-fbc8-a25f-4865-5bc7adb206e2@marcan.st>
- <Y1+LzpEvVj7xswqb@google.com>
- <dcd692aa-1525-4fc5-5198-37f803725c4f@marcan.st>
- <Y1+VdnmMUfIKTwWF@google.com>
- <4faa5e4c-b43b-12e4-2259-c2595bd55b97@marcan.st>
- <Y2AEgIfURNhCgimr@google.com>
- <Y2AjUz9eGa/GLY5s@shell.armlinux.org.uk>
+        with ESMTP id S231330AbiKBNPC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 09:15:02 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78F2B1DA5F
+        for <linux-gpio@vger.kernel.org>; Wed,  2 Nov 2022 06:15:00 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id u6so16524068plq.12
+        for <linux-gpio@vger.kernel.org>; Wed, 02 Nov 2022 06:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C/kZvdRxAUH0GsTm0Ljg66O60LqmbOB14hLZgE6D6mQ=;
+        b=A5nJBvY+F+9i+0Pl7xYlMpouklbsSQ0KJBPad+JpmWp/n8TN7u3EzmH6zvrDb+jPyi
+         fs4Aa+wVQlJzxcAXkWysyz1T4Y38fezs3kUDZU/meezthtitSQ8QSOW/Ku+opNpbP+4s
+         DdfOgH3KUaQb5vb1iIIwC7HljcvqPPXh5I5QZl6CiMWt/opKRK09JWlHjxV9wQJjwgV5
+         XYi+yRXG9zWOZUU6SniiUruYPQWzc2WkihSpJqqZhR2orxuh+5JdNlo5lF7QGEjqoVbl
+         UlTHHe4F87Csier41b4sloLf2DcBtr7i85XnasHRmYIVSRsk3Lcp3FgFCJB2Cve0ofyM
+         rFKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C/kZvdRxAUH0GsTm0Ljg66O60LqmbOB14hLZgE6D6mQ=;
+        b=tDmVctdba3N9QGcU4HlAeWnMhq0Cgags2pShpOWIpKO25obLUOh2nm8q+yjf7dM+if
+         Kb1gDGFP00pQ+BJ1lL4QbjUexH9jdc7ZcqPOdG0Wv7Xfc8vtT27bsMz+Szhber7qXzEW
+         yuKOo4+LbPLvyCgClECbfs2pEzSxbI1IPyxAbbZVDa8aDCTT/+H6Z6BPRh3heHZw+lBm
+         5gdzIwUfOl165JF/BWPmvxB5v6L8/05bCG4kt0VX2QdEx9YeV2cTWNkn2ma0Vt79gRtF
+         JzM3xvt7ge0CvzI4OgrzhXNwIoFs52mc6n1HB0R40V80+KNe3Imw+AEKfErtlAZH73hc
+         Tkfw==
+X-Gm-Message-State: ACrzQf0Djv6gBXImsHmAMKxaidBMBtkxtevzcAMiB3EEo7/RsTxKhmA2
+        cx5WbtVC9wwm2musnhXmy2c=
+X-Google-Smtp-Source: AMsMyM5IWxHkhViKeTL5DC5BQ80O4IkkVplaGNodhce41sYgPLfNWN078Oarhk1iIvpeDFy4XyhwsA==
+X-Received: by 2002:a17:902:8643:b0:187:3f0b:a4d7 with SMTP id y3-20020a170902864300b001873f0ba4d7mr6212471plt.15.1667394899908;
+        Wed, 02 Nov 2022 06:14:59 -0700 (PDT)
+Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
+        by smtp.gmail.com with ESMTPSA id v8-20020a17090a088800b002071ee97923sm1409191pjc.53.2022.11.02.06.14.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Nov 2022 06:14:59 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 21:14:51 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod v2][PATCH V8 5/9] bindings: rust: Add libgpiod crate
+Message-ID: <Y2JtSw+laG5lgCUl@sol>
+References: <cover.1667215380.git.viresh.kumar@linaro.org>
+ <08d4095c314caf50430c2eaa733d925122242b12.1667215380.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y2AjUz9eGa/GLY5s@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <08d4095c314caf50430c2eaa733d925122242b12.1667215380.git.viresh.kumar@linaro.org>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 31 Oct 2022, Russell King (Oracle) wrote:
-
-> On Mon, Oct 31, 2022 at 05:23:12PM +0000, Lee Jones wrote:
-> > I see that you pass a bunch of function pointers from the RTKit
-> > implementation into the SMC.  Which in turn offers an exported
-> > (apple_smc_*) API.  In most of the frameworks I have knowledge of, the
-> > core provides the Ops structure and it's populated by the client
-> > device.
+On Mon, Oct 31, 2022 at 05:17:13PM +0530, Viresh Kumar wrote:
+> Add rust wrapper crate, around the libpiod-sys crate added earlier, to
+> provide a convenient interface for the users.
 > 
-> Sorry Lee, I don't get this point. From what I can see, the
-> apple_smc_backend_ops struct is owned by the core System Management
-> Controller code, and RTKit backend fills in an instance of these ops
-> and provides that to the core SMC code. The RTKit backend is just
-> how we walk to the System Management Controller. It is not a client.
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  bindings/rust/Cargo.toml                     |   1 +
+>  bindings/rust/libgpiod/Cargo.toml            |  20 +
+>  bindings/rust/libgpiod/src/chip.rs           | 317 ++++++++++++
+>  bindings/rust/libgpiod/src/edge_event.rs     | 128 +++++
+>  bindings/rust/libgpiod/src/event_buffer.rs   | 102 ++++
+>  bindings/rust/libgpiod/src/info_event.rs     |  69 +++
+>  bindings/rust/libgpiod/src/lib.rs            | 478 +++++++++++++++++++
+>  bindings/rust/libgpiod/src/line_config.rs    | 135 ++++++
+>  bindings/rust/libgpiod/src/line_info.rs      | 162 +++++++
+>  bindings/rust/libgpiod/src/line_request.rs   | 224 +++++++++
+>  bindings/rust/libgpiod/src/line_settings.rs  | 297 ++++++++++++
+>  bindings/rust/libgpiod/src/request_config.rs |  95 ++++
+>  12 files changed, 2028 insertions(+)
+>  create mode 100644 bindings/rust/libgpiod/Cargo.toml
+>  create mode 100644 bindings/rust/libgpiod/src/chip.rs
+>  create mode 100644 bindings/rust/libgpiod/src/edge_event.rs
+>  create mode 100644 bindings/rust/libgpiod/src/event_buffer.rs
+>  create mode 100644 bindings/rust/libgpiod/src/info_event.rs
+>  create mode 100644 bindings/rust/libgpiod/src/lib.rs
+>  create mode 100644 bindings/rust/libgpiod/src/line_config.rs
+>  create mode 100644 bindings/rust/libgpiod/src/line_info.rs
+>  create mode 100644 bindings/rust/libgpiod/src/line_request.rs
+>  create mode 100644 bindings/rust/libgpiod/src/line_settings.rs
+>  create mode 100644 bindings/rust/libgpiod/src/request_config.rs
 > 
-> I don't see this being any different to struct file_operations,
-> seq_operations, vm_operations_struct, block_Device_operations,
-> and so on and so forth.
-> 
-> Having read your response, I wonder if you're confused about what the
-> smc_core and smc_rtkit code actually are - because you seem to think
-> that smc_rtkit is a _client_ of the smc_core code. It isn't, as I
-> explain above, it's how we talk to the System Management Controller,
-> and smc_core provides a uniform interface to the client drivers such
-> as GPIO, RTC etc.
-> 
-> Essentially, we have:
-> 
-> Hardware   Backend    Core             Clients
->                                  .---- RTC
->                                 / .--- GPIO
-> Mailbox -- RTKit -- SMC Core -- MFD -- HID
->                                 \ `--- Power
->                                  `---- Reboot
+> diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+> index b9eea6b3a5ea..4fdf4e06ff90 100644
+> --- a/bindings/rust/Cargo.toml
+> +++ b/bindings/rust/Cargo.toml
+> @@ -2,5 +2,6 @@
+>  
+>  members = [
+>      "gpiosim",
+> +    "libgpiod",
+>      "libgpiod-sys"
+>  ]
+> diff --git a/bindings/rust/libgpiod/Cargo.toml b/bindings/rust/libgpiod/Cargo.toml
+> new file mode 100644
+> index 000000000000..ef52fdc198d7
+> --- /dev/null
+> +++ b/bindings/rust/libgpiod/Cargo.toml
+> @@ -0,0 +1,20 @@
+> +[package]
+> +name = "libgpiod"
+> +version = "0.1.0"
+> +authors = ["Viresh Kumar <viresh.kumar@linaro.org>"]
+> +description = "libgpiod wrappers"
+> +repository = "https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git"
+> +categories = ["command-line-utilities", "os::linux-apis"]
 
-The issue I see with the current implementation is that, what you are
-calling the SMC Core here, is being viewed as the parent to all of
-these client (child / sub) devices.  However, in reality, the SMC Core
-is little more than a function pointer shim / pass-through without
-it's own Device.  In order for it to register the child-devices, it's
-effectively borrowing and branching off of the RTKit's Device, which
-from a Device Driver hierarchy stand-point feels odd.
+The command line utilities being the examples?
+That is a bit of a stretch.
 
-> RTKit is just _one_ possible backend, there are other backends that
-> can be used to interface to the underlying platform implementation to
-> talk to the SMC.
+How about "api-bindings", and maybe "hardware-support" and "embedded"?
 
-Right, this is the tricky part.  The way I see it, the best route
-would be to make the RTKit, which is the real Linux Device (with real
-resources), the direct parent (no sharing) and move it to MFD.
+> +rust-version = "1.56"
+> +keywords = ["libgpiod", "gpio"]
+> +license = "Apache-2.0 OR BSD-3-Clause"
+> +edition = "2021"
+> +
+> +# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+> +
 
-However, the looming question then becomes, "what happens when the
-RTKit is removed and swapped out for something else?", does that mean
-anything you swap it out with will need to become an MFD also?  How
-would the children get registered otherwise?
+That link is put there by cargo for YOU.
+When you are satisfied with your keys you can delete it.
 
-The TL;DR is, I can see why it's been architected this way, but it
-doesn't really fit in with the Device Driver norms, which makes it
-quite difficult to shoehorn in without the issues (using MFD API
-outside of MFD and borrowing Devices) we're encountering here.
+< --8<-- >
 
-> > I'm sure having that clear in my head will go some ways to put me in a
-> > position to advise you further.
-> > 
-> > > > Request the device-wide memory (and other shared resources) here.
-> > > 
-> > > That's what smc_rtkit.c does, but you seem not to want that code in mfd.
-> > 
-> > I'm not sure I explicitly said that.
-> 
-> On Fri, Sep 09, 2022 at 08:50:07AM +0100, Lee Jones wrote:
-> | If we were to design and build it up again from scratch, I'd suggest
-> | that the MFD part would be the core-driver / entry-point.  That driver
-> | should request and initialise shared resources and register the other
-> | devices, which is essentially the MFD's mantra.
-> 
-> This is exactly what smc_rtkit is doing, which as I've mentioned above
-> is the backend provider of access to the System Management Controller.
-> Backend-independent access to the System Management Controller is done
-> via smc_core which - at least to me - seems to be entirely correct,
-> and it seems entirely appropriate that this should be responsible for
-> creating the individual clients that make use of the System Management
-> Controller's facilities such as GPIO, RTC etc.
+> +    /// Get the file descriptor associated with the chip.
+> +    ///
+> +    /// The returned file descriptor must not be closed by the caller, else other methods for the
+> +    /// `struct Chip` may fail.
+> +    pub fn fd(&self) -> Result<u32> {
+> +        // SAFETY: `gpiod_chip` is guaranteed to be valid here.
+> +        let fd = unsafe { gpiod::gpiod_chip_get_fd(self.ichip.chip) };
+> +
+> +        if fd < 0 {
+> +            Err(Error::OperationFailed(
+> +                OperationType::ChipGetFd,
+> +                errno::errno(),
+> +            ))
+> +        } else {
+> +            Ok(fd as u32)
+> +        }
+> +    }
 
-Making a shim-layer without a real Device become a parent to
-sub-devices is the part I'm finding most difficult to swallow.
+Impl AsRawFd, as per Request.
 
-> > "call into" was not a good choice of words here.  Simply, let the
-> > child devices go about their business and do whatever they were
-> > designed to do.
-> 
-> ... by calling into the code which provides them with access to the
-> System Management Controller - that being through smc_core and
-> ultimately which ever backend is used to finally communicate with the
-> System Management Controller.
+< --8<-- >
 
-Right.  No problem with that part.
+> +/// Line info
+> +///
+> +/// Exposes functions for retrieving kernel information about both requested and
+> +/// free lines.  Line info object contains an immutable snapshot of a line's status.
+> +///
+> +/// The line info contains all the publicly available information about a
+> +/// line, which does not include the line value.  The line must be requested
+> +/// to access the line value.
+> +
+> +#[derive(Debug, Eq, PartialEq)]
+> +pub struct Info {
+> +    info: *mut gpiod::gpiod_line_info,
+> +    from_event: bool,
+> +}
 
-Mailbox, I2C, SPI, MMIO, USB, makes no difference to me.
+The "from_event" flag indicates if the info needs to be freed, or not,
+when the Info is dropped, so call it something that indicates that, like
+"contained".
 
-> At this point, I'm wondering whether you're somehow expecting client
-> devices to map memory and read/write some registers. This is not that
-> kind of setup. The address space is entirely virtual, through a set
-> of four byte keys that indicate to the System Management Controller
-> which fine-grained resource one wants to access. That being an
-> individual GPIO line or some other parameter of the system.
 
-No, not at all.  A public API mapping to whatever the H/W communication
-strategy (I2C, SPI, ...) is a perfectly viable implementation.
+Admittedly I'm only skimming this one compared to my v7 review,
+but only minor knits that could always be picked up later.
 
-> The memory that you see smc_rtkit claim is for passing messages, none
-> of the clients have a right to directly access that memory - indeed,
-> doing so would be a total layering violation and really bad bit of
-> design.
-
-This is not a concept I have an issue understanding.
-
-> So, I hope my response helps fill in some of the detail about what
-> this code is doing, how it works and how it's been designed.
-
-I have a strong grasp of the concept presented. :)
-
-If we can find an acceptable way to create a proper and correct device
-hierarchy, I think we're in a good place.  My present suggestion is to
-make the RTKit the MFD and spawn the child devices directly from it.
-
--- 
-Lee Jones [李琼斯]
+Cheers,
+Kent.
