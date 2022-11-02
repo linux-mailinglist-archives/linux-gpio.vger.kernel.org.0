@@ -2,136 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27EE5615967
-	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 04:10:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E69615B44
+	for <lists+linux-gpio@lfdr.de>; Wed,  2 Nov 2022 05:00:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbiKBDKW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 1 Nov 2022 23:10:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
+        id S229436AbiKBEA4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 2 Nov 2022 00:00:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230087AbiKBDKV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 1 Nov 2022 23:10:21 -0400
-X-Greylist: delayed 900 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Nov 2022 20:10:20 PDT
-Received: from mxus.zte.com.cn (mxus.zte.com.cn [20.69.78.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350DB2317C
-        for <linux-gpio@vger.kernel.org>; Tue,  1 Nov 2022 20:10:20 -0700 (PDT)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxus.zte.com.cn (FangMail) with ESMTPS id 4N2B9L3dS3zdmJQy;
-        Wed,  2 Nov 2022 10:46:30 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4N2B9G5KSCz4xVnK;
-        Wed,  2 Nov 2022 10:46:26 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.40.50])
-        by mse-fl2.zte.com.cn with SMTP id 2A22kJMg065436;
-        Wed, 2 Nov 2022 10:46:19 +0800 (+08)
-        (envelope-from zhang.songyi@zte.com.cn)
-Received: from mapi (xaxapp01[null])
-        by mapi (Zmail) with MAPI id mid31;
-        Wed, 2 Nov 2022 10:46:20 +0800 (CST)
-Date:   Wed, 2 Nov 2022 10:46:20 +0800 (CST)
-X-Zmail-TransId: 2af96361d9fcffffffffc2aa439d
-X-Mailer: Zmail v1.0
-Message-ID: <202211021046202606659@zte.com.cn>
-Mime-Version: 1.0
-From:   <zhang.songyi@zte.com.cn>
-To:     <andersson@kernel.org>, <agross@kernel.org>,
-        <konrad.dybcio@somainline.org>
-Cc:     <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <xue.zhihong@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHBpbmN0cmw6IHFjb206IHJlbW92ZSBkdXBsaWNhdGUgaW5jbHVkZQ==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2A22kJMg065436
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at 10-207-168-8 with ID 6361DA05.000 by FangMail milter!
-X-FangMail-Envelope: 1667357190/4N2B9L3dS3zdmJQy/6361DA05.000/192.168.250.138/[192.168.250.138]/mxhk.zte.com.cn/<zhang.songyi@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6361DA05.000/4N2B9L3dS3zdmJQy
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229512AbiKBEAx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 2 Nov 2022 00:00:53 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D79AE275C9
+        for <linux-gpio@vger.kernel.org>; Tue,  1 Nov 2022 21:00:52 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id z26so2175100pff.1
+        for <linux-gpio@vger.kernel.org>; Tue, 01 Nov 2022 21:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=c/xn8GCuNPtzqzIP0fKQfVLGbGFp11OcImQCGfFohX0=;
+        b=cLsHozo/wyOeJFyvzuLqSQiNJCWM5PT7VAGkIuUHzIuYOtVU2A49zlayd+9P4jqakp
+         Vo7UPo5ISy+ivLCqKYfjdC7I7R/R5hDrOlFw4umLxXcHMwacECK2LfI9GIkTwXQUdVT1
+         cAg4QF28ZgG2QQ+O6wWWW5gItjDtvNcAyR/KqRfep5EEN6RVrsu4slXbF/n0CB5tctun
+         kXU4QI3U+UlPSedrS8UnoTKq7hmkQQv23IlBxFFWoh9FnemLROnPzAFa5FFO6cFmteOE
+         6rRmr/yz6yVaevjx1pb0jvalLocLzsqMki/SWa/wv7jJP5zDFNbomOT3KUU8jmazGAfh
+         iTCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c/xn8GCuNPtzqzIP0fKQfVLGbGFp11OcImQCGfFohX0=;
+        b=3nArUn2J1ykpmmHOQaw/gfYsDgJ3hbjT9RFKn07V9PKpbOuSa/g56ho2NVgzThrjQg
+         ImcClCpXzSq2O2GN5u7D5BYQUGq2zkjPkFmhlaoLIZ8cEo2AMTcG97KXzojwYrO0EhBb
+         OiMOdizRrEi64e5XX7dbeqXEpY5Fi0g2dqQzkxblJs9V6EELKTHS54VXNZ3YVIdYzn9n
+         eo+2qg4BagfDV+29KmTNZ5IbvoVzOZcbFyGv/BQ+x+rVuxm3nINkPvahw/AywLU2ePmI
+         yc91gkBuJOhQOLtCqTOQ+t/GcQpx5u7XJPKf//7AqiSeMNFIeC4xw9lZQke/PWNLG3H8
+         W4fQ==
+X-Gm-Message-State: ACrzQf0dwbc6QUYg0LoXoEbZjc8ggAiTv1AbsPpckZrLJeuddlpS/y3z
+        ICDr/YRDlpWhsFAsXOHNF44oHw==
+X-Google-Smtp-Source: AMsMyM742Va/Dt30lBVWWGVLhvLNKBTSCZclFW9W8xsinlgZIQseVPvLLdwAOY9ZEm8ms/qFcEhrDw==
+X-Received: by 2002:a65:6e0d:0:b0:42d:707c:94ee with SMTP id bd13-20020a656e0d000000b0042d707c94eemr19638872pgb.260.1667361652353;
+        Tue, 01 Nov 2022 21:00:52 -0700 (PDT)
+Received: from localhost ([122.172.84.80])
+        by smtp.gmail.com with ESMTPSA id n29-20020aa7985d000000b0056baca45977sm7264690pfq.21.2022.11.01.21.00.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Nov 2022 21:00:51 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 09:30:49 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@google.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>
+Subject: Re: [PATCH V7 3/8] libgpiod: Add rust wrapper crate
+Message-ID: <20221102040049.64b3yll7itvi7vzw@vireshk-i7>
+References: <cover.1665744170.git.viresh.kumar@linaro.org>
+ <6a94249d2d69bc5c1907fea9ed80c9d7e34278aa.1665744170.git.viresh.kumar@linaro.org>
+ <Y01RvbboC3dMDVSy@sol>
+ <20221021112238.teqz25pn3hz5d4cs@vireshk-i7>
+ <Y1KTCWiGdUxkQ6Al@sol>
+ <CAMRc=MdWce2Msjwjyo3ny9LyUsA8Zeq_WhhJ2=ar5CG1BPmhtg@mail.gmail.com>
+ <Y1/AtfEhuijx1+tK@sol>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y1/AtfEhuijx1+tK@sol>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From 6b941a80348b4d8b862072ecec4df41a43368c60 Mon Sep 17 00:00:00 2001
-From: zhang songyi <zhang.songyi@zte.com.cn>
-Date: Wed, 2 Nov 2022 10:21:53 +0800
-Subject: [PATCH linux-next] pinctrl: qcom: remove duplicate include
+On 31-10-22, 20:33, Kent Gibson wrote:
+> Wrt the Rust bindings, I was assuming that either Viresh would provide
+> support, or as his work appears to be on behalf of Linaro that they
+> would have an interest in maintaining it.
 
-'linux/seq_file.h' included in
-'drivers/pinctrl/qcom/pinctrl-lpass-lpi.c,
-drivers/pinctrl/qcom/pinctrl-msm.c,
-drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c,
-drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c' is duplicated.
+I will surely help in maintaining the Rust part. Not an issue.
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: zhang songyi <zhang.songyi@zte.com.cn>
----
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 2 --
- drivers/pinctrl/qcom/pinctrl-msm.c       | 2 --
- drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 2 --
- drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c  | 2 --
- 4 files changed, 8 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index d5cfa91e2eff..90648fc11647 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -283,8 +283,6 @@ static void lpi_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
- }
-
- #ifdef CONFIG_DEBUG_FS
--#include <linux/seq_file.h>
--
- static unsigned int lpi_regval_to_drive(u32 val)
- {
-    return (val + 1) * 2;
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 8fbb953c4bbe..0d2d3e83e929 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -622,8 +622,6 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- }
-
- #ifdef CONFIG_DEBUG_FS
--#include <linux/seq_file.h>
--
- static void msm_gpio_dbg_show_one(struct seq_file *s,
-                  struct pinctrl_dev *pctldev,
-                  struct gpio_chip *chip,
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-index b1748791a01e..cf69f208dfb8 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
-@@ -536,8 +536,6 @@ static int pm8xxx_gpio_of_xlate(struct gpio_chip *chip,
-
-
- #ifdef CONFIG_DEBUG_FS
--#include <linux/seq_file.h>
--
- static void pm8xxx_gpio_dbg_show_one(struct seq_file *s,
-                  struct pinctrl_dev *pctldev,
-                  struct gpio_chip *chip,
-diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-index 30a934245c1b..71bbf1f1599a 100644
---- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
-@@ -536,8 +536,6 @@ static int pm8xxx_mpp_of_xlate(struct gpio_chip *chip,
-
-
- #ifdef CONFIG_DEBUG_FS
--#include <linux/seq_file.h>
--
- static void pm8xxx_mpp_dbg_show_one(struct seq_file *s,
-                  struct pinctrl_dev *pctldev,
-                  struct gpio_chip *chip,
---
-2.15.2
+-- 
+viresh
