@@ -2,60 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D7561E035
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Nov 2022 04:48:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4411261E097
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Nov 2022 08:14:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbiKFDsb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Nov 2022 23:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46324 "EHLO
+        id S229571AbiKFHO1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Nov 2022 02:14:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbiKFDsa (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 23:48:30 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3496CE14;
-        Sat,  5 Nov 2022 20:48:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8ACB9B8091E;
-        Sun,  6 Nov 2022 03:48:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333ECC433C1;
-        Sun,  6 Nov 2022 03:48:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667706506;
-        bh=iMNkY5XUiFrsfECPbiHaxPG9ZDHoXGLcq+Z6Mx7HhfQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eRXtzVJCCQHGWYCYrONmgB+Ixdu7B6Wao/KDhAaiKa0Z98+I6KubIuBXhuix3W1tT
-         afTqHznfCKHDGJmEJZG9Jr7/uAd1B5UIoFv83y0XWtU89slZhGs8nMYVSee5RTpPZi
-         nEx02thIXxb6F6Uyn8AzNumWf5QkySRp39ICNQLHcrkUdz7z8LNWgCUrt2FbD0LecL
-         b80s1kI3JgTpwdEsc2nLelRGiMxjE39LdxFIr8s+k339yahjl4atU9M8gybmw4JbfP
-         5RzXg1SG591OEvgpwRqDxD0OmIMKLA9WPtCH+XDaIIBvuMZyO4xjL18XydJwRTynGu
-         TQrH+Bt8V4cuw==
-Date:   Sat, 5 Nov 2022 22:48:23 -0500
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Neil Armstrong <neil.armstrong@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Lee Jones <lee@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] dt-bindings: soc: qcom: convert non-smd RPM
- bindings to dt-schema
-Message-ID: <20221106034823.quftsxs7zpvb73tv@builder.lan>
-References: <20221005-mdm9615-pinctrl-yaml-v3-0-e5e045644971@linaro.org>
- <20221005-mdm9615-pinctrl-yaml-v3-4-e5e045644971@linaro.org>
+        with ESMTP id S229492AbiKFHO0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Nov 2022 02:14:26 -0500
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D68FBC14
+        for <linux-gpio@vger.kernel.org>; Sun,  6 Nov 2022 00:14:24 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id z6so5475471qtv.5
+        for <linux-gpio@vger.kernel.org>; Sun, 06 Nov 2022 00:14:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DonEqSTJiwnh5BPpFBajI/K8nd1IJI444+Ft76rBKbY=;
+        b=BwTCwscxr3J8iHXdr/sJ6iyd05vpTUtyYq8PxjSk8DRZAF/9cnofyj2B8Hc82Oqi/C
+         cw6HletfEyCnEQNj6xDMQHEZNQlqrF4FM+RaTz6NqWTe3CYpgPelSMw5+Vt8wq6B34x7
+         s3FFXYPnK4Uid2ePnXzA2TdYgMUC4KVVlv5ITyprhQ0knqB/EmX0u11ayM7SxX9pzs80
+         3gZZ0top7GnxatAbAjQJursv2FCr+dK1tSuazhRhwTBkbIINe9BnEV77LK8uY0C8zUIc
+         UFNmeTP9eautaNKnay1NdBQ/p767iB7dqTrkSJJJPt46LPDTHxr0dir9liGEGKH4sfga
+         JIeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DonEqSTJiwnh5BPpFBajI/K8nd1IJI444+Ft76rBKbY=;
+        b=0Y41HmfVh6lIUF3Nz4yZhimcAhefPJVNsmAfEE1u2C99MZBkvd9Ijkl3aVPdqMCSrr
+         nn6NxzzoQLWuBLq91ZMDxh83g89t5BEdmPqMBVfCBa1kxwp5vXgGm6WQluCkEWkZp7nj
+         +oRsyBPGL3pN4QLk2joWv3yR+5ILb6qbqoM7lAYNTPEHipseeM9y/ra1q0Bs83Rn0fZC
+         SwFYU8OoM8FRNZHgNWADmKiGPcFdaAJndOJVoYlLNT2fwS65YsA/aYHuU++Pl3No6LUg
+         fBnfkcEq9s5BlOXC77XX6r81sqeBise6Cg4yIHMcmq7+n9OP/P72gxY9TBjKgp6frZjZ
+         KRDg==
+X-Gm-Message-State: ACrzQf3Hn1eECnotIhyY9598BhYPJ6NHtvf0PSx8PRlP0TITspCkxvuY
+        Ruc+1Z/7BcCbbAX4bL0IQuN50A==
+X-Google-Smtp-Source: AMsMyM4FmqkCCkXopNcpZQ8cRQq0Ci9aFTIZoXidQE8xCp5VjNMrmafuc/0Yt5R0XiKoR7wKPlicrw==
+X-Received: by 2002:a05:622a:986:b0:3a5:1eca:a7e1 with SMTP id bw6-20020a05622a098600b003a51ecaa7e1mr30721034qtb.350.1667718863157;
+        Sun, 06 Nov 2022 00:14:23 -0700 (PDT)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id t29-20020a37ea1d000000b006af0ce13499sm3719038qkj.115.2022.11.06.00.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Nov 2022 00:14:22 -0700 (PDT)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH 0/3] Migrate i8255 GPIO drivers to regmap API
+Date:   Thu,  3 Nov 2022 07:20:46 -0400
+Message-Id: <cover.1667472555.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221005-mdm9615-pinctrl-yaml-v3-4-e5e045644971@linaro.org>
-X-Spam-Status: No, score=-8.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,31 +68,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 05:27:56PM +0200, Neil Armstrong wrote:
-[..]
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml
-> new file mode 100644
-> index 000000000000..6531c8805894
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ipc-rpm.yaml
-> @@ -0,0 +1,101 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/soc/qcom/qcom,ipc-rpm.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Qualcomm Resource Power Manager (RPM) over IPC
+The regmap API supports IO port accessors so we can take advantage of
+regmap abstractions rather than handling access to the device registers
+directly in the driver.
 
-It's true that there's something executing elsewhere in the SoC
-acting upon the request written to the RPM memory region.
+Precursor patches are provided for 104-dio-48e and 104-idi-48 to migrate
+their respective device-specific registers first in order to simplify
+the subsequent patch migrating the i8255 library and its dependents.
 
-But for me the phrasing "over IPC" applies much more to the SMD/GLINK
-variant than to this. So I would prefer to just name this
-"qcom,rpm.yaml" and omit the "over IPC" phrasing.
+The struct i8255 control_state member serves as a cache of the i8255
+device's control register. Does the regmap API support caching such that
+we won't need to manually update a control_state member?
+
+William Breathitt Gray (3):
+  gpio: 104-dio-48e: Migrate to regmap API
+  gpio: 104-idi-48: Migrate to regmap API
+  gpio: i8255: Migrate to regmap API
+
+ drivers/gpio/gpio-104-dio-48e.c | 200 +++++++++++++++++++----------
+ drivers/gpio/gpio-104-idi-48.c  | 110 +++++++++++-----
+ drivers/gpio/gpio-gpio-mm.c     |  97 ++++++++++----
+ drivers/gpio/gpio-i8255.c       | 218 +++++++++++++++++++++-----------
+ drivers/gpio/gpio-i8255.h       |  54 ++++----
+ 5 files changed, 451 insertions(+), 228 deletions(-)
 
 
-Binding looks good to me.
+base-commit: b8b80348c57b360019071e17380298619c5d8066
+-- 
+2.37.3
 
-Thanks,
-Bjorn
