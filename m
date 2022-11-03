@@ -2,387 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E93A0618717
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 19:08:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35629618723
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 19:11:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230231AbiKCSIu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 14:08:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        id S229551AbiKCSLM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 14:11:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230233AbiKCSI3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 14:08:29 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7ACF58;
-        Thu,  3 Nov 2022 11:06:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667498803; x=1699034803;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=tb/bsJQ7ZOSsfUsJM4qE4cXo/y1Pld0tApVWQ4QgeSs=;
-  b=Sgo3a836bmxi/NN3kanYMRWksFf7EAutUPDjYdqxrrHTlhQevUBm65ma
-   YfUVcXc3P6XEax0p28xFRCuE/u7zfqlIP9hPBQmq+sfcvZwEWar7IqdGN
-   hLfr0LLbQD+4v3MPFOgHUwdrVL90beQxgjmotkpzxb6+hiGrPoFJQTWLd
-   6cDkObIqZitvHhB5Wqh98pc+7W1vm77GEh9C1JK2hGt3cikjNPg0J78kn
-   EgaeWj89W/ZsJaRr0x/yRjgXXZFzxnkzvgg7A8ovvM6kr+OJejkmBXL6W
-   7yDKX7i0jH3nbnYopqMZEK/gvm6YJJHDjI8iNmGzLRxtQI6CCMXIFVh0h
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="293085576"
-X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="293085576"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 11:06:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10520"; a="637272787"
-X-IronPort-AV: E=Sophos;i="5.96,134,1665471600"; 
-   d="scan'208";a="637272787"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Nov 2022 11:06:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 63D93F7; Thu,  3 Nov 2022 20:06:48 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [rft, PATCH v2 1/1] gpiolib: Get rid of not used of_node member
-Date:   Thu,  3 Nov 2022 20:06:43 +0200
-Message-Id: <20221103180643.79352-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S229764AbiKCSLK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 14:11:10 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AD48BC6;
+        Thu,  3 Nov 2022 11:11:05 -0700 (PDT)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2A3EGMxv018288;
+        Thu, 3 Nov 2022 18:10:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=OG3ZTVkiPmyvpPF5mJKUEJHl0NC19XqSJrIaLunOOLI=;
+ b=aQdody+5AW4ELl+RJ+vKsU3uRtZqsxe3OKiBi3CEMwl5a5PebEugYri7sF4FdwnUJkGy
+ l+vJIdb3+mZi8FDzNjE5pV1x8nF4U3J/Fz1sfSBtRhkJZivoqYWImgw7NLP5cAXyCjzH
+ 5ORdQGpLSa+JCvGmmo2pwnmEKyGwRGpBH2auHeOJ6GYc0yaHDqkU2iD6oVESVYoiHOGx
+ /Ldjyfe+jqUNXT6TK+1YBs36S3eHEhqWkbhpDPMBTK3GVouDG3b8Bb3ZFQmZgA2aaanh
+ zmlFK8g+vJuLyRa9epWICMSCWgKa7oP6sZBNmgAsB6UP6WFigYJk6W7Za0MKDyeInbB5 VA== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3km6yjjd6v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Nov 2022 18:10:58 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2A3IAvPD027804
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 3 Nov 2022 18:10:57 GMT
+Received: from th-lint-050.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.29; Thu, 3 Nov 2022 11:10:56 -0700
+From:   Bjorn Andersson <quic_bjorande@quicinc.com>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     Johan Hovold <johan@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] pinctrl: qcom: sc8280xp: Rectify UFS reset pins
+Date:   Thu, 3 Nov 2022 11:10:51 -0700
+Message-ID: <20221103181051.26912-1-quic_bjorande@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4Iq4sCA--5RnHfNi21eqtdGhJXNZ8Csr
+X-Proofpoint-GUID: 4Iq4sCA--5RnHfNi21eqtdGhJXNZ8Csr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-03_04,2022-11-03_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 adultscore=0 clxscore=1011 phishscore=0 bulkscore=0
+ suspectscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211030123
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All new drivers should use fwnode and / or parent to provide the
-necessary information to the GPIO library.
+From: Anjana Hari <quic_ahari@quicinc.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+UFS reset pin offsets are wrongly configured for SC8280XP,
+correcting the same for both UFS instances here.
+
+Signed-off-by: Anjana Hari <quic_ahari@quicinc.com>
+Signed-off-by: Bjorn Andersson <quic_bjorande@quicinc.com>
 ---
-v2: resent against latest Linux Next: expected not to fail now
-    (Linux Next has no more users of of_node member of gpio_chip)
-v1: to test for now (using CIs and build bots) what is left uncoverted
-    (Expected to fail in some configurations!)
+ drivers/pinctrl/qcom/pinctrl-sc8280xp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- drivers/gpio/gpiolib-acpi.c | 10 -------
- drivers/gpio/gpiolib-acpi.h |  4 ---
- drivers/gpio/gpiolib-of.c   | 60 ++++++++++++++-----------------------
- drivers/gpio/gpiolib-of.h   |  5 ----
- drivers/gpio/gpiolib.c      | 15 +---------
- include/linux/gpio/driver.h |  7 -----
- 6 files changed, 24 insertions(+), 77 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 064ba5150fd4..251e76b3a1f5 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1363,16 +1363,6 @@ void acpi_gpiochip_remove(struct gpio_chip *chip)
- 	kfree(acpi_gpio);
- }
- 
--void acpi_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev)
--{
--	/* Set default fwnode to parent's one if present */
--	if (gc->parent)
--		ACPI_COMPANION_SET(&gdev->dev, ACPI_COMPANION(gc->parent));
--
--	if (gc->fwnode)
--		device_set_node(&gdev->dev, gc->fwnode);
--}
--
- static int acpi_gpio_package_count(const union acpi_object *obj)
- {
- 	const union acpi_object *element = obj->package.elements;
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index 01e0cb480a00..be26751b7b69 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -50,8 +50,6 @@ struct acpi_gpio_info {
- void acpi_gpiochip_add(struct gpio_chip *chip);
- void acpi_gpiochip_remove(struct gpio_chip *chip);
- 
--void acpi_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev);
--
- void acpi_gpiochip_request_interrupts(struct gpio_chip *chip);
- void acpi_gpiochip_free_interrupts(struct gpio_chip *chip);
- 
-@@ -74,8 +72,6 @@ int acpi_gpio_count(struct device *dev, const char *con_id);
- static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
- static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
- 
--static inline void acpi_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev) { }
--
- static inline void
- acpi_gpiochip_request_interrupts(struct gpio_chip *chip) { }
- 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 52616848a37c..f6a07a5b0fa0 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -85,7 +85,7 @@ static int of_gpiochip_match_node_and_xlate(struct gpio_chip *chip, void *data)
- {
- 	struct of_phandle_args *gpiospec = data;
- 
--	return chip->gpiodev->dev.of_node == gpiospec->np &&
-+	return device_match_of_node(&chip->gpiodev->dev, gpiospec->np) &&
- 				chip->of_xlate &&
- 				chip->of_xlate(chip, gpiospec, NULL) >= 0;
- }
-@@ -122,9 +122,8 @@ static struct gpio_desc *of_xlate_and_get_gpiod_flags(struct gpio_chip *chip,
- bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
- {
- 	int size;
--	const struct device_node *np = gc->of_node;
- 
--	size = of_property_count_u32_elems(np,  "gpio-reserved-ranges");
-+	size = fwnode_property_count_u32(gc->fwnode, "gpio-reserved-ranges");
- 	if (size > 0 && size % 2 == 0)
- 		return true;
- 	return false;
-@@ -662,7 +661,7 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 					   unsigned long *lflags,
- 					   enum gpiod_flags *dflags)
- {
--	struct device_node *chip_np;
-+	struct device_node *chip_np = to_of_node(chip->fwnode);
- 	enum of_gpio_flags xlate_flags;
- 	struct of_phandle_args gpiospec;
- 	struct gpio_desc *desc;
-@@ -670,7 +669,6 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 	u32 tmp;
- 	int ret;
- 
--	chip_np = chip->of_node;
- 	if (!chip_np)
- 		return ERR_PTR(-EINVAL);
- 
-@@ -759,16 +757,18 @@ static int of_gpiochip_add_hog(struct gpio_chip *chip, struct device_node *hog)
-  */
- static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
- {
--	struct device_node *np;
-+	struct fwnode_handle *child;
- 	int ret;
- 
--	for_each_available_child_of_node(chip->of_node, np) {
--		if (!of_property_read_bool(np, "gpio-hog"))
-+	fwnode_for_each_available_child_node(chip->fwnode, child) {
-+		struct device_node *np = to_of_node(child);
-+
-+		if (!fwnode_property_read_bool(child, "gpio-hog"))
- 			continue;
- 
- 		ret = of_gpiochip_add_hog(chip, np);
- 		if (ret < 0) {
--			of_node_put(np);
-+			fwnode_handle_put(child);
- 			return ret;
- 		}
- 
-@@ -920,14 +920,15 @@ int of_mm_gpiochip_add_data(struct device_node *np,
- 			    struct of_mm_gpio_chip *mm_gc,
- 			    void *data)
- {
-+	struct fwnode_handle *fwnode = of_fwnode_handle(np);
- 	int ret = -ENOMEM;
- 	struct gpio_chip *gc = &mm_gc->gc;
- 
--	gc->label = kasprintf(GFP_KERNEL, "%pOF", np);
-+	gc->label = kasprintf(GFP_KERNEL, "%pfw", fwnode);
- 	if (!gc->label)
- 		goto err0;
- 
--	mm_gc->regs = of_iomap(np, 0);
-+	mm_gc->regs = fwnode_iomap(fwnode, 0);
- 	if (!mm_gc->regs)
- 		goto err1;
- 
-@@ -936,8 +937,8 @@ int of_mm_gpiochip_add_data(struct device_node *np,
- 	if (mm_gc->save_regs)
- 		mm_gc->save_regs(mm_gc);
- 
--	of_node_put(mm_gc->gc.of_node);
--	mm_gc->gc.of_node = of_node_get(np);
-+	fwnode_handle_put(mm_gc->gc.fwnode);
-+	mm_gc->gc.fwnode = fwnode_handle_get(fwnode);
- 
- 	ret = gpiochip_add_data(gc, data);
- 	if (ret)
-@@ -945,12 +946,12 @@ int of_mm_gpiochip_add_data(struct device_node *np,
- 
- 	return 0;
- err2:
--	of_node_put(np);
-+	fwnode_handle_put(fwnode);
- 	iounmap(mm_gc->regs);
- err1:
- 	kfree(gc->label);
- err0:
--	pr_err("%pOF: GPIO chip registration failed with status %d\n", np, ret);
-+	pr_err("%pfw: GPIO chip registration failed with status %d\n", fwnode, ret);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(of_mm_gpiochip_add_data);
-@@ -974,9 +975,9 @@ EXPORT_SYMBOL_GPL(of_mm_gpiochip_remove);
- 
- static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
- {
-+	struct device_node *np = to_of_node(chip->fwnode);
- 	int len, i;
- 	u32 start, count;
--	struct device_node *np = chip->of_node;
- 
- 	len = of_property_count_u32_elems(np,  "gpio-reserved-ranges");
- 	if (len < 0 || len % 2 != 0)
-@@ -997,7 +998,7 @@ static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
- #ifdef CONFIG_PINCTRL
- static int of_gpiochip_add_pin_range(struct gpio_chip *chip)
- {
--	struct device_node *np = chip->of_node;
-+	struct device_node *np = to_of_node(chip->fwnode);
- 	struct of_phandle_args pinspec;
- 	struct pinctrl_dev *pctldev;
- 	int index = 0, ret;
-@@ -1087,9 +1088,10 @@ static int of_gpiochip_add_pin_range(struct gpio_chip *chip) { return 0; }
- 
- int of_gpiochip_add(struct gpio_chip *chip)
- {
-+	struct device_node *np = to_of_node(chip->fwnode);
- 	int ret;
- 
--	if (!chip->of_node)
-+	if (!np)
- 		return 0;
- 
- 	if (!chip->of_xlate) {
-@@ -1106,32 +1108,16 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (ret)
- 		return ret;
- 
--	of_node_get(chip->of_node);
-+	fwnode_handle_get(chip->fwnode);
- 
- 	ret = of_gpiochip_scan_gpios(chip);
- 	if (ret)
--		of_node_put(chip->of_node);
-+		fwnode_handle_put(chip->fwnode);
- 
- 	return ret;
- }
- 
- void of_gpiochip_remove(struct gpio_chip *chip)
- {
--	of_node_put(chip->of_node);
--}
--
--void of_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev)
--{
--	/* Set default OF node to parent's one if present */
--	if (gc->parent)
--		gdev->dev.of_node = gc->parent->of_node;
--
--	if (gc->fwnode)
--		gc->of_node = to_of_node(gc->fwnode);
--
--	/* If the gpiochip has an assigned OF node this takes precedence */
--	if (gc->of_node)
--		gdev->dev.of_node = gc->of_node;
--	else
--		gc->of_node = gdev->dev.of_node;
-+	fwnode_handle_put(chip->fwnode);
- }
-diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-index 1b5df39a952e..34415be0ac61 100644
---- a/drivers/gpio/gpiolib-of.h
-+++ b/drivers/gpio/gpiolib-of.h
-@@ -24,7 +24,6 @@ int of_gpiochip_add(struct gpio_chip *gc);
- void of_gpiochip_remove(struct gpio_chip *gc);
- int of_gpio_get_count(struct device *dev, const char *con_id);
- bool of_gpio_need_valid_mask(const struct gpio_chip *gc);
--void of_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev);
- #else
- static inline struct gpio_desc *of_find_gpio(struct device *dev,
- 					     const char *con_id,
-@@ -43,10 +42,6 @@ static inline bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
- {
- 	return false;
- }
--static inline void of_gpio_dev_init(struct gpio_chip *gc,
--				    struct gpio_device *gdev)
--{
--}
- #endif /* CONFIG_OF_GPIO */
- 
- extern struct notifier_block gpio_of_notifier;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e8faedca6b14..be3240b805b4 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -594,7 +594,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			       struct lock_class_key *lock_key,
- 			       struct lock_class_key *request_key)
- {
--	struct fwnode_handle *fwnode = NULL;
- 	struct gpio_device *gdev;
- 	unsigned long flags;
- 	int base = gc->base;
-@@ -602,11 +601,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	int ret = 0;
- 	u32 ngpios;
- 
--	if (gc->fwnode)
--		fwnode = gc->fwnode;
--	else if (gc->parent)
--		fwnode = dev_fwnode(gc->parent);
--
- 	/*
- 	 * First: allocate and populate the internal stat container, and
- 	 * set up the struct device.
-@@ -619,14 +613,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	gdev->chip = gc;
- 	gc->gpiodev = gdev;
- 
--	of_gpio_dev_init(gc, gdev);
--	acpi_gpio_dev_init(gc, gdev);
--
--	/*
--	 * Assign fwnode depending on the result of the previous calls,
--	 * if none of them succeed, assign it to the parent's one.
--	 */
--	gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
-+	device_set_node(&gdev->dev, gc->fwnode ?: dev_fwnode(gc->parent));
- 
- 	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
- 	if (gdev->id < 0) {
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 2a44600b01f7..ee382712f066 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -503,13 +503,6 @@ struct gpio_chip {
- 	 * the device tree automatically may have an OF translation
- 	 */
- 
--	/**
--	 * @of_node:
--	 *
--	 * Pointer to a device tree node representing this GPIO controller.
--	 */
--	struct device_node *of_node;
--
- 	/**
- 	 * @of_gpio_n_cells:
- 	 *
-
-base-commit: 81214a573d19ae2fa5b528286ba23cd1cb17feec
+diff --git a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
+index aa2075390f3e..e96c00686a25 100644
+--- a/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
++++ b/drivers/pinctrl/qcom/pinctrl-sc8280xp.c
+@@ -1873,8 +1873,8 @@ static const struct msm_pingroup sc8280xp_groups[] = {
+ 	[225] = PINGROUP(225, hs3_mi2s, phase_flag, _, _, _, _, egpio),
+ 	[226] = PINGROUP(226, hs3_mi2s, phase_flag, _, _, _, _, egpio),
+ 	[227] = PINGROUP(227, hs3_mi2s, phase_flag, _, _, _, _, egpio),
+-	[228] = UFS_RESET(ufs_reset, 0xf1004),
+-	[229] = UFS_RESET(ufs1_reset, 0xf3004),
++	[228] = UFS_RESET(ufs_reset, 0xf1000),
++	[229] = UFS_RESET(ufs1_reset, 0xf3000),
+ 	[230] = SDC_QDSD_PINGROUP(sdc2_clk, 0xe8000, 14, 6),
+ 	[231] = SDC_QDSD_PINGROUP(sdc2_cmd, 0xe8000, 11, 3),
+ 	[232] = SDC_QDSD_PINGROUP(sdc2_data, 0xe8000, 9, 0),
 -- 
-2.35.1
+2.17.1
 
