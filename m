@@ -2,44 +2,45 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE26F6178E9
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 09:40:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C526E617915
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 09:51:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbiKCIkk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 04:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
+        id S229501AbiKCIvC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 04:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiKCIkj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 04:40:39 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BE39BF77;
-        Thu,  3 Nov 2022 01:40:38 -0700 (PDT)
-Received: from kwepemi500015.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4N2xzN2Ny2z15MLJ;
-        Thu,  3 Nov 2022 16:40:32 +0800 (CST)
-Received: from [10.40.188.234] (10.40.188.234) by
- kwepemi500015.china.huawei.com (7.221.188.92) with Microsoft SMTP Server
+        with ESMTP id S229379AbiKCIvB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 04:51:01 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B586FD2D6;
+        Thu,  3 Nov 2022 01:51:00 -0700 (PDT)
+Received: from canpemm500004.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N2y7J5YghzpW3j;
+        Thu,  3 Nov 2022 16:47:24 +0800 (CST)
+Received: from [10.174.179.106] (10.174.179.106) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 16:40:36 +0800
+ 15.1.2375.31; Thu, 3 Nov 2022 16:50:58 +0800
 Subject: Re: [PATCH next v3 1/2] gpio: hisi: Add initial device tree support
-To:     Weilong Chen <chenweilong@huawei.com>, <linus.walleij@linaro.org>,
+To:     <f.fangjian@huawei.com>, <linus.walleij@linaro.org>,
         <brgl@bgdev.pl>, <yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
         <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
 CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
 References: <20221101082442.263448-1-chenweilong@huawei.com>
-From:   Jay Fang <f.fangjian@huawei.com>
-Message-ID: <5a365420-cc3e-ef6c-9105-b4561b3c3aab@huawei.com>
-Date:   Thu, 3 Nov 2022 16:40:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+From:   chenweilong <chenweilong@huawei.com>
+Message-ID: <9824fa76-89cc-6c17-9c4a-d37524a30a92@huawei.com>
+Date:   Thu, 3 Nov 2022 16:50:57 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
 In-Reply-To: <20221101082442.263448-1-chenweilong@huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.188.234]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500015.china.huawei.com (7.221.188.92)
+Content-Language: en-US
+X-Originating-IP: [10.174.179.106]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500004.china.huawei.com (7.192.104.92)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -51,19 +52,23 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 2022/11/1 16:24, Weilong Chen wrote:
+
+This is the latest version for the patch, I used the v3 version number incorrectly.
+Sorry for the mistake. I will pay attention next time.
+
 > Add support for HiSilicon GPIO controller in embedded platform, which
 > boot from devicetree.
-> 
+>
 > Signed-off-by: Weilong Chen <chenweilong@huawei.com>
 > ---
 > Change since v2:
 > - Drop wrong use ACPI_PTR/of_match_ptr
 > Link: https://lore.kernel.org/lkml/20221028022453.163186-1-chenweilong@huawei.com/
-> 
+>
 >  drivers/gpio/Kconfig     | 2 +-
 >  drivers/gpio/gpio-hisi.c | 7 +++++++
 >  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
+>
 > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
 > index e034f752e7ce..71a7880af59d 100644
 > --- a/drivers/gpio/Kconfig
@@ -102,5 +107,5 @@ On 2022/11/1 16:24, Weilong Chen wrote:
 >  	},
 >  	.probe		= hisi_gpio_probe,
 >  };
-> 
-Acked-by: Jay Fang <f.fangjian@huawei.com>
+
+
