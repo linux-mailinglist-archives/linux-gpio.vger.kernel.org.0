@@ -2,91 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59800617BD3
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 12:44:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7790C617C66
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 13:19:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbiKCLoy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 07:44:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54928 "EHLO
+        id S231288AbiKCMTq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 08:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbiKCLox (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 07:44:53 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CCE4DB3;
-        Thu,  3 Nov 2022 04:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667475893; x=1699011893;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=i1ewGVqgpLa0I9aDl7AaVHshZOxjkLCv6NBjBF5OKM8=;
-  b=BLVVYaU+tVDW4ykWwDwW+qgLQPeMWKKTlczK5Sb95TPg6hKT1yEneY+0
-   7kLuhU5XsCs2R0HYQuT32ChGymBi2u/yB4hjXe/K9mFpCQ97o6amXEiv3
-   1kMWPy2KTdQrtaLlQKa/kKnKOrXRwWUCTuhO7VldseMvrtNeT6HlkzGTk
-   47W9KonZELT6L8E903AllrvLlJekSBGTwxjYRnjjcUc5iuBHhF0YyqgM3
-   qPz2ecBqM4DKrNi7pfKepX/SvJba26aJ5YUvzT/Wd0L1FYme/AGMj7Kw0
-   fuPSQpJ7EOb/DM7i8kmGhG3YIdVKX8zumVgWYFoTlIwvKJc672PiOMy1v
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="310775048"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="310775048"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Nov 2022 04:44:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10519"; a="740158650"
-X-IronPort-AV: E=Sophos;i="5.95,235,1661842800"; 
-   d="scan'208";a="740158650"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Nov 2022 04:44:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oqYeH-006gqi-3C;
-        Thu, 03 Nov 2022 13:44:41 +0200
-Date:   Thu, 3 Nov 2022 13:44:41 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/2] pinctrl: intel: Use temporary variable for struct
- device
-Message-ID: <Y2OpqUKHf7ksL660@smile.fi.intel.com>
-References: <20221102152915.22995-1-andriy.shevchenko@linux.intel.com>
- <Y2NtQgRwkUlU5bMw@black.fi.intel.com>
- <CAHp75Vd520HKL8_JQrDr7JBEVf1rDzJC=T=mceZvovq8AwrUVg@mail.gmail.com>
+        with ESMTP id S230005AbiKCMTp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 08:19:45 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53A13278;
+        Thu,  3 Nov 2022 05:19:44 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N32mv4S8nzJnL4;
+        Thu,  3 Nov 2022 20:16:47 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 3 Nov 2022 20:19:42 +0800
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <brgl@bgdev.pl>, <yangyicong@hisilicon.com>, <robh+dt@kernel.org>,
+        <xuwei5@huawei.com>, <krzysztof.kozlowski+dt@linaro.org>
+Subject: Re: [PATCH next v3 1/2] gpio: hisi: Add initial device tree support
+To:     Weilong Chen <chenweilong@huawei.com>, <f.fangjian@huawei.com>
+References: <20221101082442.263448-1-chenweilong@huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <bb081979-10d6-5d6e-8e87-9a317fb09455@huawei.com>
+Date:   Thu, 3 Nov 2022 20:19:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vd520HKL8_JQrDr7JBEVf1rDzJC=T=mceZvovq8AwrUVg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221101082442.263448-1-chenweilong@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 12:54:23PM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 3, 2022 at 9:26 AM Mika Westerberg
-> <mika.westerberg@linux.intel.com> wrote:
-> > On Wed, Nov 02, 2022 at 05:29:14PM +0200, Andy Shevchenko wrote:
-
-...
-
-> > Anyway, no feelings about this so feel free to add,
-> >
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > for both patches.
+On 2022/11/1 16:24, Weilong Chen wrote:
+> Add support for HiSilicon GPIO controller in embedded platform, which
+> boot from devicetree.
 > 
-> Thank you!
+> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
 
-Pushed to my review and testing queue, thank you!
+Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> ---
+> Change since v2:
+> - Drop wrong use ACPI_PTR/of_match_ptr
+> Link: https://lore.kernel.org/lkml/20221028022453.163186-1-chenweilong@huawei.com/
+> 
+>  drivers/gpio/Kconfig     | 2 +-
+>  drivers/gpio/gpio-hisi.c | 7 +++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index e034f752e7ce..71a7880af59d 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -310,7 +310,7 @@ config GPIO_GRGPIO
+>  
+>  config GPIO_HISI
+>  	tristate "HiSilicon GPIO controller driver"
+> -	depends on (ARM64 && ACPI) || COMPILE_TEST
+> +	depends on ARM64 || COMPILE_TEST
+>  	select GPIO_GENERIC
+>  	select GPIOLIB_IRQCHIP
+>  	help
+> diff --git a/drivers/gpio/gpio-hisi.c b/drivers/gpio/gpio-hisi.c
+> index 3caabef5c7a2..55bd69043bf4 100644
+> --- a/drivers/gpio/gpio-hisi.c
+> +++ b/drivers/gpio/gpio-hisi.c
+> @@ -221,6 +221,12 @@ static const struct acpi_device_id hisi_gpio_acpi_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, hisi_gpio_acpi_match);
+>  
+> +static const struct of_device_id hisi_gpio_dts_match[] = {
+> +	{ .compatible = "hisilicon,ascend910-gpio", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, hisi_gpio_dts_match);
+> +
+>  static void hisi_gpio_get_pdata(struct device *dev,
+>  				struct hisi_gpio *hisi_gpio)
+>  {
+> @@ -311,6 +317,7 @@ static struct platform_driver hisi_gpio_driver = {
+>  	.driver		= {
+>  		.name	= HISI_GPIO_DRIVER_NAME,
+>  		.acpi_match_table = hisi_gpio_acpi_match,
+> +		.of_match_table = hisi_gpio_dts_match,
+>  	},
+>  	.probe		= hisi_gpio_probe,
+>  };
+> 
