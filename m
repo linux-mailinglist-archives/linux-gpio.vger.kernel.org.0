@@ -2,110 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C526E617915
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 09:51:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13735617AAC
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 11:15:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbiKCIvC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 04:51:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52510 "EHLO
+        id S230132AbiKCKPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 06:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbiKCIvB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 04:51:01 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B586FD2D6;
-        Thu,  3 Nov 2022 01:51:00 -0700 (PDT)
-Received: from canpemm500004.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N2y7J5YghzpW3j;
-        Thu,  3 Nov 2022 16:47:24 +0800 (CST)
-Received: from [10.174.179.106] (10.174.179.106) by
- canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 16:50:58 +0800
-Subject: Re: [PATCH next v3 1/2] gpio: hisi: Add initial device tree support
-To:     <f.fangjian@huawei.com>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <yangyicong@hisilicon.com>, <xuwei5@huawei.com>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20221101082442.263448-1-chenweilong@huawei.com>
-From:   chenweilong <chenweilong@huawei.com>
-Message-ID: <9824fa76-89cc-6c17-9c4a-d37524a30a92@huawei.com>
-Date:   Thu, 3 Nov 2022 16:50:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        with ESMTP id S229485AbiKCKPl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 06:15:41 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28331C1
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Nov 2022 03:15:40 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id u2so1598341ljl.3
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Nov 2022 03:15:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ba2RHuNnxHRUZprt+7VnyllD6dviYtxroBxHsg3w0zo=;
+        b=okvYEstr8o0X+egV+NqRu7sN9zBUTuobYcLeNxGvIN6AtiFlBwcjRUsdjq3TW1IfgM
+         hy/+eX3RM59+JGMhDY+AQU4m3E4//GvJichRV5bBrdGPdsvuIMVxUkuqX82hUunxMWRJ
+         fpNbhwL6gf5XKehxzPmxsXdfalA7wiWtwszWZiqZT56qqQOpNC8ABf5+iUPMCpohwk7n
+         u1YVG2icGXbXbZEDgzje3DPUOXFRyRI3h/sWCuQ/e6Qp7IEurb3MoYvfeIzzi/j3qkeo
+         T0Y1lrTQToQmQhymtBR9aYophGm2x8pqWeIZyNHmOJQsVWNFiSpSn6ujwipT1uW34Lva
+         Nztg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ba2RHuNnxHRUZprt+7VnyllD6dviYtxroBxHsg3w0zo=;
+        b=QgJwkoOT4Fx9mykLdU15PCRPOAX+HTTJzacaZYMbzqgoK65G0Q+E9iSFAFyTBwtIAs
+         sofvj4FuzSPvWJKH7yI+2M9gevPoheRHWTuC3irRk/b3xTC6GGkSefdGUO+eyCwZdbXp
+         vn3qfWTQQm/JgcdUl8M6VhHGcnB819BagdAyYN65WWrVcYnXtIteBXZ8SvZ3qjZ93Bop
+         EfIzINelWF7NxcUf8+14p98sMVxw+H1AOkMV+xxqxixwYeHLJcKQv+e57rlJrbColZQn
+         BhKpmUoCxBXQ7IFVywqCLVSU+neN1gkwFwguinnpjfv/G5R7MvpGmb3x3YaNVUkS2YxW
+         pqSA==
+X-Gm-Message-State: ACrzQf1KR0OrnBgJTBHYIs6L6UCfFgmkCMX1dzl8kVMiphtqH1whLPQI
+        hbFl7n5Vj89sXNmN+U89kpXJ/Q==
+X-Google-Smtp-Source: AMsMyM4m/DC4U+EW2Pl5GRZ8fuvaxRb6DQwE6k27YCeX1672wBcGk+QuwiLrjKygR5BEdt8ea3+6eg==
+X-Received: by 2002:a2e:bc11:0:b0:277:6018:6f07 with SMTP id b17-20020a2ebc11000000b0027760186f07mr6517510ljf.16.1667470539142;
+        Thu, 03 Nov 2022 03:15:39 -0700 (PDT)
+Received: from Fecusia.lan (c-05d8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.216.5])
+        by smtp.gmail.com with ESMTPSA id y6-20020a056512044600b004a45edc1de2sm72091lfk.239.2022.11.03.03.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 03:15:38 -0700 (PDT)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc:     linux-mips@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+Subject: [PATCH v2] mips: alchemy: gpio: Include the right header
+Date:   Thu,  3 Nov 2022 11:15:35 +0100
+Message-Id: <20221103101535.715956-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-In-Reply-To: <20221101082442.263448-1-chenweilong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.174.179.106]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- canpemm500004.china.huawei.com (7.192.104.92)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022/11/1 16:24, Weilong Chen wrote:
+The local GPIO driver in the MIPS Alchemy is including the legacy
+<linux/gpio.h> header but what it wants is to implement a GPIO
+driver so include <linux/gpio/driver.h> instead.
 
-This is the latest version for the patch, I used the v3 version number incorrectly.
-Sorry for the mistake. I will pay attention next time.
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Collect Philippe's review tag
+- Resend to the right MIPS maintainer
+---
+ arch/mips/alchemy/common/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Add support for HiSilicon GPIO controller in embedded platform, which
-> boot from devicetree.
->
-> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
-> ---
-> Change since v2:
-> - Drop wrong use ACPI_PTR/of_match_ptr
-> Link: https://lore.kernel.org/lkml/20221028022453.163186-1-chenweilong@huawei.com/
->
->  drivers/gpio/Kconfig     | 2 +-
->  drivers/gpio/gpio-hisi.c | 7 +++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index e034f752e7ce..71a7880af59d 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -310,7 +310,7 @@ config GPIO_GRGPIO
->  
->  config GPIO_HISI
->  	tristate "HiSilicon GPIO controller driver"
-> -	depends on (ARM64 && ACPI) || COMPILE_TEST
-> +	depends on ARM64 || COMPILE_TEST
->  	select GPIO_GENERIC
->  	select GPIOLIB_IRQCHIP
->  	help
-> diff --git a/drivers/gpio/gpio-hisi.c b/drivers/gpio/gpio-hisi.c
-> index 3caabef5c7a2..55bd69043bf4 100644
-> --- a/drivers/gpio/gpio-hisi.c
-> +++ b/drivers/gpio/gpio-hisi.c
-> @@ -221,6 +221,12 @@ static const struct acpi_device_id hisi_gpio_acpi_match[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, hisi_gpio_acpi_match);
->  
-> +static const struct of_device_id hisi_gpio_dts_match[] = {
-> +	{ .compatible = "hisilicon,ascend910-gpio", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, hisi_gpio_dts_match);
-> +
->  static void hisi_gpio_get_pdata(struct device *dev,
->  				struct hisi_gpio *hisi_gpio)
->  {
-> @@ -311,6 +317,7 @@ static struct platform_driver hisi_gpio_driver = {
->  	.driver		= {
->  		.name	= HISI_GPIO_DRIVER_NAME,
->  		.acpi_match_table = hisi_gpio_acpi_match,
-> +		.of_match_table = hisi_gpio_dts_match,
->  	},
->  	.probe		= hisi_gpio_probe,
->  };
-
+diff --git a/arch/mips/alchemy/common/gpiolib.c b/arch/mips/alchemy/common/gpiolib.c
+index a17d7a8909c4..1b16daaa86ae 100644
+--- a/arch/mips/alchemy/common/gpiolib.c
++++ b/arch/mips/alchemy/common/gpiolib.c
+@@ -31,7 +31,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/types.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/driver.h>
+ #include <asm/mach-au1x00/gpio-au1000.h>
+ #include <asm/mach-au1x00/gpio-au1300.h>
+ 
+-- 
+2.34.1
 
