@@ -2,157 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD6FD617CC1
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 13:37:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4539761865F
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 18:45:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231816AbiKCMhZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 08:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54794 "EHLO
+        id S231150AbiKCRpr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 13:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231754AbiKCMhH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 08:37:07 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C379014036;
-        Thu,  3 Nov 2022 05:36:58 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N33822hZFzpW8Y;
-        Thu,  3 Nov 2022 20:33:22 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 20:36:56 +0800
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <brgl@bgdev.pl>, <xuwei5@huawei.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <robh+dt@kernel.org>,
-        <yangyicong@hisilicon.com>
-Subject: Re: [PATCH next v3 2/2] dt-bindings: gpio: add entry for
- hisilicon,ascend910-gpio
-To:     Weilong Chen <chenweilong@huawei.com>, <f.fangjian@huawei.com>
-References: <20221101082442.263448-1-chenweilong@huawei.com>
- <20221101082442.263448-2-chenweilong@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <322c65cf-2b89-a73c-ba7e-983ac8fb8b3e@huawei.com>
-Date:   Thu, 3 Nov 2022 20:36:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S230222AbiKCRpq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 13:45:46 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2046.outbound.protection.outlook.com [40.107.243.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017541A817;
+        Thu,  3 Nov 2022 10:45:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vy4g+5jQD52RGhcP+cd9PP2yDpS9UMWy9mGogwPDKmG1z7gaL4VCKHDDIPJ1cn0KGO0JU+sjW9V/g2wK3vh7W453r1exOU4DUHqc0SatM9P/Ao1eSv+qR2W8KC9MMLR4xjidv7rmk0wGo9k3w7GUrU12uM31w9DD+uzBN82W3nOrvo+cciHIR5iMVfBHju4tVW7WdPBzvgLSnLHrbFqA9q6rgjlULcL93zFHTvVdr4hpM4dnSaLYBbMTwDdQ+OKFA5lRQAvkFfEUbA/L7se3rKv3SKQJXalF8dNeHnNrqUoGaZNjmKsN5z6HbYT+NXOS7Euz3yRnCyetSVj+Qnoigg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rFMcM6zkYTuVUd1a/CBtfjvHFg7ShWtG0G/3juEsix8=;
+ b=NwrNIaByNgizwxwLMXPjPvPUAiSxcDWIzj9zHyr3SCOkeXHuIB9PJgPvrsTsqohRuwrUK5JaJUMoCk4v4IN9IJKb/hFEa9LYYTGTTMdYjEnZiZ5nP/E5byhZPi4eXG9wu8wC0NamMR68Uo1fFR//JrW+KJjjnRM1DPblbTMcd4mHUxo9hhOlvl9ewOlU6p6b4zVBtewXTDYQ6pDZMSNRA8w9Wp9xySOWMG3GyEsPM/3T7q5koiRYwXaqqYK/nM+RPW+FjjYIHnGqUg5dXgBkOy1mYjkvev2RIJ+UVy4MQ0q9UN2XY/HGSib95/EnppzGovyqjI2dID4t4xnpov4xEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rFMcM6zkYTuVUd1a/CBtfjvHFg7ShWtG0G/3juEsix8=;
+ b=rodWmkkDiWaWUsAJb1Nr5AkihPADgYNjPeehX0QxlzyVRIIm0r8lrALnfM2VjbmZ9CrjSdnFgrEZMBq3aYiUCRJ/tKoXNhQro5MYo+ZIOZ/IQVzx0rA0b0IL/p98dxPoIM1jzTEnQbvkptHsy2wBeV/jvlNZ59LrFFJ3hwohe11Gz4eijPtWBRaaUNN+8gAB706Rc7ji2+nmxphHu+LXB2y3FAKMSHu0lIVfS4nR9Q9zz8prBQoqlVM/RZ0lHsS6rR9N7budoXYGrmR0cwJwUK+82qhTkBY2cXF7YZ8+cHOIwKogQsD7jOlbJ/FCSfoWJDCC6Gsl6+VROPZz78w+6A==
+Received: from MW4PR04CA0077.namprd04.prod.outlook.com (2603:10b6:303:6b::22)
+ by CH0PR12MB5124.namprd12.prod.outlook.com (2603:10b6:610:bf::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22; Thu, 3 Nov
+ 2022 17:45:44 +0000
+Received: from CO1NAM11FT106.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:6b:cafe::bd) by MW4PR04CA0077.outlook.office365.com
+ (2603:10b6:303:6b::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.21 via Frontend
+ Transport; Thu, 3 Nov 2022 17:45:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CO1NAM11FT106.mail.protection.outlook.com (10.13.175.44) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5791.20 via Frontend Transport; Thu, 3 Nov 2022 17:45:44 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.26; Thu, 3 Nov 2022
+ 10:45:34 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.29; Thu, 3 Nov 2022 10:45:34 -0700
+Received: from dipenp.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.29 via Frontend
+ Transport; Thu, 3 Nov 2022 10:45:34 -0700
+From:   Dipen Patel <dipenp@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <devicetree@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <robh+dt@kernel.org>
+CC:     Dipen Patel <dipenp@nvidia.com>
+Subject: [PATCH 0/7] Add Tegra234 HTE support
+Date:   Thu, 3 Nov 2022 10:45:16 -0700
+Message-ID: <20221103174523.29592-1-dipenp@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <20221101082442.263448-2-chenweilong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT106:EE_|CH0PR12MB5124:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd4c0e5f-e578-42ee-dc61-08dabdc33b9b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QOZdpGIH0CrxtvoBmgjG/MicHXnJyJMUZv6S9Vb5L/VN6ZZdZHIR0nOaT6aWSEDEJ/i2uxRQ1uEQdBg3oVzltwrkTHJrCb+TWuDO1UyjikFLCcAVQCDuYaoTbkLU3UvcvGp76ktJLJ1G+0ym8Mv/sntmp2uK4NQq9h9GZbiqZAeKoNV8JhTfp0+aHWER1YtkMSY4fsPkIBTtwHfp/TpsAQZmY6L+ci+qTW7c7jxR9uu+TyT/6OnDePJ3CoblfeOgRNjZCAu8/dJ2ZEfy/XoQayUgdcnQkaFRPbAB6jk56rf3iRMiJ95wt/BndiBWwTZtzGu4Rngb2fk/FZBNe6h5ZqfStxD1CJVXEDxX9bbo+U6FRHPRDw/IgnJvJp/aFUqgS8+fD6XYQIPB/qlAJmu3PFmBrevp5b+2cM7VPHF4cd0xMvHaytrAHp/eKX/UFxlvIjjuDFw11TC2o1yT17lfXmtSV1Jvw1v0CXRmtSGoFlVtwc5hNNehC3R6VoUbdqjliTqatRpx0mwUYEB+xXSUz15Fv/onPxe0rGqOmN2csiKa0EGTlUbwQw6GoMEpFvFM8hx0ZooRioQV50mDACCWsK7jucXyNZpocA5RLAaO2OAe5fkWhdI8PETT28VjUWfdGMj2rAi8zhtGeuWxvVrCXXf2jU0Y8MzjAmY/lX2kS0HE6d+Uxr7inviI4LR6SHAKLLOAIsIvUqIGqecAMBRKDmxYPuonTl2wUimLwWoqYdw0IgycWHiTdmluLje8601r/FJGcezQExC8gUj+ETlEj+7o8oqabSgNQBW4QvImHKI=
+X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199015)(36840700001)(40470700004)(46966006)(36860700001)(40480700001)(82310400005)(36756003)(86362001)(356005)(7636003)(107886003)(82740400003)(8676002)(40460700003)(316002)(6666004)(70206006)(70586007)(7696005)(4326008)(110136005)(5660300002)(478600001)(2906002)(47076005)(426003)(8936002)(2616005)(186003)(336012)(1076003)(83380400001)(26005)(41300700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 17:45:44.1751
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd4c0e5f-e578-42ee-dc61-08dabdc33b9b
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT106.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5124
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022/11/1 16:24, Weilong Chen wrote:
-> Add the new compatible for HiSilicon gpio controller driver.
-> 
-> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+The patch series:
+- Adds tegra Tegra234 HTE(timestamp) provider supports.
+- Updates MAINTAINERS file for git tree, mail list fields.
+- Updates devicetree and API documentations.
+- Enables HTE subsystem, Tegra194 and Tegra234 HTE providers
+by default in arm64 defconfig and dts files.
 
-Looks good to me,
+Dipen Patel (7):
+  MAINTAINERS: Add HTE/timestamp subsystem details
+  hte: Add Tegra234 provider
+  gpio: tegra186: Add Tegra234 hte support
+  dt-bindings: timestamp: Add Tegra234 support
+  hte: Re-phrase tegra API document
+  arm64: tegra: Enable GTE nodes
+  arm64: defconfig: Enable HTE config
 
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+ .../timestamp/nvidia,tegra194-hte.yaml        |  44 ++++++-
+ Documentation/driver-api/hte/tegra194-hte.rst |  33 +++--
+ MAINTAINERS                                   |   3 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  20 +++
+ arch/arm64/boot/dts/nvidia/tegra234.dtsi      |  20 +++
+ arch/arm64/configs/defconfig                  |   3 +
+ drivers/gpio/gpio-tegra186.c                  |   1 +
+ drivers/hte/hte-tegra194-test.c               |   2 +-
+ drivers/hte/hte-tegra194.c                    | 124 +++++++++++++++++-
+ 9 files changed, 224 insertions(+), 26 deletions(-)
 
-> ---
-> Change since v2:
-> - No change.
-> Link: https://lore.kernel.org/lkml/20221028022453.163186-2-chenweilong@huawei.com/
-> 
-> Change since v1:
-> - Drop "Device Tree Bindings" and reg's description
-> - Move description in top-level description.
-> - Add gpio-cells to required
-> - Use additionalProperties and decimal numbers
-> - Use IRQ flags
-> - Use vendor,soc-ipblock format
-> Link: https://lore.kernel.org/lkml/20221026034219.172880-2-chenweilong@huawei.com/
-> 
->  .../gpio/hisilicon,ascend910-gpio.yaml        | 56 +++++++++++++++++++
->  MAINTAINERS                                   |  1 +
->  2 files changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml b/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
-> new file mode 100644
-> index 000000000000..735d97d645a0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
-> @@ -0,0 +1,56 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/hisilicon,ascend910-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HiSilicon common GPIO controller
-> +
-> +maintainers:
-> +  - Jay Fang <f.fangjian@huawei.com>
-> +
-> +description:
-> +  The HiSilicon common GPIO controller can be used for many different
-> +  types of SoC such as Huawei Ascend AI series chips.
-> +
-> +properties:
-> +  compatible:
-> +    const: hisilicon,ascend910-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  ngpios:
-> +    minimum: 1
-> +    maximum: 32
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +  - ngpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    gpio@840d0000 {
-> +      compatible = "hisilicon,ascend910-gpio";
-> +      reg = <0x840d0000 0x1000>;
-> +      ngpios = <32>;
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d42e34d1e8e2..74ac2e7a8e4b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9212,6 +9212,7 @@ HISILICON GPIO DRIVER
->  M:	Jay Fang <f.fangjian@huawei.com>
->  L:	linux-gpio@vger.kernel.org
->  S:	Maintained
-> +F:	Documentation/devicetree/bindings/gpio/hisilicon,ascend910-gpio.yaml
->  F:	drivers/gpio/gpio-hisi.c
->  
->  HISILICON HIGH PERFORMANCE RSA ENGINE DRIVER (HPRE)
-> 
+
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+-- 
+2.17.1
+
