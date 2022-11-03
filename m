@@ -2,104 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13735617AAC
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 11:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFD1C617B22
+	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 11:55:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbiKCKPm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 06:15:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
+        id S229445AbiKCKza (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 3 Nov 2022 06:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiKCKPl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 06:15:41 -0400
-Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C28331C1
-        for <linux-gpio@vger.kernel.org>; Thu,  3 Nov 2022 03:15:40 -0700 (PDT)
-Received: by mail-lj1-x22f.google.com with SMTP id u2so1598341ljl.3
-        for <linux-gpio@vger.kernel.org>; Thu, 03 Nov 2022 03:15:40 -0700 (PDT)
+        with ESMTP id S231415AbiKCKzJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 06:55:09 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA7A11172;
+        Thu,  3 Nov 2022 03:55:01 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id e15so955154qts.1;
+        Thu, 03 Nov 2022 03:55:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ba2RHuNnxHRUZprt+7VnyllD6dviYtxroBxHsg3w0zo=;
-        b=okvYEstr8o0X+egV+NqRu7sN9zBUTuobYcLeNxGvIN6AtiFlBwcjRUsdjq3TW1IfgM
-         hy/+eX3RM59+JGMhDY+AQU4m3E4//GvJichRV5bBrdGPdsvuIMVxUkuqX82hUunxMWRJ
-         fpNbhwL6gf5XKehxzPmxsXdfalA7wiWtwszWZiqZT56qqQOpNC8ABf5+iUPMCpohwk7n
-         u1YVG2icGXbXbZEDgzje3DPUOXFRyRI3h/sWCuQ/e6Qp7IEurb3MoYvfeIzzi/j3qkeo
-         T0Y1lrTQToQmQhymtBR9aYophGm2x8pqWeIZyNHmOJQsVWNFiSpSn6ujwipT1uW34Lva
-         Nztg==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AxCfvK9F2HThh2W2Xp3je+aG6Hjdmf1tZ0bHKXB3Kes=;
+        b=cl5jX+mpkbBsC/BK8H1TagMbrvQqLrh96Jj+Zrw1zmpLEfzQvojfxWxdfXDLgRcv5I
+         MFnQ82NOWLxqGaPh8I/v3thVDCGmjC0lICIb0V7XNdGUx0p1bY1JRirzuN44E59kL92x
+         HVWCzxhRlutrZlrMcFLtDxMuPOhiJJdDYluVtZ8UV1X9hBcf3Um9jl2Lshn+aL/c0rPI
+         t6ezk35AHLA8lAo9MOlKMFUpwo4rDG71CjapUdECSQDS+EdC9/k/BbAu5Y4Fi+WLDpBO
+         iUXtwfannQhJEMH1QXsyHH8FCl51FvKeIHtSPOqRncMwRX5PD3I735TuDGe31wur6GPM
+         0/PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ba2RHuNnxHRUZprt+7VnyllD6dviYtxroBxHsg3w0zo=;
-        b=QgJwkoOT4Fx9mykLdU15PCRPOAX+HTTJzacaZYMbzqgoK65G0Q+E9iSFAFyTBwtIAs
-         sofvj4FuzSPvWJKH7yI+2M9gevPoheRHWTuC3irRk/b3xTC6GGkSefdGUO+eyCwZdbXp
-         vn3qfWTQQm/JgcdUl8M6VhHGcnB819BagdAyYN65WWrVcYnXtIteBXZ8SvZ3qjZ93Bop
-         EfIzINelWF7NxcUf8+14p98sMVxw+H1AOkMV+xxqxixwYeHLJcKQv+e57rlJrbColZQn
-         BhKpmUoCxBXQ7IFVywqCLVSU+neN1gkwFwguinnpjfv/G5R7MvpGmb3x3YaNVUkS2YxW
-         pqSA==
-X-Gm-Message-State: ACrzQf1KR0OrnBgJTBHYIs6L6UCfFgmkCMX1dzl8kVMiphtqH1whLPQI
-        hbFl7n5Vj89sXNmN+U89kpXJ/Q==
-X-Google-Smtp-Source: AMsMyM4m/DC4U+EW2Pl5GRZ8fuvaxRb6DQwE6k27YCeX1672wBcGk+QuwiLrjKygR5BEdt8ea3+6eg==
-X-Received: by 2002:a2e:bc11:0:b0:277:6018:6f07 with SMTP id b17-20020a2ebc11000000b0027760186f07mr6517510ljf.16.1667470539142;
-        Thu, 03 Nov 2022 03:15:39 -0700 (PDT)
-Received: from Fecusia.lan (c-05d8225c.014-348-6c756e10.bbcust.telenor.se. [92.34.216.5])
-        by smtp.gmail.com with ESMTPSA id y6-20020a056512044600b004a45edc1de2sm72091lfk.239.2022.11.03.03.15.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 03:15:38 -0700 (PDT)
-From:   Linus Walleij <linus.walleij@linaro.org>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     linux-mips@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org,
-        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <philmd@linaro.org>
-Subject: [PATCH v2] mips: alchemy: gpio: Include the right header
-Date:   Thu,  3 Nov 2022 11:15:35 +0100
-Message-Id: <20221103101535.715956-1-linus.walleij@linaro.org>
-X-Mailer: git-send-email 2.37.3
+        bh=AxCfvK9F2HThh2W2Xp3je+aG6Hjdmf1tZ0bHKXB3Kes=;
+        b=yeeXckbVMFjLHcS6/K1BL2c8IQrE1Au/FxtrirsJX305q01xystIdH4nPKGK0TCIMs
+         RfSZQInMn7ZAMRh9qpUf1apBKAbUxrPorAOJcCpDZWxYHqubtxClpK+i70ONWlPnC/qy
+         efS3ZfEy3R4qwEF+FKmb2N5TghsU1TCdOiQrdbWfhwok2KlBmhWP7Ns4SpAEhpM3mmxX
+         VJnuh/WTlqKk8RDuJeq96+fQQt4uJ5s8f1yZDGXa2IfDtldROrWhXRp1BKKpQyWNUFsS
+         dy6x+rJOQzqhaWMWBipgcVOzcCLJm6etGUUHhIma8b2vVwTawY0vGnLVUGB+MVi3BmDp
+         Txdg==
+X-Gm-Message-State: ACrzQf3K570i5WSuXkofCN8G/gicfIkYzLuZ1FBlaIREvlkquDZuo5KO
+        sZguYrR/4ehgX+waraQQ7sse6M1JcE7cDNOxNVRUtk/CRJMhNudZ
+X-Google-Smtp-Source: AMsMyM7T54w+5Irb0QStrHCnYXmnkwvVqdeMy6UQV0NjN3Om8lGlCy9go33LOKO0WGsNQKx1AIs5J6Zfqk5mr3Ub1oo=
+X-Received: by 2002:ac8:5751:0:b0:39c:b848:198f with SMTP id
+ 17-20020ac85751000000b0039cb848198fmr23931962qtx.429.1667472900226; Thu, 03
+ Nov 2022 03:55:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20221102152915.22995-1-andriy.shevchenko@linux.intel.com> <Y2NtQgRwkUlU5bMw@black.fi.intel.com>
+In-Reply-To: <Y2NtQgRwkUlU5bMw@black.fi.intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 3 Nov 2022 12:54:23 +0200
+Message-ID: <CAHp75Vd520HKL8_JQrDr7JBEVf1rDzJC=T=mceZvovq8AwrUVg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] pinctrl: intel: Use temporary variable for struct device
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The local GPIO driver in the MIPS Alchemy is including the legacy
-<linux/gpio.h> header but what it wants is to implement a GPIO
-driver so include <linux/gpio/driver.h> instead.
+On Thu, Nov 3, 2022 at 9:26 AM Mika Westerberg
+<mika.westerberg@linux.intel.com> wrote:
+> On Wed, Nov 02, 2022 at 05:29:14PM +0200, Andy Shevchenko wrote:
+> > Use temporary variable for struct device to make code neater.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/pinctrl/intel/pinctrl-intel.c | 23 ++++++++++++-----------
+> >  1 file changed, 12 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+> > index fe5bf2184cbf..e15629348cb5 100644
+> > --- a/drivers/pinctrl/intel/pinctrl-intel.c
+> > +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+> > @@ -1522,14 +1522,15 @@ static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
+> >  int intel_pinctrl_probe(struct platform_device *pdev,
+> >                       const struct intel_pinctrl_soc_data *soc_data)
+> >  {
+> > +     struct device *dev = &pdev->dev;
+> >       struct intel_pinctrl *pctrl;
+> >       int i, ret, irq;
+> >
+> > -     pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+> > +     pctrl = devm_kzalloc(dev, sizeof(*pctrl), GFP_KERNEL);
+>
+> IMHO &pdev->dev is neater and saves an extra line. I would agree if this
+> would be something like &foo->bar->baz->dev but it is not.
 
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Collect Philippe's review tag
-- Resend to the right MIPS maintainer
----
- arch/mips/alchemy/common/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I have no strong opinion, but one thing which may play in favour of
+the patches is that all other drivers, that have their custom
+->probe() implemented, are using temporary variable. That said, let's
+consider this as unification among Intel pin control drivers.
 
-diff --git a/arch/mips/alchemy/common/gpiolib.c b/arch/mips/alchemy/common/gpiolib.c
-index a17d7a8909c4..1b16daaa86ae 100644
---- a/arch/mips/alchemy/common/gpiolib.c
-+++ b/arch/mips/alchemy/common/gpiolib.c
-@@ -31,7 +31,7 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
--#include <linux/gpio.h>
-+#include <linux/gpio/driver.h>
- #include <asm/mach-au1x00/gpio-au1000.h>
- #include <asm/mach-au1x00/gpio-au1300.h>
- 
+> Anyway, no feelings about this so feel free to add,
+>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> for both patches.
+
+Thank you!
+
 -- 
-2.34.1
-
+With Best Regards,
+Andy Shevchenko
