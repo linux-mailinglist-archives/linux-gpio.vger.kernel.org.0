@@ -2,323 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 770DF6190BD
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 07:11:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36EFF619350
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 10:20:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbiKDGLb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Nov 2022 02:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43502 "EHLO
+        id S230405AbiKDJUq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 05:20:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230507AbiKDGKw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 02:10:52 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADE429367;
-        Thu,  3 Nov 2022 23:10:31 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so2458205pjs.4;
-        Thu, 03 Nov 2022 23:10:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mz3SxtBsg329L+3fRZS9MYteoJhzga8XhsBAQr3LWvc=;
-        b=Ruzp+sbx3l3D0LY8ZrkEtOhqSqzNEGZZhjEn7RrR+eiTLQRB/s9ZOULcIF1So2tulI
-         jamvz+Y8M7yGw1cLUGBbOClP8sHExevgHsx8bT9GnAi5eEtFx4/kzKnQreP0wpPqP8OH
-         Lsc6p/xs+eLlrFKUpldHaDudajoua/QsW2XFlBQdUEUYYryZzppCl016K4bNY8xW8D46
-         bZJx1a6kY1lJHf3GmvoCO2n5rFnaOqN8JvB/BHjAATPsYIXxg2lZIM8qiM9EcMJ6qeO2
-         MgpDY8UUHCbtCyxym3awOV56LDo40Te7SzWq9ac+GEkSm/EjNLLPUcJbwxA4U+9g81GV
-         UW3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mz3SxtBsg329L+3fRZS9MYteoJhzga8XhsBAQr3LWvc=;
-        b=OZHg1vEO2yp8zdWG1dGDFODPxO5OHoH7B/WGzdvGvzpHK5OaIbsQdf2d2u1IKs11r7
-         E+qAUvxTKQ0ECpCRWDQ3p/K/RRZ2Uhieb/nmN+ugPfHEjsYQX+nTi3HhdoFfuMtAD/Tn
-         IfxJ4cgrD6PHURheosTurX9DYYKy1Sy34NE8GgqDffGHKpwfXbkVZjcScz5h2KeA8Nj/
-         CgURcPh28XMWxizwgXtX3OSL27ap2zGq7k4yJ4/Io29hQ0lSuQeQEMXq9rZ7/Vzgl/uc
-         u/HRr1YN5eKZbRI/KUxTGlMUZ61eyCVvleKGFrgZ/Ivcwi4S0tGhJK+uAhpMZXxzZ6Tj
-         kP4w==
-X-Gm-Message-State: ACrzQf2vEn58Je3pFZ7KEnEXgcdMYnDaWd5NhhAphJx5VVsXylLuY9yq
-        x83nqUFMOX9S+3qNGSjYqBw=
-X-Google-Smtp-Source: AMsMyM5Z1Bg6zvy47FTBq2SK6m6jaOV7nAaWMlEyzwu33RoZwJg7cuJTj91r2nYhR3N0PZJx09bHmw==
-X-Received: by 2002:a17:90a:24b:b0:213:9da2:5c98 with SMTP id t11-20020a17090a024b00b002139da25c98mr35329803pje.123.1667542230785;
-        Thu, 03 Nov 2022 23:10:30 -0700 (PDT)
-Received: from dtor-ws.mtv.corp.google.com ([2620:15c:9d:2:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id x5-20020aa79ac5000000b0056bfd4a2702sm1791411pfp.45.2022.11.03.23.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 23:10:30 -0700 (PDT)
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] gpiolib: add support for software nodes
-Date:   Thu,  3 Nov 2022 23:10:16 -0700
-Message-Id: <20221031-gpiolib-swnode-v1-6-a0ab48d229c7@gmail.com>
-X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
-In-Reply-To: <20221031-gpiolib-swnode-v1-0-a0ab48d229c7@gmail.com>
-References: <20221031-gpiolib-swnode-v1-0-a0ab48d229c7@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.11.0-dev-28747
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229572AbiKDJUp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 05:20:45 -0400
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05466248DB;
+        Fri,  4 Nov 2022 02:20:43 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 8B17F580511;
+        Fri,  4 Nov 2022 05:20:41 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Fri, 04 Nov 2022 05:20:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1667553641; x=1667560841; bh=SJoBz4HEVE
+        RiFUnQzb3ZIub9dT0AONhBbUZgzTI8xuQ=; b=jOAioEcqTCQaB6i99azVot5cAk
+        gre11Ve+vBmc+Fs/vkDIrNjCSzfHPOUS4wzGCXwfIKJy9biOGQnW4iqxv75LAqbt
+        RdYq92O8WI8weSFAZzxtnrW2XuUukmSBN8KcaYYLkhR8/jLD6oh6MJQ9cwWd7yl8
+        mH21fZUTzBP3gaoYiV4qH0o52fq8RuYFTCOdHa7Soal92hUHyLnB5uIHP9R7ZXTY
+        yrk8ucJVboxa6GlUfb8qItPWrs5N4B3xbNfDaXknJzA5ZsbLT0XMXiOZj0LDZKk8
+        6WHRFTqWjdbWEHnXA5Wxg4OS34kfyJ+czE32JS893SSJ8vebcjylW97lvLOw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1667553641; x=1667560841; bh=SJoBz4HEVERiFUnQzb3ZIub9dT0A
+        ONhBbUZgzTI8xuQ=; b=BmHXv8dWgMDB3A30MW7r0ER+x2KPnCs67D5Tm4znOHms
+        KOvE21G5Qhp1IrhrNpstSMDDbjbRSKKI+wikCsrQUA1D/bc3nhsP6Pfph0Q2sq/L
+        w5xrS9CVegwYB6hNxnfcyAYSDOlMngVd/4QaY9exxV3aeJMS+7bUlXh8ZFR6fpSK
+        gPa2Xr8LydLZo5vJzfOV1L/TUvE6+ISJhz2GoZweOm3SeuEKaa51K7Ium5W5K020
+        eA1TNoxWdJRVK08gDXfqjSbR39bjBE0aJEu+l1hoD12ykpSVSlQ8ZDa9eXuaf1Sv
+        VIUPNFOv24w/xRDpe00prXWHte2pkStlJDT70gy7rw==
+X-ME-Sender: <xms:Z9lkYzSrjU71xNBk6_zqZw7_YH6JI0yUseZ9KPinXiiMwa2ms5wZNA>
+    <xme:Z9lkY0y5CO55EwHV9Y6MI53sDiK8VD6-UVJ3Kx8hhf4HE2ApNz1-y8IkyXw6-f9C2
+    r627sGDwec4-VUhbl4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrvddugddtudcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeufeeh
+    udenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:Z9lkY42FoeE9AWZWaTBjKK0WgCtTsBwtE9dvMmUqE911tjOLuc_EpQ>
+    <xmx:Z9lkYzD3odg97j_NLZJAinYScUOubW4GrxI_Sg6mxaH40a00usXu3A>
+    <xmx:Z9lkY8gjj31U7LlNshlCvQUZGUTi1_xePFBMFsKDj6YaX8-3AvZpfA>
+    <xmx:adlkYxI9rlur3V1K3bRsxhvV5OL9Go-r-JYQNksdhAr5r8wa1PdT3g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 17FD1B603ED; Fri,  4 Nov 2022 05:20:38 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1087-g968661d8e1-fm-20221021.001-g968661d8
+Mime-Version: 1.0
+Message-Id: <6b35d496-2313-4fd9-851b-2ba469bc9261@app.fastmail.com>
+In-Reply-To: <803778517.2279639.1667493436959.JavaMail.open-xchange@opme11oxm02aub.pom.fr.intraorange>
+References: <20221019161831.3864786-1-arnd@kernel.org>
+ <m2r0z3h5yr.fsf@sopl295.home>
+ <7d9eebc8-39b6-4dc1-9ffc-f17ec584bee2@app.fastmail.com>
+ <803778517.2279639.1667493436959.JavaMail.open-xchange@opme11oxm02aub.pom.fr.intraorange>
+Date:   Fri, 04 Nov 2022 10:20:20 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Robert Jarzmik" <jarzmik.robert@orange.fr>,
+        "Arnd Bergmann" <arnd@kernel.org>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>
+Cc:     jingoohan1@gmail.com, "Linus Walleij" <linus.walleij@linaro.org>,
+        "Sudip Mukherjee" <sudipm.mukherjee@gmail.com>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        marek.vasut@gmail.com,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "Ulf Hansson" <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+        "Sergey Shtylyov" <s.shtylyov@omp.ru>, alsa-devel@alsa-project.org,
+        philipp.zabel@gmail.com, linux-usb@vger.kernel.org,
+        linux-leds@vger.kernel.org, slapin@ossfans.org,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        "Mark Brown" <broonie@kernel.org>, linux-mtd@lists.infradead.org,
+        "Lee Jones" <lee@kernel.org>,
+        "Russell King" <linux@armlinux.org.uk>,
+        "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+        linux-input@vger.kernel.org, mkpetch@internode.on.net,
+        lgirdwood@gmail.com, "Vignesh Raghavendra" <vigneshr@ti.com>,
+        "Daniel Mack" <daniel@zonque.org>, kernel@wantstofly.org,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, sre@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        patches@opensource.cirrus.com, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, "Felipe Balbi" <balbi@kernel.org>,
+        "Helge Deller" <deller@gmx.de>,
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Wolfram Sang" <wsa+renesas@sang-engineering.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, perex@perex.cz,
+        linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-rtc@vger.kernel.org,
+        "linux-mmc @ vger . kernel . org" <linux-mmc@vger.kernel.org>,
+        lost.distance@yahoo.com,
+        "Haojian Zhuang" <haojian.zhuang@gmail.com>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>, tiwai@suse.com,
+        "Dominik Brodowski" <linux@dominikbrodowski.net>,
+        "Alexandre Belloni" <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 00/30] ARM: pxa: remove all unused boards&drivers
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Now that static device properties understand notion of child nodes and
-references, let's teach gpiolib to handle them:
+On Thu, Nov 3, 2022, at 17:37, Jarzmik Robert wrote:
+> I'm sorry Arnd, my mailer messed up again, and instead of using my 
+> normal robert.jarzmik@free.fr, it used my ISP mail ...
+>>
+>
+> The reason you're not seeing the AC97_BUS_NEW used is because this 
+> becomes visible only in device-tree files, which were posted (for 
+> mioa701 for example) but never properly reviewed nor merged.
+>
+> As from memory, at least mioa701, zylonite, em_x270 are DT ported, ie. 
+> there is a DT file which makes them boot. For the mioa701, the DT file 
+> offers the same functionnality, ie. all drivers in mioa701.c legacy 
+> file are working as well in a DT variant (not using mioa701.c 
+> obviously).
 
-- GPIOs are represented as a references to software nodes representing
-  gpiochip
-- references must have 2 arguments - GPIO number within the chip and
-  GPIO flags (GPIO_ACTIVE_LOW/GPIO_ACTIVE_HIGH, etc).
-- name of the software node representing gpiochip must match label of
-  the gpiochip, as we use it to locate gpiochip structure at runtime.
+Ok, I see. I need a little clarification here, so I can adapt
+my patch series to keep the necessary files in place:
 
-const struct software_node gpio_bank_b_node = {
-	.name = "B",
-};
+- Zylonite has both PXA300 and PXA320 variants. I removed the PXA320
+  code because nothing selected it any more and it is not hooked
+  up to the MACH_PXA3XX_DT Kconfig symbol. Should I undo this and
+  keep all three PXA3xx variant, removing only PXA930 but selecting
+  CPU_PXA310/320 from MACH_PXA3XX_DT?
 
-const struct property_entry simone_key_enter_props[] __initconst = {
-	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
-	PROPERTY_ENTRY_STRING("label", "enter"),
-	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
-	{ }
-};
+- The em_x270 board file was already removed as part of 9d3239147d6d
+  ("ARM: pxa: remove Compulab pxa2xx boards"), which already removed
+  the associated drivers. Is it correct to assume that the DT support
+  for it has also become unusable at that point, or would you expect
+  it to still have some use? I now remove the related CM-X300 machine
+  as well, but it sounds like you did not have DT support for that,
+  right?
 
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpiolib-swnode.c | 106 ++++++++++++++++++++++++++++++++++++++++++
- drivers/gpio/gpiolib-swnode.h |  13 ++++++
- drivers/gpio/gpiolib.c        |  35 +++++++++++++-
- 4 files changed, 153 insertions(+), 2 deletions(-)
+- I'm not sure how the probing of the ASoC drivers works in the
+  DT case. Do I only need to make SND_PXA2XX_SOC_AC97 user-visible
+  to let everything get probed automatically from DT, or do we
+  need to also keep SND_PXA2XX_SOC_MIOA701 and SND_SOC_ZYLONITE?
 
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 8629e9eaf79e..010587025fc8 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_OF_GPIO)		+= gpiolib-of.o
- obj-$(CONFIG_GPIO_CDEV)		+= gpiolib-cdev.o
- obj-$(CONFIG_GPIO_SYSFS)	+= gpiolib-sysfs.o
- obj-$(CONFIG_GPIO_ACPI)		+= gpiolib-acpi.o
-+obj-$(CONFIG_GPIOLIB)		+= gpiolib-swnode.o
- 
- # Device drivers. Generally keep list sorted alphabetically
- obj-$(CONFIG_GPIO_REGMAP)	+= gpio-regmap.o
-diff --git a/drivers/gpio/gpiolib-swnode.c b/drivers/gpio/gpiolib-swnode.c
-new file mode 100644
-index 000000000000..d005ce0b986d
---- /dev/null
-+++ b/drivers/gpio/gpiolib-swnode.c
-@@ -0,0 +1,106 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Software Node helpers for the GPIO API
-+ *
-+ * Copyright 2022 Google LLC
-+ */
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/gpio/consumer.h>
-+
-+#include "gpiolib.h"
-+#include "gpiolib-swnode.h"
-+
-+static int swnode_gpiochip_match_name(struct gpio_chip *chip, void *data)
-+{
-+	return !strcmp(chip->label, data);
-+}
-+
-+struct gpio_desc *swnode_find_gpio(struct fwnode_handle *fwnode,
-+				   const char *con_id, unsigned int idx,
-+				   unsigned long *flags)
-+{
-+	const struct software_node *chip_node;
-+	const struct software_node *swnode;
-+	struct fwnode_reference_args args;
-+	struct gpio_chip *chip;
-+	struct gpio_desc *desc;
-+	char prop_name[32]; /* 32 is max size of property name */
-+	int error;
-+
-+	swnode = to_software_node(fwnode);
-+	if (!swnode)
-+		return ERR_PTR(-EINVAL);
-+
-+	/*
-+	 * Note we do not need to try both -gpios and -gpio suffixes,
-+	 * as, unlike OF and ACPI, we can fix software nodes to conform
-+	 * to the proper binding.
-+	 */
-+	if (con_id)
-+		snprintf(prop_name, sizeof(prop_name), "%s-gpios", con_id);
-+	else
-+		strscpy(prop_name, "gpios", sizeof(prop_name));
-+
-+	/*
-+	 * We expect all swnode-described GPIOs have GPIO number and
-+	 * polarity arguments, hence nargs is set to 2.
-+	 */
-+	error = fwnode_property_get_reference_args(fwnode, prop_name, NULL,
-+						   2, idx, &args);
-+	if (error) {
-+		pr_debug("%s: can't parse '%s' property of node '%pfwP[%d]'\n",
-+			__func__, prop_name, fwnode, idx);
-+		return ERR_PTR(error);
-+	}
-+
-+	chip_node = to_software_node(args.fwnode);
-+	if (!chip_node || !chip_node->name)
-+		return ERR_PTR(-EINVAL);
-+
-+	chip = gpiochip_find((void *)chip_node->name,
-+			     swnode_gpiochip_match_name);
-+	if (!chip)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	desc = gpiochip_get_desc(chip, args.args[0]);
-+	*flags = args.args[1]; /* We expect native GPIO flags */
-+
-+	pr_debug("%s: parsed '%s' property of node '%pfwP[%d]' - status (%d)\n",
-+		 __func__, prop_name, fwnode, idx, PTR_ERR_OR_ZERO(desc));
-+
-+	return desc;
-+}
-+
-+/**
-+ * swnode_gpio_count - count the GPIOs associated with a device / function
-+ * @fwnode:	firmware node of the GPIO consumer, can be %NULL for
-+ *		system-global GPIOs
-+ * @con_id:	function within the GPIO consumer
-+ *
-+ * Return:
-+ * The number of GPIOs associated with a device / function or %-ENOENT,
-+ * if no GPIO has been assigned to the requested function.
-+ */
-+int swnode_gpio_count(struct fwnode_handle *fwnode, const char *con_id)
-+{
-+	struct fwnode_reference_args args;
-+	char prop_name[32];
-+	int count;
-+
-+	if (con_id)
-+		snprintf(prop_name, sizeof(prop_name), "%s-gpios", con_id);
-+	else
-+		strscpy(prop_name, "gpios", sizeof(prop_name));
-+
-+	/*
-+	 * This is not very efficient, but GPIO lists usually have only
-+	 * 1 or 2 entries.
-+	 */
-+	count = 0;
-+	while (fwnode_property_get_reference_args(fwnode, prop_name, NULL,
-+						  0, count, &args) == 0)
-+		count++;
-+
-+	return count ? count : -ENOENT;
-+}
-diff --git a/drivers/gpio/gpiolib-swnode.h b/drivers/gpio/gpiolib-swnode.h
-new file mode 100644
-index 000000000000..afd51c9b6e34
---- /dev/null
-+++ b/drivers/gpio/gpiolib-swnode.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef GPIOLIB_SWNODE_H
-+#define GPIOLIB_SWNODE_H
-+
-+struct fwnode_handle;
-+
-+struct gpio_desc *swnode_find_gpio(struct fwnode_handle *fwnode,
-+				   const char *con_id, unsigned int idx,
-+				   unsigned long *flags);
-+int swnode_gpio_count(struct fwnode_handle *fwnode, const char *con_id);
-+
-+#endif /* GPIOLIB_SWNODE_H */
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 79aaba693c4f..b9976485587d 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -26,6 +26,7 @@
- #include "gpiolib.h"
- #include "gpiolib-of.h"
- #include "gpiolib-acpi.h"
-+#include "gpiolib-swnode.h"
- #include "gpiolib-cdev.h"
- #include "gpiolib-sysfs.h"
- 
-@@ -3813,6 +3814,19 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	dev_dbg(consumer, "GPIO lookup for consumer %s in node '%s'\n",
- 		con_id, fwnode_get_name(fwnode));
- 
-+	/*
-+	 * First look up GPIO in the secondary software node in case
-+	 * it was used to store updated properties.
-+	 */
-+	if (is_software_node(fwnode->secondary)) {
-+		dev_dbg(consumer,
-+			"using secondary software node for GPIO lookup\n");
-+		desc = swnode_find_gpio(fwnode->secondary,
-+					con_id, idx, lookupflags);
-+		if (!gpiod_not_found(desc))
-+			return desc;
-+	}
-+
- 	/* Using device tree? */
- 	if (is_of_node(fwnode)) {
- 		dev_dbg(consumer, "using device tree for GPIO lookup\n");
-@@ -3821,6 +3835,9 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	} else if (is_acpi_node(fwnode)) {
- 		dev_dbg(consumer, "using ACPI for GPIO lookup\n");
- 		desc = acpi_find_gpio(fwnode, con_id, idx, flags, lookupflags);
-+	} else if (is_software_node(fwnode)) {
-+		dev_dbg(consumer, "using software node for GPIO lookup\n");
-+		desc = swnode_find_gpio(fwnode, con_id, idx, lookupflags);
- 	}
- 
- 	return desc;
-@@ -3933,13 +3950,27 @@ EXPORT_SYMBOL_GPL(fwnode_gpiod_get_index);
-  */
- int gpiod_count(struct device *dev, const char *con_id)
- {
--	const struct fwnode_handle *fwnode = dev ? dev_fwnode(dev) : NULL;
--	int count = -ENOENT;
-+	struct fwnode_handle *fwnode = dev ? dev_fwnode(dev) : NULL;
-+	int count;
-+
-+	/*
-+	 * First look up GPIO in the secondary software node in case
-+	 * it was used to store updated properties.
-+	 */
-+	if (!IS_ERR_OR_NULL(fwnode) && is_software_node(fwnode->secondary)) {
-+		count = swnode_gpio_count(fwnode->secondary, con_id);
-+		if (count > 0)
-+			return count;
-+	}
- 
- 	if (is_of_node(fwnode))
- 		count = of_gpio_get_count(dev, con_id);
- 	else if (is_acpi_node(fwnode))
- 		count = acpi_gpio_count(dev, con_id);
-+	else if (is_software_node(fwnode))
-+		count = swnode_gpio_count(fwnode, con_id);
-+	else
-+		count = -ENOENT;
- 
- 	if (count < 0)
- 		count = platform_gpio_count(dev, con_id);
+>> Any idea where I went wrong here? Did I make a mistake in following the Kconfig dependencies, or are some parts of this
+> incorrectly annotated?
+>
+> I don't think you did a mistake, I think I did. When I saw the patch of 
+> "deprecation" of mioa701 and all the other pxa files, I took it that 
+> the platform-device was deprecated, and was to be removed. This is the 
+> right thing to do in my opinion. I wouldn't mind if all board file go 
+> actually (expect the QEMU one), as this would leave only the boards 
+> with proper DT support, and would remove some clutter from the kernel.
 
--- 
-b4 0.11.0-dev-28747
+Right, this is the plan: the only board files I left in place are
+'gumstix' family that is supported by qemu and has the largest amount
+of RAM in there, and the 'spitz' family that is also supported by
+qemu and apparently had at least one user that was interested in
+working on DT (I can't find a record of who that was now). 
+
+> I also thought the drivers won't get touched by the purge, exception 
+> made of "platform similar ones", such as in the sound tree 
+> (sound/soc/pxa) where we have some of them, and maybe mfd tree.
+
+I made two lists of drivers here: the first list is for those that
+become invisible in Kconfig and can no longer even be compile tested.
+My reasoning here was that these are likely already dead and will
+only get worse without compile testing. If anyone ends up doing
+a new DT conversion of a removed board later on, these can obviously
+get resurrected. The current state of the patches is in [1],
+I'll go through them again based on your feedback, but let me know
+if you see anything else that I'm removing that you think should be
+kept.
+
+The second list of drivers is for those that have no DT support and
+are impossible to get used without anyone declaring a (platform, spi,
+i2c, ...) device in source code somewhere. The list is still
+incomplete because this is hard to check automatically. I have
+included a few patches to remove drivers that have been obviously
+unused for a long time, or never had an in-tree user at all, but
+I left the majority of these drivers for a later series.
+
+       Arnd
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=boardfile-remove&id=73c4b7cfbc2b2ef0
