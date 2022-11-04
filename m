@@ -2,133 +2,453 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1445F619C7C
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 17:04:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60BF1619CA8
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 17:11:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232107AbiKDQEm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Nov 2022 12:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39040 "EHLO
+        id S232332AbiKDQLi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 12:11:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231565AbiKDQEl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 12:04:41 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E442710;
-        Fri,  4 Nov 2022 09:04:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1667577856;
-        bh=HaDXsj5DAmUozxmuMTfo9ex+N6s+nv1T65q4Xi8hgFE=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ZM2nwxB2r33PzRiQCbOUAeIkRnw2n9KjRUooAhRZVI9FX5xWWX4UWs1MZdn2iJS+F
-         DWw5BS4v8Jnvr9XtlBMz3T9NOVl2wGVwoY6N3nwXNjBEhsV+Dv6NN6zqc4N8WCs8Cm
-         Wa7veXULp3mR9NTq7H0N6DHXJibfQDALqqGUKtdkqQ5M4JAtSPGCQHwoMP4adChuoL
-         0lKpbFDuN3NR8wlpvQwKrfO6ot4c0ThUdXII1H6Vk4auLgDsdN88eA3fFYftYDciUg
-         hDG0gzOSaS80ZkoAsjTsiizwU2afLqcd+Ru8+pr6JHMuGs7YqTALqohyx6/tazW/Po
-         bnsNJoZx5VbNw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [80.245.77.26] ([80.245.77.26]) by web-mail.gmx.net
- (3c-app-gmx-bs24.server.lan [172.19.170.76]) (via HTTP); Fri, 4 Nov 2022
- 17:04:16 +0100
-MIME-Version: 1.0
-Message-ID: <trinity-889b4468-8a50-4eae-80a1-6bd9ffbeaaf2-1667577856206@3c-app-gmx-bs24>
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org,
+        with ESMTP id S232292AbiKDQLg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 12:11:36 -0400
+Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C1F4730B
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Nov 2022 09:11:35 -0700 (PDT)
+Received: by mail-qk1-x72a.google.com with SMTP id z30so3311195qkz.13
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Nov 2022 09:11:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7zZ4hgOBkSS7lKqMVHhHdz8obglhyQ+aTwbL4NpTFkY=;
+        b=Yq6e3O/pGs0MyOMWNUA3vzTx3Od/4zemKt3ajIfy7bcKicU6rKTt+8SIfixfMHxYJG
+         w3lkubqOHSdShkN8ENt7WCjjVvv9tm492yyyg6N6h8Q0bhPz7urmD2n6uvcihudnfrtD
+         w5UqLLeSSwlvEdhrQ/6T0CGR628QwEKOuiTjBynJldhpCCIjNLmnUz62A21iSOSUoBz2
+         PTm/SNg41p669YN1ZpS75LmdeyTFSdWeYGC9CLP8h32bqyQkootg73Cnl8BMYv1fcapI
+         9/Q0u8hE1BASSR7bydW+osW15FGfsoMxrnc8IjlNiBNooe9wpIkU0P+PUIriongxdZqa
+         dUjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7zZ4hgOBkSS7lKqMVHhHdz8obglhyQ+aTwbL4NpTFkY=;
+        b=Q08JK66Qg08C5iXoKmKsnTrJga4Kkmh3f1LO7FxBcEodXDYPnnIn9Gc9eJuoldunj/
+         tu1QClRaGKTf47gHYmWIngVxL4mGnBFZfkEE2Zc2xM0g2gyhRGlO/wFzkaHvX5oFyMhk
+         6w7VNhZlXy5nvZMl0rODjKj6wTbkgL3E9AOtChBdLt912zz3aCS2sOk/eNPyJh+4VfSF
+         lFJh3HbykXoO8pwK6xPm57TTDERt/XnqpV+YyDM3vwCB6NU8GaYaSvIoiuiflkm3Y5Ig
+         OwoSabgLAq6scfkpXCRzHacCYdV5w7j72u0AAgx1nlDkTkbPIjS3udDOwUNVfpLG1RVf
+         B9oQ==
+X-Gm-Message-State: ACrzQf2SuuEL2FTXHiQiSHxrzretgd5YCk9Np8SD+wkgiIX62ZdtAHdo
+        mM6VrB8hZ6NLtx9QLxEY6B5iq51NWlohLg==
+X-Google-Smtp-Source: AMsMyM6tpIfGesI5sSD92+o7Ph27abF80lG778Fl8YEEGnGgkigFyNhJSH2KgbhupSJ1G3bKjEPdZA==
+X-Received: by 2002:a37:69c5:0:b0:6fa:d6f:e848 with SMTP id e188-20020a3769c5000000b006fa0d6fe848mr26175271qkc.17.1667578294302;
+        Fri, 04 Nov 2022 09:11:34 -0700 (PDT)
+Received: from krzk-bin.. ([2601:586:5000:570:aad6:acd8:4ed9:299b])
+        by smtp.gmail.com with ESMTPSA id b6-20020a05620a0cc600b006e6a7c2a269sm3125370qkj.22.2022.11.04.09.11.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Nov 2022 09:11:33 -0700 (PDT)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Aw: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings
- for MT7986 SoC
-Content-Type: text/plain; charset=UTF-8
-Date:   Fri, 4 Nov 2022 17:04:16 +0100
-Importance: normal
-Sensitivity: Normal
-In-Reply-To: <e7192d9b-df86-a860-d5cb-8b4b9184e5bc@linaro.org>
-References: <20221025070255.14407-1-linux@fw-web.de>
- <e7192d9b-df86-a860-d5cb-8b4b9184e5bc@linaro.org>
-X-UI-Message-Type: mail
-X-Priority: 3
-X-Provags-ID: V03:K1:2X1CafeoZLi1maobab4XpgEBgVUV/xQr84vHR6gjBAuOAY+JVVgANmAm4TcRb/l8nDxS2
- TnKDSNrjO66TVkQ5Xv4tr22SQACFwC8dyQ5Ll1ovrg6NFnaVVla9fQWFTGVG3ydGBt4eY/4/7vU8
- BOJEfNFxM3uM2fdID/4ZsxJovvlK1CDWDoVbs+QRvVF175YDPu+J5S564bNkOGoh11auRi/vnZss
- jHYbLCQ7bKanEf80Q/YE26Kq+rO1TwJuNmmvMxFtfFWsv5EV0YohuUNEs5XDlMS5neXaVDZAYIYw
- +g=
-UI-OutboundReport: notjunk:1;M01:P0:uc0fEXlhH1I=;v14gmGUwfv0+qhv+chsSKxKrs5P
- pwVmYK1Z+eFI4681MyQNBz/llzYKerv1128HaHFkR43erPzjWWPnk/BxJfoUhH3LmmWPkGsWG
- Sk8JuO1KSz5VdbakOSaL3Ql+Q7VPd4OGrLYhSBz8dfwaawb4C3pSOYpTnkgmMjCmqQgFXmrfq
- b9kGjG+G5j8n2iuiXVsv/L6nFTFnolCkwcPKeFysjsSbGZ7M0lGV+kaRIrPmezJVEnMSFiL9D
- pYy2VsMd7Dk17hgP81q7yhcsCA5vXFceeYISenxgZfBiXQSJV6mNKSFiGp0Ttql8Jyr1O/3ZV
- VyfLpd7PRJMmzap8TtKeBdgp6R9xVMsX/IaaKtXXfij97OGpAGCOJqs5hCE4Oz3DMP+F7QY0f
- WIN527EHyL47okLwszSdFNatf6uh9rc9oCMqHSMHq2l4P5g0//mfjV8G6O80rYd/RXfinSKGQ
- 7PPQRA0vJckPPSWEr9IRQpH2he3G8/22AzEqEBjDvZ6xAkTTz+iiUCN5zYA4mTT+lBmT1IJtf
- h09a8G8k4edta9sAq9qiMoGgS59X1Se7+ounLhHeWFFVZSVrgWNGdy4sBjD4vvgAb+/78C1gd
- oKf9no7c1eIuJa6bFL0s8Rwwya4yeVFr6M0ihtwsNdwU00a2L+3SLcHVvkwzhJ48p1WF5kNKE
- 4KXjT9FbecheJRm35FwNbIfhbmCrFR//HA7gt/o5x3FgnaeLupaIbf6BboNfWbDFrRcQ1aTLt
- 5zPRw4LOtLFUnk4KjIWnSF/+GgkaQn834lSdZe5OsIaQRJWuCnkC7VL73hMGHATNrap6UOuzr
- IDQZmto+wcE9Idj3Tx1bfR8NAo9OQlPqjlgFTRtTW3H7c=
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/2] arm64: dts: qcom: qcs404: align TLMM pin configuration with DT schema
+Date:   Fri,  4 Nov 2022 12:11:30 -0400
+Message-Id: <20221104161131.57719-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi
+DT schema expects TLMM pin configuration nodes to be named with
+'-state' suffix and their optional children with '-pins' suffix.
 
-> Gesendet: Dienstag, 25. Oktober 2022 um 20:35 Uhr
-> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
-> Betreff: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings f=
-or MT7986 SoC
->
-> On 25/10/2022 03:02, Frank Wunderlich wrote:
-> > From: Frank Wunderlich <frank-w@public-files.de>
-> >
-> > Add new splitted uart pins and emmc_51
-> >
-> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
->
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts | 20 +++---
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi     | 52 +++++++--------
+ arch/arm64/boot/dts/qcom/qcs404.dtsi         | 66 ++++++++++++--------
+ 3 files changed, 71 insertions(+), 67 deletions(-)
 
-after talking with MTK for the emmc pinctrl settings (custom pull-up) they=
- suggested me to change
-binding to fix other emmc-values and allow multiple (2) uart-items
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+index 08d5d51221cf..9c7d4e780357 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb-4000.dts
+@@ -37,54 +37,54 @@ phy1: phy@4 {
+ };
+ 
+ &tlmm {
+-	ethernet_defaults: ethernet-defaults {
+-		int {
++	ethernet_defaults: ethernet-defaults-state {
++		int-pins {
+ 			pins = "gpio61";
+ 			function = "rgmii_int";
+ 			bias-disable;
+ 			drive-strength = <2>;
+ 		};
+-		mdc {
++		mdc-pins {
+ 			pins = "gpio76";
+ 			function = "rgmii_mdc";
+ 			bias-pull-up;
+ 		};
+-		mdio {
++		mdio-pins {
+ 			pins = "gpio75";
+ 			function = "rgmii_mdio";
+ 			bias-pull-up;
+ 		};
+-		tx {
++		tx-pins {
+ 			pins = "gpio67", "gpio66", "gpio65", "gpio64";
+ 			function = "rgmii_tx";
+ 			bias-pull-up;
+ 			drive-strength = <16>;
+ 		};
+-		rx {
++		rx-pins {
+ 			pins = "gpio73", "gpio72", "gpio71", "gpio70";
+ 			function = "rgmii_rx";
+ 			bias-disable;
+ 			drive-strength = <2>;
+ 		};
+-		tx-ctl {
++		tx-ctl-pins {
+ 			pins = "gpio68";
+ 			function = "rgmii_ctl";
+ 			bias-pull-up;
+ 			drive-strength = <16>;
+ 		};
+-		rx-ctl {
++		rx-ctl-pins {
+ 			pins = "gpio74";
+ 			function = "rgmii_ctl";
+ 			bias-disable;
+ 			drive-strength = <2>;
+ 		};
+-		tx-ck {
++		tx-ck-pins {
+ 			pins = "gpio63";
+ 			function = "rgmii_ck";
+ 			bias-pull-up;
+ 			drive-strength = <16>;
+ 		};
+-		rx-ck {
++		rx-ck-pins {
+ 			pins = "gpio69";
+ 			function = "rgmii_ck";
+ 			bias-disable;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index dbbe1653718b..4d53cd544e41 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -229,7 +229,7 @@ &sdcc1 {
+ };
+ 
+ &tlmm {
+-	perst_state: perst {
++	perst_state: perst-state {
+ 		pins = "gpio43";
+ 		function = "gpio";
+ 
+@@ -238,68 +238,63 @@ perst_state: perst {
+ 		output-low;
+ 	};
+ 
+-	sdc1_on: sdc1-on {
+-		clk {
++	sdc1_on: sdc1-on-state {
++		clk-pins {
+ 			pins = "sdc1_clk";
+ 			bias-disable;
+ 			drive-strength = <16>;
+ 		};
+ 
+-		cmd {
++		cmd-pins {
+ 			pins = "sdc1_cmd";
+ 			bias-pull-up;
+ 			drive-strength = <10>;
+ 		};
+ 
+-		data {
++		data-pins {
+ 			pins = "sdc1_data";
+ 			bias-pull-up;
+ 			drive-strength = <10>;
+ 		};
+ 
+-		rclk {
++		rclk-pins {
+ 			pins = "sdc1_rclk";
+ 			bias-pull-down;
+ 		};
+ 	};
+ 
+-	sdc1_off: sdc1-off {
+-		clk {
++	sdc1_off: sdc1-off-state {
++		clk-pins {
+ 			pins = "sdc1_clk";
+ 			bias-disable;
+ 			drive-strength = <2>;
+ 		};
+ 
+-		cmd {
++		cmd-pins {
+ 			pins = "sdc1_cmd";
+ 			bias-pull-up;
+ 			drive-strength = <2>;
+ 		};
+ 
+-		data {
++		data-pins {
+ 			pins = "sdc1_data";
+ 			bias-pull-up;
+ 			drive-strength = <2>;
+ 		};
+ 
+-		rclk {
++		rclk-pins {
+ 			pins = "sdc1_rclk";
+ 			bias-pull-down;
+ 		};
+ 	};
+ 
+-	usb3_id_pin: usb3-id-pin {
+-		pinmux {
+-			pins = "gpio116";
+-			function = "gpio";
+-		};
++	usb3_id_pin: usb3-id-state {
++		pins = "gpio116";
++		function = "gpio";
+ 
+-		pinconf {
+-			pins = "gpio116";
+-			drive-strength = <2>;
+-			bias-pull-up;
+-			input-enable;
+-		};
++		drive-strength = <2>;
++		bias-pull-up;
++		input-enable;
+ 	};
+ };
+ 
+@@ -366,31 +361,28 @@ &wifi {
+ /* PINCTRL - additions to nodes defined in qcs404.dtsi */
+ 
+ &blsp1_uart2_default {
+-	rx {
++	rx-pins {
+ 		drive-strength = <2>;
+ 		bias-disable;
+ 	};
+ 
+-	tx {
++	tx-pins {
+ 		drive-strength = <2>;
+ 		bias-disable;
+ 	};
+ };
+ 
+ &blsp1_uart3_default {
+-	cts {
+-		pins = "gpio84";
++	cts-pins {
+ 		bias-disable;
+ 	};
+ 
+-	rts-tx {
+-		pins = "gpio85", "gpio82";
++	rts-tx-pins {
+ 		drive-strength = <2>;
+ 		bias-disable;
+ 	};
+ 
+-	rx {
+-		pins = "gpio83";
++	rx-pins {
+ 		bias-pull-up;
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index 80f2d05595fa..577d76662468 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -593,118 +593,130 @@ tlmm: pinctrl@1000000 {
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 
+-			blsp1_i2c0_default: blsp1-i2c0-default {
++			blsp1_i2c0_default: blsp1-i2c0-default-state {
+ 				pins = "gpio32", "gpio33";
+ 				function = "blsp_i2c0";
+ 			};
+ 
+-			blsp1_i2c1_default: blsp1-i2c1-default {
++			blsp1_i2c1_default: blsp1-i2c1-default-state {
+ 				pins = "gpio24", "gpio25";
+ 				function = "blsp_i2c1";
+ 			};
+ 
+-			blsp1_i2c2_default: blsp1-i2c2-default {
+-				sda {
++			blsp1_i2c2_default: blsp1-i2c2-default-state {
++				sda-pins {
+ 					pins = "gpio19";
+ 					function = "blsp_i2c_sda_a2";
+ 				};
+ 
+-				scl {
++				scl-pins {
+ 					pins = "gpio20";
+ 					function = "blsp_i2c_scl_a2";
+ 				};
+ 			};
+ 
+-			blsp1_i2c3_default: blsp1-i2c3-default {
++			blsp1_i2c3_default: blsp1-i2c3-default-state {
+ 				pins = "gpio84", "gpio85";
+ 				function = "blsp_i2c3";
+ 			};
+ 
+-			blsp1_i2c4_default: blsp1-i2c4-default {
++			blsp1_i2c4_default: blsp1-i2c4-default-state {
+ 				pins = "gpio117", "gpio118";
+ 				function = "blsp_i2c4";
+ 			};
+ 
+-			blsp1_uart0_default: blsp1-uart0-default {
++			blsp1_uart0_default: blsp1-uart0-default-state {
+ 				pins = "gpio30", "gpio31", "gpio32", "gpio33";
+ 				function = "blsp_uart0";
+ 			};
+ 
+-			blsp1_uart1_default: blsp1-uart1-default {
++			blsp1_uart1_default: blsp1-uart1-default-state {
+ 				pins = "gpio22", "gpio23";
+ 				function = "blsp_uart1";
+ 			};
+ 
+-			blsp1_uart2_default: blsp1-uart2-default {
+-				rx {
++			blsp1_uart2_default: blsp1-uart2-default-state {
++				rx-pins {
+ 					pins = "gpio18";
+ 					function = "blsp_uart_rx_a2";
+ 				};
+ 
+-				tx {
++				tx-pins {
+ 					pins = "gpio17";
+ 					function = "blsp_uart_tx_a2";
+ 				};
+ 			};
+ 
+-			blsp1_uart3_default: blsp1-uart3-default {
+-				pins = "gpio82", "gpio83", "gpio84", "gpio85";
+-				function = "blsp_uart3";
++			blsp1_uart3_default: blsp1-uart3-default-state {
++				cts-pins {
++					pins = "gpio84";
++					function = "blsp_uart3";
++				};
++
++				rts-tx-pins {
++					pins = "gpio85", "gpio82";
++					function = "blsp_uart3";
++				};
++
++				rx-pins {
++					pins = "gpio83";
++					function = "blsp_uart3";
++				};
+ 			};
+ 
+-			blsp2_i2c0_default: blsp2-i2c0-default {
++			blsp2_i2c0_default: blsp2-i2c0-default-state {
+ 				pins = "gpio28", "gpio29";
+ 				function = "blsp_i2c5";
+ 			};
+ 
+-			blsp1_spi0_default: blsp1-spi0-default {
++			blsp1_spi0_default: blsp1-spi0-default-state {
+ 				pins = "gpio30", "gpio31", "gpio32", "gpio33";
+ 				function = "blsp_spi0";
+ 			};
+ 
+-			blsp1_spi1_default: blsp1-spi1-default {
+-				mosi {
++			blsp1_spi1_default: blsp1-spi1-default-state {
++				mosi-pins {
+ 					pins = "gpio22";
+ 					function = "blsp_spi_mosi_a1";
+ 				};
+ 
+-				miso {
++				miso-pins {
+ 					pins = "gpio23";
+ 					function = "blsp_spi_miso_a1";
+ 				};
+ 
+-				cs_n {
++				cs-n-pins {
+ 					pins = "gpio24";
+ 					function = "blsp_spi_cs_n_a1";
+ 				};
+ 
+-				clk {
++				clk-pins {
+ 					pins = "gpio25";
+ 					function = "blsp_spi_clk_a1";
+ 				};
+ 			};
+ 
+-			blsp1_spi2_default: blsp1-spi2-default {
++			blsp1_spi2_default: blsp1-spi2-default-state {
+ 				pins = "gpio17", "gpio18", "gpio19", "gpio20";
+ 				function = "blsp_spi2";
+ 			};
+ 
+-			blsp1_spi3_default: blsp1-spi3-default {
++			blsp1_spi3_default: blsp1-spi3-default-state {
+ 				pins = "gpio82", "gpio83", "gpio84", "gpio85";
+ 				function = "blsp_spi3";
+ 			};
+ 
+-			blsp1_spi4_default: blsp1-spi4-default {
++			blsp1_spi4_default: blsp1-spi4-default-state {
+ 				pins = "gpio37", "gpio38", "gpio117", "gpio118";
+ 				function = "blsp_spi4";
+ 			};
+ 
+-			blsp2_spi0_default: blsp2-spi0-default {
++			blsp2_spi0_default: blsp2-spi0-default-state {
+ 				pins = "gpio26", "gpio27", "gpio28", "gpio29";
+ 				function = "blsp_spi5";
+ 			};
+ 
+-			blsp2_uart0_default: blsp2-uart0-default {
++			blsp2_uart0_default: blsp2-uart0-default-state {
+ 				pins = "gpio26", "gpio27", "gpio28", "gpio29";
+ 				function = "blsp_uart5";
+ 			};
+-- 
+2.34.1
 
-so on top of this patch
-
-             then:
-               properties:
-                 groups:
--                  enum: [emmc, emmc_rst, emmc_51]
-+                  enum: [emmc_45, emmc_51]
-           - if:
-               properties:
-                 function:
-@@ -231,10 +231,12 @@ patternProperties:
-             then:
-               properties:
-                 groups:
--                  enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
--                         uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
--                         uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
--                         uart2_1, uart0, uart1, uart2]
-+                  items:
-+                    enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
-+                           uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
-+                           uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rt=
-s,
-+                           uart2_1, uart0, uart1, uart2]
-+                  maxItems: 2
-
-i would squash these changes and send as v3 or should i send an extra-patc=
-h?
-
-regards Frank
