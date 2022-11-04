@@ -2,75 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A68619C1A
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 16:51:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1445F619C7C
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 17:04:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbiKDPvV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Nov 2022 11:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
+        id S232107AbiKDQEm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 12:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230045AbiKDPvU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 11:51:20 -0400
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C6CA2D76F
-        for <linux-gpio@vger.kernel.org>; Fri,  4 Nov 2022 08:51:19 -0700 (PDT)
-Received: by mail-vk1-xa2d.google.com with SMTP id r13so983045vkf.2
-        for <linux-gpio@vger.kernel.org>; Fri, 04 Nov 2022 08:51:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+bqmSTCOdiCvfbgpzZn+pfDZRQ4gDb7114O5UHyr/s0=;
-        b=w/9tMYiwZerS8Da4PUf/fyy0dDSlqkEAiDsa5AQGeHKbl8qptdBdKJhtM6wI6WBJe5
-         QUvIAAMgffTVX71nRzXSH+z3j6v0lXXSytMN44JCDPtP+Imdg+FFLnEFd9voCIrj9wzJ
-         JksgTOOQjbKVp/Xtl2i5JuWAr0+38/Q8vFCbubs1PB1h6Qc6u5azoESSbbwoS7SCNSZv
-         8qpxQmu4SgXquLQAy1kr0pBnb28biE+CTFmFagdI0aPSr7j3y013LgElA1xP4ErI09F4
-         +dw92pUiWr7Y8uvEwK9PvHE8vdZdaqYc5lUh/pklr+EtOudlcCixGuC22P1L1cDE2lLd
-         IA4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+bqmSTCOdiCvfbgpzZn+pfDZRQ4gDb7114O5UHyr/s0=;
-        b=ufRBtMowNhQUyQ5h4pkB5B9RDfkfFgrOzi45/GS5KlKIyBRIR/GtMiwdt+hj6SFq8q
-         b5+IZAW0YGk/8n30+E+34ZXPM4Uz1aM8U9HnpKIF82yMbvxt14HFnRsQEv/Ba2GRoQdZ
-         qiDyd1a9lpVT7pi3VIyY9ZhgTY6owKXhq0AnIbfivF0IEKNlKTP7XR0WDhi3X1i6JBRY
-         E5VyaFCc559YH58Su3o8f9dOxKC/401B9O6Nr10TT4Z6vuDlnX8yqwoNzPjjDzVYHoBC
-         VCtKi+hIEfhNfnpYJ6ihy8x7287bqv1pYKQgLWagI1njicdefb0d4Gll9KYukrOWBGoz
-         muiw==
-X-Gm-Message-State: ACrzQf2PmaNiaHzndHWFNTIZP9TQG/ybFC+4gLN9cOIPLsEnAA2gMiom
-        cH2awIBzR6IsGcpUCtxM6g4OAlouaBtoMyODzU8bhw==
-X-Google-Smtp-Source: AMsMyM65wjyFB3T+odhlXz824p/tDA0Fbyaf1AiBNs6kDPVX0QgXVN6pBRLmoXUcGfhvd/eYkURRr14qp3QfZVlaYyA=
-X-Received: by 2002:a05:6122:92a:b0:3b8:ae77:6927 with SMTP id
- j42-20020a056122092a00b003b8ae776927mr1333137vka.33.1667577078097; Fri, 04
- Nov 2022 08:51:18 -0700 (PDT)
+        with ESMTP id S231565AbiKDQEl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 12:04:41 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E442710;
+        Fri,  4 Nov 2022 09:04:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
+        s=s31663417; t=1667577856;
+        bh=HaDXsj5DAmUozxmuMTfo9ex+N6s+nv1T65q4Xi8hgFE=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=ZM2nwxB2r33PzRiQCbOUAeIkRnw2n9KjRUooAhRZVI9FX5xWWX4UWs1MZdn2iJS+F
+         DWw5BS4v8Jnvr9XtlBMz3T9NOVl2wGVwoY6N3nwXNjBEhsV+Dv6NN6zqc4N8WCs8Cm
+         Wa7veXULp3mR9NTq7H0N6DHXJibfQDALqqGUKtdkqQ5M4JAtSPGCQHwoMP4adChuoL
+         0lKpbFDuN3NR8wlpvQwKrfO6ot4c0ThUdXII1H6Vk4auLgDsdN88eA3fFYftYDciUg
+         hDG0gzOSaS80ZkoAsjTsiizwU2afLqcd+Ru8+pr6JHMuGs7YqTALqohyx6/tazW/Po
+         bnsNJoZx5VbNw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [80.245.77.26] ([80.245.77.26]) by web-mail.gmx.net
+ (3c-app-gmx-bs24.server.lan [172.19.170.76]) (via HTTP); Fri, 4 Nov 2022
+ 17:04:16 +0100
 MIME-Version: 1.0
-References: <20221021112238.teqz25pn3hz5d4cs@vireshk-i7> <Y1KTCWiGdUxkQ6Al@sol>
- <CAMRc=MdWce2Msjwjyo3ny9LyUsA8Zeq_WhhJ2=ar5CG1BPmhtg@mail.gmail.com>
- <Y1/AtfEhuijx1+tK@sol> <20221102040049.64b3yll7itvi7vzw@vireshk-i7>
- <CAMRc=Mc=gjGPcVOcx8YGNFqEsnve0h5a0OYqNMsWmUOP19wVAg@mail.gmail.com>
- <Y2JrywE5RB0Mdrqo@sol> <CAMRc=McQ11LtOGxHTVb2GbAWpPaz+2_F+WtiwPN=psBmEppGzQ@mail.gmail.com>
- <Y2MNd0Y27hZ164i2@sol> <CAMRc=McT1RFNdqdNJJYEXad4kcSpj4MgrKL9emcsiaJoO5YvrA@mail.gmail.com>
- <Y2O0LRbTvzCsbDKK@sol>
-In-Reply-To: <Y2O0LRbTvzCsbDKK@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 4 Nov 2022 16:51:07 +0100
-Message-ID: <CAMRc=Mf0fQPFJDTvii2Sm0hkQDshXHm1BOXT6oPQwagNHj9zuw@mail.gmail.com>
-Subject: Re: [PATCH V7 3/8] libgpiod: Add rust wrapper crate
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+Message-ID: <trinity-889b4468-8a50-4eae-80a1-6bd9ffbeaaf2-1667577856206@3c-app-gmx-bs24>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        linux-mediatek@lists.infradead.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@google.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Aw: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings
+ for MT7986 SoC
+Content-Type: text/plain; charset=UTF-8
+Date:   Fri, 4 Nov 2022 17:04:16 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <e7192d9b-df86-a860-d5cb-8b4b9184e5bc@linaro.org>
+References: <20221025070255.14407-1-linux@fw-web.de>
+ <e7192d9b-df86-a860-d5cb-8b4b9184e5bc@linaro.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:2X1CafeoZLi1maobab4XpgEBgVUV/xQr84vHR6gjBAuOAY+JVVgANmAm4TcRb/l8nDxS2
+ TnKDSNrjO66TVkQ5Xv4tr22SQACFwC8dyQ5Ll1ovrg6NFnaVVla9fQWFTGVG3ydGBt4eY/4/7vU8
+ BOJEfNFxM3uM2fdID/4ZsxJovvlK1CDWDoVbs+QRvVF175YDPu+J5S564bNkOGoh11auRi/vnZss
+ jHYbLCQ7bKanEf80Q/YE26Kq+rO1TwJuNmmvMxFtfFWsv5EV0YohuUNEs5XDlMS5neXaVDZAYIYw
+ +g=
+UI-OutboundReport: notjunk:1;M01:P0:uc0fEXlhH1I=;v14gmGUwfv0+qhv+chsSKxKrs5P
+ pwVmYK1Z+eFI4681MyQNBz/llzYKerv1128HaHFkR43erPzjWWPnk/BxJfoUhH3LmmWPkGsWG
+ Sk8JuO1KSz5VdbakOSaL3Ql+Q7VPd4OGrLYhSBz8dfwaawb4C3pSOYpTnkgmMjCmqQgFXmrfq
+ b9kGjG+G5j8n2iuiXVsv/L6nFTFnolCkwcPKeFysjsSbGZ7M0lGV+kaRIrPmezJVEnMSFiL9D
+ pYy2VsMd7Dk17hgP81q7yhcsCA5vXFceeYISenxgZfBiXQSJV6mNKSFiGp0Ttql8Jyr1O/3ZV
+ VyfLpd7PRJMmzap8TtKeBdgp6R9xVMsX/IaaKtXXfij97OGpAGCOJqs5hCE4Oz3DMP+F7QY0f
+ WIN527EHyL47okLwszSdFNatf6uh9rc9oCMqHSMHq2l4P5g0//mfjV8G6O80rYd/RXfinSKGQ
+ 7PPQRA0vJckPPSWEr9IRQpH2he3G8/22AzEqEBjDvZ6xAkTTz+iiUCN5zYA4mTT+lBmT1IJtf
+ h09a8G8k4edta9sAq9qiMoGgS59X1Se7+ounLhHeWFFVZSVrgWNGdy4sBjD4vvgAb+/78C1gd
+ oKf9no7c1eIuJa6bFL0s8Rwwya4yeVFr6M0ihtwsNdwU00a2L+3SLcHVvkwzhJ48p1WF5kNKE
+ 4KXjT9FbecheJRm35FwNbIfhbmCrFR//HA7gt/o5x3FgnaeLupaIbf6BboNfWbDFrRcQ1aTLt
+ 5zPRw4LOtLFUnk4KjIWnSF/+GgkaQn834lSdZe5OsIaQRJWuCnkC7VL73hMGHATNrap6UOuzr
+ IDQZmto+wcE9Idj3Tx1bfR8NAo9OQlPqjlgFTRtTW3H7c=
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,100 +81,54 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 3, 2022 at 1:29 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Thu, Nov 03, 2022 at 09:35:33AM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Nov 3, 2022 at 1:38 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Wed, Nov 02, 2022 at 05:34:20PM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Nov 2, 2022 at 2:08 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > >
-> > > > > On Wed, Nov 02, 2022 at 01:47:44PM +0100, Bartosz Golaszewski wrote:
-> > > > > > On Wed, Nov 2, 2022 at 5:00 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > > > > > >
-> > > > > > > On 31-10-22, 20:33, Kent Gibson wrote:
-> > > > > > > > Wrt the Rust bindings, I was assuming that either Viresh would provide
-> > > > > > > > support, or as his work appears to be on behalf of Linaro that they
-> > > > > > > > would have an interest in maintaining it.
-> > > > > > >
-> > > > > > > I will surely help in maintaining the Rust part. Not an issue.
-> > > > > > >
-> > > > > >
-> > > > > > Sounds like a plan. I'm going through Kent's gpio-tools patches and
-> > > > > > rust bindings are next in line.
-> > > > > >
-> > > > >
-> > > > > The rust bindings might make it in before they do - you may find that
-> > > > > they are a bit more different from the old tools than you were expecting.
-> > > > >
-> > > >
-> > > > Yeah, I can tell that. :)
-> > > >
-> > > > I have lots of non-functional minor things to point out - mostly
-> > > > coding style etc. - that I will probably just fix locally when
-> > > > applying.
-> > > >
-> > >
-> > > Looks like there will be a v5 for the optional interactive set, if
-> > > nothing else, so let me know and I can fix them as well.
-> > >
-> > > > One thing that stands out though is the dependency on libedit - do you
-> > > > think we could make the gpioset interactive mode a configurable
-> > > > feature with its own configure switch that could be left out if we
-> > > > don't want to depend on any external libraries?
-> > >
-> > > Well, libedit was your preferred choice.
-> >
-> > It's still is - it's not about the choice of the library but about
-> > keeping it possible to build a set of command-line tools with no
-> > dependencies other than libc.
-> >
-> > > But, yeah, making the interactive mode optional is a good idea.
-> > >
-> > > Any preference on the name for the config flag?
-> > > --enable-gpioset-interactive ?
-> > >
-> >
-> > Sounds great.
-> >
-> > > One other major thing I had been considering, and implemented in my Rust
-> > > version[1], is renaming the tools, since it isn't intuitively obvious,
-> > > to me anyway, what gpiodetect, gpioinfo, gpiomon, and gpiowatch do.
-> > >
-> > > I went with:
-> > >  gpiodetect -> gpiochip
-> > >  gpioinfo   -> gpioline
-> > >  gpiomon    -> gpioedges
-> > >  gpiowatch  -> gpionotify
-> > >
-> > > where the names try to indicate the information returned, rather than
-> > > how it is collected.
-> > > And yeah, I got stuck with gpiowatch/gpionotify as I couldn't come up
-> > > with a short meaningful name for line info changed events.
-> > > Suggestions welcome.  And lice is not an option.
-> > >
-> > > gpioget and gpioset remain unchanged as they are already as clear as can
-> > > be.
-> > >
-> > > Would that work for you, or would you prefer to stick with the existing
-> > > names?
-> >
-> > I don't know if it is because I'm used to the previous names but none
-> > of the first three make much sense to me. I think it's better for the
-> > names to indicate what the program is doing, not what it's returning.
-> >
-> > On the other hand - gpionotify is great, go for it!
-> >
->
-> Ok, now I'm confused - only rename gpiowatch?
+Hi
 
-Yes, gpiowatch -> gpionotify.
-
+> Gesendet: Dienstag, 25. Oktober 2022 um 20:35 Uhr
+> Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+> Betreff: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings f=
+or MT7986 SoC
 >
-> Anyway, we probably should pick this conversation up as part of the
-> tools review, not the Rust bindings, so let me know there.
+> On 25/10/2022 03:02, Frank Wunderlich wrote:
+> > From: Frank Wunderlich <frank-w@public-files.de>
+> >
+> > Add new splitted uart pins and emmc_51
+> >
+> > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 >
+>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Makes sense. I'm off most of this week, but I will get there, I promise. :)
+after talking with MTK for the emmc pinctrl settings (custom pull-up) they=
+ suggested me to change
+binding to fix other emmc-values and allow multiple (2) uart-items
 
-Bartosz
+so on top of this patch
+
+             then:
+               properties:
+                 groups:
+-                  enum: [emmc, emmc_rst, emmc_51]
++                  enum: [emmc_45, emmc_51]
+           - if:
+               properties:
+                 function:
+@@ -231,10 +231,12 @@ patternProperties:
+             then:
+               properties:
+                 groups:
+-                  enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
+-                         uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
+-                         uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
+-                         uart2_1, uart0, uart1, uart2]
++                  items:
++                    enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
++                           uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
++                           uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rt=
+s,
++                           uart2_1, uart0, uart1, uart2]
++                  maxItems: 2
+
+i would squash these changes and send as v3 or should i send an extra-patc=
+h?
+
+regards Frank
