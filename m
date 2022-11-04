@@ -2,322 +2,144 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2FAD619B57
-	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 16:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A32F619C17
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 16:50:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232502AbiKDPTx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Nov 2022 11:19:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
+        id S230089AbiKDPu0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 11:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232172AbiKDPTw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 11:19:52 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E761B64C7;
-        Fri,  4 Nov 2022 08:19:50 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.96,137,1665414000"; 
-   d="scan'208";a="141511333"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 05 Nov 2022 00:19:50 +0900
-Received: from localhost.localdomain (unknown [10.226.93.164])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id E969C4006355;
-        Sat,  5 Nov 2022 00:19:46 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 2/2] drivers: pinctrl: renesas: Add RZ/G2L POEG driver support
-Date:   Fri,  4 Nov 2022 15:19:35 +0000
-Message-Id: <20221104151935.1783791-3-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221104151935.1783791-1-biju.das.jz@bp.renesas.com>
-References: <20221104151935.1783791-1-biju.das.jz@bp.renesas.com>
+        with ESMTP id S229995AbiKDPuY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 11:50:24 -0400
+Received: from mail-vk1-xa2a.google.com (mail-vk1-xa2a.google.com [IPv6:2607:f8b0:4864:20::a2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D73F72D76F
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Nov 2022 08:50:20 -0700 (PDT)
+Received: by mail-vk1-xa2a.google.com with SMTP id v81so2648973vkv.5
+        for <linux-gpio@vger.kernel.org>; Fri, 04 Nov 2022 08:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=++mWirKgGkrCI+vm0xRouCpwLdjdutJmLOYC+ZHZYHc=;
+        b=6qu4jPdvOOCYWJY2tYYGANBMsSd7/CxYS5H1o7QbPvAsTaD3mee0pz6cbfCWiGZ4Aq
+         H9LlODO3kFJlFVAJT7CWMU+Yqj+4/FmxVqbGf9Bg7iS7e2P92JECKKHtE261i6ZEtTCz
+         FIQOzDnp3SYTBW5oLsXtc6+zxZtUH7pborqIMlysstix1rAvqjU2uv6o+VflrvL4Rjj4
+         8mAa0BWA2okqYafMVrqVg84kcgiwkwcXcFlRYAFhq9TL0un+hAvb/jL9UqK7ynx2ocpb
+         TycWbahuCCIotdBs9kjuDTSC/+C7WLjP9lultacC5wEX+N88cMxMlPEGDydWN0KDNXJJ
+         e+yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=++mWirKgGkrCI+vm0xRouCpwLdjdutJmLOYC+ZHZYHc=;
+        b=aU7NIKJUsfb26r0Bv6D46MT+snCRNVl/fRs5aVSAakSrEuGlVN+3tJSZYDqBUImfUs
+         +hpU/mdTu/W6P+C7jPab80ZiBU6SbfH+y0qMVtVUIWm4Qi6MiDZgeaw6V6vuqwNLeRRN
+         LdAy1Lj6oA3pUb8n0gL0mVcbkxJqBNHflbd+Xbdkh1HSjCvZkKo+VEdBoMz6youo04ip
+         w+ipj8fo/jlFzctQXQ5NZaWLgXTG2KOlgE03MqXQcy0h2dHgfz0WGV74QrAEVlNPOaSg
+         ifR4+GaLZVOH3F24wH7kxsD7BZfFTF0eLLtZsOm4+mVnKIvchp0VuLaN0freuck1NJlk
+         1Gxg==
+X-Gm-Message-State: ACrzQf1oMCohe5WrHq1DtE7hhLFNasuwR84XkZYVp6Sj0SKMcTE7RLoF
+        5K5r/Uk4keu1BNZmkcGqxshbYPtwIZy54FYhGL9h6Q==
+X-Google-Smtp-Source: AMsMyM4h4K63MwrVrCDVB/AEOjRx4mKVdTi14OodmNPYWW8xwyK/6GeLFp4IWp8SkZBgNFadF7b0idAIkTNXuDaCmn8=
+X-Received: by 2002:a05:6122:92a:b0:3b8:ae77:6927 with SMTP id
+ j42-20020a056122092a00b003b8ae776927mr1331401vka.33.1667577019933; Fri, 04
+ Nov 2022 08:50:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221031-gpiolib-swnode-v1-0-a0ab48d229c7@gmail.com>
+In-Reply-To: <20221031-gpiolib-swnode-v1-0-a0ab48d229c7@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 4 Nov 2022 16:50:09 +0100
+Message-ID: <CAMRc=McPxk_SPybakAsfJB0RRjSSByEbPY+rk=M63b+i3pBnuA@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add support for software nodes to gpiolib
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The output pins of the RZ/G2L general PWM timer (GPT) can be disabled
-by using the port output enabling function for the GPT (POEG).
+On Fri, Nov 4, 2022 at 7:10 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> This series attempts to add support for software nodes to gpiolib, using
+> software node references. This allows us to convert more drivers to the
+> generic device properties and drop support for custom platform data.
+>
+> To describe a GPIO via software nodes we can create the following data
+> items:
+>
+> /* Node representing the GPIO controller/GPIO bank */
+> static const struct software_node gpio_bank_b_node = {
+>         .name = "B",
+> };
+>
+> /*
+>  * Properties that will be assigned to a software node assigned to
+>  * the devicei that used platform data.
+>  */
+> static const struct property_entry simone_key_enter_props[] = {
+>         PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+>         PROPERTY_ENTRY_STRING("label", "enter"),
+>         PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+>         { }
+> };
+>
+> The code in gpiolib handling software nodes uses the name in the
+> software node representing GPIO controller to locate the actual instance
+> of GPIO controller.
+>
+> Note that kbuild robot is likely to complain about this patchset because
+> it depends on patches removing [devm_]gpiod_get_from_of_node() and
+> devm_fwnode_get_[index_]gpiod_from_child() APIs that are still pending.
+> I pushed them to
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git tmp-gpiolib
+>
+> for your reference.
+>
+> To: Linus Walleij <linus.walleij@linaro.org>
+> To: Bartosz Golaszewski <brgl@bgdev.pl>
+> To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-acpi@vger.kernel.org
+>
+> ---
+> Dmitry Torokhov (6):
+>       gpiolib: of: change of_find_gpio() to accept device node
+>       gpiolib: acpi: change acpi_find_gpio() to accept firmware node
+>       gpiolib: acpi: teach acpi_find_gpio() to handle data-only nodes
+>       gpiolib: acpi: avoid leaking ACPI details into upper gpiolib layers
+>       gpiolib: consolidate GPIO lookups
+>       gpiolib: add support for software nodes
+>
+>  drivers/gpio/Makefile         |   1 +
+>  drivers/gpio/gpiolib-acpi.c   | 132 +++++++++++++----------
+>  drivers/gpio/gpiolib-acpi.h   |  54 +---------
+>  drivers/gpio/gpiolib-of.c     |  52 +--------
+>  drivers/gpio/gpiolib-of.h     |  16 +--
+>  drivers/gpio/gpiolib-swnode.c | 106 +++++++++++++++++++
+>  drivers/gpio/gpiolib-swnode.h |  13 +++
+>  drivers/gpio/gpiolib.c        | 239 ++++++++++++++++++++----------------------
+>  8 files changed, 316 insertions(+), 297 deletions(-)
+> ---
+> base-commit: dc04f5ab1b1114aa19b9026f816fc01ca9c9941d
+> change-id: 20221031-gpiolib-swnode-948203f49b23
+>
+> --
+> Dmitry
+>
 
-This patch series add basic support using s/w control through
-sysfs to enable/disable output from GPT.
+This is great work. I'll wait for Andy to Ack the ACPI patches and
+let's get it in.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v2->v3:
- * Added sysfs documentation for output_disable
- * PWM_RZG2L_GPT implies ARCH_RZG2L. So removed ARCH_RZG2L dependency
- * Used dev_get_drvdata to get device data
- * Replaced sprintf->sysfs_emit in show().
-v1->v2:
- * Renamed the file poeg-rzg2l->rzg2l-poeg
- * Removed the macro POEGG as there is only single register and
-   updated rzg2l_poeg_write() and rzg2l_poeg_read()
- * Updated error handling in probe()
-Ref->v1:
- * Moved driver files from soc to pincontrol directory
- * Updated KConfig
----
- .../ABI/testing/sysfs-platform-rzg2l-poeg     |  18 ++
- drivers/pinctrl/renesas/Kconfig               |   2 +
- drivers/pinctrl/renesas/Makefile              |   2 +
- drivers/pinctrl/renesas/poeg/Kconfig          |  11 ++
- drivers/pinctrl/renesas/poeg/Makefile         |   2 +
- drivers/pinctrl/renesas/poeg/rzg2l-poeg.c     | 157 ++++++++++++++++++
- 6 files changed, 192 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-rzg2l-poeg
- create mode 100644 drivers/pinctrl/renesas/poeg/Kconfig
- create mode 100644 drivers/pinctrl/renesas/poeg/Makefile
- create mode 100644 drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-
-diff --git a/Documentation/ABI/testing/sysfs-platform-rzg2l-poeg b/Documentation/ABI/testing/sysfs-platform-rzg2l-poeg
-new file mode 100644
-index 000000000000..5ee68f9ff17e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-platform-rzg2l-poeg
-@@ -0,0 +1,18 @@
-+What:		/sys/devices/platform/<rzg2l-poeg's name>/output_disable
-+Date:		November 2022
-+KernelVersion:	6.2
-+Contact:	Biju Das <biju.das.jz@bp.renesas.com>
-+Description:
-+		This file can be read and write.
-+		The file used to control the output disable using
-+		register settings.
-+
-+		Write the following string to control the output disable:
-+
-+		- "1" - request output-disable from software.
-+		- "0" - request no output-disable from software.
-+
-+		Read the file, then it shows the following strings:
-+
-+		- "1" - Output-disable request from software occurred.
-+		- "0" - No output-disable request from software occurred.
-diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
-index 0903a0a41831..92bdc2e1e125 100644
---- a/drivers/pinctrl/renesas/Kconfig
-+++ b/drivers/pinctrl/renesas/Kconfig
-@@ -308,4 +308,6 @@ config PINCTRL_PFC_SHX3
- 	bool "pin control support for SH-X3" if COMPILE_TEST
- 	select PINCTRL_SH_FUNC_GPIO
- 
-+source "drivers/pinctrl/renesas/poeg/Kconfig"
-+
- endmenu
-diff --git a/drivers/pinctrl/renesas/Makefile b/drivers/pinctrl/renesas/Makefile
-index 558b30ce0dec..de1bb592fbf3 100644
---- a/drivers/pinctrl/renesas/Makefile
-+++ b/drivers/pinctrl/renesas/Makefile
-@@ -52,6 +52,8 @@ obj-$(CONFIG_PINCTRL_RZG2L)	+= pinctrl-rzg2l.o
- obj-$(CONFIG_PINCTRL_RZN1)	+= pinctrl-rzn1.o
- obj-$(CONFIG_PINCTRL_RZV2M)	+= pinctrl-rzv2m.o
- 
-+obj-$(CONFIG_POEG_RZG2L)	+= poeg/
-+
- ifeq ($(CONFIG_COMPILE_TEST),y)
- CFLAGS_pfc-sh7203.o	+= -I$(srctree)/arch/sh/include/cpu-sh2a
- CFLAGS_pfc-sh7264.o	+= -I$(srctree)/arch/sh/include/cpu-sh2a
-diff --git a/drivers/pinctrl/renesas/poeg/Kconfig b/drivers/pinctrl/renesas/poeg/Kconfig
-new file mode 100644
-index 000000000000..306e8ae81cb2
---- /dev/null
-+++ b/drivers/pinctrl/renesas/poeg/Kconfig
-@@ -0,0 +1,11 @@
-+# SPDX-License-Identifier: GPL-2.0
-+config POEG_RZG2L
-+	tristate "Renesas RZ/G2L poeg support"
-+	depends on PWM_RZG2L_GPT || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  This driver exposes the Port Output Enable for GPT(POEG) found
-+	  in Renesas RZ/G2L alike SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called rzg2l-poeg.
-diff --git a/drivers/pinctrl/renesas/poeg/Makefile b/drivers/pinctrl/renesas/poeg/Makefile
-new file mode 100644
-index 000000000000..610bdd6182be
---- /dev/null
-+++ b/drivers/pinctrl/renesas/poeg/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_POEG_RZG2L)	+= rzg2l-poeg.o
-diff --git a/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c b/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-new file mode 100644
-index 000000000000..3788191bc2f1
---- /dev/null
-+++ b/drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
-@@ -0,0 +1,157 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Renesas RZ/G2L Port Output Enable for GPT (POEG) driver
-+ *
-+ * Copyright (C) 2022 Renesas Electronics Corporation
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/reset.h>
-+
-+#define POEGG_SSF	BIT(3)
-+
-+struct rzg2l_poeg_chip {
-+	struct reset_control *rstc;
-+	void __iomem *mmio;
-+};
-+
-+static void rzg2l_poeg_write(struct rzg2l_poeg_chip *chip, u32 data)
-+{
-+	iowrite32(data, chip->mmio);
-+}
-+
-+static u32 rzg2l_poeg_read(struct rzg2l_poeg_chip *chip)
-+{
-+	return ioread32(chip->mmio);
-+}
-+
-+static ssize_t output_disable_store(struct device *dev,
-+				    struct device_attribute *attr,
-+				    const char *buf, size_t count)
-+{
-+	struct rzg2l_poeg_chip *chip;
-+	unsigned int val;
-+	u32 reg_val;
-+	int ret;
-+
-+	chip = dev_get_drvdata(dev);
-+	ret = kstrtouint(buf, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	reg_val = rzg2l_poeg_read(chip);
-+	if (val)
-+		reg_val |= POEGG_SSF;
-+	else
-+		reg_val &= ~POEGG_SSF;
-+
-+	rzg2l_poeg_write(chip, reg_val);
-+
-+	return count;
-+}
-+
-+static ssize_t output_disable_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct rzg2l_poeg_chip *chip;
-+	u32 reg;
-+
-+	chip = dev_get_drvdata(dev);
-+	reg = rzg2l_poeg_read(chip);
-+
-+	return sysfs_emit(buf, "%u\n", (reg & POEGG_SSF) ? 1 : 0);
-+}
-+
-+static DEVICE_ATTR_RW(output_disable);
-+
-+static struct attribute *poeg_attrs[] = {
-+	&dev_attr_output_disable.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group poeg_groups = {
-+	.attrs = poeg_attrs,
-+};
-+
-+static const struct of_device_id rzg2l_poeg_of_table[] = {
-+	{ .compatible = "renesas,rzg2l-poeg", },
-+	{ /* Sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rzg2l_poeg_of_table);
-+
-+static int rzg2l_poeg_probe(struct platform_device *pdev)
-+{
-+	struct rzg2l_poeg_chip *chip;
-+	int ret;
-+
-+	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->mmio = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(chip->mmio))
-+		return PTR_ERR(chip->mmio);
-+
-+	chip->rstc = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-+	if (IS_ERR(chip->rstc))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(chip->rstc),
-+				     "get reset failed\n");
-+
-+	ret = reset_control_deassert(chip->rstc);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, chip);
-+	pm_runtime_enable(&pdev->dev);
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "pm_runtime_resume_and_get failed: %d\n", ret);
-+		goto err_pm_disable;
-+	}
-+
-+	ret = sysfs_create_group(&pdev->dev.kobj, &poeg_groups);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to create sysfs: %d\n", ret);
-+		goto err_pm;
-+	}
-+
-+	return 0;
-+
-+err_pm:
-+	pm_runtime_put(&pdev->dev);
-+err_pm_disable:
-+	pm_runtime_disable(&pdev->dev);
-+	reset_control_assert(chip->rstc);
-+
-+	return ret;
-+}
-+
-+static int rzg2l_poeg_remove(struct platform_device *pdev)
-+{
-+	struct rzg2l_poeg_chip *chip = platform_get_drvdata(pdev);
-+
-+	sysfs_remove_group(&pdev->dev.kobj, &poeg_groups);
-+	pm_runtime_put(&pdev->dev);
-+	pm_runtime_disable(&pdev->dev);
-+	reset_control_assert(chip->rstc);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rzg2l_poeg_driver = {
-+	.driver = {
-+		.name = "rzg2l-poeg",
-+		.of_match_table = of_match_ptr(rzg2l_poeg_of_table),
-+	},
-+	.probe = rzg2l_poeg_probe,
-+	.remove = rzg2l_poeg_remove,
-+};
-+module_platform_driver(rzg2l_poeg_driver);
-+
-+MODULE_AUTHOR("Biju Das <biju.das.jz@bp.renesas.com>");
-+MODULE_DESCRIPTION("Renesas RZ/G2L POEG Driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+Bartosz
