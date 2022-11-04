@@ -2,105 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 395296189A2
-	for <lists+linux-gpio@lfdr.de>; Thu,  3 Nov 2022 21:36:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 126F4619089
+	for <lists+linux-gpio@lfdr.de>; Fri,  4 Nov 2022 06:56:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbiKCUgf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 3 Nov 2022 16:36:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43792 "EHLO
+        id S231361AbiKDF4R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 01:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiKCUge (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 3 Nov 2022 16:36:34 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F8410AF;
-        Thu,  3 Nov 2022 13:36:33 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id k22so2714006pfd.3;
-        Thu, 03 Nov 2022 13:36:33 -0700 (PDT)
+        with ESMTP id S231535AbiKDFzw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 01:55:52 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BFA12AE34
+        for <linux-gpio@vger.kernel.org>; Thu,  3 Nov 2022 22:52:40 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id g129so3541108pgc.7
+        for <linux-gpio@vger.kernel.org>; Thu, 03 Nov 2022 22:52:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sLrzIidolT+xc06DFOsj1BiO5uh6NNhCUl/p3YFUbo4=;
-        b=U5iLI+ckjIK5W52v1WEwrJSTnXXfEETUGsJPv9Z6eg0BvkR0sQN4vTymyeRFlwPFV4
-         tIIPVMNm1bG3P+uLNzOUYxs7w2smYMyRasM2NsKQSSuFhdwEg/oV9rFLcEtojNDtEGFx
-         ZlWkdXb3EG+jxIPkyB7PTFhbC+VjEZK7e6zBLDdVfHvOyaEkBHgOx+pxb9nG/rrGv3Jq
-         L4FmO3SfiwJI6KFxFZZdOANH045OFabcyJV4sLQh6LnutNK/z+qTkx77D6otwDpBnbU/
-         x0QpqOdE5gvqpsZAk8CbhzNiBwpQTt2E6Z0Y1XkxI6e1Ekoyx6+XOq0jx8/Hi7RAe7ov
-         TdtA==
+        bh=iu33dAA/yW36a1VSAl7oiwACcXYBlWFObMg5Mf2LO6w=;
+        b=plODNXahQL3vbjn4BU7nQifw0ltJ7DzkT0YkHqtO0WihLrtO9MZcUzOvXBTUzZG85t
+         swCJYIkJgSHix1CcOePXxzemc6mQzAjhu+GEIEDdq813qrA65J9iediPlMWAvhkUJLVd
+         BoUqlNHXOAe15DHEpK+7xtcU9Mpt/rPHiBuuE2cbyq1aal/M3vQHOgLwGBcYDeaPuPsF
+         L6sSeHJi3KXg4lkoa+eAZKUwr0Na7Andgvr7RleLFRuLNKGQUj0xn8/1Vvkv1qNw1tKq
+         Hoe1nj4tWJHAFB073VBeqYCCWDs5Jhb4D+WSLAksdb9JBDClI0FN0FeaScqv5j3YiqTP
+         AwkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sLrzIidolT+xc06DFOsj1BiO5uh6NNhCUl/p3YFUbo4=;
-        b=JnpZHrEMkzbM/stZ2ylxKqCQpGFJFcOoeQbSi241zCchcNBGYZNaFtiTRzZ95kotF3
-         4Dd92ybFdVm5AjuLH+epYJFtA3qErR3VlhQyvQR+ACeN3i3XXOkAE/qPqdTMdUw6qAwI
-         u3/DecrhUdj/IlX1nVHXpiX5Ksvv8syWoYOIi5LPpp9WUYbhffRPwZ3Yei778//B3RTH
-         bjeOErij4rCj/hFfa383HZe+sKeZ8s241oZ9aF/c3TGltBBR2w0lfJUYGObDN+hch0Hl
-         1XzOXNzRdbcIBYmK2HcsQrmyX+aa4SjaseZpZkq9ELTMtFONI96OxBnaBG0W4ZVJ1EZ1
-         MRxg==
-X-Gm-Message-State: ACrzQf1QqPsf9hGq/dC51No3IhfeJbKu1yjljPWmuA4eyAWV8PHDNPch
-        ZgEqJNynKsZNxTxwutJiTvw2aB5SQPQ=
-X-Google-Smtp-Source: AMsMyM6X79Jrq1zfdFszaXsV+kFll5k4/hf7+sME8OLFpys6osvRodYwwHJIKS1C7UCNkTUOaFFr5A==
-X-Received: by 2002:a05:6a00:4ac3:b0:56d:6e51:60eb with SMTP id ds3-20020a056a004ac300b0056d6e5160ebmr23459645pfb.58.1667507793061;
-        Thu, 03 Nov 2022 13:36:33 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id h16-20020aa796d0000000b0056cea9530b9sm1129489pfq.200.2022.11.03.13.36.31
+        bh=iu33dAA/yW36a1VSAl7oiwACcXYBlWFObMg5Mf2LO6w=;
+        b=1jYU55JlJwHu9ssS4z606gtRgrkOb/jM33ofk3uP7nn8mCjDeUPkAJ5Ak8LLZ9+g4w
+         3Jsf8DqrWyWmyBc4cSoC/jOesCSn+udVF9X6SZTiZDPs9G2lqAuupRbNhcNS+qlH8PxW
+         1TXi/2MpTsnFlE94OSwswN1MR1LUr7gpJKnuu1Kx1peB6FsxP/KNrEpl8jyl0oWTmo8o
+         kQg32B4hVYmz3eSS1gv1l2AUIjvUPcmoAL/In/r9K/S75R3UVTU3JWPOMRMnda5wIWrR
+         Pdl8RJMKyMOWSK8IY3pU8FwBdzQzvoUBqSB7OVvpkU9m+vsVTPRWYTPMHyKUXL/f30Yt
+         B6tg==
+X-Gm-Message-State: ACrzQf3qXjINmm4W8AS7dEmob6Dof2Ww9uhlhrXQb1L18Ue67RmwLy0T
+        zaxynXQx//2Lygg1YtARvKKXEA==
+X-Google-Smtp-Source: AMsMyM6+hKOHSJHr9RFtNAbcmWSqZC1agjcf84anQAQSnKcrnRdu7CAXmC5uSMyt7YCrRVErFPiRSw==
+X-Received: by 2002:a63:cf0d:0:b0:46e:96b9:2760 with SMTP id j13-20020a63cf0d000000b0046e96b92760mr29034590pgg.328.1667541133354;
+        Thu, 03 Nov 2022 22:52:13 -0700 (PDT)
+Received: from localhost ([122.172.84.80])
+        by smtp.gmail.com with ESMTPSA id iw15-20020a170903044f00b00186881e1feasm1676166plb.112.2022.11.03.22.52.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Nov 2022 13:36:32 -0700 (PDT)
-Date:   Thu, 3 Nov 2022 13:36:29 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: of: Make use of device_match_of_node()
-Message-ID: <Y2QmTSfA4qRUarxA@google.com>
-References: <20221103203005.25743-1-andriy.shevchenko@linux.intel.com>
+        Thu, 03 Nov 2022 22:52:12 -0700 (PDT)
+Date:   Fri, 4 Nov 2022 11:22:10 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod v2][PATCH V8 7/9] bindings: rust: Add tests for
+ libgpiod crate
+Message-ID: <20221104055210.nisy53pi2coaukf5@vireshk-i7>
+References: <cover.1667215380.git.viresh.kumar@linaro.org>
+ <0e1deffab733e0a8458d1626bc20cd496cbd5099.1667215380.git.viresh.kumar@linaro.org>
+ <Y2JtYTCqYM2sTuRC@sol>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221103203005.25743-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <Y2JtYTCqYM2sTuRC@sol>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FSL_HELO_FAKE,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 03, 2022 at 10:30:05PM +0200, Andy Shevchenko wrote:
-> Make use of device_match_of_node() instead of open coding its
-> functionality.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On 02-11-22, 21:15, Kent Gibson wrote:
+> Those drops are now redundant as the events are returned by ref after
+> patch 9.
+> I assume they are ignored in the build, as the tests build and run,
+> but clippy complains.
 
-Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-
-> ---
->  drivers/gpio/gpiolib-of.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 52616848a37c..4b91e19366a8 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -85,7 +85,7 @@ static int of_gpiochip_match_node_and_xlate(struct gpio_chip *chip, void *data)
->  {
->  	struct of_phandle_args *gpiospec = data;
->  
-> -	return chip->gpiodev->dev.of_node == gpiospec->np &&
-> +	return device_match_of_node(&chip->gpiodev->dev, gpiospec->np) &&
->  				chip->of_xlate &&
->  				chip->of_xlate(chip, gpiospec, NULL) >= 0;
->  }
-> -- 
-> 2.35.1
-> 
-
-Thanks.
+I have now added "--tests" option in my clippy's alias. I should have done it
+earlier, my bad.
 
 -- 
-Dmitry
+viresh
