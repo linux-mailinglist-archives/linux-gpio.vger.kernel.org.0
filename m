@@ -2,221 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2879C61A750
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 04:33:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACCA261A76A
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 04:56:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiKEDdn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 4 Nov 2022 23:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34906 "EHLO
+        id S229472AbiKED4K (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 4 Nov 2022 23:56:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbiKEDdn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 23:33:43 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED8D827DD1;
-        Fri,  4 Nov 2022 20:33:40 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id v28so6069606pfi.12;
-        Fri, 04 Nov 2022 20:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PqWuupQi575tTUpTn1o8/kCq7G4qDeLiygBhCrz4Zxo=;
-        b=aGdUJM/eIC4PP+6b+bBppMXXwPX3CNiuwwB6lgiPNuyvmrM88eneutVazgDvc2MLQ6
-         UJ4R0Wf47SGdcHq2b0/UA4d0wodUaZdfFZBAGej85/rMoU4MhjPEFB+3/wJZGPcFKlxm
-         xyjSsO9d8JDye6GUuUe2jduU1TVtZo9A+PyOJtV73YMr4d8EAJ9mD1yi1q94u8A1v6c/
-         sYJmUcWWFLssxQzvPQ8xoh1ULLvghWDEo7dLJO9mW53cox+STTdNM8t9ryEUtqowDMuP
-         dnBdvnq6ZwQlg+M0HrzyjyANMH+OWUoLl6Yf8pakpEOhFenzfv47ZZiQY5/6C8umg61P
-         fTew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PqWuupQi575tTUpTn1o8/kCq7G4qDeLiygBhCrz4Zxo=;
-        b=ankdGW0Sq/fCut1nEeKR8fp652qASZ1YjW0ILzcRt+33lc8CPF1kHLiVxHWNQYg9JZ
-         2M44wI3GheGLe3c2Nhy0pxpmFPTaykpDi7Y9lLNhu5r6uf5TDXKKnHfUYrM0GLSlCu9h
-         Qb/Yz2k3lTMimMJhI8sUeX3sIpLez5oos1HmCOqMeXkzCa1eY6x3oonn4pxlaQvXq8yT
-         JPwLj228Hc5L21elNjY8jUdnvRfZhtQjNXqrDv6+ziLzGKGKd7/J+T5jQD+Z2iYE6Dd2
-         z3prJXtXSX95VtWxIZy/giFa+IzLOtBgAOLXitaxWRqc9MB6HSSM5cmQLsUHrTZZy1XH
-         bBNA==
-X-Gm-Message-State: ACrzQf1ZTfZMVuJxjtopSbdaD2t175O7DyeEW+ogwY6rUR6Zu7Z5wnJc
-        bp9M1MXPNuw0nBGCzVPeoC8=
-X-Google-Smtp-Source: AMsMyM4x71iF83RahSkMtTuALh2Y0HRgGol+0+euNhayw25UqeojetlLdZqHO0MX/qp+ZVFHPLcIoQ==
-X-Received: by 2002:a63:5109:0:b0:470:22e0:d7a4 with SMTP id f9-20020a635109000000b0047022e0d7a4mr9087189pgb.71.1667619220342;
-        Fri, 04 Nov 2022 20:33:40 -0700 (PDT)
-Received: from debian.me (subs02-180-214-232-85.three.co.id. [180.214.232.85])
-        by smtp.gmail.com with ESMTPSA id w3-20020a628203000000b00562784609fbsm322628pfd.209.2022.11.04.20.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Nov 2022 20:33:39 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 4619D1009A7; Sat,  5 Nov 2022 10:33:36 +0700 (WIB)
-Date:   Sat, 5 Nov 2022 10:33:35 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Dipen Patel <dipenp@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org
-Subject: Re: [PATCH 5/7] hte: Re-phrase tegra API document
-Message-ID: <Y2XZj4j/NQH2igvJ@debian.me>
-References: <20221103174523.29592-1-dipenp@nvidia.com>
- <20221103174523.29592-6-dipenp@nvidia.com>
+        with ESMTP id S229469AbiKED4J (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 4 Nov 2022 23:56:09 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C15631DE8
+        for <linux-gpio@vger.kernel.org>; Fri,  4 Nov 2022 20:56:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667620568; x=1699156568;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jkZVwFZ6wDI6tnYACyTYkeWefC+r+o9mSS6wCS95T7M=;
+  b=JYi4BPUIC+eHEaAdsP2HYLjUa821HHN0tYtO1fJZpgFGWhORhocq7Y/P
+   auBjGJbfeZr6p1ckCgJ1FM3PXWaRYLlVNorqNNXgq0okjXk8mMIWqrB14
+   cwCO81C5ndf5hVonI5D8g/oC1VeG+QeIQ7T4SBYl0MW2CSs41wluzHPb9
+   rn/F0phGXSn01mU9yzSQ3zjVUT/4MvHuozJdI3Dfeoy71Qtv7B5lIE2E8
+   IqGplCwKU9AiR7xOmRuCoLodl7dRIX1vQjghZukfiwrBImr34wsl+BqFo
+   H0GYs3FbOggooVBWwL8J+i0LocbMQSTZH0w2FLM3evSU5aMZF8SO34OEx
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="308836347"
+X-IronPort-AV: E=Sophos;i="5.96,139,1665471600"; 
+   d="scan'208";a="308836347"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 20:56:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="586397533"
+X-IronPort-AV: E=Sophos;i="5.96,139,1665471600"; 
+   d="scan'208";a="586397533"
+Received: from lkp-server02.sh.intel.com (HELO b6d29c1a0365) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 04 Nov 2022 20:56:05 -0700
+Received: from kbuild by b6d29c1a0365 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1orAHt-000HcW-0e;
+        Sat, 05 Nov 2022 03:56:05 +0000
+Date:   Sat, 05 Nov 2022 11:55:39 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ b8b80348c57b360019071e17380298619c5d8066
+Message-ID: <6365debb.k7boT2D/4jg1JLC7%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uDKYV1gmcRUMwZrs"
-Content-Disposition: inline
-In-Reply-To: <20221103174523.29592-6-dipenp@nvidia.com>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: b8b80348c57b360019071e17380298619c5d8066  gpiolib: of: add polarity quirk for Freescale PCIe controller
 
---uDKYV1gmcRUMwZrs
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 722m
 
-On Thu, Nov 03, 2022 at 10:45:21AM -0700, Dipen Patel wrote:
->  Description
->  -----------
-> -The Nvidia tegra194 HTE provider driver implements two GTE
-> -(Generic Timestamping Engine) instances: 1) GPIO GTE and 2) LIC
-> -(Legacy Interrupt Controller) IRQ GTE. Both GTE instances get the
-> -timestamp from the system counter TSC which has 31.25MHz clock rate, and=
- the
-> -driver converts clock tick rate to nanoseconds before storing it as time=
-stamp
-> -value.
-> +The Nvidia tegra HTE provider also known as GTE (Generic Timestamping En=
-gine)
-> +driver implements two GTE instances: 1) GPIO GTE and 2) LIC
-> +(Legacy Interrupt Controller) IRQ GTE. Both GTE instances get the timest=
-amp
-> +from the system counter TSC which has 31.25MHz clock rate, and the driver
-> +converts clock tick rate to nanoseconds before storing it as timestamp v=
-alue.
-> =20
->  GPIO GTE
->  --------
-> =20
->  This GTE instance timestamps GPIO in real time. For that to happen GPIO
-> -needs to be configured as input. The always on (AON) GPIO controller ins=
-tance
-> -supports timestamping GPIOs in real time and it has 39 GPIO lines. The G=
-PIO GTE
-> -and AON GPIO controller are tightly coupled as it requires very specific=
- bits
-> -to be set in GPIO config register before GPIO GTE can be used, for that =
-GPIOLIB
-> -adds two optional APIs as below. The GPIO GTE code supports both kernel
-> -and userspace consumers. The kernel space consumers can directly talk to=
- HTE
-> -subsystem while userspace consumers timestamp requests go through GPIOLI=
-B CDEV
-> -framework to HTE subsystem.
-> +needs to be configured as input. Only the always on (AON) GPIO controller
-> +instance supports timestamping GPIOs in real time as it is tightly coupl=
-ed with
-> +the GPIO GTE. To support this, GPIOLIB adds two optional APIs as mention=
-ed
-> +below. The GPIO GTE code supports both kernel and userspace consumers. T=
-he
-> +kernel space consumers can directly talk to HTE subsystem while userspace
-> +consumers timestamp requests go through GPIOLIB CDEV framework to HTE
-> +subsystem. The hte devicetree binding described at
-> +``Documentation/devicetree/bindings/timestamp`` provides an example of h=
-ow a
-> +consumer can request an GPIO line.
-> =20
->  See gpiod_enable_hw_timestamp_ns() and gpiod_disable_hw_timestamp_ns().
-> =20
+configs tested: 70
+configs skipped: 3
 
-I think the wording can be better:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
----- >8 ----
+gcc tested configs:
+x86_64                               rhel-8.3
+x86_64                              defconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                           allyesconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+arc                                 defconfig
+s390                             allmodconfig
+powerpc                           allnoconfig
+alpha                               defconfig
+powerpc                          allmodconfig
+i386                          randconfig-a001
+x86_64                           rhel-8.3-syz
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+arc                  randconfig-r043-20221104
+sh                               allmodconfig
+x86_64                        randconfig-a015
+i386                          randconfig-a003
+riscv                randconfig-r042-20221104
+s390                                defconfig
+s390                 randconfig-r044-20221104
+mips                             allyesconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a005
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a006
+x86_64                        randconfig-a004
+x86_64                           rhel-8.3-kvm
+s390                             allyesconfig
+i386                                defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+arm                                 defconfig
+arc                              allyesconfig
+ia64                             allmodconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+i386                             allyesconfig
+powerpc                     taishan_defconfig
+powerpc                      ppc6xx_defconfig
+mips                     loongson1b_defconfig
+arm                           viper_defconfig
+i386                          randconfig-c001
+powerpc              randconfig-c003-20221104
 
-diff --git a/Documentation/driver-api/hte/tegra194-hte.rst b/Documentation/=
-driver-api/hte/tegra194-hte.rst
-index 85e654772782c1..13c45bfc03a75e 100644
---- a/Documentation/driver-api/hte/tegra194-hte.rst
-+++ b/Documentation/driver-api/hte/tegra194-hte.rst
-@@ -5,11 +5,11 @@ HTE Kernel provider driver
-=20
- Description
- -----------
--The Nvidia tegra HTE provider also known as GTE (Generic Timestamping Engi=
-ne)
--driver implements two GTE instances: 1) GPIO GTE and 2) LIC
--(Legacy Interrupt Controller) IRQ GTE. Both GTE instances get the timestamp
--from the system counter TSC which has 31.25MHz clock rate, and the driver
--converts clock tick rate to nanoseconds before storing it as timestamp val=
-ue.
-+The Nvidia tegra HTE provider, also known as GTE (Generic Timestamping Eng=
-ine)
-+driver implements two GTE instances: GPIO GTE and LIC (Legacy Interrupt
-+Controller) IRQ GTE. Both GTE instances get the timestamp from system coun=
-ter
-+TSC which has 31.25MHz clock rate, and the driver converts clock tick rate=
- to
-+nanoseconds before storing it as timestamp value.
-=20
- GPIO GTE
- --------
-@@ -19,17 +19,17 @@ needs to be configured as input. Only the always on (AO=
-N) GPIO controller
- instance supports timestamping GPIOs in real time as it is tightly coupled=
- with
- the GPIO GTE. To support this, GPIOLIB adds two optional APIs as mentioned
- below. The GPIO GTE code supports both kernel and userspace consumers. The
--kernel space consumers can directly talk to HTE subsystem while userspace
--consumers timestamp requests go through GPIOLIB CDEV framework to HTE
--subsystem. The hte devicetree binding described at
--``Documentation/devicetree/bindings/timestamp`` provides an example of how=
- a
--consumer can request an GPIO line.
-+kernel space consumers can directly talk to HTE subsystem while requests f=
-rom
-+userspace consumers go through GPIOLIB CDEV framework to HTE subsystem. Th=
-e hte
-+devicetree binding described at ``Documentation/devicetree/bindings/timest=
-amp``
-+provides an example of how a consumer can request an GPIO line.
-=20
--See gpiod_enable_hw_timestamp_ns() and gpiod_disable_hw_timestamp_ns().
-+To toggle hardware timestamp, use gpiod_enable_hw_timestamp_ns() and
-+gpiod_disable_hw_timestamp_ns().
-=20
- For userspace consumers, GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE flag must be
--specified during IOCTL calls. Refer to ``tools/gpio/gpio-event-mon.c``, wh=
-ich
--returns the timestamp in nanoseconds.
-+specified during IOCTL calls. Refer to ``tools/gpio/gpio-event-mon.c`` for
-+example.
-=20
- LIC (Legacy Interrupt Controller) IRQ GTE
- -----------------------------------------
+clang tested configs:
+i386                          randconfig-a013
+i386                          randconfig-a015
+i386                          randconfig-a011
+hexagon              randconfig-r041-20221104
+x86_64                        randconfig-a012
+hexagon              randconfig-r045-20221104
+x86_64                        randconfig-a014
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+i386                          randconfig-a006
+x86_64                        randconfig-a003
+i386                          randconfig-a004
+mips                        bcm63xx_defconfig
+powerpc                   bluestone_defconfig
+mips                        omega2p_defconfig
+powerpc                     akebono_defconfig
+powerpc                     mpc512x_defconfig
+x86_64                        randconfig-k001
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---uDKYV1gmcRUMwZrs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY2XZigAKCRD2uYlJVVFO
-o8AOAP4hUzaq+a/2yFymft+ISsBiFcMR0EF08Jm0EKm6pu04bQD/fWuDpsSvy1dM
-kq2KhhNX5LxzZ+zeUL5x+YiHkrC35Qg=
-=CiD3
------END PGP SIGNATURE-----
-
---uDKYV1gmcRUMwZrs--
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
