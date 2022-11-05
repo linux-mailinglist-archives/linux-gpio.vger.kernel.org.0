@@ -2,176 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06BB461D912
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 10:25:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E41661D9C3
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 12:54:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229540AbiKEJZQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Nov 2022 05:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54074 "EHLO
+        id S229469AbiKELyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Nov 2022 07:54:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKEJZP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 05:25:15 -0400
-Received: from mxout1.routing.net (mxout1.routing.net [IPv6:2a03:2900:1:a::a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE012D1D2;
-        Sat,  5 Nov 2022 02:25:14 -0700 (PDT)
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-        by mxout1.routing.net (Postfix) with ESMTP id 0559C3FF4C;
-        Sat,  5 Nov 2022 09:25:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-        s=20200217; t=1667640313;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uo/Ed4Y8qzNEfRX3DlUQeK2B620x/akI0gmr6lmZoIk=;
-        b=tJRiiCW4T8C535oIw7XEGzfdHkLOJEeBTBHNc+7v+rRh5FxfmBDPtnXVa7z59fwFQBURQZ
-        ep58WRxghVtLoG4LCiNVASVMlGQbGrd9Mpi/NL8k4HpJFg2EDWi/BSatEf/GY+WThn7TT8
-        qTMvIA3EGswSmHvvGkerktD/Ddf3dCA=
-Received: from frank-G5.. (fttx-pool-217.61.159.50.bambit.de [217.61.159.50])
-        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id EEEBC1003E5;
-        Sat,  5 Nov 2022 09:25:11 +0000 (UTC)
-From:   Frank Wunderlich <linux@fw-web.de>
-To:     linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Sam Shih <sam.shih@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: pinctrl: update uart/mmc bindings for MT7986 SoC
-Date:   Sat,  5 Nov 2022 10:25:00 +0100
-Message-Id: <20221105092500.12145-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229461AbiKELyA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 07:54:00 -0400
+X-Greylist: delayed 1819 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 05 Nov 2022 04:53:59 PDT
+Received: from pott.psjt.org (pott.psjt.org [46.38.234.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353DF2AE13
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Nov 2022 04:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=psjt.org;
+        s=psjt01; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
+        Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=mpDcZc01pZViMYSVMkHvzduLdn1V2GWusqkCdYjkBbo=; b=Af5bUYSRjl9dUlJ77/pupcerL2
+        z0NkB3MMpjy5+JViE9sZKMROmaLna2i1uuNtNMnsZJ1yaok2CCgrHBOgWwxAajKPsjYuZp1yBnYUq
+        Ww93pt9ssenpingMlhQUjiFAFNpDlCQVGFKpSU1yaDv75Fx/QajFQIz0IPI5jo2N8fhGs3KLkitk9
+        mdG9B1e+j9p4TV/hmRCXnPwbjY/VYWkmPCs1KHHX0//qk6kEHJvdUKcunEN2/Yu4v69g2662iapdx
+        R7Q9hzKdN48bUUAXNbZNSMgDQxwf0EU9Uk70fVyMNG0ymLpGPUZMgmQKezXSNllNoabQaVmendtJg
+        TI2gdvgg==;
+Received: from [10.1.1.3] (helo=malachite.psjt.org)
+        by pott.psjt.org with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.96)
+        (envelope-from <stephan@psjt.org>)
+        id 1orHGz-0004jD-2t
+        for linux-gpio@vger.kernel.org;
+        Sat, 05 Nov 2022 12:23:37 +0100
+Received: from blaulicht.dmz.brux ([10.1.1.10])
+        by malachite.psjt.org with esmtp (Exim 4.96)
+        (envelope-from <stephan@psjt.org>)
+        id 1orHGz-0005LQ-1l;
+        Sat, 05 Nov 2022 12:23:37 +0100
+Received: from stephan by blaulicht.dmz.brux with local (Exim 4.96)
+        (envelope-from <stephan@psjt.org>)
+        id 1orHGz-0001SM-1h;
+        Sat, 05 Nov 2022 12:23:37 +0100
+From:   =?utf-8?Q?Stephan_B=C3=B6ttcher?= <linux@psjt.org>
+To:     linux-gpio@vger.kernel.org
+Subject: Question: switching alternate pin functions in bcm2835
+Date:   Sat, 05 Nov 2022 12:23:37 +0100
+Message-ID: <s6n8rkpably.fsf@psjt.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.1.91 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 19b8833f-3e9d-48d4-bf07-755f1bc822c7
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Frank Wunderlich <frank-w@public-files.de>
 
-Some pinmux pins of the mt7986 pinctrl driver is composed of multiple
-pinctrl groups, the original binding only allows one pinctrl group
-per dts node, this patch sets "maxItems" for these groups and add new
-examples to the binding documentation.
+Moin,
 
-Fixes: 65916a1ca90a ("dt-bindings: pinctrl: update bindings for MT7986 SoC")
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
-sorry, messed up email-list, so resend it
+is it appropriate to ask user questions here?=20
 
-v3:
-- squashed version from sam
-- v2 was ack'd by Krzysztof, but sams patch included updated emmc-names
-  and different structure for uart to allow 2 pingroups
-v2:
-- wrap on col 80
----
- .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 46 +++++++++++++++++--
- 1 file changed, 41 insertions(+), 5 deletions(-)
+On a Raspberry Pi 2B, I connected the UART pins among others to an
+ATtiny =C2=B5C to use avrdude in linuxgpio bit-banging mode to flash the
+program, and then use the same pins to talk to the ATtiny via
+/dev/ttyAMA0.  After a reboot I can use the serial port.  After using
+gpio on those pins, the serial link does not receive anything.  There
+are not errors opening, writing, or reading /dev/ttyAMA0.  Just no
+answer.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-index 75766956cfad..b2b9c01efd70 100644
---- a/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
-@@ -87,6 +87,8 @@ patternProperties:
-           "wifi_led"        "led"       1, 2
-           "i2c"             "i2c"       3, 4
-           "uart1_0"         "uart"      7, 8, 9, 10
-+          "uart1_rx_tx"     "uart"      42, 43
-+          "uart1_cts_rts"   "uart"      44, 45
-           "pcie_clk"        "pcie"      9
-           "pcie_wake"       "pcie"      10
-           "spi1_0"          "spi"       11, 12, 13, 14
-@@ -98,9 +100,11 @@ patternProperties:
-           "emmc_45"         "emmc"      22, 23, 24, 25, 26, 27, 28, 29, 30,
-                                         31, 32
-           "spi1_1"          "spi"       23, 24, 25, 26
--          "uart1_2"         "uart"      29, 30, 31, 32
-+          "uart1_2_rx_tx"   "uart"      29, 30
-+          "uart1_2_cts_rts" "uart"      31, 32
-           "uart1_1"         "uart"      23, 24, 25, 26
--          "uart2_0"         "uart"      29, 30, 31, 32
-+          "uart2_0_rx_tx"   "uart"      29, 30
-+          "uart2_0_cts_rts" "uart"      31, 32
-           "spi0"            "spi"       33, 34, 35, 36
-           "spi0_wp_hold"    "spi"       37, 38
-           "uart1_3_rx_tx"   "uart"      35, 36
-@@ -157,7 +161,7 @@ patternProperties:
-             then:
-               properties:
-                 groups:
--                  enum: [emmc, emmc_rst]
-+                  enum: [emmc_45, emmc_51]
-           - if:
-               properties:
-                 function:
-@@ -227,8 +231,12 @@ patternProperties:
-             then:
-               properties:
-                 groups:
--                  enum: [uart1_0, uart1_1, uart1_2, uart1_3_rx_tx,
--                         uart1_3_cts_rts, uart2_0, uart2_1, uart0, uart1, uart2]
-+                  items:
-+                    enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
-+                           uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
-+                           uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
-+                           uart2_1, uart0, uart1, uart2]
-+                  maxItems: 2
-           - if:
-               properties:
-                 function:
-@@ -362,6 +370,27 @@ examples:
-         interrupt-parent = <&gic>;
-         #interrupt-cells = <2>;
- 
-+        pcie_pins: pcie-pins {
-+          mux {
-+            function = "pcie";
-+            groups = "pcie_clk", "pcie_wake", "pcie_pereset";
-+          };
-+        };
-+
-+        pwm_pins: pwm-pins {
-+          mux {
-+            function = "pwm";
-+            groups = "pwm0", "pwm1_0";
-+          };
-+        };
-+
-+        spi0_pins: spi0-pins {
-+          mux {
-+            function = "spi";
-+            groups = "spi0", "spi0_wp_hold";
-+          };
-+        };
-+
-         uart1_pins: uart1-pins {
-           mux {
-             function = "uart";
-@@ -369,6 +398,13 @@ examples:
-           };
-         };
- 
-+        uart1_3_pins: uart1-3-pins {
-+          mux {
-+            function = "uart";
-+            groups = "uart1_3_rx_tx", "uart1_3_cts_rts";
-+          };
-+        };
-+
-         uart2_pins: uart2-pins {
-           mux {
-             function = "uart";
--- 
-2.34.1
+Is there a way (sysfs, ioclt, =E2=80=A6) to reconnect the pins to the UART
+without a reboot?
 
+Thanks!
+
+Gru=C3=9F,
+--=20
+Stephan
