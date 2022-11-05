@@ -2,83 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E41661D9C3
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 12:54:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24B7F61DA64
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 13:40:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbiKELyB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Nov 2022 07:54:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
+        id S229917AbiKEMkR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Nov 2022 08:40:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiKELyA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 07:54:00 -0400
-X-Greylist: delayed 1819 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 05 Nov 2022 04:53:59 PDT
-Received: from pott.psjt.org (pott.psjt.org [46.38.234.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353DF2AE13
-        for <linux-gpio@vger.kernel.org>; Sat,  5 Nov 2022 04:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=psjt.org;
-        s=psjt01; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:
-        Date:Subject:To:From:Sender:Reply-To:Cc:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=mpDcZc01pZViMYSVMkHvzduLdn1V2GWusqkCdYjkBbo=; b=Af5bUYSRjl9dUlJ77/pupcerL2
-        z0NkB3MMpjy5+JViE9sZKMROmaLna2i1uuNtNMnsZJ1yaok2CCgrHBOgWwxAajKPsjYuZp1yBnYUq
-        Ww93pt9ssenpingMlhQUjiFAFNpDlCQVGFKpSU1yaDv75Fx/QajFQIz0IPI5jo2N8fhGs3KLkitk9
-        mdG9B1e+j9p4TV/hmRCXnPwbjY/VYWkmPCs1KHHX0//qk6kEHJvdUKcunEN2/Yu4v69g2662iapdx
-        R7Q9hzKdN48bUUAXNbZNSMgDQxwf0EU9Uk70fVyMNG0ymLpGPUZMgmQKezXSNllNoabQaVmendtJg
-        TI2gdvgg==;
-Received: from [10.1.1.3] (helo=malachite.psjt.org)
-        by pott.psjt.org with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.96)
-        (envelope-from <stephan@psjt.org>)
-        id 1orHGz-0004jD-2t
-        for linux-gpio@vger.kernel.org;
-        Sat, 05 Nov 2022 12:23:37 +0100
-Received: from blaulicht.dmz.brux ([10.1.1.10])
-        by malachite.psjt.org with esmtp (Exim 4.96)
-        (envelope-from <stephan@psjt.org>)
-        id 1orHGz-0005LQ-1l;
-        Sat, 05 Nov 2022 12:23:37 +0100
-Received: from stephan by blaulicht.dmz.brux with local (Exim 4.96)
-        (envelope-from <stephan@psjt.org>)
-        id 1orHGz-0001SM-1h;
-        Sat, 05 Nov 2022 12:23:37 +0100
-From:   =?utf-8?Q?Stephan_B=C3=B6ttcher?= <linux@psjt.org>
-To:     linux-gpio@vger.kernel.org
-Subject: Question: switching alternate pin functions in bcm2835
-Date:   Sat, 05 Nov 2022 12:23:37 +0100
-Message-ID: <s6n8rkpably.fsf@psjt.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.1.91 (gnu/linux)
+        with ESMTP id S229923AbiKEMkA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 08:40:00 -0400
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8D817A83
+        for <linux-gpio@vger.kernel.org>; Sat,  5 Nov 2022 05:39:59 -0700 (PDT)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-13c569e5ff5so8226917fac.6
+        for <linux-gpio@vger.kernel.org>; Sat, 05 Nov 2022 05:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=mu8m7znM9duu/MEuox3wxE9uI+enJzfHDrHCiCJ0dxXEnbtqlugP30RV4pUA4LaD8D
+         DTqzL6R3iJdygnN0tebcl2jKMC1xnk2qmH9yHj5ZpYJsig0zgAkFbQEJMtQOsyMS9E9+
+         9mZsd+BXbCYizoNZILloIeJgVKBYQDDlfcxWmhtehgP0gShVz6QbysTuA73O0zNW89oN
+         M95vp9qd39mlLDduLYXTQkqHXtcuCB6sr4c0ysKpoCTw5s/vT8zmw06SHC/DLusZ9o66
+         sNkDbmLIhAcJBtA+VmbRSjB+l+4rXBDt3pKOG75zF9L+vjSBjo5n2zZjo+rRsufLH5jZ
+         6xmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=c8XA1N0uaxkLO/wKHErNWHaSuu64k5Pjb5u9dmcZrOc=;
+        b=VRGIMbBCpUBW49piqYEh5vWLth8ddeSSSzvvp6E45dx/klk3GmKYVRI8wUKxXQX38X
+         IN2KF5g9GEcB/cv9jRrhH3Fv04cQaOXOnHfN/iVvBNIxCbklpUxFUzbJVNliZ/pxq7Us
+         5rTZFj9fREFAVU++hCbu4oYPImLzs+WNeJaxGwqcYIuOqglEi3oa3DslEP16JXmIJHfh
+         wovxn3kcyCwqDymPlXlDrVEGU700bSeICPGPf/0rOOWeLzLQs1/56h8Hxv55gayeMzpw
+         p4xrf6kzpVvEdWZgX7kBcOH33hMRj4BdSubeOWcDMqBaTAHviCvBoYzQRhnHAO4RINF0
+         bUqQ==
+X-Gm-Message-State: ACrzQf3LhB25KiBrkN7Q2NWSWMN4uLiKwjVayPtpXnoI0QHuitYzMdf8
+        mp6IBbHzgXkpvQuf+UuBhwWjQtFfNFxb7FO6D5PJsxv+FnQ=
+X-Google-Smtp-Source: AMsMyM5GFe2gsiMaHXHXvp99K7JeNN2UuK6dELDyLpsoJjIUkQcn4q3aD74FbKEapmwctM2YF8x1D4LMLHeg4fM3LVk=
+X-Received: by 2002:a17:90b:4ac3:b0:213:3918:f276 with SMTP id
+ mh3-20020a17090b4ac300b002133918f276mr57022678pjb.19.1667651987563; Sat, 05
+ Nov 2022 05:39:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Received: by 2002:a05:7301:2e91:b0:83:922d:c616 with HTTP; Sat, 5 Nov 2022
+ 05:39:47 -0700 (PDT)
+Reply-To: stefanopessia755@hotmail.com
+From:   Stefano Pessina <wamathaibenard@gmail.com>
+Date:   Sat, 5 Nov 2022 15:39:47 +0300
+Message-ID: <CAN7bvZKO8GxFn7CG_EtS_Of+AZ+KsuqTkq40Mq-yJDNrEHyakg@mail.gmail.com>
+Subject: Geldspende
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-Moin,
-
-is it appropriate to ask user questions here?=20
-
-On a Raspberry Pi 2B, I connected the UART pins among others to an
-ATtiny =C2=B5C to use avrdude in linuxgpio bit-banging mode to flash the
-program, and then use the same pins to talk to the ATtiny via
-/dev/ttyAMA0.  After a reboot I can use the serial port.  After using
-gpio on those pins, the serial link does not receive anything.  There
-are not errors opening, writing, or reading /dev/ttyAMA0.  Just no
-answer.
-
-Is there a way (sysfs, ioclt, =E2=80=A6) to reconnect the pins to the UART
-without a reboot?
-
-Thanks!
-
-Gru=C3=9F,
 --=20
-Stephan
+Die Summe von 500.000,00 =E2=82=AC wurde Ihnen von STEFANO PESSINA gespende=
+t.
+Bitte kontaktieren Sie uns f=C3=BCr weitere Informationen =C3=BCber
+stefanopessia755@hotmail.com
