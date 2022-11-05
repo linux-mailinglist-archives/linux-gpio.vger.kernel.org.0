@@ -2,110 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B9EB61DB37
-	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 15:52:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B49AB61DB86
+	for <lists+linux-gpio@lfdr.de>; Sat,  5 Nov 2022 16:06:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229581AbiKEOwT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 5 Nov 2022 10:52:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47464 "EHLO
+        id S229894AbiKEPG1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 5 Nov 2022 11:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKEOwS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 10:52:18 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A60FAF8;
-        Sat,  5 Nov 2022 07:52:16 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-13bef14ea06so8454995fac.3;
-        Sat, 05 Nov 2022 07:52:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=PcwwgX98pioZqmpF7IpPJDYkENxYcijXYjHPqyIhZNk=;
-        b=nr64UzSq6N9gHeBgs0HzkwVtYzRdu53HgbULVNodQ7xJkKeS+yS/KlzNAxZSpEcavl
-         1oL26fkfI0ySRiJPs7tJAHcxfeQxoW7dwIsL55ijDwZsTTd1I0ekqDXfC+n+S3gFl/F1
-         HOKn7SHouALr72EVLKeMj7Eyuoim9P1ua96TGeN7JUyN2EZvZR9Qe1EvOvC6INpHLgYI
-         WJM6Gmc6Fhlw7LvRIpx2m4yugSKXJ8yuiywektZs2ScGM6QVWKZvauEY64atEhgUOP7n
-         lftmTr8VVI4kDNf7tWso1//vMx6VkT6lJhwrXn9yVWOa0W+oUt5QwBDckVtFBtPxWTbl
-         aIpQ==
-X-Gm-Message-State: ANoB5pk6kDDtZaNuYc6pjihbVb0wMlJ2PxC8YNaiZbXVUdHBRYuBLSeO
-        M0rXJ3MHQ+WOHi6yG5NUEg==
-X-Google-Smtp-Source: AMsMyM4kYNdfuRTk0occtw+rgiRZ+CP73DXZYUn56GnB9f+gvwg8Zo+icy0yvtW6pg+iyM+ep7Dv3Q==
-X-Received: by 2002:a05:6870:82a4:b0:140:78f6:c954 with SMTP id q36-20020a05687082a400b0014078f6c954mr4581995oae.16.1667659935742;
-        Sat, 05 Nov 2022 07:52:15 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id d9-20020a4a3c09000000b0049bd96ec131sm677216ooa.8.2022.11.05.07.52.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 05 Nov 2022 07:52:14 -0700 (PDT)
-Received: (nullmailer pid 27957 invoked by uid 1000);
-        Sat, 05 Nov 2022 14:52:16 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S229962AbiKEPGL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 5 Nov 2022 11:06:11 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791692CC9C;
+        Sat,  5 Nov 2022 08:04:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
+        s=s31663417; t=1667660667;
+        bh=9HRqnYYikNNPoD5ufxUfY6iw/kgmW0wRUIiv/To2cDw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=pEdIySWYG/wUQainNcS2k3z5zM++LsIUvl5hkt4NpHiScpg9yGT0Tqgp100kaNMqs
+         68Y9WQ6/6dx4iBAY0eIsV//aYuAFR+WLDdozM7UVZtVCYUPGd42sNQjCnenzWUuzGs
+         I4bzU2AHjp1ltYD9AtQzD1n5B+PuHVSWUZxJPEgjlvtcRfMD2oPm1tlu5U15ftwVMB
+         ZNecmkSGPbzrgWrVSSt+QxV2G3fZgzrOwrx85ASGxWCABdRcUJ+UxksOryimFgkcuv
+         122uHSMYPI8UrVs8Y2w2r5aNlnj62tQ+BkbmIbpPh1D3Sp57OD9qn4U4McE2dKgmYh
+         d0gI5IccBFnzQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [217.61.159.50] ([217.61.159.50]) by web-mail.gmx.net
+ (3c-app-gmx-bap26.server.lan [172.19.172.96]) (via HTTP); Sat, 5 Nov 2022
+ 16:04:27 +0100
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Frank Wunderlich <linux@fw-web.de>
-Cc:     Sam Shih <sam.shih@mediatek.com>,
+Message-ID: <trinity-93c64b9b-8363-406b-aa0b-07e6802ec84b-1667660667233@3c-app-gmx-bap26>
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Frank Wunderlich <linux@fw-web.de>,
+        Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Frank Wunderlich <frank-w@public-files.de>,
+        Sam Shih <sam.shih@mediatek.com>, devicetree@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
         Sean Wang <sean.wang@kernel.org>
-In-Reply-To: <20221105084905.9596-2-linux@fw-web.de>
-References: <20221105084905.9596-1-linux@fw-web.de>
- <20221105084905.9596-2-linux@fw-web.de>
-Message-Id: <166765939131.4158830.8416727494529058690.robh@kernel.org>
-Subject: Re: [PATCH v1 1/4] dt-bindings: pinctrl: mt7986: add generic
- bias-pull* support
-Date:   Sat, 05 Nov 2022 09:52:16 -0500
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Subject: Aw: Re: [PATCH v3] dt-bindings: pinctrl: update uart/mmc bindings
+ for MT7986 SoC
+Content-Type: text/plain; charset=UTF-8
+Date:   Sat, 5 Nov 2022 16:04:27 +0100
+Importance: normal
+Sensitivity: Normal
+In-Reply-To: <166765939212.4158869.5881767839110614067.robh@kernel.org>
+References: <20221105092500.12145-1-linux@fw-web.de>
+ <166765939212.4158869.5881767839110614067.robh@kernel.org>
+X-UI-Message-Type: mail
+X-Priority: 3
+X-Provags-ID: V03:K1:9i6nkkBvk3T5O3ufr7r4jiF+bmV1GKMrD01K5YQwqSEMvYaep/nf7+b+ZBktNGIFNaSWT
+ k4rUG7O3gBAshWE1PcW0hdTJ7LRDYBKZDZaz5wOt4UjmCkNbnvtz8EkzGXxzCCAOBkzesai2NKAu
+ kNwp5DEvI5JvXLsFZH2gMf6n6ZOA1vjRqAxv87RvdxDDBQQGj/man4mEqksVg3YiJle8dlen6A95
+ NxBNsn4c3stFzaaZboDEJgNXZVZD3zkqyG0g/XIkzyrNvGJQB2/8rMtCrxZlcy1BfsvAszn6fYdS
+ aI=
+UI-OutboundReport: notjunk:1;M01:P0:3XgvP+Ek2cQ=;urkMPgTvJPxr4uarHrkP6J2gErj
+ YjTDX6vZGD3PnvOBHnh1i7g21qceKgOr87hkr4xw8nv66qdF7x3O81XCNP/ov1KyBHDNHYVgs
+ rCGX/iSGWEfZy/+1tIXLtIfOrlodzD6odIqaXO2n0uLaqrJ0VTn5IEsvVkFmt14D43JQVzDmz
+ 7KEmiB8gIW4P+Icj2GXZJCRHVp6p1DwjHZfnAS9mk2qjEYmI7YsWxnyDiPgt0/gjFYJlVayeZ
+ QZOey+xl4kb98Wm+YHZ03wnBxWMxrbLK7XG8r7iNWUmhQL2y5buj0Hezp7BthKUaXK2AX53z2
+ XiEQgE7Emp1fPhpRmMs1gnVSr7DKy+Wq/EaMu6A59ylSi0S9Aitj0jaFjT+hvnk/j04+c6XRY
+ 0+Enkk79ppwW3DsP/Wk/1fbAzRep2XB7B24wb54LwzwvPvMzH/dydigXEi1gLE8UVD7V3Z336
+ k6ANT+s0hMBfmd5xa2CTPOYRl1cxYGT9Q5f9d8fg8iXzi56HdEJ4vQw86ImL9wPx6WrvweEL3
+ i+Lg0gGR5VSxVNpmwc1TsSXfNV/SgoQgLeN++vM3VzppJWM9MR0pM8fBGXTpm+jIyEVY1/TjP
+ TZKqQ1EqOTthP3me5UXPUB0aTJy7aA5mJnvFTZ9hQWcsRQ5ptc6JOT/RKueh5tm8bRFe8q9ZZ
+ juCDjMRm3yl2VIdAdGDz04aPYqWjdyKsoH0JpZkFe6Qns0+iHlJfjNzE3mWnXuNq/7VkZ9MfL
+ y785P36gtS+UFgj/BZVnoJl6PeqIPN289mmwFdC17LaLipTD4XjrgUHawvYXktxWZuTeSSGPi
+ R9TWw0xuc8+oiYWsq9CueiT5vX4mlbDRYiSpmiIIM1fE4=
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi
+> Gesendet: Samstag, 05. November 2022 um 15:52 Uhr
+> Von: "Rob Herring" <robh@kernel.org>
 
-On Sat, 05 Nov 2022 09:49:02 +0100, Frank Wunderlich wrote:
-> From: Sam Shih <sam.shih@mediatek.com>
-> 
-> Since the bias-pull-{up,down} attribute already defines in pinctrl driver
-> of mediatek MT7986 SoC, this patch updates bindings to support mediatek
-> common bias-pull* function.
-> 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  .../pinctrl/mediatek,mt7986-pinctrl.yaml      | 50 +++++++++++++++++--
->  1 file changed, 47 insertions(+), 3 deletions(-)
-> 
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check=
+'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/=
+pinctrl/mediatek,mt7986-pinctrl.example.dtb: pinctrl@1001f000: pcie-pins:m=
+ux:groups: ['pcie_clk', 'pcie_wake', 'pcie_pereset'] is too long
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/device=
+tree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/=
+pinctrl/mediatek,mt7986-pinctrl.example.dtb: pinctrl@1001f000: pwm-pins:mu=
+x:groups: ['pwm0', 'pwm1_0'] is too long
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/device=
+tree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/=
+pinctrl/mediatek,mt7986-pinctrl.example.dtb: pinctrl@1001f000: spi0-pins:m=
+ux:groups: ['spi0', 'spi0_wp_hold'] is too long
+> 	From schema: /builds/robherring/dt-review-ci/linux/Documentation/device=
+tree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
 
-yamllint warnings/errors:
+these are handled by this Patch, sorry to not mention the depency
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.example.dtb: pinctrl@1001f000: mmc0-pins:mux:groups:0: 'emmc_51' is not one of ['emmc', 'emmc_rst']
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/mediatek,mt7986-pinctrl.yaml
+https://patchwork.kernel.org/project/linux-mediatek/patch/20221024074349.7=
+777-1-linux@fw-web.de/
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/patch/
-
-This check can fail if there are any dependencies. The base for a patch
-series is generally the most recent rc1.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit.
-
+regards Frank
