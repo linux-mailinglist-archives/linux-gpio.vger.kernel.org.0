@@ -2,100 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F45261E15E
-	for <lists+linux-gpio@lfdr.de>; Sun,  6 Nov 2022 10:43:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 581B561E255
+	for <lists+linux-gpio@lfdr.de>; Sun,  6 Nov 2022 14:27:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbiKFJnp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 6 Nov 2022 04:43:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
+        id S229910AbiKFN1I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 6 Nov 2022 08:27:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbiKFJno (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Nov 2022 04:43:44 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F527DF69
-        for <linux-gpio@vger.kernel.org>; Sun,  6 Nov 2022 01:43:43 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id bp15so12990418lfb.13
-        for <linux-gpio@vger.kernel.org>; Sun, 06 Nov 2022 01:43:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j3uoZ8eg/BvFs8rs7FPp0J3kaSE2I30G0Ccj5oJr1j0=;
-        b=JhCFu/aUzf0W6T5ML6C7E94GeMV8WaJYKN5uI7XxEQ1qKbP9iZx2yKA3gdoRXBUY2z
-         G/fWgv2s4UwsyGK+b+YcsLB+TAb3J1498wTMjElMK1w0V7u5IGc5N59aYO4LhWPBjbV/
-         ymHpL33lLG9uCKa53lE6Zh9bK1bWlQsaKoVrdL9ypsbPvHgqBAqRyetcyUHSO7pxTfzU
-         WIyxSazI18dj4uWtsregYMTY+05XvBnHJTNwAV39HzjU3XbY77N85RcCsLIinP5fcuPh
-         B7ovO/lRaOKsrPsTB9JqRK9QDYeFygiIRitdN8uZZGDxL3F6NoxTK6nnEbwdb7Wl8t97
-         bVSQ==
+        with ESMTP id S229844AbiKFN1H (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 6 Nov 2022 08:27:07 -0500
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0877DEEB;
+        Sun,  6 Nov 2022 05:27:06 -0800 (PST)
+Received: by mail-oi1-f172.google.com with SMTP id h132so1849812oif.2;
+        Sun, 06 Nov 2022 05:27:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j3uoZ8eg/BvFs8rs7FPp0J3kaSE2I30G0Ccj5oJr1j0=;
-        b=J/BCIcxRwOTvwFd+jxSuUb5VqxTWz6jobpgn9HKOO/C7BsgxzDT4Kk3GXLuSUTLjMo
-         cyR61vne/6CKoN6ywCwM1AwPdpp/AYtTpho7C/avlnq2sclzismzQVHkzd6o5KTBazPt
-         MUBtoVpkTnTMRJm/eX0XN64h7xmwpJOQasdvXeQhT3ymPsDTcD2G3GmVXAW3enxFKXei
-         bGAK8QNZEdu2enxnAv678Y4Gha8lYbfLrW4xiV0KpwUzBGcABP3Ay5l+nGMPuUOlVsqI
-         /r4Fk0qyULbevrvtf30yb79g1piljW7dOEqbr73u7OHkxSmZMGaIUU5YmWeqrj9wTfT8
-         Zjsw==
-X-Gm-Message-State: ACrzQf03shS4emhOEHWYi1eD69fRP0tb4KOJy8vtfzjElIV6vaErIdbn
-        kkfckr3LOrAAvvGdpGXFWs+y3Q==
-X-Google-Smtp-Source: AMsMyM6yFiVzkAiG6SuBOtUyuRrODZlYhfqyISkrKpHDvrih18jZcYBcgFsRYtxM2rvLqfCkOewXRg==
-X-Received: by 2002:ac2:4c47:0:b0:4a2:c07b:4b62 with SMTP id o7-20020ac24c47000000b004a2c07b4b62mr15311753lfk.426.1667727792787;
-        Sun, 06 Nov 2022 01:43:12 -0800 (PST)
-Received: from [192.168.0.20] (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
-        by smtp.gmail.com with ESMTPSA id be13-20020a056512250d00b004a8b9c68735sm628148lfb.102.2022.11.06.01.43.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 06 Nov 2022 01:43:12 -0800 (PST)
-Message-ID: <143bcd9f-b4af-2651-4f5f-752912b553e1@linaro.org>
-Date:   Sun, 6 Nov 2022 10:43:11 +0100
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=70rG3D8Yrp5l4kQEMqm9SiHO8UxHi0ydxic0NbAwdXY=;
+        b=MseI7AkTwJlp74aN4gRQn/6MlVv3OQ/LHSEakp6/SDEFO98fBEPdwNGQAvlHoP8wUN
+         Kx3lyIjlJQXu6ox8lQ5v43A2rMRJn46fSh0pIIP1Wjz4qROVTaujhAfb9kCKnhbNIp4S
+         Y1eTfUF4LhZtenbt7heMGQ88ciqwj89EoKBALWOcLY1xiEdyMdz0Hx5RjEC4RFrj3vb8
+         /MasD8vMDxz/JaXdXftiFylHF+dFQxmLx/F6xyZ+vAa7xLgemGhcSoSFjJ7VUDNGfB98
+         xOq4ZSTHu1ykowTsNDd9inNjAcGARFrvEY/n/y12p/sA3ZgmDgZr76yjlBWM1EBJifjH
+         T6vg==
+X-Gm-Message-State: ACrzQf2jzuAZtAEDp9lV4Cl+bgAoSn4v4K9uH4IQmsuKSBTrMcVWEKxN
+        N1T+m/snwVwDC/XW95In+N02rby4cA==
+X-Google-Smtp-Source: AMsMyM7Sls3WiTU2TvqdLp/oEK24gdz+axBLfyyb2HTGWnoficc1u8L89/xNoNFThGX+S2ZP2YkBgg==
+X-Received: by 2002:a05:6808:1823:b0:35a:6f80:6398 with SMTP id bh35-20020a056808182300b0035a6f806398mr4003830oib.68.1667741225773;
+        Sun, 06 Nov 2022 05:27:05 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id ek17-20020a056870f61100b0013c50b812a2sm1878335oab.36.2022.11.06.05.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Nov 2022 05:27:05 -0800 (PST)
+Received: (nullmailer pid 2692032 invoked by uid 1000);
+        Sun, 06 Nov 2022 13:27:07 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v2 3/6] dt-bindings: pinctrl: mt7986: add generic
- bias-pull* support
-Content-Language: en-US
-To:     Frank Wunderlich <linux@fw-web.de>,
-        linux-mediatek@lists.infradead.org
-Cc:     Frank Wunderlich <frank-w@public-files.de>,
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan =?utf-8?q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        linux-spi@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>,
-        Sam Shih <sam.shih@mediatek.com>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20221106080114.7426-1-linux@fw-web.de>
- <20221106080114.7426-4-linux@fw-web.de>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221106080114.7426-4-linux@fw-web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, openbmc@lists.ozlabs.org
+In-Reply-To: <20221105185911.1547847-4-j.neuschaefer@gmx.net>
+References: <20221105185911.1547847-1-j.neuschaefer@gmx.net>
+ <20221105185911.1547847-4-j.neuschaefer@gmx.net>
+Message-Id: <166774077447.2683568.10429527253386553094.robh@kernel.org>
+Subject: Re: [PATCH 3/8] dt-bindings: spi: Add Nuvoton WPCM450 Flash Interface
+ Unit (FIU)
+Date:   Sun, 06 Nov 2022 07:27:07 -0600
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 06/11/2022 09:01, Frank Wunderlich wrote:
-> From: Sam Shih <sam.shih@mediatek.com>
+
+On Sat, 05 Nov 2022 19:59:06 +0100, Jonathan Neuschäfer wrote:
+> The Flash Interface Unit (FIU) is the SPI flash controller in the
+> Nuvoton WPCM450 BMC SoC. It supports four chip selects, and direct
+> (memory-mapped) access to 16 MiB per chip. Larger flash chips can be
+> accessed by software-defined SPI transfers.
 > 
-> Since the bias-pull-{up,down} attribute already defines in pinctrl driver
-> of mediatek MT7986 SoC, this patch updates bindings to support mediatek
-> common bias-pull* function.
+> The FIU in newer NPCM7xx SoCs is not compatible with the WPCM450 FIU.
 > 
-> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
+>  .../bindings/spi/nuvoton,wpcm450-fiu.yaml     | 76 +++++++++++++++++++
+>  1 file changed, 76 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.yaml
+> 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Best regards,
-Krzysztof
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.example.dts:18:18: fatal error: dt-bindings/clock/nuvoton,wpcm450-clk.h: No such file or directory
+   18 |         #include <dt-bindings/clock/nuvoton,wpcm450-clk.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:406: Documentation/devicetree/bindings/spi/nuvoton,wpcm450-fiu.example.dtb] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make: *** [Makefile:1492: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/patch/
+
+This check can fail if there are any dependencies. The base for a patch
+series is generally the most recent rc1.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit.
 
