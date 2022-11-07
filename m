@@ -2,241 +2,246 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32FDB61F882
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 17:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 140FC61F895
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 17:12:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232618AbiKGQKV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 11:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
+        id S232338AbiKGQMp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 11:12:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232511AbiKGQKT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 11:10:19 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48E0413FBE;
-        Mon,  7 Nov 2022 08:10:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667837410; x=1699373410;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ob2VcCD8eQ1INAspt4Ij3GP7vl0BcLPuHM41kGRdqME=;
-  b=gPV4zWBuSiQIcYQUcRggBpU+pUC+f5u+9OlIDhTC82vgN7Rw9v4cOueW
-   vXVMqieMyOltjxggqFxyE+whEc6NuTOnP9YP6GahSBL5s+cmRMj1QOBD8
-   OBCJI3qbhYYaRAd4FqcH4u/ACcK/OUjokQWBotfLzNvezp8QVikQbllzp
-   MYnCGBNdjpLPJ/T4xnKLD+dRzw3bOFBRSFF2ZMWNFzjRrfgk9T25z+aTR
-   wWF2BStZK6JOS6Mn119K16ERnYVIPHIJKyDdvTvbMS7jCdneRxlRnOV2T
-   FLwRwA8cPLmIFr55f+cHl24unT730sBWjUWyOHJFymeaE6LTdgpdh0fQR
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="312215920"
-X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="312215920"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 08:10:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="613910899"
-X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
-   d="scan'208";a="613910899"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 07 Nov 2022 08:10:08 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id F0074D0; Mon,  7 Nov 2022 18:10:31 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 2/2] gpiolib: of: Integrate of_gpiochip_init_valid_mask() into gpiochip_init_valid_mask()
-Date:   Mon,  7 Nov 2022 18:10:27 +0200
-Message-Id: <20221107161027.43384-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221107161027.43384-1-andriy.shevchenko@linux.intel.com>
-References: <20221107161027.43384-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S232273AbiKGQMm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 11:12:42 -0500
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 647DC201A3;
+        Mon,  7 Nov 2022 08:12:37 -0800 (PST)
+Received: by mail-pl1-x635.google.com with SMTP id b21so11486577plc.9;
+        Mon, 07 Nov 2022 08:12:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OxtV4eNytGZqtTr58EFGp2fbSAZOZDoFPK3f2kbkRSc=;
+        b=Un0/gzqqJqp56xovtIlDx/l/4Wf3KozrwJ+Kvde3KzTeLg+iaDo42Wl6PMNlX/JaWd
+         PmB6+afpyMrrvup7NxbXAiWaqkCzP4waeRlZbICEmJc+ctRV/zlLSgYq+ymI7epfPsNZ
+         qW1WxTcaHcgqZbl8Nv6tRJ+hJoxyT+Veeplr34dhyYrUc+3z8L2oBQcSeYpFgFRN9GfD
+         HvlNiiQknOQXTQsQDBYbdQwJsFi4ZlGzZhAJzSj4IIul+sH1sW6D0U6+SYPtuQCuj4+r
+         +RlXc9obyw1H3h4v+L9s1Xln23utuF1D4SjyB5DrRG3fYMTrVEB2jPaP1wbtU6GXKoBd
+         ktkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OxtV4eNytGZqtTr58EFGp2fbSAZOZDoFPK3f2kbkRSc=;
+        b=IWZOujmH3iGrewKqTzN+9CHRqZVFsfZr11M+FZ6Jhs1iLr62tLZprtAeBI4IXhFmN7
+         hIYoRJHpHIVTr3EFj1ga37stM+SxJsyYqJjJO4PFZKERZIr1mM5hIXnIul8ZRZ2/vPVn
+         jMctM9sl4fhra7X0W7QQFqRPc8k0IABYRG4drUZMS6bIwQTcGjEd9V9yPLZowGZjvtwT
+         LCXCgZ58jndIKc7Zfc3fl3yAXJbrgRntPtRnI4AZLhKYrM8/NnFsyFuycz3i5edD84X7
+         6+e5AwIDNA+XyO8HcITuMJrJnrS1mJ0023rDxhgdrYKWR2qfu4GXkneFZoMPFCwZzYE5
+         /hBg==
+X-Gm-Message-State: ACrzQf1Mt3D/BcxdaokFmXz12lPMbnlyLH0fOPr4drdrAJ+UtRSViOE7
+        Ue+Eg6r1yQ4vMkxUBd/78D4=
+X-Google-Smtp-Source: AMsMyM66nke43Q8t/SVF5Qdo371dgX5xx0mM6O93qO0RYuPpneFRsifcjcbSFrIfa4oWl4Yes7cs+A==
+X-Received: by 2002:a17:903:25c3:b0:188:602c:5c25 with SMTP id jc3-20020a17090325c300b00188602c5c25mr20543498plb.133.1667837556560;
+        Mon, 07 Nov 2022 08:12:36 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:626:eb80:9eb9:1fd7])
+        by smtp.gmail.com with ESMTPSA id w69-20020a627b48000000b00545f5046372sm4628226pfc.208.2022.11.07.08.12.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Nov 2022 08:12:35 -0800 (PST)
+Date:   Mon, 7 Nov 2022 08:12:32 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/6] gpiolib: add support for software nodes
+Message-ID: <Y2kucGtw/t9v0245@google.com>
+References: <20221031-gpiolib-swnode-v1-0-a0ab48d229c7@gmail.com>
+ <20221031-gpiolib-swnode-v1-6-a0ab48d229c7@gmail.com>
+ <Y2VVA2Wp1IWoJf3m@smile.fi.intel.com>
+ <Y2Vo8g5HfvSi7Bck@google.com>
+ <Y2V8uwTHYw2McL5S@smile.fi.intel.com>
+ <Y2XrL0noH4HqsAU7@google.com>
+ <Y2jnGVKDmGvK94AV@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y2jnGVKDmGvK94AV@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-In preparation to complete fwnode switch, integrate
-of_gpiochip_init_valid_mask() into gpiochip_init_valid_mask().
+On Mon, Nov 07, 2022 at 01:08:09PM +0200, Andy Shevchenko wrote:
+> On Fri, Nov 04, 2022 at 09:48:47PM -0700, Dmitry Torokhov wrote:
+> > On Fri, Nov 04, 2022 at 10:57:31PM +0200, Andy Shevchenko wrote:
+> > > On Fri, Nov 04, 2022 at 12:33:06PM -0700, Dmitry Torokhov wrote:
+> > > > On Fri, Nov 04, 2022 at 08:08:03PM +0200, Andy Shevchenko wrote:
+> > > > > On Thu, Nov 03, 2022 at 11:10:16PM -0700, Dmitry Torokhov wrote:
+> 
+> ...
+> 
+> > > > > > const struct property_entry simone_key_enter_props[] __initconst = {
+> > > > > > 	PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
+> > > > > 
+> > > > > > 	PROPERTY_ENTRY_STRING("label", "enter"),
+> > > > > > 	PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
+> > > > > 
+> > > > > Okay, can we have an example for something like reset-gpios? Because from
+> > > > > the above I can't easily get what label is and how in the `gpioinfo` tool
+> > > > > the requested line will look like.
+> > > > 
+> > > > The label is something unrelated to gpio. The example was supposed to
+> > > > match gpio-keys binding found in
+> > > > Documentation/devicetree/bindings/input/gpio-keys.yaml
+> > > 
+> > > Yes, but what would be output of `gpioinfo` for the above  example and
+> > > if GPIO is named properly (with con_id)?
+> > 
+> > Same as if I am using device tree, or ACPI, etc. I am not changing how
+> > labeling is done, so whatever rules were before adding swnode support
+> > they will be used with swnodes.
+> > 
+> > With the hack patch to gpio-keys.c below and device using the following
+> > DT fragment I see the following from gpioinfo:
+> > 
+> >         gpio_keys: gpio-keys {
+> >                 status = "okay";
+> > 
+> >                 compatible = "gpio-keys";
+> >                 pinctrl-names = "default";
+> >                 pinctrl-0 = <&pen_eject>;
+> > 
+> >                 pen_insert: pen-insert {
+> >                         label = "Pen Insert";
+> >                         /* Insert = low, eject = high */
+> >                         /* gpios = <&pio 18 GPIO_ACTIVE_LOW>; */
+> >                         linux,code = <SW_PEN_INSERTED>;
+> >                         linux,input-type = <EV_SW>;
+> >                         wakeup-event-action = <EV_ACT_DEASSERTED>;
+> >                         wakeup-source;
+> >                 };
+> >         };
+> > 
+> > Just "gpios" (con_id == NULL):
+> > 
+> >         line  18: "PEN_EJECT_OD" "Pen Insert" input active-low [used]
+> > 
+> > With "key-gpios" (con_id == "key") it is exactly the same:
+> > 
+> >         line  18: "PEN_EJECT_OD" "Pen Insert" input active-low [used]
+> > 
+> > Ah, I guess you wonder how it will look like if we do not pass this
+> > "label" into devm_fwnode_gpiod_get() and instead use NULL?
+> > 
+> > 	line  18: "PEN_EJECT_OD" "?" input active-low [used]
+> > 
+> > If the driver used gpiod_get() or similar it would either have the
+> > "con_id" label or device name (produced with dev_name(dev) if con_id is
+> > NULL. Still, not changes from using swnodes compared to ACPI or DT.
+> 
+> Yes, can you add a summary of above to the commit message?
+> 
+> > > > > > 	{ }
+> > > > > > };
+> 
+> ...
+> 
+> > > > > > +	/*
+> > > > > > +	 * We expect all swnode-described GPIOs have GPIO number and
+> > > > > > +	 * polarity arguments, hence nargs is set to 2.
+> > > > > > +	 */
+> > > > > 
+> > > > > Maybe instead you can provide a custom macro wrapper that will check the number
+> > > > > of arguments at compile time?
+> > > > 
+> > > > We could have PROPERTY_ENTRY_GPIO() built on top of PROPERTY_ENTRY_REF()
+> > > > that enforces needed arguments.
+> > > 
+> > > Yes, that's what I meant.
+> > 
+> > Where do you think it should go? Not sure if I want to pollute
+> > property.h, I guess linux/gpio/matchine.h will need to include
+> > property.h?
+> 
+> Good question. I was thinking more of a separate header for that,
+> because adding property.h adds tons of stuff which might be not
+> needed otherwise.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-of.c | 42 -------------------------------
- drivers/gpio/gpiolib-of.h |  5 ----
- drivers/gpio/gpiolib.c    | 52 ++++++++++++++++++++++++++++++++++++++-
- 3 files changed, 51 insertions(+), 48 deletions(-)
+OK, I guess include/linux/gpio/property.h ?
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 000020eb78d8..4be3c21aa718 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -112,24 +112,6 @@ static struct gpio_desc *of_xlate_and_get_gpiod_flags(struct gpio_chip *chip,
- 	return gpiochip_get_desc(chip, ret);
- }
- 
--/**
-- * of_gpio_need_valid_mask() - figure out if the OF GPIO driver needs
-- * to set the .valid_mask
-- * @gc: the target gpio_chip
-- *
-- * Return: true if the valid mask needs to be set
-- */
--bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
--{
--	int size;
--	const struct device_node *np = gc->of_node;
--
--	size = of_property_count_u32_elems(np,  "gpio-reserved-ranges");
--	if (size > 0 && size % 2 == 0)
--		return true;
--	return false;
--}
--
- /*
-  * Overrides stated polarity of a gpio line and warns when there is a
-  * discrepancy.
-@@ -989,28 +971,6 @@ void of_mm_gpiochip_remove(struct of_mm_gpio_chip *mm_gc)
- }
- EXPORT_SYMBOL_GPL(of_mm_gpiochip_remove);
- 
--static void of_gpiochip_init_valid_mask(struct gpio_chip *chip)
--{
--	int len, i;
--	u32 start, count;
--	struct device_node *np = chip->of_node;
--
--	len = of_property_count_u32_elems(np,  "gpio-reserved-ranges");
--	if (len < 0 || len % 2 != 0)
--		return;
--
--	for (i = 0; i < len; i += 2) {
--		of_property_read_u32_index(np, "gpio-reserved-ranges",
--					   i, &start);
--		of_property_read_u32_index(np, "gpio-reserved-ranges",
--					   i + 1, &count);
--		if (start >= chip->ngpio || start + count > chip->ngpio)
--			continue;
--
--		bitmap_clear(chip->valid_mask, start, count);
--	}
--};
--
- #ifdef CONFIG_PINCTRL
- static int of_gpiochip_add_pin_range(struct gpio_chip *chip)
- {
-@@ -1119,8 +1079,6 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 	if (chip->of_gpio_n_cells > MAX_PHANDLE_ARGS)
- 		return -EINVAL;
- 
--	of_gpiochip_init_valid_mask(chip);
--
- 	ret = of_gpiochip_add_pin_range(chip);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/gpio/gpiolib-of.h b/drivers/gpio/gpiolib-of.h
-index 1b5df39a952e..2a2f7d17fa7e 100644
---- a/drivers/gpio/gpiolib-of.h
-+++ b/drivers/gpio/gpiolib-of.h
-@@ -23,7 +23,6 @@ struct gpio_desc *of_find_gpio(struct device *dev,
- int of_gpiochip_add(struct gpio_chip *gc);
- void of_gpiochip_remove(struct gpio_chip *gc);
- int of_gpio_get_count(struct device *dev, const char *con_id);
--bool of_gpio_need_valid_mask(const struct gpio_chip *gc);
- void of_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev);
- #else
- static inline struct gpio_desc *of_find_gpio(struct device *dev,
-@@ -39,10 +38,6 @@ static inline int of_gpio_get_count(struct device *dev, const char *con_id)
- {
- 	return 0;
- }
--static inline bool of_gpio_need_valid_mask(const struct gpio_chip *gc)
--{
--	return false;
--}
- static inline void of_gpio_dev_init(struct gpio_chip *gc,
- 				    struct gpio_device *gdev)
- {
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e8faedca6b14..2ab7b7949171 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -445,9 +445,20 @@ static unsigned long *gpiochip_allocate_mask(struct gpio_chip *gc)
- 	return p;
- }
- 
-+static unsigned int gpiochip_count_reserved_ranges(struct gpio_chip *gc)
-+{
-+	int size;
-+
-+	size = fwnode_property_count_u32(gc->fwnode, "gpio-reserved-ranges");
-+	if (size > 0 && size % 2 == 0)
-+		return size;
-+
-+	return 0;
-+}
-+
- static int gpiochip_alloc_valid_mask(struct gpio_chip *gc)
- {
--	if (!(of_gpio_need_valid_mask(gc) || gc->init_valid_mask))
-+	if (!(gpiochip_count_reserved_ranges(gc) || gc->init_valid_mask))
- 		return 0;
- 
- 	gc->valid_mask = gpiochip_allocate_mask(gc);
-@@ -457,8 +468,47 @@ static int gpiochip_alloc_valid_mask(struct gpio_chip *gc)
- 	return 0;
- }
- 
-+static int gpiochip_apply_reserved_ranges(struct gpio_chip *gc, unsigned int sz)
-+{
-+	u32 *ranges;
-+	int ret;
-+
-+	ranges = kmalloc_array(sz, sizeof(*ranges), GFP_KERNEL);
-+	if (!ranges)
-+		return -ENOMEM;
-+
-+	ret = fwnode_property_read_u32_array(gc->fwnode, "gpio-reserved-ranges", ranges, sz);
-+	if (ret) {
-+		kfree(ranges);
-+		return ret;
-+	}
-+
-+	while (sz) {
-+		u32 count = ranges[--sz];
-+		u32 start = ranges[--sz];
-+
-+		if (start >= gc->ngpio || start + count > gc->ngpio)
-+			continue;
-+
-+		bitmap_clear(gc->valid_mask, start, count);
-+	}
-+
-+	kfree(ranges);
-+	return 0;
-+}
-+
- static int gpiochip_init_valid_mask(struct gpio_chip *gc)
- {
-+	unsigned int sz;
-+	int ret;
-+
-+	sz = gpiochip_count_reserved_ranges(gc);
-+	if (sz) {
-+		ret = gpiochip_apply_reserved_ranges(gc, sz);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (gc->init_valid_mask)
- 		return gc->init_valid_mask(gc,
- 					   gc->valid_mask,
+> 
+> ...
+> 
+> > > > > > +	/*
+> > > > > > +	 * First look up GPIO in the secondary software node in case
+> > > > > > +	 * it was used to store updated properties.
+> > > > > 
+> > > > > Why this is done first? We don't try secondary before we have checked primary.
+> > > > 
+> > > > I believe we should check secondary first, so that secondaries can be
+> > > > used not only to add missing properties, but also to override existing
+> > > > ones in case they are incorrect.
+> > > 
+> > > It contradicts all code we have in the kernel regarding the use of software
+> > > nodes, you need very strong argument to justify that.
+> > > 
+> > > Personally I think this must be fixed.
+> > 
+> > I agree, the rest of the code should be fixed ;) I'll put it on my TODO
+> > list.
+> 
+> I'm not sure what "rest of the code" you are referring to. The core part of
+> device property APIs?
+
+Yes.
+
+> 
+> > I gave my argument above already: swnodes should not only be useful to
+> > add missing properties, but also allow fixing up existing ones. If I
+> > implemented what you are suggesting then I would not be able to create
+> > this concise example and would need to model entire DT node for GPIO
+> > keys.
+> 
+> Why do you need that in the first place? We should not use swnodes as primary
+> source of the information. The auxiliary one is fine. "Fixing" via priority
+> inversion in current model is not good thing to have.
+> 
+> If you really need that you have to first do the following:
+> - convert fwnode to be a list node
+> - unembed it from struct device (leaving only head of list there
+> - update all necessary APIs respectively
+> 
+> In such implementation list_add() / list_add_tail() will define a priority
+> and you may have stack of properties.
+
+Hmm, that will complicate things quite a bit. I wonder why you think
+that using swnodes to fix up the "bad" firmware data is not desirable.
+Swnodes are controlled by the kernel and thus we can potentially allow
+users tweak them from usersoace. There is a desire to allow easier
+access to various driver's parameters - see for example Hans patches to
+Goodix and Silead where he adds code that intercepts reading of device
+properties and instead gets data form module parameter - I would like to
+have such facility in more general way.
+
+https://lore.kernel.org/all/20221025122930.421377-3-hdegoede@redhat.com/
+
+> 
+> Doing it in a hackish way by allowing priority inversion in _some_ APIs
+> is no go in my opinion.
+
+Yes, I agree that we want to have all APIs behave in the similar way. It
+occurred to me that the topic of handling secondary node is actually
+separate from swnode hanlding, so I will remove it from this patch and I
+can start a separate thread/patches for it after we land this series.
+
+Thanks.
+
 -- 
-2.35.1
-
+Dmitry
