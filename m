@@ -2,316 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55CF961FE14
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 19:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 823F661FF19
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 21:06:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230438AbiKGS7l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 13:59:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
+        id S231580AbiKGUGB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 15:06:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232291AbiKGS7j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 13:59:39 -0500
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F251F24BF7
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 10:59:36 -0800 (PST)
-Received: by mail-lj1-x22b.google.com with SMTP id d3so17757595ljl.1
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 10:59:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q6+tifRwm98rAaw+GHP74ruEoAmooOK+xQD6j6mXEfs=;
-        b=mBleVDhIojdtiptSbA/vSs3qVkg4VMpPsrlPMfPe2VtoRCCLCELsPQ4dqELBh2sfpN
-         DNhwKEoswbG5mI1fFV3MFttf8Cr/3dlD7LJj3pOAtd25oQcXXpEls/1M5GV2clWa09ve
-         DVGd+rHSS8MGAUFhGA4hw9kikrpDPQBhplG4QosIOBO3oB1AGYjzh11NJbN6uVWkLW4Z
-         Zm+HgTQ+deFRoVLAZCo8kRu2b/3R9VDIfmLJhBVKNXAf1yA2VHjrwAQ9ogdfMUM6zz+w
-         WuRbXKkOqcOoSEQjJl4cuZ66Flyp9X3iRMfHEYkmmMhBYI+dvMM0ybSndZm/rBl0Q8KP
-         lT0g==
+        with ESMTP id S231351AbiKGUGA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 15:06:00 -0500
+Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D922527CC3;
+        Mon,  7 Nov 2022 12:05:59 -0800 (PST)
+Received: by mail-ot1-f44.google.com with SMTP id cn2-20020a056830658200b0066c74617e3dso7204976otb.2;
+        Mon, 07 Nov 2022 12:05:59 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q6+tifRwm98rAaw+GHP74ruEoAmooOK+xQD6j6mXEfs=;
-        b=XxX54xRidtyjfWLX4yDmypoar6o74jBQIg5KlXkRNYuDp/sT0nma87JeZJcN6nWxya
-         4jvF5ohteenBxQbMCq/2uCyFUUf+smtw6XEiOfzhl67XP2FFBylgW/fwXN3jLx83rqrI
-         Wd6zWKeRFsG/FzDiKLMGPGuN0Z3ivb/301sWZ9ON49Qz9pioUBd1KGyQ1+fW324W6IIZ
-         XYymeFEI8j2aFHwYo68c0yBbxEmx1sIk+SL6B6p/UQI4dMPsEDfM3Uuw1QRWrYSKx/sW
-         sGpjTIEWQV42+UXtaVZST5o+yqNS05lbzWNyRfp7UWXzzPa15RAHz7eU0Q8e1CzV22A+
-         RuBg==
-X-Gm-Message-State: ACrzQf2q78Zj/u2uIFzuRcgQvCwqSCZno95t1fvf25Eo/WBwUA11K5or
-        jZfS3THsZsREkapGDSiGZErTjw==
-X-Google-Smtp-Source: AMsMyM4bvRAD5pFcUnjckx8kRc0DjR32qWX+6xs08zUhVp9Yl6EplB/pie2qvUv/MMlfAvmm+qyEhg==
-X-Received: by 2002:a2e:b2d1:0:b0:277:c68:874b with SMTP id 17-20020a2eb2d1000000b002770c68874bmr5414236ljz.261.1667847575315;
-        Mon, 07 Nov 2022 10:59:35 -0800 (PST)
-Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
-        by smtp.gmail.com with ESMTPSA id y5-20020a05651c106500b002770a9ed61bsm1327875ljm.66.2022.11.07.10.59.34
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mzxwEFNUScRHad0GSitNuAPUAQgYGoYkKZUbn1eKG18=;
+        b=Pk7c3069xNX4M+ZFbRx1Kg4eokduxQiU4Ya7kmipQd6L8+/a6//TQfwWAvHhWxxTEv
+         /dQvBT0WD8rQzh5IPiIjLlaez7mffx5zbRRIcC/KqSaDIKsQmW0SBFh/vJGTwEhrcTYW
+         mPB8mC7OuvaGEP9j9ycemv+J6NPRuAbKJewyyrC5reKwPpEiu11JsVdKSRk+tYuJBAVu
+         aPLWgiQme7jCVt7a8Hqp49AUZAkC6xhi8Wa215qfSbluW3rHjw82SCTAcRU8FFrvUVKY
+         IoDi6O6HogkLk0QoW53xkl1RQMd2Uw7NNnVQ27JXIwFtW7UzztWkUmN7dGV0i8GTZMfZ
+         31gg==
+X-Gm-Message-State: ACrzQf0Asqv0GGV8K9RVMril0+v3ho0ydyRvzXeNVYndArt/QWUBm5C2
+        +RcLk1bfiAmkcrn7w49Bhb0jTW2nGA==
+X-Google-Smtp-Source: AMsMyM5F0ZUoojX9ufwQfzy1dN0QLHEBHTBy2a9TmPWOTk7MHOTPAWpdcmmZ5GfaQLGlHKVMLnBdiQ==
+X-Received: by 2002:a05:6830:410b:b0:66c:9a3a:53e with SMTP id w11-20020a056830410b00b0066c9a3a053emr8419415ott.225.1667851558934;
+        Mon, 07 Nov 2022 12:05:58 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id m6-20020a4a9506000000b0049201e2b8f4sm2522674ooi.4.2022.11.07.12.05.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 10:59:34 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH 2/2] ARM: dts: qcom-apq8060: align TLMM pin configuration with DT schema
-Date:   Mon,  7 Nov 2022 19:59:31 +0100
-Message-Id: <20221107185931.22075-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221107185931.22075-1-krzysztof.kozlowski@linaro.org>
-References: <20221107185931.22075-1-krzysztof.kozlowski@linaro.org>
+        Mon, 07 Nov 2022 12:05:58 -0800 (PST)
+Received: (nullmailer pid 1504075 invoked by uid 1000);
+        Mon, 07 Nov 2022 20:06:00 -0000
+Date:   Mon, 7 Nov 2022 14:06:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 4/7] dt-bindings: timestamp: Add Tegra234 support
+Message-ID: <20221107200600.GA1489762-robh@kernel.org>
+References: <20221103174523.29592-1-dipenp@nvidia.com>
+ <20221103174523.29592-5-dipenp@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221103174523.29592-5-dipenp@nvidia.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DT schema expects TLMM pin configuration nodes to be named with
-'-state' suffix and their optional children with '-pins' suffix.
+On Thu, Nov 03, 2022 at 10:45:20AM -0700, Dipen Patel wrote:
+> Added timestamp provider support for the Tegra234 in devicetree
+> bindings.
+> 
+> Signed-off-by: Dipen Patel <dipenp@nvidia.com>
+> ---
+>  .../timestamp/nvidia,tegra194-hte.yaml        | 44 +++++++++++++++++--
+>  1 file changed, 40 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+> index c31e207d1652..158dbe58c49f 100644
+> --- a/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+> +++ b/Documentation/devicetree/bindings/timestamp/nvidia,tegra194-hte.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/timestamp/nvidia,tegra194-hte.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>  
+> -title: Tegra194 on chip generic hardware timestamping engine (HTE)
+> +title: Tegra on chip generic hardware timestamping engine (HTE) provider
+>  
+>  maintainers:
+>    - Dipen Patel <dipenp@nvidia.com>
+> @@ -23,6 +23,8 @@ properties:
+>      enum:
+>        - nvidia,tegra194-gte-aon
+>        - nvidia,tegra194-gte-lic
+> +      - nvidia,tegra234-gte-aon
+> +      - nvidia,tegra234-gte-lic
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- .../arm/boot/dts/qcom-apq8060-dragonboard.dts | 126 +++++++-----------
- 1 file changed, 51 insertions(+), 75 deletions(-)
+How is the h/w in this chip different from the existing one? I'm 
+assuming it must be because you don't have a fallback compatible.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8060-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8060-dragonboard.dts
-index 0baf202a82ba..7a4c59e04af6 100644
---- a/arch/arm/boot/dts/qcom-apq8060-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8060-dragonboard.dts
-@@ -789,28 +789,24 @@ &sdcc5 {
- 
- &tlmm {
- 	/* eMMC pins, all 8 data lines connected */
--	dragon_sdcc1_pins: sdcc1 {
--		mux {
--			pins = "gpio159", "gpio160", "gpio161",
--			     "gpio162", "gpio163", "gpio164",
--			     "gpio165", "gpio166", "gpio167",
--			     "gpio168";
--			     function = "sdc1";
--		};
--		clk {
-+	dragon_sdcc1_pins: sdcc1-state {
-+		clk-pins {
- 			pins = "gpio167"; /* SDC1 CLK */
-+			function = "sdc1";
- 			drive-strength = <16>;
- 			bias-disable;
- 		};
--		cmd {
-+		cmd-pins {
- 			pins = "gpio168"; /* SDC1 CMD */
-+			function = "sdc1";
- 			drive-strength = <10>;
- 			bias-pull-up;
- 		};
--		data {
-+		data-pins {
- 			/* SDC1 D0 to D7 */
- 			pins = "gpio159", "gpio160", "gpio161", "gpio162",
- 			     "gpio163", "gpio164", "gpio165", "gpio166";
-+			function = "sdc1";
- 			drive-strength = <10>;
- 			bias-pull-up;
- 		};
-@@ -820,18 +816,18 @@ data {
- 	 * The SDCC3 pins are hardcoded (non-muxable) but need some pin
- 	 * configuration.
- 	 */
--	dragon_sdcc3_pins: sdcc3 {
--		clk {
-+	dragon_sdcc3_pins: sdcc3-state {
-+		clk-pins {
- 			pins = "sdc3_clk";
- 			drive-strength = <8>;
- 			bias-disable;
- 		};
--		cmd {
-+		cmd-pins {
- 			pins = "sdc3_cmd";
- 			drive-strength = <8>;
- 			bias-pull-up;
- 		};
--		data {
-+		data-pins {
- 			pins = "sdc3_data";
- 			drive-strength = <8>;
- 			bias-pull-up;
-@@ -839,101 +835,82 @@ data {
- 	};
- 
- 	/* Second SD card slot pins */
--	dragon_sdcc5_pins: sdcc5 {
--		mux {
--			pins = "gpio95", "gpio96", "gpio97",
--			    "gpio98", "gpio99", "gpio100";
--			function = "sdc5";
--		};
--		clk {
-+	dragon_sdcc5_pins: sdcc5-state {
-+		clk-pins {
- 			pins = "gpio97"; /* SDC5 CLK */
-+			function = "sdc5";
- 			drive-strength = <16>;
- 			bias-disable;
- 		};
--		cmd {
-+		cmd-pins {
- 			pins = "gpio95"; /* SDC5 CMD */
-+			function = "sdc5";
- 			drive-strength = <10>;
- 			bias-pull-up;
- 		};
--		data {
-+		data-pins {
- 			/* SDC5 D0 to D3 */
- 			pins = "gpio96", "gpio98", "gpio99", "gpio100";
-+			function = "sdc5";
- 			drive-strength = <10>;
- 			bias-pull-up;
- 		};
- 	};
- 
--	dragon_gsbi3_i2c_pins: gsbi3_i2c {
--		mux {
--			pins = "gpio43", "gpio44";
--			function = "gsbi3";
--		};
--		pinconf {
--			pins = "gpio43", "gpio44";
--			drive-strength = <8>;
--			/* These have external pull-up 2.2kOhm to 1.8V */
--			bias-disable;
--		};
-+	dragon_gsbi3_i2c_pins: gsbi3-i2c-state {
-+		pins = "gpio43", "gpio44";
-+		function = "gsbi3";
-+		drive-strength = <8>;
-+		/* These have external pull-up 2.2kOhm to 1.8V */
-+		bias-disable;
- 	};
- 
--	dragon_gsbi8_i2c_pins: gsbi8_i2c {
--		mux {
--			pins = "gpio64", "gpio65";
--			function = "gsbi8";
--		};
--		pinconf {
--			pins = "gpio64", "gpio65";
--			drive-strength = <16>;
--			/* These have external pull-up 2.2kOhm to 1.8V */
--			bias-disable;
--		};
-+	dragon_gsbi8_i2c_pins: gsbi8-i2c-state {
-+		pins = "gpio64", "gpio65";
-+		function = "gsbi8";
-+		drive-strength = <16>;
-+		/* These have external pull-up 2.2kOhm to 1.8V */
-+		bias-disable;
- 	};
- 
--	dragon_gsbi12_i2c_pins: gsbi12_i2c {
--		mux {
--			pins = "gpio115", "gpio116";
--			function = "gsbi12";
--		};
--		pinconf {
--			pins = "gpio115", "gpio116";
--			drive-strength = <16>;
--			/* These have external pull-up 4.7kOhm to 1.8V */
--			bias-disable;
--		};
-+	dragon_gsbi12_i2c_pins: gsbi12-i2c-state {
-+		pins = "gpio115", "gpio116";
-+		function = "gsbi12";
-+		drive-strength = <16>;
-+		/* These have external pull-up 4.7kOhm to 1.8V */
-+		bias-disable;
- 	};
- 
- 	/* Primary serial port uart 0 pins */
--	dragon_gsbi12_serial_pins: gsbi12_serial {
--		mux {
--			pins = "gpio117", "gpio118";
--			function = "gsbi12";
--		};
--		tx {
-+	dragon_gsbi12_serial_pins: gsbi12-serial-state {
-+		tx-pins {
- 			pins = "gpio117";
-+			function = "gsbi12";
- 			drive-strength = <8>;
- 			bias-disable;
- 		};
--		rx {
-+		rx-pins {
- 			pins = "gpio118";
-+			function = "gsbi12";
- 			drive-strength = <2>;
- 			bias-pull-up;
- 		};
- 	};
- 
--	dragon_ebi2_pins: ebi2 {
-+	dragon_ebi2_pins: ebi2-state {
- 		/*
- 		 * Pins used by EBI2 on the Dragonboard, actually only
- 		 * CS2 is used by a real peripheral. CS0 is just
- 		 * routed to a test point.
- 		 */
--		mux0 {
-+		mux0-pins {
- 			pins =
- 			    /* "gpio39", CS1A_N this is not good to mux */
- 			    "gpio40", /* CS2A_N */
- 			    "gpio134"; /* CS0_N testpoint TP29 */
- 			function = "ebi2cs";
- 		};
--		mux1 {
-+		mux1-pins {
- 			pins =
- 			    /* EBI2_ADDR_7 downto EBI2_ADDR_0 address bus */
- 			    "gpio123", "gpio124", "gpio125", "gpio126",
-@@ -951,22 +928,21 @@ mux1 {
- 	};
- 
- 	/* Interrupt line for the KXSD9 accelerometer */
--	dragon_kxsd9_gpios: kxsd9 {
--		irq {
--			pins = "gpio57"; /* IRQ line */
--			bias-pull-up;
--		};
-+	dragon_kxsd9_gpios: kxsd9-state {
-+		pins = "gpio57"; /* IRQ line */
-+		function = "gpio";
-+		bias-pull-up;
- 	};
- 
--	dragon_tma340_gpios: tma340 {
--		reset {
-+	dragon_tma340_gpios: tma340-state {
-+		reset-pins {
- 			/* RESET line, TS_ATTN, WAKE_CTP */
- 			pins = "gpio58";
- 			function = "gpio";
- 			drive-strength = <6>;
- 			bias-disable;
- 		};
--		irq {
-+		irq-pins {
- 			pins = "gpio61"; /* IRQ line */
- 			function = "gpio";
- 			drive-strength = <2>;
--- 
-2.34.1
+>  
+>    reg:
+>      maxItems: 1
+> @@ -43,9 +45,8 @@ properties:
+>      description:
+>        HTE lines are arranged in 32 bit slice where each bit represents different
+>        line/signal that it can enable/configure for the timestamp. It is u32
+> -      property and depends on the HTE instance in the chip. The value 3 is for
+> -      GPIO GTE and 11 for IRQ GTE.
+> -    enum: [3, 11]
+> +      property and the value depends on the HTE instance in the chip.
 
+If this statement was true, then this property makes sense...
+
+> +    enum: [3, 11, 17]
+>  
+>    '#timestamp-cells':
+>      description:
+> @@ -55,6 +56,41 @@ properties:
+>        mentioned in the nvidia GPIO device tree binding document.
+>      const: 1
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra194-gte-aon
+> +              - nvidia,tegra234-gte-aon
+> +    then:
+> +      properties:
+> +        nvidia,slices:
+> +          const: 3
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra194-gte-lic
+> +    then:
+> +      properties:
+> +        nvidia,slices:
+> +          const: 11
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            enum:
+> +              - nvidia,tegra234-gte-lic
+> +    then:
+> +      properties:
+> +        nvidia,slices:
+> +          const: 17
+
+However, if there is only one possible value for each compatible, then 
+being per instance can't really be true. I guess 'aon' or 'lic' define 
+the instance? That's not normal practice. Are there other differences?
+
+It seems like 'nvidia,slices' should be implied from the compatible 
+string.
+
+Rob
