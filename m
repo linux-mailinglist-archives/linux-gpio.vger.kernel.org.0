@@ -2,215 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B023061EFC4
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 10:58:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40EE761F075
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 11:24:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbiKGJ6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 04:58:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
+        id S232005AbiKGKYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 05:24:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231589AbiKGJ6H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 04:58:07 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE7691581E
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 01:58:06 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id q71so9989151pgq.8
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 01:58:06 -0800 (PST)
+        with ESMTP id S231940AbiKGKYS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 05:24:18 -0500
+Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F4318E24
+        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 02:24:03 -0800 (PST)
+Received: by mail-vs1-xe44.google.com with SMTP id k67so10126096vsk.2
+        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 02:24:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ibQIYKNHrvV99f8U/JaozemK8LCdkqYO52B0gI5m82c=;
-        b=BMHG5+KCGkaCdE6pc9EZ61pvrv9TkGZCK2B8KMKBneys3M0RiS7ijHIJ3epbj1SCQz
-         cGXsF4uurJjxiaveV+ZZ1V9onX3eax2eKGLaambtj7q6yF9eVdnYiAAEBZZ5kPHC3gFW
-         nikrlkPwHVi4a1bP7rAhNoz19+hDrrxu711NG4qG5ZKXCtafcOtiDXQvMnCc7VsfdO7a
-         tX64NjrPmiVOx64szdoZhEJwoyiSEYSHIjnSVjUa69I7ek7QAaaylNEKGlbu+g3Dz/zO
-         gel8XxqU+WcgSIKfHoVlUDJ6ZAGv6V4m9SmShB26vIVao/xU83SxycT7dWrHJ7Z+4b58
-         j74g==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=Zv++OJ/ncK2pWuUWAQT+z52+cIoHK/WVJU4bVze52hunD5wDL4D5XJdl5mW2VbRjhi
+         PKA0tQ/z42/ONfUnPJoBfdYRGEG2gwiyoDRW7hecaxcg+/0t0u3g44ISFlpe+B9l1fvu
+         TmkNgtKOyak6WThRMAIvY+g5IgPZxvnz63e21BpajeaX9653GP4qpHUHyfV7BL4cSNb4
+         pCU1fNGxZBn7NlKzWZCMHMxM9LSs8sKofgpQ0FSoeb/qTDQ+CPP+tvlBe/vGQ8T8hOyn
+         vdUZr48/zTuwVxtBDF6IrOR7pT19nf73qD9i1Q8QUWEzM8dVJjwmGS+xVbVCXqFaE09J
+         SKzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ibQIYKNHrvV99f8U/JaozemK8LCdkqYO52B0gI5m82c=;
-        b=BqFQ1FgvgSKPsuHrMQef8GxDvL/KswVBSBC/Ms5Kp6VlfVX1qZhTgAUN8umjcHv78u
-         6tah7MXuRmwmZis7mP5qq1gWFWu7KLFLOd0fUoXx5YLjXTX7Kh9nQwZKAstB9uxfna6F
-         YGR5KaAzT7GGdFr7F8MsMjvWnokj4sygCyHjFQlUdvuH6nElPKQCMs+4smhk+5SKkt+r
-         LB9TUL3/qGgb/muVWQmWYUwMsBEvTL6nid0PDwHOg1oJWkK5kwbkrd2RkEsnXcvKB8si
-         U4Rxv8fc+I6k+MOImm71lHSV8H4AAy/aYVnfdqDQPKmjWUT8Y8HWgxvOBatKM7enwpas
-         zo+Q==
-X-Gm-Message-State: ACrzQf1hyZblNrI9DGT4OLP5CbTa19UnxRDv00loK+DW8YIEZizCGxLi
-        tmq7Zbi31qIjv+yTF7jZPiuvmA==
-X-Google-Smtp-Source: AMsMyM5knZXFVWdzGCNLcHuJQVLhohpQur4ND0qZfjlkmTQhEkIcDyLbj5I0nXhyiGj1LFOfWuV8rQ==
-X-Received: by 2002:a63:1c52:0:b0:470:a4a:66b3 with SMTP id c18-20020a631c52000000b004700a4a66b3mr23537462pgm.573.1667815086260;
-        Mon, 07 Nov 2022 01:58:06 -0800 (PST)
-Received: from localhost ([122.172.84.80])
-        by smtp.gmail.com with ESMTPSA id a20-20020a1709027d9400b0018862b7f8besm4607785plm.160.2022.11.07.01.58.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 01:58:05 -0800 (PST)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-        y86-dev <y86-dev@protonmail.com>
-Subject: [libgpiod][PATCH V9 8/8] bindings: rust: Integrate building of bindings with make
-Date:   Mon,  7 Nov 2022 15:27:34 +0530
-Message-Id: <d914ccd91e1abb856779ace7a43d15bc510545ad.1667815011.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
-In-Reply-To: <cover.1667815011.git.viresh.kumar@linaro.org>
-References: <cover.1667815011.git.viresh.kumar@linaro.org>
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
+        b=R7PmS2xY6UT6TllVEgKHmMncQCCGMSyop5xWnLbaWVbaJLcxo4L644VTnp/FnUQex7
+         2+4IMqft1deYIJyBwLFTGW84s/b2k+WK/HMU9ZnuPagUbbSqKRqIGCt21cbpNmJYg/RN
+         d1nlmeubbIDRe8yU3IYDz4mcSp3XMBVJv1k5fhWPAiMkQChq8FpIHToF0AUQzm1mXLCQ
+         PmnTYh1OrxMlrlNWUPeKwUOJ1Owg5JTz8xiXyaCqQqbyaRNpV8gVMZBbSn1arv/EuU06
+         /h4dR39TiE5zRML2MEoz+qBtt1bwaV/P3HAv25Ud1+lvVuEFPkoDnQ7+xlI+6iEqBq7p
+         P6FA==
+X-Gm-Message-State: ACrzQf3OXIR/frOM//iIqgrrOjSvry56PvVUUofXvFfvg+wS1gOxSJIA
+        TU43u82FietAPHyZq6WRqyQJaoQh4GC5rQ8D/S+k4pRvYlk=
+X-Google-Smtp-Source: AMsMyM7DPjaK7bSeUBIcMTkNZUaqK+NSwCEUfp88ZZDLY5TXShnQ2+B86xH3ryBKqTyGQWW3ozA/96x60VupsK8qo34=
+X-Received: by 2002:a17:902:8a90:b0:186:b145:f5ec with SMTP id
+ p16-20020a1709028a9000b00186b145f5ecmr50774476plo.103.1667816632274; Mon, 07
+ Nov 2022 02:23:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
+ 02:23:51 -0800 (PST)
+Reply-To: contact@ammico.it
+From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
+Date:   Mon, 7 Nov 2022 11:23:51 +0100
+Message-ID: <CAHAXD+bPNCns8Ez=7iXmPLADMtJgZj3-mFTk3NMhWC-Ca1b9rw@mail.gmail.com>
+Subject: Re:
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
+        BAYES_40,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:e44 listed in]
+        [list.dnswl.org]
+        * -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
+        *      [score: 0.2481]
+        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [977638ib[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Lets make build rust bindings as well.
-
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- README                    |  8 +++++---
- TODO                      |  8 --------
- bindings/Makefile.am      |  6 ++++++
- bindings/rust/Makefile.am | 18 ++++++++++++++++++
- configure.ac              | 16 ++++++++++++++++
- 5 files changed, 45 insertions(+), 11 deletions(-)
- create mode 100644 bindings/rust/Makefile.am
-
-diff --git a/README b/README
-index 814a0f161fd2..68b5d69f9b66 100644
---- a/README
-+++ b/README
-@@ -119,9 +119,9 @@ TOOLS
- BINDINGS
- --------
- 
--High-level, object-oriented bindings for C++ and python3 are provided. They
--can be enabled by passing --enable-bindings-cxx and --enable-bindings-python
--arguments respectively to configure.
-+High-level, object-oriented bindings for C++, python3 and Rust are provided.
-+They can be enabled by passing --enable-bindings-cxx, --enable-bindings-python
-+and --enable-bindings-rust arguments respectively to configure.
- 
- C++ bindings require C++11 support and autoconf-archive collection if building
- from git.
-@@ -132,6 +132,8 @@ the PYTHON_CPPFLAGS and PYTHON_LIBS variables in order to point the build
- system to the correct locations. During native builds, the configure script
- can auto-detect the location of the development files.
- 
-+Rust bindings require cargo support.
-+
- TESTING
- -------
- 
-diff --git a/TODO b/TODO
-index 8bb4d8f3ad56..cf4fd7b4a962 100644
---- a/TODO
-+++ b/TODO
-@@ -28,14 +28,6 @@ and is partially functional.
- 
- ----------
- 
--* implement rust bindings
--
--With Rust gaining popularity as a low-level system's language and the
--possibility of it making its way into the linux kernel, it's probably time to
--provide Rust bindings to libgpiod as part of the project.
--
------------
--
- * implement a simple daemon for controlling GPIOs in C together with a client
-   program
- 
-diff --git a/bindings/Makefile.am b/bindings/Makefile.am
-index 8f8c762f254f..004ae23dbc58 100644
---- a/bindings/Makefile.am
-+++ b/bindings/Makefile.am
-@@ -14,3 +14,9 @@ if WITH_BINDINGS_PYTHON
- SUBDIRS += python
- 
- endif
-+
-+if WITH_BINDINGS_RUST
-+
-+SUBDIRS += rust
-+
-+endif
-diff --git a/bindings/rust/Makefile.am b/bindings/rust/Makefile.am
-new file mode 100644
-index 000000000000..79a52bc691ae
---- /dev/null
-+++ b/bindings/rust/Makefile.am
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# SPDX-FileCopyrightText: 2022 Viresh Kumar <viresh.kumar@linaro.org>
-+
-+command = cargo build --release --lib
-+
-+if WITH_TESTS
-+command += --tests
-+endif
-+
-+if WITH_EXAMPLES
-+command += --examples
-+endif
-+
-+all:
-+	$(command)
-+
-+clean:
-+	cargo clean
-diff --git a/configure.ac b/configure.ac
-index 048b2ac7af8f..4a2cdb68b8b0 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -212,6 +212,21 @@ then
- 		[AC_SUBST(PYTHON_LIBS, [`$PYTHON-config --libs`])])
- fi
- 
-+AC_ARG_ENABLE([bindings-rust],
-+	[AS_HELP_STRING([--enable-bindings-rust],[enable rust bindings [default=no]])],
-+	[if test "x$enableval" = xyes; then with_bindings_rust=true; fi],
-+	[with_bindings_rust=false])
-+AM_CONDITIONAL([WITH_BINDINGS_RUST], [test "x$with_bindings_rust" = xtrue])
-+
-+if test "x$with_bindings_rust" = xtrue
-+then
-+	AC_CHECK_PROG([has_cargo], [cargo], [true], [false])
-+	if test "x$has_cargo" = xfalse
-+	then
-+		AC_MSG_ERROR([cargo not found - needed for rust bindings])
-+	fi
-+fi
-+
- AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
- AM_CONDITIONAL([HAS_DOXYGEN], [test "x$has_doxygen" = xtrue])
- if test "x$has_doxygen" = xfalse
-@@ -249,6 +264,7 @@ AC_CONFIG_FILES([Makefile
- 		 bindings/python/examples/Makefile
- 		 bindings/python/tests/Makefile
- 		 bindings/python/tests/gpiosim/Makefile
-+		 bindings/rust/Makefile
- 		 man/Makefile])
- 
- AC_OUTPUT
--- 
-2.31.1.272.g89b43f80a514
-
+Hei ja miten voit?
+Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
+ toivolla
+v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
+leikkaus
+t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
+suudet selviyty=C3=A4.
+Mutta ennen kuin min=C3=A4
+Tee toinen vaarallinen operaatio, annan sen sinulle
+Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
+sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
+voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
+iden auttamista
+ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
+=C3=A4 minulla ei ole niit=C3=A4
+kenelt=C3=A4 perii rahaa.
+Vastaa minulle nopeasti
+terveisi=C3=A4
+Rouva Monika Evereen
+Florida, Amerikan Yhdysvallat
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+Hi and how are you?
+My name is Mrs. Evereen, I am sending this message with great hope for
+an immediate response, as I have to undergo heart reoperation in my
+current poor health with little chance of survival. But before I
+undertake the second dangerous operation, I will give you the
+$6,550,000 I have in my US bank account to invest well, manage and use
+the profits to run a charity project for me. I count helping the sick
+and the poor as my last wish on earth, because I have no one to
+inherit money from.
+Please give me a quick reply
+regards
+Mrs. Monika Evereen
+Florida, United States of America
