@@ -2,141 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78FA161F74E
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 16:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C48C61F886
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 17:11:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232741AbiKGPOV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 10:14:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
+        id S231646AbiKGQLF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 11:11:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232689AbiKGPOV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 10:14:21 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8637D12618
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 07:14:19 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id 131so9570912ybl.3
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 07:14:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UJyu92WZZbDaoQSrBib4kOIXTx2m8Pl0N0pfQ3F15qo=;
-        b=YmaqIjy3rjqlN8gqbQV5RFr95bNsv468/uD3jRnpknMeEdSXMAfPkjGbeoHjj/2Y+w
-         frtrNFWeEL5A+bTgUq5zgoMn1nzZaAtfCFV1AOVQEN/wJqHjGnC5EdiID9y/ctYL8JKK
-         D5OhldQThFIbbnf7p98S8UUJl4Em7mDHxIW1TMBnHnaqqYBteyPj1V4ODjOHu11EyTuR
-         TGU+LrK8KXDLIdfAQ2A1KPEK1ha2/8mAgNlxRbfKLrRlGjRRg8g7zdogqq6XEoq9Wi+N
-         p15fMa3z5XnWTS85S75/2buIcRf/802mlLP141Z0qIPaa97fnMY5p5ldZsZE+JQ7xQ5y
-         q8cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UJyu92WZZbDaoQSrBib4kOIXTx2m8Pl0N0pfQ3F15qo=;
-        b=Trxk97mS9Rf0Cz+smX/HKxql+d/n+IzNZuvS73IEM4SsZ9omtfphpFQ4yx6G7cCL7b
-         D7MkSSI9eoPJo8BZp9qJHL9F/QousyY7Ie+Gmp6YFbgcAvp1Dj/sK9BDyudhLGNeksb5
-         /vAo51/GGBSAXhwNBi421aP3T/DpCdY/HkHc5nijd6eWnpfrreJkQM2GzicLdBJWv3OU
-         VXM/AskWARoB5byAu8/WG4pFUMRWWq6Gnzx6gnNiqgJnNSRZwGXWlp60QFCvIgXDP6iO
-         zzN7PECS0h1ApFB4YCW4CFS3PoggY6TGcK2ZROuNeklUgj0eyxtdQTU+xs9fa0GH73Oh
-         jzJg==
-X-Gm-Message-State: ACrzQf1ZGN9JLqawBt1Zd1fX2HiBBsRXIQPxmejpwp0qTNYxFDgXhmFT
-        SpQRUJ2h87ErN2pZDkpjW+Cw4ilgkw/JI78xbq5Fs12/mIo=
-X-Google-Smtp-Source: AMsMyM7zLuZ18DNIAU6GXhONnkH47m6L+NRV4z89rYYQQc3AS/LpuWP1U0k7odf4Ig7J0PNoNXGY+kYKkknD64y+h1I=
-X-Received: by 2002:a25:3005:0:b0:6cb:7f63:c664 with SMTP id
- w5-20020a253005000000b006cb7f63c664mr716850ybw.263.1667834058775; Mon, 07 Nov
- 2022 07:14:18 -0800 (PST)
+        with ESMTP id S231557AbiKGQLE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 11:11:04 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BF9254;
+        Mon,  7 Nov 2022 08:11:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667837464; x=1699373464;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=/kSwwswIzgCUAxVBjbvEobr7bEAkyBfEjUc94Vf2hq4=;
+  b=MVthJ47D5e0Q/HsA/oSXeNIhCmeE81stHEEqQ+vuIxLbaiEXwC5TTUht
+   ADRZ/9c+kQmvqJoV+O9yhemIpm0B+Y+XhVb5DVgCJOF7v9KNB0OJqPRfK
+   eNpEm5Nn/08LVu9nxLukGbl081mDISD3IHAFh2e90RtTRISvGPffNHX5o
+   j+nXQ3AyE0Qa031B+v0h41qczPP44NPASdyVasOk/jF1dm1M2X1W8piSE
+   HkKrMHv1Vbwt4Fhm67+e6aRqgdFfszx2mZEvupxwRw4wWwXZi99Ikqmaj
+   oCLqeLKD1XYWe8XflwfvXpkME5ArLyyMTcYemQwcvjuDshZkukYjUXHUE
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="310451919"
+X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
+   d="scan'208";a="310451919"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 08:10:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="778543956"
+X-IronPort-AV: E=Sophos;i="5.96,145,1665471600"; 
+   d="scan'208";a="778543956"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Nov 2022 08:10:08 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id E6B49F7; Mon,  7 Nov 2022 18:10:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/2] gpiolib: of: Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode
+Date:   Mon,  7 Nov 2022 18:10:26 +0200
+Message-Id: <20221107161027.43384-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <20221026203539.517886-1-nfrayer@baylibre.com> <CAMRc=MfVqBVv9byXvimpYUtvs1OXqh5608AZ0_L=zw7q6rOo9A@mail.gmail.com>
-In-Reply-To: <CAMRc=MfVqBVv9byXvimpYUtvs1OXqh5608AZ0_L=zw7q6rOo9A@mail.gmail.com>
-From:   Nicolas Frayer <nfrayer@baylibre.com>
-Date:   Mon, 7 Nov 2022 16:14:08 +0100
-Message-ID: <CANyCTtRpOaBUU36XfK-MiDTQ0NvqUb-ezV6jySGZRixx7CMQmQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: davinci: add support of module build
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     j-keerthy@ti.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        khilman@baylibre.com, glaroque@baylibre.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Le lun. 7 nov. 2022 =C3=A0 10:14, Bartosz Golaszewski <brgl@bgdev.pl> a =C3=
-=A9crit :
->
-> On Wed, Oct 26, 2022 at 10:35 PM Nicolas Frayer <nfrayer@baylibre.com> wr=
-ote:
-> >
-> > From: Guillaume La Roque <glaroque@baylibre.com>
-> >
-> > Added module build support for the davinci gpio driver
-> >
-> > Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-> > Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
-> > ---
-> >  drivers/gpio/Kconfig        |  2 +-
-> >  drivers/gpio/gpio-davinci.c | 15 ++++++---------
-> >  2 files changed, 7 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index a01af1180616..f8bace51c2d0 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -219,7 +219,7 @@ config GPIO_CLPS711X
-> >           Say yes here to support GPIO on CLPS711X SoCs.
-> >
-> >  config GPIO_DAVINCI
-> > -       bool "TI Davinci/Keystone GPIO support"
-> > +       tristate "TI Davinci/Keystone GPIO support"
-> >         default y if ARCH_DAVINCI
-> >         depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || =
-ARCH_K3)
-> >         help
-> > diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> > index 59c4c48d8296..def87b99691f 100644
-> > --- a/drivers/gpio/gpio-davinci.c
-> > +++ b/drivers/gpio/gpio-davinci.c
-> > @@ -721,12 +721,9 @@ static struct platform_driver davinci_gpio_driver =
-=3D {
-> >         },
-> >  };
-> >
-> > -/**
-> > - * GPIO driver registration needs to be done before machine_init funct=
-ions
-> > - * access GPIO. Hence davinci_gpio_drv_reg() is a postcore_initcall.
-> > - */
-> > -static int __init davinci_gpio_drv_reg(void)
-> > -{
-> > -       return platform_driver_register(&davinci_gpio_driver);
-> > -}
-> > -postcore_initcall(davinci_gpio_drv_reg);
-> > +module_platform_driver(davinci_gpio_driver);
->
-> I'm sure there was a reason to register the driver early (at postcore)
-> for some platforms. This moves the registration to module_init which
-> is the last initcall to call. What HW did you test this on?
->
-> Bart
->
+GPIO library is getting rid of of_node, fwnode should be utilized instead.
+Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode.
 
-You are right, I'll send a v2 keeping postcore_initcall.
-I've tested on a AM62x SK EVM.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/gpio/gpiolib-of.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Thanks.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index be9c34cca322..000020eb78d8 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -1104,9 +1104,11 @@ static int of_gpiochip_add_pin_range(struct gpio_chip *chip) { return 0; }
+ 
+ int of_gpiochip_add(struct gpio_chip *chip)
+ {
++	struct device_node *np;
+ 	int ret;
+ 
+-	if (!chip->of_node)
++	np = to_of_node(chip->fwnode);
++	if (!np)
+ 		return 0;
+ 
+ 	if (!chip->of_xlate) {
+@@ -1123,18 +1125,18 @@ int of_gpiochip_add(struct gpio_chip *chip)
+ 	if (ret)
+ 		return ret;
+ 
+-	of_node_get(chip->of_node);
++	fwnode_handle_get(chip->fwnode);
+ 
+ 	ret = of_gpiochip_scan_gpios(chip);
+ 	if (ret)
+-		of_node_put(chip->of_node);
++		fwnode_handle_put(chip->fwnode);
+ 
+ 	return ret;
+ }
+ 
+ void of_gpiochip_remove(struct gpio_chip *chip)
+ {
+-	of_node_put(chip->of_node);
++	fwnode_handle_put(chip->fwnode);
+ }
+ 
+ void of_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev)
+-- 
+2.35.1
 
-> > +
-> > +MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
-> > +MODULE_DESCRIPTION("DAVINCI GPIO driver");
-> > +MODULE_LICENSE("GPL");
-> > +MODULE_ALIAS("platform:gpio-davinci");
-> > --
-> > 2.25.1
-> >
