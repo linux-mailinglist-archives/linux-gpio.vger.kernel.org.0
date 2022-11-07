@@ -2,132 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 173B261FFA2
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 21:38:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9180561FFC1
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 21:48:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232411AbiKGUiI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 15:38:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34748 "EHLO
+        id S232191AbiKGUsu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 15:48:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231887AbiKGUiG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 15:38:06 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3653A264A1
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 12:38:05 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id z189so11775310vsb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 12:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IHQPm0wu+YpCSjSEGUCLAXG8G/dftjICDA1Cd0hRfeQ=;
-        b=v5sI0kcBdDoCOkZIGxqhb4rT9YpWXWkK5YNai2ZsI0LwkhX4FRfRZdOHhe+XFMtmO2
-         KWo5ymx5sn82nITWbEgRXOiY4GNydpVeDWlQWWwd1ft3/KcBqIsbeNFhjPEb7fW15ccT
-         nhAKNcu5c10qRwFFHodMHjfBi8eE2d/EyAEqiOO0T/m6niREitOTyB6hlrffalAotlXu
-         q7/p7Nwow85rgPMixcCaB1gp3SYzvYPLZwU12im9h+ff+caINUpx95pr7YCGyzqCvy9H
-         SPGt3JDP1X6pnExIK98tIRBCtVsF6n1gjBh3wAnukW3ER2VLyAassxHVe6FXyFgNFR0w
-         Zhfg==
+        with ESMTP id S233017AbiKGUsn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 15:48:43 -0500
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB0121D339;
+        Mon,  7 Nov 2022 12:48:41 -0800 (PST)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-13be3ef361dso14037116fac.12;
+        Mon, 07 Nov 2022 12:48:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IHQPm0wu+YpCSjSEGUCLAXG8G/dftjICDA1Cd0hRfeQ=;
-        b=bZmBLcGS6e88eqVyKmsha3PKVNeHbmzEud7g+2rkNBzpbLYGfUvcgZfpMV/tGJzF/e
-         xYw/JNcWN5ViCmLvIqWkpVOHt5gwJyGyNkZ4Datp8IlZJSQ/u0uhynXeS9QmFSfY9gmm
-         uxbXIB37ervn1uIwaAauF1BodKcV2q4z8kdrcUmbvBH4xzkqxHUMvnHrbSrjIjCrCXfm
-         ul4IUV6IRqCjabp/xFiikchRgZdL8vl1pmja5ItXVramyu0LaU7RV/IgDSgtP1zE3XYD
-         5D5SY7hCpry3tLDnnV1SGazxmed5wKSf66GvN4k9swBVyARio2ytY1qtoHh5IGLYPHhd
-         twWg==
-X-Gm-Message-State: ACrzQf3793wEIQE74v/K106OgbJ8sx9ENi65aO/HpsjMlx9E92I8YxUy
-        zvboCsDx/Z3twQIBWqxu+y/GjU03GVeBXz5TK2BaFQ==
-X-Google-Smtp-Source: AMsMyM7HKtwdW6lovqXQpX0baiK/2edNiHMRZe7qPwavV5oUB/CVeT9TRpDCXiaPRYKoPRZKiDdMY609XkAwj6FX7iE=
-X-Received: by 2002:a67:ac0e:0:b0:3aa:86c3:e6fc with SMTP id
- v14-20020a67ac0e000000b003aa86c3e6fcmr26672223vse.9.1667853484301; Mon, 07
- Nov 2022 12:38:04 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OP9uqgjVo6enR7hOZ597rbGfwfyI/yQnJGV/FYA5+1I=;
+        b=AjLxfb+CN1NtzNbgS9qKzLFxbJbk/Wn3/iYr19Vr878yaqjEyzCqN5QVpIIZNHP8eA
+         dPpI8463lBlfrPCIP2RH6zgWfFTFGJX01dQD/8urUVJ8P5pMjvgUHu795ZL3rLWlvl/p
+         mhjs/PWRGW8aq2wd31Y1KEGAHgi80Kclc80RR8NtnZQMDmtipgJbmb9JEM43maWIJrad
+         /3LuoT8VeazTCnZgToxRYRpHUU6+RYUjnITXpvCqY0jBxKU/CD62t9zxiaIl+c9Qzugf
+         l5hLbYpezB8DblYFHJx9cQnuQ1WgWdznHze+mx0qQ5zdcGhA7wi0vuQaKttnJQNSRXrc
+         DFbw==
+X-Gm-Message-State: ACrzQf0PtAF5bnpq5g7plgh8C38av5HIZ+LSxlgsj3BOZpU+IJFwFciH
+        fzfgC76fFlQudFfPD2gU+g==
+X-Google-Smtp-Source: AMsMyM5jNbS++rcRXHa+o4FntULPIyIZnDRzbRYVtPrUY0F5/ADZJS9RyB7D56J4jQQZTr3PXSIIqQ==
+X-Received: by 2002:a05:6870:5803:b0:12c:c3e0:99dc with SMTP id r3-20020a056870580300b0012cc3e099dcmr38722896oap.19.1667854120939;
+        Mon, 07 Nov 2022 12:48:40 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z10-20020a9d248a000000b00660e833baddsm3365246ota.29.2022.11.07.12.48.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Nov 2022 12:48:40 -0800 (PST)
+Received: (nullmailer pid 1607977 invoked by uid 1000);
+        Mon, 07 Nov 2022 20:48:42 -0000
+Date:   Mon, 7 Nov 2022 14:48:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vidya Sagar <vidyas@nvidia.com>, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: pinctrl: tegra: Convert to
+ json-schema
+Message-ID: <166785411929.1607862.9138980578446400859.robh@kernel.org>
+References: <20221104142345.1562750-1-thierry.reding@gmail.com>
+ <20221104142345.1562750-2-thierry.reding@gmail.com>
 MIME-Version: 1.0
-References: <20221101082442.263448-1-chenweilong@huawei.com> <9824fa76-89cc-6c17-9c4a-d37524a30a92@huawei.com>
-In-Reply-To: <9824fa76-89cc-6c17-9c4a-d37524a30a92@huawei.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 7 Nov 2022 21:37:53 +0100
-Message-ID: <CAMRc=Mdw=45_oEzO-4ix5Nhm2tnSJRrPmLjnzkp4GeYGbDPeVQ@mail.gmail.com>
-Subject: Re: [PATCH next v3 1/2] gpio: hisi: Add initial device tree support
-To:     chenweilong <chenweilong@huawei.com>
-Cc:     f.fangjian@huawei.com, linus.walleij@linaro.org,
-        yangyicong@hisilicon.com, xuwei5@huawei.com, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221104142345.1562750-2-thierry.reding@gmail.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 3, 2022 at 9:51 AM chenweilong <chenweilong@huawei.com> wrote:
->
-> On 2022/11/1 16:24, Weilong Chen wrote:
->
-> This is the latest version for the patch, I used the v3 version number incorrectly.
-> Sorry for the mistake. I will pay attention next time.
->
-> > Add support for HiSilicon GPIO controller in embedded platform, which
-> > boot from devicetree.
-> >
-> > Signed-off-by: Weilong Chen <chenweilong@huawei.com>
-> > ---
-> > Change since v2:
-> > - Drop wrong use ACPI_PTR/of_match_ptr
-> > Link: https://lore.kernel.org/lkml/20221028022453.163186-1-chenweilong@huawei.com/
-> >
-> >  drivers/gpio/Kconfig     | 2 +-
-> >  drivers/gpio/gpio-hisi.c | 7 +++++++
-> >  2 files changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index e034f752e7ce..71a7880af59d 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -310,7 +310,7 @@ config GPIO_GRGPIO
-> >
-> >  config GPIO_HISI
-> >       tristate "HiSilicon GPIO controller driver"
-> > -     depends on (ARM64 && ACPI) || COMPILE_TEST
-> > +     depends on ARM64 || COMPILE_TEST
-> >       select GPIO_GENERIC
-> >       select GPIOLIB_IRQCHIP
-> >       help
-> > diff --git a/drivers/gpio/gpio-hisi.c b/drivers/gpio/gpio-hisi.c
-> > index 3caabef5c7a2..55bd69043bf4 100644
-> > --- a/drivers/gpio/gpio-hisi.c
-> > +++ b/drivers/gpio/gpio-hisi.c
-> > @@ -221,6 +221,12 @@ static const struct acpi_device_id hisi_gpio_acpi_match[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(acpi, hisi_gpio_acpi_match);
-> >
-> > +static const struct of_device_id hisi_gpio_dts_match[] = {
-> > +     { .compatible = "hisilicon,ascend910-gpio", },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, hisi_gpio_dts_match);
-> > +
-> >  static void hisi_gpio_get_pdata(struct device *dev,
-> >                               struct hisi_gpio *hisi_gpio)
-> >  {
-> > @@ -311,6 +317,7 @@ static struct platform_driver hisi_gpio_driver = {
-> >       .driver         = {
-> >               .name   = HISI_GPIO_DRIVER_NAME,
-> >               .acpi_match_table = hisi_gpio_acpi_match,
-> > +             .of_match_table = hisi_gpio_dts_match,
-> >       },
-> >       .probe          = hisi_gpio_probe,
-> >  };
->
->
 
-I applied both, but reversed the order as dt bindings should come first. Thanks!
+On Fri, 04 Nov 2022 15:23:42 +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Convert the NVIDIA Tegra pinmux controller bindings from the free-form
+> text format to json-schema.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v3:
+> - add missing "type: object" to patternProperties definitions
+> - restructure common bindings according to Rob's comments
+> 
+> Changes in v2:
+> - wrap lines at 80 characters instead of the standard 100 characters in Linux
+> - use GPL-2.0-only instead of GPL-2.0+ license for DT bindings
+> - reorder additionalProperties for better readability
+> - move common definitions into a shared schema
+> - remove consumer snippets from examples
+> 
+>  .../bindings/clock/nvidia,tegra124-dfll.yaml  |   2 +-
+>  .../pinctrl/nvidia,tegra-pinmux-common.yaml   | 178 ++++++++++++++++++
+>  .../pinctrl/nvidia,tegra114-pinmux.txt        | 131 -------------
+>  .../pinctrl/nvidia,tegra114-pinmux.yaml       | 155 +++++++++++++++
+>  .../pinctrl/nvidia,tegra124-pinmux.txt        | 153 ---------------
+>  .../pinctrl/nvidia,tegra124-pinmux.yaml       | 176 +++++++++++++++++
+>  .../pinctrl/nvidia,tegra194-pinmux.txt        | 107 -----------
+>  .../pinctrl/nvidia,tegra194-pinmux.yaml       |  89 +++++++++
+>  .../pinctrl/nvidia,tegra20-pinmux.txt         | 143 --------------
+>  .../pinctrl/nvidia,tegra20-pinmux.yaml        | 112 +++++++++++
+>  .../pinctrl/nvidia,tegra210-pinmux.txt        | 166 ----------------
+>  .../pinctrl/nvidia,tegra210-pinmux.yaml       | 142 ++++++++++++++
+>  .../pinctrl/nvidia,tegra30-pinmux.txt         | 144 --------------
+>  .../pinctrl/nvidia,tegra30-pinmux.yaml        | 176 +++++++++++++++++
+>  14 files changed, 1029 insertions(+), 845 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra-pinmux-common.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra114-pinmux.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-pinmux.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra194-pinmux.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra20-pinmux.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra30-pinmux.yaml
+> 
 
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
