@@ -2,128 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40EE761F075
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 11:24:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E3EB061F0DC
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 11:37:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232005AbiKGKYa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 05:24:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35610 "EHLO
+        id S231482AbiKGKhG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 05:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231940AbiKGKYS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 05:24:18 -0500
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67F4318E24
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 02:24:03 -0800 (PST)
-Received: by mail-vs1-xe44.google.com with SMTP id k67so10126096vsk.2
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 02:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
-        b=Zv++OJ/ncK2pWuUWAQT+z52+cIoHK/WVJU4bVze52hunD5wDL4D5XJdl5mW2VbRjhi
-         PKA0tQ/z42/ONfUnPJoBfdYRGEG2gwiyoDRW7hecaxcg+/0t0u3g44ISFlpe+B9l1fvu
-         TmkNgtKOyak6WThRMAIvY+g5IgPZxvnz63e21BpajeaX9653GP4qpHUHyfV7BL4cSNb4
-         pCU1fNGxZBn7NlKzWZCMHMxM9LSs8sKofgpQ0FSoeb/qTDQ+CPP+tvlBe/vGQ8T8hOyn
-         vdUZr48/zTuwVxtBDF6IrOR7pT19nf73qD9i1Q8QUWEzM8dVJjwmGS+xVbVCXqFaE09J
-         SKzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AOmtRIzmF5dcnWrT0j3skK83MYTC+QvduwZ6ndeN2Ks=;
-        b=R7PmS2xY6UT6TllVEgKHmMncQCCGMSyop5xWnLbaWVbaJLcxo4L644VTnp/FnUQex7
-         2+4IMqft1deYIJyBwLFTGW84s/b2k+WK/HMU9ZnuPagUbbSqKRqIGCt21cbpNmJYg/RN
-         d1nlmeubbIDRe8yU3IYDz4mcSp3XMBVJv1k5fhWPAiMkQChq8FpIHToF0AUQzm1mXLCQ
-         PmnTYh1OrxMlrlNWUPeKwUOJ1Owg5JTz8xiXyaCqQqbyaRNpV8gVMZBbSn1arv/EuU06
-         /h4dR39TiE5zRML2MEoz+qBtt1bwaV/P3HAv25Ud1+lvVuEFPkoDnQ7+xlI+6iEqBq7p
-         P6FA==
-X-Gm-Message-State: ACrzQf3OXIR/frOM//iIqgrrOjSvry56PvVUUofXvFfvg+wS1gOxSJIA
-        TU43u82FietAPHyZq6WRqyQJaoQh4GC5rQ8D/S+k4pRvYlk=
-X-Google-Smtp-Source: AMsMyM7DPjaK7bSeUBIcMTkNZUaqK+NSwCEUfp88ZZDLY5TXShnQ2+B86xH3ryBKqTyGQWW3ozA/96x60VupsK8qo34=
-X-Received: by 2002:a17:902:8a90:b0:186:b145:f5ec with SMTP id
- p16-20020a1709028a9000b00186b145f5ecmr50774476plo.103.1667816632274; Mon, 07
- Nov 2022 02:23:52 -0800 (PST)
+        with ESMTP id S231476AbiKGKhF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 05:37:05 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBB418B2A;
+        Mon,  7 Nov 2022 02:37:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667817424; x=1699353424;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=i6MTD6B4lNHMqgSksufKxFv2DiiLzRusg7SK8cxF7qQ=;
+  b=ipV3bX5fuKQFv/lfvOtNIrgq+Vs2ILcNg1kKRDSVNqPCSkvZEJ8c869c
+   3Mw9ZWXNzId2L0emgr/ZA1jRbGaIT6T299EHiPGlmgu0+ep/pvjPHfzgp
+   8jXF9cX/t11gh8hjgwqk/orgp/dWHkA5yxe8oP6nkfjlmVfPG2U8MKJZ/
+   7mFSbbJtX629d5gLOXpkLZufJrIxifHkAij+CRXP4wIs8SIfLl1efNIUt
+   ImkJwCEho4cTLbqaWxb5ipD8YMloL3EmSfjwpGnzSyK7LJ51DSbwgrF02
+   RtrxAF2icMcpcgmsWHb4A61viemywuUUJOzXTT8SyO8qGhxMwYhuKBikH
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="312145289"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="312145289"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2022 02:37:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="638322691"
+X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
+   d="scan'208";a="638322691"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP; 07 Nov 2022 02:37:02 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1orzUy-008av4-28;
+        Mon, 07 Nov 2022 12:37:00 +0200
+Date:   Mon, 7 Nov 2022 12:37:00 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Migrate i8255 GPIO drivers to regmap API
+Message-ID: <Y2jfzKZkcEcQTdH5@smile.fi.intel.com>
+References: <cover.1667472555.git.william.gray@linaro.org>
 MIME-Version: 1.0
-Received: by 2002:a05:6a06:925:b0:587:19e0:c567 with HTTP; Mon, 7 Nov 2022
- 02:23:51 -0800 (PST)
-Reply-To: contact@ammico.it
-From:   =?UTF-8?Q?Mrs=2E_Monika_Everenov=C3=A1?= <977638ib@gmail.com>
-Date:   Mon, 7 Nov 2022 11:23:51 +0100
-Message-ID: <CAHAXD+bPNCns8Ez=7iXmPLADMtJgZj3-mFTk3NMhWC-Ca1b9rw@mail.gmail.com>
-Subject: Re:
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.8 required=5.0 tests=ADVANCE_FEE_2_NEW_MONEY,
-        BAYES_40,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,UNDISC_MONEY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:e44 listed in]
-        [list.dnswl.org]
-        * -0.0 BAYES_40 BODY: Bayes spam probability is 20 to 40%
-        *      [score: 0.2481]
-        *  0.7 FROM_STARTS_WITH_NUMS From: starts with several numbers
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [977638ib[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        *  3.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  2.0 ADVANCE_FEE_2_NEW_MONEY Advance Fee fraud and lots of money
-X-Spam-Level: *****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1667472555.git.william.gray@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hei ja miten voit?
-Nimeni on rouva Evereen, l=C3=A4het=C3=A4n t=C3=A4m=C3=A4n viestin suurella=
- toivolla
-v=C3=A4lit=C3=B6n vastaus, koska minun on teht=C3=A4v=C3=A4 uusi syd=C3=A4n=
-leikkaus
-t=C3=A4ll=C3=A4 hetkell=C3=A4 huonokuntoinen ja v=C3=A4h=C3=A4iset mahdolli=
-suudet selviyty=C3=A4.
-Mutta ennen kuin min=C3=A4
-Tee toinen vaarallinen operaatio, annan sen sinulle
-Minulla on 6 550 000 dollaria yhdysvaltalaisella pankkitilill=C3=A4
-sijoittamista, hallinnointia ja k=C3=A4ytt=C3=B6=C3=A4 varten
-voittoa hyv=C3=A4ntekev=C3=A4isyysprojektin toteuttamiseen. Tarkoitan saira=
-iden auttamista
-ja k=C3=B6yh=C3=A4t ovat viimeinen haluni maan p=C3=A4=C3=A4ll=C3=A4, sill=
-=C3=A4 minulla ei ole niit=C3=A4
-kenelt=C3=A4 perii rahaa.
-Vastaa minulle nopeasti
-terveisi=C3=A4
-Rouva Monika Evereen
-Florida, Amerikan Yhdysvallat
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-Hi and how are you?
-My name is Mrs. Evereen, I am sending this message with great hope for
-an immediate response, as I have to undergo heart reoperation in my
-current poor health with little chance of survival. But before I
-undertake the second dangerous operation, I will give you the
-$6,550,000 I have in my US bank account to invest well, manage and use
-the profits to run a charity project for me. I count helping the sick
-and the poor as my last wish on earth, because I have no one to
-inherit money from.
-Please give me a quick reply
-regards
-Mrs. Monika Evereen
-Florida, United States of America
+On Thu, Nov 03, 2022 at 07:20:46AM -0400, William Breathitt Gray wrote:
+> The regmap API supports IO port accessors so we can take advantage of
+> regmap abstractions rather than handling access to the device registers
+> directly in the driver.
+> 
+> Precursor patches are provided for 104-dio-48e and 104-idi-48 to migrate
+> their respective device-specific registers first in order to simplify
+> the subsequent patch migrating the i8255 library and its dependents.
+> 
+> The struct i8255 control_state member serves as a cache of the i8255
+> device's control register. Does the regmap API support caching such that
+> we won't need to manually update a control_state member?
+
+Yes, regmap supports caching and IIRC it's opt-out.
+
+> William Breathitt Gray (3):
+>   gpio: 104-dio-48e: Migrate to regmap API
+>   gpio: 104-idi-48: Migrate to regmap API
+>   gpio: i8255: Migrate to regmap API
+> 
+>  drivers/gpio/gpio-104-dio-48e.c | 200 +++++++++++++++++++----------
+>  drivers/gpio/gpio-104-idi-48.c  | 110 +++++++++++-----
+>  drivers/gpio/gpio-gpio-mm.c     |  97 ++++++++++----
+>  drivers/gpio/gpio-i8255.c       | 218 +++++++++++++++++++++-----------
+>  drivers/gpio/gpio-i8255.h       |  54 ++++----
+>  5 files changed, 451 insertions(+), 228 deletions(-)
+> 
+> 
+> base-commit: b8b80348c57b360019071e17380298619c5d8066
+> -- 
+> 2.37.3
+> 
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
