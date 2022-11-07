@@ -2,64 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C925061FB60
-	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 18:29:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F1C661FC20
+	for <lists+linux-gpio@lfdr.de>; Mon,  7 Nov 2022 18:54:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbiKGR3k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 7 Nov 2022 12:29:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42804 "EHLO
+        id S231587AbiKGRyr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 7 Nov 2022 12:54:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232431AbiKGR3j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 12:29:39 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66371D8
-        for <linux-gpio@vger.kernel.org>; Mon,  7 Nov 2022 09:29:37 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id ja4-20020a05600c556400b003cf6e77f89cso8685746wmb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 07 Nov 2022 09:29:37 -0800 (PST)
+        with ESMTP id S232539AbiKGRyM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 7 Nov 2022 12:54:12 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D09625C5A;
+        Mon,  7 Nov 2022 09:53:18 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id w14so17380009wru.8;
+        Mon, 07 Nov 2022 09:53:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jUX5wkpwN8zL5/uJRNeccKjsPP/B2qlR2/KDWqYNiM4=;
-        b=pqBGiTYfcBFJqNr8tDtfWk3jvCGI5s9YXawmOSInZi0O2sGpowSdPmdVW1uE+rrVEL
-         iS9VUEaVAbYwLuAICHDfodGZW2L/AyLEGdrKT79VdSMjbPQ9qT4c6GZUEKHc/ObyGWtn
-         N8MBrpnGlJMFfZYGgxzALB69EKAS2OANUDnd/6kYNV3/nDrqkdL5UWoVSVUCU63aAc28
-         V+JtzHNVPyDzPyOyvSXOh4bVrt+AZ5Dk1IT/mdb5ct5z0m+VJxMdq8alt+8bowuFD/WZ
-         ikimyF29gtPWuGSRn8qpkRIL+mZD5tAuEGnLD9na9uyptOLzsb4AuazWFj65BeqWKckQ
-         /AHQ==
+        bh=ewkdkX3Q84Mhn4kLhU3/9cKwQhB4ZBILHwBNdxQhLqM=;
+        b=T6qdWNc1QAmND0ahZNUdtHC/Pjualisr7bdQyT7ltEGvxxuN4wgxOorvCmKar+iMwo
+         5Ov0WxSrzXpDzDH86yf72hFk4vHl468PCD5hupLjcpN+nlD55A4w+1QyuCwJDtI1O5tg
+         KNCP3k0NWvC3XKZWSYnmbkjuHAM3WDmoWWZSk9Q8KQssyy3n1jZnYLwngCkYOF+7HlTN
+         sl0oXcKsoZyuhXEg/rwe/DZsK6TENoNvIOsuQtCnZ+XlkXjYZFMM6LpRT72xX6L0Bg6v
+         sQwQskXiGXJzD/k7V/dskTVRhOxmivT9db85KqBrIYLk9Tq+/Lt+qRPgrx42hc7CHKjN
+         C/oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jUX5wkpwN8zL5/uJRNeccKjsPP/B2qlR2/KDWqYNiM4=;
-        b=Htpn7neB24AyYY9LFvwJ4d/kbh7iqqwrOw97di0gIJqb9zIbnjwSAehStRU5wga18v
-         jzAQe/8+WZZ94GExk0dKabpZxcykwm+npmYBgwFhDj6u+0C5kQYq1rBQBa5rhGhI6W/6
-         6Hd08rWKR33YkpjGaehl6RcJFjeVRqFyRNWKs1B5eVEE3W++4MKObMuTmNwfz4dszQhD
-         DflIYyfH0Yly8r8CzQanOTnsgidSgAcwwiYzL1w8w0fEMG7F63JW11zBSrIcDdJL1cBv
-         orSBgePFObUw5MqA43w4lhH2SUnTTZvsomGvxRqVFx7DO6n/7t4SZ8PNQokRQxU88zb6
-         zWuw==
-X-Gm-Message-State: ACrzQf3VOEPzDko1vFW8kLAWIGlBeo1/lySXFpMtUwlQOixIzlakluCa
-        sAgS/Tro2yD3/jxicMG0oWnAnA==
-X-Google-Smtp-Source: AMsMyM72ZA74Klabcot79eR9g6E6J0hISSevIALy9nqeZDI3ZDeP022Nmnolf/O6XSc8Req1nxdSbw==
-X-Received: by 2002:a05:600c:818:b0:3cf:7385:7609 with SMTP id k24-20020a05600c081800b003cf73857609mr28177045wmp.186.1667842176333;
-        Mon, 07 Nov 2022 09:29:36 -0800 (PST)
-Received: from nicolas-Precision-3551.home ([2001:861:5180:dcc0:9e3a:7162:292d:1065])
-        by smtp.gmail.com with ESMTPSA id n1-20020a1ca401000000b003cf66a2d433sm11831751wme.33.2022.11.07.09.29.35
+        bh=ewkdkX3Q84Mhn4kLhU3/9cKwQhB4ZBILHwBNdxQhLqM=;
+        b=2nrhqMqOrOiLUb2SWqnI2XLmImbRADNktvC2V1wbWWT2kwIXKgUTPskncXUP6YA74Y
+         QOC10EwiTFq7X6p82IaVDiNRZSOXJbSQ3SipZzrj6DxUO4mPH/V5/qbbcqWKV/rGqN/q
+         VFmwNp6s9zid/Bvt3MD0Dx/B/nJqKBoORgniFZw2ZE6MlTwL8bzJaKuDACO2lOvYdcDh
+         CGS9XCgkXsjG7hC5MqZ6sGVoU+vkROVh7K2q+BPS4ulKWAdp1diVJY7qoeENnjxLV9pi
+         9pQA5hpeSDSnNhT++xnN6p3Pi4C1ePp3Pghv6WOobNlZXRXEsA3y36zHx+hhcF738QlZ
+         kGxw==
+X-Gm-Message-State: ACrzQf2e/YObNNFz3UJaAMDG42wYdwA3wUbo/XK4LywbGeoyP3zuNezE
+        znRN0PvU4sSjEjctpOH0twSMk4E8LMKakQ==
+X-Google-Smtp-Source: AMsMyM5Dj/b4bM++yul5GsWhItJ90z9PxDTvAmcwwXIxUkMakGuvaT+dcz8zPr+dF+WTLgKuPuBSBQ==
+X-Received: by 2002:adf:ed4a:0:b0:236:aef1:9c75 with SMTP id u10-20020adfed4a000000b00236aef19c75mr32254562wro.258.1667843596487;
+        Mon, 07 Nov 2022 09:53:16 -0800 (PST)
+Received: from prasmi.home ([2a00:23c8:2501:c701:9c45:7ed3:c12e:e25b])
+        by smtp.gmail.com with ESMTPSA id v4-20020a5d4a44000000b002365254ea42sm8072454wrs.1.2022.11.07.09.53.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Nov 2022 09:29:35 -0800 (PST)
-From:   Nicolas Frayer <nfrayer@baylibre.com>
-To:     j-keerthy@ti.com, linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     khilman@baylibre.com, glaroque@baylibre.com, nfrayer@baylibre.com
-Subject: [PATCH v2] gpio: davinci: add support of module build
-Date:   Mon,  7 Nov 2022 18:29:21 +0100
-Message-Id: <20221107172921.514125-1-nfrayer@baylibre.com>
+        Mon, 07 Nov 2022 09:53:15 -0800 (PST)
+From:   Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Prabhakar <prabhakar.csengg@gmail.com>,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH RFC 0/5] Add IRQC support to RZ/G2UL SoC
+Date:   Mon,  7 Nov 2022 17:53:00 +0000
+Message-Id: <20221107175305.63975-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,52 +78,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Guillaume La Roque <glaroque@baylibre.com>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Added module build support for the davinci gpio driver
+Hi All,
 
-Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
-Signed-off-by: Nicolas Frayer <nfrayer@baylibre.com>
----
-v1->v2:
-Keep postcore_initcall() instead of using module_init() 
+This patch series does the following:
+* Adds IRQC support to the RZ/G2UL SoC.
+* Includes a fix for pinctrl driver when using GPIO pins as interrupts
+* Adds PHY interrupt support for ETH{0/1}
 
- drivers/gpio/Kconfig        |  2 +-
- drivers/gpio/gpio-davinci.c | 11 +++++++++++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+Reason for sending it as RFC, as I am introducing new compatible string for
+RZ/G2UL SoC as there are some differences when compared to RZ/Five:
+- G2UL IRQCHIP (hierarchical IRQ domain) -> GIC where as on RZ/Five we have
+  PLIC (chained interrupt domain) -> RISCV INTC
+- On the RZ/Five we have additional registers for IRQC block
+- On the RZ/Five we have BUS_ERR_INT which needs to be handled by IRQC
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a01af1180616..f8bace51c2d0 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -219,7 +219,7 @@ config GPIO_CLPS711X
- 	  Say yes here to support GPIO on CLPS711X SoCs.
- 
- config GPIO_DAVINCI
--	bool "TI Davinci/Keystone GPIO support"
-+	tristate "TI Davinci/Keystone GPIO support"
- 	default y if ARCH_DAVINCI
- 	depends on (ARM || ARM64) && (ARCH_DAVINCI || ARCH_KEYSTONE || ARCH_K3)
- 	help
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 59c4c48d8296..5ddac03dac8a 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -730,3 +730,14 @@ static int __init davinci_gpio_drv_reg(void)
- 	return platform_driver_register(&davinci_gpio_driver);
- }
- postcore_initcall(davinci_gpio_drv_reg);
-+
-+static void __exit davinci_gpio_exit(void)
-+{
-+	platform_driver_unregister(&davinci_gpio_driver);
-+}
-+module_exit(davinci_gpio_exit);
-+
-+MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
-+MODULE_DESCRIPTION("DAVINCI GPIO driver");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:gpio-davinci");
+Cheers,
+Prabhakar
+
+Lad Prabhakar (5):
+  dt-bindings: interrupt-controller: renesas,rzg2l-irqc: Document
+    RZ/G2UL SoC
+  pinctrl: renesas: rzg2l: Fix configuring the GPIO pins as interrupts
+  arm64: dts: renesas: r9a07g043[u]: Add IRQC node
+  arm64: dts: renesas: r9a07g043[u]: Update pinctrl node to handle GPIO
+    interrupts
+  arm64: dts: renesas: rzg2ul-smarc-som: Add PHY interrupt support for
+    ETH{0/1}
+
+ .../renesas,rzg2l-irqc.yaml                   |  1 +
+ arch/arm64/boot/dts/renesas/r9a07g043.dtsi    | 10 ++++
+ arch/arm64/boot/dts/renesas/r9a07g043u.dtsi   | 54 +++++++++++++++++++
+ .../boot/dts/renesas/rzg2ul-smarc-som.dtsi    | 11 +++-
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 17 +++---
+ 5 files changed, 84 insertions(+), 9 deletions(-)
+
 -- 
 2.25.1
 
