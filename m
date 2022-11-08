@@ -2,111 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14BD86219C4
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 17:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A99E66219CE
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 17:51:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233985AbiKHQuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 11:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36914 "EHLO
+        id S233925AbiKHQvz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 11:51:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbiKHQuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 11:50:07 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2234256572;
-        Tue,  8 Nov 2022 08:50:06 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id bs21so21915266wrb.4;
-        Tue, 08 Nov 2022 08:50:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lzu8o9GG+rQV95TQcHmCItfsXISynxSuosbBYQlCmt8=;
-        b=SocYvczHroVp4XHkMPIp7gSKsqd8xgbGlvXi6yx0ZnEsRTpc++d1845nkZ8B3q4ksI
-         3JueTDqPardWkafPpYSdIC7Hv3HVTv1xXtizytQMqzC3aou+N2EurrBv/sg9cvKYm8+p
-         YEBagF9gfNE6GWScWusf4ee0BwQKbSwF4orAOzvow0FPH/4Xe8G2RWxc3WYHFNZv2g5t
-         dVbAmFLNH4/7ED4Jz2eww5MpqUrM8Pt30OA1qM0Qz0eKf9OC+Ruo6ehAB5PPQ4WP7JU7
-         bjzKsPnT3gjs3hFQJIw4GrgAJf9+rycMeL/i5s2EjKuzbC9R6eVgXICy/QWwd7XG1GW7
-         vMaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lzu8o9GG+rQV95TQcHmCItfsXISynxSuosbBYQlCmt8=;
-        b=o+YKJUi42cPECJ5hUzkyaB2SJQ4rs/4vfJD7GFsJtDphHDuiQASeLpzzSecmnt+xVE
-         jcpbGv+mmdaYK9DfkBr7Z1XKAhLg2lAcEjsFmJk2dH2qx55L3ytGHEXbuYwi4UAFoS5o
-         1tYEqG+KmWa5Q2wkmAWAtG3+Hh5yePPXD6UGT3cxJR+fIKw/if/ZOMpLHAPVnBNmVgH/
-         oGoL3g47UL4gk15t1YQ26xvVHFFoknNJDD7EHyRI1JLp9BXEKdCMRS2VGLosb4X4DeJj
-         RYCW5F2KDPab2RsPrjXawO4GSAePksXgkeienWx6EtVvi3riHX0Wgs5jh4ic3Lk1dI7T
-         dNsg==
-X-Gm-Message-State: ACrzQf1QdVPjBwEXKeokhy2I361rMzaaGfPmi7uKRa3lPysMfnIN5HSV
-        CY5Eap2d9TbS5jRzi/qdi+s=
-X-Google-Smtp-Source: AMsMyM7PeyIbqxOVDwCt3DMl8SeeLMT1BoIW3zIboH7LXzL+d3ylaG9gT1A3k7WMgfTd+2c53cgLZQ==
-X-Received: by 2002:a05:6000:a11:b0:236:7685:e7 with SMTP id co17-20020a0560000a1100b00236768500e7mr37639616wrb.359.1667926204501;
-        Tue, 08 Nov 2022 08:50:04 -0800 (PST)
-Received: from [192.168.0.25] ([37.222.251.204])
-        by smtp.gmail.com with ESMTPSA id k186-20020a1ca1c3000000b003cf4d99fd2asm11701116wme.6.2022.11.08.08.50.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Nov 2022 08:50:03 -0800 (PST)
-Message-ID: <e6cb428b-bfa6-d7f0-e648-668dcd93eeb8@gmail.com>
-Date:   Tue, 8 Nov 2022 17:50:01 +0100
+        with ESMTP id S233816AbiKHQvy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 11:51:54 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811C957B50;
+        Tue,  8 Nov 2022 08:51:53 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 270941F45B;
+        Tue,  8 Nov 2022 16:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1667926312; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z9ykV8hJMFJwXk6aawtYnz0dSwskJrdet1sqEDHolqg=;
+        b=e1csi0ceHDVT6ElHtaOfK5rcrmyejxystY4Zd1EfxzaJZ5fyVJsfDgMBorKaWv2tgUhZrw
+        dxw1Y2uzDWI9Nl7B2NzxEl3m9HgUJ/UXAAmyXQxMKU9ch8Yx6tXQVkFR8NFDnBp6hSWxFY
+        7zY0IezPMK6ZLREC9aihgc6crAPQ1B4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1667926312;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z9ykV8hJMFJwXk6aawtYnz0dSwskJrdet1sqEDHolqg=;
+        b=IlZl2bUZaFenbZ/5W1K2+rt4+HEn1a78KNKjF498QyEM9z+N8Jc/UKOEvLfLhZjWiyVjph
+        O2ztMiVE3fEE6LAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E27AF13398;
+        Tue,  8 Nov 2022 16:51:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id jovyNieJamMLCQAAMHmgww
+        (envelope-from <afaerber@suse.de>); Tue, 08 Nov 2022 16:51:51 +0000
+Message-ID: <d3905a85-4746-09e8-ecf9-b39757bf6d85@suse.de>
+Date:   Tue, 8 Nov 2022 17:51:51 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v4 01/13] arm64: dts: mediatek: mt6779: Remove syscon
- compatible from pin controller
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Yassine Oudjana <yassine.oudjana@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        Andy Teng <andy.teng@mediatek.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Yassine Oudjana <y.oudjana@protonmail.com>,
-        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <20221028153505.23741-1-y.oudjana@protonmail.com>
- <20221028153505.23741-2-y.oudjana@protonmail.com>
- <CACRpkdYtJze2ziz+XBzNnsi_7r0jzujW0o=2P5Brgsi5QCZBuw@mail.gmail.com>
+ Thunderbird/102.4.0
+Subject: Re: [PATCH 2/2] pinctrl: add NXP S32 SoC family support
+To:     Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Chester Lin <clin@suse.com>
+Cc:     dl-S32 <S32@nxp.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Larisa Ileana Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <ghennadi.procopciuc@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Matthew Nunez <matthew.nunez@nxp.com>,
+        Phu Luu An <phu.luuan@nxp.com>,
+        Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <20221031100843.14579-1-clin@suse.com>
+ <20221031100843.14579-3-clin@suse.com>
+ <AM9PR04MB8487C664E75EBA4D3678DD03E33F9@AM9PR04MB8487.eurprd04.prod.outlook.com>
 Content-Language: en-US
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-In-Reply-To: <CACRpkdYtJze2ziz+XBzNnsi_7r0jzujW0o=2P5Brgsi5QCZBuw@mail.gmail.com>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+In-Reply-To: <AM9PR04MB8487C664E75EBA4D3678DD03E33F9@AM9PR04MB8487.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Chester and Andrei,
 
+Am 08.11.22 um 15:54 schrieb Andrei Stefanescu:
+>> diff --git a/drivers/pinctrl/freescale/pinctrl-s32.h b/drivers/pinctrl/freescale/pinctrl-s32.h
+>> new file mode 100644
+>> index 000000000000..7b48fe3d73c9
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/freescale/pinctrl-s32.h
+>> @@ -0,0 +1,65 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-or-later
+>> + *
+>> + * S32 pinmux core definitions
+>> + *
+>> + * Copyright (C) 2016-2020,2022 NXP
+> 
+> Could we also add: " * Copyright 2015-2016 Freescale Semiconductor, Inc."?
 
-On 08/11/2022 13:18, Linus Walleij wrote:
-> On Fri, Oct 28, 2022 at 5:35 PM Yassine Oudjana
-> <yassine.oudjana@gmail.com> wrote:
-> 
->> From: Yassine Oudjana <y.oudjana@protonmail.com>
->>
->> Remove syscon compatible string from pin controller to follow
->> DT bindings and pass checks. Adding the syscon compatible to
->> the DT bindings documentation instead causes a different check
->> error due to the syscon document specifying a maximum of 1 item
->> in the reg property, while this has 9. This pin controller has
->> never been, and will never be, used as a syscon, hence it is
->> safe to drop this compatible.
->>
->> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
->> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
+... and insert a space before 2022, while at it.
 
-Applied, thanks.
+@Andrei: Intentionally no (C) or (c) for Freescale? (column alignment)
+
+Cheers,
+Andreas
+
+-- 
+SUSE Software Solutions Germany GmbH
+Frankenstraße 146, 90461 Nürnberg, Germany
+GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
+HRB 36809 (AG Nürnberg)
