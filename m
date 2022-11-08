@@ -2,74 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59197621F54
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 23:30:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DACC621F4B
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 23:30:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbiKHWar (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 17:30:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        id S230028AbiKHWap (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 17:30:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbiKHWaS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 17:30:18 -0500
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E6F1007;
-        Tue,  8 Nov 2022 14:30:10 -0800 (PST)
-Received: by mail-ot1-f50.google.com with SMTP id r13-20020a056830418d00b0065601df69c0so9176811otu.7;
-        Tue, 08 Nov 2022 14:30:10 -0800 (PST)
+        with ESMTP id S230202AbiKHWaR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 17:30:17 -0500
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DA9FEF;
+        Tue,  8 Nov 2022 14:30:08 -0800 (PST)
+Received: by mail-oi1-f179.google.com with SMTP id t62so17021378oib.12;
+        Tue, 08 Nov 2022 14:30:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=date:subject:message-id:references:in-reply-to:cc:to:from
          :mime-version:content-transfer-encoding:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kj6QYdjPI+Mq4cfZXxle0k51SIZ4UdpD/shGFJqOIiY=;
-        b=rsC4XHHvIUH0nLc+i/7PA/kswwxqAmsLvjMD22FJ3M7Av6bBi4dHg/hIX5VmWkFJdD
-         To/UUF8AFMMp/cQoyiyOjfOPvuS58XZqiwV1oUZ0KK//v8gv9qy3RGj04afmnqU7Vvzg
-         nNaaZowYu7a7bT7i9WewRrn8al4pE1APi1zd6DreCWMy8CK46/j6ggPcWdvtkh7aBgg2
-         W0h976ttbEiKZXGLje4DACRpb9QEDeuKnLMmyqpGkR98p6yxaCxhaSLaJ+nAUerebH6G
-         eIyjSLryLU9FLXMiLy8hhSRbRFT0p+QuAZMzGcrB6+hw8sI4POo0YTIrF8wRv4RlC6dx
-         mbdw==
-X-Gm-Message-State: ACrzQf0SJp5nNUiFJspgchMn+Mh6lJ8SIBk2fF4eNnKEohvvAZ0KaraX
-        3L+4SXQKTKzs32DlPEPY5g==
-X-Google-Smtp-Source: AMsMyM4w+Q0bbTEoYWhch8yicb0YbQQFv0vfYscvOAojHPlu4xud6CxfcJeuZdXmpshPM5pW0gSwWA==
-X-Received: by 2002:a05:6830:628b:b0:660:d639:f380 with SMTP id ce11-20020a056830628b00b00660d639f380mr27602176otb.181.1667946609236;
-        Tue, 08 Nov 2022 14:30:09 -0800 (PST)
+        bh=WVr22nk4SndJ8H66JU2yibJo3CMhTG//flCyYnxoDWc=;
+        b=BYitRpomvygWCNAqEhv8R0GKmcsJ01hGJ6/ERY+NR2eA3w07wDIaBnnv89NkB2mlPl
+         Kh0AszQube+5QpFxpFv7wcVehvZKpcZDlIgq+VlqHe0I4cG9rgwKeAAZ0nmrGE0mA7DN
+         /ndHbh6g3N8rvyeSWJQFDxBZgkR+rMWYk6qgiAVMdRir3wqNPj+sT3cjj5EX4wmQkYoK
+         4XK45C7fZRKT3ap5kr7VkqatLw5YwxAmZyUHG2zkdOTL2jstD97Ka71gmGyzTk6UIFEd
+         Yc7G0iFn8gAqM/MCfxTbDPnNBumWvAZ9r6ZJoqPbUEJZfxtVxgyvCZ3O2m3mwH9UZiE5
+         Sc/w==
+X-Gm-Message-State: ANoB5plf8gySrPIkNLbJH4UWWiD5bTFNqavFN6W5CbMgiRvthXlIZTaD
+        Vhj8Nb5rUO09+u8lFYwmYQ==
+X-Google-Smtp-Source: AA0mqf6RlGieEbcl+dbrT/D28zOgZua9hO0IvxHXERfgLyfC27jlopKZRm2zIWGtIbWYsCWz7LHTjQ==
+X-Received: by 2002:a05:6808:d52:b0:35a:83c5:d8e2 with SMTP id w18-20020a0568080d5200b0035a83c5d8e2mr7905378oik.160.1667946607517;
+        Tue, 08 Nov 2022 14:30:07 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id y36-20020a05687045a400b0013ae39d0575sm5230025oao.15.2022.11.08.14.30.07
+        by smtp.gmail.com with ESMTPSA id s41-20020a05687024a900b0012763819bcasm5224061oaq.50.2022.11.08.14.30.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 14:30:08 -0800 (PST)
-Received: (nullmailer pid 4095484 invoked by uid 1000);
+        Tue, 08 Nov 2022 14:30:07 -0800 (PST)
+Received: (nullmailer pid 4095481 invoked by uid 1000);
         Tue, 08 Nov 2022 22:30:08 -0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 From:   Rob Herring <robh@kernel.org>
 To:     "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>, asahi@lists.linux.dev,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Sven Peter <sven@svenpeter.dev>,
-        Hector Martin <marcan@marcan.st>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        linux-doc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <E1osRXi-002mwL-UB@rmk-PC.armlinux.org.uk>
+        linux-doc@vger.kernel.org, Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee@kernel.org>, Hector Martin <marcan@marcan.st>,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        Petr Mladek <pmladek@suse.com>, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>
+In-Reply-To: <E1osRXT-002mw3-JR@rmk-PC.armlinux.org.uk>
 References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
- <E1osRXi-002mwL-UB@rmk-PC.armlinux.org.uk>
-Message-Id: <166794645522.4092185.9292599131300169784.robh@kernel.org>
-Subject: Re: [PATCH v3 6/7] dt-bindings: gpio: add binding for the GPIO block
- for Apple Mac SMC
+ <E1osRXT-002mw3-JR@rmk-PC.armlinux.org.uk>
+Message-Id: <166794645363.4092121.5573869968792780468.robh@kernel.org>
+Subject: Re: [PATCH v3 3/7] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
 Date:   Tue, 08 Nov 2022 16:30:08 -0600
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -77,14 +76,14 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Tue, 08 Nov 2022 16:33:42 +0000, Russell King (Oracle) wrote:
-> Add the DT binding for the Apple Mac System Management Controller GPIOs.
+On Tue, 08 Nov 2022 16:33:27 +0000, Russell King (Oracle) wrote:
+> Add a DT binding for the Apple Mac System Management Controller.
 > 
 > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > ---
->  .../bindings/gpio/apple,smc-gpio.yaml         | 37 +++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
+>  .../devicetree/bindings/mfd/apple,smc.yaml    | 67 +++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
@@ -93,8 +92,9 @@ on your patch (DT_CHECKER_FLAGS is new in v5.13):
 yamllint warnings/errors:
 
 dtschema/dtc warnings/errors:
-./Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml: $id: relative path/filename doesn't match actual path or filename
-	expected: http://devicetree.org/schemas/gpio/apple,smc-gpio.yaml#
+./Documentation/devicetree/bindings/mfd/apple,smc.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/gpio/gpio-macsmc.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/apple,smc.example.dtb: smc@23e400000: gpio: False schema does not allow {'gpio-controller': True, '#gpio-cells': [[2]]}
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/apple,smc.yaml
 
 doc reference errors (make refcheckdocs):
 
