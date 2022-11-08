@@ -2,98 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C6B2621797
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 16:00:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA0AA6217A8
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 16:08:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233819AbiKHPAX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 10:00:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33286 "EHLO
+        id S234386AbiKHPIA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 10:08:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233500AbiKHPAV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 10:00:21 -0500
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A6E13F3E
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 07:00:20 -0800 (PST)
-Received: by mail-vk1-xa31.google.com with SMTP id s204so9078326vkb.3
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 07:00:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F2QrAi/LQ7qBpvMzxLU1SPmaMAR+Dih79qGdKF0xOUM=;
-        b=XoL10ntpnL14hLpelSFg61tRXvcm9MKfRPwkD2OFtEjFzDVxkXKuCqzsvylir0UVfu
-         P18VvHH4z4eiOMPagBXSegz6ITkwEw41XScRJk5fTz41XHauqiW4O1bCKQfG+H8ETq3H
-         6OhUzTSM+g4r7yA+5zihzB+iIeAgo2WpXfH1l3JsjAjiS0LH94ZB8HgVv6cwh3proIKM
-         LM9g+TDX26lBvQoTnS+STXMWAXgDSjK47DgT5Jp21BhiB4bn0lIfoYUY28d1/Q+NvYWu
-         j8qlQGhkPGo6az2etoLBSpKN7Q/iu4upHkINcPZbafvOj0lzamKf1E3n3mxhqxz2g66s
-         JpCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F2QrAi/LQ7qBpvMzxLU1SPmaMAR+Dih79qGdKF0xOUM=;
-        b=FCSuU1hV5gaR/MWIOHbF3gx5peAAPwSbKdscfNj+B5PgI3EvBMwg1wV+lZxnMkS3iT
-         lOBla9yGGETANRr49bFBG06091AnMBXGHEQdGGgEwUuE4HgfihFwmDvK/HOshNz9KZKR
-         YQHbY5JroumL41eluUTV8Gpx8lriEqINdX88kmKFycOixP9UrnHMI4/w5EGpd8+c1gM0
-         iDThf8U23QA9cVyavApjl+v8AvlYLg5WC7NfM3Q9ZdgWDoqSQaeBcMynZviw5x/ZGdlD
-         dIRk/RxCsq7lCpZkK2xR+cy/tBNIbcoALdopaQiNnUqiZYqReePdCICx8M7q49ml1e0s
-         webA==
-X-Gm-Message-State: ACrzQf0QviRhrCImUpt9IjBl/TRpwFDV+V7cxM2IgGeO3qhspel/GYTQ
-        gfIGS/v/wTeXiGPZ0JNQqPsA1eQCYuCJ8mG4S7zw/g==
-X-Google-Smtp-Source: AMsMyM55T30jGuX17epw2UcfZe39FWnNQlA14xFMGzW06X7z/xG9SBWntvvcGYxoxR6D4LMNbIZdGHUHXCKsj/LcKGA=
-X-Received: by 2002:a05:6122:92a:b0:3b8:ae77:6927 with SMTP id
- j42-20020a056122092a00b003b8ae776927mr9973794vka.33.1667919619178; Tue, 08
- Nov 2022 07:00:19 -0800 (PST)
+        with ESMTP id S234061AbiKHPH6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 10:07:58 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4E035802D
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 07:07:57 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osQCM-0000UE-Cj; Tue, 08 Nov 2022 16:07:34 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osQCJ-0034pj-Oe; Tue, 08 Nov 2022 16:07:32 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1osQCJ-00FCdk-Qe; Tue, 08 Nov 2022 16:07:31 +0100
+Date:   Tue, 8 Nov 2022 16:07:31 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/6] pwm: lpss: Rename MAX_PWMS --> LPSS_MAX_PWMS
+Message-ID: <20221108150731.obmwkiepwcewtdqm@pengutronix.de>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-3-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-References: <20221011002909.26987-1-warthog618@gmail.com> <20221011002909.26987-5-warthog618@gmail.com>
-In-Reply-To: <20221011002909.26987-5-warthog618@gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 8 Nov 2022 16:00:08 +0100
-Message-ID: <CAMRc=MdC9fcrKaXRTq5eQttdyLo_SwhU7qEeV9+ej3L0ENkrTA@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v3 4/5] tools: add gpiowatch
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dsjwetekhvvdedgm"
+Content-Disposition: inline
+In-Reply-To: <20221108142226.63161-3-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Oct 11, 2022 at 2:29 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> Add a gpiowatch tool, based on gpiomon, to report line info change
-> events read from chip file descriptors.
->
-> Inspired by the gpio-watch tool in the linux kernel, but with gpiomon
-> features such as custom formatted output, filtering events of
-> interest and exiting after a number of events, so more useful for
-> scripting.
->
-> Default output is minimalist, so just time, event type and line id.
-> Full event details are available using the custom formatted output.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->
-> Changes v2 -> v3:
->    - Minimise the default output to more closely match gpiomon.
->    - Add --format option for when more detail is required.
->    - Add --num-events option to exit after a number of events.
->    - Add --event option to report only specific event types.
->    - Add --quiet option to not print events.
->    - fix monotonic to realtime conversion on 32 bit platforms.
->
 
-Nice and clean, I don't have any issues other than the regular
-coding-style bikeshedding.
+--dsjwetekhvvdedgm
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-What happened to the idea we've been floating about creating a single,
-busyboxy executable with links rather than separate executables? Have
-we ever agreed on it?
+On Tue, Nov 08, 2022 at 04:22:22PM +0200, Andy Shevchenko wrote:
+> The MAX_PWMS definition is already being used by PWM core.
+> Using the same name in the certain driver confuses people
+> and potentially can clash with it.
+>=20
+> Hence, rename it by adding LPSS prefix.
+>=20
+> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Bart
+Reviewed-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Thanks
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--dsjwetekhvvdedgm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNqcLAACgkQwfwUeK3K
+7AmxHgf+JkfoFFD1fhwIOpede6fH0CofrcKC1M3kPM29kliA/+/VD/S2mT6PRIAO
+AaysKqJp8Ha0mXBUYfsUXEQ17OCnveP1GgiFjqGzmhQFmqWvetqCQKYWM4LAK1SC
+kxHpVHdaDH4ILScJ5J0JanOaSoQuOZA2CvXE9P+kzzANaK8/4UbCCkyak3wPkic8
+qhAIxTBDPyUsMWqegzrl9L5PAmTwCTtbiOAtll5SsQ5WJA8/Qku/hnd9aKgbW21P
+jCp8tyAWE26h+pmdpsikVnhpw2/C6uQwNavlS/mXKGXM7abOUPvJAh3cYbwWMydc
++nO5SetlhLGYHHFIJdD76C0+UY7Lwg==
+=dmFr
+-----END PGP SIGNATURE-----
+
+--dsjwetekhvvdedgm--
