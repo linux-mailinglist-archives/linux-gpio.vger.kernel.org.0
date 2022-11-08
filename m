@@ -2,164 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 801CB621CEF
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 20:20:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0F78621DCE
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 21:42:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229587AbiKHTUo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 14:20:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51818 "EHLO
+        id S229931AbiKHUmW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 15:42:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbiKHTUn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 14:20:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49ABF6C71F;
-        Tue,  8 Nov 2022 11:20:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D82BC6173F;
-        Tue,  8 Nov 2022 19:20:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38587C433D6;
-        Tue,  8 Nov 2022 19:20:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667935241;
-        bh=JsQ7IAXX736if0do7+rF4cpmY09knimF5FgdWdfJoyw=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=kJydPl/IMLM7XNIratGgzwUAdQghfjqRl2+WduMSRWC5jy/DtRlBTEvKIrx5KvmEq
-         LZAkuMX4kptEzbGzus6JZC9LBfi7phAE8oFPJVGHMGlXa1+FWtw1bRbbJyksl54IEQ
-         nVdBaNR7F7QnyKkwgGLcWhvxGNNu6NnVTXF+rLCuRokwr87SdVPzEtuIWQhu90EfTC
-         WBtYOyAIOWcoU/l3i7rCM0gJpxqVoQtCBBmtKDyXqmRKEW2NfQrg1+AIrNELOOODS3
-         vtNe180h7++z62MqK5xL6dm7o4yJKS20YKCFD+j3l09JJKXPPyvqSG/csqJqi85+nw
-         21eQxdWkfTMyg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id D596A5C1E87; Tue,  8 Nov 2022 11:20:39 -0800 (PST)
-Date:   Tue, 8 Nov 2022 11:20:39 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Maria Yu <quic_aiquny@quicinc.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-gpio@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: core: Make p->state in order in
- pinctrl_commit_state
-Message-ID: <20221108192039.GH3907045@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20221027065110.9395-1-quic_aiquny@quicinc.com>
- <CACRpkdbCwvGr4JA+=khynduWSZSbSN8D9dtsY0h_9LxkqJuQ_Q@mail.gmail.com>
+        with ESMTP id S229709AbiKHUmV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 15:42:21 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A860067122
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 12:42:20 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id r14so24320364edc.7
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 12:42:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8PDeB4nZ2b0/kaV55EwLdKiv7+4Bjm3GYojARxweqjE=;
+        b=AVqZhoAy5n+PtVAMMbVx+483gzWF1tI70Wt+diEOnr/EEFplpI0IFX1YwVIOi7rt+5
+         xKjZRLDc7nKF1ln5nELX1axvNvA5KYnfEpaqcCUyQ1pFevFiis+oM1AT+lyQk3g7zHXY
+         LCaPl0JSId8MgYe21cyHU2fF6H+jewXU4nMH02zBTKFcCs2BJmeM/k0IOqOeQqCcSB32
+         Y6WYvyPjSIPQ9vvrFv+lQAHO3ltLKEVdP+WdsH1qA8J8GYSCb6l+9H4m2VSi05fgWWYa
+         RryX9TkQXOsmrkLmuqRSFQyVkoTeXgUcRgclZKN9oXRwEyoI5GUOItPRM4ZgJNwyzF37
+         S9og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8PDeB4nZ2b0/kaV55EwLdKiv7+4Bjm3GYojARxweqjE=;
+        b=Firm5IoNTyHMSu7S9as18U/Plp+yezX5dRybTSYTKpxYXgEMEYJ6O1NqeQ+v3BdhEW
+         1zJ9qDGZcKuUcEkHWBF5EgnOEdQbweh0UeNuxx3+8U6hQ7CNAm3HTwuo845vDZwSoklh
+         G7u57pqbmYp6/hAkmytDwhX7ud3nlnIMsLWMw2y/iA5zU5dgj4d0wTPwKAgaRCIp39hn
+         v6ZoL8c6/RIMs27OzAfRNle91XXN6iIg+Z28GdhDlZD9s1s4guQXJwSFHoNU0xRjvGVe
+         7HUq9pHILgJerHmA9OGElkoE03MxfrM2M+bYLZ3OFdpWeJF4bM5h6oAkanXaN6i/wPkU
+         iagA==
+X-Gm-Message-State: ACrzQf2Ivtft6axrS93QFWLMGn/o7/uFebPDpA64IFHZZPNfoKtxBXH2
+        4qEHmLLZX6td5Gjps42fjvQ8XlUkf8tDEOhdpRRm8Q==
+X-Google-Smtp-Source: AMsMyM5UacZlCRfKiRNa0kTrzT5kX7+K684naVNWV/pxq0wgKsP9jRI7CKgITH4pf2zDtNIwin7mrjQA9a0Qs67HpcE=
+X-Received: by 2002:aa7:c718:0:b0:462:ff35:95dc with SMTP id
+ i24-20020aa7c718000000b00462ff3595dcmr56160916edq.32.1667940139213; Tue, 08
+ Nov 2022 12:42:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbCwvGr4JA+=khynduWSZSbSN8D9dtsY0h_9LxkqJuQ_Q@mail.gmail.com>
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk> <E1osRXT-002mw3-JR@rmk-PC.armlinux.org.uk>
+In-Reply-To: <E1osRXT-002mw3-JR@rmk-PC.armlinux.org.uk>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 8 Nov 2022 21:42:08 +0100
+Message-ID: <CACRpkdaPwe0igrZOnA3Q3QosySTEa9H06kdXLQMcpeEmt+hiBw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: mfd: add binding for Apple Mac System
+ Management Controller
+To:     "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, devicetree@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sven Peter <sven@svenpeter.dev>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 01:47:15PM +0100, Linus Walleij wrote:
-> Hi Maria,
-> 
-> thanks for your patch!
-> 
-> On Thu, Oct 27, 2022 at 8:51 AM Maria Yu <quic_aiquny@quicinc.com> wrote:
-> 
-> > We've got a dump that current cpu is in pinctrl_commit_state, the
-> > old_state != p->state while the stack is still in the process of
-> > pinmux_disable_setting. So it means even if the current p->state is
-> > changed in new state, the settings are not yet up-to-date enabled
-> > complete yet.
-> >
-> > Currently p->state in different value to synchronize the
-> > pinctrl_commit_state behaviors. The p->state will have transaction like
-> > old_state -> NULL -> new_state. When in old_state, it will try to
-> > disable all the all state settings. And when after new state settings
-> > enabled, p->state will changed to the new state after that. So use
-> > smp_mb to synchronize the p->state variable and the settings in order.
-> > ---
-> >  drivers/pinctrl/core.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> > index 9e57f4c62e60..cd917a5b1a0a 100644
-> > --- a/drivers/pinctrl/core.c
-> > +++ b/drivers/pinctrl/core.c
-> > @@ -1256,6 +1256,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
-> >                 }
-> >         }
-> >
-> > +       smp_mb();
-> >         p->state = NULL;
-> >
-> >         /* Apply all the settings for the new state - pinmux first */
-> > @@ -1305,6 +1306,7 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
-> >                         pinctrl_link_add(setting->pctldev, p->dev);
-> >         }
-> >
-> > +       smp_mb();
-> >         p->state = state;
-> >
-> >         return 0;
-> 
-> Ow!
-> 
-> It's not often that I loop in Paul McKenney on patches, but this is in the core
-> of the subsystem used across all architectures so if this is a generic problem
-> of concurrency, I really want some professional concurrency person to
-> look at it before I apply it.
+On Tue, Nov 8, 2022 at 5:33 PM Russell King (Oracle)
+<rmk+kernel@armlinux.org.uk> wrote:
 
-Hello, Linus and Maria!
+> Add a DT binding for the Apple Mac System Management Controller.
+>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Insertion of unadorned and uncommented memory barriers does rouse more
-than a bit of suspicion, to be sure.  ;-)
+Looks good to me!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Could you please outline what ordering this smp_mb() is intended to
-provide?  Yes, my guess is that the p->state change is to be seen as
-happening after the prior memory accesses, but:
-
-1.	What is the other side of the interaction doing?  My guess is
-	that something is reading p->state and the referencing the same
-	memory referenced prior to the pair of smp_mb() calls above.
-	For example, are the other relevant memory references referenced
-	by the pointer "p"?
-
-	For example, what happens if two of the above updates happen in
-	quick succession during the execution of a single instance of
-	the other side of the interaction?
-
-2.	Why smp_mb() rather than using smp_store_release() to update
-	p->state?
-
-3.	More generally, why unmarked accesses to p->state?  Are the
-	other relevant accesses also unmarked?
-
-	Please see these LWN articles for more on the potential dangers
-	of unmarked accesses to shared variables:
-
-	Who's afraid of a big bad optimizing compiler?
-		https://lwn.net/Articles/793253/
-
-	Calibrating your fear of big bad optimizing compilers
-		https://lwn.net/Articles/799218/
-
-4.	There are some tools that can help with this sort of ordering
-	code, for example:
-
-	Concurrency bugs should fear the big bad data-race detector (part 1)
-		https://lwn.net/Articles/816850/
-	Concurrency bugs should fear the big bad data-race detector (part 2)
-		https://lwn.net/Articles/816854/
-
-	For this tool (KCSAN) to find a problem, your testing must come
-	close to making it happen.
-
-	A design-level full-state-space tool may be found in
-	tools/memotry-model.  This tool, as you might expect, is
-	restricted to very short code fragments, but does fully handle
-	concurrency.  It might take some work to squeeze what you have
-	into the confines of this tool.
-
-Again, to evaluate this change, I need to understand what it is trying
-to accomplish.
-
-							Thanx, Paul
+Yours,
+Linus Walleij
