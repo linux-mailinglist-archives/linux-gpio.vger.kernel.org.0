@@ -2,115 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC2C62187B
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 16:38:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 358B26218D6
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 16:53:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234328AbiKHPix (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 10:38:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58226 "EHLO
+        id S234380AbiKHPxa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 10:53:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234337AbiKHPiu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 10:38:50 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BEE5657A
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 07:38:48 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id io19so14505129plb.8
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 07:38:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=imHLwLP5LqolAl6H4jLjTLrCyjCUYpNEsrPPoIuPG8A=;
-        b=BgY8gYr4DX06Nl1xSAy+yz90Ua6CsSjPrFdy6RWetctOfxzFhuVe2oePhv2tF+q4fK
-         9VVw2XUzsANCyMVEhvCvy+2cHbLMbw6ndJNvLd7YGW1HxVBoEfg+SvCEFaxtb+kKuBo6
-         s2IXk+OV321o0TrQrYArOJD2lh/mpJGZnggwj5LUQP/LZvyoCmYfcEuXOpei0bQiGX4z
-         d4opjAoCHmxQTFtpR/Bx5QITqfEdNLoq19R0iK3OA2pV61/q8CUiOPJccLgcXoPu2AHu
-         8PEsLorCbnYV4Z4/UqieISXNv6jtQkdXr0Ppw9je9SQgwT9Us+ZXzxdYGUSIT53CECDU
-         +EGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=imHLwLP5LqolAl6H4jLjTLrCyjCUYpNEsrPPoIuPG8A=;
-        b=ksYFaQhwbjSPq3mGwCqNCYWHfxwPM0y34Fri5/zghGNhD104YcbpU7s3s+kA8AMhRz
-         9rUD8cmKXFausF0D9zduYj/1N2JKyWInfqlJHcocR0XUswcgBMlBdvPkhlMPWLVjM+Dw
-         sexycjOd1Z5/+83kEO3kQvJ9uH58smPrXeEJ0OOAfllZUu4RXWIfYmCZKItjRtD1N7VM
-         hNL4oHlem715gdOj3PQspUoFopZuOtyrE7poYtSKgS1Oyoa+fAAskib4m0FQsFAy7JXP
-         OPVtV4T3LMloFOSp49SIFFrk7vfYP34YsHSyVUlJQtdo0ohl9EZwb1qmwaYSA3p0dwVE
-         QNwQ==
-X-Gm-Message-State: ACrzQf3mOJWiDvcj5l7kY8k7eFtL9T7aEWnlMQ7ErASwBVU50jb4VMjr
-        6WiQh0mOuC5nadvIEYCIfBU7s/MHiaQ=
-X-Google-Smtp-Source: AMsMyM47bUbA+Srp1sASeyWT8QAUovDR/JExoSnnCvFlCIpaU11pZxaW6MSnvweXsHtVfYgAOiyy7w==
-X-Received: by 2002:a17:90a:5b03:b0:213:e4bc:fbf4 with SMTP id o3-20020a17090a5b0300b00213e4bcfbf4mr49540226pji.74.1667921928072;
-        Tue, 08 Nov 2022 07:38:48 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id u7-20020a170902e80700b00186fa988a13sm7169021plg.166.2022.11.08.07.38.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 07:38:47 -0800 (PST)
-Date:   Tue, 8 Nov 2022 23:38:43 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v3 4/5] tools: add gpiowatch
-Message-ID: <Y2p4A6FM9nF5RLqw@sol>
-References: <20221011002909.26987-1-warthog618@gmail.com>
- <20221011002909.26987-5-warthog618@gmail.com>
- <CAMRc=MdC9fcrKaXRTq5eQttdyLo_SwhU7qEeV9+ej3L0ENkrTA@mail.gmail.com>
+        with ESMTP id S233970AbiKHPx2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 10:53:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3C6EB1;
+        Tue,  8 Nov 2022 07:53:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C87B76162F;
+        Tue,  8 Nov 2022 15:53:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF58C433D6;
+        Tue,  8 Nov 2022 15:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1667922805;
+        bh=PRO30yRurUbHZpdLzN8x9Q3584RZSHnID9+jX8Obh+U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IClHp78MU3nWMIP915AO6LG55lEQ0hHr0Ool07pB41BAPb2TPgPe3WrIpobyyw3qo
+         uPC317aauYjXJzr4/Ag66h7TPrKHTT9B93oVZw5uAdmzgRdfcwXOUquQkbP+7BO/2t
+         jeZWjTuBpbd1b8P3cUIsJzmoEFwMZ98BKSVLeehU=
+Date:   Tue, 8 Nov 2022 16:53:21 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Larry Lai <larry.lai@yunjingtech.com>
+Cc:     Lee Jones <lee@kernel.org>, chengwei <foxfly.lai.tw@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "brgl@bgdev.pl" <brgl@bgdev.pl>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "GaryWang@aaeon.com.tw" <GaryWang@aaeon.com.tw>,
+        Musa Lin <musa.lin@yunjingtech.com>,
+        Jack Chang <jack.chang@yunjingtech.com>,
+        Javier Arteaga <javier@emutex.com>,
+        Nicola Lunghi <nicola.lunghi@emutex.com>,
+        Noah Hung <noah.hung@yunjingtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH 1/5] mfd: Add
+ support for UP board CPLD/FPGA
+Message-ID: <Y2p7cQXULoBp4k3f@kroah.com>
+References: <20221019022450.16851-1-larry.lai@yunjingtech.com>
+ <20221019022450.16851-2-larry.lai@yunjingtech.com>
+ <Y1/ik4XGNWsOg5KH@google.com>
+ <SG2PR06MB37422173908A6584B3D6D349F93F9@SG2PR06MB3742.apcprd06.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdC9fcrKaXRTq5eQttdyLo_SwhU7qEeV9+ej3L0ENkrTA@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <SG2PR06MB37422173908A6584B3D6D349F93F9@SG2PR06MB3742.apcprd06.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 04:00:08PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Oct 11, 2022 at 2:29 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Add a gpiowatch tool, based on gpiomon, to report line info change
-> > events read from chip file descriptors.
-> >
-> > Inspired by the gpio-watch tool in the linux kernel, but with gpiomon
-> > features such as custom formatted output, filtering events of
-> > interest and exiting after a number of events, so more useful for
-> > scripting.
-> >
-> > Default output is minimalist, so just time, event type and line id.
-> > Full event details are available using the custom formatted output.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > ---
-> >
-> > Changes v2 -> v3:
-> >    - Minimise the default output to more closely match gpiomon.
-> >    - Add --format option for when more detail is required.
-> >    - Add --num-events option to exit after a number of events.
-> >    - Add --event option to report only specific event types.
-> >    - Add --quiet option to not print events.
-> >    - fix monotonic to realtime conversion on 32 bit platforms.
-> >
+On Tue, Nov 08, 2022 at 03:45:45PM +0000, Larry Lai wrote:
+> Dear Jones,
 > 
-> Nice and clean, I don't have any issues other than the regular
-> coding-style bikeshedding.
-> 
+>         Thank you for spending time to review this code, please check our response below your comment with yellow background.
 
-Will be renamed to gpionotify for v5, ok?
+html email will be rejected by the mailing lists.  Please resend in
+plain-text format.
 
-> What happened to the idea we've been floating about creating a single,
-> busyboxy executable with links rather than separate executables? Have
-> we ever agreed on it?
-> 
+thanks,
 
-Yeah, last we spoke on it we agreed it was of dubious value and a low
-priority, so I didn't go anywhere with it.  You've reconsidered?
-
-Cheers,
-Kent.
-
+greg k-h
