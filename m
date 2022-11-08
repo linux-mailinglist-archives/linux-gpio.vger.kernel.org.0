@@ -2,88 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DA9562168E
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 15:29:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CB5A6216C8
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 15:32:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234105AbiKHO3V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 09:29:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38752 "EHLO
+        id S233472AbiKHOcT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 09:32:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234089AbiKHO2v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 09:28:51 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698B15C776;
-        Tue,  8 Nov 2022 06:26:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667917610; x=1699453610;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PF5aiFMvuJCck1QCgwE4v9546WvgeXFWsp175nRCSTU=;
-  b=f7329ker/B7xWvQX4aX/MJteJ01apb9a3wCJ+n/KRvbq0KiB2+tiTTg5
-   mimXHkFt9ygk4eXkpB/svsfYwNgqQ+wMst6TkcsCBJXXDTCdlnH+hr/Ri
-   h99bQJTTtb5ZFZ3l4LmlQS6cccdCnCiYvTh1eJBgdVqA4sF8OpLkR+KCC
-   3gHMRgeYeVxHRwbGZgXeYOVJQa9lMpz0fUjc5wyYWj0vYHYibOFHB6gWZ
-   vG04xwRwwhFDAkT62hbL+xuqRFa/mlHp907Cbzh5j2HckYhbNH1TgfJkk
-   5V7bqV5Moh11QqSCmsR8SQpqD7LqaBcC/mxYafPCWk8/fsAc5ME1ZUw/l
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="310701596"
-X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="310701596"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 06:26:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10524"; a="638804818"
-X-IronPort-AV: E=Sophos;i="5.96,148,1665471600"; 
-   d="scan'208";a="638804818"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 08 Nov 2022 06:26:48 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1osPYt-009ASc-0d;
-        Tue, 08 Nov 2022 16:26:47 +0200
-Date:   Tue, 8 Nov 2022 16:26:46 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] pinctrl: intel: Add Intel Moorefield pin
- controller support
-Message-ID: <Y2pnJskyDcTMn8LL@smile.fi.intel.com>
-References: <20221108140931.62910-1-andriy.shevchenko@linux.intel.com>
- <Y2pmYOKcVcMZ+lF1@black.fi.intel.com>
+        with ESMTP id S233737AbiKHOb0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 09:31:26 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A42413F1E
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 06:31:15 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id 78so13518811pgb.13
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 06:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=plCZMl07mNxOy4FwEnJyPWecERqsJQyrHYHIsHPByWrtU1k24II845ABLvzsZ/utuV
+         xrfZ6D/e/ZRoyRjpbZ5oMDY9h9ndbu6gtWFiQs/CjHcVVSqci/vjYPMMyy1pnVJ69u5N
+         OM2Kwkcs/9db1KNzWi4t4Kki8xmdjDy37F969+9phg4q7Iutyq/zyteGqROU9T6wdO4n
+         lS/c2RFkn8H1h3UlswE5jNY6oMt5wQG8oq965L41J8fDh6fe1zek7KZifUk151Do70De
+         k9oKwcRkEhDvguAg4zcTYagV5rrGsvTLwyNtdWlzI5EY/CPrjAga8S7nNTzf3DHImH9S
+         a/jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
+        b=n+sm95z89tp24afQkWZ7cZDW+X318OXxb5upi/eL552gn1MHSL4FF3ju6Sy4RsvcrX
+         JDzXx47gXoWrwIu3lAHPBowaIdbJBKYSPH7r+NUpCC7ZU4i8wABJGZYKt80KsozXWZpS
+         tKdn2seReDuLk7WJ7osgeIhX0qJBLgyJWm637C7yRbC4YBNotG4nE1pIPDXfjm4QGsTT
+         NsI9LgaPOHf8M4cGSQcts4Fn0cuxWVbqC4OuGyub1GVfmn9C1c5EWVWSaZ+frKsFjlUY
+         0g1PGp6ubFi8ghfXeiC+3AU0tehmEPmNTXC327W+EpN28QlA+lppzv6m3mFSHzUoRSJx
+         CHlA==
+X-Gm-Message-State: ACrzQf0fW7wOz8/jF7zHzJWr8DSsCZgeq+T7odWAlu86pEu8kdY/BVyS
+        1CAr66oTyT1N+u8aFuVHqRyVi+gsG3XwtpvTS2LIR7+o3/f8bw==
+X-Google-Smtp-Source: AMsMyM5cpw1VKvG8gEasOMmG4UhkblJY7gBReqfbYX80x9OXEWSZokzXOm90JDY4L5h3JbfU+3ckCU+QNWhG8SGrNVo=
+X-Received: by 2002:a05:6a00:1da6:b0:56c:318a:f8ab with SMTP id
+ z38-20020a056a001da600b0056c318af8abmr56843835pfw.82.1667917864342; Tue, 08
+ Nov 2022 06:31:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y2pmYOKcVcMZ+lF1@black.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:ac4:c8c2:0:b0:56a:d900:eb11 with HTTP; Tue, 8 Nov 2022
+ 06:31:03 -0800 (PST)
+Reply-To: mr.abraham022@gmail.com
+From:   "Mr.Abraham" <davidbraddy01@gmail.com>
+Date:   Tue, 8 Nov 2022 14:31:03 +0000
+Message-ID: <CAHGOU4PvdrNhE2KifzdPkFxZTCG5gy+23qf130PwnSmJcLRSew@mail.gmail.com>
+Subject: Greeting
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:536 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4796]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mr.abraham022[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [davidbraddy01[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [davidbraddy01[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 04:23:28PM +0200, Mika Westerberg wrote:
-> On Tue, Nov 08, 2022 at 04:09:31PM +0200, Andy Shevchenko wrote:
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Intel Moorefield SoC pinctrl driver
-> > + *
-> > + * Copyright (C) 2020, Intel Corporation
-> 
-> 2022
-> 
-> Otherwise looks nice to me,
-
-Fixed and pushed into my reqiew and testing queue, thanks!
-
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+My Greeting, Did you receive the letter i sent to you. Please answer me.
+Regard, Mr.Abraham
