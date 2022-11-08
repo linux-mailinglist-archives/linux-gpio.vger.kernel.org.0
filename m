@@ -2,70 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4593F6210BB
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 13:31:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF096210E1
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 13:36:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233631AbiKHMbb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 07:31:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
+        id S233865AbiKHMgT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 07:36:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233326AbiKHMba (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 07:31:30 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899321143
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 04:31:29 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id m22so965616eji.10
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 04:31:29 -0800 (PST)
+        with ESMTP id S233923AbiKHMgS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 07:36:18 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB454C24F
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 04:36:14 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id z18so22231280edb.9
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 04:36:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sm+oC/YPWF/iZNcfGahmynT1lvQ6GZ85C3/IGkCpcBg=;
-        b=uOF5AWIk4QTXqHhAviukr3WgFBbqJAthELAkouqC5SPAKtYa2dhvPvalBKk8aQIhOA
-         C6QdxBUGCZD8XHA2Tcb+stvMx6RD+jEN1FXcMt8EUTde5Nqt/yPwiziVSrIl6FRzAKGw
-         7WHs+gNB2Eo04TurLhyHF8DQsMsnUTszhbPTkNgxpNrM9TQLoVL2g/ipepIsbu42c8f/
-         Ucsk2YPk64Le/SK6lOoCE7EwcTsmdJPRGngxdwSP/My16Inn864TipaOy4Gfu0AuQAB3
-         PQn8l9hT4+yg8dGyptmbz+Gw0qSt+XZfk/9UDi4UyA1YUFJ8WhLyl+ztp8lueLoPPHRo
-         dc0A==
+        bh=lUte8uNFM/Ko5EYA94xDS4OarmRppybS52Yd06EmKs0=;
+        b=exue/41mpesJS2YHEz7v0h7Ysi3Mac6gew2UFoCbLeSfddgbKISLJDgotDgMFVYkqV
+         9buWnp6zQNtN4O6AT4aswNa1CgAq2FNtGMgCfMy4m9mpKJRgu1fYulX/Xu6c2NRdsrZR
+         +1UMYXNI35yEqCowzKJyC9duOFwQ4Cnb1qzmCMTBdbPsQvk/ovnmKvU5XaMVOLDX9YCC
+         zm/3t5mRGmoSf7cYJxhv+m6jHMhM/vsh6iB2JP+he/UnWDMxUsNMbXr+xYv+oOK+Kcmh
+         uUVENFfQvlvi1WxCN6Xhp29t2LjaXSIuDLSg2jHWW+/BIljG+y/Z/FVMf5D6HDZQTmd4
+         wDxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sm+oC/YPWF/iZNcfGahmynT1lvQ6GZ85C3/IGkCpcBg=;
-        b=YFV4klxgS9BxeKKlxle2MOiq/LR8P1lfXDvn8eIHVBMkhMhJfViySHDBxiPsi1+M7m
-         fzt05gaIz2p8CnOiHL5yNpiGxyIewQ9SjqI2B9FbQLF434I4T9HXgXh4Wf4wcLi90Z/R
-         82GkYYJqBiT73Fm1iwIMx4lfAHa8g9FfOp0yQsfAEklFuGDnTQ2EzYlciUUm31T+e7zR
-         oa1NphFFy+JkyDLGU82cp8z+Sx1fieKQPvV6rkijVtXUOEucx4CDnduItbAAEYwN/QPk
-         Ncc/f3A6R8VSE8y4WXzqUq+CjvP0+2DhuoifsMQVXHdq6r7rOXshhCUt2+8xS0ZiXDWw
-         FlTg==
-X-Gm-Message-State: ANoB5pnPbEbkUYSXO7R1sLKa0z6AbzefZlzLX8tOCYoRLUmOUdNi5aXW
-        ymfWPUehAHAt2VKXs4DejQ3loz/3M9zU/8xqSGEDMA==
-X-Google-Smtp-Source: AA0mqf6mScTI8wfSGbpo+cE2WOMgktUG3GbfO4kwbhqKSf/NX3F8x3YQuNjKwU0wd/caXHpjY3fm9Kvzkc0l9DucqnE=
-X-Received: by 2002:a17:906:6acc:b0:7ae:658c:ee45 with SMTP id
- q12-20020a1709066acc00b007ae658cee45mr10953313ejs.190.1667910688158; Tue, 08
- Nov 2022 04:31:28 -0800 (PST)
+        bh=lUte8uNFM/Ko5EYA94xDS4OarmRppybS52Yd06EmKs0=;
+        b=EVc/K/jcNn+fSkzMNFu4gbjmj3wBg46IEd5Tk0PO2utzvhR0C3+4/JvZ/6YguGnx8r
+         4Sy94rSjF+Vs6W9MDYo+DiEzCVDM4LxIq2Zvq8GT9V72sPGwIOUfJ4phySIjXF1M4d2x
+         mPRTegWbragZUXbqCcLARtDo5P3gD5bDZZ/ZvygOI7etDFNQhuWnF/I8EwEDz7JApJIq
+         1RhVsdyV6Gufwa7VF9rTlZJDMnt18nOKzHyyhUQCOgEZcper3kyrqJrxVTBlkcBkFlBc
+         qppgrSbx1DSz2aF3x6V5EHMMMxHpCUN/IkArZDlQNBBSFngE+l3CVVA+7DEFmbDI1GbO
+         5cFw==
+X-Gm-Message-State: ACrzQf32xrgWKO4FYDjgE7O0UWTaTxQXjuArXi+oReEVS+0jEsiZX+rp
+        ORncX9eyCFB95OVyG9bmRQ5TQNndV6PnlIcz2MH/Yw==
+X-Google-Smtp-Source: AMsMyM6J5Wkx9+mm9M5bnxR10MBsY4ZpxY0vOQ398u8OSuBf312QsZh7E7zi2Rnq4+DElyDARXmG+vClXK7CeAYG5YY=
+X-Received: by 2002:a05:6402:d0b:b0:458:a244:4e99 with SMTP id
+ eb11-20020a0564020d0b00b00458a2444e99mr55652244edb.46.1667910973339; Tue, 08
+ Nov 2022 04:36:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20221031100843.14579-1-clin@suse.com> <20221031100843.14579-2-clin@suse.com>
-In-Reply-To: <20221031100843.14579-2-clin@suse.com>
+References: <20221031100843.14579-1-clin@suse.com> <20221031100843.14579-3-clin@suse.com>
+In-Reply-To: <20221031100843.14579-3-clin@suse.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 8 Nov 2022 13:31:16 +0100
-Message-ID: <CACRpkdY-uaQ--vFM+vVPbwa-q9nbSU0rQB+qbL=9m0wVMwA3Aw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
+Date:   Tue, 8 Nov 2022 13:35:59 +0100
+Message-ID: <CACRpkdYWLVc4Rp4U=hRV9qDdTWeWUXM1BF0WrBxRpCWkwt6VQw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: add NXP S32 SoC family support
 To:     Chester Lin <clin@suse.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        s32@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
+Cc:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>, s32@nxp.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Larisa Grigore <larisa.grigore@nxp.com>,
         Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
         =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>
+        Matthias Brugger <mbrugger@suse.com>,
+        Matthew Nunez <matthew.nunez@nxp.com>,
+        Phu Luu An <phu.luuan@nxp.com>,
+        Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -76,26 +83,45 @@ Hi Chester,
 
 thanks for your patch!
 
-On Mon, Oct 31, 2022 at 11:09 AM Chester Lin <clin@suse.com> wrote:
+On Mon, Oct 31, 2022 at 11:10 AM Chester Lin <clin@suse.com> wrote:
 
-> Add DT schema for the pinctrl driver of NXP S32 SoC family.
+> Add the pinctrl driver for NXP S32 SoC family. This driver is mainly based
+> on NXP's downstream implementation on CodeAurora[1].
 >
+> [1] https://source.codeaurora.org/external/autobsps32/linux/tree/drivers/pinctrl/freescale?h=bsp34.0-5.10.120-rt
+>
+> Signed-off-by: Matthew Nunez <matthew.nunez@nxp.com>
+> Signed-off-by: Phu Luu An <phu.luuan@nxp.com>
+> Signed-off-by: Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
 > Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
 > Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@nxp.com>
+> Signed-off-by: Radu Pirea <radu-nicolae.pirea@nxp.com>
 > Signed-off-by: Chester Lin <clin@suse.com>
-(...)
-> +  nxp,pins:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      A list of [start, end] pin ID boundaries that correspond to each of
-> +      the register regions reserved.
 
-That's an interesting approach.
+Overall this looks very good, special thanks for using as much generic code
+as possible.
 
-But what about just hardcoding this into the driver instead?
+Only main thing I want you to look into are those magic nxp,pins ranges encoded
+into the device tree.
 
-If you have the compatible, surely you know these indexes from
-that compatible string?
+> +static struct s32_pinctrl_soc_info s32_pinctrl_info = {
+> +       .pins = s32_pinctrl_pads_siul2,
+> +       .npins = ARRAY_SIZE(s32_pinctrl_pads_siul2),
+> +};
+> +
+> +static const struct of_device_id s32_pinctrl_of_match[] = {
+> +       {
+> +
+> +               .compatible = "nxp,s32g-siul2-pinctrl",
+> +               .data = (void *) &s32_pinctrl_info,
+> +       },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, s32_pinctrl_of_match);
+
+Since you are already using .data so nicely for the variants surely the
+nxp,pins info can go in there too?
 
 Yours,
 Linus Walleij
