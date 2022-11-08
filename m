@@ -2,132 +2,123 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF3D1620E3B
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 12:08:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 614B0620E69
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 12:17:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234086AbiKHLIj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 06:08:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52036 "EHLO
+        id S233629AbiKHLRh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 06:17:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233995AbiKHLIQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 06:08:16 -0500
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FAD47309;
-        Tue,  8 Nov 2022 03:08:05 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id A2CE35C0217;
-        Tue,  8 Nov 2022 06:08:04 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 08 Nov 2022 06:08:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1667905684; x=1667992084; bh=U2YniFrngs
-        ovR3GGMHxDGF+HfkbcgWA9nLVRmjP0B74=; b=DLZAbHIDGlSTqD5S6iR3/gtAx9
-        eQPOYkplcG08hQDSgSO1gFClIBZ2sG7HpVUj8MRQGSvwr3uX0nWzeaIFqs9BtSV0
-        K6Cha0JZ4bLdlWYZtF6ytoLIqWDEAsB53CrO86XXr0e0n4Og2B/pQ/n6T7NguH3n
-        ZgVhYysiE3e4IahkP7qciaGtVZyg9P1WwqW7kx8iewWSD47Jt1S4eLTkeEpd8aX9
-        JaPh1OeythbWk1w12UGaD65Ah+DzjDVwXD8CLbRxEe/uwEp9nH0Prj5TDfdsKBL5
-        Yfh4kvAiZbUIr3vxHNd51QMOjzK2H0RU5uQXZ1J6MLcCMmmIVHYwj/nva7WQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1667905684; x=1667992084; bh=U2YniFrngsovR3GGMHxDGF+Hfkbc
-        gWA9nLVRmjP0B74=; b=guo9ieRqxDkiVbCiCXSD12kJW79DrE3/LFbw76BjvFvM
-        4OUzzLIX/dE07AIH0AAWU08egIJQ7ch32xAxGofrymLafOsbRHhjUIm6a37pPDpN
-        cDBaSFbbAsIqzSE4xu+gr1WZz1z5xll+m+2Nz1MIwlbmQrPNIRaf3M78dqVb8BMS
-        7H0hoZXWFqBNHFOY0yPXyHvr+V9LJl+7ivf4A8RpAweUKzOnnuPdFMfl/ozcfgfb
-        vZFukuUffMCdMmegB0y0oBbl/qKMswvuwxEM/h4DNixcmQ28IpJiYITK/WJfUH85
-        Zz3R7bPMFAlGHL9EyuPNhJ/cLRA8yg/NV+iBArsDQQ==
-X-ME-Sender: <xms:kzhqYxSRQqupIpfPXyXLRHQN-f7Swmt-t-SiPLc9Qb4nbBbka45vSg>
-    <xme:kzhqY6zZFRhJJTTEe4plBs6MlVt3yMnZ608f1Xn2QSqDkT3aN7jwyrqSZ0DPJbQ_S
-    QVPa-wKNwbdLTgtfLM>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrfedtgddvhecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
-    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
-    gvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedtkeet
-    ffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrh
-    hnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:kzhqY22OzqwTPxWzlMhHiKqQ446U1FI1m5Yy45A9NbLjmnv4P4SJDA>
-    <xmx:kzhqY5D-Rz_VgQ94AH2kjcL5y74K5vL0-T2cPdBJASFgYgnJexgiaA>
-    <xmx:kzhqY6iHYGkZyYz5fovjzvcwG5T3IJmkEi9PqQopFjxW3ERDXIBujg>
-    <xmx:lDhqY1TFWSNJsWkhZe0ejtZAEljf33bOXTw81USZ4MUxfDl5OYgWUQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 84808B60086; Tue,  8 Nov 2022 06:08:03 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <d5f29c86-4bd8-4550-971e-4e941b1099f2@app.fastmail.com>
-In-Reply-To: <ef5d4f48-71b9-2d5c-37f4-7a029a32a41b@gmail.com>
-References: <20221107071511.2764628-1-Mr.Bossman075@gmail.com>
- <20221107071511.2764628-8-Mr.Bossman075@gmail.com>
- <d293e410-223d-4baa-ba6d-65bc11ab1e55@app.fastmail.com>
- <ef5d4f48-71b9-2d5c-37f4-7a029a32a41b@gmail.com>
-Date:   Tue, 08 Nov 2022 12:07:33 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Jesse Taube" <mr.bossman075@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>
-Cc:     "Rob Herring" <robh+dt@kernel.org>,
-        "Stephen Boyd" <sboyd@kernel.org>,
-        "Shawn Guo" <shawnguo@kernel.org>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        "Fabio Estevam" <festevam@gmail.com>, aisheng.dong@nxp.com,
-        stefan@agner.ch, "Linus Walleij" <linus.walleij@linaro.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Russell King" <linux@armlinux.org.uk>, abel.vesa@nxp.com,
-        dev@lynxeye.de, "Marcel Ziswiler" <marcel.ziswiler@toradex.com>,
-        tharvey@gateworks.com, leoyang.li@nxp.com, fugang.duan@nxp.com,
-        "Giulio Benetti" <giulio.benetti@benettiengineering.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-serial@vger.kernel.org
-Subject: Re: [PATCH v1 7/7] ARM: dts: imx: Update i.MXRT1050.dtsi compatibles
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232929AbiKHLRh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 06:17:37 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29B917E1F;
+        Tue,  8 Nov 2022 03:17:35 -0800 (PST)
+Received: from canpemm500004.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4N65D55WTLzRp4y;
+        Tue,  8 Nov 2022 19:17:25 +0800 (CST)
+Received: from [10.174.179.106] (10.174.179.106) by
+ canpemm500004.china.huawei.com (7.192.104.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 8 Nov 2022 19:17:32 +0800
+Subject: Re: [PATCH next 1/2] gpio: hisi: Add initial device tree support
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <f.fangjian@huawei.com>, <yangyicong@hisilicon.com>,
+        <xuwei5@huawei.com>, <robh+dt@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <20221026034219.172880-1-chenweilong@huawei.com>
+ <CACRpkdbfZoBsKhH-fDHbuiBMz=LuWJ5kRfRT9JupycJQLFzJZw@mail.gmail.com>
+From:   chenweilong <chenweilong@huawei.com>
+Message-ID: <33794563-ae4b-87e5-09df-d800268828f8@huawei.com>
+Date:   Tue, 8 Nov 2022 19:17:32 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <CACRpkdbfZoBsKhH-fDHbuiBMz=LuWJ5kRfRT9JupycJQLFzJZw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.174.179.106]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ canpemm500004.china.huawei.com (7.192.104.92)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 7, 2022, at 16:09, Jesse Taube wrote:
-> On 11/7/22 02:44, Arnd Bergmann wrote:
->> On Mon, Nov 7, 2022, at 08:15, Jesse Taube wrote:
->>> Remove unused compatibles from i.MXRT1050.dtsi.
->>> Change GPT clock-names to match documentation.
->>>
->>> Cc: Giulio Benetti <giulio.benetti@benettiengineering.com>
->>> Signed-off-by: Jesse Taube <Mr.Bossman075@gmail.com>
->> 
->> Can you make sure your changelog texts explain why you do this?
-> Yes, sorry I wasn't clear.
+On 2022/11/8 18:33, Linus Walleij wrote:
+> Hi Weilong,
 >
->> Are they fundamentally different from the devices you had
->> claimed to be compatible with that need a different driver,
+> thanks for your patch!
 >
-> UART and SDHC had drivers added which are better fit.
-> The GPT binds to imx6dl which is also the same as imx6sl.
+> On Wed, Oct 26, 2022 at 5:34 AM Weilong Chen <chenweilong@huawei.com> wrote:
+>
+>> Add support for HiSilicon GPIO controller in embedded platform, which
+>> boot from devicetree.
+>>
+>> Signed-off-by: Weilong Chen <chenweilong@huawei.com>
+> I will provide OF comments, I let Andy and other ACPI experts say
+> what is necessary for ACPI.
+>
+> (...)
+>> +#include <linux/acpi.h>
+> I don't know if this is necessary, check it.
+>
+>>  #include <linux/gpio/driver.h>
+>>  #include <linux/module.h>
+>>  #include <linux/mod_devicetable.h>
+>> +#include <linux/of.h>
+> This is unnecessary for what you are trying to do. Drop it.
+>
+>> +#ifdef CONFIG_ACPI
+>>  static const struct acpi_device_id hisi_gpio_acpi_match[] = {
+>>         {"HISI0184", 0},
+>>         {}
+>>  };
+>>  MODULE_DEVICE_TABLE(acpi, hisi_gpio_acpi_match);
+>> +#endif
+> Don't know about this #ifdef, check if it is needed.
+>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id hisi_gpio_dts_match[] = {
+>> +       { .compatible = "hisilicon,gpio-ascend910", },
+>> +       { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, hisi_gpio_dts_match);
+>> +#endif
+> Drop the ifdef, it is not needed.
+>
+>>  static void hisi_gpio_get_pdata(struct device *dev,
+>>                                 struct hisi_gpio *hisi_gpio)
+>> @@ -310,7 +322,8 @@ static int hisi_gpio_probe(struct platform_device *pdev)
+>>  static struct platform_driver hisi_gpio_driver = {
+>>         .driver         = {
+>>                 .name   = HISI_GPIO_DRIVER_NAME,
+>> -               .acpi_match_table = hisi_gpio_acpi_match,
+>> +               .acpi_match_table = ACPI_PTR(hisi_gpio_acpi_match),
+>> +               .of_match_table = of_match_ptr(hisi_gpio_dts_match),
+> Drop of_match_ptr() just assign it.
+>
+> The reason it works is because we put struct of_device_id into the generic
+> headers so we can avoid the ifdefing.
+>
+> Yours,
+> Linus Walleij
 
-Where are those drivers added? Looking at linux-6.1-rc2
-and linux-next, I still see them use the same drivers as
-the original ones, and listing both strings would be the
-preferred method.
+Thank for your review，I get it，and make  improvements in subsequent patches.
 
->> or are there drivers in the field that bind to the wrong
->> string first?
-> I don't understand?
 
-I mean if you had run into the case where you have
-a driver that misbehaves when the fallback string is
-present in addition to the most specific one.
+Best regards,
 
-     Arnd
+Weilong Chen.
+
+> .
+
+
