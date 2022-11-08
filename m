@@ -2,97 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB5A6216C8
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 15:32:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC4462175D
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 15:51:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233472AbiKHOcT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 09:32:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38786 "EHLO
+        id S233640AbiKHOvJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 09:51:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233737AbiKHOb0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 09:31:26 -0500
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A42413F1E
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 06:31:15 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 78so13518811pgb.13
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 06:31:15 -0800 (PST)
+        with ESMTP id S233944AbiKHOvI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 09:51:08 -0500
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1666B13F6F
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 06:51:07 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id t25so39214857ejb.8
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 06:51:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=plCZMl07mNxOy4FwEnJyPWecERqsJQyrHYHIsHPByWrtU1k24II845ABLvzsZ/utuV
-         xrfZ6D/e/ZRoyRjpbZ5oMDY9h9ndbu6gtWFiQs/CjHcVVSqci/vjYPMMyy1pnVJ69u5N
-         OM2Kwkcs/9db1KNzWi4t4Kki8xmdjDy37F969+9phg4q7Iutyq/zyteGqROU9T6wdO4n
-         lS/c2RFkn8H1h3UlswE5jNY6oMt5wQG8oq965L41J8fDh6fe1zek7KZifUk151Do70De
-         k9oKwcRkEhDvguAg4zcTYagV5rrGsvTLwyNtdWlzI5EY/CPrjAga8S7nNTzf3DHImH9S
-         a/jQ==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5RfhvWt1Tv41V7xOdh182isXRfcqnMCvMMU4ZxjHa4I=;
+        b=vgPgq/fKoy91SWpS9t2e6oRNux2GYZ11uz4nq69Ecusn/WQxEr9PnRkXeciq96q9Kf
+         Y/uc1JXxwDcE7DZk4ERIHWnMD3xCOKQOkmZ9szh6zLYAHlS8jB3/9Vzu0GTEcRvD273p
+         QcJzqGu94FAUp4fND/CyiussZorc4AISQgkF6NZxvG/MLLVHHNxJkea27kaoeMZFf8NM
+         MrPmIrciQQHldO1W0L/ICYsoJczxk/E5K1ku/kfcnyWtcEYwFARIfMuiqAHSi0RwOReo
+         3xg6N55uGAcHesseexA8+25xPiouSe/QNOgAQpSqMWJsa4JVGZPnnvoO6B0S9mYDKIX0
+         HTaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SzBlYeGeT15Xra75w9IZDBjQ7Da3XKSmRdlnDJDYrko=;
-        b=n+sm95z89tp24afQkWZ7cZDW+X318OXxb5upi/eL552gn1MHSL4FF3ju6Sy4RsvcrX
-         JDzXx47gXoWrwIu3lAHPBowaIdbJBKYSPH7r+NUpCC7ZU4i8wABJGZYKt80KsozXWZpS
-         tKdn2seReDuLk7WJ7osgeIhX0qJBLgyJWm637C7yRbC4YBNotG4nE1pIPDXfjm4QGsTT
-         NsI9LgaPOHf8M4cGSQcts4Fn0cuxWVbqC4OuGyub1GVfmn9C1c5EWVWSaZ+frKsFjlUY
-         0g1PGp6ubFi8ghfXeiC+3AU0tehmEPmNTXC327W+EpN28QlA+lppzv6m3mFSHzUoRSJx
-         CHlA==
-X-Gm-Message-State: ACrzQf0fW7wOz8/jF7zHzJWr8DSsCZgeq+T7odWAlu86pEu8kdY/BVyS
-        1CAr66oTyT1N+u8aFuVHqRyVi+gsG3XwtpvTS2LIR7+o3/f8bw==
-X-Google-Smtp-Source: AMsMyM5cpw1VKvG8gEasOMmG4UhkblJY7gBReqfbYX80x9OXEWSZokzXOm90JDY4L5h3JbfU+3ckCU+QNWhG8SGrNVo=
-X-Received: by 2002:a05:6a00:1da6:b0:56c:318a:f8ab with SMTP id
- z38-20020a056a001da600b0056c318af8abmr56843835pfw.82.1667917864342; Tue, 08
- Nov 2022 06:31:04 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5RfhvWt1Tv41V7xOdh182isXRfcqnMCvMMU4ZxjHa4I=;
+        b=QxqbY68h5l0MzK7TqHRjHgqYZgmJKiHdsyKEc/QzHaJGx73KiD6/uzFwkVgrc12+Kz
+         iyfgNcj9Suhliz+rX0oHqEsmv8Z/qVe5F2qPmQRKTA+HTmvifQZZ4mR8WdPxRSZQOtPR
+         jCdf9QH8ACDybieL3rNtlJge5RF07nUKhjmiz/he8JFe5zF0AcAK9/VU+wpzxF/1Lnid
+         +8m4UEzxNk6gEtJqjYjbproMhi32N0IioMgzYMk4Jtbsoqpx2qmX0IE/7x7ucqiNI4Fg
+         RonIruxL9PStkfJ2KoRpTDfAr/MQICqoHTf/MwhBuFz0qM4UMKxjCT67jWTr4FS2YFv2
+         mcGg==
+X-Gm-Message-State: ACrzQf3caF73+d9gyKuYe2FyABaqavL1FsN/L6HiHQ7KCzaJ2JROuCqP
+        Unyyce17lIxgh+TnTzu5SRcBgqyF6kpA3AwRf3MNIw==
+X-Google-Smtp-Source: AMsMyM43GACP12dQZV6v3KIC5Qxaj6QVCASShwmiPx6+SaG+30Y/RBMbREK4KJlCmGU7p1c/8UJC8IQmuja8j8BZsDc=
+X-Received: by 2002:a17:907:c1e:b0:7ae:31a0:571e with SMTP id
+ ga30-20020a1709070c1e00b007ae31a0571emr21471098ejc.690.1667919065615; Tue, 08
+ Nov 2022 06:51:05 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:ac4:c8c2:0:b0:56a:d900:eb11 with HTTP; Tue, 8 Nov 2022
- 06:31:03 -0800 (PST)
-Reply-To: mr.abraham022@gmail.com
-From:   "Mr.Abraham" <davidbraddy01@gmail.com>
-Date:   Tue, 8 Nov 2022 14:31:03 +0000
-Message-ID: <CAHGOU4PvdrNhE2KifzdPkFxZTCG5gy+23qf130PwnSmJcLRSew@mail.gmail.com>
-Subject: Greeting
-To:     undisclosed-recipients:;
+References: <20221025070255.14407-1-linux@fw-web.de> <e7192d9b-df86-a860-d5cb-8b4b9184e5bc@linaro.org>
+ <trinity-889b4468-8a50-4eae-80a1-6bd9ffbeaaf2-1667577856206@3c-app-gmx-bs24>
+In-Reply-To: <trinity-889b4468-8a50-4eae-80a1-6bd9ffbeaaf2-1667577856206@3c-app-gmx-bs24>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 8 Nov 2022 15:50:44 +0100
+Message-ID: <CACRpkdZFkeX7J9R2C0rhF+WZJXe65y6FfeBEMBGGkSTh4AWmsQ@mail.gmail.com>
+Subject: Re: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings for
+ MT7986 SoC
+To:     Frank Wunderlich <frank-w@public-files.de>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Frank Wunderlich <linux@fw-web.de>,
+        linux-mediatek@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:536 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4796]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mr.abraham022[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [davidbraddy01[at]gmail.com]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [davidbraddy01[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 T_HK_NAME_FM_MR_MRS No description available.
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-My Greeting, Did you receive the letter i sent to you. Please answer me.
-Regard, Mr.Abraham
+On Fri, Nov 4, 2022 at 5:04 PM Frank Wunderlich <frank-w@public-files.de> wrote:
+
+> > Gesendet: Dienstag, 25. Oktober 2022 um 20:35 Uhr
+> > Von: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>
+> > Betreff: Re: [PATCH v2] dt-bindings: pinctrl: update uart/mmc bindings for MT7986 SoC
+> >
+> > On 25/10/2022 03:02, Frank Wunderlich wrote:
+> > > From: Frank Wunderlich <frank-w@public-files.de>
+> > >
+> > > Add new splitted uart pins and emmc_51
+> > >
+> > > Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+> >
+> >
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>
+> after talking with MTK for the emmc pinctrl settings (custom pull-up) they suggested me to change
+> binding to fix other emmc-values and allow multiple (2) uart-items
+>
+> so on top of this patch
+>
+>              then:
+>                properties:
+>                  groups:
+> -                  enum: [emmc, emmc_rst, emmc_51]
+> +                  enum: [emmc_45, emmc_51]
+>            - if:
+>                properties:
+>                  function:
+> @@ -231,10 +231,12 @@ patternProperties:
+>              then:
+>                properties:
+>                  groups:
+> -                  enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
+> -                         uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
+> -                         uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
+> -                         uart2_1, uart0, uart1, uart2]
+> +                  items:
+> +                    enum: [uart1_0, uart1_rx_tx, uart1_cts_rts, uart1_1,
+> +                           uart1_2_rx_tx, uart1_2_cts_rts, uart1_3_rx_tx,
+> +                           uart1_3_cts_rts, uart2_0_rx_tx, uart2_0_cts_rts,
+> +                           uart2_1, uart0, uart1, uart2]
+> +                  maxItems: 2
+>
+> i would squash these changes and send as v3 or should i send an extra-patch?
+
+Squash and send av v3 if you haven't already! Easiest for me.
+
+Yours,
+Linus Walleij
