@@ -2,385 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAD6862198A
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 17:33:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC0F5621998
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 17:40:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234218AbiKHQdy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 11:33:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58720 "EHLO
+        id S232035AbiKHQkF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 11:40:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233654AbiKHQdx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 11:33:53 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6960357B45;
-        Tue,  8 Nov 2022 08:33:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Date:Sender:Message-Id:Content-Type:
-        Content-Transfer-Encoding:MIME-Version:Subject:Cc:To:From:References:
-        In-Reply-To:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0YuT/1kkHJsdBfN/BGMqpUuaH3DBVYf6Kah8+7mSTP0=; b=zSRN7jM4d9Lez4dLQdLNSCChFn
-        gvXBWsZDj7VDAWF7OVrUrSrlsDcCpQvKvJeTFFCvrzTKytGBmnOsqHnkpZfjgGMZqfYYJDl5RJKNv
-        xq9tFz3wdy7ZQeqNek/Avy2ErToMa1GEf8td2P/9KAu8mztJW3He4S6O3+bObLUSB38ilJiNbbuhz
-        LvCw7Sj+dC+1LrJwv8s+Wxtezuvwc+peXoxkgzO35f2vdOTnDx240BFR+JfRkXxcGWWL2pmXsTWVD
-        PEsgfiSNJlbVDU30cBX6suit1nUohBix3iHEcjZbvxowkBor8b+gSSLGW/XFoKYeVeRF29FVqzOqD
-        gjTXczFg==;
-Received: from e0022681537dd.dyn.armlinux.org.uk ([fd8f:7570:feb6:1:222:68ff:fe15:37dd]:40942 helo=rmk-PC.armlinux.org.uk)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <rmk@armlinux.org.uk>)
-        id 1osRXo-0003Ta-Lt; Tue, 08 Nov 2022 16:33:48 +0000
-Received: from rmk by rmk-PC.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <rmk@rmk-PC.armlinux.org.uk>)
-        id 1osRXo-002mwR-1T; Tue, 08 Nov 2022 16:33:48 +0000
-In-Reply-To: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
-References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
-From:   Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, devicetree@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: [PATCH v3 7/7] gpio: Add new gpio-macsmc driver for Apple Macs
+        with ESMTP id S232031AbiKHQkE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 11:40:04 -0500
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2128.outbound.protection.outlook.com [40.107.215.128])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1858149B5C;
+        Tue,  8 Nov 2022 08:40:03 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NDP/DiT4gYywgf15PKzVEjllUxBBiqt0LEDTOVEI95p8Bk4W8z5tQzoSwLY00Hr78WV15bYIuz0GHrVOWgojHqSx9OX5isfy6a4coUQhbK8euMkGTIkGzNMXcU2nQUX9BnlPC/vfzP+cKxe2OClYVQeUkrpJom2WwRHLL/3OmyiZ0wwBUEW1WNBkx+Hk6p66+0/wFOA5CYMfTsxFRC366JgOJz76A4V9EGTDN/ChL7guZIlrHm3e4AdXhYz/Ys01XU/OFuDb3mWb3St/Zu2Ebb1rxcwlf8zvzYlUBEuIneyERiScEpc0KiaIZaZAY8sFlis9mjLdy48csVq6+M2R1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uqLJiN1mWpZA2nRvUOPQnuS+o0OX9y1gDcn3qU8xRbc=;
+ b=WoQDTkacywCexmqvSiqQ3yWyd2h4mBKhrjiHEpPKSTexxm1LSYlhMESnpDj3poU1S+lTicLWceATKtwRMnNzbl68URQR37aXpvKsA0m7F5l1fz57qOdBmCQVwQ9ClQgk9lrlWV5SNCfUPWvBUF1wWOBK9C7Dxdpxkt+bhGwNtiTsZdjATpb8NNvQxlV0sozpJ/ccOdTN3uqOlerD7cT1ZsUbmL88fasvsZJ12UIUQAm40LyKDpZoSQuanzHS50ccGPKQMRnpeIAQh3ufCgBsWGamHRFOOWHQ4HgLkJnhNbyDEImNlgyHxHEpXxm0pxsVriOVjiaN+Ke9ccW520YdhA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=yunjingtech.com; dmarc=pass action=none
+ header.from=yunjingtech.com; dkim=pass header.d=yunjingtech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=yunjingtech.com;
+Received: from SG2PR06MB3742.apcprd06.prod.outlook.com (2603:1096:4:d8::14) by
+ PSAPR06MB4454.apcprd06.prod.outlook.com (2603:1096:301:8a::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5791.27; Tue, 8 Nov 2022 16:39:56 +0000
+Received: from SG2PR06MB3742.apcprd06.prod.outlook.com
+ ([fe80::9ac2:8b0a:9ad:24b5]) by SG2PR06MB3742.apcprd06.prod.outlook.com
+ ([fe80::9ac2:8b0a:9ad:24b5%5]) with mapi id 15.20.5791.025; Tue, 8 Nov 2022
+ 16:39:56 +0000
+From:   chengwei <larry.lai@yunjingtech.com>
+To:     lee@kernel.org, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw,
+        musa.lin@yunjingtech.com, jack.chang@yunjingtech.com,
+        noah.hung@yunjingtech.com, chengwei <larry.lai@yunjingtech.com>
+Subject: [PATCH V2 0/3] Add support control UP board CPLD/FPGA pin control
+Date:   Wed,  9 Nov 2022 00:38:49 +0800
+Message-Id: <20221108163852.15926-1-larry.lai@yunjingtech.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0001.apcprd02.prod.outlook.com
+ (2603:1096:4:194::10) To SG2PR06MB3742.apcprd06.prod.outlook.com
+ (2603:1096:4:d8::14)
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-Message-Id: <E1osRXo-002mwR-1T@rmk-PC.armlinux.org.uk>
-Sender: Russell King <rmk@armlinux.org.uk>
-Date:   Tue, 08 Nov 2022 16:33:48 +0000
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PR06MB3742:EE_|PSAPR06MB4454:EE_
+X-MS-Office365-Filtering-Correlation-Id: 564a95df-70b1-4fc9-53e9-08dac1a7de8f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: t6CdMTzufVsP7yWKov7SHihkw/lp8c3nuF3vKHv+YxkN4bxUb49ir/HaDKXY9ejafZaXdDmQ+XgjzF0Sh7+a6QVgptuAAsvfN8QM573RRynOEXbltoQZP18DqPDEbotLojpcjtEsnHDUx9B9IwiQsLZ2IidijNHSeRWs6ZPWnsBMzHN826eqy67lYBGXDS29P4zX1HP3NjeMYFI2IQShr+ISeQpbrR/kz4HPkZeqosCbPSeDdmPIptNozZ+yYt1p6h9pJ9vGFLE5FhvtWpO3ZerWc6ylGArRXzdDAqeRTKdTjP36nuqFvttfv9Cz97Ssun3mGzs7jvy25tNaIWCdA1qpKJl9tiHc54+z5X40bYCURcHJX+VtF+QbewS1dpyiacHjg9SO0PNBgBYLgslvRauMDEv6/gyrGTlAeUhI7RvzLncLQDNV7NIL9cyW+Ck/Wbcr/mQAm0L6vQ//4Zl4hGF1pomwcAbXojkhrtF/jWU0RntIagJJ40mteHJJi5iNkraoHsEv/s3FG35hXsn78j7fR1tjr7MDb+wjkC4XWlisSjQKvdx6sRo6OWr1QVYRgXfbGTvnZuXdmyQ6S1r9+l6k68Uw/jbIXXKQLSQMdBd+wBq6BXpPtnIvhHQp42xbv5QEKqb74aI7ZsPPGsLqUoibYIFVIyzsVddDbL5Y/RAYTTMfOP4xXp0kNVmkqhGk+ExbRvTWtMvhXwjOrvwNkMXToJTaeib9DSS7Fdy2C1xpXFXjRKBDOaxUK7Gtl9BkPXkb86fP0I4f831M2fYut1h5xZOCBQ7wzPgLRjMqLDo/UMtDOIEgchPtleHTv7wB
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SG2PR06MB3742.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(376002)(39830400003)(396003)(366004)(136003)(451199015)(8936002)(41300700001)(38350700002)(38100700002)(52116002)(6666004)(6506007)(4326008)(66946007)(83380400001)(2906002)(66556008)(66476007)(6512007)(26005)(316002)(5660300002)(86362001)(478600001)(107886003)(6486002)(186003)(36756003)(2616005)(8676002)(1076003)(43062005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OFJf3q44pU/o4tyzPQcoa/CI9jPSrsZzT/yxOrSGUz6h1OWtZVn+OC3CKfdP?=
+ =?us-ascii?Q?+bKKL42dGRRhVk000ceZMbWTbYLSppGNy3oy4QQRTP+1mIm0rvosyLkA9J9p?=
+ =?us-ascii?Q?MWe8FbvY3nAhzKjdlcbVCIA7z2/P8Z+FAQJYe51Hbd3Jv9r1ZvY4ZWSjy+CO?=
+ =?us-ascii?Q?GTw14VHSQVmzgiFJnM6KhdHtZ1APRfx26aM9C8nFyWyriW7IAXAE+VH9jCza?=
+ =?us-ascii?Q?0d13jNpmvCm9oLhmq15dt67tOxLOK8GHZxNsdi35QvyqOJRWqqyj+koTHOe0?=
+ =?us-ascii?Q?r4R/cTfdLDOsgCHOTvB6wL25Ne+DwpLajV12WGHgtMB1qfkuCuxG9q0a/G8/?=
+ =?us-ascii?Q?KdO7UjGs2fcB6dHVSU34Y8EB4jujvpEgn/PBOEDB82iMemiF5XkhQI1xxVKy?=
+ =?us-ascii?Q?qIhEAELJBPgibVReqaUFkoYQDJopqMotWUHYtwbwVz5c/CX+mc98UD59O9Ya?=
+ =?us-ascii?Q?zYDZl4RwVVftKUPNii+llOoJocYtsGQCL9CLv7cYlheDLWRlkMF0mvRTaW/W?=
+ =?us-ascii?Q?9AVodir9aSIaUB23SnYHJ1ENzfkzSWGbVYlv/VQNIdH9uAzFxRE2QYQ+RZby?=
+ =?us-ascii?Q?XIbf/7SgAyfnD9HEunvRsjddIa2bv9OHw708ITeqtfPUGbavIDOK5ZctULFF?=
+ =?us-ascii?Q?tDVlMwY2peYREQ+RDCWYxGotP/LyXAQt8KHCo/hKLLKVHRc2q5eldrnAdgIR?=
+ =?us-ascii?Q?Nl3strZjH0ElFP6IHEsefsf2S98axHql8+4t3ss/5A9xXQXBGWvXFQwlY1x8?=
+ =?us-ascii?Q?grXX2+Y7/hcknvuaVTLKbi70DDUnpz0sb9FigxHxGLRLj34tfvnt5i1mZ8vT?=
+ =?us-ascii?Q?QibH4GDOXj7kVCj+NM8Pkv+dyLED1FHtHeOnf1Blpmg1hweRlmhVrYz8lVwV?=
+ =?us-ascii?Q?stbijxaHaK1YQjS/9+Yn0c0LKcW9duknnQGH8SKp1B8auQk9bwq6nE2YJh62?=
+ =?us-ascii?Q?7FF9LIa3HwOLEz5JfmbE2DPXdWnYT8dq96G1cX+hDxL1jOTkxqfa0apP/ci1?=
+ =?us-ascii?Q?bW5iVBmO5wr8Dhezx7UMTBg2KiV4vXnfnWn0C/EQI0ukABnSzObDi/M7KJrD?=
+ =?us-ascii?Q?4aDiv4SoX7sDEQsdNP0wQjEACMy7tYE9qOr9/vJGVPwQ1Okt05e1x7d80e7S?=
+ =?us-ascii?Q?fldU6FSXLIjlH5CVg1cj1mws3nZIiUZuUHrjhUL9mRfsgxU3tvRsx+6FYoC6?=
+ =?us-ascii?Q?/Ov2jUgLXTFWxj3tKVR2sEMeso0cwyugnlpY5eS69P3deK0ZUU4pFLAft0CN?=
+ =?us-ascii?Q?FJJCTCggicqdol/+HAA+NSNA2RgXzS/OgXeA5ghKrkZzFdTcxJHPAylK7k2u?=
+ =?us-ascii?Q?oGAEQNR1Ba1CWnUtu4dXkkvdRkaELJtYcSKc733M5CtHFwpSKWaF07DG10c+?=
+ =?us-ascii?Q?Hi/S6LkwlmqgVN17i3AO55ocv2CbkDg42/TiuvNyPWPeiUBIre6UbONEffNp?=
+ =?us-ascii?Q?4bJR9ATQAg6Ti61Lh7uBWViQrEvuSg6bxL8LMK8KHD/PXBeaJmoYgVmh+2lu?=
+ =?us-ascii?Q?+kjsCyDBm2xe3Zdh5k9FCf4L11zH7k8+aavdapeI+jVSUPRj+Y0IODYngZx1?=
+ =?us-ascii?Q?hhS4LHd9RLNDwXEg+xXM2EYtGz0NQGVnu2ZTSrbGEvy9g51+nb3JWTos6fF1?=
+ =?us-ascii?Q?mg=3D=3D?=
+X-OriginatorOrg: yunjingtech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 564a95df-70b1-4fc9-53e9-08dac1a7de8f
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR06MB3742.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Nov 2022 16:39:56.6168
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: be2d5505-f7e6-4600-bbe2-b3201c91b344
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q/Uij3wPGroCLr2WzNbL2Vt3yu9FC278B1UnOwbVIdI1Jr4A55+LOIUgqzQtiZF5QvQjXON0IG1IWq5+cQEL4+qEqamGqeRAAnOZVes7HBg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PSAPR06MB4454
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,T_SPF_PERMERROR
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Hector Martin <marcan@marcan.st>
+The UP board <http://www.upboard.com> is the computer board for 
+Professional Makers and Industrial Applications. We want to upstream 
+the UP board 40-pin GP-bus Kernel driver for giving the users better 
+experience on the software release. (not just download from UP board 
+github)
 
-This driver implements the GPIO service on top of the SMC framework
-on Apple Mac machines. In particular, these are the GPIOs present in the
-PMU IC which are used to control power to certain on-board devices.
+These patches are generated from the Linux kernel mainline tag v6.0.
 
-Although the underlying hardware supports various pin config settings
-(input/output, open drain, etc.), this driver does not implement that
-functionality and leaves it up to the firmware to configure things
-properly. We also don't yet support interrupts/events. This is
-sufficient for device power control, which is the only thing we need to
-support at this point. More features will be implemented when needed.
+Change history:
+(1) PATCH V2 1 (mfd: Add support for UP board CPLD/FPGA)
+Refer 2022/10/31 Lee Jones review, fixed some of the issues.
 
-To our knowledge, only Apple Silicon Macs implement this SMC feature.
+(2) PATCH V2 2 (pinctrl: Add support pin control for UP board CPLD/FPGA)
+Refer 2022/10/19 Mark Brown and Andy Shevchenko review, fixed some of 
+the issues.
 
-Signed-off-by: Hector Martin <marcan@marcan.st>
-Reviewed-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Sven Peter <sven@svenpeter.dev>
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
----
- drivers/gpio/Kconfig       |  11 ++
- drivers/gpio/Makefile      |   1 +
- drivers/gpio/gpio-macsmc.c | 245 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 257 insertions(+)
- create mode 100644 drivers/gpio/gpio-macsmc.c
+(3) PATCH V2 3 (leds : Add support for UP board CPLD onboard LEDS)
+We did git send-email this patch to maintainer on 2022/10/11 for reviewing.
+there's no change on this LED PATCH V2.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index a01af1180616..08138322010a 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1283,6 +1283,17 @@ config GPIO_LP87565
- 	  This driver can also be built as a module. If so, the module will be
- 	  called gpio-lp87565.
- 
-+config GPIO_MACSMC
-+	tristate "Apple Mac SMC GPIO"
-+	depends on MFD_MACSMC
-+	default ARCH_APPLE
-+	help
-+	  Support for GPIOs controlled by the SMC microcontroller on Apple Mac
-+	  systems.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called gpio-macsmc.
-+
- config GPIO_MADERA
- 	tristate "Cirrus Logic Madera class codecs"
- 	depends on PINCTRL_MADERA
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 29e3beb6548c..467833cc9a9d 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -83,6 +83,7 @@ obj-$(CONFIG_GPIO_LP873X)		+= gpio-lp873x.o
- obj-$(CONFIG_GPIO_LP87565)		+= gpio-lp87565.o
- obj-$(CONFIG_GPIO_LPC18XX)		+= gpio-lpc18xx.o
- obj-$(CONFIG_GPIO_LPC32XX)		+= gpio-lpc32xx.o
-+obj-$(CONFIG_GPIO_MACSMC)		+= gpio-macsmc.o
- obj-$(CONFIG_GPIO_MADERA)		+= gpio-madera.o
- obj-$(CONFIG_GPIO_MAX3191X)		+= gpio-max3191x.o
- obj-$(CONFIG_GPIO_MAX7300)		+= gpio-max7300.o
-diff --git a/drivers/gpio/gpio-macsmc.c b/drivers/gpio/gpio-macsmc.c
-new file mode 100644
-index 000000000000..24ec98ad18f7
---- /dev/null
-+++ b/drivers/gpio/gpio-macsmc.c
-@@ -0,0 +1,245 @@
-+// SPDX-License-Identifier: GPL-2.0-only OR MIT
-+/*
-+ * Apple SMC GPIO driver
-+ * Copyright The Asahi Linux Contributors
-+ *
-+ * This driver implements basic SMC PMU GPIO support that can read inputs
-+ * and write outputs. Mode changes and IRQ config are not yet implemented.
-+ */
-+
-+#include <linux/bitmap.h>
-+#include <linux/device.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/macsmc.h>
-+
-+#define MAX_GPIO 64
-+
-+/*
-+ * Commands 0-6 are, presumably, the intended API.
-+ * Command 0xff lets you get/set the pin configuration in detail directly,
-+ * but the bit meanings seem not to be stable between devices/PMU hardware
-+ * versions.
-+ *
-+ * We're going to try to make do with the low commands for now.
-+ * We don't implement pin mode changes at this time.
-+ */
-+
-+#define CMD_ACTION	(0 << 24)
-+#define CMD_OUTPUT	(1 << 24)
-+#define CMD_INPUT	(2 << 24)
-+#define CMD_PINMODE	(3 << 24)
-+#define CMD_IRQ_ENABLE	(4 << 24)
-+#define CMD_IRQ_ACK	(5 << 24)
-+#define CMD_IRQ_MODE	(6 << 24)
-+#define CMD_CONFIG	(0xff << 24)
-+
-+#define MODE_INPUT	0
-+#define MODE_OUTPUT	1
-+#define MODE_VALUE_0	0
-+#define MODE_VALUE_1	2
-+
-+#define IRQ_MODE_HIGH		0
-+#define IRQ_MODE_LOW		1
-+#define IRQ_MODE_RISING		2
-+#define IRQ_MODE_FALLING	3
-+#define IRQ_MODE_BOTH		4
-+
-+#define CONFIG_MASK	GENMASK(23, 16)
-+#define CONFIG_VAL	GENMASK(7, 0)
-+
-+#define CONFIG_OUTMODE	GENMASK(7, 6)
-+#define CONFIG_IRQMODE	GENMASK(5, 3)
-+#define CONFIG_PULLDOWN	BIT(2)
-+#define CONFIG_PULLUP	BIT(1)
-+#define CONFIG_OUTVAL	BIT(0)
-+
-+/*
-+ * Output modes seem to differ depending on the PMU in use... ?
-+ * j274 / M1 (Sera PMU):
-+ *   0 = input
-+ *   1 = output
-+ *   2 = open drain
-+ *   3 = disable
-+ * j314 / M1Pro (Maverick PMU):
-+ *   0 = input
-+ *   1 = open drain
-+ *   2 = output
-+ *   3 = ?
-+ */
-+
-+struct macsmc_gpio {
-+	struct device *dev;
-+	struct apple_smc *smc;
-+	struct gpio_chip gc;
-+
-+	int first_index;
-+};
-+
-+static int macsmc_gpio_nr(smc_key key)
-+{
-+	int low = hex_to_bin(key & 0xff);
-+	int high = hex_to_bin((key >> 8) & 0xff);
-+
-+	if (low < 0 || high < 0)
-+		return -1;
-+
-+	return low | (high << 4);
-+}
-+
-+static int macsmc_gpio_key(unsigned int offset)
-+{
-+	return _SMC_KEY("gP\0\0") | hex_asc_hi(offset) << 8 | hex_asc_lo(offset);
-+}
-+
-+static int macsmc_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-+	smc_key key = macsmc_gpio_key(offset);
-+	u32 val;
-+	int ret;
-+
-+	/* First try reading the explicit pin mode register */
-+	ret = apple_smc_rw_u32(smcgp->smc, key, CMD_PINMODE, &val);
-+	if (!ret)
-+		return (val & MODE_OUTPUT) ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-+
-+	/*
-+	 * Less common IRQ configs cause CMD_PINMODE to fail, and so does open drain mode.
-+	 * Fall back to reading IRQ mode, which will only succeed for inputs.
-+	 */
-+	ret = apple_smc_rw_u32(smcgp->smc, key, CMD_IRQ_MODE, &val);
-+	return ret ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
-+}
-+
-+static int macsmc_gpio_get(struct gpio_chip *gc, unsigned int offset)
-+{
-+	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-+	smc_key key = macsmc_gpio_key(offset);
-+	u32 cmd, val;
-+	int ret;
-+
-+	ret = macsmc_gpio_get_direction(gc, offset);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (ret == GPIO_LINE_DIRECTION_OUT)
-+		cmd = CMD_OUTPUT;
-+	else
-+		cmd = CMD_INPUT;
-+
-+	ret = apple_smc_rw_u32(smcgp->smc, key, cmd, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return val ? 1 : 0;
-+}
-+
-+static void macsmc_gpio_set(struct gpio_chip *gc, unsigned int offset, int value)
-+{
-+	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-+	smc_key key = macsmc_gpio_key(offset);
-+	int ret;
-+
-+	value |= CMD_OUTPUT;
-+	ret = apple_smc_write_u32(smcgp->smc, key, CMD_OUTPUT | value);
-+	if (ret < 0)
-+		dev_err(smcgp->dev, "GPIO set failed %p4ch = 0x%x\n", &key, value);
-+}
-+
-+static int macsmc_gpio_init_valid_mask(struct gpio_chip *gc,
-+				       unsigned long *valid_mask, unsigned int ngpios)
-+{
-+	struct macsmc_gpio *smcgp = gpiochip_get_data(gc);
-+	int count;
-+	int i;
-+
-+	count = apple_smc_get_key_count(smcgp->smc) - smcgp->first_index;
-+	if (count > MAX_GPIO)
-+		count = MAX_GPIO;
-+
-+	bitmap_zero(valid_mask, ngpios);
-+
-+	for (i = 0; i < count; i++) {
-+		int ret, gpio_nr;
-+		smc_key key;
-+
-+		ret = apple_smc_get_key_by_index(smcgp->smc, smcgp->first_index + i, &key);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (key > SMC_KEY(gPff))
-+			break;
-+
-+		gpio_nr = macsmc_gpio_nr(key);
-+		if (gpio_nr < 0 || gpio_nr > MAX_GPIO) {
-+			dev_err(smcgp->dev, "Bad GPIO key %p4ch\n", &key);
-+			continue;
-+		}
-+
-+		set_bit(gpio_nr, valid_mask);
-+	}
-+
-+	return 0;
-+}
-+
-+static int macsmc_gpio_probe(struct platform_device *pdev)
-+{
-+	struct macsmc_gpio *smcgp;
-+	struct apple_smc *smc = dev_get_drvdata(pdev->dev.parent);
-+	smc_key key;
-+	int ret;
-+
-+	smcgp = devm_kzalloc(&pdev->dev, sizeof(*smcgp), GFP_KERNEL);
-+	if (!smcgp)
-+		return -ENOMEM;
-+
-+	smcgp->dev = &pdev->dev;
-+	smcgp->smc = smc;
-+	smcgp->first_index = apple_smc_find_first_key_index(smc, SMC_KEY(gP00));
-+
-+	if (smcgp->first_index >= apple_smc_get_key_count(smc))
-+		return -ENODEV;
-+
-+	ret = apple_smc_get_key_by_index(smc, smcgp->first_index, &key);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (key > macsmc_gpio_key(MAX_GPIO - 1))
-+		return -ENODEV;
-+
-+	dev_info(smcgp->dev, "First GPIO key: %p4ch\n", &key);
-+
-+	smcgp->gc.label = "macsmc-pmu-gpio";
-+	smcgp->gc.owner = THIS_MODULE;
-+	smcgp->gc.get = macsmc_gpio_get;
-+	smcgp->gc.set = macsmc_gpio_set;
-+	smcgp->gc.get_direction = macsmc_gpio_get_direction;
-+	smcgp->gc.init_valid_mask = macsmc_gpio_init_valid_mask;
-+	smcgp->gc.can_sleep = true;
-+	smcgp->gc.ngpio = MAX_GPIO;
-+	smcgp->gc.base = -1;
-+	smcgp->gc.parent = &pdev->dev;
-+
-+	return devm_gpiochip_add_data(&pdev->dev, &smcgp->gc, smcgp);
-+}
-+
-+static const struct of_device_id macsmc_gpio_of_table[] = {
-+	{ .compatible = "apple,smc-gpio", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, macsmc_gpio_of_table);
-+
-+static struct platform_driver macsmc_gpio_driver = {
-+	.driver = {
-+		.name = "macsmc-gpio",
-+		.of_match_table = macsmc_gpio_of_table,
-+	},
-+	.probe = macsmc_gpio_probe,
-+};
-+module_platform_driver(macsmc_gpio_driver);
-+
-+MODULE_AUTHOR("Hector Martin <marcan@marcan.st>");
-+MODULE_LICENSE("Dual MIT/GPL");
-+MODULE_DESCRIPTION("Apple SMC GPIO driver");
-+MODULE_ALIAS("platform:macsmc-gpio");
+chengwei (3):
+  mfd: Add support for UP board CPLD/FPGA
+  pinctrl: Add support pin control for UP board CPLD/FPGA
+  leds: Add support for UP board CPLD onboard LEDS
+
+ drivers/leds/Kconfig              |   10 +
+ drivers/leds/Makefile             |    1 +
+ drivers/leds/leds-upboard.c       |   78 ++
+ drivers/mfd/Kconfig               |   12 +
+ drivers/mfd/Makefile              |    1 +
+ drivers/mfd/upboard-fpga.c        |  632 ++++++++++++
+ drivers/pinctrl/Kconfig           |   15 +
+ drivers/pinctrl/Makefile          |    1 +
+ drivers/pinctrl/pinctrl-upboard.c | 1588 +++++++++++++++++++++++++++++
+ include/linux/mfd/upboard-fpga.h  |   56 +
+ 10 files changed, 2394 insertions(+)
+ create mode 100644 drivers/leds/leds-upboard.c
+ create mode 100644 drivers/mfd/upboard-fpga.c
+ create mode 100644 drivers/pinctrl/pinctrl-upboard.c
+ create mode 100644 include/linux/mfd/upboard-fpga.h
+
 -- 
-2.30.2
+2.17.1
 
