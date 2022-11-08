@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79F67621C70
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 19:50:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D075621C74
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 19:50:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbiKHSuL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 13:50:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
+        id S229787AbiKHSu2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 13:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbiKHStx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 13:49:53 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CBA63152
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 10:49:10 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id z18so23884898edb.9
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 10:49:10 -0800 (PST)
+        with ESMTP id S229533AbiKHSuD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 13:50:03 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E0C6CA04
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 10:49:36 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id a13so23958923edj.0
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 10:49:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to:subject
          :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iFEI+OVj3meMKerE8m3XRj1WIR+3TY6afj77dwFQNKU=;
-        b=zQNl4VxL6/HH42SQyC7RyGNCefk+IDdeZXh7OGPP3F7RD1rvw+/PIElhr53HAr6aYT
-         HnDjRNSoe2b7aLI3Gfc5sp6PnIoQk9afxZBlaXYOGEpBBv1qaGGyWo/V1NnRkFPlILen
-         SGIQVa4F0dwpf2ARHzGvsE26abq9gm0BU9eissEjf0Hjst4zGINgZjcvo4Wggp0s2o2E
-         nZTKOpQcGUHEbsht43TxlgP7PyADnNBf+v28nf/RVrTvmnXgqsWS5V2JYn9Hk8kpofCJ
-         yBDH/0QJkK4c4ASlZSgKWXD9TVt6pY3qdJPhpmjALcKZoX/YwVW2vI8hapbIoN+b73yj
-         B9cQ==
+        bh=901AouGB9Xg2LgWXbPxYdin3rXeDsm5qAW0ykXSOses=;
+        b=ehr2ShxEm9RLIvfr3sNgzoAbvo2A51ZnO0kwCV56E6a1JjYKUBFXTq/3PYdg03dlpF
+         uf6FOkBuWOT5IjJgUPcz4eV4QqyTWxZoL2HF+ZrFDNuzu77OHWPKp4rf+G6FDgA0vtpb
+         lG1MxqlwxnvnOyHc5iF3MMC6XdTD3HFCexEIao53GW/p6OjWaaV0a/mVZX2lpT7GMO8y
+         OryiRfch6g0PNhzsFjnqCQ6xg7eaCTBSzMjlAGVn+e5C6UbmMV8yn0NkDEdzJgq69hD/
+         EOCZH6G6ERtz5EB1If+Qu7ldWWvSkKCHwHzzZFiaydOHVyaJZ3XoBDl/ygFNoxaBISFH
+         E4hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to:subject
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=iFEI+OVj3meMKerE8m3XRj1WIR+3TY6afj77dwFQNKU=;
-        b=fPsq7Uak0ZAJlhogfAsH0z0eePohlMhFBzS0O54iKTL3A9TtGnaLxTgNvVuQiYxOf8
-         tr3hbouCXw0zfRnP+wfrVC6qzB6QMBWXZlEmhvr+PJn1EKWeHQBUaBNz6t2s/nBFY4yh
-         g7HBw+riGa1y+MnlEptlmPYnVXmEGs6NyjaBJ1NRV16krIgxBpRHwogpBagkpI9EPNvX
-         AdnJ2rGQsX52n9k/cS/bDcFCNYE95ZY9+ZnNden81+PqU/4jIHDYVBW0SDhagr7lYBl6
-         6VRlyQP/Q+yIeCAkwcNfVY23Tk1da+G0B/yqfdgL3U/IHhQ0dKyqHWyiCU3rXqpTmkJQ
-         sY9w==
-X-Gm-Message-State: ACrzQf33aOztGy6OvY41fTIlN1goeYTbqhsioglTmOCideLxqpxrQbh5
-        bT8HuJdKrEJnzdhV+LW7ZsMt7w==
-X-Google-Smtp-Source: AMsMyM7DLtgr+46W3y81zE9KYE2rJh3K9Swfz6w7mHqc/kxaNTcNqq9Ah0sjkBOh7YlgfOAjnwcjJA==
-X-Received: by 2002:aa7:d8c4:0:b0:461:8d31:41fc with SMTP id k4-20020aa7d8c4000000b004618d3141fcmr57059380eds.202.1667933349379;
-        Tue, 08 Nov 2022 10:49:09 -0800 (PST)
+        bh=901AouGB9Xg2LgWXbPxYdin3rXeDsm5qAW0ykXSOses=;
+        b=p5+t/ipYQEEM27qOmMpwX+KoLMAdbQLV9qFtTRw+pEWjl5zdW+nlGuKiyKo/n09IZt
+         bfxIxafHsvcctAxqx2bitG/qEvrpveQuMR6cDFcS54BAbWOznYafgR6Eb2ACr3RbAXGM
+         wn+alcn7UjiONyxHr+COtiYa7CQo+JEjBFHzQrx4h/OuYY5pFtr3azB62R1MnWvOueIQ
+         nYsh0S9Jqse6iDr1WuOF/34G8DItMYSEQdXQg6fA/dLI3Ogwh+spUmA3kLLdoWPRHpgz
+         923cDHDnVi0a86dYoT7JZOoong3CNirxONwUM7IO0SX52lccsf8lYTrAHshKV3Kkh+tA
+         EnpQ==
+X-Gm-Message-State: ACrzQf3czkXATjRf/HXdX9qHdJ1WRi1CKHaMDz3+J7uTR0NyKOVgzBfE
+        2Q9djV1RbYnAuVDsg63JApZlG+hoMUgOjn6a
+X-Google-Smtp-Source: AMsMyM7bPFokM1yFe/uSfDmKd/Qw9LPK6GyYQwK49gEHNuAYyDK/gImACuLE+LaCJDcZi+yrJQZlBQ==
+X-Received: by 2002:a05:6402:3896:b0:45c:93c3:3569 with SMTP id fd22-20020a056402389600b0045c93c33569mr26507912edb.37.1667933374572;
+        Tue, 08 Nov 2022 10:49:34 -0800 (PST)
 Received: from [192.168.31.208] ([194.29.137.22])
-        by smtp.gmail.com with ESMTPSA id a1-20020a05640213c100b004614c591366sm5828499edx.48.2022.11.08.10.49.08
+        by smtp.gmail.com with ESMTPSA id kz5-20020a17090777c500b0077b523d309asm4930540ejc.185.2022.11.08.10.49.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Nov 2022 10:49:08 -0800 (PST)
-Message-ID: <41242ffc-fd61-ded1-0647-bba1efb60a1e@linaro.org>
-Date:   Tue, 8 Nov 2022 19:49:07 +0100
+        Tue, 08 Nov 2022 10:49:34 -0800 (PST)
+Message-ID: <e858e76a-17d6-9f11-e0f1-90cd3c888689@linaro.org>
+Date:   Tue, 8 Nov 2022 19:49:32 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.4.1
-Subject: Re: [PATCH 2/3] ARM: dts: qcom-msm8960: use define for interrupt
- constants
+Subject: Re: [PATCH 3/3] ARM: dts: qcom-msm8960-cdp: align TLMM pin
+ configuration with DT schema
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Bjorn Andersson <andersson@kernel.org>,
         Andy Gross <agross@kernel.org>,
@@ -65,9 +65,9 @@ To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20221108184529.26857-1-krzysztof.kozlowski@linaro.org>
- <20221108184529.26857-2-krzysztof.kozlowski@linaro.org>
+ <20221108184529.26857-3-krzysztof.kozlowski@linaro.org>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20221108184529.26857-2-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221108184529.26857-3-krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,110 +83,61 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 On 08/11/2022 19:45, Krzysztof Kozlowski wrote:
-> Replace GIC_PPI, GIC_SPI and interrupt type numbers with appropriate
-> defines.
+> DT schema expects TLMM pin configuration nodes to be named with
+> '-state' suffix and their optional children with '-pins' suffix.
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
->   arch/arm/boot/dts/qcom-msm8960-cdp.dts |  2 +-
->   arch/arm/boot/dts/qcom-msm8960.dtsi    | 22 ++++++++++++----------
->   2 files changed, 13 insertions(+), 11 deletions(-)
+>   arch/arm/boot/dts/qcom-msm8960-cdp.dts | 19 +++++++++----------
+>   1 file changed, 9 insertions(+), 10 deletions(-)
 > 
 > diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-> index cb0f612e6c90..3a484ac53917 100644
+> index 3a484ac53917..9a3a510f88ca 100644
 > --- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
 > +++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-> @@ -42,7 +42,7 @@ ethernet@0 {
->   		compatible = "micrel,ks8851";
->   		reg = <0>;
->   		interrupt-parent = <&msmgpio>;
-> -		interrupts = <90 8>;
-> +		interrupts = <90 IRQ_TYPE_LEVEL_LOW>;
->   		spi-max-frequency = <5400000>;
->   		vdd-supply = <&ext_l2>;
->   		vdd-io-supply = <&pm8921_lvs6>;
-> diff --git a/arch/arm/boot/dts/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom-msm8960.dtsi
-> index 30abf53b062d..2f32e734f18d 100644
-> --- a/arch/arm/boot/dts/qcom-msm8960.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8960.dtsi
-> @@ -17,7 +17,7 @@ / {
->   	cpus {
->   		#address-cells = <1>;
->   		#size-cells = <0>;
-> -		interrupts = <1 14 0x304>;
-> +		interrupts = <GIC_PPI 14 0x304>;
+> @@ -60,33 +60,32 @@ &gsbi5_serial {
+>   };
 >   
->   		cpu@0 {
->   			compatible = "qcom,krait";
-> @@ -52,7 +52,7 @@ memory {
+>   &msmgpio {
+> -	spi1_default: spi1_default {
+> -		 mux {
+> -			pins = "gpio6", "gpio7", "gpio9";
+> -			function = "gsbi1";
+> -		 };
+> -
+> -		 mosi {
+> +	spi1_default: spi1-default-state {
+> +		 mosi-pins {
+>   			pins = "gpio6";
+> +			function = "gsbi1";
+>   			drive-strength = <12>;
+>   			bias-disable;
+>   		 };
 >   
->   	cpu-pmu {
->   		compatible = "qcom,krait-pmu";
-> -		interrupts = <1 10 0x304>;
-> +		interrupts = <GIC_PPI 10 0x304>;
->   		qcom,no-pc-write;
->   	};
+> -		 miso {
+> +		 miso-pins {
+>   			pins = "gpio7";
+> +			function = "gsbi1";
+>   			drive-strength = <12>;
+>   			bias-disable;
+>   		 };
 >   
-> @@ -105,9 +105,9 @@ intc: interrupt-controller@2000000 {
->   		timer@200a000 {
->   			compatible = "qcom,kpss-timer",
->   				     "qcom,kpss-wdt-msm8960", "qcom,msm-timer";
-> -			interrupts = <1 1 0x301>,
-> -				     <1 2 0x301>,
-> -				     <1 3 0x301>;
-> +			interrupts = <GIC_PPI 1 0x301>,
-> +				     <GIC_PPI 2 0x301>,
-> +				     <GIC_PPI 3 0x301>;
->   			reg = <0x0200a000 0x100>;
->   			clock-frequency = <27000000>,
->   					  <32768>;
-> @@ -119,7 +119,7 @@ msmgpio: pinctrl@800000 {
->   			gpio-controller;
->   			gpio-ranges = <&msmgpio 0 0 152>;
->   			#gpio-cells = <2>;
-> -			interrupts = <0 16 0x4>;
-> +			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
->   			interrupt-controller;
->   			#interrupt-cells = <2>;
->   			reg = <0x800000 0x4000>;
-> @@ -255,7 +255,7 @@ ssbi@500000 {
->   			pmicintc: pmic {
->   				compatible = "qcom,pm8921";
->   				interrupt-parent = <&msmgpio>;
-> -				interrupts = <104 8>;
-> +				interrupts = <104 IRQ_TYPE_LEVEL_LOW>;
->   				#interrupt-cells = <2>;
->   				interrupt-controller;
->   				#address-cells = <1>;
-> @@ -265,7 +265,8 @@ pwrkey@1c {
->   					compatible = "qcom,pm8921-pwrkey";
->   					reg = <0x1c>;
->   					interrupt-parent = <&pmicintc>;
-> -					interrupts = <50 1>, <51 1>;
-> +					interrupts = <50 IRQ_TYPE_EDGE_RISING>,
-> +						     <51 IRQ_TYPE_EDGE_RISING>;
->   					debounce = <15625>;
->   					pull-up;
->   				};
-> @@ -274,7 +275,8 @@ keypad@148 {
->   					compatible = "qcom,pm8921-keypad";
->   					reg = <0x148>;
->   					interrupt-parent = <&pmicintc>;
-> -					interrupts = <74 1>, <75 1>;
-> +					interrupts = <74 IRQ_TYPE_EDGE_RISING>,
-> +						     <75 IRQ_TYPE_EDGE_RISING>;
->   					debounce = <15>;
->   					scan-delay = <32>;
->   					row-hold = <91500>;
-> @@ -283,7 +285,7 @@ keypad@148 {
->   				rtc@11d {
->   					compatible = "qcom,pm8921-rtc";
->   					interrupt-parent = <&pmicintc>;
-> -					interrupts = <39 1>;
-> +					interrupts = <39 IRQ_TYPE_EDGE_RISING>;
->   					reg = <0x11d>;
->   					allow-set-time;
->   				};
+> -		 cs {
+> +		 cs-pins {
+>   			pins = "gpio8";
+> +			function = "gpio";
+>   			drive-strength = <12>;
+>   			bias-disable;
+>   			output-low;
+>   		 };
+>   
+> -		 clk {
+> +		 clk-pins {
+>   			pins = "gpio9";
+> +			function = "gsbi1";
+>   			drive-strength = <12>;
+>   			bias-disable;
+>   		 };
