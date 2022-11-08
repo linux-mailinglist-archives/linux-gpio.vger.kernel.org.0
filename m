@@ -2,39 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E979621BED
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 19:32:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68E14621C5A
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 19:47:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbiKHSce (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 13:32:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46768 "EHLO
+        id S229517AbiKHSrl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 13:47:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230425AbiKHSca (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 13:32:30 -0500
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3581C5B857;
-        Tue,  8 Nov 2022 10:32:28 -0800 (PST)
-X-IronPort-AV: E=Sophos;i="5.96,148,1665414000"; 
-   d="scan'208";a="139379478"
-Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 09 Nov 2022 03:32:28 +0900
-Received: from localhost.localdomain (unknown [10.226.92.5])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 0EDFA400752C;
-        Wed,  9 Nov 2022 03:32:25 +0900 (JST)
-From:   Biju Das <biju.das.jz@bp.renesas.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Chris Paterson <chris.paterson2@renesas.com>,
-        Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Subject: [PATCH] pinctrl: renesas: pinctrl-rzv2m: remove unnecessary check from rzv2m_dt_node_to_map()
-Date:   Tue,  8 Nov 2022 18:32:23 +0000
-Message-Id: <20221108183223.3902097-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229531AbiKHSrJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 13:47:09 -0500
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38AA368AF2
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 10:45:40 -0800 (PST)
+Received: by mail-lj1-x22f.google.com with SMTP id l8so22439605ljh.13
+        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 10:45:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7pg5grMGw+dN40yW9oShqSeI7QB7xqJxaLgwb1nIo4k=;
+        b=IDrhXbTJ3qxtNFqGy399xrDN+XKxfx5BwYf6bc3U/OATfHpyWyy94NUe+yZVyUVR0F
+         8+G8zLbXkGoWPqxAlfit2owJKpWBS57gwUhl7tFwIG7aV+xMwZPlajmGts9HYk5o9S3V
+         H5yUQIe1CG+UADAHwiK2ZtnTEciIHPKZYHms9ennyeb/P1foDB7dQE8DK+JuKJF2Nsfk
+         41MCoyenlKP3gp4fwnC71D25xJhlNWS0b4pGKbxTVbGgy6+p/SU5sklkznhUoBcGn6yW
+         rOc03gI4ylvwtlibK95f2DDCsJC8Z6jNwzbqGBphvEf9jgrV8zoPF/xILzZvlcaaYS/Q
+         2iyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7pg5grMGw+dN40yW9oShqSeI7QB7xqJxaLgwb1nIo4k=;
+        b=SMVdKqPQ96urbqcbiykoQnRHmEH+PmsPw/fKA2ET/hef8HwoD31sOB66WB383cRNsk
+         4qzfvFwTFJlWMTjkPcPgC32krA+EVqrn/ynH8OgbX5owsbzU+iGlEg8QbI9luBWuD3E4
+         E9PvvgTXvrDBSfwuNv/7kpmpDT0H/3yz5katka0U69n7iOKAvAxkiBxzPTh3YBV50F7c
+         fmDO1uFw/qvjGj+QHO9EcX0VlVL3aVjwaApCDwoqOYYhkel/GHGrba13DG8okL28X09d
+         2yB/ZlNViO0ZghvmbOuSIlylgTurrZPCFwGSaelIeF3DObpH3lg0n8Sd7FN4xRF6nRM5
+         UGrg==
+X-Gm-Message-State: ACrzQf3FftUAl601xEzmIL/6GD0XNmqpAXL0wqs1yJ9F1VyHA8JxmqbH
+        44CVHSgs+bfDmrsUfrmtC7WtIg==
+X-Google-Smtp-Source: AMsMyM7O4wyRtGTtsDzYhf1xecFT/CCRjsecl5uZgR7/yfZou+UhZ/XkgNH7JKSr1H9liulu1/or9A==
+X-Received: by 2002:a2e:90c6:0:b0:276:ff51:65e2 with SMTP id o6-20020a2e90c6000000b00276ff5165e2mr6700169ljg.185.1667933132920;
+        Tue, 08 Nov 2022 10:45:32 -0800 (PST)
+Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
+        by smtp.gmail.com with ESMTPSA id be13-20020a056512250d00b004a8b9c68735sm1890611lfb.102.2022.11.08.10.45.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Nov 2022 10:45:32 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 1/3] dt-bindings: pinctrl: qcom,msm8960: convert to dtschema
+Date:   Tue,  8 Nov 2022 19:45:27 +0100
+Message-Id: <20221108184529.26857-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -42,28 +73,385 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This patch removes the unnecessary check from rzv2m_dt_node_to_map()
-as the ret value is already negative.
+Convert Qualcomm MSM8960 pin controller bindings to DT schema.  Keep the
+parsing of pin configuration subnodes consistent with other Qualcomm
+schemas (children named with '-state' suffix, their children with
+'-pins').
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/pinctrl/renesas/pinctrl-rzv2m.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../bindings/pinctrl/qcom,msm8960-pinctrl.txt | 190 ------------------
+ .../pinctrl/qcom,msm8960-pinctrl.yaml         | 164 +++++++++++++++
+ 2 files changed, 164 insertions(+), 190 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.yaml
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzv2m.c b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
-index e8c18198bebd..62e911b7d007 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzv2m.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzv2m.c
-@@ -397,8 +397,7 @@ static int rzv2m_dt_node_to_map(struct pinctrl_dev *pctldev,
- 	ret = -EINVAL;
- 
- done:
--	if (ret < 0)
--		rzv2m_dt_free_map(pctldev, *map, *num_maps);
-+	rzv2m_dt_free_map(pctldev, *map, *num_maps);
- 
- 	return ret;
- }
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+deleted file mode 100644
+index a7dd213c77c6..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
++++ /dev/null
+@@ -1,190 +0,0 @@
+-Qualcomm MSM8960 TLMM block
+-
+-This binding describes the Top Level Mode Multiplexer block found in the
+-MSM8960 platform.
+-
+-- compatible:
+-	Usage: required
+-	Value type: <string>
+-	Definition: must be "qcom,msm8960-pinctrl"
+-
+-- reg:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: the base address and size of the TLMM register space.
+-
+-- interrupts:
+-	Usage: required
+-	Value type: <prop-encoded-array>
+-	Definition: should specify the TLMM summary IRQ.
+-
+-- interrupt-controller:
+-	Usage: required
+-	Value type: <none>
+-	Definition: identifies this node as an interrupt controller
+-
+-- #interrupt-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: must be 2. Specifying the pin number and flags, as defined
+-		    in <dt-bindings/interrupt-controller/irq.h>
+-
+-- gpio-controller:
+-	Usage: required
+-	Value type: <none>
+-	Definition: identifies this node as a gpio controller
+-
+-- #gpio-cells:
+-	Usage: required
+-	Value type: <u32>
+-	Definition: must be 2. Specifying the pin number and flags, as defined
+-		    in <dt-bindings/gpio/gpio.h>
+-
+-- gpio-ranges:
+-	Usage: required
+-	Definition:  see ../gpio/gpio.txt
+-
+-- gpio-reserved-ranges:
+-	Usage: optional
+-	Definition: see ../gpio/gpio.txt
+-
+-Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+-a general description of GPIO and interrupt bindings.
+-
+-Please refer to pinctrl-bindings.txt in this directory for details of the
+-common pinctrl bindings used by client devices, including the meaning of the
+-phrase "pin configuration node".
+-
+-The pin configuration nodes act as a container for an arbitrary number of
+-subnodes. Each of these subnodes represents some desired configuration for a
+-pin, a group, or a list of pins or groups. This configuration can include the
+-mux function to select on those pin(s)/group(s), and various pin configuration
+-parameters, such as pull-up, drive strength, etc.
+-
+-
+-PIN CONFIGURATION NODES:
+-
+-The name of each subnode is not important; all subnodes should be enumerated
+-and processed purely based on their content.
+-
+-Each subnode only affects those parameters that are explicitly listed. In
+-other words, a subnode that lists a mux function but no pin configuration
+-parameters implies no information about any pin configuration parameters.
+-Similarly, a pin subnode that describes a pullup parameter implies no
+-information about e.g. the mux function.
+-
+-
+-The following generic properties as defined in pinctrl-bindings.txt are valid
+-to specify in a pin configuration subnode:
+-
+-- pins:
+-	Usage: required
+-	Value type: <string-array>
+-	Definition: List of gpio pins affected by the properties specified in
+-		    this subnode.  Valid pins are:
+-		    gpio0-gpio151,
+-		    sdc1_clk,
+-		    sdc1_cmd,
+-		    sdc1_data
+-		    sdc3_clk,
+-		    sdc3_cmd,
+-		    sdc3_data
+-
+-- function:
+-	Usage: required
+-	Value type: <string>
+-	Definition: Specify the alternative function to be configured for the
+-		    specified pins. Functions are only valid for gpio pins.
+-		    Valid values are:
+-		    audio_pcm, bt, cam_mclk0, cam_mclk1, cam_mclk2,
+-		    codec_mic_i2s, codec_spkr_i2s, ext_gps, fm, gps_blanking,
+-		    gps_pps_in, gps_pps_out, gp_clk_0a, gp_clk_0b, gp_clk_1a,
+-		    gp_clk_1b, gp_clk_2a, gp_clk_2b, gp_mn, gp_pdm_0a,
+-		    gp_pdm_0b, gp_pdm_1a, gp_pdm_1b, gp_pdm_2a, gp_pdm_2b, gpio,
+-		    gsbi1, gsbi1_spi_cs1_n, gsbi1_spi_cs2a_n, gsbi1_spi_cs2b_n,
+-		    gsbi1_spi_cs3_n, gsbi2, gsbi2_spi_cs1_n, gsbi2_spi_cs2_n,
+-		    gsbi2_spi_cs3_n, gsbi3, gsbi4, gsbi4_3d_cam_i2c_l,
+-		    gsbi4_3d_cam_i2c_r, gsbi5, gsbi5_3d_cam_i2c_l,
+-		    gsbi5_3d_cam_i2c_r, gsbi6, gsbi7, gsbi8, gsbi9, gsbi10,
+-		    gsbi11, gsbi11_spi_cs1a_n, gsbi11_spi_cs1b_n,
+-		    gsbi11_spi_cs2a_n, gsbi11_spi_cs2b_n, gsbi11_spi_cs3_n,
+-		    gsbi12, hdmi_cec, hdmi_ddc_clock, hdmi_ddc_data,
+-		    hdmi_hot_plug_detect, hsic, mdp_vsync, mi2s, mic_i2s,
+-		    pmb_clk, pmb_ext_ctrl, ps_hold, rpm_wdog, sdc2, sdc4, sdc5,
+-		    slimbus1, slimbus2, spkr_i2s, ssbi1, ssbi2, ssbi_ext_gps,
+-		    ssbi_pmic2, ssbi_qpa1, ssbi_ts, tsif1, tsif2, ts_eoc,
+-		    usb_fs1, usb_fs1_oe, usb_fs1_oe_n, usb_fs2, usb_fs2_oe,
+-		    usb_fs2_oe_n, vfe_camif_timer1_a, vfe_camif_timer1_b,
+-		    vfe_camif_timer2, vfe_camif_timer3_a, vfe_camif_timer3_b,
+-		    vfe_camif_timer4_a, vfe_camif_timer4_b, vfe_camif_timer4_c,
+-		    vfe_camif_timer5_a, vfe_camif_timer5_b, vfe_camif_timer6_a,
+-		    vfe_camif_timer6_b, vfe_camif_timer6_c, vfe_camif_timer7_a,
+-		    vfe_camif_timer7_b, vfe_camif_timer7_c, wlan
+-
+-- bias-disable:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as no pull.
+-
+-- bias-pull-down:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as pull down.
+-
+-- bias-pull-up:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins should be configured as pull up.
+-
+-- output-high:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    high.
+-		    Not valid for sdc pins.
+-
+-- output-low:
+-	Usage: optional
+-	Value type: <none>
+-	Definition: The specified pins are configured in output mode, driven
+-		    low.
+-		    Not valid for sdc pins.
+-
+-- drive-strength:
+-	Usage: optional
+-	Value type: <u32>
+-	Definition: Selects the drive strength for the specified pins, in mA.
+-		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+-
+-Example:
+-
+-	msmgpio: pinctrl@800000 {
+-		compatible = "qcom,msm8960-pinctrl";
+-		reg = <0x800000 0x4000>;
+-
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		gpio-ranges = <&msmgpio 0 0 152>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupts = <0 16 0x4>;
+-
+-		gsbi8_uart: gsbi8-uart {
+-			mux {
+-				pins = "gpio34", "gpio35";
+-				function = "gsbi8";
+-			};
+-
+-			tx {
+-				pins = "gpio34";
+-				drive-strength = <4>;
+-				bias-disable;
+-			};
+-
+-			rx {
+-				pins = "gpio35";
+-				drive-strength = <2>;
+-				bias-pull-up;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.yaml
+new file mode 100644
+index 000000000000..a568f6ad8957
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.yaml
+@@ -0,0 +1,164 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/qcom,msm8960-pinctrl.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Qualcomm MSM8960 TLMM pin controller
++
++maintainers:
++  - Bjorn Andersson <andersson@kernel.org>
++  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
++
++description:
++  Top Level Mode Multiplexer pin controller in Qualcomm MSM8960 SoC.
++
++properties:
++  compatible:
++    const: qcom,msm8960-pinctrl
++
++  reg:
++    maxItems: 1
++
++  interrupts: true
++  interrupt-controller: true
++  "#interrupt-cells": true
++  gpio-controller: true
++  "#gpio-cells": true
++  gpio-ranges: true
++  wakeup-parent: true
++
++  gpio-reserved-ranges:
++    minItems: 1
++    maxItems: 76
++
++  gpio-line-names:
++    maxItems: 152
++
++patternProperties:
++  "-state$":
++    oneOf:
++      - $ref: "#/$defs/qcom-msm8960-tlmm-state"
++      - patternProperties:
++          "-pins$":
++            $ref: "#/$defs/qcom-msm8960-tlmm-state"
++        additionalProperties: false
++
++$defs:
++  qcom-msm8960-tlmm-state:
++    type: object
++    description:
++      Pinctrl node's client devices use subnodes for desired pin configuration.
++      Client device subnodes use below standard properties.
++    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
++
++    properties:
++      pins:
++        description:
++          List of gpio pins affected by the properties specified in this
++          subnode.
++        items:
++          oneOf:
++            - pattern: "^gpio([0-9]|[1-4][0-9]|15[01])$"
++            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc3_clk, sdc3_cmd,
++                      sdc3_data ]
++        minItems: 1
++        maxItems: 36
++
++      function:
++        description:
++          Specify the alternative function to be configured for the specified
++          pins.
++
++        enum: [ gpio, audio_pcm, bt, cam_mclk0, cam_mclk1, cam_mclk2,
++                codec_mic_i2s, codec_spkr_i2s, ext_gps, fm, gps_blanking,
++                gps_pps_in, gps_pps_out, gp_clk_0a, gp_clk_0b, gp_clk_1a,
++                gp_clk_1b, gp_clk_2a, gp_clk_2b, gp_mn, gp_pdm_0a, gp_pdm_0b,
++                gp_pdm_1a, gp_pdm_1b, gp_pdm_2a, gp_pdm_2b, gsbi1,
++                gsbi1_spi_cs1_n, gsbi1_spi_cs2a_n, gsbi1_spi_cs2b_n,
++                gsbi1_spi_cs3_n, gsbi2, gsbi2_spi_cs1_n, gsbi2_spi_cs2_n,
++                gsbi2_spi_cs3_n, gsbi3, gsbi4, gsbi4_3d_cam_i2c_l,
++                gsbi4_3d_cam_i2c_r, gsbi5, gsbi5_3d_cam_i2c_l,
++                gsbi5_3d_cam_i2c_r, gsbi6, gsbi7, gsbi8, gsbi9, gsbi10, gsbi11,
++                gsbi11_spi_cs1a_n, gsbi11_spi_cs1b_n, gsbi11_spi_cs2a_n,
++                gsbi11_spi_cs2b_n, gsbi11_spi_cs3_n, gsbi12, hdmi_cec,
++                hdmi_ddc_clock, hdmi_ddc_data, hdmi_hot_plug_detect, hsic,
++                mdp_vsync, mi2s, mic_i2s, pmb_clk, pmb_ext_ctrl, ps_hold,
++                rpm_wdog, sdc2, sdc4, sdc5, slimbus1, slimbus2, spkr_i2s,
++                ssbi1, ssbi2, ssbi_ext_gps, ssbi_pmic2, ssbi_qpa1, ssbi_ts,
++                tsif1, tsif2, ts_eoc, usb_fs1, usb_fs1_oe, usb_fs1_oe_n,
++                usb_fs2, usb_fs2_oe, usb_fs2_oe_n, vfe_camif_timer1_a,
++                vfe_camif_timer1_b, vfe_camif_timer2, vfe_camif_timer3_a,
++                vfe_camif_timer3_b, vfe_camif_timer4_a, vfe_camif_timer4_b,
++                vfe_camif_timer4_c, vfe_camif_timer5_a, vfe_camif_timer5_b,
++                vfe_camif_timer6_a, vfe_camif_timer6_b, vfe_camif_timer6_c,
++                vfe_camif_timer7_a, vfe_camif_timer7_b, vfe_camif_timer7_c,
++                wlan ]
++
++      bias-pull-down: true
++      bias-pull-up: true
++      bias-disable: true
++      drive-strength: true
++      input-enable: true
++      output-high: true
++      output-low: true
++
++    required:
++      - pins
++
++    additionalProperties: false
++
++allOf:
++  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    msmgpio: pinctrl@800000 {
++        compatible = "qcom,msm8960-pinctrl";
++        reg = <0x800000 0x4000>;
++        gpio-controller;
++        gpio-ranges = <&msmgpio 0 0 152>;
++        #gpio-cells = <2>;
++        interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        spi1-default-state {
++            mosi-pins {
++                pins = "gpio6";
++                function = "gsbi1";
++                drive-strength = <12>;
++                bias-disable;
++            };
++
++            miso-pins {
++                pins = "gpio7";
++                function = "gsbi1";
++                drive-strength = <12>;
++                bias-disable;
++            };
++
++            cs-pins {
++                pins = "gpio8";
++                function = "gpio";
++                drive-strength = <12>;
++                bias-disable;
++                output-low;
++            };
++
++            clk-pins {
++                pins = "gpio9";
++                function = "gsbi1";
++                drive-strength = <12>;
++                bias-disable;
++            };
++        };
++    };
 -- 
-2.25.1
+2.34.1
 
