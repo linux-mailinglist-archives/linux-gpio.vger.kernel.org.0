@@ -2,76 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C4BF620B95
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 09:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D52B8620BCA
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 10:10:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233387AbiKHIz7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 03:55:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55420 "EHLO
+        id S233411AbiKHJKI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 04:10:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbiKHIz6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 03:55:58 -0500
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B48F2F646
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 00:55:57 -0800 (PST)
-Received: by mail-vk1-xa36.google.com with SMTP id f68so8424111vkc.8
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 00:55:57 -0800 (PST)
+        with ESMTP id S233358AbiKHJKH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 04:10:07 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D47451A047;
+        Tue,  8 Nov 2022 01:10:06 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id 21so21485716edv.3;
+        Tue, 08 Nov 2022 01:10:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALE2uYDmUzLsmu+4QV93eY8C3u+SfgcYlWQ7s8B+dp0=;
-        b=FXe5668a0UX4WcX/wqmK3fTdH0NjN9ORT0f/txHGysDtYc93b4l9sCxVd6rW6c/XmR
-         /YEzXtzAhsgXC/gFrbbZfDw6jhU/LbulF1scvmbgodQ2IDyW0NKER2hjHMvLU1N6LUKt
-         9VXGY12liYWnzNNqER9jmO/XRq/yMMy4bJuR7FeqqrP9vpaOjl8NDkmZF0FaR/EuMoPW
-         VDzKfGBq3oPtaRxnMgBQ6RaG6iWAzYGuAF1XcWwABp9Gj9EP1TtgEYc2r2zp4nC4TRJr
-         OXWjTpAiXE/qshX6uM3Ys80itPb1UDDrJU/ljxsukTkBSQiQw506sgmjq3S4hOmsW39+
-         cLog==
+        bh=wxg9R63E/LdpcjaJ1QXBZQ2mfpoLnn2CNR5q0txR95Q=;
+        b=ogCSi5jgLyz06Qj/c6EJv9UE5I5iKSMxLytwg1lrGusO+4y+j4+AxQscA2mU30i42a
+         JIASDnnCHv4STIP+XYOVQvGqZm7L6cWat+SmVGKGiJbMht7ZO33lSuaMyM+yy2s4TWZw
+         smqOj19N4qK+Pf3tloAaYEq3NZ/ybhbC9BNxMW7VR2uIzLiOODeIKwGIaQrGoFEMrL1k
+         jpKv/Xtx7iEzkApoe0yPfXaQr+B6ExWMiZD0vivjZzLMC4k/UpdQg0mcNU5J3tuZ0nzm
+         Cda232w0MQ4cXFptnNwidf4Vsxb39ivcI1B3MIIrGBLa1J8bGKR5q+XR9AxG0VMoa8cZ
+         dLtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ALE2uYDmUzLsmu+4QV93eY8C3u+SfgcYlWQ7s8B+dp0=;
-        b=dL287QDdx7D5hOzOuN/CZWvwrUKP45cHIkGj2wSbEIvE6rAARqzwZo5q60dxI9X37C
-         ILNPB7VR1m49oKCg8LhhR2GOV9MGeozw+LKyHPChoXhpLstB8KZ7ICrZjIfjGumd59Ro
-         1U0craJ6BlKm3M0Q5AXqwijN05GpYgJzrUYTbMU3EdIdCYojFiMt8Lr3QSv5St6teg1W
-         uS2sQxqv79jbskFqVw1HLkvJ0m0oXZm2UdYy0A2/Wkuvw1nlSLn9Or1NEa1zzHEkIB42
-         qPReFPRmkxOk7MqWB+DwjoeXeb0Nvy/MYyORnZ7AY1cLmi0MtFSYsCXioxaVrAxPatzo
-         F5Ug==
-X-Gm-Message-State: ACrzQf3fKkNRuWj7f3Bcsy/Pq190DEWE8JAVb2GS6320xeHVYWd3hQPk
-        xZkPx1xV2dySEf+YBBvepdodF+wMPu++qAkTNdw=
-X-Google-Smtp-Source: AMsMyM4VTQURGjSe3yRoH6jVfwlbUrBOIDoun3zPQIo1rp9PAEB5bVihF6AVd5wcwnKzT9t3qo/5VHqLTUvGXa8bmfA=
-X-Received: by 2002:a1f:a217:0:b0:3b8:6042:74e6 with SMTP id
- l23-20020a1fa217000000b003b8604274e6mr9606277vke.4.1667897756580; Tue, 08 Nov
- 2022 00:55:56 -0800 (PST)
+        bh=wxg9R63E/LdpcjaJ1QXBZQ2mfpoLnn2CNR5q0txR95Q=;
+        b=DA+3K1PPBIgiWTuC4sJuxODGTLrEhuv8piuhRGouCob8FLVhB30gFJW1c+c96F1x9M
+         8lMxZTDQTA+nYL0jVl1JXtCvYHt0gcfdoE2jhRfmxf4GcZefgtRJjtez8agoqHHZnSxk
+         /Yl3GRq856pF9BhXmESrYnI58D65OcFRaESuJJUpJ1tdQ5RHWBc7YMXCrrm+vlR36ICv
+         VuxzKk02o1lOwNw9BF8Qqq+ZOryhcPYpRbA2kjwaML0gezSdeGP1HL4CrwVYtGOvCrw/
+         nOMjFB8xzLmf3tAtKSiUE0ZiAJ1AhMhaUOma5LVePRApzGlQ/f332NLEObIxUWM3vvET
+         xmNA==
+X-Gm-Message-State: ACrzQf36ruLK6+c3e67SsJSm/5UAd8Pd9/rtR97bHAmDcoTMdab6k0Vf
+        AZkjbANkyPtX6vaqAHvcTKBtO9xsSGSQPMoV0Gw=
+X-Google-Smtp-Source: AMsMyM6T8HbMBQWOPhacutnHoVxAwoc4LO6/Vkb+hKjPKYPLcf66oY+UO8xaFlbDTqs1tDwpCp3vAWrQhbUfzdh3GJs=
+X-Received: by 2002:a05:6402:3217:b0:461:d6d7:7f19 with SMTP id
+ g23-20020a056402321700b00461d6d77f19mr33389993eda.109.1667898605416; Tue, 08
+ Nov 2022 01:10:05 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a59:5a5a:0:b0:327:8138:2478 with HTTP; Tue, 8 Nov 2022
- 00:55:56 -0800 (PST)
-Reply-To: golsonfinancial@gmail.com
-From:   OLSON FINANCIAL GROUP <mrjackson585@gmail.com>
-Date:   Tue, 8 Nov 2022 00:55:56 -0800
-Message-ID: <CAEJ-0XLzT+DGdyJbj36pXQWE2mhXUdEMn9V2GkHkW1WpXR18YQ@mail.gmail.com>
-Subject: 
-To:     undisclosed-recipients:;
+References: <20221107175305.63975-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221107175305.63975-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <OS0PR01MB592295C7DBA5E0A85B4D26AF863F9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+In-Reply-To: <OS0PR01MB592295C7DBA5E0A85B4D26AF863F9@OS0PR01MB5922.jpnprd01.prod.outlook.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 8 Nov 2022 09:09:39 +0000
+Message-ID: <CA+V-a8u6J3+OkANOQYec9-Xe6voAiNTkLo_Zvy6dkC03EYp-4Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/5] pinctrl: renesas: rzg2l: Fix configuring the GPIO
+ pins as interrupts
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
---=20
-H, Guten Tag, Sie brauchen heute dringend einen Kredit, um eine
-Investition zu t=C3=A4tigen? Ein neues Unternehmen gr=C3=BCnden oder Rechnu=
-ngen
-bezahlen? Und uns auf Wunsch in Raten zur=C3=BCckzahlen? Wir bieten Kredite
-zu einem sehr niedrigen Zinssatz von 2% an.
-F=C3=BCr weitere Informationen antworten Sie auf unsere E-Mail-Adresse:
-golsonfinancial@gmail.com....
+Hi Biju,
+
+On Tue, Nov 8, 2022 at 7:14 AM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+>
+> Hi Prabhakar,
+>
+>
+> > Subject: [PATCH RFC 2/5] pinctrl: renesas: rzg2l: Fix configuring the GPIO
+> > pins as interrupts
+> >
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > On the RZ/G2UL SoC we have less number of pins compared to RZ/G2L and also
+> > the pin configs are completely different. This patch makes sure we use the
+> > appropriate pin configs for each SoC (which is passed as part of the OF
+> > data) while configuring the GPIO pin as interrupts instead of using
+> > rzg2l_gpio_configs[] for all the SoCs.
+> >
+>
+> Looks like you are missing fixes tag.
+> Fixes: db2e5f21a48ed ("pinctrl: renesas: pinctrl-rzg2l: Add IRQ domain to handle GPIO interrupt")
+>
+I did think about but then I realised this fixes the GPIO IRQ
+functions only and we didn't support IRQC and GPIO interrupts up until
+now so I hadn't added the fixes tag.
+
+Cheers,
+Prabhakar
