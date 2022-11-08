@@ -2,81 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 358B26218D6
-	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 16:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 381C1621973
+	for <lists+linux-gpio@lfdr.de>; Tue,  8 Nov 2022 17:33:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234380AbiKHPxa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 10:53:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41318 "EHLO
+        id S234651AbiKHQdB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 11:33:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233970AbiKHPx2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 10:53:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3C6EB1;
-        Tue,  8 Nov 2022 07:53:26 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C87B76162F;
-        Tue,  8 Nov 2022 15:53:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF58C433D6;
-        Tue,  8 Nov 2022 15:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1667922805;
-        bh=PRO30yRurUbHZpdLzN8x9Q3584RZSHnID9+jX8Obh+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IClHp78MU3nWMIP915AO6LG55lEQ0hHr0Ool07pB41BAPb2TPgPe3WrIpobyyw3qo
-         uPC317aauYjXJzr4/Ag66h7TPrKHTT9B93oVZw5uAdmzgRdfcwXOUquQkbP+7BO/2t
-         jeZWjTuBpbd1b8P3cUIsJzmoEFwMZ98BKSVLeehU=
-Date:   Tue, 8 Nov 2022 16:53:21 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     Larry Lai <larry.lai@yunjingtech.com>
-Cc:     Lee Jones <lee@kernel.org>, chengwei <foxfly.lai.tw@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "brgl@bgdev.pl" <brgl@bgdev.pl>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "GaryWang@aaeon.com.tw" <GaryWang@aaeon.com.tw>,
-        Musa Lin <musa.lin@yunjingtech.com>,
-        Jack Chang <jack.chang@yunjingtech.com>,
-        Javier Arteaga <javier@emutex.com>,
-        Nicola Lunghi <nicola.lunghi@emutex.com>,
-        Noah Hung <noah.hung@yunjingtech.com>
-Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH 1/5] mfd: Add
- support for UP board CPLD/FPGA
-Message-ID: <Y2p7cQXULoBp4k3f@kroah.com>
-References: <20221019022450.16851-1-larry.lai@yunjingtech.com>
- <20221019022450.16851-2-larry.lai@yunjingtech.com>
- <Y1/ik4XGNWsOg5KH@google.com>
- <SG2PR06MB37422173908A6584B3D6D349F93F9@SG2PR06MB3742.apcprd06.prod.outlook.com>
+        with ESMTP id S234428AbiKHQdB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 11:33:01 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16C458006;
+        Tue,  8 Nov 2022 08:32:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=r3eNyIjxDKk23f9oCDU73gWOczaFl0qT6zUOuTRb0KQ=; b=AzGdUlh9t8JDBnIuNxuDjRNcW0
+        fFfcdGUwj0KSqsLFPDfXaN9OWeoMQwAwz8WJ13HVKS/VDc2pfYP5S+uYwA61hl+0e2ijMVdW+jynO
+        POEuP+WLohwvLH9sOMp7uEmB3KwYO2gkaBwgX0SUQzAldHI8YofqnNQS1VrwOUurX/LxYMKTZGdrH
+        w/RwBzIxrB4JKwsbBhR88tUPwJ8kN65Z4oppRBtIXJX9XpSB5vZBrXjQ62u9sgQthc2e+DLiZDVT9
+        HW8DO3+9ax8uuRYzYe70L8AjvLpZWc2gGNz4Jvo9frdtOiRTq1mAKWdOJqPeNYfECF9l7KNm4uBRE
+        tGdTKg4g==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35172)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1osRWm-0003R2-7b; Tue, 08 Nov 2022 16:32:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1osRWg-0004su-7V; Tue, 08 Nov 2022 16:32:38 +0000
+Date:   Tue, 8 Nov 2022 16:32:38 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, devicetree@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sven Peter <sven@svenpeter.dev>
+Subject: [PATCH v3 0/7] Add Apple Mac System Management Controller GPIOs
+Message-ID: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
+References: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <SG2PR06MB37422173908A6584B3D6D349F93F9@SG2PR06MB3742.apcprd06.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YxC5eZjGgd8xguDr@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 03:45:45PM +0000, Larry Lai wrote:
-> Dear Jones,
-> 
->         Thank you for spending time to review this code, please check our response below your comment with yellow background.
+Hi,
 
-html email will be rejected by the mailing lists.  Please resend in
-plain-text format.
+This is version 3 of the series adds support for the Apple Mac GPIO
+driver. These GPIOs are hadled via the System Management Controller.
 
-thanks,
+The first patch adds the core SMC support to the MFD subsystem.
 
-greg k-h
+Patch 2 prepares the printf code for printing generic fourccs, as
+required by patch 4 and 7.
+
+Patch 3 adds the DT binding documentation for the rtkit backend.
+
+Patch 4 adds the rtkit backend for the SMC core.
+
+Patch 5 adds the device tree updates for the rtkit communication
+channel and gpio sub device to DT.
+
+Patch 6 adds the DT binding documentation for the gpio client.
+
+Patch 7 adds the gpio client.
+
+Patches mostly taken from the Asahi project and then modified due to
+review comments from the previous postings.
+
+I may have missed some comments as there's been quite a lot of
+discussion on previous postings.
+
+ Documentation/core-api/printk-formats.rst          |  32 ++
+ .../devicetree/bindings/gpio/apple,smc-gpio.yaml   |  37 ++
+ .../devicetree/bindings/mfd/apple,smc.yaml         |  67 +++
+ arch/arm64/boot/dts/apple/t8103.dtsi               |  27 ++
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-macsmc.c                         | 245 +++++++++++
+ drivers/mfd/Kconfig                                |   4 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/macsmc.c                               | 239 +++++++++++
+ drivers/platform/Kconfig                           |   2 +
+ drivers/platform/Makefile                          |   1 +
+ drivers/platform/apple/Kconfig                     |  34 ++
+ drivers/platform/apple/Makefile                    |   7 +
+ drivers/platform/apple/macsmc-rtkit.c              | 455 +++++++++++++++++++++
+ include/linux/mfd/macsmc.h                         | 104 +++++
+ lib/test_printf.c                                  |  39 +-
+ lib/vsprintf.c                                     |  35 +-
+ 18 files changed, 1328 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/apple,smc-gpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
+ create mode 100644 drivers/gpio/gpio-macsmc.c
+ create mode 100644 drivers/mfd/macsmc.c
+ create mode 100644 drivers/platform/apple/Kconfig
+ create mode 100644 drivers/platform/apple/Makefile
+ create mode 100644 drivers/platform/apple/macsmc-rtkit.c
+ create mode 100644 include/linux/mfd/macsmc.h
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
