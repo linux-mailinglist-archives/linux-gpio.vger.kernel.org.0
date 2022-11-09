@@ -2,124 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F058F622C0B
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 14:00:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC7FC622C32
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 14:13:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230050AbiKINA1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 08:00:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43294 "EHLO
+        id S229499AbiKINN1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 08:13:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbiKINAR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 08:00:17 -0500
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF3FD2D1E2
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 05:00:15 -0800 (PST)
-Received: by mail-vk1-xa36.google.com with SMTP id g26so10945239vkm.12
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 05:00:15 -0800 (PST)
+        with ESMTP id S229509AbiKINN0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 08:13:26 -0500
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB41EE21
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 05:13:25 -0800 (PST)
+Received: by mail-vk1-xa33.google.com with SMTP id g26so10971011vkm.12
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 05:13:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+S5RqoJR7eNe+UaJkaYqcNTqaJzBg/EYLhKrA3XeTJU=;
-        b=rel5ChBGOWyyPrddCcExdpNk6z2wGkv02sSJ3Ur8AgAiG81XQo6uyS7ekn5oSKkVD/
-         0K2A7M8rKye5Ef9vzj5Q+WX+6PdEllkM5zevX9Y2XeNeOTo5gK3ozm/jCMy6HaV08zLt
-         Jgnjft+gnVJNZa37xueaFYjkxwLXGOUs0MaZ9/RCKaW55DVX02GaFXZYi8qmaP3/NQGo
-         NACh6/96YRotOn/YrO5Z8u8dTj5tT1R3eoG4tWmY4LqHzL7OMTnUNMlB7R2AQZfSZD0F
-         Cklf7yVZx0xKA/oKNLeNdsHmdpqEvzMElzN81Jw0LF7/dw2u44YCixewsXkQbfCsGNeZ
-         sC7g==
+        bh=+xGpBG68yF08lFUOD8FBdV6g+IPjUuqkuqMR+0AcmSk=;
+        b=Y15zyMu5aj0OdVFCG2o69gYSzZu8TjRpqnGEAOUbLWgV8/N3lcgs6OLiOUGYsksj8T
+         1H5ymxeAJt+w9z+BfBjUpEf++Ps7GDZULzl0y+SVk0rGrs/AJLhZUFaaolqQG9wWqrN1
+         ie5IFmKCDXaqb5fXj3pWCd4A6aXlLSpq2plpJR0S1lDTvxkRiQdM5IVEyxhz9yQ4aOB6
+         WOEw9sk/87nuFTr0OHku6N1YreSM4POJYQ3mJtO+e6UIu/IoejNCovvtZBXMeiaoQje1
+         JqgFyQzgMc9ZEWQqn4+jZhCtzNwW6BibzCrq+doTz2I8cHtKMPcSivo0Ateq6M4PXGIv
+         19fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=+S5RqoJR7eNe+UaJkaYqcNTqaJzBg/EYLhKrA3XeTJU=;
-        b=L4XqZM0O67ZNHFqCvHLCMokjJr2J8bcicrea8ZvyQD8MdAZDlUh/ULAP6rJ/xv1BnI
-         NscWiXwxUwvNKYBu9jful9se44acYpHP816+fCaCeARKJ2W6Iv3ZieTJw0sLS8bpZnvA
-         uR+x0htbRlpC/iggbHATgiif2pa4x7fgEKNiFx9a8EyK1v81BZlMwbnXgzAmoitZSHnZ
-         9pp4kwFZwUHhcPRpOLRMd1Buf7UAAEBTKp4bom43pJ1+77ZMtPLJhFaG9uuXoWiAZlIP
-         UTmRSDOxFb5vA1lCaYkMUvlMG2kvEEv99sPg/zmoe0K21s+jnl1hNzORfVtjU7SffJLt
-         D5aw==
-X-Gm-Message-State: ACrzQf0altQ8nBrvkHNZqqehAs+j3MuXlZiNlHV+pflVHLN7zr15fWOd
-        rXY/Ke+qh8TX6oYIutB+HKMIi0rS5v7wmuPZHQbPtQ==
-X-Google-Smtp-Source: AMsMyM4Hv8fvC//1o6S/UqfJLdecKRfXQBgB0zlcBIQd3tRd5vJVClWy+ngarqMcUdi0XfIgwMKO7msMaawfJQHUAPc=
-X-Received: by 2002:a05:6122:2219:b0:3b8:7fbd:9554 with SMTP id
- bb25-20020a056122221900b003b87fbd9554mr10547205vkb.27.1667998814618; Wed, 09
- Nov 2022 05:00:14 -0800 (PST)
+        bh=+xGpBG68yF08lFUOD8FBdV6g+IPjUuqkuqMR+0AcmSk=;
+        b=QZTKNF9FRl3htLC5EpU9dQlLdGZTt0QeBEmwdGlJC4xQ5F0kWiSo1egFNm4ElW1E01
+         ph2b+i1Slpi4O6XDSqhSrV6AVygA4u+I4GEHGH6cR7QkY6i65t82xYONtqLFavc6FKSq
+         5XLt3jDrJ0lG9wq+u7CyXevU112/OdtxhY2CnDQDEzXfVbUfoCA9Tco3/ceLZKKZ0W2T
+         2ihC3Bs1I76ynBz7g1RZARZnBfKZXUyebxu/s6ilswwtX5CsYhPQHlI95JYXO6Ta9iPI
+         TVgsa45y6PPsabGouG8lUlqkP17kwEcvMtBQX6709pK+hODdoJfgQxPS6WL1eZgfiZpx
+         59qg==
+X-Gm-Message-State: ACrzQf0T7PWkaTdpJxM7CYS2U6XhhiKVsmeYs/kgawQGRLmd4gJXhjKl
+        TP85iG/CiWAEBCsJbzbCSqGQXbUtypiDlBGBNo5wzw==
+X-Google-Smtp-Source: AMsMyM5aeaov7lpqDjWPDYQ2IhfUZRVLWjPERcWKtCe9KmX1ljQiJnMOLPgKrRur21mGztSmpgdFUq4KzpipyJbLj1M=
+X-Received: by 2002:a1f:a695:0:b0:3ab:85c0:e1e8 with SMTP id
+ p143-20020a1fa695000000b003ab85c0e1e8mr13359359vke.1.1667999604912; Wed, 09
+ Nov 2022 05:13:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20220902-get_gpiod_from_child-remove-v1-0-1e47125df20f@gmail.com>
- <YyzYKmsjKflqT1xZ@google.com> <Y1aCgJihNIqExUR2@google.com>
- <CAMRc=McvJ7AvhKdP7cv8K1+rzMf8-ptg2SnU+XOAwERhRx1Eyw@mail.gmail.com> <CACRpkdaPDXBWKQgNnmBLBmaXDo6roEDSpe1wrvMi_aG5F52K4g@mail.gmail.com>
-In-Reply-To: <CACRpkdaPDXBWKQgNnmBLBmaXDo6roEDSpe1wrvMi_aG5F52K4g@mail.gmail.com>
+References: <20221107161027.43384-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221107161027.43384-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 9 Nov 2022 14:00:03 +0100
-Message-ID: <CAMRc=Mf5va=ZbV5zhz30hqEVW_fGi3B4Qe+tBcU-P3DT3zxQmg@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Get rid of devm_fwnode_get_[index_]gpiod_from_child()
-To:     Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 9 Nov 2022 14:13:14 +0100
+Message-ID: <CAMRc=Md7yN2cw14EAPbODGeLOXw=7VGceK_uYdTx-NsN6P64HQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] gpiolib: of: Prepare of_gpiochip_add() /
+ of_gpiochip_remove() for fwnode
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        =?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 8, 2022 at 11:54 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Mon, Nov 7, 2022 at 5:10 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Tue, Oct 25, 2022 at 5:48 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> GPIO library is getting rid of of_node, fwnode should be utilized instead.
+> Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode.
 >
-> > On Mon, Oct 24, 2022 at 2:18 PM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > On Thu, Sep 22, 2022 at 02:48:26PM -0700, Dmitry Torokhov wrote:
-> > > > Hi Pavel, Marek,
-> > > >
-> > > > On Fri, Sep 02, 2022 at 05:55:24PM -0700, Dmitry Torokhov wrote:
-> > > > > This drops the last uses of devm_fwnode_get_[index_]gpiod_from_child()
-> > > > > from the tree and drops the stubs implementing this API on top of
-> > > > > devm_fwnode_gpiod_get_index().
-> > > > >
-> > > > > Note that the bulk of users were converted in 2019, the couple of LED
-> > > > > drivers are all that have remained.
-> > > > >
-> > > > > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > >
-> > > > > ---
-> > > > > Dmitry Torokhov (3):
-> > > > >       leds: gpio: switch to using devm_fwnode_gpiod_get()
-> > > > >       leds: lgm-sso: switch to using devm_fwnode_gpiod_get()
-> > > > >       gpiolib: remove devm_fwnode_get_[index_]gpiod_from_child()
-> > > > >
-> > > > >  drivers/leds/blink/leds-lgm-sso.c |  5 ++---
-> > > > >  drivers/leds/leds-gpio.c          |  5 ++---
-> > > > >  include/linux/gpio/consumer.h     | 21 ---------------------
-> > > > >  3 files changed, 4 insertions(+), 27 deletions(-)
-> > > > > ---
-> > > > > base-commit: 7fd22855300e693668c3397771b3a2b3948f827a
-> > > > > change-id: 20220902-get_gpiod_from_child-remove-a62638849e91
-> > > > >
-> > > >
-> > > > Could you please consider picking this up for 6.1? Or would you be OK
-> > > > with this going through other tree (GPIO maybe)?
-> > >
-> > > *ping* Could this go through GPIO tree? Dropping this API helps with
-> > > some outstanding work that I have...
-> > >
-> >
-> > Sure! I'll let it wait for another week - it would be great to get an
-> > ack from Pavel - but in case of no response I'll take it through my
-> > tree.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
 >
-> I'd say just apply it at this point.
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index be9c34cca322..000020eb78d8 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -1104,9 +1104,11 @@ static int of_gpiochip_add_pin_range(struct gpio_chip *chip) { return 0; }
+>
+>  int of_gpiochip_add(struct gpio_chip *chip)
+>  {
+> +       struct device_node *np;
+>         int ret;
+>
+> -       if (!chip->of_node)
+> +       np = to_of_node(chip->fwnode);
+> +       if (!np)
+>                 return 0;
+>
+>         if (!chip->of_xlate) {
+> @@ -1123,18 +1125,18 @@ int of_gpiochip_add(struct gpio_chip *chip)
+>         if (ret)
+>                 return ret;
+>
+> -       of_node_get(chip->of_node);
+> +       fwnode_handle_get(chip->fwnode);
+>
+>         ret = of_gpiochip_scan_gpios(chip);
+>         if (ret)
+> -               of_node_put(chip->of_node);
+> +               fwnode_handle_put(chip->fwnode);
+>
+>         return ret;
+>  }
+>
+>  void of_gpiochip_remove(struct gpio_chip *chip)
+>  {
+> -       of_node_put(chip->of_node);
+> +       fwnode_handle_put(chip->fwnode);
+>  }
+>
+>  void of_gpio_dev_init(struct gpio_chip *gc, struct gpio_device *gdev)
+> --
+> 2.35.1
 >
 
-Right. Applied to gpio/for-next.
+Applied, thanks!
 
-Thanks!
-Bartosz
+Bart
