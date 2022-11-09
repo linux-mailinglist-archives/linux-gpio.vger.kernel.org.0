@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45E00622383
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 06:44:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4AAB622385
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 06:44:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbiKIFoX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 00:44:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
+        id S229573AbiKIFoY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 00:44:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbiKIFoX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 00:44:23 -0500
+        with ESMTP id S229447AbiKIFoY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 00:44:24 -0500
 Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F882ACC
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 21:44:22 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9A015A3E
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 21:44:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667972662; x=1699508662;
+  t=1667972663; x=1699508663;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=2VNzCaNki0vw3wdWEcZQcCFSMKfjKSZiN9HjCS6C+Yg=;
-  b=WJ1PSe6fT6npgMrYiqbGXuiFRnDBTdP36j5hndbZHpb7sZldn7UmsNTy
-   q5ev3bLMMGMgOnmBNGRm75pGnpv7ANlIwQfwoxDMFUFe0Zj5a6SKNVkHE
-   0dN3PbNJM7uENuBPsYgsdc5g2MiXjOJdshhk6n5Cyerkz3pjmYUvkLPSn
-   bxJRBzIUV/vmBeUnLG2lNsMC5lqpl6TZe4n8oDY6wLU+WtTLZGeHB+dQR
-   wZyBHhEXxWqlXlN1GJyI6geY+tOGh0obOghHc/iZwGmwQjg/aoJ7oZDfM
-   LNamxmUy2E6HTxHiL1PmeVzDwUbgxfk89mW/1zJWc6LaJr6a6tev2Rd6P
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="312692916"
+  bh=rBSSyfGFfSHRAZMJ2u8A8MpYv7naWx/zXNKvDo7h7io=;
+  b=AuNGHU4jtz2/rQFXZDeufJAS28pknaqGG232Qb0M0lHTMYhtnCmfoahI
+   bsxqooNrIZdrw4QcIwSHAFD3PpLSduJd3jvi0fmUoRSv5N2hoTJnANzeC
+   oqMccm1kBM9W/kMItdoq579l0XASw188Ajp+JzEFrYtGFZEc4EadW/f0E
+   8Wys01Werc4yhEdSEcKSiSj0+T/SplmgZywkRaMw+svnOH4y5hsCuFyKV
+   J/vEZA6fXszKUwwc+rvKswHidjsml028f2J1wTs1TUXOXus7C1AX4BBqV
+   GJOOjNNJZIaEw4JtD3VhMK1/5YF1KUgiTxtpoCIMY/P0IPeMsM18kWwKP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="312692917"
 X-IronPort-AV: E=Sophos;i="5.96,149,1665471600"; 
-   d="scan'208";a="312692916"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 21:44:21 -0800
+   d="scan'208";a="312692917"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 21:44:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="761763734"
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="965863242"
 X-IronPort-AV: E=Sophos;i="5.96,149,1665471600"; 
-   d="scan'208";a="761763734"
+   d="scan'208";a="965863242"
 Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 08 Nov 2022 21:44:20 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 08 Nov 2022 21:44:20 -0800
 Received: from kbuild by e783503266e8 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1osdsp-00016Z-39;
+        id 1osdsp-00016F-2i;
         Wed, 09 Nov 2022 05:44:19 +0000
-Date:   Wed, 09 Nov 2022 13:44:00 +0800
+Date:   Wed, 09 Nov 2022 13:44:14 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- ff58d67fd2a986bd43561744a8157a7f93a4cbd6
-Message-ID: <636b3e20.7EqOFtEeiPWJnj5Z%lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS WITH WARNING
+ a2a68e9e10bad391b01a9f4b0f3a81ce03afc2ad
+Message-ID: <636b3e2e.D1TOe4drQIdfFNu/%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,16 +62,70 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: ff58d67fd2a986bd43561744a8157a7f93a4cbd6  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: a2a68e9e10bad391b01a9f4b0f3a81ce03afc2ad  docs/pinctrl: fix runtime pinmuxing example
 
-elapsed time: 747m
+Warning reports:
+
+https://lore.kernel.org/oe-kbuild-all/202211090942.6OVKvIdY-lkp@intel.com
+
+Warning: (recently discovered and may have been fixed)
+
+drivers/pinctrl/pinctrl-loongson2.c:212:35: warning: excess elements in struct initializer
+drivers/pinctrl/pinctrl-loongson2.c:223:43: warning: initialization of 'struct loongson2_pinctrl *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+
+Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- arc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- arm-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- arm64-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- ia64-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- m68k-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- m68k-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- mips-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- openrisc-randconfig-r025-20221109
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- riscv-randconfig-c042-20221108
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- riscv-randconfig-s052-20221109
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- s390-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- sh-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+|-- sh-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+|   `-- drivers-pinctrl-pinctrl-loongson2.c:warning:initialization-of-struct-loongson2_pinctrl-from-int-makes-pointer-from-integer-without-a-cast
+`-- xtensa-allyesconfig
+    `-- drivers-pinctrl-pinctrl-loongson2.c:warning:excess-elements-in-struct-initializer
+
+elapsed time: 748m
 
 configs tested: 101
 configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
 
 gcc tested configs:
 x86_64                            allnoconfig
