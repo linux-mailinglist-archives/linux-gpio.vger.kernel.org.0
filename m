@@ -2,64 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13CE262356F
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 22:09:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91C5A623569
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 22:09:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231424AbiKIVJU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 16:09:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60626 "EHLO
+        id S230271AbiKIVJO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 16:09:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbiKIVJQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 16:09:16 -0500
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 645CF2EF7B;
-        Wed,  9 Nov 2022 13:09:15 -0800 (PST)
-Received: by mail-oi1-f178.google.com with SMTP id n186so20198644oih.7;
-        Wed, 09 Nov 2022 13:09:15 -0800 (PST)
+        with ESMTP id S230146AbiKIVJN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 16:09:13 -0500
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC9B12D38;
+        Wed,  9 Nov 2022 13:09:12 -0800 (PST)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-13b103a3e5dso193834fac.2;
+        Wed, 09 Nov 2022 13:09:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=date:subject:message-id:references:in-reply-to:cc:to:from
          :mime-version:content-transfer-encoding:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=3JK7iAPYbPLR42yscRzAFOhzDf8fswRFehByP99Ej2k=;
-        b=y5SV25GR49P6R7ccN4tJXHqU+6N7aRY75TcaLmogTKb8x1a/3SRAsy0A1zw+zTaZYU
-         VWJUhguj9win0bOsyrQaxkNKFFX1+MYFOwBt3Qt+6Fpx0832C9pIENxcllLjpQ6KYeFf
-         HPF1rJf8q3xc95WEUnVszEXis86kqHw6uad9rF5kwuIl+DCp+XCjXX2GbixFfolQNDCh
-         4d/X9goOMMWYq+fmZ6f7KX2HyFFBiV2/SCH1Qon6m/hy0sqpK4/fxn8oo+3dispND+WP
-         CmfK7b8h2OiK3a5m+rrqIleF2ia2vG0ZlwAc08VtXX0Txm7HDnxsJRxOK71A+5HBOn1f
-         D8JQ==
-X-Gm-Message-State: ACrzQf2nY08N30WP9qxNcCIBT4j1o/ALgbzkDDdUVPeQULUvQB3tDgWN
-        QhxV9psjLYOHR6FaPWeaQA/q+KiYJw==
-X-Google-Smtp-Source: AMsMyM4226V1B9Bim9hiyYeb6rDAaHwH3K5mNu+jN4Zyeeyhhcguqx9bi8mkRs06U2LeKMBT4m+sHA==
-X-Received: by 2002:a05:6808:f8f:b0:35a:6eed:42f with SMTP id o15-20020a0568080f8f00b0035a6eed042fmr12756467oiw.192.1668028154584;
-        Wed, 09 Nov 2022 13:09:14 -0800 (PST)
+        bh=69ynaJZ0vfSiU5Z7REHN/yVn0+I4DGU0vC88AAV66eU=;
+        b=rh09yB7TkjRXGV19Bw67j20XW4exVjrcKHX0RZVnQxkeXyoAFC4zu/8JX0eEXdGPXJ
+         igW9PmJ+5fLHckPfivjJECJ7CJfXUkaJ5U55EUOLuCoiTNMlaJnIzHFdQ41BLx812L8V
+         rmzIqX/cl7O7ZpyQ/Ra0OtmT6GBCLcpQxBOQ7Agu38PDXAk4ZAneV03zg9l7veriWgdp
+         oiKLF90XBVsDk4SAnL18UeY2gt3ovNhDuQMAeuclVHXBVQiR9s+tg8hii1qQd74ulEh8
+         TJpShTTgiHwKIWMccHbC5KQeMqxe0ma8/UbMYzZQ6ab2NvmeeAA6OsomuW2g++yldJHK
+         00ZQ==
+X-Gm-Message-State: ANoB5pkcZmZ3zc0662T1bLIcuiErfY1GCDiQcP4YZVedmzEEIX39h7J1
+        OSvPRPioRPESQ2lkZ4EBag==
+X-Google-Smtp-Source: AA0mqf7uijbXxM1V5E4YDTZSWH4fX4tkDBL3BOD5z9wGdyYsxPQIhx2cbf5ym35wl8Y+779wpe7d8g==
+X-Received: by 2002:a05:6870:888c:b0:12c:55d6:968 with SMTP id m12-20020a056870888c00b0012c55d60968mr11226996oam.244.1668028151442;
+        Wed, 09 Nov 2022 13:09:11 -0800 (PST)
 Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id o30-20020a056870911e00b0012779ba00fesm6657392oae.2.2022.11.09.13.09.13
+        by smtp.gmail.com with ESMTPSA id r198-20020a4a37cf000000b0049be423151asm4572127oor.34.2022.11.09.13.09.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 13:09:14 -0800 (PST)
-Received: (nullmailer pid 2868048 invoked by uid 1000);
+        Wed, 09 Nov 2022 13:09:10 -0800 (PST)
+Received: (nullmailer pid 2868046 invoked by uid 1000);
         Wed, 09 Nov 2022 21:09:10 -0000
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   Rob Herring <robh@kernel.org>
 To:     Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc:     alsa-devel@alsa-project.org, linus.walleij@linaro.org,
-        patches@opensource.cirrus.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de,
-        krzysztof.kozlowski+dt@linaro.org, linux-kernel@vger.kernel.org,
-        robh+dt@kernel.org, maz@kernel.org, broonie@kernel.org,
-        lee@kernel.org
-In-Reply-To: <20221109165331.29332-5-rf@opensource.cirrus.com>
+Cc:     lee@kernel.org, patches@opensource.cirrus.com, maz@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, alsa-devel@alsa-project.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+In-Reply-To: <20221109165331.29332-2-rf@opensource.cirrus.com>
 References: <20221109165331.29332-1-rf@opensource.cirrus.com>
- <20221109165331.29332-5-rf@opensource.cirrus.com>
-Message-Id: <166802788390.2833223.7991217464686925936.robh@kernel.org>
-Subject: Re: [PATCH 04/12] dt-bindings: pinctrl: Add Cirrus Logic CS48L31/32/33
+ <20221109165331.29332-2-rf@opensource.cirrus.com>
+Message-Id: <166802788268.2833081.8250615552136903141.robh@kernel.org>
+Subject: Re: [PATCH 01/12] dt-bindings: mfd: Add Cirrus Logic CS48L32 audio codec
 Date:   Wed, 09 Nov 2022 15:09:10 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -67,36 +67,52 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Wed, 09 Nov 2022 16:53:23 +0000, Richard Fitzgerald wrote:
-> Codecs in this family have multiple digital I/O functions for audio,
-> DSP subsystem, GPIO and various special functions. All muxable pins
-> are selectable as either a GPIO or one of the available alternate
-> functions.
+On Wed, 09 Nov 2022 16:53:20 +0000, Richard Fitzgerald wrote:
+> The CS48L32 has multiple digital and analog audio I/O, a
+> high-performance low-power programmable audio DSP, and a variety of
+> power-efficient fixed-function audio processors, with digital
+> mixing and routing.
 > 
 > Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
 > ---
->  .../bindings/pinctrl/cirrus,cs48l32.yaml      | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml
+>  .../bindings/mfd/cirrus,cs48l32.yaml          | 166 ++++++++++++++++++
+>  1 file changed, 166 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml
 > 
 
 My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
 on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
 yamllint warnings/errors:
-./Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml:14:1: [error] syntax error: could not find expected ':' (syntax)
+./Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml:107:7: [warning] wrong indentation: expected 4 but found 6 (indentation)
+./Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml:108:7: [warning] wrong indentation: expected 8 but found 6 (indentation)
 
 dtschema/dtc warnings/errors:
-make[1]: *** Deleting file 'Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.example.dts'
-Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml:14:1: could not find expected ':'
-make[1]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.example.dts] Error 1
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml: properties:clocks: 'oneOf' conditional failed, one must be fixed:
+	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml: properties:clocks: 'anyOf' conditional failed, one must be fixed:
+		'minItems' is not one of ['maxItems', 'description', 'deprecated']
+			hint: Only "maxItems" is required for a single entry if there are no constraints defined for the values.
+		'minItems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
+		'maxItems' is not one of ['description', 'deprecated', 'const', 'enum', 'minimum', 'maximum', 'multipleOf', 'default', '$ref', 'oneOf']
+		1 is less than the minimum of 2
+			hint: Arrays must be described with a combination of minItems/maxItems/items
+		hint: cell array properties must define how many entries and what the entries are when there is more than one entry.
+		from schema $id: http://devicetree.org/meta-schemas/clocks.yaml#
+	'minItems' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
+	'maxItems' is not one of ['type', 'description', 'dependencies', 'dependentRequired', 'dependentSchemas', 'properties', 'patternProperties', 'additionalProperties', 'unevaluatedProperties', 'deprecated', 'required', 'allOf', 'anyOf', 'oneOf', '$ref']
+	'type' is a required property
+		hint: DT nodes ("object" type in schemas) can only use a subset of json-schema keywords
+	from schema $id: http://devicetree.org/meta-schemas/clocks.yaml#
+./Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml: Unable to find schema file matching $id: http://devicetree.org/schemas/pinctrl/cirrus,cs48l32.yaml
+Documentation/devicetree/bindings/mfd/cirrus,cs48l32.example.dts:21:18: fatal error: dt-bindings/sound/cs48l32.h: No such file or directory
+   21 |         #include <dt-bindings/sound/cs48l32.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[1]: *** [scripts/Makefile.lib:406: Documentation/devicetree/bindings/mfd/cirrus,cs48l32.example.dtb] Error 1
 make[1]: *** Waiting for unfinished jobs....
-./Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml:14:1: could not find expected ':'
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml: ignoring, error parsing file
 make: *** [Makefile:1492: dt_binding_check] Error 2
 
 doc reference errors (make refcheckdocs):
-Documentation/devicetree/bindings/pinctrl/cirrus,cs48l32.yaml: Documentation/devicetree/bindings/mfd/cirrus,cs48l32.yaml
 
 See https://patchwork.ozlabs.org/patch/
 
