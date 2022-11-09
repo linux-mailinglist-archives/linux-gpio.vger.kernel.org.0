@@ -2,162 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2B8C6225B6
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 09:46:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 158A66225BB
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 09:47:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbiKIIqc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 03:46:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56426 "EHLO
+        id S229540AbiKIIrS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 03:47:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229976AbiKIIqb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 03:46:31 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E84A2BFE
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 00:46:30 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id s24so24683913ljs.11
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 00:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nfRa70L7g0nxe8P0BclrazZWpKjrPweL5zf7N3oG2m4=;
-        b=IUY3VD9UK53+OdkIAp16Q6OthrEIBlaCwIS+04/+wqYsufoykWa7ec+XrK0zWZKOLa
-         9Xzj6/zUaGWLu70p+rtSjKWSbi/bwzoMKcO5hMjsnxm2lMp9viboE46t5XqiqmDkBSDJ
-         TX8RdQJKRJ76ggcJk1xc2zFytuyQPXFj6EnpPfWXt2ABSWEUv3gNt+uJQOy97TjkvrU5
-         WeriNZP5okt8MvUGbEyfjT3OZDULrDbRymmqFLkZ1yoCs/gEmG5pdEm3LWFFH4o2FYsK
-         pM50Z+BTo3pPTPnsYb1HvboYRnljbO0UhVIvdG8YTlUwLskYwJ3D54BTgBKfmN/3NEGQ
-         226A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nfRa70L7g0nxe8P0BclrazZWpKjrPweL5zf7N3oG2m4=;
-        b=LFK2bOFH9B6VammIb2JyBD5vgku01aMcBKRgEpI/1e2beSIxXGY+X7lQn/tfDpPPqY
-         2i/qqv0Q5UFZFo1Q1pnooFnROM/BuNCxJEaMBh8iRtu3DTs99G78jXFEnDv04L6SGDIU
-         4ftB6QcwPV0eVvltTjwzAffKZSQz8/rfoRIMYZsWwy0nZ8SYaXGhdV9dUMnGttaw0cR2
-         XcV1koiLQaNQwlbUVrCGX56URLu3Ewpr6HOn3A825cfKR9bvoWaCMzwpGSvEk2hVoCi0
-         SEyg4grcyUk7Cz8Qsit83mZ0GAPKqbVCK9KOlMV6G6l/D5Mk5qhm62oitE0SXikJ6/L8
-         QMlg==
-X-Gm-Message-State: ACrzQf1am3jmQIF3RBjinnMlMdlHU712OJQvhSEJpra0rjqb5yN72brj
-        +e12f6gQXq1sbjAzXlCBaPYIrA==
-X-Google-Smtp-Source: AMsMyM6fnwCEY5y06IZIpi9DtTIMT7zAe2zw95FGw/UKN9dOcLrqH4A5BEisW1ztQojxGaa3aHSzgA==
-X-Received: by 2002:a2e:92c6:0:b0:277:3ca2:dac6 with SMTP id k6-20020a2e92c6000000b002773ca2dac6mr7337738ljh.143.1667983588862;
-        Wed, 09 Nov 2022 00:46:28 -0800 (PST)
-Received: from [192.168.0.20] (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
-        by smtp.gmail.com with ESMTPSA id d1-20020a2eb041000000b0026a92616cd2sm2026488ljl.35.2022.11.09.00.46.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Nov 2022 00:46:28 -0800 (PST)
-Message-ID: <371d8427-b854-a39b-9d20-6c55018f670f@linaro.org>
-Date:   Wed, 9 Nov 2022 09:46:27 +0100
+        with ESMTP id S229505AbiKIIrS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 03:47:18 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6263813DDF;
+        Wed,  9 Nov 2022 00:47:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
+        s=s31663417; t=1667983597;
+        bh=PRVwWrjJDCQx2PTwDXm20wxkOYYY83T6jZ7prdQHy30=;
+        h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
+         References;
+        b=gEoRVWsYKdnB/rSvLatOuN1uNvbJw6dbVKqfNn9R64mJBvcFdMo6cBDEbxGAvqPKM
+         WpIZlPdP1F2hUiak6yx7XW/yJRysiGvxJtIWC2k1cH4GCutUQmqJD3QGeMNAXv8n7o
+         /mtRP/rmbT7Lk1uBbpZHmFLpvzO8lvewtbjUl7bIPdoE5nMu+aZhw6cz38CD2OWb1u
+         EjQ6e0nHrLj/OWbARNGOyCUPHukY672dZ80JmuuigM+UCWhYnWHzNoPIDcu57lxKhS
+         RrH2miHq/+S85DO1z8CfS3kr7J2Wx/vTETwRoxXdmIF4VgT8NJu4+D24xfi8Xb1f/x
+         9Yc/g+9dYTqsQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [127.0.0.1] ([80.245.72.218]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MeCpR-1pSIzi1wRT-00bKIF; Wed, 09
+ Nov 2022 09:46:37 +0100
+Date:   Wed, 09 Nov 2022 09:46:30 +0100
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Rob Herring <robh@kernel.org>, Frank Wunderlich <linux@fw-web.de>,
+        Sam Shih <sam.shih@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Sean Wang <sean.wang@kernel.org>
+Subject: =?US-ASCII?Q?Re=3A_Re=3A_=5BPATCH_v1_1/4=5D_dt-bindings=3A_pinct?= =?US-ASCII?Q?rl=3A_mt7986=3A_add_generic_bias-pull*_support?=
+User-Agent: K-9 Mail for Android
+Reply-to: frank-w@public-files.de
+In-Reply-To: <CACRpkdZsP-aj6hcD2sOB8ypVqdxwC8dWOo0d52qnDpxppUwNAA@mail.gmail.com>
+References: <20221105084905.9596-1-linux@fw-web.de> <20221105084905.9596-2-linux@fw-web.de> <166765939131.4158830.8416727494529058690.robh@kernel.org> <trinity-c732b826-2a12-4ab1-aaac-294ac5524926-1667660774779@3c-app-gmx-bap26> <CACRpkdZsP-aj6hcD2sOB8ypVqdxwC8dWOo0d52qnDpxppUwNAA@mail.gmail.com>
+Message-ID: <6752A6BE-3750-4195-821A-917205F59258@public-files.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 1/7] Documentation: tps6594x: Add DT bindings for the
- TPS6594x PMIC
-Content-Language: en-US
-To:     Matt Ranostay <mranostay@ti.com>, brgl@bgdev.pl, lee@kernel.org,
-        linus.walleij@linaro.org, kristo@kernel.org,
-        alexandre.belloni@bootlin.com, a.zummo@towertech.it,
-        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org, vigneshr@ti.com
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20221109065546.24912-1-mranostay@ti.com>
- <20221109065546.24912-2-mranostay@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221109065546.24912-2-mranostay@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:jHtmrCYPElP8JtRuEiA7NPBiK7ne0lZA2T52PK4SqtN3oFto41e
+ NGuuF+JH3JRGNhbou6J8OX3FKcKEb+neiidWWEMEBOb9haLmrkCrjKZA1I23S5mC24I9pAo
+ C7oCYwBOW+psA88hZZzYtg61yyDrVrmQGbm9Db4VvJrm7jReOjYZOTGwJU3lItWU3JKjIi4
+ L0Sy8AeH39BsxDiaTJUdQ==
+UI-OutboundReport: notjunk:1;M01:P0:ZxB4zEPrxfU=;JLtousEZBz6ZHywN4c7nHNSTlW2
+ ICihBS2ALeVKO1JYgkwWYwCarSmjhYnmzpEPZhYFJ/CQr56GHvqq1RLnOGsWPWuIay6qu4LwE
+ /dX2BfTIMBRNAzi7L+5jUZ9UxuaZYZu45B0uIjYkgdGuUDeeoxqy5JTNrT+GHz+wNl587eNgt
+ dyaKdEudzRuRasc9N1kkExxWQFLOmbtL/IXZxn1u8tlOEdNAaoCvNsIelqx2DYj8wmbCD4Dmf
+ hia57i4GSDNkNw/b3tNeKaOkk3tEtKtK1Fluu2N83wQY+whFDwowtD3c+yKRp7EZ+FEjL8ZVk
+ qvAyv/1Y6nkjIVJIfCn57Lo9hdIMhIchvLTc7IHON0TrLMZT6rlcgk1ntWH+RQXjBiX5p278j
+ Vbv8ydhZlQoAzjIsHjY9Tr1trubrzOXzXrHTd5CIc2g7F3PsbpTCpyefkXqz0P1LWKDNEjH2t
+ ISm6jy/rQqEEyrCzBsLS8oCD8oya7vjwm2FwuHtUKTdmnRH0T0K8G/3zOykyFJIab24hIY/wG
+ nPMLh330svNlgcpXFhNpYIAI1iWocS3uaGcL+H31Eo9wONsh7rsA9u+zcI9mXMJNvgJNhj5SV
+ ejgoJXLxSEYFhUiWOODYV3M+SHqisrljYEW1QKbXInz8HrOtwUDEXLMF4PtXBsfBgxfFVEu8V
+ HtegHtJMXhDnK+cWJahkN9CdkKIggWEsnfxFI2mE3Bymh1tyyBA0RQOwKVqZfTFM5uQmjgthI
+ 9xiVenpgbBN4DjyC+RkonzHnTF9CGrcCwZeyh6WAlnRHQdgD5UyfdFYoyjeIS069vITYHKUQN
+ /stzNrIngSl/+kCGXzvayP1VT8Yh3WvfDq22PcX4L1hlSyMeSYoExcr+7z6UgQvbk6GXDLN+M
+ QS2Ij/w00u/lZVvy7/GCryjRibr/qdLpV76onBU3ys0xPQJXs4rM6vxzMt2gZLsvE+bdPcvzv
+ VDR2GA==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/11/2022 07:55, Matt Ranostay wrote:
+Am 9=2E November 2022 09:38:03 MEZ schrieb Linus Walleij <linus=2Ewalleij@l=
+inaro=2Eorg>:
+>On Sat, Nov 5, 2022 at 4:06 PM Frank Wunderlich <frank-w@public-files=2Ed=
+e> wrote:
+>
 
-Missing commit msg.
+>That patch in turn says it needs another patch first=2E
+>
+>Now I am utterly confused, it is really hard to follow these trains
+>of patches depending on and breaking each other left and right=2E=2E=2E
+>
+>Can you please tell me which patches I need to apply and
+>in which order?
 
-Use subject prefixes matching the subsystem (git log --oneline -- ...).
+Sorry, picked the wrong link=2E Put all pinctrl patches together into this=
+ series to make it easier to follow (but v2 because v1 was for changing onl=
+y mmc pinctrl and to have no conflicts or "broken" commits):
 
-> Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> ---
->  .../devicetree/bindings/mfd/ti,tps6594x.yaml  | 67 +++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti,tps6594x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594x.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594x.yaml
-> new file mode 100644
-> index 000000000000..be87f0037bf9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594x.yaml
-> @@ -0,0 +1,67 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/ti,tps6594x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TPS6594x Power Management Integrated Circuit (PMIC)
-> +
-> +maintainers:
-> +  - Keerthy <j-keerthy@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    contains:
+https://patchwork=2Ekernel=2Eorg/project/linux-mediatek/list/?series=3D692=
+462
 
-Drop contains.
+>Yours,
+>Linus Walleij
 
-> +      enum:
-> +        - ti,tps6594x
 
-No wildcards in compatibles.
-
-> +
-> +  reg:
-> +    const: 0x48
-> +    description: I2C slave address
-
-Drop description.
-
-> +
-> +  ti,system-power-controller:
-> +    type: boolean
-> +    description: PMIC is controlling the system power.
-> +
-> +  rtc:
-> +    type: object
-> +    $ref: /schemas/rtc/rtc.yaml#
-> +    unevaluatedProperties: false
-> +    properties:
-> +      compatible:
-> +        const: ti,tps6594x-rtc
-
-No wildcards in compatibles.
-
-> +
-> +  gpio:
-> +    type: object
-> +    unevaluatedProperties: false
-> +    properties:
-> +      compatible:
-> +        const: ti,tps6594x-gpio
-
-No wildcards in compatibles.
-
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-
-> +...
-
-Best regards,
-Krzysztof
-
+regards Frank
