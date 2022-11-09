@@ -2,72 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D00D622ABD
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 12:41:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9953C622C05
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 13:59:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbiKILlI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 06:41:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55354 "EHLO
+        id S230097AbiKIM7w (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 07:59:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbiKILlF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 06:41:05 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C32F12A26E
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 03:41:04 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id d10so16435650pfh.6
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 03:41:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K3pgT8b9s/C/C7NyQ4PY/7JshPMk0htR0Q4sUyjosGs=;
-        b=o3Hc793Q0S4AKSeDO3h8U92siMtyStSMQHmph4JxlIMZuNm2oSAC+LVkd4zmE0T0Mi
-         pXVud047t+Vcmg8oyr/mqP2GZfun9NJIXuq8W5RpK8EZIi9hHPj8MTcMMQr3Y+MEAF3B
-         shMwtOKl9EKJbJL4plM1ImeCyv72EbO61EItJ8wt0rDJwPKrO64F8TrjdfElIEFnXfrQ
-         N0VuRIr+UIOxlInzKSSb69ITg67jNTsZwm6NDpVQTmNQjHm8rkg7+qWqOdiX6IZVOvMY
-         smV98xP5tOLMxnUz7GX1FOZYEgkB8RjYKSM/cHXZuV8r/Eu9sWxtr56g2KXcgzxZwc0R
-         kKJw==
+        with ESMTP id S230050AbiKIM7u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 07:59:50 -0500
+Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA69295;
+        Wed,  9 Nov 2022 04:59:49 -0800 (PST)
+Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-13b6c1c89bdso19489271fac.13;
+        Wed, 09 Nov 2022 04:59:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K3pgT8b9s/C/C7NyQ4PY/7JshPMk0htR0Q4sUyjosGs=;
-        b=7k4n8Chb90JbDC+youSui3y0n8ISKqvdGmK2yMwPRRKboCHnkILUW1XRTgg1S8GYcd
-         yH/ElBLcBaSiv4e0Zpe29kr+ZPuOa9hnbrKVUNe4JDlJBF5SR5fkm13UJ1Pxft3Jr6bI
-         WDGD8POPuK3PVfsUXgo/Kad2filHe/ZiybiAI1AWpl4MXmkYnqwECoXQz2xMSM4BP2xj
-         2fhnjdXN+RSTfzOPBSK6FmY3BUzKEjks44SpewzpYf+AXk0u/bfhp4Jwy+PQOcZyPU5i
-         in//OZhboMLwv/NX4VwzFerSOkvc6igTwDChJc50cnCFc/JhtwDuuDePgdk3X/j5JYD+
-         BRsA==
-X-Gm-Message-State: ACrzQf0EAkMaOtlpVXS1ce8dWY6NZnRuuY5FBlz0aAdA/9CI1Lo3OFi8
-        Ouq5iHvDrcDkNp1Jt4c3cw0=
-X-Google-Smtp-Source: AMsMyM6bG1uu9yjbEsajb6cJ89+EVx8c63Ssve00Ftd0PCYqsb5HHEG4WMIKSXQbiaAQwaigLPdkag==
-X-Received: by 2002:a05:6a00:190a:b0:56c:123e:3e61 with SMTP id y10-20020a056a00190a00b0056c123e3e61mr60233555pfi.47.1667994064108;
-        Wed, 09 Nov 2022 03:41:04 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id b5-20020a170902650500b00180cf894b67sm8840997plk.130.2022.11.09.03.41.02
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IorQxebq1IkLKdmdug0pO7ZDEecFvRtQoVpI506EQvw=;
+        b=AFLC6uS/eVH6N8Z3t0jR3+9c5QrIVNREkh2y8Vt1+6B3bKP5j/jKPL2K8fJeBkZQ2g
+         cIH0+vQMRD8wx3aOXtdTL1MH/q4ikTZLIDhz2CkNyelRem7g6ph9zo2XmYp49Y3jsrJo
+         ENv63IIqhme2AX8A+/tAkOq1UyH3frsXWlQA953uqvvPocAV/LlXWSOoVv7hi+L0357g
+         f01NJTnm199IoWjhgIcBjzK8k6ORdBY6OKePyG7UuODT7nsustDLB7y1qsdPs6xm8iud
+         30N3ZFF6MbX/jlnr6VFglgZ78aA0WbWL+6KsZbPgeckBcjU526UuvHPeA5onSH8KYxmR
+         +1cA==
+X-Gm-Message-State: ACrzQf08p+2kjVPYD6GH0FwHis9kG2jif/ebcEfeiaKnyxxneTPwecfj
+        2bs9IiIdymeh+fjdQYRONQ==
+X-Google-Smtp-Source: AMsMyM6v+OG1eliq8Ysr/2ZhqW/vBOs8Zq4nHM9Lpv0mKjILtoLiEyH2cl91J+qfv0ho/a8CpEYKZA==
+X-Received: by 2002:a05:6870:58a4:b0:11c:9b6d:f066 with SMTP id be36-20020a05687058a400b0011c9b6df066mr35496743oab.155.1667998788293;
+        Wed, 09 Nov 2022 04:59:48 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i25-20020a9d6519000000b0066cc88749f8sm3914504otl.68.2022.11.09.04.59.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 03:41:03 -0800 (PST)
-Date:   Wed, 9 Nov 2022 19:40:59 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v3 2/5] tools: line name focussed rework
-Message-ID: <Y2uRywwaKnIqfwAB@sol>
-References: <20221011002909.26987-1-warthog618@gmail.com>
- <20221011002909.26987-3-warthog618@gmail.com>
- <CAMRc=Mf=x3iKyvzj63CX1Jgj4fsQKXbHHwcSpLbsvF-teb8Rag@mail.gmail.com>
- <Y2p2u7oCQ/fToeLw@sol>
- <CAMRc=MdYfHpJDfBiG3+F-p+H99wbekmF12VVNhjcMr=Hd9=56w@mail.gmail.com>
- <Y2sJt+IUuBB556+b@sol>
- <CAMRc=MdF6=T_kRGHuxCPK0oO+bPfLFaa=VQd8t=4d9JBKEjoPQ@mail.gmail.com>
+        Wed, 09 Nov 2022 04:59:47 -0800 (PST)
+Received: (nullmailer pid 1538569 invoked by uid 1000);
+        Wed, 09 Nov 2022 12:59:47 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdF6=T_kRGHuxCPK0oO+bPfLFaa=VQd8t=4d9JBKEjoPQ@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20221109104402.45592-1-krzysztof.kozlowski@linaro.org>
+References: <20221109104402.45592-1-krzysztof.kozlowski@linaro.org>
+Message-Id: <166799861348.1536107.4747849372358837118.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,msm8916: convert to dtschema
+Date:   Wed, 09 Nov 2022 06:59:47 -0600
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,131 +68,84 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 12:16:22PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Nov 9, 2022 at 3:00 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
+
+On Wed, 09 Nov 2022 11:44:01 +0100, Krzysztof Kozlowski wrote:
+> Convert Qualcomm MSM8916 pin controller bindings to DT schema.  Keep the
+> parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, their children with
+> '-pins').
 > 
-> [snip]
-> 
-> 
-> > >
-> > > I insist on this one as just a quick glance at the current values of
-> > > gpio-line-names DT properties in the kernel show all kinds of funky
-> > > names - not only including spaces but also various other characters
-> > > like [, ], #, /, - and that not. I think it makes a lot of sense to
-> > > delimit them visually with quotes.
-> > >
-> >
-> > Good grief, what a mess.  Would've been nice to have some naming
-> > conventions in place, but too late now...
-> >
-> > Which reminds me - any guarantees the name, particularly the consumer
-> > name, is valid UTF-8?
-> > If not then need to double check how the Rust bindings deal with that.
-> > Throwing a utf8_error would not be appropriate if it isn't guaranteed to
-> > be UTF-8.
-> >
-> 
-> There's nothing that technically prohibits anyone from using non-UTF8
-> characters and also current libgpiod seems to be handling such chars
-> just fine (just tested to make sure).
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,msm8916-pinctrl.txt | 195 ------------------
+>  .../pinctrl/qcom,msm8916-pinctrl.yaml         | 166 +++++++++++++++
+>  2 files changed, 166 insertions(+), 195 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.yaml
 > 
 
-Exactly - AIUI the names are simply 32 bytes - any 32 bytes.
+Running 'make dtbs_check' with the schema in this patch gives the
+following warnings. Consider if they are expected or the schema is
+incorrect. These may not be new warnings.
 
-There is also the possibility of UTF-8 being truncated mid-character due
-to the 32 byte limit - so even if you put UTF-8 in, it might come out
-invalid when you read it back.
+Note that it is not yet a requirement to have 0 warnings for dtbs_check.
+This will change in the future.
 
-> > > > >Same for the consumer as with your current
-> > > > > version, if the consumer string has spaces in it, it will look like
-> > > > > this: consumer=foo bar. I think consumer="foo bar" would be easier to
-> > > > > parse.
-> > > >
-> > > > For this very reason, the consumer is explicitly listed last, so the
-> > > > consumer name matches everything between the "consumer=" and end of
-> > > > line.
-> > > >
-> > > > Unless consumer names with spaces are very common in the wild then
-> > > > quotes only add more clutter.
-> > > >
-> > >
-> > > We can't know, but instead of putting it last, I'd just treat it like
-> > > every other flag and instead delimit the name with "".
-> >
-> > It is also last based on length predicatability - more predicatable
-> > first, and the other attributes are more predictable.
-> >
-> > >
-> > > The tool is mostly aimed at humans anyway and if someone's brave
-> > > enough to parse the output with a script then a cut-based one-liner is
-> > > all they need, no?
-> > >
-> >
-> > Sure, but don't underestimate the ability of users to complain when a
-> > tool isn't quite as easy to use as they would like.
-> >
-> > Hmmm, how about an option to quote all string attributes?
-> > Say --quoted?
-> > Or if quoted is the default then --unquoted to remove the clutter?
-> >
-> 
-> I don't feel like it's necessary. How would you handle line names with
-> spaces? It would add an additional column? That would be actually
-> harder to parse than quoted names IMO.
-> 
+Full log is available here: https://patchwork.ozlabs.org/patch/
 
-Line names are surrounded by tabs, so the actual issue is line names
-containing tabs. Are there any of those?
 
-And this is just targetting humans (well me at least) anyway.
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-flash-default', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ctp-pwr-en-default', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'gyro-int-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'light-int-default', 'magn-int-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tp-int-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinct
+ rl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8150.dtb
 
-<snip>
-> > > > One thing I was considering was reworking the resolver so it would be
-> > > > more suitable for general use, and move it to core libgpiod so apps
-> > > > could more readily perform line name discovery.
-> > > >
-> > >
-> > > Hmm, I think it's unnecessary clutter in the library. I was thinking
-> > > about whether to put the upcoming fdinfo parsing into the library and
-> > > figured that it's more of a suitable candidate for a new command-line
-> > > tool as the library should focus on the character device exclusively
-> > > IMO.
-> > >
-> >
-> > I think you were right the first time.  The fdinfo is another aspect of
-> > the cdev GPIO uAPI - it isn't just the ioctls.
-> > If the GPIO uAPI were extended to use AIO, would that not go in libgpiod as
-> > well?
-> >
-> > And agreed that fdinfo warrants another tool.
-> >
-> 
-> I was thinking that both gpioinfo could use that (e.g.
-> consumer="foobar",consumer_pid=12345) and we could have something
-> like:
-> 
-> # gpioowner foobar
-> 12345
-> 
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'fg-alert-default', 'gpio-hall-sensor-default', 'gpio-keys-default', 'gpio-led-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mdss', 'motor-en-default', 'muic-i2c-default', 'muic-int-default', 'nfc-default', 'nfc-i2c-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tkey-default', 'tke
+ y-en-default', 'tkey-i2c-default', 'ts-int-default', 'tsp-en-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-grandmax.dtb
+	arch/arm/boot/dts/qcom-msm8916-samsung-grandmax.dtb
 
-Both those make sense to me.
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'fg-alert-default', 'gpio-hall-sensor-default', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mdss', 'motor-en-default', 'muic-i2c-default', 'muic-int-default', 'nfc-default', 'nfc-i2c-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tkey-default', 'tkey-en-default', 'tkey
+ -i2c-default', 'ts-int-default', 'tsp-en-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-e5.dtb
+	arch/arm64/boot/dts/qcom/msm8916-samsung-e7.dtb
+	arch/arm/boot/dts/qcom-msm8916-samsung-e5.dtb
+	arch/arm/boot/dts/qcom-msm8916-samsung-e7.dtb
 
-> > It makes sense to me to add higher level abstractions or functionality
-> > where that greatly simplifies apps.
-> > Speaking from experience, looking up up the line chip/offset based on
-> > name is at best tedious and at worst a serious PITA.
-> > If it isn't available in libgpiod then apps are more likely to do it
-> > out-of-band, such as by using gpioinfo to generate app configuration,
-> > or just stick to specifying lines by chip/offset, which is a bit sad.
-> >
-> > But, as per the unified tool binary, this can always be added later.
-> >
-> 
-> Ok, I'm buying this. Let's think about adding this to the core library.
-> 
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'fg-alert-default', 'gpio-hall-sensor-default', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mdss', 'muic-i2c-default', 'muic-int-default', 'nfc-default', 'nfc-i2c-default', 'panel-vdd3-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tkey-default', 'tkey-en-default', 'tk
+ ey-i2c-default', 'tkey-led-en-default', 'ts-int-default', 'tsp-en-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-a3u-eur.dtb
 
-Oh great - I should've kept my trap shut ;-).
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'fg-alert-default', 'gpio-hall-sensor-default', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mdss', 'muic-i2c-default', 'muic-int-default', 'nfc-default', 'nfc-i2c-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tkey-default', 'tkey-en-default', 'tkey-i2c-default', 'ts-i
+ nt-default', 'tsp-en-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-a5u-eur.dtb
 
-Cheers,
-Kent.
+pinctrl@1000000: 'accel-int-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'gyro-int-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mag-reset-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'proximity-int-default', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'ts-int-reset-default', 'usb-id-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-alcatel-idol347.dtb
+
+pinctrl@1000000: 'accel-irq-default', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'gpio-leds-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mag-reset-default', 'nfc-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'prox-irq-default', 'reg-lcd-en-default', 'sdhc2-cd-default', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'ts-irq-default', 'usb-id-default', 'wcnss-active' do not match any of 
+ the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-huawei-g7.dtb
+
+pinctrl@1000000: 'adv533-int-active', 'adv7533-int-suspend', 'adv7533-switch-active', 'adv7533-switch-suspend', 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'msm-key-volp-n-default', 'msmgpio-leds', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'usb-id-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/apq8016-sbc.dtb
+	arch/arm/boot/dts/qcom-apq8016-sbc.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'button-backlight-default', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'mag-reset-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'usb-id-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-longcheer-l8910.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'fg-alert-default', 'gpio-hall-sensor-default', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'imu-irq-default', 'muic-i2c-default', 'muic-irq-default', 'nfc-default', 'nfc-i2c-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'tkey-default', 'tkey-en-default', 'tkey-i2c-default', 'tkey-led-en-de
+ fault', 'tsp-en-default', 'tsp-irq-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-serranove.dtb
+	arch/arm/boot/dts/qcom-msm8916-samsung-serranove.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'imu-default', 'mag-reset-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'sd-vmmc-en-default', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'touchscreen-default', 'usb-id-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-asus-z00l.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'imu-default', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'touchscreen-default', 'usb-id-default', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-wingtech-wt88047.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'gpio-keys-default', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-samsung-j5.dtb
+
+pinctrl@1000000: 'blsp1-uart1-default', 'blsp1-uart1-sleep', 'blsp1-uart2-default', 'blsp1-uart2-sleep', 'camera-front-default', 'camera-rear-default', 'cci0-default', 'cdc-dmic-lines', 'cdc-pdm-lines', 'ext-mclk-tlmm-lines', 'ext-pri-tlmm-lines', 'ext-pri-ws-line', 'ext-sec-tlmm-lines', 'i2c1-default', 'i2c1-sleep', 'i2c2-default', 'i2c2-sleep', 'i2c3-default', 'i2c3-sleep', 'i2c4-default', 'i2c4-sleep', 'i2c5-default', 'i2c5-sleep', 'i2c6-default', 'i2c6-sleep', 'pmx-sdc1-clk', 'pmx-sdc1-cmd', 'pmx-sdc1-data', 'pmx-sdc2-cd-pin', 'pmx-sdc2-clk', 'pmx-sdc2-cmd', 'pmx-sdc2-data', 'spi1-default', 'spi1-sleep', 'spi2-default', 'spi2-sleep', 'spi3-default', 'spi3-sleep', 'spi4-default', 'spi4-sleep', 'spi5-default', 'spi5-sleep', 'spi6-default', 'spi6-sleep', 'wcnss-active' do not match any of the regexes: '-state$', 'pinctrl-[0-9]+'
+	arch/arm64/boot/dts/qcom/msm8916-mtp.dtb
+
