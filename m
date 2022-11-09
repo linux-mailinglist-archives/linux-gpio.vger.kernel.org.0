@@ -2,93 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EBC7622803
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E9B622824
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:12:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbiKIKIU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 05:08:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36082 "EHLO
+        id S230274AbiKIKMQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 05:12:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbiKIKIT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:08:19 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B22922BEE;
-        Wed,  9 Nov 2022 02:08:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net; s=s31663417;
-        t=1667988490; bh=kd8KI0VvTgYS616XjUKkZ7Ghx5h6RnT4rDbBnzCkVnk=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=hv3S7WHUR5IfwXEOq7pdqvjEH2A3PNbF9tOwgT7dBHgTscbhkZf4wjY7wVlswffGO
-         F1izqEspC3ojgZIkERAK1FkK9XXXNx61lpXaK7tznsEzy29t6uC8CD/5CGvoKsUtWt
-         4QvnYZ2OUY4D1Nj7akVe2HvNmM4Z4nMwq/CY9KJpj48mG1gTqA4gHK91W43TnUmaRm
-         QJ6vezOl4LnqcQv/tUvYXjGlcKvcLXTRUy8haGDvY2Htu+uqw1S2PRGl1n8zCBWFnF
-         e3m6YiuZnZi8DUe6Sj89t0Htm171AvscKAUVZfZrpSy2xTYEeQE+38PIN2h4GIc7BU
-         6no8qE7AiwEAQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from probook ([95.223.44.31]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MS3mz-1oPB450iJX-00TQgw; Wed, 09
- Nov 2022 11:08:10 +0100
-Date:   Wed, 9 Nov 2022 11:08:09 +0100
-From:   Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        linux-spi@vger.kernel.org, openbmc@lists.ozlabs.org,
-        Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 0/8] Nuvoton WPCM450 FIU SPI flash controller
-Message-ID: <Y2t8CYaBfXB0RBkp@probook>
-References: <20221105185911.1547847-1-j.neuschaefer@gmx.net>
- <CACRpkdaUv0=Q4X3VyN6hDZKTrchKpiA-H-aBSnj+8CWU6=TfXQ@mail.gmail.com>
+        with ESMTP id S230297AbiKIKMN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:12:13 -0500
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74F401D316
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 02:12:12 -0800 (PST)
+Date:   Wed, 09 Nov 2022 10:12:02 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=protonmail3; t=1667988729; x=1668247929;
+        bh=sfEzrEjmM7iMLFpX8HnS5oPTyZbUtAIqI+D4BILBLKY=;
+        h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+         Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+         Message-ID:BIMI-Selector;
+        b=QomSysndz1iVh6esKChLFplHtAQDVgMXo6j+KgIy2hBJuVzprQE8mm/Q0Zs+H0C/S
+         QBGlwmFD7Pz65tXR9ZOQh0/OjITBJUhUMSpvQTPkydXlNlta7XlQs/srN+JRGvARga
+         SY2lUtylUtxUGX1xb0XSLem4SkeVvM1d9sfqYiEeK2SLQQ2xo9VQZrgzm4Zs/Q35sx
+         BendQUNY4lr6NhmUC0SNJFcV3q+tEUuf7efYcUWQIHx53uZge/MPKzG+w9fp7xOq+H
+         5Lh3z13TlvOz7lfVbzJ+K/jlrxDRlnau945vZL99R64amZojf5LJDk62xRhxmvS7lb
+         vRseNjlXwdtrg==
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+From:   =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod][PATCH V9 7/8] bindings: rust: Add tests for libgpiod crate
+Message-ID: <0vBj-aJdBA862C_lhhXmDju9vtaHahGOK57lEX4yZx6CRUtH9SGHJgPP_noow8Zs_ghry9tnEfnwAhLe5tuqNlkVPr2dLgAaYEn44ybX3S0=@protonmail.com>
+In-Reply-To: <CAMRc=Mfb+CVA+2fThZqUFWYYmk1dU9NiMMP+rZtbcNFyGehKrQ@mail.gmail.com>
+References: <cover.1667815011.git.viresh.kumar@linaro.org> <d9d71dc939ad39abf262f5442d423c2241336548.1667815011.git.viresh.kumar@linaro.org> <CAMRc=Mfb+CVA+2fThZqUFWYYmk1dU9NiMMP+rZtbcNFyGehKrQ@mail.gmail.com>
+Feedback-ID: 27884398:user:proton
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CACRpkdaUv0=Q4X3VyN6hDZKTrchKpiA-H-aBSnj+8CWU6=TfXQ@mail.gmail.com>
-X-Provags-ID: V03:K1:/uV95BZUCz/kdf3R+oZrIwHNFn3eUKIPK1T4QVkOSBcbBI0KsjV
- pCReinysjykzMdIBCqbJvAO/UNY1Bb/vk85bxxC0FGsXb9i95XaLotvXEqswT3Bsl5IOOZ8
- UDbWMTRUtH+dcZBlmLayitAIyaZsSyqe/QV6ZQJnUpmnPVHlES5X0ZdGLQvumgA4HMKPACR
- o13WovKkBqBa0+8RPUC7g==
-UI-OutboundReport: notjunk:1;M01:P0:+x4fTq1f/R0=;9QDlaw3XAmZieT+Qnphn3tjxCvx
- Gbt1+QJfVDuWUr0NYRcIQIXYS9VkbQ2tqjuLqu7BiCZ1ksSOYoQrY+otHODD/gbUDusE8OgXj
- 9UENzGSWuWwa7dT0nwJwsXYqS6bCDMwyO6iZQ7OSabDR7J6ALuSOEiIMnV1q2qmeiAgOXdqug
- jiaNGyF4pf4UwPdzf4fHzlLsjXjd6Roh2a3Q/48dLcDBzsXRkJ3EFkzBOiEJeTm9ZH1stZnal
- T81NgTbOmY0C+tZRtDyYS3ziyfkkCMms9Ql4BArIgPVUoBZsvg95MypLjv1RZpAn2fEr+ym0I
- YD9plPQuHYhHKZ6L6cIZ3TUpcYnczXLB4eIINxnuNmcRbPtoO2RK2BPaKgnf6zgy1e7ZzZzaF
- R3AnwnI/nlOzWFeLEQnyj2gpMfY5cpTA4U+LgI1SN951J6jUgfo9cBg8EB2RyeqWWY2jun5Bg
- QTHiLEv1mHMHCayXkhOMGU9nUzuHJjKzgjWCsANKRzCCY4nWvsYWXoiXMUmsX2kK+ff55fLt9
- t/JE98/H255T/e4q6E4SAOQMYDsF6cSbM0OPmrR8xoLrDWgSk2cYaB/zve4oiXxHgt9Aqqqfo
- 2KCkEwtTakOSn4P9SwLLpzQBYJAKUMfmUAEoHQZcGSozn+W56QMdpWAanCvgaglh5xY05fumv
- gHm15UbQKlUiVs8MAwPgnjymZJFhxZIUKo0zMYpy909WkwFFSZgnc5cZ23EQquiZdZZdW6QHq
- dyFpihEQAKqFZlZVTGOZx32Ca05rAyj569nSY7XsGjhwtVr1YFIlvPbwK1f2VIeYWVbmKrQZE
- +vCVYtGToAWTOyUgt4wNkCrBHTelGHdsxlNI7VcfkrwJQxGL92JSSvZmcBNiTczETPdmAVBHT
- wQEQKI+gtTzb+kXuRJFPxMUYeZFB+qskkJau1H2MFF5fwhJSuuk6zbIhlxekG1E4Cph+gZaqP
- 0mRT2pQ+C2yskoBXNoalSqx09ts=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 09:41:04AM +0100, Linus Walleij wrote:
-> On Sat, Nov 5, 2022 at 7:59 PM Jonathan Neusch=C3=A4fer
-> <j.neuschaefer@gmx.net> wrote:
->
-> > Jonathan Neusch=C3=A4fer (8):
-> >   pinctrl: nuvoton: wpcm450: Refactor MFSEL setting code
-> >   pinctrl: nuvoton: wpcm450: Fix handling of inverted MFSEL bits
->
-> I just applied these two patches to the pinctrl tree, it looks like they
-> can be applied independently of the others so I just did.
+On Wednesday, November 9th, 2022 at 10:30, Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
 
-Yes, that's the intention.
 
->
-> So no need to resend these or include me on subsequent patch
-> series.
+> On Mon, Nov 7, 2022 at 10:58 AM Viresh Kumar viresh.kumar@linaro.org wrot=
+e:
+>=20
+> > Add tests for the rust bindings, quite similar to the ones in cxx
+> > bindings.
+> >=20
+> > Signed-off-by: Viresh Kumar viresh.kumar@linaro.org
+>=20
+>=20
+> Without modifying udev rules on my system - is there a one-liner I
+> could use to launch the tests? I guess using cargo as sudo is wrong
+> but the executables are there so can I somehow run them all at once as
+> if running `cargo test`?
+>=20
+> Bartosz
 
-Thanks!
-Jonathan
+For running doc tests setting the RUSTDOC env var to a shell script that ru=
+ns rustdoc as sudo may work. You should probably unset it when using cargo =
+doc though to prevent the generated documentation from being owned by root.=
+ For unit tests and integration tests you can set the CARGO_TARGET_X86_64_U=
+NKNOWN_LINUX_GNU_RUNNER (adapt for the target triple of your system) env va=
+r to "sudo" to run just the tests as root using sudo, but keep cargo runnin=
+g as regular user. The runner env var also applies to cargo run and cargo b=
+ench. See [1] for some basic documentation.
+
+[1] https://doc.rust-lang.org/cargo/reference/config.html#targettriplerunne=
+r
+
+Cheers,
+Bj=C3=B6rn
