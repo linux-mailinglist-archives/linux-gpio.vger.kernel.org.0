@@ -2,110 +2,416 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A894C622A8A
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 12:29:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B2C622A9D
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 12:33:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbiKIL3s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 06:29:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47992 "EHLO
+        id S229601AbiKILdo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 06:33:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiKIL3q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 06:29:46 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5C3E0F3;
-        Wed,  9 Nov 2022 03:29:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667993385; x=1699529385;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=weDABe4QTLm1KrZFnbFPqLVoV09bftWW7j0CQtDumik=;
-  b=mZQYm2cDeA3CxZwWXe76Le0CeAWLaGkVSZhky1HQMabQUIq5St6mVVm/
-   Zo2UuNX76snddsfjIu1x0oTUe0YVasRmKY1dW0DArgpyW3bBuykD2lmjq
-   tnCKqtMKE1fYB2P/wvoTCdSCEPIc1IrIewWmWODm/5wWpM86XxGgC/VT1
-   XZu3QXf+/SFjxLxJLwelEamYmJpUUdRio+WN9DFjIxyxwHTnJHAfxcO66
-   03tix07TR0B7AfCNsGKZFYeVsREKFnB3yOaAFI0CEe4M3hrgxFAybHaO0
-   IPBZO5xDv7FDf0+6MBY8WUKxeGHebftVs4GdkrSTlo6zSqXTxbXkp/eCR
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="298475926"
-X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="298475926"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 03:29:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="631223690"
-X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="631223690"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 09 Nov 2022 03:29:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1osjH3-009ibe-33;
-        Wed, 09 Nov 2022 13:29:41 +0200
-Date:   Wed, 9 Nov 2022 13:29:41 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] Add support for software nodes to gpiolib
-Message-ID: <Y2uPJfkYpuI/uHeQ@smile.fi.intel.com>
-References: <20221031-gpiolib-swnode-v2-0-81f55af5fa0e@gmail.com>
+        with ESMTP id S229509AbiKILdo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 06:33:44 -0500
+Received: from m-r2.th.seeweb.it (m-r2.th.seeweb.it [IPv6:2001:4b7a:2000:18::171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED77910FE0
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 03:33:40 -0800 (PST)
+Received: from SoMainline.org (94-209-172-39.cable.dynamic.v4.ziggo.nl [94.209.172.39])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by m-r2.th.seeweb.it (Postfix) with ESMTPSA id BC0D540180;
+        Wed,  9 Nov 2022 12:33:36 +0100 (CET)
+Date:   Wed, 9 Nov 2022 12:33:34 +0100
+From:   Marijn Suijten <marijn.suijten@somainline.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,msm8976: convert to dtschema
+Message-ID: <20221109113334.u2jhlwqgpfubfg5w@SoMainline.org>
+References: <20221108140909.51422-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221031-gpiolib-swnode-v2-0-81f55af5fa0e@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221108140909.51422-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 04:26:45PM -0800, Dmitry Torokhov wrote:
-> This series attempts to add support for software nodes to gpiolib, using
-> software node references. This allows us to convert more drivers to the
-> generic device properties and drop support for custom platform data.
+On 2022-11-08 15:09:09, Krzysztof Kozlowski wrote:
+> Convert Qualcomm MSM8976 pin controller bindings to DT schema.  Keep the
+> parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, their children with
+> '-pins').
 > 
-> To describe a GPIO via software nodes we can create the following data
-> items:
+> Changes during conversion: update the list of non-mux pins (like sdc1)
+> to match Linux driver.
 > 
-> /* Node representing the GPIO controller/GPIO bank */
-> static const struct software_node gpio_bank_b_node = {
->         .name = "B",
-> };
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Thanks for sending this right as we are upstreaming MSM8976!  With one
+question and one nit below:
+
+Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+
+> ---
+>  .../bindings/pinctrl/qcom,msm8976-pinctrl.txt | 183 ------------------
+>  .../pinctrl/qcom,msm8976-pinctrl.yaml         | 137 +++++++++++++
+>  2 files changed, 137 insertions(+), 183 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.yaml
 > 
-> /*
->  * Properties that will be assigned to a software node assigned to
->  * the device that used platform data.
->  */
-> static const struct property_entry simone_key_enter_props[] = {
->         PROPERTY_ENTRY_U32("linux,code", KEY_ENTER),
->         PROPERTY_ENTRY_STRING("label", "enter"),
->         PROPERTY_ENTRY_REF("gpios", &gpio_bank_b_node, 123, GPIO_ACTIVE_LOW),
->         { }
-> };
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> deleted file mode 100644
+> index 70d04d12f136..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
+> +++ /dev/null
+> @@ -1,183 +0,0 @@
+> -Qualcomm MSM8976 TLMM block
+> -
+> -This binding describes the Top Level Mode Multiplexer block found in the
+> -MSM8956 and MSM8976 platforms.
+> -
+> -- compatible:
+> -	Usage: required
+> -	Value type: <string>
+> -	Definition: must be "qcom,msm8976-pinctrl"
+> -
+> -- reg:
+> -	Usage: required
+> -	Value type: <prop-encoded-array>
+> -	Definition: the base address and size of the TLMM register space.
+> -
+> -- interrupts:
+> -	Usage: required
+> -	Value type: <prop-encoded-array>
+> -	Definition: should specify the TLMM summary IRQ.
+> -
+> -- interrupt-controller:
+> -	Usage: required
+> -	Value type: <none>
+> -	Definition: identifies this node as an interrupt controller
+> -
+> -- #interrupt-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 2. Specifying the pin number and flags, as defined
+> -		    in <dt-bindings/interrupt-controller/irq.h>
+> -
+> -- gpio-controller:
+> -	Usage: required
+> -	Value type: <none>
+> -	Definition: identifies this node as a gpio controller
+> -
+> -- #gpio-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 2. Specifying the pin number and flags, as defined
+> -		    in <dt-bindings/gpio/gpio.h>
+> -
+> -- gpio-ranges:
+> -	Usage: required
+> -	Definition:  see ../gpio/gpio.txt
+> -
+> -- gpio-reserved-ranges:
+> -	Usage: optional
+> -	Definition: see ../gpio/gpio.txt
+> -
+> -Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> -a general description of GPIO and interrupt bindings.
+> -
+> -Please refer to pinctrl-bindings.txt in this directory for details of the
+> -common pinctrl bindings used by client devices, including the meaning of the
+> -phrase "pin configuration node".
+> -
+> -The pin configuration nodes act as a container for an arbitrary number of
+> -subnodes. Each of these subnodes represents some desired configuration for a
+> -pin, a group, or a list of pins or groups. This configuration can include the
+> -mux function to select on those pin(s)/group(s), and various pin configuration
+> -parameters, such as pull-up, drive strength, etc.
+> -
+> -
+> -PIN CONFIGURATION NODES:
+> -
+> -The name of each subnode is not important; all subnodes should be enumerated
+> -and processed purely based on their content.
+> -
+> -Each subnode only affects those parameters that are explicitly listed. In
+> -other words, a subnode that lists a mux function but no pin configuration
+> -parameters implies no information about any pin configuration parameters.
+> -Similarly, a pin subnode that describes a pullup parameter implies no
+> -information about e.g. the mux function.
+> -
+> -
+> -The following generic properties as defined in pinctrl-bindings.txt are valid
+> -to specify in a pin configuration subnode:
+> -
+> -- pins:
+> -	Usage: required
+> -	Value type: <string-array>
+> -	Definition: List of gpio pins affected by the properties specified in
+> -		    this subnode.
+> -
+> -		    Valid pins are:
+> -		      gpio0-gpio145
+> -		        Supports mux, bias and drive-strength
+> -
+> -		      sdc1_clk, sdc1_cmd, sdc1_data,
+> -		      sdc2_clk, sdc2_cmd, sdc2_data,
+> -		      sdc3_clk, sdc3_cmd, sdc3_data
+> -		        Supports bias and drive-strength
+> -
+> -- function:
+> -	Usage: required
+> -	Value type: <string>
+> -	Definition: Specify the alternative function to be configured for the
+> -		    specified pins. Functions are only valid for gpio pins.
+> -		    Valid values are:
+> -
+> -		    gpio, blsp_uart1, blsp_spi1, smb_int, blsp_i2c1, blsp_spi2,
+> -		    blsp_uart2, blsp_i2c2, gcc_gp1_clk_b, blsp_spi3,
+> -		    qdss_tracedata_b, blsp_i2c3, gcc_gp2_clk_b, gcc_gp3_clk_b,
+> -		    blsp_spi4, cap_int, blsp_i2c4, blsp_spi5, blsp_uart5,
+> -		    qdss_traceclk_a, m_voc, blsp_i2c5, qdss_tracectl_a,
+> -		    qdss_tracedata_a, blsp_spi6, blsp_uart6, qdss_tracectl_b,
+> -		    blsp_i2c6, qdss_traceclk_b, mdp_vsync, pri_mi2s_mclk_a,
+> -		    sec_mi2s_mclk_a, cam_mclk, cci0_i2c, cci1_i2c, blsp1_spi,
+> -		    blsp3_spi, gcc_gp1_clk_a, gcc_gp2_clk_a, gcc_gp3_clk_a,
+> -		    uim_batt, sd_write, uim1_data, uim1_clk, uim1_reset,
+> -		    uim1_present, uim2_data, uim2_clk, uim2_reset,
+> -		    uim2_present, ts_xvdd, mipi_dsi0, us_euro, ts_resout,
+> -		    ts_sample, sec_mi2s_mclk_b, pri_mi2s, codec_reset,
+> -		    cdc_pdm0, us_emitter, pri_mi2s_mclk_b, pri_mi2s_mclk_c,
+> -		    lpass_slimbus, lpass_slimbus0, lpass_slimbus1, codec_int1,
+> -		    codec_int2, wcss_bt, sdc3, wcss_wlan2, wcss_wlan1,
+> -		    wcss_wlan0, wcss_wlan, wcss_fm, key_volp, key_snapshot,
+> -		    key_focus, key_home, pwr_down, dmic0_clk, hdmi_int,
+> -		    dmic0_data, wsa_vi, wsa_en, blsp_spi8, wsa_irq, blsp_i2c8,
+> -		    pa_indicator, modem_tsync, ssbi_wtr1, gsm1_tx, gsm0_tx,
+> -		    sdcard_det, sec_mi2s, ss_switch,
+> -
+> -- bias-disable:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as no pull.
+> -
+> -- bias-pull-down:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as pull down.
+> -
+> -- bias-pull-up:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as pull up.
+> -
+> -- output-high:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins are configured in output mode, driven
+> -		    high.
+> -		    Not valid for sdc pins.
+> -
+> -- output-low:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins are configured in output mode, driven
+> -		    low.
+> -		    Not valid for sdc pins.
+> -
+> -- drive-strength:
+> -	Usage: optional
+> -	Value type: <u32>
+> -	Definition: Selects the drive strength for the specified pins, in mA.
+> -		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+> -
+> -Example:
+> -
+> -	tlmm: pinctrl@1000000 {
+> -		compatible = "qcom,msm8976-pinctrl";
+> -		reg = <0x1000000 0x300000>;
+> -		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&tlmm 0 0 145>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -
+> -		blsp1_uart2_active: blsp1_uart2_active {
+> -			mux {
+> -				pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> -				function = "blsp_uart2";
+> -			};
+> -
+> -			config {
+> -				pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> -				drive-strength = <2>;
+> -				bias-disable;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..1002a57248f6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.yaml
+> @@ -0,0 +1,137 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,msm8976-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm MSM8976 TLMM pin controller
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +
+> +description:
+> +  Top Level Mode Multiplexer pin controller in Qualcomm MSM8976 SoC.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,msm8976-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  "#interrupt-cells": true
+> +  gpio-controller: true
+> +  "#gpio-cells": true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 73
+> +
+> +  gpio-line-names:
+> +    maxItems: 145
+> +
+> +patternProperties:
+> +  "-state$":
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-msm8976-tlmm-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-msm8976-tlmm-state"
+> +        additionalProperties: false
+> +
+> +$defs:
+> +  qcom-msm8976-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+
+I thought I read earlier that the description shouldn't describe the DT
+format: should this be `state` instead of `subnode` (same in the
+description above)?
+
+> +        items:
+> +          oneOf:
+> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-3][0-9]|14[0-4])$"
+> +            - enum: [ qdsd_clk, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
+> +                      qdsd_data3 sdc1_clk, sdc1_cmd, sdc1_data, sdc1_rclk,
+> +                      sdc2_clk, sdc2_cmd, sdc2_data ]
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +        enum: [ gpio, blsp_uart1, blsp_spi1, smb_int, blsp_i2c1, blsp_spi2,
+> +                blsp_uart2, blsp_i2c2, gcc_gp1_clk_b, blsp_spi3,
+> +                qdss_tracedata_b, blsp_i2c3, gcc_gp2_clk_b, gcc_gp3_clk_b,
+> +                blsp_spi4, cap_int, blsp_i2c4, blsp_spi5, blsp_uart5,
+> +                qdss_traceclk_a, m_voc, blsp_i2c5, qdss_tracectl_a,
+> +                qdss_tracedata_a, blsp_spi6, blsp_uart6, qdss_tracectl_b,
+> +                blsp_i2c6, qdss_traceclk_b, mdp_vsync, pri_mi2s_mclk_a,
+> +                sec_mi2s_mclk_a, cam_mclk, cci0_i2c, cci1_i2c, blsp1_spi,
+> +                blsp3_spi, gcc_gp1_clk_a, gcc_gp2_clk_a, gcc_gp3_clk_a,
+> +                uim_batt, sd_write, uim1_data, uim1_clk, uim1_reset,
+> +                uim1_present, uim2_data, uim2_clk, uim2_reset, uim2_present,
+> +                ts_xvdd, mipi_dsi0, us_euro, ts_resout, ts_sample,
+> +                sec_mi2s_mclk_b, pri_mi2s, codec_reset, cdc_pdm0, us_emitter,
+> +                pri_mi2s_mclk_b, pri_mi2s_mclk_c, lpass_slimbus,
+> +                lpass_slimbus0, lpass_slimbus1, codec_int1, codec_int2,
+> +                wcss_bt, sdc3, wcss_wlan2, wcss_wlan1, wcss_wlan0, wcss_wlan,
+> +                wcss_fm, key_volp, key_snapshot, key_focus, key_home, pwr_down,
+> +                dmic0_clk, hdmi_int, dmic0_data, wsa_vi, wsa_en, blsp_spi8,
+> +                wsa_irq, blsp_i2c8, pa_indicator, modem_tsync, ssbi_wtr1,
+> +                gsm1_tx, gsm0_tx, sdcard_det, sec_mi2s, ss_switch ]
+> +
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      bias-disable: true
+> +      drive-strength: true
+> +      input-enable: true
+> +      output-high: true
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    tlmm: pinctrl@1000000 {
+> +        compatible = "qcom,msm8976-pinctrl";
+> +        reg = <0x1000000 0x300000>;
+> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        gpio-ranges = <&tlmm 0 0 145>;
+
+Shouldn't this be alphabetical (disregarding `#`), where cells <
+controller? (same for interrupt-controller below)
+
+- Marijn
+
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +
+> +        blsp1-uart2-active-state {
+> +            pins = "gpio4", "gpio5", "gpio6", "gpio7";
+> +            function = "blsp_uart2";
+> +            drive-strength = <2>;
+> +            bias-disable;
+> +        };
+> +    };
+> -- 
+> 2.34.1
 > 
-> The code in gpiolib handling software nodes uses the name in the
-> software node representing GPIO controller to locate the actual instance
-> of GPIO controller.
-
-Thank for an update!
-
-I have almost nothing serious except two nit-picks I think we can address:
-- dropping const qualifier for no (?) reason
-- having a superfluous check and extra dev_dbg()
-
-If you are are going to address them, feel free to add my Rb tag to
-the patches 5 & 6.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
