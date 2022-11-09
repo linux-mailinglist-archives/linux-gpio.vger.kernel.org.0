@@ -2,63 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DA6B622ED8
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 16:16:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF2D622EF5
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 16:23:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231869AbiKIPQi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 10:16:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49880 "EHLO
+        id S232004AbiKIPXx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 10:23:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231786AbiKIPQh (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 10:16:37 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBFED1B9D6;
-        Wed,  9 Nov 2022 07:16:36 -0800 (PST)
+        with ESMTP id S232021AbiKIPXj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 10:23:39 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510DD6242;
+        Wed,  9 Nov 2022 07:23:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668006997; x=1699542997;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KY4b7NsDoGsL4SL3fvQGjKv30lEJ6m9IU4VcQT450oQ=;
-  b=DBPXyWSTBf6FH6FY5+vucJ+pi4o26kfXbRSfWAF8aXDzA4BXjlnN1zNw
-   hxpTZSoVup3hBpgw0ajFbCEWXMbIC4kzLuNT9wf7M/6cjckCGbCZVf5LR
-   Zrk9+CIOpa71t/xJSa61PJ0qLQ/93wkJfJec7ben2FUCxdh2WNH4MnnHr
-   vh14GjRooQcDNO0i+O1lg0H3GOYVZDlqOXKnoRqaLqrp8FTb5OSgxjon5
-   95omgE+EE9HtZvKV5XxBzVP1outtg4NHPe9LFC3sskXKNo0kYN5JVA3Hp
-   KoilHAVuV8ZIJAItthGUZkiFmvb8kIhtv4PBDIeaqgV5LSFmlx4KVBrhD
+  t=1668007416; x=1699543416;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=zG5k+jtwrR0fe/HNEmrBVzmcIDN1wrEsaTPW7Qt9gz8=;
+  b=m0OEOo952ueP4RiuxvVIxcEdFd1jBpa3vOnCd1m8sTsKLZx0PxK2n/MS
+   3rQGUjWKcPGfy/tf2Tt/9HVQcWq3HUIi+bI1oGknps/R5G/5eSCWKLV5c
+   RsoXhmP7zSR64ey0uzv+FZT+y8F4yswktfIf1dlokT86Q71QjyOVldBj7
+   Jk6HpnG27HxuE0Lj6Kk6OTz3bl50Y3l9vHvZgdfgiFAm56x4gg94a2tw1
+   sKgdNKqKuXKDI4Xp2ANKEUWruS3Wodfd34YgKwFFIqCVw+EK0v8Epy8Y4
+   VKRnURJXWwr3EN3Uz8g5EBz6ejpJN/DkIrR0mE9ZkpOfhUR0ZH6vr6z9R
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="312162763"
-X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="312162763"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 07:16:36 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="337739221"
+X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
+   d="scan'208";a="337739221"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 07:23:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="811663069"
-X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
-   d="scan'208";a="811663069"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2022 07:16:35 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1osmob-009nj3-16;
-        Wed, 09 Nov 2022 17:16:33 +0200
-Date:   Wed, 9 Nov 2022 17:16:33 +0200
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="881963251"
+X-IronPort-AV: E=Sophos;i="5.96,151,1665471600"; 
+   d="scan'208";a="881963251"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Nov 2022 07:23:34 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 992D1155; Wed,  9 Nov 2022 17:23:58 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/2] gpiolib: of: Prepare of_mm_gpiochip_add_data()
- for fwnode
-Message-ID: <Y2vEUflUsama81aF@smile.fi.intel.com>
-References: <20221109150734.38874-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: Put space between type and data in compound literal
+Date:   Wed,  9 Nov 2022 17:23:56 +0200
+Message-Id: <20221109152356.39868-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221109150734.38874-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,18 +61,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 05:07:33PM +0200, Andy Shevchenko wrote:
-> GPIO library is getting rid of of_node, fwnode should be utilized instead.
-> Prepare of_mm_gpiochip_add_data() for fwnode.
+It's slightly better to read when compound literal data and type
+are separated by a space.
 
-I believe this is the last preparatory patch to get rid of of_node from
-GPIO chip data structure.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-After rc1 I will send that clean up and it would be nice to start next cycle
-of_node free.
+It also standard practice in the kernel:
 
+$ git grep -l '(struct [^()]\+) {' | wc -l
+1384
+
+$ git grep -l '(struct [^()]\+){' | wc -l
+306
+
+ include/linux/pinctrl/pinctrl.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+index 487117ccb1bc..f6ff2590657d 100644
+--- a/include/linux/pinctrl/pinctrl.h
++++ b/include/linux/pinctrl/pinctrl.h
+@@ -40,7 +40,7 @@ struct pingroup {
+ 
+ /* Convenience macro to define a single named or anonymous pingroup */
+ #define PINCTRL_PINGROUP(_name, _pins, _npins)	\
+-(struct pingroup){				\
++(struct pingroup) {				\
+ 	.name = _name,				\
+ 	.pins = _pins,				\
+ 	.npins = _npins,			\
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
