@@ -2,143 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD88162290C
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:52:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2AD622950
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:56:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbiKIKvv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 05:51:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38478 "EHLO
+        id S230176AbiKIK4W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 05:56:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbiKIKvt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:51:49 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3161209E
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 02:51:47 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id j4so25121466lfk.0
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 02:51:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=coHdJafi29GCpCUt/Krw8ZYkusDRjtP3ISPQSVzm+uU=;
-        b=CZW504uUGt8GZtS5yACmXALMcE08tH6uabwUVez/B/HQaK7fjxBi9Gr1G/iNd8Qh5R
-         5QWBDoZs5iBO216tIuiG6hkTymPFF+CV0f/Qxa6LOaGgoYIS0L+ybLSvcdwXB0nFr5BN
-         XvRrS5KJaR2tcgi9ttA9h4FOUdiEZ/13im5BcDHEpigedf47ctKz93BgMLuDhpodOI9q
-         Q+8isS1u1xwvGVm89mlqSlxA3bbzSNcs0Etev5UgqMFNxx7aVol58CCplU6eWrbfpDqg
-         rWwz7xza/w2m5Na8VAk4jaNiJ98XXBrz/pMsipfwWlIhKZZW19sordFG8Ow29utB8DfO
-         runw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=coHdJafi29GCpCUt/Krw8ZYkusDRjtP3ISPQSVzm+uU=;
-        b=6kAk9TIwX1lylrSuyak+cEfIQ3+n9MiIK3SB2r51mlWSOrSs4Y81wMZBv3RFTHLVI3
-         280BVXsQVbesOWphkx6ZQ0CP+Bu00pLM6lU4CtOFh8DokYJPBSvJEFQAp/dF84tdKSyi
-         KaVJIkhE3GDk07SbSuvtS3tPlv0NumVYyRzrcn8IAh2+e+YKq2JH+ihHWIERzR7aj5G3
-         r0gjEAXRpgLsBwlbXnisTfaJsc2wefudWaUrD41lqqLFoEgaHBn0rnHqSH4TzHGZ3SPD
-         9en71nR5l5/bBaoiqOpu4i6mKQRqHhHjn2uHaJkpa7Qd5cm7Zdj6ZXQAXLfZ5Lyzx+UI
-         MAEg==
-X-Gm-Message-State: ANoB5pkUlhkW4h+EryoJyb6lT3ZaXWy6mEiDTtG/B3l2zAnPtfkCZyQ7
-        PwO717KB2Mkfu5+12Bo7TyqZrg==
-X-Google-Smtp-Source: AA0mqf69CuJKkqag1pef3KyZ6TqRSRu6tY0RQtWSpT+VNVpIuARV26DjLK+HTbSZTsrqrCALf6uODA==
-X-Received: by 2002:a05:6512:3502:b0:4b2:2cff:8437 with SMTP id h2-20020a056512350200b004b22cff8437mr6693775lfs.413.1667991105965;
-        Wed, 09 Nov 2022 02:51:45 -0800 (PST)
-Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
-        by smtp.gmail.com with ESMTPSA id l10-20020a056512110a00b004b005150e92sm2167508lfg.127.2022.11.09.02.51.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 02:51:45 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH v2 3/3] ARM: dts: qcom-msm8960-cdp: align TLMM pin configuration with DT schema
-Date:   Wed,  9 Nov 2022 11:51:40 +0100
-Message-Id: <20221109105140.48196-3-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
-References: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S230131AbiKIK4A (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:56:00 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18F2529CB8;
+        Wed,  9 Nov 2022 02:54:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667991276; x=1699527276;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=kZDUrGxLZXD8ZS03E/DY8j/TP1l3/jEAXlKHEYjBUD8=;
+  b=NZOhVjsvKITQbu1GuC4+LuuWB+b1AK/FeoxM1QTVN5Cx89U3HNl7PIaE
+   UV3w6NF3f726ICqheZVsuBh2WnmNLT7+/aaJwFpI4KoOWrc3xEWQtZSjQ
+   uuCr1Qhju/F/Ld/FdlXBlf9XbbwaWpf3t1T5FLxnDuGtgOxq4lrxE3OJC
+   qzY6qXzN3tovqMLro2hEk9Q7vJPp0ulN5QOigk70pwMOTTOC3+ubKeGob
+   kxJ4HIzoq2td7lHM0iUG29G5UQa3r1Wk4xCl+TU72i3hzIl9a/MJeC44A
+   VYCq4VUr+2X/X8Ejvks91o1Mj87tPng89JFndzGZzJ0YCHBqNPrwu7AtN
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="309658674"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="309658674"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 02:54:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="811591459"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="811591459"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2022 02:54:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1osij0-009huC-0s;
+        Wed, 09 Nov 2022 12:54:30 +0200
+Date:   Wed, 9 Nov 2022 12:54:30 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     chengwei <larry.lai@yunjingtech.com>, lee@kernel.org, pavel@ucw.cz,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw,
+        musa.lin@yunjingtech.com, jack.chang@yunjingtech.com,
+        noah.hung@yunjingtech.com, Javier Arteaga <javier@emutex.com>,
+        Nicola Lunghi <nicola.lunghi@emutex.com>
+Subject: Re: [PATCH V3 2/3] pinctrl: Add support pin control for UP board
+ CPLD/FPGA
+Message-ID: <Y2uG5jrYeadqMNav@smile.fi.intel.com>
+References: <20221109090957.13167-1-larry.lai@yunjingtech.com>
+ <20221109090957.13167-3-larry.lai@yunjingtech.com>
+ <CACRpkdZQ7FCtLPEioWXn+MXQhnpuu-EY+CjhEeKqBe=Bvq777g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZQ7FCtLPEioWXn+MXQhnpuu-EY+CjhEeKqBe=Bvq777g@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-DT schema expects TLMM pin configuration nodes to be named with
-'-state' suffix and their optional children with '-pins' suffix.
+On Wed, Nov 09, 2022 at 10:27:59AM +0100, Linus Walleij wrote:
+> On Wed, Nov 9, 2022 at 10:11 AM chengwei <larry.lai@yunjingtech.com> wrote:
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+...
 
----
+> > +config PINCTRL_UPBOARD
+> > +       tristate "UP board FPGA pin controller"
+> > +       depends on ACPI
+> > +       depends on MFD_UPBOARD_FPGA
+> > +       depends on X86
+> 
+> This is Andy territory as it is x86 and ACPI but...
 
-Changes since v1:
-1. Add Rb tag
----
- arch/arm/boot/dts/qcom-msm8960-cdp.dts | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+It seems they forgot paying the respect to the reviewers by Cc'ing them.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8960-cdp.dts b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-index 3a484ac53917..9a3a510f88ca 100644
---- a/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-+++ b/arch/arm/boot/dts/qcom-msm8960-cdp.dts
-@@ -60,33 +60,32 @@ &gsbi5_serial {
- };
- 
- &msmgpio {
--	spi1_default: spi1_default {
--		 mux {
--			pins = "gpio6", "gpio7", "gpio9";
--			function = "gsbi1";
--		 };
--
--		 mosi {
-+	spi1_default: spi1-default-state {
-+		 mosi-pins {
- 			pins = "gpio6";
-+			function = "gsbi1";
- 			drive-strength = <12>;
- 			bias-disable;
- 		 };
- 
--		 miso {
-+		 miso-pins {
- 			pins = "gpio7";
-+			function = "gsbi1";
- 			drive-strength = <12>;
- 			bias-disable;
- 		 };
- 
--		 cs {
-+		 cs-pins {
- 			pins = "gpio8";
-+			function = "gpio";
- 			drive-strength = <12>;
- 			bias-disable;
- 			output-low;
- 		 };
- 
--		 clk {
-+		 clk-pins {
- 			pins = "gpio9";
-+			function = "gsbi1";
- 			drive-strength = <12>;
- 			bias-disable;
- 		 };
+...
+
+> So this looks like it should be uncommented and used or deleted?
+> It just looks unfinished, and this patch is not an RFC.
+
+I'm wondering why it has v3 and not RFC in the Subject. So, no need to spend
+time right now in reviewing this.
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
