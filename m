@@ -2,311 +2,239 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFA28622188
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 03:00:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 911F36222D5
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 04:50:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiKICAk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 8 Nov 2022 21:00:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
+        id S230174AbiKIDuk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 8 Nov 2022 22:50:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229850AbiKICAg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 21:00:36 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD5768C7B
-        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 18:00:27 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id o7so15427425pjj.1
-        for <linux-gpio@vger.kernel.org>; Tue, 08 Nov 2022 18:00:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZL1Y5UTKqoAapLe5Almtm20PAz4W9RFwZ4EtZylDLXw=;
-        b=b80UdXVxxSBRdHPRYkXNEgnS+8MsMJzcw/E7Exgw00w/aCw2Y6zIcIQde1+sbZ+r5s
-         E86teT3/mmzDPu+CYPpuyfyac9G3dfmaOgfJrfjVGI0Cyzm7pvPoz6FA7yJWVC2I21Ud
-         t/tfvia1PIfOV1SShIqkN2gjemHlWhgJ33Zwj4xw6kB9moDqmF2yUDehQ/V90TQBM6jL
-         3xLI7fTEbKD6zsE0F6c+MtEVOgyipaqSaYd5EruMMGrARujWLQXQdtddYx6hLYOt4355
-         ldE2sXE0YLjSzg2utushvF5iZGvZWGR/+G6Qneb/J2kIjYJ+4mqgtE52BU6plmj7uG/y
-         LYvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZL1Y5UTKqoAapLe5Almtm20PAz4W9RFwZ4EtZylDLXw=;
-        b=pkaDcp2xHFDfGyKjhdFqEJXZACdxHiPOuxjUe8guXaim1I/FErmmgBqs7hSwtRpb0F
-         fVxi6FbOoC3cpmSO8YPM95VHEMfacmNzzUJpyBSwY67qdtXnf1CgA3urrYc186Sq2r+n
-         An0FNIOJzGQ+KIehVa+arZMCo9sSbdTIbRWBioXvjJmCRrOx+1HhFi4Suywove2sGQBV
-         m1msXrFYNqEZ6ytNUdkreeoVxlFd1JVMAVhhrZINnKVRak/7PMiWDMmA/AEpwyl/lh8K
-         IM0u2J2H4oW7NTKQdlC67ccLNIGjnULv2z2kSm8D7OGB4bZWSf2sVv2TMabw6UBvgMeO
-         T6/w==
-X-Gm-Message-State: ACrzQf1oBBWwSLdtTssqUlem5GyrJ0dr66g5N9w3Doe0Yj2Bn5dUpAo9
-        CX7KGxNs3lFqlIo+OkhE45xGLQA0pWM=
-X-Google-Smtp-Source: AMsMyM7qOCeCHDvMmmCik3lR4obrPwPIHGxMLLiCeicMN7eTqvz5b75ccxrQOtFbjTdKW2vMJIQZPw==
-X-Received: by 2002:a17:90b:1bc1:b0:213:e2af:b1f4 with SMTP id oa1-20020a17090b1bc100b00213e2afb1f4mr51296944pjb.47.1667959227201;
-        Tue, 08 Nov 2022 18:00:27 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id h10-20020a17090a2eca00b00205db4ff6dfsm6648457pjs.46.2022.11.08.18.00.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Nov 2022 18:00:26 -0800 (PST)
-Date:   Wed, 9 Nov 2022 10:00:23 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v3 2/5] tools: line name focussed rework
-Message-ID: <Y2sJt+IUuBB556+b@sol>
-References: <20221011002909.26987-1-warthog618@gmail.com>
- <20221011002909.26987-3-warthog618@gmail.com>
- <CAMRc=Mf=x3iKyvzj63CX1Jgj4fsQKXbHHwcSpLbsvF-teb8Rag@mail.gmail.com>
- <Y2p2u7oCQ/fToeLw@sol>
- <CAMRc=MdYfHpJDfBiG3+F-p+H99wbekmF12VVNhjcMr=Hd9=56w@mail.gmail.com>
+        with ESMTP id S230264AbiKIDuX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 8 Nov 2022 22:50:23 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 58EC41835F
+        for <linux-gpio@vger.kernel.org>; Tue,  8 Nov 2022 19:50:09 -0800 (PST)
+Received: from loongson.cn (unknown [10.180.13.64])
+        by gateway (Coremail) with SMTP id _____8BxfdpvI2tjXXgFAA--.18063S3;
+        Wed, 09 Nov 2022 11:50:07 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFldsI2tj81MPAA--.24155S2;
+        Wed, 09 Nov 2022 11:50:04 +0800 (CST)
+Subject: Re: [linusw-pinctrl:devel 21/30]
+ drivers/pinctrl/pinctrl-loongson2.c:212:35: warning: excess elements in
+ struct initializer
+To:     kernel test robot <lkp@intel.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        zhanghongchen <zhanghongchen@loongson.cn>
+References: <202211090942.6OVKvIdY-lkp@intel.com>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <e754dd19-a257-71d3-a5c3-18a6239d5c79@loongson.cn>
+Date:   Wed, 9 Nov 2022 11:50:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdYfHpJDfBiG3+F-p+H99wbekmF12VVNhjcMr=Hd9=56w@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <202211090942.6OVKvIdY-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxFldsI2tj81MPAA--.24155S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW3ZrWDtw48Kw43trWDXFWfGrg_yoWDXw43pF
+        W3Aw15GryUJr4DWry5J34UuFy3ua1xA342k3W7G3srXFZ8X3srWw1UKF4Uurs8Gr4jyF1a
+        qr1DWFW5uF15ArDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bx8Fc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+        F7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM2
+        8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+        57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCF04k20xvE74
+        AGY7Cv6cx26rWl4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC2
+        0s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMI
+        IF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF
+        0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87
+        Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07Uio7NUUUUU=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 07:25:27PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Nov 8, 2022 at 4:33 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Nov 08, 2022 at 02:13:20PM +0100, Bartosz Golaszewski wrote:
-> > >  On Tue, Oct 11, 2022 at 2:29 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> > > > Rework the tool suite to support identifying lines by name and to
-> > > > support operating on the GPIO lines available to the user at once, rather
-> > > > than on one particular GPIO chip.
-> > > >
-> > > > All tools, other than gpiodetect, now provide the name to (chip,offset)
-> > > > mapping that was previously only performed by gpiofind. As names are not
-> > > > guaranteed to be unique, a --strict option is provided for all tools to
-> > > > either abort the operation or report all lines with the matching name, as
-> > > > appropriate.
-> > > > By default the tools operate on the first line found with a matching name.
-> > > >
-> > > > Selection of line by (chip,offset) is still supported with a --chip
-> > > > option, though it restricts the scope of the operation to an individual
-> > > > chip.  When the --chip option is specified, the lines are assumed to be
-> > > > identified by offset where they parse as an integer, else by name.
-> > > > To cater for the unusual case where a line name parses as an integer,
-> > > > but is different from the offset, the --by-name option forces the lines
-> > > > to be identified by name.
-> > > >
-> > > > The updated tools are intentionally NOT backwardly compatible with the
-> > > > previous tools. Using old command lines with the updated tools will
-> > > > almost certainly fail, though migrating old command lines is generally as
-> > > > simple as adding a '-c' before the chip.
-> > > >
-> > >
-> > > While at it: how about adding the --consumer/-C switch to specify a
-> > > consumer string other than the name of the program?
-> > >
-> >
-> > Ironically I added that to the Rust version, for the long lived
-> > commands anyway, so it could better emulate the C version for testing
-> > purposes.
-> > But could be generally useful, so ok.
-> >
-> > I only used the long form there to avoid confusion with -c (as they are
-> > visually very similar) and following the principle that rarely used
-> > options only get a long form, so I will omit the short -C option - unless
-> > you insist.
-> >
+
+
+在 2022/11/9 上午9:12, kernel test robot 写道:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+> head:   a2a68e9e10bad391b01a9f4b0f3a81ce03afc2ad
+> commit: 6c2a0a800390dd8f2b61d81a75ee7f62b049cb5e [21/30] pinctrl: pinctrl-loongson2: add pinctrl driver support
+> config: m68k-allyesconfig
+> compiler: m68k-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=6c2a0a800390dd8f2b61d81a75ee7f62b049cb5e
+>          git remote add linusw-pinctrl https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+>          git fetch --no-tags linusw-pinctrl devel
+>          git checkout 6c2a0a800390dd8f2b61d81a75ee7f62b049cb5e
+>          # save the config file
+>          mkdir build_dir && cp config build_dir/.config
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/pinctrl/
 > 
-> I don't see why it would hurt but I'm fine either way.
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
 > 
-
-It would only be a problem if the consumer name matched with a gpiochip,
-and that seems unlikely. And no other use for -C seems likely either, so I
-guess you are right - it wouldn't hurt.
-
-> > > > In addition the individual tools are modified as follows:
-> > > >
-> > > > gpiodetect:
-> > > >
-> > > > Add the option to select individual chips.
-> > > >
-> > > > gpioinfo:
-> > > >
-> > > > Change the focus from chips to lines, so the scope can be
-> > > > an individual line, a subset of lines, all lines on a particular chip,
-> > > > or all the lines available to the user.  For line scope a single line
-> > > > summary is output for each line.  For chip scope the existing format
-> > > > displaying a summary of the chip and each of its lines is retained.
-> > > >
-> > > > Line attributes are consolidated into a list format, and are extended
-> > > > to cover all attributes supported by uAPI v2.
-> > > >
-> > >
-> > > One change in the output that bothers me is the removal of quotation
-> > > marks around the line name and consumer. I did that in v1 to visually
-> > > distinguish between unnamed/unused lines and those that are named. I
-> > > know it's highly unlikely that a line would be named "unnamed" (sic!)
-> > > but still:
-> > >
-> > > line 0: "foo"
-> > > line 1: unnamed
-> > >
-> > > looks more intuitive to me.
-> >
-> > I disagree on this one. In the longer term all lines should be named
-> > and then the quotes just become pointless noise, and require more
-> > work to parse.
-> >
+> All warnings (new ones prefixed by >>):
 > 
-> I insist on this one as just a quick glance at the current values of
-> gpio-line-names DT properties in the kernel show all kinds of funky
-> names - not only including spaces but also various other characters
-> like [, ], #, /, - and that not. I think it makes a lot of sense to
-> delimit them visually with quotes.
+>     drivers/pinctrl/pinctrl-loongson2.c:42:29: error: field 'desc' has incomplete type
+>        42 |         struct pinctrl_desc desc;
+>           |                             ^~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:63:38: error: array type has incomplete element type 'struct pinctrl_pin_desc'
+>        63 | static const struct pinctrl_pin_desc loongson2_pctrl_pins[] = {
+>           |                                      ^~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:62:26: error: implicit declaration of function 'PINCTRL_PIN' [-Werror=implicit-function-declaration]
+>        62 | #define LOONGSON2_PIN(x) PINCTRL_PIN(x, "gpio"#x)
+>           |                          ^~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:64:9: note: in expansion of macro 'LOONGSON2_PIN'
+>        64 |         LOONGSON2_PIN(0),  LOONGSON2_PIN(1),  LOONGSON2_PIN(2),  LOONGSON2_PIN(3),
+>           |         ^~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c: In function 'loongson2_pin_dbg_show':
+>     drivers/pinctrl/pinctrl-loongson2.c:208:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
+>       208 |         seq_printf(s, " %s", dev_name(pcdev->dev));
+>           |         ^~~~~~~~~~
+>           |         bstr_printf
+>     drivers/pinctrl/pinctrl-loongson2.c: At top level:
+>     drivers/pinctrl/pinctrl-loongson2.c:211:21: error: variable 'loongson2_pctrl_ops' has initializer but incomplete type
+>       211 | static const struct pinctrl_ops loongson2_pctrl_ops = {
+>           |                     ^~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:212:10: error: 'const struct pinctrl_ops' has no member named 'get_groups_count'
+>       212 |         .get_groups_count       = loongson2_get_groups_count,
+>           |          ^~~~~~~~~~~~~~~~
+>>> drivers/pinctrl/pinctrl-loongson2.c:212:35: warning: excess elements in struct initializer
+>       212 |         .get_groups_count       = loongson2_get_groups_count,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:212:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c:213:10: error: 'const struct pinctrl_ops' has no member named 'get_group_name'
+>       213 |         .get_group_name         = loongson2_get_group_name,
+>           |          ^~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:213:35: warning: excess elements in struct initializer
+>       213 |         .get_group_name         = loongson2_get_group_name,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:213:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c:214:10: error: 'const struct pinctrl_ops' has no member named 'get_group_pins'
+>       214 |         .get_group_pins         = loongson2_get_group_pins,
+>           |          ^~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:214:35: warning: excess elements in struct initializer
+>       214 |         .get_group_pins         = loongson2_get_group_pins,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:214:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c:215:10: error: 'const struct pinctrl_ops' has no member named 'dt_node_to_map'
+>       215 |         .dt_node_to_map         = pinconf_generic_dt_node_to_map_all,
+>           |          ^~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:215:35: warning: excess elements in struct initializer
+>       215 |         .dt_node_to_map         = pinconf_generic_dt_node_to_map_all,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:215:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c:216:10: error: 'const struct pinctrl_ops' has no member named 'dt_free_map'
+>       216 |         .dt_free_map            = pinctrl_utils_free_map,
+>           |          ^~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:216:35: warning: excess elements in struct initializer
+>       216 |         .dt_free_map            = pinctrl_utils_free_map,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:216:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c:217:10: error: 'const struct pinctrl_ops' has no member named 'pin_dbg_show'
+>       217 |         .pin_dbg_show           = loongson2_pin_dbg_show,
+>           |          ^~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:217:35: warning: excess elements in struct initializer
+>       217 |         .pin_dbg_show           = loongson2_pin_dbg_show,
+>           |                                   ^~~~~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:217:35: note: (near initialization for 'loongson2_pctrl_ops')
+>     drivers/pinctrl/pinctrl-loongson2.c: In function 'loongson2_pmx_set_mux':
+>     drivers/pinctrl/pinctrl-loongson2.c:223:43: error: implicit declaration of function 'pinctrl_dev_get_drvdata'; did you mean 'dev_get_drvdata'? [-Werror=implicit-function-declaration]
+>       223 |         struct loongson2_pinctrl *pctrl = pinctrl_dev_get_drvdata(pcdev);
+>           |                                           ^~~~~~~~~~~~~~~~~~~~~~~
+>           |                                           dev_get_drvdata
+>>> drivers/pinctrl/pinctrl-loongson2.c:223:43: warning: initialization of 'struct loongson2_pinctrl *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+>     In file included from include/linux/container_of.h:5,
+>                      from include/linux/list.h:5,
+>                      from include/linux/module.h:12,
+>                      from drivers/pinctrl/pinctrl-loongson2.c:9:
+>     drivers/pinctrl/pinctrl-loongson2.c: In function 'loongson2_pinctrl_probe':
+>     include/linux/build_bug.h:16:51: error: bit-field '<anonymous>' width not an integer constant
+>        16 | #define BUILD_BUG_ON_ZERO(e) ((int)(sizeof(struct { int:(-!!(e)); })))
+>           |                                                   ^
+>     include/linux/compiler.h:232:33: note: in expansion of macro 'BUILD_BUG_ON_ZERO'
+>       232 | #define __must_be_array(a)      BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+>           |                                 ^~~~~~~~~~~~~~~~~
+>     include/linux/kernel.h:55:59: note: in expansion of macro '__must_be_array'
+>        55 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
+>           |                                                           ^~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:294:35: note: in expansion of macro 'ARRAY_SIZE'
+>       294 |         pctrl->desc.npins       = ARRAY_SIZE(loongson2_pctrl_pins);
+>           |                                   ^~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:296:24: error: implicit declaration of function 'devm_pinctrl_register'; did you mean 'device_register'? [-Werror=implicit-function-declaration]
+>       296 |         pctrl->pcdev = devm_pinctrl_register(pctrl->dev, &pctrl->desc, pctrl);
+>           |                        ^~~~~~~~~~~~~~~~~~~~~
+>           |                        device_register
+>     drivers/pinctrl/pinctrl-loongson2.c: At top level:
+>     drivers/pinctrl/pinctrl-loongson2.c:211:33: error: storage size of 'loongson2_pctrl_ops' isn't known
+>       211 | static const struct pinctrl_ops loongson2_pctrl_ops = {
+>           |                                 ^~~~~~~~~~~~~~~~~~~
+>     drivers/pinctrl/pinctrl-loongson2.c:63:38: warning: 'loongson2_pctrl_pins' defined but not used [-Wunused-variable]
+>        63 | static const struct pinctrl_pin_desc loongson2_pctrl_pins[] = {
+>           |                                      ^~~~~~~~~~~~~~~~~~~~
+>     cc1: some warnings being treated as errors
 > 
-
-Good grief, what a mess.  Would've been nice to have some naming
-conventions in place, but too late now...
-
-Which reminds me - any guarantees the name, particularly the consumer
-name, is valid UTF-8?
-If not then need to double check how the Rust bindings deal with that.
-Throwing a utf8_error would not be appropriate if it isn't guaranteed to
-be UTF-8.
-
-> > >Same for the consumer as with your current
-> > > version, if the consumer string has spaces in it, it will look like
-> > > this: consumer=foo bar. I think consumer="foo bar" would be easier to
-> > > parse.
-> >
-> > For this very reason, the consumer is explicitly listed last, so the
-> > consumer name matches everything between the "consumer=" and end of
-> > line.
-> >
-> > Unless consumer names with spaces are very common in the wild then
-> > quotes only add more clutter.
-> >
 > 
-> We can't know, but instead of putting it last, I'd just treat it like
-> every other flag and instead delimit the name with "".
-
-It is also last based on length predicatability - more predicatable
-first, and the other attributes are more predictable.
-
+> vim +212 drivers/pinctrl/pinctrl-loongson2.c
 > 
-> The tool is mostly aimed at humans anyway and if someone's brave
-> enough to parse the output with a script then a cut-based one-liner is
-> all they need, no?
+>     210	
+>     211	static const struct pinctrl_ops loongson2_pctrl_ops = {
+>   > 212		.get_groups_count	= loongson2_get_groups_count,
+>     213		.get_group_name		= loongson2_get_group_name,
+>     214		.get_group_pins		= loongson2_get_group_pins,
+>     215		.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
+>     216		.dt_free_map		= pinctrl_utils_free_map,
+>     217		.pin_dbg_show		= loongson2_pin_dbg_show,
+>     218	};
+>     219	
+>     220	static int loongson2_pmx_set_mux(struct pinctrl_dev *pcdev, unsigned int func_num,
+>     221				      unsigned int group_num)
+>     222	{
+>   > 223		struct loongson2_pinctrl *pctrl = pinctrl_dev_get_drvdata(pcdev);
+>     224		unsigned long reg = (unsigned long)pctrl->reg_base +
+>     225					loongson2_pmx_groups[group_num].reg;
+>     226		unsigned int mux_bit = loongson2_pmx_groups[group_num].bit;
+>     227		unsigned int val;
+>     228		unsigned long flags;
+>     229	
+>     230		spin_lock_irqsave(&pctrl->lock, flags);
+>     231		val = readl((void *)reg);
+>     232		if (func_num == 0)
+>     233			val &= ~(1<<mux_bit);
+>     234		else
+>     235			val |= (1<<mux_bit);
+>     236		writel(val, (void *)reg);
+>     237		spin_unlock_irqrestore(&pctrl->lock, flags);
+>     238	
+>     239		return 0;
+>     240	}
+>     241	
 > 
+I was test it that base on 6.1-rc3 master branch and it is okay, but in 
+pinctrl tree test that need include following head file.
+--- a/drivers/pinctrl/pinctrl-loongson2.c
++++ b/drivers/pinctrl/pinctrl-loongson2.c
+@@ -11,6 +11,8 @@
+  #include <linux/of.h>
+  #include <linux/pinctrl/pinmux.h>
+  #include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/seq_file.h>
+  #include <asm-generic/io.h>
 
-Sure, but don't underestimate the ability of users to complain when a
-tool isn't quite as easy to use as they would like.
+BRs,
+Yinbo.
 
-Hmmm, how about an option to quote all string attributes?
-Say --quoted?
-Or if quoted is the default then --unquoted to remove the clutter?
-
-<snip>
-> >
-> > > > Remove the --mode, --sec, and --usec options.
-> > > > The combination of hold period and interactive mode provide functionality
-> > > > equivalent to the old --mode options.
-> > > >
-> > >
-> > > I have one problem with that - I think the basic functionality of:
-> > > "take a line, set its value and wait for a signal" would still be
-> > > useful. As it is now, I'm not sure how to make gpioset just hold a
-> > > line without calling the GPIO_V2_LINE_SET_VALUES_IOCTL ioctl
-> > > periodically.
-> > >
-> >
-> > I forgot to mention the daemonize option here, so
-> >
-> > gpioset -z myline=1
-> >
-> > will do that.
-> >
-> > (or
-> >
-> > gpioset -i myline=1
-> >
-> > if you want to keep the process in the foreground.)
-> >
-> > I'll add something to the daemonize help to highlight that it will hold
-> > the line until killed. Is that sufficient?
-> >
-> 
-> What if I don't want to daemonize the program nor open the interactive
-> mode? Why not just make the default behavior of `gpioset foo=active`
-> be: stay alive until interrupted? The current immediate exiting is
-> mostly useless anyway.
-> 
-
-Hmmm, not when used with the --hold-period, so a script could call a
-series of gpiosets to generate a waveform.  Though that doesn't work
-well, as the line is released between sets, and the whole point of
-the toggle option and interactive modes is to provide better
-alternatives for doing that.
-
-So yeah, true - I guess I just blindly followed the v1 behaviour on that.
-- the standard behaviour should be to not exit.
-The only exception being a zero-terminated toggle sequence.
-
-That should also reduce the chance of users complaining that gpioset
-doesn't work where they assume the set persists after gpioset exists.
-OTOH I'm willing to bet we get at least one complaint that gpioset
-hangs... :|.
-
-<snip>
-> 
-> > > > +
-> > > > +// minimal version similar to tools-common that indicates if a line should be
-> > > > +// printed rather than storing details into the resolver.
-> > > > +// Does not die on non-unique lines.
-> > >
-> > > C-style comments only please. Same elsewhere.
-> > >
-> >
-> > Yeah - sorry again - I'm so used to that style that I don't even notice
-> > I'm doing it.
-> >
-> > > <snip>
-> > >
-> > > I like the new tools in general. I don't have many issues with the
-> > > code - you are a much better coder than I am.
-> >
-> > That's being a bit harsh.
-> >
-> > One thing I was considering was reworking the resolver so it would be
-> > more suitable for general use, and move it to core libgpiod so apps
-> > could more readily perform line name discovery.
-> >
-> 
-> Hmm, I think it's unnecessary clutter in the library. I was thinking
-> about whether to put the upcoming fdinfo parsing into the library and
-> figured that it's more of a suitable candidate for a new command-line
-> tool as the library should focus on the character device exclusively
-> IMO.
-> 
-
-I think you were right the first time.  The fdinfo is another aspect of
-the cdev GPIO uAPI - it isn't just the ioctls.
-If the GPIO uAPI were extended to use AIO, would that not go in libgpiod as
-well?
-
-And agreed that fdinfo warrants another tool.
-
-It makes sense to me to add higher level abstractions or functionality
-where that greatly simplifies apps.
-Speaking from experience, looking up up the line chip/offset based on
-name is at best tedious and at worst a serious PITA.
-If it isn't available in libgpiod then apps are more likely to do it
-out-of-band, such as by using gpioinfo to generate app configuration,
-or just stick to specifying lines by chip/offset, which is a bit sad.
-
-But, as per the unified tool binary, this can always be added later.
-
-Cheers,
-Kent.
