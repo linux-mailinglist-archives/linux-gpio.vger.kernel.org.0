@@ -2,126 +2,134 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E2CB62288D
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:36:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 252BA6228A9
+	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 11:40:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbiKIKgV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 05:36:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52728 "EHLO
+        id S230112AbiKIKkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 05:40:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbiKIKgU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:36:20 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20FB9193FE
-        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 02:36:18 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id io19so16694789plb.8
-        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 02:36:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vKGPZN6CaDW/W758veLJq3VgUkMyYMOe083MaAE+njE=;
-        b=qyj1MuiRQphz1fnb+vlFQdQtYr0Ri12Ok+re1ZblcrJ/EWFMUZOiGlPaEfdfnwspTk
-         yz6oTFT3Bmtx9V+bHO7L8FlQN1fRQ1ktXWa29WuoQysPHO1GBnTN8ZJp6SFJXXDv7qjb
-         G2O4OlYPZZYaSTZsSxas55YCtlyP3y5zJxBrTuneg3HOt3yQTbNgMPYuqJxzijjFIYL2
-         AiMZZzpEghz/bSSwPrOhNthwTv95rIyGDa6ewOLYT0lcXFDTHKUT9Gij1hMoEmlHyDwR
-         o+HzPdtWfnHfmuVmjxSRUhbei5tWjUY0yZPqRNtb8FzDwvZ9Ee7xHZX22td8FMseAmaZ
-         3j+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vKGPZN6CaDW/W758veLJq3VgUkMyYMOe083MaAE+njE=;
-        b=4dHfZ19RIVeQaCp3oBCjydCbezpGw9iOEfSxeYXAqWdbMq/uuga/w3ng0aKXLDkDlY
-         c5Ct/zDRX9qOHFN/VopK85sbYjxCYarqyrn3VjLn8pRbF9aEdtYM1hoKRK+zGm8DZx/r
-         DtT8T8FwC9w8S0imnhyTmrMaZw1t0xnanhhUQQERaHeZZ31+rc3B1gmvivfDnj88zWba
-         J3Cu8586fK6soXwkI/juevAARdF28OWNSNBoBrEBVzbU/cXLdPoxtl6yp7cJlTshElBE
-         uCOmSULc7YV2teOv7y2Rzm3jchdWGGQeovxV6oPQ+9VPs8RjZF9J0lRZEZL3rWQbL6jA
-         DOpA==
-X-Gm-Message-State: ACrzQf3LSwZAjCVs2nRMFBqioOQrEVJe0jKljb6R9tbF331P7Av9mYdv
-        mRNCwTGnZ0yr0EmdfBviz4I=
-X-Google-Smtp-Source: AMsMyM71W+fraSHnfAqb+uWi6Nu1QSnlwFlhgddMHBJdNflCaHTZFKA8kL+uQOZr/q2gn7oH0j8Fkg==
-X-Received: by 2002:a17:90a:f0d1:b0:213:473e:6ff0 with SMTP id fa17-20020a17090af0d100b00213473e6ff0mr60451670pjb.87.1667990177571;
-        Wed, 09 Nov 2022 02:36:17 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id mp4-20020a17090b190400b0020647f279fbsm893684pjb.29.2022.11.09.02.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 02:36:17 -0800 (PST)
-Date:   Wed, 9 Nov 2022 18:36:09 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-        y86-dev <y86-dev@protonmail.com>
-Subject: Re: [libgpiod][PATCH V9 7/8] bindings: rust: Add tests for libgpiod
- crate
-Message-ID: <Y2uCmSiSatVQD/Hb@sol>
-References: <cover.1667815011.git.viresh.kumar@linaro.org>
- <d9d71dc939ad39abf262f5442d423c2241336548.1667815011.git.viresh.kumar@linaro.org>
- <CAMRc=Mfb+CVA+2fThZqUFWYYmk1dU9NiMMP+rZtbcNFyGehKrQ@mail.gmail.com>
- <Y2t30tYwSqGW8HlA@sol>
+        with ESMTP id S229802AbiKIKkP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 05:40:15 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739FB1C10D;
+        Wed,  9 Nov 2022 02:40:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667990414; x=1699526414;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5bHYyqP5M5DI4ZLT2QWbl6fGoRoL44686dEs/SdCwz0=;
+  b=bFQK1aWJdnVgaD2k3h4NeEcAMbqMD5gmkE62yR6cbvWpOobTKcmYwekw
+   YgbfFRAZNnyqUssYRFbOsbDNjRIUXJnGKxgR/rNUb1bPPEtjsWTVngZfm
+   1Gk1aJiTrwzC8N6zw3y1CgkSuckFDArH7+you43MTAMBKAC2+/WcgYzYR
+   Vu/m0Srgb5zsl2eWzVd+i3rSGkKkLfGGUD4mVRN2zXk8Y99l56Fv3vhBq
+   vtj6BAk3Hc2r161gKSSpmuf9porbBcjvTIkB69lvCDHS51RjKBln3iXla
+   AXnkKLXsNuOcpUgQA12pZvS3SFAxKo4grqLh7WJne2FXCeRxUiWiaUz26
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="298467163"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="298467163"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Nov 2022 02:40:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10525"; a="811587922"
+X-IronPort-AV: E=Sophos;i="5.96,150,1665471600"; 
+   d="scan'208";a="811587922"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 09 Nov 2022 02:40:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1osiV7-009hZ3-29;
+        Wed, 09 Nov 2022 12:40:09 +0200
+Date:   Wed, 9 Nov 2022 12:40:09 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] pinctrl: intel: Enumerate PWM device when
+ community has a capabilitty
+Message-ID: <Y2uDifs0CkPl+P0X@smile.fi.intel.com>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-7-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbVekP0kFpwexpb3NhqRSouNW7FhhRpSK0yRQTrJAGt4A@mail.gmail.com>
+ <Y2t5ZXM0Oihz/LDK@smile.fi.intel.com>
+ <CACRpkda6uDOEXybduFbTe0yXzLMaQ8x0UORZAH-U0SOTWHkF-Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y2t30tYwSqGW8HlA@sol>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkda6uDOEXybduFbTe0yXzLMaQ8x0UORZAH-U0SOTWHkF-Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 09, 2022 at 05:50:10PM +0800, Kent Gibson wrote:
-> On Wed, Nov 09, 2022 at 10:30:55AM +0100, Bartosz Golaszewski wrote:
-> > On Mon, Nov 7, 2022 at 10:58 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Wed, Nov 09, 2022 at 11:08:04AM +0100, Linus Walleij wrote:
+> On Wed, Nov 9, 2022 at 10:56 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Wed, Nov 09, 2022 at 10:08:51AM +0100, Linus Walleij wrote:
+
+...
+
+> > > I guess I can be convinced that this hack is the lesser evil :D
 > > >
-> > > Add tests for the rust bindings, quite similar to the ones in cxx
-> > > bindings.
-> > >
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > Without modifying udev rules on my system - is there a one-liner I
-> > could use to launch the tests? I guess using cargo as sudo is wrong
-> > but the executables are there so can I somehow run them all at once as
-> > if running `cargo test`?
-> > 
+> > > What is it in the platform that makes this kind of hacks necessary?
+> >
+> > The PWM capability is discoverable by the looking for it in the pin
+> > control IP MMIO, it's not a separate device, but a sibling (child?)
+> > of the pin control, that's not a separate entity.
 > 
-> I use:
+> OK I get it.
 > 
-> sudo /home/dev/.cargo/bin/cargo test
+> > Moreover, not every pin control _community_ has that capability (capabilities
+> > are on the Community level and depends on ACPI representation of the
+> > communities themself - single device or device per community - the PWM may or
+> > may not be easily attached.
 > 
-> so using the cargo installed in the dev account on my test machine.
-> 
-> That way I can build, clippy and generate docs etc as dev, but require
-> sudo for the tests.
-> 
-> I would love to know how to do it without the sudo, but as you suggest,
-> that would probably require some udev magic or something to set the
-> configfs and sysfs file permissions, as well as the gpiochips themselves,
-> and given the above works for me I've not had sufficient incentive to
-> look into it.
-> 
+> OK I think I understand it a bit, if ACPI thinks about the PWM
+> as "some feature of the community" then that is how it is, we have
+> this bad fit between device tree and Linux internals at times as well,
+> then spawning a device from another one is the way to go, we need
+> to consider the option that it is Linux that is weird at times, not the
+> HW description.
 
-And just to be clear, my libgpiod test machine is a VM, so running as
-root isn't a huge issue.
+The problem here is not the impossibility to do the things. The problem is
+that things are done and validated on a Windows system. After that it close
+to impossible to update the firmware or perform any architectural changes.
 
-Being able to run tests against gpiosim on a real machine, without
-requiring root, would be really nice to have though.
+OTOH, announcing the separate device out of the existing MMIO space doesn't
+sound right from the software point of view that should follow the hardware
+representation.
 
-Cheers,
-Kent.
+Ideally, this should be an adaptive MFD-like device, but it makes things
+even more complicated than has been discussed already. (Note, that some
+of the pin control drivers are enumerated as platform devices, and that
+code should also be taken into account)
+
+...
+
+> > That said, I agree that this looks not nice, but that's all what
+> > Mika and me can come up with to make all this as little ugly and
+> > intrusive as possible.
+> 
+> I can live with it, rough consensus and running code.
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
