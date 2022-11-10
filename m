@@ -2,146 +2,207 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF796623916
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 02:44:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EE626239D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 03:37:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231893AbiKJBoe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 20:44:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42780 "EHLO
+        id S232226AbiKJChA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 21:37:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231925AbiKJBo0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 20:44:26 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AA4DA275E2;
-        Wed,  9 Nov 2022 17:44:25 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A0CFD6E;
-        Wed,  9 Nov 2022 17:44:31 -0800 (PST)
-Received: from slackpad.fritz.box (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2A0D3F703;
-        Wed,  9 Nov 2022 17:44:23 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>
-Cc:     Icenowy Zheng <uwu@icenowy.me>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-sunxi@lists.linux.dev
-Subject: [RFC PATCH 2/2] pinctrl: sunxi: Add support for the Allwinner V5 pin controller
-Date:   Thu, 10 Nov 2022 01:42:55 +0000
-Message-Id: <20221110014255.20711-3-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.35.5
-In-Reply-To: <20221110014255.20711-1-andre.przywara@arm.com>
-References: <20221110014255.20711-1-andre.przywara@arm.com>
+        with ESMTP id S232213AbiKJCg7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 21:36:59 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D19201BD;
+        Wed,  9 Nov 2022 18:36:57 -0800 (PST)
+Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N75W54m3ZzJnZQ;
+        Thu, 10 Nov 2022 10:33:53 +0800 (CST)
+Received: from [10.174.179.163] (10.174.179.163) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 10 Nov 2022 10:36:54 +0800
+Message-ID: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
+Date:   Thu, 10 Nov 2022 10:36:53 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v2] gpiolib: fix memory leak in gpiochip_setup_dev
+Content-Language: en-US
+To:     Kent Gibson <warthog618@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        <linux@roeck-us.net>
+CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <liwei391@huawei.com>,
+        <yuancan@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <Y2ttmcV+PFDUZR3l@sol>
+ <20221109093120.3128541-1-zengheng4@huawei.com>
+ <Y2u9bLIohQ8eFTY1@smile.fi.intel.com> <Y2xTSyce8WfLdtge@sol>
+From:   Zeng Heng <zengheng4@huawei.com>
+In-Reply-To: <Y2xTSyce8WfLdtge@sol>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.163]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The Allwinner V5 contains pins in all 10 possible pin banks.
-Use the newly introduced DT based pinctrl driver to describe just the
-generic pinctrl properties, so advertise the number of pins per bank
-and the interrupt capabilities. The actual function/mux assignment is
-taken from the devicetree.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- drivers/pinctrl/sunxi/Kconfig            |  5 +++
- drivers/pinctrl/sunxi/Makefile           |  1 +
- drivers/pinctrl/sunxi/pinctrl-sun8i-v5.c | 52 ++++++++++++++++++++++++
- 3 files changed, 58 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-v5.c
+On 2022/11/10 9:26, Kent Gibson wrote:
+> On Wed, Nov 09, 2022 at 04:47:08PM +0200, Andy Shevchenko wrote:
+>> On Wed, Nov 09, 2022 at 05:31:20PM +0800, Zeng Heng wrote:
+>>> gcdev_register & gcdev_unregister call device_add & device_del to
+>>> request/release source. But in device_add, the dev->p allocated by
+>>> device_private_init is not released by device_del.
+>> First of all, we refer to the functions like func().
+Thanks, it would be updated in next version.
+> Further to this, the description of the problem could be clearer -
+> it would be helpful to indicate the code path that triggers the problem
+> - it is gpiochip_sysfs_register() returning an error?
+>
+>>> So when calling gcdev_unregister to release gdev, it needs put_device
+>>> to release dev in the following.
+>>>
+>>> Otherwise, kmemleak would report memory leak such as below:
+>>>
+>>> unreferenced object 0xffff88810b406400 (size 512):
+>>>    comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
+>>>    hex dump (first 32 bytes):
+>>>      00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+>>>      ff ff ff ff ff ff ff ff a0 5e 23 90 ff ff ff ff  .........^#.....
+>>>    backtrace:
+>> Second, read Submitting Patches on how to provide your backtraces in the
+>> message body.
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index a78fdbbdfc0c..6b8ea56c08fd 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -131,4 +131,9 @@ config PINCTRL_SUN50I_H616_R
- 	default ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN8I_V5
-+	bool "Support for the Allwinner V5 PIO"
-+	default MACH_SUN8I
-+	select PINCTRL_SUNXI
-+
- endif
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index f5bad7a52951..5b289e18bd5a 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A83T_R)	+= pinctrl-sun8i-a83t-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_V3S)		+= pinctrl-sun8i-v3s.o
-+obj-$(CONFIG_PINCTRL_SUN8I_V5)		+= pinctrl-sun8i-v5.o
- obj-$(CONFIG_PINCTRL_SUN20I_D1)		+= pinctrl-sun20i-d1.o
- obj-$(CONFIG_PINCTRL_SUN50I_H5)		+= pinctrl-sun50i-h5.o
- obj-$(CONFIG_PINCTRL_SUN50I_H6)		+= pinctrl-sun50i-h6.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-v5.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-v5.c
-new file mode 100644
-index 000000000000..402b1c915e04
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-v5.c
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Allwinner V5 SoC pinctrl driver.
-+ *
-+ * Copyright (C) 2022 Arm Ltd.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const unsigned int v5_irq_bank_map[] = { 0, 1, 5, 6, 7 };
-+
-+static const u8 v5_irq_bank_muxes[SUNXI_PINCTRL_MAX_BANKS] =
-+/*       PA PB PC PD PE PF PG PH */
-+        { 6, 6, 0, 0, 0, 6, 6, 6 };
-+
-+static const u8 v5_nr_bank_pins[SUNXI_PINCTRL_MAX_BANKS] =
-+/*        PA  PB  PC  PD  PE  PF  PG  PH  PI  PJ */
-+        { 16, 11, 17, 23, 18,  7, 14, 16, 17, 18 };
-+
-+static struct sunxi_pinctrl_desc v5_pinctrl_data = {
-+	.irq_banks = ARRAY_SIZE(v5_irq_bank_map),
-+	.irq_bank_map = v5_irq_bank_map,
-+	.irq_read_needs_mux = true,
-+	.io_bias_cfg_variant = BIAS_VOLTAGE_PIO_POW_MODE_SEL,
-+};
-+
-+static int v5_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_dt_table_init(pdev, v5_nr_bank_pins,
-+					   v5_irq_bank_muxes,
-+					   &v5_pinctrl_data);
-+}
-+
-+static const struct of_device_id v5_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun8i-v5-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver v5_pinctrl_driver = {
-+	.probe	= v5_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun8i-v5-pinctrl",
-+		.of_match_table	= v5_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(v5_pinctrl_driver);
--- 
-2.35.5
+Thanks, it would be updated in next version.
+
+>>
+>>>      [<00000000a58ee5fe>] kmalloc_trace+0x22/0x110
+>>>      [<0000000045fe2058>] device_add+0xb34/0x1130
+>>>      [<00000000d778b45f>] cdev_device_add+0x83/0xe0
+>>>      [<0000000089f948ed>] gpiolib_cdev_register+0x73/0xa0
+>>>      [<00000000a3a8a316>] gpiochip_setup_dev+0x1c/0x70
+>>>      [<00000000787227b4>] gpiochip_add_data_with_key+0x10f6/0x1bf0
+>>>      [<000000009ac5742c>] devm_gpiochip_add_data_with_key+0x2e/0x80
+>>>      [<00000000bf2b23d9>] xra1403_probe+0x192/0x1b0 [gpio_xra1403]
+>>>      [<000000005b5ef2d4>] spi_probe+0xe1/0x140
+>>>      [<000000002b26f6f1>] really_probe+0x17c/0x3f0
+>>>      [<00000000dd2dad9c>] __driver_probe_device+0xe3/0x170
+>>>      [<000000005ca60d2a>] device_driver_attach+0x34/0x80
+>>>      [<00000000e9db90db>] bind_store+0x10b/0x1a0
+>>>      [<00000000e2650f8a>] drv_attr_store+0x49/0x70
+>>>      [<0000000080a80b2b>] sysfs_kf_write+0x8c/0xb0
+>>>      [<00000000a28b45b9>] kernfs_fop_write_iter+0x216/0x2e0
+>>>
+>>> unreferenced object 0xffff888100de9800 (size 512):
+>>>    comm "python3", pid 264, jiffies 4294737615 (age 33.514s)
+>>>    hex dump (first 32 bytes):
+>>>      00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+>>>      ff ff ff ff ff ff ff ff a0 5e 63 a1 ff ff ff ff  .........^c.....
+>>>    backtrace:
+>>>      [<00000000bcc571d0>] kmalloc_trace+0x22/0x110
+>>>      [<00000000eeb06124>] device_add+0xb34/0x1130
+>>>      [<000000007e5cd2fd>] cdev_device_add+0x83/0xe0
+>>>      [<000000008f6bcd3a>] gpiolib_cdev_register+0x73/0xa0
+>>>      [<0000000012c93b24>] gpiochip_setup_dev+0x1c/0x70
+>>>      [<00000000a24b646a>] gpiochip_add_data_with_key+0x10f6/0x1bf0
+>>>      [<000000000c225212>] tpic2810_probe+0x16e/0x196 [gpio_tpic2810]
+>>>      [<00000000b52d04ff>] i2c_device_probe+0x651/0x680
+>>>      [<0000000058d3ff6b>] really_probe+0x17c/0x3f0
+>>>      [<00000000586f43d3>] __driver_probe_device+0xe3/0x170
+>>>      [<000000003f428602>] device_driver_attach+0x34/0x80
+>>>      [<0000000040e91a1b>] bind_store+0x10b/0x1a0
+>>>      [<00000000c1d990b9>] drv_attr_store+0x49/0x70
+>>>      [<00000000a23bfc22>] sysfs_kf_write+0x8c/0xb0
+>>>      [<00000000064e6572>] kernfs_fop_write_iter+0x216/0x2e0
+>>>      [<00000000026ce093>] vfs_write+0x658/0x810
+>>>
+>>> Because at the point of gpiochip_setup_dev here, where dev.release
+>>> does not set yet, calling put_device would cause the warning of
+>>> no release function and double-free in the following fault handler
+>>> route (when kfree dev_name). So directly calling kfree to release
+>>> dev->p here in case of memory leak.
+> Again, this could be clearer.  The dev->p is normally freed by
+> device_release() - why is that not happening in this case?
+> (as put_device() is never called in this path)
+>
+> The double free you see if you do call put_device() appears to be due to
+> different expectations as to the cleanup that gpiochip_setup_dev() will
+> perform on error, depending on where it is called. gpiochip_setup_devs()
+> assumes any cleanup is performed by gpiochip_setup_dev(), while
+> gpiochip_add_data_with_key() assumes that it hasn't performed any cleanup.
+>
+> Having gpiochip_setup_dev() perform its own cleanup makes the most sense
+> to me, so gpiochip_add_data_with_key() should be changed to allow for
+> that.
+
+
+Right, the cleanup route of gpiochip_add_data_with_key() & 
+gpiochip_setup_dev()
+
+has to be considered comprehensively after any possible cases of fault 
+injections.
+
+
+>> ...
+>>
+>>> @@ -539,6 +539,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>>>   
+>>>   err_remove_device:
+>>>   	gcdev_unregister(gdev);
+>>> +	kfree(gdev->dev.p);
+>>>   	return ret;
+>> Third, I do not believe it's a correct fix.
+>> Have you read comments around device_del() / etc.?
+
+Yes, not only the comments I read, but also the device_del() implement code.
+
+Releasing the dev->p pointer is not the business with device_del(), but 
+it's relied on
+
+put_device() calling release function.
+
+Turning back here, the release function is not set yet at this point, 
+there is a gap
+
+between device_add() and set release function pointer.
+
+That's the reason why choose to free dev->p explicitly as the mail 
+mentioned above.
+
+> I agree - this is not the correct fix.  The correct fix is to trigger the
+> normal cleanup mechanism, so put_device().
+> The fact that that triggers a warning:
+>
+> "Device '%s' does not have a release() function, it is broken and must be
+> fixed. See Documentation/core-api/kobject.rst.\n"
+>
+> is an indicator that dev.release should be set earlier.
+> If gpiodevice_release() is not appropriate, or cannot be modified to deal
+> with the device state at that point, then an appropriate interim release
+> function should be set.
+>
+> And, as mentioned above, gpiochip_add_data_with_key() needs to be modified
+> to allow for gpiochip_setup_dev() cleaning up its own mess.
+>
+> That is my take, but that is just from perusing the code so I may be
+> totally off base.  Either way, an ACK/NACK on this from a maintainer or
+> other gpiolib expert would be helpful to expiditing a solution.
+>
+> Cheers,
+> Kent.
+
+Yes, exactly.
+
+Thanks to all,
+
+Zeng Heng
 
