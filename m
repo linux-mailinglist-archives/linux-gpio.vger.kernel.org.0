@@ -2,74 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA0F1623AD4
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 05:09:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12B9F623C58
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 08:07:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbiKJEJW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 23:09:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59358 "EHLO
+        id S232728AbiKJHHi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 02:07:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232450AbiKJEJV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 23:09:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B81C27CD5;
-        Wed,  9 Nov 2022 20:09:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 262A9B82089;
-        Thu, 10 Nov 2022 04:09:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14842C433C1;
-        Thu, 10 Nov 2022 04:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668053356;
-        bh=3FEJA0KkULpgej9nxe0ZxnRNLWUnIRECmTmwA/pWKFw=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=eulmPpg88/YWoGE9kDGoaBgroCfBUDoaIEfYyLhMMJ8yvswywZhzaleZXbJMQ6+uz
-         2Uy8o693DhAcmZG3rKA2gzIdpo5Tqll2X7bUgAY0FsFnS74XLSyUUf2zbPdVzI/5Uz
-         DIlwDVQaWLbCGX8ziBxLFdIi21Y9zl6+UsfvGsPyR6/nJ/2QLTByGbMTOnsk3AN896
-         EWbfY5NtX9SLfEfTkXfjryn6t6jdgPwlY9dbYKfaYqRa1v2tfofsa8bBuA0Kyl/HBe
-         xbK/MWlf8avjFDwNjI2zf0o72q7eF1vZniyXL8+0h/vL11B80suNOZTaeU7FwHiTUg
-         PQ7voWD2V2jsA==
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     agross@kernel.org, konrad.dybcio@somainline.org,
-        robh+dt@kernel.org, krzysztof.kozlowski@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 1/3] dt-bindings: pinctrl: qcom,msm8960: convert to dtschema
-Date:   Wed,  9 Nov 2022 22:09:09 -0600
-Message-Id: <166805334843.800572.5669261969891914293.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.37.1
-In-Reply-To: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
-References: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S232439AbiKJHHh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 02:07:37 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2B131DF6
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 23:07:36 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1ej-0006Ue-Ex; Thu, 10 Nov 2022 08:07:21 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1eg-003Omm-Vx; Thu, 10 Nov 2022 08:07:19 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot1eh-00FZqn-40; Thu, 10 Nov 2022 08:07:19 +0100
+Date:   Thu, 10 Nov 2022 08:07:18 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/6] pwm: Add a stub for devm_pwmchip_add()
+Message-ID: <20221110070718.bqpam7h3hjf2hkip@pengutronix.de>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-2-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hbekflahz2byd2ag"
+Content-Disposition: inline
+In-Reply-To: <20221108142226.63161-2-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 9 Nov 2022 11:51:38 +0100, Krzysztof Kozlowski wrote:
-> Convert Qualcomm MSM8960 pin controller bindings to DT schema.  Keep the
-> parsing of pin configuration subnodes consistent with other Qualcomm
-> schemas (children named with '-state' suffix, their children with
-> '-pins').
-> 
-> 
 
-Applied, thanks!
+--hbekflahz2byd2ag
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[2/3] ARM: dts: qcom-msm8960: use define for interrupt constants
-      commit: 33c21ece867e845123a5c10d4384aea58cf6a21a
-[3/3] ARM: dts: qcom-msm8960-cdp: align TLMM pin configuration with DT schema
-      commit: 0bc33727c491dfe07e19a11f1610f0a632e0e935
+Hello=20
 
-Best regards,
--- 
-Bjorn Andersson <andersson@kernel.org>
+On Tue, Nov 08, 2022 at 04:22:21PM +0200, Andy Shevchenko wrote:
+> devm_pwmchip_add() can be called by a module that optionally
+> instantiates PWM chip. In case of CONFIG_PWM=3Dn, the compilation
+> can't be performed. Hence, add a necessary stub.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  include/linux/pwm.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+>=20
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index d70c6e5a839d..bba492eea96c 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -478,6 +478,11 @@ static inline int pwmchip_remove(struct pwm_chip *ch=
+ip)
+>  	return -EINVAL;
+>  }
+> =20
+> +static inline int devm_pwmchip_add(struct device *dev, struct pwm_chip *=
+chip)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+
+I'm a bit surprised to see this returning -EINVAL and not -ENOSYS. But
+that's in line with the other stubs, so:
+
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--hbekflahz2byd2ag
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNsoyQACgkQwfwUeK3K
+7AkwtAgAlngwWjscEhoQXRiD28VBXc9a5O4+98O/r+kYB2f4/9rN6+2ET0CWOpzd
+8KDQ9B5IuGoSKhII3IwDcM4rRDI3DwECHp23BbLQL6NXjgxtw3eYZ7hJwUDEXpRE
+85aPp4cSqFMMkEpCOx8dLnj6rRxrR+l2kmsonH8ZpOM38kVvvkpD8+UPKFL7X/Kj
+ENy05dR+v2QEWE1UzYNuHHxWS3D61v9+H2Ae2DGHI0JH9+24hSTLwYvAE4SivcIY
+O1mTM7pKNsoFuCORxf1Vit/f8ZDWD+3miMg0cfIU0AgqxaPACkZpjf/7CZ99WjJr
+okFGA+bWbJp7tPxqjDpAhJPJTb7Ctw==
+=4ga8
+-----END PGP SIGNATURE-----
+
+--hbekflahz2byd2ag--
