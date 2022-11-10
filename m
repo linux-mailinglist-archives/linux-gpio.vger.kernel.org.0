@@ -2,174 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D5D462431B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 14:22:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22DFD624372
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 14:43:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbiKJNWq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 08:22:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43946 "EHLO
+        id S231133AbiKJNnK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 08:43:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbiKJNWp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 08:22:45 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1EA716CE;
-        Thu, 10 Nov 2022 05:22:44 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id bj12so4825132ejb.13;
-        Thu, 10 Nov 2022 05:22:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/18V6DEHc1m62ka1bnYxz/SFLrQNISW3e95B0eVyUzc=;
-        b=L7BV7JuQOOcc6F2Jv0F5cWFQAlELaRgYGhpBgtfTvasDVYxIOCNO5h9Ysl47KyiD9r
-         aiVduYnZNtbHj9Aq6azLNlzsn18S521/vo/saE9Alqw/C4hswJpsY0rNpbfIIlcc1LbR
-         P2XGizUWbJfSXl31R4AvjZpK1F4AC+gtZ5SqpPE9XOiymYQtI8/KPc0j6yOcy/2+VTWO
-         BUQYO/okF3TWY5nJ2AyBrM0pWejZcb3oTn3xrEexlRH4Y7LpKoORzywudE9VIlDBGY1y
-         UIIaYgaLH/je/46GlgSdZ32JsvwU+WihVzBikJ8zdQzJ/tGnzHGjJC41dHbFLk6qhEli
-         Ra7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/18V6DEHc1m62ka1bnYxz/SFLrQNISW3e95B0eVyUzc=;
-        b=pIunYZwsbltKjFT18O5ZrzdUqWAahPUJm+NpsGGxmihIfvp6Z5c+xPj1jQEloQfJjn
-         TBtV2KokQ8Taxcbtws6iAXUigkkt++7oSM4+7bWNyJj1LpolPkrcOUCmp1RKwZxi+rJc
-         BNpVak8yklLWVwIwQC2HIQ+vP2hUe14qXwnesNgDthPf4omN6syar2kcpsWSHbsNW3ZF
-         VkLWyCXH4bJpAvgu8Qi6MoGHbzMOZ5RIdnaKleJgQQXGIP2veSSZg+zAwuBQmJEo0LCE
-         Lza4xOhqQg5uIzRlW7rGpzrMERS8ASWGIlj/qsJUZblJ5rHvq9SGGHqrwsTseix1YeSs
-         t01g==
-X-Gm-Message-State: ACrzQf0qxlj30GfPl0JlujpuvhTX5/HJpdMqmwpxGO2yxszEPNE33jRr
-        DYOOR9TfA8saaLqY+h/x/fg=
-X-Google-Smtp-Source: AMsMyM5u23u12SbRkdxyRIp1Xi4Wx+0pjLHXzzVURVBGzc+IWlAkTg5/ZsKut6rsISsUJqcy7GjegA==
-X-Received: by 2002:a17:906:444d:b0:7ad:eb7f:8697 with SMTP id i13-20020a170906444d00b007adeb7f8697mr41939612ejp.770.1668086563245;
-        Thu, 10 Nov 2022 05:22:43 -0800 (PST)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id f19-20020a1709064dd300b0077a1dd3e7b7sm7214132ejw.102.2022.11.10.05.22.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 05:22:42 -0800 (PST)
-Date:   Thu, 10 Nov 2022 14:22:40 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] gpiolib: of: Prepare of_gpiochip_add() /
- of_gpiochip_remove() for fwnode
-Message-ID: <Y2z7IJv2IQy+Mlsh@orome>
-References: <20221108133853.61884-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231218AbiKJNm6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 08:42:58 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 954D76B23A;
+        Thu, 10 Nov 2022 05:42:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668087777; x=1699623777;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fTAuXuJ4jKin+JcE3huOPfi/0se7PcE3kuFaiJBuDfk=;
+  b=OrrVuKXXi+XOmoDwAgOYFIJRWmm8LFslRUJMgu/doWwzdM8TIu/+zT75
+   BRsotRJpL37k9D25Yx9gbJm2h6LqB5Kt1+gXdwYZ2PGvBsTTAQkw8YSqU
+   OJS2mxTixbl7mrRqVwfpulstOpvkQ3B5BNDls5Zdvl8vIfv3Jca3ct+Us
+   8k12Osojnjvzf1qv/ff0z+4E23CLaiaO2CC4GPaTNHMUcYOxCmZm54Yf/
+   YSfRMB70/OXpEm/bGd/CB1qS+p7aBInh/tgeFoQczFnAJSX2t3r3MGsTB
+   gzK3Sz6wNEgkIsQ36Fw60zr1phWwKrpPlbQWj9CNCKEYvuZQwWEsh4v9V
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="308932359"
+X-IronPort-AV: E=Sophos;i="5.96,153,1665471600"; 
+   d="scan'208";a="308932359"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 05:42:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10526"; a="588177624"
+X-IronPort-AV: E=Sophos;i="5.96,153,1665471600"; 
+   d="scan'208";a="588177624"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 10 Nov 2022 05:42:42 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ot7pJ-00A9hz-12;
+        Thu, 10 Nov 2022 15:42:41 +0200
+Date:   Thu, 10 Nov 2022 15:42:40 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] gpiolib: consolidate GPIO lookups
+Message-ID: <Y2z/0IUOQMSonASw@smile.fi.intel.com>
+References: <20221031-gpiolib-swnode-v2-0-81f55af5fa0e@gmail.com>
+ <20221031-gpiolib-swnode-v2-5-81f55af5fa0e@gmail.com>
+ <Y2uOEhib5dvIcobF@smile.fi.intel.com>
+ <Y2v4ze4y8qDThjrv@google.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/mBCcUfC9k4UM3tz"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221108133853.61884-1-andriy.shevchenko@linux.intel.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <Y2v4ze4y8qDThjrv@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Wed, Nov 09, 2022 at 11:00:29AM -0800, Dmitry Torokhov wrote:
+> On Wed, Nov 09, 2022 at 01:25:06PM +0200, Andy Shevchenko wrote:
+> > On Tue, Nov 08, 2022 at 04:26:50PM -0800, Dmitry Torokhov wrote:
 
---/mBCcUfC9k4UM3tz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+...
 
-On Tue, Nov 08, 2022 at 03:38:52PM +0200, Andy Shevchenko wrote:
-> GPIO library is getting rid of of_node, fwnode should be utilized instead.
-> Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
-> v2: added tag (Dmitry)
->  drivers/gpio/gpiolib-of.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index be9c34cca322..000020eb78d8 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -1104,9 +1104,11 @@ static int of_gpiochip_add_pin_range(struct gpio_c=
-hip *chip) { return 0; }
-> =20
->  int of_gpiochip_add(struct gpio_chip *chip)
->  {
-> +	struct device_node *np;
->  	int ret;
-> =20
-> -	if (!chip->of_node)
-> +	np =3D to_of_node(chip->fwnode);
-> +	if (!np)
+> > > +static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
+> > > +					      struct device *consumer,
+> > > +					      const char *con_id,
+> > > +					      unsigned int idx,
+> > > +					      enum gpiod_flags *flags,
+> > > +					      unsigned long *lookupflags)
+> > >  {
+> > > -	unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+> > 
+> > > -	struct gpio_desc *desc = ERR_PTR(-ENODEV);
+> > 
+> > Not sure why this is needed. Now I see that else branch has been changed,
+> > but looking closer to it, we can drop it completely, while leaving this
+> > line untouched, correct?
+> 
+> Yes. I believe removing an initializer and doing a series of if/else
+> if/else was discussed and [soft] agreed-on in the previous review cycle,
+> but I can change it back.
+> 
+> I think we still need to have it return -ENOENT and not -ENODEV/-EINVAL
+> so that we can fall back to GPIO lookup tables when dealing with an
+> unsupported node type.
 
-This breaks a number of GPIO controllers on Tegra where chip->fwnode
-ends up never getting set. I also see this break drivers like the MFD-
-based gpio-max77620, so I don't think this is anything specific to the
-Tegra drivers.
+Right, okay, let's go with whatever variant you find better.
 
-Looking at how fwnode handling works, it seems like we're checking the
-wrong value here, since chip->fwnode is only for explicit overrides of
-the fwnode value.
+...
 
-The below patch fixes the regression for me:
+> > > +	if (!IS_ERR_OR_NULL(fwnode))
+> > 
+> > I think this is superfluous check.
+> > 
+> > Now in the form of this series, you have only a single dev_dbg() that tries to
+> > dereference it. Do we really need to have it there, since every branch has its
+> > own dev_dbg() anyway?
+> 
+> As I mentioned, I like to keep this check to show the reader that we
+> should only descend into gpiod_find_by_fwnode() if we have a valid
+> fwnode. It is less about code generation and more about the intent.
 
---- >8 ---
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 4be3c21aa718..760f018ae7de 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -1067,7 +1067,7 @@ int of_gpiochip_add(struct gpio_chip *chip)
-        struct device_node *np;
-        int ret;
+Yes, but if fwnode is not found, we have a next check for that. I really don't
+think we lose anything by dropping the check and gaining the code generation as
+a side effect.
 
--       np =3D to_of_node(chip->fwnode);
-+       np =3D to_of_node(chip->gpiodev->dev.fwnode);
-        if (!np)
-                return 0;
+-- 
+With Best Regards,
+Andy Shevchenko
 
---- >8 ---
 
-That uses the GPIO device's fwnode, which can be chip->fwnode if
-chip->fwnode was explicitly specified. Otherwise this defaults to=20
-
-See gpiochip_add_data_with_key() in drivers/gpio/gpiolib.c:
-
-    677 |	/*
-    678 |	 * Assign fwnode depending on the result of the previous calls,
-    679 |	 * if none of them succeed, assign it to the parent's one.
-    680 |	 */
-    681 |	gdev->dev.fwnode =3D dev_fwnode(&gdev->dev) ?: fwnode;
-
-Looks like this is only important to make sure gdev->dev.fwnode is valid
-for OF, for ACPI this should be a no-op.
-
-Thierry
-
---/mBCcUfC9k4UM3tz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNs+x4ACgkQ3SOs138+
-s6Fabw/9Ez3zRB8odDhkKTz+3aOmy7YcMqcp4oS2/TIuznqOTAEGk5yFId/rClH8
-zrborlaubJde/K9j2v8CjfyMg9Ev4sJa5OehZoWx+rRV7dtTG4PBjsfzMOO6Q40n
-308PRiQx5lTlJw4v6/qNb7TGDj4TxVf/EfP8YI/301Bmyc2NglRZsja9r//9ZnsW
-Ka2NFY+utfgIKYnCsWoix0qc9Xn/Be0F94TpwKiKwCwnPSkgWIEisGPhlKNv0RVh
-y7+DPV4KVlXJproeG8dH3g6R5zIEMJ87kI/AXKlKf6BV8IU6pjnYs8PjObClOHO+
-g+yyPvUfq1S4vNRqW3GLb8nnYlEp6H/dIJmbxm0PxdzLzuYf+TSkBlAWQv8VgTRi
-tvbIto4Q2pXjcnMvb7tYq/YFg0mo+Z/0dNMhyaUptjj+zFCpz73EvsLm6kQouIWG
-A3SSWeCabkEHWQqSgkGSbtmWwjxFyhJ5DDZkjkVU0U2wXw4lbnyn5+Pwpu+UBO/4
-4lJn3YglelJpYQKi4x9WS6ZFNte/u03Jk4hUP1JvE0M1T5g725lL4qyARa4CXCaY
-1KfrXQhekbDwX29PmiztWAya5YkCIp6zIVnVuvZtU9FKtaI6TDCanX1csVx0HY5A
-1DgF2X4xTxVRqMJyxpOAtu66saLz5X4LrFDOKlwMLTRcipp6W3A=
-=Mxfw
------END PGP SIGNATURE-----
-
---/mBCcUfC9k4UM3tz--
