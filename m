@@ -2,151 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4FB8624959
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 19:26:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E3BE6249E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 19:47:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231854AbiKJS0l (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 13:26:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32978 "EHLO
+        id S230247AbiKJSr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 13:47:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231794AbiKJS0k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 13:26:40 -0500
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D123B1F5
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 10:26:39 -0800 (PST)
-Received: by mail-vk1-xa35.google.com with SMTP id bk51so542866vkb.4
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 10:26:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XkRiRNFz3B0+o5bdjKTjdxN+wwnRNu+jJCIgV5Wh92E=;
-        b=CMQsWHTMOGR/ADIiwmJykAVPJIhCO8djjog6YZeDG9v9fF6mmDyPPyAgsADyrdTjPK
-         kiJ3MiNEiHY6bK7xyB5iL/iXj2TH8bcZjCtIWK266EaA3HsjNQ6oJtlVfxUJOn39024L
-         mwKolq0Ky6lsCsOqj3RR227hTTLRkwqXs0mvwCPII/eTAw4Jw1zUO6+A+LJR9JARbLIz
-         WeWA96CdAbOK5J4hS8EfEXNx/kwRybArfkYpxRsrMkG0++C0ywxissNtwrLiBODEVpwo
-         H4EhMtuxgrpOjr9DBnMYsMBhvPU4bqG53fs0uwiBhFrqsm89WnCa2dw+gWjEavkkp3d+
-         oGJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XkRiRNFz3B0+o5bdjKTjdxN+wwnRNu+jJCIgV5Wh92E=;
-        b=d31AbuiDcqhZBSeX7wWRd9B0AiHjAcOr+SdTAGLrTlgzClWxszzM50cre1FXc0RsU+
-         nuEflivg10o5J3ltkzPrhvjBSmQxjK/K9pDX/Yie1Jk55Efq9dhvWeqPWNhyq8rEfTZq
-         28F4kyIF9BwLp0Jpy2X/FxmpIel+tHK5kBxK+vj3Yqfgk3ipUpq4O5gJbp36C8bW+K7x
-         ofe1FaA2Us2w0GrfWtjiEZA3HVKcEU5jpX0bSvJrxnwQ+WowTPlezU7vGcjJYCySRrl1
-         /Rs/fC6b2GsKnjwSgBRDMyIGeu6Lp8gjJus2XsR0eONGY1GjpbySTOsJEq9EGO+0bYfb
-         j/vQ==
-X-Gm-Message-State: ACrzQf2XzvSAZyBqOI34v/HWTUp9uqMLEtp3OVH/L5bNrZJfC87hDTt0
-        Z8hodxpBIgeYy6HE8PHXV49iUsvM8QZ0X3iQBzRq3Q==
-X-Google-Smtp-Source: AMsMyM7SnEHRz98GN4/5jy3o1c5oqxVsuXzjlsUSNUJDaJzz/SPsmMYgNmx9Dvi+4pHzQnq4Plkl5WHI9GQ33okw4Kg=
-X-Received: by 2002:a1f:a695:0:b0:3ab:85c0:e1e8 with SMTP id
- p143-20020a1fa695000000b003ab85c0e1e8mr16330133vke.1.1668104798499; Thu, 10
- Nov 2022 10:26:38 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1667815011.git.viresh.kumar@linaro.org> <43c0d28fc12bbfb5a0feba0d30542a4ca2d4bad6.1667815011.git.viresh.kumar@linaro.org>
-In-Reply-To: <43c0d28fc12bbfb5a0feba0d30542a4ca2d4bad6.1667815011.git.viresh.kumar@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 10 Nov 2022 19:26:27 +0100
-Message-ID: <CAMRc=MetERzq-SjosE6bxTHh6Np6133CAMxz09YVrJAgvnpssA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V9 6/8] bindings: rust: Add examples to libgpiod crate
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230496AbiKJSrx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 13:47:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2257E4B98C;
+        Thu, 10 Nov 2022 10:47:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BC4D661D70;
+        Thu, 10 Nov 2022 18:47:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E04DC433C1;
+        Thu, 10 Nov 2022 18:47:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668106069;
+        bh=Eb8pRz09JxZ+CgnpKwL02Ekng+XHb16ZA97L7PgePj0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rZrKGXf6VQAFdx7pZgdPTpJ7nfnCp6H/aZpbRWLpLqt5XKRMq+2KhxK2jHcyhwKZh
+         cX3rlSHWgKYfJLst6ABHXZdnIrIbDEVdUTA42yMXskWLlw0IOGPYcDOevnJzyP0bKI
+         f2mdMin+Pcf8JlrbhMJDvc7wWS0tEB5mE8cv7KWTfgBXEen1SyEgx4pI20nenZddTr
+         2BeSAQoZ/60di9DXhB92s2Im1ezzWIUjXSQolYUJP+YwC7pkSWlWafQ6vIQENbqRLk
+         llStIQswB7/fR6NtkKfnerHcV8t6uhRRCagQEqxMBOJYZIQ6dR+S9HP90eU6QtbWAv
+         D14jR138div4w==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1otCaY-005EAY-OI;
+        Thu, 10 Nov 2022 18:47:46 +0000
+Date:   Thu, 10 Nov 2022 18:47:20 +0000
+Message-ID: <87iljmve87.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc:     <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <broonie@kernel.org>, <tglx@linutronix.de>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic CS48L31/32/33 codecs
+In-Reply-To: <05ae0e20-b472-f812-1afc-ef8c2a97cdeb@opensource.cirrus.com>
+References: <20221109165331.29332-1-rf@opensource.cirrus.com>
+        <20221109165331.29332-10-rf@opensource.cirrus.com>
+        <87mt8zutib.wl-maz@kernel.org>
+        <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
+        <86pmdvow5y.wl-maz@kernel.org>
+        <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
+        <86k042q1uc.wl-maz@kernel.org>
+        <05ae0e20-b472-f812-1afc-ef8c2a97cdeb@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: rf@opensource.cirrus.com, lee@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org, broonie@kernel.org, tglx@linutronix.de, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> diff --git a/bindings/rust/libgpiod/examples/gpioset.rs b/bindings/rust/libgpiod/examples/gpioset.rs
-> new file mode 100644
-> index 000000000000..f72a623ab28c
-> --- /dev/null
-> +++ b/bindings/rust/libgpiod/examples/gpioset.rs
-> @@ -0,0 +1,64 @@
-> +// SPDX-License-Identifier: Apache-2.0 OR BSD-3-Clause
-> +//
-> +// Copyright 2022 Linaro Ltd. All Rights Reserved.
-> +//     Viresh Kumar <viresh.kumar@linaro.org>
-> +//
-> +// Simplified Rust implementation of the gpioset tool.
-> +
-> +use std::env;
-> +use std::io::{stdin, Read};
-> +
-> +use libgpiod::{
-> +    chip::Chip,
-> +    line::{self, Direction, Offset, SettingVal, Value},
-> +    request, Error, Result,
-> +};
-> +
-> +fn usage(name: &str) {
-> +    println!("Usage: {} <chip> <line_offset0>=<value0> ...", name);
-> +}
-> +
-> +fn main() -> Result<()> {
-> +    let args: Vec<String> = env::args().collect();
-> +    if args.len() < 3 {
-> +        usage(&args[0]);
-> +        return Err(Error::InvalidArguments);
-> +    }
-> +
-> +    let lconfig = line::Config::new()?;
-> +
-> +    for arg in &args[2..] {
-> +        let pair: Vec<&str> = arg.split('=').collect();
-> +        if pair.len() != 2 {
-> +            usage(&args[0]);
-> +            return Err(Error::InvalidArguments);
-> +        }
-> +
-> +        let offset = pair[0]
-> +            .parse::<Offset>()
-> +            .map_err(|_| Error::InvalidArguments)?;
-> +        let value = pair[1]
-> +            .parse::<i32>()
-> +            .map_err(|_| Error::InvalidArguments)?;
-> +
-> +        let mut lsettings = line::Settings::new()?;
-> +        lsettings.set_prop(&[
-> +            SettingVal::Direction(Direction::Output),
-> +            SettingVal::OutputValue(Value::new(value)?),
-> +        ])?;
-> +        lconfig.add_line_settings(&[offset], lsettings)?;
-> +    }
-> +
+On Thu, 10 Nov 2022 16:31:06 +0000,
+Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> 
+> On 10/11/2022 15:13, Marc Zyngier wrote:
+> > On Thu, 10 Nov 2022 13:00:50 +0000,
+> > Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> >> 
+> >> On 10/11/2022 12:01, Marc Zyngier wrote:
+> >>> On Thu, 10 Nov 2022 11:22:26 +0000,
+> >>> Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> >>>> 
+> >>>> On 10/11/2022 08:02, Marc Zyngier wrote:
+> >>>>> On Wed, 09 Nov 2022 16:53:28 +0000,
+> >>>>> Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> >>>>>> 
+> >>>>>> The Cirrus Logic CS48L31/32/33 audio codecs contain a programmable
+> >>>>>> interrupt controller with a variety of interrupt sources, including
+> >>>>>> GPIOs that can be used as interrupt inputs.
+> >>>>>> 
+> >>>>>> This driver provides the handling for the interrupt controller. As the
+> >>>>>> codec is accessed via regmap, the generic regmap_irq functionality
+> >>>>>> is used to do most of the work.
+> >>>>>> 
+> >>>>> 
+> >>>>> I cannot spot a shred of interrupt controller code in there. This
+> >>>> 
+> >>>> It is providing support for handling an interrupt controller so that
+> >>>> other drivers can bind to those interrupts. It's just that regmap
+> >>>> provides a lot of generic implementation for SPI-connected interrupt
+> >>>> controllers so we don't need to open-code all that in the
+> >>>> irqchip driver.
+> >>> 
+> >>> And thus none of that code needs to live in drivers/irqchip.
+> >>> 
+> >>>> 
+> >>>>> belongs IMO to the MFD code.
+> >>>> 
+> >>>> We did once put interrupt support in MFD for an older product line but
+> >>>> the MFD maintainer doesn't like the MFD being a dumping-ground for
+> >>>> random other functionality that have their own subsystems.
+> >>> 
+> >>> I don't like this stuff either. All this code is a glorified set of
+> >>> interrupt handlers and #defines that only hide the lack of a proper DT
+> >>> binding to express the interrupt routing (it feels like looking at
+> >>> board files from 10 years ago).
+> >>> 
+> >> 
+> >> I didn't understand this. The whole purpose of this is to instantiate
+> >> Linux interrupts for the PIC interrupt sources so that other drivers
+> >> that want to use the interrupts from the CS48L32 PIC can use standard
+> >> kernel APIs or DT to bind against them.
+> > 
+> > There is zero standard APIs in this patch. Does cs48l32_request_irq()
+> > look standard to you? This whole thing makes a mockery of the
+> > interrupt model and of firmware-based interrupt description which we
+> > spent years to build.
+> > 
+> >> 
+> >> The four handlers registered within the driver are done here simply
+> >> because they don't belong to any particular child driver. Since they
+> >> are a fixed feature of the chip that we know we want to handle we may as
+> >> well just register them.
+> > 
+> > Again, they have no purpose in an interrupt controller driver.
+> > 
+> >> If we put them in the MFD with DT definitions it would make a
+> >> circular dependency between MFD and its child, which is not a great
+> >> situation. If it's these handlers that are bothering you, we could move
+> >> them to the audio driver.
+> > 
+> > And what's left? Nothing.
+> 
+> Ah, I see. You've missed that the bulk of the implementation re-uses
+> existing library code from regmap. It does say this in the commit
+> message.
+> 
+>   "the generic regmap_irq functionality is used to do most of the work."
+> 
+> and I've also said this in previous replies.
+> 
+> This is no way driver that does nothing. There's over 1000 lines of code
+> handling the PIC and dispatching its interrupts to other drivers that
+> want to bind to them. It's just that it makes no sense to duplicate 1300
+> lines of interrupt handling code from elsewhere when we can re-use that
+> by calling regmap_add_irq_chip(). That gives us all the interrupt-
+> controller-handling code in drivers/base/regmap/regmap-irq.c
+> 
+> Perhaps you could re-review this taking into account that
+> regmap_add_irq_chip() is significant.
 
-I'm looking at it and thinking that it would look much better as:
+Read again what I have written. Having to expose a device-specific API
+for endpoint drivers to obtain their interrupts, and requiring them to
+know about some magic values that describe the interrupts source are
+not a acceptable constructs.
 
-let settings = line::Settings::new()
-    .set_direction(Direction::Output)
-    .set_output_value(Value::new(value))
-    .build()?;
+We have firmware descriptions to expose interrupt linkages, and your
+HW is not special enough to deserve its own top level API. Yes, we
+accepted such drivers in the past, but it has to stop.
 
-settings would not need to be mutable (we'd have some intermediate
-SettingsBuilder object?) and could be directly passed to
-add_line_settings()?
+Either you describe the internal structure of your device in DT or
+ACPI, and make all client drivers use the standard API, or you make
+this a codec library, purely specific to your device and only used by
+it. But the current shape is not something I'm prepared to accept.
 
-We now have chained mutators for LineSettings in C++ and keyword
-arguments in Python - somehow I think that the former suits rust much
-better than passing an array of properties.
+	M.
 
-Bartosz
+-- 
+Without deviation from the norm, progress is not possible.
