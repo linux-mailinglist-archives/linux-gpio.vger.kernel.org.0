@@ -2,118 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B1B1624B3B
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 21:10:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5204624B50
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 21:14:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbiKJUKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 15:10:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54450 "EHLO
+        id S229703AbiKJUOu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 15:14:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbiKJUKl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 15:10:41 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0104F10B5F;
-        Thu, 10 Nov 2022 12:10:40 -0800 (PST)
+        with ESMTP id S229461AbiKJUOt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 15:14:49 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D9BE43841
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 12:14:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668111041; x=1699647041;
+  t=1668111289; x=1699647289;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=fyLP1OFDfjLFdrnLtrPCMT1/7GJGV+zVR22r3TPCCJQ=;
-  b=C+lCdKBSgG3O0TZ4AJhF09Ic4fNMEbKyTHi4qpwr5lzgB2Jo5UCKdMEW
-   plWeu8LFL0HzidE6wWB85xeCJcQ6ch4Q6Ckij8KjcC/7mKjbYwI6ehuxu
-   PJAQqo0UD5bPzU8B0x3PzctbqjekowN08DJCqaS5/b8eDWWqLILeHH+zi
-   KqG7/+h8wmJsDXm6SUCMFJ1kFg26Ko8idkHr6er4E2s+nxvmDnKsS1Az5
-   ydYYlwoPjMQd0EPXDjncoVsP2MhqWnMllXlmkDlh1DeSvJcwUZ8CcUOV7
-   XFYyhax/DSxYM9zdN9eadwLeDB52vMOM23ycYMcm3vp62vB2ivrSe7EP1
+  bh=4yBmpt/Fv1PbYctoR7mLWTtuvc33tN+wCt4Y+0zAQTk=;
+  b=aC1eYwFt3GvBEHutukljqiOTxutkzbJF3l4qoJZ91T2oze+KAngDHQiB
+   fAeo8JxhPTocGy3k6jyao4ROfh99vAHWymDod3iVChLVyCMhpqhLhYHjj
+   SMjnHydFl833xl8fT8ecb4QpQtIsZIukqVOj2dEZKhLKuvPe2iZODsn5V
+   ICxiGF4nKEmUSlyMtfaXEMeG0ZxGkHXRUuVk9ELu4bQTuK/mdE91WWs0E
+   Tg7bwuy/RzK6seH8OKQfUSf4rKOBsRp6xr9iuqcXWhVMWsCWJmshipzcD
+   eGdr8v6klEXIF6q3TLrjzdrmfyuVF8KfO5M9SqZLdd+bkS7A1SIncn0Zh
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="309056977"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="312571319"
 X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="309056977"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 12:10:40 -0800
+   d="scan'208";a="312571319"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 12:14:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="706286235"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="670495555"
 X-IronPort-AV: E=Sophos;i="5.96,154,1665471600"; 
-   d="scan'208";a="706286235"
+   d="scan'208";a="670495555"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Nov 2022 12:10:38 -0800
+  by orsmga001.jf.intel.com with ESMTP; 10 Nov 2022 12:14:47 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1otDsj-00AKBU-07;
-        Thu, 10 Nov 2022 22:10:37 +0200
-Date:   Thu, 10 Nov 2022 22:10:36 +0200
+        id 1otDwj-00AKJG-1B;
+        Thu, 10 Nov 2022 22:14:45 +0200
+Date:   Thu, 10 Nov 2022 22:14:45 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] gpiolib: consolidate GPIO lookups
-Message-ID: <Y21avEvX8Vd2Mj0j@smile.fi.intel.com>
-References: <20221031-gpiolib-swnode-v2-0-81f55af5fa0e@gmail.com>
- <20221031-gpiolib-swnode-v2-5-81f55af5fa0e@gmail.com>
- <Y2uOEhib5dvIcobF@smile.fi.intel.com>
- <Y2v4ze4y8qDThjrv@google.com>
- <Y2z/0IUOQMSonASw@smile.fi.intel.com>
- <Y20zN8WpWamUQtWp@google.com>
+To:     Niyas Sait <niyas.sait@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
+        rafael@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH RFC 0/3] pinctrl: add ACPI support to pin controller
+Message-ID: <Y21btYwNRMD4xXXL@smile.fi.intel.com>
+References: <20221110191258.1134378-1-niyas.sait@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y20zN8WpWamUQtWp@google.com>
+In-Reply-To: <20221110191258.1134378-1-niyas.sait@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 09:21:59AM -0800, Dmitry Torokhov wrote:
-> On Thu, Nov 10, 2022 at 03:42:40PM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 09, 2022 at 11:00:29AM -0800, Dmitry Torokhov wrote:
-> > > On Wed, Nov 09, 2022 at 01:25:06PM +0200, Andy Shevchenko wrote:
-> > > > On Tue, Nov 08, 2022 at 04:26:50PM -0800, Dmitry Torokhov wrote:
-
-...
-
-> > > > > +	if (!IS_ERR_OR_NULL(fwnode))
-> > > > 
-> > > > I think this is superfluous check.
-> > > > 
-> > > > Now in the form of this series, you have only a single dev_dbg() that tries to
-> > > > dereference it. Do we really need to have it there, since every branch has its
-> > > > own dev_dbg() anyway?
-> > > 
-> > > As I mentioned, I like to keep this check to show the reader that we
-> > > should only descend into gpiod_find_by_fwnode() if we have a valid
-> > > fwnode. It is less about code generation and more about the intent.
-> > 
-> > Yes, but if fwnode is not found, we have a next check for that.
+On Thu, Nov 10, 2022 at 07:12:55PM +0000, Niyas Sait wrote:
+> This is a proposal for adding ACPI support to pin controller.
 > 
-> No, the check you are talking about is for the GPIO not being located.
-> It does not have anything to do with fwnode validity. You are relying on
-> intimate knowledge of gpiod_find_by_fwnode() implementation and the fact
-> that in the current form it will withstand ERR_PTR-encoded or NULL
-> fwnode.
+> The patch supports following resources introduced in ACPI from v6.2
 > 
-> I want to have the source code so clear in its intent so that I can be
-> woken up in the middle of the night with a huge hangover and still be
-> able to tell how it is supposed to behave.
-
-As you said let's leave it to Bart and Linus.
-
-> > I really don't
-> > think we lose anything by dropping the check and gaining the code generation as
-> > a side effect.
+> - PinFunction
+> - PinConfig
+> - PinGroupFunction
+> - PinGroupConfig
+> - PinGroup
 > 
-> This is cold path, happening only on startup. I am not saying that we
-> want to make it slow unnecessarily, but a condition branch that might
-> even get optimized out is not something we should be concerned here.
+> The patch has been tested on NXP I.MX8MP Plus platform with ACPI.
 
-Agree, that's why I called it "side effect".
+Thank you very much for this work!
+
+I will take time to review it, presumably next week.
+
+I'm not sure it will go to the v6/2-rc1 due to tough time range
+(we are almost at -rc5), I hope you are not in such hurry.
+
+> Niyas Sait (3):
+>   pinctrl: add support for acpi PinGroup resource
+>   pinconf-generic: add pull up and pull down config with resistance
+>   pinctrl: add support for acpi pin function and config resources
+> 
+>  drivers/pinctrl/Makefile                |   1 +
+>  drivers/pinctrl/core.c                  |  19 +-
+>  drivers/pinctrl/core.h                  |   3 +
+>  drivers/pinctrl/pinctrl-acpi.c          | 450 ++++++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-acpi.h          |  50 +++
+>  include/linux/pinctrl/pinconf-generic.h |   6 +
+>  include/linux/pinctrl/pinctrl.h         |  15 +
+>  7 files changed, 540 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/pinctrl/pinctrl-acpi.c
+>  create mode 100644 drivers/pinctrl/pinctrl-acpi.h
+> 
+> -- 
+> 2.25.1
+> 
 
 -- 
 With Best Regards,
