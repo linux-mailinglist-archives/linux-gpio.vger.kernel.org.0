@@ -2,111 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D8B1623F99
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 11:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8468623FA4
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 11:20:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbiKJKPj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 05:15:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50520 "EHLO
+        id S229769AbiKJKUr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 05:20:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbiKJKPi (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 05:15:38 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448D265E73
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:15:36 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id t25so3691732ejb.8
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:15:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=E8Cf67Csj4VD7OjeDad04YWXxh2H8/Tism91fe0AaI4=;
-        b=fOBQm/pV8/DGgVvHGlPfc1mJ29brRXVHnGHjUjMWlUg2UzidttxHcpiMJ2HE6NjkzA
-         Jrdfoie3b2P8WvxJdwOaXX9+SSbmrVjx9KbOBBHrgtmsO4Xxy4oV7yfgzpF4+H9ez4Ch
-         /ZxTqmghUoeMwGNdNuCkRgQ8sY7o8FiURl635xYRjy7NSY1d94FTxU5+67rlS7KvRcr6
-         Khy8R35UWeqn3W+rJOvfmIsRxnj5UO9YF+NpibEaOukUgfG51JSphray/tPYJBpZ61G9
-         T6E2IXXuYZS3BfL7Gtu3xh5kCxrdojb+VHgj9Xej52p4dpEyadkIvlcmKl0PxjU+UPMD
-         56rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=E8Cf67Csj4VD7OjeDad04YWXxh2H8/Tism91fe0AaI4=;
-        b=uTfRqJCLyGAK61IHVEQSzZbwB7uZQRJ3WVmONaJtgDWjLMz61qwI/+j2bKYxDVYAJd
-         XkgZ/ZRTz0Y04JAo1JkvHtiv935i1l8m8IqzehIRIpQDfXIlOPRaDN/gERCkPUjvg+mP
-         9N4irxzo3xvgxwVMxL9FwO7RpHPCXzGyvw3Yoor60F6WSp6Pjg9kF592gDRtDQ81gAXd
-         oyCl3RcjwzM2KALcbX3doM0Zi4x6xKLDYuRvujFZhlmMghvcK0E1o5oEq3NGGU3fzlDT
-         +lDfauds6aLL92upaOvcEa/x8lkET9oO9odFUYwfxKPM4efDEdSzF+6FTAJAAAouNqCb
-         n5PA==
-X-Gm-Message-State: ACrzQf05d42h6m7GfpVa4qkzYepEtjW4zLoBClNJHVbVA6pBPgezp8by
-        WcFzV/zfz0UjzVUUNNluziCoT1rxIF0J9xoiQdAr2Q==
-X-Google-Smtp-Source: AMsMyM4D0d+Hokf7UrAn5sIPHLSXdHQLYX9QQgnGs4iKs4ZA+COquSO+v27PLn+KIJj7g+TgvuEl9Xa1sTphUe/n8Q8=
-X-Received: by 2002:a17:906:3394:b0:78e:11ea:8528 with SMTP id
- v20-20020a170906339400b0078e11ea8528mr2559173eja.190.1668075334783; Thu, 10
- Nov 2022 02:15:34 -0800 (PST)
+        with ESMTP id S229463AbiKJKUp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 05:20:45 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAA99FE4
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:20:43 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot4fc-00074I-7y; Thu, 10 Nov 2022 11:20:28 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot4fZ-003Qp3-KW; Thu, 10 Nov 2022 11:20:26 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ot4fZ-00FcfD-NA; Thu, 10 Nov 2022 11:20:25 +0100
+Date:   Thu, 10 Nov 2022 11:20:25 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/6] pwm: lpss: Include headers we are direct user of
+Message-ID: <20221110102025.2tqdb3v6ndg6vyqk@pengutronix.de>
+References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
+ <20221108142226.63161-4-andriy.shevchenko@linux.intel.com>
+ <20221110072144.2s37r52qcpi6utgh@pengutronix.de>
+ <CAHp75VenLc-QfuD3rHPh=5nu_SqWvEnsePbNMsBA4R-Zs+nvrw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20221109065546.24912-1-mranostay@ti.com> <20221109065546.24912-5-mranostay@ti.com>
- <CACRpkdaTV6unVsfNj+M39jLn5FLTnhryjuzF4EB6Ytds9R1nEQ@mail.gmail.com> <Y2zOhf8lqVLyLn+A@ubuntu>
-In-Reply-To: <Y2zOhf8lqVLyLn+A@ubuntu>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 10 Nov 2022 11:15:22 +0100
-Message-ID: <CACRpkdZOR4Hcyv=bO7=rJERJK7JbCoS0_dvWj0K=YZC6Nsozdw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/7] gpio: tps6594x: add GPIO support for TPS6594x PMIC
-To:     Matt Ranostay <mranostay@ti.com>, Michael Walle <michael@walle.cc>
-Cc:     brgl@bgdev.pl, lee@kernel.org, kristo@kernel.org,
-        alexandre.belloni@bootlin.com, a.zummo@towertech.it,
-        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,
-        vigneshr@ti.com, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Keerthy <j-keerthy@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ilrfeteqmdew4gst"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VenLc-QfuD3rHPh=5nu_SqWvEnsePbNMsBA4R-Zs+nvrw@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 11:12 AM Matt Ranostay <mranostay@ti.com> wrote:
-> On Wed, Nov 09, 2022 at 10:59:08AM +0100, Linus Walleij wrote:
-> > On Wed, Nov 9, 2022 at 7:56 AM Matt Ranostay <mranostay@ti.com> wrote:
-> >
-> > > Add support for TPS6594X PMICs GPIO interface that has 11 that can be
-> > > configured as input or outputs.
+
+--ilrfeteqmdew4gst
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Nov 10, 2022 at 11:53:59AM +0200, Andy Shevchenko wrote:
+> On Thu, Nov 10, 2022 at 9:22 AM Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Tue, Nov 08, 2022 at 04:22:23PM +0200, Andy Shevchenko wrote:
+> > > For the sake of integrity, include headers we are direct user of.
 > > >
-> > > Tested-by: Keerthy <j-keerthy@ti.com>
-> > > Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> > > While at it, move the struct pwm_lpss_chip to be after
+> > > the struct pwm_lpss_boardinfo as the former uses pointer
+> > > to the latter.
 > >
-> > (...)
-> > > +config GPIO_TPS6594X
-> > > +       tristate "TI TPS6594X GPIO driver"
-> > > +       depends on MFD_TPS6594X
-> > > +       help
-> > > +         Select this option to enable GPIO driver for the TPS6954X
-> > > +         PMIC chip family. There are 11 GPIOs that can be configured.
+> > That part is fine.
 > >
-> > select GPIO_REGMAP
+> > > Replace device.h with a forward declaration in order to improve
+> > > the compilation time due to reducing overhead of device.h parsing
+> > > with entire train of dependencies.
 > >
-> > This driver is an archetypical example of a driver that can make great
-> > use of GPIO_REGMAP helpers, so rewrite it to use them.
-> > Look in drivers/gpio/gpio-sl28cpld.c for an example.
->
-> Linus,
->
-> Those helpers look great for this usecase on the surface but however I think there could be some issues.
-> For GPIO direction it isn't configured by a bitmap on a register(s) but by a bit on a range of
-> registers (with a register for each GPIOx).
->
-> For set/get values the gpio helper would work though.
+> > Together with "For the sake of integrity, include headers we are direct
+> > user of." this makes an a bit schizophrenic impression on me. You add
+> > <linux/types.h> because the file is a direct user of it, but you drop
+> > <linux/device.h> despite being a direct user.
+>=20
+> But we don't use device.h.
 
-Isn't is possible to just use parts of the GPIO_REGMAP
-helpers? I thought it's designed like such.
+What is the canonical header to provide struct device?
 
-Michael Walle will know what to do with your usecase, and
-whether to use it or not, let's page him!
+> > If you adapt the reasoning to something like:
+> >
+> > Replace the inclusion of <linux/device.h> by a forward declaration of
+> > struct device plus a (cheaper) #include of <linux/types.h> as
+> > <linux/device.h> is an expensive include (measured in compiler effort).
+>=20
+> Fine with me, thanks for the draft.
+>=20
+> > I could better live with it. I would even split this into two patches
+> > then. (i.e. move struct pwm_lpss_chip vs the include and forward change)
+>=20
+> I think for this small change for a driver that hasn't been modified
+> often it's fine to have them in one. But tell me if you are insisting
+> on a split, I can do that.
 
-Yours,
-Linus Walleij
+I don't insist.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ilrfeteqmdew4gst
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNs0GcACgkQwfwUeK3K
+7Ak9iggAhGxxudCLGFL25NcgPyQ/qjyQM1LryRG9tCC0hHhkmpvNEdxRgdHghG9L
+48uWXHpGmJ4CToYbKjmeN+2pk0lrCWwh9R5Av8y8/O5oDNxrda8uwtG7mOdhpC3q
+0KZEvYuwlroI87pq1qG81UQdyHsQuZjusiFQctNHqgWI3XuDIOvMM8kGyET6uPe7
+w9v+4ZsvUv979VgO0c49L9C+G/3XF9Ta2uJuovwnQt2clj9RN//5ai9JDQw8vnDr
+pSjXFSO7sqokaRTsVEyUU4TbH0R/DI7UjuUApitn86YcEMrV/FLE8TiOg7CBbZzl
+fOZ+jcg1cBba21CAv43jNGufS8NknQ==
+=Gg6m
+-----END PGP SIGNATURE-----
+
+--ilrfeteqmdew4gst--
