@@ -2,160 +2,178 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0822062451A
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 16:07:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52993624546
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 16:14:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbiKJPHd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 10:07:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55376 "EHLO
+        id S229536AbiKJPN4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 10:13:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229651AbiKJPHc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 10:07:32 -0500
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C5AD654A
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 07:07:30 -0800 (PST)
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20221110150727euoutp02b31f9cb3a848b6271ac7d19df800aeda~mQZtSx1Zs1276812768euoutp02f
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 15:07:27 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20221110150727euoutp02b31f9cb3a848b6271ac7d19df800aeda~mQZtSx1Zs1276812768euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1668092847;
-        bh=bkVdHplvWaEGh1Cm0ynqOTDiZ48pqaRCJMDkGbyi3jM=;
-        h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-        b=biu3epuBnad1fIpJLLDCBsNqNXn1LYwv8i/UxHsVSrx0HlJfd6RzevNjaU7i7YeuU
-         RMFUBomA4HrJVn+N1vO8dzeVrpzjVAKLtnCe93mqQ/5HF/yxb74VvSFsN94FXujhWh
-         JA7jBKufLeRiVJUTYIboncSybem5khh6FyV6Su5g=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20221110150726eucas1p186010a6b7e687f64510865396d0e7b2b~mQZs0-d890319103191eucas1p1P;
-        Thu, 10 Nov 2022 15:07:26 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 9E.A1.09561.EA31D636; Thu, 10
-        Nov 2022 15:07:26 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20221110150726eucas1p11ed664a096b2169dd9e568c0f6113104~mQZsXHZmS0522305223eucas1p1B;
-        Thu, 10 Nov 2022 15:07:26 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20221110150726eusmtrp1f15efe12e5b562d11514becae45aa095~mQZsWh37v1433614336eusmtrp1A;
-        Thu, 10 Nov 2022 15:07:26 +0000 (GMT)
-X-AuditID: cbfec7f2-0c9ff70000002559-b4-636d13ae427c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 3D.CA.09026.EA31D636; Thu, 10
-        Nov 2022 15:07:26 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20221110150725eusmtip14e8894aa8b8580ef52a85eb2878adc9e~mQZr8x6kb0699506995eusmtip1c;
-        Thu, 10 Nov 2022 15:07:25 +0000 (GMT)
-Message-ID: <674efb84-c6f4-eb67-ce7f-2471384a8698@samsung.com>
-Date:   Thu, 10 Nov 2022 16:07:26 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0)
-        Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH v2 1/2] gpiolib: of: Prepare of_gpiochip_add() /
- of_gpiochip_remove() for fwnode
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <Y20CZtHkaLmQj+IP@smile.fi.intel.com>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLKsWRmVeSWpSXmKPExsWy7djP87rrhHOTDZpOqlv0Nk1nstj1YBub
-        xeFFLxgtpvxZzmSxef4fRovLu+awWfzcNY/Fgd1j8bXbrB47Z91l97hzbQ+bx7yTgR6fN8kF
-        sEZx2aSk5mSWpRbp2yVwZSw+/puxYBN3xdXXGxgbGP9zdDFyckgImEjcmn2dDcQWEljBKNH1
-        OhTC/sIoMet7chcjF5D9mVFi+aNf7DANc76eZYFILGeU6Jt/mxXC+cgoMfP4ZyaQKl4BO4lP
-        n/eygtgsAqoS3SevsUHEBSVOznzCAmKLCqRILNxyA6xeWCBNouPXJrA4s4C4xK0n88HiIkA1
-        PccmgC1gFtjDKHFxxTuwBJuAoUTX2y6woZwCRhKrpjWyQjTLS2x/O4cZpEFC4A6HRP/mRSwQ
-        d7tItC59ywRhC0u8Or4F6h8ZidOTe1ggGtoZJRb8vs8E4UxglGh4fosRospa4s65X0DrOIBW
-        aEqs36UPEXaU6N3wgBkkLCHAJ3HjrSDEEXwSk7ZNhwrzSnS0CUFUq0nMOr4Obu3BC5eYJzAq
-        zUIKl1lI/p+F5J1ZCHsXMLKsYhRPLS3OTU8tNsxLLdcrTswtLs1L10vOz93ECExBp/8d/7SD
-        ce6rj3qHGJk4GA8xSnAwK4nwcmtkJwvxpiRWVqUW5ccXleakFh9ilOZgURLnZZuhlSwkkJ5Y
-        kpqdmlqQWgSTZeLglGpgCvg2PZC/jTfKleG8ofKknTsSzxa3957q/Zmg8CBC5PT+iomnViZF
-        2hYcqr/wV2FDWt7emIWL5zYkvY0y5lPz2/ql5EFQyH/uJ6fOmVvHlmqXxbNr8M5gn7tp39NJ
-        B9dt/5VTfereMu8Lyau8JbLfpmkXBnGUR0u7rKmpvcK8j+sFc0rQpBOn//nsqzxeO+HTWYfj
-        +de5qnmYeTnnPihvmiG7v/cPT+AVW51Edq5rBqm+Pxs/ZAcvYNljFCdfNYfByMgj9n3Lvp83
-        3/9WCjNN+XvzcubSJ2d+dxgy2sTxfDHKFTrCfDV/ssu8N5u+913YnJWjYXZOdK7T0y0nwtdp
-        Jt5UmG12TCqP5cLGK3ZcSizFGYmGWsxFxYkApX38KbADAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xu7rrhHOTDfomCVn0Nk1nstj1YBub
-        xeFFLxgtpvxZzmSxef4fRovLu+awWfzcNY/Fgd1j8bXbrB47Z91l97hzbQ+bx7yTgR6fN8kF
-        sEbp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZSw+
-        /puxYBN3xdXXGxgbGP9zdDFyckgImEjM+XqWpYuRi0NIYCmjxPUv55ggEjISJ6c1sELYwhJ/
-        rnWxQRS9Z5SY8qCXDSTBK2An8enzXrAiFgFVie6T16DighInZz4BmsrBISqQIrHuSBRIWFgg
-        TaLj1yYWEJtZQFzi1pP5YLtEgEouHewFm88ssIdRYnr7WXaIZe2MEjs/nWQGqWITMJToetsF
-        toBTwEhi1bRGVohJZhJdW7sYIWx5ie1v5zBPYBSaheSOWUgWzkLSMgtJywJGllWMIqmlxbnp
-        ucVGesWJucWleel6yfm5mxiBUbft2M8tOxhXvvqod4iRiYPxEKMEB7OSCC+3RnayEG9KYmVV
-        alF+fFFpTmrxIUZTYGBMZJYSTc4Hxn1eSbyhmYGpoYmZpYGppZmxkjivZ0FHopBAemJJanZq
-        akFqEUwfEwenVAOT+KKtlUZxB7+q1L3+X2lcMutHg/7ke5+7tPuF96UGuZsGXi0/PVVTiNfn
-        4bx3n/1PdlkoLWyc5H9Lmml58h9rf566jNlMFrXrGPt8C8UPNv6wnNq8eyvHzofz9G4XbnXn
-        j0pmOTXb9snU4LAN3Xfj5JZXP1++Z8eq6nsLj/78vp430XP6rTUPfoZWv2fuP/wu8tG9aVfr
-        W3eV7ox/ckxr15mdOt8lNxTGmxgsiL2/x6jCRsT+hFTwue87XrhUb1p0+EK4x+LfFt1Vk9iF
-        uufpHf3zIfHc65aXJXGf3/00tf+0We6SmdWD784/v00Ui+/McDzRc77s85NZs01k/8t1h0TL
-        ntB5mXaL+Zz6f959VkosxRmJhlrMRcWJAKrKVzhDAwAA
-X-CMS-MailID: 20221110150726eucas1p11ed664a096b2169dd9e568c0f6113104
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20221110150726eucas1p11ed664a096b2169dd9e568c0f6113104
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20221110150726eucas1p11ed664a096b2169dd9e568c0f6113104
-References: <20221108133853.61884-1-andriy.shevchenko@linux.intel.com>
-        <Y2z7IJv2IQy+Mlsh@orome> <Y20CZtHkaLmQj+IP@smile.fi.intel.com>
-        <CGME20221110150726eucas1p11ed664a096b2169dd9e568c0f6113104@eucas1p1.samsung.com>
+        with ESMTP id S229541AbiKJPNz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 10:13:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8968B1144D;
+        Thu, 10 Nov 2022 07:13:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 34B0AB82192;
+        Thu, 10 Nov 2022 15:13:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C584DC433D6;
+        Thu, 10 Nov 2022 15:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668093230;
+        bh=MbJwL/xbNtWgUF6Zd3do7MReo/iqoBtgzj/J3KIlx90=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VPmAypvfdQ/EYxpZBz4FGtjyhZwtFHwHCL4hvvmLLxNjovB5hH2aK2kq/WBds/xW2
+         QFiTiocP3roVTIZj9ni53QY2JaOeviGrLdFuhgue8gGfwoVF1M3sYvSKug/xWEEXzF
+         9VoGVymQ2G/tSlmCLhn4P+XcPa1LIOpoFEKbNg28NltEXKzhY53GxDnmih5H+9kguF
+         K49ct7+wmEOpd1v3vShnQlvR01FUYyZGJCK3dsFgGyrL2lPnLIzttP8MpuNvsUcYW7
+         gxjR0GcI4I3NH0URtM5xJXD0RI7XwRP1Wm3FxBBoy6aLNVIYAYjTtWtfRlhYTxKDdQ
+         P8LFOj/iYKhbA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ot9FT-005BUm-Ds;
+        Thu, 10 Nov 2022 15:13:47 +0000
+Date:   Thu, 10 Nov 2022 15:13:47 +0000
+Message-ID: <86k042q1uc.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc:     <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <broonie@kernel.org>, <tglx@linutronix.de>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic CS48L31/32/33 codecs
+In-Reply-To: <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
+References: <20221109165331.29332-1-rf@opensource.cirrus.com>
+        <20221109165331.29332-10-rf@opensource.cirrus.com>
+        <87mt8zutib.wl-maz@kernel.org>
+        <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
+        <86pmdvow5y.wl-maz@kernel.org>
+        <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rf@opensource.cirrus.com, lee@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org, broonie@kernel.org, tglx@linutronix.de, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Thu, 10 Nov 2022 13:00:50 +0000,
+Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> 
+> On 10/11/2022 12:01, Marc Zyngier wrote:
+> > On Thu, 10 Nov 2022 11:22:26 +0000,
+> > Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> >> 
+> >> On 10/11/2022 08:02, Marc Zyngier wrote:
+> >>> On Wed, 09 Nov 2022 16:53:28 +0000,
+> >>> Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> >>>> 
+> >>>> The Cirrus Logic CS48L31/32/33 audio codecs contain a programmable
+> >>>> interrupt controller with a variety of interrupt sources, including
+> >>>> GPIOs that can be used as interrupt inputs.
+> >>>> 
+> >>>> This driver provides the handling for the interrupt controller. As the
+> >>>> codec is accessed via regmap, the generic regmap_irq functionality
+> >>>> is used to do most of the work.
+> >>>> 
+> >>> 
+> >>> I cannot spot a shred of interrupt controller code in there. This
+> >> 
+> >> It is providing support for handling an interrupt controller so that
+> >> other drivers can bind to those interrupts. It's just that regmap
+> >> provides a lot of generic implementation for SPI-connected interrupt
+> >> controllers so we don't need to open-code all that in the
+> >> irqchip driver.
+> > 
+> > And thus none of that code needs to live in drivers/irqchip.
+> > 
+> >> 
+> >>> belongs IMO to the MFD code.
+> >> 
+> >> We did once put interrupt support in MFD for an older product line but
+> >> the MFD maintainer doesn't like the MFD being a dumping-ground for
+> >> random other functionality that have their own subsystems.
+> > 
+> > I don't like this stuff either. All this code is a glorified set of
+> > interrupt handlers and #defines that only hide the lack of a proper DT
+> > binding to express the interrupt routing (it feels like looking at
+> > board files from 10 years ago).
+> > 
+> 
+> I didn't understand this. The whole purpose of this is to instantiate
+> Linux interrupts for the PIC interrupt sources so that other drivers
+> that want to use the interrupts from the CS48L32 PIC can use standard
+> kernel APIs or DT to bind against them.
 
-On 10.11.2022 14:53, Andy Shevchenko wrote:
-> On Thu, Nov 10, 2022 at 02:22:40PM +0100, Thierry Reding wrote:
->> On Tue, Nov 08, 2022 at 03:38:52PM +0200, Andy Shevchenko wrote:
-> ...
->>> +	np = to_of_node(chip->fwnode);
->> This breaks a number of GPIO controllers on Tegra where chip->fwnode
->> ends up never getting set. I also see this break drivers like the MFD-
->> based gpio-max77620, so I don't think this is anything specific to the
->> Tegra drivers.
->>
->> Looking at how fwnode handling works, it seems like we're checking the
->> wrong value here, since chip->fwnode is only for explicit overrides of
->> the fwnode value.
->>
->> The below patch fixes the regression for me:
-> Thank you! Can you submit it as a formal fix? (Also see below)
-> Of if Bart prefers I can respin fixed verison. Bart?
->
-> ...
->> -       np = to_of_node(chip->fwnode);
->> +       np = to_of_node(chip->gpiodev->dev.fwnode);
-> dev_fwnode(&chip->gpiodev->dev)
->
-> ...
->
->
-> Your report makes me wonder if I can Cc you the patch that changes that logic,
-> so you can help with a testing on OF platforms.
+There is zero standard APIs in this patch. Does cs48l32_request_irq()
+look standard to you? This whole thing makes a mockery of the
+interrupt model and of firmware-based interrupt description which we
+spent years to build.
 
-I've also found this issue with today's linux-next and bisected to this 
-patch. I confirm that the above change fixes the boot issue on Raspberry 
-Pi 4B and Odroid-M1 boards. Feel free to add:
+> 
+> The four handlers registered within the driver are done here simply
+> because they don't belong to any particular child driver. Since they
+> are a fixed feature of the chip that we know we want to handle we may as
+> well just register them.
 
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Again, they have no purpose in an interrupt controller driver.
 
+> If we put them in the MFD with DT definitions it would make a
+> circular dependency between MFD and its child, which is not a great
+> situation. If it's these handlers that are bothering you, we could move
+> them to the audio driver.
 
-Best regards
+And what's left? Nothing.
+
+> 
+> > None of that belongs in the irqchip code.
+> > 
+> 
+> I don't really understand here what the criteria is that makes this not
+> a irqchip driver but it was ok for madera. We have a PIC and we need to
+> handle that and export those interrupts so other drivers can bind
+> against them. Is the problem that the PIC is on a SPI bus and irqchip is
+> only for memory-mapped PICs? Or is it that we have re-used existing
+> library code instead of open-coding it, so you aren't seeing the actual
+> handling code?
+
+An irqchip driver uses the irq_chip structure, uses irq domains to
+abstract the device-specific interrupt numbering from clients, and
+doesn't force the use of an esoteric API on these clients.
+
+What I see here is the exact opposite.
+
+Was it OK for madera? No. A moment of weakness, I presume. Do I want
+to repeat the same mistake? Neither.
+
+> As Lee has already objected in the past to having the interrupt
+> controller implementation in MFD I don't want to move it there without
+> Lee's agreement that it's ok to put the PIC IRQ implementation in MFD
+> for CS48L32.
+
+If you were implementing an actual interrupt controller driver, I'd
+take it without any question. The fact that this code mandates the use
+of its own homegrown API rules it out.
+
+Thanks,
+
+	M.
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Without deviation from the norm, progress is not possible.
