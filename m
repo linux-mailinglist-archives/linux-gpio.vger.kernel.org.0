@@ -2,127 +2,120 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 896326247A8
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 17:55:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D44FE62480E
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 18:17:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231631AbiKJQzR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 11:55:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56220 "EHLO
+        id S229776AbiKJRRM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 12:17:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231829AbiKJQzQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 11:55:16 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ECEC1C924;
-        Thu, 10 Nov 2022 08:55:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E2FDBB8225B;
-        Thu, 10 Nov 2022 16:55:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D424AC433C1;
-        Thu, 10 Nov 2022 16:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668099312;
-        bh=qGC1ASd6YLdkSOCo/KqD1UYwY3TeafFhoJvfxCxFnCM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dQfDlf5BK4dJHrVFk7IehyY8tj2sKalFuTIQ8MsSJm8HyNTdGinzsLiF+ZNP2OafM
-         Bcit/JIOEkqOIWCdSyRlXpJylL/LDBbIv9cBuokUY+24W+uKmh1w2upF3C9i3waZ8L
-         3nFD3Wl6lWqALhoqL8XXbwqEb45+WrkCOxxUUII/Cuwe4luzs2ynwwMD2dL6a6zemQ
-         wTKxrwwHnQABWCeRHtBKDECDTmandtAh16d3/l4uditCnXFRu4wvitEIS1/CN1/Qa7
-         cw0pvWYlau2dq+CUvxgtQsj356diXO0Vn46GN8P6qUGxXm2h2S4hxSjYiOr+cfzKMh
-         o9tXfEdLYOGyA==
-Date:   Thu, 10 Nov 2022 16:55:05 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc:     Marc Zyngier <maz@kernel.org>, lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
-        tglx@linutronix.de, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic
- CS48L31/32/33 codecs
-Message-ID: <Y20s6UCsYyB+/nfK@sirena.org.uk>
-References: <20221109165331.29332-1-rf@opensource.cirrus.com>
- <20221109165331.29332-10-rf@opensource.cirrus.com>
- <87mt8zutib.wl-maz@kernel.org>
- <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
- <86pmdvow5y.wl-maz@kernel.org>
- <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
- <86k042q1uc.wl-maz@kernel.org>
- <05ae0e20-b472-f812-1afc-ef8c2a97cdeb@opensource.cirrus.com>
+        with ESMTP id S229693AbiKJRRL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 12:17:11 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC3471146A;
+        Thu, 10 Nov 2022 09:17:10 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id c15-20020a17090a1d0f00b0021365864446so2137396pjd.4;
+        Thu, 10 Nov 2022 09:17:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2lVmgd5iU+DYuUAsCm9zf956y2hb5rpDqnPteUG5ac4=;
+        b=qWCdTEiP5pQviSj+O54GiZmAoHPXK0RyCfkwi3DuBLECwS890sS1zUZ0xN3rVkwbFe
+         /PuessvPsaYoGAtWygPt0T+UV6+Iir/W3NZ71kmM58q04a31/hUFylisA+t1tFCenbvF
+         fNNsFZpMJN4NhdUDClBcxMShnJ83vphoAgdQxWxzpK1qOsShiLGKYTF/GbR9Uvv3Hiuz
+         8c4zuZ+rQM/740i3Oz3IhpWBYcg5nJnymVDj12V7DbAnflKN8lkCutU/BBykzVWAtG8X
+         NRwDrHa8EijttIiyy7GH7K2IYmj4TwhkXKjwKpWMMQh1aRBF8xIXGH2x9zpvFYFROnAy
+         3dxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2lVmgd5iU+DYuUAsCm9zf956y2hb5rpDqnPteUG5ac4=;
+        b=ulkKw1ThLq8bHdsKZf+kisjL8h9MPEXXqld9ngY08po+lVGlQ3CfZ+ITf6M1+mRnpJ
+         THO8yQeyeb0/wlK4vfF0EdqSlmtwiKsrqhvP4zkGdCvjEAHYLXM0QuQ72/lk1DEQ4niK
+         yWzIXENzFaTGhCT9IHsBofTEHQMGRmgFuj6jaYelpMMVtVt1UqrJCT2kHr2FKybyRND+
+         IRRk46cSpJyMF3cTOHg9WitX1dQFDQmFlmsdZTFh3pDu2FnKFbU5q2CcS/drTumfpaUU
+         4BU0s7iNRUxfBSJHHid2G3PBLEyCi4ZqSxcAA91FBLRKG3D8ZcZNv3D8bpdTTVuW/rWC
+         DxFg==
+X-Gm-Message-State: ACrzQf2G/a/P5NCX0HrTPgojhxfn7qA7O26/KcwcP1rar5GN6J4UCmpo
+        1PALcs/pIwZyjVri+ooT6k8=
+X-Google-Smtp-Source: AMsMyM4NM5BH+EEeld8afhNduczRl5sEVCUkHHUUXRK7D8MepJ09HG6rCFRLdfcKcf+AqZ0qjnXlMg==
+X-Received: by 2002:a17:903:1209:b0:179:d027:66e6 with SMTP id l9-20020a170903120900b00179d02766e6mr66443580plh.67.1668100629918;
+        Thu, 10 Nov 2022 09:17:09 -0800 (PST)
+Received: from google.com ([2620:15c:9d:2:6af4:9e55:5482:c0de])
+        by smtp.gmail.com with ESMTPSA id je6-20020a170903264600b0017f7c4e260fsm11554164plb.150.2022.11.10.09.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Nov 2022 09:17:09 -0800 (PST)
+Date:   Thu, 10 Nov 2022 09:17:06 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] gpiolib: add support for software nodes
+Message-ID: <Y20yElFGvm2GLtE9@google.com>
+References: <20221031-gpiolib-swnode-v2-0-81f55af5fa0e@gmail.com>
+ <20221031-gpiolib-swnode-v2-6-81f55af5fa0e@gmail.com>
+ <Y2uNDmRefzPvUu3P@smile.fi.intel.com>
+ <Y2v6lxoCQvlRdr8q@google.com>
+ <Y20BEuHlY2OEsZ0v@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IpzSAZ/C+hH7f6Oc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <05ae0e20-b472-f812-1afc-ef8c2a97cdeb@opensource.cirrus.com>
-X-Cookie: Torque is cheap.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y20BEuHlY2OEsZ0v@smile.fi.intel.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 10, 2022 at 03:48:02PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 09, 2022 at 11:08:07AM -0800, Dmitry Torokhov wrote:
+> > On Wed, Nov 09, 2022 at 01:20:46PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Nov 08, 2022 at 04:26:51PM -0800, Dmitry Torokhov wrote:
+> 
+> ...
+> 
+> > > > +	pr_debug("%s: parsed '%s' property of node '%pfwP[%d]' - status (%d)\n",
+> > > > +		 __func__, propname, fwnode, idx, PTR_ERR_OR_ZERO(desc));
+> > > 
+> > > %pe ?
+> > 
+> > "/* %pe with a non-ERR_PTR gets treated as plain %p */".
+> > 
+> > I do not think users are interested in the address on success.
+> 
+> Hmm... Perhaps we can teach %pe to behave differently with, e.g. %pe0,
+> modification.
 
---IpzSAZ/C+hH7f6Oc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Yes, and maybe we could even have %e for normal errors ;)
 
-On Thu, Nov 10, 2022 at 04:31:06PM +0000, Richard Fitzgerald wrote:
-> On 10/11/2022 15:13, Marc Zyngier wrote:
+> But this is another story. So, let's go with your variant.
+> 
+> ...
+> 
+> > > > +#include <dt-bindings/gpio/gpio.h>
+> > > 
+> > > Not sure why we have this here.
+> > 
+> > For convenience - so that users have access to GPIO_ACTIVE_HIGH/
+> > GPIO_ACTIVE_LOW and other flags.
+> 
+> Okay, would we make this as a guarantee then?
+> 
+> In such case a comment before this inclusion should be added to explain why
+> we do that without any actual user to be present in the header file.
 
-> > > If we put them in the MFD with DT definitions it would make a
-> > > circular dependency between MFD and its child, which is not a great
-> > > situation. If it's these handlers that are bothering you, we could move
-> > > them to the audio driver.
+Just to close the loop - I added a comment reflecting this in v3.
 
-> > And what's left? Nothing.
+Thanks.
 
-> Ah, I see. You've missed that the bulk of the implementation re-uses
-> existing library code from regmap. It does say this in the commit
-> message.
-
->   "the generic regmap_irq functionality is used to do most of the work."
-
-> and I've also said this in previous replies.
-
-The thread prompted me to have a look at regmap-irq earlier today and
-see what it's still doing that peers into the regmap core internals and
-it seems it's just getting the register stride which has had an external
-API added already and getting the device for the regmap.  It should be
-straightforward to repaint it and move it into the irqchip subsystem
-which would be a much more sensible home for a library for implementing
-irqchips in this day and age.  I started looking at the code changes for
-that a bit.
-
-> This is no way driver that does nothing. There's over 1000 lines of code
-> handling the PIC and dispatching its interrupts to other drivers that
-> want to bind to them. It's just that it makes no sense to duplicate 1300
-> lines of interrupt handling code from elsewhere when we can re-use that
-> by calling regmap_add_irq_chip(). That gives us all the interrupt-
-> controller-handling code in drivers/base/regmap/regmap-irq.c
-
-TBF that's 1000 lines of overly generic code, a bunch of it is
-conditional stuff and it's unlikely that any individual driver would
-want all of it.  Equally it does mean that all the users are just
-providing data rather than writing any code which generally makes things
-easier to maintain and was the main goal.
-
---IpzSAZ/C+hH7f6Oc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmNtLOkACgkQJNaLcl1U
-h9Czzgf+MDPNrKaCh6tGeXTVbFjlxx2mex0I6klShYbJTgtJXdJl+8Yqy82h0XI8
-TZOB30riAERaTu61UvhbFFKADZfg6KSSLqRY9F0aloY7KWA+Lo6tCPZ4VrDCKxvs
-yAk5rWlbfN2QUS0Sd0+1N8E/8IQql3OPCUx4/2OXN1h0hnppTwkFsY5Zbres+PJO
-Aw/PhihEP74ddp7mp6W85hTn6+rol8pluzJJCTVBC70myEG2hppTcMKzN0r9cNqR
-z2/+nz3aIO0BE65HI7/yB+fNegixinMAiZRGoiYfHj4ubdrYnbw5O1WBWAVG7gSq
-DZoqpARh4bX8hFAkkjbUsBh9pQP9gA==
-=zQ3R
------END PGP SIGNATURE-----
-
---IpzSAZ/C+hH7f6Oc--
+-- 
+Dmitry
