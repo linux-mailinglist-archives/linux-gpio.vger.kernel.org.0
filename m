@@ -2,180 +2,198 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2598623666
-	for <lists+linux-gpio@lfdr.de>; Wed,  9 Nov 2022 23:17:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ADDD6238C9
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 02:26:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiKIWRY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 17:17:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34950 "EHLO
+        id S229802AbiKJB0o (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 20:26:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229784AbiKIWRY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 17:17:24 -0500
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3A411806;
-        Wed,  9 Nov 2022 14:17:23 -0800 (PST)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-13bef14ea06so369071fac.3;
-        Wed, 09 Nov 2022 14:17:23 -0800 (PST)
+        with ESMTP id S232250AbiKJB0n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 20:26:43 -0500
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8C523EBB
+        for <linux-gpio@vger.kernel.org>; Wed,  9 Nov 2022 17:26:42 -0800 (PST)
+Received: by mail-pg1-x531.google.com with SMTP id 78so280738pgb.13
+        for <linux-gpio@vger.kernel.org>; Wed, 09 Nov 2022 17:26:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2RtWgMCJZnGoeth0dnFIK+hifnxRTemqPqR+TqZRVVw=;
+        b=QXVunuPjw+pfc0rUzT25y927sbh0VC0eIQWSXZcxN2MjV0xMecxUvMUXxz0Ydngzax
+         +GrDBYuXghYi+0atH0Wov7jC0IuNQmsTGpxj9O0A3xmwqVG0+w0ZFuHk24NxSZdGIrGQ
+         wgoD2AnrRrHfkVcA7+uJ8lEnV53LwcRU/g3zvQZ9EGrXfLLK/rXuE+e4AEE0qBhnKBOH
+         kLkwSdLhV1PWFcD4jzoEglS/OR415MsAf+AE+edvC+i3avaXIgy38tBXv2huC33vyPHX
+         7SbUMkbfeltEBKamscva5bIDenZXvRqgwkm0ZiBal2kg+cN3m9mDgN3P9v6Y+1z51pxM
+         umzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k4lH5rWvUE98GU8yCy1NGQDUM/X/Z3Tpbwa5NYFQXGg=;
-        b=ZFqmmdUoIHpjBeZSZKy30ZQONpWcZRCwwHk9rMv1ZIjVVM9tQxyKOe5bWKV9pAWrow
-         MsYrBI/bAuF/gYUuvQ5xTH/uuGfmV56zZZ+Q0YF4EUOMiH/odYwC9kL7iuO+m36J0lM1
-         QYNE+8Cu19PB5oAOuXx4lW4HCJOnzzrYB+63tazKyBKnLKkLadx5mlt7V1hEEgJ3ISR7
-         boX+LBbynr3+Ue7GDOQ4Tf3ToZTOiDDm2KXa88IMkqKj4//5v1MeqcpwyaV4xARSnbOj
-         Rbq/VBg8P16giFPjcjmVxmoqnSE+oPVJH2dYUrPNsznFF3JK75/jz6r9uhMb9TlXwHTi
-         j6Eg==
-X-Gm-Message-State: ACrzQf1PPJAS5uFJydaoMMKaD0rfreZIerjFIU2cAO0MG3hsv+p2+13v
-        7EmQQmoYyWRpL0jXOlgIIA==
-X-Google-Smtp-Source: AMsMyM4FAtCtJYba4qjwAMKO/E286pubc0VAzXrmDkV7GWZ7ieKpPlDQmLDrWAXpJ8enR50wmPd/Qg==
-X-Received: by 2002:a05:6871:611:b0:13b:8097:2b92 with SMTP id w17-20020a056871061100b0013b80972b92mr47236179oan.44.1668032242503;
-        Wed, 09 Nov 2022 14:17:22 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id db6-20020a0568306b0600b0066cc0525476sm4690773otb.75.2022.11.09.14.17.21
+        bh=2RtWgMCJZnGoeth0dnFIK+hifnxRTemqPqR+TqZRVVw=;
+        b=6ZoKLrPyj+OqDThn5xoo81DbiaacPbWbtPT+XsfY6k0JQx7adVwhrbBbim8oppkvkr
+         RenHPUadcWSVHq3/RpixqRlpJQb5fsTAIbF+VXFBXnqmKNOfk93in7GS1HvupajlKfAi
+         5ZU8vaPCrG1VfPg+UrUw5HMBf0klixDth1WcI50IEQNY1ozXLlRt7tGfBFCdVBoEYYHM
+         oJia+dNZv42hCKDlLDdqPEcZlfufSAkYlj8IeRWFep1AwTQDz3fHhIQG0vRh31+OUKH+
+         INXTKgD2kM4Hjw7e5v64Ib7icQINvE8FIHNHfQuwu9SA6VsYgvch7EAd0WVg51AI0Ofd
+         KbTg==
+X-Gm-Message-State: ACrzQf2dl7AgbFyPtF6FmANj3RaQAeqZXUonazDElTC5otJt79tF4BNH
+        hlWYLt678G3emfspZL6sHvs=
+X-Google-Smtp-Source: AMsMyM6LmYGpfzHdKfEItQ3yW6SE64zpTpVoFl/EcNBmDoB71ZIHiF33cimW9rRDTkFptIsez43h3A==
+X-Received: by 2002:a63:ec02:0:b0:46f:a989:ad72 with SMTP id j2-20020a63ec02000000b0046fa989ad72mr1463804pgh.430.1668043602173;
+        Wed, 09 Nov 2022 17:26:42 -0800 (PST)
+Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
+        by smtp.gmail.com with ESMTPSA id y13-20020aa78f2d000000b0056babe4fb8asm8833574pfr.49.2022.11.09.17.26.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Nov 2022 14:17:21 -0800 (PST)
-Received: (nullmailer pid 2973198 invoked by uid 1000);
-        Wed, 09 Nov 2022 22:17:23 -0000
-Date:   Wed, 9 Nov 2022 16:17:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, devicetree@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH v3 3/7] dt-bindings: mfd: add binding for Apple Mac
- System Management Controller
-Message-ID: <20221109221723.GA2948356-robh@kernel.org>
-References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
- <E1osRXT-002mw3-JR@rmk-PC.armlinux.org.uk>
- <531d88b8-75db-1d8f-1384-b8d05594e7b3@linaro.org>
- <Y2rWp4wasbflS/0y@shell.armlinux.org.uk>
+        Wed, 09 Nov 2022 17:26:41 -0800 (PST)
+Date:   Thu, 10 Nov 2022 09:26:35 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Zeng Heng <zengheng4@huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
+        linus.walleij@linaro.org, brgl@bgdev.pl, linux@roeck-us.net,
+        linux-gpio@vger.kernel.org, liwei391@huawei.com, yuancan@huawei.com
+Subject: Re: [PATCH v2] gpiolib: fix memory leak in gpiochip_setup_dev
+Message-ID: <Y2xTSyce8WfLdtge@sol>
+References: <Y2ttmcV+PFDUZR3l@sol>
+ <20221109093120.3128541-1-zengheng4@huawei.com>
+ <Y2u9bLIohQ8eFTY1@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y2rWp4wasbflS/0y@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <Y2u9bLIohQ8eFTY1@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 08, 2022 at 10:22:31PM +0000, Russell King (Oracle) wrote:
-> On Tue, Nov 08, 2022 at 09:55:58PM +0100, Krzysztof Kozlowski wrote:
-> > On 08/11/2022 17:33, Russell King (Oracle) wrote:
-> > > Add a DT binding for the Apple Mac System Management Controller.
+On Wed, Nov 09, 2022 at 04:47:08PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 09, 2022 at 05:31:20PM +0800, Zeng Heng wrote:
+> > gcdev_register & gcdev_unregister call device_add & device_del to
+> > request/release source. But in device_add, the dev->p allocated by
+> > device_private_init is not released by device_del.
+> 
+> First of all, we refer to the functions like func().
+> 
+
+Further to this, the description of the problem could be clearer -
+it would be helpful to indicate the code path that triggers the problem
+- it is gpiochip_sysfs_register() returning an error?
+
+> > So when calling gcdev_unregister to release gdev, it needs put_device
+> > to release dev in the following.
 > > 
-> > Drop the second, redundant "binding" from subject. It's already in prefix.
-> 
-> Yet another thing that's been there from the start... how many more
-> things are you going to pick up in subsequent versions of the patch?
-> When does this stop?
-> 
-> In any case, taking your comment literally,
-> 
-> "dt-bindings: mfd: add for Apple Mac System Management Controller"
-> 
-> makes no sense, so presumably you want something more than that.
-> 
-> In any case, I see several recent cases already merged which follow
-> the pattern that I've used and that you've reviewed.
-> 
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > > ---
-> > >  .../devicetree/bindings/mfd/apple,smc.yaml    | 67 +++++++++++++++++++
-> > >  1 file changed, 67 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mfd/apple,smc.yaml b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > > new file mode 100644
-> > > index 000000000000..014eba5a1bbc
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/apple,smc.yaml
-> > > @@ -0,0 +1,67 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mfd/apple,smc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Apple Mac System Management Controller
-> > > +
-> > > +maintainers:
-> > > +  - Hector Martin <marcan@marcan.st>
-> > > +
-> > > +description:
-> > > +  Apple Mac System Management Controller implements various functions
-> > > +  such as GPIO, RTC, power, reboot.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    items:
-> > > +      - enum:
-> > > +          - apple,t6000-smc
-> > > +          - apple,t8103-smc
-> > > +          - apple,t8112-smc
-> > > +      - const: apple,smc
-> > > +
-> > > +  reg:
-> > > +    items:
-> > > +      - description: SMC area
-> > > +      - description: SRAM area
-> > > +
-> > > +  reg-names:
-> > > +    items:
-> > > +      - const: smc
-> > > +      - const: sram
-> > > +
-> > > +  mboxes:
-> > > +    maxItems: 1
-> > > +
-> > > +  gpio:
-> > > +    $ref: /schemas/gpio/gpio-macsmc.yaml
+> > Otherwise, kmemleak would report memory leak such as below:
 > > 
-> > So this depends on other patch, so:
-> > 1. You need mention the dependency in cover letter (nothing there),
-> > 2. Re-order patches.
-> > 
-> > The GPIO cannot go separate tree and this must be explicitly communicated.
+> > unreferenced object 0xffff88810b406400 (size 512):
+> >   comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
+> >   hex dump (first 32 bytes):
+> >     00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+> >     ff ff ff ff ff ff ff ff a0 5e 23 90 ff ff ff ff  .........^#.....
+> >   backtrace:
 > 
-> Sigh, getting an order that is sensible is really bloody difficult.
+> Second, read Submitting Patches on how to provide your backtraces in the
+> message body.
+> 
+> >     [<00000000a58ee5fe>] kmalloc_trace+0x22/0x110
+> >     [<0000000045fe2058>] device_add+0xb34/0x1130
+> >     [<00000000d778b45f>] cdev_device_add+0x83/0xe0
+> >     [<0000000089f948ed>] gpiolib_cdev_register+0x73/0xa0
+> >     [<00000000a3a8a316>] gpiochip_setup_dev+0x1c/0x70
+> >     [<00000000787227b4>] gpiochip_add_data_with_key+0x10f6/0x1bf0
+> >     [<000000009ac5742c>] devm_gpiochip_add_data_with_key+0x2e/0x80
+> >     [<00000000bf2b23d9>] xra1403_probe+0x192/0x1b0 [gpio_xra1403]
+> >     [<000000005b5ef2d4>] spi_probe+0xe1/0x140
+> >     [<000000002b26f6f1>] really_probe+0x17c/0x3f0
+> >     [<00000000dd2dad9c>] __driver_probe_device+0xe3/0x170
+> >     [<000000005ca60d2a>] device_driver_attach+0x34/0x80
+> >     [<00000000e9db90db>] bind_store+0x10b/0x1a0
+> >     [<00000000e2650f8a>] drv_attr_store+0x49/0x70
+> >     [<0000000080a80b2b>] sysfs_kf_write+0x8c/0xb0
+> >     [<00000000a28b45b9>] kernfs_fop_write_iter+0x216/0x2e0
+> > 
+> > unreferenced object 0xffff888100de9800 (size 512):
+> >   comm "python3", pid 264, jiffies 4294737615 (age 33.514s)
+> >   hex dump (first 32 bytes):
+> >     00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+> >     ff ff ff ff ff ff ff ff a0 5e 63 a1 ff ff ff ff  .........^c.....
+> >   backtrace:
+> >     [<00000000bcc571d0>] kmalloc_trace+0x22/0x110
+> >     [<00000000eeb06124>] device_add+0xb34/0x1130
+> >     [<000000007e5cd2fd>] cdev_device_add+0x83/0xe0
+> >     [<000000008f6bcd3a>] gpiolib_cdev_register+0x73/0xa0
+> >     [<0000000012c93b24>] gpiochip_setup_dev+0x1c/0x70
+> >     [<00000000a24b646a>] gpiochip_add_data_with_key+0x10f6/0x1bf0
+> >     [<000000000c225212>] tpic2810_probe+0x16e/0x196 [gpio_tpic2810]
+> >     [<00000000b52d04ff>] i2c_device_probe+0x651/0x680
+> >     [<0000000058d3ff6b>] really_probe+0x17c/0x3f0
+> >     [<00000000586f43d3>] __driver_probe_device+0xe3/0x170
+> >     [<000000003f428602>] device_driver_attach+0x34/0x80
+> >     [<0000000040e91a1b>] bind_store+0x10b/0x1a0
+> >     [<00000000c1d990b9>] drv_attr_store+0x49/0x70
+> >     [<00000000a23bfc22>] sysfs_kf_write+0x8c/0xb0
+> >     [<00000000064e6572>] kernfs_fop_write_iter+0x216/0x2e0
+> >     [<00000000026ce093>] vfs_write+0x658/0x810
+> > 
+> > Because at the point of gpiochip_setup_dev here, where dev.release
+> > does not set yet, calling put_device would cause the warning of
+> > no release function and double-free in the following fault handler
+> > route (when kfree dev_name). So directly calling kfree to release
+> > dev->p here in case of memory leak.
+> 
 
-It's not. Sub-devices before the MFD. The only time that doesn't work is 
-when the sub-devices put the parent MFD in their example. The solution 
-there is don't do that. Just 1 complete example in the MFD schema and no 
-examples in the sub-devices.
+Again, this could be clearer.  The dev->p is normally freed by
+device_release() - why is that not happening in this case?
+(as put_device() is never called in this path)
 
-> I'm quite sure Lee is only going to want to apply the mfd bits. 
+The double free you see if you do call put_device() appears to be due to
+different expectations as to the cleanup that gpiochip_setup_dev() will
+perform on error, depending on where it is called. gpiochip_setup_devs()
+assumes any cleanup is performed by gpiochip_setup_dev(), while
+gpiochip_add_data_with_key() assumes that it hasn't performed any cleanup.
 
-Indeed. I can't seem to make Lee care... All the schemas should really 
-be applied together.
+Having gpiochip_setup_dev() perform its own cleanup makes the most sense
+to me, so gpiochip_add_data_with_key() should be changed to allow for
+that.
 
-> Then
-> what do we do with the other bits? GPIO stuff via the GPIO tree, then
-> wait a cycle before the rest can be merged. Or what?
+> ...
+> 
+> > @@ -539,6 +539,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+> >  
+> >  err_remove_device:
+> >  	gcdev_unregister(gdev);
+> > +	kfree(gdev->dev.p);
+> >  	return ret;
+> 
+> Third, I do not believe it's a correct fix.
+> Have you read comments around device_del() / etc.?
+> 
 
-The schemas must be picked up in the same cycle. I don't care so much 
-if subsystem maintainers' trees have warnings if they don't care, but I 
-do care for linux-next. If the subsystem bits aren't picked up, then 
-I'll pick them up if it comes to that.
+I agree - this is not the correct fix.  The correct fix is to trigger the
+normal cleanup mechanism, so put_device().
+The fact that that triggers a warning:
 
-Rob
+"Device '%s' does not have a release() function, it is broken and must be
+fixed. See Documentation/core-api/kobject.rst.\n"
+
+is an indicator that dev.release should be set earlier.
+If gpiodevice_release() is not appropriate, or cannot be modified to deal
+with the device state at that point, then an appropriate interim release
+function should be set.
+
+And, as mentioned above, gpiochip_add_data_with_key() needs to be modified
+to allow for gpiochip_setup_dev() cleaning up its own mess.
+
+That is my take, but that is just from perusing the code so I may be
+totally off base.  Either way, an ACK/NACK on this from a maintainer or
+other gpiolib expert would be helpful to expiditing a solution.
+
+Cheers,
+Kent.
+
