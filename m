@@ -2,99 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F2B96245E5
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 16:31:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E711F624625
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 16:40:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231502AbiKJPbm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 10:31:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43200 "EHLO
+        id S231405AbiKJPkm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 10:40:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231546AbiKJPbY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 10:31:24 -0500
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C096743853
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 07:29:24 -0800 (PST)
-Received: by mail-vs1-xe31.google.com with SMTP id 128so2492656vse.6
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 07:29:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hNTcc4uUyrsAoinmTB9zBCvvHRIc7Wk7WZeBLPZzrbQ=;
-        b=Hhv03m03FnrTEZtz1TMhaTpPL00vBQeMpx+rHK9v/0Sjyd2zUPpP/Zyzg5Ai+ztCcc
-         hfGDEdPH0XTwnYE39JDJ/wiNOiELaHB1cUrPPKYaiurtAG89ekvLr/P/Ir5d4LVLqDlk
-         tRH66draLRJSxApF8Z2vPvtoH4qAkKdTj+ZFO5y1/I2E/UvTvzxUf0qZDlEQnhlW+Loi
-         0Uyg8AQ51AlAvi6AlLlEpIWjE2/YJR4RtarVoy7FxxgvGJEBwfvmwkX8qdi6U+P5Fnw4
-         VmVzxQzBo2ZTzRFC5WN2+uJi3AhNy6xFicuIh9ehyHqCT/v42i0U47le6Ox8/qcg9DiN
-         ExfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hNTcc4uUyrsAoinmTB9zBCvvHRIc7Wk7WZeBLPZzrbQ=;
-        b=W4iEqUhBxIEJBssac3MD3weATdaQ4LHr6iLsSen3+sd0ZkauzO2qBWEromMIp2Zcwq
-         +YbUi4+5KlIrb1Tc/VhDmv/C1f3Uvp24AaCSjSL3ykIHNmAtNuTmeKjlNiu8icm17EMV
-         Sz775Z1uxClvzvLBs6YiKt43YKMcjGmVRznuUyygaUpj0RPmNSz1xCIR9LojnDNIzCAi
-         b/7H7KAoLgG/9EgQ+cOeDFzmjqjhmwbx60RXpNG3lO954hAovbHtmJq4kXXABrZKZ8Eq
-         4VO0ZndTvsCAVQ/YdYMAVWEghX5BXqyq9V4/tA2gkC/n5t6BHo3sJL7rJIF4xjyaFMj4
-         3Z8g==
-X-Gm-Message-State: ACrzQf3N4jWHI3KRgJGtKX8NXOVN67DWcduf0fFGQgzLGas+ICR1maXz
-        FmtBe2BedlmemsXzPaJHaLFSVxy/gZe57LnzXfCkLQ==
-X-Google-Smtp-Source: AMsMyM7hga4DZVrVdmNCedH4QHI0A1R/v4wKZuAtiP0aJ1cBE0kYZy6+soKo+MjNaCy7VAvRv1W5lNb+0121sUm5q04=
-X-Received: by 2002:a67:ab0a:0:b0:3a9:9953:6471 with SMTP id
- u10-20020a67ab0a000000b003a999536471mr33712395vse.47.1668094163904; Thu, 10
- Nov 2022 07:29:23 -0800 (PST)
-MIME-Version: 1.0
-References: <20221108133853.61884-1-andriy.shevchenko@linux.intel.com>
- <Y2z7IJv2IQy+Mlsh@orome> <Y20CZtHkaLmQj+IP@smile.fi.intel.com>
-In-Reply-To: <Y20CZtHkaLmQj+IP@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 10 Nov 2022 16:29:12 +0100
-Message-ID: <CAMRc=MeL=K3BEW+-G-Z49Sw1Z5CCSnbQxbS9qDyizWa7nQjDiw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: of: Prepare of_gpiochip_add() /
- of_gpiochip_remove() for fwnode
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231599AbiKJPki (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 10:40:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3ED2CC96;
+        Thu, 10 Nov 2022 07:40:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 34B87B82224;
+        Thu, 10 Nov 2022 15:40:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9399C433D6;
+        Thu, 10 Nov 2022 15:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668094834;
+        bh=IihG5F+175wM6zXZz+Enufph03JbHLOePA/iQlUtjrM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Rdscuz840FMK66mNyb4CIacgEFlwcs50WejbujTcMgQGEAVdeszRpPMd4H/oWugRZ
+         0Kn/lNpMJ5XIKDQwGcJAOIZsqM6crKrGWwyrwjvlJQzf2riY5xHu2apJY/HVeKIg4j
+         zpTXMTx5abr85zspZ0ocZffwZrNQyztHgMtFHmFTfkkP9F8x6K6qCd+QAXm5KSrlg0
+         K0zgTH8+3wc0GTLFhpohrnoGkqpoIG1AfQ6FV320OHko9XQO1MiU3xqkWyZPm1zOWl
+         Xu99/Rc5O/gpgc6TzkSQP7ZdLsg4Nsp6NarNtuf+eny0C3d9K24ZqR870V4ovPT4ix
+         En3WOpKSipcnQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1ot9fM-005Brn-Gt;
+        Thu, 10 Nov 2022 15:40:32 +0000
+Date:   Thu, 10 Nov 2022 15:40:32 +0000
+Message-ID: <86iljmq0lr.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Richard Fitzgerald <rf@opensource.cirrus.com>
+Cc:     <lee@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+        <broonie@kernel.org>, <tglx@linutronix.de>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic CS48L31/32/33 codecs
+In-Reply-To: <4d50faae-7eea-bc5a-9def-935c2063a7b3@opensource.cirrus.com>
+References: <20221109165331.29332-1-rf@opensource.cirrus.com>
+        <20221109165331.29332-10-rf@opensource.cirrus.com>
+        <87mt8zutib.wl-maz@kernel.org>
+        <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
+        <86pmdvow5y.wl-maz@kernel.org>
+        <4d50faae-7eea-bc5a-9def-935c2063a7b3@opensource.cirrus.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: rf@opensource.cirrus.com, lee@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org, broonie@kernel.org, tglx@linutronix.de, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 2:53 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Nov 10, 2022 at 02:22:40PM +0100, Thierry Reding wrote:
-> > On Tue, Nov 08, 2022 at 03:38:52PM +0200, Andy Shevchenko wrote:
->
-> ...
->
-> > > +   np = to_of_node(chip->fwnode);
-> >
-> > This breaks a number of GPIO controllers on Tegra where chip->fwnode
-> > ends up never getting set. I also see this break drivers like the MFD-
-> > based gpio-max77620, so I don't think this is anything specific to the
-> > Tegra drivers.
-> >
-> > Looking at how fwnode handling works, it seems like we're checking the
-> > wrong value here, since chip->fwnode is only for explicit overrides of
-> > the fwnode value.
-> >
-> > The below patch fixes the regression for me:
->
-> Thank you! Can you submit it as a formal fix? (Also see below)
-> Of if Bart prefers I can respin fixed verison. Bart?
->
+On Thu, 10 Nov 2022 13:14:30 +0000,
+Richard Fitzgerald <rf@opensource.cirrus.com> wrote:
+> 
+> I note your accusation that we were too lazy (or too stupid?)
+> to think of this.
 
-Let's have a fix on top of your changes. Thierry: can you send the
-patch to the list?
+Take it the way you want. But I criticise the code, not the author.
+And I'm merely pointed out that there was significant room for
+improvement.
 
-Bart
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
