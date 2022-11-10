@@ -2,56 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8468623FA4
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 11:20:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46C8B623FA6
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 11:21:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbiKJKUr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 05:20:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51626 "EHLO
+        id S229795AbiKJKVS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 05:21:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbiKJKUp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 05:20:45 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAA99FE4
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:20:43 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot4fc-00074I-7y; Thu, 10 Nov 2022 11:20:28 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot4fZ-003Qp3-KW; Thu, 10 Nov 2022 11:20:26 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ot4fZ-00FcfD-NA; Thu, 10 Nov 2022 11:20:25 +0100
-Date:   Thu, 10 Nov 2022 11:20:25 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/6] pwm: lpss: Include headers we are direct user of
-Message-ID: <20221110102025.2tqdb3v6ndg6vyqk@pengutronix.de>
-References: <20221108142226.63161-1-andriy.shevchenko@linux.intel.com>
- <20221108142226.63161-4-andriy.shevchenko@linux.intel.com>
- <20221110072144.2s37r52qcpi6utgh@pengutronix.de>
- <CAHp75VenLc-QfuD3rHPh=5nu_SqWvEnsePbNMsBA4R-Zs+nvrw@mail.gmail.com>
+        with ESMTP id S229730AbiKJKVR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 05:21:17 -0500
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77AC82EF27
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:21:15 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id q9so3917586ejd.0
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 02:21:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DzVccqK8r10+eJcWFau+z76oVshVdUbajb+fpILwHo4=;
+        b=ZjAWG299WEYD3yhWLaSEkxdPYu/zU0l6XzZeRRxVMF/TbyNqO4VjpXuAtPmN3OE7BL
+         WU2ayYqvlurEI4IIqWefXARXvKodyhMPCIxUPeJu0Wh1rxfXBmsmxAsZ9rwxvpm+n3Hi
+         VgYa3tKEmTetYUmFNPmOiQYDc29IZE9tv0tikOdFijyjoI+j6hQTy9qfLlku3jA1HkLs
+         f6W5V2yQgG0zE/u+0ciDWzq/kYEuk9KoylB+bifB34zPgkF0WRaaUUizmpqThuzbGiJ6
+         llmCosDcSRBA0zcQPfvGKeH2F3JPCtozxm+ClTMVSYwHlZXroAQwhFCO6W2IuHWUSg3X
+         gZHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DzVccqK8r10+eJcWFau+z76oVshVdUbajb+fpILwHo4=;
+        b=QltOzgQ3EjaFreC7iCJNQO9aPqL1W3Nn3iKNAOn78LnFbkLJJX0V4yxFMQmpKWvzGJ
+         Og6zSO9v1JwWbVV5PbOeehWWBF8zEf5FSD7MKqRnpzi6TNnPKrQG5f820Uzg6buOKOIV
+         CVKa2fuW/Zt3GCZbuBIJuCLzh/esqVFzT7EffQBUTQN3DDVA/d6Q+zcqFARKeEoxims9
+         USiilLDWdTntGUaz/neAhHSpbGKdSISISRKp8LuDSZn0g6vaPooNT8mx5KXLOpV6DvdG
+         m56W+1Q9Fk/x9hNgJzjdpAhMrHJwBO7mWdQWYLFzTvhjIiAK4j5SGV6jugGfTWXXhW2V
+         iVRA==
+X-Gm-Message-State: ACrzQf1SzuNPrH0DYy4PfNZszAKiFhmUyVBkaEYX6U3ibWA3os2kwB6C
+        Piw2sIA2s8CXhFIP9inWrp+8WqpW8NLYFDIfiw1oRw==
+X-Google-Smtp-Source: AMsMyM7gTYta/+pVULXdP/rsWKEEJRTzX78HLJvZMbTb+bGDejI9yp4s7ufQUVVK7iJ/aB5J8JreNEBML0pwIRci4UA=
+X-Received: by 2002:a17:906:4c4b:b0:7ad:a197:b58e with SMTP id
+ d11-20020a1709064c4b00b007ada197b58emr60349152ejw.203.1668075673995; Thu, 10
+ Nov 2022 02:21:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ilrfeteqmdew4gst"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VenLc-QfuD3rHPh=5nu_SqWvEnsePbNMsBA4R-Zs+nvrw@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+References: <20221110014255.20711-1-andre.przywara@arm.com>
+In-Reply-To: <20221110014255.20711-1-andre.przywara@arm.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 10 Nov 2022 11:21:02 +0100
+Message-ID: <CACRpkdb=5mobcWBJYtXd=nC7A+Uo__itk0F9oZBeTjWHBkBU1w@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/2] pinctrl: sunxi: Introduce DT-based pinctrl builder
+To:     Andre Przywara <andre.przywara@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Icenowy Zheng <uwu@icenowy.me>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-sunxi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,74 +72,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 10, 2022 at 2:44 AM Andre Przywara <andre.przywara@arm.com> wrote:
 
---ilrfeteqmdew4gst
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Compared to my previous effort almost exactly five years ago [1], this
+> new version drops the idea of describing the pinctrl data entirely in
+> the DT, instead it still relies on driver provided information for that.
+(...)
+> On the DT side all that would be needed is *one* extra property per
+> pin group to announce the mux value:
+>
+>         uart0_pb_pins: uart0-pb-pins {
+>                 pins = "PB9", "PB10";
+>                 function = "uart0";
+>                 pinmux = <2>;
+>         };
 
-On Thu, Nov 10, 2022 at 11:53:59AM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 10, 2022 at 9:22 AM Uwe Kleine-K=F6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Tue, Nov 08, 2022 at 04:22:23PM +0200, Andy Shevchenko wrote:
-> > > For the sake of integrity, include headers we are direct user of.
-> > >
-> > > While at it, move the struct pwm_lpss_chip to be after
-> > > the struct pwm_lpss_boardinfo as the former uses pointer
-> > > to the latter.
-> >
-> > That part is fine.
-> >
-> > > Replace device.h with a forward declaration in order to improve
-> > > the compilation time due to reducing overhead of device.h parsing
-> > > with entire train of dependencies.
-> >
-> > Together with "For the sake of integrity, include headers we are direct
-> > user of." this makes an a bit schizophrenic impression on me. You add
-> > <linux/types.h> because the file is a direct user of it, but you drop
-> > <linux/device.h> despite being a direct user.
->=20
-> But we don't use device.h.
+So what you need to do is to convince the device tree people that this
+is a good idea.
 
-What is the canonical header to provide struct device?
+For me as linux maintainer it's no big deal, it's fine either way. The new
+code looks elegant.
 
-> > If you adapt the reasoning to something like:
-> >
-> > Replace the inclusion of <linux/device.h> by a forward declaration of
-> > struct device plus a (cheaper) #include of <linux/types.h> as
-> > <linux/device.h> is an expensive include (measured in compiler effort).
->=20
-> Fine with me, thanks for the draft.
->=20
-> > I could better live with it. I would even split this into two patches
-> > then. (i.e. move struct pwm_lpss_chip vs the include and forward change)
->=20
-> I think for this small change for a driver that hasn't been modified
-> often it's fine to have them in one. But tell me if you are insisting
-> on a split, I can do that.
+But from a DT point of view this needs to make sense also for Windows
+and BSD, so that is who you have to convince. If it is possible to derive
+the same information from the compatible string (like today) that will
+need an extended argument why all operating systems will benefit from
+this.
 
-I don't insist.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---ilrfeteqmdew4gst
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmNs0GcACgkQwfwUeK3K
-7Ak9iggAhGxxudCLGFL25NcgPyQ/qjyQM1LryRG9tCC0hHhkmpvNEdxRgdHghG9L
-48uWXHpGmJ4CToYbKjmeN+2pk0lrCWwh9R5Av8y8/O5oDNxrda8uwtG7mOdhpC3q
-0KZEvYuwlroI87pq1qG81UQdyHsQuZjusiFQctNHqgWI3XuDIOvMM8kGyET6uPe7
-w9v+4ZsvUv979VgO0c49L9C+G/3XF9Ta2uJuovwnQt2clj9RN//5ai9JDQw8vnDr
-pSjXFSO7sqokaRTsVEyUU4TbH0R/DI7UjuUApitn86YcEMrV/FLE8TiOg7CBbZzl
-fOZ+jcg1cBba21CAv43jNGufS8NknQ==
-=Gg6m
------END PGP SIGNATURE-----
-
---ilrfeteqmdew4gst--
+Yours,
+Linus Walleij
