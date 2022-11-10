@@ -2,207 +2,410 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EE626239D2
-	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 03:37:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30B27623A67
+	for <lists+linux-gpio@lfdr.de>; Thu, 10 Nov 2022 04:27:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232226AbiKJChA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 9 Nov 2022 21:37:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45222 "EHLO
+        id S232603AbiKJD1q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 9 Nov 2022 22:27:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232213AbiKJCg7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 21:36:59 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D19201BD;
-        Wed,  9 Nov 2022 18:36:57 -0800 (PST)
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N75W54m3ZzJnZQ;
-        Thu, 10 Nov 2022 10:33:53 +0800 (CST)
-Received: from [10.174.179.163] (10.174.179.163) by
- kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 10 Nov 2022 10:36:54 +0800
-Message-ID: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
-Date:   Thu, 10 Nov 2022 10:36:53 +0800
+        with ESMTP id S232624AbiKJD1p (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 9 Nov 2022 22:27:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE3E28728;
+        Wed,  9 Nov 2022 19:27:42 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D79A61D62;
+        Thu, 10 Nov 2022 03:27:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B034AC43470;
+        Thu, 10 Nov 2022 03:27:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668050861;
+        bh=FGC5r9hkOMujXFEau65cl+2ooaMgbcgKE5/ije1zdRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=pEnPGJR8945KDDyvZJCjIBl5lirmdubu60BO/Q7jwEU5Tl4oSG7JMJrYT03Uxvtzt
+         dGIUO2Fhrz0F69tVtip+dN5JTeshkYaAfCqHCnHyAjhp5iBuLJwMg5D/3Mz52+0zC4
+         5lYewBlhW5StdCg7KR0lCKQ9hSHXOX0WKQUJUKB/eK2HTxUyI3TxZsHqnNm0/lmfHh
+         GnX6ql4iFsp71NKfPhfVP/lZoOy7NyZUCzoKPq2GzJHHe45OkMOVNyZnbNHouzJMLJ
+         Dt4EbskcBhiRROtfvK7wBPitG8QnC/QxvDYTe/ks5lToynDiQF+PxdN6c/FFgVBFQ1
+         49gfBVKuXC9Ag==
+Date:   Wed, 9 Nov 2022 21:27:38 -0600
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,ipq8074: convert to
+ dtschema
+Message-ID: <20221110032738.dx3yqgabzsprjvjw@builder.lan>
+References: <20221108142357.67202-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v2] gpiolib: fix memory leak in gpiochip_setup_dev
-Content-Language: en-US
-To:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        <linux@roeck-us.net>
-CC:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <linux-gpio@vger.kernel.org>, <liwei391@huawei.com>,
-        <yuancan@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <Y2ttmcV+PFDUZR3l@sol>
- <20221109093120.3128541-1-zengheng4@huawei.com>
- <Y2u9bLIohQ8eFTY1@smile.fi.intel.com> <Y2xTSyce8WfLdtge@sol>
-From:   Zeng Heng <zengheng4@huawei.com>
-In-Reply-To: <Y2xTSyce8WfLdtge@sol>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.163]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221108142357.67202-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Nov 08, 2022 at 03:23:56PM +0100, Krzysztof Kozlowski wrote:
+> Convert Qualcomm IPQ8074 pin controller bindings to DT schema.  Keep the
+> parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, their children with
+> '-pins').
+> 
 
-On 2022/11/10 9:26, Kent Gibson wrote:
-> On Wed, Nov 09, 2022 at 04:47:08PM +0200, Andy Shevchenko wrote:
->> On Wed, Nov 09, 2022 at 05:31:20PM +0800, Zeng Heng wrote:
->>> gcdev_register & gcdev_unregister call device_add & device_del to
->>> request/release source. But in device_add, the dev->p allocated by
->>> device_private_init is not released by device_del.
->> First of all, we refer to the functions like func().
-Thanks, it would be updated in next version.
-> Further to this, the description of the problem could be clearer -
-> it would be helpful to indicate the code path that triggers the problem
-> - it is gpiochip_sysfs_register() returning an error?
->
->>> So when calling gcdev_unregister to release gdev, it needs put_device
->>> to release dev in the following.
->>>
->>> Otherwise, kmemleak would report memory leak such as below:
->>>
->>> unreferenced object 0xffff88810b406400 (size 512):
->>>    comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
->>>    hex dump (first 32 bytes):
->>>      00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
->>>      ff ff ff ff ff ff ff ff a0 5e 23 90 ff ff ff ff  .........^#.....
->>>    backtrace:
->> Second, read Submitting Patches on how to provide your backtraces in the
->> message body.
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 
-Thanks, it would be updated in next version.
+Regards,
+Bjorn
 
->>
->>>      [<00000000a58ee5fe>] kmalloc_trace+0x22/0x110
->>>      [<0000000045fe2058>] device_add+0xb34/0x1130
->>>      [<00000000d778b45f>] cdev_device_add+0x83/0xe0
->>>      [<0000000089f948ed>] gpiolib_cdev_register+0x73/0xa0
->>>      [<00000000a3a8a316>] gpiochip_setup_dev+0x1c/0x70
->>>      [<00000000787227b4>] gpiochip_add_data_with_key+0x10f6/0x1bf0
->>>      [<000000009ac5742c>] devm_gpiochip_add_data_with_key+0x2e/0x80
->>>      [<00000000bf2b23d9>] xra1403_probe+0x192/0x1b0 [gpio_xra1403]
->>>      [<000000005b5ef2d4>] spi_probe+0xe1/0x140
->>>      [<000000002b26f6f1>] really_probe+0x17c/0x3f0
->>>      [<00000000dd2dad9c>] __driver_probe_device+0xe3/0x170
->>>      [<000000005ca60d2a>] device_driver_attach+0x34/0x80
->>>      [<00000000e9db90db>] bind_store+0x10b/0x1a0
->>>      [<00000000e2650f8a>] drv_attr_store+0x49/0x70
->>>      [<0000000080a80b2b>] sysfs_kf_write+0x8c/0xb0
->>>      [<00000000a28b45b9>] kernfs_fop_write_iter+0x216/0x2e0
->>>
->>> unreferenced object 0xffff888100de9800 (size 512):
->>>    comm "python3", pid 264, jiffies 4294737615 (age 33.514s)
->>>    hex dump (first 32 bytes):
->>>      00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
->>>      ff ff ff ff ff ff ff ff a0 5e 63 a1 ff ff ff ff  .........^c.....
->>>    backtrace:
->>>      [<00000000bcc571d0>] kmalloc_trace+0x22/0x110
->>>      [<00000000eeb06124>] device_add+0xb34/0x1130
->>>      [<000000007e5cd2fd>] cdev_device_add+0x83/0xe0
->>>      [<000000008f6bcd3a>] gpiolib_cdev_register+0x73/0xa0
->>>      [<0000000012c93b24>] gpiochip_setup_dev+0x1c/0x70
->>>      [<00000000a24b646a>] gpiochip_add_data_with_key+0x10f6/0x1bf0
->>>      [<000000000c225212>] tpic2810_probe+0x16e/0x196 [gpio_tpic2810]
->>>      [<00000000b52d04ff>] i2c_device_probe+0x651/0x680
->>>      [<0000000058d3ff6b>] really_probe+0x17c/0x3f0
->>>      [<00000000586f43d3>] __driver_probe_device+0xe3/0x170
->>>      [<000000003f428602>] device_driver_attach+0x34/0x80
->>>      [<0000000040e91a1b>] bind_store+0x10b/0x1a0
->>>      [<00000000c1d990b9>] drv_attr_store+0x49/0x70
->>>      [<00000000a23bfc22>] sysfs_kf_write+0x8c/0xb0
->>>      [<00000000064e6572>] kernfs_fop_write_iter+0x216/0x2e0
->>>      [<00000000026ce093>] vfs_write+0x658/0x810
->>>
->>> Because at the point of gpiochip_setup_dev here, where dev.release
->>> does not set yet, calling put_device would cause the warning of
->>> no release function and double-free in the following fault handler
->>> route (when kfree dev_name). So directly calling kfree to release
->>> dev->p here in case of memory leak.
-> Again, this could be clearer.  The dev->p is normally freed by
-> device_release() - why is that not happening in this case?
-> (as put_device() is never called in this path)
->
-> The double free you see if you do call put_device() appears to be due to
-> different expectations as to the cleanup that gpiochip_setup_dev() will
-> perform on error, depending on where it is called. gpiochip_setup_devs()
-> assumes any cleanup is performed by gpiochip_setup_dev(), while
-> gpiochip_add_data_with_key() assumes that it hasn't performed any cleanup.
->
-> Having gpiochip_setup_dev() perform its own cleanup makes the most sense
-> to me, so gpiochip_add_data_with_key() should be changed to allow for
-> that.
-
-
-Right, the cleanup route of gpiochip_add_data_with_key() & 
-gpiochip_setup_dev()
-
-has to be considered comprehensively after any possible cases of fault 
-injections.
-
-
->> ...
->>
->>> @@ -539,6 +539,7 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
->>>   
->>>   err_remove_device:
->>>   	gcdev_unregister(gdev);
->>> +	kfree(gdev->dev.p);
->>>   	return ret;
->> Third, I do not believe it's a correct fix.
->> Have you read comments around device_del() / etc.?
-
-Yes, not only the comments I read, but also the device_del() implement code.
-
-Releasing the dev->p pointer is not the business with device_del(), but 
-it's relied on
-
-put_device() calling release function.
-
-Turning back here, the release function is not set yet at this point, 
-there is a gap
-
-between device_add() and set release function pointer.
-
-That's the reason why choose to free dev->p explicitly as the mail 
-mentioned above.
-
-> I agree - this is not the correct fix.  The correct fix is to trigger the
-> normal cleanup mechanism, so put_device().
-> The fact that that triggers a warning:
->
-> "Device '%s' does not have a release() function, it is broken and must be
-> fixed. See Documentation/core-api/kobject.rst.\n"
->
-> is an indicator that dev.release should be set earlier.
-> If gpiodevice_release() is not appropriate, or cannot be modified to deal
-> with the device state at that point, then an appropriate interim release
-> function should be set.
->
-> And, as mentioned above, gpiochip_add_data_with_key() needs to be modified
-> to allow for gpiochip_setup_dev() cleaning up its own mess.
->
-> That is my take, but that is just from perusing the code so I may be
-> totally off base.  Either way, an ACK/NACK on this from a maintainer or
-> other gpiolib expert would be helpful to expiditing a solution.
->
-> Cheers,
-> Kent.
-
-Yes, exactly.
-
-Thanks to all,
-
-Zeng Heng
-
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt | 181 ------------------
+>  .../pinctrl/qcom,ipq8074-pinctrl.yaml         | 135 +++++++++++++
+>  2 files changed, 135 insertions(+), 181 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+> deleted file mode 100644
+> index 7b151894f5a0..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+> +++ /dev/null
+> @@ -1,181 +0,0 @@
+> -Qualcomm Technologies, Inc. IPQ8074 TLMM block
+> -
+> -This binding describes the Top Level Mode Multiplexer block found in the
+> -IPQ8074 platform.
+> -
+> -- compatible:
+> -	Usage: required
+> -	Value type: <string>
+> -	Definition: must be "qcom,ipq8074-pinctrl"
+> -
+> -- reg:
+> -	Usage: required
+> -	Value type: <prop-encoded-array>
+> -	Definition: the base address and size of the TLMM register space.
+> -
+> -- interrupts:
+> -	Usage: required
+> -	Value type: <prop-encoded-array>
+> -	Definition: should specify the TLMM summary IRQ.
+> -
+> -- interrupt-controller:
+> -	Usage: required
+> -	Value type: <none>
+> -	Definition: identifies this node as an interrupt controller
+> -
+> -- #interrupt-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 2. Specifying the pin number and flags, as defined
+> -		    in <dt-bindings/interrupt-controller/irq.h>
+> -
+> -- gpio-controller:
+> -	Usage: required
+> -	Value type: <none>
+> -	Definition: identifies this node as a gpio controller
+> -
+> -- #gpio-cells:
+> -	Usage: required
+> -	Value type: <u32>
+> -	Definition: must be 2. Specifying the pin number and flags, as defined
+> -		    in <dt-bindings/gpio/gpio.h>
+> -
+> -- gpio-ranges:
+> -	Usage: required
+> -	Definition:  see ../gpio/gpio.txt
+> -
+> -- gpio-reserved-ranges:
+> -	Usage: optional
+> -	Definition: see ../gpio/gpio.txt
+> -
+> -Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+> -a general description of GPIO and interrupt bindings.
+> -
+> -Please refer to pinctrl-bindings.txt in this directory for details of the
+> -common pinctrl bindings used by client devices, including the meaning of the
+> -phrase "pin configuration node".
+> -
+> -The pin configuration nodes act as a container for an arbitrary number of
+> -subnodes. Each of these subnodes represents some desired configuration for a
+> -pin, a group, or a list of pins or groups. This configuration can include the
+> -mux function to select on those pin(s)/group(s), and various pin configuration
+> -parameters, such as pull-up, drive strength, etc.
+> -
+> -
+> -PIN CONFIGURATION NODES:
+> -
+> -The name of each subnode is not important; all subnodes should be enumerated
+> -and processed purely based on their content.
+> -
+> -Each subnode only affects those parameters that are explicitly listed. In
+> -other words, a subnode that lists a mux function but no pin configuration
+> -parameters implies no information about any pin configuration parameters.
+> -Similarly, a pin subnode that describes a pullup parameter implies no
+> -information about e.g. the mux function.
+> -
+> -
+> -The following generic properties as defined in pinctrl-bindings.txt are valid
+> -to specify in a pin configuration subnode:
+> -
+> -- pins:
+> -	Usage: required
+> -	Value type: <string-array>
+> -	Definition: List of gpio pins affected by the properties specified in
+> -		    this subnode.  Valid pins are:
+> -		    gpio0-gpio69
+> -
+> -- function:
+> -	Usage: required
+> -	Value type: <string>
+> -	Definition: Specify the alternative function to be configured for the
+> -		    specified pins. Functions are only valid for gpio pins.
+> -		    Valid values are:
+> -		    atest_char, atest_char0, atest_char1, atest_char2,
+> -		    atest_char3, audio_rxbclk, audio_rxd, audio_rxfsync,
+> -		    audio_rxmclk, audio_txbclk, audio_txd, audio_txfsync,
+> -		    audio_txmclk, blsp0_i2c, blsp0_spi, blsp0_uart, blsp1_i2c,
+> -		    blsp1_spi, blsp1_uart, blsp2_i2c, blsp2_spi, blsp2_uart,
+> -		    blsp3_i2c, blsp3_spi, blsp3_spi0, blsp3_spi1, blsp3_spi2,
+> -		    blsp3_spi3, blsp3_uart, blsp4_i2c0, blsp4_i2c1, blsp4_spi0,
+> -		    blsp4_spi1, blsp4_uart0, blsp4_uart1, blsp5_i2c, blsp5_spi,
+> -		    blsp5_uart, burn0, burn1, cri_trng, cri_trng0, cri_trng1,
+> -		    cxc0, cxc1, dbg_out, gcc_plltest, gcc_tlmm, gpio, ldo_en,
+> -		    ldo_update, led0, led1, led2, mac0_sa0, mac0_sa1, mac1_sa0,
+> -		    mac1_sa1, mac1_sa2, mac1_sa3, mac2_sa0, mac2_sa1, mdc,
+> -		    mdio, pcie0_clk, pcie0_rst, pcie0_wake, pcie1_clk,
+> -		    pcie1_rst, pcie1_wake, pcm_drx, pcm_dtx, pcm_fsync,
+> -		    pcm_pclk, pcm_zsi0, pcm_zsi1, prng_rosc, pta1_0, pta1_1,
+> -		    pta1_2, pta2_0, pta2_1, pta2_2, pwm0, pwm1, pwm2, pwm3,
+> -		    qdss_cti_trig_in_a0, qdss_cti_trig_in_a1,
+> -		    qdss_cti_trig_in_b0, qdss_cti_trig_in_b1,
+> -		    qdss_cti_trig_out_a0, qdss_cti_trig_out_a1,
+> -		    qdss_cti_trig_out_b0, qdss_cti_trig_out_b1,
+> -		    qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a,
+> -		    qdss_tracectl_b, qdss_tracedata_a, qdss_tracedata_b,
+> -		    qpic, rx0, rx1, rx2, sd_card, sd_write, tsens_max, wci2a,
+> -		    wci2b, wci2c, wci2d
+> -
+> -- bias-disable:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as no pull.
+> -
+> -- bias-pull-down:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as pull down.
+> -
+> -- bias-pull-up:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins should be configured as pull up.
+> -
+> -- output-high:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins are configured in output mode, driven
+> -		    high.
+> -
+> -- output-low:
+> -	Usage: optional
+> -	Value type: <none>
+> -	Definition: The specified pins are configured in output mode, driven
+> -		    low.
+> -
+> -- drive-strength:
+> -	Usage: optional
+> -	Value type: <u32>
+> -	Definition: Selects the drive strength for the specified pins, in mA.
+> -		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
+> -
+> -Example:
+> -
+> -	tlmm: pinctrl@1000000 {
+> -		compatible = "qcom,ipq8074-pinctrl";
+> -		reg = <0x1000000 0x300000>;
+> -		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> -		gpio-controller;
+> -		#gpio-cells = <2>;
+> -		gpio-ranges = <&tlmm 0 0 70>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -
+> -		uart2: uart2-default {
+> -			mux {
+> -				pins = "gpio23", "gpio24";
+> -				function = "blsp4_uart1";
+> -			};
+> -
+> -			rx {
+> -				pins = "gpio23";
+> -				drive-strength = <4>;
+> -				bias-disable;
+> -			};
+> -
+> -			tx {
+> -				pins = "gpio24";
+> -				drive-strength = <2>;
+> -				bias-pull-up;
+> -			};
+> -		};
+> -	};
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..c02dd2ad9b31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.yaml
+> @@ -0,0 +1,135 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq8074-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ8074 TLMM pin controller
+> +
+> +maintainers:
+> +  - Bjorn Andersson <andersson@kernel.org>
+> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> +
+> +description:
+> +  Top Level Mode Multiplexer pin controller in Qualcomm IPQ8074 SoC.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq8074-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  "#interrupt-cells": true
+> +  gpio-controller: true
+> +  "#gpio-cells": true
+> +  gpio-ranges: true
+> +  wakeup-parent: true
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 35
+> +
+> +  gpio-line-names:
+> +    maxItems: 70
+> +
+> +patternProperties:
+> +  "-state$":
+> +    oneOf:
+> +      - $ref: "#/$defs/qcom-ipq8074-tlmm-state"
+> +      - patternProperties:
+> +          "-pins$":
+> +            $ref: "#/$defs/qcom-ipq8074-tlmm-state"
+> +        additionalProperties: false
+> +
+> +$defs:
+> +  qcom-ipq8074-tlmm-state:
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        items:
+> +          pattern: "^gpio([0-9]|[1-6][0-9]|70)$"
+> +        minItems: 1
+> +        maxItems: 36
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +
+> +        enum: [ gpio, atest_char, atest_char0, atest_char1, atest_char2,
+> +                atest_char3, audio_rxbclk, audio_rxd, audio_rxfsync,
+> +                audio_rxmclk, audio_txbclk, audio_txd, audio_txfsync,
+> +                audio_txmclk, blsp0_i2c, blsp0_spi, blsp0_uart, blsp1_i2c,
+> +                blsp1_spi, blsp1_uart, blsp2_i2c, blsp2_spi, blsp2_uart,
+> +                blsp3_i2c, blsp3_spi, blsp3_spi0, blsp3_spi1, blsp3_spi2,
+> +                blsp3_spi3, blsp3_uart, blsp4_i2c0, blsp4_i2c1, blsp4_spi0,
+> +                blsp4_spi1, blsp4_uart0, blsp4_uart1, blsp5_i2c, blsp5_spi,
+> +                blsp5_uart, burn0, burn1, cri_trng, cri_trng0, cri_trng1, cxc0,
+> +                cxc1, dbg_out, gcc_plltest, gcc_tlmm, ldo_en, ldo_update, led0,
+> +                led1, led2, mac0_sa0, mac0_sa1, mac1_sa0, mac1_sa1, mac1_sa2,
+> +                mac1_sa3, mac2_sa0, mac2_sa1, mdc, mdio, pcie0_clk, pcie0_rst,
+> +                pcie0_wake, pcie1_clk, pcie1_rst, pcie1_wake, pcm_drx, pcm_dtx,
+> +                pcm_fsync, pcm_pclk, pcm_zsi0, pcm_zsi1, prng_rosc, pta1_0,
+> +                pta1_1, pta1_2, pta2_0, pta2_1, pta2_2, pwm0, pwm1, pwm2, pwm3,
+> +                qdss_cti_trig_in_a0, qdss_cti_trig_in_a1, qdss_cti_trig_in_b0,
+> +                qdss_cti_trig_in_b1, qdss_cti_trig_out_a0,
+> +                qdss_cti_trig_out_a1, qdss_cti_trig_out_b0,
+> +                qdss_cti_trig_out_b1, qdss_traceclk_a, qdss_traceclk_b,
+> +                qdss_tracectl_a, qdss_tracectl_b, qdss_tracedata_a,
+> +                qdss_tracedata_b, qpic, rx0, rx1, rx2, sd_card, sd_write,
+> +                tsens_max, wci2a, wci2b, wci2c, wci2d ]
+> +
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      bias-disable: true
+> +      drive-strength: true
+> +      input-enable: true
+> +      output-high: true
+> +      output-low: true
+> +
+> +    required:
+> +      - pins
+> +
+> +    additionalProperties: false
+> +
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    tlmm: pinctrl@1000000 {
+> +        compatible = "qcom,ipq8074-pinctrl";
+> +        reg = <0x01000000 0x300000>;
+> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +        gpio-controller;
+> +        gpio-ranges = <&tlmm 0 0 70>;
+> +        #gpio-cells = <0x2>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <0x2>;
+> +
+> +        serial4-state {
+> +            pins = "gpio23", "gpio24";
+> +            function = "blsp4_uart1";
+> +            drive-strength = <8>;
+> +            bias-disable;
+> +        };
+> +    };
+> -- 
+> 2.34.1
+> 
