@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32E11624E92
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 00:47:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0437624E91
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 00:47:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbiKJXrt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 18:47:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
+        id S229958AbiKJXrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 18:47:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbiKJXrs (ORCPT
+        with ESMTP id S229667AbiKJXrs (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 18:47:48 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777ED5E9FA
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8956E5EF80
         for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 15:47:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1668124066; x=1699660066;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=+v9kEgcJfazMlASb8pmreBFtrNT+w08aR/p/bXtrqBE=;
-  b=P0GtJyE9zwDEGo63/uzg11TfS0sW6Z68+PmCvFGB79eIMahb4lrxM7W8
-   Wd6rfrUdbjg3FiXZiJEmX1r3y9oiaJOtCju9MJ2t8NPYPzgcB88Du/h+r
-   U/7Q0dqZCQH4fzfmgN47vnc4om/teWUDOGYRV7UHi28r0uzZ66VEjqQ6x
-   zSvGKswW36UlMQTEWtDiRe8/U1S+mbzyRnwdgUSM3lfxbSKzRVyJS1d/F
-   xwgzi3CN4LmwvAl3Gd4BYTjzmF8aPFNMAQ6dhadbVV2zRY3rMWIOstP2g
-   xY1hw2vbm0Ll8UcO7VXXqeKK6+bEVXG19yjcJ899XtaSPqTplD+Gz65pG
+  bh=PiBWUE1qVunjijBUcIwPS3/Ujzrqwi00YRLez1zNFAc=;
+  b=HEAABFC3K8lTLaygj8gApNAp8IdqbErQsxLSNFQfHogdpSe+vBvvtzlN
+   NNumHVLdtsf+bxoaQQKQWmGADN8oGWDhFLgyIAUTbAbW1hvM3LQr53k/w
+   pt7r758fPLuDSTIGn67/LdM/0SG1gfDpceWvMDEQ1dQb1PNIhFBb11OHF
+   NgAbAtfcZWbYCKS+jBRy6JpZ7Wicw5mO1DNddZj3F9UWbEE+xD65FMPhU
+   h2Qx0rQApv0I2vtYYluzjwEFwMBtpzRIEyIX/rPpsrjTQpMwDiQ7y9lNs
+   TynjCMTloqU9RRFqbjwBy8JGKlbM/N8nELbr6liCRSW0pPxX0bj0AiYbk
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373598165"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="313253318"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="373598165"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:47:46 -0800
+   d="scan'208";a="313253318"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:47:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="670548313"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="726583787"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="670548313"
+   d="scan'208";a="726583787"
 Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 10 Nov 2022 15:47:44 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 10 Nov 2022 15:47:44 -0800
 Received: from kbuild by e783503266e8 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1otHGq-0003NN-0g;
+        id 1otHGq-0003NP-0v;
         Thu, 10 Nov 2022 23:47:44 +0000
-Date:   Fri, 11 Nov 2022 07:46:56 +0800
+Date:   Fri, 11 Nov 2022 07:47:00 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
- 91d5c5060ee24fe8da88cd585bb43b843d2f0dce
-Message-ID: <636d8d70.6DzTtxVbybODN5y5%lkp@intel.com>
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 99bcf14b234d22ff348cd3d131187493009eaf85
+Message-ID: <636d8d74.YM9+SmHuj96k4YVP%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,12 +62,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
-branch HEAD: 91d5c5060ee24fe8da88cd585bb43b843d2f0dce  pinctrl: devicetree: fix null pointer dereferencing in pinctrl_dt_to_map
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 99bcf14b234d22ff348cd3d131187493009eaf85  Merge branch 'devel' into for-next
 
 elapsed time: 726m
 
-configs tested: 107
+configs tested: 105
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -117,15 +117,15 @@ s390                             allmodconfig
 arc                                 defconfig
 s390                             allyesconfig
 alpha                               defconfig
-sh                           se7722_defconfig
-arm                         lpc18xx_defconfig
-nios2                         10m50_defconfig
-powerpc                 mpc837x_rdb_defconfig
-sh                      rts7751r2d1_defconfig
 sh                   secureedge5410_defconfig
+powerpc                 mpc837x_rdb_defconfig
 xtensa                    xip_kc705_defconfig
 xtensa                          iss_defconfig
 powerpc                 mpc834x_mds_defconfig
+sh                           se7722_defconfig
+arm                         lpc18xx_defconfig
+nios2                         10m50_defconfig
+sh                      rts7751r2d1_defconfig
 arm64                               defconfig
 powerpc                 linkstation_defconfig
 parisc                generic-64bit_defconfig
@@ -136,13 +136,11 @@ i386                          randconfig-a016
 arm64                            allyesconfig
 arm                                 defconfig
 arm                              allyesconfig
+powerpc                    amigaone_defconfig
 arm                             rpc_defconfig
 m68k                          multi_defconfig
 arc                         haps_hs_defconfig
-powerpc                    amigaone_defconfig
 arc                        nsimosci_defconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
 powerpc                       ppc64_defconfig
 i386                          debian-10.3-kvm
 i386                        debian-10.3-kunit
