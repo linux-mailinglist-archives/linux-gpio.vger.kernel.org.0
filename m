@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55229624E8C
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 00:40:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 32E11624E92
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 00:47:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbiKJXks (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 10 Nov 2022 18:40:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
+        id S229667AbiKJXrt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 10 Nov 2022 18:47:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231298AbiKJXkr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 18:40:47 -0500
+        with ESMTP id S229528AbiKJXrs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 10 Nov 2022 18:47:48 -0500
 Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A75453EF1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 15:40:46 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 777ED5E9FA
+        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 15:47:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668123646; x=1699659646;
+  t=1668124066; x=1699660066;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=M2Eo5rUcjVUsnIwKawmRhdYFp5iYoPBEdu8U9gl+0t4=;
-  b=gZYqyh9DcS1WBtDmz1XuCiVmSATFiqHVZFhCedw4TDnkukqlaWDY1PjI
-   LW+FzgZ8kHO99rpm2cMDzQFdeADhTbKpQELwLA4GmypqyGEBxTbNqvxau
-   PYMONRGIfkHlPQS8gncZibzUdX3XzURcNBBof/XGz/hKTVaXzpEcFPaOa
-   mLAkzqtgJ5pKlMYauruFTY2/FE0GJ5H9telFHoiYaevePmpIeBQI8P1Mx
-   rW0299ARCVACWSx6Nh8uGUrr6qmF5RjY8L+LFVfrJwcKongqgRN+723He
-   18vFIxHXXLGnGBa5Aq4BSEfUCisaAZLU5V/qe1n0JV4psWgSA/q2gU3S3
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373597280"
+  bh=+v9kEgcJfazMlASb8pmreBFtrNT+w08aR/p/bXtrqBE=;
+  b=P0GtJyE9zwDEGo63/uzg11TfS0sW6Z68+PmCvFGB79eIMahb4lrxM7W8
+   Wd6rfrUdbjg3FiXZiJEmX1r3y9oiaJOtCju9MJ2t8NPYPzgcB88Du/h+r
+   U/7Q0dqZCQH4fzfmgN47vnc4om/teWUDOGYRV7UHi28r0uzZ66VEjqQ6x
+   zSvGKswW36UlMQTEWtDiRe8/U1S+mbzyRnwdgUSM3lfxbSKzRVyJS1d/F
+   xwgzi3CN4LmwvAl3Gd4BYTjzmF8aPFNMAQ6dhadbVV2zRY3rMWIOstP2g
+   xY1hw2vbm0Ll8UcO7VXXqeKK6+bEVXG19yjcJ899XtaSPqTplD+Gz65pG
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="373598165"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="373597280"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:40:46 -0800
+   d="scan'208";a="373598165"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Nov 2022 15:47:46 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="966618856"
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="670548313"
 X-IronPort-AV: E=Sophos;i="5.96,155,1665471600"; 
-   d="scan'208";a="966618856"
+   d="scan'208";a="670548313"
 Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Nov 2022 15:40:44 -0800
+  by orsmga001.jf.intel.com with ESMTP; 10 Nov 2022 15:47:44 -0800
 Received: from kbuild by e783503266e8 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1otHA3-0003Mz-35;
-        Thu, 10 Nov 2022 23:40:43 +0000
-Date:   Fri, 11 Nov 2022 07:40:19 +0800
+        id 1otHGq-0003NN-0g;
+        Thu, 10 Nov 2022 23:47:44 +0000
+Date:   Fri, 11 Nov 2022 07:46:56 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 802e19a066c40017321a0717817785d861aedc53
-Message-ID: <636d8be3.pMzqNdFQ6nfrX55b%lkp@intel.com>
+Subject: [linusw-pinctrl:fixes] BUILD SUCCESS
+ 91d5c5060ee24fe8da88cd585bb43b843d2f0dce
+Message-ID: <636d8d70.6DzTtxVbybODN5y5%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -62,12 +62,12 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 802e19a066c40017321a0717817785d861aedc53  pinctrl: Put space between type and data in compound literal
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git fixes
+branch HEAD: 91d5c5060ee24fe8da88cd585bb43b843d2f0dce  pinctrl: devicetree: fix null pointer dereferencing in pinctrl_dt_to_map
 
-elapsed time: 720m
+elapsed time: 726m
 
-configs tested: 103
+configs tested: 107
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -136,10 +136,10 @@ i386                          randconfig-a016
 arm64                            allyesconfig
 arm                                 defconfig
 arm                              allyesconfig
-powerpc                    amigaone_defconfig
 arm                             rpc_defconfig
 m68k                          multi_defconfig
 arc                         haps_hs_defconfig
+powerpc                    amigaone_defconfig
 arc                        nsimosci_defconfig
 i386                   debian-10.3-kselftests
 i386                              debian-10.3
@@ -159,6 +159,10 @@ loongarch                        allmodconfig
 i386                          randconfig-c001
 ia64                        generic_defconfig
 openrisc                         alldefconfig
+sparc                               defconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
 
 clang tested configs:
 x86_64                        randconfig-a014
