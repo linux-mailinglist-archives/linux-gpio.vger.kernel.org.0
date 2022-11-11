@@ -2,352 +2,748 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8245D625A5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 13:19:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7497A625A6B
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 13:24:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232841AbiKKMTT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Nov 2022 07:19:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
+        id S232803AbiKKMX6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Nov 2022 07:23:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbiKKMTS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 07:19:18 -0500
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74566315A;
-        Fri, 11 Nov 2022 04:19:15 -0800 (PST)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2ABCJ5UQ037678;
-        Fri, 11 Nov 2022 06:19:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668169145;
-        bh=RxZQqT7CzYYwrQOggpseJOaSexhZund2j84t2+jgt3w=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=GFpCfZBtN6aDbq76Nb3f7OCZw3YsieoeejIFp9pQFAKbxK/1E0pgqr8gfBhM6BQ0/
-         zEzbi6gr3NGLnYHf+pnJlPgbkrBMvlPDHuzUw3vOCyPgkYw9jtXkD/DS5WVqDjOWlV
-         d0Xbgw4bjeZuVUTPiKV0aDp7qgLUM+hyDFRRBpmg=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2ABCJ5V3061190
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 11 Nov 2022 06:19:05 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Fri, 11
- Nov 2022 06:19:04 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Fri, 11 Nov 2022 06:19:04 -0600
-Received: from [10.250.233.43] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2ABCIwSQ010732;
-        Fri, 11 Nov 2022 06:18:59 -0600
-Message-ID: <581d0735-8294-5805-9a44-ed4ec3e9ae54@ti.com>
-Date:   Fri, 11 Nov 2022 17:48:57 +0530
+        with ESMTP id S230270AbiKKMX6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 07:23:58 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC6D27FD1
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Nov 2022 04:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668169436; x=1699705436;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dvb9web1p1c2XUTiChWGgB1Aj6cXXMN21cl8PHuN3m0=;
+  b=b7/BWLXr8ooyfQ/4LkNAGO7UZfGOcfIZzrTELvmY7wvZG3swyHrQF+j7
+   sqVZrtIab/TtuTabstiQ/9SjI23ywcW7gscBpPQ3P9gI3eIu8CEhGUcpT
+   VDsk8Llc+IwytCLk+MLUJ7G8cOKDUYC8+nLxJUfSyk4O74qi7XLWyGqwE
+   tiSxWJn0ydsqOOKSwd/82TuDM4Mm93w0nIYDRN3apS0ncCNhhvNOsKQ7N
+   5tjmJAqL0JoRUTdq1AMZsmpJspQ2LajfjnYavmqbqTlZhHlwgqkqTrGA1
+   JiBLh1RplfSvlnau77CIAreGwjXKQ5CqJz3R1KGlymw1p6mHu2kV79gwv
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="338356984"
+X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
+   d="scan'208";a="338356984"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 04:23:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="639999780"
+X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
+   d="scan'208";a="639999780"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Nov 2022 04:23:54 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id CB027155; Fri, 11 Nov 2022 14:24:18 +0200 (EET)
+Date:   Fri, 11 Nov 2022 14:24:18 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Niyas Sait <niyas.sait@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        rafael@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH RFC 3/3] pinctrl: add support for acpi pin function and
+ config resources
+Message-ID: <Y24+8mtqqqJWwNSR@black.fi.intel.com>
+References: <20221110191258.1134378-1-niyas.sait@linaro.org>
+ <20221110191258.1134378-4-niyas.sait@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH v2 4/4] arm64: dts: ti: Add support for J784S4 EVM board
-To:     Andrew Davis <afd@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Hari Nagalla <hnagalla@ti.com>
-References: <20221014082314.118361-1-a-nandan@ti.com>
- <20221014082314.118361-5-a-nandan@ti.com>
- <cd5dbbb0-2d9f-8d7d-b051-f8d01d710c62@ti.com>
-Content-Language: en-US
-From:   Apurva Nandan <a-nandan@ti.com>
-In-Reply-To: <cd5dbbb0-2d9f-8d7d-b051-f8d01d710c62@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221110191258.1134378-4-niyas.sait@linaro.org>
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 10, 2022 at 07:12:58PM +0000, Niyas Sait wrote:
+> Add support for following acpi pin resources
+> 
+> - PinFunction
+> - PinConfig
+> - PinGroupFunction
+> - PinGroupConfig
+> 
+> Pinctrl-acpi parses the acpi table and generates list of pin
 
-On 19/10/22 23:01, Andrew Davis wrote:
-> On 10/14/22 3:23 AM, Apurva Nandan wrote:
->> J784S4 EVM board is designed for TI J784S4 SoC. It supports the following
->> interfaces:
->> * 32 GB DDR4 RAM
->> * x2 Gigabit Ethernet interfaces capable of working in Switch and MAC mode
->> * x1 Input Audio Jack, x1 Output Audio Jack
->> * x1 USB2.0 Hub with two Type A host and x1 USB 3.1 Type-C Port
->> * x2 4L PCIe connector
->> * x1 UHS-1 capable micro-SD card slot
->> * 512 Mbit OSPI flash, 1 Gbit Octal NAND flash, 512 Mbit QSPI flash,
->>     UFS flash.
->> * x6 UART through UART-USB bridge
->> * XDS110 for onboard JTAG debug using USB
->> * Temperature sensors, user push buttons and LEDs
->> * 40-pin User Expansion Connector
->> * x2 ENET Expansion Connector, x1 GESI expander, x2 Display connector
->> * x1 15-pin CSI header
->> * x6 MCAN instances
->>
->> Add basic support for J784S4-EVM.
->>
->> Schematics: https://www.ti.com/lit/zip/sprr458
->>
->> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->> Signed-off-by: Apurva Nandan <a-nandan@ti.com>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> Signed-off-by: Matt Ranostay <mranostay@ti.com>
->> Signed-off-by: Rahul T R <r-ravikumar@ti.com>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->> ---
->>    arch/arm64/boot/dts/ti/Makefile          |   2 +
->>    arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 199 +++++++++++++++++++++++
->>    2 files changed, 201 insertions(+)
->>    create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->>
->> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
->> index 02e5d80344d0..6381c458738a 100644
->> --- a/arch/arm64/boot/dts/ti/Makefile
->> +++ b/arch/arm64/boot/dts/ti/Makefile
->> @@ -19,6 +19,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-j7200-common-proc-board.dtb
->>    
->>    dtb-$(CONFIG_ARCH_K3) += k3-j721s2-common-proc-board.dtb
->>    
->> +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
->> +
->>    dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
->>    dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
->>    
->> diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->> new file mode 100644
->> index 000000000000..bf2f2dfb7658
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
->> @@ -0,0 +1,199 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
->> + *
->> + * Common Processor Board: https://www.ti.com/tool/J721EXCPXEVM
-> This doesn't seem to be the right EVM, I'd just drop this link.
->
->> + */
->> +
->> +/dts-v1/;
->> +
->> +#include <dt-bindings/net/ti-dp83867.h>
->> +#include <dt-bindings/gpio/gpio.h>
->> +#include "k3-j784s4.dtsi"
->> +
->> +/ {
->> +	compatible = "ti,j784s4-evm", "ti,j784s4";
->> +	model = "Texas Instruments J784S4 EVM";
->> +
->> +	chosen {
->> +		stdout-path = "serial2:115200n8";
->> +	};
->> +
->> +	aliases {
->> +		serial2 = &main_uart8;
->> +		mmc1 = &main_sdhci1;
->> +		i2c0 = &main_i2c0;
->> +	};
->> +
->> +	memory@80000000 {
->> +		device_type = "memory";
->> +		/* 32G RAM */
->> +		reg = <0x00 0x80000000 0x00 0x80000000>,
->> +		      <0x08 0x80000000 0x07 0x80000000>;
->> +	};
->> +
->> +	/* Reserving memory regions still pending */
-> Comment not needed.
->
->> +	reserved_memory: reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		secure_ddr: optee@9e800000 {
->> +			reg = <0x00 0x9e800000 0x00 0x01800000>;
->> +			alignment = <0x1000>;
-> Is alignment needed here?
-Okay, will drop this alignment property.
->
->> +			no-map;
->> +		};
->> +	};
->> +
->> +	evm_12v0: regulator-evm12v0 {
->> +		/* main supply */
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "evm_12v0";
->> +		regulator-min-microvolt = <12000000>;
->> +		regulator-max-microvolt = <12000000>;
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->> +	vsys_3v3: regulator-vsys3v3 {
->> +		/* Output of LM5140 */
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vsys_3v3";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		vin-supply = <&evm_12v0>;
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->> +	vsys_5v0: regulator-vsys5v0 {
->> +		/* Output of LM5140 */
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vsys_5v0";
->> +		regulator-min-microvolt = <5000000>;
->> +		regulator-max-microvolt = <5000000>;
->> +		vin-supply = <&evm_12v0>;
->> +		regulator-always-on;
->> +		regulator-boot-on;
->> +	};
->> +
->> +	vdd_mmc1: regulator-sd {
->> +		/* Output of TPS22918 */
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vdd_mmc1";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		enable-active-high;
->> +		vin-supply = <&vsys_3v3>;
->> +		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	vdd_sd_dv: regulator-TLV71033 {
->> +		/* Output of TLV71033 */
->> +		compatible = "regulator-gpio";
->> +		regulator-name = "tlv71033";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&vdd_sd_dv_pins_default>;
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-boot-on;
->> +		vin-supply = <&vsys_5v0>;
->> +		gpios = <&main_gpio0 8 GPIO_ACTIVE_HIGH>;
->> +		states = <1800000 0x0>,
->> +			 <3300000 0x1>;
->> +	};
->> +};
->> +
->> +&main_pmx0 {
->> +	main_uart8_pins_default: main-uart8-pins-default {
->> +		pinctrl-single,pins = <
->> +			J784S4_IOPAD(0x040, PIN_INPUT, 14) /* (AF37) MCASP0_AXR0.UART8_CTSn */
->> +			J784S4_IOPAD(0x044, PIN_OUTPUT, 14) /* (AG37) MCASP0_AXR1.UART8_RTSn */
->> +			J784S4_IOPAD(0x0d0, PIN_INPUT, 11) /* (AP38) SPI0_CS1.UART8_RXD */
->> +			J784S4_IOPAD(0x0d4, PIN_OUTPUT, 11) /* (AN38) SPI0_CLK.UART8_TXD */
->> +		>;
->> +	};
->> +
->> +	main_i2c0_pins_default: main-i2c0-pins-default {
->> +		pinctrl-single,pins = <
->> +			J784S4_IOPAD(0x0e0, PIN_INPUT_PULLUP, 0) /* (AN36) I2C0_SCL */
->> +			J784S4_IOPAD(0x0e4, PIN_INPUT_PULLUP, 0) /* (AP37) I2C0_SDA */
->> +		>;
->> +	};
->> +
->> +	main_mmc1_pins_default: main-mmc1-pins-default {
->> +		pinctrl-single,pins = <
->> +			J784S4_IOPAD(0x104, PIN_INPUT, 0) /* (AB38) MMC1_CLK */
->> +			J784S4_IOPAD(0x108, PIN_INPUT, 0) /* (AB36) MMC1_CMD */
->> +			J784S4_IOPAD(0x100, PIN_INPUT, 0) /* (###) MMC1_CLKLB */
-> Pin ###?
-This pin is not brought out physically, but needs to be muxed correctly 
-internally.
-Hence, there is no external pin/ball name.
->
-> Andrew
->
->> +			J784S4_IOPAD(0x0fc, PIN_INPUT, 0) /* (AA33) MMC1_DAT0 */
->> +			J784S4_IOPAD(0x0f8, PIN_INPUT, 0) /* (AB34) MMC1_DAT1 */
->> +			J784S4_IOPAD(0x0f4, PIN_INPUT, 0) /* (AA32) MMC1_DAT2 */
->> +			J784S4_IOPAD(0x0f0, PIN_INPUT, 0) /* (AC38) MMC1_DAT3 */
->> +			J784S4_IOPAD(0x0e8, PIN_INPUT, 8) /* (AR38) TIMER_IO0.MMC1_SDCD */
->> +		>;
->> +	};
->> +
->> +	vdd_sd_dv_pins_default: vdd-sd-dv-pins-default {
->> +		pinctrl-single,pins = <
->> +			J784S4_IOPAD(0x020, PIN_INPUT, 7) /* (AJ35) MCAN15_RX.GPIO0_8 */
->> +		>;
->> +	};
->> +};
->> +
->> +&main_uart8 {
->> +	status = "okay";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&main_uart8_pins_default>;
->> +};
->> +
->> +&main_i2c0 {
->> +	status = "okay";
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&main_i2c0_pins_default>;
->> +
->> +	clock-frequency = <400000>;
->> +
->> +	exp1: gpio@20 {
->> +		compatible = "ti,tca6416";
->> +		reg = <0x20>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		gpio-line-names = "PCIE1_2L_MODE_SEL", "PCIE1_4L_PERSTZ", "PCIE1_2L_RC_RSTZ",
->> +				  "PCIE1_2L_EP_RST_EN", "PCIE0_4L_MODE_SEL", "PCIE0_4L_PERSTZ",
->> +				  "PCIE0_4L_RC_RSTZ", "PCIE0_4L_EP_RST_EN", "PCIE1_4L_PRSNT#",
->> +				  "PCIE0_4L_PRSNT#", "CDCI1_OE1/OE4", "CDCI1_OE2/OE3",
->> +				  "AUDIO_MUX_SEL", "EXP_MUX2", "EXP_MUX3", "GESI_EXP_PHY_RSTZ";
->> +	};
->> +
->> +	exp2: gpio@22 {
->> +		compatible = "ti,tca6424";
->> +		reg = <0x22>;
->> +		gpio-controller;
->> +		#gpio-cells = <2>;
->> +		gpio-line-names = "R_GPIO_RGMII1_RST", "ENET2_I2CMUX_SEL", "GPIO_USD_PWR_EN",
->> +				  "USBC_PWR_EN", "USBC_MODE_SEL1", "USBC_MODE_SEL0",
->> +				  "GPIO_LIN_EN", "R_CAN_STB", "CTRL_PM_I2C_OE#",
->> +				  "ENET2_EXP_PWRDN", "ENET2_EXP_SPARE2", "CDCI2_RSTZ",
->> +				  "USB2.0_MUX_SEL", "CANUART_MUX_SEL0", "CANUART_MUX2_SEL1",
->> +				  "CANUART_MUX1_SEL1", "ENET1_EXP_PWRDN", "ENET1_EXP_RESETZ",
->> +				  "ENET1_I2CMUX_SEL", "ENET1_EXP_SPARE2", "ENET2_EXP_RESETZ",
->> +				  "USER_INPUT1", "USER_LED1", "USER_LED2";
->> +	};
->> +};
->> +
->> +&main_sdhci1 {
->> +	/* SD card */
->> +	status = "okay";
->> +	pinctrl-0 = <&main_mmc1_pins_default>;
->> +	pinctrl-names = "default";
->> +	disable-wp;
->> +	vmmc-supply = <&vdd_mmc1>;
->> +	vqmmc-supply = <&vdd_sd_dv>;
->> +};
->> +
->> +&main_gpio0 {
->> +	status = "okay";
->> +};
->> +
+ACPI
 
--- 
-Thanks and regards,
-Apurva Nandan,
-Texas Instruments India.
+> descriptors that can be used by pin controller to set and config pin.
+> 
+> Descriptors are grouped by pin number or group name and contains list
+> of functions or configs to apply.
+> 
+> Pin config types from acpi are converted to generic pin config types
 
+ACPI (ditto everywhere).
+
+> and passed through the descriptor.
+> 
+> Signed-off-by: Niyas Sait <niyas.sait@linaro.org>
+> ---
+>  drivers/pinctrl/core.c          |  19 +-
+>  drivers/pinctrl/core.h          |   3 +
+>  drivers/pinctrl/pinctrl-acpi.c  | 391 ++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-acpi.h  |  28 +++
+>  include/linux/pinctrl/pinctrl.h |  15 ++
+>  5 files changed, 452 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index ffe39336fcac..03770ac66d48 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/machine.h>
+> +#include <linux/acpi.h>
+>  
+>  #ifdef CONFIG_GPIOLIB
+>  #include "../gpio/gpiolib.h"
+> @@ -35,7 +36,7 @@
+>  #include "devicetree.h"
+>  #include "pinmux.h"
+>  #include "pinconf.h"
+> -
+> +#include "pinctrl-acpi.h"
+>  
+>  static bool pinctrl_dummy_state;
+>  
+> @@ -1042,9 +1043,15 @@ static struct pinctrl *create_pinctrl(struct device *dev,
+>  		return ERR_PTR(-ENOMEM);
+>  	p->dev = dev;
+>  	INIT_LIST_HEAD(&p->states);
+> -	INIT_LIST_HEAD(&p->dt_maps);
+>  
+> -	ret = pinctrl_dt_to_map(p, pctldev);
+> +	if (!ACPI_COMPANION(dev)) {
+> +		INIT_LIST_HEAD(&p->dt_maps);
+> +		ret = pinctrl_dt_to_map(p, pctldev);
+> +	} else {
+> +		INIT_LIST_HEAD(&p->acpi_maps);
+> +		ret = pinctrl_acpi_to_map(p);
+> +	}
+> +
+>  	if (ret < 0) {
+>  		kfree(p);
+>  		return ERR_PTR(ret);
+> @@ -1168,7 +1175,11 @@ static void pinctrl_free(struct pinctrl *p, bool inlist)
+>  		kfree(state);
+>  	}
+>  
+> -	pinctrl_dt_free_maps(p);
+> +	if (!ACPI_COMPANION(p->dev)) {
+> +		pinctrl_dt_free_maps(p);
+> +	} else {
+> +		pinctrl_acpi_free_maps(p);
+> +	}
+
+You don't need the {}
+
+>  
+>  	if (inlist)
+>  		list_del(&p->node);
+> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+> index 840103c40c14..28f2f9d518d4 100644
+> --- a/drivers/pinctrl/core.h
+> +++ b/drivers/pinctrl/core.h
+> @@ -72,6 +72,8 @@ struct pinctrl_dev {
+>   * @state: the current state
+>   * @dt_maps: the mapping table chunks dynamically parsed from device tree for
+>   *	this device, if any
+> + * @acpi_maps: the mapping table chunks dynamically parsed from acpi for this
+> + *  device, if any
+>   * @users: reference count
+>   */
+>  struct pinctrl {
+> @@ -80,6 +82,7 @@ struct pinctrl {
+>  	struct list_head states;
+>  	struct pinctrl_state *state;
+>  	struct list_head dt_maps;
+> +	struct list_head acpi_maps;
+>  	struct kref users;
+>  };
+>  
+> diff --git a/drivers/pinctrl/pinctrl-acpi.c b/drivers/pinctrl/pinctrl-acpi.c
+> index 75e59fe22387..9777577aefd6 100644
+> --- a/drivers/pinctrl/pinctrl-acpi.c
+> +++ b/drivers/pinctrl/pinctrl-acpi.c
+> @@ -10,6 +10,397 @@
+>  #include <linux/list.h>
+>  
+>  #include "pinctrl-acpi.h"
+> +#include "core.h"
+> +
+> +/**
+> + * struct pinctrl_acpi_map - mapping table chunk parsed from device tree
+
+Parsed from ACPI namespace?
+
+> + * @node: list node for struct pinctrl's @acpi_maps field
+> + * @pctldev: the pin controller that allocated this struct, and will free it
+> + * @map: the mapping table entries
+> + * @num_maps: number of mapping table entries
+> + */
+> +struct pinctrl_acpi_map {
+> +	struct list_head node;
+> +	struct pinctrl_dev *pctldev;
+> +	struct pinctrl_map *map;
+> +	unsigned int num_maps;
+
+size_t?
+
+> +};
+> +
+> +static void acpi_free_map(struct pinctrl_dev *pctldev,
+> +			 struct pinctrl_map *map, unsigned int num_maps)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < num_maps; ++i) {
+> +		kfree_const(map[i].dev_name);
+> +		map[i].dev_name = NULL;
+> +	}
+> +
+> +	if (pctldev) {
+> +		const struct pinctrl_ops *ops = pctldev->desc->pctlops;
+> +
+> +		if (ops->acpi_free_map)
+> +			ops->acpi_free_map(pctldev, map, num_maps);
+> +
+> +	} else {
+> +		/* There is no pctldev for PIN_MAP_TYPE_DUMMY_STATE */
+> +		kfree(map);
+> +	}
+> +}
+> +
+
+kernel-doc?
+
+> +void pinctrl_acpi_free_maps(struct pinctrl *p)
+> +{
+> +	struct pinctrl_acpi_map *acpi_map, *n1;
+
+Why not 'tmp' instead of 'n1'?
+
+> +
+> +	list_for_each_entry_safe(acpi_map, n1, &p->acpi_maps, node) {
+> +		pinctrl_unregister_mappings(acpi_map->map);
+> +		list_del(&acpi_map->node);
+> +		acpi_free_map(acpi_map->pctldev, acpi_map->map,
+> +				acpi_map->num_maps);
+> +		kfree(acpi_map);
+> +	}
+> +}
+> +
+> +static int acpi_remember_or_free_map(struct pinctrl *p, const char *statename,
+> +				   struct pinctrl_dev *pctldev,
+> +				   struct pinctrl_map *map, unsigned num_maps)
+> +{
+> +	int i;
+> +	struct pinctrl_acpi_map *acpi_map;
+> +
+> +	/* Initialize common mapping table entry fields */
+> +	for (i = 0; i < num_maps; i++) {
+> +		const char *devname;
+> +
+> +		devname = kstrdup_const(dev_name(p->dev), GFP_KERNEL);
+> +		if (!devname)
+> +			goto err_free_map;
+> +
+> +		map[i].dev_name = devname;
+> +		map[i].name = statename;
+> +		if (pctldev)
+> +			map[i].ctrl_dev_name = dev_name(pctldev->dev);
+> +	}
+> +
+> +	/* Remember the converted mapping table entries */
+> +	acpi_map = kzalloc(sizeof(*acpi_map), GFP_KERNEL);
+> +	if (!acpi_map)
+> +		goto err_free_map;
+> +
+> +	acpi_map->pctldev = pctldev;
+> +	acpi_map->map = map;
+> +	acpi_map->num_maps = num_maps;
+> +	list_add_tail(&acpi_map->node, &p->acpi_maps);
+> +
+> +	return pinctrl_register_mappings(map, num_maps);
+> +
+> +err_free_map:
+> +	acpi_free_map(pctldev, map, num_maps);
+> +	return -ENOMEM;
+> +}
+> +
+> +/* Convert raw acpi device references to device name */
+
+raw ACPI device or raw acpi_device.
+
+> +static const char *acpi_node_to_device_name(char *acpi_node)
+
+Can this be const?
+
+> +{
+> +	acpi_status status;
+> +	acpi_handle handle;
+> +	struct acpi_device *controller_device;
+> +
+> +	status = acpi_get_handle(NULL, acpi_node, &handle);
+> +
+
+Drop the empty line.
+
+> +	if (ACPI_FAILURE(status))
+> +		return NULL;
+> +
+> +	controller_device = acpi_bus_get_acpi_device(handle);
+
+Ditto.
+
+> +
+> +	if (!controller_device)
+> +		return NULL;
+> +
+> +	return acpi_dev_name(controller_device);
+> +}
+> +
+> +/* Map acpi pin configuration types to pinctrl general configuration type */
+> +static unsigned map_acpi_conf_to_general_conf(unsigned param, unsigned value)
+> +{
+> +	switch (param) {
+> +	case ACPI_PIN_CONFIG_DEFAULT:
+> +		return pinconf_to_config_packed(ACPI_PIN_CONFIG_DEFAULT, 0);
+> +	case ACPI_PIN_CONFIG_BIAS_PULL_UP:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_PULL_UP_OHMS, value);
+> +	case ACPI_PIN_CONFIG_BIAS_PULL_DOWN:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_PULL_DOWN_OHMS, value);
+> +	case ACPI_PIN_CONFIG_BIAS_DEFAULT:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_PULL_PIN_DEFAULT, 0);
+> +	case ACPI_PIN_CONFIG_BIAS_DISABLE:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_DISABLE, 0);
+> +	case ACPI_PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_HIGH_IMPEDANCE, 0);
+> +	case ACPI_PIN_CONFIG_BIAS_BUS_HOLD:
+> +		return pinconf_to_config_packed(PIN_CONFIG_BIAS_BUS_HOLD, 0);
+> +	case ACPI_PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		return pinconf_to_config_packed(PIN_CONFIG_DRIVE_OPEN_DRAIN, 0);
+> +	case ACPI_PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> +		return pinconf_to_config_packed(PIN_CONFIG_DRIVE_OPEN_SOURCE, 0);
+> +	case ACPI_PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		return pinconf_to_config_packed(PIN_CONFIG_DRIVE_PUSH_PULL, 0);
+> +	case ACPI_PIN_CONFIG_DRIVE_STRENGTH:
+> +		return pinconf_to_config_packed(PIN_CONFIG_DRIVE_STRENGTH, value);
+> +	case ACPI_PIN_CONFIG_SLEW_RATE:
+> +		return pinconf_to_config_packed(PIN_CONFIG_SLEW_RATE, value);
+> +	case ACPI_PIN_CONFIG_INPUT_DEBOUNCE:
+> +		return pinconf_to_config_packed(PIN_CONFIG_INPUT_DEBOUNCE, value);
+> +	case ACPI_PIN_CONFIG_INPUT_SCHMITT_TRIGGER:
+> +		return pinconf_to_config_packed(PIN_CONFIG_INPUT_SCHMITT_ENABLE, value);
+> +	default:
+> +		pr_warn("PINCTRL: ACPI pin configuration type (%d) not handled\n", param);
+
+Don't you have any dev * pointer that you can use here instead of
+pr_warn()?
+
+> +		return pinconf_to_config_packed(ACPI_PIN_CONFIG_DEFAULT, 0);
+> +	}
+> +}
+> +
+> +struct pinctrl_acpi_controller_map {
+> +	char *pinctrl_dev;
+
+const char *?
+
+> +	struct list_head list;
+> +	struct list_head pin_group_maps;
+> +};
+> +
+> +/* Add pin/group function and configuration descriptor to internal map */
+> +static int add_pin_group_node(struct list_head *acpi_map_head,
+> +							char *pinctrl_dev,
+> +							char *group,
+> +							unsigned pin,
+> +							bool is_config,
+> +							unsigned config_func,
+> +							void *vendor_data)
+> +{
+> +	struct pinctrl_acpi_controller_map *acpi_controller_map = NULL;
+> +	struct pinctrl_acpi_controller_map *acpi_controller_map_iter = NULL;
+> +	struct pinctrl_acpi_pin_group_map *pin_group_map = NULL;
+> +	struct pinctrl_acpi_pin_group_map *pin_group_map_iter = NULL;
+> +	struct pinctrl_acpi_pin_group_info *info = NULL;
+
+
+Do you need to initialize them all?
+
+> +	bool group_pin_match;
+> +
+> +	/* Find the pin controller specific list to use to add the descriptor */
+> +	list_for_each_entry(acpi_controller_map_iter, acpi_map_head, list) {
+> +		if (!strcmp(acpi_controller_map_iter->pinctrl_dev, pinctrl_dev)) {
+> +			acpi_controller_map = acpi_controller_map_iter;
+> +			break;
+> +		}
+> +	}
+> +
+> +	/* If this is the first entry for the pin controller, allocate an entry */
+> +	if (!acpi_controller_map) {
+> +		acpi_controller_map = kzalloc(sizeof(struct pinctrl_acpi_controller_map), GFP_KERNEL);
+> +
+
+Drop the empty line.
+
+> +		if (!acpi_controller_map)
+> +			return -ENOMEM;
+> +
+> +		acpi_controller_map->pinctrl_dev = pinctrl_dev;
+> +		INIT_LIST_HEAD(&acpi_controller_map->list);
+> +		INIT_LIST_HEAD(&acpi_controller_map->pin_group_maps);
+> +		list_add(&acpi_controller_map->list, acpi_map_head);
+> +	}
+> +
+> +	/* Find the group/pin specific node from the descriptor list */
+> +	list_for_each_entry(pin_group_map_iter, &acpi_controller_map->pin_group_maps, list) {
+> +		if (group)
+> +			group_pin_match = !strcmp(pin_group_map_iter->group, group);
+> +		else
+> +			group_pin_match = (pin == pin_group_map_iter->pin);
+
+Empty line
+
+> +		if (pin_group_map_iter->is_config == is_config && group_pin_match) {
+> +			pin_group_map = pin_group_map_iter;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (!pin_group_map) {
+> +		pin_group_map = kzalloc(sizeof(struct pinctrl_acpi_pin_group_map), GFP_KERNEL);
+> +
+
+Drop the empty line ;-)
+
+> +		if (!pin_group_map)
+> +			return -ENOMEM;
+> +
+> +		pin_group_map->group = group;
+> +		pin_group_map->pin = pin;
+> +		pin_group_map->is_config = is_config;
+> +		INIT_LIST_HEAD(&pin_group_map->list);
+> +		INIT_LIST_HEAD(&pin_group_map->info);
+> +		list_add(&pin_group_map->list, &acpi_controller_map->pin_group_maps);
+> +	}
+> +
+> +	/* Allocate descriptor and add the pin configuration/function info */
+> +	info = kzalloc(sizeof(struct pinctrl_acpi_pin_group_info), GFP_KERNEL);
+
+Drop the empty line.
+
+> +
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	info->config_func = config_func;
+> +	info->vendor_data = vendor_data;
+> +	INIT_LIST_HEAD(&info->list);
+> +	list_add(&info->list, &pin_group_map->info);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pinctrl_acpi_populate_pin_group_map(struct acpi_resource *ares, void *data)
+> +{
+> +	struct acpi_resource_pin_function *ares_pin_function;
+> +	struct acpi_resource_pin_config *ares_pin_config;
+> +	struct acpi_resource_pin_group_function *ares_pin_group_function;
+> +	struct acpi_resource_pin_group_config *ares_pin_group_config;
+> +	struct list_head *acpi_map_head = data;
+> +	int i;
+> +	int ret;
+> +	unsigned int config;
+> +	char *pinctrl_dev;
+> +	char *group;
+> +	unsigned int pin;
+> +	void *vendor_data;
+> +	unsigned int func;
+
+That's huge amount of variables. I wonder if this can be reduced with
+helper functions etc?
+
+> +
+> +	switch (ares->type) {
+> +	case ACPI_RESOURCE_TYPE_PIN_FUNCTION:
+> +		ares_pin_function = &ares->data.pin_function;
+> +		vendor_data = ares_pin_function->vendor_data;
+> +		pinctrl_dev = ares_pin_function->resource_source.string_ptr;
+> +		group = NULL;
+> +		func = ares_pin_function->function_number;
+> +		config = map_acpi_conf_to_general_conf(ares_pin_function->pin_config, 0);
+> +
+> +		for (i = 0; i < ares_pin_function->pin_table_length; i++) {
+> +
+
+Drop the empty line
+
+> +			ret = add_pin_group_node(acpi_map_head, pinctrl_dev, group,
+> +					ares_pin_function->pin_table[i], false, func, vendor_data);
+> +
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +			ret = add_pin_group_node(acpi_map_head, pinctrl_dev, group,
+> +					ares_pin_function->pin_table[i], true, config, vendor_data);
+> +
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +		break;
+
+Add empty line
+
+(Ditto everywhere below)
+
+> +	case ACPI_RESOURCE_TYPE_PIN_CONFIG:
+> +		ares_pin_config = &ares->data.pin_config;
+> +		pinctrl_dev = ares_pin_config->resource_source.string_ptr;
+> +		group = NULL;
+> +		func = 0;
+> +
+> +		config = map_acpi_conf_to_general_conf(
+> +			ares_pin_config->pin_config_type,
+> +			ares_pin_config->pin_config_value);
+> +
+> +		vendor_data = ares_pin_config->vendor_data;
+> +
+> +		for (i = 0; i < ares_pin_function->pin_table_length; i++) {
+> +			pin = ares_pin_config->pin_table[i];
+> +
+> +			ret = add_pin_group_node(acpi_map_head, pinctrl_dev,
+> +						group, pin, true, config, vendor_data);
+> +			if (ret < 0)
+> +				return ret;
+> +		}
+> +		break;
+> +	case ACPI_RESOURCE_TYPE_PIN_GROUP_FUNCTION:
+> +		ares_pin_group_function = &ares->data.pin_group_function;
+> +		vendor_data = ares_pin_group_function->vendor_data;
+> +		pinctrl_dev = ares_pin_group_function->resource_source.string_ptr;
+> +		group = ares_pin_group_function->resource_source_label.string_ptr;
+> +		pin = 0;
+> +		func = ares_pin_group_function->function_number;
+> +		ret = add_pin_group_node(acpi_map_head, pinctrl_dev,
+> +					group, pin, false, func, vendor_data);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		break;
+> +	case ACPI_RESOURCE_TYPE_PIN_GROUP_CONFIG:
+> +		ares_pin_group_config = &ares->data.pin_group_config;
+> +		vendor_data = ares_pin_group_config->vendor_data;
+> +		pinctrl_dev = ares_pin_group_config->resource_source.string_ptr;
+> +		group = ares_pin_group_config->resource_source_label.string_ptr;
+> +		pin = 0;
+> +
+> +		config = map_acpi_conf_to_general_conf(
+> +					ares_pin_group_config->pin_config_type,
+> +					ares_pin_group_config->pin_config_value);
+> +
+> +		ret = add_pin_group_node(acpi_map_head, pinctrl_dev, group,
+> +					pin, true, config, vendor_data);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		break;
+> +	}
+> +	return 1;
+> +}
+> +
+> +static int pinctrl_acpi_get_pin_group_map(struct acpi_device *adev, struct list_head *pin_group_root)
+> +{
+> +	struct list_head res_list;
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&res_list);
+> +
+> +	ret = acpi_dev_get_resources(adev, &res_list,
+> +								 pinctrl_acpi_populate_pin_group_map,
+> +								 pin_group_root);
+> +
+
+Weird formatting.
+
+> +	acpi_dev_free_resource_list(&res_list);
+> +
+> +	return ret;
+> +}
+> +
+> +/* Decode and register acpi pinctrl related properties to pinctrl system */
+
+Kernel-doc
+
+> +int pinctrl_acpi_to_map(struct pinctrl *p)
+> +{
+> +	int num_maps;
+> +	int ret;
+> +	struct acpi_device *adev;
+> +	struct list_head pin_group_list;
+> +	struct pinctrl_map *new_map;
+> +	struct pinctrl_dev *pctldev;
+> +	const struct pinctrl_ops *ops;
+> +	struct pinctrl_acpi_controller_map *controller_map;
+> +
+> +	adev = ACPI_COMPANION(p->dev);
+> +	if (!adev)
+> +		return -ENODEV;
+> +
+> +	/* list to hold the pin/group descriptors generated, grouped by pin controller, pin/group name*/
+> +	INIT_LIST_HEAD(&pin_group_list);
+> +
+> +	ret = pinctrl_acpi_get_pin_group_map(adev, &pin_group_list);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Iterate over descriptor for each pin controller and invoke the driver function */
+> +	list_for_each_entry(controller_map, &pin_group_list, list) {
+> +		const char *pinctrl_dev_name = acpi_node_to_device_name(controller_map->pinctrl_dev);
+> +
+> +		pctldev = get_pinctrl_dev_from_devname(pinctrl_dev_name);
+> +		ops = pctldev->desc->pctlops;
+> +		if (!ops->acpi_node_to_map) {
+> +			dev_err(p->dev, "pctldev %s doesn't support ACPI\n",
+> +				dev_name(pctldev->dev));
+> +			return -ENODEV;
+> +		}
+> +		ret = ops->acpi_node_to_map(pctldev, &controller_map->pin_group_maps, &new_map, &num_maps);
+> +		if (ret < 0) {
+> +			return ret;
+> +		} else if (num_maps == 0) {
+> +			dev_info(p->dev, "there is not valid maps for pin controller %s\n", pinctrl_dev_name);
+> +			return 0;
+> +		}
+> +
+> +		ret = acpi_remember_or_free_map(p, "default", pctldev, new_map, num_maps);
+> +		if (ret < 0) {
+> +			dev_info(p->dev, "Failed to register maps\n");
+> +			return ret;
+> +		}
+> +	}
+> +	return 0;
+> +}
+>  
+>  static int pinctrl_acpi_populate_group_desc(struct acpi_resource *ares, void *data)
+>  {
+> diff --git a/drivers/pinctrl/pinctrl-acpi.h b/drivers/pinctrl/pinctrl-acpi.h
+> index 1a0c751a7594..4ed45b22257c 100644
+> --- a/drivers/pinctrl/pinctrl-acpi.h
+> +++ b/drivers/pinctrl/pinctrl-acpi.h
+> @@ -12,11 +12,39 @@ struct pinctrl_acpi_group_desc {
+>  	struct list_head list;
+>  };
+
+
+kernel-doc
+
+>  
+> +struct pinctrl_acpi_pin_group_map {
+> +	const char *group;
+> +	unsigned int pin;
+> +	bool is_config;
+> +    struct list_head info;
+
+indent
+
+> +	struct list_head list;
+> +};
+> +
+
+kernel-doc
+
+> +struct pinctrl_acpi_pin_group_info {
+> +	unsigned config_func;
+> +	void *vendor_data;
+
+indent
+
+> +    struct list_head list;
+> +};
+> +
+>  #ifdef CONFIG_ACPI
+>  int pinctrl_acpi_get_pin_groups(struct acpi_device *adev, struct list_head *group_desc_list);
+> +
+> +int pinctrl_acpi_to_map(struct pinctrl *p);
+> +
+> +void pinctrl_acpi_free_maps(struct pinctrl *p);
+>  #else
+>  int pinctrl_acpi_get_pin_groups(struct acpi_device *adev, struct list_head *group_desc_list)
+>  {
+>  	return -ENODEV;
+>  }
+> +
+> +int pinctrl_acpi_to_map(struct pinctrl *p)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +void pinctrl_acpi_free_maps(struct pinctrl *p)
+> +{
+> +
+> +}
+
+static inline for these. Try also to compile with CONFIG_ACPI=n to see
+what warnings you get.
+
+>  #endif
+> diff --git a/include/linux/pinctrl/pinctrl.h b/include/linux/pinctrl/pinctrl.h
+> index 70b45d28e7a9..99a087888c0d 100644
+> --- a/include/linux/pinctrl/pinctrl.h
+> +++ b/include/linux/pinctrl/pinctrl.h
+> @@ -84,6 +84,15 @@ struct pinctrl_gpio_range {
+>   *	allocated members of the mapping table entries themselves. This
+>   *	function is optional, and may be omitted for pinctrl drivers that do
+>   *	not support device tree.
+> + * @acpi_node_to_map: process acpi pin related properties, and create
+
+ACPI
+
+> + *	mapping table entries for it. These are returned through the @map and
+> + *	@num_maps output parameters. This function is optional, and may be
+> + *	omitted for pinctrl drivers that do not support acpi.
+
+ACPI
+
+> + * @acpi_free_map: free mapping table entries created via @dt_node_to_map. The
+
+dt_node_to_map? Isn't that acpi_node_to_map?
+
+> + *	top-level @map pointer must be freed, along with any dynamically
+> + *	allocated members of the mapping table entries themselves. This
+> + *	function is optional, and may be omitted for pinctrl drivers that do
+> + *	not support acpi.
+
+ACPI
+
+>   */
+>  struct pinctrl_ops {
+>  	int (*get_groups_count) (struct pinctrl_dev *pctldev);
+> @@ -100,6 +109,12 @@ struct pinctrl_ops {
+>  			       struct pinctrl_map **map, unsigned *num_maps);
+>  	void (*dt_free_map) (struct pinctrl_dev *pctldev,
+>  			     struct pinctrl_map *map, unsigned num_maps);
+> +	int (*acpi_node_to_map) (struct pinctrl_dev *pctldev,
+> +			       struct list_head *info_list,
+> +			       struct pinctrl_map **map, unsigned *num_maps);
+> +	void (*acpi_free_map) (struct pinctrl_dev *pctldev,
+> +				   struct pinctrl_map *map, unsigned num_maps);
+> +
+>  };
+>  
+>  /**
+> -- 
+> 2.25.1
