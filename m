@@ -2,157 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E9856254D8
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 09:04:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F6C625539
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 09:27:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbiKKIEF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Nov 2022 03:04:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40346 "EHLO
+        id S233165AbiKKI1v (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Nov 2022 03:27:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231221AbiKKIEE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 03:04:04 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DFD12AEA
-        for <linux-gpio@vger.kernel.org>; Fri, 11 Nov 2022 00:04:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668153842; x=1699689842;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+WswOLJKoR1N0FHknphnF7SS+4yma4HENKWGAS38dPc=;
-  b=TCH1nb20g2MIP9FEvA/+87TmXJ2vbowLczTkztb+SBQVQmgd9o9VelWT
-   ajBpCrbe/TDcgmWLilPK3TmjMxSNMaebKnDRHoI3iVOjZS9iPgCIAHXNv
-   6wkXGwKvd5pGjt07quhM+3/sBfzyyl3vYsDuZ1/0/IiBcY0/laM/lOS7s
-   2mzNw23qTvMT1Kf30xAFfeIwwiQUtnoW4jZnKsbOELS46H1mBrcSufiA+
-   wsI1m+cLvNhWaR6rB7x4CJvIawqtRiHoYK2xqGZJakEidXl08ViCNRgJM
-   FZLd2BU/E3zcFjSrkrPWyQGsFk8XTtNYbrez1PPINryRWSLoBOYneS/IZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="312697402"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="312697402"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Nov 2022 00:04:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10527"; a="668737932"
-X-IronPort-AV: E=Sophos;i="5.96,156,1665471600"; 
-   d="scan'208";a="668737932"
-Received: from lkp-server01.sh.intel.com (HELO e783503266e8) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 11 Nov 2022 00:03:59 -0800
-Received: from kbuild by e783503266e8 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1otP14-0003kP-2s;
-        Fri, 11 Nov 2022 08:03:58 +0000
-Date:   Fri, 11 Nov 2022 16:03:10 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 8dab99c9eab3162bfb4326c35579a3388dbf68f2
-Message-ID: <636e01be.IjVH1KLnpaicIU5d%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233163AbiKKI1q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 03:27:46 -0500
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BF47C8D8
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Nov 2022 00:27:42 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id d6so7276480lfs.10
+        for <linux-gpio@vger.kernel.org>; Fri, 11 Nov 2022 00:27:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xx7LXGsQ1UybmGpbrTODqg39yWDhEchfX49PVTgfsiQ=;
+        b=Dv2m87uGwk9M6MuktyNavmEClgVM+K6T3sS9jKf0PJuFe+TJsNESLx8l5EypLjRTpr
+         0D86vIkiX8Tviw5NUYsMWvWu29TUXBbWc8N5ldKgMY2VAOBk7dbqLK+OEm+PBxKdU2zB
+         0Bog737EpaHTQZ3aEwgXUt8PBsVzTdVQb3hN8eGZgxNStU5xqnjD7fd67b1Oj6jGlghz
+         KT91ppeO2QWpKZ6ifxEAOvKFKlJb9ZbkrNHJc48YC00dnSl6/F724AP1PfRgPJTrKoQK
+         75UFKfY06UJNT+Nol++auIGHm9bhCVFKetyVCZLMkshnmBM8aSgpi8wfm/dYhavmiPPL
+         hBWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xx7LXGsQ1UybmGpbrTODqg39yWDhEchfX49PVTgfsiQ=;
+        b=aA21sG8zo7x85R7uA848/cqaGIM/c7OAFfuqQAGrNusdRft4p7VeY7Px87QGRMgUdu
+         8EGcCfdkX2qGsmfRIHVfNYNWYx4vkp90lxx7m1Ofqnr8BvQuGsBJ8MO33sgy21ENaCnd
+         E0coaxw/d/tAeIq48dfh6WqdcRP3N86kV0w3wm7P557Acg/+BqBOevqwY0GaU3ftRA3V
+         3pwQgH0129I/AFmS0/clQkWMbvXl7z9D9+XqndBcSaOZ0PtK4RUjyYR6CKItrdiiyDL0
+         ms8YFqh53G4ytzU7pjpoCX2fGWJ2KMl/GbJR2LxEijqWBRoPcOSV5ftVo5l92BPM4pRQ
+         0zvg==
+X-Gm-Message-State: ANoB5pm5CXSyaozO+L4QqR9M8LB/qxavWSxYy9dThX4uGAsJ5BvSFNBr
+        fbVJDp1ejCHBJ6lFMTv+LqoYdA==
+X-Google-Smtp-Source: AA0mqf77hOpbW33UTEyrvrjdY4j8ukRUH+BixcU7n6vB6+hL3EoiEVloZPKw3opau7Dr7zr/Ft5tHw==
+X-Received: by 2002:a19:8c1e:0:b0:4b4:6460:24d with SMTP id o30-20020a198c1e000000b004b46460024dmr378243lfd.386.1668155260865;
+        Fri, 11 Nov 2022 00:27:40 -0800 (PST)
+Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142199.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.199])
+        by smtp.gmail.com with ESMTPSA id k17-20020a2e6f11000000b0027754bdd667sm265888ljc.109.2022.11.11.00.27.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 11 Nov 2022 00:27:40 -0800 (PST)
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        devicetree@vger.kernel.org
+Subject: Re: (subset) [PATCH 1/2] dt-bindings: pinctrl: qcom,msm8660: convert to dtschema
+Date:   Fri, 11 Nov 2022 09:27:37 +0100
+Message-Id: <166815525483.8898.4129334640616218143.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20221107185931.22075-1-krzysztof.kozlowski@linaro.org>
+References: <20221107185931.22075-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 8dab99c9eab3162bfb4326c35579a3388dbf68f2  gpio: davinci: add support of module build
+On Mon, 7 Nov 2022 19:59:30 +0100, Krzysztof Kozlowski wrote:
+> Convert Qualcomm MSM8660 pin controller bindings to DT schema.  Keep the
+> parsing of pin configuration subnodes consistent with other Qualcomm
+> schemas (children named with '-state' suffix, their children with
+> '-pins').
+> 
+> 
 
-elapsed time: 724m
+Applied, thanks!
 
-configs tested: 75
-configs skipped: 2
+[1/2] dt-bindings: pinctrl: qcom,msm8660: convert to dtschema
+      https://git.kernel.org/krzk/linux-dt/c/aa191ab79a3e94d51a52155ad85fea40620c1dc8
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-s390                             allyesconfig
-x86_64                              defconfig
-x86_64                           allyesconfig
-x86_64                               rhel-8.3
-x86_64                            allnoconfig
-alpha                            allyesconfig
-ia64                             allmodconfig
-arc                              allyesconfig
-powerpc                           allnoconfig
-mips                             allyesconfig
-i386                                defconfig
-powerpc                          allmodconfig
-arc                        nsimosci_defconfig
-sh                               allmodconfig
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-powerpc                       ppc64_defconfig
-arm                          pxa910_defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-s390                 randconfig-r044-20221111
-sh                   secureedge5410_defconfig
-powerpc                 mpc837x_rdb_defconfig
-xtensa                    xip_kc705_defconfig
-xtensa                          iss_defconfig
-powerpc                 mpc834x_mds_defconfig
-sh                           se7724_defconfig
-parisc                           alldefconfig
-powerpc                    amigaone_defconfig
-arm                           viper_defconfig
-i386                             allyesconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-microblaze                          defconfig
-i386                          randconfig-c001
-powerpc              randconfig-c003-20221110
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-arc                           tb10x_defconfig
-sh                         apsh4a3a_defconfig
-powerpc              randconfig-c003-20221111
-
-clang tested configs:
-i386                          randconfig-a004
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a006
-s390                 randconfig-r044-20221110
-riscv                randconfig-r042-20221110
-hexagon              randconfig-r041-20221110
-hexagon              randconfig-r045-20221110
-arm                       aspeed_g4_defconfig
-mips                      pic32mzda_defconfig
-arm                         lpc32xx_defconfig
-powerpc                      obs600_defconfig
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
