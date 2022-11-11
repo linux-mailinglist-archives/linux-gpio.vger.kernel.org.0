@@ -2,73 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61592625463
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 08:23:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D49036254D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 09:00:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbiKKHXm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Nov 2022 02:23:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        id S232702AbiKKIAt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Nov 2022 03:00:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiKKHXm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 02:23:42 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 033C2657D7
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 23:23:41 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id p13-20020a05600c468d00b003cf8859ed1bso2609867wmo.1
-        for <linux-gpio@vger.kernel.org>; Thu, 10 Nov 2022 23:23:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8hCt+s7KzrEZnZzX/V6UkrovCzttNU9klucFddcbEXQ=;
-        b=LxuIejDcXyzNr5EimGzlNfhCNF4vXCRjWClWUruFy6JB5nHm8oZtztdWs7EqCLH8vN
-         qHx6XJVB+/E5h22Otcbqct8N4Pur7GXxM7Wzu3EqVxH8AUJx4JA9oShrAEc3cPibEteI
-         99kRC/6q3NhzvuEtx82iPsFXeWFwna0uVjgzpjTeptHbXe/a9Ch8/6+HlSyoW7emmquO
-         SjfHT7kbVf2kSkUBytEfStFoI1njTRCFbBntUi46KD5VUVN0/mBbAkTf+7fXSO+Rt2gx
-         JalYkHy465D0DhX38iWm9KFER9o8pW4xhN1AURm9naMI2f/AXm0L67GEexQlaCoX5Ker
-         IV2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8hCt+s7KzrEZnZzX/V6UkrovCzttNU9klucFddcbEXQ=;
-        b=O0N4jrniFRROBUs8+UWgchevoMGYQwEc0sB1mmhuaUMaqhHtcj9AvC2G12cfSgRe9/
-         qS1a7X6wPg9MyIxD5EFYu0kimfq2C7pAedg0qVaEL/kvVPKsytOwa9fc7Gn4wNxGpgDC
-         Ye7DdpaZ8j5J6Xz+dJ//ctxWZsYySpzayl8vp2M5dfcXcmB9ecuKYYVWJGzTSaYExqZn
-         YoxRCpXxHtCB+hkWkeGrnkoAH8wRXmNKAukcHpimISW3tDdK/281dVx5ZUB8xDw9wbdU
-         2XA71N1KnD0sAkxpYbSBclXOTmYcZl5cRM7rZYhkFXVgV666Leb0n+Z3ZzLf7jqOp0hH
-         fHmQ==
-X-Gm-Message-State: ANoB5pkbOzbw2pUwaGm54SaeN2YIIf8cs6r7BY3tInr0wzDx4T0sLjDa
-        diew7ZEIPvEGEFjecDn9oenYzo2ByOM8jcRj
-X-Google-Smtp-Source: AA0mqf62fb1OzdzRHyplikXG3IRVNe1wOO245/BagvYyII6v7QZWaLxR2HJgDscPbstPSsiGINkSBg==
-X-Received: by 2002:a05:600c:4e50:b0:3cf:71b7:7a41 with SMTP id e16-20020a05600c4e5000b003cf71b77a41mr343647wmq.31.1668151419591;
-        Thu, 10 Nov 2022 23:23:39 -0800 (PST)
-Received: from [192.168.1.166] ([212.228.7.114])
-        by smtp.gmail.com with ESMTPSA id k5-20020adff5c5000000b0022e344a63c7sm1110093wrp.92.2022.11.10.23.23.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Nov 2022 23:23:39 -0800 (PST)
-Message-ID: <9f7f922c-a904-d47a-de62-854e5e784424@linaro.org>
-Date:   Fri, 11 Nov 2022 07:23:37 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH RFC 2/3] pinconf-generic: add pull up and pull down config
- with resistance
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
-        rafael@kernel.org, linus.walleij@linaro.org
-References: <20221110191258.1134378-1-niyas.sait@linaro.org>
- <20221110191258.1134378-3-niyas.sait@linaro.org>
- <Y21cRkOwH/pmn5NP@smile.fi.intel.com>
-From:   Niyas Sait <niyas.sait@linaro.org>
-In-Reply-To: <Y21cRkOwH/pmn5NP@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S232987AbiKKIAm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 03:00:42 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D0E748E8;
+        Fri, 11 Nov 2022 00:00:40 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4505FB82405;
+        Fri, 11 Nov 2022 08:00:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCA15C433C1;
+        Fri, 11 Nov 2022 08:00:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668153637;
+        bh=/JhKtSplEXWQW83/PgxO5BdmEweOLgZbpN75oFE0iQE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bXKbxgj2UCTHUgeiGA+vW+Pc06m+20eJOo+npKH0T0z6xBvXwNBmy/nWBbAo7HJ2f
+         HDxHRP5biJytHOqONg5WlAPFBBWqfCjz5e3YiQH27oEZP2hW5wi5rQfPY2z7DIM6NL
+         cKst6mvMt3HKjZZK5fmNA593a2Xi9uIkxppyVXIy3bijpGj+R+aZx526NQQ678BB8o
+         YWDAG5KrCQBYMlyJsKUO3ItrixysfwtSnk+EKwWyBPKH7fU+yX1eernRm+A7Hjn//6
+         62ngoqWbRW6nzjTl+Tj2llrao/t4SaOFSa2hh7wR1eMQtrVyq86bnTJyVrFjpcQvtV
+         dnrWszvKuSCoA==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1otOxn-005LMf-A2;
+        Fri, 11 Nov 2022 08:00:35 +0000
+Date:   Fri, 11 Nov 2022 08:00:10 +0000
+Message-ID: <87h6z5vs39.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Richard Fitzgerald <rf@opensource.cirrus.com>, lee@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linus.walleij@linaro.org, tglx@linutronix.de,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic CS48L31/32/33 codecs
+In-Reply-To: <Y21gwGDb5CFft0kp@sirena.org.uk>
+References: <20221109165331.29332-1-rf@opensource.cirrus.com>
+        <20221109165331.29332-10-rf@opensource.cirrus.com>
+        <87mt8zutib.wl-maz@kernel.org>
+        <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
+        <86pmdvow5y.wl-maz@kernel.org>
+        <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
+        <86k042q1uc.wl-maz@kernel.org>
+        <05ae0e20-b472-f812-1afc-ef8c2a97cdeb@opensource.cirrus.com>
+        <87iljmve87.wl-maz@kernel.org>
+        <Y21gwGDb5CFft0kp@sirena.org.uk>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: broonie@kernel.org, rf@opensource.cirrus.com, lee@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org, tglx@linutronix.de, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,14 +77,83 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-ACPI Pull up and Pull down config also passes resistance values and 
-looking at the existing PIN_CONFIG_BIAS_PULL_DOWN and 
-PIN_CONFIG_BIAS_PULL_UP types I wasn't sure if it was designed to pass 
-the extra resistance values.
+On Thu, 10 Nov 2022 20:36:16 +0000,
+Mark Brown <broonie@kernel.org> wrote:
+> 
+> On Thu, Nov 10, 2022 at 06:47:20PM +0000, Marc Zyngier wrote:
+> 
+> > Read again what I have written. Having to expose a device-specific API
+> > for endpoint drivers to obtain their interrupts, and requiring them to
+> > know about some magic values that describe the interrupts source are
+> > not a acceptable constructs.
+> 
+> > We have firmware descriptions to expose interrupt linkages, and your
+> > HW is not special enough to deserve its own top level API. Yes, we
+> > accepted such drivers in the past, but it has to stop.
+> 
+> > Either you describe the internal structure of your device in DT or
+> > ACPI, and make all client drivers use the standard API, or you make
+> > this a codec library, purely specific to your device and only used by
+> > it. But the current shape is not something I'm prepared to accept.
+> 
+> ACPI gets to be a lot of fun here, it's just not idiomatic to describe
+> the internals of these devices in firmware there and a lot of the
+> systems shipping this stuff are targeted at other OSs and system
+> integrators are therefore not in the least worried about Linux
+> preferences.
 
+Let me reassure the vendors that I do not care about them either. By
+this standard, we'd all run Windows on x86.
 
-On 10/11/2022 20:17, Andy Shevchenko wrote:
-> On Thu, Nov 10, 2022 at 07:12:57PM +0000, Niyas Sait wrote:
->> pin configuration types have been extended to include a pull up
->> and pull down config with resistance in ohms.
-> Why do we need this?
+> You'd need to look at having the MFD add additional
+> description via swnode or something to try to get things going.  MFD
+> does have support for that, though it's currently mainly used with
+> devices that only have ACPI use (axp20x looks like the only potentially
+> DT user, from the git history the swnode bits are apparently for use on
+> ACPI systems).  That might get fragile in the DT case since you could
+> have multiple sources for description of the same thing unless you do
+> something like suppress the swnode stuff on DT systems.
+> 
+> Given that swnode is basically DT written out in C code I'm not actually
+> convinced it's that much of a win, unless someone writes some tooling to
+> generate swnode data from DT files you're not getting the benefit of any
+> of the schema validation work that's being done.  We'd also need to do
+> some work for regulators to make sure that if we are parsing DT
+> properties on ACPI systems we don't do so from _DSD since ACPI has
+> strong ideas about how power works and we don't want to end up with
+> systems with firmware providing mixed ACPI/DT models without a clear
+> understanding of what we're geting into.
+> 
+> I do also have other concerns in the purely DT case, especially with
+> chip functions like the CODEC where there's a very poor mapping between
+> physical IPs and how Linux is tending to describe things internally at
+> the minute.  In particular these devices often have a clock tree
+> portions of which can be visible and useful off chip but which tends to
+> get lumped in with the audio IPs in our current code.  Ideally we'd
+> describe that as a clock subdevice (or subdevices if that fits the
+> hardware) using the clock bindings but then that has a bunch of knock on
+> effects the way the code currently is which probably it's probably
+> disproportionate to force an individual driver author to work through.
+> OTOH the DT bindings should be OS neutral ABI so...
+
+I don't think this is a reason to continue on the current path that
+pretends to have something generic, but instead is literally a board
+file fragment with baked-in magic numbers.
+
+An irqchip is supposed to offer services to arbitrary clients
+(endpoint drivers) that are oblivious of the irqchip itself, of the
+hwirq mapping, and use the standard APIs to obtain a virtual interrupt
+number. None of that here. This is a monolithic driver, only split
+across multiple subsystem to satisfy a "not in my backyard"
+requirement.
+
+If the vendors/authors want to keep the shape of the code as is, they
+can do it outside of the irqchip code and have some library code with
+an internal API. At least they will stop pretending that this is a
+general purpose driver. And the existing madera code can also go in
+the process.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
