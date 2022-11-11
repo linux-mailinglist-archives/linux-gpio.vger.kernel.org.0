@@ -2,69 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAE36625F07
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 17:02:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7302625F15
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 17:04:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233158AbiKKQCX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Nov 2022 11:02:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
+        id S233225AbiKKQEQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Nov 2022 11:04:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233974AbiKKQCV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 11:02:21 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2E848760;
-        Fri, 11 Nov 2022 08:02:20 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id bj12so13426584ejb.13;
-        Fri, 11 Nov 2022 08:02:20 -0800 (PST)
+        with ESMTP id S233119AbiKKQEQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 11:04:16 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 230791120;
+        Fri, 11 Nov 2022 08:04:15 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id kt23so13523894ejc.7;
+        Fri, 11 Nov 2022 08:04:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5tGIRLfxoAILWi/6ryjLTwkDXu9Pm1eaKIZFSWqym/M=;
-        b=XIvKyDSLoDVLFd8ux0DUgm+AXjQtcAq4Ty4ZRYkmxYnSrwgctpSItOLp43i1D8TOQC
-         V5I4Iy1lTv/Gz465tmrk1iTkkevi6XrH1/ozsARqN4Fhz+38qG80m2whE4MtAIA+rvbd
-         Rmh2LGR0XifAuX7OWa95e6yzmjjacgh5VcCApLTVqMoGhl0O6M3E8BwJJlge/bUM4bFa
-         ldt29HMMbtfz80MIqvFWyQ2FBRKVL3INo9nw+dkMGpA6W5e7VT3TRGWAN4a/+opu9OKP
-         DfCw590ddeE52iAhcU3WzDIsj448Xx2HHTXZj/wOxR07jN/hzEqGslKArvWaHpqY+b7i
-         8fAw==
+        bh=5RYiINc4Bd6qZGurHjg+i3dUcjtgpz53hBmH4uiN6W8=;
+        b=bpT9H0VSq61mtRaB+w+MwktB4H8/QwY/fZ906ouZhTn7IvSeYM5mJ1dmM8UY3XU9P3
+         Nssj9gJ+/0Kx9r9vy2aPbh4f87J/ZqqPrjSQCuCNMOVGK6lwgfBtebBlC5yuE5BSYOO9
+         s1KGT107UMiVitYYZmmutd6EIE4P1DDAMda/kxGKZyBzRmExtXEF0Eo0GOuiWWN9dESl
+         XNXbyAUTmwjcvW4xN1WHG59CaOC45Ja8j7OhpMzaIDhYR5zMv/u/v00KaZeJa4T28t+n
+         cIjB8Y5H/h10YF9Jpqfn82YlNVCkDtZAwqMfjaLCdAL05zDsV/1y3kwGl2InZ5WDXaMU
+         /Dvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5tGIRLfxoAILWi/6ryjLTwkDXu9Pm1eaKIZFSWqym/M=;
-        b=DpjzsIIWsVvpX0t9knwh857pEYkH7nQlHuhptW+2xILVwvSkRPIRjxIIF5CnuebPaS
-         zjpNt+PTuZ6WR6OEjgNTLUYmFcziWzTh0a+/3QSwRMVUuqR8rgjX1KzMm834PfkjCJ0E
-         GlHAx+mnK/pEANoTQJo/maAvGAl43ChqPnq3CT7eujJosC48/tc/T0vGiOHk+Rffp4cb
-         xEVs27/GSBtlK1QdiIVW1gGp273JuZ7u9PG4W+rSpzpsF3Lh9uc6eDjPtdY4J1YB+iXz
-         HlVW+8LtznetSNT73SY/q3R1OzZ9RD5ELHzMgoWobyKMhKnjqRz9DMS/4xKO5RODkDhG
-         4Egg==
-X-Gm-Message-State: ANoB5plp9qe4Ird2dX/mQ3QTF48A5T1GRrzEoTrsJxEANWPZo/ycAF2M
-        gLlYiMJJG8Iism0CJY/ADXk=
-X-Google-Smtp-Source: AA0mqf4KSb4BDmX14/WhzvbNRQ5ALv2iVBg34t8A2HAlXC1UHqo5WZrn+HWZI/QaPO4PDeAC+w1p6g==
-X-Received: by 2002:a17:906:e0d4:b0:7ad:d1ab:2431 with SMTP id gl20-20020a170906e0d400b007add1ab2431mr2258412ejb.213.1668182539314;
-        Fri, 11 Nov 2022 08:02:19 -0800 (PST)
+        bh=5RYiINc4Bd6qZGurHjg+i3dUcjtgpz53hBmH4uiN6W8=;
+        b=FjHNURBsepfPDHWNCpZGQfceuI66ybSUMci41B8w20D2WJF6nJWWdUcXGalnjkyWJc
+         THTAvdZ2yymOb1MPcqAkHrhgc15WYegzwBoFEY5+W7db8lcY7J+0QdZWq3z0WS6fby4D
+         hc3ghlldO3V2UIzH4oXT0XZ2rVoNMJRKmKaBH7V5ilRlT1KimjvLD0ZfYwV/TLnB8B5T
+         Yk8EUu42kZqGOHyS/Dn4Ybtr9WdArJ1Tzu7BxDrrCe5YI0H1yjsZNx10STg1dEToh+of
+         lvo3DJ3b/IKEGTOZscjc7zFwnlHtnJIHEIPuGvyr7KAaAw4miDLTRX80cWGG1Su4t6xH
+         2gjA==
+X-Gm-Message-State: ANoB5pnsVpDHJxLE56K2CIzT6uDVwcC3vPdClkxt4GrIGkB5SvAMBvru
+        xFmkpIwzcx4rfpk8LoX7prQ=
+X-Google-Smtp-Source: AA0mqf4AUdHpt/P34pxIzEAXU6V6SkqQL2dQgB7e6fxY93k0WVMr3qmlCKRO9BLsPmuDRIS0pOAIAQ==
+X-Received: by 2002:a17:907:7681:b0:78d:d10b:4bd5 with SMTP id jv1-20020a170907768100b0078dd10b4bd5mr2362294ejc.467.1668182653487;
+        Fri, 11 Nov 2022 08:04:13 -0800 (PST)
 Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id 3-20020a170906300300b0079800b8173asm989635ejz.158.2022.11.11.08.02.18
+        by smtp.gmail.com with ESMTPSA id t18-20020a056402021200b00459f4974128sm1239843edv.50.2022.11.11.08.04.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Nov 2022 08:02:18 -0800 (PST)
-Date:   Fri, 11 Nov 2022 17:02:16 +0100
+        Fri, 11 Nov 2022 08:04:12 -0800 (PST)
+Date:   Fri, 11 Nov 2022 17:04:10 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Dipen Patel <dipenp@nvidia.com>
 Cc:     jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org,
         linus.walleij@linaro.org, devicetree@vger.kernel.org,
         linux-doc@vger.kernel.org, robh+dt@kernel.org
-Subject: Re: [PATCH 3/7] gpio: tegra186: Add Tegra234 hte support
-Message-ID: <Y25yCAzDBMtZtave@orome>
+Subject: Re: [PATCH 4/7] dt-bindings: timestamp: Add Tegra234 support
+Message-ID: <Y25yerZJMwKWCy3+@orome>
 References: <20221103174523.29592-1-dipenp@nvidia.com>
- <20221103174523.29592-4-dipenp@nvidia.com>
+ <20221103174523.29592-5-dipenp@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ea7abbhrcCN1PRGS"
+        protocol="application/pgp-signature"; boundary="OI8OX5lQwVXJ1cTS"
 Content-Disposition: inline
-In-Reply-To: <20221103174523.29592-4-dipenp@nvidia.com>
+In-Reply-To: <20221103174523.29592-5-dipenp@nvidia.com>
 User-Agent: Mutt/2.2.8 (2022-11-05)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -77,40 +77,47 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---ea7abbhrcCN1PRGS
+--OI8OX5lQwVXJ1cTS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 03, 2022 at 10:45:19AM -0700, Dipen Patel wrote:
-> To enable timestamp support for the Tegra234, has_gte variable needs
-> to be set true.
+On Thu, Nov 03, 2022 at 10:45:20AM -0700, Dipen Patel wrote:
+> Added timestamp provider support for the Tegra234 in devicetree
+> bindings.
 >=20
 > Signed-off-by: Dipen Patel <dipenp@nvidia.com>
 > ---
->  drivers/gpio/gpio-tegra186.c | 1 +
->  1 file changed, 1 insertion(+)
+>  .../timestamp/nvidia,tegra194-hte.yaml        | 44 +++++++++++++++++--
+>  1 file changed, 40 insertions(+), 4 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+As I mentioned in the other patch, perhaps we should extend the binding
+with a phandle property that lets us point directly to the GPIO
+controller that a given HTE is coupled with.
 
---ea7abbhrcCN1PRGS
+We haven't technically started making use of these bindings yet, so
+backwards-compatibility shouldn't be an issue yet.
+
+Thierry
+
+--OI8OX5lQwVXJ1cTS
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNucggACgkQ3SOs138+
-s6F2UxAAsaR46zSPAHB9mgaKOGM6kXjc5h/Zt/0lXTYAUqSv73d7hKlnhJAj3Nbx
-mn9hagAjFqd2nRrNbAOnGxCptFYxaQLXA3KdBRm1mrY2xMGkT8CZDXquz4t1KQne
-oGnurLbJ7NOwEqVUDnFw9h6Kmw7l8FOEQt7UsepkSBIOIlF6Irf8mfhIdCcmjh7u
-TDlKS6g3/jewfZ21fPctK0wcTJkoVa1wIR0yCKp9uTwv7cEahxOJGt65KYFfl8k5
-259QMgctJb1y1UQApygwlRJFzAkzyXHlVqt2qEeQSOy2Ty95guzY9+VfwqSEjamr
-daLVN03ztczJVc8s/VrB/2AQb9gImOAVdd5SSubfp2LUB7QLR7F2bpqJTVEHwf+j
-fgniJGERCV6u7p+V3b3W3qBBbhPbhDDUyK2v6gIKh7RYQZqEQk4O0to4QxNZFRK6
-1ZVQQTylguw62fuibAleqDR5QYfvzgHiQUm3Z4h3BxAoTGsD40cPjNGMy1VPb4KL
-HH/5SxL43irWjDdyyvxcMH/KqXik08mGblMUCMnyHeaftUya9T+31mdcVRN0ASnn
-rRcLzPpRaRRY2IH8f6uqHBZkrprhEWUww0C61Je2Tfzi6rVU2LuBVJdU/N+t/B+8
-/AJ4oCq0xXoe8d6gecKSjeK048QYMvYpQRHZmERR4nILE9bz04A=
-=Z3ui
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmNucnoACgkQ3SOs138+
+s6GgsBAAq5eiY8YLwRzd4588a63jlCN9cKM5G6WCoqwddVWxf37jY6Yf4tN1sQ9h
+RBmozpq98vzV0IbMFAfxGOruhGetjgAnksZT8646hQQ3I7neGyqH5WYDpNF3m06e
+n7eTrWxUuVGhVjesrb2uUh5xNVBE/ovrGLTZeDMxtxrNz30SPDpbYesdamf0Gykw
+DuEy8N+9CqH+mqyrEm2lpnHTREI8RdpS3GvmI9R9eFXFoRAsmseh4oyRhNaKXhk4
+vqSTIuq4HKh+7DcShUAx4zRDOVyspS5deo0tXi/iawwSCDzx/siy/Q9GsrvnC2uX
+yVibpFEqvzN7g3BB/Hf5D69ojnA3sdubEZAS1V8Hg9sM+vAfAsetyGM3nYvoskAQ
+5TxNrhhv9+Gv9WDfjAibhsmYMhl+yfWdDzy1nvsH8j0Cih/SIFmHp1iYdLSf0bg3
+bXdt8niJNjJgbQhLLDDbAhekeZzJM4cvzzIToJl1eOUEahxq4YAy/qZ3Um9XI7QV
+sDbA4jJykgbEXMRJLHdwowCAvbnVpjZytp15bX9uOU6tUwoni4oEMzkV3gDgRIW5
+/AIsumuhyyAmxoW3WmKxrCBDojaYN+KFGCMMK8atFrrMQV+NuttPrzpuGTY3IdfA
+g8V3pLSXR+eQQzBsWlFkz8uo62TMEvaizeW2ZE6m9EO784fStSw=
+=7qDJ
 -----END PGP SIGNATURE-----
 
---ea7abbhrcCN1PRGS--
+--OI8OX5lQwVXJ1cTS--
