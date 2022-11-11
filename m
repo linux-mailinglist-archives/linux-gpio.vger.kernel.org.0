@@ -2,48 +2,48 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA549625AD1
-	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 14:00:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BA43625ADC
+	for <lists+linux-gpio@lfdr.de>; Fri, 11 Nov 2022 14:01:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233426AbiKKNAU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 11 Nov 2022 08:00:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32986 "EHLO
+        id S233183AbiKKNBo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 11 Nov 2022 08:01:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbiKKNAT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 08:00:19 -0500
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36CBC2E9FC;
-        Fri, 11 Nov 2022 05:00:18 -0800 (PST)
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2ABAb9V2005866;
-        Fri, 11 Nov 2022 07:00:03 -0600
+        with ESMTP id S233702AbiKKNBl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 11 Nov 2022 08:01:41 -0500
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3489E6DCE3;
+        Fri, 11 Nov 2022 05:01:41 -0800 (PST)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+        by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AB8vlrS024478;
+        Fri, 11 Nov 2022 07:01:23 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
  : subject : message-id : references : mime-version : content-type :
  in-reply-to; s=PODMain02222019;
- bh=/60KnAr5FUsJ8zQZvJ+hZGIs6XC9AeBNG9RBS6yfGWg=;
- b=WCHkpjpJnoqnfiNP/terOoASQ98PNJon0nbCrOLvU8XUg7XM//n0PXYPzLmKs0Mpwk27
- s3SmZzrU5lEp7IhYG2SJexDy+6GoIPA4Ogjw/r5Gs8bBnpenuNy4kvbC519uI/kQJ+B+
- ut0+7fck4Ph5oYJDR8twZQILQ573kNJcgDMHm3O1Qbtna+VoquXffOgfNLb2bgc6ni2t
- kM7vyljPbMHgLba4ugWqKshNzCtewT9t88S3/NPfVIZP1kiMUnWH1bFnixsuZQJtSHfQ
- UoKQHNjPv0Q2dCEs258NPa69RAG8wi1qfv++1bKixP14t7Yaw6nt/6tr1bcSCjXA9G/e uA== 
+ bh=arsKwLFQpMknXDHWPffdQfi+mQBzA9ITsUa1V2QBBRo=;
+ b=GVY43Q5hxhAu4yDFXIgOzjF/02QKzGxvgGGyLb2feftX4iR1HpISVPGBvqLR/Mzae/fH
+ P1i0fa9IuvayCdOZqGPyuv6dwgwsZeKMvp0ePP4tBgjRfWIq9tnCAb+++6tD/QifuNGT
+ 4NZ6hriWhXLimWu/XQCXqPmdyL08dVF32S9c5tAeCkD5l2nW8AFY9bkFgno5DdhCn32E
+ xK2HOC5vYrB4cRCA0NoQ1dtCt062bo7tf8lli5YREqI44zJ+FeGCXLTGfYeT0Db3uD+B
+ HIbTBOwTLxCNChvHqDrUumL+tBYYb17avcy+FKn4zwEcCrbuvDEwFl12VN6v3XDVr5yz Sg== 
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-        by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3knm8pgh6g-1
+        by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3knn81rxu7-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 11 Nov 2022 07:00:02 -0600
+        Fri, 11 Nov 2022 07:01:22 -0600
 Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.15; Fri, 11 Nov
- 2022 07:00:01 -0600
+ 2022 07:01:20 -0600
 Received: from ediswmail.ad.cirrus.com (198.61.86.93) by ediex01.ad.cirrus.com
  (198.61.84.80) with Microsoft SMTP Server id 15.2.1118.15 via Frontend
- Transport; Fri, 11 Nov 2022 07:00:01 -0600
+ Transport; Fri, 11 Nov 2022 07:01:20 -0600
 Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E97BE46B;
-        Fri, 11 Nov 2022 13:00:00 +0000 (UTC)
-Date:   Fri, 11 Nov 2022 13:00:00 +0000
+        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 91854B06;
+        Fri, 11 Nov 2022 13:01:20 +0000 (UTC)
+Date:   Fri, 11 Nov 2022 13:01:20 +0000
 From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
+To:     Mark Brown <broonie@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
         Richard Fitzgerald <rf@opensource.cirrus.com>,
         <lee@kernel.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
@@ -52,9 +52,8 @@ CC:     Mark Brown <broonie@kernel.org>,
         <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
 Subject: Re: [PATCH 09/12] irqchip: cirrus: Add driver for Cirrus Logic
  CS48L31/32/33 codecs
-Message-ID: <20221111130000.GI10437@ediswmail.ad.cirrus.com>
-References: <87mt8zutib.wl-maz@kernel.org>
- <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
+Message-ID: <20221111130120.GJ10437@ediswmail.ad.cirrus.com>
+References: <c0c05799-6424-7edf-01b3-e28a10907b2c@opensource.cirrus.com>
  <86pmdvow5y.wl-maz@kernel.org>
  <ef60cbdb-f506-7bd6-a8e1-c92b6963a0f4@opensource.cirrus.com>
  <86k042q1uc.wl-maz@kernel.org>
@@ -63,13 +62,14 @@ References: <87mt8zutib.wl-maz@kernel.org>
  <Y21gwGDb5CFft0kp@sirena.org.uk>
  <87h6z5vs39.wl-maz@kernel.org>
  <20221111111611.GH10437@ediswmail.ad.cirrus.com>
+ <Y242xYJQMC2JlMtH@sirena.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20221111111611.GH10437@ediswmail.ad.cirrus.com>
+In-Reply-To: <Y242xYJQMC2JlMtH@sirena.org.uk>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: FJ2KJtnO5BhYskYK5Gg9AMPrnOAunrsX
-X-Proofpoint-GUID: FJ2KJtnO5BhYskYK5Gg9AMPrnOAunrsX
+X-Proofpoint-ORIG-GUID: 6OWPJbfmcAph1DMxGRzvxH6w1CDxkx0H
+X-Proofpoint-GUID: 6OWPJbfmcAph1DMxGRzvxH6w1CDxkx0H
 X-Proofpoint-Spam-Reason: safe
 X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS
@@ -80,21 +80,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 11:16:11AM +0000, Charles Keepax wrote:
-> On Fri, Nov 11, 2022 at 08:00:10AM +0000, Marc Zyngier wrote:
-> > On Thu, 10 Nov 2022 20:36:16 +0000,
-> > Mark Brown <broonie@kernel.org> wrote:
-> > > On Thu, Nov 10, 2022 at 06:47:20PM +0000, Marc Zyngier wrote:
-> The interrupt-parent points at who our IRQ is connected to, and
-> we are an interrupt-controller so people can use our IRQs. I
-> think it is not currently supported to have more than a single
-> interrupt-parent for a device so with the current binding is it
-> actually possible for the device to refer to its own IRQs in DT?
+On Fri, Nov 11, 2022 at 11:49:25AM +0000, Mark Brown wrote:
+> On Fri, Nov 11, 2022 at 11:16:11AM +0000, Charles Keepax wrote:
+> > On Fri, Nov 11, 2022 at 08:00:10AM +0000, Marc Zyngier wrote:
+> > 
+> > > > ACPI gets to be a lot of fun here, it's just not idiomatic to describe
+> > > > the internals of these devices in firmware there and a lot of the
+> > > > systems shipping this stuff are targeted at other OSs and system
+> > > > integrators are therefore not in the least worried about Linux
+> > > > preferences.
+> 
+> > I would echo Mark's statement that going the way of moving this
+> > into DT/ACPI will actually likely necessitate the addition of a
+> > lot of "board file" stuff in the future. If the part gets used in
+> > any ACPI systems (granted support is not in yet but this is not a
+> > super unlikely addition in the future for cs48l32) we will need to
+> > support the laptops containing the part in Linux and the vendors are
+> > extremely unlikely to put internal CODEC IRQs into the ACPI tables.
+> 
+> It's a bit of a stronger issue than that in that it's not how ACPI is
+> usually expected to work (it draws more from the PCI model where you
+> just get a top level ID from the device and have to figure the rest out
+> yourself).
 > 
 
-I see there is actually interrupts-extended which would let us
-refer to ourselves although its a little unclear to be if that
-would actually work but might be worth a look.
+Hmm... yes ok true ACPI isn't going to put the elements of the
+MFD in either so we would then need something to bind all those
+in as well.
 
 Thanks,
 Charles
