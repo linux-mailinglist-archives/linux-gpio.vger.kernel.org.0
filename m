@@ -2,75 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C2D3626983
-	for <lists+linux-gpio@lfdr.de>; Sat, 12 Nov 2022 13:59:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A52B3626A37
+	for <lists+linux-gpio@lfdr.de>; Sat, 12 Nov 2022 16:29:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234292AbiKLM7u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 12 Nov 2022 07:59:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
+        id S232311AbiKLP31 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 12 Nov 2022 10:29:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231814AbiKLM7t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Nov 2022 07:59:49 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9284060D6;
-        Sat, 12 Nov 2022 04:59:48 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id f27so18257132eje.1;
-        Sat, 12 Nov 2022 04:59:48 -0800 (PST)
+        with ESMTP id S231404AbiKLP31 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 12 Nov 2022 10:29:27 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496EFC773;
+        Sat, 12 Nov 2022 07:29:26 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id t25-20020a1c7719000000b003cfa34ea516so6745535wmi.1;
+        Sat, 12 Nov 2022 07:29:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XxgZUhoZIdG7gFB84P/XyUiuXQ5Zy1yGT9mDuPve4q4=;
-        b=g9LoZXUsJS6aWbanCCtLneDMm5qg8qFyIqmFfMOECW8GWEAbhT+gth5JyIAFzF/ZQS
-         6wMuAypuITkpKGjG3skXvWP3LqHnwrPpMb+6Eax41OCKuBdq+GeXqVL9L1xvCyTKOoPt
-         z+lTogAveyAwtRcEcGPr5QQ4Wrq1gNIX39aAkmAfoA62uQ87X2rLw+cPEuuoQmgVjgjX
-         LNRPaCmzF7JZl6OGlpiD7WmoKzBt7qVuFOuOOxch2tlSn7ji+yGOCJykWxTsG3Dk6rL7
-         udkVbzx8PCYY/h/U//acchHXYzcOzAQ7utUzhy26orl1kjBE2voH1fiwJx65222Ym3sB
-         +QjQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g6cp5m3ImBZ7KTnMToLeEU95rkG7mRiWgSX6Mnz0HUk=;
+        b=H+Nveg/mN09Lol3Pj5k/TN2le7XBMJrVS9lbYMnNLnVf7GBxofVa3Xw9d3DVFQfVhG
+         9tkWET348ZrYG9lTdWhZP/eUdc5tJPvvqxF7YBw2xzddToJ9V0zvlDGR0rK/Xsne8wQq
+         rctCQOJjlsdZ9+q/K/Q9vpP3sYcHXzkynAkFwmGKrl8mXPCcL7ZhGc01tKnBz5FZOYOE
+         lFb2Z4FhCv5inyRZlLTY60b05+7wxKV3a03Z10xrV8SV3yfa5h4bx4K42Mdap269JdQl
+         iZP5T9WAqergBfAQ+6NlwsLVvfewREtVz7iJsJQpGol9kp8fQG59oBFlBGsSz79IYneA
+         knCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XxgZUhoZIdG7gFB84P/XyUiuXQ5Zy1yGT9mDuPve4q4=;
-        b=zPWAyc9SMux445fFVn4WhA7/HmlnlvbWPR0zPVyuZer+qR7C+CLSum28pgZHw57oxq
-         T8SlSc8DvYpdR03+8Fs+vAryqaz5G/Y/q555U3P9rE7sV+ygGE/+Mz/JkquVVWUwScR3
-         bWthFetnj57S3/5Vb87KEvIRpquRwR3FVy7zjvdNb3BuJK7Af2zKkTO8o3YPD5BUH7wt
-         PvE70P4QQBukZST3+8NzgNQ2Q2ZalcFnbICBIdMptzyoqoil2IhkLBxpAKSbtxzRpVfc
-         lDRJrCzSvUPctWXsk+hb1foIL7RAvUF/tR6OafU5vS0QYPWE7gry4Q3gIFt5D9Vq4ks1
-         g8/w==
-X-Gm-Message-State: ANoB5pnsC3ToANS8UsiYfdjUJioZSVC1mgcJ8VhPj85gwvPDI86FBcOp
-        vdnjDv4C2sMb7zK7J1dQ11YIx/u1pJU=
-X-Google-Smtp-Source: AA0mqf46WbgZkGJXrH9oR/R47NByuem807cClU3zAYvEurttA2p9qcjTKFAeJJ7atFdwGl8RMsKp/w==
-X-Received: by 2002:a17:906:2b57:b0:7ad:b45c:dbe7 with SMTP id b23-20020a1709062b5700b007adb45cdbe7mr4959707ejg.617.1668257986893;
-        Sat, 12 Nov 2022 04:59:46 -0800 (PST)
-Received: from [192.168.3.32] (dh207-99-143.xnet.hr. [88.207.99.143])
-        by smtp.gmail.com with ESMTPSA id v19-20020aa7cd53000000b0045bd14e241csm2302900edw.76.2022.11.12.04.59.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 12 Nov 2022 04:59:46 -0800 (PST)
-Message-ID: <3d1f5b5e-b444-cd9f-e0fb-69f834b0d1d6@gmail.com>
-Date:   Sat, 12 Nov 2022 13:59:44 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g6cp5m3ImBZ7KTnMToLeEU95rkG7mRiWgSX6Mnz0HUk=;
+        b=si0iFLTB0rAgFLM6H71QuFiFQipxuuqhxsSltwg02UAGOlvJgeTehLTEHtU3W3gdNU
+         GvxVG7qmZhL+VzRonsJOHLBGg5bcCiBSGvkMtJdUY9qzmGSY4IKKYb6dPU6jOY0ioaHM
+         ovhO0pJagx5BKxYgmka47X0ddH3OqoiSsYoBMrdQwgTgiHAp2V6piBQgt4HVXqXu6a6w
+         5Zuvd01Sba5jjIT2reyVC6JNGRe67dHQC36ybVb+Orm5o0uLHpOpovxEraoH1ovdq6UV
+         eGYCwPQzgFZwn+tmDdAkNJUZXCF6C7Agg6zl++/f91uRjWrQw9aLdMm+9EthyyIniGYh
+         Ohbg==
+X-Gm-Message-State: ANoB5pmXLomNRfdLvGNKXb9VKolsVax+nXUKl1Lg/Jf8AksW5nBS9pyY
+        Qri7YfCPAP1fzWMR5k5dXlg=
+X-Google-Smtp-Source: AA0mqf4a1Xsu5Xu8InLxUgzkkFe3OpJUFq99qZEQD1uWwZxOmYllCX7IOeZAVLLkjHesYiFI5WryPA==
+X-Received: by 2002:a05:600c:348e:b0:3cf:6e78:e2aa with SMTP id a14-20020a05600c348e00b003cf6e78e2aamr4154643wmq.121.1668266964921;
+        Sat, 12 Nov 2022 07:29:24 -0800 (PST)
+Received: from localhost (94.197.38.186.threembb.co.uk. [94.197.38.186])
+        by smtp.gmail.com with ESMTPSA id h4-20020a05600c350400b003c6f426467fsm13646045wmq.40.2022.11.12.07.29.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 12 Nov 2022 07:29:24 -0800 (PST)
+From:   Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+To:     michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: sl28cpld: Replace irqchip mask_invert with unmask_base
+Date:   Sat, 12 Nov 2022 15:29:28 +0000
+Message-Id: <20221112152928.42204-1-aidanmacdonald.0x0@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH] gpiolib: of: Use correct fwnode for DT-probed chips
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-References: <20221111113732.461881-1-thierry.reding@gmail.com>
-Content-Language: en-US
-From:   Robert Marko <robimarko@gmail.com>
-In-Reply-To: <20221111113732.461881-1-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,40 +66,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Remove use of the deprecated mask_invert flag. Inverted mask
+registers (where a '1' bit enables an IRQ) can be described more
+directly as an unmask register.
 
-On 11. 11. 2022. 12:37, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->
-> The OF node store in chip->fwnode is used to explicitly override the FW
-> node for a GPIO chip. For chips that use the default FW node (i.e. that
-> of their parent device), this will be NULL and cause the chip not to be
-> fully registered.
->
-> Instead, use the GPIO device's FW node, which is set to either the node
-> of the parent device or the explicit override in chip->fwnode.
->
-> Fixes: 8afe82550240 ("gpiolib: of: Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode")
-> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Aidan MacDonald <aidanmacdonald.0x0@gmail.com>
+---
+ drivers/gpio/gpio-sl28cpld.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Hi, I can confirm this fixes the blamed commit on Qualcomm IPQ8074.
+diff --git a/drivers/gpio/gpio-sl28cpld.c b/drivers/gpio/gpio-sl28cpld.c
+index 52404736ac86..2195f88c2048 100644
+--- a/drivers/gpio/gpio-sl28cpld.c
++++ b/drivers/gpio/gpio-sl28cpld.c
+@@ -70,8 +70,7 @@ static int sl28cpld_gpio_irq_init(struct platform_device *pdev,
+ 	irq_chip->num_irqs = ARRAY_SIZE(sl28cpld_gpio_irqs);
+ 	irq_chip->num_regs = 1;
+ 	irq_chip->status_base = base + GPIO_REG_IP;
+-	irq_chip->mask_base = base + GPIO_REG_IE;
+-	irq_chip->mask_invert = true;
++	irq_chip->unmask_base = base + GPIO_REG_IE;
+ 	irq_chip->ack_base = base + GPIO_REG_IP;
+ 
+ 	ret = devm_regmap_add_irq_chip_fwnode(dev, dev_fwnode(dev),
+-- 
+2.38.1
 
-Tested-by: Robert Marko <robimarko@gmail.com>
-
-> ---
->   drivers/gpio/gpiolib-of.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 4be3c21aa718..55c3712592db 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -1067,7 +1067,7 @@ int of_gpiochip_add(struct gpio_chip *chip)
->   	struct device_node *np;
->   	int ret;
->   
-> -	np = to_of_node(chip->fwnode);
-> +	np = to_of_node(dev_fwnode(&chip->gpiodev->dev));
->   	if (!np)
->   		return 0;
->   
