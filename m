@@ -2,118 +2,84 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE4EA626F7F
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Nov 2022 13:40:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6573D626F85
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Nov 2022 13:42:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233810AbiKMMkY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Nov 2022 07:40:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36160 "EHLO
+        id S233029AbiKMMmz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Nov 2022 07:42:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232884AbiKMMkX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 07:40:23 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76BA1115D;
-        Sun, 13 Nov 2022 04:40:21 -0800 (PST)
+        with ESMTP id S232799AbiKMMmy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 07:42:54 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128ED12A85;
+        Sun, 13 Nov 2022 04:42:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668343221; x=1699879221;
+  t=1668343374; x=1699879374;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=pjNiMa1Cy/F/7GAAO42rp/m2JLQqPKP6EMEtoOQqGQ0=;
-  b=cQlImT4HYpjdFBdqe99mm6DDD08JhSHGxb6WaYCixRmqynJbp66WA9mN
-   mmUe4tZyo344BTrGFn9iJVVKQuod1lZzKUJiX+TF1POgU2U9QY/5JuL8U
-   uuD3fj5I2x796Qi0LXIbuZP2EidmVuUGrSqlHZncUlnlm70cj5AeQ5O1W
-   odzw5OYHBRFso8+kXQ52b+NGTyvIx45hnTjYja1eqppsl1VEwszKGUV/i
-   nKqPaH7UNQxm3IPDcedqgKovq8nDwU5UOPGCKzZmUnDyNXPaijWHOs4G8
-   ksErjHmko49PsWcx71iIYHyo1BTYD9+jEoVh+v8Og7BsjSIxDesPlGDUX
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="295169330"
+  bh=+j0oNtGEaWU57mtrA0OycgFLPKMPBzs0k05+bUidqxE=;
+  b=B/0ed++lmjFb4E2/ZbGLpCqPjne3Gtkl+rE1i8sBgdvVCPkCTClmKeAk
+   I9N7tU2wF5aJVHnNLHWV+TyG3/bJW2uNUdldT66u9qFSRRvAgAXeANaDT
+   4agblnQ2lXteH9GY/bvfLJwe1Y91cKrKt2Im8nsJRPnJvfMq+yog6oJz4
+   jye3AFGYZ2SnAf/F3gvcEEVO0XuGLGFsSTvKBjjum0o678k1/csUFy9xQ
+   UWKu8NcqsGvpyQdFbcgTJ61T12QbWnAYwCTaBOHcSoPyTc3jeWAIizyeI
+   Ca/XbsEBIfE5bWiipzZc929wP7AwV6QoUNQsXOpIHk6S/wJsvVU7tpgEM
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="292206469"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="295169330"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 04:40:21 -0800
+   d="scan'208";a="292206469"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Nov 2022 04:42:53 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="640451724"
+X-IronPort-AV: E=McAfee;i="6500,9779,10529"; a="967264507"
 X-IronPort-AV: E=Sophos;i="5.96,161,1665471600"; 
-   d="scan'208";a="640451724"
+   d="scan'208";a="967264507"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Nov 2022 04:40:19 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 13 Nov 2022 04:42:51 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ouCHZ-00Bg3n-0t;
-        Sun, 13 Nov 2022 14:40:17 +0200
-Date:   Sun, 13 Nov 2022 14:40:17 +0200
+        id 1ouCK2-00Bg6k-0i;
+        Sun, 13 Nov 2022 14:42:50 +0200
+Date:   Sun, 13 Nov 2022 14:42:49 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     William Breathitt Gray <william.gray@linaro.org>
 Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         michael@walle.cc, broonie@kernel.org
-Subject: Re: [PATCH v2 1/4] gpio: regmap: Always set gpio_chip get_direction
-Message-ID: <Y3DlsTAQMi6kKObJ@smile.fi.intel.com>
+Subject: Re: [PATCH v2 2/4] regmap-irq: Add handle_mask_sync() callback
+Message-ID: <Y3DmSfdG9ZeV8inu@smile.fi.intel.com>
 References: <cover.1668129763.git.william.gray@linaro.org>
- <1805d1ddb5bbce8e86164e66421ddde481cce4f9.1668129763.git.william.gray@linaro.org>
+ <53e9e89cc9d7e9c20cbdfc13b360dcb43d07f832.1668129763.git.william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1805d1ddb5bbce8e86164e66421ddde481cce4f9.1668129763.git.william.gray@linaro.org>
+In-Reply-To: <53e9e89cc9d7e9c20cbdfc13b360dcb43d07f832.1668129763.git.william.gray@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 10, 2022 at 08:55:50PM -0500, William Breathitt Gray wrote:
-> If you only have reg_dat_base set, then it is input-only; if you only
-> have reg_set_base set, then it is output-only. Thus, we can always set
-> gpio_chip get_direction to gpio_regmap_get_direction and return
-> GPIO_LINE_DIRECTION_IN/GPIO_LINE_DIRECTION_OUT given the respective
-> register base addresses configuration.
+On Thu, Nov 10, 2022 at 08:55:51PM -0500, William Breathitt Gray wrote:
+> Provide a public callback handle_mask_sync() that drivers can use when
+> they have more complex IRQ masking logic. The default implementation is
+> regmap_irq_handle_mask_sync(), used if the chip doesn't provide its own
+> callback.
 
-Seems legit to me. Have you checked if we have any gpio-regmap drivers that
-have something like this in their configuration already? In such cases we need
-to be sure they behave as expected.
+...
 
-From the code perspective:
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> + * @handle_mask_sync: Callback used to handle IRQ mask syncs. The index will be
+> + *		      in the range [0, num_regs[
 
-> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> ---
->  drivers/gpio/gpio-regmap.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> index 6383136cbe59..f907c9c19fce 100644
-> --- a/drivers/gpio/gpio-regmap.c
-> +++ b/drivers/gpio/gpio-regmap.c
-> @@ -111,6 +111,11 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
->  	unsigned int base, val, reg, mask;
->  	int invert, ret;
->  
-> +	if (gpio->reg_dat_base && !gpio->reg_set_base)
-> +		return GPIO_LINE_DIRECTION_IN;
-> +	if (gpio->reg_set_base && !gpio->reg_dat_base)
-> +		return GPIO_LINE_DIRECTION_OUT;
-> +
->  	if (gpio->reg_dir_out_base) {
->  		base = gpio_regmap_addr(gpio->reg_dir_out_base);
->  		invert = 0;
-> @@ -265,8 +270,8 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
->  	else if (gpio->reg_set_base)
->  		chip->set = gpio_regmap_set;
->  
-> +	chip->get_direction = gpio_regmap_get_direction;
->  	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
-> -		chip->get_direction = gpio_regmap_get_direction;
->  		chip->direction_input = gpio_regmap_direction_input;
->  		chip->direction_output = gpio_regmap_direction_output;
->  	}
-> -- 
-> 2.38.1
-> 
+Not sure if it's a typo ([ vs. ]), but if you want to say "not including the
+last", use mathematical notation, i.e. "[0, num_regs)".
+
 
 -- 
 With Best Regards,
