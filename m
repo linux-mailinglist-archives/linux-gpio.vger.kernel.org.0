@@ -2,71 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A2B627007
-	for <lists+linux-gpio@lfdr.de>; Sun, 13 Nov 2022 15:14:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF218627062
+	for <lists+linux-gpio@lfdr.de>; Sun, 13 Nov 2022 17:14:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235353AbiKMOOh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Nov 2022 09:14:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32842 "EHLO
+        id S234351AbiKMQN7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Nov 2022 11:13:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231252AbiKMOOf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 09:14:35 -0500
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E180B878
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 06:14:35 -0800 (PST)
-Received: by mail-qt1-x82a.google.com with SMTP id l2so5482473qtq.11
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 06:14:35 -0800 (PST)
+        with ESMTP id S233401AbiKMQN6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 11:13:58 -0500
+Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70FEE6578
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 08:13:56 -0800 (PST)
+Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-141ca09c2fbso652765fac.6
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 08:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=DNZRFfPTIAo7WXZRG85F2W4fpqHXCOpB+6LDuGu/bak=;
-        b=sE13bnfiQEwOas5EWN/9S1zISno6RI4STkh69426YI8yjtTcFtaIM+b1VG3fFH1uei
-         BmxoJJlZJnk7ofNVYpYb8twKxJI0CPOWEa6hwK3mYYCh7zFsMGOfoz3cQHCZGrbjf3qW
-         LDFplfzUF65uFR6j0XvJE+LcxbwWgzsaUnOqvCVPN8UPX43a5ODGiiOx/L3B9+Ju05gw
-         liatH+v3lh1AiCcVrN5CdtgSbqUZwxFDkD60H9T93QZfHHri5cMFy2+ErwJXSLqsPr9I
-         bg9OtkSjjJd/TeslErekQ2cAvlYpXZlt6DM1/ZQWiF74LGs0vMY/vJeZgpxmRGKZ2CpR
-         j1og==
+        bh=rie3aJc2EdJufL+DgKGmAfwMS5IGiPxwZ8BE2w/f1TU=;
+        b=lK/RJQYpTTK0XTQPTPPXEm6cwO79eeuR/Svllm0NJbzcU5jjpJfnnkzu6nkzdQ89UP
+         oxE6yJW7wz8z1G8RH7r1W2LSZVreJFQ6Bpt8uhS4TFYtzeMXdLjjxDUlkXkBULOjvQAF
+         9VbpK1zis0t5LMN6bMkVQIblMI/CPegktj1+As1HPULKsbAKAADLiV3isGbaBFx5PwGz
+         Sl3SbbufEy9SK9BASDrYOLKGri87aeksqqYDcRQpm9m7njTNkGibIxBJSh8a6wOlNHxH
+         XEZlTLxtTm3VlV08vYN5XWbC5eDsJ5k/0o997xACFQd6ToFPoq1FTxPLQLRw71OJivsJ
+         VNxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DNZRFfPTIAo7WXZRG85F2W4fpqHXCOpB+6LDuGu/bak=;
-        b=ddWJ6I/bzET9ysASbkj9SyEAzwyZ7TKBHpB1ddKe8ysB04R1BEIpu4pDxpTl+MTgzA
-         2UitaADmgP4bUlz9w8d8DpS982JZ3yLomZ9Htaw45crZpL8iHdhUS5I5MZozYhB/Ucli
-         hjXhWAW2kKMJkuwkEMFwwhkVjha9DRV1TKeXWucTWIzZPtwqYzEUBzvVZFgqVNJ0wehM
-         JAllbdWonVuR0xXdtWvGv+Xc/7zusWLkcWYqit+tIAtFPEPB1wlK8VQU+7GBnRGAxbno
-         079E98ZOfBi1aEPIN5zaAeTSEtz6s9cTTAvfgd/JPgrtgqTADbgCJYlkDO4NA1cfNYGU
-         10sg==
-X-Gm-Message-State: ANoB5pmB0u1BWQ8Wb0NKyRzgUNI9vmlhmgeFDwsomwdG9ZMLYT2tyJzH
-        AnV0nYr8NieUvFPQZsipGfZW3ednfGJC/g==
-X-Google-Smtp-Source: AA0mqf5jFx8ZESzHrdKTSEHHQzdGZFMHRNEwRptg4AxS+bZMcap9WmJ+s9unN6xGg2AkpOjKjX/h5Q==
-X-Received: by 2002:ac8:6b8f:0:b0:3a5:20b1:e390 with SMTP id z15-20020ac86b8f000000b003a520b1e390mr8754468qts.626.1668348874125;
-        Sun, 13 Nov 2022 06:14:34 -0800 (PST)
+        bh=rie3aJc2EdJufL+DgKGmAfwMS5IGiPxwZ8BE2w/f1TU=;
+        b=ALjSQOm9PVD5RFshv8X0z9npPwtxF08Rk77QSn87DT6wciIRJdC7auW02nyVnUETt9
+         A1EQzCVVwyQUqSlXKrl64hz4knzhq+rAzFvPsQEyyqctu/jW270lwpleDkK8XtBiHZnM
+         dk8q+tcadlZZaDT+3zuZSjwMOpkZdlpsPLNpt2OChAh7zKkRzWAeJzrF0iTY+XvM9UkS
+         ycCgYVq1rkKE3lIffDtNo+k1yfLVyFT2w1oPhzM6O0SV0q3ZYV5AWEesSV152mA7ndPA
+         bW8aMTJ9Aqn7UlIGGf2706f4Ted+Use2/LrgaV62ZBiEfdO9exzsWhGgI/2cHioSfyrP
+         O7TQ==
+X-Gm-Message-State: ANoB5pnr8T0/dVfEhX4E97mHqJEngP9DB7yumMGb5lpDBEzUnUhIW2vu
+        3JzVVdrE/6+vl5Ga86qafP4sIQ==
+X-Google-Smtp-Source: AA0mqf5q6u+2A+907zP4rxPzv2WmQbvMPCkOvpeg1RZBaTo13bdnAyTWIl8HolUgtH/YCDBFnhyvEg==
+X-Received: by 2002:a05:6870:7816:b0:135:1e5e:e71e with SMTP id hb22-20020a056870781600b001351e5ee71emr5086404oab.223.1668356034915;
+        Sun, 13 Nov 2022 08:13:54 -0800 (PST)
 Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id i15-20020a05620a248f00b006fb3884e10bsm4841124qkn.24.2022.11.13.06.14.32
+        by smtp.gmail.com with ESMTPSA id y18-20020a056808061200b0034d8abf42f1sm2770068oih.23.2022.11.13.08.13.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Nov 2022 06:14:33 -0800 (PST)
-Date:   Sun, 13 Nov 2022 09:07:42 -0500
+        Sun, 13 Nov 2022 08:13:54 -0800 (PST)
+Date:   Sun, 13 Nov 2022 09:13:34 -0500
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         michael@walle.cc, broonie@kernel.org
 Subject: Re: [PATCH v2 4/4] gpio: i8255: Migrate to regmap API
-Message-ID: <Y3D6Lji9bKeSbJaI@fedora>
+Message-ID: <Y3D7jipyk5L655AE@fedora>
 References: <cover.1668129763.git.william.gray@linaro.org>
  <61327a67cc308af413471a69a4810b2785e53e8e.1668129763.git.william.gray@linaro.org>
  <Y3Dol6rHduFNQT85@smile.fi.intel.com>
+ <Y3D6Lji9bKeSbJaI@fedora>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="l+IjPmXaLKrbTOfD"
+        protocol="application/pgp-signature"; boundary="oTGlfTqifU6OR20N"
 Content-Disposition: inline
-In-Reply-To: <Y3Dol6rHduFNQT85@smile.fi.intel.com>
+In-Reply-To: <Y3D6Lji9bKeSbJaI@fedora>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,83 +76,59 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---l+IjPmXaLKrbTOfD
+--oTGlfTqifU6OR20N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Nov 13, 2022 at 02:52:39PM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 10, 2022 at 08:55:53PM -0500, William Breathitt Gray wrote:
-> > The regmap API supports IO port accessors so we can take advantage of
-> > regmap abstractions rather than handling access to the device registers
-> > directly in the driver. The 104-dio-48e and gpio-mm modules depend on
-> > the i8255 library and are thus updated accordingly.
+On Sun, Nov 13, 2022 at 09:07:42AM -0500, William Breathitt Gray wrote:
+> On Sun, Nov 13, 2022 at 02:52:39PM +0200, Andy Shevchenko wrote:
+> > On Thu, Nov 10, 2022 at 08:55:53PM -0500, William Breathitt Gray wrote:
+> > >  drivers/gpio/Kconfig            |   2 +
+> > >  drivers/gpio/gpio-104-dio-48e.c | 397 ++++++++++-------------------
+> > >  drivers/gpio/gpio-gpio-mm.c     | 151 +++--------
+> > >  drivers/gpio/gpio-i8255.c       | 429 +++++++++++-------------------=
+--
+> > >  drivers/gpio/gpio-i8255.h       |  80 +++---
 > >=20
-> > By leveraging the gpio_regmap API, the i8255 library is reduced to
-> > simply a devm_i8255_regmap_register() function, a configuration
-> > structure struct i8255_regmap_config, and a helper macro
-> > i8255_volatile_regmap_range() provided to simplify volatile PPI register
-> > hinting for the regmap.
+> > Can we actually split this to a few steps:
+> >  - providing gpio-i8255-regmap
+> >  - providing gpio-mm-regmap
+> >  - converting the driver
+> >  - removing not used modules (one by one)
+> > ?
+> >=20
+> > In this case if any regression somewhere appears, we can always perform=
+ a
+> > (semi-)revert for a certain driver.
 >=20
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sure, I can split the regmap_irq migration for 104-dio-48e into a
+> separate precursor patch to reduce the amount of changes we see here and
+> provide a revert path for these IRQ changes. I can do a similar change
+> for 104-idi-48 as well.
 >=20
-> Suggested-by?
-> (I'm not insisting, just consider if it's appropriate to use here or in t=
-he
->  other patches)
+> The rest of the changes for 104-dio-48 and gpio-mm are essentially just
+> the regmap configurations, so the patch will be largely identical even
+> if we migrate gpio-i8255 to regmap API first before migrating again to
+> the gpio_regmap in a second patch.
 
-No problem, I'll make sure your Suggested-by lines are properly added
-for the patches. ;-)
-
-> > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> > ---
-> >  drivers/gpio/Kconfig            |   2 +
-> >  drivers/gpio/gpio-104-dio-48e.c | 397 ++++++++++-------------------
-> >  drivers/gpio/gpio-gpio-mm.c     | 151 +++--------
-> >  drivers/gpio/gpio-i8255.c       | 429 +++++++++++---------------------
-> >  drivers/gpio/gpio-i8255.h       |  80 +++---
->=20
-> Can we actually split this to a few steps:
->  - providing gpio-i8255-regmap
->  - providing gpio-mm-regmap
->  - converting the driver
->  - removing not used modules (one by one)
-> ?
->=20
-> In this case if any regression somewhere appears, we can always perform a
-> (semi-)revert for a certain driver.
-
-Sure, I can split the regmap_irq migration for 104-dio-48e into a
-separate precursor patch to reduce the amount of changes we see here and
-provide a revert path for these IRQ changes. I can do a similar change
-for 104-idi-48 as well.
-
-The rest of the changes for 104-dio-48 and gpio-mm are essentially just
-the regmap configurations, so the patch will be largely identical even
-if we migrate gpio-i8255 to regmap API first before migrating again to
-the gpio_regmap in a second patch.
-
-I believe the reason the changes look ugly in this patch is because the
-large number of lines deleted is confusing the match heuristic for diff
-so the changes aren't lining up nicely into distinct deletion/creation
-blocks. I can play around with the git diff "--break-rewrites" option to
-get it to produce a nicer diff; I think gpio-mm looks much easier to
-review as a rewrite rather than inline diffs [0].
-
-[0] https://gitlab.com/vilhelmgray/gpio/-/raw/61327a67cc308af413471a69a4810=
-b2785e53e8e/drivers/gpio/gpio-gpio-mm.c
+Sorry, I realize now that you meant to split the i8255 gpio_regmap
+additions to their own patch, perform the driver migrations in the own
+respective patches, and then finally remove the dangling unused i8255
+functions and structures. Yes I think that would make for a cleaner
+patch series so I'll split it up that way.
 
 William Breathitt Gray
 
---l+IjPmXaLKrbTOfD
+--oTGlfTqifU6OR20N
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY3D6LgAKCRC1SFbKvhIj
-K680AQDBglAZoOnqV+sVHlIl9/nOiibX2EdRb7qmeqg4iW9pbgEA6dBV3pWLBU1k
-hzVMUuUSwa2v+gN6LsDoz3yELg9HKws=
-=S2bd
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY3D7jgAKCRC1SFbKvhIj
+K9xoAQChK9V3hkCewQu4U/YzHkR8KOf3J7N1Pl+9IK7YoX3TgwD+L7FDU83nXmWi
+g3MvYstO9i7FwtgWranyHbVBbcbCSwU=
+=bAac
 -----END PGP SIGNATURE-----
 
---l+IjPmXaLKrbTOfD--
+--oTGlfTqifU6OR20N--
