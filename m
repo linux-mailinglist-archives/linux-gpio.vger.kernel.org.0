@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3A7B627939
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 10:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC19262793B
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 10:41:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236989AbiKNJlT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 04:41:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        id S235837AbiKNJlh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 04:41:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237070AbiKNJlD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 04:41:03 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD191E3E5
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 01:40:49 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id a29so18310742lfj.9
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 01:40:49 -0800 (PST)
+        with ESMTP id S236655AbiKNJlE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 04:41:04 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8811EAD6
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 01:40:51 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id a15so12382564ljb.7
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 01:40:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=rhjMWnbPiyWtnSlNKUPMhCILBSQuKkW5JKpMpkNUhPc=;
-        b=xDoUbGyu7xJvnEe64C39u3W1WlMwPR+7xRgCl/wRlulZRVB3Am1KRRuuXYjae3A1EJ
-         lVpNipOsRjdFPusE3n6XM7Fqmck01W+FMuAkQMIe3loVPwnsQXRFLeHx4pgRM37t/fpF
-         oAvUVWZ+IkkClo/AFmdxBrxly65igc7syLBz4dz7snMDKP82fiVPlwk3Bt5WR/ytgBPf
-         T1vj6slkPUbNmHmAf9jg24hXqTwf8iY9W4EygHDV4Bi3tg3TeN3q7jBRkmBpjmcR8uTR
-         1SULd3xkB5JyMGZyoF+yh8vze7qQB/j4AWUgE+M6LPBV5Vx9frlUqsJe3XhZ5/RXY/kF
-         hrGw==
+        bh=wVIrJB62xFytgyX2hXOIwCkUIaWq9adGnSjJaoKJxng=;
+        b=IL7q4QAIccunJwfWqTuHGQi1izpTEyFq8ufXrX5+T7lwl4pEYmRVyDDS/Wf4wBVEtm
+         A+h8yErXUxZzGoavkINF6Ihw3pmO0QuJG5v28i/FL+0FnjkKsQsg86PIqkpAuWbucUQl
+         JLJ1gmB9ioWwwqOG1oh/cmCpieV7flF9QUF69BP8m8jYWfCm2Luz1Hym1r90TmOITXNm
+         v454W6JgZTm7WuHTXFieVdrXoBH1jXsscukcueTuRUl4ev4h2P/RDYi1d39ZrzM01bwR
+         bhQsgMBqoFQA9usFOct05Kbb0KdZc0HQWXt1ZMTpuwkwBXJ1IHNvQfoW8iHZynKH0fh7
+         R61Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rhjMWnbPiyWtnSlNKUPMhCILBSQuKkW5JKpMpkNUhPc=;
-        b=U4YmJTPOeodh3r/ziTdv9iTY9sqnwTeFA1H1NzJ4p9/yh8ld09Oha8p7T8nxEAUHWV
-         pUf/II/uwywo77kZZ8AOdLilc+vhdykijhE9tIEl7jsl0xjUE5NbTcCV6fnbsCUGfzPT
-         ypcrk4Di8GkZflNND0pZtgD/mAwc0J4PnaWKVQ2aHOOKAdg5IsAOadxUH4DEPLNDNWSw
-         5zbRIz669Ry0aqLCPBMzdUM4h8igHGD3A7VB8XUkj9YGpjdX3gB/iH/6TgyVggcfvWq+
-         isvV4Lur3haNO9Lic0AzK6U954DTE2cAIdFNHOZYD37bQE8ASmcdF2aFHPTA46JMqVa3
-         g56g==
-X-Gm-Message-State: ANoB5pm8NEe5D7yqoD587EJp1lBitHq6H3ODCeNbAL3BGoXOQ93BoaOT
-        RfbDWkxjf+sPSUc3tH0CO8P2Xw==
-X-Google-Smtp-Source: AA0mqf4dQ9dBRg41J79ai7kzpTgLAKtrtWRzPIvGXbB1MyW2oFA22ZTfWkIZpTFB1l+T1p5GnGRkcg==
-X-Received: by 2002:a19:645e:0:b0:4a9:e27a:1cfa with SMTP id b30-20020a19645e000000b004a9e27a1cfamr3719038lfj.147.1668418848354;
-        Mon, 14 Nov 2022 01:40:48 -0800 (PST)
+        bh=wVIrJB62xFytgyX2hXOIwCkUIaWq9adGnSjJaoKJxng=;
+        b=f+av4JGNtUNcYgIV7nX8CGLVCFzry3IX+7OTOzea3DHBfe3Iw/wD/4rpAT3W67B2bd
+         RM0mltPPfDiudpQFt6/eY4uOvVfoFnmsWDN1SkVUybf+rq9NnBzIYBDHjWixKoGlDyJu
+         E2KoawCAqr85V9xtB1gsvCSonbfbj/D/jKNX0d2B2FFJMjA4SiN7lDDSCasGBtAQ4/rp
+         xl1w/s9D0X3tQExaTRU/s1KF7IQx6q2xURPR/wjMkASbm48SaxhflSJKxewQIQ/EUXC5
+         PbgJ3pP6XktryU8/4aEnADlU79OnDj/edWE2XswbkaJVkx0GQwapmEzkgpD1uphanaTO
+         jbtA==
+X-Gm-Message-State: ANoB5plFgZtFfRlMOydFgktDnuENW4J7y8TRbWLakXGKFpClBfxyh0XY
+        LjqKdREScIVOcvyP8K1CK/0zVA==
+X-Google-Smtp-Source: AA0mqf4/jxt2YzhS5bqE7d3oZSnRUYxSjcA4QKPtBPsohUR7PehtXB8E2onkoMJ2R42SbsaUTYppbg==
+X-Received: by 2002:a2e:b011:0:b0:277:6f0:523b with SMTP id y17-20020a2eb011000000b0027706f0523bmr4271345ljk.297.1668418849464;
+        Mon, 14 Nov 2022 01:40:49 -0800 (PST)
 Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id n26-20020ac2491a000000b00494a603953dsm1762430lfi.89.2022.11.14.01.40.47
+        by smtp.gmail.com with ESMTPSA id n26-20020ac2491a000000b00494a603953dsm1762430lfi.89.2022.11.14.01.40.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 01:40:47 -0800 (PST)
+        Mon, 14 Nov 2022 01:40:48 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
@@ -58,26 +58,27 @@ To:     devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: (subset) [PATCH 1/2] dt-bindings: pinctrl: qcom,ipq8074: convert to dtschema
-Date:   Mon, 14 Nov 2022 10:40:45 +0100
-Message-Id: <166841878696.36382.14839128580435642280.b4-ty@linaro.org>
+Subject: Re: (subset) [PATCH v2 1/3] dt-bindings: pinctrl: qcom,msm8960: convert to dtschema
+Date:   Mon, 14 Nov 2022 10:40:46 +0100
+Message-Id: <166841878696.36382.16617765528924868503.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221108142357.67202-1-krzysztof.kozlowski@linaro.org>
-References: <20221108142357.67202-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
+References: <20221109105140.48196-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 8 Nov 2022 15:23:56 +0100, Krzysztof Kozlowski wrote:
-> Convert Qualcomm IPQ8074 pin controller bindings to DT schema.  Keep the
+On Wed, 9 Nov 2022 11:51:38 +0100, Krzysztof Kozlowski wrote:
+> Convert Qualcomm MSM8960 pin controller bindings to DT schema.  Keep the
 > parsing of pin configuration subnodes consistent with other Qualcomm
 > schemas (children named with '-state' suffix, their children with
 > '-pins').
@@ -86,7 +87,7 @@ On Tue, 8 Nov 2022 15:23:56 +0100, Krzysztof Kozlowski wrote:
 
 Applied, thanks!
 
-[1/2] dt-bindings: pinctrl: qcom,ipq8074: convert to dtschema
+[1/3] dt-bindings: pinctrl: qcom,msm8960: convert to dtschema
 
 Best regards,
 -- 
