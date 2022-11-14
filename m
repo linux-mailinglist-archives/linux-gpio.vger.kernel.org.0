@@ -2,250 +2,197 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E551D6274B4
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 03:49:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D53F862751D
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 05:01:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235706AbiKNCt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Nov 2022 21:49:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43930 "EHLO
+        id S235484AbiKNEB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Nov 2022 23:01:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235560AbiKNCty (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 21:49:54 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4382913F51;
-        Sun, 13 Nov 2022 18:49:53 -0800 (PST)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8DxTtvQrHFjGcgGAA--.20674S3;
-        Mon, 14 Nov 2022 10:49:52 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJlfIrHFjcjkSAA--.31072S3;
-        Mon, 14 Nov 2022 10:49:51 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Subject: [PATCH v10 2/2] dt-bindings: pinctrl: add loongson-2 pinctrl
-Date:   Mon, 14 Nov 2022 10:49:42 +0800
-Message-Id: <20221114024942.8111-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221114024942.8111-1-zhuyinbo@loongson.cn>
-References: <20221114024942.8111-1-zhuyinbo@loongson.cn>
+        with ESMTP id S235468AbiKNEBZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 23:01:25 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C5AEDEA3
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:20 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id 62so891726pgb.13
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtnWgnDap6e5nrrEHKoEi4mfUZ3vgmp/3c4z7rNJa4c=;
+        b=pR195AWaxPIcF6vjNny0vonqrnY1ZgzGyfR9d5D4uSWVdUfedVQx/ARD4tDgQp7OEa
+         GCMxuchCShTWdxqNH2IL9lauuIoY2ZqdaLHBUvNkYR/TR0UbZZt7bIBDdpUuuF6YnyIy
+         z81JDo8K3zI87YUtsFfTbOGyEE9v5oYETrtoXmYZMt8TDdqLmcU00Mwf+xP/fFTCQS69
+         mHYK9Ns0Jjmwj/xASg0v55/lfW9bGrf68Bq/7EuyGr/oWNJPc6oHQnSuVMIp0QtU1C/C
+         gamuWmOyeLufHffnZWmRW8X8o4zI7+RU79CvBUThNASYzHwv50VGfR4BRthZp+FcBCw8
+         rIcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wtnWgnDap6e5nrrEHKoEi4mfUZ3vgmp/3c4z7rNJa4c=;
+        b=kDRhe4ukbhivAVyxhSo4Z83jGiT8n9jaxUU6tFv9zHcBkMyqxSkg69FH0EOod7oskZ
+         dwCTeeCjuXmlIJHrTdV5ygyZxlSNFQy3SA2TIYi1H8vjy2HGoBikSQQjbAi+2m+B+H8u
+         GKmhE1jCzy4A1LTsdgD9ORigniXS56tnp3YjCcBf1Wbhg08XD0QmuRPpI0oVTWuHYl1Z
+         Ice6hff9Wgipj7R4gxu6bLk8cehQCXQd0R9VKhhswziI47x0S0jPtHK+tVXSdBzpUB/F
+         FPqIfLqdH3bSdhDxe5S4Smt25bDVCQkKdVlNHkQlfGZHlh2dubtDVBJHGNSAe+ypjFo/
+         jQyA==
+X-Gm-Message-State: ANoB5plHZADVgljO8j2F4/uB8CDPxFR21S/w7Y7vSKyLLPrhid5PVkNz
+        X8CU5VvSBldjitetv7Aw4ojVEOYNR+M=
+X-Google-Smtp-Source: AA0mqf66/DATmkNAwsgPuGDfvxtI7DxgnpcQnKa2VsCC8bvN4dXGVPZeEt4vz0g9j6qanAqT6W+lIw==
+X-Received: by 2002:a63:cf48:0:b0:473:f7cd:6603 with SMTP id b8-20020a63cf48000000b00473f7cd6603mr10541987pgj.336.1668398479788;
+        Sun, 13 Nov 2022 20:01:19 -0800 (PST)
+Received: from sol.home.arpa (14-200-229-209.tpgi.com.au. [14.200.229.209])
+        by smtp.gmail.com with ESMTPSA id f11-20020a170902684b00b001801aec1f6bsm6018636pln.141.2022.11.13.20.01.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 13 Nov 2022 20:01:19 -0800 (PST)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Cc:     Kent Gibson <warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH v4 0/5] tools: improvements for v2
+Date:   Mon, 14 Nov 2022 12:00:57 +0800
+Message-Id: <20221114040102.66031-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxJlfIrHFjcjkSAA--.31072S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tFy5XFW7Gr4DAF4ruFg_yoWrCF4DpF
-        4fur93GF17ta1fu398Aa40vw1rGan3AFZrCa12v34jqr4qqa4qvay3Kr90qrWDur43Jay5
-        WFy5C347XF1UCr7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        b3xFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-        1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkE
-        cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-        0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-        6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l42xK82IY6x8Erc
-        xFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
-        5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtV
-        W8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY
-        1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
-        0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7I
-        U8QzVUUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the Loongson-2 pinctrl binding with DT schema format using
-json-schema.
+This patch series is an optimistic reimagining of the tools intended to
+simplify usage for well configured systems, i.e. for systems where lines
+can be uniquely identified by name.  In such systems the chip and offset
+location of the line is no longer of relevance to the user, so the tools
+should be able to operate without mentioning them.
+e.g.
+  gpioget GPIO17
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
----
-Change in v10:
-		1. Remove lio/uart2/uart1/carmera/dvo1/dvo0 pins resue configuration.
-Change in v9:
-		1. NO change, but other patch in this series patches set has
-		   change.
-Change in v8:
-		1. NO change, but other patch in this series patches set has
-		   change.
-Change in v7:
-		1. Add all change log information. 
-Change in v6:
-		1. NO change, but other patch in this series patches set has
-		   change.
-Change in v5:
-		1. Drop dependencies.
-		2. Add spaces after '='.
-		3. Replace string loongson2 with loongson-2 in title.
-Change in v4:
-		1. Replace Loongson2 with Loongson-2.
-Change in v3:
-		1. Drop the quotes in "pinctrl.yaml#".
-		2. Remove the items in function node.
-		3. Add requird node for "group" and "function" in properties.
-Change in v2: 
-                1. Add "$ref to pinctrl.yaml".
-                2. Put required after patternProperties.
-                3. Add "additionalProperties: false" after '-pins$'
-                4. Add "unevaluatedProperties: false" after 'pinmux$'
-                5. Fixup the broken indentation in patternProperties node.
-                6. Use 4 spaces for example indentation. 
+  gpioset GPIO17=active
 
- .../pinctrl/loongson,ls2k-pinctrl.yaml        | 123 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 124 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
+  gpiomon --localtime GPIO17 GPIO18 
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-new file mode 100644
-index 000000000000..bd8a45843566
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
-@@ -0,0 +1,123 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/loongson,ls2k-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson-2 SoC Pinctrl Controller
-+
-+maintainers:
-+  - zhanghongchen <zhanghongchen@loongson.cn>
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
-+properties:
-+  compatible:
-+    const: loongson,ls2k-pinctrl
-+
-+  reg:
-+    maxItems: 1
-+
-+patternProperties:
-+  '-pins$':
-+    type: object
-+
-+    additionalProperties: false
-+
-+    patternProperties:
-+      'pinmux$':
-+        type: object
-+        description: node for pinctrl.
-+        $ref: pinmux-node.yaml#
-+
-+        unevaluatedProperties: false
-+
-+        properties:
-+          groups:
-+            description:
-+              One or more groups of pins to mux to a certain function
-+            items:
-+              enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                     nand, sata_led, i2s, hda]
-+          function:
-+            description:
-+              The function that a group of pins is muxed to
-+            enum: [gpio, sdio, can1, can0, pwm3, pwm2, pwm1, pwm0, i2c1, i2c0,
-+                   nand, sata_led, i2s, hda]
-+
-+        required:
-+          - groups
-+          - function
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pctrl: pinctrl@1fe00420 {
-+        compatible = "loongson,ls2k-pinctrl";
-+        reg = <0x1fe00420 0x18>;
-+        sdio_pins_default: sdio-pins {
-+            sdio-pinmux {
-+                groups = "sdio";
-+                function = "sdio";
-+            };
-+
-+            sdio-det-pinmux {
-+                groups = "pwm2";
-+                function = "gpio";
-+            };
-+        };
-+
-+        pwm1_pins_default: pwm1-pins {
-+            pinmux {
-+                groups = "pwm1";
-+                function = "pwm1";
-+            };
-+        };
-+
-+        pwm0_pins_default: pwm0-pins {
-+            pinmux {
-+                groups = "pwm0";
-+                function = "pwm0";
-+            };
-+        };
-+
-+        i2c1_pins_default: i2c1-pins {
-+            pinmux {
-+                groups = "i2c1";
-+                function = "i2c1";
-+            };
-+        };
-+
-+        i2c0_pins_default: i2c0-pins {
-+            pinmux {
-+                groups = "i2c0";
-+                function = "i2c0";
-+            };
-+        };
-+
-+        nand_pins_default: nand-pins {
-+            pinmux {
-+                groups = "nand";
-+                function = "nand";
-+            };
-+        };
-+
-+        hda_pins_default: hda-pins {
-+            grp0-pinmux {
-+                groups = "hda";
-+                function = "hda";
-+            };
-+
-+            grp1-pinmux {
-+                groups = "i2s";
-+                function = "gpio";
-+            };
-+        };
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0e493b4d6e39..e85b0c1aeebb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12041,6 +12041,7 @@ M:	zhanghongchen <zhanghongchen@loongson.cn>
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/pinctrl/loongson,ls2k-pinctrl.yaml
- F:	drivers/pinctrl/pinctrl-loongson2.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+It is accepted that the kernel does not guarantee line name uniqueness
+within the system, or even within a chip, and not all systems are well
+configured, so the tools retain the option to identify lines by chip
+and offset.  The hope and expectation is that over time systems will
+become more well configured, not less, and identification of GPIO lines
+by name will become the norm.
+
+The core of the series is patch 1 which is a reworking of the tools to
+support identifying lines by name, and to operate across multiple GPIO
+chips if named lines are located on different chips.
+The gpioset tool is extended to support toggling lines and interactive
+control of line values, so some common use cases can be trivially
+implemented from the command line.
+e.g.
+  gpioset --toggle 500ms LED=on
+
+will blink the LED line at 1Hz, indefinitely.
+More complex outputs can be generated by adding more entries to the
+toggle sequence:
+  gpioset --toggle 1s,2s,1s,300ms LED=on
+
+Even more complex outputs can be generated by driving gpioset in
+interactive mode from another script.
+
+Those are the major changes.  A more complete list of the changes can be
+found in the patch description.
+
+The core tool changes are contained in patch 2.  To simplify review,
+patch 1 removes old code replaced by that in patch 2 and 3.
+Patch 1 also removes gpiofind, as that tools functionality is absorbed
+by the other commands, particularly gpioinfo.
+
+Patch 3 updates and extends the tool tests to cover the reworked tools,
+including demonstrating gpioset being driven interactively via a script.
+
+Patch 4 adds a gpionotify tool that monitors changes to the state line
+information, similar to the gpio-watch tool in the kernel, and
+patch 5 extends the test suite to cover it.
+
+Cheers,
+Kent.
+
+Changes v3 -> v4:
+  - rebase on master following merge with next/libgpiod-2.0
+  - C style comments - again.
+  - rename gpiowatch to gpionotify
+  - make gpioset interactive mode optional, enabled with
+    --enable-gpioset-interactive.
+  - gpioset does not exit by default
+  - add a banner option to gpioset as it can be long lived
+  - make some functions and variables static
+  - move parse_periods_or_die from tools-common to gpioset
+  - quote line and consumer names
+  - add option to not quote line and consumer names
+  - always use bool, not int, for command line flags
+  - add --consumer option to commands that request lines (get/set/mon)
+  - move parse_periods_or_die() from tools-common to gpioset
+
+Changes v2 -> v3:
+  - squash removal of gpiofind into patch 1 (was patch 6).
+  - rebase to C API line_config changes.
+  - rework line name to chip/offset resolution to improve clarity and
+    better handle corner cases.
+  - drop bias=as-is as a command line option as that is the default
+    behaviour.
+  - revise gpioinfo output format to combine the used flag and consumer
+    name, and to remove the brackets around the list of attributes.
+  - gpiowatch: rework so it is more like gpiomon than the Linux gpio-watch
+    tool.  More details in patch 4.
+  - quote text from the command line when used in error messages.
+  - improve test suite coverage of corner cases.
+  - gpiomon: rename --edge option to --edges, and drop "-edges" from the
+    possible values, e.g. --edges=rising.
+  - add hte support to gpiomon.
+  - gpiomon: decouple selection of event clock from timestamp output
+    formatting.
+
+Changes v1 -> v2:
+  - code formatting, particularly trying to keep to the 80 character
+    limit and C style comments.
+  - move global config fields into the struct config for each tool.
+  - switch gpioset from readline to libedit.
+  - add tests for symlink chip path behaviour.
+  - long lived tools flush stdout before blocking.
+  - fix copyrights
+  - replace gpiosim attr lookup functions with cached values.
+  - remove gpiofind
+
+Kent Gibson (5):
+  tools: remove old code to simplify review
+  tools: line name focussed rework
+  tools: tests for line name focussed rework
+  tools: add gpionotify
+  tools: gpionotify tests
+
+ configure.ac               |   24 +-
+ man/Makefile.am            |    2 +-
+ tools/.gitignore           |    2 +-
+ tools/Makefile.am          |   12 +-
+ tools/gpio-tools-test      |    3 -
+ tools/gpio-tools-test.bats | 3079 ++++++++++++++++++++++++++++--------
+ tools/gpiodetect.c         |  122 +-
+ tools/gpiofind.c           |   93 --
+ tools/gpioget.c            |  252 +--
+ tools/gpioinfo.c           |  388 ++---
+ tools/gpiomon.c            |  584 ++++---
+ tools/gpionotify.c         |  445 ++++++
+ tools/gpioset.c            | 1057 ++++++++++---
+ tools/tools-common.c       |  712 ++++++++-
+ tools/tools-common.h       |   98 +-
+ 15 files changed, 5265 insertions(+), 1608 deletions(-)
+ delete mode 100644 tools/gpiofind.c
+ create mode 100644 tools/gpionotify.c
+
 -- 
-2.31.1
+2.38.1
 
