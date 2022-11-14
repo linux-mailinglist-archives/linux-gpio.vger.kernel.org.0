@@ -2,144 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 910406284EA
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 17:19:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 430956285B7
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 17:42:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237409AbiKNQTC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 11:19:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
+        id S237794AbiKNQmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 11:42:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237491AbiKNQSn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 11:18:43 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04196DFA;
-        Mon, 14 Nov 2022 08:18:29 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id B4DAC22C5F;
-        Mon, 14 Nov 2022 16:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1668442707; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0tL7xPSD03f3HZ+4HQQQ7sQ5enemmDpf5Sp5cZ89xFw=;
-        b=oWvuMqKJhtkNpedSgvnQGk4xFBCkRyJ7Ke9fIutR/Lc7G/sifitPB/TZk+jWmaLllrk9R4
-        OKXNLgokyF/Vky+YYw3QVk2SaFT+t0DtJgztAH1VgUhEphielJwf/CWWY2zmJwUoGy6lOR
-        /Rr4Dzm154RIXwpqI13iQCAKf+QwqWo=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 559E52C142;
-        Mon, 14 Nov 2022 16:18:27 +0000 (UTC)
-Date:   Mon, 14 Nov 2022 17:18:26 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        asahi@lists.linux.dev, devicetree@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Y3JqUtLcnGVR7kb6@alley>
-References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
- <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
- <Y3Jf7xz2CQjJuEeT@alley>
- <Y3Ji1B+Kar6OSBn3@smile.fi.intel.com>
+        with ESMTP id S237756AbiKNQmr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 11:42:47 -0500
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DEC5E54
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 08:42:47 -0800 (PST)
+Received: by mail-vk1-xa29.google.com with SMTP id v81so5238951vkv.5
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 08:42:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XrEc46dYQm6J/LtBlyvWMBwaNc0hpbtvjUVUxiE5TlI=;
+        b=pc0fQ+qWBFsHT2nuihDOJLcIJSOkERtobzt0vqPd6+UTZ9uGG24RhBA5X9NafjE8fm
+         ajiF4o6wYmRyYX/aoX5MXp1w0D8xUgPyF4CpGGcdNXZxdNwSmslm0S+JYo07E7HCIwZ8
+         huYNK6FW2zBx6QpRhSoJwrOiPp/kWasXEUBVyUQ5KYUUgffA/s+S9h/T0k5sTPpg6GUr
+         eHwikUmuJ3IPCtL52HR/4MDFm58mhjNxHbgCsJUIyBI1u0MsMOoWm0mwU4SSNykT1lt8
+         zpe4XWxGBP4517jHeRwdaBigB+jozxK0ynjuvVe7X75dn6usOBDdnSxyq5ymTygET5a+
+         Gq8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XrEc46dYQm6J/LtBlyvWMBwaNc0hpbtvjUVUxiE5TlI=;
+        b=saNJwwj6p3Heat8FLeHpIobUAFmDeQNB0O4G8Ns1NM87G7QLVCwd0thm/vp3vi1Y92
+         rZNN6zNPr9jvixMdkDVv8fZzKrPSsZ8psUrWzvSKy5NHOnbtnRqQ0lHti0f6yxEW0ZvJ
+         Z/TFbPheXc56kB7Db/a3peLbo/drXpNGpne6IHJDNRT5sQsFjYhDkZ4O9NJ/JSqm3qlB
+         nFNfQp5DGWotYLNzu7P4QZIJZbEX/6RHjUIJ0zajVAyTGu5pc/WEh0pdzi8LELrlmGv+
+         6V0PFjj1eovhaaeCTllNjHqpPAkLoim5bRgrcY7gamb+XNQ9b2DkZLo2ha1yD5Mv0nOY
+         rtMQ==
+X-Gm-Message-State: ANoB5pnhnQv4dT112AKy/cC5jKlE5IhQWg+PW/ONMlFQ3bMUsqZEoymT
+        9wGpAFD2jr3ihpj5ANNLjipfhhRzQTHqsqJhujIXQHtSid8=
+X-Google-Smtp-Source: AA0mqf6KgvCMWYP/UUtkuck6sqnjHSHnaNgKKykARcx23e1tLoD8/rvPTvo98r6094e0YDFFC8kw368rciMFi7AV2uU=
+X-Received: by 2002:a1f:2882:0:b0:3b7:65cc:8ebc with SMTP id
+ o124-20020a1f2882000000b003b765cc8ebcmr6798665vko.5.1668444166198; Mon, 14
+ Nov 2022 08:42:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3Ji1B+Kar6OSBn3@smile.fi.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221114040102.66031-1-warthog618@gmail.com> <CAMRc=MdUNHsL3_uFR1j2ao4GCMvH_1W0ZMxe4QBG0HFu4xNcew@mail.gmail.com>
+ <Y3Ja2d1X0vC663gl@sol>
+In-Reply-To: <Y3Ja2d1X0vC663gl@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 14 Nov 2022 17:42:35 +0100
+Message-ID: <CAMRc=MfCTE8mKn9+UE0XvPShAD4WDSZQ5m9waC4FvNTOb2-7hg@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v4 0/5] tools: improvements for v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 2022-11-14 17:46:28, Andy Shevchenko wrote:
-> On Mon, Nov 14, 2022 at 04:34:07PM +0100, Petr Mladek wrote:
-> > On Tue 2022-11-08 16:33:22, Russell King wrote:
-> 
-> ...
-> 
-> > >  	orig = get_unaligned(fourcc);
-> > > -	val = orig & ~BIT(31);
-> > > +	switch (fmt[2]) {
-> > > +	case 'h':
-> > > +		val = orig;
-> > > +		break;
-> > > +	case 'r':
-> > > +		val = orig = swab32(orig);
-> > 
-> > I do not like much these multi assignments. I think that the result
-> > was not even defined in some older C standards. Though, I can't find
-> > it now. And even make W=3 does not warn about it.
-> > 
-> > > +		break;
-> > > +	case 'l':
-> > > +		val = orig = le32_to_cpu(orig);
-> > > +		break;
-> > > +	case 'b':
-> > > +		val = orig = be32_to_cpu(orig);
-> > > +		break;
-> 
-> Isn't easy to fix? Something like below?
-> 
-> 	switch (fmt[2]) {
-> 	case 'h':
-> 		break;
-> 	case 'r':
-> 		orig = swab32(orig);
-> 		break;
-> 	case 'l':
-> 		orig = le32_to_cpu(orig);
-> 		break;
-> 	case 'b':
-> 		orig = be32_to_cpu(orig);
-> 		break;
-> 
-> 		...
-> 	}
-> 	val = orig;
+On Mon, Nov 14, 2022 at 4:12 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Mon, Nov 14, 2022 at 03:26:38PM +0100, Bartosz Golaszewski wrote:
+> > On Mon, Nov 14, 2022 at 5:01 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > >
+> >
+> > I played with the tools a bit and really like the way they look now. I
+> > think they're ready to hop into master, I'll do some more testing and
+> > they should be in this week. Just one last request from my side: would
+> > you mind updating the TOOLS section of the README? I'm aware it's not
+> > yet updated for v2 and I plan to do it soon but we could already start
+> > with the tools examples. You can send an incremental patch on top of
+> > this series.
+> >
+>
+> Good point - I totally forgot about the README.
+> I'll take a look at it.
+>
+> Cheers,
+> Kent.
 
-I though the same. Unfortunately, this is not valid for the "case c:"
-path where "orig" stays untouched:
+Thanks. Is it ok if I just squash the first three commits in the
+series when applying to keep it bisectable?
 
-	case 'c':
-		/* Pixel formats are printed LSB-first */
-		val = swab32(orig & ~BIT(31));
-		pixel_fmt = true;
-		break;
-
-It is pity that "orig" is handled differently for the pixel and the generic
-formats.
-
-But I am afraid that there is no good solution. The code will
-always be a mess when it tries to implement a messy definition.
-
-It would be nice if the the FourCC format was used consistently
-in all subsystems in the first place.
-
-
-IMPORTANT: This brings the questions.
-
-	   Is there actually a standard how to print the original
-	   number in FourCC?
-
-	   Do we really want to modify "orig" in the generic
-	   implementation?
-
-Best Regards,
-Petr
+Bartosz
