@@ -2,106 +2,97 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3E4B628131
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 14:23:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34FD2628172
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 14:37:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235625AbiKNNXJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 08:23:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49780 "EHLO
+        id S236319AbiKNNhJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 08:37:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235551AbiKNNXI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 08:23:08 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5F824F
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 05:23:07 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id x102so2041496ede.0
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 05:23:07 -0800 (PST)
+        with ESMTP id S236428AbiKNNhI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 08:37:08 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E72D24F0D;
+        Mon, 14 Nov 2022 05:37:07 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id v7so7519122wmn.0;
+        Mon, 14 Nov 2022 05:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HdjlbixNksyWUmSwVA0oszzukvQJyBdRdSXeK1Q7UgM=;
-        b=Voqp3oaFTueqHJ5jpTyX8MHk0ZEQn9jwK4nyyO0uhP+iTVeqdQKo/TXXxQmvVEBdPs
-         Sw+iGKIUvtqYYOgR8ZFhVsWwU9c9UGAn2jVLOADgMynXMR9S8b55F+Hkl9Ak5nDgDDQb
-         hJH08eEp53gOqcf5QzZ4w3yVVyoXcmy20HWIx+cpcyirc0MmNzXD0yYHFTR9kmEwebUR
-         OSI6EFp7MGMenJBOhgzAZ5DaRe1oI04e5wFHP3YWiQHPQCoQ7aIyiBmnPK3Btvjos1Bf
-         uKXhcGKHVb8TZSBpaqBIKbV9T7qsGpFfQneHeBnmnRoyFVs273eVwMDtRCpo2P8pQLpu
-         frfw==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lWT+ji8Yb+Swwb/eh8dOGGW5IwdF58UzTtEgO7Ui6qE=;
+        b=ZGnBDKOLkWNwQhH3G6OKosPy0cQ2MZ1Hu1xhDoOz+phUNTbFAEql/0Rq+kfTYX1r+u
+         t43SUFn+y/1su4lClon9A+ZSejcHVi7gjHgU70YOZvx1cfbBeNuPL5XnVs4JZC7gNlIb
+         BhnTeK1UwVY8gPh+wtxRRp3kWo11PB9K7nrFCsMcqchbeVJbKJLz5MS5mZc8u/TTaIW/
+         h66aR22tLSMd1N9saQEHACFu66/LdQA7ROfQU1XSfB+EFTWP+AGHEXnplQRDnm/JvOya
+         0qbi2/7CeP2U4yiP8t6gZbYLVsYHe5vcsV2qmejalnJXaFl/RIVSVAeBZ6FKvwqbw2fU
+         AE+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=HdjlbixNksyWUmSwVA0oszzukvQJyBdRdSXeK1Q7UgM=;
-        b=pcAsu126M09gx+BLKqhmHvOId5+2jx3jCz7RMqMJMh2q5CYu2QEa0lSxmaqd4EOxhR
-         5miY6qH2FjzGh4QDM93IGnNLMERXYmq8f7MFXY/gX7YQ5SMywAyuqvTABHvW9o6F0ySj
-         RK8IZt4usX+rZcjNCx4G8a7RTbdEP8h/PczbZgxt40O43Ao5FNe4oLdNEG7t1ewFw5/W
-         GGJ/SAhlj+FE0N3NMX0gfaZeI9TzcNyTaoiDXk/AfHzNRgHrX67XdeGkfCsduQ73cCN/
-         lyKbV5/tkb0RKFoX1LyXZ9NkYHMXS/jMhTFW3FYRFerFYbf7CHicTaHrmGnbl0PaVgKh
-         Ueuw==
-X-Gm-Message-State: ANoB5pnp98GpjeEq8go6OXm4yzsGzqi1nBmovVEXj5Xl/CKAUkJ8V9T/
-        oRrSaYWWJGQv9/LZQOcu4z8Gqh6/Y2W6DaTJqa1aRw==
-X-Google-Smtp-Source: AA0mqf6K9UdLNkuoM1yV47dlYKLSc/9xdfJA+YA8IMuwuRw1bt7cE7J5tOY7mfFjmQ/o8fEmPNLBHZ7WiHiycebyGkQ=
-X-Received: by 2002:a05:6402:2931:b0:463:ce05:c00e with SMTP id
- ee49-20020a056402293100b00463ce05c00emr11088202edb.46.1668432185632; Mon, 14
- Nov 2022 05:23:05 -0800 (PST)
+        bh=lWT+ji8Yb+Swwb/eh8dOGGW5IwdF58UzTtEgO7Ui6qE=;
+        b=q4XKTfUrCZHfHCud3Ofz3RUBXIoyX7dqX9BhjiVUnu9CCA0alV3W86HtC4L5tA8cTZ
+         eDh14fVY4FyN9Vot4+NkrjL+yyzkKAXWitILzhZljueITFWtw8NmVCudAFcRdSgw5nUu
+         x7Hjf2IjZunFCbNu38LSGefdOlEs7KjHr2SLAP4hKLxDBIsbcNG86anzR97d1HqZXzNJ
+         EVTYNNoBdTowaGNuQxhj5Hrj6prtSpoiZnBJymOgVtEvIe89lEo32vH3OYReYTdwUull
+         GK7keJh0K/BT8/7R8KS0ZupuGquFTk5NsHpJR6/NoAZkGaf0aVw0g5FQUcqZ4mLjoi87
+         st7g==
+X-Gm-Message-State: ANoB5pnI0J3gJuNndbcATzhrAeTvuEkLsEonmyZDI0aSZnbjJGok88Qu
+        BsFgA9iC8wJ8eBZQJWAi5pcaMKiiKBM=
+X-Google-Smtp-Source: AA0mqf4+IpKLWPs+M1T9sBAgIj2eJ+/ZHLX7caSyhZrBLLkysLeeRBuG9nbeq0mGThBZiPGGEg0UIg==
+X-Received: by 2002:a1c:f611:0:b0:3c6:b7cc:79d2 with SMTP id w17-20020a1cf611000000b003c6b7cc79d2mr8156761wmc.42.1668433025780;
+        Mon, 14 Nov 2022 05:37:05 -0800 (PST)
+Received: from demon-pc.localdomain ([188.24.3.89])
+        by smtp.gmail.com with ESMTPSA id z25-20020a05600c221900b003c6c5a5a651sm12175001wml.28.2022.11.14.05.37.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Nov 2022 05:37:05 -0800 (PST)
+From:   Cosmin Tanislav <demonsingur@gmail.com>
+X-Google-Original-From: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cosmin Tanislav <cosmin.tanislav@analog.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] iio: adc: ad4130: depend on GPIOLIB
+Date:   Mon, 14 Nov 2022 15:36:49 +0200
+Message-Id: <20221114133649.1737027-1-cosmin.tanislav@analog.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20221111094106.18486-1-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20221111094106.18486-1-angelogioacchino.delregno@collabora.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 14 Nov 2022 14:22:54 +0100
-Message-ID: <CACRpkdZ_FYHBn+d9Q4w3U4=CzCaC0U81n3kJeCDKwKtSi9+RPQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: mediatek: Fix EINT pins input debounce time configuration
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     sean.wang@kernel.org, matthias.bgg@gmail.com,
-        nfraprado@collabora.com, marijn.suijten@somainline.org,
-        jami.kettunen@somainline.org, linux-mediatek@lists.infradead.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 11, 2022 at 10:41 AM AngeloGioacchino Del Regno
-<angelogioacchino.delregno@collabora.com> wrote:
+Fixes undefined references to 'gpiochip_get_data' and
+'devm_gpiochip_add_data_with_key'.
 
-> The External Interrupt Controller (EINTC) on all of the supported
-> MediaTek SoCs does support input debouncing, but not all of them
-> index the debounce time values (DBNC_SETTING registers) the same way.
->
-> Before this change, in some cases, as an example, requesting a debounce
-> time of 16 milliseconds would mistakenly set the relative DBNC_SETTING
-> register to 0x2, resulting in a way shorter debounce time of 500uS.
->
-> To fix the aforementioned issue, define three different debounce_time
-> arrays, reflecting the correct register index for each value and for
-> each register index variant, and make sure that each SoC pinctrl
-> driver uses the right one.
->
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Cosmin Tanislav <cosmin.tanislav@analog.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Fixes: 5bdef39c5c6e ("iio: adc: ad4130: add AD4130 driver")
+---
+ drivers/iio/adc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch applied for v6.1 fixes.
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 8d719fbb6acc..63f80d747cbd 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -24,6 +24,7 @@ config AD_SIGMA_DELTA
+ config AD4130
+ 	tristate "Analog Device AD4130 ADC Driver"
+ 	depends on SPI
++	depends on GPIOLIB
+ 	select IIO_BUFFER
+ 	select IIO_KFIFO_BUF
+ 	select REGMAP_SPI
+-- 
+2.38.1
 
-> I know, this commit is a good candidate to get a Fixes tag, but I
-> couldn't find a way to actually do that cleanly...
-
-I don't super much care. If you need this backported to stable,
-suggest it to linux-stable once it hits Torvalds' tree.
-
-> The only way would be to split this in one commit for each pinctrl
-> driver, but that would result in a series containing 21 commits, of
-> which 20 are one-liners... and that didn't look right.
-
-Ugh no this is way better.
-
-Thanks for fixing this!
-
-Yours,
-Linus Walleij
