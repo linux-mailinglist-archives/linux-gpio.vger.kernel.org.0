@@ -2,75 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15D1C628AFB
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 22:02:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA4BD628B2A
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 22:13:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237367AbiKNVCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 16:02:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41040 "EHLO
+        id S236464AbiKNVNm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 16:13:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237268AbiKNVCR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 16:02:17 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17E8B4A7;
-        Mon, 14 Nov 2022 13:02:15 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id n20so10788456ejh.0;
-        Mon, 14 Nov 2022 13:02:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TzzsYr3QBaUTVu5kumkFsbRVJbtcn69A/lItbi1zU98=;
-        b=bojHQRtx6KhmuPEwvS6vokOwrOP4UUSsInITgCjLbtci2sWccS1NQ3IBggtobrbZan
-         a/DE0f7eJ6SrCJmepFpJfRyZZAbhpYX9/hC7gaa39gPY78WqWta518lYjhXbVzG1i9Vq
-         xyrz920zssclK67meKsPP4rTz+a0mTOT19jBOsWogfCaw0BnG9xfsRBVswbODWVdQ7PN
-         qzT0AsUgSgEcw/PbJ8DeaeYtwoOIxAFBKo5HFM1hxPQ4qHppx3v2jlzl/jdyoEE3uzX2
-         JdbSkmxETArx0MEIfJ0ApbMwn84Q3VsxW6qNXf45s1NXFIjqt5/TfAmDbnsqiaU3PXv5
-         RUcQ==
+        with ESMTP id S237353AbiKNVNl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 16:13:41 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47E1B6556
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 13:12:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668460362;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=p7ORPw9FCS+zEbfmYdWbdnPfb8i6EFWnkcrxCVHohjY=;
+        b=HNw6ITWZPfQgzw4g9LmyuMkc7bHG/Bnib07GAZfgCs1bI7s3Yay0NwBvk+qQ5igQU638FH
+        x5KlY4zwDfAZscllu4zILroGAKRMDcBmfl8Si/NRrjyQfR5AVzOv+s7txxjgT+6mwbl2Yg
+        NvKBln+nrWM3T0Dgy3+ZIn/bliq0QE4=
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
+ [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-634-dGfDmHfEPBSCtpv7iNddnA-1; Mon, 14 Nov 2022 16:12:41 -0500
+X-MC-Unique: dGfDmHfEPBSCtpv7iNddnA-1
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-13cc24bcecbso6001999fac.14
+        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 13:12:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TzzsYr3QBaUTVu5kumkFsbRVJbtcn69A/lItbi1zU98=;
-        b=saFI7LGX+1PX8zSQvt0LWBlmx2CdfvA7nOt1tiIRTySjCeuUmpnmsVYZgYgXLq+VzD
-         cL9iuvvaZ64O5R9wfDn+VJZjlhD2XoZ6B5DXYsxBqBpCbg9I1pAwLpBjM9Bn7PfedjqN
-         7nj/b3rKBU9uWDiqdbFAdAoPWyUxNNlJ+Q8XF6tT806q9gfSko9T1cxl9LMqJjjopYvb
-         voQpyRrdct3EOQI5oWbg5ZPMRsioRxu/wstPx5UZZS0rzF93fjp80waj1Rnn8ddxWaqT
-         xSHQyALZFn5VX9uooDzjexCg8TGECPlLmOlUhRRG6qAwZtY0puSjfGvboIDlPozMZYTP
-         pYCA==
-X-Gm-Message-State: ANoB5pkOGC5ih6SzaAGEeRMia/VaIGHmmTlFW4WLa4q5gNiagxHn/i7H
-        cXwhfSUHeKylDiF3EMnwCdQ=
-X-Google-Smtp-Source: AA0mqf4romJpJ696KN+fPZmMnIrPunyW+McWEUlAOPIcwTtZicCYdIFczAT2Nw/U1Ct4Zm/p43lNmg==
-X-Received: by 2002:a17:906:c185:b0:7ad:84d1:5b56 with SMTP id g5-20020a170906c18500b007ad84d15b56mr12214793ejz.205.1668459734207;
-        Mon, 14 Nov 2022 13:02:14 -0800 (PST)
-Received: from [192.168.3.32] (dh207-97-48.xnet.hr. [88.207.97.48])
-        by smtp.gmail.com with ESMTPSA id x16-20020a170906135000b0073d84a321c8sm4587847ejb.166.2022.11.14.13.02.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 14 Nov 2022 13:02:13 -0800 (PST)
-Message-ID: <b3860cbd-0967-0b8d-3d67-f2a09f1e0042@gmail.com>
-Date:   Mon, 14 Nov 2022 22:02:11 +0100
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p7ORPw9FCS+zEbfmYdWbdnPfb8i6EFWnkcrxCVHohjY=;
+        b=fhSN7KTSz5KApSyJmGiTrRA9ra+Sp54WN8PFwAmSgF92b/C8KzhS0aVXj8YAR2T/vI
+         mYshvY+cn21LVmbYEA70WJ5AHDfz6FLGpKCoeSrRERfq6zkSyhCJ96o1ZaAlEeJrkAn7
+         YF9SbEmgt/ZPawFAxSk7BZt9CSgESoKH2KyniOzbMR4ym+92U4fnXTWtR6Zb4b8RVLmy
+         eG1IK0W6OQkR0qdN6CDtAFdueBIgvVKITPXSI1BVMEv5OLUjvUV/sH9HG4tAO90KxCYR
+         G730YPsOl04UDGkm4uAdiSaReUnlnrMIzW7iUZGbLH4uezcDfK/yNZU8mcfW9qqIKrvw
+         BYzQ==
+X-Gm-Message-State: ANoB5pmeGHvU6KWA68YM5WFHFyuU60ETL9eQLPB9LY3YBIoEeuSjIcNs
+        1iuFuRFizgLW9uggInVWZ/2np/4xzEBFyvtw79ewmrRSVg4ZqBICVuPY4+j+HWW6/vu/aJo7S5T
+        X1fx6VJeIhOEgC8bKc/nNSA==
+X-Received: by 2002:a05:6830:114a:b0:66c:6bac:dd4c with SMTP id x10-20020a056830114a00b0066c6bacdd4cmr7534172otq.166.1668460359320;
+        Mon, 14 Nov 2022 13:12:39 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6Hp+nVlKWm45R202Fsz4MudiXsv43sYYiUWYOXHUOwmjRH5tCRg4sBxIBOAFhXGlbEFe0Y4g==
+X-Received: by 2002:a05:6830:114a:b0:66c:6bac:dd4c with SMTP id x10-20020a056830114a00b0066c6bacdd4cmr7534159otq.166.1668460359021;
+        Mon, 14 Nov 2022 13:12:39 -0800 (PST)
+Received: from halaney-x13s ([2600:1700:1ff0:d0e0::41])
+        by smtp.gmail.com with ESMTPSA id bk31-20020a0568081a1f00b0035a5ed5d935sm4089664oib.16.2022.11.14.13.12.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Nov 2022 13:12:38 -0800 (PST)
+Date:   Mon, 14 Nov 2022 15:12:36 -0600
+From:   Andrew Halaney <ahalaney@redhat.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] gpiolib: of: Use correct fwnode for DT-probed chips
+Message-ID: <20221114211236.pfnobreab6twcqw4@halaney-x13s>
+References: <20221111113732.461881-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH RFC] gpiolib: ensure that fwnode is properly set
-To:     Brian Masney <bmasney@redhat.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, psodagud@quicinc.com,
-        quic_shazhuss@quicinc.com, quic_ppareek@quicinc.com,
-        ahalaney@redhat.com, echanude@redhat.com,
-        nicolas.dechesne@linaro.org
-References: <20221114202943.2389489-1-bmasney@redhat.com>
-Content-Language: en-US
-From:   Robert Marko <robimarko@gmail.com>
-In-Reply-To: <20221114202943.2389489-1-bmasney@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221111113732.461881-1-thierry.reding@gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,51 +80,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Fri, Nov 11, 2022 at 12:37:32PM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The OF node store in chip->fwnode is used to explicitly override the FW
+> node for a GPIO chip. For chips that use the default FW node (i.e. that
+> of their parent device), this will be NULL and cause the chip not to be
+> fully registered.
+> 
+> Instead, use the GPIO device's FW node, which is set to either the node
+> of the parent device or the explicit override in chip->fwnode.
+> 
+> Fixes: 8afe82550240 ("gpiolib: of: Prepare of_gpiochip_add() / of_gpiochip_remove() for fwnode")
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-On 14. 11. 2022. 21:29, Brian Masney wrote:
-> Note that this is a RFC patch and not meant to be merged. I looked into
-> a problem with linux-next-20221110 on the Qualcomm SA8540P automotive
-> board (sc8280xp) where the UFS host controller would fail to probe due
-> to repeated probe deferrals when trying to get reset-gpios via
-> devm_gpiod_get_optional().
->
-> of_get_named_gpiod_flags() returns -EPROBE_DEFER, which is caused by
-> of_gpiochip_match_node_and_xlate() returning 0 since the of_xlate function
-> pointer is not set for the qcom,sc8280xp-tlmm pinctrl driver. The
-> pinctrl driver doesn't define one, so of_gpiochip_add() should
-> automatically setup of_gpio_simple_xlate() on it's behalf. This doesn't
-> happen since the fwnode member on the struct gpiochip is set to null
-> when of_gpiochip_add() is called. Let's work around this by ensuring
-> that it's set if available.
->
-> Note that this broke sometime within the last few weeks within
-> linux-next and I haven't bisected this. I'm posting this in the hopes
-> that someone may know offhand which patch(es) may have broken this.
+Tested-by: Andrew Halaney <ahalaney@redhat.com>
 
-Hi, the following patch should fix it for you, I have hit the same issue on
-IPQ8074.
+This fixes issues I ran into today on my sa8540p-ride board.
 
-https://patchwork.ozlabs.org/project/linux-gpio/patch/20221111113732.461881-1-thierry.reding@gmail.com/
+Thanks,
+Andrew
 
-Regards,
-Robert
-
->
-> Signed-off-by: Brian Masney <bmasney@redhat.com>
 > ---
->   drivers/gpio/gpiolib.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 11fb7ec883e9..8bec66008869 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -678,7 +678,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->   	 * Assign fwnode depending on the result of the previous calls,
->   	 * if none of them succeed, assign it to the parent's one.
->   	 */
-> -	gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
-> +	gc->fwnode = gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
->   
->   	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
->   	if (gdev->id < 0) {
+>  drivers/gpio/gpiolib-of.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 4be3c21aa718..55c3712592db 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -1067,7 +1067,7 @@ int of_gpiochip_add(struct gpio_chip *chip)
+>  	struct device_node *np;
+>  	int ret;
+>  
+> -	np = to_of_node(chip->fwnode);
+> +	np = to_of_node(dev_fwnode(&chip->gpiodev->dev));
+>  	if (!np)
+>  		return 0;
+>  
+> -- 
+> 2.38.1
+> 
+
