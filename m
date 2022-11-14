@@ -2,46 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EB736284CD
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 17:16:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 910406284EA
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 17:19:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236851AbiKNQQM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 11:16:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52092 "EHLO
+        id S237409AbiKNQTC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 11:19:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbiKNQQL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 11:16:11 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0386264CA;
-        Mon, 14 Nov 2022 08:16:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=znnsShYF3xMT+VtpHIRsweTjuKslFaebTs8rKcGhy3I=; b=NGUAJ3PUj4W0JFQSXxGJbcBUQ/
-        brGT1l6wHh1sn8UkG+adbRc1r/md9kAuUOyuoiYNhiMF3I9bAj6W/J8sz8zl9iW2n3AyilbK83oj8
-        sLiY1dHAeT/yqkV3pDilb7JLyvUm1ifJ7Uo9zzS5neCknjQO163obDLUM1D8yxpLg0HJYnwlYe0mA
-        Kh/W/GfeEE7fYcxqJ7mBB9Mg/m2okIiKlpFm7MYsCRTQcLGyRn6uTu9oOYFxjDft1giaLeAm0a543
-        1NaB/+pX8T2qz+SUHEUklMrrabJ0L/LfN577N8YG6DVUXzagS06rcTwuxXMFTO3/iESar/IXZVSXC
-        SimKFuMQ==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35264)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ouc7o-00014G-14; Mon, 14 Nov 2022 16:15:56 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ouc7i-0003wN-OK; Mon, 14 Nov 2022 16:15:50 +0000
-Date:   Mon, 14 Nov 2022 16:15:50 +0000
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S237491AbiKNQSn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 11:18:43 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04196DFA;
+        Mon, 14 Nov 2022 08:18:29 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id B4DAC22C5F;
+        Mon, 14 Nov 2022 16:18:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1668442707; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0tL7xPSD03f3HZ+4HQQQ7sQ5enemmDpf5Sp5cZ89xFw=;
+        b=oWvuMqKJhtkNpedSgvnQGk4xFBCkRyJ7Ke9fIutR/Lc7G/sifitPB/TZk+jWmaLllrk9R4
+        OKXNLgokyF/Vky+YYw3QVk2SaFT+t0DtJgztAH1VgUhEphielJwf/CWWY2zmJwUoGy6lOR
+        /Rr4Dzm154RIXwpqI13iQCAKf+QwqWo=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 559E52C142;
+        Mon, 14 Nov 2022 16:18:27 +0000 (UTC)
+Date:   Mon, 14 Nov 2022 17:18:26 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
         Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         asahi@lists.linux.dev, devicetree@vger.kernel.org,
         Hector Martin <marcan@marcan.st>,
         Jonathan Corbet <corbet@lwn.net>,
@@ -54,91 +50,96 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Sven Peter <sven@svenpeter.dev>
 Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
  extending %p4cc
-Message-ID: <Y3Jptob4bGL9Weel@shell.armlinux.org.uk>
+Message-ID: <Y3JqUtLcnGVR7kb6@alley>
 References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
  <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
  <Y3Jf7xz2CQjJuEeT@alley>
+ <Y3Ji1B+Kar6OSBn3@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3Jf7xz2CQjJuEeT@alley>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y3Ji1B+Kar6OSBn3@smile.fi.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 04:34:07PM +0100, Petr Mladek wrote:
-> On Tue 2022-11-08 16:33:22, Russell King wrote:
-> > From: Hector Martin <marcan@marcan.st>
-> > 
-> > %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> > it's useful to be able to print generic 4-character codes formatted as
-> > an integer. Extend it to add format specifiers for printing generic
-> > 32-bit FOURCCs with various endian semantics:
-> > 
-> > %p4ch   Host-endian
-> > %p4cl	Little-endian
-> > %p4cb	Big-endian
-> > %p4cr	Reverse-endian
-> > 
-> > The endianness determines how bytes are interpreted as a u32, and the
-> > FOURCC is then always printed MSByte-first (this is the opposite of
-> > V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> > allow printing LSByte-first FOURCCs stored in host endian order
-> > (other than the hex form being in character order, not the integer
-> > value).
-> > 
-> > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+On Mon 2022-11-14 17:46:28, Andy Shevchenko wrote:
+> On Mon, Nov 14, 2022 at 04:34:07PM +0100, Petr Mladek wrote:
+> > On Tue 2022-11-08 16:33:22, Russell King wrote:
 > 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> ...
 > 
-> See one nit below.
+> > >  	orig = get_unaligned(fourcc);
+> > > -	val = orig & ~BIT(31);
+> > > +	switch (fmt[2]) {
+> > > +	case 'h':
+> > > +		val = orig;
+> > > +		break;
+> > > +	case 'r':
+> > > +		val = orig = swab32(orig);
+> > 
+> > I do not like much these multi assignments. I think that the result
+> > was not even defined in some older C standards. Though, I can't find
+> > it now. And even make W=3 does not warn about it.
+> > 
+> > > +		break;
+> > > +	case 'l':
+> > > +		val = orig = le32_to_cpu(orig);
+> > > +		break;
+> > > +	case 'b':
+> > > +		val = orig = be32_to_cpu(orig);
+> > > +		break;
 > 
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -1762,27 +1762,50 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> >  	char output[sizeof("0123 little-endian (0x01234567)")];
-> >  	char *p = output;
-> >  	unsigned int i;
-> > +	bool pixel_fmt = false;
-> >  	u32 orig, val;
-> >  
-> > -	if (fmt[1] != 'c' || fmt[2] != 'c')
-> > +	if (fmt[1] != 'c')
-> >  		return error_string(buf, end, "(%p4?)", spec);
-> >  
-> >  	if (check_pointer(&buf, end, fourcc, spec))
-> >  		return buf;
-> >  
-> >  	orig = get_unaligned(fourcc);
-> > -	val = orig & ~BIT(31);
-> > +	switch (fmt[2]) {
-> > +	case 'h':
-> > +		val = orig;
-> > +		break;
-> > +	case 'r':
-> > +		val = orig = swab32(orig);
+> Isn't easy to fix? Something like below?
 > 
-> I do not like much these multi assignments. I think that the result
-> was not even defined in some older C standards. Though, I can't find
-> it now. And even make W=3 does not warn about it.
+> 	switch (fmt[2]) {
+> 	case 'h':
+> 		break;
+> 	case 'r':
+> 		orig = swab32(orig);
+> 		break;
+> 	case 'l':
+> 		orig = le32_to_cpu(orig);
+> 		break;
+> 	case 'b':
+> 		orig = be32_to_cpu(orig);
+> 		break;
+> 
+> 		...
+> 	}
+> 	val = orig;
 
-Err.
+I though the same. Unfortunately, this is not valid for the "case c:"
+path where "orig" stays untouched:
 
-It's been supported for decades. I learnt about it back in 1992 when
-I was introduced to C by another experienced C programmer. It's been
-supported in ANSI C compilers. The Norcroft C compiler (which is
-strict ANSI) on Acorn platforms back in the late 1980s/1990s even
-supported it.
+	case 'c':
+		/* Pixel formats are printed LSB-first */
+		val = swab32(orig & ~BIT(31));
+		pixel_fmt = true;
+		break;
 
-I think you're a bit out of date.
+It is pity that "orig" is handled differently for the pixel and the generic
+formats.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+But I am afraid that there is no good solution. The code will
+always be a mess when it tries to implement a messy definition.
+
+It would be nice if the the FourCC format was used consistently
+in all subsystems in the first place.
+
+
+IMPORTANT: This brings the questions.
+
+	   Is there actually a standard how to print the original
+	   number in FourCC?
+
+	   Do we really want to modify "orig" in the generic
+	   implementation?
+
+Best Regards,
+Petr
