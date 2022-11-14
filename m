@@ -2,119 +2,258 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBD1E628A71
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 21:31:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6B7628AC0
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 21:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237631AbiKNUbE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 15:31:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        id S237693AbiKNUsZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 15:48:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236988AbiKNUbD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 15:31:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46B09102
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 12:30:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668457801;
+        with ESMTP id S237663AbiKNUsN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 15:48:13 -0500
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A666713F7F;
+        Mon, 14 Nov 2022 12:48:07 -0800 (PST)
+Received: (Authenticated sender: alexandre.belloni@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 547BC60007;
+        Mon, 14 Nov 2022 20:48:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1668458886;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=QSwGPQPGYuSJyzjFn4FohKoV+SdPmLV3qCVTVk9ZraQ=;
-        b=WbmqeiHI5v+/h2YAmzmx04T59sdVPhVW5vV5DHd9+jXk+rJYoUdPqwQNfArx6eAU81wbGO
-        cR+AX9JHY7yH5e4nWAr+CY0sWJzXb4EYpbRwQBjsitV1U4SfXfzOlVFPYwy046MALA9RQG
-        jK1YZtZTSGiRb6hsvXFphASBMtWufE4=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-244-t-RidfVCPsCfBg4Iv6sNFg-1; Mon, 14 Nov 2022 15:29:58 -0500
-X-MC-Unique: t-RidfVCPsCfBg4Iv6sNFg-1
-Received: by mail-io1-f69.google.com with SMTP id be26-20020a056602379a00b006dd80a0ba1cso6341420iob.11
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 12:29:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QSwGPQPGYuSJyzjFn4FohKoV+SdPmLV3qCVTVk9ZraQ=;
-        b=cFGd7k3Qem5QAX/pn1MIu8hJzTEJ9HOCzkZRRxYGxVjOS/DVmz3dkaiE11VM9zpWL4
-         VISIpnLxuwqK1Vqqv5mHbpefPJ4xA+Zwzi6GgNPIGub86OC89oq8UDdHUSQNliNrBZlp
-         iUjbFAB9vsZWGVEjObuO74e9yTSc8MAFxEFym2gXabWSmcfqgDXxi75FKn4+OimkcgCR
-         RD12mAShyaTdzm+WS53eeF+22Y+E0I9V4HR3F1ohg8N16BOX6idX6klX1zqJTkFIRpdx
-         IZ8nPlWqX2fBtN/Dh909dVFqWn1F2mDgQLkXrlINn9LMcJmUrAhi92VKn8ADTV+ThJ/Z
-         1RgQ==
-X-Gm-Message-State: ANoB5pkt1IiHyqMn5WjDBJTNeoQ824XqPfnJsvokABDJkAqFrbJIKaAx
-        sMOa04WKF1mSnAWI7Xm1drDkd7oGguvORIAeeAmtBpN2SNkvzFNRIoehvzbT5OgfE968UsHHsKP
-        9MuaD3MZ9P4rWW4LNQy63/Q==
-X-Received: by 2002:a92:c90a:0:b0:302:759b:6fb7 with SMTP id t10-20020a92c90a000000b00302759b6fb7mr52455ilp.199.1668457796827;
-        Mon, 14 Nov 2022 12:29:56 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf7laylm71gj6zlFb/LlA13vJqijVyI7RxHqdo/irUmdJzG3ZY3TN+ZFadUzPNOPfZdDFz8cNQ==
-X-Received: by 2002:a92:c90a:0:b0:302:759b:6fb7 with SMTP id t10-20020a92c90a000000b00302759b6fb7mr52446ilp.199.1668457796596;
-        Mon, 14 Nov 2022 12:29:56 -0800 (PST)
-Received: from x1.redhat.com (c-73-214-169-22.hsd1.pa.comcast.net. [73.214.169.22])
-        by smtp.gmail.com with ESMTPSA id n20-20020a02a194000000b00374f8a0ed3csm3864044jah.103.2022.11.14.12.29.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 12:29:56 -0800 (PST)
-From:   Brian Masney <bmasney@redhat.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, psodagud@quicinc.com,
-        quic_shazhuss@quicinc.com, quic_ppareek@quicinc.com,
-        ahalaney@redhat.com, echanude@redhat.com,
-        nicolas.dechesne@linaro.org
-Subject: [PATCH RFC] gpiolib: ensure that fwnode is properly set
-Date:   Mon, 14 Nov 2022 15:29:43 -0500
-Message-Id: <20221114202943.2389489-1-bmasney@redhat.com>
-X-Mailer: git-send-email 2.38.1
+         in-reply-to:in-reply-to:references:references;
+        bh=owj7jV2GY0bbRrGgiyqXUxSTQ0wmVf4/LAIwgp1eqF8=;
+        b=fPjiK1A++szrwZEnjkTBXzH/jFiLZT76xYokAFU+URbgHTO6BNe+gXvmvPIVS5p4Lirnn8
+        O1tmoUXPl8NXoSrDw887X2foBeCr7HZcCQHekIYGUSNI/eD9X1R1jWLRPtajylOIzYzKyu
+        XE3gefsBty0Oz+3HsnvqrIp+AC5rLDcEfQNCrF/8O6PoV/SAsAB1Op54QV/W6vbQC79sjC
+        AC6svzkXuTSL8oEAMJBeEQXn7UYq2AFZzHp/tR17mzZ1r71prmAYsNupnE6YByUQFtTWxf
+        AZ1fxduvDDqotNv2gANhfhWVgmudjEn6AquhqAU7fGtMoGptMDvJEDhUMO5thg==
+Date:   Mon, 14 Nov 2022 21:48:04 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Matt Ranostay <mranostay@ti.com>
+Cc:     brgl@bgdev.pl, lee@kernel.org, linus.walleij@linaro.org,
+        kristo@kernel.org, a.zummo@towertech.it,
+        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,
+        vigneshr@ti.com, linux-arm-kernel@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v3 3/7] rtc: rtc-tps6594x: Add support for TPS6594X PMIC
+ RTC
+Message-ID: <Y3KphJB4ux7zfW/M@mail.local>
+References: <20221109065546.24912-1-mranostay@ti.com>
+ <20221109065546.24912-4-mranostay@ti.com>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221109065546.24912-4-mranostay@ti.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Note that this is a RFC patch and not meant to be merged. I looked into
-a problem with linux-next-20221110 on the Qualcomm SA8540P automotive
-board (sc8280xp) where the UFS host controller would fail to probe due
-to repeated probe deferrals when trying to get reset-gpios via
-devm_gpiod_get_optional().
+Hello,
 
-of_get_named_gpiod_flags() returns -EPROBE_DEFER, which is caused by
-of_gpiochip_match_node_and_xlate() returning 0 since the of_xlate function
-pointer is not set for the qcom,sc8280xp-tlmm pinctrl driver. The
-pinctrl driver doesn't define one, so of_gpiochip_add() should
-automatically setup of_gpio_simple_xlate() on it's behalf. This doesn't
-happen since the fwnode member on the struct gpiochip is set to null
-when of_gpiochip_add() is called. Let's work around this by ensuring
-that it's set if available.
+On 08/11/2022 22:55:42-0800, Matt Ranostay wrote:
+> diff --git a/drivers/rtc/rtc-tps6594x.c b/drivers/rtc/rtc-tps6594x.c
+> new file mode 100644
+> index 000000000000..e9f904d0a769
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-tps6594x.c
+> @@ -0,0 +1,181 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * rtc-tps6594x.c -- TPS6594x Real Time Clock driver.
+> + *
+> + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com
+> + *
+> + * TODO: alarm support
 
-Note that this broke sometime within the last few weeks within
-linux-next and I haven't bisected this. I'm posting this in the hopes
-that someone may know offhand which patch(es) may have broken this.
+Is this TODO actually useful? :)
 
-Signed-off-by: Brian Masney <bmasney@redhat.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +static int tps6594x_rtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	unsigned char rtc_data[TPS6594X_NUM_TIME_REGS];
+> +	struct tps6594x *tps6594x = dev_get_drvdata(dev->parent);
+> +	int ret;
+> +
+> +	/* Reset TPS6594X_RTC_CTRL_REG_GET_TIME bit to zero, required for latch */
+> +	ret = regmap_update_bits(tps6594x->regmap, TPS6594X_RTC_CTRL_1,
+> +		TPS6594X_RTC_CTRL_REG_GET_TIME, 0);
+> +	if (ret < 0) {
+> +		dev_err(dev, "RTC CTRL reg update failed, err: %d\n", ret);
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 11fb7ec883e9..8bec66008869 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -678,7 +678,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	 * Assign fwnode depending on the result of the previous calls,
- 	 * if none of them succeed, assign it to the parent's one.
- 	 */
--	gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
-+	gc->fwnode = gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
- 
- 	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
- 	if (gdev->id < 0) {
+I would avoid these messages that are not actually actionable.
+
+> +		return ret;
+> +	}
+> +
+> +	/* Copy RTC counting registers to static registers or latches */
+> +	ret = regmap_update_bits(tps6594x->regmap, TPS6594X_RTC_CTRL_1,
+> +		TPS6594X_RTC_CTRL_REG_GET_TIME, TPS6594X_RTC_CTRL_REG_GET_TIME);
+> +	if (ret < 0) {
+> +		dev_err(dev, "RTC CTRL reg update failed, err: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_bulk_read(tps6594x->regmap, TPS6594X_RTC_SECONDS,
+> +			rtc_data, TPS6594X_NUM_TIME_REGS);
+> +	if (ret < 0) {
+> +		dev_err(dev, "RTC_SECONDS reg read failed, err = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	tm->tm_sec = bcd2bin(rtc_data[0]);
+> +	tm->tm_min = bcd2bin(rtc_data[1]);
+> +	tm->tm_hour = bcd2bin(rtc_data[2]);
+> +	tm->tm_mday = bcd2bin(rtc_data[3]);
+> +	tm->tm_mon = bcd2bin(rtc_data[4]) - 1;
+> +	tm->tm_year = bcd2bin(rtc_data[5]) + 100;
+> +
+> +	return ret;
+> +}
+> +
+> +static int tps6594x_rtc_set_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	unsigned char rtc_data[TPS6594X_NUM_TIME_REGS];
+> +	struct tps6594x *tps6594x = dev_get_drvdata(dev->parent);
+> +	int ret, retries = 5;
+> +	unsigned int val;
+> +
+> +	rtc_data[0] = bin2bcd(tm->tm_sec);
+> +	rtc_data[1] = bin2bcd(tm->tm_min);
+> +	rtc_data[2] = bin2bcd(tm->tm_hour);
+> +	rtc_data[3] = bin2bcd(tm->tm_mday);
+> +	rtc_data[4] = bin2bcd(tm->tm_mon + 1);
+> +	rtc_data[5] = bin2bcd(tm->tm_year - 100);
+> +
+> +	/* Stop RTC while updating the RTC time registers */
+> +	ret = regmap_update_bits(tps6594x->regmap, TPS6594X_RTC_CTRL_1,
+> +				 TPS6594X_RTC_CTRL_REG_STOP_RTC, 0);
+> +	if (ret < 0) {
+> +		dev_err(dev, "RTC stop failed, err = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Waiting till RTC isn't running */
+> +	do {
+> +		ret = regmap_read(tps6594x->regmap, TPS6594X_RTC_STATUS, &val);
+> +		if (ret < 0) {
+> +			dev_err(dev, "RTC_STATUS reg read failed, err = %d\n", ret);
+> +			return ret;
+> +		}
+> +		msleep(20);
+> +	} while (--retries && (val & TPS6594X_RTC_STATUS_RUN));
+
+Maybe you should go for regmap_read_poll_timeout.
+
+> +
+> +	if (!retries) {
+> +		dev_err(dev, "RTC_STATUS is still RUNNING\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	ret = regmap_bulk_write(tps6594x->regmap, TPS6594X_RTC_SECONDS,
+> +		rtc_data, TPS6594X_NUM_TIME_REGS);
+> +	if (ret < 0) {
+> +		dev_err(dev, "RTC_SECONDS reg write failed, err = %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Start back RTC */
+> +	ret = regmap_update_bits(tps6594x->regmap, TPS6594X_RTC_CTRL_1,
+> +				 TPS6594X_RTC_CTRL_REG_STOP_RTC,
+> +				 TPS6594X_RTC_CTRL_REG_STOP_RTC);
+> +	if (ret < 0)
+> +		dev_err(dev, "RTC start failed, err = %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct rtc_class_ops tps6594x_rtc_ops = {
+> +	.read_time	= tps6594x_rtc_read_time,
+> +	.set_time	= tps6594x_rtc_set_time,
+> +};
+> +
+> +static int tps6594x_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct tps6594x *tps6594x = dev_get_drvdata(pdev->dev.parent);
+> +	struct tps6594x_rtc *tps6594x_rtc = NULL;
+> +	int ret;
+> +
+> +	tps6594x_rtc = devm_kzalloc(&pdev->dev, sizeof(struct tps6594x_rtc), GFP_KERNEL);
+> +	if (!tps6594x_rtc)
+> +		return -ENOMEM;
+> +
+> +	tps6594x_rtc->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, tps6594x_rtc);
+> +
+> +	/* Start RTC */
+> +	ret = regmap_update_bits(tps6594x->regmap, TPS6594X_RTC_CTRL_1,
+> +				 TPS6594X_RTC_CTRL_REG_STOP_RTC,
+> +				 TPS6594X_RTC_CTRL_REG_STOP_RTC);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "RTC_CTRL write failed, err = %d\n", ret);
+> +		return ret;
+> +	}
+
+It doesn't make sense to start the RTC in probe as it is probably
+already started and time is kept properly or it is not started and then
+you can use this information in tps6594x_rtc_read_time as you know the
+time is not correct.
+I'd rather ensure it is started in tps6594x_rtc_set_time.
+
+> +
+> +	tps6594x_rtc->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+
+This is deprecated, please use devm_rtc_allocate_device() and
+devm_rtc_register_device(). You also need to set the range properly.
+
+> +				&tps6594x_rtc_ops, THIS_MODULE);
+> +	if (IS_ERR(tps6594x_rtc->rtc)) {
+> +		ret = PTR_ERR(tps6594x_rtc->rtc);
+> +		dev_err(&pdev->dev, "RTC register failed, err = %d\n", ret);
+
+This message is useless as the core aloready pronts an error on
+registration failure.
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_tps6594x_rtc_match[] = {
+> +	{ .compatible = "ti,tps6594x-rtc", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_tps6594x_rtc_match);
+> +#endif
+> +
+> +static struct platform_driver tps6594x_rtc_driver = {
+> +	.probe		= tps6594x_rtc_probe,
+> +	.driver		= {
+> +		.name	= "tps6594x-rtc",
+> +		.of_match_table = of_match_ptr(of_tps6594x_rtc_match),
+> +	},
+> +};
+> +
+> +module_platform_driver(tps6594x_rtc_driver);
+> +
+> +MODULE_ALIAS("platform:tps6594x_rtc");
+> +MODULE_DESCRIPTION("TI TPS6594x series RTC driver");
+> +MODULE_AUTHOR("Keerthy J <j-keerthy@ti.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.38.GIT
+> 
+
 -- 
-2.38.1
-
+Alexandre Belloni, co-owner and COO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
