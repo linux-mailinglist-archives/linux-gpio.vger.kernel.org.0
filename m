@@ -2,89 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E784628392
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 16:12:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10B79628403
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 16:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236428AbiKNPMe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 10:12:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40560 "EHLO
+        id S236783AbiKNPeR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 10:34:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237144AbiKNPMc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 10:12:32 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2CFDFA4
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 07:12:30 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id c15-20020a17090a1d0f00b0021365864446so10920253pjd.4
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 07:12:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WwEb/qIRjqnKTLFdyj7tFGznF3ILfpFsVkdiNDDJeIA=;
-        b=XDCkZkOh+QA4l5pFoNJFJocV/coljfERuzXuZbvZwH6bLiszeKPb7qpOmpLTMxpivt
-         8hny/UwYzscQxlrSrWsNZP5P9jEzTQz74ltUfvtzA5InEW5tZclDY8r/pfqw/tcGaUQo
-         wdJyEoLpryWSjbyG/Cn1qjIRWqm9FKXlGXQleiec+5pAGzrvFyq+ALE9coQlW3LpwR2m
-         TdE8fyYHnC9vKPyt81iA27Rqfds9Sor9o5GUvs+cKi57proQaiMhDCXY4USQ2/kzRfHs
-         ovfrOXbZy3OoHu8LK2GEbVCsmlLA9P1NV4fbFQkJiBT47MVlnWHep8O6pJHsqdzpJb0F
-         Dj0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwEb/qIRjqnKTLFdyj7tFGznF3ILfpFsVkdiNDDJeIA=;
-        b=RlkExxENw2yW6RbG5HM0Ie8OTjx3y1eu9XrCDYv60k0ZvdgvbE+9+SDdq2hE5ius3z
-         PPTnVRn6lUKSxjNlz5pOXDFTginEpmeZCTTEB9Xiw/RksdMLeK71a/9vgtT1wzL69uQJ
-         5vdmTWIuhplQ7cIGSB+b6x+kJ+BltKDYe2gfClpbSK9fJMUOPnxndmNPFNNHPhwDBqlY
-         1FZWt0QppYWF8ukp4cU9hrcgsepF+ODUNTOTFFvDXDRSV20dow4m6Blfnr+477fstzmy
-         IVkWwtDLgRvB8iTPHnHWfi2QaF3LnkDpLIl9XqY8F68N8yviImfk21Wn+NhirhvStlXC
-         lJdA==
-X-Gm-Message-State: ANoB5pnvV0Ytyunr0k3vpUnAUPLO4fmI+evktp022YbYNGrcYnOBI65x
-        FBupdCGJBzt+mi8XAov+GIyYsFsFLNc=
-X-Google-Smtp-Source: AA0mqf5YUe3QCVG2/dt8Tz2PSMyYvjcfo9KLAc8kYfg/3iAptzhGIlXClMu0iWAHpzWiL/xGJNx7Gw==
-X-Received: by 2002:a17:902:eb91:b0:186:a687:e077 with SMTP id q17-20020a170902eb9100b00186a687e077mr14455603plg.26.1668438750153;
-        Mon, 14 Nov 2022 07:12:30 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id s10-20020a17090a764a00b0020ad26fa65dsm6552044pjl.56.2022.11.14.07.12.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Nov 2022 07:12:29 -0800 (PST)
-Date:   Mon, 14 Nov 2022 23:12:25 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod v2][PATCH v4 0/5] tools: improvements for v2
-Message-ID: <Y3Ja2d1X0vC663gl@sol>
-References: <20221114040102.66031-1-warthog618@gmail.com>
- <CAMRc=MdUNHsL3_uFR1j2ao4GCMvH_1W0ZMxe4QBG0HFu4xNcew@mail.gmail.com>
+        with ESMTP id S236008AbiKNPeP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 10:34:15 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38244AE63;
+        Mon, 14 Nov 2022 07:34:14 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 9C2321FFD1;
+        Mon, 14 Nov 2022 15:34:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1668440052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iX0twiutIXQvyzjvENfNYeTzi5iV06fn6/uJ3rwwZHQ=;
+        b=CSqUQJ08j5/qIt6kMB+TN0dttJya6Uhm0czVdp3AA47iPq4SLqKwE0jAXalRa4kxsrFQiv
+        Ue+cwR7I2ZEkuCD6NoN7jvTBC/sog6Tt4IKCxLbydvrfyKmt2pclKFrhOQGYKiVjtT2JW2
+        rdKzXoU7xcaRXSO722vtMJPAQeuhPsQ=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id E91DB2C143;
+        Mon, 14 Nov 2022 15:34:10 +0000 (UTC)
+Date:   Mon, 14 Nov 2022 16:34:07 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, devicetree@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
+ extending %p4cc
+Message-ID: <Y3Jf7xz2CQjJuEeT@alley>
+References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
+ <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MdUNHsL3_uFR1j2ao4GCMvH_1W0ZMxe4QBG0HFu4xNcew@mail.gmail.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 03:26:38PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Nov 14, 2022 at 5:01 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
+On Tue 2022-11-08 16:33:22, Russell King wrote:
+> From: Hector Martin <marcan@marcan.st>
 > 
-> I played with the tools a bit and really like the way they look now. I
-> think they're ready to hop into master, I'll do some more testing and
-> they should be in this week. Just one last request from my side: would
-> you mind updating the TOOLS section of the README? I'm aware it's not
-> yet updated for v2 and I plan to do it soon but we could already start
-> with the tools examples. You can send an incremental patch on top of
-> this series.
+> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
+> it's useful to be able to print generic 4-character codes formatted as
+> an integer. Extend it to add format specifiers for printing generic
+> 32-bit FOURCCs with various endian semantics:
 > 
+> %p4ch   Host-endian
+> %p4cl	Little-endian
+> %p4cb	Big-endian
+> %p4cr	Reverse-endian
+> 
+> The endianness determines how bytes are interpreted as a u32, and the
+> FOURCC is then always printed MSByte-first (this is the opposite of
+> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
+> allow printing LSByte-first FOURCCs stored in host endian order
+> (other than the hex form being in character order, not the integer
+> value).
+> 
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-Good point - I totally forgot about the README.
-I'll take a look at it.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Cheers,
-Kent.
+See one nit below.
+
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -1762,27 +1762,50 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+>  	char output[sizeof("0123 little-endian (0x01234567)")];
+>  	char *p = output;
+>  	unsigned int i;
+> +	bool pixel_fmt = false;
+>  	u32 orig, val;
+>  
+> -	if (fmt[1] != 'c' || fmt[2] != 'c')
+> +	if (fmt[1] != 'c')
+>  		return error_string(buf, end, "(%p4?)", spec);
+>  
+>  	if (check_pointer(&buf, end, fourcc, spec))
+>  		return buf;
+>  
+>  	orig = get_unaligned(fourcc);
+> -	val = orig & ~BIT(31);
+> +	switch (fmt[2]) {
+> +	case 'h':
+> +		val = orig;
+> +		break;
+> +	case 'r':
+> +		val = orig = swab32(orig);
+
+I do not like much these multi assignments. I think that the result
+was not even defined in some older C standards. Though, I can't find
+it now. And even make W=3 does not warn about it.
+
+> +		break;
+> +	case 'l':
+> +		val = orig = le32_to_cpu(orig);
+> +		break;
+> +	case 'b':
+> +		val = orig = be32_to_cpu(orig);
+> +		break;
+
+Best Regards,
+Petr
