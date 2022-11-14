@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B921E627521
-	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 05:01:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EAB9627522
+	for <lists+linux-gpio@lfdr.de>; Mon, 14 Nov 2022 05:01:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235771AbiKNEBw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 13 Nov 2022 23:01:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35962 "EHLO
+        id S235714AbiKNEB6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 13 Nov 2022 23:01:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235714AbiKNEBv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 23:01:51 -0500
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61B713CD3
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:49 -0800 (PST)
-Received: by mail-pf1-x42d.google.com with SMTP id v28so9883469pfi.12
-        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:49 -0800 (PST)
+        with ESMTP id S235773AbiKNEB5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 13 Nov 2022 23:01:57 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3F012D39
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:55 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id m6-20020a17090a5a4600b00212f8dffec9so9514605pji.0
+        for <linux-gpio@vger.kernel.org>; Sun, 13 Nov 2022 20:01:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=maEdBsz2kLehmf10cGacNvNHGSNaGfa7oMa5GR8cWD0=;
-        b=jAYkByFN1QAzAk8jByBfYnF7b59D39I0OdCQucUsk/5TbR4QlWeAkIIiKv90rV8gEQ
-         AsFiUodh6RZbY6Qbx2rAqZSirZ7Am6Ts3b3Tlo8R4pJdBGnwY88ApAN4zHyGxeR+N3S7
-         OjJwwv3G7j6YpBWGOpkRJcRZsMEGC/Ln5BODRYuPIICM/GcopppP8iEmCeLA4hVhk/+0
-         OzrvzuJDOj8ZzQm9oFjk8bZn4cfBmBj8P2INdeS7yNryxozuKduuYvN6x9C0PdHzmWWp
-         HB7E6v0UxC3oliv5y+5Ug4R6vx1DB8LFqKSVqmrOL3QRyQJMKtdATOd9wase2d/BzrHz
-         WJ8Q==
+        bh=NbK+IngWpViM1296w06W1SejMrRpWzBlWnD5Rov/MPA=;
+        b=pmSt3IvQ7+EZev/YEErhcv5XsaB9ugQFhJOfkxuSEcbXohVhbs3Nq8zzbMzM3/YeIY
+         C0sGRCsJPWZgyzJRP1E4kuHmX4a/j4wetCtwaVLN2+6fifCzi4r60lIsHL4MikiNbGoa
+         t5eUqa3MupfBSnIy0H+7qcI7RbpIr9/luCCKSM+DDVYcc4bwXR53GmNmcM+loqFGpm+R
+         UeIF2U/5IH0fS0hOgfpuOq4UoiCZrjiBlu87sdeBWIAEnd1sQ8+R4U2AX/XY2Qqe4ISy
+         b0zzjCxHTX407l7UTzOXqdNwc6PxUHvoF4fJX67s1wM3zl7ofxL6bUjKjBDET02WuyO1
+         r90A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=maEdBsz2kLehmf10cGacNvNHGSNaGfa7oMa5GR8cWD0=;
-        b=02qY2crYnzROx5CBx8kas+Ok2oay3r9VF3/rej/GZlzth1jV4CMVVHYed6qnLeyNnu
-         /ppyQea3JlIC7Oxi/NuFNgboV2x24QKsAPibbUX4MUSMv2ybDJUHgfGEjZLPNKNyqufY
-         33Go8I4Y1aYSvVEvVQh99SCpEOkhAMmQWoaJ363/IcQ2WtOuQiNnlVte7wYownDXQqam
-         0J3d/u4yxirAGkaeeyIynM/dX2l9d7bWzhFMm7PrFVpMZI49HnXed74UBRQmZBcGlQM+
-         UpH/LNYSbpvlA8N4316ZFc/oNGVrhQ1LDHQg9y+m7/YcDzHSDUWyUdShIl0WZY7PdYIq
-         kMMw==
-X-Gm-Message-State: ANoB5pkiW9a4yLa0n8pNNin5rUvnWugw1rD6jNMGHB5CR5TeiAWhJQd7
-        4JebWwAr/ysq9STVvgACyEEcc6VvYKE=
-X-Google-Smtp-Source: AA0mqf77H0kDVk5Nj2CycFWJ5Xc/c264ucsacuZxURx8YQvKdqgOQSGPQ2BCamjJtj5Rd0ei0KB6yw==
-X-Received: by 2002:a63:dd4f:0:b0:464:2135:5f88 with SMTP id g15-20020a63dd4f000000b0046421355f88mr10278340pgj.360.1668398508870;
-        Sun, 13 Nov 2022 20:01:48 -0800 (PST)
+        bh=NbK+IngWpViM1296w06W1SejMrRpWzBlWnD5Rov/MPA=;
+        b=lkj8cYqaaJjXvSqWSyTLJIhYsuvO2bnSDXAiJqNgkSSkp2L72y4NNgwysgiSxEleou
+         6HltVHYZPW8sE1m+J+gPijAyDl1qZSSrxDPZrubNHH9Aj0n5fax64v09lh8h592dXEkw
+         Xd6RpQNcJib5wusljzBKNW/g4pLwZgmfGQNIxGpw0fREoOPHfy7T5igpwJaCdNTANB2H
+         1byQcJ8C7Ezy51v+y3rLsWzCUzpnEzhLgB8neJOLlkpeBf6S0UiyA5M/Ryg96Iw0I+2Z
+         nVpUiiRo8V4c9p+eM8AcetHxNpD7wq2i7G1ZMq3zHnbmqqxHvp5jvWuByrjW0whzFbfG
+         sifw==
+X-Gm-Message-State: ANoB5pk5WosExbCiyT8OVGVDR5m2PXzZK89BqBVcAQOdv8WPx2XDNsov
+        9rLZR68qAH4dqg9tJS3m0YfMnCaxYhw=
+X-Google-Smtp-Source: AA0mqf4iF2zPySxp6mmxrEEkSf1UzHCEEjHCJ0jqCzja9QXQI/wp7wi3JWqgdVebfkbv8K77bD1uDw==
+X-Received: by 2002:a17:902:be12:b0:186:a97d:6bcc with SMTP id r18-20020a170902be1200b00186a97d6bccmr11881001pls.121.1668398514473;
+        Sun, 13 Nov 2022 20:01:54 -0800 (PST)
 Received: from sol.home.arpa (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id f11-20020a170902684b00b001801aec1f6bsm6018636pln.141.2022.11.13.20.01.46
+        by smtp.gmail.com with ESMTPSA id f11-20020a170902684b00b001801aec1f6bsm6018636pln.141.2022.11.13.20.01.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 13 Nov 2022 20:01:48 -0800 (PST)
+        Sun, 13 Nov 2022 20:01:54 -0800 (PST)
 From:   Kent Gibson <warthog618@gmail.com>
 To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
 Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod v2][PATCH v4 4/5] tools: add gpionotify
-Date:   Mon, 14 Nov 2022 12:01:01 +0800
-Message-Id: <20221114040102.66031-5-warthog618@gmail.com>
+Subject: [libgpiod v2][PATCH v4 5/5] tools: gpionotify tests
+Date:   Mon, 14 Nov 2022 12:01:02 +0800
+Message-Id: <20221114040102.66031-6-warthog618@gmail.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221114040102.66031-1-warthog618@gmail.com>
 References: <20221114040102.66031-1-warthog618@gmail.com>
@@ -70,520 +70,523 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a gpionotify tool, based on gpiomon, to report line info change
-events read from chip file descriptors.
-
-Inspired by the gpio-watch tool in the linux kernel, but with gpiomon
-features such as custom formatted output, filtering events of
-interest and exiting after a number of events, so more useful for
-scripting.
-
-Default output is minimalist, so just time, event type and line id.
-Full event details are available using the custom formatted output.
+Extend the tool test suite to cover the gpionotify tool.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- man/Makefile.am    |   2 +-
- tools/.gitignore   |   1 +
- tools/Makefile.am  |   4 +-
- tools/gpionotify.c | 445 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 450 insertions(+), 2 deletions(-)
- create mode 100644 tools/gpionotify.c
+ tools/gpio-tools-test.bats | 503 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 503 insertions(+)
 
-diff --git a/man/Makefile.am b/man/Makefile.am
-index 8d1d9b3..201a52b 100644
---- a/man/Makefile.am
-+++ b/man/Makefile.am
-@@ -3,7 +3,7 @@
- 
- if WITH_MANPAGES
- 
--dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiomon.man
-+dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiomon.man gpionotify.man
- 
- %.man: $(top_builddir)/tools/$(*F)
- 	help2man $(top_builddir)/tools/$(*F) --include=$(srcdir)/template --output=$(builddir)/$@ --no-info
-diff --git a/tools/.gitignore b/tools/.gitignore
-index d6b2f44..dfdbc0d 100644
---- a/tools/.gitignore
-+++ b/tools/.gitignore
-@@ -6,3 +6,4 @@ gpioinfo
- gpioget
- gpioset
- gpiomon
-+gpionotify
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 3fafec6..b6e8f34 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -15,7 +15,7 @@ libtools_common_la_SOURCES = tools-common.c tools-common.h
- 
- LDADD = libtools-common.la $(top_builddir)/lib/libgpiod.la $(LIBEDIT_LIBS)
- 
--bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon
-+bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpionotify
- 
- gpiodetect_SOURCES = gpiodetect.c
- 
-@@ -27,6 +27,8 @@ gpioset_SOURCES = gpioset.c
- 
- gpiomon_SOURCES = gpiomon.c
- 
-+gpionotify_SOURCES = gpionotify.c
+diff --git a/tools/gpio-tools-test.bats b/tools/gpio-tools-test.bats
+index 78b0959..d73cf9b 100755
+--- a/tools/gpio-tools-test.bats
++++ b/tools/gpio-tools-test.bats
+@@ -2419,3 +2419,506 @@ request_release_line() {
+ 	dut_read
+ 	output_is "%x"
+ }
 +
- EXTRA_DIST = gpio-tools-test gpio-tools-test.bats
- 
- if WITH_TESTS
-diff --git a/tools/gpionotify.c b/tools/gpionotify.c
-new file mode 100644
-index 0000000..dfa0538
---- /dev/null
-+++ b/tools/gpionotify.c
-@@ -0,0 +1,445 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+// SPDX-FileCopyrightText: 2022 Kent Gibson <warthog618@gmail.com>
++#
++# gpionotify test cases
++#
 +
-+#include <getopt.h>
-+#include <gpiod.h>
-+#include <inttypes.h>
-+#include <poll.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
++@test "gpionotify: by name" {
++	gpiosim_chip sim0 num_lines=8 line_name=4:foo
 +
-+#include "tools-common.h"
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+static void print_help(void)
-+{
-+	printf("Usage: %s [OPTIONS] <line>...\n", get_progname());
-+	printf("\n");
-+	printf("Wait for changes to info on GPIO lines and print them to standard output.\n");
-+	printf("\n");
-+	printf("Lines are specified by name, or optionally by offset if the chip option\n");
-+	printf("is provided.\n");
-+	printf("\n");
-+	printf("Options:\n");
-+	printf("      --banner\t\tdisplay a banner on successful startup\n");
-+	printf("      --by-name\t\ttreat lines as names even if they would parse as an offset\n");
-+	printf("  -c, --chip <chip>\trestrict scope to a particular chip\n");
-+	printf("  -e, --event <event>\tspecify the events to monitor\n");
-+	printf("\t\t\tPossible values: 'requested', 'released', 'reconfigured'.\n");
-+	printf("\t\t\t(default is all events)\n");
-+	printf("  -h, --help\t\tdisplay this help and exit\n");
-+	printf("  -F, --format <fmt>\tspecify a custom output format\n");
-+	printf("      --localtime\tconvert event timestamps to local time\n");
-+	printf("  -n, --num-events <num>\n");
-+	printf("\t\t\texit after processing num events\n");
-+	printf("  -q, --quiet\t\tdon't generate any output\n");
-+	printf("  -s, --strict\t\tabort if requested line names are not unique\n");
-+	printf("      --unquoted\tdon't quote line or consumer names\n");
-+	printf("      --utc\t\tconvert event timestamps to UTC\n");
-+	printf("  -v, --version\t\toutput version information and exit\n");
-+	print_chip_help();
-+	printf("\n");
-+	printf("Format specifiers:\n");
-+	printf("  %%o   GPIO line offset\n");
-+	printf("  %%l   GPIO line name\n");
-+	printf("  %%c   GPIO chip name\n");
-+	printf("  %%e   numeric info event type ('1' - requested, '2' - released or '3' - reconfigured)\n");
-+	printf("  %%E   info event type ('requested', 'released' or 'reconfigured')\n");
-+	printf("  %%a   line attributes\n");
-+	printf("  %%C   consumer\n");
-+	printf("  %%S   event timestamp as seconds\n");
-+	printf("  %%U   event timestamp as UTC\n");
-+	printf("  %%L   event timestamp as local time\n");
++	dut_run gpionotify --banner foo
++	dut_regex_match "Watching line .*"
++
++	request_release_line $sim0 4
++
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"foo\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"foo\""
++	# tools currently have no way to generate a reconfig event
 +}
 +
-+static int parse_event_type_or_die(const char *option)
-+{
-+	if (strcmp(option, "requested") == 0)
-+		return GPIOD_INFO_EVENT_LINE_REQUESTED;
-+	if (strcmp(option, "released") == 0)
-+		return GPIOD_INFO_EVENT_LINE_RELEASED;
-+	if (strcmp(option, "reconfigured") != 0)
-+		die("invalid edge: %s", option);
-+	return GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED;
++@test "gpionotify: by offset" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --chip $sim0 4
++	dut_regex_match "Watching line .*"
++
++	request_release_line $sim0 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 4"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 4"
++
++	assert_fail dut_readable
 +}
 +
-+struct config {
-+	bool banner;
-+	bool by_name;
-+	bool quiet;
-+	bool strict;
-+	bool unquoted;
-+	int event_type;
-+	int events_wanted;
-+	const char *chip_id;
-+	const char *fmt;
-+	int timestamp_fmt;
-+};
++@test "gpionotify: by symlink" {
++	gpiosim_chip sim0 num_lines=8
++	gpiosim_chip_symlink sim0 .
 +
-+static int parse_config(int argc, char **argv, struct config *cfg)
-+{
-+	int opti, optc;
-+	const char *const shortopts = "+c:e:hF:n:qshv";
-+	const struct option longopts[] = {
-+		{ "banner",	no_argument,	NULL,		'-'},
-+		{ "by-name",	no_argument,	NULL,		'B'},
-+		{ "chip",	required_argument, NULL,	'c' },
-+		{ "event",	required_argument, NULL,	'e' },
-+		{ "format",	required_argument, NULL,	'F' },
-+		{ "help",	no_argument,	NULL,		'h' },
-+		{ "localtime",	no_argument,	&cfg->timestamp_fmt, 2 },
-+		{ "num-events",	required_argument, NULL,	'n' },
-+		{ "quiet",	no_argument,	NULL,		'q' },
-+		{ "silent",	no_argument,	NULL,		'q' },
-+		{ "strict",	no_argument,	NULL,		's' },
-+		{ "unquoted",	no_argument,	NULL,		'Q' },
-+		{ "utc",	no_argument,	&cfg->timestamp_fmt, 1 },
-+		{ "version",	no_argument,	NULL,		'v' },
-+		{ GETOPT_NULL_LONGOPT },
-+	};
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	memset(cfg, 0, sizeof(*cfg));
++	dut_run gpionotify --banner --chip $GPIOSIM_CHIP_LINK 4
++	dut_regex_match "Watching line .*"
 +
-+	for (;;) {
-+		optc = getopt_long(argc, argv, shortopts, longopts, &opti);
-+		if (optc < 0)
-+			break;
++	request_release_line $sim0 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0\\s+4"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0\\s+4"
 +
-+		switch (optc) {
-+		case '-':
-+			cfg->banner = true;
-+			break;
-+		case 'B':
-+			cfg->by_name = true;
-+			break;
-+		case 'c':
-+			cfg->chip_id = optarg;
-+			break;
-+		case 'e':
-+			cfg->event_type = parse_event_type_or_die(optarg);
-+			break;
-+		case 'F':
-+			cfg->fmt = optarg;
-+			break;
-+		case 'n':
-+			cfg->events_wanted = parse_uint_or_die(optarg);
-+			break;
-+		case 'q':
-+			cfg->quiet = true;
-+			break;
-+		case 'Q':
-+			cfg->unquoted = true;
-+			break;
-+		case 's':
-+			cfg->strict = true;
-+			break;
-+		case 'h':
-+			print_help();
-+			exit(EXIT_SUCCESS);
-+		case 'v':
-+			print_version();
-+			exit(EXIT_SUCCESS);
-+		case '?':
-+			die("try %s --help", get_progname());
-+		case 0:
-+			break;
-+		default:
-+			abort();
-+		}
-+	}
-+
-+	return optind;
++	assert_fail dut_readable
 +}
 +
-+static void print_banner(int num_lines, char **lines)
-+{
-+	int i;
++@test "gpionotify: by chip and name" {
++	gpiosim_chip sim0 num_lines=8 line_name=4:foo
++	gpiosim_chip sim1 num_lines=8 line_name=2:foo
 +
-+	if (num_lines > 1) {
-+		printf("Watching lines ");
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
 +
-+		for (i = 0; i < num_lines - 1; i++)
-+			printf("'%s', ", lines[i]);
++	dut_run gpionotify --banner --chip $sim1 foo
++	dut_regex_match "Watching line .*"
 +
-+		printf("and '%s'...\n", lines[i]);
-+	} else {
-+		printf("Watching line '%s'...\n", lines[0]);
-+	}
++	request_release_line $sim1 2
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim1 2 \"foo\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim1 2 \"foo\""
++
++	assert_fail dut_readable
 +}
 +
-+static void print_event_type(int evtype)
-+{
-+	switch (evtype) {
-+	case GPIOD_INFO_EVENT_LINE_REQUESTED:
-+		fputs("requested", stdout);
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_RELEASED:
-+		fputs("released", stdout);
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED:
-+		fputs("reconfigured", stdout);
-+		break;
-+	default:
-+		fputs("unknown", stdout);
-+		break;
-+	}
++@test "gpionotify: first matching named line" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar \
++				      line_name=3:foobar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
++				      line_name=4:xyz line_name=7:foobar
++	gpiosim_chip sim2 num_lines=16
++
++	dut_run gpionotify --banner foobar
++	dut_regex_match "Watching line .*"
++
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 3
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"foobar\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"foobar\""
++
++	assert_fail dut_readable
 +}
 +
-+/*
-+ * A convenience function to map clock monotonic to realtime, as uAPI only
-+ * supports CLOCK_MONOTONIC.
-+ *
-+ * Samples the realtime clock on either side of a monotonic sample and averages
-+ * the realtime samples to estimate the offset between the two clocks.
-+ * Any time shifts between the two realtime samples will result in the
-+ * monotonic time being mapped to the average of the before and after, so
-+ * half way between the old and new times.
-+ *
-+ * Any CPU suspension between the event being generated and converted will
-+ * result in the returned time being shifted by the period of suspension.
-+ */
-+static uint64_t monotonic_to_realtime(uint64_t evtime)
-+{
-+	struct timespec ts;
-+	uint64_t before, after, mono;
++@test "gpionotify: with requested" {
++	gpiosim_chip sim0 num_lines=8
 +
-+	clock_gettime(CLOCK_REALTIME, &ts);
-+	before = ts.tv_nsec + ((uint64_t)ts.tv_sec) * 1000000000;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	clock_gettime(CLOCK_MONOTONIC, &ts);
-+	mono = ts.tv_nsec + ((uint64_t)ts.tv_sec) * 1000000000;
++	gpiosim_set_pull sim0 4 pull-up
 +
-+	clock_gettime(CLOCK_REALTIME, &ts);
-+	after = ts.tv_nsec + ((uint64_t)ts.tv_sec) * 1000000000;
++	dut_run gpionotify --banner --event=requested --chip $sim0 4
++	dut_flush
 +
-+	evtime += (after/2 - mono + before/2);
-+	return evtime;
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 4"
++	assert_fail dut_readable
 +}
 +
-+static void event_print_formatted(struct gpiod_info_event *event,
-+			struct line_resolver *resolver, int chip_num,
-+			struct config *cfg)
-+{
-+	struct gpiod_line_info *info;
-+	const char *lname, *prev, *curr, *consumer;
-+	char  fmt;
-+	uint64_t evtime;
-+	int evtype;
-+	unsigned int offset;
++@test "gpionotify: with released" {
++	gpiosim_chip sim0 num_lines=8
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	info = gpiod_info_event_get_line_info(event);
-+	evtime = gpiod_info_event_get_timestamp_ns(event);
-+	evtype = gpiod_info_event_get_event_type(event);
-+	offset = gpiod_line_info_get_offset(info);
++	gpiosim_set_pull sim0 4 pull-down
 +
-+	for (prev = curr = cfg->fmt;;) {
-+		curr = strchr(curr, '%');
-+		if (!curr) {
-+			fputs(prev, stdout);
-+			break;
-+		}
++	dut_run gpionotify --banner --event=released --chip $sim0 4
++	dut_flush
 +
-+		if (prev != curr)
-+			fwrite(prev, curr - prev, 1, stdout);
-+
-+		fmt = *(curr + 1);
-+
-+		switch (fmt) {
-+		case 'a':
-+			print_line_attributes(info, cfg->unquoted);
-+			break;
-+		case 'c':
-+			fputs(get_chip_name(resolver, chip_num), stdout);
-+			break;
-+		case 'C':
-+			if (!gpiod_line_info_is_used(info)) {
-+				consumer = "unused";
-+			} else {
-+				consumer = gpiod_line_info_get_consumer(info);
-+				if (!consumer)
-+					consumer = "kernel";
-+			}
-+			fputs(consumer, stdout);
-+			break;
-+		case 'e':
-+			printf("%d", evtype);
-+			break;
-+		case 'E':
-+			print_event_type(evtype);
-+			break;
-+		case 'l':
-+			lname = gpiod_line_info_get_name(info);
-+			if (!lname)
-+				lname = "unnamed";
-+			fputs(lname, stdout);
-+			break;
-+		case 'L':
-+			print_event_time(monotonic_to_realtime(evtime), 2);
-+			break;
-+		case 'o':
-+			printf("%u", offset);
-+			break;
-+		case 'S':
-+			print_event_time(evtime, 0);
-+			break;
-+		case 'U':
-+			print_event_time(monotonic_to_realtime(evtime), 1);
-+			break;
-+		case '%':
-+			fputc('%', stdout);
-+			break;
-+		case '\0':
-+			fputc('%', stdout);
-+			goto end;
-+		default:
-+			fwrite(curr, 2, 1, stdout);
-+			break;
-+		}
-+
-+		curr += 2;
-+		prev = curr;
-+	}
-+
-+end:
-+	fputc('\n', stdout);
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 4"
++	assert_fail dut_readable
 +}
 +
-+static void event_print_human_readable(struct gpiod_info_event *event,
-+			struct line_resolver *resolver, int chip_num,
-+			struct config *cfg)
-+{
-+	struct gpiod_line_info *info;
-+	uint64_t evtime;
-+	int evtype;
-+	unsigned int offset;
-+	char *evname;
++@test "gpionotify: with quiet mode" {
++	gpiosim_chip sim0 num_lines=8
 +
-+	info = gpiod_info_event_get_line_info(event);
-+	evtime = gpiod_info_event_get_timestamp_ns(event);
-+	evtype = gpiod_info_event_get_event_type(event);
-+	offset = gpiod_line_info_get_offset(info);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	switch (evtype) {
-+	case GPIOD_INFO_EVENT_LINE_REQUESTED:
-+		evname = "requested";
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_RELEASED:
-+		evname = "released";
-+		break;
-+	case GPIOD_INFO_EVENT_LINE_CONFIG_CHANGED:
-+		evname = "reconfigured";
-+		break;
-+	default:
-+		evname = "unknown";
-+	}
++	dut_run gpionotify --banner --quiet --chip $sim0 4
++	dut_flush
 +
-+	if (cfg->timestamp_fmt)
-+		evtime = monotonic_to_realtime(evtime);
-+
-+	print_event_time(evtime, cfg->timestamp_fmt);
-+	printf("\t%s\t", evname);
-+	print_line_id(resolver, chip_num, offset, cfg->chip_id, cfg->unquoted);
-+	fputc('\n', stdout);
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 4
++	assert_fail dut_readable
 +}
 +
-+static void event_print(struct gpiod_info_event *event,
-+			struct line_resolver *resolver, int chip_num,
-+			struct config *cfg)
-+{
-+	if (cfg->quiet)
-+		return;
++@test "gpionotify: with num-events" {
++	gpiosim_chip sim0 num_lines=8
 +
-+	if (cfg->fmt)
-+		event_print_formatted(event, resolver, chip_num, cfg);
-+	else
-+		event_print_human_readable(event, resolver, chip_num, cfg);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	# redirect, as gpionotify exits after 4 events
++	dut_run_redirect gpionotify --num-events=4 --chip $sim0 3 4
++
++
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 4
++	request_release_line ${GPIOSIM_CHIP_NAME[sim0]} 3
++
++	dut_wait
++	status_is 0
++	dut_read_redirect
++
++	regex_matches "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 4" "${lines[0]}"
++	regex_matches "[0-9]+\.[0-9]+\\s+released\\s+$sim0 4" "${lines[1]}"
++	regex_matches "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 3" "${lines[2]}"
++	regex_matches "[0-9]+\.[0-9]+\\s+released\\s+$sim0 3" "${lines[3]}"
++	num_lines_is 4
 +}
 +
-+int main(int argc, char **argv)
-+{
-+	int i, j, events_done = 0, evtype;
-+	struct gpiod_chip **chips;
-+	struct pollfd *pollfds;
-+	struct gpiod_chip *chip;
-+	struct line_resolver *resolver;
-+	struct gpiod_info_event *event;
-+	struct config cfg;
++@test "gpionotify: multiple lines" {
++	gpiosim_chip sim0 num_lines=8
 +
-+	i = parse_config(argc, argv, &cfg);
-+	argc -= optind;
-+	argv += optind;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	if (argc < 1)
-+		die("at least one GPIO line must be specified");
++	dut_run gpionotify --banner --chip $sim0 1 2 3 4 5
++	dut_regex_match "Watching lines .*"
 +
-+	if (argc > 64)
-+		die("too many lines given");
++	request_release_line $sim0 2
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 2"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 2"
 +
-+	resolver = resolve_lines(argc, argv, cfg.chip_id, cfg.strict,
-+				 cfg.by_name);
-+	validate_resolution(resolver, cfg.chip_id);
-+	chips = calloc(resolver->num_chips, sizeof(*chips));
-+	pollfds = calloc(resolver->num_chips, sizeof(*pollfds));
-+	if (!pollfds)
-+		die("out of memory");
++	request_release_line $sim0 3
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 3"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 3"
 +
-+	for (i = 0; i < resolver->num_chips; i++) {
-+		chip = gpiod_chip_open(resolver->chips[i].path);
-+		if (!chip)
-+			die_perror("unable to open chip '%s'",
-+				   resolver->chips[i].path);
++	request_release_line $sim0 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 4"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 4"
 +
-+		for (j = 0; j < resolver->num_lines; j++)
-+			if ((resolver->lines[j].chip_num == i) &&
-+			    !gpiod_chip_watch_line_info(
-+					chip, resolver->lines[j].offset))
-+				die_perror("unable to watch line on chip '%s'",
-+					   resolver->chips[i].path);
++	assert_fail dut_readable
++}
 +
-+		chips[i] = chip;
-+		pollfds[i].fd = gpiod_chip_get_fd(chip);
-+		pollfds[i].events = POLLIN;
-+	}
++@test "gpionotify: multiple lines by name and offset" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
 +
-+	if (cfg.banner)
-+		print_banner(argc, argv);
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
 +
-+	for (;;) {
-+		fflush(stdout);
++	dut_run gpionotify --banner --chip $sim0 bar foo 3
++	dut_regex_match "Watching lines .*"
 +
-+		if (poll(pollfds, resolver->num_chips, -1) < 0)
-+			die_perror("error polling for events");
++	request_release_line $sim0 2
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 2\\s+\"bar\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 2\\s+\"bar\""
 +
-+		for (i = 0; i < resolver->num_chips; i++) {
-+			if (pollfds[i].revents == 0)
-+				continue;
++	request_release_line $sim0 1
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 1\\s+\"foo\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 1\\s+\"foo\""
 +
-+			event = gpiod_chip_read_info_event(chips[i]);
-+			if (!event)
-+				die_perror("unable to retrieve chip event");
++	request_release_line $sim0 3
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 3"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 3"
 +
-+			if (cfg.event_type) {
-+				evtype = gpiod_info_event_get_event_type(event);
-+				if (evtype != cfg.event_type)
-+					continue;
-+			}
++	assert_fail dut_readable
++}
 +
-+			event_print(event, resolver, i, &cfg);
++@test "gpionotify: multiple lines across multiple chips" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=4:xyz
 +
-+			events_done++;
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++	local sim1=${GPIOSIM_CHIP_NAME[sim1]}
 +
-+			if (cfg.events_wanted &&
-+			    events_done >= cfg.events_wanted)
-+				goto done;
-+		}
-+	}
-+done:
-+	for (i = 0; i < resolver->num_chips; i++)
-+		gpiod_chip_close(chips[i]);
++	dut_run gpionotify --banner baz bar foo xyz
++	dut_regex_match "Watching lines .*"
 +
-+	free(chips);
-+	free_line_resolver(resolver);
++	request_release_line $sim0 2
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"bar\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"bar\""
 +
-+	return EXIT_SUCCESS;
++	request_release_line $sim0 1
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"foo\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"foo\""
++
++	request_release_line $sim1 4
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"xyz\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"xyz\""
++
++	request_release_line $sim1 0
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+\"baz\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+\"baz\""
++
++	assert_fail dut_readable
++}
++
++@test "gpionotify: exit after SIGINT" {
++	gpiosim_chip sim0 num_lines=8
++
++	dut_run gpionotify --banner --chip ${GPIOSIM_CHIP_NAME[sim0]} 4
++	dut_regex_match "Watching line .*"
++
++	dut_kill -SIGINT
++	dut_wait
++
++	status_is 130
++}
++
++@test "gpionotify: exit after SIGTERM" {
++	gpiosim_chip sim0 num_lines=8
++
++	dut_run gpionotify --banner --chip ${GPIOSIM_CHIP_NAME[sim0]} 4
++	dut_regex_match "Watching line .*"
++
++	dut_kill -SIGTERM
++	dut_wait
++
++	status_is 143
++}
++
++@test "gpionotify: with nonexistent line" {
++	run_tool gpionotify nonexistent-line
++
++	status_is 1
++	output_regex_match ".*cannot find line 'nonexistent-line'"
++}
++
++@test "gpionotify: with same line twice" {
++	gpiosim_chip sim0 num_lines=8 line_name=1:foo
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	# by offset
++	run_tool gpionotify --chip $sim0 0 0
++
++	output_regex_match ".*lines '0' and '0' are the same line"
++	num_lines_is 1
++	status_is 1
++
++	# by name
++	run_tool gpionotify foo foo
++
++	output_regex_match ".*lines 'foo' and 'foo' are the same line"
++	num_lines_is 1
++	status_is 1
++
++	# by name and offset
++	run_tool gpionotify --chip $sim0 1 foo
++
++	output_regex_match ".*lines '1' and 'foo' are the same line"
++	num_lines_is 1
++	status_is 1
++}
++
++@test "gpionotify: with strict named line check" {
++	gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar \
++				      line_name=3:foobar
++	gpiosim_chip sim1 num_lines=8 line_name=0:baz line_name=2:foobar \
++				      line_name=4:xyz line_name=7:foobar
++	gpiosim_chip sim2 num_lines=16
++
++	run_tool gpionotify --strict foobar
++
++	output_regex_match ".*line 'foobar' is not unique"
++	status_is 1
++}
++
++@test "gpionotify: with lines by offset" {
++	# not suggesting this setup makes any sense
++	# - just test that we can deal with it
++	gpiosim_chip sim0 num_lines=8 line_name=1:6 line_name=6:1
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --chip $sim0 1
++	dut_flush
++
++	request_release_line $sim0 1
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 1"
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 1"
++
++	request_release_line $sim0 6
++
++	assert_fail dut_readable
++}
++
++@test "gpionotify: with lines strictly by name" {
++	# not suggesting this setup makes any sense
++	# - just test that we can deal with it
++	gpiosim_chip sim0 num_lines=8 line_name=1:6 line_name=6:1
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --by-name --chip $sim0 1
++	dut_flush
++
++	request_release_line $sim0 6
++	dut_regex_match "[0-9]+\.[0-9]+\\s+requested\\s+$sim0 6 \"1\""
++	dut_regex_match "[0-9]+\.[0-9]+\\s+released\\s+$sim0 6 \"1\""
++
++	request_release_line $sim0 1
++	assert_fail dut_readable
++}
++
++@test "gpionotify: with no arguments" {
++	run_tool gpionotify
++
++	output_regex_match ".*at least one GPIO line must be specified"
++	status_is 1
++}
++
++@test "gpionotify: with no line specified" {
++	gpiosim_chip sim0 num_lines=8
++
++	run_tool gpionotify --chip ${GPIOSIM_CHIP_NAME[sim0]}
++
++	output_regex_match ".*at least one GPIO line must be specified"
++	status_is 1
++}
++
++@test "gpionotify: with offset out of range" {
++	gpiosim_chip sim0 num_lines=4
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	run_tool gpionotify --chip $sim0 5
++
++	output_regex_match ".*offset 5 is out of range on chip '$sim0'"
++	status_is 1
++}
++
++@test "gpionotify: with custom format (event type + offset)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%e %o" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "1 4"
++}
++
++@test "gpionotify: with custom format (event type + offset joined)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%e%o" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "14"
++}
++
++@test "gpionotify: with custom format (event, chip and line)" {
++	gpiosim_chip sim0 num_lines=8 line_name=4:baz
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=released \
++		"--format=%e %o %E %c %l" -c $sim0 baz
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_regex_match "2 4 released $sim0 baz"
++}
++
++@test "gpionotify: with custom format (seconds timestamp)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%e %o %S" \
++		-c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_regex_match "1 4 [0-9]+\\.[0-9]+"
++}
++
++@test "gpionotify: with custom format (UTC timestamp)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=released \
++		"--format=%U %e %o" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_regex_match \
++"[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9]\\.[0-9]+Z 2 4"
++}
++
++@test "gpionotify: with custom format (localtime timestamp)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=released \
++		"--format=%L %e %o" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_regex_match \
++"[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]T[0-2][0-9]:[0-5][0-9]:[0-5][0-9]\\.[0-9]+ 2 4"
++}
++
++@test "gpionotify: with custom format (double percent sign)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=start%%end" \
++		-c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "start%end"
++}
++
++@test "gpionotify: with custom format (double percent sign + event type specifier)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%%e" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "%e"
++}
++
++@test "gpionotify: with custom format (single percent sign)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "%"
++}
++
++@test "gpionotify: with custom format (single percent sign between other characters)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=foo % bar" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "foo % bar"
++}
++
++@test "gpionotify: with custom format (unknown specifier)" {
++	gpiosim_chip sim0 num_lines=8
++
++	local sim0=${GPIOSIM_CHIP_NAME[sim0]}
++
++	dut_run gpionotify --banner --event=requested "--format=%x" -c $sim0 4
++	dut_flush
++
++	request_release_line $sim0 4
++	dut_read
++	output_is "%x"
 +}
 -- 
 2.38.1
