@@ -2,179 +2,401 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC96C6294DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 10:53:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A52D8629541
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 11:07:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238224AbiKOJx4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 04:53:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45232 "EHLO
+        id S230017AbiKOKHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 05:07:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237819AbiKOJxv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 04:53:51 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 54538110F;
-        Tue, 15 Nov 2022 01:53:29 -0800 (PST)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8DxndqYYXNjgjcHAA--.21645S3;
-        Tue, 15 Nov 2022 17:53:28 +0800 (CST)
-Received: from [10.180.13.64] (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxr+CWYXNjUoUTAA--.52636S2;
-        Tue, 15 Nov 2022 17:53:28 +0800 (CST)
-Subject: Re: [PATCH v2 1/2] gpio: loongson: add dts/acpi gpio support
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, zhuyinbo@loongson.cn,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        lvjianmin <lvjianmin@loongson.cn>,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>
-References: <20221114095332.21079-1-zhuyinbo@loongson.cn>
- <CAMRc=McnEiSj1Q51pG3Lc8e+HcXE_uU7dm=1VoOa__xOgyoZPg@mail.gmail.com>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <8b24e3df-8c22-bd09-cfc1-b27e39a05c25@loongson.cn>
-Date:   Tue, 15 Nov 2022 17:53:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S229818AbiKOKG5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 05:06:57 -0500
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A573BDE0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 02:06:55 -0800 (PST)
+Received: by mail-wm1-x32c.google.com with SMTP id v7so9328560wmn.0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 02:06:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r6J2lsA0Wo197QAgdKxOXmtdQ23amoC9lDrXaGdR/FQ=;
+        b=RXsBzvZsf7KCOSfh2YF3gb4x2ca7GWci0hQ80sX9RbhHT0CwRxVHX3aQ7JsEYsP4yJ
+         U/xYGh3/K7RWX/Z4mMJ+P8hRuq9piViCBeOjdPvIrG00e24ltWTKqHjhdFyCT+h6rLXG
+         fKrOM0rLMIUVZ1SbWNsBTIgFd3iWhwHGynymr64zu6Zn+QS1pV8R9VuKDQ05Bce/aOzj
+         T8g5Aj1qx4lWXp75KkZSs8T50h6iNEXF8hA5NdjSIwy28GcOXsSeT6fkwCR1znmNI5cb
+         ZISNz96aGCWleN8yu/LTUdO0tlUNSIdQ0SSulTXnI4KTrzIUzsQTVvZujhy5N2IBc2Qf
+         oNgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r6J2lsA0Wo197QAgdKxOXmtdQ23amoC9lDrXaGdR/FQ=;
+        b=TrrPqdNxTtyHQm9x7lTMgrYXr4ZLJOPBGIsCT6vreBB2n0YUY9SIxndcQ3wTsKF1fZ
+         pjFEhZAtq9Yox1K1gRTtSGfX2ZEcGW/VUyzScPzD8RHzAFb2VCRYpKjczmjIOXT6UVbX
+         BP3WI0WuhNDdF1+TXbrP1fquA/uxEJU0QWZ+7ITn4/nzZEpR1x8vhdXAuLv1TMpmnYOn
+         Y8CH/C+njt9dLphDWx3G0R9JbIx+H2OGYAGr+dxo5J50pzAeSmejxOxH7soJr8eKePUZ
+         5RDqE9Cuktthyo0TVAvvnESwle7SHCMA6v83oe0TG8NviasEwfqlZPk68o2B9n2ZHAU6
+         l63w==
+X-Gm-Message-State: ANoB5pk4hetwT4uxxExsMIANUwQ4GT4PESAmm7iuELje2HlV15LAJgrI
+        5tFnQgNK7G5Xkkk0e3o2y6NKZRNDVaLAHQ==
+X-Google-Smtp-Source: AA0mqf60kkOnsL2coIZUUusLLQoO8xcZuEF7Ejs909LN8vxM5+59flaYZZSPiG41TJq6qWFXdwGk3w==
+X-Received: by 2002:a05:600c:3b27:b0:3cf:6263:bfc5 with SMTP id m39-20020a05600c3b2700b003cf6263bfc5mr196888wms.137.1668506814125;
+        Tue, 15 Nov 2022 02:06:54 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id o7-20020a05600c4fc700b003a6125562e1sm16199370wmq.46.2022.11.15.02.06.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 02:06:53 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Tue, 15 Nov 2022 11:06:47 +0100
+Subject: [PATCH v3] dt-bindings: pinctrl: convert semtech,sx150xq bindings to
+ dt-schema
 MIME-Version: 1.0
-In-Reply-To: <CAMRc=McnEiSj1Q51pG3Lc8e+HcXE_uU7dm=1VoOa__xOgyoZPg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dxr+CWYXNjUoUTAA--.52636S2
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWr1UWFW5AF1fZw1DWw43trb_yoWrXFykpF
-        nxAa93KF48Kry7Crn8J348ur13A395KrnFqF4fJ34jkryDW34kZr1DGF15ZF4xGr4FvFyj
-        qFy8Kr48WFs8ur7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bDkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
-        52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-        80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
-        c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-        0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-        c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
-        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8k-BtUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Message-Id: <20221005-mdm9615-sx1509q-yaml-v3-0-e8b349eb1900@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        linux-gpio@vger.kernel.org
+X-Mailer: b4 0.10.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+This converts the Semtech SX150Xq bindings to dt-schemas, add necessary
+bindings documentation to cover all differences between HW variants
+and current bindings usage.
 
+Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+To: Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+Changes in v3:
+- Resent with missing To: Linus Walleij
+- Link to v2: https://lore.kernel.org/r/20221005-mdm9615-sx1509q-yaml-v2-0-a4a5b8eecc7b@linaro.org
 
-在 2022/11/15 下午5:05, Bartosz Golaszewski 写道:
-> On Mon, Nov 14, 2022 at 10:53 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>
->> The latest Loongson series platform use dts or acpi framework to
->> register gpio device resources, such as the Loongson-2 series
->> SoC of LOONGARCH architecture. In order to support dts, acpi and
->> compatibility with previous platform device resources in driver,
->> this patch was added.
->>
->> Signed-off-by: lvjianmin <lvjianmin@loongson.cn>
->> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
->> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
->> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
->> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->> ---
->> Change in v2:
->>                  1. Fixup of_loongson_gpio_get_props and remove the parse logic about
->>                     "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
->>                     "loongson,gpio_base", "loongson,support_irq" then kernel driver will
->>                     initial them that depend compatible except "loongson,gpio_base".
->>
->>   arch/loongarch/include/asm/loongson.h         |  13 +
->>   .../include/asm/mach-loongson2ef/loongson.h   |  12 +
->>   .../include/asm/mach-loongson64/loongson.h    |  13 +
->>   drivers/gpio/Kconfig                          |   6 +-
->>   drivers/gpio/gpio-loongson.c                  | 422 +++++++++++++++---
->>   5 files changed, 391 insertions(+), 75 deletions(-)
->>
->> diff --git a/arch/loongarch/include/asm/loongson.h b/arch/loongarch/include/asm/loongson.h
->> index 00db93edae1b..383fdda155f0 100644
->> --- a/arch/loongarch/include/asm/loongson.h
->> +++ b/arch/loongarch/include/asm/loongson.h
->> @@ -60,6 +60,19 @@ static inline void xconf_writeq(u64 val64, volatile void __iomem *addr)
->>          );
->>   }
->>
->> +/* ============== Data structrues =============== */
->> +
->> +/* gpio data */
->> +struct platform_gpio_data {
->> +       u32 gpio_conf;
->> +       u32 gpio_out;
->> +       u32 gpio_in;
->> +       u32 support_irq;
->> +       char *label;
->> +       int gpio_base;
->> +       int ngpio;
->> +};
-> 
-> This is a terrible name for an exported structure. You would at least
-> need some kind of a namespace prefix. But even then the need to add a
-> platform data structure is very questionable. We've moved past the
-> need for platform data in the kernel. I don't see anyone setting it up
-> in this series either. Could you provide more explanation on why you
-> would need it and who would use it?
-okay, I will add a namespace prefix, about this platform data was added
-that was to compatible with legacy platforms that do not support dts or
-acpi, then, the mips loongson platform or loongarch loongson platform
-can implement the gpio device driver to initialize the
-platform_gpio_data structure as needed after exporting the structure.
-> 
->> +
->>   /* ============== LS7A registers =============== */
->>   #define LS7A_PCH_REG_BASE              0x10000000UL
->>   /* LPC regs */
->> diff --git a/arch/mips/include/asm/mach-loongson2ef/loongson.h b/arch/mips/include/asm/mach-loongson2ef/loongson.h
->> index ca039b8dcde3..b261cea4fee1 100644
->> --- a/arch/mips/include/asm/mach-loongson2ef/loongson.h
->> +++ b/arch/mips/include/asm/mach-loongson2ef/loongson.h
->> @@ -315,4 +315,16 @@ extern unsigned long _loongson_addrwincfg_base;
->>
->>   #endif /* ! CONFIG_CPU_SUPPORTS_ADDRWINCFG */
->>
->> +/* ============== Data structrues =============== */
->> +
->> +/* gpio data */
->> +struct platform_gpio_data {
->> +       u32 gpio_conf;
->> +       u32 gpio_out;
->> +       u32 gpio_in;
->> +       u32 support_irq;
->> +       char *label;
->> +       int gpio_base;
->> +       int ngpio;
->> +};
-> 
-> No idea why you would need to duplicate it like this either. And why
-> put it in arch/.
-because loongson platform include mips and loongarch, and the gpio 
-device data was defined in arch/ in leagcy loongson gpio driver.  so the
-latest loongson gpio drvier add platform_gpio_data in same dir.
-> 
-> [snip]
-> 
-> I will hold off reviewing the rest of the patch until we get that clarified.
-> 
-> Bartosz
-> 
+Changes in v2:
+- fixed rob comments
+- added rob's Reviewed-by
+- Link to v1: https://lore.kernel.org/r/20221005-mdm9615-sx1509q-yaml-v1-0-0c26649b637c@linaro.org
+---
+ .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |  72 -------
+ .../bindings/pinctrl/semtech,sx1501q.yaml          | 208 +++++++++++++++++++++
+ 2 files changed, 208 insertions(+), 72 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
+deleted file mode 100644
+index 4023bad2fe39..000000000000
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
++++ /dev/null
+@@ -1,72 +0,0 @@
+-SEMTECH SX150x GPIO expander bindings
+-
+-Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
+-../interrupt-controller/interrupts.txt for generic information regarding
+-pin controller, GPIO, and interrupt bindings.
+-
+-Required properties:
+-- compatible: should be one of :
+-			"semtech,sx1501q",
+-			"semtech,sx1502q",
+-			"semtech,sx1503q",
+-			"semtech,sx1504q",
+-			"semtech,sx1505q",
+-			"semtech,sx1506q",
+-			"semtech,sx1507q",
+-			"semtech,sx1508q",
+-			"semtech,sx1509q".
+-
+-- reg: The I2C slave address for this device.
+-
+-- #gpio-cells: Should be 2. The first cell is the GPIO number and the
+-		second cell is used to specify optional parameters:
+-		bit 0: polarity (0: normal, 1: inverted)
+-
+-- gpio-controller: Marks the device as a GPIO controller.
+-
+-Optional properties :
+-- interrupts: Interrupt specifier for the controllers interrupt.
+-
+-- interrupt-controller: Marks the device as a interrupt controller.
+-
+-- semtech,probe-reset: Will trigger a reset of the GPIO expander on probe,
+-		only for sx1507q, sx1508q and sx1509q
+-
+-The GPIO expander can optionally be used as an interrupt controller, in
+-which case it uses the default two cell specifier.
+-
+-Required properties for pin configuration sub-nodes:
+- - pins: List of pins to which the configuration applies.
+-
+-Optional properties for pin configuration sub-nodes:
+-----------------------------------------------------
+- - bias-disable: disable any pin bias, except the OSCIO pin
+- - bias-pull-up: pull up the pin, except the OSCIO pin
+- - bias-pull-down: pull down the pin, except the OSCIO pin
+- - bias-pull-pin-default: use pin-default pull state, except the OSCIO pin
+- - drive-push-pull: drive actively high and low
+- - drive-open-drain: drive with open drain only for sx1507q, sx1508q and sx1509q and except the OSCIO pin
+- - output-low: set the pin to output mode with low level
+- - output-high: set the pin to output mode with high level
+-
+-Example:
+-
+-	i2c0gpio-expander@20{
+-		#gpio-cells = <2>;
+-		#interrupt-cells = <2>;
+-		compatible = "semtech,sx1506q";
+-		reg = <0x20>;
+-		interrupt-parent = <&gpio_1>;
+-		interrupts = <16 0>;
+-
+-		gpio-controller;
+-		interrupt-controller;
+-
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&gpio1_cfg_pins>;
+-
+-		gpio1_cfg_pins: gpio1-cfg {
+-			pins = "gpio1";
+-			bias-pull-up;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
+new file mode 100644
+index 000000000000..df429a396ba3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
+@@ -0,0 +1,208 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright 2022 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pinctrl/semtech,sx1501q.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech SX150x GPIO expander
++
++maintainers:
++  - Neil Armstrong <neil.armstrong@linaro.org>
++
++properties:
++  compatible:
++    enum:
++      - semtech,sx1501q
++      - semtech,sx1502q
++      - semtech,sx1503q
++      - semtech,sx1504q
++      - semtech,sx1505q
++      - semtech,sx1506q
++      - semtech,sx1507q
++      - semtech,sx1508q
++      - semtech,sx1509q
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#interrupt-cells':
++    const: 2
++
++  interrupt-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++  gpio-controller: true
++
++  semtech,probe-reset:
++    description: Will trigger a reset of the GPIO expander on probe
++    type: boolean
++
++patternProperties:
++  '-cfg$':
++    type: object
++    properties:
++      pins: true
++
++      bias-disable: true
++      bias-pull-up: true
++      bias-pull-down: true
++      bias-pull-pin-default: true
++      drive-push-pull: true
++      output-low: true
++      output-high: true
++      drive-open-drain: true
++
++    required:
++      - pins
++
++    allOf:
++      - $ref: "pincfg-node.yaml#"
++      - $ref: "pinmux-node.yaml#"
++      - if:
++          properties:
++            pins:
++              contains:
++                const: oscio
++        then:
++          properties:
++            bias-disable: false
++            bias-pull-up: false
++            bias-pull-down: false
++            bias-pull-pin-default: false
++            drive-open-drain: false
++
++    additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - '#gpio-cells'
++  - gpio-controller
++
++allOf:
++  - $ref: "pinctrl.yaml#"
++  - if:
++      not:
++        properties:
++          compatible:
++            contains:
++              enum:
++                - semtech,sx1507q
++                - semtech,sx1508q
++                - semtech,sx1509q
++    then:
++      properties:
++        semtech,probe-reset: false
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - semtech,sx1501q
++              - semtech,sx1504q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^gpio[0-3]$'
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - semtech,sx1502q
++              - semtech,sx1505q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^gpio[0-7]$'
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - semtech,sx1503q
++              - semtech,sx1506q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^gpio[0-15]$'
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: semtech,sx1507q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^(oscio|gpio[0-3])$'
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: semtech,sx1508q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^(oscio|gpio[0-7])$'
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: semtech,sx1509q
++    then:
++      patternProperties:
++        '-cfg$':
++          properties:
++            pins:
++              items:
++                pattern: '^(oscio|gpio[0-15])$'
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    i2c@1000 {
++        reg = <0x1000 0x80>;
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        pinctrl@20 {
++            compatible = "semtech,sx1501q";
++            reg = <0x20>;
++
++            #gpio-cells = <2>;
++            #interrupt-cells = <2>;
++
++            interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
++
++            gpio-controller;
++            interrupt-controller;
++
++            gpio1-cfg {
++                  pins = "gpio1";
++                  bias-pull-up;
++            };
++        };
++    };
+
+---
+base-commit: 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
+change-id: 20221005-mdm9615-sx1509q-yaml-7cfabf896fff
+
+Best regards,
+-- 
+Neil Armstrong <neil.armstrong@linaro.org>
