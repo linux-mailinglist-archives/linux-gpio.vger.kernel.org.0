@@ -2,91 +2,239 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C347D6299AE
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 14:09:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAEAF629A9B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 14:36:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbiKONI7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 08:08:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
+        id S229915AbiKONgN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 08:36:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbiKONI6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 08:08:58 -0500
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6C211A
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 05:08:52 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id c26so4903900uak.5
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 05:08:52 -0800 (PST)
+        with ESMTP id S229814AbiKONgM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 08:36:12 -0500
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92B40FD0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 05:36:11 -0800 (PST)
+Received: by mail-ua1-x92d.google.com with SMTP id w2so3026914uap.1
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 05:36:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=94QXdC69iZv8lNQZuFyoludJBk+DvDEJu1OgD60oB8w=;
-        b=1ApRXucfeUcaea+IGxJPyJyI/c+pccNcVMIcpxnIBvLEIyJmCQ2CFZR9E73oRBw6ey
-         NpDSeYgVy6anRqNs5IPLLJTUornf8ENxE/X2ifRWI+i94J2dGFzRD60gwc22vMsJLzi3
-         EMgCuJ+s6DgaPxk0qw+7IVxvj6JZvLeoFP7Pg0vQjWcOsP35zJ657aGW5dE/kqH9Sb+D
-         exD0TRCpkg60FvITTXc8xJ/AtRh4e27schjCDW6q1O6yQdNfrY+NeYx+Z2RTI7ir7Idh
-         F6teXXjK3Cfc8VrKe7O8E+1OJfjQzzir8ssbEDKXhVV2j4m+hWPBwbJPRWjR7UoTREPT
-         p80A==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U7mTdtGmnKT1l4rqdyKapBUF4iLXmO0p5rKdEhhg63U=;
+        b=Tg69myXMlgXVtWUU1D5S5CfsA2sHtrEFASYjM3Hh2ugynyxm4UDnoXacIiTDLXGu8K
+         N3qNP+RJN4u1X5cZbKCrh6w3gBErjlcfXs0sF0y+tfIvq1hpy0vGAQO7bMrz4LRhzq2m
+         triyXAiiJB5E+LCOn4cigI2zeNHff/2UFdV9wcU7SUdJStthca1sjQPONzuIXKwwtNqB
+         +9EJ+gbMWnHSQZU2kSkdW5j+69av11QBjBzRsw7lYw/PkPqvbg8tMKNJ0FPTNwD9Ax2X
+         lV6EhWlFc6MYlMW3l+fpkMAYxUj4JjCza10rMwdlfzI7bJKbHjT5NSmUZ826E6oC3XCc
+         0tZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=94QXdC69iZv8lNQZuFyoludJBk+DvDEJu1OgD60oB8w=;
-        b=Rql889O+PUiwjlp4qlSByIU7LgMvbnS1uy7MAWMJicUkAKSzCFT4YbntoR/z9FIqIY
-         boz+302GSTmICCYpWOoE0lPurI5QjDZx1sHGObmRe3gTgO36I71BloyosrwvP21breEy
-         MCw8T43DR+9hfNyFSZJuJO1CZ9bCF9ECG4gio9F5aICpB0N5BJranzYixNvtrV9cpGSu
-         L3klM2qffdCb0U6KlX0tV58WXEBKP4AG5jsFZqOW90j8l/wlph9rNI4BS/JiRVqbyQoU
-         sSutJHFrI/SvD/xCePyHyDforbYXes4K2pI8qJJrOkMw4/AkyWM+0ex1Te8q2RWVYHMz
-         XLOg==
-X-Gm-Message-State: ANoB5pmew1hXX32SF9Hv/97sPNvdwdlZs4UwNWDsdDmsmjIo0hHYboWf
-        rSvd0es7BPMv4JAg/h7q1A5ZPHQ9qlC+cGH3JkFY+zMmwTA=
-X-Google-Smtp-Source: AA0mqf7fbosupX6wqBPVx7ZMSuSjP7tHZis95ZH6xGGC2FyR0lNTzEeqScFgiIsrJFUpfnm23IfsZz2KreW5KE1WxUY=
-X-Received: by 2002:ab0:1044:0:b0:415:715c:1e70 with SMTP id
- g4-20020ab01044000000b00415715c1e70mr9412580uab.81.1668517731792; Tue, 15 Nov
- 2022 05:08:51 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U7mTdtGmnKT1l4rqdyKapBUF4iLXmO0p5rKdEhhg63U=;
+        b=DjdECcZbibU7r9Rwd6szsr8uvZ9p7QFan3/k57W9yZo1zEPbk6Tx3DpZxDmlhfWpWH
+         UfKVH5egFkuxsDjr9S6R957itTK/T+1a19Y0S9ovS/cLle5hXFoafJJ6rQez5fRfr3dy
+         wbJrQ2woSkfw6nnKHg6wvC4oTr3NNteNZCue0jeYfyjvK7P74dqMLKWlZCegPMTgYh/R
+         kCwAsVgZlcxgRfyyVhPVlbwszACCRezPgPxd5Ag08IBlVSTBOwn90FW0O7S5F0q12d+P
+         yCn84PcZ/L++lZhOAbzoymEq154vYUsIbCymfRjFSwqOo3FZ55HLpdpSreKBg4q4R+Jg
+         8nOQ==
+X-Gm-Message-State: ANoB5plcAlrhKfiLXyPlGYvCi9WCsfIXHNx/n+Nynqzxk6Bl3XP9/j4X
+        SGQ8as6Uk+oKbtS2hUrMpyc7lmVMvHAFApXLIK1mTQ==
+X-Google-Smtp-Source: AA0mqf5DpPJ1UK4Q211u76/jWWRWitTx4shgsyTa5wMd5qmYtp/mR9opW5GexXaqFResUisdhUK+OUTg1mqUDaFVPTI=
+X-Received: by 2002:ab0:15b2:0:b0:418:7beb:6f42 with SMTP id
+ i47-20020ab015b2000000b004187beb6f42mr4857776uae.92.1668519367898; Tue, 15
+ Nov 2022 05:36:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20221114040102.66031-1-warthog618@gmail.com> <20221114040102.66031-4-warthog618@gmail.com>
-In-Reply-To: <20221114040102.66031-4-warthog618@gmail.com>
+References: <20221114095332.21079-1-zhuyinbo@loongson.cn> <CAMRc=McnEiSj1Q51pG3Lc8e+HcXE_uU7dm=1VoOa__xOgyoZPg@mail.gmail.com>
+ <8b24e3df-8c22-bd09-cfc1-b27e39a05c25@loongson.cn> <fd5cc541-dfc6-d1cf-0865-669b11ce2e7a@xen0n.name>
+ <9a448680-0bb6-c4f0-93d2-29a86fede2d4@loongson.cn>
+In-Reply-To: <9a448680-0bb6-c4f0-93d2-29a86fede2d4@loongson.cn>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 15 Nov 2022 14:08:40 +0100
-Message-ID: <CAMRc=MeSr9EA4dj1J3b-UoGqo7S-Es144pyTqG6-P1xpV2W14w@mail.gmail.com>
-Subject: Re: [libgpiod v2][PATCH v4 3/5] tools: tests for line name focussed rework
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
+Date:   Tue, 15 Nov 2022 14:35:56 +0100
+Message-ID: <CAMRc=McQ-_3rmHFMW_f+oscuEi+18OJHYz7jBFLm_fh2qA1EHw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: loongson: add dts/acpi gpio support
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     WANG Xuerui <kernel@xen0n.name>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Bibo Mao <maobibo@loongson.cn>,
+        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        Arnaud Patard <apatard@mandriva.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        lvjianmin <lvjianmin@loongson.cn>,
+        zhanghongchen <zhanghongchen@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 5:01 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Tue, Nov 15, 2022 at 2:07 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
 >
-> Rework the tools tests and expand to cover new functionality.
 >
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  tools/gpio-tools-test      |    3 -
->  tools/gpio-tools-test.bats | 2369 ++++++++++++++++++++++++++++++++++--
->  2 files changed, 2284 insertions(+), 88 deletions(-)
 >
-> diff --git a/tools/gpio-tools-test b/tools/gpio-tools-test
-> index 234f9bd..1a012dc 100755
-> --- a/tools/gpio-tools-test
-> +++ b/tools/gpio-tools-test
-> @@ -37,9 +37,6 @@ check_prog() {
->  # Check all required non-coreutils tools
->  check_prog bats
->  check_prog modprobe
-> -check_prog rmmod
-> -check_prog udevadm
-> -check_prog timeout
+> =E5=9C=A8 2022/11/15 =E4=B8=8B=E5=8D=886:17, WANG Xuerui =E5=86=99=E9=81=
+=93:
+> > Sorry for jumping in, but...
+> >
+> > On 2022/11/15 17:53, Yinbo Zhu wrote:
+> >>
+> >>
+> >> =E5=9C=A8 2022/11/15 =E4=B8=8B=E5=8D=885:05, Bartosz Golaszewski =E5=
+=86=99=E9=81=93:
+> >>> On Mon, Nov 14, 2022 at 10:53 AM Yinbo Zhu <zhuyinbo@loongson.cn> wro=
+te:
+> >>>>
+> >>>> The latest Loongson series platform use dts or acpi framework to
+> >>>> register gpio device resources, such as the Loongson-2 series
+> >>>> SoC of LOONGARCH architecture. In order to support dts, acpi and
+> >>>> compatibility with previous platform device resources in driver,
+> >>>> this patch was added.
+> >>>>
+> >>>> Signed-off-by: lvjianmin <lvjianmin@loongson.cn>
+> >>>> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
+> >>>> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
+> >>>> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> >>>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+> >>>> ---
+> >>>> Change in v2:
+> >>>>                  1. Fixup of_loongson_gpio_get_props and remove the
+> >>>> parse logic about
+> >>>>                     "loongson,conf_offset", "loongson,out_offset",
+> >>>> "loongson,in_offset",
+> >>>>                     "loongson,gpio_base", "loongson,support_irq"
+> >>>> then kernel driver will
+> >>>>                     initial them that depend compatible except
+> >>>> "loongson,gpio_base".
+> >>>>
+> >>>>   arch/loongarch/include/asm/loongson.h         |  13 +
+> >>>>   .../include/asm/mach-loongson2ef/loongson.h   |  12 +
+> >>>>   .../include/asm/mach-loongson64/loongson.h    |  13 +
+> >>>>   drivers/gpio/Kconfig                          |   6 +-
+> >>>>   drivers/gpio/gpio-loongson.c                  | 422
+> >>>> +++++++++++++++---
+> >>>>   5 files changed, 391 insertions(+), 75 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/loongarch/include/asm/loongson.h
+> >>>> b/arch/loongarch/include/asm/loongson.h
+> >>>> index 00db93edae1b..383fdda155f0 100644
+> >>>> --- a/arch/loongarch/include/asm/loongson.h
+> >>>> +++ b/arch/loongarch/include/asm/loongson.h
+> >>>> @@ -60,6 +60,19 @@ static inline void xconf_writeq(u64 val64,
+> >>>> volatile void __iomem *addr)
+> >>>>          );
+> >>>>   }
+> >>>>
+> >>>> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Data structrues =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> >>>> +
+> >>>> +/* gpio data */
+> >>>> +struct platform_gpio_data {
+> >>>> +       u32 gpio_conf;
+> >>>> +       u32 gpio_out;
+> >>>> +       u32 gpio_in;
+> >>>> +       u32 support_irq;
+> >>>> +       char *label;
+> >>>> +       int gpio_base;
+> >>>> +       int ngpio;
+> >>>> +};
+> >>>
+> >>> This is a terrible name for an exported structure. You would at least
+> >>> need some kind of a namespace prefix. But even then the need to add a
+> >>> platform data structure is very questionable. We've moved past the
+> >>> need for platform data in the kernel. I don't see anyone setting it u=
+p
+> >>> in this series either. Could you provide more explanation on why you
+> >>> would need it and who would use it?
+> >> okay, I will add a namespace prefix, about this platform data was adde=
+d
+> >> that was to compatible with legacy platforms that do not support dts o=
+r
+> >> acpi, then, the mips loongson platform or loongarch loongson platform
+> >
+> > Why are you trying to support "legacy" LoongArch platforms when the
+> > architecture was just upstreamed *this year*?
+> the leagacy gpio driver had support LoongArch, and you can find some
+> gpio register defined in arch/loongarch/include
+> /asm/loongson.h in legacy gpio driver, such as LOONGSON_GPIODATA,
+> The legacy gpio driver is the driver that doesn't include my gpio patch.
+> >
+> >> can implement the gpio device driver to initialize the
+> >> platform_gpio_data structure as needed after exporting the structure.
+> >>>
+> >>>> +
+> >>>>   /* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D LS7A registers =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> >>>>   #define LS7A_PCH_REG_BASE              0x10000000UL
+> >>>>   /* LPC regs */
+> >>>> diff --git a/arch/mips/include/asm/mach-loongson2ef/loongson.h
+> >>>> b/arch/mips/include/asm/mach-loongson2ef/loongson.h
+> >>>> index ca039b8dcde3..b261cea4fee1 100644
+> >>>> --- a/arch/mips/include/asm/mach-loongson2ef/loongson.h
+> >>>> +++ b/arch/mips/include/asm/mach-loongson2ef/loongson.h
+> >>>> @@ -315,4 +315,16 @@ extern unsigned long _loongson_addrwincfg_base;
+> >>>>
+> >>>>   #endif /* ! CONFIG_CPU_SUPPORTS_ADDRWINCFG */
+> >>>>
+> >>>> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D Data structrues =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> >>>> +
+> >>>> +/* gpio data */
+> >>>> +struct platform_gpio_data {
+> >>>> +       u32 gpio_conf;
+> >>>> +       u32 gpio_out;
+> >>>> +       u32 gpio_in;
+> >>>> +       u32 support_irq;
+> >>>> +       char *label;
+> >>>> +       int gpio_base;
+> >>>> +       int ngpio;
+> >>>> +};
+> >>>
+> >>> No idea why you would need to duplicate it like this either. And why
+> >>> put it in arch/.
+> >> because loongson platform include mips and loongarch, and the gpio
+> >> device data was defined in arch/ in leagcy loongson gpio driver.  so t=
+he
+> >> latest loongson gpio drvier add platform_gpio_data in same dir.
+> >
+> > I think at this point it's hopefully clear, that the way forward to
+> > supporting Loongson IP blocks shared between MIPS/LoongArch SoCs is to
+> > start over and do things properly, making the code as platform-agnostic
+> > as possible. Just make sure the drivers can get initialized via DT and
+> > ACPI then you're all set -- the upstream kernel is guaranteed to use on=
+e
+> > of the two well-established boot flows for every Loongson chip it
+> > supports. Be it hard-coded DT in arch/mips/boot/dts/loongson, or the
+> > LoongArch ACPI/upcoming DT, no need for hard-coding things in arch/ in
+> > either case.
+> Our old platforms are used by customers, but we will not maintain those
+> platforms. Adding dts/acpi support to those old platforms not only makes
+> no sense, but also affects their use. Because the configuration of
+> dts/acpi requires the support of the firmware team, but in fact, we have
+> no one to maintain those old platforms.
+>
+> in a words, My patch to upstream was supposed to consider dts/acpi in
+> LoongArch platform  But I have to consider the original legacy gpio
+> driver and to compatible with it.
 
-We do use timeout in the test-suite even after your changes so I'll
-keep this line.
+Which legacy driver are you referring to? Neither gpio-loongson nor
+gpio-loongson1 define any platform data. If it wasn't needed before
+then it's sure we won't be adding it in 2022. If you have board-files
+upstream that need to use this driver then you can do fine with
+regular device properties.
 
-Bart
+Bartosz
