@@ -2,401 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A52D8629541
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 11:07:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C1FD629540
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 11:06:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbiKOKHL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 05:07:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
+        id S229751AbiKOKGy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 05:06:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229818AbiKOKG5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 05:06:57 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A573BDE0
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 02:06:55 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id v7so9328560wmn.0
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 02:06:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=r6J2lsA0Wo197QAgdKxOXmtdQ23amoC9lDrXaGdR/FQ=;
-        b=RXsBzvZsf7KCOSfh2YF3gb4x2ca7GWci0hQ80sX9RbhHT0CwRxVHX3aQ7JsEYsP4yJ
-         U/xYGh3/K7RWX/Z4mMJ+P8hRuq9piViCBeOjdPvIrG00e24ltWTKqHjhdFyCT+h6rLXG
-         fKrOM0rLMIUVZ1SbWNsBTIgFd3iWhwHGynymr64zu6Zn+QS1pV8R9VuKDQ05Bce/aOzj
-         T8g5Aj1qx4lWXp75KkZSs8T50h6iNEXF8hA5NdjSIwy28GcOXsSeT6fkwCR1znmNI5cb
-         ZISNz96aGCWleN8yu/LTUdO0tlUNSIdQ0SSulTXnI4KTrzIUzsQTVvZujhy5N2IBc2Qf
-         oNgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=r6J2lsA0Wo197QAgdKxOXmtdQ23amoC9lDrXaGdR/FQ=;
-        b=TrrPqdNxTtyHQm9x7lTMgrYXr4ZLJOPBGIsCT6vreBB2n0YUY9SIxndcQ3wTsKF1fZ
-         pjFEhZAtq9Yox1K1gRTtSGfX2ZEcGW/VUyzScPzD8RHzAFb2VCRYpKjczmjIOXT6UVbX
-         BP3WI0WuhNDdF1+TXbrP1fquA/uxEJU0QWZ+7ITn4/nzZEpR1x8vhdXAuLv1TMpmnYOn
-         Y8CH/C+njt9dLphDWx3G0R9JbIx+H2OGYAGr+dxo5J50pzAeSmejxOxH7soJr8eKePUZ
-         5RDqE9Cuktthyo0TVAvvnESwle7SHCMA6v83oe0TG8NviasEwfqlZPk68o2B9n2ZHAU6
-         l63w==
-X-Gm-Message-State: ANoB5pk4hetwT4uxxExsMIANUwQ4GT4PESAmm7iuELje2HlV15LAJgrI
-        5tFnQgNK7G5Xkkk0e3o2y6NKZRNDVaLAHQ==
-X-Google-Smtp-Source: AA0mqf60kkOnsL2coIZUUusLLQoO8xcZuEF7Ejs909LN8vxM5+59flaYZZSPiG41TJq6qWFXdwGk3w==
-X-Received: by 2002:a05:600c:3b27:b0:3cf:6263:bfc5 with SMTP id m39-20020a05600c3b2700b003cf6263bfc5mr196888wms.137.1668506814125;
-        Tue, 15 Nov 2022 02:06:54 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
-        by smtp.gmail.com with ESMTPSA id o7-20020a05600c4fc700b003a6125562e1sm16199370wmq.46.2022.11.15.02.06.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 02:06:53 -0800 (PST)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Tue, 15 Nov 2022 11:06:47 +0100
-Subject: [PATCH v3] dt-bindings: pinctrl: convert semtech,sx150xq bindings to
- dt-schema
-MIME-Version: 1.0
+        with ESMTP id S229626AbiKOKGx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 05:06:53 -0500
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-eopbgr130083.outbound.protection.outlook.com [40.107.13.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FE36DE0
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 02:06:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GrwWfNdpQ7POOTqBzdurnwM9L2zTgVaN0OC47pqeMd2O4U4fUdxjGJHhTion2ca3TohXKpGizVHjd5rQIk0SUywthvUaMyjGIs/iyzwsASGwwSCMDOgTM/PsvyXF2h54izj2hbH+tK5lig70fBTNEIWCDS7XrSUklLVMhPlUXrv3rl7F5yA0i8Dk1fLGHOe4gZfehttgN+UcCgiQaDYfPkdSWzp7Y2kKd5UconDaeOevZcDo2BJiBUjn0xeEHggQM1hBame7g5Z9eeZspNdKQ9rTR1rxsY+aY9rsGVx476vEiS63d5xb1qbh8FApwPw7yUQxls+f7XgjpYCAYp426g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VrT+6393fWI8ztejS6M0rU/wFzO1XwnS0P+kyFWsQI8=;
+ b=nzn520c0wfHUop4TSwzg+HWdxoQBx0/BcyP0sN4hCTZbiRg93Uh7ECvNjnaRb6EbjC/ILSQCmme27fxjf8ik/EiJOwPax9XH+DhdDDd40S8KrbWYdkfaE2WVVQ2lqHewuNguxyKTJE7fZDWIbiZx4kZsyNR/hUtic+IItGEDPAHriWj1bkW3qdqjn22lrfJJpI6qo8DOY3n9y4i+yzHcYJXKoQA1u/HUVWFJQF/5MYzApxfKs7ci6BxUc2OACdpPNMpSZhF8fZjuYQ0ckLDkqRRRVQXMmvWAIFzqY/Vzel1O/NhgoCzyk0xcB1gBy/+FIbvwMMg3nUJF2msGC4Vzdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VrT+6393fWI8ztejS6M0rU/wFzO1XwnS0P+kyFWsQI8=;
+ b=wJRpXhWymeZo8vH/CfjQYFP1FcAfSSRf79b5vr0HXj+WnvIUwN2Ch5Yg6dasM/bSrBWre0UnPGb5UoZqZNvJiAWW9b8cgiTX09mgMuB1AqoDIg3n7AM4xI7GMTDQkG47OgTj+dKXN6WzhTahfTEFM17nvvKCBiELmCqAQVBXntwpk4PI4oex47sm0O6b5oInBEMVCvndh+fswfzskBWa24J2pYsGm+hz86lCWgsPPc9geqr1r9CMz41mfsXEj6QarHQuRqrZDHB4Mc4eO0v/SiCMr0lw7JDAmdbCfed1n/zucOIkcm3qxQ0b/v9o308GDQ3SQ5qa7ofNGSHeKHbgoA==
+Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:23e::20)
+ by AS8PR10MB6866.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:20b:5b7::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Tue, 15 Nov
+ 2022 10:06:49 +0000
+Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::a9a2:43d3:12c:f695]) by PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::a9a2:43d3:12c:f695%5]) with mapi id 15.20.5813.017; Tue, 15 Nov 2022
+ 10:06:49 +0000
+From:   "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Question regarding runtime pinctrl
+Thread-Topic: Question regarding runtime pinctrl
+Thread-Index: AQHY+Nn5KD9wvAfV2EW6GZNUQtJ/BA==
+Date:   Tue, 15 Nov 2022 10:06:49 +0000
+Message-ID: <b4d10617df2b8a7c627bd93327679222d7db6796.camel@siemens.com>
+Reply-To: "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR10MB5520:EE_|AS8PR10MB6866:EE_
+x-ms-office365-filtering-correlation-id: ece8ba0d-d3b9-4f92-7bfd-08dac6f11c66
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +YrzJK/cjPk2a4rqX22OKbxnVBGTRR6Zf/TAKiL1fdBMP0EFEbbYmDcXAvGwWNjdhHDVRnQteSGXU20W7/gEQTmrtWkWT7wFCHOYwNofoC7iZrfWybtTkYFUsdFoKWHPcVZ/aBuJFrpNhBtTpgsFZPi/eXlMgr/CY2vAXa9Bv3IjR5yM+izYzD1BT8b/mihytSiFLsfb0vyti2isQPZ9h2lwqUrtFBHlHrA0Yt0+Zzmw6sKDXhAD9ssGBNiJg7IR+SY9nql7OkoUhvZQox0CDpJ4/5VnlQp/71LYWvyvGe5+DnkyUwzvwKgD6u7jbtOCeNPOjWFTQG9iutpwJxHR++Q6/1eERyS9eaCAFWCElCwSo4Vp4shMzUiEzGicyKE7VlSVkD2Cr8H0IVPYLTYpaVdkLUTbdEOQbh+vUeoXMDcON+I3o28LIczfSQYnone+5PQ81GfK/CsZTqFcakn7ytv3VPQitlPXTtodRrE74LcCTneZdG5bGmK0FlOIWGUs2o3SrA/+l6F0Uc1e6Q5f6nYBSuYIK8dUei8tCOIjp6jwIWvX+bKOkVDYOwE3imOh+iYv5ZrWZPdcq6RuRHYjZNLFcwcP+ggGOL2GuPQyMWegZN8wSjjDi7HjlTU+98x3I9PZyn/rZFf64XhKJqEg5lx+KmycmtAHiiKQqQa8wq0vEuH5F2S2YuNLNasijkuE8pjq87qC5Nrb4MYvIRU+UCBrXEvkDryL4M5amK34naPK5xsm3GJyeyVQjIQ86GoHaWEt5CiXa7Os3mfMfYd4Lw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(451199015)(6486002)(478600001)(38070700005)(71200400001)(6506007)(6916009)(76116006)(38100700002)(6512007)(91956017)(86362001)(3450700001)(26005)(82960400001)(316002)(66476007)(66556008)(64756008)(66446008)(122000001)(66946007)(8676002)(2616005)(36756003)(186003)(8936002)(5660300002)(83380400001)(3480700007)(41300700001)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?OWxsWEJMOFd0T0pmUElWRkRpNjR4T3gwZjNRM3pCNVoySFJHcS9VaGEzb3lU?=
+ =?utf-8?B?R0N5TkpnbzlsZnczT0ZZMEl3MTlMWWNhRHpkZ25FKzBRYlllQW12bGg1MkUz?=
+ =?utf-8?B?ay9QOHpRMEFFelVPYjlhR0x2K3JLRGlyZGVLeXprZldRQm5ZVG41aFY5blRl?=
+ =?utf-8?B?aUphWU5ZRVlLT0ltUW5SVVlWK3d1TWk3Z2k0L2JKRmRaM0pkN0tTY1l2dWIx?=
+ =?utf-8?B?L1ZaNVRtTFNFeVEwUURFUGRubUF1UWpRbEh4V0NPdDhRVkZQa3ArRHBobzh3?=
+ =?utf-8?B?SnhkeGdRckVWNEsxamZ6U1JnK1ZFWktwQmN0NjVZY1ZDamVWK1NrYVVGczdq?=
+ =?utf-8?B?S0x3czZkOUp6UXM1NzNoaXJZOFJJeG1Zem02bFFzeTR3a1hzUlBBNDRaamMv?=
+ =?utf-8?B?bTc1UnEranpCT3RjbWk3WjZZWWFRY2xmL3EzRUdBeUV2RTB3OTZSdE5EelBr?=
+ =?utf-8?B?Y3NlMU45NjJvTTFXZ3JBN0psTm1PUmdKOEoweGxwSDhoMmR0UDBONzdBNU11?=
+ =?utf-8?B?K2w5eVRYSCt4VnZjcFd5M2orKys0V2ViRDZUTldicndLcTJmUzFGL0JiNmY3?=
+ =?utf-8?B?d1pYdmQ5STJyN2NiMEpsQUhnb1JIbC9mcTZZUTNZYW94cnJwdDRVWW5LSHZj?=
+ =?utf-8?B?YUFiVm95TWozT2NWOGFVYmZ2d3c2SXNmaU94UDVIN0trdllSQkFnemFnWTRl?=
+ =?utf-8?B?b24yUXN5WFZ1aXd3K3VQYmhjRkVZLytBWnNWOEZsUUd6dTRvek1rZjR6bHNF?=
+ =?utf-8?B?NVNVYllOVWpieXhYamcydXdJSyt0NFNod3BTeUFHY0I4RmJSbTFFWkg0ZTYw?=
+ =?utf-8?B?TlZ4Y0lMelhzQmcrOHJjNHN3eFRHa1BBbXYrL1VkcVFVMWNrcHE2QS8yYm41?=
+ =?utf-8?B?bnh5c1UvV1hpZ1FiUjJPTmpnMmNkeGZ2ZkRKeEJRYXR6aDBqQVdCM051L2Vt?=
+ =?utf-8?B?TisxZjh1Vlh1c0F1U1NlYWxlYVVNQlhzRmY2dVh1a0NLbVgyVzhvOXkwR0lh?=
+ =?utf-8?B?Ui9JWWh4VEJoQlRSdEF6dDFERmtEenJCSFpIVHJwMW1RWFJRYzRjYUlxcDZK?=
+ =?utf-8?B?c05NVEpWRnlQUjN1T3VkakM4QjVDRjAxSFZMekloVVppU2Q5TGRIMkRuQ2lT?=
+ =?utf-8?B?d0dNdHJqdE1NNWRxS3BpOUlBM3VqMDRrQUhhUjhJTFJjVHJpSER4cXpMWEZJ?=
+ =?utf-8?B?bk1INHlEd0QvMC9ZUEVTTHJxOHlZdXIwL2ZKOXRQZW5tWFE5T3hqY2diT1By?=
+ =?utf-8?B?Z0ZRV3FZWG5OZ0ZpbFBGbkFlYU9MM0ZOcmdoN1lhVVdBcG5zbWtqWUtvbHVM?=
+ =?utf-8?B?YkpvOVJXMmpEMEVvTWRkRDdVQWY0VHBqZVpMaUF2aS9UNnFiN05SL2xIN3JS?=
+ =?utf-8?B?YVVkY3phaVd6NzZ4VkQyelVtOFEyUTBLUUlJMGFLUkx6ZW4ycjVxZGlkV2Np?=
+ =?utf-8?B?RXo5M1hRVS9UUk83akpwTkNBeHVjMjY0REc2M1IzSXZCWTlYMXdsTTdnUlM2?=
+ =?utf-8?B?bG81OE5EN1NSbmhkL3pad09lck8veTEySUthMXVmcFpUMDlFbVgyYWpDZHY3?=
+ =?utf-8?B?QUFIKzdQZHkyaDZGakJKd3NIK1hjWFJMQnduTGRldC9ONDk3ZldIcitaNkpx?=
+ =?utf-8?B?WVFuYUk1WUxMSnc4NUx6SmQ2ZXJMYXJDejJSNDQxRm9lOGJnTTJ2RDE3Y2Fp?=
+ =?utf-8?B?QWY4TitUWGlHSUl6eW5OQ3QxQnlUdlJYaXJkb2pmdElsbTdxRkVPdXRNVUdv?=
+ =?utf-8?B?LzF5cCs0bXo4aTFlTWVkZHA3NXJPQWk0N0k3R3piYUFlM0U5dnJiRzZ6Qit6?=
+ =?utf-8?B?RDIzYnEwZ28yOFFRU01pbU5RdUMrK1lCV3dBVGxGQlJqbjFrZU1iOGptQmpn?=
+ =?utf-8?B?U2I2cnNZajFhNGJXS0lKZ1ZMTWFMV0xPMjdnRERiTzlMNEgxVjhvS3VDQWJp?=
+ =?utf-8?B?Rk9KVmpUbjhnbHY2RENJM29qOWY5WkM0blVRVUtKc0xZUzFzbjRWZHpGc1pU?=
+ =?utf-8?B?VHpTMmNmeS9oQ2NZWHRNWjcvMjNId1ZyclYyNmo1K29Kemo0Mmw0MTEvWmVI?=
+ =?utf-8?B?aUpSR2R3ZkdXY0NJWEJFQ1Z5Sk45TW9IeVZMTEthaXJXamtlT3lRT1hwTU5z?=
+ =?utf-8?B?UlpmUnIvWU4rbXBJUFJtNzBNMWRVNzZuS29GNEE3ZVA4MmVnZVRRZ2p0NkR2?=
+ =?utf-8?Q?zmd+h9P7j4CEKLg8g47RbdI=3D?=
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20221005-mdm9615-sx1509q-yaml-v3-0-e8b349eb1900@linaro.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        linux-gpio@vger.kernel.org
-X-Mailer: b4 0.10.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-ID: <CC508A9A89D9C643BF381F068BAB4EFA@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: ece8ba0d-d3b9-4f92-7bfd-08dac6f11c66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Nov 2022 10:06:49.1617
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sSHlpvmRW4TSJw6BLNIqEldsAS6+//Coa+v5vxCoTyhHYq2+I337++murbK97gVk64xhY00htIt//GIJjtsbRVygmCpJQAKugatoyonPw6Q=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR10MB6866
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This converts the Semtech SX150Xq bindings to dt-schemas, add necessary
-bindings documentation to cover all differences between HW variants
-and current bindings usage.
-
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-To: Linus Walleij <linus.walleij@linaro.org>
-To: Rob Herring <robh+dt@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-Changes in v3:
-- Resent with missing To: Linus Walleij
-- Link to v2: https://lore.kernel.org/r/20221005-mdm9615-sx1509q-yaml-v2-0-a4a5b8eecc7b@linaro.org
-
-Changes in v2:
-- fixed rob comments
-- added rob's Reviewed-by
-- Link to v1: https://lore.kernel.org/r/20221005-mdm9615-sx1509q-yaml-v1-0-0c26649b637c@linaro.org
----
- .../devicetree/bindings/pinctrl/pinctrl-sx150x.txt |  72 -------
- .../bindings/pinctrl/semtech,sx1501q.yaml          | 208 +++++++++++++++++++++
- 2 files changed, 208 insertions(+), 72 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-deleted file mode 100644
-index 4023bad2fe39..000000000000
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-sx150x.txt
-+++ /dev/null
-@@ -1,72 +0,0 @@
--SEMTECH SX150x GPIO expander bindings
--
--Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
--../interrupt-controller/interrupts.txt for generic information regarding
--pin controller, GPIO, and interrupt bindings.
--
--Required properties:
--- compatible: should be one of :
--			"semtech,sx1501q",
--			"semtech,sx1502q",
--			"semtech,sx1503q",
--			"semtech,sx1504q",
--			"semtech,sx1505q",
--			"semtech,sx1506q",
--			"semtech,sx1507q",
--			"semtech,sx1508q",
--			"semtech,sx1509q".
--
--- reg: The I2C slave address for this device.
--
--- #gpio-cells: Should be 2. The first cell is the GPIO number and the
--		second cell is used to specify optional parameters:
--		bit 0: polarity (0: normal, 1: inverted)
--
--- gpio-controller: Marks the device as a GPIO controller.
--
--Optional properties :
--- interrupts: Interrupt specifier for the controllers interrupt.
--
--- interrupt-controller: Marks the device as a interrupt controller.
--
--- semtech,probe-reset: Will trigger a reset of the GPIO expander on probe,
--		only for sx1507q, sx1508q and sx1509q
--
--The GPIO expander can optionally be used as an interrupt controller, in
--which case it uses the default two cell specifier.
--
--Required properties for pin configuration sub-nodes:
-- - pins: List of pins to which the configuration applies.
--
--Optional properties for pin configuration sub-nodes:
------------------------------------------------------
-- - bias-disable: disable any pin bias, except the OSCIO pin
-- - bias-pull-up: pull up the pin, except the OSCIO pin
-- - bias-pull-down: pull down the pin, except the OSCIO pin
-- - bias-pull-pin-default: use pin-default pull state, except the OSCIO pin
-- - drive-push-pull: drive actively high and low
-- - drive-open-drain: drive with open drain only for sx1507q, sx1508q and sx1509q and except the OSCIO pin
-- - output-low: set the pin to output mode with low level
-- - output-high: set the pin to output mode with high level
--
--Example:
--
--	i2c0gpio-expander@20{
--		#gpio-cells = <2>;
--		#interrupt-cells = <2>;
--		compatible = "semtech,sx1506q";
--		reg = <0x20>;
--		interrupt-parent = <&gpio_1>;
--		interrupts = <16 0>;
--
--		gpio-controller;
--		interrupt-controller;
--
--		pinctrl-names = "default";
--		pinctrl-0 = <&gpio1_cfg_pins>;
--
--		gpio1_cfg_pins: gpio1-cfg {
--			pins = "gpio1";
--			bias-pull-up;
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
-new file mode 100644
-index 000000000000..df429a396ba3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/semtech,sx1501q.yaml
-@@ -0,0 +1,208 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright 2022 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/semtech,sx1501q.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Semtech SX150x GPIO expander
-+
-+maintainers:
-+  - Neil Armstrong <neil.armstrong@linaro.org>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - semtech,sx1501q
-+      - semtech,sx1502q
-+      - semtech,sx1503q
-+      - semtech,sx1504q
-+      - semtech,sx1505q
-+      - semtech,sx1506q
-+      - semtech,sx1507q
-+      - semtech,sx1508q
-+      - semtech,sx1509q
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  '#interrupt-cells':
-+    const: 2
-+
-+  interrupt-controller: true
-+
-+  '#gpio-cells':
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  semtech,probe-reset:
-+    description: Will trigger a reset of the GPIO expander on probe
-+    type: boolean
-+
-+patternProperties:
-+  '-cfg$':
-+    type: object
-+    properties:
-+      pins: true
-+
-+      bias-disable: true
-+      bias-pull-up: true
-+      bias-pull-down: true
-+      bias-pull-pin-default: true
-+      drive-push-pull: true
-+      output-low: true
-+      output-high: true
-+      drive-open-drain: true
-+
-+    required:
-+      - pins
-+
-+    allOf:
-+      - $ref: "pincfg-node.yaml#"
-+      - $ref: "pinmux-node.yaml#"
-+      - if:
-+          properties:
-+            pins:
-+              contains:
-+                const: oscio
-+        then:
-+          properties:
-+            bias-disable: false
-+            bias-pull-up: false
-+            bias-pull-down: false
-+            bias-pull-pin-default: false
-+            drive-open-drain: false
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#gpio-cells'
-+  - gpio-controller
-+
-+allOf:
-+  - $ref: "pinctrl.yaml#"
-+  - if:
-+      not:
-+        properties:
-+          compatible:
-+            contains:
-+              enum:
-+                - semtech,sx1507q
-+                - semtech,sx1508q
-+                - semtech,sx1509q
-+    then:
-+      properties:
-+        semtech,probe-reset: false
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - semtech,sx1501q
-+              - semtech,sx1504q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^gpio[0-3]$'
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - semtech,sx1502q
-+              - semtech,sx1505q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^gpio[0-7]$'
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - semtech,sx1503q
-+              - semtech,sx1506q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^gpio[0-15]$'
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: semtech,sx1507q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^(oscio|gpio[0-3])$'
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: semtech,sx1508q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^(oscio|gpio[0-7])$'
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            const: semtech,sx1509q
-+    then:
-+      patternProperties:
-+        '-cfg$':
-+          properties:
-+            pins:
-+              items:
-+                pattern: '^(oscio|gpio[0-15])$'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    i2c@1000 {
-+        reg = <0x1000 0x80>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        pinctrl@20 {
-+            compatible = "semtech,sx1501q";
-+            reg = <0x20>;
-+
-+            #gpio-cells = <2>;
-+            #interrupt-cells = <2>;
-+
-+            interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
-+
-+            gpio-controller;
-+            interrupt-controller;
-+
-+            gpio1-cfg {
-+                  pins = "gpio1";
-+                  bias-pull-up;
-+            };
-+        };
-+    };
-
----
-base-commit: 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
-change-id: 20221005-mdm9615-sx1509q-yaml-7cfabf896fff
-
-Best regards,
--- 
-Neil Armstrong <neil.armstrong@linaro.org>
+SGVsbG8sDQoNCmFzIHRoZSBzdWJqZWN0IG1heSBpbmRpY2F0ZSwgSSd2ZSBzdHVtYmxlZCBhY3Jv
+c3MgdGhlIHVzZSBjYXNlIG9mIGNvbnRyb2xsaW5nIHBpbm11eCBmcm9tIHVzZXJzcGFjZS4NCk1h
+eWJlIGJpdCBtb3JlIGJhY2tncm91bmQ6DQoNCldlIGFyZSBjdXJyZW50bHkgdXNpbmcgcGxhdGZv
+cm1zIHdoaWNoIGNhbiBiZSBleHRlbmRlZCB3aXRoIGRpZmZlcmVudCBraW5kIG9mIElPLXNoaWVs
+ZHMuIFRoZXNlIElPLXNoaWVsZHMgYXJlIGNvbmZpZ3VyYWJsZSAoZXZlbiBhdCBydW50aW1lKS4g
+UmVjb25maWd1cmluZw0KZHVyaW5nIHJ1bnRpbWUgaXMgZ2VuZXJhbGx5IGVsZWN0cmljYWxseSBm
+aW5lLg0KV2Ugbm93IHdhbnQgdG8gYmUgYWJsZSB0byBjb25maWd1cmUgdGhvc2UgSU8tc2hpZWxk
+cyBieSBjaGFuZ2luZyB0aGUgcGlubXV4IGNvbmZpZ3VyYXRpb24gZHVyaW5nIHJ1bnRpbWUgKGFm
+dGVyIGtlcm5lbCBib290KS4NCg0KVW50aWwgbm93IHdlIGFyZSBhY2hpZXZpbmcgdGhhdCBieSBh
+Y2Nlc3NpbmcgdGhlIHRoZSBwaW5tdXgvcGluY3RybCByZWdpc3RlcnMgZGlyZWN0bHkgdmlhIC9k
+ZXYvbWVtLiBCdXQgd2Ugc2VlIGF0IGxlYXN0IHR3byBpc3N1ZXMgaGVyZToNCkZyb20gYSBzZWN1
+cml0eSBhc3BlY3QsIGFjY2Vzc2luZyB0aGUgL2Rldi9tZW0gaW50ZXJmYWNlIGlzIHByaXZpbGVn
+ZWQgKGF0IGxlYXN0IHJlcXVpcmVzIENBUF9TWVNfUkFXSU8pLiBCdXQgdGhpcyBtYXkgY29uZmxp
+Y3Qgd2l0aCB0aGUgZmluYWwgYXBwbGljYXRpb24NCndoaWNoIHNob3VsZCBydW4gbm9uIHByaXZp
+bGVnZWQuIA0KVGhlIHNlY29uZCBpc3N1ZSBpcyB0aGF0IHdlIGFjdHVhbGx5IGR1cGxpY2F0ZSB0
+aGUgcGlubXV4L3BpbmN0cmwga2VybmVsIGltcGxlbWVudGF0aW9uIHdoaWNoIGFscmVhZHkuDQoN
+CkFyZSB0aGVyZSBhbnkgZGlzY3Vzc2lvbnMgb3V0IHRoZXJlIHJlbGF0ZWQgdG8gdGhpcyB0b3Bp
+Yz8gSSB3b3VsZCBiZSBzdXJwcmlzZWQgaWYgSSB3YXMgdGhlIGZpcnN0IG9uZSBzZWFyY2hpbmcg
+Zm9yIGEgc29sdXRpb24gZm9yIHRoaXMgdXNlIGNhc2UuIA0KV2UgYWxyZWFkeSBoYXZlIHNvbWUg
+aWRlYXMgYnV0IHdlIGFsc28gd2FudCB0byBrbm93IGlmIGFueWJvZHkgaGFkIGEgc2ltaWxhciB1
+c2UgY2FzZSBhbmQgY2FuIHNoYXJlIGFueSBleHBlcmllbmNlPyAgDQoNCmNoZWVycywNCkJlbmVk
+aWt0ICANCg0KDQo=
