@@ -2,170 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77E1F62911F
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 05:12:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81BF262914A
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 05:52:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbiKOEMD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 14 Nov 2022 23:12:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47460 "EHLO
+        id S231750AbiKOEwi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 14 Nov 2022 23:52:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231954AbiKOEL7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 23:11:59 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D383B1B9C8
-        for <linux-gpio@vger.kernel.org>; Mon, 14 Nov 2022 20:11:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668485516; x=1700021516;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=G3fjd8i/3XbCbz8idm+1T17jPD8uy9oXTEBayu3l2/8=;
-  b=Isr0q6LPKNftBpKtnJk5R/4zFXTwzKmBplOIGT/Bz14jzddOt7v26L0T
-   d0EBlXhWbrJ2/qEsDz7tKHVcy9ztPD5GLcc5XTNXM9+VZxq0xTylo5qDO
-   IUCZkfzOG+gUBCidV2ZspRVy9uPZWW/dU0Cfrar/oCPJSoez+wm8snfto
-   5HU91tXoBwW6ah79/qIzBiSG9D8SqvOr9bThthhDXzZO+rTzYtbbJSoqE
-   zEW4pilVcTrpKaIW8pn/64zgjzEH9mOYf116n0AmAcrm15MC3MnJi+kmP
-   1Ho+hglAcV1stg3FZaZEjJj+DLyiiN2zSjugCQnqpNXf6CohJ5U7v8VtW
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="292551808"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="292551808"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Nov 2022 20:11:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10531"; a="781193469"
-X-IronPort-AV: E=Sophos;i="5.96,164,1665471600"; 
-   d="scan'208";a="781193469"
-Received: from lkp-server01.sh.intel.com (HELO ebd99836cbe0) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 14 Nov 2022 20:11:54 -0800
-Received: from kbuild by ebd99836cbe0 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ounIf-00011y-3B;
-        Tue, 15 Nov 2022 04:11:53 +0000
-Date:   Tue, 15 Nov 2022 12:11:41 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD REGRESSION
- 43f71206fa12976e422919b8a54ff797c8aeeeb4
-Message-ID: <6373117d.T1PqNhGcy15gMcps%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231598AbiKOEwh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 14 Nov 2022 23:52:37 -0500
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAEF91582E;
+        Mon, 14 Nov 2022 20:52:34 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AF4qRE5071518;
+        Mon, 14 Nov 2022 22:52:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1668487947;
+        bh=/E64PIHXFOY3H6YTDaG6PFJhJzJ2G3dj+Y42ilK0YHI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=aidddNcZMEXSMIFt4ma3aqQPuCCtDWL2Up5uxYPJJdMUaccZ+Cas4iF2OiX/e2YOx
+         46LrzXc1bixZLllpIGnm0oyQA2pE82t2yuerGE3Ycw7H+zxUX/n/jY8BDh9bDC7Xql
+         2nolg+uzTSKgNJBghzQ9a8Pn+pGu0h3zqCdsr++g=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AF4qRhC129576
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 14 Nov 2022 22:52:27 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Mon, 14
+ Nov 2022 22:52:26 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Mon, 14 Nov 2022 22:52:26 -0600
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AF4qQhv009627;
+        Mon, 14 Nov 2022 22:52:26 -0600
+Date:   Mon, 14 Nov 2022 22:52:26 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Apurva Nandan <a-nandan@ti.com>
+CC:     Andrew Davis <afd@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
+Subject: Re: [PATCH v2 4/4] arm64: dts: ti: Add support for J784S4 EVM board
+Message-ID: <20221115045226.6l4j4qbvedv2whjq@effects>
+References: <20221014082314.118361-1-a-nandan@ti.com>
+ <20221014082314.118361-5-a-nandan@ti.com>
+ <cd5dbbb0-2d9f-8d7d-b051-f8d01d710c62@ti.com>
+ <581d0735-8294-5805-9a44-ed4ec3e9ae54@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <581d0735-8294-5805-9a44-ed4ec3e9ae54@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 43f71206fa12976e422919b8a54ff797c8aeeeb4  Merge branch 'devel' into for-next
+On 17:48-20221111, Apurva Nandan wrote:
+> 
+[...]
 
-Error/Warning reports:
+> > > Schematics: https://www.ti.com/lit/zip/sprr458
 
-https://lore.kernel.org/oe-kbuild-all/202211150935.KfTmjWeC-lkp@intel.com
 
-Error/Warning: (recently discovered and may have been fixed)
+> > > 
+> > > Signed-off-by: Hari Nagalla <hnagalla@ti.com>
+> > > Signed-off-by: Apurva Nandan <a-nandan@ti.com>
+> > > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > > Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> > > Signed-off-by: Rahul T R <r-ravikumar@ti.com>
+> > > Signed-off-by: Suman Anna <s-anna@ti.com>
+> > > Signed-off-by: Pratyush Yadav <p.yadav@ti.com>
+> > > Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-ERROR: modpost: "debounce_time_mt2701" [drivers/pinctrl/mediatek/pinctrl-mt6779.ko] undefined!
-ERROR: modpost: "debounce_time_mt6765" [drivers/pinctrl/mediatek/pinctrl-mt6765.ko] undefined!
+Uggh - too many Signed-off-by -> Can we either trim this down or use
+Co-developed-by ?
 
-Error/Warning ids grouped by kconfigs:
+The last of the SoB should be yours as you are handing the patch over.
+> > > ---
+> > >    arch/arm64/boot/dts/ti/Makefile          |   2 +
+> > >    arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 199 +++++++++++++++++++++++
+> > >    2 files changed, 201 insertions(+)
+> > >    create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+> > > 
+> > > diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
+> > > index 02e5d80344d0..6381c458738a 100644
+> > > --- a/arch/arm64/boot/dts/ti/Makefile
+> > > +++ b/arch/arm64/boot/dts/ti/Makefile
+> > > @@ -19,6 +19,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-j7200-common-proc-board.dtb
+> > >    dtb-$(CONFIG_ARCH_K3) += k3-j721s2-common-proc-board.dtb
 
-gcc_recent_errors
-`-- powerpc-allmodconfig
-    |-- ERROR:debounce_time_mt2701-drivers-pinctrl-mediatek-pinctrl-mt6779.ko-undefined
-    `-- ERROR:debounce_time_mt6765-drivers-pinctrl-mediatek-pinctrl-mt6765.ko-undefined
+One EoL here please? helps keeps the dtbs grouped.
 
-elapsed time: 720m
+> > > +dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
+> > > +
+> > >    dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
+> > >    dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
+> > > diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+> > > new file mode 100644
+> > > index 000000000000..bf2f2dfb7658
+> > > --- /dev/null
+> > > +++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+> > > @@ -0,0 +1,199 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
+> > > + *
+> > > + * Common Processor Board: https://www.ti.com/tool/J721EXCPXEVM
+> > This doesn't seem to be the right EVM, I'd just drop this link.
 
-configs tested: 76
-configs skipped: 2
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-powerpc                           allnoconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-s390                                defconfig
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-arc                  randconfig-r043-20221114
-s390                             allyesconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-i386                                defconfig
-m68k                             allmodconfig
-x86_64                              defconfig
-m68k                             allyesconfig
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-i386                             allyesconfig
-x86_64               randconfig-a002-20221114
-x86_64               randconfig-a001-20221114
-x86_64               randconfig-a004-20221114
-x86_64               randconfig-a003-20221114
-x86_64                           rhel-8.3-kvm
-x86_64               randconfig-a006-20221114
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-syz
-x86_64               randconfig-a005-20221114
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-i386                 randconfig-a001-20221114
-i386                 randconfig-a004-20221114
-i386                 randconfig-a002-20221114
-i386                 randconfig-a005-20221114
-i386                 randconfig-a003-20221114
-i386                 randconfig-a006-20221114
-x86_64                        randconfig-a015
-x86_64                            allnoconfig
-arm                          pxa3xx_defconfig
-m68k                       m5475evb_defconfig
-sh                            hp6xx_defconfig
-mips                  decstation_64_defconfig
-powerpc                    sam440ep_defconfig
-sparc64                          alldefconfig
-ia64                             allmodconfig
-arm                                 defconfig
-i386                 randconfig-c001-20221114
-sparc64                             defconfig
-ia64                         bigsur_defconfig
-ia64                             allyesconfig
-arm                              allyesconfig
-arm64                            allyesconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-
-clang tested configs:
-hexagon              randconfig-r041-20221114
-riscv                randconfig-r042-20221114
-s390                 randconfig-r044-20221114
-hexagon              randconfig-r045-20221114
-x86_64                        randconfig-a012
-x86_64                        randconfig-a016
-x86_64                        randconfig-a014
-i386                 randconfig-a011-20221114
-i386                 randconfig-a014-20221114
-i386                 randconfig-a013-20221114
-i386                 randconfig-a012-20221114
-i386                 randconfig-a015-20221114
-i386                 randconfig-a016-20221114
-x86_64               randconfig-k001-20221114
-hexagon              randconfig-r041-20221115
-hexagon              randconfig-r045-20221115
-arm                        magician_defconfig
+Please use the proper link -> I think it is in commit message.
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards,
+Nishanth Menon
+Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
