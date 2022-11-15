@@ -2,151 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1681462A3EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 22:21:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1568E62AD8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 23:03:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238748AbiKOVVZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 16:21:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45936 "EHLO
+        id S232403AbiKOWDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 17:03:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232119AbiKOVVD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 16:21:03 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9729831DCD
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 13:20:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668547220; x=1700083220;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=P5FjMpTh5W7HLo3oMS/UjQ/k/hAjNz/gJzpGL+Lya4E=;
-  b=cQ3YlY6ZnI9B4AZk7H6D754hEs8/BVUa3U845W06boWHoCGsuW3VOsuw
-   0RJWmi11+8K4zVaVyGSyYnrxbCmMTN3YEsOn49W7oC8mTWrAPhMTgMzpy
-   n4T2Mz+IPEGuM4DAFG8EJcyM0LjUSD8GyxwxZtPb2UpkjML7SIkdn7/oW
-   +lRHjjwFmy3L0DvGn10QZmkVVlkDLrd5CYvsSk7jkQqfcx6Glt/r2AoSJ
-   RuSYdvBVz53aJft4cr0c25h9CWOHAjwH2MrRfR879bWy+Lt1CLluHjRgN
-   KmHzAbiIUmAnOEjxsqKLFSediXog49Hds4XsEhXUFoMfopKrbHdG+Op6D
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="398659271"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="398659271"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 13:20:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="884118468"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="884118468"
-Received: from lkp-server01.sh.intel.com (HELO ebd99836cbe0) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Nov 2022 13:20:19 -0800
-Received: from kbuild by ebd99836cbe0 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ov3Lu-0001fb-1s;
-        Tue, 15 Nov 2022 21:20:18 +0000
-Date:   Wed, 16 Nov 2022 05:19:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 8555c646407de9e924f438d7dd81cd67c4a19bfa
-Message-ID: <6374027a.yjhj3J6+6sifjjFO%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S232418AbiKOWCw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 17:02:52 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDFD2FC2C
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 14:02:51 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id v17so23911853edc.8
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 14:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kali.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GcIrTj8VztBeFoy4k6qhtUBsqi2dQ47UyYJpB5EaTPo=;
+        b=nftL9VuGbqz2wS8aoSGn3u7lKhkqTIh6Qw3ut+/2+mk6iuDylkuO4fKqsTWNWzmabb
+         1+uO4j7fYObWyKAiKEKmBE6gzehSG2tyufgvwVYrmRAYLhOssRGJ9oA3QBbh9RyOLzlD
+         D5fcH2cI5+DXyeI+BcwcFUebEsI1vJt1W0bEQaW9X71inPhHZi6DXA+kWLv8R2nH9LVA
+         yCJcUwuUooshd1gvooIvbPMh2/lQOVvj9ve3fZmdH63tyY2mitEUq1BLVqJRK6kOV6ox
+         eeo5WJFrUM+yQ2HFSuYk0Ulo2z+7GNylpGJhI/w5XIqx8FYdEGgPziqKHptGoWU+3dLY
+         VcMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GcIrTj8VztBeFoy4k6qhtUBsqi2dQ47UyYJpB5EaTPo=;
+        b=5XYG9Tj00e9dH0sZNHUdEZ515HJFjANsuFBRWP+WyH28YrNxLL2At7ZzN7VoZk8Y3J
+         vSFQ4J0KZT77WwH08O4WIxADEiidOZiAYoX3j/Cf9HQ0B76zdOVyqkoLGC2iUerOAF8E
+         +o+XUUskePaSvt07JkT+S3J3A0vlIqeEOqPisGIJpUjsg3D8KGl3bIlM7YTf96VkP8m4
+         eOgeVItHQBC4ixAYRy/dHJ0Yi19B2GUyU1aCvRNnL8EHejABh/UJyJHeidAK1nsw+s7j
+         BpWKQ/blNb+cs5uG3gDVf1SLnNCrwKjsgNS/A3KF9XFur9lUJPR+vtFaEMiQg04NkO/d
+         jVLQ==
+X-Gm-Message-State: ANoB5plxzo297vMjpSMz57w/bhg54LRUJF2qhxqGplaFpnmHgg7m2JKq
+        bGkQypOwoBS1zuhUKwcC2CgjBkg/4fr2tcGerSAcTg==
+X-Google-Smtp-Source: AA0mqf5SXfBI6T37ANtaU6IquIxC4j46qTnsreujvs83VOL05kbVxIsQj9U6F2D9Uv3/ulToJeZmoQ1bjTwySKzYq/0=
+X-Received: by 2002:a50:fd8f:0:b0:461:46c7:310b with SMTP id
+ o15-20020a50fd8f000000b0046146c7310bmr17315493edt.307.1668549769960; Tue, 15
+ Nov 2022 14:02:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221114202943.2389489-1-bmasney@redhat.com> <7420da17-d6d6-10e6-c87e-d3dc37d17ffb@linaro.org>
+In-Reply-To: <7420da17-d6d6-10e6-c87e-d3dc37d17ffb@linaro.org>
+From:   Steev Klimaszewski <steev@kali.org>
+Date:   Tue, 15 Nov 2022 16:02:38 -0600
+Message-ID: <CAKXuJqgckbmikXwFi0g3P3Db5jvyst+xhQBcPoV7mA2XStVVzA@mail.gmail.com>
+Subject: Re: [PATCH RFC] gpiolib: ensure that fwnode is properly set
+To:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc:     Brian Masney <bmasney@redhat.com>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        psodagud@quicinc.com, quic_shazhuss@quicinc.com,
+        quic_ppareek@quicinc.com, ahalaney@redhat.com, echanude@redhat.com,
+        nicolas.dechesne@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 8555c646407de9e924f438d7dd81cd67c4a19bfa  Merge branch 'devel' into for-next
+Hi,
 
-elapsed time: 720m
+Others in the thread pointed to Thierry's patch, but on the Lenovo
+Thinkpad X13s, that patch did *not* fix the issue, and with it
+applied, the X13s still immediately reboots as soon as exiting EFI
+services.  With this patch applied, the X13s does *not* reboot after
+exiting EFI services, so thank you for this patch.
 
-configs tested: 70
-configs skipped: 2
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-x86_64                               rhel-8.3
-um                           x86_64_defconfig
-arc                                 defconfig
-x86_64                           rhel-8.3-kvm
-x86_64                         rhel-8.3-kunit
-alpha                               defconfig
-i386                                defconfig
-s390                                defconfig
-x86_64                           rhel-8.3-syz
-s390                             allmodconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                              defconfig
-powerpc                           allnoconfig
-s390                             allyesconfig
-i386                             allyesconfig
-x86_64               randconfig-a002-20221114
-x86_64               randconfig-a001-20221114
-x86_64               randconfig-a004-20221114
-i386                 randconfig-a001-20221114
-x86_64               randconfig-a003-20221114
-i386                 randconfig-a004-20221114
-x86_64               randconfig-a006-20221114
-i386                 randconfig-a002-20221114
-i386                 randconfig-a005-20221114
-i386                 randconfig-a003-20221114
-x86_64                           allyesconfig
-i386                 randconfig-a006-20221114
-arc                              allyesconfig
-x86_64               randconfig-a005-20221114
-alpha                            allyesconfig
-ia64                             allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-sh                               allmodconfig
-arc                  randconfig-r043-20221114
-mips                             allyesconfig
-powerpc                          allmodconfig
-arm                                 defconfig
-arm                              allyesconfig
-x86_64                        randconfig-a011
-x86_64                        randconfig-a013
-x86_64                        randconfig-a015
-arm64                            allyesconfig
-i386                          randconfig-a012
-i386                          randconfig-a014
-i386                          randconfig-a016
-x86_64                            allnoconfig
-
-clang tested configs:
-x86_64               randconfig-a014-20221114
-x86_64               randconfig-a012-20221114
-x86_64               randconfig-a016-20221114
-x86_64               randconfig-a015-20221114
-x86_64               randconfig-a013-20221114
-x86_64               randconfig-a011-20221114
-i386                 randconfig-a011-20221114
-i386                 randconfig-a014-20221114
-i386                 randconfig-a013-20221114
-i386                 randconfig-a012-20221114
-i386                 randconfig-a015-20221114
-i386                 randconfig-a016-20221114
-riscv                randconfig-r042-20221114
-hexagon              randconfig-r041-20221114
-hexagon              randconfig-r045-20221114
-s390                 randconfig-r044-20221114
-hexagon              randconfig-r041-20221115
-hexagon              randconfig-r045-20221115
-x86_64                        randconfig-a005
-x86_64                        randconfig-a003
-x86_64                        randconfig-a001
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Tested-by: Steev Klimaszewski <steev@kali.org> #Lenovo Thinkpad X13s
