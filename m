@@ -2,104 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1169C629AB3
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 14:38:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80EAE629C2B
+	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 15:33:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbiKONil (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 08:38:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40924 "EHLO
+        id S229836AbiKOOdL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 09:33:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiKONik (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 08:38:40 -0500
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87A2E11445;
-        Tue, 15 Nov 2022 05:38:39 -0800 (PST)
-Received: by mail-oi1-f171.google.com with SMTP id m204so14855641oib.6;
-        Tue, 15 Nov 2022 05:38:39 -0800 (PST)
+        with ESMTP id S229587AbiKOOdK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 09:33:10 -0500
+Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC0A43BF
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 06:33:08 -0800 (PST)
+Received: by mail-vs1-xe2a.google.com with SMTP id t5so14817807vsh.8
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 06:33:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ql5Dpk9CyUuSxvNXn+gMJrL3PKw+a0bnATMG8sMuGxo=;
+        b=E2VJOpvcOiBbQD+l0VSvfEwj3RnQNeUqgBDICJmdYBy71ExE8jdLvAdJD57vRPkHFJ
+         IraoVZZn5OcmZ7h+MneSv6OB1/Zakl7Yba/No8jwmQ3m4B8ceX+ZQgbQLnqhsSfa2+0G
+         5QGxrjj41NDO8qfMMPFe/72sPyLXsOCh80FXneEfMPtOklmFG4sVlBHfykKk3egiWCq5
+         zpTYqwrsxGsHfEjgvTjC4nUiCUdlcUrdyRHuvCOR5QRkchnIUTryFSVYkWNh8PD7jC5+
+         pSLwgZufHoX7PYbCWs84NTynLyuf8u+YG3ZdZuvWV93IeGqm3AdwsB7O00oWYcTxhKg4
+         aKNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z+fDz1MeXrHCSzrnjCBgED+fbLhxB4Hb//quFwOW43s=;
-        b=61hgC9/Ln+S9bfCtSZTrDyKLxpqT44/OtqnwKeExscBSjMAAqiK3fTHq0GI2XRLjI4
-         mYq1bAFaRc8L9jbXwBh+DpBkvitpnUMfouoeW+9BDZ1GSGzkqHOCMKW7rUfaDWndiJ8c
-         V6SF+R2SVEgclsTHTCZ3RF7bfTlRjFkKC9AAFZvdELQZvbgCqlw4uWunMeh+8ox+p25U
-         BxKvzXld1wPaG0PHm4vX/jc6UwmM66MCrOzGjHVQadWTzsOBfWYo8W2L17YF9tQKtMXv
-         4MJzxZgk2chC04k20+uA8UzwMpjab/sPdk9WcmOyZZiyijc8GJi0bUzULfVPM5iL14vp
-         HYWQ==
-X-Gm-Message-State: ANoB5pkTiepp+JchO3ECVAQ71h83SEOPFs50qWilKMgdX7HW1W+RxMQP
-        fUILMwYQV6O0eMfGfVb6pg==
-X-Google-Smtp-Source: AA0mqf4DqB+WPG/dOrOPgThB+8W8RhMkPaOgNske3u2tmtgD9UpaU6R0SMSg4otTyqeCTim6ddZ6dg==
-X-Received: by 2002:aca:1b18:0:b0:350:d543:7554 with SMTP id b24-20020aca1b18000000b00350d5437554mr272866oib.251.1668519518573;
-        Tue, 15 Nov 2022 05:38:38 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id n204-20020aca40d5000000b0035a0c543ad6sm4938359oia.21.2022.11.15.05.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Nov 2022 05:38:38 -0800 (PST)
-Received: (nullmailer pid 865048 invoked by uid 1000);
-        Tue, 15 Nov 2022 13:38:40 -0000
-Date:   Tue, 15 Nov 2022 07:38:40 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        zhanghongchen <zhanghongchen@loongson.cn>
-Subject: Re: [PATCH v10 1/2] pinctrl: pinctrl-loongson2: add pinctrl driver
- support
-Message-ID: <20221115133840.GA861387-robh@kernel.org>
-References: <20221114024942.8111-1-zhuyinbo@loongson.cn>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ql5Dpk9CyUuSxvNXn+gMJrL3PKw+a0bnATMG8sMuGxo=;
+        b=AwKxy/agHInn/LdivEJj0gpVBmIbb895MNhRMqUwLdpCSNb6cbnPcj2uO88NwIfGAu
+         lHAOfDjTYF1GMZtyBG7e18DTzV8IupskLF6R++TK4RwW89xpPY3WSDu5X0LVm16lAxPm
+         /nc8YOh0un3FKLJ9xHJ69PILWAQmUHQU+Oazf4inX+MQfo3oMzOzhkT0OKDH+auoZIvE
+         bBGBQd9cgrzBzFH4zlPps12PvSwkZ8E2b3YB572Amz25dEUdgHVGkFBofKfiRPuwwSzW
+         j7Ld38vOUeKphTulNvOS4t73NVIYOX1bxlGgWReQsKC7u8gF1vPlQ2fxS7CXBo21GchT
+         rJuA==
+X-Gm-Message-State: ANoB5pnXbOj2DFJ9NUOoA3lrCUA1cRySVG5deOOBMghyF7lt5BS9o98c
+        7A0BJ0wNU0FPsCepbPrEK/h51Syh9IKXwpW3jnW8jnnoFbXT6Q==
+X-Google-Smtp-Source: AA0mqf7Rzfj9Adg5tlO2/OwLcgeVXsd1fDZ+IHzwcsJPby2MtgozzFDKfpUJcNaJaHAQxbn/B9SpB+HbydNcfKI3m/w=
+X-Received: by 2002:a05:6102:4187:b0:3aa:c58:66 with SMTP id
+ cd7-20020a056102418700b003aa0c580066mr8961016vsb.47.1668522787852; Tue, 15
+ Nov 2022 06:33:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221114024942.8111-1-zhuyinbo@loongson.cn>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+References: <20221114040102.66031-1-warthog618@gmail.com> <CAMRc=MdUNHsL3_uFR1j2ao4GCMvH_1W0ZMxe4QBG0HFu4xNcew@mail.gmail.com>
+ <Y3Ja2d1X0vC663gl@sol> <Y3MLF3ilWDXhD2P4@sol>
+In-Reply-To: <Y3MLF3ilWDXhD2P4@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 15 Nov 2022 15:32:57 +0100
+Message-ID: <CAMRc=McQQYPRO1NzbJ26SSD+b_Q+-sLiDHCesSn1tcv8nM52sg@mail.gmail.com>
+Subject: Re: [libgpiod v2][PATCH v4 0/5] tools: improvements for v2
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 14, 2022 at 10:49:41AM +0800, Yinbo Zhu wrote:
-> From: zhanghongchen <zhanghongchen@loongson.cn>
-> 
-> The Loongson-2 SoC has a few pins that can be used as GPIOs or take
-> multiple other functions. Add a driver for the pinmuxing.
-> 
-> There is currently no support for GPIO pin pull-up and pull-down.
-> 
-> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
-> Co-developed-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
-> Change in v10:
-> 		1. Remove lio/uart2/uart1/carmera/dvo1/dvo0 pins resue configuration.
-> 		2. Remove the castings about readl/writel/definition addr.
-> Change in v9:
-> 		1. Add zhanghongchen as patch author and add Co-developed-by tag
-> 		   for myself.
-> 		2. Keep entry in order in Kconfig and Makefile.
-> 		3. Keep it as a separate group after generic linux/* ones.
-> 		4. Use linux/io.h replace asm-generic/io.h.
-> 		5. Use PINCTRL_PINGROUP() and associated data structure.
-> 		6. Remove Redundant blank line after loongson2_pmx_groups.
-> 		7. Adjust gpio_groups.
-> 		8. Remove message printk after devm_platform_ioremap_resource.
-> 		9. Remove comma for the terminator line.
-> 		10. Add MODULE_LICENSE("GPL") in driver ending.
-> Change in v8:
-> 		1. Add #include <linux/pinctrl/pinctrl.h>.
-> 		2. Add #include <linux/seq_file.h>. 
-> Change in v7:
-> 		1. Add all history change log information.
+On Tue, Nov 15, 2022 at 4:44 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Mon, Nov 14, 2022 at 11:12:25PM +0800, Kent Gibson wrote:
+> > On Mon, Nov 14, 2022 at 03:26:38PM +0100, Bartosz Golaszewski wrote:
+> > > On Mon, Nov 14, 2022 at 5:01 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > >
+> > > I played with the tools a bit and really like the way they look now. I
+> > > think they're ready to hop into master, I'll do some more testing and
+> > > they should be in this week. Just one last request from my side: would
+> > > you mind updating the TOOLS section of the README? I'm aware it's not
+> > > yet updated for v2 and I plan to do it soon but we could already start
+> > > with the tools examples. You can send an incremental patch on top of
+> > > this series.
+> > >
+> >
+> > Good point - I totally forgot about the README.
+> > I'll take a look at it.
+> >
+>
+> And while collecting examples for the README I find the interactive mode
+> tab completion is now broken. It seems I broke it when fixing the prompt
+> behaviour when called from a script.
+> And when fixing that I notice some other odd tab completion behaviour -
+> seems there are at least two separate bugs in in_line_buffer().
+> All things that gpio-tools-tests doesn't currently test for, so I
+> should extend the test coverage as well.
+>
+> And gpiomon --unquoted aborts as I forgot to cut-and-paste the parser
+> handler - and forgot to add a test for it too.
+> So another fix and more tests to add.
+>
+> I probably wont get that done for a day or two, so you might want to hold
+> off on merging - or I can always provide patches later.
+>
+> I also note that interactive mode does not support quoted line names on
+> the interactive command line yet. Adding that is sure to be entertaining.
+> Do you want to wait for me to patch that, or add it to the TODO list?
+>
 
-Linus applied v7 already. Additional changes need to be incremental 
-patches on top of it.
+Yeah, I can wait.
 
-Rob
+While at it: can you move the following test case:
+
+@test "gpioget: with consumer" {
+gpiosim_chip sim0 num_lines=4 line_name=1:foo line_name=2:bar
+gpiosim_chip sim1 num_lines=8 line_name=3:baz line_name=4:xyz
+
+dut_run gpionotify --banner -F "%l %E %C" foo baz
+
+run_tool gpioget --consumer gpio-tools-tests foo baz
+status_is 0
+
+dut_read
+output_regex_match "foo requested gpio-tools-tests"
+output_regex_match "baz requested gpio-tools-tests"
+}
+
+to after you actually add gpionotify? Otherwise the test suite fails
+and bisectability is lost.
+
+Thanks!
+Bartosz
