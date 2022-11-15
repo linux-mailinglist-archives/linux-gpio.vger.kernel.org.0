@@ -2,80 +2,99 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1568E62AD8B
-	for <lists+linux-gpio@lfdr.de>; Tue, 15 Nov 2022 23:03:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7270B62AF24
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 00:11:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232403AbiKOWDN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 17:03:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
+        id S231326AbiKOXKz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 15 Nov 2022 18:10:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232418AbiKOWCw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 17:02:52 -0500
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BDFD2FC2C
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 14:02:51 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id v17so23911853edc.8
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 14:02:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GcIrTj8VztBeFoy4k6qhtUBsqi2dQ47UyYJpB5EaTPo=;
-        b=nftL9VuGbqz2wS8aoSGn3u7lKhkqTIh6Qw3ut+/2+mk6iuDylkuO4fKqsTWNWzmabb
-         1+uO4j7fYObWyKAiKEKmBE6gzehSG2tyufgvwVYrmRAYLhOssRGJ9oA3QBbh9RyOLzlD
-         D5fcH2cI5+DXyeI+BcwcFUebEsI1vJt1W0bEQaW9X71inPhHZi6DXA+kWLv8R2nH9LVA
-         yCJcUwuUooshd1gvooIvbPMh2/lQOVvj9ve3fZmdH63tyY2mitEUq1BLVqJRK6kOV6ox
-         eeo5WJFrUM+yQ2HFSuYk0Ulo2z+7GNylpGJhI/w5XIqx8FYdEGgPziqKHptGoWU+3dLY
-         VcMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GcIrTj8VztBeFoy4k6qhtUBsqi2dQ47UyYJpB5EaTPo=;
-        b=5XYG9Tj00e9dH0sZNHUdEZ515HJFjANsuFBRWP+WyH28YrNxLL2At7ZzN7VoZk8Y3J
-         vSFQ4J0KZT77WwH08O4WIxADEiidOZiAYoX3j/Cf9HQ0B76zdOVyqkoLGC2iUerOAF8E
-         +o+XUUskePaSvt07JkT+S3J3A0vlIqeEOqPisGIJpUjsg3D8KGl3bIlM7YTf96VkP8m4
-         eOgeVItHQBC4ixAYRy/dHJ0Yi19B2GUyU1aCvRNnL8EHejABh/UJyJHeidAK1nsw+s7j
-         BpWKQ/blNb+cs5uG3gDVf1SLnNCrwKjsgNS/A3KF9XFur9lUJPR+vtFaEMiQg04NkO/d
-         jVLQ==
-X-Gm-Message-State: ANoB5plxzo297vMjpSMz57w/bhg54LRUJF2qhxqGplaFpnmHgg7m2JKq
-        bGkQypOwoBS1zuhUKwcC2CgjBkg/4fr2tcGerSAcTg==
-X-Google-Smtp-Source: AA0mqf5SXfBI6T37ANtaU6IquIxC4j46qTnsreujvs83VOL05kbVxIsQj9U6F2D9Uv3/ulToJeZmoQ1bjTwySKzYq/0=
-X-Received: by 2002:a50:fd8f:0:b0:461:46c7:310b with SMTP id
- o15-20020a50fd8f000000b0046146c7310bmr17315493edt.307.1668549769960; Tue, 15
- Nov 2022 14:02:49 -0800 (PST)
+        with ESMTP id S238570AbiKOXKk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 18:10:40 -0500
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45B9F2E680;
+        Tue, 15 Nov 2022 15:10:38 -0800 (PST)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AFNAMUf026650;
+        Tue, 15 Nov 2022 17:10:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1668553822;
+        bh=gtf+eQVCKgSWi792JEHOnuPGmozhEm9qEIoe9H4zdgg=;
+        h=From:To:CC:Subject:Date;
+        b=jPOIf5AiID8XwK+J8AuyetpqXxWKUGmBI60zIdnA5pUEQuUDX1GraE7PofICp5cpl
+         2GTScVC8OVpS0cM89NgCFLNXP2zI0koT5k5qAN7+n6tBvDvm9q1so80pz4IdpYD1Ys
+         xeWV5K2St+L8tN+Peeql1IJJxlxUexN+MQD7sZ5w=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AFNAMej019020
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 15 Nov 2022 17:10:22 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Tue, 15
+ Nov 2022 17:10:22 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Tue, 15 Nov 2022 17:10:22 -0600
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AFNAMhV115002;
+        Tue, 15 Nov 2022 17:10:22 -0600
+From:   Nishanth Menon <nm@ti.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Keerthy <j-keerthy@ti.com>
+CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Nishanth Menon <nm@ti.com>
+Subject: [PATCH] dt-bindings: gpio: gpio-davinci: Increase maxItems in gpio-line-names
+Date:   Tue, 15 Nov 2022 17:10:21 -0600
+Message-ID: <20221115231021.2389-1-nm@ti.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-References: <20221114202943.2389489-1-bmasney@redhat.com> <7420da17-d6d6-10e6-c87e-d3dc37d17ffb@linaro.org>
-In-Reply-To: <7420da17-d6d6-10e6-c87e-d3dc37d17ffb@linaro.org>
-From:   Steev Klimaszewski <steev@kali.org>
-Date:   Tue, 15 Nov 2022 16:02:38 -0600
-Message-ID: <CAKXuJqgckbmikXwFi0g3P3Db5jvyst+xhQBcPoV7mA2XStVVzA@mail.gmail.com>
-Subject: Re: [PATCH RFC] gpiolib: ensure that fwnode is properly set
-To:     "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc:     Brian Masney <bmasney@redhat.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        psodagud@quicinc.com, quic_shazhuss@quicinc.com,
-        quic_ppareek@quicinc.com, ahalaney@redhat.com, echanude@redhat.com,
-        nicolas.dechesne@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+gpio-line-names really depends on ti,ngpios. However, the maximum value
+we have seen across the board is on K2G and da850 platforms where it can
+be upto 144.
 
-Others in the thread pointed to Thierry's patch, but on the Lenovo
-Thinkpad X13s, that patch did *not* fix the issue, and with it
-applied, the X13s still immediately reboots as soon as exiting EFI
-services.  With this patch applied, the X13s does *not* reboot after
-exiting EFI services, so thank you for this patch.
+Link: https://lore.kernel.org/linux-arm-kernel/20221115200357.qa2rvw3clbz7unzq@symptom/T/#u
+Fixes: c830b87a761b ("dt-bindings: gpio: gpio-davinci: Convert to json-schema")
+Reported-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
 
-Tested-by: Steev Klimaszewski <steev@kali.org> #Lenovo Thinkpad X13s
+I dont see a practical scheme to set the maxItems based on ti,ngpios,
+but deleting the maxItems was softening the check as well.
+
+ Documentation/devicetree/bindings/gpio/gpio-davinci.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+index f32e09ef937c..10e56cf306db 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.yaml
+@@ -35,7 +35,7 @@ properties:
+   gpio-line-names:
+     description: strings describing the names of each gpio line.
+     minItems: 1
+-    maxItems: 100
++    maxItems: 144
+ 
+   "#gpio-cells":
+     const: 2
+-- 
+2.31.1
+
