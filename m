@@ -2,118 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A27C962B3EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 08:31:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 349D962B3ED
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 08:32:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231845AbiKPHbT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 02:31:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
+        id S232500AbiKPHcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 02:32:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbiKPHbS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 02:31:18 -0500
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CAE9B1F6;
-        Tue, 15 Nov 2022 23:31:18 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5EFE55809C4;
-        Wed, 16 Nov 2022 02:31:17 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Wed, 16 Nov 2022 02:31:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1668583877; x=1668591077; bh=E7Jvxw9QD6
-        996LKckctE3pdX4RULOQBfxqDk4Zxzl70=; b=UCYzRJf5/nF7KDyRXSU6qXw6m2
-        h/GU0Nq4X2X7krevsnL8L2tQjh7uA+CbeT3BoQMb0+Z7hbw3YCDdZh3StmM3fQla
-        L+8mrROo/hgakmB9OW4IUO3GJj1yZwqE8JnxdBh6dYzTfATlwnzoSBDzME8MyDTT
-        ksd98dty5hszdERTH7aOJ9A5lXFno5oW9VJ414s4ixJyOfDjugQucJc02H/yraY7
-        m8D/EpW3c4NzwprB+ZRuzHLf99xy3MLiDnSWAKTV4C7GPG6mSl+bu8j21ycmD9Gc
-        RD0dwIdCqv6pAmrzjsTKMDN8jGWTAyhrPQINx0ItVtRXFZX60RtwNhaVDaPQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1668583877; x=1668591077; bh=E7Jvxw9QD6996LKckctE3pdX4RUL
-        OQBfxqDk4Zxzl70=; b=a71ozBRnHjODiY3Bl2l8nH5zIEdMV8WQ9QLrSluipnJQ
-        c+ZPC8SEZNgpWnmMNqVGumLalZNySjSk2TFEHXWBflhQXSwblMaBzCHDll3ksYkv
-        12sVw0c3uZGlni/OyzVh4u/8yVkN4In+Neu8oOK44OdkRjKicMfd88Wp9JpVJsJg
-        Ueg6dGTdJmIUAu1TIdA1z1xmAIOvybbmCEieBdj3cnQMBn+lSPTMlaM019IYdisK
-        Y149puB9nPI8d7avw0dglZCmuP1niuRXJT042eDWdyAcew/kisksjG6M4N9UP8SD
-        6Y065HA8/rCwTDOlRBmzVWQ6NmnPx8ftOwIbBKvmcg==
-X-ME-Sender: <xms:wpF0Yzx92FxEviZ4rKqY1Dg_MtW2wQb6JgAnuyGBwODp2NtLbv_B6w>
-    <xme:wpF0Y7RW98tAi8rBUArSO9nbjLyaioIX8LXbGJFJvmATCQJHsCnxF4urgcYuhecJH
-    WOkouzlyP3ZjLEGZCU>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgeehgddutdekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:wpF0Y9X6hQ1Q0rn2n4V8MUqsEMXEI0muIoGMmjnJbHJCYDyzSuE-5A>
-    <xmx:wpF0Y9iWplj5NDFNtnjL2cdlkcKiQqTlvZB06KLoCz-R_6U9mGd23w>
-    <xmx:wpF0Y1AO2AU2yBr2weajsEHEiXyu1eHgd-DKgd8DWFtExHvqN5LVHA>
-    <xmx:xZF0Y957IjAdhwipWoPh3GF8kRlSsqFjl4NYXgZtisTgQwYQyRkuHQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id D04D8B60086; Wed, 16 Nov 2022 02:31:14 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <88f8d4b3-b144-4d04-a2bc-61ee30dd6ff6@app.fastmail.com>
-In-Reply-To: <20221116065335.8823-1-zhuyinbo@loongson.cn>
-References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
-Date:   Wed, 16 Nov 2022 08:30:54 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Yinbo Zhu" <zhuyinbo@loongson.cn>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        "WANG Xuerui" <kernel@xen0n.name>,
-        "Jiaxun Yang" <jiaxun.yang@flygoat.com>,
-        "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
-        "Juxin Gao" <gaojuxin@loongson.cn>,
-        "Bibo Mao" <maobibo@loongson.cn>,
-        "Yanteng Si" <siyanteng@loongson.cn>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        "Arnaud Patard" <apatard@mandriva.com>,
-        "Huacai Chen" <chenhuacai@kernel.org>
-Cc:     "Jianmin Lv" <lvjianmin@loongson.cn>,
-        zhanghongchen <zhanghongchen@loongson.cn>,
-        "Liu Peibao" <liupeibao@loongson.cn>
-Subject: Re: [PATCH v3 1/2] gpio: loongson: add dts/acpi gpio support
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232501AbiKPHcC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 02:32:02 -0500
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2895EB1F6;
+        Tue, 15 Nov 2022 23:32:02 -0800 (PST)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id D39B714C1;
+        Wed, 16 Nov 2022 08:31:57 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1668583917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=piDfn64ODAtoaZKFwAql8Y2/q2UocH9lkh4rRnP9hco=;
+        b=vEv6i7pNqUD1YJqyKPKHL6S+GfFWxCp3JCNxh2zDhn2j6jzSrGYH8tbOfYbS+hHzey3J8j
+        yerF9dZ+i4nEFBNDjigRrxfsERL+u/WVqM8NfzMH0aYYF7ZVFCvMLufQnOKtgEguC2+TUn
+        GWgx8pWeyW7ikqXdhnX2M20WspRrcmsj1WtI/uBPMzVLxQVeWuKg6qQw2S1hsob6Dku26R
+        VQBW+Iwbc2uAZbn2Xmdu9sXeWORAELzkbh9lwu/gxp5PlE/M00rgJAU8KnQSZtVUxD+Hv8
+        7yZTefX9Oq+i0JlyYjBvrXviM9fAwyJCXn3wIClMG/IEPQ5CHKJ26AI3zlaBTQ==
+MIME-Version: 1.0
+Date:   Wed, 16 Nov 2022 08:31:57 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Matt Ranostay <mranostay@ti.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
+        lee@kernel.org, kristo@kernel.org, alexandre.belloni@bootlin.com,
+        a.zummo@towertech.it, krzysztof.kozlowski+dt@linaro.org,
+        robh@kernel.org, vigneshr@ti.com,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v3 4/7] gpio: tps6594x: add GPIO support for TPS6594x PMIC
+In-Reply-To: <Y24OuHmXCV/5HuEY@ubuntu>
+References: <20221109065546.24912-1-mranostay@ti.com>
+ <20221109065546.24912-5-mranostay@ti.com>
+ <CACRpkdaTV6unVsfNj+M39jLn5FLTnhryjuzF4EB6Ytds9R1nEQ@mail.gmail.com>
+ <Y2zOhf8lqVLyLn+A@ubuntu>
+ <CACRpkdZOR4Hcyv=bO7=rJERJK7JbCoS0_dvWj0K=YZC6Nsozdw@mail.gmail.com>
+ <Y24OuHmXCV/5HuEY@ubuntu>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <91b51ffaadaa4c3d5ca46dc252d641c6@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 16, 2022, at 07:53, Yinbo Zhu wrote:
-> The latest Loongson series platform use dts or acpi framework to
-> register gpio device resources, such as the Loongson-2 series
-> SoC of LOONGARCH architecture. In order to support dts, acpi and
-> compatibility with previous platform device resources in driver,
-> this patch was added.
+Hi,
 
-I think the support for legacy platform_data should be left out
-of this patch. I am working on a series that removes unused
-platform_data headers for machines that have DT support and no
-longer use static platform_device declarations anywhere in
-the kernel, so if you add another instance, that would just
-get removed again in the near future.
+Am 2022-11-11 09:58, schrieb Matt Ranostay:
+> On Thu, Nov 10, 2022 at 11:15:22AM +0100, Linus Walleij wrote:
+>> On Thu, Nov 10, 2022 at 11:12 AM Matt Ranostay <mranostay@ti.com> 
+>> wrote:
+>> > On Wed, Nov 09, 2022 at 10:59:08AM +0100, Linus Walleij wrote:
+>> > > On Wed, Nov 9, 2022 at 7:56 AM Matt Ranostay <mranostay@ti.com> wrote:
+>> > >
+>> > > > Add support for TPS6594X PMICs GPIO interface that has 11 that can be
+>> > > > configured as input or outputs.
+>> > > >
+>> > > > Tested-by: Keerthy <j-keerthy@ti.com>
+>> > > > Signed-off-by: Matt Ranostay <mranostay@ti.com>
+>> > >
+>> > > (...)
+>> > > > +config GPIO_TPS6594X
+>> > > > +       tristate "TI TPS6594X GPIO driver"
+>> > > > +       depends on MFD_TPS6594X
+>> > > > +       help
+>> > > > +         Select this option to enable GPIO driver for the TPS6954X
+>> > > > +         PMIC chip family. There are 11 GPIOs that can be configured.
+>> > >
+>> > > select GPIO_REGMAP
+>> > >
+>> > > This driver is an archetypical example of a driver that can make great
+>> > > use of GPIO_REGMAP helpers, so rewrite it to use them.
+>> > > Look in drivers/gpio/gpio-sl28cpld.c for an example.
+>> >
+>> > Linus,
+>> >
+>> > Those helpers look great for this usecase on the surface but however I think there could be some issues.
+>> > For GPIO direction it isn't configured by a bitmap on a register(s) but by a bit on a range of
+>> > registers (with a register for each GPIOx).
 
-Just don't add it here. If there are users that use traditional
-boardfiles instead of DT, they already need kernel patches to
-add the board files, and adding in the driver support can be
-part of the same patches.
+As long as there is only one register to be changed per pin/action,
+.reg_mask_xlate should work, as you've already found out.
 
-      Arnd
+>> > For set/get values the gpio helper would work though.
+>> 
+>> Isn't is possible to just use parts of the GPIO_REGMAP
+>> helpers? I thought it's designed like such.
+
+No, you can't use them as they are kept private, along with
+the needed struct gpio_regmap. Which was intentional back then
+as it should be easier to change the implementation or add features
+without its use being spread all over the gpio drivers.
+
+We could change that though - or just add the needed feature to
+gpio-regmap if it looks generic enough.
+
+>> 
+>> Michael Walle will know what to do with your usecase, and
+>> whether to use it or not, let's page him!
+>> 
+> 
+> So after looking around a bit and digging into the helper code I found 
+> this
+> drivers/pinctrl/bcm/pinctrl-bcm63xx.c which has a example on how to 
+> override
+> the reg_mask_xlate function which could be used for changing the
+> stride, and mask
+> based on the base address.
+> 
+> Currently have coded up using the gpio regmap helper. Will run through
+> some testing
+> first and then submit for review.
+
+Sounds promising.
+
+-michael
