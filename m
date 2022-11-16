@@ -2,139 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1E2862B1F9
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 04:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B08362B2FE
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 06:52:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230522AbiKPDzb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 15 Nov 2022 22:55:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
+        id S232434AbiKPFwP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 00:52:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbiKPDzb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 15 Nov 2022 22:55:31 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52868DB9
-        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 19:55:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668570930; x=1700106930;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=b+Do3JjhTAcmS4PhBV4tfqWNt+kLVugncrJOn0WX0T0=;
-  b=R7qkp57dxlMJaYqJBpvOoDH24fZwwakMDOOQm10iVRhdeoJ+5+DZX1+x
-   7grpzSRZZcBrZVcXQ53KhIDSLM+jkz6QOgn787CNbp+U8Q5A8m2pfcuVJ
-   dGYjpMATCk6wwarN2GBaueMkn1tM0fQRnpvdEfhIRwu0yb50CoRfd0kI+
-   vCimN94QysvfRa8+rqUzONgvmzXBqMljK6D1v0TtzRJeyU6Q/HyS+ItQ+
-   ArFguyM2Bp8BHfe+UTupND9itiPTFu5tHFtRFW2BP8+qvD82ui6Hb39nG
-   vDvTrQz6+qvKW4+d+nQb2J4B2VGjEpPsCF7MypYQl+lhtfCK03+whye1F
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="292148870"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="292148870"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Nov 2022 19:55:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="884227392"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="884227392"
-Received: from lkp-server01.sh.intel.com (HELO ebd99836cbe0) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 15 Nov 2022 19:55:29 -0800
-Received: from kbuild by ebd99836cbe0 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ov9WK-0001xH-1P;
-        Wed, 16 Nov 2022 03:55:28 +0000
-Date:   Wed, 16 Nov 2022 11:55:21 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        with ESMTP id S232417AbiKPFwO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 00:52:14 -0500
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E37024F19
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 21:52:10 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id p21so15470766plr.7
+        for <linux-gpio@vger.kernel.org>; Tue, 15 Nov 2022 21:52:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vl2lMOnv9oIQ5HaIF9r7Aqubw+AlknQ8u6ccwj68OyU=;
+        b=qzqL2KnFbl4wPNWyw/klDjoARuF0l8czmi9qlHvROylJc2oSgACx7gn7nP943ebATf
+         EOJ6KIzjEBiS2d53UxuQLdfNgdIO9PnjI6Q3z+SR/iaW4W4Omt32Sv/6dkOxFl92tBHy
+         kJ1g1NHEPp10VBE5y06D77d13ZYsntdUUxVEdtjE2np0Y6qSg3vnt47bE2RFPmiueCbE
+         Ld+gJ0LpLXiYOkqeFTiZDBVWOTQZMECDjch8+sY7HSB+ILeOjZDIGy4jMpozjlUQiKis
+         lzHw8UO1yB5qGznlpXyexC+OZgbmT91SQpjrJLV22w795TpJd7ivAihDgt8ItxKqglWO
+         nrwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vl2lMOnv9oIQ5HaIF9r7Aqubw+AlknQ8u6ccwj68OyU=;
+        b=zbcSxebe8SGdGojwd3VMw/buEtMIkW04B2o+bDc2X758qAWN47dVAV5TtyLW02IUeY
+         Fs5ZMzheKIiYfTKEzwIvVBTqkWJ0IejPY9402jv6XTfeu1PrZXGUkMHsUI1CeI6uOIUG
+         DaapditI8GJOs9p4H0+k6BdghNWIKs6+qGZKsHkysMGr5L1973AQLGKyj/9Y8sxU+nhJ
+         S52mi90bxehSd9OSPhKdIXSOSvUHlZvCnPMMKjivniDjyjkgNnVH17Zz+jdg3FRbENDX
+         YrI5UcFYrnpiJihWm+2DpfCyvL51VVVx5OVOH/fdoeEowJawr7tgK2iAFDW2SZ3QtU1X
+         Ddjg==
+X-Gm-Message-State: ANoB5plfH/uIyrpHztfFzjWFGoCjkFD83Zj0oLbQ4e5XwtateFW2T2zp
+        87a4N3D0Xx78kc2M3uiRu/Z3tBdDIh0=
+X-Google-Smtp-Source: AA0mqf4SLA7oIvmLRLcXXE0utMZ1plHAiJW6neZeYvmOce9/BBXy32gMX7no4sgMT3OqiHEmlQKO3A==
+X-Received: by 2002:a17:90b:d13:b0:217:ecbd:5ae with SMTP id n19-20020a17090b0d1300b00217ecbd05aemr2066855pjz.17.1668577929912;
+        Tue, 15 Nov 2022 21:52:09 -0800 (PST)
+Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
+        by smtp.gmail.com with ESMTPSA id e4-20020a170902d38400b001822121c45asm10985931pld.28.2022.11.15.21.52.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 21:52:09 -0800 (PST)
+Date:   Wed, 16 Nov 2022 13:52:05 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Leszek Dubiel <leszek@dubiel.pl>
 Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 739be9b6a84b23c40b0fb534b749602fb8285e70
-Message-ID: <63745f29./Pbxcc+0LNvofNYJ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+Subject: Re: Elegant way to kill previous gpioset?
+Message-ID: <Y3R6hbBF5vKuwvFe@sol>
+References: <fc3da423-1107-83a1-1c94-afb2ac5fa7c9@dubielvitrum.pl>
+ <57c25430-284b-36dc-7a68-70847bc1bdcb@dubiel.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <57c25430-284b-36dc-7a68-70847bc1bdcb@dubiel.pl>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 739be9b6a84b23c40b0fb534b749602fb8285e70  gpio: sl28cpld: Replace irqchip mask_invert with unmask_base
+On Tue, Nov 15, 2022 at 09:36:59PM +0100, Leszek Dubiel wrote:
+> 
+> 
+> 
+> Different bash scripts from different servers
+> ssh to Raspberry and set GPIO line:
+> 
+>         /dev/gpiochip2, pin number 7.
+> 
+> with such command:
+> 
+>         gpioset -b -msignal /dev/gpiochip2 7=1
+> 
+> 
+> 
+> If another script tries:
+> 
+>       gpioset -b -msignal /dev/gpiochip2 7=0
+> 
+> then it gets:
+> 
+>       gpioset: error setting the GPIO line values: Device or resource busy
+> 
+> 
+> 
+> So every bash script kills previous instance
+> before setting gpio line:
+> 
+>      pkill -ef "^gpioset .* /dev/gpiochip2 7=[01]$"
+>      gpioset -b -msignal /dev/gpiochip2 7=0
+> 
+> 
+> 
+> Pkill is bad solution:
+> 
+> 1. it is very slow, because it has to grep full command lines.
+> 
+> 2. it doesn't work if one of bash scripts
+> used little bit different command, for example:
+> 
+>      gpioset -b -msignal /dev/gpiochip2 7=0 5=2
+>      gpiomon             /dev/gpiochip2 7
+> 
+> 
+> 
+> Is there a better way to kill o replace
+> previous instance of running gpioset?
+> 
 
-elapsed time: 722m
+The best way is not to have to kill it.
+If you kill the gpioset then the state of the line becomes indeterminate
+so you are open to glitches as well as some other process grabbing the
+line.
 
-configs tested: 58
-configs skipped: 2
+To address this the gpioset for v2[1] has an interactive mode that allows
+you to pipe commands to it.  The tests for v2[2] (gpio-tools-tests.bats)
+demonstrate that by launching the gpioset from bash using coproc and then
+driving the gpioset via the pipe to the co-process.
+For a more long lived solution you can setup a named pipe and then write
+commands to that to update the line:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+mkfifo setpipe
+gpioset --interactive -c gpiochip2 7=0 < setpipe &
+echo "set 7=1" > setpipe
+or
+echo "toggle" > setpipe
 
-gcc tested configs:
-powerpc                           allnoconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-sh                               allmodconfig
-arc                                 defconfig
-s390                             allmodconfig
-mips                             allyesconfig
-alpha                               defconfig
-x86_64                          rhel-8.3-func
-powerpc                          allmodconfig
-x86_64                    rhel-8.3-kselftests
-arc                              allyesconfig
-s390                                defconfig
-alpha                            allyesconfig
-s390                             allyesconfig
-x86_64                              defconfig
-ia64                             allmodconfig
-arc                  randconfig-r043-20221115
-riscv                randconfig-r042-20221115
-s390                 randconfig-r044-20221115
-m68k                             allyesconfig
-x86_64                               rhel-8.3
-i386                          randconfig-a001
-m68k                             allmodconfig
-i386                          randconfig-a003
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                           allyesconfig
-x86_64                        randconfig-a004
-i386                          randconfig-a014
-x86_64                        randconfig-a002
-x86_64                           rhel-8.3-syz
-i386                          randconfig-a012
-x86_64                         rhel-8.3-kunit
-i386                          randconfig-a016
-x86_64                        randconfig-a015
-i386                                defconfig
-x86_64                        randconfig-a006
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a005
-arm                                 defconfig
-i386                             allyesconfig
-arm                              allyesconfig
-arm64                            allyesconfig
+You can even kill it with:
 
-clang tested configs:
-hexagon              randconfig-r045-20221115
-hexagon              randconfig-r041-20221115
-i386                          randconfig-a013
-i386                          randconfig-a002
-x86_64                        randconfig-a012
-i386                          randconfig-a004
-x86_64                        randconfig-a014
-x86_64                        randconfig-a001
-i386                          randconfig-a011
-x86_64                        randconfig-a003
-x86_64                        randconfig-a016
-x86_64                        randconfig-a005
-i386                          randconfig-a015
-i386                          randconfig-a006
+echo "exit" > setpipe
 
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Would that work for you?
+
+Personally, for situations like this I don't use the tools, I use one of
+the bindings to write a daemon that controls the line and receives its
+commands from some other source.
+
+There are plans for a generic daemon that would allow you to access lines
+via dbus, but that hasn't got past the planning stages AFAIAA.
+
+Wrt identifying and killing processes holding particular lines,
+the ability to identify the GPIO lines held by processes via the /proc
+filesystem has recently been added to the 6.1 kernel[3].  There are
+plans for a tool that will use that to return the PID holding a line,
+but again that is still in the planning stages.
+
+Cheers,
+Kent.
+
+[1] https://lore.kernel.org/linux-gpio/20221114040102.66031-3-warthog618@gmail.com/
+[2] https://lore.kernel.org/linux-gpio/20221114040102.66031-4-warthog618@gmail.com/
+[3] https://lore.kernel.org/linux-gpio/Yyw5mivLAgWZIx0W@sol/T/
+
