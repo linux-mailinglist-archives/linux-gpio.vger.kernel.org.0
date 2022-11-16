@@ -2,152 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBDA062BC72
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 12:49:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC21662BCD1
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 13:00:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbiKPLtH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 06:49:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60090 "EHLO
+        id S232256AbiKPMAc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 07:00:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238990AbiKPLr7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 06:47:59 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7331220986
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:34:47 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id 130so16388900pgc.5
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:34:47 -0800 (PST)
+        with ESMTP id S233340AbiKPMAF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 07:00:05 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45E6419A1
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:52:12 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso2130618pjc.5
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:52:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sartura.hr; s=sartura;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GdCAa7K7DpxQCHLJzzUvovjinqpUndXrecJwIijz2vQ=;
-        b=dw1O2udg2QI9VOP1TCM5Vih67cp/9mpyxnn8xiB14IMfm5vhkK6xmJH4i+X73rFtXv
-         jUM3kxB/1XzlXDsEdlLaG4RCySNWjqYgDGPYxvll5iTAR/6CP3IOGlKsgLhcmggLQ0yI
-         AEf+MBzMC2DYsDASPOvfAbRwWIoYCxqmjsJxU5H+oJhBP3w7wG/t00yOZcudSw8tNT/s
-         YhZhFUPPS+zXtJ1o3Wl2BFfXNn0Gifi1QP37A0ifm1M3ljMbfyWg53EEt6JZjcNqqdKb
-         zjKW/jt7tfD3lZs9oZ//z7z8V/+QiDTFZpSc3kzKGPMAl6Lkp4uiul2rJWwckI+HW09j
-         RqVg==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LumQeZjCjKVk2NcCFJ7XQg27qQhohVPunXFB2i4bXVU=;
+        b=dU3FoWB5MP52X0XAP7BbVMHFd35DoaKDV1NigGzrPhCO3oDp7hUCQ3b9Sh3fuSnIVX
+         g4UmD7v6HKMNJG5dTh/iJnnJA+mtq0cwRNcmw7AatMzvbRC/lovCqn+ihPOqFnYXxpen
+         rm61hWEYSZolStvd2WArzY41iidIMVJqa2sy6ouQe/59l6ECx8EHTBZKlVyN5Wg9WWUi
+         LgTpBIgrwESJguBUY9FooYK2w1/+7DjtgshA8yR9Yk3NKudS9r1dOOYSD4KMsYdcLWu6
+         T06V6PmBCVdGUW2kbZmqfvJJN4JJZaog7g+20533dw3lnno+XsmE5YtJ/VUp9tTXPxJs
+         Z9jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GdCAa7K7DpxQCHLJzzUvovjinqpUndXrecJwIijz2vQ=;
-        b=tqqgVrpIfGbAX6dmBdwoEYQ26fqMMtq0FXUAVL9R0pTrToTy+e+jK5KcZD/btn9oZY
-         24Dysfbp5Ufa+bLg0soJCtcOILaWvfKqt6l4H8KXk6WYU9Yziro1E8J7v0jb6l3/KkGz
-         fD5DDwYgviAtyP9PVU1F4nToTKvDWWu0R0xIFG9TzMmD3yasyoZ/gTDAqMVxwHkP6Jc5
-         HIrOa7BUSPAWqWDlrLQ0hA/11mxClTAbGQ16bho3YlTzPhIHo3xqkmMaibXbKsQdtf82
-         d+uLjQ9o9cWvkOGyjWJ7aNLAfHTMp1ok1hYv21JkWd1z5HQJ7f4QSU4Is3eg0qmDIttu
-         oCbA==
-X-Gm-Message-State: ANoB5plZ5oLMiii0PFBK0XPHlX4Wo1K7NFokwZu/RHqXRZZB/T41cfBN
-        HKOVr07akIHZbwCBDv+TQi+0k7SdI9uPaWyh82noAA==
-X-Google-Smtp-Source: AA0mqf6zJoGirhigKD2kDvLydGV2Js8wZTzDP2PmwKIEDjisKeGR+HGvUm+duDEidzaBoUk7Fs/yq4fvk7fY1+c1Ar4=
-X-Received: by 2002:a63:224b:0:b0:45c:562f:b2b9 with SMTP id
- t11-20020a63224b000000b0045c562fb2b9mr19864447pgm.245.1668598486574; Wed, 16
- Nov 2022 03:34:46 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LumQeZjCjKVk2NcCFJ7XQg27qQhohVPunXFB2i4bXVU=;
+        b=l2VbkwrHmjQrVJrAgaxOXVXSnMKquX7jKAvbaeNRsfWrfyCJfzHs44+NzxRcxJAo1B
+         vuwD334LNyz9N2+G7+MoNznl7Yu8qTKuN+jA+AGtWkyI/bOlviM1arthQdg1D/jCy6Go
+         YJyg6M3ULHd5NIbHATD0YvRfgdEf7iBuToGFZIYR5kFGSDWVG3jEJzV1JQtt8bTEeosC
+         HHmee7fOjGfiS5cNQroCGuyx4aorK39UAfPTWDjLoAJArgGS8BhsMiEXvmeGwJRgBtBP
+         xE4YZUtj/ekeMap3LlZcbt7EdZYKxWeB6hQxwwC272G/7Z5AXGiNv9R3y0laJ2y/vzsX
+         EP/g==
+X-Gm-Message-State: ANoB5plqvt/TQXaqYtK+Wgvqf2MCE7XbyGCRDac/eRk4SCIjgpyR0Dbr
+        HgL+W1eRsvVvXBW8towIOoFksJUyYfo=
+X-Google-Smtp-Source: AA0mqf4APw/wEV5s1aTE968kK1Gc+LTfC4BK2gFvDx6EGFmw538L2Ea8cjMjwMe7LaCj9LF+ESFUYw==
+X-Received: by 2002:a17:902:d1d4:b0:186:9ef5:4d59 with SMTP id g20-20020a170902d1d400b001869ef54d59mr8610258plb.89.1668599531887;
+        Wed, 16 Nov 2022 03:52:11 -0800 (PST)
+Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
+        by smtp.gmail.com with ESMTPSA id t10-20020a63224a000000b00460fbe0d75esm9502553pgm.31.2022.11.16.03.52.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 03:52:11 -0800 (PST)
+Date:   Wed, 16 Nov 2022 19:52:07 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Leszek Dubiel <leszek@dubiel.pl>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: Elegant way to kill previous gpioset?
+Message-ID: <Y3TO52Fn3XIqN8yY@sol>
+References: <fc3da423-1107-83a1-1c94-afb2ac5fa7c9@dubielvitrum.pl>
+ <57c25430-284b-36dc-7a68-70847bc1bdcb@dubiel.pl>
+ <Y3R6hbBF5vKuwvFe@sol>
+ <1608e9ad-d9c4-8856-569f-cd894ffc2836@dubiel.pl>
 MIME-Version: 1.0
-References: <cover.1668129763.git.william.gray@linaro.org> <1805d1ddb5bbce8e86164e66421ddde481cce4f9.1668129763.git.william.gray@linaro.org>
- <Y3DlsTAQMi6kKObJ@smile.fi.intel.com> <Y3DvUaA7YYAsypGv@fedora>
-In-Reply-To: <Y3DvUaA7YYAsypGv@fedora>
-From:   Robert Marko <robert.marko@sartura.hr>
-Date:   Wed, 16 Nov 2022 12:34:35 +0100
-Message-ID: <CA+HBbNHs+RJ_AwUP-8Ju=-HF-4sO=dKcrDUu1BfbE7Pb4kVeLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] gpio: regmap: Always set gpio_chip get_direction
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        michael@walle.cc, linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1608e9ad-d9c4-8856-569f-cd894ffc2836@dubiel.pl>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 13, 2022 at 2:21 PM William Breathitt Gray
-<william.gray@linaro.org> wrote:
->
-> On Sun, Nov 13, 2022 at 02:40:17PM +0200, Andy Shevchenko wrote:
-> > On Thu, Nov 10, 2022 at 08:55:50PM -0500, William Breathitt Gray wrote:
-> > > If you only have reg_dat_base set, then it is input-only; if you only
-> > > have reg_set_base set, then it is output-only. Thus, we can always set
-> > > gpio_chip get_direction to gpio_regmap_get_direction and return
-> > > GPIO_LINE_DIRECTION_IN/GPIO_LINE_DIRECTION_OUT given the respective
-> > > register base addresses configuration.
-> >
-> > Seems legit to me. Have you checked if we have any gpio-regmap drivers that
-> > have something like this in their configuration already? In such cases we need
-> > to be sure they behave as expected.
-> >
-> > From the code perspective:
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> I see gpio-sl28cpld has two device types SL28CPLD_GPO (output-only) and
-> SL28CPLD_GPI (input-only); gpio-tn48m similarly has two device types
-> TN48M_GPO (output-only) and TN48M_GPI (input-only). It doesn't look like
-> the change in this patch will cause problems for them, but I'll let
-> Michael Walle and Robert Marko comment if they see issues here.
+On Wed, Nov 16, 2022 at 09:54:21AM +0100, Leszek Dubiel wrote:
+> 
+> 
+> I was wondering if there is some "one-liner" that
+> recofigures pin, something like:
+> 
+>                 gpioset -b -msignal --autokill /dev/gpiochip2 7=0
+> 
+> or
+>                 gpioset -b -msignal --force /dev/gpiochip2 7=0
+> 
+> that does these two commands at once:
+> 
+>               pkill -ef "^gpioset .* /dev/gpiochip2 7=[01]$"
+>               gpioset -b -msignal /dev/gpiochip2 7=0
+> 
+> 
 
-Hi, sorry for the late reply.
-This should work fine for TN48M.
+Understand that GPIOs are a managed resource, like files, and what
+you are asking for here is equivalent to a function that would kill
+whatever process has a file open whenever you write to that file.
+So, no there isn't.
 
-Regards,
-Robert
->
-> William Breathitt Gray
->
-> > > Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
-> > > ---
-> > >  drivers/gpio/gpio-regmap.c | 7 ++++++-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> > > index 6383136cbe59..f907c9c19fce 100644
-> > > --- a/drivers/gpio/gpio-regmap.c
-> > > +++ b/drivers/gpio/gpio-regmap.c
-> > > @@ -111,6 +111,11 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
-> > >     unsigned int base, val, reg, mask;
-> > >     int invert, ret;
-> > >
-> > > +   if (gpio->reg_dat_base && !gpio->reg_set_base)
-> > > +           return GPIO_LINE_DIRECTION_IN;
-> > > +   if (gpio->reg_set_base && !gpio->reg_dat_base)
-> > > +           return GPIO_LINE_DIRECTION_OUT;
-> > > +
-> > >     if (gpio->reg_dir_out_base) {
-> > >             base = gpio_regmap_addr(gpio->reg_dir_out_base);
-> > >             invert = 0;
-> > > @@ -265,8 +270,8 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
-> > >     else if (gpio->reg_set_base)
-> > >             chip->set = gpio_regmap_set;
-> > >
-> > > +   chip->get_direction = gpio_regmap_get_direction;
-> > >     if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
-> > > -           chip->get_direction = gpio_regmap_get_direction;
-> > >             chip->direction_input = gpio_regmap_direction_input;
-> > >             chip->direction_output = gpio_regmap_direction_output;
-> > >     }
-> > > --
-> > > 2.38.1
-> > >
-> >
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> >
-> >
+It is really unfortunate that killing the process holding the line is the
+only viable approach when using the libgpiod tools at the moment, but
+better solutions to your problem should be available soon.
+Alternatively you can use, say, the Python bindings to write something
+that better suits your particular needs.
 
-
-
--- 
-Robert Marko
-Staff Embedded Linux Engineer
-Sartura Ltd.
-Lendavska ulica 16a
-10000 Zagreb, Croatia
-Email: robert.marko@sartura.hr
-Web: www.sartura.hr
+Cheers.
+Kent.
