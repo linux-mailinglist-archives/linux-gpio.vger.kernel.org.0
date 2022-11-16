@@ -2,61 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34D0562B741
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:11:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BE2C62B744
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:11:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232882AbiKPKLr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 05:11:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
+        id S232954AbiKPKLs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 05:11:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232493AbiKPKLp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:11:45 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 119FD2018C
+        with ESMTP id S232778AbiKPKLq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:11:46 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 012C720BDF
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:45 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id p16so11532759wmc.3
         for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:44 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y16so29069831wrt.12
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
-         :subject:from:to:cc:subject:date:message-id:reply-to;
-        bh=2sXMPjyYlEjI2B4Rlkp7SFAQqHOI8ZKcd3a/TQ7z30o=;
-        b=Gxzs4tsDE0+FP+wW1pfIp50r9zP6o78+feeCdIiM41l3zs3Vk7HYcqPpVge4ESuXwI
-         yj+Ar2zg8pmyDoTU9OcRXMiLPCP+cvmTUnTntyZlCDGcJAO9FxIXPVjz0e0vz49/xewO
-         n+e7WTuaxj3DkQgJyZyy0kKv1ujONjvua3TPY4OT0m5uYzbCM0+XhJBdnEVvh3ZiD8HR
-         JrH+xgsjtqqMt+TUzBxL96PRXXXE1Sq0e/+WTdQ36vQYNYoiUXpOI85/KLFfYw7P589s
-         43olaDdf49r/yZU8JMILZ9GtjAKX0InNz0Pa7fgQSqXT5CLvi2NHDMQzCKoXc9c8sdzx
-         +DhQ==
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xrFpP9QwUo7UqKYXxLix0MUsi0KOqYbvwdMGQZr77xU=;
+        b=eMTVGG49sC4X6HIhmiWz0T/pIw4BVcQA8T/8TD08hCKMLsVkfU5p6azY4KGAH3Dwg5
+         X4zszBAoOc2To0cXd6IlAZvLOQLwOzVlQ7lB8cbxwyLkPJkC8Oejd8LAK5B9PbQRKwUk
+         88lzJYTazF+xSsIGfvUPHu7JmLX2LUHNidlTPNAlmimVvh7hDQ5xZhhb09R9MqUulmqI
+         VE2nOhTgwC98QGkO2eEiT+ahYjZE782fOfUYYfM0/XClx2silBSkrQOwT2OrVsOseYio
+         5ZG6gfCJew4YIejFYFUXpBIsWIbWdCpHDOomdUaDuqPQJu4B8geMzAtvfaoPAufsU8tE
+         89Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:message-id:date:from:content-transfer-encoding:mime-version
-         :subject:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2sXMPjyYlEjI2B4Rlkp7SFAQqHOI8ZKcd3a/TQ7z30o=;
-        b=pu8/nju1aW/m0MQGLNeaDQtuiSAV18i6ocRO3Ndj1LZIN+VR+j2kXnyUnIyLWutLxn
-         xLCQur+d3Iyeysg2qj4f9WbtL59nLcM/hU3gqeXIuq5Klpm7rLVAcoWE0lU87XxgX036
-         z8upgFoK3h/p9SoDePieB8fgTOJ8dW/ps4ogGPqNdglBOjlKzypsSo6V5L8TZlgpVSVy
-         iC4qix1IQyAHZzTn6eaMhG4nM4eZDUg+oLLMatja6RCoFhMO14mZ0xyBex32ZLOI+PY0
-         Y7D/fCCB8C2/KSIE6t1GpBLiQi7DAHNmcXW+GwXJiXuEZQEqucH/Awq/QYz3D5FcmyIz
-         Ys2g==
-X-Gm-Message-State: ANoB5plN86kWLu8FQzzpFP29wihId7/xgNp9Y3UGSxTaOBiJigMLUFEu
-        8m0y153eAtgpHJIA9NQzbiTzjw==
-X-Google-Smtp-Source: AA0mqf4/okQIcXHsn8/0v1t7nIrZA6mDr+ohIbIQdxlqgvxuf7KXViaPZQrirc2BdsFInvRGsWS6TQ==
-X-Received: by 2002:adf:cd10:0:b0:22e:c2a6:d00d with SMTP id w16-20020adfcd10000000b0022ec2a6d00dmr13486833wrm.29.1668593502580;
-        Wed, 16 Nov 2022 02:11:42 -0800 (PST)
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xrFpP9QwUo7UqKYXxLix0MUsi0KOqYbvwdMGQZr77xU=;
+        b=h0wfbbx/taM/wzAWQinxASBmgKy3PO7N3FlP1KJw61n/lqyj61NYd2CG8rZP1mg3to
+         ISewnESGASKstGj31IZl4AgjoBDX9vYhpYEWJ+q+fTJFoaXT4eI+Ef9o//V7nM8um1Tx
+         5d6lvtNgWjRX73a4UH8qnpJLW44gB0uki48d3Ev5m3qE8R6Jz1Pq0+MG1fG/UhKy7NSX
+         Aa86rCh+sh6jJ3s7YU+ETr6Z3QHzc8p+viOdvcf+zwxJ9xi4ZVJCtY6AUGbXHrE8NSHz
+         k+SddMliLJ7kldIsHQ0pwp8Xy8N6mtSiOnw0LdlX7oXAASnUdJfmU6I1NIU6sNwkznHE
+         V5ig==
+X-Gm-Message-State: ANoB5pl6y8WNiZ+fnPnhbvB2VdeaboIjXevFjJiFyr0F8te6Su6pVPHq
+        U4cmVFwTD7Vzb+Ge6nS6Ign1xA==
+X-Google-Smtp-Source: AA0mqf5B3TT3UbZWZIPIYVSwDm7bpf27/Yg3J5xtbt2zfp6zKAu4+azwrHIc/fLSAVuD+4pcpfY26Q==
+X-Received: by 2002:a05:600c:21d2:b0:3cf:b2b1:3c7 with SMTP id x18-20020a05600c21d200b003cfb2b103c7mr1570335wmj.176.1668593503465;
+        Wed, 16 Nov 2022 02:11:43 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id h12-20020a05600c350c00b003c6bd91caa5sm1741752wmq.17.2022.11.16.02.11.41
+        by smtp.gmail.com with ESMTPSA id h12-20020a05600c350c00b003c6bd91caa5sm1741752wmq.17.2022.11.16.02.11.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 02:11:42 -0800 (PST)
-Subject: [PATCH 0/7] qcom: add support for SPMI PMICs found on SM8550 platforms
+        Wed, 16 Nov 2022 02:11:43 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Date:   Wed, 16 Nov 2022 11:11:30 +0100
+Subject: [PATCH 1/7] dt-bindings: mfd: qcom,spmi-pmic: document pm8550, pm8550b,
+ pm8550ve, pm8550vs & pmk8550
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-b4-tracking: H4sIAFG3dGMC/w3MQQqEMAwAwK9IzhswZQtbf1PboAEbpdG9iH83x7nMDcZd2GAabuj8F5NdHfQZoK
- xZF0apbghjCET0Rc292dl3XdDaL8YRr8PNuaEdTbCGklLiEmsh8GXOxjj3rGX1R69te54Xmoe7KXYA AAA=
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Wed, 16 Nov 2022 11:11:29 +0100
-Message-Id: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
+Message-Id: <20221114-narmstrong-sm8550-upstream-spmi-v1-1-6338a2b4b241@linaro.org>
+References: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
+In-Reply-To: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Konrad Dybcio <konrad.dybcio@somainline.org>,
@@ -79,58 +81,36 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The SM8550 based platforms sports a bunch of new PMICs:
-- pm8550
-- pm8550b
-- pm8550ve
-- pm8550vs
-- pmk8550
-- pmr735d
-- pm8010
+Document compatible for the pm8550, pm8550b, pm8550ve, pm8550vs & pmk8550 SPMI PMICs
 
-With GPIO support on:
-- pm8550
-- pm8550b
-- pm8550ve
-- pm8550vs
-- pmk8550
-- pmr735d
-
-This documents bindings for those SPMI PMIC and adds compatible in the
-PMIC pinctrl driver for GPIO support.
-
-To: Andy Gross <agross@kernel.org>
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@somainline.org>
-To: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh+dt@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-To: Stephen Boyd <sboyd@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-
 ---
-Neil Armstrong (7):
-      dt-bindings: mfd: qcom,spmi-pmic: document pm8550, pm8550b, pm8550ve, pm8550vs & pmk8550
-      dt-bindings: mfd: qcom,spmi-pmic: document pm8010
-      dt-bindings: mfd: qcom,spmi-pmic: document pmr735d
-      dt-bindings: pinctrl: qcom,pmic-gpio: document pm8550, pm8550b, pm8550ve, pm8550vs & pmk8550
-      dt-bindings: pinctrl: qcom,pmic-gpio: document pmr735d
-      pinctrl: qcom: spmi-gpio: add support for pm8550 gpio control
-      pinctrl: qcom: spmi-gpio: add support for pmr735d gpio control
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml        |  7 +++++++
- .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml    | 18 ++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c               |  6 ++++++
- 3 files changed, 31 insertions(+)
----
-base-commit: 3c1f24109dfc4fb1a3730ed237e50183c6bb26b3
-change-id: 20221114-narmstrong-sm8550-upstream-spmi-d2c999ec5dc1
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+index c01a00128eda..93e76d7f7814 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -55,6 +55,10 @@ properties:
+           - qcom,pm8350
+           - qcom,pm8350b
+           - qcom,pm8350c
++          - qcom,pm8550
++          - qcom,pm8550b
++          - qcom,pm8550ve
++          - qcom,pm8550vs
+           - qcom,pm8841
+           - qcom,pm8909
+           - qcom,pm8916
+@@ -71,6 +75,7 @@ properties:
+           - qcom,pmi8998
+           - qcom,pmk8002
+           - qcom,pmk8350
++          - qcom,pmk8550
+           - qcom,pmm8155au
+           - qcom,pmp8074
+           - qcom,pmr735a
 
-Best regards,
 -- 
-Neil Armstrong <neil.armstrong@linaro.org>
+b4 0.10.1
