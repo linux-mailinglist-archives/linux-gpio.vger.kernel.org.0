@@ -2,138 +2,269 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3713662B6B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 10:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9779662B6C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 10:41:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232833AbiKPJjp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 04:39:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56450 "EHLO
+        id S238529AbiKPJl1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 04:41:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233411AbiKPJjo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 04:39:44 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D05F25282
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:39:43 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id j16so28558780lfe.12
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=j+gl7l2sUM+JuRSjFTkzINmsvGZarBZozPSoW/pkC8U=;
-        b=nabZ7U2yFQENwR0B6rx2HYg/E2viR3SDwxtWZnvqTTcgpiKsO/7THHEB0/1bWDQZas
-         /9LJ2x5bQ+FKQpsuQPEma6+eJbo6EmC7g/3RZaRAS20WLqDj03LolJ/lBCtLeBH/cZn0
-         g4qxE6F2YmmvkV5dO7SRs3EnnDvffOAM0JE3FTPz5tMe5ymLKVwA+HcntK4sFKsPF9/i
-         +PcyUwaVWV72eEYFmrZVmcQMyncNjHvdbICJ9q8h2NJLwgatMVH7JA77qqRmKYeRCFix
-         3IrAnSfLYo0MRStXuBTRyRaHVIiI4GfjLCCEm++UXHATgL2WFkefy60VCmsIgzkc8ImQ
-         54pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=j+gl7l2sUM+JuRSjFTkzINmsvGZarBZozPSoW/pkC8U=;
-        b=6ViTnPrwYlOs/9ounPTrqdISlSWG7uwGyUl5L7gQeJAnkfFVmDET6J+DH5ieoWG8kT
-         ZwtqUHz0Fy7MhcR/z+WSBHqAZEeGvpnpxQB21lGBOLC9Ealp3i1gjoMgG/NgNRFF/TG3
-         MqnloU+haUuPJL0W/zvX8vTqHisLv92cuxQm8Lkt47zoRYKSmjYvCjmWN56+wOqnGHeE
-         e9YU0Xey4oSFRiIAhVW8m24JUEWji6meqhWY61f1STGnNm0/gYMiYPQRmiAipxnYXBU5
-         MKqxmSC3c9fToTQNgSWuWTB1iJYovqFKLue5JHbK9+CiIclvg6Yqq9kZmcFpLajQIJA9
-         ym2A==
-X-Gm-Message-State: ANoB5pmiH2NwQC8/BEn9VuyCWfhvSmTCMiagy18qceJHHY8kxlUXVse9
-        MeKZ+Y/idGz9j+Tc9vxBvNxSAt5Aor5YXoWd
-X-Google-Smtp-Source: AA0mqf4mB5/tmsVdj0UfaSGVIV3XOkNlkt4gjuroY+HB7oemrLuFblk2sOHVkDC2mg0gfIwsEcqaEg==
-X-Received: by 2002:a05:6512:1597:b0:4a2:676e:cf68 with SMTP id bp23-20020a056512159700b004a2676ecf68mr6846656lfb.546.1668591581632;
-        Wed, 16 Nov 2022 01:39:41 -0800 (PST)
-Received: from krzk-bin.NAT.warszawa.vectranet.pl (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id c8-20020ac24148000000b00492c663bba2sm2511151lfi.124.2022.11.16.01.39.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 01:39:41 -0800 (PST)
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] pinctrl: dt-bindings: qcom: Second convertions for v6.2
-Date:   Wed, 16 Nov 2022 10:39:39 +0100
-Message-Id: <20221116093939.20111-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S238684AbiKPJlW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 04:41:22 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3611D2A261
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:41:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668591681; x=1700127681;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HAPjLLvf2ozoFtbjBZS+kcx8bo/y09gmpTmBiG6otP8=;
+  b=AlOAu972phWl7ln7hI+ezDtjk1ht3QzBOd2IMnY2Hrplz9Wh39WDIpLk
+   Q543tUEh8kUBo2nYqr1tlYL8jv6r1v4Mb2HR/sbzTUpMII9jjs1x9xbMb
+   68rTVhZJf9JZzb4ot2l0jVyK1ppj4twGXEhxI7PRSJ94eF3+SoyjENSlw
+   bC3Dsgm8YXFFyP4ONRGPfuxz5J1fW36EyqaqPP0wU5WDv+OG5WhBfV4QD
+   jenygq7W1tKmibxjKT1Mu0sFk3GI+rVRv19v+SNAjKCnioYfGtaXz1oCm
+   dYDR9zdrKESBUCQzgkzmYvMrzcTPHxnbKROrydtlHgNZLYMT1uBSaL4Wp
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="295864364"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="295864364"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 01:41:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="968354678"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="968354678"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Nov 2022 01:41:18 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 5A0E92F3; Wed, 16 Nov 2022 11:41:43 +0200 (EET)
+Date:   Wed, 16 Nov 2022 11:41:43 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Niyas Sait <niyas.sait@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        rafael@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH RFC v2 1/3] pinctrl: add support for ACPI PinGroup
+ resource
+Message-ID: <Y3SwV2ygYb3C0w4o@black.fi.intel.com>
+References: <20221115175415.650690-1-niyas.sait@linaro.org>
+ <20221115175415.650690-2-niyas.sait@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20221115175415.650690-2-niyas.sait@linaro.org>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Tue, Nov 15, 2022 at 05:54:13PM +0000, Niyas Sait wrote:
+> pinctrl-acpi parses and decode PinGroup resources for
+> the device and generate list of group descriptor.
+> Descriptors can be used by the pin controller to identify
+> the groups and pins provided in the group.
+> 
+> Signed-off-by: Niyas Sait <niyas.sait@linaro.org>
+> ---
+>  drivers/pinctrl/Makefile       |  1 +
+>  drivers/pinctrl/pinctrl-acpi.c | 99 ++++++++++++++++++++++++++++++++++
+>  drivers/pinctrl/pinctrl-acpi.h | 34 ++++++++++++
+>  3 files changed, 134 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-acpi.c
+>  create mode 100644 drivers/pinctrl/pinctrl-acpi.h
+> 
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index 89bfa01b5231..b5423465131f 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -8,6 +8,7 @@ obj-$(CONFIG_PINMUX)		+= pinmux.o
+>  obj-$(CONFIG_PINCONF)		+= pinconf.o
+>  obj-$(CONFIG_GENERIC_PINCONF)	+= pinconf-generic.o
+>  obj-$(CONFIG_OF)		+= devicetree.o
+> +obj-$(CONFIG_ACPI)		+= pinctrl-acpi.o
+>  
+>  obj-$(CONFIG_PINCTRL_AMD)	+= pinctrl-amd.o
+>  obj-$(CONFIG_PINCTRL_APPLE_GPIO) += pinctrl-apple-gpio.o
+> diff --git a/drivers/pinctrl/pinctrl-acpi.c b/drivers/pinctrl/pinctrl-acpi.c
+> new file mode 100644
+> index 000000000000..cd0d4b2d8868
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-acpi.c
+> @@ -0,0 +1,99 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ACPI helpers for PinCtrl API
+> + *
+> + * Copyright (C) 2022 Linaro Ltd.
+> + * Author: Niyas Sait <niyas.sait@linaro.org>
+> + */
+> +#include <linux/acpi.h>
+> +#include <linux/errno.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/list.h>
+> +
+> +#include "pinctrl-acpi.h"
+> +
+> +static int pinctrl_acpi_populate_group_desc(struct acpi_resource *ares, void *data)
+> +{
+> +	struct acpi_resource_pin_group *ares_pin_group;
+> +	struct pinctrl_acpi_group_desc *desc;
+> +	struct list_head *group_desc_list = data;
+> +	int i;
+> +
+> +	if (ares->type != ACPI_RESOURCE_TYPE_PIN_GROUP)
+> +		return 1;
+> +
+> +	ares_pin_group = &ares->data.pin_group;
+> +	desc = kzalloc(sizeof(struct pinctrl_acpi_group_desc), GFP_KERNEL);
+> +	if (!desc)
+> +		return -ENOMEM;
+> +
+> +	desc->name = kstrdup_const(ares_pin_group->resource_label.string_ptr, GFP_KERNEL);
+> +	desc->num_pins = ares_pin_group->pin_table_length;
+> +	desc->pins = kmalloc_array(desc->num_pins, sizeof(*desc->pins), GFP_KERNEL);
+> +	if (!desc->pins)
+> +		return -ENOMEM;
 
-Continuation of my cleanups - second, last round based on previous pull request.
+Here you leak desc.
 
-Best regards,
-Krzysztof
+> +
+> +	for (i = 0; i < desc->num_pins; i++)
+> +		desc->pins[i] = ares_pin_group->pin_table[i];
+> +
+> +	desc->vendor_length = ares_pin_group->vendor_length;
+> +	desc->vendor_data = kmalloc_array(desc->vendor_length,
+> +				sizeof(*desc->vendor_data),
+> +				GFP_KERNEL);
+> +	if (!desc->vendor_data)
+> +		return -ENOMEM;
 
+And this one leaks also ->pins.
 
-The following changes since commit 1b6b54ef7c4a1f482a2a6d33a769e89877beba4e:
+> +
+> +	for (i = 0; i < desc->vendor_length; i++)
+> +		desc->vendor_data[i] = ares_pin_group->vendor_data[i];
+> +
+> +	INIT_LIST_HEAD(&desc->list);
+> +	list_add(&desc->list, group_desc_list);
+> +
+> +	return 1;
+> +}
+> +
+> +/**
+> + * pinctrl_acpi_get_pin_groups() - Get ACPI PinGroup Descriptors for the device
+> + * @adev: ACPI device node for retrieving PinGroup descriptors
+> + * @group_desc_list: list head to add PinGroup descriptors
+> + *
+> + * This will parse ACPI PinGroup resources for the given ACPI device
+> + * and will add descriptors to the provided @group_desc_list list
 
-  dt-bindings: pinctrl: qcom,sc7180: convert to dtschema (2022-10-19 11:55:58 -0400)
+I would add here what happens to group_desc_list if the function returns
+non-zero.
 
-are available in the Git repository at:
+Also perhaps the API should use an array instead and when NULL is passed
+it returns the size as we do with properties for example. The naged
+list_head pointer looks kind of weird.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.2-2
+> + */
+> +int pinctrl_acpi_get_pin_groups(struct acpi_device *adev, struct list_head *group_desc_list)
+> +{
+> +	struct list_head res_list;
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&res_list);
+> +	INIT_LIST_HEAD(group_desc_list);
+> +	ret = acpi_dev_get_resources(adev, &res_list,
+> +		pinctrl_acpi_populate_group_desc, group_desc_list);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	acpi_dev_free_resource_list(&res_list);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pinctrl_acpi_free_group_desc() - free allocated group descriptor
 
-for you to fetch changes up to 86bfee318b546c03d954e863fc1af43960cb06e2:
+Get the capitalization consistent. Here you have 'free ..' above you
+have 'Get ..'.
 
-  dt-bindings: pinctrl: qcom,msm8976: convert to dtschema (2022-11-16 08:56:02 +0100)
+> + * @group_desc_list: list head for group descriptor to free
+> + *
+> + * Call this function to free the allocated group descriptors
+> + */
+> +void pinctrl_acpi_free_group_desc(struct list_head *group_desc_list)
+> +{
+> +	struct pinctrl_acpi_group_desc *grp, *tmp;
+> +
+> +	list_for_each_entry_safe(grp, tmp, group_desc_list, list) {
+> +		list_del(&grp->list);
+> +		kfree_const(grp->name);
+> +		kfree(grp->pins);
+> +		kfree(grp->vendor_data);
+> +		kfree(grp);
+> +	}
+> +}
+> diff --git a/drivers/pinctrl/pinctrl-acpi.h b/drivers/pinctrl/pinctrl-acpi.h
+> new file mode 100644
+> index 000000000000..e3a6b61bea90
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-acpi.h
+> @@ -0,0 +1,34 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * ACPI helpers for PinCtrl API
+> + *
+> + * Copyright (C) 2022 Linaro Ltd.
+> + */
+> +
+> +/**
+> + * struct pinctrl_acpi_group_desc - Descriptor to hold PinGroup resource from ACPI
+> + * @name: name of the pin group
+> + * @pins: array of pins that belong to the group
+> + * @num_pins: number of pins in the group
+> + * @vendor_data: vendor data from parsed ACPI resources
+> + * @vendor_length: length of vendor data
+> + * @list: list head for the descriptor
+> + */
+> +struct pinctrl_acpi_group_desc {
+> +	const char *name;
+> +	u16 *pins;
+> +	unsigned int num_pins;
 
-----------------------------------------------------------------
-Qualcomm pinctrl Devicetree bindings changes for v6.2, part two
+size_t?
 
-Continuation of refactoring and improving Qualcomm pin controller bindings:
-1. Narrow compatible combinations in PMIC MPP.
-2. Convert several bindings from TXT to DT schema format: QCS404,
-   IPQ8074, MSM8660, MSM8916, MSM8960 and MSM8976.
+npins intead of num_pins?
 
-----------------------------------------------------------------
-Krzysztof Kozlowski (7):
-      dt-bindings: pinctrl: qcom,pmic-mpp: make compatible fallbacks specific
-      dt-bindings: pinctrl: qcom,msm8916: convert to dtschema
-      dt-bindings: pinctrl: qcom,qcs404: convert to dtschema
-      dt-bindings: pinctrl: qcom,msm8660: convert to dtschema
-      dt-bindings: pinctrl: qcom,ipq8074: convert to dtschema
-      dt-bindings: pinctrl: qcom,msm8960: convert to dtschema
-      dt-bindings: pinctrl: qcom,msm8976: convert to dtschema
+> +	u8 *vendor_data;
 
- .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      | 181 -------------------
- .../bindings/pinctrl/qcom,ipq8074-pinctrl.yaml     | 135 ++++++++++++++
- .../bindings/pinctrl/qcom,msm8660-pinctrl.txt      |  96 ----------
- .../bindings/pinctrl/qcom,msm8660-pinctrl.yaml     | 125 +++++++++++++
- .../bindings/pinctrl/qcom,msm8916-pinctrl.txt      | 195 --------------------
- .../bindings/pinctrl/qcom,msm8916-pinctrl.yaml     | 166 +++++++++++++++++
- .../bindings/pinctrl/qcom,msm8960-pinctrl.txt      | 190 --------------------
- .../bindings/pinctrl/qcom,msm8960-pinctrl.yaml     | 164 +++++++++++++++++
- .../bindings/pinctrl/qcom,msm8976-pinctrl.txt      | 183 -------------------
- .../bindings/pinctrl/qcom,msm8976-pinctrl.yaml     | 136 ++++++++++++++
- .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |  45 ++---
- .../bindings/pinctrl/qcom,qcs404-pinctrl.txt       | 199 ---------------------
- .../bindings/pinctrl/qcom,qcs404-pinctrl.yaml      | 176 ++++++++++++++++++
- 13 files changed, 925 insertions(+), 1066 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8660-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8916-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8976-pinctrl.yaml
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.yaml
+void *?
+
+> +	unsigned int vendor_length;
+
+size_t?
+
+vendor_data_size perhaps?
+
+> +	struct list_head list;
+> +};
+> +
+> +#ifdef CONFIG_ACPI
+> +int pinctrl_acpi_get_pin_groups(struct acpi_device *adev, struct list_head *group_desc_list);
+> +#else
+> +static inline int pinctrl_acpi_get_pin_groups(struct acpi_device *adev,
+> +			struct list_head *group_desc_list)
+> +{
+> +	return -ENXIO;
+> +}
+> +#endif
+> -- 
+> 2.25.1
