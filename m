@@ -2,93 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E5462BA1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:52:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 21B3262BADB
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 12:06:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbiKPKwQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 05:52:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
+        id S233745AbiKPLGM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 06:06:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238685AbiKPKvf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:51:35 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD7D532D5
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:40:22 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id l39-20020a05600c1d2700b003cf93c8156dso1142108wms.4
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:40:22 -0800 (PST)
+        with ESMTP id S233567AbiKPLFY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 06:05:24 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423912ED73
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:52:01 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id f7so25956895edc.6
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:52:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mbd0MrzSKpoNU15NfmTageL726rc6rPXJTRDLTbRGU0=;
-        b=g0bOnt+6OzmHXwVaVOFTmeN9Ewab8z9uyfL3dywjuaCy0KW6O+cKJq/Xee5PhL9gP7
-         xSOCPaALlg+g3s5H4TYLryQH4tkMjl+NcN3zIwUWH44/sY8S5havhNBQpmbZnMDy1gJP
-         QTb0tt4m8Hdn3BnC8RLbgslT7inEXUGNRNEV7mxwID+43LicCH+JUoh1acJ6h+kJMOKU
-         Ya3DluD8+y1JNwNfnHjjoOXwkC1CE+jLsho5K2MulFummRhPT8l2KzRIR8RCfZit2af+
-         qR51o0cgByO5Xl7VgP9L8zLcblWEUm8XXmP64jEB8ulMvToOpRMvBTdsdez6xU9euSHL
-         OZMQ==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jmDzdOcJCZVFEJz0cGwp78BZmKtS5/OHvJ4gcqeQ22U=;
+        b=EPRG7osZR2L/3rHtV1b9dGX3T17rHFXmQU4zzbKNX42jRXbXowHCVomW9FwUGaM2r7
+         LYIaZDA+k7YlaBCM8mr1imuYBEqlTmhT94UfgxNUlF6CpZnysa9lDUTQEDM2pTqyBukU
+         qg38moV/kYoxcYAHoehRSCis7Bkuu42chBmryhv4yZjqtCGquzjMUF6QW4ilLCqDoqBu
+         K2cU8PYsJItfRVia9c9Nrmqbj7+yqvqJzvrAm8FwazSKl2BQacUDhjza8CWDHqEn0f5I
+         rl5+CYTiHV4BcqwbmjrWj7WJQyPOn1rqbndhF/6JKTrY1cGYOkQT3yHB9H4U6gKPh5e/
+         /thQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mbd0MrzSKpoNU15NfmTageL726rc6rPXJTRDLTbRGU0=;
-        b=7mjJyvGaqZyn5jegOny7pj8VzHns/rJaLFqpUjyyd8ORRPjyKKiLJcbO66kzw9PspH
-         GjofyMf8AM0WElj+eSswDNf2Y7oxWr9MaznKdffx29J8ZPj6+KX8yD88i83h/65S76Tk
-         ctWcbX2KLXyEo6gD/IzH6WIEM/+2zwa/qqkBBQE3bJR1LBdITLDenIBgad95YpfQYnl9
-         uB5bzl7EcXHWxpb8K3x+6L1UgYG2xsEkZHK+VXB2K4vnAGAsswzj7wYQZEq7CM5ncnA5
-         YMqih6hbuji0GR2Rq33xtCOXYPv9TWgNJo4tIvpiiZwB0F11JW8fDJ5PQ9TWl3SRL/l8
-         8xUg==
-X-Gm-Message-State: ANoB5plkN70QTiiepRkfWISUKd6ckJumOrwjdOX8TCYKyEnKIFtfNc/s
-        MLEpFD5zN1A1pVhmh9dIQRa17g==
-X-Google-Smtp-Source: AA0mqf6GNR8Umv3d/VtvvCibBIKvRpTTDHJaAMEsWGrqwmcS/SdMwCN4mFX+B1kw4/w+xtNwrH0kVA==
-X-Received: by 2002:a05:600c:230d:b0:3cf:eaf5:77c6 with SMTP id 13-20020a05600c230d00b003cfeaf577c6mr1646635wmo.56.1668595221402;
-        Wed, 16 Nov 2022 02:40:21 -0800 (PST)
-Received: from [192.168.1.166] ([212.228.7.114])
-        by smtp.gmail.com with ESMTPSA id n10-20020adff08a000000b002368f6b56desm17382639wro.18.2022.11.16.02.40.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 02:40:20 -0800 (PST)
-Message-ID: <05f3c105-12f8-1fd5-0e6c-1ab7e24a01df@linaro.org>
-Date:   Wed, 16 Nov 2022 10:40:19 +0000
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jmDzdOcJCZVFEJz0cGwp78BZmKtS5/OHvJ4gcqeQ22U=;
+        b=rv9pqC37ABVXXwDrs7zSY+cKyYVYZt/7Ap1efX4M0vK5xugFcGWN3AQgfoBk24hy9n
+         qBYz9SSDhpGaj+UnIvLm4a9MEzt+97eCVCFmNjW1OGeuj+YH5/YQ1GJf+9S73Uz+tsLv
+         zUO0SdnFnG7kGND9+QvRExjAN3V73t3sMoz/kaB4OB/R4HFrPP5ReH3dWdCm2QPKEAZ3
+         LQBJWKQQq67e4CaIEcRIr52HImKsgQEngFG8P0s3HuPDNVBv/VpGpgfVHhc0eECgyLAN
+         2sHPRMzdUnLDT8RXM6eb/KE6ZYvfEo9oVAdr1sHc/UQdUVr6CaJ4BmPXxRwwhAmfDx83
+         RY1Q==
+X-Gm-Message-State: ANoB5pkxckx+4hRVauMOuET3bWN+rWi0F4qKRtJAAEqagKHddKuFuo7+
+        wwBLK433ospj907ZjIkE05dQZRM+cvkyuaTd2jHULw==
+X-Google-Smtp-Source: AA0mqf64irImFpuxWfnuQVwe5pGIad2p0If0h7oh7065tcZjwfzMlUBDf1yRl9o/jLlSJRaOIU8hV7LxOrNP3Ko2F7I=
+X-Received: by 2002:a05:6402:b7b:b0:463:ab08:2bc6 with SMTP id
+ cb27-20020a0564020b7b00b00463ab082bc6mr18384756edb.143.1668595919878; Wed, 16
+ Nov 2022 02:51:59 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH RFC v2 0/3] pinctrl: add ACPI support to pin controller
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
-        rafael@kernel.org, linus.walleij@linaro.org
-References: <20221115175415.650690-1-niyas.sait@linaro.org>
- <Y3PWjZb9Jci1oXyM@smile.fi.intel.com>
- <3766343a-ce40-10aa-99dc-2ea94bc1ffbd@linaro.org>
- <Y3Pexz7tLrAP05uY@smile.fi.intel.com>
- <c9eb64c4-4cb3-b25c-df04-97da24a595fd@linaro.org>
- <Y3Sz32+4uuynGeAy@smile.fi.intel.com>
-From:   Niyas Sait <niyas.sait@linaro.org>
-In-Reply-To: <Y3Sz32+4uuynGeAy@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221021084708.1109986-1-bchihi@baylibre.com> <CACRpkdYdmG5cFenESg36BwVpJ7FDJunPH1Z8dJjHwmu+NW-etA@mail.gmail.com>
+In-Reply-To: <CACRpkdYdmG5cFenESg36BwVpJ7FDJunPH1Z8dJjHwmu+NW-etA@mail.gmail.com>
+From:   Balsam CHIHI <bchihi@baylibre.com>
+Date:   Wed, 16 Nov 2022 11:51:23 +0100
+Message-ID: <CAGuA+oq8XrvNrDdW6JZS7UyhM4ZCk-RvpMUnw-bht9d6nJr3jw@mail.gmail.com>
+Subject: Re: [v2, 0/2] Fix broken SET/CLR mode of a certain number of pins for
+ MediaTek MT8385 SoC
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     sean.wang@kernel.org, matthias.bgg@gmail.com,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/11/2022 09:56, Andy Shevchenko wrote:
-> The GPIO to pin mapping is done by GPIO ranges. This can be made up in the
-> driver or, IIRC, in DT (so in ACPI) by already registered properties).
-> 
-> Not sure, why you don't use them.
+On Mon, Nov 7, 2022 at 3:44 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Oct 21, 2022 at 10:47 AM <bchihi@baylibre.com> wrote:
+>
+> > From: Balsam CHIHI <bchihi@baylibre.com>
+> >
+> > On MT8365, the SET/CLR of the mode is broken and some pins won't set or clear the modes correctly.
+> > To fix this issue, we add a specific callback mt8365_set_clr_mode() for this specific SoC.
+> > This callback uses the main R/W register to read/update/write the modes instead of using the SET/CLR register.
+> >
+> > This is the original patch series proposed by Fabien Parent <fparent@baylibre.com>.
+> > "https://lore.kernel.org/linux-arm-kernel/20220530123425.689459-1-fparent@baylibre.com/"
+> >
+> > Changelog:
+> > Changes in v2 :
+> >         - Rebase on top of 6.1.0-rc1-next-20221020
+> >         - Delete MTK_PINCTRL_MODE_SET_CLR_BROKEN quirk
+> >         - Add mt8365_set_clr_mode() callback
+>
+> Patches applied, no need to resend for small issues.
+>
+> Sorry for taking so long, I wanted some feedback from the Mediatek
+> maintainers but haven't heard anything, so I just applied them.
+>
 
-OK. I might have missed it.
+Hi Linus,
 
-In DT, gpio-ranges property is used to describe the mapping, I could not 
-find equivalent property in GPIO ACPI properties - 
-https://www.kernel.org/doc/html/latest/firmware-guide/acpi/gpio-properties.html
+I'm sorry for the delay.
+Thank you very much.
 
--- 
-Niyas
+Best regards,
+Balsam.
+
+> Yours,
+> Linus Walleij
