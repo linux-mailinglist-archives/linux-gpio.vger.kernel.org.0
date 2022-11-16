@@ -2,137 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0516462B77F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFCFC62B78F
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:18:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231418AbiKPKQe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 05:16:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52342 "EHLO
+        id S233050AbiKPKSF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 05:18:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbiKPKQd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:16:33 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFFCFFFF
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:16:32 -0800 (PST)
+        with ESMTP id S233074AbiKPKSB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:18:01 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B762192B2
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:18:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668593792; x=1700129792;
+  t=1668593881; x=1700129881;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=m3PfdTcRdVd2y8+Yfwu54IhehZZlVocVyayURbrVAVA=;
-  b=nPCIxaZyo7vspU2yw6yFgbkr7Fzf8NpDUi4IqwK1+gP+RWxhqh3lOnEO
-   NwDvNcQSXSAWYR6FCaLWlfQZpftB85IGP6W68OvjEh9fa6s5douNm1BRb
-   vZHeJdI3nV5OMYl1HtsUoTOc1Z/VFJDGRH/UG9tKrpMj7F6vag7PCro8n
-   E2XGp1l7hyVf80tJtKRSFqEFksKHLHXhibMLAz1JBgcWeuBORNoVk/mHL
-   Ndujzz0uRbIqz/G5zDljOJwtwpEvphm/QWUJrAHFKKJskxDGdOuz+ZTHY
-   Y1c5VrtOWuaCcg3AZIJkl0DxzpQLlcL6wAOGCqn50ReW0e0r+kqkjban9
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="314322910"
+  bh=GT4RTnq62K/D1kfAwggNNz3uPbxAWLGaAR9iMAkpuk8=;
+  b=KZXXTu9hnHa5d91AKXX5yecf+ClWe8ykj7gi7YutTizaKFedgit27LqQ
+   oLpOjCOIigbUnip/Q4C3jc2tZfLSnYvEMnYqWotAXS2sl21GhmZWimzer
+   ZaqrRKuHbOi0K4WXsNx7HyW6uf+aHl4S/L8A1v2VaLxhHdqw56Pz+6ZEa
+   AIfi4QrDjxqZubGKhWL3klHeCZskckq9cp7cn/x4T9hfYVCmZjtuF8NoY
+   G5qv/bHw15ZppBOfI9hkitRsOrJeGNv20N0QG8ulTfI3RJ9PDsDJm9IcF
+   No9aYmDp+fH8/8mNR2GK2V7A1y2gXGboG9+Pt62xBChhbL8QzNu5p705O
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="300037354"
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="314322910"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 02:16:25 -0800
+   d="scan'208";a="300037354"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 02:18:01 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="672344274"
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="641584538"
 X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="672344274"
+   d="scan'208";a="641584538"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 16 Nov 2022 02:16:23 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 16 Nov 2022 02:17:59 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ovFSv-00D56t-33;
-        Wed, 16 Nov 2022 12:16:21 +0200
-Date:   Wed, 16 Nov 2022 12:16:21 +0200
+        id 1ovFUT-00D5A1-1h;
+        Wed, 16 Nov 2022 12:17:57 +0200
+Date:   Wed, 16 Nov 2022 12:17:57 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Niyas Sait <niyas.sait@linaro.org>
 Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
         rafael@kernel.org, linus.walleij@linaro.org
 Subject: Re: [PATCH RFC v2 0/3] pinctrl: add ACPI support to pin controller
-Message-ID: <Y3S4dXdneJ6mEVoI@smile.fi.intel.com>
+Message-ID: <Y3S41U1xmjzi21bz@smile.fi.intel.com>
 References: <20221115175415.650690-1-niyas.sait@linaro.org>
- <Y3PWjZb9Jci1oXyM@smile.fi.intel.com>
- <3766343a-ce40-10aa-99dc-2ea94bc1ffbd@linaro.org>
- <Y3Pexz7tLrAP05uY@smile.fi.intel.com>
- <35760f9d-e491-4014-96f3-b13657c1c523@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <35760f9d-e491-4014-96f3-b13657c1c523@linaro.org>
+In-Reply-To: <20221115175415.650690-1-niyas.sait@linaro.org>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,URIBL_SBL_A
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 15, 2022 at 07:15:25PM +0000, Niyas Sait wrote:
-> >>> 1) why do you need specific _DSD() for the pin mappings?
-> >>
-> >> _DSD is required to pass the GPIO number to Pin mapping. Is there a
-> better
-> >> way to do it ?
-> >
-> > Don't you have your pins sequential? Doesn't driver know the pin list?
-> > Where are the device tree bindings for those properties? Are they already
-> > present there?
+On Tue, Nov 15, 2022 at 05:54:12PM +0000, Niyas Sait wrote:
+> This is a proposal for adding ACPI support to pin controller.
 > 
-> They are not sequential. There are multiple GPIO controllers and GPIO pins
-> are mapped to different pin ranges.
+> The patch supports following resources introduced in ACPI from v6.2
 > 
-> Please checkout arch/arm64/boot/dts/freescale/imx8mp.dtsi for device tree
-> binding.
+> - PinFunction
+> - PinConfig
+> - PinGroupFunction
+> - PinGroupConfig
+> - PinGroup
 > 
-> Yes I think it can be done in the driver.
-> 
-> >>> 2) wgy you need vendor data for some of Pin*() resources?
-> >>
-> >> Vendor data contains platform specific mux, config and input selection
-> >> register for the pin group.
-> >
-> > Why can't this be in the driver?
-> 
-> Yes I think it can be done in driver. But I think we still have to pass the
-> vendor data from the ACPI resources to the drivers in case if any
-> implementation wants to pass vendor specific data for the driver.
+> The patch has been tested on NXP I.MX8MP Plus platform with ACPI.
 
-I'm afraid that opening this to the drivers will allow to a lot of unknown data
-to be encoded in ACPI, so I would really like to see the vendor data to be
-absent (ideally).
+I have just published some old stuff I have [1] for targeting same feature.
+Maybe you can find something interesting there.
 
-> On 15/11/2022 18:47, Andy Shevchenko wrote:
-> > On Tue, Nov 15, 2022 at 06:29:28PM +0000, Niyas Sait wrote:
-> > > > Cover letter doesn't point to the ASL code you are using.
-> > > 
-> > > I've built this patch with a prototype ACPI implementation for NXP I.MX8MP
-> > > platform.
-> > > 
-> > > You can see the code here: https://gitlab.com/nsait-linaro/acpi-patches/-/blob/master/0001-add-acpi-pinctrl-support-for-i2c-controllers.patch.
-> > 
-> > Yes, my point that you have to create a cover letter
-> > 
-> > > > 1) why do you need specific _DSD() for the pin mappings?
-> > > 
-> > > _DSD is required to pass the GPIO number to Pin mapping. Is there a better
-> > > way to do it ?
-> > 
-> > Don't you have your pins sequential? Doesn't driver know the pin list?
-> > Where are the device tree bindings for those properties? Are they already
-> > present there?
-> > 
-> > > > 2) wgy you need vendor data for some of Pin*() resources?
-> > > 
-> > > Vendor data contains platform specific mux, config and input selection
-> > > register for the pin group.
-> > 
-> > Why can't this be in the driver?
-> > 
-> > ...
-> > 
-> > On top of that, how other hardware can utilize what you are doing without
-> > adding redundancy to the ACPI?
+What I have noticed that your series misses documentation part and it's
+hard to see the design behind it.
+
+[1]: https://bitbucket.org/andy-shev/linux/commits/branch/topic%2Feds-acpi-pinctrl
 
 -- 
 With Best Regards,
