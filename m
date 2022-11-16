@@ -2,106 +2,135 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC21662BCD1
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 13:00:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8ACD62BEE9
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 14:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232256AbiKPMAc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 07:00:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47050 "EHLO
+        id S233777AbiKPNEt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 08:04:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233340AbiKPMAF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 07:00:05 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45E6419A1
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:52:12 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso2130618pjc.5
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 03:52:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=LumQeZjCjKVk2NcCFJ7XQg27qQhohVPunXFB2i4bXVU=;
-        b=dU3FoWB5MP52X0XAP7BbVMHFd35DoaKDV1NigGzrPhCO3oDp7hUCQ3b9Sh3fuSnIVX
-         g4UmD7v6HKMNJG5dTh/iJnnJA+mtq0cwRNcmw7AatMzvbRC/lovCqn+ihPOqFnYXxpen
-         rm61hWEYSZolStvd2WArzY41iidIMVJqa2sy6ouQe/59l6ECx8EHTBZKlVyN5Wg9WWUi
-         LgTpBIgrwESJguBUY9FooYK2w1/+7DjtgshA8yR9Yk3NKudS9r1dOOYSD4KMsYdcLWu6
-         T06V6PmBCVdGUW2kbZmqfvJJN4JJZaog7g+20533dw3lnno+XsmE5YtJ/VUp9tTXPxJs
-         Z9jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LumQeZjCjKVk2NcCFJ7XQg27qQhohVPunXFB2i4bXVU=;
-        b=l2VbkwrHmjQrVJrAgaxOXVXSnMKquX7jKAvbaeNRsfWrfyCJfzHs44+NzxRcxJAo1B
-         vuwD334LNyz9N2+G7+MoNznl7Yu8qTKuN+jA+AGtWkyI/bOlviM1arthQdg1D/jCy6Go
-         YJyg6M3ULHd5NIbHATD0YvRfgdEf7iBuToGFZIYR5kFGSDWVG3jEJzV1JQtt8bTEeosC
-         HHmee7fOjGfiS5cNQroCGuyx4aorK39UAfPTWDjLoAJArgGS8BhsMiEXvmeGwJRgBtBP
-         xE4YZUtj/ekeMap3LlZcbt7EdZYKxWeB6hQxwwC272G/7Z5AXGiNv9R3y0laJ2y/vzsX
-         EP/g==
-X-Gm-Message-State: ANoB5plqvt/TQXaqYtK+Wgvqf2MCE7XbyGCRDac/eRk4SCIjgpyR0Dbr
-        HgL+W1eRsvVvXBW8towIOoFksJUyYfo=
-X-Google-Smtp-Source: AA0mqf4APw/wEV5s1aTE968kK1Gc+LTfC4BK2gFvDx6EGFmw538L2Ea8cjMjwMe7LaCj9LF+ESFUYw==
-X-Received: by 2002:a17:902:d1d4:b0:186:9ef5:4d59 with SMTP id g20-20020a170902d1d400b001869ef54d59mr8610258plb.89.1668599531887;
-        Wed, 16 Nov 2022 03:52:11 -0800 (PST)
-Received: from sol (14-200-229-209.tpgi.com.au. [14.200.229.209])
-        by smtp.gmail.com with ESMTPSA id t10-20020a63224a000000b00460fbe0d75esm9502553pgm.31.2022.11.16.03.52.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 03:52:11 -0800 (PST)
-Date:   Wed, 16 Nov 2022 19:52:07 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Leszek Dubiel <leszek@dubiel.pl>
-Cc:     linux-gpio@vger.kernel.org
-Subject: Re: Elegant way to kill previous gpioset?
-Message-ID: <Y3TO52Fn3XIqN8yY@sol>
-References: <fc3da423-1107-83a1-1c94-afb2ac5fa7c9@dubielvitrum.pl>
- <57c25430-284b-36dc-7a68-70847bc1bdcb@dubiel.pl>
- <Y3R6hbBF5vKuwvFe@sol>
- <1608e9ad-d9c4-8856-569f-cd894ffc2836@dubiel.pl>
+        with ESMTP id S233324AbiKPNEr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 08:04:47 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFAAF2FC30;
+        Wed, 16 Nov 2022 05:04:42 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AGD4XuG060612;
+        Wed, 16 Nov 2022 07:04:33 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1668603873;
+        bh=W9LOsNQ3d8aW/4MtosEUbpffw4i6MSxRHD13/xiBvdo=;
+        h=From:To:CC:Subject:Date;
+        b=DPFc+wfRpk0FLQuKPt58FUb4GpSpVvOxsQiHJFMIv0jjx8DK/Nbv5RpoJZl37ZvCn
+         eiJ8xf1hAJBxta5fIPY1DicWWBwGnahEYSdhwdhECAUxlVlIWu69n5B+zyFI7sgQDl
+         Xf1Zi8xdQCnWfaMOVt/vKpwX6FhNTtltynh4zRVc=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AGD4XBP018474
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 16 Nov 2022 07:04:33 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 16
+ Nov 2022 07:04:32 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
+ Frontend Transport; Wed, 16 Nov 2022 07:04:32 -0600
+Received: from LT5CD112GSQZ.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AGD4TbZ121231;
+        Wed, 16 Nov 2022 07:04:29 -0600
+From:   Apurva Nandan <a-nandan@ti.com>
+To:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Apurva Nandan <a-nandan@ti.com>, Hari Nagalla <hnagalla@ti.com>
+Subject: [PATCH v3 0/4] Add initial support for J784S4 SoC
+Date:   Wed, 16 Nov 2022 18:34:24 +0530
+Message-ID: <20221116130428.161329-1-a-nandan@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1608e9ad-d9c4-8856-569f-cd894ffc2836@dubiel.pl>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,T_SPF_TEMPERROR autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 16, 2022 at 09:54:21AM +0100, Leszek Dubiel wrote:
-> 
-> 
-> I was wondering if there is some "one-liner" that
-> recofigures pin, something like:
-> 
->                 gpioset -b -msignal --autokill /dev/gpiochip2 7=0
-> 
-> or
->                 gpioset -b -msignal --force /dev/gpiochip2 7=0
-> 
-> that does these two commands at once:
-> 
->               pkill -ef "^gpioset .* /dev/gpiochip2 7=[01]$"
->               gpioset -b -msignal /dev/gpiochip2 7=0
-> 
-> 
+The J784S4 SoC belongs to the K3 Multicore SoC architecture
+platform, providing advanced system integration in automotive,
+ADAS and industrial applications requiring AI at the network edge.
+This SoC extends the K3 Jacinto 7 family of SoCs with focus on
+raising performance and integration while providing interfaces,
+memory architecture and compute performance for multi-sensor, high
+concurrency applications.
 
-Understand that GPIOs are a managed resource, like files, and what
-you are asking for here is equivalent to a function that would kill
-whatever process has a file open whenever you write to that file.
-So, no there isn't.
+Some highlights of this SoC are:
+* Up to 8 Cortex-A72s, four clusters of lockstep capable dual Cortex-R5F MCUs,
+  4 C7x floating point vector DSPs with Matrix Multiply Accelerator(MMA) for
+  deep learning and CNN.
+* 3D GPU: Automotive grade IMG BXS-4-64
+* Vision Processing Accelerator (VPAC) with image signal processor and Depth
+  and Motion Processing Accelerator (DMPAC)
+* Three CSI2.0 4L RX plus two CSI2.0 4L TX, two DSI Tx, one eDP/DP and one
+  DPI interface.
+* Integrated gigabit ethernet switch, up to 8 ports (TDA4VH), two ports
+  support 10Gb USXGMII; Two 4 lane PCIe-GEN3 controllers, USB3.0 Dual-role
+  device subsystems, Up to 20 MCANs, among other peripherals.
 
-It is really unfortunate that killing the process holding the line is the
-only viable approach when using the libgpiod tools at the moment, but
-better solutions to your problem should be available soon.
-Alternatively you can use, say, the Python bindings to write something
-that better suits your particular needs.
+See J784S4 Technical Reference Manual (SPRUJ52 - JUNE 2022)
+for further details: http://www.ti.com/lit/zip/spruj52
 
-Cheers.
-Kent.
+bootlog: https://pastebin.ubuntu.com/p/DtmGZgzR6v/plain/
+
+Changes in v3:
+- Enabled hwspinlock, main_ringacc, main_udmap, cpts, and mcu_navss in
+  the dtsi
+- Removed alignment in secure_ddr optee
+- Changed the assigned clock parent in main and mcu cpts to main pll0, hsdiv6
+  from pll3, hsdiv1
+- Removed few signed-off by
+- Formatting fixes at some places
+- Corrected link to EVM board schmatics in the commit
+
+Changes in v2:
+- Disabled all the IPs that are not mandatory for booting up the SoC by
+  default in the dtsi, and thus this gives a minimal SoC boot devicetree.
+- Moved no-1-8-v property from the k3-j784s4-evm.dts file to
+  k3-j784s4-main.dtsi file.
+- Naming changes (hwlock, regulator) and commit description changes.
+- Added device specific compatible for j721e system controller.
+- Dropped bootargs completely.
+
+Apurva Nandan (4):
+  dt-bindings: arm: ti: Add bindings for J784s4 SoC
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions for J784s4
+  arm64: dts: ti: Add initial support for J784S4 SoC
+  arm64: dts: ti: Add support for J784S4 EVM board
+
+ .../devicetree/bindings/arm/ti/k3.yaml        |    6 +
+ arch/arm64/boot/dts/ti/Makefile               |    2 +
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  197 ++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 1008 +++++++++++++++++
+ .../boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi     |  316 ++++++
+ arch/arm64/boot/dts/ti/k3-j784s4.dtsi         |  286 +++++
+ include/dt-bindings/pinctrl/k3.h              |    3 +
+ 7 files changed, 1818 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4.dtsi
+
+-- 
+2.17.1
+
