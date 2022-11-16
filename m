@@ -2,80 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BC2E62B7F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:25:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6ABB62B824
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:28:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233134AbiKPKY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 05:24:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
+        id S233881AbiKPK2F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 05:28:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237368AbiKPKYT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:24:19 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D3A30F76
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:22:52 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id bp15so28695590lfb.13
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:22:52 -0800 (PST)
+        with ESMTP id S238937AbiKPK1M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:27:12 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620E03F045;
+        Wed, 16 Nov 2022 02:23:55 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id gv23so10205845ejb.3;
+        Wed, 16 Nov 2022 02:23:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9NS4gwSDhOkL+YOO4Yac7+z3Uk669hHhGemqfXEb/Y0=;
-        b=jTbk8uFW2qmr1yT1BvBLGimsjD+aEpDxNsaqK/IQha0TKn0vcdGY2u2017LXBweFXu
-         3p4wKI8lYJczJYjXvAZe5zX+wSUjK37n9m2LjBq9KMSApUDLU4PMIL3OHHhugm9YmeF0
-         GBcvIVkJcHoQfG3eLb63atIDSmdiOrSFoW92WeKyUQhyI35GUChHpleEpQ5vKGXwZ/lC
-         zvxhqO+pWxp0DXfNm2PRYCbEgbbA6OyVyApwv6glBrdrT2+eSTuANCOkufOB+ZN/nA+W
-         BUdle2xExMow8i3gEwizRt/4OMUzfTgEs1uniWjQmvHf5ikg+VvdNtKJ9FD0aFktLS2+
-         fETw==
+        bh=dx8zMsCqJ/b5ENIL96HeAHIr3J2YawLRjwQyFl5N+RQ=;
+        b=jPLN+BH98o/JEHL6iTFpp4qDwAWctKDajXMtaaU0/5+TPBFu9N0ksiE5QThbVxMFzq
+         cBvhTUppolBlNowINNzIYSXJ4Fu884K1BlAf99XMwG55uQPGgbk27rutGYFd+guav8jc
+         Mm+AAaY86NgxdJRCSyJxppnzzAetp09w+oXQVIQlyXyqGX+qmvtL0hOEcjWyBTcHligm
+         FTVxksEohFRVNAmM7Uo+G1Fs+TAvTuYeDUo1H1FvxS5fKdRDnJ8NUiXH/nu0oPYSTyGI
+         tRHqKLYY1SwGtatN0a/PE1JNQGvL7DXGCYY/lT6PHgoHwF2tLl9hZQ9ycBfU/Iey//dx
+         pWcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9NS4gwSDhOkL+YOO4Yac7+z3Uk669hHhGemqfXEb/Y0=;
-        b=vk/EOvZxc+ad7F6gDPcBXMFpkeRqIZCt9WQbGfIDKyhM3uuQ4w18xA5Do4aCwjH3O8
-         icpgh7QL2Mc4acl7pgL+RkIa2/YxjvVc081UhfNFTN1DWQBWXBM3/h9nbcpxO6hJJkz8
-         TrlNmE2msoY1vL+d3rXqGsnMwss/W549jfqjUMb4wfj36aC51/5vz+5l3S7x+4GmdGbg
-         STsrauXypaBhWf6LGByWuHDv7i9B2zhjWgwRPga7AT61s7nKuGxa1z5tcklHBHBVkWSJ
-         hYYILWxr02BYDjELeIH0T5GhVn1rGgsqNVUx/dDna1IazTbW8ZN90jhlwKkFYmivJiEc
-         U/eA==
-X-Gm-Message-State: ANoB5pmLC7zutbR8AL/Ncmnj0JSDfb1PZxPoYdAiS4mjIVr+W86OinSA
-        MOOlS2idKkiD2azpAYg8G1j5Mg==
-X-Google-Smtp-Source: AA0mqf7ZTYi3hn/J0wxTVBbrKDY7/qh61IahmRtldN7M9nItS/ze2scTM///yC5joq7+fUIhnJowMA==
-X-Received: by 2002:ac2:4bca:0:b0:4a9:f2e3:3cf0 with SMTP id o10-20020ac24bca000000b004a9f2e33cf0mr6782672lfq.545.1668594170926;
-        Wed, 16 Nov 2022 02:22:50 -0800 (PST)
-Received: from [192.168.31.208] ([194.29.137.22])
-        by smtp.gmail.com with ESMTPSA id b21-20020a05651c033500b0027722e99323sm2934578ljp.5.2022.11.16.02.22.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 16 Nov 2022 02:22:50 -0800 (PST)
-Message-ID: <16de0a02-e7d7-87d1-c877-e32de46bfc28@linaro.org>
-Date:   Wed, 16 Nov 2022 11:22:44 +0100
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dx8zMsCqJ/b5ENIL96HeAHIr3J2YawLRjwQyFl5N+RQ=;
+        b=leRMOOLZlXp2bFJnqf1aiHxs2120+LL7VvfM4/6Nt+hYeq05DBSew3hia8Rw5++F1k
+         /PZLJtOghVMOrHtEBAazJ53aIqHJpupa/XBInJTQGo5R6VO1VQMdsDSJw8SaG6VLGTDL
+         s0f9vR8mlkp8i9EcxtZMmslaFZUQgM7hTtWKfBDOO0uF5OZe7zZVLcd7paexjxRbsLtd
+         MdMz5Ou3141XkwBd1K2yWaf6TmVekbN5XqBFes7vqve0qZEaSem1G+duCAUCQN8grW/L
+         2ifrNRYGSDJmz4ATMsedCdmBk4FEMv3N70BNxtTuMQwuUq/PhY59IYlF4MbX7Ng8IcGR
+         yx0A==
+X-Gm-Message-State: ANoB5pkd1lpYAXp14nsE8fjDCw7lm7N5N4luxyglUw7mAQRdf9N1ibQ/
+        vOkQTQ1e1OaitH7Y53R+GHt75AeGAuA=
+X-Google-Smtp-Source: AA0mqf6cW5MNv6KVaRLzN4SpGw31D3kQqzuQfbSTzfslBdRMvqZB/AB7e6dlr3tsr0H1J1qcDVgeFA==
+X-Received: by 2002:a17:907:20c2:b0:7ae:967a:50bb with SMTP id qq2-20020a17090720c200b007ae967a50bbmr17188059ejb.383.1668594233480;
+        Wed, 16 Nov 2022 02:23:53 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id i9-20020aa7c709000000b004588ef795easm7361126edq.34.2022.11.16.02.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 02:23:52 -0800 (PST)
+Date:   Wed, 16 Nov 2022 11:23:51 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Steev Klimaszewski <steev@kali.org>
+Cc:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Brian Masney <bmasney@redhat.com>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        psodagud@quicinc.com, quic_shazhuss@quicinc.com,
+        quic_ppareek@quicinc.com, ahalaney@redhat.com, echanude@redhat.com,
+        nicolas.dechesne@linaro.org
+Subject: Re: [PATCH RFC] gpiolib: ensure that fwnode is properly set
+Message-ID: <Y3S6NyPwN8wbwJDI@orome>
+References: <20221114202943.2389489-1-bmasney@redhat.com>
+ <7420da17-d6d6-10e6-c87e-d3dc37d17ffb@linaro.org>
+ <CAKXuJqgckbmikXwFi0g3P3Db5jvyst+xhQBcPoV7mA2XStVVzA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH 7/7] pinctrl: qcom: spmi-gpio: add support for pmr735d
- gpio control
-To:     Neil Armstrong <neil.armstrong@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
- <20221114-narmstrong-sm8550-upstream-spmi-v1-7-6338a2b4b241@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20221114-narmstrong-sm8550-upstream-spmi-v1-7-6338a2b4b241@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sDjlB8ktuswCuIRX"
+Content-Disposition: inline
+In-Reply-To: <CAKXuJqgckbmikXwFi0g3P3Db5jvyst+xhQBcPoV7mA2XStVVzA@mail.gmail.com>
+User-Agent: Mutt/2.2.8 (2022-11-05)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -83,31 +81,47 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
+--sDjlB8ktuswCuIRX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 16/11/2022 11:11, Neil Armstrong wrote:
-> Add support for the pmr735d gpio controller providing GPIO control over SPMI.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> ---
-Any particular reason this could not be a part of the previous patch?
+On Tue, Nov 15, 2022 at 04:02:38PM -0600, Steev Klimaszewski wrote:
+> Hi,
+>=20
+> Others in the thread pointed to Thierry's patch, but on the Lenovo
+> Thinkpad X13s, that patch did *not* fix the issue, and with it
+> applied, the X13s still immediately reboots as soon as exiting EFI
+> services.  With this patch applied, the X13s does *not* reboot after
+> exiting EFI services, so thank you for this patch.
+>=20
+> Tested-by: Steev Klimaszewski <steev@kali.org> #Lenovo Thinkpad X13s
 
-For the addition itself:
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+Do you happen to know what driver the X13s is using? As mentioned in
+another email, I don't think overriding gc->fwnode at this point is the
+right thing to do, so I suspect this field might be used unexpectedly in
+some other place, so I'd like to take a closer look at that.
 
-Konrad
->   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index f758522d035e..66d6d7ffbd43 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -1242,6 +1242,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
->   	{ .compatible = "qcom,pmp8074-gpio", .data = (void *) 12 },
->   	{ .compatible = "qcom,pmr735a-gpio", .data = (void *) 4 },
->   	{ .compatible = "qcom,pmr735b-gpio", .data = (void *) 4 },
-> +	{ .compatible = "qcom,pmr735d-gpio", .data = (void *) 2 },
->   	/* pms405 has 12 GPIOs with holes on 1, 9, and 10 */
->   	{ .compatible = "qcom,pms405-gpio", .data = (void *) 12 },
->   	/* pmx55 has 11 GPIOs with holes on 3, 7, 10, 11 */
-> 
+Thierry
+
+--sDjlB8ktuswCuIRX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmN0ujYACgkQ3SOs138+
+s6Ekeg//fsV8Vbkdcv+e3uObyH4LDXM7h9VfB1Faav6WkstVescdfRFUNkrMOUL4
+Nihw+XJQPHhacVnR12e1smY2zHeMeMHK1AgzHxQZIhuFIKrDNJ1ygehsKwMWPsSO
+wBjpeViQ7LujjK7URvYmzv0mV2ElHDetWwHleY6RmFWuZujrUB895EBPBlyfcYPx
+FSsuHc4ll6mVq0JRQBlcSWwaQy1+5svJTeIBv4BFJhDVXH8M5W/sKDT7r6xNfIuI
+ciBHrR7J6K1fKKBpJMqFnrxVv247KM7KStmr+CqaL2+SRTeQQgqqlzHhBRxX/MbC
+PgsmIV22A8CSrK7QTce8YTdZSYOPNVNEGiD15WhIliLtZ6SiZl7V4u63iEIx6xbF
+tca7tdifI5EErHNb32liEmcig8FH7ulkTkZ//glZMR/jFnSzzYozUCa27rT29kvs
+g+IMTMxwSfPEONuo00yWPqgRYqE5jJFYxNAEXy59igVe/Vf+GznoIuYT/uoqZqzc
+D28ruTziw82/Q2+V1aeE/GdT3G2IBr/ClCoHJP5s9kXuZvRZxjHY7D0T1KkiigXw
+47xGGjoS6eY5Ws4JbKNFpLoYLIuhSJ2Zu7K8JO7kHs2t5p3kxvhh8miARVUHLYfg
+DDj95W/w4KgFl67HAKGP66FeKrtbjj6s3mNnlZBsEkQuP1cO46w=
+=sbMU
+-----END PGP SIGNATURE-----
+
+--sDjlB8ktuswCuIRX--
