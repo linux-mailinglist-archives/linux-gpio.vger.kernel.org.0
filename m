@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88F0262B74B
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:11:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 411D462B754
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 11:12:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233144AbiKPKLw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 05:11:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46572 "EHLO
+        id S232974AbiKPKLz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 05:11:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232493AbiKPKLs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:11:48 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947441FF98
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:47 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id d9so24363007wrm.13
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:47 -0800 (PST)
+        with ESMTP id S233007AbiKPKLt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 05:11:49 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5A729C94
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:48 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id d9so24363070wrm.13
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 02:11:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ExCAMXl4X7rdqIm34AVHVhl9Z8BlvBZkZwKq1aSTCFQ=;
-        b=S4iYucZ+MqnX/0CvFzAz1FzJkdOEyIr5n6/k6CFu3hna2QUZUrpqVD5dVuOpEMiP6B
-         Y6dB7Sm0zw+6TLKUL3cNSXk+ORYPHOdC0wrupiPbCWl4zgh76mfF7HYi4WhfomYItL5p
-         sjrjIogREx0dE//6DN6DZZDPkF6lhIMLB2pOoBrb0iVYJcAY8LAHTEXvIn/C2kQ+/jFN
-         Vw+WRW4r+f9n4Sa/hJmpK1i3dyOZLgyRPoNMGOAI7nbBHcc+CEQAayPL1bhqsgoCNL64
-         p+YbEcUyGSVq8uhzsVrA5zeH+0SJMUu0ghIYy42I6CK3nnY8bBxvv4UzeIOhUaz9rzn3
-         5ORw==
+        bh=+Qej+X9L0LDwif2YwJHaq/jZ9PPv+8zS7y3TDz6dHpM=;
+        b=Uq+R2iDQp5PciR2jHtrmk8i/Dq01exWTwx0SqNq1Pj2UXSc7qi2MzrUgUrJt+hnZ26
+         QkoA/WztanSIUaPFvF70pF5U5CACe+zQmdSRTmGTQpo1gvEbO/n4kuEzR9CxCRcEgJ7C
+         3lOJww7/8vzAnvGGt64kw4lLJg6w6Sep4a9c7UmHJO+4Qil38XLPjl+0u+Ni4BYnEYSe
+         DaXFXy1wB63NAxbWepNwSvOyJKQReL0r2px/9QrbdcTGVAmKOOGMJ7lVewCRPjEQCx4s
+         LMhH2lodhkK3MeRS5Jj53gyf/CBDaxgzNEM6h1QOinhgJLdv41SDZZXwrS7RhuGsRr4N
+         YZ9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ExCAMXl4X7rdqIm34AVHVhl9Z8BlvBZkZwKq1aSTCFQ=;
-        b=cxNunmJxyjL2cm8APUwcOPEtODLXWLZQC/2JiMUVJh7yiAC1onBwVjV5secEeqQoVF
-         6auQG0hGAe8vy8nn298YjWF67Pvva6jSL9yFTkIUlCUBnbXiHxju2CnOap1Pshkv3EA2
-         PoLUzKH1g9+TqO4ZuRUNDwFFWZc0Z3vCFjkpiJ1789d+hXbnOBDPjrLKrqjdNzZ8jl8U
-         zWCyYQJvVJXy4WuPbphuC7K54H+RR2fn9sV9Qy2GbBYQMyOllf6jZhsXetw9Xexamv8o
-         nfd4j5ePquEF/y8WbkwJhhqxhJfQO5diaKKadfbiwgIetXVIzG9Y5NrO6U21iq/yQaCv
-         viuQ==
-X-Gm-Message-State: ANoB5pnGmyzeaaJk9YGhuimijX/gTJeWalSqprBS42QQUyMkeianwlCn
-        NYQ0Z3xB+AYVSwHTB5Q5T5S8MA==
-X-Google-Smtp-Source: AA0mqf5vpWUc8K7B7XBKSiAD7ykkjuU2GkQ8ATzB5QV68u7ShOVrW8NmfiuHSAPa6qjtQ/XhwNxA8g==
-X-Received: by 2002:a05:6000:1283:b0:236:5fa6:1873 with SMTP id f3-20020a056000128300b002365fa61873mr12577296wrx.49.1668593506164;
-        Wed, 16 Nov 2022 02:11:46 -0800 (PST)
+        bh=+Qej+X9L0LDwif2YwJHaq/jZ9PPv+8zS7y3TDz6dHpM=;
+        b=zPaDIPc7EGX/pIp2tLFtD71blYMs6HHiOTKBIWXFXAyoVf44MJysk/qIH874Tmimwg
+         W+L0meG7qXnNjvvIpAnbaptdCVvrj8V6dC8/bwcv/WEcKYMjvIQhLV3QkYO7Y20JFNZf
+         PeFhEaOh0dB81+KDO0ugnvbJ2e1FDvxbh6FeFRXOLo9rkCuEsrgq5dSCe98SPAcDDUdX
+         6rEbvlRhmaqrUteNujNIEyH1A2MYjEWalI+2ssnN4/J3Rp62AVUXuIYBOb1yT45wB51v
+         C+WYH0iN+P5SnTPwGZUaE4JYho8VXqCjJj1c3m7TYHuYxQLom5TcfLcBN1cxuE+s6+jk
+         XAdA==
+X-Gm-Message-State: ANoB5pm7jRJKhtf4MIdg26cH2yM6Mp0PjTqZel3VPV6hSF8kNSubYc8J
+        jDZ96CxvhZsWOTqV5sI4Ddj/yg==
+X-Google-Smtp-Source: AA0mqf5bwdV7+IAFS9abch8kfaDbStiEwno2CxvELKhTbNGkd+vZAnf3MUiuVS80w5aq4WzSiYqkRA==
+X-Received: by 2002:adf:df92:0:b0:241:8e98:42f with SMTP id z18-20020adfdf92000000b002418e98042fmr7871862wrl.206.1668593507111;
+        Wed, 16 Nov 2022 02:11:47 -0800 (PST)
 Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id h12-20020a05600c350c00b003c6bd91caa5sm1741752wmq.17.2022.11.16.02.11.45
+        by smtp.gmail.com with ESMTPSA id h12-20020a05600c350c00b003c6bd91caa5sm1741752wmq.17.2022.11.16.02.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Nov 2022 02:11:45 -0800 (PST)
+        Wed, 16 Nov 2022 02:11:46 -0800 (PST)
 From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Wed, 16 Nov 2022 11:11:33 +0100
-Subject: [PATCH 4/7] dt-bindings: pinctrl: qcom,pmic-gpio: document pm8550,
- pm8550b, pm8550ve, pm8550vs & pmk8550
+Date:   Wed, 16 Nov 2022 11:11:34 +0100
+Subject: [PATCH 5/7] dt-bindings: pinctrl: qcom,pmic-gpio: document pmr735d
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20221114-narmstrong-sm8550-upstream-spmi-v1-4-6338a2b4b241@linaro.org>
+Message-Id: <20221114-narmstrong-sm8550-upstream-spmi-v1-5-6338a2b4b241@linaro.org>
 References: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
 In-Reply-To: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
 To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
@@ -81,82 +80,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Document compatible, pin count & pin names for pm8550, pm8550b, pm8550ve,
-pm8550vs & pmk8550 SPMI GPIO controllers.
+Document compatible, pin count & pin names for pmr735d.
 
 Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 ---
- .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml       | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-index 29dd503f9522..a32e4b4566bb 100644
+index a32e4b4566bb..db505fdeac86 100644
 --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
 +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-@@ -40,6 +40,10 @@ properties:
-           - qcom,pm8350b-gpio
-           - qcom,pm8350c-gpio
-           - qcom,pm8450-gpio
-+          - qcom,pm8550-gpio
-+          - qcom,pm8550b-gpio
-+          - qcom,pm8550ve-gpio
-+          - qcom,pm8550vs-gpio
-           - qcom,pm8916-gpio
-           - qcom,pm8917-gpio
-           - qcom,pm8921-gpio
-@@ -52,6 +56,7 @@ properties:
-           - qcom,pmi8994-gpio
-           - qcom,pmi8998-gpio
-           - qcom,pmk8350-gpio
-+          - qcom,pmk8550-gpio
-           - qcom,pmm8155au-gpio
+@@ -61,6 +61,7 @@ properties:
            - qcom,pmp8074-gpio
            - qcom,pmr735a-gpio
-@@ -146,6 +151,8 @@ allOf:
+           - qcom,pmr735b-gpio
++          - qcom,pmr735d-gpio
+           - qcom,pms405-gpio
+           - qcom,pmx55-gpio
+           - qcom,pmx65-gpio
+@@ -116,6 +117,7 @@ allOf:
              enum:
-               - qcom,pm8018-gpio
-               - qcom,pm8019-gpio
-+              - qcom,pm8550vs-gpio
-+              - qcom,pmk8550-gpio
+               - qcom,pm8008-gpio
+               - qcom,pmi8950-gpio
++              - qcom,pmr735d-gpio
      then:
        properties:
          gpio-line-names:
-@@ -162,6 +169,7 @@ allOf:
-             enum:
-               - qcom,pm8226-gpio
-               - qcom,pm8350b-gpio
-+              - qcom,pm8550ve-gpio
-               - qcom,pm8950-gpio
-     then:
-       properties:
-@@ -236,6 +244,8 @@ allOf:
-               - qcom,pm8038-gpio
-               - qcom,pm8150b-gpio
-               - qcom,pm8150l-gpio
-+              - qcom,pm8550-gpio
-+              - qcom,pm8550b-gpio
-               - qcom,pmc8180c-gpio
-               - qcom,pmp8074-gpio
-               - qcom,pms405-gpio
-@@ -411,6 +421,10 @@ $defs:
-                  - gpio1-gpio8 for pm8350b
-                  - gpio1-gpio9 for pm8350c
-                  - gpio1-gpio4 for pm8450
-+                 - gpio1-gpio12 for pm8550
-+                 - gpio1-gpio12 for pm8550b
-+                 - gpio1-gpio8 for pm8550ve
-+                 - gpio1-gpio6 for pm8550vs
-                  - gpio1-gpio38 for pm8917
-                  - gpio1-gpio44 for pm8921
-                  - gpio1-gpio36 for pm8941
-@@ -421,6 +435,7 @@ $defs:
-                  - gpio1-gpio2 for pmi8950
-                  - gpio1-gpio10 for pmi8994
-                  - gpio1-gpio4 for pmk8350
-+                 - gpio1-gpio6 for pmk8550
-                  - gpio1-gpio10 for pmm8155au
+@@ -440,6 +442,7 @@ $defs:
                   - gpio1-gpio12 for pmp8074 (holes on gpio1 and gpio12)
                   - gpio1-gpio4 for pmr735a
+                  - gpio1-gpio4 for pmr735b
++                 - gpio1-gpio2 for pmr735d
+                  - gpio1-gpio12 for pms405 (holes on gpio1, gpio9
+                                             and gpio10)
+                  - gpio1-gpio11 for pmx55 (holes on gpio3, gpio7, gpio10
 
 -- 
 b4 0.10.1
