@@ -2,136 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 916AA62C01F
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 14:51:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DD8562C075
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 15:07:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231838AbiKPNvR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 08:51:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
+        id S233809AbiKPOHk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 09:07:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233183AbiKPNvQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 08:51:16 -0500
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-eopbgr60047.outbound.protection.outlook.com [40.107.6.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB55205D3
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 05:51:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V7B65u1MN4e1XxPGQ4obKN8kTco2uIduM+uNbY37vnnHbIKQOpHkXoRCGxa4gz49ak3sxZg6VIV2zEhtdv0SciNPDr+1SfrfNJfEIE0n4nJj/0KPhf19Z4jeVU+e3LVMZXDFlHN5ZsuzJqzdRsX9cnYk14+z/avQYHe0wLKaEAZUaCmMmWRyBLG9VlpdJbLtoWtSCejhmsULq0LX52RwDBIqQIMgt+57tIJ+VhTxj30qiU8M/4H9WgssHFOwXzsSLOwH3V6WuTKItQZCEJhNQsaxQev/AIbWNM3hQJ4cMy7xThyoH9q4qPWHtkQLgKJ5szZp0TjVMMawlhIYus9/NQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u6GyiKnUgKv9Jg0LWH9ldSMOzFdbKNLn1sy8JUkdJnU=;
- b=QWMNHg19or7RLYbRkGrVk/R8eRy9wIKjszRCRT/xzaZn9ZB2pd2pAfXe4qqk2dEMoiYh8OpwdCGozGxq/cANhvN+LZRw0rJ78hIKOhevRUMTwoed1HThCELbQEcE73SlBmu/tgzsGghtR7uBXLPdCvd80gDe+/w8NRrPKBckTo5fxIP5KrBZRFrgqZFvkAiiU7VZLRgw7RswczGKkQPCMM6lD7jm0N7PXmorz1U7wjmZm5mgDjebtp9R1lHaXrbRZptF2vTC8sMVIbmkYMJ1g1KX+b3JG0xiD8GWvEpUUu9QH/jr+bWPo1twr++wv2WCYqcOqCSt71TYnLSOF4V5OQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=eilabs.com; dmarc=pass action=none header.from=eilabs.com;
- dkim=pass header.d=eilabs.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=eilabs.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u6GyiKnUgKv9Jg0LWH9ldSMOzFdbKNLn1sy8JUkdJnU=;
- b=xqexpSWs9z6wRtm4WYSilGkjrea6NCSWdp607Iu9at0/ImxqHEAIzn7WRvB2MDtYBtlMBObfc+r1dA3jFWm3tR80iz6NCbU/HYQiWi8MmvhzCrmICMIsxjnfX4DBTMi/V0Ubtzl8aS+DPwevsbTYjc5RwupAjuzZkedk+/QGfVo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=eilabs.com;
-Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:147::21)
- by VE1P194MB0751.EURP194.PROD.OUTLOOK.COM (2603:10a6:800:161::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.18; Wed, 16 Nov
- 2022 13:51:11 +0000
-Received: from VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- ([fe80::b29f:dc93:5ae6:764d]) by VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- ([fe80::b29f:dc93:5ae6:764d%9]) with mapi id 15.20.5813.018; Wed, 16 Nov 2022
- 13:51:11 +0000
-Message-ID: <12c33c55-a0ec-3dc0-2416-f3dcd7f74f44@eilabs.com>
-Date:   Wed, 16 Nov 2022 14:51:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH v2 2/6] gpio: pca953x: Add PCAL953X as a separate chip
- type
-Content-Language: en-US
-From:   =?UTF-8?Q?Levente_R=c3=a9v=c3=a9sz?= <levente.revesz@eilabs.com>
+        with ESMTP id S233879AbiKPOHT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 09:07:19 -0500
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2E821E27;
+        Wed, 16 Nov 2022 06:05:35 -0800 (PST)
+Received: by mail-ej1-x630.google.com with SMTP id n20so23726730ejh.0;
+        Wed, 16 Nov 2022 06:05:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GQHF6xrCnnZ/7DJTYm+O8SFaI/pPn9ON4reEyxN2lG8=;
+        b=mcsN0Z4GnK2cM6xSJNBIPBi7EHILZ0SYCq+B55jZraePjTlCZXEtZ7XykfS0uNWI3f
+         d4ADRfjzgCKuUsx6qddTEP6FuF4e/WBwG7d0hmF9H6A6e5brwnuaq2mlbYzrMYUI9rqf
+         c1uiMCi/Nti2X5HtdsS9lAiJ95UhihKrtTidVM+UkACyd1v0slcOqBkjgtJw53UWtRTy
+         S4oxCa/eoP30GtWusk6wg7VMKvUA+2ome7Bi5MO9so+csGMjWJGF9fkxej2M3jmxBpmc
+         fhkffqsB7BEQhCvE+u/24DJIU5qytn6MBmowCLjOOmV8tXKjlgN++7LCTCDGTuKOqQ2r
+         E1Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GQHF6xrCnnZ/7DJTYm+O8SFaI/pPn9ON4reEyxN2lG8=;
+        b=mVqg86GOhyCmgc2GwQ0tT7WYjcjVs1dQIh3nbEJ4LaOXPEmyS0okr2PActti0DEFZ4
+         kSJYd2hA3Jse6R0HZBbwnWIVYx3JflWS8h0SL0Rzb9U5xOKTuqa02sBPqbH2OHWJ5Kaw
+         dUyIjxE2F2CENR3+npqugb9CGce+2NswRNqXvOQVWajC6ho4D5i67CVLxzRhdlp8avvZ
+         kD3gs0I7gqa+bJcBmjwJlbCtDTVor1Y8NOGsMLrjKBOc9ekUBK+1FcZNCNdSLAVQtjpz
+         0H9CzbZSbKyjxpJGkCNQKVrFEHZ2WDyoBsM78pr20SX1w7ek0LC8ptDbfvglt+M27tw9
+         Rp8w==
+X-Gm-Message-State: ANoB5pny18pr+N2kwZ4NeFIfbMoGw/n/HnG8Ija7hHwbAAur5Qo3ns3P
+        Q7SC6rHwt2kebCSAKs/v/XU=
+X-Google-Smtp-Source: AA0mqf6cxmMPu1BENt50HCQDkq9BZrUHa3M+DXUGefFES5D3hEVDS28SanxsIJ1ijZlK6Z2y73tWIw==
+X-Received: by 2002:a17:906:eb59:b0:7ae:c1b2:d928 with SMTP id mc25-20020a170906eb5900b007aec1b2d928mr17631108ejb.296.1668607533703;
+        Wed, 16 Nov 2022 06:05:33 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id h4-20020a0564020e8400b00461bacee867sm7413810eda.25.2022.11.16.06.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 06:05:32 -0800 (PST)
+Date:   Wed, 16 Nov 2022 15:05:30 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Cc:     Marijn Suijten <marijn.suijten@somainline.org>,
+        Brian Masney <bmasney@redhat.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Martyn Welch <martyn.welch@collabora.com>,
-        Haibo Chen <haibo.chen@nxp.com>, Puyou Lu <puyou.lu@gmail.com>,
-        Justin Chen <justinpopo6@gmail.com>,
-        Andrey Gusakov <andrey.gusakov@cogentembedded.com>,
-        Nate Drude <nate.d@variscite.com>,
-        =?UTF-8?Q?D=c3=a1vid_Jenei?= <david.jenei@eilabs.com>,
-        linux-gpio@vger.kernel.org
-References: <cc987520-d95b-01b9-5b65-53442ce122f6@eilabs.com>
- <9bdc962c-1cfe-8240-963c-491f3992b2cb@eilabs.com>
- <Y1luUgS25ddeSCT9@smile.fi.intel.com>
- <8b94b5a6-fac8-5087-b4da-ddba098d2265@eilabs.com>
- <ea34ed6788923b8be496317f7a962d7073946ff4.camel@collabora.com>
- <Y1q52efyv93/z8BC@smile.fi.intel.com>
- <67bba210-09ac-32fb-bb97-8bfc40c2c200@eilabs.com>
-In-Reply-To: <67bba210-09ac-32fb-bb97-8bfc40c2c200@eilabs.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM6PR10CA0108.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:209:8c::49) To VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
- (2603:10a6:800:147::21)
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>
+Subject: Re: [PATCH] gpiolib: of: Use correct fwnode for DT-probed chips
+Message-ID: <Y3TuKhW9YjOTzcfg@orome>
+References: <20221111113732.461881-1-thierry.reding@gmail.com>
+ <Y3Kv7XoBytwwy9pC@x1>
+ <20221115111800.t6i6fuszhuasvgka@SoMainline.org>
+ <Y3S62i7OzocP5QrT@orome>
+ <Y3S9oEw6qfLVgGhR@smile.fi.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1P194MB0655:EE_|VE1P194MB0751:EE_
-X-MS-Office365-Filtering-Correlation-Id: 12e39102-b559-47fd-4479-08dac7d99ed3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZNLV9opUsq1B+XqKOaLnmpybFbd59mbkv4f3xTNd5eXcauOXgkpCXSWrvP5lXffbssw+fuvS/7pWp/V4N2VUWzkiEH0i7jDBDx3sxWth88vMXS1wwAVCNaGjKzzTRCV3woGzALCJexSlTSUccIa0qwuNw6WjYz0GZGfwt3rdxT2C5s/+Vwb9I5deYWmSbbsAWrAOprfN8b8ncHD+GuVO07ZgtNUduC9q1ZrekKuAp/deTlhVyzLY2i3J1byCK+dSNi/fOH1n6VojMcrt3yOZhjqBjs5J7uMrBNaLOMw9rY/kVL+ys0f0qXaotLcQZPNz8V9JqF/wa6fsXzJtQQ1hWr1zcmPlkxOQ8doPvO6tY781a7x5FdtHrtYfZl5/pW/6114ZVPn/mdI5HSV7sHac125D/BUGZNLv9mxLmmP1LMLyiBRZ1ZAiofDAa1gJ7FMNPAVzYGGux/0V4qkx+/W29Dm31TqcMd/YyLBLgIqcDzysVdLUz896Q7oU4MUb30ITu+jMEcu5ZOpTeczlXRj/A7qadqMqbRdCdcheQN82u1OaVUv9bsgk8Jx3X2zyA5x22ibYxFSSMQ69TxmXa5dvc4K5iQRb2s19l4MTCcHy0YlJXPyn4j4uhmeGyTAW8JoI/4+ll5gcUPNbPUnQUdNh/QZOwKufgQ0e30Ho8fNaqkpYvSEJm4DfWm+qR0e7GxAKPqoLPz/D87kaJU556YRX9Hzz6p9QueY90aTc9s2k0JOHGkO8tnbIuvbv//R4NjPQHLAFOHtAJ7myyh41oI/yrG8meH0wpvUAe2T2kL1omzrV1fEpuCmZVU3PrtK+u2HR
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1P194MB0655.EURP194.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(136003)(376002)(39830400003)(396003)(366004)(346002)(451199015)(36756003)(26005)(31686004)(86362001)(31696002)(38100700002)(186003)(83380400001)(2616005)(66574015)(2906002)(6512007)(478600001)(5660300002)(7416002)(8936002)(6506007)(6486002)(41300700001)(6916009)(54906003)(66476007)(316002)(8676002)(66556008)(4326008)(66946007)(437434003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V0tZTEVVMzFtS2Vhd1dPTWUzc2h6b0NxSTdyTVR3NUI4MzZCa2F2TGYzeHha?=
- =?utf-8?B?NlNBY0pDdkNTd3FlWEN0Lzl1YW5maVJFb3Nnak5nTmh0dUNKZ29SVFU1ck96?=
- =?utf-8?B?KzJoN29Wa2lsRHdYOEhJSTdFMDdVQ3p3OFVFQnpLNVhleGpoeE1XdzlCM2du?=
- =?utf-8?B?Ry9nVDRGQUtHNWRZWVZ0SnR0OUNYMlFzSUVBekwzOUNRTnpHU0FYb0hNVzNL?=
- =?utf-8?B?TFB0ZkhneE5JTmR2ZitpclV2b3JOY2FYSU9pa0dsRzJwRnBPWnZ2NnMwVExy?=
- =?utf-8?B?WHZoTGplVE5SV2ZKaHBTdy9uZDR5Z2JzMWErbm13Vk5Ddk1FcmhpN1ZrM011?=
- =?utf-8?B?Nm9ZejA2ekdPR2NZU1ExRVFDUzQzTytIUkFDK3dySGxBcEZsOXozck1iUFBD?=
- =?utf-8?B?ZTFISHk2SGgwV0JvdVFSTnhud0VhaVpDQURHUXpRaEdWNCtPVHo2S3FWTURy?=
- =?utf-8?B?d2tWRjlFSWloNDNlNGYza25hc1Q2Z29BRTdaVzlGUWlBTlRpZ1RId2VweW9M?=
- =?utf-8?B?a0VsRWdOS1VTNWhCUzBSMTV1alJjWU5HaUt2NFhMVTZYS05QVkN5ZEJ1TFAx?=
- =?utf-8?B?THpyN01GTENYNG1GckMvZ1BZNDd6YU5hb3ZRcWlRWmNSVnVSVlVuSXgwSlpl?=
- =?utf-8?B?NWl3OGc0VHhCUEthZ2R4R2ZlNUxzaVhhNWNKSUNUNGgyaHUyKzRZZzU0bVNq?=
- =?utf-8?B?OTNiNVN6VzV0ZDk0MHh6SFlJMURLM01LSzlic01nUlZ2NUVTeVF4QWJ0UmZk?=
- =?utf-8?B?MWlYZmVZZkhkQVpuQUxhcE45Rys0elVQSkZnZE1xVHcwem51R2M1blFjMXMz?=
- =?utf-8?B?SjRiTko5YnpPV0JzTEt5b1REWG10NGhvWnhJWlpsY0IvVU54L2tiRlQ2MVR3?=
- =?utf-8?B?VllpTnp0RERiWTlQMTZYa3ZBK1ZtdFB6MmtZWXVJeUxnL0x0Ti9CbHQrZVVv?=
- =?utf-8?B?SklSQzh0aUx2L1FRSHZ4b3ZPUDdWci84Y1VYeGtJOFIwVm5hOFV0LzBVWkVK?=
- =?utf-8?B?MTJMQjlVYXFYY2ZocU5tdmJWZUdqWnRFMVgyVkFjUzJGRmdYSkhSbEZ0RXhW?=
- =?utf-8?B?RDVCT3NMMG9hZUcyVFpBYXN0Z1ZHWDJraFIveHpzczBGaFdWZXR0UVlYYm5y?=
- =?utf-8?B?b2ordWNtTFE0Z3lBQ2k4RTB5aUFQYXVLeFZwbHBMZ0M0dGtYeURMaHIyYlFj?=
- =?utf-8?B?WUdJcW10Z2NWZHhnU3A2Tnp0NStQd3NzU3dBUTVsc2tQNjdkZHJycUl5d0J0?=
- =?utf-8?B?bm16ckszOXZFOGVtZG82Z1NxQVVnd3FTYmY3TjNpdFpPYm9nOHNXdjBVNlFi?=
- =?utf-8?B?SyswRU9JSGdHRkdKL0pSQ3VqWWYrdFVTOHVqN3M3N1Y2ODN4cEoxSGdNb1pq?=
- =?utf-8?B?YVhVazZtRWRSdW1SenUzZG8vaU9XYy92SitiUWtDOTV6T1Q1VUIwbEFUVk9X?=
- =?utf-8?B?M04wV1dEQUFINnJkUklkVlYxWmFmeDllcGk4UVZWKzI5amx6M0hWYVpjUWZ4?=
- =?utf-8?B?Yk9PdVNVeUU3VlR0Z0Iwc3ZvSVpRbUxPejhBbDA1OWFKbmZ5ZDBhSDczdEZE?=
- =?utf-8?B?S1RPdktNSXlpSWNtNGQvVis1VmhJcDBEK05FN1JOK1gyVkVTbTE3Ui85VUd3?=
- =?utf-8?B?OUtrMUlFV2JOOVpqU2w4K2FSR0JRR3NaekM5WTRFcEFDZnVuRU44SS9VeW9u?=
- =?utf-8?B?NWh4aGJCTjQ5RHJJSEYrTU1OejBIT2dVcEh4TzRSRTZHa3gxZFNEVjBJcXV4?=
- =?utf-8?B?RHVyOTVSKys1RFp2cU0rODRkaWh4T2NWT21HVThzMWdYZUczNTZ6eUMweEc5?=
- =?utf-8?B?UlpPVEJpZE92RklpU0RvQjZtb3luRjdwcmhsOVJTTUl3dkkxSDBXZXNPd2lk?=
- =?utf-8?B?R05kNklsLzFkTEhxall5RUZvMkhvODlIV2MyTkVjZlRRWDI0Q1pFZXliaUp1?=
- =?utf-8?B?blVWZyt1Si82UG1aYklNYk9GbTFjZ3NEQWdERVFsSEFtejZ3a1RObE0rQXBw?=
- =?utf-8?B?amx4SEluT3p2QXRTYUIxMXV3WlBKTjF6OTd4dUNtTFF6QXU1WmR5ZjByS0hw?=
- =?utf-8?B?UGRpakpjTHROT0txaUcwdHZvNkM3QVpSdG5pajVpdXAxS1lSR3YxcnJ0VDFa?=
- =?utf-8?B?SGdBQmpoRmxZQ2NIakxuMWlUaXB1N0NzVjVsTmJuZUlub1Z3NWhrQzI3Ykk5?=
- =?utf-8?B?eGc9PQ==?=
-X-OriginatorOrg: eilabs.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 12e39102-b559-47fd-4479-08dac7d99ed3
-X-MS-Exchange-CrossTenant-AuthSource: VI1P194MB0655.EURP194.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2022 13:51:11.4385
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 6ef6a9ce-c7b1-47cb-80ec-8c54be45d567
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UV4JsaDx2zoMZzVVp7TNy91la6NLhz7H/8NWLTgt0CeIg4Txx8oVxBz8QLsUhwT+RqOuoqYOAcqKpdze6MKJnKF6pfWA9Zd15QGYGEzHDkg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1P194MB0751
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8YUqZNNhJPdRaHFQ"
+Content-Disposition: inline
+In-Reply-To: <Y3S9oEw6qfLVgGhR@smile.fi.intel.com>
+User-Agent: Mutt/2.2.8 (2022-11-05)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -139,67 +83,91 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 28 Oct 2022 20:57 +0200, Levente Révész wrote:
-> I went through all the datasheets and created this note listing
-> chip functions and register layouts.
 
-On Thu, 27 Oct 2022 20:03:21 +0300, Andy Shevchenko wrote
-> PCA_PCAL is about having latched interrupts, it doesn't suggest
-> the layout. So, somebody needs to take a pen and draw the current
-> list of possible combinations of the features and layouts and then
-> we can see what can be done as a type and what's not.
+--8YUqZNNhJPdRaHFQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The note in my previous email lists the functions of each chip this
-driver supports. The currently supported features are the following:
+On Wed, Nov 16, 2022 at 12:38:24PM +0200, Andy Shevchenko wrote:
+> On Wed, Nov 16, 2022 at 11:26:34AM +0100, Thierry Reding wrote:
+> > On Tue, Nov 15, 2022 at 12:18:00PM +0100, Marijn Suijten wrote:
+> > > On 2022-11-14 16:15:25, Brian Masney wrote:
+> > > > On Fri, Nov 11, 2022 at 12:37:32PM +0100, Thierry Reding wrote:
+> > > > > From: Thierry Reding <treding@nvidia.com>
+> > > > >=20
+> > > > > The OF node store in chip->fwnode is used to explicitly override =
+the FW
+> > > > > node for a GPIO chip. For chips that use the default FW node (i.e=
+=2E that
+> > > > > of their parent device), this will be NULL and cause the chip not=
+ to be
+> > > > > fully registered.
+> > > > >=20
+> > > > > Instead, use the GPIO device's FW node, which is set to either th=
+e node
+> > > > > of the parent device or the explicit override in chip->fwnode.
+> > > > >=20
+> > > > > Fixes: 8afe82550240 ("gpiolib: of: Prepare of_gpiochip_add() / of=
+_gpiochip_remove() for fwnode")
+> > > > > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > > > > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > > >=20
+> > > > Reviewed-by: Brian Masney <bmasney@redhat.com>
+> > > > Tested-by: Brian Masney <bmasney@redhat.com>
+> > > >=20
+> > > > I separately sent a similar type of patch to fix the same issue tod=
+ay:
+> > > > https://lore.kernel.org/linux-arm-msm/20221114202943.2389489-1-bmas=
+ney@redhat.com/T/#u
+> > >=20
+> > > For completeness, your linked patch fixes a synchronous external abort
+> > > on multiple Qualcomm platforms pointed out in [1].  This patch however
+> > > does not, are you sure they fix the exact same issue?
+>=20
+> Yes, they fix the same issue.
+>=20
+> > > [1]: https://lore.kernel.org/linux-arm-msm/20221115110800.35gl3j43lmb=
+xm3jb@SoMainline.org/
+> >=20
+> > Can you check if the below fixes the MSM issue that you're seeing
+> > (applied on top of my earlier patch, though with Brian's reverted
+> > temporarily)?
+>=20
+> I don't know why we would need this. Brian's patch (already applied into
+> GPIO tree) is correct, no? (Moreover, it makes yours unneeded, but I'm fi=
+ne
+> with having it anyway.)
 
-    - basic interrupt (no registers)
-    - interrupt status and mask registers
-    - bias (pull-up, pull-down)
-    - input latch
+I've explained this in the reply to Brian's patch, but I don't think we
+want to use gc->fwnode other than initially to override the fwnode that
+the GPIO chip uses. It might even be worth turning it into a parameter
+to gpiochip_add() to avoid the ambiguity we have right now where we
+store the same fwnode in two different places and end up using either
+depending on whoever wrote the patch and what mood they were in. There
+really should only be one place to store this pointer to avoid this sort
+of ambiguity.
 
-Proposed chip types to allow implementing these functions for all chips
-that have them:
+Thierry
 
-    1. PCA953X without interrupt
-        also covers some MAX731X chips
-    2. PCA953X
-        also covers some MAX731X chips
-    3. PCA950X
-        also covers PCA9698
-    4. PCAL953X
-        also covers PCAL652X
-    5. PCAL653X
-    6. PCA957X
-    7. XRA120X
+--8YUqZNNhJPdRaHFQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Other functions which could be used for pinconfig, but are not currently
-implemented for any of the chips in the driver:
+-----BEGIN PGP SIGNATURE-----
 
-    - interrupt on specific edges
-    - drive mode (push-pull or open-drain)
-    - drive strength
-    - debounce
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmN07ioACgkQ3SOs138+
+s6GcARAAwVSaB6cgAFmgZVVRCE4RrjHNgm0XrWw1TWomrfOvqBcIprj702QqcOfq
+DMkgLdW9LPzt/nxItelQ9sn8tfrajma7x+kfTAcXMtTIkZgAKIcP7MLk++ymwL30
+RzfsjbFUhCaqSb75m4fktdi6Jdj8G80R4VEmmiEk0nnWu9CeOquC+5MTf+BL3PNy
+jCx6ndMyRjuLU7JRVFqkfXJt+LsjDh/+tMIaomfiYnoMRimKxQSmf318avHZXA9/
+H8DvEyh+dlGwyexUHBD6GI4N4COFdLamOrjXXjqr/t0lSZ28GrCbhm9ZmhVXjR1j
+NkNRElKf0VF41y0/oVoqgt+Aq2AirL2yh0jCQIS7Qou1snvqXDw8aW6AxGSSWpgL
++Oj8k9xqd/OEWchd0J7dQED0Iokv1q+RosY5bGLuAkeAzkKzk7cKqndiNGHl0A+p
+IbLX7g8cvI6duFoMh8oSAOWT8ATrCTzzMbHt5GodGITKTWO41VlfUrI3znx/RDNQ
+1j8jVLkpgQd1sS//Dj/wgHEWcFKqcvg5Z18dtTSy+EhlHG5UNFQMyHKohXQ+Tnp0
+eCDJ18okOfytJbc0N+co2CI91bsAfBIYIMlQtoLfsVFlj4fiT64ZEJE82BVClbHa
+IuI4TgbdV/1Y2YIo6RwcaK0Zud4SYVjhxt32aLTbX63OAMYXaLU=
+=PJfZ
+-----END PGP SIGNATURE-----
 
-Proposed chip types to allow implementing all of these functions for
-all chips that support them:
-
-    1. PCA953X without interrupt
-        also covers some MAX731X chips
-    2. PCA953X
-        also covers some MAX731X chips
-    3. PCA950X
-    4. PCA9698
-    5. PCAL953X
-    6. PCAL652X
-    7. PCAL653X
-    8. PCA957X
-    9. XRA120X
-
-Should the chip type take all relevant chip functions into account, or
-just the currently implemented functions?
-
-
----
-Best Regards,
-Levente
-
+--8YUqZNNhJPdRaHFQ--
