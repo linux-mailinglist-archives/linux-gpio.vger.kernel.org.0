@@ -2,318 +2,93 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D2162BEF0
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 14:05:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AE9B62BF6A
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 14:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233759AbiKPNE5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 08:04:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52406 "EHLO
+        id S230387AbiKPN2L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 08:28:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233451AbiKPNEy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 08:04:54 -0500
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 300922FB;
-        Wed, 16 Nov 2022 05:04:53 -0800 (PST)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AGD4lLY060655;
-        Wed, 16 Nov 2022 07:04:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668603887;
-        bh=igkbXPia3TALCYpXbhmuW7jnfZel4eCmgZ4nI718qhg=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=LHNxdSd+YlUTknoVO8PLaZBv/oeGgul5mNiOZoJWx4B+wHzrlaCUIlYoKNkePF9v+
-         pggj2QPeTN/otXkRkVuZHUSMMz+fIUMB29I5gb6Z0iK8rhxhUW6D+Ugsm5JY184OOd
-         ypnGWhNQivh+ZjeyGBIdEabS4OhbkfOxTgyvDBFk=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AGD4lXm043625
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 16 Nov 2022 07:04:47 -0600
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6; Wed, 16
- Nov 2022 07:04:47 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.6 via
- Frontend Transport; Wed, 16 Nov 2022 07:04:47 -0600
-Received: from LT5CD112GSQZ.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AGD4Tbd121231;
-        Wed, 16 Nov 2022 07:04:44 -0600
-From:   Apurva Nandan <a-nandan@ti.com>
-To:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Apurva Nandan <a-nandan@ti.com>, Hari Nagalla <hnagalla@ti.com>
-Subject: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
-Date:   Wed, 16 Nov 2022 18:34:28 +0530
-Message-ID: <20221116130428.161329-5-a-nandan@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221116130428.161329-1-a-nandan@ti.com>
-References: <20221116130428.161329-1-a-nandan@ti.com>
+        with ESMTP id S233260AbiKPN1o (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 08:27:44 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E5145EE0
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 05:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668605254; x=1700141254;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=fX08OjnF5j+VinCAJYhyUbYh0qdU2CTZ8twCktLxRp0=;
+  b=FghEKXdizxbZ+xXCXM/MC/mKTtUQbBD0FZtq6Fo+RZuKUd9YHItjJ1Rw
+   FGnm6nQf7uPUWKUdei29Nk7+sqFPQJj51FzJ92amUYpYo8jv/KMVLox4E
+   pTuEdDdIcZUvLsMg+TE/lc9lXUufXTSbHlZ93HB/bTfKT0V5YsKDoLO5v
+   P17jFlW6vNT9+xGUa/vJQH/9v28YGoWn/ULhTQ2/M8Zp2r4tBRW7sw0x7
+   pifL4SeUDyho03R1aM1jx6OlrvCGOT4oyuJ5KOYmaPddJdFg7EmOFnMJh
+   CkNZYugho0b95Vw0Y4ynFZvcYBOW0G055J39/HZiyMmU/Gwf0rWPOaD0Y
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="314356042"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="314356042"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 05:27:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="672391170"
+X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
+   d="scan'208";a="672391170"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 16 Nov 2022 05:27:32 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ovIRu-00D8q5-1F;
+        Wed, 16 Nov 2022 15:27:30 +0200
+Date:   Wed, 16 Nov 2022 15:27:29 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Niyas Sait <niyas.sait@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
+        rafael@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH RFC v2 0/3] pinctrl: add ACPI support to pin controller
+Message-ID: <Y3TlQYcLHjA23iRL@smile.fi.intel.com>
+References: <20221115175415.650690-1-niyas.sait@linaro.org>
+ <Y3PWjZb9Jci1oXyM@smile.fi.intel.com>
+ <3766343a-ce40-10aa-99dc-2ea94bc1ffbd@linaro.org>
+ <Y3Pexz7tLrAP05uY@smile.fi.intel.com>
+ <c9eb64c4-4cb3-b25c-df04-97da24a595fd@linaro.org>
+ <Y3Sz32+4uuynGeAy@smile.fi.intel.com>
+ <05f3c105-12f8-1fd5-0e6c-1ab7e24a01df@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <05f3c105-12f8-1fd5-0e6c-1ab7e24a01df@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-J784S4 EVM board is designed for TI J784S4 SoC. It supports the following
-interfaces:
-* 32 GB DDR4 RAM
-* x2 Gigabit Ethernet interfaces capable of working in Switch and MAC mode
-* x1 Input Audio Jack, x1 Output Audio Jack
-* x1 USB2.0 Hub with two Type A host and x1 USB 3.1 Type-C Port
-* x2 4L PCIe connector
-* x1 UHS-1 capable micro-SD card slot
-* 512 Mbit OSPI flash, 1 Gbit Octal NAND flash, 512 Mbit QSPI flash,
-  UFS flash.
-* x6 UART through UART-USB bridge
-* XDS110 for onboard JTAG debug using USB
-* Temperature sensors, user push buttons and LEDs
-* 40-pin User Expansion Connector
-* x2 ENET Expansion Connector, x1 GESI expander, x2 Display connector
-* x1 15-pin CSI header
-* x6 MCAN instances
+On Wed, Nov 16, 2022 at 10:40:19AM +0000, Niyas Sait wrote:
+> On 16/11/2022 09:56, Andy Shevchenko wrote:
+> > The GPIO to pin mapping is done by GPIO ranges. This can be made up in the
+> > driver or, IIRC, in DT (so in ACPI) by already registered properties).
+> > 
+> > Not sure, why you don't use them.
+> 
+> OK. I might have missed it.
+> 
+> In DT, gpio-ranges property is used to describe the mapping, I could not
+> find equivalent property in GPIO ACPI properties -
+> https://www.kernel.org/doc/html/latest/firmware-guide/acpi/gpio-properties.html
 
-Add basic support for J784S4-EVM.
+It's the same. You just need to check the code of GPIO library to make sure
+that it uses fwnode / device property APIs, so it will be parsed in ACPI case
+as well.
 
-Schematics: https://www.ti.com/lit/zip/sprr458
-
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Apurva Nandan <a-nandan@ti.com>
----
- arch/arm64/boot/dts/ti/Makefile          |   2 +
- arch/arm64/boot/dts/ti/k3-j784s4-evm.dts | 197 +++++++++++++++++++++++
- 2 files changed, 199 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-
-diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 4555a5be2257..67621b349e88 100644
---- a/arch/arm64/boot/dts/ti/Makefile
-+++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -19,6 +19,8 @@ dtb-$(CONFIG_ARCH_K3) += k3-j7200-common-proc-board.dtb
- 
- dtb-$(CONFIG_ARCH_K3) += k3-j721s2-common-proc-board.dtb
- 
-+dtb-$(CONFIG_ARCH_K3) += k3-j784s4-evm.dtb
-+
- dtb-$(CONFIG_ARCH_K3) += k3-am642-evm.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am642-sk.dtb
- 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-new file mode 100644
-index 000000000000..53516fb2b346
---- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
-@@ -0,0 +1,196 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
-+ *
-+ * EVM Board Schematics: https://www.ti.com/lit/zip/sprr458
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/net/ti-dp83867.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "k3-j784s4.dtsi"
-+
-+/ {
-+	compatible = "ti,j784s4-evm", "ti,j784s4";
-+	model = "Texas Instruments J784S4 EVM";
-+
-+	chosen {
-+		stdout-path = "serial2:115200n8";
-+	};
-+
-+	aliases {
-+		serial2 = &main_uart8;
-+		mmc1 = &main_sdhci1;
-+		i2c0 = &main_i2c0;
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		/* 32G RAM */
-+		reg = <0x00 0x80000000 0x00 0x80000000>,
-+		      <0x08 0x80000000 0x07 0x80000000>;
-+	};
-+
-+	reserved_memory: reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		secure_ddr: optee@9e800000 {
-+			reg = <0x00 0x9e800000 0x00 0x01800000>;
-+			no-map;
-+		};
-+	};
-+
-+	evm_12v0: regulator-evm12v0 {
-+		/* main supply */
-+		compatible = "regulator-fixed";
-+		regulator-name = "evm_12v0";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vsys_3v3: regulator-vsys3v3 {
-+		/* Output of LM5140 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&evm_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vsys_5v0: regulator-vsys5v0 {
-+		/* Output of LM5140 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vsys_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&evm_12v0>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vdd_mmc1: regulator-sd {
-+		/* Output of TPS22918 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_mmc1";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		enable-active-high;
-+		vin-supply = <&vsys_3v3>;
-+		gpio = <&exp2 2 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	vdd_sd_dv: regulator-TLV71033 {
-+		/* Output of TLV71033 */
-+		compatible = "regulator-gpio";
-+		regulator-name = "tlv71033";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vdd_sd_dv_pins_default>;
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-boot-on;
-+		vin-supply = <&vsys_5v0>;
-+		gpios = <&main_gpio0 8 GPIO_ACTIVE_HIGH>;
-+		states = <1800000 0x0>,
-+			 <3300000 0x1>;
-+	};
-+};
-+
-+&main_pmx0 {
-+	main_uart8_pins_default: main-uart8-pins-default {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x040, PIN_INPUT, 14) /* (AF37) MCASP0_AXR0.UART8_CTSn */
-+			J784S4_IOPAD(0x044, PIN_OUTPUT, 14) /* (AG37) MCASP0_AXR1.UART8_RTSn */
-+			J784S4_IOPAD(0x0d0, PIN_INPUT, 11) /* (AP38) SPI0_CS1.UART8_RXD */
-+			J784S4_IOPAD(0x0d4, PIN_OUTPUT, 11) /* (AN38) SPI0_CLK.UART8_TXD */
-+		>;
-+	};
-+
-+	main_i2c0_pins_default: main-i2c0-pins-default {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x0e0, PIN_INPUT_PULLUP, 0) /* (AN36) I2C0_SCL */
-+			J784S4_IOPAD(0x0e4, PIN_INPUT_PULLUP, 0) /* (AP37) I2C0_SDA */
-+		>;
-+	};
-+
-+	main_mmc1_pins_default: main-mmc1-pins-default {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x104, PIN_INPUT, 0) /* (AB38) MMC1_CLK */
-+			J784S4_IOPAD(0x108, PIN_INPUT, 0) /* (AB36) MMC1_CMD */
-+			J784S4_IOPAD(0x100, PIN_INPUT, 0) /* (No Pin) MMC1_CLKLB */
-+			J784S4_IOPAD(0x0fc, PIN_INPUT, 0) /* (AA33) MMC1_DAT0 */
-+			J784S4_IOPAD(0x0f8, PIN_INPUT, 0) /* (AB34) MMC1_DAT1 */
-+			J784S4_IOPAD(0x0f4, PIN_INPUT, 0) /* (AA32) MMC1_DAT2 */
-+			J784S4_IOPAD(0x0f0, PIN_INPUT, 0) /* (AC38) MMC1_DAT3 */
-+			J784S4_IOPAD(0x0e8, PIN_INPUT, 8) /* (AR38) TIMER_IO0.MMC1_SDCD */
-+		>;
-+	};
-+
-+	vdd_sd_dv_pins_default: vdd-sd-dv-pins-default {
-+		pinctrl-single,pins = <
-+			J784S4_IOPAD(0x020, PIN_INPUT, 7) /* (AJ35) MCAN15_RX.GPIO0_8 */
-+		>;
-+	};
-+};
-+
-+&main_uart8 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_uart8_pins_default>;
-+};
-+
-+&main_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&main_i2c0_pins_default>;
-+
-+	clock-frequency = <400000>;
-+
-+	exp1: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "PCIE1_2L_MODE_SEL", "PCIE1_4L_PERSTZ", "PCIE1_2L_RC_RSTZ",
-+				  "PCIE1_2L_EP_RST_EN", "PCIE0_4L_MODE_SEL", "PCIE0_4L_PERSTZ",
-+				  "PCIE0_4L_RC_RSTZ", "PCIE0_4L_EP_RST_EN", "PCIE1_4L_PRSNT#",
-+				  "PCIE0_4L_PRSNT#", "CDCI1_OE1/OE4", "CDCI1_OE2/OE3",
-+				  "AUDIO_MUX_SEL", "EXP_MUX2", "EXP_MUX3", "GESI_EXP_PHY_RSTZ";
-+	};
-+
-+	exp2: gpio@22 {
-+		compatible = "ti,tca6424";
-+		reg = <0x22>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-line-names = "R_GPIO_RGMII1_RST", "ENET2_I2CMUX_SEL", "GPIO_USD_PWR_EN",
-+				  "USBC_PWR_EN", "USBC_MODE_SEL1", "USBC_MODE_SEL0",
-+				  "GPIO_LIN_EN", "R_CAN_STB", "CTRL_PM_I2C_OE#",
-+				  "ENET2_EXP_PWRDN", "ENET2_EXP_SPARE2", "CDCI2_RSTZ",
-+				  "USB2.0_MUX_SEL", "CANUART_MUX_SEL0", "CANUART_MUX2_SEL1",
-+				  "CANUART_MUX1_SEL1", "ENET1_EXP_PWRDN", "ENET1_EXP_RESETZ",
-+				  "ENET1_I2CMUX_SEL", "ENET1_EXP_SPARE2", "ENET2_EXP_RESETZ",
-+				  "USER_INPUT1", "USER_LED1", "USER_LED2";
-+	};
-+};
-+
-+&main_sdhci1 {
-+	/* SD card */
-+	status = "okay";
-+	pinctrl-0 = <&main_mmc1_pins_default>;
-+	pinctrl-names = "default";
-+	disable-wp;
-+	vmmc-supply = <&vdd_mmc1>;
-+	vqmmc-supply = <&vdd_sd_dv>;
-+};
-+
-+&main_gpio0 {
-+	status = "okay";
-+};
 -- 
-2.17.1
+With Best Regards,
+Andy Shevchenko
+
 
