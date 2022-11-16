@@ -2,138 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 349D962B3ED
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 08:32:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96AE162B414
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 08:39:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232500AbiKPHcE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 02:32:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47714 "EHLO
+        id S231547AbiKPHjO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 02:39:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232501AbiKPHcC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 02:32:02 -0500
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2895EB1F6;
-        Tue, 15 Nov 2022 23:32:02 -0800 (PST)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id D39B714C1;
-        Wed, 16 Nov 2022 08:31:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1668583917;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=piDfn64ODAtoaZKFwAql8Y2/q2UocH9lkh4rRnP9hco=;
-        b=vEv6i7pNqUD1YJqyKPKHL6S+GfFWxCp3JCNxh2zDhn2j6jzSrGYH8tbOfYbS+hHzey3J8j
-        yerF9dZ+i4nEFBNDjigRrxfsERL+u/WVqM8NfzMH0aYYF7ZVFCvMLufQnOKtgEguC2+TUn
-        GWgx8pWeyW7ikqXdhnX2M20WspRrcmsj1WtI/uBPMzVLxQVeWuKg6qQw2S1hsob6Dku26R
-        VQBW+Iwbc2uAZbn2Xmdu9sXeWORAELzkbh9lwu/gxp5PlE/M00rgJAU8KnQSZtVUxD+Hv8
-        7yZTefX9Oq+i0JlyYjBvrXviM9fAwyJCXn3wIClMG/IEPQ5CHKJ26AI3zlaBTQ==
+        with ESMTP id S229456AbiKPHjN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 02:39:13 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EBC58C745;
+        Tue, 15 Nov 2022 23:39:11 -0800 (PST)
+Received: from loongson.cn (unknown [10.180.13.64])
+        by gateway (Coremail) with SMTP id _____8BxLLaek3RjXa8HAA--.10868S3;
+        Wed, 16 Nov 2022 15:39:10 +0800 (CST)
+Received: from [10.180.13.64] (unknown [10.180.13.64])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axf+Cdk3Rjx5UUAA--.54799S2;
+        Wed, 16 Nov 2022 15:39:10 +0800 (CST)
+Subject: Re: [PATCH v10 1/2] pinctrl: pinctrl-loongson2: add pinctrl driver
+ support
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        zhanghongchen <zhanghongchen@loongson.cn>
+References: <20221114024942.8111-1-zhuyinbo@loongson.cn>
+ <20221115133840.GA861387-robh@kernel.org>
+From:   Yinbo Zhu <zhuyinbo@loongson.cn>
+Message-ID: <b6b09a89-0284-69ee-a858-84c2198f4177@loongson.cn>
+Date:   Wed, 16 Nov 2022 15:39:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Date:   Wed, 16 Nov 2022 08:31:57 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Matt Ranostay <mranostay@ti.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>, brgl@bgdev.pl,
-        lee@kernel.org, kristo@kernel.org, alexandre.belloni@bootlin.com,
-        a.zummo@towertech.it, krzysztof.kozlowski+dt@linaro.org,
-        robh@kernel.org, vigneshr@ti.com,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH v3 4/7] gpio: tps6594x: add GPIO support for TPS6594x PMIC
-In-Reply-To: <Y24OuHmXCV/5HuEY@ubuntu>
-References: <20221109065546.24912-1-mranostay@ti.com>
- <20221109065546.24912-5-mranostay@ti.com>
- <CACRpkdaTV6unVsfNj+M39jLn5FLTnhryjuzF4EB6Ytds9R1nEQ@mail.gmail.com>
- <Y2zOhf8lqVLyLn+A@ubuntu>
- <CACRpkdZOR4Hcyv=bO7=rJERJK7JbCoS0_dvWj0K=YZC6Nsozdw@mail.gmail.com>
- <Y24OuHmXCV/5HuEY@ubuntu>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <91b51ffaadaa4c3d5ca46dc252d641c6@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20221115133840.GA861387-robh@kernel.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Axf+Cdk3Rjx5UUAA--.54799S2
+X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7CrWrZr1ftFykAFy3XF1xGrg_yoW8Wr48pF
+        4fGa9YkFs8GF18Ga9xKryfZr95ZFZxJFnxtwsav342gryDAasa93yUKF1UCrykCFsxJF1x
+        ua45Gw1Uuay5CFDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bxkFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
+        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28E
+        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
+        A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487
+        Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+        IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+        Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l42xK82IY6x
+        8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+        x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+        CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI
+        42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
+        80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8c_-PUUUUU==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-Am 2022-11-11 09:58, schrieb Matt Ranostay:
-> On Thu, Nov 10, 2022 at 11:15:22AM +0100, Linus Walleij wrote:
->> On Thu, Nov 10, 2022 at 11:12 AM Matt Ranostay <mranostay@ti.com> 
->> wrote:
->> > On Wed, Nov 09, 2022 at 10:59:08AM +0100, Linus Walleij wrote:
->> > > On Wed, Nov 9, 2022 at 7:56 AM Matt Ranostay <mranostay@ti.com> wrote:
->> > >
->> > > > Add support for TPS6594X PMICs GPIO interface that has 11 that can be
->> > > > configured as input or outputs.
->> > > >
->> > > > Tested-by: Keerthy <j-keerthy@ti.com>
->> > > > Signed-off-by: Matt Ranostay <mranostay@ti.com>
->> > >
->> > > (...)
->> > > > +config GPIO_TPS6594X
->> > > > +       tristate "TI TPS6594X GPIO driver"
->> > > > +       depends on MFD_TPS6594X
->> > > > +       help
->> > > > +         Select this option to enable GPIO driver for the TPS6954X
->> > > > +         PMIC chip family. There are 11 GPIOs that can be configured.
->> > >
->> > > select GPIO_REGMAP
->> > >
->> > > This driver is an archetypical example of a driver that can make great
->> > > use of GPIO_REGMAP helpers, so rewrite it to use them.
->> > > Look in drivers/gpio/gpio-sl28cpld.c for an example.
->> >
->> > Linus,
->> >
->> > Those helpers look great for this usecase on the surface but however I think there could be some issues.
->> > For GPIO direction it isn't configured by a bitmap on a register(s) but by a bit on a range of
->> > registers (with a register for each GPIOx).
 
-As long as there is only one register to be changed per pin/action,
-.reg_mask_xlate should work, as you've already found out.
-
->> > For set/get values the gpio helper would work though.
->> 
->> Isn't is possible to just use parts of the GPIO_REGMAP
->> helpers? I thought it's designed like such.
-
-No, you can't use them as they are kept private, along with
-the needed struct gpio_regmap. Which was intentional back then
-as it should be easier to change the implementation or add features
-without its use being spread all over the gpio drivers.
-
-We could change that though - or just add the needed feature to
-gpio-regmap if it looks generic enough.
-
->> 
->> Michael Walle will know what to do with your usecase, and
->> whether to use it or not, let's page him!
->> 
+ÔÚ 2022/11/15 ÏÂÎç9:38, Rob Herring Ð´µÀ:
+> On Mon, Nov 14, 2022 at 10:49:41AM +0800, Yinbo Zhu wrote:
+>> From: zhanghongchen <zhanghongchen@loongson.cn>
+>>
+>> The Loongson-2 SoC has a few pins that can be used as GPIOs or take
+>> multiple other functions. Add a driver for the pinmuxing.
+>>
+>> There is currently no support for GPIO pin pull-up and pull-down.
+>>
+>> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
+>> Co-developed-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
+>> ---
+>> Change in v10:
+>> 		1. Remove lio/uart2/uart1/carmera/dvo1/dvo0 pins resue configuration.
+>> 		2. Remove the castings about readl/writel/definition addr.
+>> Change in v9:
+>> 		1. Add zhanghongchen as patch author and add Co-developed-by tag
+>> 		   for myself.
+>> 		2. Keep entry in order in Kconfig and Makefile.
+>> 		3. Keep it as a separate group after generic linux/* ones.
+>> 		4. Use linux/io.h replace asm-generic/io.h.
+>> 		5. Use PINCTRL_PINGROUP() and associated data structure.
+>> 		6. Remove Redundant blank line after loongson2_pmx_groups.
+>> 		7. Adjust gpio_groups.
+>> 		8. Remove message printk after devm_platform_ioremap_resource.
+>> 		9. Remove comma for the terminator line.
+>> 		10. Add MODULE_LICENSE("GPL") in driver ending.
+>> Change in v8:
+>> 		1. Add #include <linux/pinctrl/pinctrl.h>.
+>> 		2. Add #include <linux/seq_file.h>.
+>> Change in v7:
+>> 		1. Add all history change log information.
 > 
-> So after looking around a bit and digging into the helper code I found 
-> this
-> drivers/pinctrl/bcm/pinctrl-bcm63xx.c which has a example on how to 
-> override
-> the reg_mask_xlate function which could be used for changing the
-> stride, and mask
-> based on the base address.
+> Linus applied v7 already. Additional changes need to be incremental
+> patches on top of it.
 > 
-> Currently have coded up using the gpio regmap helper. Will run through
-> some testing
-> first and then submit for review.
+> Rob
+okay, I got it.
+> 
 
-Sounds promising.
-
--michael
