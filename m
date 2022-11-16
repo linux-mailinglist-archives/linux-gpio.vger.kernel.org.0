@@ -2,116 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB0B962B5E3
-	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 10:03:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ACFE62B615
+	for <lists+linux-gpio@lfdr.de>; Wed, 16 Nov 2022 10:10:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231221AbiKPJD2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 04:03:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
+        id S231622AbiKPJKZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 04:10:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbiKPJDM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 04:03:12 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36017F014
-        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:02:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668589350; x=1700125350;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=b4SJRR2GkwSipqtLqaujFhcFXWBPNvednbRpCEHf9Jc=;
-  b=H0EPuaR2xCIfNDxWTm2I+5cxq1nRm7LEpceonAD2NwLfw6j8X4Uvd60d
-   UYldf93/9rGxLnQUfsFyDSZXhrzkquTXyPfnObeS9PIReLypUeeaypfPB
-   lC10eQ51Jn+qIHA2Q3Czv1M8XBOL4aEoEyJFDDHQuXi1Zf4YX0Csydl09
-   fHQIbsP1+z2cvXN+y8jQT79XOoqQFIpoebhc9w/UxV3QRqErHVSGftQ+j
-   f0EAsrPEy4ssIpumqPJqX6Kk8sPn5abGKmXnmNKNoIfLwrlARl+y3vxYc
-   9mYrsd/Ze6MpeO53Z+scYPRzthWiQBb5PARYVyH8qTLQjnxy/5gFlcD0c
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="339303876"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="339303876"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Nov 2022 01:02:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10532"; a="672324268"
-X-IronPort-AV: E=Sophos;i="5.96,167,1665471600"; 
-   d="scan'208";a="672324268"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 16 Nov 2022 01:02:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 271F62F3; Wed, 16 Nov 2022 11:02:53 +0200 (EET)
-Date:   Wed, 16 Nov 2022 11:02:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linux GPIO <linux-gpio@vger.kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [GIT PULL] intel-gpio for 6.2-1
-Message-ID: <Y3SnPaO3yhAs96tn@black.fi.intel.com>
+        with ESMTP id S238829AbiKPJKN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 04:10:13 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C408620F4F
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:10:01 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id d9so24099587wrm.13
+        for <linux-gpio@vger.kernel.org>; Wed, 16 Nov 2022 01:10:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:reply-to:organization:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+EWQaz6AjRSmTYx1xAEW3ez1+waZqAXR8+3Ii5G6qKY=;
+        b=Jd5kxV1FSvOV6K7/6NukSVogzsjR8X+lPT7Ct8DTbnvGDiUGxegx2yd/nsSNJ6uRpa
+         2ew2U+0EN1+VHBkBlGKM0saoaLDKkDfIjFRheK/Hhp3HUh3wBCQ8q8l8Qcwa5I+yjARJ
+         j/uS3wa3AyTIsFEzcSI30hJnGjIb5byhITw81TjyaOrXmPTvr5uAfj/Fci1VUbpbww3g
+         TBwhUG6RgdOYsSVilN0zXmhvSwq8fBTDFO5pAb99PTrXn1ZCvFHDZMWoNGsebDBe1jWK
+         m0gcXfhMO75ViKcPsCpYcWIf/BPPE5aBbLEHD3L16qnYikygymvhfTaVqJSueCXr8Xfa
+         w+tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:reply-to:organization:from
+         :references:cc:to:content-language:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+EWQaz6AjRSmTYx1xAEW3ez1+waZqAXR8+3Ii5G6qKY=;
+        b=RAjInURXOqugYnkcQvLWBXgKf/ab6IB9aeiLF1VQpKtKnwnZoTCxK2LzybNCSbWyiN
+         03pr80fWCYXZ5g3/xo+VXJHIfwLzg0mthAK8Np4K0Si8mvriBm1ECOdihsf+CT9njnx3
+         pesGdj/oVA67+iexNclmlrtkTzIeEtvDQBGVTbOz1hFMDF7lSi/bujLjhvGWeZubh9s7
+         l3O92FJX5pT6l3TNzl+qGosKt6h/xoVTyeTUfSOHl8ExPSzeyohJaSExhRyxmATQP67E
+         NwmksuwmB2saWeJhmCtioJeyOq5ialBB3cRSXI8u2hyfGh+EHb2mkix0lubT7KW7gWq/
+         J4zQ==
+X-Gm-Message-State: ANoB5pmBB2q4bK/9MkGilze2g+yYOG/6TTQF0w2RZbwgMPILdMLK3Z0L
+        V5Kpp09r7/ikHcrB5ggYAnertw==
+X-Google-Smtp-Source: AA0mqf7qtmWKrvfnyLLlcsy5HreT4080D+PHLRUfJtM7qj9c/DZNd9kmcoIZPKtDRZVHFWldDUgkjQ==
+X-Received: by 2002:a05:6000:22e:b0:236:6d6b:fb56 with SMTP id l14-20020a056000022e00b002366d6bfb56mr13467483wrz.198.1668589800269;
+        Wed, 16 Nov 2022 01:10:00 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:2a03:71a6:7a9d:9c71? ([2a01:e0a:982:cbb0:2a03:71a6:7a9d:9c71])
+        by smtp.gmail.com with ESMTPSA id e17-20020a05600c4e5100b003cfa81e2eb4sm1493890wmq.38.2022.11.16.01.09.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Nov 2022 01:09:59 -0800 (PST)
+Message-ID: <2ce5bc21-c4c5-ed61-3683-3288ed1057e2@linaro.org>
+Date:   Wed, 16 Nov 2022 10:09:58 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: [PATCH RFC] gpiolib: ensure that fwnode is properly set
+Content-Language: en-US
+To:     Brian Masney <bmasney@redhat.com>, linus.walleij@linaro.org,
+        brgl@bgdev.pl
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, psodagud@quicinc.com,
+        quic_shazhuss@quicinc.com, quic_ppareek@quicinc.com,
+        ahalaney@redhat.com, echanude@redhat.com,
+        nicolas.dechesne@linaro.org, 'Abel Vesa' <abel.vesa@linaro.org>
+References: <20221114202943.2389489-1-bmasney@redhat.com>
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Organization: Linaro Developer Services
+Reply-To: neil.armstrong@linaro.org
+In-Reply-To: <20221114202943.2389489-1-bmasney@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linux GPIO  maintainers,
+On 14/11/2022 21:29, Brian Masney wrote:
+> Note that this is a RFC patch and not meant to be merged. I looked into
+> a problem with linux-next-20221110 on the Qualcomm SA8540P automotive
+> board (sc8280xp) where the UFS host controller would fail to probe due
+> to repeated probe deferrals when trying to get reset-gpios via
+> devm_gpiod_get_optional().
+> 
+> of_get_named_gpiod_flags() returns -EPROBE_DEFER, which is caused by
+> of_gpiochip_match_node_and_xlate() returning 0 since the of_xlate function
+> pointer is not set for the qcom,sc8280xp-tlmm pinctrl driver. The
+> pinctrl driver doesn't define one, so of_gpiochip_add() should
+> automatically setup of_gpio_simple_xlate() on it's behalf. This doesn't
+> happen since the fwnode member on the struct gpiochip is set to null
+> when of_gpiochip_add() is called. Let's work around this by ensuring
+> that it's set if available.
+> 
+> Note that this broke sometime within the last few weeks within
+> linux-next and I haven't bisected this. I'm posting this in the hopes
+> that someone may know offhand which patch(es) may have broken this.
+> 
+> Signed-off-by: Brian Masney <bmasney@redhat.com>
+> ---
+>   drivers/gpio/gpiolib.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 11fb7ec883e9..8bec66008869 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -678,7 +678,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   	 * Assign fwnode depending on the result of the previous calls,
+>   	 * if none of them succeed, assign it to the parent's one.
+>   	 */
+> -	gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
+> +	gc->fwnode = gdev->dev.fwnode = dev_fwnode(&gdev->dev) ?: fwnode;
+>   
+>   	gdev->id = ida_alloc(&gpio_ida, GFP_KERNEL);
+>   	if (gdev->id < 0) {
 
-Rather quite small GPIO updates from me for the v6.2 cycle.
-Was a few weeks in Linux Next without any problems reported.
-Please pull!
+Fixes boot on 8550 on next-20221115
+
+Tested-by: Neil Armstrong <neil.armstrong@linaro.org>
 
 Thanks,
-
-With Best Regards,
-Andy Shevchenko
-
-The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
-
-  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git tags/intel-gpio-v6.2-1
-
-for you to fetch changes up to 8d259847243d1e21a866e828c4ce90d759f3d17b:
-
-  gpiolib: cdev: Fix typo in kernel doc for struct line (2022-10-25 19:48:55 +0300)
-
-----------------------------------------------------------------
-intel-gpio for v6.2-1
-
-* Miscellaneous updates to the core (cdev, acpi) and Intel Merrifield driver
-
-The following is an automated git shortlog grouped by driver:
-
-gpiolib:
- -  cdev: Fix typo in kernel doc for struct line
- -  acpi: Use METHOD_NAME__AEI macro for acpi_walk_resources
-
-merrifield:
- -  Use str_enable_disable() helper
-
-----------------------------------------------------------------
-Andy Shevchenko (2):
-      gpio: merrifield: Use str_enable_disable() helper
-      gpiolib: cdev: Fix typo in kernel doc for struct line
-
-Xiang Yang (1):
-      gpiolib: acpi: Use METHOD_NAME__AEI macro for acpi_walk_resources
-
- drivers/gpio/gpio-merrifield.c | 3 ++-
- drivers/gpio/gpiolib-acpi.c    | 2 +-
- drivers/gpio/gpiolib-cdev.c    | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Neil
