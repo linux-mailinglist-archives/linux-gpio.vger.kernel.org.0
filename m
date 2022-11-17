@@ -2,81 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 809F962D64B
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:18:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB43262D652
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234715AbiKQJSo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 04:18:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        id S239664AbiKQJTm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 04:19:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234783AbiKQJSf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:18:35 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802F960C6
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:18:25 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id g12so1841894lfh.3
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:18:25 -0800 (PST)
+        with ESMTP id S239590AbiKQJTl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:19:41 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF126CA0E
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:19:40 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id n12so3453562eja.11
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:19:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lLFGwEWPh+89QV0pVhSS68GinK0G+oaZz4v6Lu9hAZs=;
-        b=LkMa0Dl0cNwFkd3Q3OQLsQFFNFtI+G8p4jjHruzKFqDFaxOB0nYlAHulUFdSYR9G3e
-         zfYmMOVN29KSDydbMwW6ElcJdg4lsE6tEaRjSwOp+UggOL1UWg2xM6WTvzTFcJfL0ehT
-         NMEl4dyNHR0IIxFPlTw95P03mFvMFJVAU32e5dZ7YN0CYHLFdz3hYNRwkL0A3OlmoSYT
-         zrDLB8VAAdFPg0lCz6HLhT4OurxKsuF2zO4AMEHhHMP3QNg/HQnSCOL9F5r+AbHNZzM+
-         ZW848XWUK6uJq1kHLN2fHocExahorRrc7Mlwn4vShZ5KcICTylHVrsGP8RjedPG2UXmm
-         IjzQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tE554iAjQ7h+EY98fG7iQCp1+WR6gTDY9R3izQaYbSM=;
+        b=RJhyPa+0sTKDvMNQhGaUZE84gU7cSwkIKl8kF/HVjWq5Kj8MIaUnjuF3vLeI9zmqt5
+         S4s2/BXDCeR0toJbwvrndR8Rf5UdjyCQum80hnZc7NVvKmoSa674I2uUdmUvlens85Oh
+         4IEcYGdVLztzhbGbHqk1ZEtp/QFDREZj6FTRUqRKGVlXFCjQljGRgSSASkya/Vzc8HYK
+         VTCncgrg+fqLRoFnVi4HvY7VC9MQCX+Tm7avrETJiBdVXAgiE7WBypICOwr5fpEwMgS9
+         eeomFvvxoF/uVInIxAoNemvxQI3VF46GvnxUZznQv1ccf6lqUT3r9FGZ2CCBL3f6760M
+         X6DA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lLFGwEWPh+89QV0pVhSS68GinK0G+oaZz4v6Lu9hAZs=;
-        b=riOwI+PTIuWTzhKG0ZMJIURa3BIuLdRCcVAIv9jB/NzI/tBGYJ+yIgZVkSRTZRnhI4
-         ueta9fnVN8VuMkSy+8BhkkibJqNUGEX+dq+Pyx7CXKLOJtzTo2QSkZrEXa+/+5mHT74o
-         rflCSBl824cLgIVwZamHqhLOMximUQfJoSaJKmIdjR35Z01aAU6yr0W3JQ8IhGU0i9vz
-         PpUMCqIMvB7+VLOs6AbZAXrdKzLw6VL6cneN6NLtPSzVfZs7kzIVAipJqbWAtHlOunvK
-         M/2tXmkieQM5cdmbFgIwOPx1j93E/s/4EoaLal8xduTqa3xmaIuG/F5MRi4VWw9GimV6
-         ReKA==
-X-Gm-Message-State: ANoB5plDMwP1a4h0wlQM0dAwxHmRrsaIMQ4r0Y4epP98Sa+RwIz5nuIZ
-        t++CLzSV228Ou/ymEJpr6C6WxnxBRavp1gdn
-X-Google-Smtp-Source: AA0mqf4/6BJcvJvcM+zce625GqtjXKyhZFyZtLVu6hUl5YtywTAvK6E7RO04n2pluWLT4D7i7ORDRw==
-X-Received: by 2002:ac2:4c18:0:b0:4a2:6e2e:2d17 with SMTP id t24-20020ac24c18000000b004a26e2e2d17mr567318lfq.339.1668676703843;
-        Thu, 17 Nov 2022 01:18:23 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id z10-20020ac25dea000000b0048b003c4bf7sm56570lfq.169.2022.11.17.01.18.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 01:18:23 -0800 (PST)
-Message-ID: <d9c41d62-6318-0fec-c2f6-9eac8f2d0de0@linaro.org>
-Date:   Thu, 17 Nov 2022 10:18:22 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tE554iAjQ7h+EY98fG7iQCp1+WR6gTDY9R3izQaYbSM=;
+        b=lk4SFmw0+YvxPazoHHPChcuQYbtLEJHYbk5PMc/Ql16G2FRT0WDCVutxfUmfDI9aB0
+         NdHGEerpu+9HYm4DwEAn7l3ZhH1fmSP+Y6DBHg3E4pF2oObuypAbdh9QI+o3ko2/Ntfi
+         lqHEAMdI2T0974DFe9T99Kjp7Shnk+a7TPeKV6exzmWPFvI7CWbR91mZUw7upGDvp84f
+         25JMyo7l0EfngMCecw7dwlw3D/YgltfQTnxbR72hKVvz+Dw/13IzdEBa/IJ8tTPL0i3E
+         cpO8BGDZub+U4nCRdLSKCRZ07iLHFmVhPYpkV4Jlhli4h6BfN3h6M97Q+F8wZ8UetUua
+         ZE3A==
+X-Gm-Message-State: ANoB5plZi3PRDBO0o48ZC7Ehwg0yf5YP3+GOufRocAS+s6BACQp4kdtw
+        /5oS9d0WFfKFPhCeCDqvNZm+HLDN1b2AoQldteZ5HUtvaxk=
+X-Google-Smtp-Source: AA0mqf5VrTpLOj4ZlFDKaIXtnaXLgZ0CYm7CAAQQe4DXP0PzbRK8eD99DVN0IU9z/RBBDpyRyd9Mayz9bYXq1N47AjA=
+X-Received: by 2002:a17:906:19d2:b0:78e:11ea:8528 with SMTP id
+ h18-20020a17090619d200b0078e11ea8528mr1440243ejd.190.1668676778935; Thu, 17
+ Nov 2022 01:19:38 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 5/7] dt-bindings: pinctrl: qcom,pmic-gpio: document
- pmr735d
-Content-Language: en-US
-To:     neil.armstrong@linaro.org, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+References: <20221021172012.87954-1-sebastian.reichel@collabora.com>
+In-Reply-To: <20221021172012.87954-1-sebastian.reichel@collabora.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 17 Nov 2022 10:19:27 +0100
+Message-ID: <CACRpkdYKdTWAtW_dhCgfja4pNZqNh=ixZ0H36bpFj=x_3t2zXQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: rockchip: further increase max
+ amount of device functions
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org
-References: <20221114-narmstrong-sm8550-upstream-spmi-v1-0-6338a2b4b241@linaro.org>
- <20221114-narmstrong-sm8550-upstream-spmi-v1-5-6338a2b4b241@linaro.org>
- <2ca3260e-f3f6-cd69-96c7-e971fa757968@linaro.org>
- <575758c9-6bc1-e980-4aba-b49cf9246d03@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <575758c9-6bc1-e980-4aba-b49cf9246d03@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -85,18 +70,16 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/11/2022 08:42, Neil Armstrong wrote:
-> On 16/11/2022 12:17, Krzysztof Kozlowski wrote:
->> On 16/11/2022 11:11, Neil Armstrong wrote:
->>> Document compatible, pin count & pin names for pmr735d.
->>>
->>
->> Squash with previous.
-> 
-> I'll squash 5 into 4, can I keep your Reviewed-by on 4 ?
+On Fri, Oct 21, 2022 at 7:20 PM Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
 
-Yes.
+> Apparently RK3588 pinctrl has 13 different device functions, but dt-validate
+> only checks for pin configuration being referenced so I did not notice.
+>
+> Fixes: ed1f77b78322 ("dt-bindings: pinctrl: rockchip: increase max amount of device functions")
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Best regards,
-Krzysztof
+Patch applied!
 
+Yours,
+Linus Walleij
