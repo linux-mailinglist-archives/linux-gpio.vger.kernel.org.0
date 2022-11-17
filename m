@@ -2,77 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CDBB62DA87
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 13:18:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00E6062DAF3
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 13:33:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240097AbiKQMSo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 07:18:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47478 "EHLO
+        id S240165AbiKQMd1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 07:33:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240059AbiKQMSl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 07:18:41 -0500
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22CF8716F4
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 04:18:18 -0800 (PST)
-Received: by mail-vs1-xe2c.google.com with SMTP id l190so1305920vsc.10
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 04:18:17 -0800 (PST)
+        with ESMTP id S239823AbiKQMdI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 07:33:08 -0500
+Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4A876146;
+        Thu, 17 Nov 2022 04:32:18 -0800 (PST)
+Received: by mail-lj1-x234.google.com with SMTP id k19so2529940lji.2;
+        Thu, 17 Nov 2022 04:32:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=AgvtbeF1yF8fqN20VrfNgYPozbYIq0o5rEH1cjyl26Q=;
-        b=fFB+uTxDDDCfZmvf5A4NTlV2oeuFK3su3M4ugRQNHNR4ycep1i4UR9EVWY/77kLyzK
-         gGNDQE5CU+nJBmLgCvXPIOPfJZRoJq6Jw8G7zh9gkXtCD/BfnvLCwQUjeaYfb8sy2oc6
-         rz3o+6rqmmjjCiNPKhGwpjTVxJWlsTRSlXMHZdgJEHfORDaNnXF5+M2rwGguGWCnuGqa
-         VvfEEp/mk8Owv0NBsGEv6V5Ii9xJ668ZpoYIzVcjjv1YEl8EHu9vZ0q2KPY1EQfabMvI
-         zRw8WZeK0WJNvEUwYAwPyfwcUKzuuycIPzLhdKpcHAeC89O8mxNg2uK41lOrU7WPguRe
-         mSmw==
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=25zzCeIdQLt2oZnq3HAIA1FC7vZFFoxeYg3WH60K9nE=;
+        b=qPGMkYweiJF1ezIePnlKNNr50vIJs3qoth6up0ubbki0AWF6i0eXAYm4WpLeQrR6sV
+         RI/LDYMNVXusVREwcxiVtzn7fXDWZxc6vm2I2uUgWz6FS1D8PTc3E+NjhbNGqrhdyxSB
+         urKQy6MCHB6xfhCuQIWsIR8ezalcpIoP9jLu2A6Rj9pbZ2TWKWlUTT/CLpcd09/Lz8Bp
+         FhpAutf3kXqJqaLqKNuFdzmKCmVhVEnQMDTjKQ9wK6taAILCYbuDCjFIIQ+3RIpbgPiX
+         n8RaLcWHx9Q3Tgi88H2LjUyGC/dvCgrPi6EVONCZRFGX51Q06JkviHBloW+6gbQwcfMD
+         L+BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AgvtbeF1yF8fqN20VrfNgYPozbYIq0o5rEH1cjyl26Q=;
-        b=HtkPJzJm9ywcTytcCFYIOnMoJ/8XbDlvrhiwiWh8vYoYuYOW3uB7VEq8VGyfRM3PWE
-         t9lPkrAppyg5O4d1blUmPfUksfukpxcVEuWnMNB3nriAZmjs5m/8O3d74bgwZTBr2g7X
-         b74ocKD2tPVJFCAvxZA/AwPylJT4JD8OXdEWG/GJ6m1+xu8nsx8hOXXIxOMQq1vorLlY
-         rWAZ0KhyuQHwOnVqbFfF3svqUSCpa7KkbShzrcMZDSP+jCc+ArW/K1jAh9sW4jq3/hRY
-         0o04rQq5bU/g1DA3qgJFFbCVlq0IGMfPgrs2I5gmWhI2eIK04jubqQuRjTViQkVBmNHC
-         YtHw==
-X-Gm-Message-State: ANoB5plq+RIr1KcEVgJc0KInvB07kfhCMLDGfcov7NJ/PFAQwhBNMCEv
-        zuIfq9YJgw4yGByDYhBof/m94nD0mz2uqxTTBmd71A==
-X-Google-Smtp-Source: AA0mqf613+kWaOq0XnmVfZzrl5W9GzW+PnnflO4NUtoC+wB0FJyf8ESGuZkSmoQzIxH/Lf7gf46s1z5NAUvs76RJfWA=
-X-Received: by 2002:a05:6102:114f:b0:3a9:afe1:eef6 with SMTP id
- j15-20020a056102114f00b003a9afe1eef6mr1378031vsg.61.1668687495018; Thu, 17
- Nov 2022 04:18:15 -0800 (PST)
-MIME-Version: 1.0
-References: <cover.1667815011.git.viresh.kumar@linaro.org> <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
- <20221117073120.g6xhn6i2dbzougx3@vireshk-i7> <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
- <20221117095609.uyamyqi5uuchrxdt@vireshk-i7> <CANiq72nxJn3F0hvWerUJvbgRjfyutQ=CCnpNqfMOEBumX62_SQ@mail.gmail.com>
- <CAMRc=McUTqUJzV-9yEA-7LxrQ8ktWzaPMv+x-1mOLZ0M2W+uJg@mail.gmail.com> <20221117112517.64fvaynvjwbcqeix@vireshk-i7>
-In-Reply-To: <20221117112517.64fvaynvjwbcqeix@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 17 Nov 2022 13:18:03 +0100
-Message-ID: <CAMRc=Mdyk4Fx5aKvjKjZSRhsSOq03wiHcMP7=Y2TG4ovWf-+zA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=25zzCeIdQLt2oZnq3HAIA1FC7vZFFoxeYg3WH60K9nE=;
+        b=O/fKsGU3j2DVZxeE6U1ReervR3VNCV0Dn8E/QLyR0PQrRSQUpYta7NjpcKpb2Tts5s
+         3dqYIh4JgytuSFMPgwuFCIdUE0XtrUiAXvXkl9WKqF7LCAaXZoZ1fBR7YIiLDJvLCh9Q
+         EaRR+BUpXqXJYJikyOYQ4K/ePaiX5PqJ6LPUlznmjLq26KpwEe5DdCy0ZogLGWbrYMPD
+         W+VwV/yu9XgTbC4OrI/ucu8axa3f7QKiTLeFBVmNDi0eKL1LJl8NDLKXGEJZAGqpmFUR
+         wXiH2iK3BF7h68rZuJBCcg/o8Xp3aX186tZkq4o9S3k1V5I1GHeTEH26GhgGz2hEa8Ay
+         r32w==
+X-Gm-Message-State: ANoB5pmdUNUEyTZR6tMNoQNsqyj0M1Usy80qF3yIdsrsohbiQn3d/JIB
+        LFc8Tck5/rOv5gGeyVUQuwY=
+X-Google-Smtp-Source: AA0mqf47EjZ7iHBlfAyyzeU7WAqvnuY3fphQib5vR6FIP9s2zwOuCRM7n70HaCpEFq6uQmqJt34J4Q==
+X-Received: by 2002:a2e:88d3:0:b0:277:72a:41a5 with SMTP id a19-20020a2e88d3000000b00277072a41a5mr1020205ljk.352.1668688336925;
+        Thu, 17 Nov 2022 04:32:16 -0800 (PST)
+Received: from mkor.rasu.local ([212.22.67.162])
+        by smtp.gmail.com with ESMTPSA id k20-20020ac24f14000000b0049ad315cfc3sm127362lfr.162.2022.11.17.04.32.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 04:32:16 -0800 (PST)
+From:   Maxim Korotkov <korotkov.maxim.s@gmail.com>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Maxim Korotkov <korotkov.maxim.s@gmail.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        "Manjunathappa, Prakash" <prakash.pm@ti.com>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org
+Subject: [PATCH] pinctrl: single: Fix potential division by zero
+Date:   Thu, 17 Nov 2022 15:30:34 +0300
+Message-Id: <20221117123034.27383-1-korotkov.maxim.s@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,16 +70,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 12:25 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-11-22, 12:15, Bartosz Golaszewski wrote:
-> > So I'd say - just use CC0-1.0 license in Cargo.toml?
->
-> The Cargo.toml files already have following currently:
->
-> license = "Apache-2.0 OR BSD-3-Clause"
->
+There is a possibility of dividing by zero due to the pcs->bits_per_pin
+if pcs->fmask() also has a value of zero and called fls
+from asm-generic/bitops/builtin-fls.h or arch/x86/include/asm/bitops.h.
+The function pcs_probe() has the branch that assigned to fmask 0 before
+pcs_allocate_pin_table() was called
 
-Then let's just add the SPDX identifier on top to make reuse happy.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Bart
+Fixes: 4e7e8017a80e ("pinctrl: pinctrl-single: enhance to configure multiple pins of different modules")
+Signed-off-by: Maxim Korotkov <korotkov.maxim.s@gmail.com>
+---
+ drivers/pinctrl/pinctrl-single.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 67bec7ea0f8b..414ee6bb8ac9 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -727,7 +727,7 @@ static int pcs_allocate_pin_table(struct pcs_device *pcs)
+ 
+ 	mux_bytes = pcs->width / BITS_PER_BYTE;
+ 
+-	if (pcs->bits_per_mux) {
++	if (pcs->bits_per_mux && pcs->fmask) {
+ 		pcs->bits_per_pin = fls(pcs->fmask);
+ 		nr_pins = (pcs->size * BITS_PER_BYTE) / pcs->bits_per_pin;
+ 	} else {
+-- 
+2.17.1
+
