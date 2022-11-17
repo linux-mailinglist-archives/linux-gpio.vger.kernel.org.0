@@ -2,84 +2,81 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB43262D652
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:19:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86E5A62D6C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:26:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239664AbiKQJTm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 04:19:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44362 "EHLO
+        id S240030AbiKQJ0q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 04:26:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239590AbiKQJTl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:19:41 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CF126CA0E
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:19:40 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id n12so3453562eja.11
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:19:40 -0800 (PST)
+        with ESMTP id S239856AbiKQJ0Y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:26:24 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58DFB326D3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:26:09 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id gv23so3608383ejb.3
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:26:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tE554iAjQ7h+EY98fG7iQCp1+WR6gTDY9R3izQaYbSM=;
-        b=RJhyPa+0sTKDvMNQhGaUZE84gU7cSwkIKl8kF/HVjWq5Kj8MIaUnjuF3vLeI9zmqt5
-         S4s2/BXDCeR0toJbwvrndR8Rf5UdjyCQum80hnZc7NVvKmoSa674I2uUdmUvlens85Oh
-         4IEcYGdVLztzhbGbHqk1ZEtp/QFDREZj6FTRUqRKGVlXFCjQljGRgSSASkya/Vzc8HYK
-         VTCncgrg+fqLRoFnVi4HvY7VC9MQCX+Tm7avrETJiBdVXAgiE7WBypICOwr5fpEwMgS9
-         eeomFvvxoF/uVInIxAoNemvxQI3VF46GvnxUZznQv1ccf6lqUT3r9FGZ2CCBL3f6760M
-         X6DA==
+        bh=Y0g4EDLEtDgnBBPOyUYQ2dr/MAZ6qJQSPBk0Q+DqlDg=;
+        b=U6Xn1tmRgEP+iOoHqH7pL0JfFVvxDSkevb4lZlOofuSTiJFrB2mCMfrdb78IDVIPuL
+         T/E3iV802C60USeteFevWYf4IwZuRQa+WHhb81/DIgHRZxxDmrWJte75DZBsDysG6+VF
+         8ZdOYQ+VlZtHpdGiR13aEf951nVu7lD0wp0KyPGE/Mqb1BkgBeNXP3MDoGJifa5h0k+A
+         NMyQstFHrQ/czvqSlLMWgc84tNbuJjVU0dS+DUi8dKNI0imZfv/CbH7onQ+6/eJ/AJF5
+         cM1yX5B1lzMA7xv3Fzmeli0ORFJiK++HVVdX8Y9+ICYS3lFrVfya2LB64TmYitOSoAQv
+         pAlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tE554iAjQ7h+EY98fG7iQCp1+WR6gTDY9R3izQaYbSM=;
-        b=lk4SFmw0+YvxPazoHHPChcuQYbtLEJHYbk5PMc/Ql16G2FRT0WDCVutxfUmfDI9aB0
-         NdHGEerpu+9HYm4DwEAn7l3ZhH1fmSP+Y6DBHg3E4pF2oObuypAbdh9QI+o3ko2/Ntfi
-         lqHEAMdI2T0974DFe9T99Kjp7Shnk+a7TPeKV6exzmWPFvI7CWbR91mZUw7upGDvp84f
-         25JMyo7l0EfngMCecw7dwlw3D/YgltfQTnxbR72hKVvz+Dw/13IzdEBa/IJ8tTPL0i3E
-         cpO8BGDZub+U4nCRdLSKCRZ07iLHFmVhPYpkV4Jlhli4h6BfN3h6M97Q+F8wZ8UetUua
-         ZE3A==
-X-Gm-Message-State: ANoB5plZi3PRDBO0o48ZC7Ehwg0yf5YP3+GOufRocAS+s6BACQp4kdtw
-        /5oS9d0WFfKFPhCeCDqvNZm+HLDN1b2AoQldteZ5HUtvaxk=
-X-Google-Smtp-Source: AA0mqf5VrTpLOj4ZlFDKaIXtnaXLgZ0CYm7CAAQQe4DXP0PzbRK8eD99DVN0IU9z/RBBDpyRyd9Mayz9bYXq1N47AjA=
-X-Received: by 2002:a17:906:19d2:b0:78e:11ea:8528 with SMTP id
- h18-20020a17090619d200b0078e11ea8528mr1440243ejd.190.1668676778935; Thu, 17
- Nov 2022 01:19:38 -0800 (PST)
+        bh=Y0g4EDLEtDgnBBPOyUYQ2dr/MAZ6qJQSPBk0Q+DqlDg=;
+        b=Rm+XGq2VXWL+XByjoKnju6P3OjcD2xFOczxstNI3iL78N4z3s2odxTyg6ecX+dVQGu
+         wt81Js8Ay+QAHrTUC4P5+3xKdkjF201abwpE7VlYKUsV+4BxoMRPbTLGQoxmLKCmNpw3
+         w375TykkVrIWagGUIihVddmhD/nfi5mTLV0KFomnVNO0hGbR44h39zbG/w+8hBpEQqqM
+         fm8SnSZo7Ss79D9v0nW4OYh6EQYp6hUkV5iY1K+LRQHbG4JM40DxSz6kTrO9Vgdu1u1k
+         imFWAPFZZ9BoNnEvybEv4s1LXdFy8FEfjtIR/CaZt10JposOD1+vu3BQH5O3A/aizz1o
+         31/A==
+X-Gm-Message-State: ANoB5plFhLo7kChYkCr2lhl5wbtNraZwMgcMQwt6baRcZsvc1deuvTkZ
+        CHrPQus9q+s2icp1Xbk+zJxx8/zc0Lr4cHCmtOgCJQ==
+X-Google-Smtp-Source: AA0mqf7l7ukZ/SXh93B5lgna2wPGzns9s7lKHxDCNS2xUNQiUQGB4mpqRTQmGP4LTe5h2/x7RpzxoTPaAL5VGOvn+GU=
+X-Received: by 2002:a17:906:ce35:b0:7ae:215:2dd5 with SMTP id
+ sd21-20020a170906ce3500b007ae02152dd5mr1439941ejb.208.1668677167917; Thu, 17
+ Nov 2022 01:26:07 -0800 (PST)
 MIME-Version: 1.0
-References: <20221021172012.87954-1-sebastian.reichel@collabora.com>
-In-Reply-To: <20221021172012.87954-1-sebastian.reichel@collabora.com>
+References: <20221114024942.8111-1-zhuyinbo@loongson.cn> <b3768259-68e8-fbed-ec9f-c43aa12b86b4@loongson.cn>
+In-Reply-To: <b3768259-68e8-fbed-ec9f-c43aa12b86b4@loongson.cn>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 17 Nov 2022 10:19:27 +0100
-Message-ID: <CACRpkdYKdTWAtW_dhCgfja4pNZqNh=ixZ0H36bpFj=x_3t2zXQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] dt-bindings: pinctrl: rockchip: further increase max
- amount of device functions
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+Date:   Thu, 17 Nov 2022 10:25:56 +0100
+Message-ID: <CACRpkdZvG41ApNkxjeb8cSuoFGT_WfR-X-g9GdnhHp962-j6ag@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] pinctrl: pinctrl-loongson2: add pinctrl driver support
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        kernel@collabora.com
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        zhanghongchen <zhanghongchen@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Oct 21, 2022 at 7:20 PM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
+On Thu, Nov 17, 2022 at 8:51 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
 
-> Apparently RK3588 pinctrl has 13 different device functions, but dt-validate
-> only checks for pin configuration being referenced so I did not notice.
->
-> Fixes: ed1f77b78322 ("dt-bindings: pinctrl: rockchip: increase max amount of device functions")
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> Could you help me to merge my patch. I just use the latest code in your
+> pinctrl tree have a test about my v10 patch. It was okay. and my patch
+> had adop other reivewer's advice and recently no other person feedback.
 
-Patch applied!
+Patches applied, I think, you forgot to collect Rob's ACK again but I added it
+back.
 
 Yours,
 Linus Walleij
