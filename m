@@ -2,31 +2,30 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14EFC62D0CC
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 02:46:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D359262D18A
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 04:19:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234568AbiKQBqo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 16 Nov 2022 20:46:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44572 "EHLO
+        id S231231AbiKQDTW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 16 Nov 2022 22:19:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbiKQBqn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 20:46:43 -0500
+        with ESMTP id S229703AbiKQDTV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 16 Nov 2022 22:19:21 -0500
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5F3C26A6AB;
-        Wed, 16 Nov 2022 17:46:39 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92E3758BC7;
+        Wed, 16 Nov 2022 19:19:18 -0800 (PST)
 Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8BxLtt9knVjtiAIAA--.23339S3;
-        Thu, 17 Nov 2022 09:46:37 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8BxHLc0qHVj0SYIAA--.11779S3;
+        Thu, 17 Nov 2022 11:19:16 +0800 (CST)
 Received: from [10.180.13.64] (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx5VZ4knVjH40VAA--.38066S2;
-        Thu, 17 Nov 2022 09:46:34 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxtuMwqHVj3J4VAA--.57027S2;
+        Thu, 17 Nov 2022 11:19:13 +0800 (CST)
 Subject: Re: [PATCH v3 1/2] gpio: loongson: add dts/acpi gpio support
-To:     Qing Zhang <zhangqing@loongson.cn>,
+To:     WANG Xuerui <kernel@xen0n.name>,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Juxin Gao <gaojuxin@loongson.cn>,
@@ -38,38 +37,38 @@ To:     Qing Zhang <zhangqing@loongson.cn>,
         Huacai Chen <chenhuacai@kernel.org>
 Cc:     lvjianmin <lvjianmin@loongson.cn>,
         zhanghongchen <zhanghongchen@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>
+        Liu Peibao <liupeibao@loongson.cn>, zhuyinbo@loongson.cn
 References: <20221116065335.8823-1-zhuyinbo@loongson.cn>
- <086f8ff4-563d-8f4d-585e-59205854f66c@loongson.cn>
+ <3ae71f5c-2737-b313-31f5-5de9eedcf6cd@xen0n.name>
 From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-Message-ID: <54570b0b-7b9c-2838-0653-d1cc3ad424eb@loongson.cn>
-Date:   Thu, 17 Nov 2022 09:46:32 +0800
+Message-ID: <61354cd8-f631-80d1-8f9e-73d3790aae0f@loongson.cn>
+Date:   Thu, 17 Nov 2022 11:19:12 +0800
 User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
  Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <086f8ff4-563d-8f4d-585e-59205854f66c@loongson.cn>
+In-Reply-To: <3ae71f5c-2737-b313-31f5-5de9eedcf6cd@xen0n.name>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Cx5VZ4knVjH40VAA--.38066S2
+X-CM-TRANSID: AQAAf8BxtuMwqHVj3J4VAA--.57027S2
 X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvAXoWfAw1rWrWxuF45uF1fArWUArb_yoW5JryfKo
-        W7Kr1rXrWrJr1jgr1UJr15XF13XF1UJrnFyr17Gry7JF1YyF1UG3yUJrW3t3yUJF1rGryU
+X-Coremail-Antispam: 1Uk129KBjvAXoWfAw1rWrWxGFykZr4rWF1xXwb_yoW5GFWDGo
+        W7Kr1fXrWrJr1jgr1UJr15XF13XF1UJrnFyr17Gry7JF1YyF1UG3yUJrW7t3yUJF1rGryU
         JFy7GrWIyFy7tF15n29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXasCq-sGcSsGvf
         J3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU0xBIdaVrnRJU
-        UUP21xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFV
+        UUPF1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFV
         AK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2
-        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr
-        1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvY
-        zxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4
-        xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCa
-        FVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2
-        AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCa
-        FVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42
-        IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-        aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU81lk3UUUUU==
+        z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
+        1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
+        cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
+        0Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
+        6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7
+        AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF04k20xvE74AGY7Cv6cx26rWl4I8I3I0E4IkC
+        6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0x
+        vE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
+        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2mFADUUUU
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -80,18 +79,39 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-在 2022/11/16 下午6:03, Qing Zhang 写道:
-> Hi, yinbo
-> 
-> On 2022/11/16 下午2:53, Yinbo Zhu wrote:
+在 2022/11/16 下午4:35, WANG Xuerui 写道:
+> On 2022/11/16 14:53, Yinbo Zhu wrote:
 >> The latest Loongson series platform use dts or acpi framework to
 >> register gpio device resources, such as the Loongson-2 series
 >> SoC of LOONGARCH architecture. In order to support dts, acpi and
 >> compatibility with previous platform device resources in driver,
 >> this patch was added.
+> 
+> "LoongArch", not "LOONGARCH". The latter sounds too similar to a mass 
+> replace from the all-caps MIPS.
+> 
+> But again the commit message is overly verbose IMO, and contains minor 
+> grammatical mistakes that don't hamper understanding but are a nuisance 
+> nevertheless. I think the following could be enough:
+> 
+> "Subject: gpio: loongson: Add DTS and ACPI support"
+> 
+> "Latest Loongson platforms such as the Loongson-2 SoC series describe 
+> GPIO device resources with DTS or ACPI. Add such support to the existing 
+> platform device driver."
+> 
 >>
 >> Signed-off-by: lvjianmin <lvjianmin@loongson.cn>
+> 
+> He's canonically "Jianmin Lv <...>" in the Git history.
+> 
 >> Signed-off-by: zhanghongchen <zhanghongchen@loongson.cn>
+> 
+> Please use proper spelling, either "Zhang Hongchen" or "Hongchen Zhang". 
+> I think every people with a loongson.cn address is using the latter form 
+> i.e. the Western order of "Firstname Lastname" except the "Liu Peibao" 
+> below, but ask the person themselves for honoring their own preference.
+> 
 >> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
 >> Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
 >> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
@@ -131,6 +151,9 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >> Documentation/devicetree/bindings/hwinfo/loongson,ls2k-chipid.yaml
 >>   F:    drivers/soc/loongson/loongson2_guts.c
 >> +LOONGSON SERIES GPIO DRIVER
+> 
+> Drop "series" here and everywhere else.
+> 
 >> +M:    Huacai Chen <chenhuacai@kernel.org>
 >> +M:    Yinbo Zhu <zhuyinbo@loongson.cn>
 >> +L:    linux-gpio@vger.kernel.org
@@ -152,19 +175,6 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 >> -    depends on CPU_LOONGSON2EF || CPU_LOONGSON64
 >> +    bool "Loongson series GPIO support"
 >> +    depends on CPU_LOONGSON2EF || CPU_LOONGSON64 || LOONGARCH
-> I did not see the dts file related to mips (eg: 2K1000),
-> If there is no plan to support or validate them, I recommend delete 
-> "cpu_loongson64".
-> 
-> Thanks,
-> - Qing
-in fact, I have verified about 2k, but I don't plan add dts for mips.
-and mips was use legacy platform driver but need add a gpio device
-driver to register device. for legacy platform if someone uses it, add
-it. and I will adopt your advice to delete "cpu_loongson64".
-
-Tks,
-Yinbo.
 >>       help
 >> -      Driver for GPIO functionality on Loongson-2F/3A/3B processors.
 >> +      Driver for GPIO functionality on Loongson seires processors.
@@ -188,6 +198,13 @@ Yinbo.
 >>    *  Copyright (c) 2013 Hongbing Hu <huhb@lemote.com>
 >>    *  Copyright (c) 2014 Huacai Chen <chenhc@lemote.com>
 >> + *  Copyright (c) 2022-2023 Yinbo Zhu <zhuyinbo@loongson.cn>
+> 
+> Is it 2023 already?
+> 
+> And do the people listed in the S-o-b tags need a mention here? Or is it 
+> more appropriate to remove some of them or demote to tags like 
+> Co-developed-by?
+> 
 >>    */
 >> +#include <linux/acpi.h>
 >>   #include <linux/kernel.h>
@@ -250,6 +267,9 @@ Yinbo.
 >> +    if (pin >= chip->ngpio)
 >> +        return -EINVAL;
 >> +    else
+> 
+> Drop the "else" because the true branch is an early return i.e. diverging.
+> 
 >> +        return 0;
 >> +}
 >> +
@@ -275,6 +295,9 @@ Yinbo.
 >> +            bval = 1;
 >> +        else
 >> +            bval = 0;
+> 
+> bval = input ? 1 : 0;
+> 
 >> +        writeb(bval, LOONGSON_GPIO_OEN_BYTE(lgpio, pin));
 >> +        return;
 >> +    }
@@ -315,6 +338,9 @@ Yinbo.
 >> +            bval = 1;
 >> +        else
 >> +            bval = 0;
+> 
+> bval = high ? 1 : 0;
+> 
 >> +        writeb(bval, LOONGSON_GPIO_OUT_BYTE(lgpio, pin));
 >> +        return;
 >> +    }
@@ -453,6 +479,10 @@ Yinbo.
 >> +    if (!strcmp(lgpio->chip.label, "loongson,ls7a-gpio") ||
 >> +            !strncmp(lgpio->chip.label, "LOON0002", 8) ||
 >> +            !strcmp(lgpio->chip.label, "loongson,ls2k-gpio"))
+> 
+> Aren't these 3 device IDs the only models we support/have right now? If 
+> so I think the check could safely be dropped.
+> 
 >> +        lgpio->chip.to_irq = loongson_gpio_to_irq;
 >> +
 >> +    gpiochip_add(&lgpio->chip);
@@ -481,6 +511,18 @@ Yinbo.
 >> +        lgpio->conf_offset = 0x800;
 >> +        lgpio->out_offset = 0x900;
 >> +        lgpio->in_offset = 0xa00;
+> 
+> Aren't configurations like these usually described in the DT? Are you 
+> trying to maintain compatibility with the pre-existing DT structure that 
+> is missing such data?
+In fact, My v1 patch was to put it in the dts. But it needs to define
+some custom dts attributes, and I don't find  any pre-existing DT struct
+to compatible with it. so I will keep it in kernel driver. and other
+advice I will adopt it.
+
+Tks,
+Yinbo.
+> 
 >> +        return;
 >> +    }
 >> +}
@@ -587,6 +629,10 @@ Yinbo.
 >> +    return 0;
 >> +out:
 >> +    pr_err("%s: %s: missing mandatory property\n", __func__, np->name);
+> 
+> I suggest checking out <linux/dev_printk.h> and use dev_* printk's 
+> everywhere you have a `dev` at hand (which is the case here).
+> 
 >> +    return ret;
 >> +}
 >> +
@@ -636,7 +682,7 @@ Yinbo.
 >> -
 >> -    ret = platform_driver_register(&loongson_gpio_driver);
 >> -    if (ret) {
->> -        pr_err("error registering loongson GPIO driver\n");
+>> -        pr_err("error registering loongson GPIO driver\n"); > 
 >> -        return ret;
 >> -    }
 >> -
@@ -668,6 +714,16 @@ Yinbo.
 >> +#define __LOONGSON_GPIO_PLATFORM_H
 >> +
 >> +/* ============== Data structrues =============== */
+> 
+> This comment could be removed as the code here is very trivial hence 
+> self-commentary.
+> 
+> But again, please check out Arnd's review comment; still I think this 
+> might not be necessary at all because the legacy users already have to 
+> modify many other things elsewhere before they can rebase on the more 
+> recent upstream versions.
+okay, I got it.
+> 
 >> +
 >> +struct loongson_gpio_platform_data {
 >> +    u32 gpio_conf;
@@ -680,5 +736,5 @@ Yinbo.
 >> +};
 >> +
 >> +#endif
->>
+> 
 
