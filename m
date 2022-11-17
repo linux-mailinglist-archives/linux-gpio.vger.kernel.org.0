@@ -2,127 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE48D62D7D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:18:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B8D462D81F
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:37:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239321AbiKQKSU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 05:18:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        id S239535AbiKQKhS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 05:37:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbiKQKSS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:18:18 -0500
-Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6F0A2AE39
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:18:17 -0800 (PST)
-Received: by mail-vk1-xa34.google.com with SMTP id b81so595986vkf.1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:18:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5ohHBGb4Ucg+7fR4s1/N63W3YPBGAZ0E1xYBpO7m13A=;
-        b=TfgOMbEBUxf63C7q7x1aHicIHiPui2EIZ+9z2Ur8PA4OnkQ9vQSPBm7g4YMJ8swiz0
-         9Oj7DcsSW/nfzAPPcPiP0iFga6rYmwHEAtMlg6sZv0ykwDNllw9yl2O0NLwzubhpt5Sr
-         tqcUy6e/eYbQg/f15l9jgDyTCb5N05UQl2YN8J5NJLId/BMfWLPnG5r3z+9xf77Kt76L
-         wZIEVrreyWlQ7zFu15JntW+d64LsfeSjVju6qYWtGVrHgX7pXhex8nwQIaMPIpP/LXJX
-         VIbvejWK87sK+5MdZk5cLKN8oF/PRDT4AYGnef1w5onv0V0RKnRZTnYD12xqIE+r+mCG
-         zA1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5ohHBGb4Ucg+7fR4s1/N63W3YPBGAZ0E1xYBpO7m13A=;
-        b=1kwp4PuoAUv3YU7HW5OZEc8LKuBbTmvnQ77N6hq+u98/JZTahD3+uftLCR9CMonobi
-         hwVar7rDR0cvydDIeKEmKiFe4D7+SNwxYpUCNAXaZkgTvHUufnMI+jTHzx8mc1DRkEAC
-         C3bRqUcP+9Os2tKKHu0qnQ23XF7KAck2LXR4fq9x6mxH+n+f7tlIX7r/OIJYC/2O0OYj
-         RuJTFCr3s8U3YDzCdPOfwMWpWPE6TOgQF6BURYLhdQabqgLjl5jSYnRbMcEPjpdQaeus
-         t3Jj8hXnA/3jp3IaDZBYjVu+5Lfyww0K2UhyXyl5TgMjs9PTRKXb44qfA6G7oan6SCh9
-         OmXA==
-X-Gm-Message-State: ANoB5pktNDn0I833wBYASI55C2F9dcltQjKgiPSScbQGPmbglVooT6Xu
-        nBjQL67IoztNy4DAlMk9DeMx0L7eFAS0vGKbyBsak669WZo=
-X-Google-Smtp-Source: AA0mqf4zxvmIcPdIOBJWybtQy6txvNkPpBi+bpsjKYROE/HJUl9stEC7DwGWv9gmQ4PqPnTTq5EFTdkXRwzZShp3zFw=
-X-Received: by 2002:ac5:cbe4:0:b0:3b7:3aca:9868 with SMTP id
- i4-20020ac5cbe4000000b003b73aca9868mr808127vkn.33.1668680296951; Thu, 17 Nov
- 2022 02:18:16 -0800 (PST)
+        with ESMTP id S239567AbiKQKhN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:37:13 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F17C31DD4;
+        Thu, 17 Nov 2022 02:37:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668681429; x=1700217429;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=d/BwTcDjTby7+EvF7SJminV1ic477402fiCW3AFm03g=;
+  b=SninrCjIKdJbxb6pyy4gKicXWjNL2H7IoaBy4vZAMoE7NfiT3JEZQckn
+   0/1enSqE7l2QBrDZQZ/TR2Xmau1OZHEzE4GgcZONMuUB2nWt3yP7NyWBX
+   9sEuwS/Nd7izkGJUhD94ZeirFzyqNTx/C0j6Nt3MPa53T/JQxJJLuYX7E
+   7m8wK12UPTPzPNmBRziJMfwPQfZG3SKvmO/vnygOmbFFHAR3Sgz7z1pN4
+   Jym8EP4aeIBQQcsX3+81P4SuFYNIaPyaIKS2GKfQsgV1UpmRxacjsjdRm
+   rhf2Fv9lOhGdUSbtDTKsh94yl1BqYpH4nREs15skToL5aw7xG0iSrfJAH
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="399105946"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="399105946"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 02:37:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="884814164"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="884814164"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Nov 2022 02:37:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ovcGV-00DXBD-2m;
+        Thu, 17 Nov 2022 12:37:03 +0200
+Date:   Thu, 17 Nov 2022 12:37:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 7/7] pinctrl: intel: Enumerate PWM device when
+ community has a capability
+Message-ID: <Y3YOz/9oLdjFwuK5@smile.fi.intel.com>
+References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
+ <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
+ <20221117090605.ktgyaverpzl3irjo@pengutronix.de>
 MIME-Version: 1.0
-References: <cover.1667815011.git.viresh.kumar@linaro.org> <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
- <20221117073120.g6xhn6i2dbzougx3@vireshk-i7> <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
- <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
-In-Reply-To: <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 17 Nov 2022 11:18:06 +0100
-Message-ID: <CAMRc=MeOVWV=dp_ytxazwoWq4JW1dbr5mfEvQVYFxe-HYgKn_g@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20221117090605.ktgyaverpzl3irjo@pengutronix.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:56 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-11-22, 10:06, Bartosz Golaszewski wrote:
-> > > File types:
-> > > - Cargo.toml
-> > >
-> > >   Most of these have a different style for versioning, though the workspace
-> > >   specific files doesn't have a version set. I checked few other projects and
-> > >   they didn't mention it as well.
-> > >
-> >
-> > Just use regular SPDX header at the top of the file in a # comment block?
->
-> Miguel ? Kent ?
->
-> > > - bindings.rs
-> > >
-> > >   These are automatically genrated files, with bindgen. Not sure if we should
-> > >   edit them to add Licensing info.
-> > >
-> >
-> > Can we not generate them at build-time then?
->
-> We can, and we do when we do "cargo build --features=generate".
->
-> There are reasons to keep them merged though. It lets the users avoid generating
-> them on the go, like the vhost-device [1] crate in my case. I also faced issues
-> with the rust-vmm containers, where vhost-device stuff gets auto-tested, in
-> enabling bindgen support and finally went back to keeping them generated in
-> advance. This is also the normal practice it seems, from whatever I have seen
-> from the rust-vmm community at least.
->
+On Thu, Nov 17, 2022 at 10:06:05AM +0100, Uwe Kleine-König wrote:
+> On Mon, Nov 14, 2022 at 06:55:45PM +0200, Andy Shevchenko wrote:
+> > Some of the Communities may have PWM capability. In such cases,
+> 
+> Is "Communities" is proper name in this context? If not, I'd not
+> capitalize it.
 
-Do these problems you faced apply to libgpiod too? Honestly, putting
-automatically generated files in the repo just feels wrong. It defeats
-the whole purpose of code generation. If we can't reliably regenerate
-them, then it sounds like a problem with the tools, not the library.
-Maybe we don't need to worry about that just yet?
+Intel pin control is a set of so called Communities, which are divided by
+groups of pins. (There is an intermediate division, but it doesn't affect
+software anyhow, so I haven't mentioned it).
 
-Bart
+> > enumerate the PWM device via respective driver. User is still
+> 
+> s/User/A user/ ?
 
-> Maybe then add the header manually to them ?
->
-> --
-> viresh
->
-> [1] https://github.com/rust-vmm/vhost-device
+OK!
+
+> > responsible for setting correct pin muxing for the line that
+> > needs to output the signal.
+
+...
+
+> > +	pwm = devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
+> > +	if (IS_ERR(pwm))
+> > +		return PTR_ERR(pwm);
+> > +
+> > +	return 0;
+> 
+> The last 3 codelines can be replaced by
+> 
+> 	return PTR_ERR_OR_ZERO(pwm);
+> 
+> (but I know it's subjective if you like that or not, so I won't insist;
+> see also b784c77075023e1a71bc06e6b4f711acb99e9c73).
+
+Yes, it used to be like that in some of my previous attempts
+(maybe not public), but have been changed due to an additional
+error check which is gone, so it can be reinstantiated now.
+
+...
+
+> All in all this is all very minor, so:
+> 
+> Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> 
+> even if you keep the patch as is.
+
+Thank you, I will amend as you suggested.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
