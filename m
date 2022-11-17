@@ -2,50 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DC562DDA4
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 15:12:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 814BD62DDE7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 15:24:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231634AbiKQOMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 09:12:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45790 "EHLO
+        id S240085AbiKQOYB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 09:24:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234866AbiKQOMg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 09:12:36 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7F462065
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:12:34 -0800 (PST)
-Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NChgb5M1kzRpHL;
-        Thu, 17 Nov 2022 22:12:11 +0800 (CST)
-Received: from [10.174.179.163] (10.174.179.163) by
- kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 17 Nov 2022 22:12:32 +0800
-Message-ID: <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
-Date:   Thu, 17 Nov 2022 22:12:31 +0800
+        with ESMTP id S231469AbiKQOYA (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 09:24:00 -0500
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5248F1CFEC
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:23:59 -0800 (PST)
+Received: by mail-qt1-x82c.google.com with SMTP id h24so1119369qta.9
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:23:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwTck/ecNhkid0iaJxj8dCkVWjNa9jLvmWZcqTf2HEY=;
+        b=TofIAUcUgNXdKkRlLpXAHp8LPOT+KnI3SNxuveYWvBTs6tRG9zxznjhaG2E7m2VMv3
+         82jxzeTw6haC8iWyHY4JKqEZAXouquoN8TTFCJIgKd0d6UUzGEptPxRLjrg6KXxGNR2w
+         murjBhrirP64xXtZVcfHKlVhh5Td4BPvP61Ri4IPnEo3rrcEFnmr8dzp9Y3rXM5DsbjL
+         cyvdDaLTYt/KwCvRorUY98pNdUqFz/pwBQTNa6TXZwKx4T2dPSblqWtCbJznGaCm4mQA
+         +hsDXCfEm9hy9oEg+09mtgkWC6h/eMmJVN7jFodZBQRn0d3FbwVDKDvxy6pwBsOQUSOp
+         IwUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XwTck/ecNhkid0iaJxj8dCkVWjNa9jLvmWZcqTf2HEY=;
+        b=CCbAMrukIHnK75UfmZtshGKAi2XEqd3xJgjr8PPDs7kq1N1VDABWrO375EVjALm1O1
+         LGZDga+D+RH4vhtk71IflQWjkD+W6aLi8Unlcq+zZasfMHPiJygvfCtpdqk2Yr71tK2h
+         f5zAjVL2H/73gZPbk3aH2s/lygiO58ZioKiP82BjlpXXlcEEOewa/snr4M07bBwfCbJQ
+         WlIziZ6FjIaBxFvulxlejA007BI+jFqzbRkbbyiiiessvtPUtCwLoCkXW9A4QMtqB5dy
+         OmYObo5WM0y5LyZRqD06FWJO4hPSWyk6LmUPRj3uA0kglF6Bo3vklryxDAHtFCcN+dtS
+         qY0Q==
+X-Gm-Message-State: ANoB5pn0AG8ccgQUoMq85/SjClOKIS3oUScUNcezHTnfDcR9WXYV50WB
+        ROKH8eDPrjw+s886eVIoy053Pw==
+X-Google-Smtp-Source: AA0mqf7v3Ie4yFVjQ30XKSRMo7y2QRB7Hnlv7UR53ByhdzHhYt63cPhGswcMJ05MvFXZN2boPog0Bg==
+X-Received: by 2002:ac8:5441:0:b0:3a5:50ba:b20c with SMTP id d1-20020ac85441000000b003a550bab20cmr2336722qtq.588.1668695038409;
+        Thu, 17 Nov 2022 06:23:58 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id y19-20020a05620a44d300b006bbf85cad0fsm574376qkp.20.2022.11.17.06.23.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 06:23:57 -0800 (PST)
+Date:   Thu, 17 Nov 2022 09:22:31 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        robert.marko@sartura.hr, linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org
+Subject: Re: [PATCH v2 1/4] gpio: regmap: Always set gpio_chip get_direction
+Message-ID: <Y3ZDp6skghvMyaKv@fedora>
+References: <cover.1668129763.git.william.gray@linaro.org>
+ <1805d1ddb5bbce8e86164e66421ddde481cce4f9.1668129763.git.william.gray@linaro.org>
+ <Y3DlsTAQMi6kKObJ@smile.fi.intel.com>
+ <Y3DvUaA7YYAsypGv@fedora>
+ <cc33aaa342ad60749d2f7c2a6d690733@walle.cc>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [PATCH v3] gpiolib: fix memory leak in gpiochip_setup_dev()
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-CC:     <brgl@bgdev.pl>, <linux@roeck-us.net>, <linus.walleij@linaro.org>,
-        <warthog618@gmail.com>, <linux-gpio@vger.kernel.org>,
-        <liwei391@huawei.com>
-References: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
- <20221117090247.122980-1-zengheng4@huawei.com>
- <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
-From:   Zeng Heng <zengheng4@huawei.com>
-In-Reply-To: <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.163]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemi500024.china.huawei.com (7.221.188.100)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="enTNzqmh6/WJTuPZ"
+Content-Disposition: inline
+In-Reply-To: <cc33aaa342ad60749d2f7c2a6d690733@walle.cc>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -53,79 +77,76 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On 2022/11/17 18:49, Andy Shevchenko wrote:
-> On Thu, Nov 17, 2022 at 05:02:47PM +0800, Zeng Heng wrote:
->> Here is a report about memory leak detected in gpiochip_setup_dev():
->>
->> unreferenced object 0xffff88810b406400 (size 512):
->>    comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
->>    backtrace:
->>      kmalloc_trace
->>      device_add 		device_private_init at drivers/base/core.c:3361
-> Seems like unneeded space after device_add. Also note, we refer to
-> the functions as func().
-Just emphasize the location of memory leak happened.
->> 			(inlined by) device_add at drivers/base/core.c:3411
->>      cdev_device_add
->>      gpiolib_cdev_register
->>      gpiochip_setup_dev
->>      gpiochip_add_data_with_key
->>
->> gcdev_register() & gcdev_unregister() would call device_add() &
->> device_del() (no matter CONFIG_GPIO_CDEV is enabled or not) to
->> register/unregister device.
->>
->> However, if device_add() succeeds, some resource (like
->> struct device_private allocated by device_private_init())
->> is not released by device_del().
->>
->> Therefore, after device_add() succeeds by gcdev_register(), it
->> needs to call put_device() to release resource in the error handle
->> path.
->>
->> Here we move forward the register of release function, and let it
->> release every piece of resource by put_device() instead of kfree().
->>
->> Fixes: 159f3cd92f17 ("gpiolib: Defer gpio device setup until after gpiolib initialization")
->> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
->> ---
-> Where is changelog since we see this as v3?
->
-> ...
+--enTNzqmh6/WJTuPZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-change in v3:
+On Wed, Nov 16, 2022 at 04:41:30PM +0100, Michael Walle wrote:
+> Am 2022-11-13 14:21, schrieb William Breathitt Gray:
+> > On Sun, Nov 13, 2022 at 02:40:17PM +0200, Andy Shevchenko wrote:
+> > > On Thu, Nov 10, 2022 at 08:55:50PM -0500, William Breathitt Gray
+> > > wrote:
+> > > > If you only have reg_dat_base set, then it is input-only; if you on=
+ly
+> > > > have reg_set_base set, then it is output-only. Thus, we can always =
+set
+> > > > gpio_chip get_direction to gpio_regmap_get_direction and return
+> > > > GPIO_LINE_DIRECTION_IN/GPIO_LINE_DIRECTION_OUT given the respective
+> > > > register base addresses configuration.
+> > >=20
+> > > Seems legit to me. Have you checked if we have any gpio-regmap
+> > > drivers that
+> > > have something like this in their configuration already? In such
+> > > cases we need
+> > > to be sure they behave as expected.
+> > >=20
+> > > From the code perspective:
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> >=20
+> > I see gpio-sl28cpld has two device types SL28CPLD_GPO (output-only) and
+> > SL28CPLD_GPI (input-only); gpio-tn48m similarly has two device types
+> > TN48M_GPO (output-only) and TN48M_GPI (input-only). It doesn't look like
+> > the change in this patch will cause problems for them, but I'll let
+> > Michael Walle and Robert Marko comment if they see issues here.
+>=20
+> For the sl28cpld driver this shouldn't be a problem. So for that
+> Acked-by: Michael Walle <michael@walle.cc>
+>=20
+> But back when I wrote gpio-regmap the bgpio served as a blue print.
+> There is the same handling. If you look at gpiolib-sysfs.c there
+> is a comment about the direction property:
+>=20
+>  * MAY BE OMITTED if kernel won't allow direction changes
+>=20
+> So from a gpiolib/sysfs POV I'm not sure about this change. Does
+> get_direction =3D=3D NULL means setting the direction isn't possible?
+> OTHO there is a fat "MAY" :)
+>=20
+> Which brings me to the question of "why this change?". The commit
+> message doesn't mention it. Just out of curiosity.
+>=20
+> -michael
 
-     - use put_device() instead of kfree()
+Currently, the 104-idi-48 module implements a get_direction() callback
+that is executed in situations such as gpiod_get_direction() which
+aren't necessarily related to sysfs. In this patch series, the
+104-idi-48 module is migrated to the gpio_regmap API, but loses this
+get_direction() support because it's an input-only configuration. The
+purpose of this patch is to prevent that regression by supporting
+get_direction() for input-only/output-only configurations.
 
->>   err_free_gpiochip_mask:
->>   	gpiochip_remove_pin_ranges(gc);
->>   	gpiochip_free_valid_mask(gc);
->> +	/*
->> +	 * If gdev->dev.release has been registered by
->> +	 * gpiochip_setup_dev(), print err msg and
->> +	 * call put_device() to release all.
->> +	 */
->> +	if (gdev->dev.release)
->> +		goto err_free_gdev;
-> (1)
->
->>   err_remove_from_list:
->>   	spin_lock_irqsave(&gpio_lock, flags);
->>   	list_del(&gdev->list);
-> ...
->
->> -	kfree(gdev);
->> +	if (gdev->dev.release)
->> +		put_device(&gdev->dev);
-> Why you can't do this above at (1)?
-> Is there any other hidden way to get here with release set?
+William Breathitt Gray
 
-As already mentioned in the mail, keep the error print info.
+--enTNzqmh6/WJTuPZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-B.R.，
+-----BEGIN PGP SIGNATURE-----
 
-Zeng Heng
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY3ZDpwAKCRC1SFbKvhIj
+K+zwAP91upqRhQV1dEM30LJyPIHO0ZHSXcyFgPN/PzNpEzV9cAEAvGvb9qHtmdAk
+xs3ibm0MRBsHFvbknnITdjEwBm27pg8=
+=/k59
+-----END PGP SIGNATURE-----
 
->> +	else
->> +		kfree(gdev);
->>   	return ret;
+--enTNzqmh6/WJTuPZ--
