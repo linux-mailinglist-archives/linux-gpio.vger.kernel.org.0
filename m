@@ -2,135 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C446862DFC4
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:25:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B039E62DFE5
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:32:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234005AbiKQPZf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 10:25:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44284 "EHLO
+        id S230383AbiKQPcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 10:32:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240395AbiKQPY6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:24:58 -0500
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71B457C026;
-        Thu, 17 Nov 2022 07:22:05 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id ud5so5899377ejc.4;
-        Thu, 17 Nov 2022 07:22:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kHlNj4O/Pkd3jf55FT+J3SAuNDsxwz0o4xLf5wKOfyc=;
-        b=jwj13zCsqmeLmCJaVaYld5WUp5M3AV3FwuHFjBiio/M3bHvl9dzTcrINTk5mdQOTMc
-         fKFjZ8LumHTOFu7hheBie9CDjxV6MIWNmEdC9tloCRz2dXTAf1QgcateoQyk+cltkuJv
-         3NRQNS4LrkT0FGf9doY0826kfKdrA+YF1zZfn/r9u7l/gJT/W3WN6utU58R/bQY6Xa+g
-         D7jgJZ8tqpGv9n3vyAGo2npvjPtkxqsy3wXPlhPKiuppkZ93ryV7sKsy3Vd6YWiwPj+2
-         JmLVCALOcxu0dBmkFja0aBj/822FE6Usxc4gdFKSiVYlS7D+yg5kAMz/gJPtJrmCaL43
-         spbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kHlNj4O/Pkd3jf55FT+J3SAuNDsxwz0o4xLf5wKOfyc=;
-        b=jtfqJuO48oF82X65c/vnH92dCeKJwRULVFD4uzPdzU5c3LRumKhGo34h/FdRVeWggi
-         JtmyOXfAJw+PEfQHKRufMmPc5aAtqn+pDG2w2tfBbFM6Prv9ENE+SsEZ6llaXaQh22zF
-         YnFGW5xyGbthK5ekulhuS65NwxH7Uhs2qqpXk15IiEVwkeSdA8Kv2g8eZTvyeAJRwGpn
-         7HL5soazW+a1uRfyPfxgzzF/i91EUVv551sXK8CV+ANPfBDW4oPphRFxWxZKV4RIWhTn
-         WGluEYVICMJVR912J/TbxBm8us2+yLxYHeSgXwN/WD65lGxj0RpfbNpUQCFkih72YEKv
-         mhwA==
-X-Gm-Message-State: ANoB5pkD3gzbb/LrJxkJ07wJyeNnpY05KXkqRGIjKO6Tmetd1o/o6kEP
-        dkoU3ASNHryZv+4y5KnG5YH5hS4c2/NDWc4Vvko=
-X-Google-Smtp-Source: AA0mqf5w2J1tdb1H1EOElNjJmXYe8wvp54py3DQbMGunNSgaTqrGRNvwr/3YTfYQvubV11kel7XDu8fDLN45Tf8OhgI=
-X-Received: by 2002:a17:906:3792:b0:7aa:97c7:2bfe with SMTP id
- n18-20020a170906379200b007aa97c72bfemr2499104ejc.196.1668698523974; Thu, 17
- Nov 2022 07:22:03 -0800 (PST)
+        with ESMTP id S234758AbiKQPb6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:31:58 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E468CE092
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:31:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668699117; x=1700235117;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=56haqea2XXoij3OAnOcFxvu7OLoAYc5NUH4P9lnMUpw=;
+  b=KQNlDz4rH49Npeay48o70p5xbynh9hBU1ohDoD6cKX0TJcKRBGani9/n
+   k7ybY2xZr+BKcRKrzp9i3wKZAebjQ8dqD7vqBh4wyRpHapWOH3Cq6oaqV
+   G0gtdo5enP80S9zws5dtN4SpHGNw18HtGuHGxVywHiEl+TLOFWjJrBI54
+   MgZXiDa7dVnsYmx3pWb6Tn7guWSQDx0IhaF3hmmbaNIJJ56OMP9PtpCzG
+   p5fZU+sFmWm+be7knuMnAH0xX7oFfgDY/COi2zh1nxVgjvd/Ar5Ba9+Cb
+   s7uEHx6mxj7lti1YKVA+QM9Re/EVf0lmYLJwrm3d1C/L2ZJBZWlZA0jyh
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="375011642"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="375011642"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 07:31:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="634088495"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="634088495"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 17 Nov 2022 07:31:54 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1ovgro-00DcwA-37;
+        Thu, 17 Nov 2022 17:31:52 +0200
+Date:   Thu, 17 Nov 2022 17:31:52 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Zeng Heng <zengheng4@huawei.com>
+Cc:     brgl@bgdev.pl, linux@roeck-us.net, linus.walleij@linaro.org,
+        warthog618@gmail.com, linux-gpio@vger.kernel.org,
+        liwei391@huawei.com
+Subject: Re: [PATCH v3] gpiolib: fix memory leak in gpiochip_setup_dev()
+Message-ID: <Y3ZT6KUkPlSS7whW@smile.fi.intel.com>
+References: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
+ <20221117090247.122980-1-zengheng4@huawei.com>
+ <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
+ <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
 MIME-Version: 1.0
-References: <20221107175305.63975-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20221107175305.63975-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV+e63iW2yCNaTqYv6_b7zSnok-1i07sbNfgJvq5vGUCQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdV+e63iW2yCNaTqYv6_b7zSnok-1i07sbNfgJvq5vGUCQ@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 17 Nov 2022 15:21:37 +0000
-Message-ID: <CA+V-a8sFfT5eUQaxQWrYraWEBDMhxDcG6fWcioV_i8aJ5Fg+3g@mail.gmail.com>
-Subject: Re: [PATCH RFC 4/5] arm64: dts: renesas: r9a07g043[u]: Update pinctrl
- node to handle GPIO interrupts
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+On Thu, Nov 17, 2022 at 10:12:31PM +0800, Zeng Heng wrote:
+> On 2022/11/17 18:49, Andy Shevchenko wrote:
+> > On Thu, Nov 17, 2022 at 05:02:47PM +0800, Zeng Heng wrote:
 
-Thank you for the review.
+...
 
-On Thu, Nov 17, 2022 at 11:20 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, Nov 7, 2022 at 6:53 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add required properties in pinctrl node to handle GPIO interrupts.
-> >
-> > Note as IRQC is not enabled in RZ/Five the phandle for interrupt-parent
-> > is added in RZ/G2UL specific dtsi so that RZ/Five pinctrl driver
-> > continues without waiting for IRQC to probe.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/arch/arm64/boot/dts/renesas/r9a07g043.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r9a07g043.dtsi
-> > @@ -531,6 +531,8 @@ pinctrl: pinctrl@11030000 {
-> >                         gpio-controller;
-> >                         #gpio-cells = <2>;
-> >                         gpio-ranges = <&pinctrl 0 0 152>;
-> > +                       #interrupt-cells = <2>;
-> > +                       interrupt-controller;
-> >                         clocks = <&cpg CPG_MOD R9A07G043_GPIO_HCLK>;
-> >                         power-domains = <&cpg>;
-> >                         resets = <&cpg R9A07G043_GPIO_RSTN>,
-> > diff --git a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-> > index 7a8ed7ae253b..65e7b029361e 100644
-> > --- a/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-> > +++ b/arch/arm64/boot/dts/renesas/r9a07g043u.dtsi
-> > @@ -98,6 +98,10 @@ &irqc {
-> >         resets = <&cpg R9A07G043_IA55_RESETN>;
-> >  };
-> >
-> > +&pinctrl {
-> > +       interrupt-parent = <&irqc>;
-> > +};
->
-> Do you plan to move it back to the common r9a07g043.dtsi later?
-Yes we should be doing that.
+> > > +	/*
+> > > +	 * If gdev->dev.release has been registered by
+> > > +	 * gpiochip_setup_dev(), print err msg and
+> > > +	 * call put_device() to release all.
+> > > +	 */
+> > > +	if (gdev->dev.release)
+> > > +		goto err_free_gdev;
+> > (1)
+> > 
+> > >   err_remove_from_list:
+> > >   	spin_lock_irqsave(&gpio_lock, flags);
+> > >   	list_del(&gdev->list);
+> > ...
+> > 
+> > > -	kfree(gdev);
+> > > +	if (gdev->dev.release)
+> > > +		put_device(&gdev->dev);
+> > Why you can't do this above at (1)?
+> > Is there any other hidden way to get here with release set?
+> 
+> As already mentioned in the mail, keep the error print info.
 
-> Perhaps it makes sense to move the full irqc node to r9a07g043[uf].dtsi?
-> There is not that much common left, even the compatible value differs.
-> We don't keep the few common properties of the cpu0 node in
-> r9a07g043.dtsi neither.
->
-Agreed, I will move it in the next version.
+Can you refactor that to avoid double condition on the ->release() presence?
 
-Cheers,
-Prabhakar
+> > > +	else
+> > > +		kfree(gdev);
+> > >   	return ret;
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
