@@ -2,104 +2,129 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7432F62D8F2
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 12:08:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF11162D8F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 12:08:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234810AbiKQLIN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 06:08:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54318 "EHLO
+        id S239737AbiKQLIP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 06:08:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239721AbiKQLH5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 06:07:57 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EE2FAD1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 03:07:47 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id c15so1462034ybf.1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 03:07:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U4EWSEj4yVr1Zz7qdMsah0lk+YIU9jCQuFIEJIZoyTI=;
-        b=HX7VtVVCvr0rjzzLuU8PPMqBysvA+ufY6bkcClpFfT2IybfKN+OkTreKoQCDwNYGoh
-         XlPnTdPtx8yxHRipzojLlf3IepvWKmtQV572B4irW5xhBZLUiVKYad2b68Hb7p8tT5b1
-         afVQDSX1W4gSjhcHeXcEFpnJhzAwKbkQ757/1RrGZVvYmNlBkWrQfqEGPuYj4Car/lsU
-         cwRj9kg4zqeSX+97uXTjAPIGDeraCj7H3Uj3oCcKDYprXkd3emMrtgCL93cUYSJbcD9p
-         xip7CwBdoFj8mcCyZ2XHA2ELpQHCW6k+5l16RE70ov8IMbYsELoKXufFfE+s42+AKlW6
-         NihQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U4EWSEj4yVr1Zz7qdMsah0lk+YIU9jCQuFIEJIZoyTI=;
-        b=LHZ698iBC5Hv747l0KZR7sPOMRJ7qqt1QwSIrRynJUynZDkZ7IQh3Ze9EhaD26ui96
-         1sSPw1IVnZ1hTyNo0ItaMUufDnB7i5T/4ebZEHbEjvNt2iEl0dvqjB6AE4z6vvH781Ut
-         heZL8rJj8MBAibKd09+fbjEqK2uqHItRaE1zGjbA9WbxLW2xDnnpJ1GOX80lIUspFmdR
-         O2VIbRJac6awoytBvpluEqJS29+Y3X04zOaO7aqJLbZCOlzAgBVMqrdckOIbfeJnWzbN
-         U2e3D089NSWyGDr83ijAv2jPHBIQFIUMvom5b//KkMA2axHFOYdc6Kl/FYw4eQ0NSTt/
-         4D8g==
-X-Gm-Message-State: ANoB5pmtac3RLBwReS980OMwV9KDnNExEBd33cXGFC46wyBz5hXapwfU
-        ySJY8+fnOGgCulP0CAar1g7+C5Fr789j6Suc14k=
-X-Google-Smtp-Source: AA0mqf4kYAlVxm0ClvyOBjNzbSG70Q4rJn/GdIahbomZI1DBT96e0ndcXvUauXVVh52okuPQQ5ABPdWsby6R+MfB7M4=
-X-Received: by 2002:a25:ce83:0:b0:6dd:edba:c7cb with SMTP id
- x125-20020a25ce83000000b006ddedbac7cbmr1473924ybe.507.1668683267124; Thu, 17
- Nov 2022 03:07:47 -0800 (PST)
+        with ESMTP id S239808AbiKQLID (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 06:08:03 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BE06AECA;
+        Thu, 17 Nov 2022 03:07:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668683275; x=1700219275;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Q/yxfRZ31XbA8GZUusYpG1deAjqkNJJIHGUThuhmAhw=;
+  b=ibMe4WNgKh1eQIsmm1sLLYZtVDLRKM95eCP01fDqW6J8/+4kvB20NGL7
+   Hs9eyhHVL3wZVX744xCFImtSedwatIJfEa+mWh05sD6fFZK7FUrgOJj1A
+   Ng43tJ4irs1avQahc33JpHIRW1tfX4r+bOu/1RDKBS9JaCQsoEznFovJ3
+   xWKHWRjOQo+QZtZ9p2sBAHNOBzkPdOSO23MInaE+HjEEjvZvdEHFKfZwy
+   A5/Te5eUcOkCxCyzx+IIB9JbO+uI9YOxudJkngNsjCiuS8Zx9deGh5I1w
+   zzO5tPW/37Yhxs54HohZMzAfqGKDkrZLf2ma/7JW+Z8I8rgKFZeFRO+1v
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="314638708"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="314638708"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 03:07:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="617572312"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="617572312"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 17 Nov 2022 03:07:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id B4CCD2B7; Thu, 17 Nov 2022 13:08:15 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v5 0/7] pinctrl: intel: Enable PWM optional feature
+Date:   Thu, 17 Nov 2022 13:07:59 +0200
+Message-Id: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <cover.1667815011.git.viresh.kumar@linaro.org> <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
- <20221117073120.g6xhn6i2dbzougx3@vireshk-i7> <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
- <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
-In-Reply-To: <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 17 Nov 2022 12:07:36 +0100
-Message-ID: <CANiq72nxJn3F0hvWerUJvbgRjfyutQ=CCnpNqfMOEBumX62_SQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:56 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 17-11-22, 10:06, Bartosz Golaszewski wrote:
-> >
-> > Just use regular SPDX header at the top of the file in a # comment block?
->
-> Miguel ? Kent ?
 
-In the kernel at least, all files (including docs) should have an SPDX line.
+This is a continuation of the previously applied PWM LPSS cleanup series.
+Now, we would like to enable PWM optional feature that may be embedded
+into Intel pin control IPs (starting from Sky Lake platforms).
 
-However, configuration files which use a publicly documented format
-(things like dot files) are not copyrightable apparently, and it was
-proposed that the `scripts/spdxexclude` kernel script excludes those
-[1], but the patch has not been merged (yet?) since I raised a couple
-questions about how to handle those (sorry...).
+I would like to route this via Intel pin control tree with issuing
+an immutable branch for both PINCTRL and PWM subsystems, but I'm
+open for other suggestions.
 
-So I am not sure if e.g. `Cargo.toml` should have a SPDX license
-identifier or not.
+Hans, I dared to leave your Rb tags, however the patches are slightly
+differ, because of the Uwe's suggestion on how to handle the missing
+headers. I hope you are okay with that. If not, please comment what
+must be amended then.
 
-[1] https://lore.kernel.org/lkml/20220516102615.884180377@linutronix.de/
+Uwe, the patches 3 and 6 still need your blessing.
 
-Cheers,
-Miguel
+Changelog v5:
+- added more tags (Uwe)
+- avoid moving struct pwm_lpss_chip in patch 3 (Uwe)
+- simplified error checking in intel_pinctrl_probe_pwm() (Uwe)
+
+Changelog v4:
+- added patch "Rename pwm_lpss_probe() --> devm_pwm_lpss_probe()"
+
+Changelog v3:
+- added tags (Uwe, Linus, Thierry)
+- fixed some spelling issues in the commit messages
+- changed a paragraph in the commit message of the patch 3 (Uwe)
+- replaced -ENODEV check with IS_REACHABLE() in the patch 6 (Uwe)
+
+Changelog v2:
+- added tag (Mika)
+- added base-commit to the series, to make sure LKP can test it
+
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+Andy Shevchenko (7):
+  pwm: Add a stub for devm_pwmchip_add()
+  pwm: lpss: Rename MAX_PWMS --> LPSS_MAX_PWMS
+  pwm: lpss: Include headers we are the direct user of
+  pwm: lpss: Allow other drivers to enable PWM LPSS
+  pwm: lpss: Rename pwm_lpss_probe() --> devm_pwm_lpss_probe()
+  pwm: lpss: Add devm_pwm_lpss_probe() stub
+  pinctrl: intel: Enumerate PWM device when community has a capability
+
+ drivers/pinctrl/intel/pinctrl-intel.c      | 29 ++++++++++++++
+ drivers/pwm/pwm-lpss-pci.c                 |  2 +-
+ drivers/pwm/pwm-lpss-platform.c            |  2 +-
+ drivers/pwm/pwm-lpss.c                     |  8 ++--
+ drivers/pwm/pwm-lpss.h                     | 26 ++-----------
+ include/linux/platform_data/x86/pwm-lpss.h | 44 ++++++++++++++++++++++
+ include/linux/pwm.h                        |  5 +++
+ 7 files changed, 88 insertions(+), 28 deletions(-)
+ create mode 100644 include/linux/platform_data/x86/pwm-lpss.h
+
+
+base-commit: 9abf2313adc1ca1b6180c508c25f22f9395cc780
+-- 
+2.35.1
+
