@@ -2,123 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E509462E162
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 17:19:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A44A562E18E
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 17:24:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240099AbiKQQTE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 11:19:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        id S234966AbiKQQYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 11:24:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240043AbiKQQTB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 11:19:01 -0500
-Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1228786ED;
-        Thu, 17 Nov 2022 08:18:57 -0800 (PST)
-Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S240478AbiKQQYP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 11:24:15 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE8088FA6;
+        Thu, 17 Nov 2022 08:21:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.3ffe.de (Postfix) with ESMTPSA id 2CDC675;
-        Thu, 17 Nov 2022 17:18:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-        t=1668701936;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cvVuv/CFKqXK0IGORbzS8gsCb1jkg5g0Q6TdD8SyobY=;
-        b=PZ66z5fBw1rR11hJ2eD3M5VCRPpL+oo45/qZ84B9tBCEYIWyvI60fWpNuUvZdNRo2IC5Mf
-        45/wI71MzSdG7S+2+Fu6aMR9rGAWMgcE1EvJA3CGkAhR16f1wNBDOhlfPmBr++ireE0Qin
-        uMZ3lgDhefkoI6fTz3q7jR9eM/IMmZ70RKo557C7sVwGhYzG/RjSsnGQ9KzTyllsE5tyGq
-        S2ltp1qaNK7PZ3TcWNIMI4NmUAf6L31mx9C9HqaBRO9UMSdsJDcqJX39GE6fDQXBZ1+I7y
-        IpPxse1jDGH7HjqstWHj6t1Xhjpp46AE7hBx6DiB4eNG29nO80BmLG/mjKSu6A==
-MIME-Version: 1.0
-Date:   Thu, 17 Nov 2022 17:18:55 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E77FA62129;
+        Thu, 17 Nov 2022 16:21:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5F2C433C1;
+        Thu, 17 Nov 2022 16:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668702104;
+        bh=phsVL3/hsv+v4acS8Sc0lFUGpjMm1v6dsEcH7Nzqomc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hmkZC3D0au47/OYpQ1ksGKtVv9CiqIPL7XknQf09yV5vSp1F0K+2dCNLYWC/Va31V
+         uVcvHviKCGT1romm1/eM6Lps6F2lIzXKYKSw58dDEO6suaqLQkZ0Y/imxN6FN/15U8
+         vUFeHa2OWGz2rzOaEbPvm4osX0ugWuZ3EsMPsDanGPFB7Gt4CWAq9Fezqdc4hFBpBT
+         sCLckKaFc12UFRGEGiQl1TsyyzbXp7ZJVKatO3Yq/MX8Tt7xFEwQiljuZ25I/aAT0M
+         +4LgvdOmAj/Wg9cXXNK05x38NJ+mdtnYCnDuNscFozvoyqYS/XmAaHFgFLXWlvl06y
+         sqTweD275CG9g==
+Date:   Thu, 17 Nov 2022 16:21:40 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     William Breathitt Gray <william.gray@linaro.org>,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
         andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, broonie@kernel.org
+        linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 4/4] gpio: i8255: Migrate to regmap API
-In-Reply-To: <61327a67cc308af413471a69a4810b2785e53e8e.1668129763.git.william.gray@linaro.org>
+Message-ID: <Y3ZflHI6CYfaGIbn@sirena.org.uk>
 References: <cover.1668129763.git.william.gray@linaro.org>
  <61327a67cc308af413471a69a4810b2785e53e8e.1668129763.git.william.gray@linaro.org>
-User-Agent: Roundcube Webmail/1.4.13
-Message-ID: <5123090e11da67e57fb00984445ece2f@walle.cc>
-X-Sender: michael@walle.cc
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+ <5123090e11da67e57fb00984445ece2f@walle.cc>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="KArWzu10SZ74/FYp"
+Content-Disposition: inline
+In-Reply-To: <5123090e11da67e57fb00984445ece2f@walle.cc>
+X-Cookie: Ego sum ens omnipotens.
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
 
-Am 2022-11-11 02:55, schrieb William Breathitt Gray:
+--KArWzu10SZ74/FYp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +    config.map = devm_regmap_init_mmio(dev, regs, 
-> &gpiomm_regmap_config);
-> +    if (IS_ERR(config.map))
-> +        return PTR_ERR(config.map);
+On Thu, Nov 17, 2022 at 05:18:55PM +0100, Michael Walle wrote:
+> Am 2022-11-11 02:55, schrieb William Breathitt Gray:
 
-I've just skimmed over your patch and noticed you're using an mmio
-regmap. Please note that for now, gpio-regmap unconditionally sets
-.can_sleep to true in the gpiochip [1]. So the users would need to
-use the _cansleep() variants. See a proposal below.
+> > +	gpio_config.parent = config->parent;
+> > +	gpio_config.regmap = config->map;
 
-> +int devm_i8255_regmap_register(struct device *const dev,
-> +			       const struct i8255_regmap_config *const config)
-> +{
-> +	struct gpio_regmap_config gpio_config = {0};
-> +	unsigned long i;
-> +	int err;
-> +
-> +	if (!config->parent)
-> +		return -EINVAL;
-> +
-> +	if (!config->map)
-> +		return -EINVAL;
-> +
-> +	if (!config->num_ppi)
-> +		return -EINVAL;
-> +
-> +	for (i = 0; i < config->num_ppi; i++) {
-> +		err = i8255_ppi_init(config->map, i * 4);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	gpio_config.parent = config->parent;
-> +	gpio_config.regmap = config->map;
+> I'd propose to add a new config flag to indicate that accesses to
+> the device will be fast:
 
-I'd propose to add a new config flag to indicate that accesses to
-the device will be fast:
+> gpio_config.regmap_has_fast_io = true;
 
-gpio_config.regmap_has_fast_io = true;
+> which will then set gpio->can_sleep = false.
 
-which will then set gpio->can_sleep = false.
+It's probably useful to provide a query function in the regmap
+API for generic regmap users like this.
 
--michael
+--KArWzu10SZ74/FYp
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +	gpio_config.ngpio = I8255_NGPIO * config->num_ppi;
-> +	gpio_config.names = config->names;
-> +	gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(I8255_REG_DAT_BASE);
-> +	gpio_config.reg_set_base = GPIO_REGMAP_ADDR(I8255_REG_DAT_BASE);
-> +	gpio_config.reg_dir_in_base = 
-> GPIO_REGMAP_ADDR(I8255_REG_DIR_IN_BASE);
-> +	gpio_config.ngpio_per_reg = I8255_NGPIO_PER_REG;
-> +	gpio_config.irq_domain = config->domain;
-> +	gpio_config.reg_mask_xlate = i8255_reg_mask_xlate;
-> +
-> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
-> +}
-> +EXPORT_SYMBOL_NS_GPL(devm_i8255_regmap_register, I8255);
+-----BEGIN PGP SIGNATURE-----
 
-[1] 
-https://elixir.bootlin.com/linux/v6.1-rc5/source/drivers/gpio/gpio-regmap.c#L260
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN2X5EACgkQJNaLcl1U
+h9BYlwf/cBtqSPMTzYsl99bR9c8JJNXZeeYSwkVnwLuXJs0lf70APD+eCNa2IQI0
+qj2Zq/ekgfnYW9+YsswY9O/dzf0ZNFhC/Pie6TM5uNnYC3yJBMAaVNoA6KOQTBED
+upXDb1QOSbYpct97CJJmx6/zyIzszjIQmuQZ/lC/gGq1Ni0Ye5+0M65tNMCDSUD3
+Uuc6tRmXOtgwCHda6Hfpis033dwWQRMvMivF6+3svGZ0GzywBME5Eft23EHooqdt
+2uEXT24DDssydf4LG65YbdeyFZJ3GQiVi/jmlSywKSyZ66bn8BpNJE/LT8aVDo6/
+sEt1FKTcbQoJm0CgdJ2AJUI2OgP2sg==
+=5d1H
+-----END PGP SIGNATURE-----
+
+--KArWzu10SZ74/FYp--
