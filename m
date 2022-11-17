@@ -2,150 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED6B662DFCB
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:27:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D84762DF67
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:13:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233899AbiKQP11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 10:27:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44338 "EHLO
+        id S240619AbiKQPNy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 10:13:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239776AbiKQP04 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:26:56 -0500
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980E2248C5
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:25:38 -0800 (PST)
-Received: by mail-qv1-xf35.google.com with SMTP id p8so743086qvn.5
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:25:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qc7+zaKXIH748CZaku7bgeQA/ReE+fYPlO45pSTJDq0=;
-        b=xpY0zt7c8PFHwiXvJEWZQ9cRA2xfBqG4NMJVKocfUmFpDGS3y6XJmizFPEBARwF5ve
-         pJ9VH8tmyT4yK+uH7+tEXv65jnluDi9mjSV0fpmS3nm8/A/IFpcExc/MCI08iFEkg43Y
-         8w+TUyKQpDSoad2kIMPtTJ9DeT9Y0FDPdHnACG4UaVnWNdxVOet6Ibf8F0RV9O4887Zz
-         I05N6w/je0LK1/x9DVYSlazHQfHlA58Q1VQLWjhe3BUvAsR/X+TBuorhU/tXvNNAFOIR
-         evPIKi+N//BSvJMrR+msf9dWf8xILywQ4vhIMO9UhZi8uU2DOnA8u/RdpuYtWhBX8a+9
-         wXxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qc7+zaKXIH748CZaku7bgeQA/ReE+fYPlO45pSTJDq0=;
-        b=NYnOllLemV3cGX2445Y/bvFPBUv+Ti21IpOC78kqKsEsSEwxofhVf9m6v2GUlX5jjz
-         qDtj6X/wjQBeODOqih9ZUo6ZPBmLLu9QrFmAzn6nwnVym+OMcGI892aN97hT8XEOFMHe
-         Jng2Nd39bZmH1KpvTGqSV4xNmDu47iA9iDB4d3jEiK5fWr1kbZfKPbW4Ylk30UsZMSSp
-         i8X7JeN0iXCesEW8BxXI85DyZ96NTUgqxyY3rroJ1t+eqalW2iS6IwfzRXdL2LliP6RQ
-         T0xn4EMNK8fsIBup4kxwJgZKo7+fNGYuUSn//zZsLKmqCifKZceuzDJOgbk5GNhE/+MV
-         UFAQ==
-X-Gm-Message-State: ANoB5pkzkZgCWbgIBbR8B1RyFmFBIFTOfB9Ku63cdDkm7kztqIHnYzXK
-        fMU060ql+3MumT2gftfxN+dm9X5/szDL4g==
-X-Google-Smtp-Source: AA0mqf7QHFoRBh/VpJtrlbjn6odbmAPfogJSw9qJRRGdGsdx5DgqPcrGPeGgnE7OYdN+gr9WpirzUg==
-X-Received: by 2002:a0c:f788:0:b0:4bb:6518:4592 with SMTP id s8-20020a0cf788000000b004bb65184592mr2824773qvn.77.1668698737730;
-        Thu, 17 Nov 2022 07:25:37 -0800 (PST)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id h4-20020a05620a284400b006f9e103260dsm609831qkp.91.2022.11.17.07.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 07:25:37 -0800 (PST)
-Date:   Thu, 17 Nov 2022 10:00:17 -0500
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, michael@walle.cc
-Subject: Re: [PATCH v2 2/4] regmap-irq: Add handle_mask_sync() callback
-Message-ID: <Y3ZMga3nphqmAtka@fedora>
-References: <cover.1668129763.git.william.gray@linaro.org>
- <53e9e89cc9d7e9c20cbdfc13b360dcb43d07f832.1668129763.git.william.gray@linaro.org>
- <Y3PI5n8FXxOtGhzP@sirena.org.uk>
+        with ESMTP id S240643AbiKQPNO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:13:14 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C379B7D50F
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:09:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668697780; x=1700233780;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rn3z6brsMs2zP98ovoPn0bIcEZj1gZEdOzUcmgFQWtY=;
+  b=RCrcNEwTL61Fs6gK/RRG5F4oii73wGYWztB/aSjWwVoSqlba6tLuzwRo
+   a4wXXTT5cu/ZHj7Rm7WKcSXuoYJfrUkYdqsAQzdTBCwsfeJ5k2ESy3lLP
+   Ar+YjaRvNOt9NWn+Y/Qi2dDp1EcnQkpIbkAxfh3a54hrXOPBiTj7azwtT
+   +8JxUyTsZlAyjltvJeU+qUCNbm+xy8/PCBHFiiaGet3Gs5DEhHHmmbYAV
+   1SLRMgV2/UAtgTgtrmQtOIC1i9LSEWHBr0mH3XTFKZHHYmTiGUmbCXWCN
+   Oh2gKvkrZu5XezKco+MWsOKURYp7T/a/IwRap0eLtZ0pCUrpeQyGzGXqp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="339703133"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="339703133"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 07:08:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="617640692"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="617640692"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga006.jf.intel.com with ESMTP; 17 Nov 2022 07:08:29 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 92F652F3; Thu, 17 Nov 2022 17:08:54 +0200 (EET)
+Date:   Thu, 17 Nov 2022 17:08:54 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Niyas Sait <niyas.sait@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        rafael@kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH RFC v2 1/3] pinctrl: add support for ACPI PinGroup
+ resource
+Message-ID: <Y3ZOhi+UPVeQ5qZj@black.fi.intel.com>
+References: <20221115175415.650690-1-niyas.sait@linaro.org>
+ <20221115175415.650690-2-niyas.sait@linaro.org>
+ <Y3SwV2ygYb3C0w4o@black.fi.intel.com>
+ <d72903a9-ba74-fc0e-5d40-6bb50f4d8354@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pKPDdkdohjMYUtPY"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Y3PI5n8FXxOtGhzP@sirena.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <d72903a9-ba74-fc0e-5d40-6bb50f4d8354@linaro.org>
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 17, 2022 at 01:28:01PM +0000, Niyas Sait wrote:
+> On 16/11/2022 09:41, Mika Westerberg wrote:
+> 
+> > > + * pinctrl_acpi_get_pin_groups() - Get ACPI PinGroup Descriptors for the device
+> > > + * @adev: ACPI device node for retrieving PinGroup descriptors
+> > > + * @group_desc_list: list head to add PinGroup descriptors
+> > > + *
+> > > + * This will parse ACPI PinGroup resources for the given ACPI device
+> > > + * and will add descriptors to the provided @group_desc_list list
+> > I would add here what happens to group_desc_list if the function returns
+> > non-zero.
+> > 
+> > Also perhaps the API should use an array instead and when NULL is passed
+> > it returns the size as we do with properties for example. The naged
+> > list_head pointer looks kind of weird.
+> 
+> Array would be nice. However I might have to do an additional acpi walk to
+> find the number of PinGroups to allocate array and another iteration to
+> populate fields. May be two iterations are not as bad as I thought. Open to
+> suggestions.
 
---pKPDdkdohjMYUtPY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Nov 15, 2022 at 05:14:14PM +0000, Mark Brown wrote:
-> On Thu, Nov 10, 2022 at 08:55:51PM -0500, William Breathitt Gray wrote:
->=20
-> > Provide a public callback handle_mask_sync() that drivers can use when
-> > they have more complex IRQ masking logic. The default implementation is
-> > regmap_irq_handle_mask_sync(), used if the chip doesn't provide its own
-> > callback.
->=20
-> Can you provide examples of something that would make sense to
-> open code in a driver rather than factoring out?  It looks like
-> this has been added due to one of the devices you're looking at
-> for some reason disabling it's upstream interrupt when all of the
-> downstream interrupts are masked, while weird that doesn't seem
-> especally device specific.
-
-Sure, I actually intend to use this callback for the 104-idi-48 module
-as well in the v3 submission so I'll describe that situations well.
-
-For the 104-dio-48e we have the following:
-
-    Base Address +B (Write): Enable Interrupt
-    Base Address +B (Read): Disable Interrupt
-    Base Address +F (Read/Write): Clear Interrupt
-
-So for 104-dio-48e, any write to 0xB will enable interrupts, while any
-read will disable interrupts; interrupts are with either a read or any
-write to 0xF. There's no status register either so software just has to
-assume that if an interrupt is raised then it was for the
-104-dio-48e device.
-
-For the 104-idi-48, we do get a status register and some basic masking
-but it's broken down by banks rather than individual GPIO; there are six
-8-bit banks (Port 0 Low Byte, Port 0 Mid Byte, Port 0 High Byte, Port 1
-Low Byte, Port 1 Mid Byte, Port 1 High Byte):
-
-    Base Address + 0 (Read/Write): Port 0 Low Byte
-    Base Address + 1 (Read/Write): Port 0 Mid Byte
-    Base Address + 2 (Read/Write): Port 0 High Byte
-    Base Address + 3: N/A
-    Base Address + 4 (Read/Write): Port 1 Low Byte
-    Base Address + 5 (Read/Write): Port 1 Mid Byte
-    Base Address + 6 (Read/Write): Port 1 High Byte
-    Base Address + 7 (Read): IRQ Status Register/IRQ Clear
-        Bit 0-5: Respective Bank IRQ Statuses
-        Bit 6: IRQ Status (Active Low)
-        Bit 7: IRQ Enable Status
-    Base Address + 7 (Write): IRQ Enable/Disable
-        Bit 0-5: Respective Bank IRQ Enable/Disable
-
-In this case, masking a bank will mask all 8 GPIO within that bank;
-so ideally I want a way to only mask a bank when all GPIO are masked,
-and unmasking when at least one is unmasked.
-
-Are there existing ways to support these kinds of configuration in
-regmap_irq?
-
-William Breathitt Gray
-
---pKPDdkdohjMYUtPY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY3ZMgQAKCRC1SFbKvhIj
-K0tkAP0W7qrriEL+8XcqAtlCtVo5jH3iXr0hCdlvBlQ0qGpsQwD/YE6KpyUdScEb
-EpyPGmUgeR+FFhcDXh4ZxmnoBZXgWQE=
-=EmJX
------END PGP SIGNATURE-----
-
---pKPDdkdohjMYUtPY--
+I don't think we need to "optimize" anything at this point and this is
+certainly not a hot path. I suggest to emphasize on the API and think
+what is easier for the caller (and also if there is simila API already
+follow that it does).
