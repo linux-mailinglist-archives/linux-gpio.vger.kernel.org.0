@@ -2,99 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96E0062DCBA
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 14:28:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16DC562DDA4
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 15:12:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239969AbiKQN2I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 08:28:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44612 "EHLO
+        id S231634AbiKQOMh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 09:12:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239934AbiKQN2G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 08:28:06 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD84F5F85B
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 05:28:03 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id v124-20020a1cac82000000b003cf7a4ea2caso5092521wme.5
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 05:28:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3uv2+BWjn3npG6/fe85H3XGSNIkic2RCEPnfweeM1kA=;
-        b=md8Ontep3EcXjVK2NUCN5q78pEpcZsUFKU65x0jX9YQh1wIaBVYmNU+2QOBSaAxyUj
-         R7+5j7DFPD3zwOMW3mydZABSPX5SrC+ouiR57MVqkppxfWero8AdL8BBIM2JUbhW5tSH
-         auRs/mYWSJHXtvEA0CMIwS9fQf6S0z9sNyDHAJicgJ0XDiXBdre8vI75k6V67OG1GuC2
-         dVPU742WU8QBgs1Uu7LobQYRfnJW2VnQCwZ6J2ZR2k6+o8cMDibq0rjUw2RjbkblXeUr
-         t6Hp2ONuuj8i3I7Y8VQDVTA4ZLGo6tQhnmf/m9XUbF3skf0wQ49VJXe5566BBULsp5ei
-         zSBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3uv2+BWjn3npG6/fe85H3XGSNIkic2RCEPnfweeM1kA=;
-        b=77Iv+7AXek05VFHr6O1PkpToAKiIorIy7fqNJ5ikKNgwjGVGzHza3u36QkSdDrP64P
-         c16oLmX5OGtU8DU264PFhEMLXgtil3DME2s78CwCCqIFvuJLko12elynllNvG+R60JOd
-         WXAgzKo2ipl6CAyx4blddcmJNBshAipmpfntFWZjKYRTU5k+lybu+9W/yxzGRCYNVTKn
-         bn6oXXZ54pu49XXVb4ZqW9evBu4E+erC81lv9OYBPqoTmJtvYhKomoGFzKuh1Exp0Kzr
-         vGBtlaL1jnOcZbs5TXlninw0jbROZlFqmoctY4qSxD1Q1lvPBi9Fi5FjYrpFVThZZiPi
-         JsTA==
-X-Gm-Message-State: ANoB5pnnP2W6qN1Y7WdHzFHDVtbMK9epwjFupcpUjTmAwtgApuu97unr
-        bPsvdcV21QmTmy0nZh8Vac518kbO7ZLVqw==
-X-Google-Smtp-Source: AA0mqf5CFhqTnm4DAj7M51LlHtzccNjt1UadVCF81p968ur6BItp0DRQxDMlqxygC+quz2QBsss2ow==
-X-Received: by 2002:a05:600c:2241:b0:3cf:9ced:dce4 with SMTP id a1-20020a05600c224100b003cf9ceddce4mr1666333wmm.120.1668691682525;
-        Thu, 17 Nov 2022 05:28:02 -0800 (PST)
-Received: from [172.16.30.75] ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id f19-20020a05600c155300b003c6f3e5ba42sm6279430wmg.46.2022.11.17.05.28.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 05:28:02 -0800 (PST)
-Message-ID: <d72903a9-ba74-fc0e-5d40-6bb50f4d8354@linaro.org>
-Date:   Thu, 17 Nov 2022 13:28:01 +0000
+        with ESMTP id S234866AbiKQOMg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 09:12:36 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7F462065
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:12:34 -0800 (PST)
+Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NChgb5M1kzRpHL;
+        Thu, 17 Nov 2022 22:12:11 +0800 (CST)
+Received: from [10.174.179.163] (10.174.179.163) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 22:12:32 +0800
+Message-ID: <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
+Date:   Thu, 17 Nov 2022 22:12:31 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH RFC v2 1/3] pinctrl: add support for ACPI PinGroup
- resource
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH v3] gpiolib: fix memory leak in gpiochip_setup_dev()
 Content-Language: en-US
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
-        rafael@kernel.org, linus.walleij@linaro.org
-References: <20221115175415.650690-1-niyas.sait@linaro.org>
- <20221115175415.650690-2-niyas.sait@linaro.org>
- <Y3SwV2ygYb3C0w4o@black.fi.intel.com>
-From:   Niyas Sait <niyas.sait@linaro.org>
-In-Reply-To: <Y3SwV2ygYb3C0w4o@black.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+CC:     <brgl@bgdev.pl>, <linux@roeck-us.net>, <linus.walleij@linaro.org>,
+        <warthog618@gmail.com>, <linux-gpio@vger.kernel.org>,
+        <liwei391@huawei.com>
+References: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
+ <20221117090247.122980-1-zengheng4@huawei.com>
+ <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
+From:   Zeng Heng <zengheng4@huawei.com>
+In-Reply-To: <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.163]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 16/11/2022 09:41, Mika Westerberg wrote:
 
->> + * pinctrl_acpi_get_pin_groups() - Get ACPI PinGroup Descriptors for the device
->> + * @adev: ACPI device node for retrieving PinGroup descriptors
->> + * @group_desc_list: list head to add PinGroup descriptors
->> + *
->> + * This will parse ACPI PinGroup resources for the given ACPI device
->> + * and will add descriptors to the provided @group_desc_list list
-> I would add here what happens to group_desc_list if the function returns
-> non-zero.
-> 
-> Also perhaps the API should use an array instead and when NULL is passed
-> it returns the size as we do with properties for example. The naged
-> list_head pointer looks kind of weird.
+On 2022/11/17 18:49, Andy Shevchenko wrote:
+> On Thu, Nov 17, 2022 at 05:02:47PM +0800, Zeng Heng wrote:
+>> Here is a report about memory leak detected in gpiochip_setup_dev():
+>>
+>> unreferenced object 0xffff88810b406400 (size 512):
+>>    comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
+>>    backtrace:
+>>      kmalloc_trace
+>>      device_add 		device_private_init at drivers/base/core.c:3361
+> Seems like unneeded space after device_add. Also note, we refer to
+> the functions as func().
+Just emphasize the location of memory leak happened.
+>> 			(inlined by) device_add at drivers/base/core.c:3411
+>>      cdev_device_add
+>>      gpiolib_cdev_register
+>>      gpiochip_setup_dev
+>>      gpiochip_add_data_with_key
+>>
+>> gcdev_register() & gcdev_unregister() would call device_add() &
+>> device_del() (no matter CONFIG_GPIO_CDEV is enabled or not) to
+>> register/unregister device.
+>>
+>> However, if device_add() succeeds, some resource (like
+>> struct device_private allocated by device_private_init())
+>> is not released by device_del().
+>>
+>> Therefore, after device_add() succeeds by gcdev_register(), it
+>> needs to call put_device() to release resource in the error handle
+>> path.
+>>
+>> Here we move forward the register of release function, and let it
+>> release every piece of resource by put_device() instead of kfree().
+>>
+>> Fixes: 159f3cd92f17 ("gpiolib: Defer gpio device setup until after gpiolib initialization")
+>> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+>> ---
+> Where is changelog since we see this as v3?
+>
+> ...
 
-Array would be nice. However I might have to do an additional acpi walk 
-to find the number of PinGroups to allocate array and another iteration 
-to populate fields. May be two iterations are not as bad as I thought. 
-Open to suggestions.
+change in v3:
 
---
-Niyas
+     - use put_device() instead of kfree()
+
+>>   err_free_gpiochip_mask:
+>>   	gpiochip_remove_pin_ranges(gc);
+>>   	gpiochip_free_valid_mask(gc);
+>> +	/*
+>> +	 * If gdev->dev.release has been registered by
+>> +	 * gpiochip_setup_dev(), print err msg and
+>> +	 * call put_device() to release all.
+>> +	 */
+>> +	if (gdev->dev.release)
+>> +		goto err_free_gdev;
+> (1)
+>
+>>   err_remove_from_list:
+>>   	spin_lock_irqsave(&gpio_lock, flags);
+>>   	list_del(&gdev->list);
+> ...
+>
+>> -	kfree(gdev);
+>> +	if (gdev->dev.release)
+>> +		put_device(&gdev->dev);
+> Why you can't do this above at (1)?
+> Is there any other hidden way to get here with release set?
+
+As already mentioned in the mail, keep the error print info.
+
+B.R.，
+
+Zeng Heng
+
+>> +	else
+>> +		kfree(gdev);
+>>   	return ret;
