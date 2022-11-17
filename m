@@ -2,110 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CFCC62DEDF
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 15:59:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED6B662DFCB
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:27:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240043AbiKQO7Q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 09:59:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        id S233899AbiKQP11 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 10:27:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240092AbiKQO67 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 09:58:59 -0500
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3448874AA1
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:58:53 -0800 (PST)
-Received: by mail-lf1-x132.google.com with SMTP id a29so3175761lfj.9
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 06:58:53 -0800 (PST)
+        with ESMTP id S239776AbiKQP04 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:26:56 -0500
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980E2248C5
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:25:38 -0800 (PST)
+Received: by mail-qv1-xf35.google.com with SMTP id p8so743086qvn.5
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:25:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VSnIdJlrSu1RqwxbrwymcRNJoSgT34DNNQH025cvo20=;
-        b=Ur9szg1DKJvl3ubQjvlChH09oAO12tYaDGESWoJRFs5nbTcgL70iq6Rk6jcbyh2eSV
-         5sIr6XHiZbOMcG5vg6LYzpKXTZagjOTTXivxVfplX5GAD0O1/9QIYKFbd0XkOcolglVT
-         VrJu0CgFgUecUmcpa3we0bBiZQmSB6sCWxEucrm8wK9mxNNpZRyq2THIgu40f2wTK8zo
-         2iE5ibWayllqwdjGN++kkVQdW9OgLgRj0+rBH5OvzcLsoNEByi9LNspb+2B+W5wqkM41
-         Rwzp9Tu2wWCQ3oQ9fSXsHYYSxRuw8yfwAEchPTid10LtcwGqSDyeXQdG7IyHwjOChaWM
-         86bg==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qc7+zaKXIH748CZaku7bgeQA/ReE+fYPlO45pSTJDq0=;
+        b=xpY0zt7c8PFHwiXvJEWZQ9cRA2xfBqG4NMJVKocfUmFpDGS3y6XJmizFPEBARwF5ve
+         pJ9VH8tmyT4yK+uH7+tEXv65jnluDi9mjSV0fpmS3nm8/A/IFpcExc/MCI08iFEkg43Y
+         8w+TUyKQpDSoad2kIMPtTJ9DeT9Y0FDPdHnACG4UaVnWNdxVOet6Ibf8F0RV9O4887Zz
+         I05N6w/je0LK1/x9DVYSlazHQfHlA58Q1VQLWjhe3BUvAsR/X+TBuorhU/tXvNNAFOIR
+         evPIKi+N//BSvJMrR+msf9dWf8xILywQ4vhIMO9UhZi8uU2DOnA8u/RdpuYtWhBX8a+9
+         wXxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VSnIdJlrSu1RqwxbrwymcRNJoSgT34DNNQH025cvo20=;
-        b=eqt7aJsKj3oah7ArBGuf2jzSqDDD4V0afqCmqG7+N8hs7pOS2iq7YGwszG/E0nK3eh
-         O9brCguhH4FflShb3dxPMmdqWC4aEVWCE0jwLKB2gCvsnf3NmWp5WHR/igHSC+S8PoPA
-         1DU5yI+zt3qOJcBpo5O2CVBIMw2dPAfrsupM7jgzV6L4mtm0nAgH+xHjISVK7nPlVzx6
-         anCfZjtkyPzNiCjiQIJ78VTCr4ve4AmZx3ObgzYQB2phwHHvqwnnqATjaGmgW2/EmlzL
-         TygN6yEwPAKicU3yy1jh3qF1OPz4YLamjFgnB0lWhn5E2aQQ4/eAaLdeR+aktUaKj4kF
-         /idg==
-X-Gm-Message-State: ANoB5pn6VU9JH4U1g+YKgeA5Cz9DMb4eAKQwQeFu5T8Mi1Rbe/jaZAW5
-        Rg1ac4XXjrKMH5SHx+R6CAKngg==
-X-Google-Smtp-Source: AA0mqf4/hs47bXqsUk4ZLu/jQ1Wna1nuVovn6G3NWi6j/M3148XUWs2V/ZZa76pyYbEsKXo3MQAsvg==
-X-Received: by 2002:ac2:4a69:0:b0:4ac:d080:e1bd with SMTP id q9-20020ac24a69000000b004acd080e1bdmr1120397lfp.318.1668697131665;
-        Thu, 17 Nov 2022 06:58:51 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id r8-20020ac24d08000000b00492dfcc0e58sm186892lfi.53.2022.11.17.06.58.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 06:58:51 -0800 (PST)
-Message-ID: <2f35b9aa-1385-9c2b-ed60-721a835645dc@linaro.org>
-Date:   Thu, 17 Nov 2022 15:58:49 +0100
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qc7+zaKXIH748CZaku7bgeQA/ReE+fYPlO45pSTJDq0=;
+        b=NYnOllLemV3cGX2445Y/bvFPBUv+Ti21IpOC78kqKsEsSEwxofhVf9m6v2GUlX5jjz
+         qDtj6X/wjQBeODOqih9ZUo6ZPBmLLu9QrFmAzn6nwnVym+OMcGI892aN97hT8XEOFMHe
+         Jng2Nd39bZmH1KpvTGqSV4xNmDu47iA9iDB4d3jEiK5fWr1kbZfKPbW4Ylk30UsZMSSp
+         i8X7JeN0iXCesEW8BxXI85DyZ96NTUgqxyY3rroJ1t+eqalW2iS6IwfzRXdL2LliP6RQ
+         T0xn4EMNK8fsIBup4kxwJgZKo7+fNGYuUSn//zZsLKmqCifKZceuzDJOgbk5GNhE/+MV
+         UFAQ==
+X-Gm-Message-State: ANoB5pkzkZgCWbgIBbR8B1RyFmFBIFTOfB9Ku63cdDkm7kztqIHnYzXK
+        fMU060ql+3MumT2gftfxN+dm9X5/szDL4g==
+X-Google-Smtp-Source: AA0mqf7QHFoRBh/VpJtrlbjn6odbmAPfogJSw9qJRRGdGsdx5DgqPcrGPeGgnE7OYdN+gr9WpirzUg==
+X-Received: by 2002:a0c:f788:0:b0:4bb:6518:4592 with SMTP id s8-20020a0cf788000000b004bb65184592mr2824773qvn.77.1668698737730;
+        Thu, 17 Nov 2022 07:25:37 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id h4-20020a05620a284400b006f9e103260dsm609831qkp.91.2022.11.17.07.25.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 07:25:37 -0800 (PST)
+Date:   Thu, 17 Nov 2022 10:00:17 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michael@walle.cc
+Subject: Re: [PATCH v2 2/4] regmap-irq: Add handle_mask_sync() callback
+Message-ID: <Y3ZMga3nphqmAtka@fedora>
+References: <cover.1668129763.git.william.gray@linaro.org>
+ <53e9e89cc9d7e9c20cbdfc13b360dcb43d07f832.1668129763.git.william.gray@linaro.org>
+ <Y3PI5n8FXxOtGhzP@sirena.org.uk>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Content-Language: en-US
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        linux-can@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-spi@vger.kernel.org, linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
- <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
- <Y3Y1xjOjijBsQLZA@lunn.ch>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y3Y1xjOjijBsQLZA@lunn.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pKPDdkdohjMYUtPY"
+Content-Disposition: inline
+In-Reply-To: <Y3PI5n8FXxOtGhzP@sirena.org.uk>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/11/2022 14:23, Andrew Lunn wrote:
->>  allOf:
->> -  - $ref: "dma-common.yaml#"
->> +  - $ref: dma-common.yaml#
->>  
->>  
->>  allOf:
->> -  - $ref: "dma-common.yaml#"
->> +  - $ref: dma-common.yaml#
-> 
-> Looks like some other automated change made its way into this patch.
 
-I forgot to mention in commit msg, but maybe better to drop it to reduce
-noise.
+--pKPDdkdohjMYUtPY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+On Tue, Nov 15, 2022 at 05:14:14PM +0000, Mark Brown wrote:
+> On Thu, Nov 10, 2022 at 08:55:51PM -0500, William Breathitt Gray wrote:
+>=20
+> > Provide a public callback handle_mask_sync() that drivers can use when
+> > they have more complex IRQ masking logic. The default implementation is
+> > regmap_irq_handle_mask_sync(), used if the chip doesn't provide its own
+> > callback.
+>=20
+> Can you provide examples of something that would make sense to
+> open code in a driver rather than factoring out?  It looks like
+> this has been added due to one of the devices you're looking at
+> for some reason disabling it's upstream interrupt when all of the
+> downstream interrupts are masked, while weird that doesn't seem
+> especally device specific.
 
+Sure, I actually intend to use this callback for the 104-idi-48 module
+as well in the v3 submission so I'll describe that situations well.
+
+For the 104-dio-48e we have the following:
+
+    Base Address +B (Write): Enable Interrupt
+    Base Address +B (Read): Disable Interrupt
+    Base Address +F (Read/Write): Clear Interrupt
+
+So for 104-dio-48e, any write to 0xB will enable interrupts, while any
+read will disable interrupts; interrupts are with either a read or any
+write to 0xF. There's no status register either so software just has to
+assume that if an interrupt is raised then it was for the
+104-dio-48e device.
+
+For the 104-idi-48, we do get a status register and some basic masking
+but it's broken down by banks rather than individual GPIO; there are six
+8-bit banks (Port 0 Low Byte, Port 0 Mid Byte, Port 0 High Byte, Port 1
+Low Byte, Port 1 Mid Byte, Port 1 High Byte):
+
+    Base Address + 0 (Read/Write): Port 0 Low Byte
+    Base Address + 1 (Read/Write): Port 0 Mid Byte
+    Base Address + 2 (Read/Write): Port 0 High Byte
+    Base Address + 3: N/A
+    Base Address + 4 (Read/Write): Port 1 Low Byte
+    Base Address + 5 (Read/Write): Port 1 Mid Byte
+    Base Address + 6 (Read/Write): Port 1 High Byte
+    Base Address + 7 (Read): IRQ Status Register/IRQ Clear
+        Bit 0-5: Respective Bank IRQ Statuses
+        Bit 6: IRQ Status (Active Low)
+        Bit 7: IRQ Enable Status
+    Base Address + 7 (Write): IRQ Enable/Disable
+        Bit 0-5: Respective Bank IRQ Enable/Disable
+
+In this case, masking a bank will mask all 8 GPIO within that bank;
+so ideally I want a way to only mask a bank when all GPIO are masked,
+and unmasking when at least one is unmasked.
+
+Are there existing ways to support these kinds of configuration in
+regmap_irq?
+
+William Breathitt Gray
+
+--pKPDdkdohjMYUtPY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY3ZMgQAKCRC1SFbKvhIj
+K0tkAP0W7qrriEL+8XcqAtlCtVo5jH3iXr0hCdlvBlQ0qGpsQwD/YE6KpyUdScEb
+EpyPGmUgeR+FFhcDXh4ZxmnoBZXgWQE=
+=EmJX
+-----END PGP SIGNATURE-----
+
+--pKPDdkdohjMYUtPY--
