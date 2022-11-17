@@ -2,92 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D69FC62D83A
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73AA362D83D
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:40:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234116AbiKQKjl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 05:39:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35120 "EHLO
+        id S233725AbiKQKkM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 05:40:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234237AbiKQKjd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:39:33 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD7901107
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:39:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668681572; x=1700217572;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tJxuMUVM/HwbkUF71HvA2dnK9bh6hftfkfPPK+8fgL4=;
-  b=VriYJgvAriSOw0GdsA1vF9e/EuE1SOCVl/YGMx3h5IZ2WwxvXTzZ5fr6
-   Vy0s1cWvV9OqN4mu2z+Q7sfhR4W2h7mUHFrloVWi93EKY60cDFwCjc4FK
-   aLXQ2FqDg3Vp7K2mlOcsCyYQg11z/CZckbQQV9ujiK6vE01MsLiK7nWwa
-   oqfTsE05alzbFPHDPqxvdJ4Fqg286S9/sXVNdyzxSs14FjMEuMP04WfsU
-   xNRcHT1n0wS0Zppb9Zy7mEYeqJM/q1Fy6N9fwkezBz8snMb3vQSlfYANA
-   1b97zRNZ+7FJ/18bPfisCtICDnU5TwpTjjkfN9dSrK5tIPK6fHhF1KEGL
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="399106270"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="399106270"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 02:39:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10533"; a="968833553"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="968833553"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Nov 2022 02:39:31 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ovcIr-00DXEF-1j;
-        Thu, 17 Nov 2022 12:39:29 +0200
-Date:   Thu, 17 Nov 2022 12:39:29 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Niyas Sait <niyas.sait@linaro.org>, linux-gpio@vger.kernel.org,
-        mika.westerberg@linux.intel.com, rafael@kernel.org
-Subject: Re: [PATCH RFC v2 2/3] pinconf-generic: clarify pull up and pull
- down config values
-Message-ID: <Y3YPYT8HkEFF1hJw@smile.fi.intel.com>
-References: <20221115175415.650690-1-niyas.sait@linaro.org>
- <20221115175415.650690-3-niyas.sait@linaro.org>
- <CACRpkdarFa3GYprA98Q2zq5nepe_naY4mZJ0q+HVvz-MBqWEMw@mail.gmail.com>
- <Y3YO+F03Hgu7KVRU@smile.fi.intel.com>
+        with ESMTP id S233096AbiKQKkK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:40:10 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57FD01D4
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:40:09 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id y4so1252538plb.2
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:40:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4VdVnlDOjWBA6i/Nv4MctX/lZfs664kDzRL2ZRRKDio=;
+        b=grK8HhS11DKWolWhRSOJ9gaKG59GR5xsAEfMx0SwLUyFiuXE8d0GCZgTffuVlDEyBR
+         2er21j92HB+kr/KNfGKX5Xa15x2xtndcPBgEEAL0PcEgkhl19q1EhUW0aVpVZecYwlOR
+         5FZSREtXSppS98Ytm+YYoCPc/uHtK7FOyzi/ePthAf4ZIV12IApH6qhcglTo3lTvr328
+         PF6yvta6q2cOegcGcpAM5naISBjK92Fc2WMhQyGjA3Hq2Hy9sdALp6XPAkn78VBnkmBx
+         RAg15tntO2KJX3rgyP+PKwThNG4mnL+fYjzrx9cFYeCe+X63iSWr1C2jp9vFoBtXF7mG
+         FUeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4VdVnlDOjWBA6i/Nv4MctX/lZfs664kDzRL2ZRRKDio=;
+        b=nOYG2RpTh87XqciQJpmQuCVNzXWd8aBGbYFBlSidOs12iL2Mj1XUDABMG+3gdOn11g
+         22XE9L5n7p+BaoGk2zzpPSUouqACbJ4E04wxxtPb65PeNdaS6B4u4czU0wDjVGqSmBGl
+         jWhFwdOqD5/3n5iPRsMRRIYQ3S+QxQYdVoLvIhKnYL660ZwkzM41pHFOeGyz+1YazeHm
+         k1pC49s4PcXmEpORnFA4IGX/182B8rXnMcnnR7CVAFgQOlKalb+UbbCHRP1iwtyztsoM
+         yagk7vZ5QLMZ/9ffgC/B13BxAZdbODmCwrcXye1moSroY0h+do7O2d+G7BcGM7KWMKTg
+         m8Qw==
+X-Gm-Message-State: ANoB5plwB25WJmu5vG0yD0u/oZTBjDcdfHVVf071uvoczheE16bB6bx8
+        kb3rNaAUfT3O1NOaWN2KMMetlA==
+X-Google-Smtp-Source: AA0mqf4QVfWE4G6PwhiOoT4S6XxH5KBwPmn50TsbLUgiYkNTCNShpxGaRER37neqvfgTf6KDFTi5XQ==
+X-Received: by 2002:a17:902:6946:b0:188:5c52:83e1 with SMTP id k6-20020a170902694600b001885c5283e1mr2165867plt.128.1668681608871;
+        Thu, 17 Nov 2022 02:40:08 -0800 (PST)
+Received: from localhost ([122.172.85.60])
+        by smtp.gmail.com with ESMTPSA id c6-20020a170903234600b00174c1855cd9sm904796plh.267.2022.11.17.02.40.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 02:40:08 -0800 (PST)
+Date:   Thu, 17 Nov 2022 16:10:06 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
+Message-ID: <20221117104006.wvpuenedh7wqsjjj@vireshk-i7>
+References: <cover.1667815011.git.viresh.kumar@linaro.org>
+ <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
+ <20221117073120.g6xhn6i2dbzougx3@vireshk-i7>
+ <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
+ <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
+ <CAMRc=MeOVWV=dp_ytxazwoWq4JW1dbr5mfEvQVYFxe-HYgKn_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3YO+F03Hgu7KVRU@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=MeOVWV=dp_ytxazwoWq4JW1dbr5mfEvQVYFxe-HYgKn_g@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 12:37:44PM +0200, Andy Shevchenko wrote:
-> On Thu, Nov 17, 2022 at 10:30:37AM +0100, Linus Walleij wrote:
-> > On Tue, Nov 15, 2022 at 6:54 PM Niyas Sait <niyas.sait@linaro.org> wrote:
-> > 
-> > > PIN_CONFIG_BIAS_PULL_DOWN and PIN_CONFIG_BIAS_PULL_UP values can
-> > > be custom or an SI unit such as ohms
-> > >
-> > > Signed-off-by: Niyas Sait <niyas.sait@linaro.org>
-> > 
-> > This patch is good as-is so I just applied it. No need to resend with
-> > the ACPI series.
-> 
-> Is it? I think it's visible that it has TAB vs. space issue...
+On 17-11-22, 11:18, Bartosz Golaszewski wrote:
+> Do these problems you faced apply to libgpiod too?
 
-To be more clear, the "such as ohms" have been indented with spaces, while
-everything else with TABs. On top of that I would use proper capitalization
-for unit, i.e. Ohms. But the latter is minor.
+I faced them with libgpiod only :(
+
+> Honestly, putting
+> automatically generated files in the repo just feels wrong.
+
+I agree, but ...
+
+> It defeats
+> the whole purpose of code generation. If we can't reliably regenerate
+> them, then it sounds like a problem with the tools, not the library.
+> Maybe we don't need to worry about that just yet?
+
+it isn't about reliability of the generated code, but making everyone do it,
+even if they don't need to.
+
+Also, the code generated here is Rust code wrappers and other declarations,
+which let us call the C helpers eventually. It can be considered like hand
+written code here, for the argument that it is automatically generated stuff.
+Just that we have a tool (bindgen) here which lets us generate it automatically,
+without introducing bugs.
+
+Anyway, I am fine with whatever you decide.
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+viresh
