@@ -2,131 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6635962D89A
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:56:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80F1D62D8A7
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 11:59:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234868AbiKQK4T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 05:56:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42070 "EHLO
+        id S239622AbiKQK7X (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 05:59:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239483AbiKQKzn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:55:43 -0500
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3D060360;
-        Thu, 17 Nov 2022 02:54:09 -0800 (PST)
-Received: by mail-qt1-f169.google.com with SMTP id c15so792711qtw.8;
-        Thu, 17 Nov 2022 02:54:09 -0800 (PST)
+        with ESMTP id S239657AbiKQK6z (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 05:58:55 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33E18233A9
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:55:37 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id v4-20020a17090a088400b00212cb0ed97eso1571753pjc.5
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 02:55:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2KcGCbAaGdiT6sEDQG/xDSsopM/ZjKY8RlnSjb3J8N8=;
+        b=yh5ZoaT6Fh/m/eyzg9rvdEIKnfgv6pRInRQnxkX0SY915tRUNvRKC12kofklGqmhV4
+         m2yucqd2QKJynKAjFCh0Jz7fveh9+F0IVFnCcIoobBvJcX+tLY4CGQuTKcV8Sr+3vp/o
+         xo38Wd6H8XlndB+TRohXLW0Tm5nml7Ken0mjnYb3aIhYDK0+1lWMAxwmnWBb4dX9+fMr
+         iBECSP2QZ5pEiLkDpe4E9GuRNDOgvIVrkzB5tczxFkO+TUqN4n19a1m/mHzmXER7BhmO
+         pWpLaxntPauYMQ9OrW4qPdk2obIe6Lu1PBrkqpYE0CWywQDgu0BBqw692k7P48aJMEP1
+         Rq5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nIhS9kUWRte6tp6oPguGoJfmoXVyyx+AXGkevCZ7vGM=;
-        b=O0Sf4hUhl+zWLJ0OMY6gPHqHmg/wX7Z1lua4ux8M3OpKu6hJ+mzpK9OdVqqqy988I5
-         Tn/hB7CUDdbBV1VyL2GDyTx2PsU1HnM2kqWn6QQ+36g2WUD22oXpbc3lTvDAxUFcJsOG
-         2BF0fTheCNZmjNWvHLlSrubsJejS6VBDBZtbZ4vvsjlFO6jZMrua7Vk70oQn3jC95rIA
-         nz0EwgVYSygOGg6EsQoTfOpoJwU1uG7C8IGLmFfRV5K6Y/kmVCJk/5BbUTm5ISfirPqL
-         rx0Ay8DcIDdaU3NdgQ/8Iz4zCHh/2lzqwFh2e8Nx+EWnNSeUc0DyxOj9J9bauz9f/iah
-         BxvA==
-X-Gm-Message-State: ANoB5pl4FDSMtnwctpONyB87ioipPPsM+g3yh2xpwydorsMSSiN/zogg
-        oBxVsJPZdptfsRqlEORYjvVEEEuTo/dPvg==
-X-Google-Smtp-Source: AA0mqf5g8PaP/U2X5ncbHAtzRjwcmj47CZ/kAfbAs8zbgPWQ+YdGXF+h4uSSFGoUsCcyODXOm74bKQ==
-X-Received: by 2002:ac8:6697:0:b0:3a5:24ad:73d with SMTP id d23-20020ac86697000000b003a524ad073dmr1682733qtp.167.1668682448230;
-        Thu, 17 Nov 2022 02:54:08 -0800 (PST)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
-        by smtp.gmail.com with ESMTPSA id m21-20020a05620a24d500b006ce0733caebsm249240qkn.14.2022.11.17.02.54.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 02:54:07 -0800 (PST)
-Received: by mail-yb1-f173.google.com with SMTP id i131so1393529ybc.9;
-        Thu, 17 Nov 2022 02:54:07 -0800 (PST)
-X-Received: by 2002:a5b:24b:0:b0:6ca:3b11:8d76 with SMTP id
- g11-20020a5b024b000000b006ca3b118d76mr1544397ybp.202.1668682446781; Thu, 17
- Nov 2022 02:54:06 -0800 (PST)
-MIME-Version: 1.0
-References: <20221107175305.63975-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20221107175305.63975-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20221107175305.63975-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Nov 2022 11:53:55 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV46aMfqu+kMW9E-RURugK-giOx0k-NPe5XX4nxKZJzkg@mail.gmail.com>
-Message-ID: <CAMuHMdV46aMfqu+kMW9E-RURugK-giOx0k-NPe5XX4nxKZJzkg@mail.gmail.com>
-Subject: Re: [PATCH RFC 1/5] dt-bindings: interrupt-controller:
- renesas,rzg2l-irqc: Document RZ/G2UL SoC
-To:     Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2KcGCbAaGdiT6sEDQG/xDSsopM/ZjKY8RlnSjb3J8N8=;
+        b=5i7xmzl8knxXs0pFREK6kwDjTRrOj0+dVi7sGhsnh8GYVjjWcJ9DIufbwdJM0hTDtk
+         Nyug//KPUb/ANrtFGr8jKfx2ceXL8HL9qhKOran8GW6fqJ0LqCsdmtpUAps3bT7cKvD1
+         KlMiTUwv0Y/arVKwn32CoEy7OZdlF9uhsKUudt8eoCkEiAfwesIbOWMRfx30XWXrdP4G
+         v/l286RPmF3rdWPAuc9lIKmqhhmMwsROIQN55ZUVyFY/6jE7KyWWie//9iUpFbNstcl+
+         iFhK9sq5BgH/QSRXcJI0/O9N+B3hMuhHPSv2o/KOA52FHCvSRTN5SMialQTyAnu1cMYz
+         Xf+A==
+X-Gm-Message-State: ANoB5pnIKnbIzaq432Xz4+LtfSAsgQB7tUMIFkcooZyHSKJFPJIK4Xwo
+        Eh5IErm1OZSY0bpqRCbnLTs0Rg==
+X-Google-Smtp-Source: AA0mqf5wZVVSvcyhlRMl6VRaw1BK1vBWj4R3KyVppk2crZ382m6qbg6nwxaxWSlrhh1GOawfdd4HGw==
+X-Received: by 2002:a17:903:428b:b0:188:f42e:6a90 with SMTP id ju11-20020a170903428b00b00188f42e6a90mr1218333plb.127.1668682536701;
+        Thu, 17 Nov 2022 02:55:36 -0800 (PST)
+Received: from localhost ([122.172.85.60])
+        by smtp.gmail.com with ESMTPSA id q9-20020a170902bd8900b00176d347e9a7sm941725pls.233.2022.11.17.02.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 02:55:36 -0800 (PST)
+Date:   Thu, 17 Nov 2022 16:25:34 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
+Message-ID: <20221117105534.shhm4ib2aukj7d3e@vireshk-i7>
+References: <cover.1667815011.git.viresh.kumar@linaro.org>
+ <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
+ <20221117073120.g6xhn6i2dbzougx3@vireshk-i7>
+ <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
+ <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
+ <CAMRc=MeOVWV=dp_ytxazwoWq4JW1dbr5mfEvQVYFxe-HYgKn_g@mail.gmail.com>
+ <20221117104006.wvpuenedh7wqsjjj@vireshk-i7>
+ <CAMRc=Me3NBDicrTenfsZ97+T28QwQL8SfZsM=ECM=i=1sqHr+g@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Me3NBDicrTenfsZ97+T28QwQL8SfZsM=ECM=i=1sqHr+g@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+On 17-11-22, 11:48, Bartosz Golaszewski wrote:
+> Let me propose a different solution. When preparing release tarballs
+> with autotools, certain files are generated automatically that go into
+> the tarball but are never part of the repository. This way developers
+> don't have to deal with the automatically generated files polluting
+> the repo while end-users get a tarball with less dependencies and
+> reproducible results.
+> 
+> It's called the dist-local hook in automake.
+> 
+> Does it sound like something we could use here?
 
-On Mon, Nov 7, 2022 at 6:53 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Document RZ/G2UL (R9A07G043) IRQC bindings. The RZ/G2UL IRQC block is
-> identical to one found on the RZ/G2L SoC. No driver changes are
-> required as generic compatible string "renesas,rzg2l-irqc" will be
-> used as a fallback.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+These auto-generated bindings are used only by the code present in
+bindings/rust/libgpiod/src/, and are never visible to end user code.
 
-Thanks for your patch!
+The end user will use the new interface provided by the libgpiod Rust bindings
+instead and that works over the web and will be picked from libgpiod's git tree
+or crates.io (later).
 
-> ---
-> Note, renesas,r9a07g043u-irqc is added we have slight difference's compared to RZ/Five
-> - G2UL IRQCHIP (hierarchical IRQ domain) -> GIC where as on RZ/Five we have PLIC (chained interrupt
-> domain) -> RISCV INTC
+Not sure how the tarball solution will work here.
 
-I think this difference is purely a software difference, and abstracted
-in DTS through the interrupt hierarchy.
-Does it have any impact on the bindings?
-
-> - On the RZ/Five we have additional registers for IRQC block
-
-Indeed, the NMI/IRQ/TINT "Interruput" Mask Control Registers, thus
-warranting separate compatible values.
-
-> - On the RZ/Five we have BUS_ERR_INT which needs to be handled by IRQC
-
-Can you please elaborate? I may have missed something, but to me it
-looks like that is exactly the same on RZ/G2UL and on RZ/Five.
-
-> --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> @@ -26,6 +26,7 @@ properties:
->    compatible:
->      items:
->        - enum:
-> +          - renesas,r9a07g043u-irqc   # RZ/G2UL
->            - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
->            - renesas,r9a07g054-irqc    # RZ/V2L
->        - const: renesas,rzg2l-irqc
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+viresh
