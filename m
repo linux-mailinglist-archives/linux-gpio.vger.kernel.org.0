@@ -2,103 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5433762E576
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 20:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52DC462E65E
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 22:09:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240450AbiKQTuH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 14:50:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47726 "EHLO
+        id S240076AbiKQVJn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 16:09:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234380AbiKQTuH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 14:50:07 -0500
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C78514081;
-        Thu, 17 Nov 2022 11:50:06 -0800 (PST)
-Received: by mail-qv1-f51.google.com with SMTP id c8so1913206qvn.10;
-        Thu, 17 Nov 2022 11:50:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a3DVt7K8FCdZao17Ost/ZvhNE/+x5EaYr3nwQwiMqDw=;
-        b=tT9WcomXQmDQaU2X8wEgXwJRxy0leYVESfMjJGT4j1GORxYbX+gemBQT7vc0KmrgBR
-         +IU+DsKfjLaWIqfAIkffK6dyPrL7U9rWb7fdRc9Y4GjP+JLbjDOWut87wz/c8JXqUurP
-         A483hoKHFQg0VgO6ST/hGCyDaU7Nj7pbzRjS1zN5dOHjYCfDN2xa65wqnEOPm4/Vgmtz
-         fWDLBWGEO7VFgPTqp3QLKSVmDPcW8+qNfBNIANCYAJw3wMc0PKzm17MZwL2jkl3drACh
-         rHDNjFJmNf+DcBlrhb8i8/6otigTe4SazJ3VAeUE0a1mR2OIEgIj1jUjoxRezcc5XrmY
-         5U6A==
-X-Gm-Message-State: ANoB5pnRAkINHi5Kb3vahFfNoOhLnM4S15+oWzuh6OgykNt9N93PQzqA
-        WL4TJZF/B6Tq6kZgoFz0t7om+dOxiH71cQ==
-X-Google-Smtp-Source: AA0mqf6iJ0vBgmoSO1Owlpa/CCpxzK3bbO+UsHDLEoevWQBkguDh08b6ofVhZQZ8ZQjg8cVDBazKmw==
-X-Received: by 2002:a0c:ea4d:0:b0:4b1:b7ee:98d8 with SMTP id u13-20020a0cea4d000000b004b1b7ee98d8mr4081809qvp.19.1668714604965;
-        Thu, 17 Nov 2022 11:50:04 -0800 (PST)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id i18-20020a05620a405200b006fbaf9c1b70sm1042461qko.133.2022.11.17.11.50.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 17 Nov 2022 11:50:04 -0800 (PST)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-37063f855e5so29481427b3.3;
-        Thu, 17 Nov 2022 11:50:04 -0800 (PST)
-X-Received: by 2002:a05:690c:b81:b0:37e:6806:a5f9 with SMTP id
- ck1-20020a05690c0b8100b0037e6806a5f9mr3525707ywb.47.1668714604002; Thu, 17
- Nov 2022 11:50:04 -0800 (PST)
+        with ESMTP id S240624AbiKQVJZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 16:09:25 -0500
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBCA87722F;
+        Thu, 17 Nov 2022 13:08:04 -0800 (PST)
+Received: (Authenticated sender: miquel.raynal@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 4969620007;
+        Thu, 17 Nov 2022 21:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1668719281;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=72JrUM6NacHh18cxNPJTokOPFIy2MlvUmUZu6AVg77s=;
+        b=kQ3WnKEHtW817TTGo/51w1BLV9fElm+d4PRny19l0Xo5WVvRKUWbYa4RLUCeb4hzAu+blU
+        gN78c5WiYd88yo78Tac1K8UgLdjF8sGEUg2eG4K4KIGZ2aSd/NCisT3pEqKgpi8MG9t8wo
+        Mhed7VoKwoPF1Ad6rnk8zscQKUda7EVdabBo89uHsVUfKLNbVRCzBabKqvqOG3TKdkeI5N
+        elXTmNOrt8pOHvUy7n2mYZBmGVFue71mi4Gp0X7blRdSkQQj+FNRIx2l1Hm3E/1dFZjljQ
+        ITXz8XlIez/SUSB6b7UDZFkg18YUByW5VovCJRgF+828mYPwuo2FHFq7f7zwSg==
+Date:   Thu, 17 Nov 2022 22:07:56 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <20221117220756.7a1bf734@xps-13>
+In-Reply-To: <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
+References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
+        <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <df2cf30ac4c3cbee726799f32b727c1ebe62819c.1668000684.git.geert+renesas@glider.be>
-In-Reply-To: <df2cf30ac4c3cbee726799f32b727c1ebe62819c.1668000684.git.geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 17 Nov 2022 20:49:52 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWczT_G7MKULUKZfZxkrB9Hk-SNam-qZqqsmb+sz1sQHg@mail.gmail.com>
-Message-ID: <CAMuHMdWczT_G7MKULUKZfZxkrB9Hk-SNam-qZqqsmb+sz1sQHg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: gpio: Use dynamic GPIO base if no
- function GPIOs
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc:     linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 9, 2022 at 2:38 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> Since commit 502df79b860563d7 ("gpiolib: Warn on drivers still using
-> static gpiobase allocation") in gpio/for-next, one or more warnings are
-> printed during boot on systems where the pin controller also provides
-> GPIO functionality:
->
->     gpio gpiochip0: Static allocation of GPIO base is deprecated, use dynamic allocation.
->
-> Fix this for ARM-based SH/R-Mobile SoCs by:
->   1. Taking into account a non-zero GPIO base in the various GPIO chip
->      callbacks,
->   2. Switching to dynamic allocation of the GPIO base when support for
->      legacy function GPIOs is not enabled.
->
-> On SuperH SoCs using legacy function GPIOs, the GPIO bases of the GPIO
-> controller and the GPIO function controller must not be changed, as all
-> board files rely on the fixed GPIO_* and GPIO_FN_* definitions provided
-> by the various <cpu/sh*.h> header files.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Hi Krzysztof,
 
-Thanks, queued in renesas-pinctrl-for-v6.2.
+krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
 
-Gr{oetje,eeting}s,
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
+>  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
+>  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
+>  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
+>  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
+>  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
+>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
+>  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
+>  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
+>  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
+>  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
+>  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
+>  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
+>  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
+>  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
+>  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
+>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
+>  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
+>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
+>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
+>  21 files changed, 23 insertions(+), 23 deletions(-)
+>=20
 
-                        Geert
+[...]
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Docum=
+entation/devicetree/bindings/mtd/nand-chip.yaml
+> index 97ac3a3fbb52..20b195ef9b70 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: NAND Chip and NAND Controller Generic Binding
+> +title: NAND Chip and NAND Controller common properties
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I only see this now but the title should be
+
+	"NAND chip common properties"
+
+> =20
+>  maintainers:
+>    - Miquel Raynal <miquel.raynal@bootlin.com>
+> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b=
+/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> index 359a015d4e5a..a004efc42842 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: NAND Chip and NAND Controller Generic Binding
+> +title: NAND Chip and NAND Controller common properties
+
+And here just "NAND controller..."
+
+Of course the original purpose of your series is more to clean those
+titles rather than fixing them and if you disagree I am fine doing it
+myself aside, but if you could at the same time make the title more
+accurate that would be perfect.
+
+Either ways:
+
+Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+
+Cheers,
+Miqu=C3=A8l
