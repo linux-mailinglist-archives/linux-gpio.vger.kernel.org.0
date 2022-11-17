@@ -2,108 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B039E62DFE5
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:32:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E57F62DFF6
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 16:37:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbiKQPcB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 10:32:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
+        id S234965AbiKQPhf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 10:37:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234758AbiKQPb6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:31:58 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E468CE092
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 07:31:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668699117; x=1700235117;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=56haqea2XXoij3OAnOcFxvu7OLoAYc5NUH4P9lnMUpw=;
-  b=KQNlDz4rH49Npeay48o70p5xbynh9hBU1ohDoD6cKX0TJcKRBGani9/n
-   k7ybY2xZr+BKcRKrzp9i3wKZAebjQ8dqD7vqBh4wyRpHapWOH3Cq6oaqV
-   G0gtdo5enP80S9zws5dtN4SpHGNw18HtGuHGxVywHiEl+TLOFWjJrBI54
-   MgZXiDa7dVnsYmx3pWb6Tn7guWSQDx0IhaF3hmmbaNIJJ56OMP9PtpCzG
-   p5fZU+sFmWm+be7knuMnAH0xX7oFfgDY/COi2zh1nxVgjvd/Ar5Ba9+Cb
-   s7uEHx6mxj7lti1YKVA+QM9Re/EVf0lmYLJwrm3d1C/L2ZJBZWlZA0jyh
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="375011642"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="375011642"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 07:31:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="634088495"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="634088495"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 17 Nov 2022 07:31:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1ovgro-00DcwA-37;
-        Thu, 17 Nov 2022 17:31:52 +0200
-Date:   Thu, 17 Nov 2022 17:31:52 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Zeng Heng <zengheng4@huawei.com>
-Cc:     brgl@bgdev.pl, linux@roeck-us.net, linus.walleij@linaro.org,
-        warthog618@gmail.com, linux-gpio@vger.kernel.org,
-        liwei391@huawei.com
-Subject: Re: [PATCH v3] gpiolib: fix memory leak in gpiochip_setup_dev()
-Message-ID: <Y3ZT6KUkPlSS7whW@smile.fi.intel.com>
-References: <f118d0b1-1bf2-b710-c3b4-2745c72f02b3@huawei.com>
- <20221117090247.122980-1-zengheng4@huawei.com>
- <Y3YR0rBSWHu5WhfL@smile.fi.intel.com>
- <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
+        with ESMTP id S234866AbiKQPhZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 10:37:25 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B05F59140;
+        Thu, 17 Nov 2022 07:37:24 -0800 (PST)
+Received: from frapeml100001.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4NCkW3422Pz6H76t;
+        Thu, 17 Nov 2022 23:34:55 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
+ frapeml100001.china.huawei.com (7.182.85.63) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 17 Nov 2022 16:37:21 +0100
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Thu, 17 Nov
+ 2022 15:37:21 +0000
+Date:   Thu, 17 Nov 2022 15:37:20 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+        <linux-leds@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-mips@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-can@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-pwm@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>, <alsa-devel@alsa-project.org>,
+        <linux-spi@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <virtualization@lists.linux-foundation.org>,
+        <linux-watchdog@vger.kernel.org>
+Subject: Re: [RFC PATCH 4/9] dt-bindings: drop redundant part of title (end)
+Message-ID: <20221117153720.00000323@Huawei.com>
+In-Reply-To: <20221117123850.368213-5-krzysztof.kozlowski@linaro.org>
+References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
+        <20221117123850.368213-5-krzysztof.kozlowski@linaro.org>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3ccf3b72-a3dd-66fe-4d8a-b22140ed9364@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 10:12:31PM +0800, Zeng Heng wrote:
-> On 2022/11/17 18:49, Andy Shevchenko wrote:
-> > On Thu, Nov 17, 2022 at 05:02:47PM +0800, Zeng Heng wrote:
+On Thu, 17 Nov 2022 13:38:45 +0100
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-...
-
-> > > +	/*
-> > > +	 * If gdev->dev.release has been registered by
-> > > +	 * gpiochip_setup_dev(), print err msg and
-> > > +	 * call put_device() to release all.
-> > > +	 */
-> > > +	if (gdev->dev.release)
-> > > +		goto err_free_gdev;
-> > (1)
-> > 
-> > >   err_remove_from_list:
-> > >   	spin_lock_irqsave(&gpio_lock, flags);
-> > >   	list_del(&gdev->list);
-> > ...
-> > 
-> > > -	kfree(gdev);
-> > > +	if (gdev->dev.release)
-> > > +		put_device(&gdev->dev);
-> > Why you can't do this above at (1)?
-> > Is there any other hidden way to get here with release set?
+> The Devicetree bindings document does not have to say in the title that
+> it is a "Devicetree binding", but instead just describe the hardware.
 > 
-> As already mentioned in the mail, keep the error print info.
-
-Can you refactor that to avoid double condition on the ->release() presence?
-
-> > > +	else
-> > > +		kfree(gdev);
-> > >   	return ret;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> Drop trailing "Devicetree bindings" in various forms (also with
+> trailling full stop):
+> 
+>   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
+>     -not -name 'trivial-devices.yaml' \
+>     -exec sed -i -e 's/^title: \(.*\) [dD]evice[ -]\?[tT]ree [bB]indings\?\.\?$/title: \1/' {} \;
+> 
+>   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
+>     -not -name 'trivial-devices.yaml' \
+>     -exec sed -i -e 's/^title: \(.*\) [dD]evice[ -]\?[nN]ode [bB]indings\?\.\?$/title: \1/' {} \;
+> 
+>   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
+>     -not -name 'trivial-devices.yaml' \
+>     -exec sed -i -e 's/^title: \(.*\) [dD][tT] [bB]indings\?\.\?$/title: \1/' {} \;
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+I eyeballed the lot and all seem fine to me so
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
