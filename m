@@ -2,197 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FF6562D5D5
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9CA462D5DC
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 10:06:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239538AbiKQJGQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 04:06:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        id S239064AbiKQJG7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 04:06:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239391AbiKQJGQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:06:16 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5223E5A6C0
-        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:06:15 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqV-0004HD-N6; Thu, 17 Nov 2022 10:06:07 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqT-004p0y-Tx; Thu, 17 Nov 2022 10:06:06 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1ovaqT-00HEYW-UH; Thu, 17 Nov 2022 10:06:05 +0100
-Date:   Thu, 17 Nov 2022 10:06:05 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 7/7] pinctrl: intel: Enumerate PWM device when
- community has a capability
-Message-ID: <20221117090605.ktgyaverpzl3irjo@pengutronix.de>
-References: <20221114165545.56088-1-andriy.shevchenko@linux.intel.com>
- <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S239553AbiKQJGu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 04:06:50 -0500
+Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87385A6D6
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:06:47 -0800 (PST)
+Received: by mail-vk1-xa33.google.com with SMTP id g16so502680vkl.11
+        for <linux-gpio@vger.kernel.org>; Thu, 17 Nov 2022 01:06:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=B5rO7jdSBBMGYknwso/DlaVI9Y2gorfX1CptprbJvrw=;
+        b=26L88FJM3jPSgXX8t4CG3NzZeRmWhTBKkN28UEhBUcbepjL4dmZpnr970SHfQFwOjM
+         zULTVtzy8GBBeolay0tiNVzFjKpHfYsw5lUp/6eyLO0VbbojeljfH9Uft5LBTInID/le
+         anI0XPf6FbPQ6l1OMqzkYtZrZJnSmxXBpN/+kBr8vGXoc5u4SPm8uskf4l2YHZkuFtIK
+         vKwWQ4VCjlJv0dlNV4f5Cy9dBbYg8vg7lL0lj5pzBdm7Fh0PuNDgQ+F6wFyyajH4t1xJ
+         FZRc2R5WCRZ1BGGnDfvMLhcXDyfVzl1CJODBLr9SYWQ9UqkQBrSNHnBBy4vaW33WrD1M
+         3z6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B5rO7jdSBBMGYknwso/DlaVI9Y2gorfX1CptprbJvrw=;
+        b=1C9IG+AA4FCvZtycmDOJZtRFlXx+v7AtydOkFdiLVzC2T6O6Mznxg7b/uN8mrEpufi
+         E9+VmkrTqXPYopDXwtZuADpP2eNzlOMmRsT4+MYcGA8JZc/lP3CyK0lzNCmqKLnUlYu8
+         D3RnXLLarKPT1M8SO0AW3kIw4jqZg+TucHYC3YXC7pyzQ61AKNXKp5OpPhBfzG8MyLid
+         B+8QmArb/BbV00mAKhI7DrixnNoOKe86r9HbevyZ0/hrYJWXGYgMuvCwbOid/TlOWDfe
+         /Bh2rajJCsoOxUMT6cpmg7tAH4J6Fbw3PPzpvVundq9sRXS6+ebYO32rU+RBSBsiT7Ec
+         rKVg==
+X-Gm-Message-State: ANoB5pm0HiW4dERhcvFWQipy+cHz5MhSC3t71p60RVy8r8ouT8eOwabY
+        aD0O/kH6dUlK8ehSdzdD9mx6bEJ/cWFHeVoTG8C9tg==
+X-Google-Smtp-Source: AA0mqf6T8nbMsk3lXcGU85u0Ku2dGM/ojQSCg6509oUXZlHMXM77b1RS9DksKsFSCXCUsc7b291XdPWcredIj1Ls8Zc=
+X-Received: by 2002:ac5:cbe4:0:b0:3b7:3aca:9868 with SMTP id
+ i4-20020ac5cbe4000000b003b73aca9868mr702906vkn.33.1668676006897; Thu, 17 Nov
+ 2022 01:06:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="jmyufltz4xble7qf"
-Content-Disposition: inline
-In-Reply-To: <20221114165545.56088-8-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <cover.1667815011.git.viresh.kumar@linaro.org> <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
+ <20221117073120.g6xhn6i2dbzougx3@vireshk-i7>
+In-Reply-To: <20221117073120.g6xhn6i2dbzougx3@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 17 Nov 2022 10:06:35 +0100
+Message-ID: <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+        y86-dev <y86-dev@protonmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Nov 17, 2022 at 8:31 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 16-11-22, 11:29, Bartosz Golaszewski wrote:
+> > Hi Viresh,
+> >
+> > There are some licensing issues I noticed now: can you make sure
+> > `reuse lint` doesn't return errors for rust bindings?
+>
+> I have fixed couple of those now, but there are few which I am not sure about.
+>
+> # MISSING COPYRIGHT AND LICENSING INFORMATION
+>
+> The following files have no copyright and licensing information:
+> * ../../bindings/rust/Cargo.toml
+> * ../../bindings/rust/gpiosim/Cargo.toml
+> * ../../bindings/rust/gpiosim/README.md
+> * ../../bindings/rust/gpiosim/src/bindings.rs
+> * ../../bindings/rust/libgpiod/Cargo.toml
+> * ../../bindings/rust/libgpiod-sys/Cargo.toml
+> * ../../bindings/rust/libgpiod-sys/README.md
+> * ../../bindings/rust/libgpiod-sys/src/bindings.rs
+>
+> File types:
+> - Cargo.toml
+>
+>   Most of these have a different style for versioning, though the workspace
+>   specific files doesn't have a version set. I checked few other projects and
+>   they didn't mention it as well.
+>
 
---jmyufltz4xble7qf
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Just use regular SPDX header at the top of the file in a # comment block?
 
-Hello,
+> - README.md
+>
+>   Here also version is mentioned differently (added now), based on how I found
+>   it elsewhere, i.e. towards the bottom of the file.
+>
 
-On Mon, Nov 14, 2022 at 06:55:45PM +0200, Andy Shevchenko wrote:
-> Some of the Communities may have PWM capability. In such cases,
+The main README.md just has a regular header at the top of the file.
+I'm fine with this. I guess the bottom of the file is good too.
 
-Is "Communities" is proper name in this context? If not, I'd not
-capitalize it.
+> - bindings.rs
+>
+>   These are automatically genrated files, with bindgen. Not sure if we should
+>   edit them to add Licensing info.
+>
 
-> enumerate the PWM device via respective driver. User is still
+Can we not generate them at build-time then? When I was first flirting
+with implementing a dbus daemon for libgpiod, I used gdbus-codegen to
+generate dbus bindings from xml but I generated them at build-time
+instead of putting them into the repo. It would also shrink the
+release checklist for rust if we didn't have to manually regenerate
+them.
 
-s/User/A user/ ?
+Bart
 
-> responsible for setting correct pin muxing for the line that
-> needs to output the signal.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  drivers/pinctrl/intel/pinctrl-intel.c | 32 +++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->=20
-> diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/inte=
-l/pinctrl-intel.c
-> index 52ecd66ce357..d61c22e9d531 100644
-> --- a/drivers/pinctrl/intel/pinctrl-intel.c
-> +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-> @@ -21,6 +21,8 @@
->  #include <linux/pinctrl/pinconf.h>
->  #include <linux/pinctrl/pinconf-generic.h>
-> =20
-> +#include <linux/platform_data/x86/pwm-lpss.h>
-> +
->  #include "../core.h"
->  #include "pinctrl-intel.h"
-> =20
-> @@ -46,6 +48,8 @@
->  #define PADOWN_MASK(p)			(GENMASK(3, 0) << PADOWN_SHIFT(p))
->  #define PADOWN_GPP(p)			((p) / 8)
-> =20
-> +#define PWMC				0x204
-> +
->  /* Offset from pad_regs */
->  #define PADCFG0				0x000
->  #define PADCFG0_RXEVCFG_SHIFT		25
-> @@ -1499,6 +1503,30 @@ static int intel_pinctrl_pm_init(struct intel_pinc=
-trl *pctrl)
->  	return 0;
->  }
-> =20
-> +static int intel_pinctrl_probe_pwm(struct intel_pinctrl *pctrl,
-> +				   struct intel_community *community)
-> +{
-> +	static const struct pwm_lpss_boardinfo info =3D {
-> +		.clk_rate =3D 19200000,
-> +		.npwm =3D 1,
-> +		.base_unit_bits =3D 22,
-> +		.bypass =3D true,
-> +	};
-> +	struct pwm_lpss_chip *pwm;
-> +
-> +	if (!(community->features & PINCTRL_FEATURE_PWM))
-> +		return 0;
-> +
-> +	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
-> +		return 0;
-> +
-> +	pwm =3D devm_pwm_lpss_probe(pctrl->dev, community->regs + PWMC, &info);
-> +	if (IS_ERR(pwm))
-> +		return PTR_ERR(pwm);
-> +
-> +	return 0;
+> > One other thing is the license of the rust bindings themselves - I'm
+> > not a lawyer but it seems to me that if you link against LGPL code
+> > statically, your code must be licensed under an LGPL-compatible
+> > license. It seems that BSD-3-Clause and Apache-2.0 are compatible but
+> > it would be great to have someone knowledgeable comment on that. Is
+> > there anyone at linaro we could contact?
+>
+> Hmm, not sure. Cc'ing Arnd, in case he can help.
+>
 
-The last 3 codelines can be replaced by
+I think that's been clarified by Linus below. We should be good.
 
-	return PTR_ERR_OR_ZERO(pwm);
-
-(but I know it's subjective if you like that or not, so I won't insist;
-see also b784c77075023e1a71bc06e6b4f711acb99e9c73).
-
-> +}
-> +
->  static int intel_pinctrl_probe(struct platform_device *pdev,
->  			       const struct intel_pinctrl_soc_data *soc_data)
->  {
-> @@ -1584,6 +1612,10 @@ static int intel_pinctrl_probe(struct platform_dev=
-ice *pdev,
->  			ret =3D intel_pinctrl_add_padgroups_by_size(pctrl, community);
->  		if (ret)
->  			return ret;
-> +
-> +		ret =3D intel_pinctrl_probe_pwm(pctrl, community);
-> +		if (ret)
-> +			return ret;
->  	}
-> =20
->  	irq =3D platform_get_irq(pdev, 0);
-
-intel_pinctrl_add_padgroups_by_size() doesn't need cleanup in the error
-path, so this hunk is fine.
-
-All in all this is all very minor, so:
-
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-
-even if you keep the patch as is.
-
-Best regards
-Uwe
-
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---jmyufltz4xble7qf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN1+XoACgkQwfwUeK3K
-7An41Qf9H02Ebbtnsoac/a/Q2UCAszSvtVhYehJVq0uC9RJYSyNVchLpxavRk4rV
-NGb6mfjl7A6OgS1gqoyQtqt0VP64FGKlp9YTNA+1AJvl6lvwcyNqgQ4nN3slp0pj
-sennz3ouKLREc3mSorDAz1tgr09xqU9etJYHDPUo4oipv74QGFT6KjWqr9bVE/yR
-5b1LYYvy8to+/tQwwt8FdnJmiP7TrtNz6LcEAH6BmmKw4/bMFFHAshHVlZTvINVZ
-q/D+qqzfrvD2evY/LOopcOCdl9movJwkltHbHhsJ4qODZjTIj2oJ39O9PgVf5V7V
-+1Vi14LTUaPMblRWJe7tNhCP2H9v0g==
-=TlVN
------END PGP SIGNATURE-----
-
---jmyufltz4xble7qf--
+Bartosz
