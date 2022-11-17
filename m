@@ -2,96 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A44A562E18E
-	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 17:24:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEF662E1F1
+	for <lists+linux-gpio@lfdr.de>; Thu, 17 Nov 2022 17:33:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234966AbiKQQYh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 17 Nov 2022 11:24:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59284 "EHLO
+        id S240478AbiKQQdY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 17 Nov 2022 11:33:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240478AbiKQQYP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 11:24:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DE8088FA6;
-        Thu, 17 Nov 2022 08:21:46 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S240512AbiKQQdE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 17 Nov 2022 11:33:04 -0500
+Received: from mail.3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7452C82204;
+        Thu, 17 Nov 2022 08:30:31 -0800 (PST)
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E77FA62129;
-        Thu, 17 Nov 2022 16:21:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5F2C433C1;
-        Thu, 17 Nov 2022 16:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668702104;
-        bh=phsVL3/hsv+v4acS8Sc0lFUGpjMm1v6dsEcH7Nzqomc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hmkZC3D0au47/OYpQ1ksGKtVv9CiqIPL7XknQf09yV5vSp1F0K+2dCNLYWC/Va31V
-         uVcvHviKCGT1romm1/eM6Lps6F2lIzXKYKSw58dDEO6suaqLQkZ0Y/imxN6FN/15U8
-         vUFeHa2OWGz2rzOaEbPvm4osX0ugWuZ3EsMPsDanGPFB7Gt4CWAq9Fezqdc4hFBpBT
-         sCLckKaFc12UFRGEGiQl1TsyyzbXp7ZJVKatO3Yq/MX8Tt7xFEwQiljuZ25I/aAT0M
-         +4LgvdOmAj/Wg9cXXNK05x38NJ+mdtnYCnDuNscFozvoyqYS/XmAaHFgFLXWlvl06y
-         sqTweD275CG9g==
-Date:   Thu, 17 Nov 2022 16:21:40 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
+        by mail.3ffe.de (Postfix) with ESMTPSA id A7DE984;
+        Thu, 17 Nov 2022 17:30:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1668702629;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bRUKljahZwvTGsaOsNNcvH3faXTDENWxWJxvCIKAQJo=;
+        b=1RrZUfw1mQ6RN4Z60F1UKGjIiA9GiZd1LypTS3hZ2rKxxjtDe+ilhbZdi5fjMlnDIkooRd
+        Iiim0xa0HCZSfR2aykoYVmFZgtCGHSTJ36Bez/14p0Lkl5Pw5T4SszUTT83JFZFXf2HShu
+        w92/VQslLqsW+I6SepLf9FTIEIdvV5OZ4HEsZv0OavL8NSLeyL9inaU0nGhk2hCuiTXEfO
+        6Ci8JfOPPUbzQwUaCxEsR57RqjSEc4RAIU+64HYfzgjOAKqPJmwGtSGr1uWQSelmd6+kdI
+        MBN7SB9Tg/9AsQHl5WUg8OKaOKoc12SDNKqzNNVSRxzrQp7rG/sK7WNDGgKbaw==
+MIME-Version: 1.0
+Date:   Thu, 17 Nov 2022 17:30:29 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>
 Cc:     William Breathitt Gray <william.gray@linaro.org>,
         linus.walleij@linaro.org, brgl@bgdev.pl,
         andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2 4/4] gpio: i8255: Migrate to regmap API
-Message-ID: <Y3ZflHI6CYfaGIbn@sirena.org.uk>
+In-Reply-To: <Y3ZflHI6CYfaGIbn@sirena.org.uk>
 References: <cover.1668129763.git.william.gray@linaro.org>
  <61327a67cc308af413471a69a4810b2785e53e8e.1668129763.git.william.gray@linaro.org>
- <5123090e11da67e57fb00984445ece2f@walle.cc>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="KArWzu10SZ74/FYp"
-Content-Disposition: inline
-In-Reply-To: <5123090e11da67e57fb00984445ece2f@walle.cc>
-X-Cookie: Ego sum ens omnipotens.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <5123090e11da67e57fb00984445ece2f@walle.cc> <Y3ZflHI6CYfaGIbn@sirena.org.uk>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <bbe25d96e892e8cfd3f0da5d6755be22@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Am 2022-11-17 17:21, schrieb Mark Brown:
+> On Thu, Nov 17, 2022 at 05:18:55PM +0100, Michael Walle wrote:
+>> Am 2022-11-11 02:55, schrieb William Breathitt Gray:
+> 
+>> > +	gpio_config.parent = config->parent;
+>> > +	gpio_config.regmap = config->map;
+> 
+>> I'd propose to add a new config flag to indicate that accesses to
+>> the device will be fast:
+> 
+>> gpio_config.regmap_has_fast_io = true;
+> 
+>> which will then set gpio->can_sleep = false.
+> 
+> It's probably useful to provide a query function in the regmap
+> API for generic regmap users like this.
 
---KArWzu10SZ74/FYp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Now I'm confused. Last time, I've proposed that, there was push
+back from you:
+https://lore.kernel.org/linux-gpio/20210430151908.GC5981@sirena.org.uk/
 
-On Thu, Nov 17, 2022 at 05:18:55PM +0100, Michael Walle wrote:
-> Am 2022-11-11 02:55, schrieb William Breathitt Gray:
+That being said, I'd prefer to have such a query API :)
 
-> > +	gpio_config.parent = config->parent;
-> > +	gpio_config.regmap = config->map;
+-michael
 
-> I'd propose to add a new config flag to indicate that accesses to
-> the device will be fast:
-
-> gpio_config.regmap_has_fast_io = true;
-
-> which will then set gpio->can_sleep = false.
-
-It's probably useful to provide a query function in the regmap
-API for generic regmap users like this.
-
---KArWzu10SZ74/FYp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN2X5EACgkQJNaLcl1U
-h9BYlwf/cBtqSPMTzYsl99bR9c8JJNXZeeYSwkVnwLuXJs0lf70APD+eCNa2IQI0
-qj2Zq/ekgfnYW9+YsswY9O/dzf0ZNFhC/Pie6TM5uNnYC3yJBMAaVNoA6KOQTBED
-upXDb1QOSbYpct97CJJmx6/zyIzszjIQmuQZ/lC/gGq1Ni0Ye5+0M65tNMCDSUD3
-Uuc6tRmXOtgwCHda6Hfpis033dwWQRMvMivF6+3svGZ0GzywBME5Eft23EHooqdt
-2uEXT24DDssydf4LG65YbdeyFZJ3GQiVi/jmlSywKSyZ66bn8BpNJE/LT8aVDo6/
-sEt1FKTcbQoJm0CgdJ2AJUI2OgP2sg==
-=5d1H
------END PGP SIGNATURE-----
-
---KArWzu10SZ74/FYp--
