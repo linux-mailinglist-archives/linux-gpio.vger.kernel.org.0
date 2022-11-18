@@ -2,248 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB3B662FE2A
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 20:44:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67B2B62FF27
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 22:08:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235272AbiKRToy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 14:44:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
+        id S229592AbiKRVIk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 16:08:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235279AbiKRTou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 14:44:50 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0E78CFE1;
-        Fri, 18 Nov 2022 11:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668800689; x=1700336689;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=QaFNElBI+fgLVtzxPva2EljaafBhBXrc+lLrYy1kfP4=;
-  b=BKlqC9YPWdEL5agqWl4CxWsID1MNaPWqDfviiHEeZX2CngNgRgGl8l8k
-   CCBGeeLkAa7TGfOQBMv2cJr9iH3rRaXdSVlRuD1GdC3aJnegq4Es1omsL
-   hzAlIkEcV0dUAekkyAuKj1lTdZCIo9X1rd7Gzu0WNuaMGpS19E3tLOg8B
-   9LqGdFUmefaQQEilnhrjjEx336ClaPlnAWiOa4rC+NGqZvucDvOkHryKz
-   gd1HiP/UghvFC/rwGyycorCZ1Q2C6lM+MwhgS4ROS/avLnC75GVxPHrk0
-   YYiHzte/VfL5lmHlH2xwBc1wqRdwv/F2OPwSx4jUIlMloFwNrAKbLIReO
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="310849264"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="310849264"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Nov 2022 11:44:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10535"; a="709143035"
-X-IronPort-AV: E=Sophos;i="5.96,175,1665471600"; 
-   d="scan'208";a="709143035"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 18 Nov 2022 11:44:46 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 230AE10E; Fri, 18 Nov 2022 21:45:11 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Zeng Heng <zengheng4@huawei.com>
-Subject: [rft, PATCH v5 1/1] gpiolib: fix memory leak in gpiochip_setup_dev()
-Date:   Fri, 18 Nov 2022 21:45:08 +0200
-Message-Id: <20221118194508.50686-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
+        with ESMTP id S229514AbiKRVIj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 16:08:39 -0500
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8741F12636;
+        Fri, 18 Nov 2022 13:08:36 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AIL8Pjs098709;
+        Fri, 18 Nov 2022 15:08:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1668805705;
+        bh=Yr4LSYGMtRX7f6gDoB3pzPK7VDSrGB+Mip9zdhZE6vY=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=pg20JjDTtULID4xVlEvXyUlUafjzZhVP48+U3vrSY7Kj8EzhZGkbUXODNcNIUpQnR
+         pTFqmHHd4D5Rk45dCVDgqmf8jNus6PXqlQUgS9EQWdHA51ZcMjgWVArO4cJ9dxUzzL
+         LEUg+foyGY8CZoHE4zSnYyQA8sG71fBn1PuI0H1k=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AIL8PhZ102998
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 18 Nov 2022 15:08:25 -0600
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 18
+ Nov 2022 15:08:25 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Fri, 18 Nov 2022 15:08:24 -0600
+Received: from [10.250.38.44] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AIL8Op3017735;
+        Fri, 18 Nov 2022 15:08:24 -0600
+Message-ID: <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
+Date:   Fri, 18 Nov 2022 15:08:23 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
+Content-Language: en-US
+To:     Nishanth Menon <nm@ti.com>
+CC:     Apurva Nandan <a-nandan@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
+References: <20221116130428.161329-1-a-nandan@ti.com>
+ <20221116130428.161329-5-a-nandan@ti.com>
+ <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
+ <20221118174754.y37pq77drvla2uxj@tinderbox>
+ <8c123fa2-caab-d2dd-5eb4-688f1c6abb33@ti.com>
+ <20221118180808.wnel7d6gswsnooww@junkman>
+ <93242211-95e7-09a0-fced-5ef2deb9fc08@ti.com>
+ <20221118192744.wish2vrxgy7dg7c2@unnerving>
+From:   Andrew Davis <afd@ti.com>
+In-Reply-To: <20221118192744.wish2vrxgy7dg7c2@unnerving>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Zeng Heng <zengheng4@huawei.com>
+On 11/18/22 1:27 PM, Nishanth Menon wrote:
+> On 12:15-20221118, Andrew Davis wrote:
+>> I don't see either of those addressed in that thread, only that
+>> the aliases should go in the .dts files and be trimmed, nothing
+> 
+> Key is trimmed to what the system and ecosystem needs.
+> 
+>> stops us from:
+>>
+>> chosen {
+>> 	stdout-path = "serial10:115200n8";
+>> };
+>>
+>> aliases {
+>> 	serial10 = &main_uart8;
+>> };
+> 
+> Do we need 10 serial aliases? There are'nt 10 serial ports exposed in
+> j782s2. ok - lets say we do this, then: [1] is needed to boot? but why
+> do we need to do that for all armv8 platforms when aliases allows us
 
-Here is a backtrace report about memory leak detected in
-gpiochip_setup_dev():
+Why do we need SERIAL_8250_NR_UARTS at all, might be a better question.
+These should be dynamically allocated if the number goes over the
+default count imposed by the TTY framework. Maybe folks are still a
+bit too afraid to touch the TTY subsystem core, I don't blame them..
 
-unreferenced object 0xffff88810b406400 (size 512):
-  comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
-  backtrace:
-    kmalloc_trace
-    device_add		device_private_init at drivers/base/core.c:3361
-			(inlined by) device_add at drivers/base/core.c:3411
-    cdev_device_add
-    gpiolib_cdev_register
-    gpiochip_setup_dev
-    gpiochip_add_data_with_key
+> to trim it to just the 3 or 4 serial ports the platform really needs
+> That + being able to use the convention that serial2 is always linux
+> console, is'nt that a good thing? Hence recommending to just expose the
+> serialports as aliases to exactly what we need while keeping serial2 as
+> the linux console (which in this case happens to be main_uart8 - example
+> as j721s2 does).
+> 
 
-gcdev_register() & gcdev_unregister() would call device_add() &
-device_del() (no matter CONFIG_GPIO_CDEV is enabled or not) to
-register/unregister device.
+"serial2 as the linux console" is *not* a convention, we just don't want to
+fix up our bootloader/userspace to actually reason about what serial ports to
+put logins on. Why not make ttyS10 the default, or ttyS666, it doesn't solve
+your multi-distro issue either way since they usually only start a login on
+ttyS0, console=, and/or the first virtual tty. Never on ttyS2. So you are
+hacking up DT for a solution that doesn't do what you want in the end.
 
-However, if device_add() succeeds, some resource (like
-struct device_private allocated by device_private_init())
-is not released by device_del().
+Andrew
 
-Therefore, after device_add() succeeds by gcdev_register(), it
-needs to call put_device() to release resource in the error handle
-path.
-
-Here we move forward the register of release function, and let it
-release every piece of resource by put_device() instead of kfree().
-
-While at it, fix another subtle issue, i.e. when gc->ngpio is equal
-to 0, we still call kcalloc() and, in case of further error, kfree()
-on the ZERO_PTR pointer, which is not NULL. It's not a bug per se,
-but rather waste of the resources and potentially wrong expectation
-about contents of the gdev->descs variable.
-
-Fixes: 159f3cd92f17 ("gpiolib: Defer gpio device setup until after gpiolib initialization")
-Signed-off-by: Zeng Heng <zengheng4@huawei.com>
-Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-changes in v5 (done by Andy):
-  - refactored to avoid double checks on the same conditionals
-  - moved kcalloc() after validating its parameter
-  - compiled tested only by me (Andy)
-changes in v4:
-  - add gpiochip_print_register_fail()
-changes in v3:
-  - use put_device() instead of kfree() explicitly
-changes in v2:
-  - correct fixes tag
-
- drivers/gpio/gpiolib.c | 42 ++++++++++++++++++++++++++----------------
- 1 file changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index caa747fdcb72..119c9c3a2a50 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -580,12 +580,13 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
- 	if (ret)
- 		return ret;
- 
-+	/* From this point, the .release() function cleans up gpio_device */
-+	gdev->dev.release = gpiodevice_release;
-+
- 	ret = gpiochip_sysfs_register(gdev);
- 	if (ret)
- 		goto err_remove_device;
- 
--	/* From this point, the .release() function cleans up gpio_device */
--	gdev->dev.release = gpiodevice_release;
- 	dev_dbg(&gdev->dev, "registered GPIOs %d to %d on %s\n", gdev->base,
- 		gdev->base + gdev->ngpio - 1, gdev->chip->label ? : "generic");
- 
-@@ -651,10 +652,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	struct fwnode_handle *fwnode = NULL;
- 	struct gpio_device *gdev;
- 	unsigned long flags;
--	int base = gc->base;
- 	unsigned int i;
-+	u32 ngpios = 0;
-+	int base = 0;
- 	int ret = 0;
--	u32 ngpios;
- 
- 	/* If the calling driver did not initialize firmware node, do it here */
- 	if (gc->fwnode)
-@@ -696,17 +697,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	else
- 		gdev->owner = THIS_MODULE;
- 
--	gdev->descs = kcalloc(gc->ngpio, sizeof(gdev->descs[0]), GFP_KERNEL);
--	if (!gdev->descs) {
--		ret = -ENOMEM;
--		goto err_free_dev_name;
--	}
--
- 	/*
- 	 * Try the device properties if the driver didn't supply the number
- 	 * of GPIO lines.
- 	 */
--	if (gc->ngpio == 0) {
-+	ngpios = gc->ngpio;
-+	if (ngpios == 0) {
- 		ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
- 		if (ret == -ENODATA)
- 			/*
-@@ -717,7 +713,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 			 */
- 			ngpios = 0;
- 		else if (ret)
--			goto err_free_descs;
-+			goto err_free_dev_name;
- 
- 		gc->ngpio = ngpios;
- 	}
-@@ -725,13 +721,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	if (gc->ngpio == 0) {
- 		chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
- 		ret = -EINVAL;
--		goto err_free_descs;
-+		goto err_free_dev_name;
- 	}
- 
- 	if (gc->ngpio > FASTPATH_NGPIO)
- 		chip_warn(gc, "line cnt %u is greater than fast path cnt %u\n",
- 			  gc->ngpio, FASTPATH_NGPIO);
- 
-+	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
-+	if (!gdev->descs) {
-+		ret = -ENOMEM;
-+		goto err_free_dev_name;
-+	}
-+
- 	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
- 	if (!gdev->label) {
- 		ret = -ENOMEM;
-@@ -750,11 +752,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	 * it may be a pipe dream. It will not happen before we get rid
- 	 * of the sysfs interface anyways.
- 	 */
-+	base = gc->base;
- 	if (base < 0) {
- 		base = gpiochip_find_base(gc->ngpio);
- 		if (base < 0) {
--			ret = base;
- 			spin_unlock_irqrestore(&gpio_lock, flags);
-+			ret = base;
-+			base = 0;
- 			goto err_free_label;
- 		}
- 		/*
-@@ -868,6 +872,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- err_free_gpiochip_mask:
- 	gpiochip_remove_pin_ranges(gc);
- 	gpiochip_free_valid_mask(gc);
-+	if (gdev->dev.release) {
-+		/* release() has been registered by gpiochip_setup_dev() */
-+		put_device(&gdev->dev);
-+		goto err_print_message;
-+	}
- err_remove_from_list:
- 	spin_lock_irqsave(&gpio_lock, flags);
- 	list_del(&gdev->list);
-@@ -881,13 +890,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- err_free_ida:
- 	ida_free(&gpio_ida, gdev->id);
- err_free_gdev:
-+	kfree(gdev);
-+err_print_message:
- 	/* failures here can mean systems won't boot... */
- 	if (ret != -EPROBE_DEFER) {
- 		pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
--		       gdev->base, gdev->base + gdev->ngpio - 1,
-+		       base, base + (int)ngpios - 1,
- 		       gc->label ? : "generic", ret);
- 	}
--	kfree(gdev);
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
--- 
-2.35.1
-
+> [1] https://lore.kernel.org/lkml/3ab9addf-7938-fcf3-6147-15a998e37d2d@ti.com/
+> 
