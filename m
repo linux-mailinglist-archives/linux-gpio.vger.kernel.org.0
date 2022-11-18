@@ -2,85 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39D0862EF5C
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 09:29:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ECC362F018
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 09:52:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241438AbiKRI3F (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 03:29:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47966 "EHLO
+        id S241616AbiKRIw3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 03:52:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241161AbiKRI2g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 03:28:36 -0500
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 318E42716D
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id h12so5866766ljg.9
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 00:28:32 -0800 (PST)
+        with ESMTP id S241424AbiKRIwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 03:52:22 -0500
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E189D2BD4
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 00:52:20 -0800 (PST)
+Received: by mail-lj1-x232.google.com with SMTP id x21so5921567ljg.10
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 00:52:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=c0DwlSGGZnpMt70g7cvHCqqLtClo+HqnYC/KDMQT/2C4Kgme2ED6Ajko4OIXpmbeXS
-         m5SIke4QdtVszOu65Cv1AnF200xxc1a/iy1cj+W/4WPUi1idnzCq3jL3rOCyXQ/Sy7Xo
-         FhxYYZmL7CP0ofdSTlNio6J4qvL4Gb4QE7SbMbyvGwdcz0q2lnaiEphLSDGuz3cWY979
-         gQT9VdBtzdRs59dL/dUgCq5BV84WRT+Q7ok8jIBAq5G8XWvjz6kIifP/efd7/+/UMkZu
-         +qzJPaRvsSeqy/GGhmsAycmFzituYnYzJUATh2BkazIz98eeuD3Eq9fkv2cSDtBNQpLB
-         eqpQ==
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5p5jpjzU8KIpwuBIIbbPSInj8EzgA3wKPkdmINuLKtg=;
+        b=db2Z79k+R0PPpeWdUSc/JMVjsPy6YDciEXKcDVGaNXEx8/LLfBnc1OvUw96yb4Sx7y
+         ccf2nWiE+lGced1G4AYq5OSfnWvibHvEGbT/bKgmxxGhYow52XhXZONuIY64C1BrwvO+
+         Ql1n6T82176cc6ZwfFRO1wFIar8u5uYpPeFQiz2mT29d/Rf/HcAaJqGGtQS4QjqivkfQ
+         s5ZJNt4ZIr4CylsP4G08wdnhOw+xeY30lx81He3VBCP24on/gpEwfhjSOGCO6xi1/YAh
+         jZtPxIB1hSIi4QynZi/03qeB1Z47W2P88Bn+2q4qfeu1UWV8nL4M03UXXxSSJngv2vad
+         Eu0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DZabo7ibEwOOw8J7VwUfivpQWJQQOqpTQOP6qmrwcFs=;
-        b=j/CRBkbLP6xYJwpwUC7/xHHQa/3FunvX2bbxrMD+KNYzcHA4cJF6Fi8iz2BdXUNSHy
-         +t6Wm2T6O20bHsjI5fMamnIhHPAx+dJnBdj45KyrYvEe2j9j7iiHBwV7HzsozrtggUeW
-         oBWiwZf92LOYP5w8MTpBZpOt87fdykKaFJac/ai6urnNzDl1gfYDTHUo1mzFQl6wb+Rj
-         WvifuU0xG36GBIid1L/v5dAeVGn6KOK2HOR9wHIKIBQaiF4sAsce+TD0wANv1p0zWLeL
-         RncKIyRTbBz++3hTn9PYK6zBaG2WVn4itt/viDfEPmewj/RBND4ybXomFQiaVpvTrswN
-         oWBw==
-X-Gm-Message-State: ANoB5pltd4FpESfqq6vxoIGKjiNHUGQOH1RpjN5VB4aWlOj+XcrYc69J
-        Fy46mqUzU6ZNeuZCeIcrHBoE+Q==
-X-Google-Smtp-Source: AA0mqf5FUU/an0yPckwGnu0iJ8FLtTfHewcyaiyp5w+c6ymGf8LMkNj5Lkw1yXdUuHVX3l3x9IvIFA==
-X-Received: by 2002:a2e:a5c7:0:b0:277:8d48:27dd with SMTP id n7-20020a2ea5c7000000b002778d4827ddmr2207144ljp.192.1668760111721;
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id d24-20020a056512369800b0049b8c0571e5sm564273lfs.113.2022.11.18.00.28.30
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5p5jpjzU8KIpwuBIIbbPSInj8EzgA3wKPkdmINuLKtg=;
+        b=1jDaUHjqf9bM6N22KK268otbuztWkDfflqe2Ad4xj93Bfn5Y7u0PPIarr7jzgjKWk5
+         nN1XXH/pdVmccbVi0Fwx1c9MjQwY1OQgu/D3NvEYN2NDwpgpts+JCZASRmh6rgUKEX1T
+         eW7bBOTLF+00LDbixSCEG8DPFs7+6ELmrJF1T46uxz5ar5L+4VxCe/qUgx0F3bTGS3uz
+         VZXhFv+LRzJAKNbUI6th7BHaa25Az+Ph9Y4OFgesjj84rmlMqqNLYhv9/7a1kjcV0fhU
+         8js/tfvIDcgK7DyWqXOj2g3drN1hCq0fXFINoYktcIVePLpAUF9hk7S9S5FqvOUChoxc
+         9RRw==
+X-Gm-Message-State: ANoB5pkveCpaXshI/9+HZJwHD6IJuY5tzTJa8ieYDu4V2N+20HuWlWlG
+        eCzB6U11iHCxFgVEN5w6cRh6GQ==
+X-Google-Smtp-Source: AA0mqf7NInPVwoinRrtQdIS7u2cBmY3U/epKgvk6kp0InWRF1xtlD+pB+TnUychIW1T9LFDhcHb72w==
+X-Received: by 2002:a2e:c52:0:b0:277:9bf:9411 with SMTP id o18-20020a2e0c52000000b0027709bf9411mr2012257ljd.504.1668761539235;
+        Fri, 18 Nov 2022 00:52:19 -0800 (PST)
+Received: from [192.168.31.208] ([194.29.137.22])
+        by smtp.gmail.com with ESMTPSA id k4-20020ac257c4000000b004a2511b8224sm573648lfo.103.2022.11.18.00.52.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 00:28:31 -0800 (PST)
-Message-ID: <578b686e-8461-a959-86c5-83a8be1dc981@linaro.org>
-Date:   Fri, 18 Nov 2022 09:28:29 +0100
+        Fri, 18 Nov 2022 00:52:18 -0800 (PST)
+Message-ID: <f20a8dff-fb51-4000-dbb6-29cb8b0d223d@linaro.org>
+Date:   Fri, 18 Nov 2022 09:52:16 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [RFC PATCH 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Content-Language: en-US
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.4.2
+Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: qcom,spmi-pmic: document pm8550,
+ pm8550b, pm8550ve, pm8550vs, pmk8550, pm8010 & pmr735d
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org
-References: <20221117123850.368213-1-krzysztof.kozlowski@linaro.org>
- <20221117123850.368213-2-krzysztof.kozlowski@linaro.org>
- <20221117220756.7a1bf734@xps-13>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221117220756.7a1bf734@xps-13>
-Content-Type: text/plain; charset=UTF-8
+        Andy Gross <agross@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20221114-narmstrong-sm8550-upstream-spmi-v2-0-b839bf2d558a@linaro.org>
+ <20221114-narmstrong-sm8550-upstream-spmi-v2-1-b839bf2d558a@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20221114-narmstrong-sm8550-upstream-spmi-v2-1-b839bf2d558a@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
@@ -92,86 +84,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/11/2022 22:07, Miquel Raynal wrote:
-> Hi Krzysztof,
-> 
-> krzysztof.kozlowski@linaro.org wrote on Thu, 17 Nov 2022 13:38:42 +0100:
-> 
->> The Devicetree bindings document does not have to say in the title that
->> it is a "binding", but instead just describe the hardware.  For shared
->> (re-usable) schemas, name them all as "common properties".
->>
->> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/clock/qcom,gcc.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-common.yaml         | 2 +-
->>  Documentation/devicetree/bindings/dma/dma-controller.yaml     | 4 ++--
->>  Documentation/devicetree/bindings/dma/dma-router.yaml         | 4 ++--
->>  Documentation/devicetree/bindings/iio/adc/adc.yaml            | 2 +-
->>  .../devicetree/bindings/media/video-interface-devices.yaml    | 2 +-
->>  Documentation/devicetree/bindings/media/video-interfaces.yaml | 2 +-
->>  Documentation/devicetree/bindings/mmc/mmc-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-chip.yaml          | 2 +-
->>  Documentation/devicetree/bindings/mtd/nand-controller.yaml    | 2 +-
->>  .../bindings/net/bluetooth/bluetooth-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/can/can-controller.yaml | 2 +-
->>  .../devicetree/bindings/net/ethernet-controller.yaml          | 2 +-
->>  Documentation/devicetree/bindings/net/ethernet-phy.yaml       | 2 +-
->>  Documentation/devicetree/bindings/net/mdio.yaml               | 2 +-
->>  Documentation/devicetree/bindings/opp/opp-v2-base.yaml        | 2 +-
->>  .../devicetree/bindings/power/reset/restart-handler.yaml      | 2 +-
->>  Documentation/devicetree/bindings/rtc/rtc.yaml                | 2 +-
->>  .../devicetree/bindings/soundwire/soundwire-controller.yaml   | 2 +-
->>  Documentation/devicetree/bindings/spi/spi-controller.yaml     | 2 +-
->>  Documentation/devicetree/bindings/watchdog/watchdog.yaml      | 2 +-
->>  21 files changed, 23 insertions(+), 23 deletions(-)
->>
-> 
-> [...]
-> 
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-chip.yaml b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> index 97ac3a3fbb52..20b195ef9b70 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-chip.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-chip.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> I only see this now but the title should be
-> 
-> 	"NAND chip common properties"
-> 
->>  
->>  maintainers:
->>    - Miquel Raynal <miquel.raynal@bootlin.com>
->> diff --git a/Documentation/devicetree/bindings/mtd/nand-controller.yaml b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> index 359a015d4e5a..a004efc42842 100644
->> --- a/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/nand-controller.yaml
->> @@ -4,7 +4,7 @@
->>  $id: http://devicetree.org/schemas/mtd/nand-controller.yaml#
->>  $schema: http://devicetree.org/meta-schemas/core.yaml#
->>  
->> -title: NAND Chip and NAND Controller Generic Binding
->> +title: NAND Chip and NAND Controller common properties
-> 
-> And here just "NAND controller..."
-> 
-> Of course the original purpose of your series is more to clean those
-> titles rather than fixing them and if you disagree I am fine doing it
-> myself aside, but if you could at the same time make the title more
-> accurate that would be perfect.
-> 
-> Either ways:
-> 
-> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Thanks, I update these manually, so I can correct the names to ones you
-mentioned. Thanks.
 
-Best regards,
-Krzysztof
+On 18/11/2022 09:24, Neil Armstrong wrote:
+> Document compatible for the pm8550, pm8550b, pm8550ve, pm8550vs, pmk8550.
+> pm8010 & pmr735d SPMI PMICs
+> 
+> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+Didn't checkpatch complain about the length of this patch's subject?
+I propose:
 
+dt-bindings: mfd: qcom,spmi-pmic: document SM8550 PMICs
+
+or
+
+dt-bindings: mfd: qcom,spmi-pmic: document PMICs bundled with SM8550
+
+
+Konrad
+>   Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> index c8362efd4345..8c9b042b4f30 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+> @@ -43,6 +43,7 @@ properties:
+>             - qcom,pm8004
+>             - qcom,pm8005
+>             - qcom,pm8009
+> +          - qcom,pm8010
+>             - qcom,pm8019
+>             - qcom,pm8028
+>             - qcom,pm8110
+> @@ -54,6 +55,10 @@ properties:
+>             - qcom,pm8350
+>             - qcom,pm8350b
+>             - qcom,pm8350c
+> +          - qcom,pm8550
+> +          - qcom,pm8550b
+> +          - qcom,pm8550ve
+> +          - qcom,pm8550vs
+>             - qcom,pm8841
+>             - qcom,pm8909
+>             - qcom,pm8916
+> @@ -70,10 +75,12 @@ properties:
+>             - qcom,pmi8998
+>             - qcom,pmk8002
+>             - qcom,pmk8350
+> +          - qcom,pmk8550
+>             - qcom,pmm8155au
+>             - qcom,pmp8074
+>             - qcom,pmr735a
+>             - qcom,pmr735b
+> +          - qcom,pmr735d
+>             - qcom,pms405
+>             - qcom,pmx55
+>             - qcom,pmx65
+> 
