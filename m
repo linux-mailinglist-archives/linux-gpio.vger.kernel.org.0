@@ -2,146 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6060762FC41
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 19:15:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB5862FC6C
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 19:21:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232926AbiKRSPT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 13:15:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        id S242612AbiKRSVC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 13:21:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235281AbiKRSPS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 13:15:18 -0500
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DEA898CF;
-        Fri, 18 Nov 2022 10:15:17 -0800 (PST)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AIIFAMg084079;
-        Fri, 18 Nov 2022 12:15:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668795310;
-        bh=JyQb2Ma01x7fRRs7TlYmPzx1wFI4WbhdeZZCWveBKt8=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=llEI2xMj14C2NWEoiT0IaTVyryh5KtqoBlJuwZ1FX2zsVpyzEhPwwwYfVEL0VlDhK
-         nwzyRcUhIPKW9gdch92GNlFyx+IXR4dqn36qtBbqxsK2Dm6ei/V/diEByavaYhsBO7
-         t5WO47WiKO5c1n0Gh80vvU8nApYg3zSVhv+Ie7xI=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AIIFAPE072009
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Nov 2022 12:15:10 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 18
- Nov 2022 12:15:10 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Fri, 18 Nov 2022 12:15:10 -0600
-Received: from [10.250.38.44] (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AIIF9s3014409;
-        Fri, 18 Nov 2022 12:15:09 -0600
-Message-ID: <93242211-95e7-09a0-fced-5ef2deb9fc08@ti.com>
-Date:   Fri, 18 Nov 2022 12:15:09 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
-Content-Language: en-US
-To:     Nishanth Menon <nm@ti.com>
-CC:     Apurva Nandan <a-nandan@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S242592AbiKRSVB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 13:21:01 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AA5A920B7;
+        Fri, 18 Nov 2022 10:21:00 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AIHx6e0017288;
+        Fri, 18 Nov 2022 18:20:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=YnN8dRhGUO82Phn5V8UvG+kes2oFbsA/5HbEWYFHmCU=;
+ b=melUiDDT1xzRx58srUz3mxK2XQHXZHyljCdTwzdLoDiqTObu2FKJhtrpfzc5VGrdbryt
+ q3gnU1s/GXiDsmdJyNh3MXds3xvqHd9XD/eE/O9DR5Svaeqq2rVV1J46T3EHmOublX98
+ jHFrMohLnAQ0Px9OOed/sNGfbzl9IvRRxsSJz26RlMxWfFvVYPjkGWaGi6PPSBxMR/Gx
+ T/eDs/EA3W1lcHrMvpcpz8NRgjvQ2KP55g2KErePkoTPkBliWPf1ASId6Rv8e9X3K1X5
+ r9+FaHDSjhqS2WMKKLT7IewUKfBTFdg6meJKnwogA2gz1heSg7HD24EzKWXqr6ZDEzWi NQ== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3kx0te9vuq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Nov 2022 18:20:57 +0000
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2AIIKtt8028049
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 18 Nov 2022 18:20:55 GMT
+Received: from hu-molvera-sd.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Fri, 18 Nov 2022 10:20:55 -0800
+From:   Melody Olvera <quic_molvera@quicinc.com>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-References: <20221116130428.161329-1-a-nandan@ti.com>
- <20221116130428.161329-5-a-nandan@ti.com>
- <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
- <20221118174754.y37pq77drvla2uxj@tinderbox>
- <8c123fa2-caab-d2dd-5eb4-688f1c6abb33@ti.com>
- <20221118180808.wnel7d6gswsnooww@junkman>
-From:   Andrew Davis <afd@ti.com>
-In-Reply-To: <20221118180808.wnel7d6gswsnooww@junkman>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Melody Olvera <quic_molvera@quicinc.com>
+Subject: [PATCH v4 0/2] Add pinctrl support for QDU1000/QRU1000 SoCs
+Date:   Fri, 18 Nov 2022 10:20:37 -0800
+Message-ID: <20221118182039.29236-1-quic_molvera@quicinc.com>
+X-Mailer: git-send-email 2.38.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: ih9feY3jY-b6CogEIuTJsys0FK5YeLZS
+X-Proofpoint-GUID: ih9feY3jY-b6CogEIuTJsys0FK5YeLZS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-18_06,2022-11-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ suspectscore=0 adultscore=0 clxscore=1011 mlxlogscore=731 phishscore=0
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 priorityscore=1501
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2211180108
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/18/22 12:08 PM, Nishanth Menon wrote:
-> On 11:56-20221118, Andrew Davis wrote:
->> On 11/18/22 11:47 AM, Nishanth Menon wrote:
->>> On 11:40-20221118, Andrew Davis wrote:
->>>> On 11/16/22 7:04 AM, Apurva Nandan wrote:
->>>
->>> [...]
->>>
->>>>> +#include <dt-bindings/net/ti-dp83867.h>
->>>>> +#include <dt-bindings/gpio/gpio.h>
->>>>> +#include "k3-j784s4.dtsi"
->>>>> +
->>>>> +/ {
->>>>> +	compatible = "ti,j784s4-evm", "ti,j784s4";
->>>>> +	model = "Texas Instruments J784S4 EVM";
->>>>> +
->>>>> +	chosen {
->>>>> +		stdout-path = "serial2:115200n8";
->>>>> +	};
->>>>> +
->>>>> +	aliases {
->>>>> +		serial2 = &main_uart8;
->>>>
->>>> This feels hacky. Your chosen node picks serial2 as that is usually
->>>> the one that is wired up on K3 boards. But on this board it is main_uart8.
->>>> So why not have this be serial10, then choose
->>>>
->>>> stdout-path = "serial10:115200n8";
->>>>
->>>> Also, I've made comments on previous version of this series, it is
->>>> nice to include folks who have commented before in the CC for future
->>>> versions, that way our filters don't hide these away and we can more
->>>> easily check that our comments have been addressed.
->>>
->>> Please stick with the standard of serial2 as the linux console standard.
->>> We ended up with that to ease up capabilities of various distros to
->>> uniformly work across SoC and board variants.
->>>
->>
->> The chosen "stdout-path" is for setting the kernel's default output terminal.
->> Distros and other userspaces need to use their own policy mechanisms for
->> picking what serial port to run getty on or whatever the issue may be.
->>
->> Some look at the kernel command line, and our bootloader provides
->> that too, so still no reason to fake alias names here.
-> 
-> 
-> We have had this conversation earlier as well.
-> 
-> https://lore.kernel.org/linux-arm-kernel/CAK8P3a2VSBvOn1o+q1PYZaQ6LS9U4cz+DZGuDbisHkwNs2dAAw@mail.gmail.com/T/#m4ecb0dc6a78c84631f072faa1b0df0df46333d09
-> 
-> This is also the reason why we picked serial2 as linux console as a
-> standard across the boards based on the ecosystem.
-> 
+This patchset adds pinctrl support for the Qualcomm QDU1000 and QRU1000
+SoCs.
 
-I don't see either of those addressed in that thread, only that
-the aliases should go in the .dts files and be trimmed, nothing
-stops us from:
+The Qualcomm Technologies, Inc. Distributed Unit 1000 and Radio Unit
+1000 are new SoCs meant for enabling Open RAN solutions. See more at
+https://www.qualcomm.com/content/dam/qcomm-martech/dm-assets/documents/qualcomm_5g_ran_platforms_product_brief.pdf
 
-chosen {
-	stdout-path = "serial10:115200n8";
-};
+Changes from v3:
+- Revised commit messages and dt-bindings
 
-aliases {
-	serial10 = &main_uart8;
-};
+Changes from v2:
+- Revised dt-bindings
+- Added extra depends on for Kconfig
 
-Andrew
+Melody Olvera (2):
+  dt-bindings: pinctrl: qcom: Add QDU1000 and QRU1000 pinctrl
+  pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
+
+ .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   |  134 ++
+ drivers/pinctrl/qcom/Kconfig                  |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-qdu1000.c        | 1273 +++++++++++++++++
+ 4 files changed, 1418 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qdu1000.c
+
+
+base-commit: 147307c69ba4441ee90c1f8ce8edf5df4ea60f67
+-- 
+2.38.1
+
