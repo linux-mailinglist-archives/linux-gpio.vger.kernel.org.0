@@ -2,62 +2,86 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 512D862F10F
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 10:23:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ACE162F14F
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 10:36:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241368AbiKRJXG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 04:23:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40648 "EHLO
+        id S241141AbiKRJgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 04:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241427AbiKRJXF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 04:23:05 -0500
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A97815718;
-        Fri, 18 Nov 2022 01:23:04 -0800 (PST)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AI9Mh7c089012;
-        Fri, 18 Nov 2022 03:22:43 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668763363;
-        bh=YfY1G9SWBu/P/IsT935fulLEbwN9xeyiglcojcgB5MM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=dcBbOq0IdS2GMqWulF8I+T0KHbW/ov8mDlGX72GUDlMIh3IsPNr79ReOQn7XiZ8cs
-         e15TgmOoWnKHAinalJh93Xk4gDs4jjt1zqD0ru1hEoeflVC3pk071PHyKqRd3MqRK6
-         OkVkwkCTNrQFt2KEPaluZD4opE4nwUkW7/l0adio=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AI9Mhlp029997
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Nov 2022 03:22:43 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 18
- Nov 2022 03:22:42 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Fri, 18 Nov 2022 03:22:42 -0600
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AI9Mdbb060374;
-        Fri, 18 Nov 2022 03:22:41 -0600
-From:   Matt Ranostay <mranostay@ti.com>
-To:     <vigneshr@ti.com>, <robh@kernel.org>,
-        <krzysztof.kozlowski@linaro.org>, <a.zummo@towertech.it>,
-        <linus.walleij@linaro.org>, <lee@kernel.org>, <brgl@bgdev.pl>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, Matt Ranostay <mranostay@ti.com>
-Subject: [PATCH v4 4/4] gpio: gpio-tps6594x: add GPIO support for TPS6594x PMIC
-Date:   Fri, 18 Nov 2022 01:22:18 -0800
-Message-ID: <20221118092218.480147-5-mranostay@ti.com>
-X-Mailer: git-send-email 2.38.GIT
-In-Reply-To: <20221118092218.480147-1-mranostay@ti.com>
-References: <20221118092218.480147-1-mranostay@ti.com>
+        with ESMTP id S235236AbiKRJgG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 04:36:06 -0500
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE1CA47E
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 01:36:03 -0800 (PST)
+Received: by mail-pf1-x42e.google.com with SMTP id y13so4369092pfp.7
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 01:36:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=PMpH9QrMmZcD/iw8g7zfLIcvd9qzkR0/JcRk7BBC/tA=;
+        b=Xu78wYvixMCcCkwuUqfubwygNwbVnSAHygf58D81Lc3X7zyLqRDtTW94vMn8kdC/0k
+         AdTQiu9e7lO04BOOrKcq0EZAAO96Jl/2jvpijm5kX5EfITl1DWTbErsHGVGoEeabxMaL
+         u5+NONdGv6rHucaTsZXZwL2SBdHjKYTkJTmOOlOhjhNBI6ijwC3wCxwVlg5NRvm40nJH
+         cwV/areEzihw7d9zTSx7Vs3bXjBGRKjrm+L9EDCwTb3MDOqMbAPfoRf48MCAttZUsYAO
+         WQAR1hT58zfvWl9VYxKmdDYBN2uglwYG8qzG8cS2e/dQVYpB275UhKfXqx+HN75ygLpb
+         jm6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PMpH9QrMmZcD/iw8g7zfLIcvd9qzkR0/JcRk7BBC/tA=;
+        b=DWmCiQRfKDbAEPWOu2pSesVCd5C/5hQFHGgBRagQgkB2RrHzzbIQ/U++XZEWuzfvVa
+         X1bMlHA0qINJxPfaXX4kuGGy0ahMAlMKfzDAELhDr/3a0/RA1LmW8vfp0qgGK+f62OjQ
+         M51ECRpM6JMpUESPLqisg9Cl1j5UnoRFZlrbXw/+GOuN4VgmCipl/5qLQAhCEGeu4v6G
+         JbgFThRU2qsU45/CBeW5KxU8v1qjFjNJNN+Lu3djuOR6NhAFHPc8DktzGYAZu0H3g8iu
+         m+hbnH8mlGAlcly9XAqhXtGUQXIZkSxc9y3IN0ffH+H8LdJzNB75NRkmYjmgTl5PeR8n
+         TtgQ==
+X-Gm-Message-State: ANoB5pl1FOPda0dEU2oeJK246tl6zSNF5T2IUOktSZy8Q3q68FtSL9VW
+        cq5/FUXXSdsuEhGTxbA4sKIE8g==
+X-Google-Smtp-Source: AA0mqf6TuHjmiq21/1AYgbe+JxVlZpkN8xeKNuDSitQTJ02HdDuUvw3UCr91E5vDiNcS8dfhWjVN3A==
+X-Received: by 2002:a63:165d:0:b0:473:f7cd:6603 with SMTP id 29-20020a63165d000000b00473f7cd6603mr6037958pgw.336.1668764163207;
+        Fri, 18 Nov 2022 01:36:03 -0800 (PST)
+Received: from localhost ([122.172.85.60])
+        by smtp.gmail.com with ESMTPSA id u5-20020a170903124500b00186c3afb49esm3098403plh.209.2022.11.18.01.36.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 01:36:02 -0800 (PST)
+Date:   Fri, 18 Nov 2022 15:05:58 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
+Message-ID: <20221118093558.hopbhda6knmoekyt@vireshk-i7>
+References: <cover.1667815011.git.viresh.kumar@linaro.org>
+ <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
+ <20221117073120.g6xhn6i2dbzougx3@vireshk-i7>
+ <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
+ <20221117095609.uyamyqi5uuchrxdt@vireshk-i7>
+ <CANiq72nxJn3F0hvWerUJvbgRjfyutQ=CCnpNqfMOEBumX62_SQ@mail.gmail.com>
+ <CAMRc=McUTqUJzV-9yEA-7LxrQ8ktWzaPMv+x-1mOLZ0M2W+uJg@mail.gmail.com>
+ <20221117112517.64fvaynvjwbcqeix@vireshk-i7>
+ <CAMRc=Mdyk4Fx5aKvjKjZSRhsSOq03wiHcMP7=Y2TG4ovWf-+zA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Mdyk4Fx5aKvjKjZSRhsSOq03wiHcMP7=Y2TG4ovWf-+zA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,149 +89,35 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for TPS6594X PMICs GPIO interface that has 11 that can be
-configured as input or outputs.
+On 17-11-22, 13:18, Bartosz Golaszewski wrote:
+> Then let's just add the SPDX identifier on top to make reuse happy.
 
-Signed-off-by: Matt Ranostay <mranostay@ti.com>
----
- drivers/gpio/Kconfig         |  9 +++++
- drivers/gpio/Makefile        |  1 +
- drivers/gpio/gpio-tps6594x.c | 78 ++++++++++++++++++++++++++++++++++++
- include/linux/mfd/tps6594x.h |  4 ++
- 4 files changed, 92 insertions(+)
- create mode 100644 drivers/gpio/gpio-tps6594x.c
+This looks fine ?
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ec7cfd4f52b1..6b65c790efe7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1405,6 +1405,15 @@ config GPIO_TPS65912
- 	help
- 	  This driver supports TPS65912 GPIO chip.
- 
-+config GPIO_TPS6594X
-+	tristate "TI TPS6594X GPIO driver"
-+	depends on MFD_TPS6594X || COMPILE_TEST
-+	select REGMAP
-+	select GPIO_REGMAP
-+	help
-+	  Select this option to enable GPIO driver for the TPS6954X
-+	  PMIC chip family. There are 11 GPIOs that can be configured.
+diff --git a/bindings/rust/Cargo.toml b/bindings/rust/Cargo.toml
+index 4fdf4e06ff90..85abe70b4aa5 100644
+--- a/bindings/rust/Cargo.toml
++++ b/bindings/rust/Cargo.toml
+@@ -1,7 +1,12 @@
++# SPDX-License-Identifier: CC0-1.0
++#
++# Copyright 2022 Linaro Ltd. All Rights Reserved.
++#     Viresh Kumar <viresh.kumar@linaro.org>
 +
- config GPIO_TPS68470
- 	tristate "TPS68470 GPIO"
- 	depends on INTEL_SKL_INT3472
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 010587025fc8..9892f9adc5b5 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -159,6 +159,7 @@ obj-$(CONFIG_GPIO_TPS65218)		+= gpio-tps65218.o
- obj-$(CONFIG_GPIO_TPS6586X)		+= gpio-tps6586x.o
- obj-$(CONFIG_GPIO_TPS65910)		+= gpio-tps65910.o
- obj-$(CONFIG_GPIO_TPS65912)		+= gpio-tps65912.o
-+obj-$(CONFIG_GPIO_TPS6594X)		+= gpio-tps6594x.o
- obj-$(CONFIG_GPIO_TPS68470)		+= gpio-tps68470.o
- obj-$(CONFIG_GPIO_TQMX86)		+= gpio-tqmx86.o
- obj-$(CONFIG_GPIO_TS4800)		+= gpio-ts4800.o
-diff --git a/drivers/gpio/gpio-tps6594x.c b/drivers/gpio/gpio-tps6594x.c
-new file mode 100644
-index 000000000000..733fedba70cb
---- /dev/null
-+++ b/drivers/gpio/gpio-tps6594x.c
-@@ -0,0 +1,78 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * GPIO driver for TI TPS6594x PMICs
-+ *
-+ * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
-+ */
+ [workspace]
+
+
+diff --git a/bindings/rust/libgpiod-sys/README.md b/bindings/rust/libgpiod-sys/README.md
+index ecf75b31c41e..567891a30868 100644
+--- a/bindings/rust/libgpiod-sys/README.md
++++ b/bindings/rust/libgpiod-sys/README.md
+@@ -1,11 +1,15 @@
++# SPDX-License-Identifier: CC0-1.0
++#
++# Copyright 2022 Linaro Ltd. All Rights Reserved.
++#     Viresh Kumar <viresh.kumar@linaro.org>
 +
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <linux/gpio/regmap.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/mfd/tps6594x.h>
-+
-+#define GPIO_BANK_SIZE	8
-+#define GPIO_CFG_MASK	BIT(0)
-+
-+static int tps6594x_regmap_xlate(struct gpio_regmap *gpio,
-+				    unsigned int base, unsigned int offset,
-+				    unsigned int *reg, unsigned int *mask)
-+{
-+	if (base == TPS6594X_GPIO_CONF) {
-+		*reg = base + offset;
-+		*mask = GPIO_CFG_MASK;
-+	} else {
-+		unsigned int line = offset % GPIO_BANK_SIZE;
-+		unsigned int stride = offset / GPIO_BANK_SIZE;
-+
-+		*reg = base + stride;
-+		*mask = BIT(line);
-+	}
-+
-+	return 0;
-+}
-+
-+static int tps6594x_gpio_probe(struct platform_device *pdev)
-+{
-+	struct gpio_regmap_config config = {0};
-+	struct regmap *regmap;
-+
-+	regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!regmap)
-+		return -ENODEV;
-+
-+	config.regmap = regmap;
-+	config.parent = &pdev->dev;
-+	config.ngpio = 11;
-+	config.ngpio_per_reg = GPIO_BANK_SIZE;
-+
-+	config.reg_dat_base = TPS6594X_GPIO_IN;
-+	config.reg_set_base = TPS6594X_GPIO_OUT;
-+	config.reg_dir_out_base = TPS6594X_GPIO_CONF;
-+	config.reg_mask_xlate = tps6594x_regmap_xlate;
-+
-+	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
-+}
-+
-+static const struct of_device_id of_tps6594x_gpio_match[] = {
-+	{ .compatible = "ti,tps6594-gpio", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_tps6594x_gpio_match);
-+
-+static struct platform_driver tps6594x_gpio_driver = {
-+	.driver = {
-+		.name = "tps6594-gpio",
-+		.of_match_table = of_tps6594x_gpio_match,
-+	},
-+	.probe = tps6594x_gpio_probe,
-+};
-+module_platform_driver(tps6594x_gpio_driver);
-+
-+MODULE_ALIAS("platform:tps6594-gpio");
-+MODULE_AUTHOR("Matt Ranostay <mranostay@ti.com>");
-+MODULE_DESCRIPTION("TPS6594X GPIO driver");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/tps6594x.h b/include/linux/mfd/tps6594x.h
-index 5a6af0da9223..155618e4d5d0 100644
---- a/include/linux/mfd/tps6594x.h
-+++ b/include/linux/mfd/tps6594x.h
-@@ -21,6 +21,10 @@
- #define TPS6594X_FSM_I2C_TRIGGERS		0x85
- #define TPS6594X_FSM_NSLEEP_TRIGGERS		0x86
- 
-+#define TPS6594X_GPIO_CONF			0x31
-+#define TPS6594X_GPIO_OUT			0x3d
-+#define TPS6594X_GPIO_IN			0x3f
-+
- #define TPS6594X_RTC_SECONDS			0xb5
- #define TPS6594X_RTC_MINUTES			0xb6
- #define TPS6594X_RTC_HOURS			0xb7
+ # Generated libgpiod-sys Rust FFI bindings
+
 -- 
-2.38.GIT
-
+viresh
