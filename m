@@ -2,96 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3275E62F408
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 12:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC59162F4C3
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 13:31:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235357AbiKRLwB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 06:52:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47438 "EHLO
+        id S235325AbiKRMba (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 07:31:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiKRLwA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 06:52:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D219922F2;
-        Fri, 18 Nov 2022 03:52:00 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A957562480;
-        Fri, 18 Nov 2022 11:51:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CDFFC433C1;
-        Fri, 18 Nov 2022 11:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668772319;
-        bh=6b1fLl1K09GMrIMYkajYzfJYue4jcVgXsRIZjrazmmo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nV06tCzwQGmpkomlbQxV4TD7b2kWyXQF12e422RJMC6Y6ECwba5fh3GT/0k/vFAWI
-         PR866c6pyY/dRM2qogrmNfD2fqL8zMT1c2wfilNR0tLguVcTJ4tOwCBpo4qXfq1ARo
-         qCJVcgX3bvPpSntzPlMwQGjfgtb0A43o2u2LfVNGa7xAql3TEbqAwqACPFPjy4K1GD
-         MNz7jnYutRZGBoGUvXHqUay7P2T4kT/WJ5wApZT0MyOUyXR0MIu0Jh6Qg1qvL9Y4Cu
-         Q4EXZA8zBV2vfip3raE3VI3AtW9AA+jx9o4ePMG6fKt9D1u0R6pkCRGbK09NDcq9FI
-         THXyT6WBclyUA==
-Date:   Fri, 18 Nov 2022 11:51:50 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     William Breathitt Gray <william.gray@linaro.org>,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] gpio: i8255: Migrate to regmap API
-Message-ID: <Y3dx1rx8mXR7vRX9@sirena.org.uk>
-References: <cover.1668129763.git.william.gray@linaro.org>
- <61327a67cc308af413471a69a4810b2785e53e8e.1668129763.git.william.gray@linaro.org>
- <5123090e11da67e57fb00984445ece2f@walle.cc>
- <Y3ZflHI6CYfaGIbn@sirena.org.uk>
- <bbe25d96e892e8cfd3f0da5d6755be22@walle.cc>
+        with ESMTP id S241649AbiKRMbR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 07:31:17 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66A845091;
+        Fri, 18 Nov 2022 04:30:11 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id n21so12631455ejb.9;
+        Fri, 18 Nov 2022 04:30:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DZylkDqipsSWVUpDnUzy17v+WnuvxbbaswTfv5O4dBs=;
+        b=eUjQ+DkdwrOamw24nWNeklKUIiMEQiQeEM567HSHskrMW8Us15k4Djy5Z9MOfHDEJA
+         leaJXxOQS+royEE5tCZ4iXf4sii3zaDalYpxMriW61uWRNQp1VKIY06yol3TqXKWDSlk
+         zIJn1Z/wnb2TCSSCAovxKTwpmmWhRdohBZv+73obigClXe2Psj9xUGAg0q5reejJYUou
+         LCB+02opStYWrwYLu0hAIGsCg/994/BBKrsjzad6976U9wbOr5dzGtrTJDIZTtWR41bX
+         1SINPUWPt9t6z1vVFFsq7YyD3HEYo75UCocoNsITgn+0BVYD9T9GA57iQyRN46MnD/0F
+         cq5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DZylkDqipsSWVUpDnUzy17v+WnuvxbbaswTfv5O4dBs=;
+        b=BxJhIZj6IOkRWTwMF3MWwsOGjI/g8ljUUpUoDKLOvdSYEdCojDNm84K2u/d9qfizFJ
+         awLkcDGseMfoaKH79HQaE6ppIwvqFgd9El8KuaiLwRTcOwd/XaVgCvfN9WrRFvMlQsZN
+         P9ApEA10o1DVb9/fzTkUUzKQNNYPRRmQKupny7BOc0gD9CGOf7nGvvS0OvM3FpjJQwnG
+         VPSRXl7/GH6a75paQwJaAjJiBLQRRuYEUA7CqQbPmOUWaWGxae9I2Uk7yuEQjk6S0RZ8
+         tcML2wJEtHZp48HSThFoar3CqgsIBSx0qunGimmiHNAAaDtgU5Y4VkSsvxIi1+xvvvv5
+         H8/Q==
+X-Gm-Message-State: ANoB5pmww3XhkvxahK26gATRBWp6dYWNefXVKSRpjnRpLcdP66dBOCeE
+        UWj6nzpNl78SpQgs2B9Bzfq378SulFjODE+la7Y=
+X-Google-Smtp-Source: AA0mqf62SAwlT3nJuz3Cdfa6K5MCGjq8wuc9X2LC0JRmw3MyXGf9MwEzDmidvSVaV+efJ1qjyE1NRSy+etHWrG6upqo=
+X-Received: by 2002:a17:906:3e41:b0:78d:bc9f:33da with SMTP id
+ t1-20020a1709063e4100b0078dbc9f33damr5761785eji.80.1668774610255; Fri, 18 Nov
+ 2022 04:30:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="DPwIp4kLu/z6kaBr"
-Content-Disposition: inline
-In-Reply-To: <bbe25d96e892e8cfd3f0da5d6755be22@walle.cc>
-X-Cookie: Ego sum ens omnipotens.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221107175305.63975-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221107175305.63975-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdV46aMfqu+kMW9E-RURugK-giOx0k-NPe5XX4nxKZJzkg@mail.gmail.com>
+In-Reply-To: <CAMuHMdV46aMfqu+kMW9E-RURugK-giOx0k-NPe5XX4nxKZJzkg@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Fri, 18 Nov 2022 12:29:43 +0000
+Message-ID: <CA+V-a8uqQ2fK1UjRT864jyHdt6Z47V=iARSJC6B2M6Gikms=Eg@mail.gmail.com>
+Subject: Re: [PATCH RFC 1/5] dt-bindings: interrupt-controller:
+ renesas,rzg2l-irqc: Document RZ/G2UL SoC
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Geert,
 
---DPwIp4kLu/z6kaBr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Nov 17, 2022 at 10:54 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Mon, Nov 7, 2022 at 6:53 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Document RZ/G2UL (R9A07G043) IRQC bindings. The RZ/G2UL IRQC block is
+> > identical to one found on the RZ/G2L SoC. No driver changes are
+> > required as generic compatible string "renesas,rzg2l-irqc" will be
+> > used as a fallback.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> > ---
+> > Note, renesas,r9a07g043u-irqc is added we have slight difference's compared to RZ/Five
+> > - G2UL IRQCHIP (hierarchical IRQ domain) -> GIC where as on RZ/Five we have PLIC (chained interrupt
+> > domain) -> RISCV INTC
+>
+> I think this difference is purely a software difference, and abstracted
+> in DTS through the interrupt hierarchy.
+> Does it have any impact on the bindings?
+>
+> > - On the RZ/Five we have additional registers for IRQC block
+>
+> Indeed, the NMI/IRQ/TINT "Interruput" Mask Control Registers, thus
+> warranting separate compatible values.
+>
+> > - On the RZ/Five we have BUS_ERR_INT which needs to be handled by IRQC
+>
+> Can you please elaborate? I may have missed something, but to me it
+> looks like that is exactly the same on RZ/G2UL and on RZ/Five.
+>
+Now that we have to update the binding doc with the BUS_ERR_INT too,
+do you think it would make sense to add interrupt-names too?
 
-On Thu, Nov 17, 2022 at 05:30:29PM +0100, Michael Walle wrote:
-> Am 2022-11-17 17:21, schrieb Mark Brown:
+BUS_ERR_INT will have to be handled IRQC itself (i.e. IRQC will
+register a handler for it).
 
-> > It's probably useful to provide a query function in the regmap
-> > API for generic regmap users like this.
-
-> Now I'm confused. Last time, I've proposed that, there was push
-> back from you:
-> https://lore.kernel.org/linux-gpio/20210430151908.GC5981@sirena.org.uk/
-
-> That being said, I'd prefer to have such a query API :)
-
-Now we have a generic user which cares about the distinction.
-
---DPwIp4kLu/z6kaBr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN3cdUACgkQJNaLcl1U
-h9C6pwf/ZGZCi5c5OHwGOR2phSgQVgE+wGj6HCl9HVhILx2xe70XG8LgJiH/YC1t
-G2X1GetoBR2VAIedj11RpAc6Rhv2pIl1bGr3tLhIT2xLgpe5dFTiko/ez90IsgK4
-wEFGxQbcvapbFSPt5/CoppVlzT+mvTYkm9t/Uk8PvVGhOzQOvrW14fHKsC1UWD/I
-gnjfwHSPUfOi3s2ZnbMJ8xdKfk4EKlfvfQBrodKyU+ogeqVEf1n55p1480892RSX
-kzObNr0V7T5sRPEKxp2YOrwTRnx6NsDTjEQ4Vb256MeDpczTaJgAjkEGjPkdw/86
-NKQ6bDldLVwZwA9f7McTj3fgZ28G1Q==
-=I5YC
------END PGP SIGNATURE-----
-
---DPwIp4kLu/z6kaBr--
+Cheers,
+Prabhakar
