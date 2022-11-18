@@ -2,99 +2,191 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7ACB662F1A7
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 10:45:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F7D62F268
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 11:22:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241672AbiKRJpR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 04:45:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51212 "EHLO
+        id S241673AbiKRKWE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 05:22:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241719AbiKRJo7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 04:44:59 -0500
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35048922F0
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 01:42:37 -0800 (PST)
-Received: by mail-ua1-x932.google.com with SMTP id y25so1535331ual.2
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 01:42:37 -0800 (PST)
+        with ESMTP id S241651AbiKRKWD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 05:22:03 -0500
+Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 209778FF98
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 02:22:01 -0800 (PST)
+Received: by mail-lf1-x131.google.com with SMTP id s8so7481375lfc.8
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 02:22:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7kMpzMjbD5KlceWACIMqfVYm+ASXBB2S9AzzL9F3auM=;
-        b=sPtQwG28GbN4bLDKztiJLJ3qag06VbHTEu9MgdJ9wEhCDHPHCoi12Kc/bo1r1Coo3K
-         iRlOnK9YUmcV1qPsFRoviuIm7kpCaBtjoyqdIu+ZJUqEEWTvoQ06mImZDWckO4xPgvk0
-         670Ytf+4sUGs+JX5oWpw/Xb7szVA0T7rxG/y+pvSRECIrx+5EMuJysjrUi2V0cyJArRA
-         3KkXHKkCX7EcetTnIW775ygIBM0d5WZrFWuNa7GoCo7aYNL02mhVRjX8pNJ5nhj86QmI
-         O5Ozlvhh1D1oGLPyZSN6HOUzent/0BXJuaQ9ydZe6Gf+NYz2TL2HH0ckMtGSS+wKJ/94
-         4ZSQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eRlfpTg375i+5zqJCLGinL+O/zsDyPhezs53zNobHyA=;
+        b=EoWxvzC6av//hkf7kXQqMlmT21HOLcPZH9boydPxmvsFyQ+6s3vzozVG8wTiRpDl10
+         IvZ05TQeqyjhSDIsUJXW6pRjkFcdIVSSOPnOaGapTQMB3ha37NYd8cEW3ibStFYw43UV
+         LZ5U/+LP/cZ37eRZYiL+JYMdVdmnGT7fUNvdTzhdrMsCpU9FKorT2zAICYANW4MLJOlE
+         LRpyENzPbLqwVd2boOcS/8ozHBG53+ebp3IN7ltWZr/zvsPh2sIJVgTuBCC6xFmirqVc
+         RhCMe7teqsEQukXq2Vv269BVfDp51XQx+es6qVbbgS03MJGGcb5nfhpgDhMWxgXqXuV5
+         Qlbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7kMpzMjbD5KlceWACIMqfVYm+ASXBB2S9AzzL9F3auM=;
-        b=3YSNzyV/CG8RSmT4uhiBxMUdjuWWUvQsOy/refpMqhhkGA6eRIqHo0ts2lvoPkIqay
-         DkzLzzXxXp+IqQOkx8ig6mPmG9f9L4SOQnWRuSEa3OhreSGWqOL79fJ8RQWHv7w9ewO1
-         CcZxRCSjNzlm39lpDsBvqF3sezs1E9ob0xl8xF/98c63Vk/CwayqBKDNPEDiXFgk4eOf
-         A60eHDoK4rrWiIsPw6/ZYXCldwbfOUwo+qOhzgxAzV1lEon7mcp0DxZmIz0NQNWlimvz
-         QnIMyi7fQYYz30PiLDnkb9KqJmSReME/EJDnCWPqICJ28c/IA9BJrv096994PyPDyDmf
-         AAkg==
-X-Gm-Message-State: ANoB5pk2X1J9JAyPBFINcAlN/EiYGCr3tgQ11jqyXwAV1t54wXVFKdDE
-        +x6BBxws1vmre27xc+qYGJ1Oca9FGZw97DiGebA/ZA==
-X-Google-Smtp-Source: AA0mqf75T+3ItrjjowWUnfi9ltCo2e1dgORuSyMNgTjVn8dVfIiaaHS1CtFv6s9fQvlYYg3mAyMnarcznVWwBmaRWeo=
-X-Received: by 2002:ab0:2559:0:b0:411:5e79:781b with SMTP id
- l25-20020ab02559000000b004115e79781bmr3681416uan.66.1668764556248; Fri, 18
- Nov 2022 01:42:36 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eRlfpTg375i+5zqJCLGinL+O/zsDyPhezs53zNobHyA=;
+        b=oJNWB9nNp9Ym/HMmfuhluqTu3pOtpPJgeRtUiaiYkiNPFeWJHfWLy5TRSNMmrKX2aQ
+         vTMZUIU+hc7INMlfeIK2cuiEdXzbczC6EodZ52ysKfWpwhtQzmBpCE7W3f86lIiERZ1D
+         wCoel51oq0i6AK0qiphoXyfmfo+kZFZ+ItH6tIFPwEJxE0vwFHZzzkuznECvB7Y03ZKq
+         Il6NKgsM0n75RZg8D3zDC6SiTmEW5pzKrhMWtu9iMIYw3+FTXKZLk15EJbTeQgP6R2Q6
+         K4y9uggFJbuQDjp9qDZTkbfsDCRykXj7q2HNHYSN7Dngx4uROmnvk1UxF7DqlY8Sw0Zo
+         nDdA==
+X-Gm-Message-State: ANoB5pkPhYiLHFzYhks2Rjb3P4fGAwjub79R6YAuVKCH3Dd08Vc6zTHd
+        PcymW4Yd5bFh5ALqSR2hz+m7bw==
+X-Google-Smtp-Source: AA0mqf6cxLd/iKhLSrNdXHgfxOkVao/c+6eUwyr7Wy1UMJAm6fgCV3omFj1Z90R0cMVNBGg0MxLZNQ==
+X-Received: by 2002:ac2:558c:0:b0:4a2:4b78:a8e8 with SMTP id v12-20020ac2558c000000b004a24b78a8e8mr2432763lfg.292.1668766919300;
+        Fri, 18 Nov 2022 02:21:59 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id n5-20020a05651203e500b00498f570aef2sm604604lfq.209.2022.11.18.02.21.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 18 Nov 2022 02:21:58 -0800 (PST)
+Message-ID: <b46253e0-6678-0a69-1522-83a559835669@linaro.org>
+Date:   Fri, 18 Nov 2022 11:21:57 +0100
 MIME-Version: 1.0
-References: <CAMRc=McWo-kUrMitbm-_YgeEYXx+ARneezAF-Tg7OMwgGydXkQ@mail.gmail.com>
- <20221117073120.g6xhn6i2dbzougx3@vireshk-i7> <CAMRc=MdNJV7gnz6-TKYCWt1uus0=urrtiBgmFdASAK7-dvSbzQ@mail.gmail.com>
- <20221117095609.uyamyqi5uuchrxdt@vireshk-i7> <CANiq72nxJn3F0hvWerUJvbgRjfyutQ=CCnpNqfMOEBumX62_SQ@mail.gmail.com>
- <CAMRc=McUTqUJzV-9yEA-7LxrQ8ktWzaPMv+x-1mOLZ0M2W+uJg@mail.gmail.com>
- <20221117112517.64fvaynvjwbcqeix@vireshk-i7> <CAMRc=Mdyk4Fx5aKvjKjZSRhsSOq03wiHcMP7=Y2TG4ovWf-+zA@mail.gmail.com>
- <20221118093558.hopbhda6knmoekyt@vireshk-i7> <CAMRc=Mf8c8sen+8_76POGjCzTea-SK-DBPJOdGH7MCvTzWjFPw@mail.gmail.com>
- <20221118094119.s4jeafgf6rn4hxn3@vireshk-i7>
-In-Reply-To: <20221118094119.s4jeafgf6rn4hxn3@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 18 Nov 2022 10:42:25 +0100
-Message-ID: <CAMRc=MdVi1ZBVQSNqXbZuGgJ4z-sTsozB7X+oFkDkdm+NoaXhg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V9 0/8] libgpiod: Add Rust bindings
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v4 1/4] Documentation: ti,tps6594: Add DT bindings for the
+ TPS6594x PMIC
+To:     Matt Ranostay <mranostay@ti.com>, vigneshr@ti.com, robh@kernel.org,
+        a.zummo@towertech.it, linus.walleij@linaro.org, lee@kernel.org,
+        brgl@bgdev.pl
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+References: <20221118092218.480147-1-mranostay@ti.com>
+ <20221118092218.480147-2-mranostay@ti.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221118092218.480147-2-mranostay@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 10:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 18-11-22, 10:38, Bartosz Golaszewski wrote:
-> > Should be:
-> >
-> > # SPDX-License-Identifier: CC0-1.0
-> > # SPDX-FileCopyrightText: 2022 Linaro Ltd.
-> > # SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
->
-> For all files ? Or just Cargo.toml and README.md files ?
->
+On 18/11/2022 10:22, Matt Ranostay wrote:
+> Add documentation for the TPS6594x PMIC including its RTC and GPIO
+> functionalities.
+> 
 
-All files. We're using unified SPFX-FileCopyrightText instead of custom notices.
+This is a friendly reminder during the review process.
 
-Bart
+It seems my previous comments were not fully addressed. Maybe my
+feedback got lost between the quotes, maybe you just forgot to apply it.
+Please go back to the previous discussion and either implement all
+requested changes or keep discussing them.
+
+Thank you.
+
+The comment was about proper subject prefix. Drop also redundant, second
+"DT bindings" from the subject.
+
+
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/ti,tps6594.yaml   | 65 +++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> new file mode 100644
+> index 000000000000..81613bcef39d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> @@ -0,0 +1,65 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mfd/ti,tps6594x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TPS6594x Power Management Integrated Circuit (PMIC)
+> +
+> +maintainers:
+> +  - Keerthy <j-keerthy@ti.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,tps6594
+
+tps6594 is the model name? So what was previous tps6594x used also in
+title? This does not look correct.
+
+> +
+> +  reg:
+> +    const: 0x48
+> +
+> +  ti,system-power-controller:
+> +    type: boolean
+> +    description: PMIC is controlling the system power.
+> +
+> +  rtc:
+> +    type: object
+> +    $ref: /schemas/rtc/rtc.yaml#
+> +    unevaluatedProperties: false
+> +    properties:
+> +      compatible:
+> +        const: ti,tps6594-rtc
+
+Same problem.
+
+> +
+> +  gpio:
+> +    type: object
+> +    unevaluatedProperties: false
+> +    properties:
+> +      compatible:
+> +        const: ti,tps6594x-gpio
+
+
+Not fixed.
+
+
+
+> +
+> +additionalProperties: false
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +examples:
+> +  - |
+> +    i2c0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic: pmic@48 {
+> +            compatible = "ti,tps6594";
+> +            reg = <0x48>;
+> +
+> +            rtc {
+> +                compatible = "ti,tps6594-rtc";
+> +            };
+> +
+> +            gpio {
+> +                compatible = "ti,tps6594-gpio";
+
+Does not look like you tested the bindings. Please run `make
+dt_binding_check` (see
+Documentation/devicetree/bindings/writing-schema.rst for instructions).
+
+
+Best regards,
+Krzysztof
+
