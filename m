@@ -2,44 +2,44 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2FDE62FBE7
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 18:45:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 795F062FBF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 18:48:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242000AbiKRRpe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 12:45:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
+        id S242057AbiKRRsE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 12:48:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241614AbiKRRpd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 12:45:33 -0500
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17B15ADCF;
-        Fri, 18 Nov 2022 09:45:32 -0800 (PST)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AIHjLEj058881;
-        Fri, 18 Nov 2022 11:45:21 -0600
+        with ESMTP id S235396AbiKRRsD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 12:48:03 -0500
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754C55ADD0;
+        Fri, 18 Nov 2022 09:48:02 -0800 (PST)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AIHlsK3063769;
+        Fri, 18 Nov 2022 11:47:54 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668793521;
-        bh=88+PC9lB91Ag0JXcJVETgQmM7PmFG0ydrmjYnoVPQs0=;
+        s=ti-com-17Q1; t=1668793674;
+        bh=A3nwiVPbNBlR3dhAOxqZ5DKYo/hsCFbpVuyuzPtXeas=;
         h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=N+z/naPnwws28kV3zmrvykGCAKdUItSi0okoSm3aFWrE1fHUb2Ug+BN2/f8VA+pZb
-         E5ZpG4cRBBNp05SEasWj6+FsV9IchuzLDp636/vWdIO/zyNdfN6SrRrNtX54kaylnW
-         HnIxm4XbRJaN05GOqWS7y5+nZfAPLbhbm4JK5cqQ=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AIHjL04119472
+        b=qxEgTIePG4rXEMarwpABpAW4ju+oQynwSWbf6ecxNSkOSMrR15yOj+GUcTKK3Pip3
+         atnVjnVpaneUNbrjTL+2KqyJoHw9kb2fu1TyOLiX3tfRYs/dIicj+BhHnvnuTu8Mi8
+         L7YP2S02k0jsXdGYIswqMLx1/xVCREwpi3S3U9c0=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AIHlsMr038405
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Nov 2022 11:45:21 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 18 Nov 2022 11:47:54 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 18
- Nov 2022 11:45:21 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2022 11:47:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Fri, 18 Nov 2022 11:45:21 -0600
+ Frontend Transport; Fri, 18 Nov 2022 11:47:54 -0600
 Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AIHjLfl089416;
-        Fri, 18 Nov 2022 11:45:21 -0600
-Date:   Fri, 18 Nov 2022 11:45:21 -0600
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AIHlsUr091109;
+        Fri, 18 Nov 2022 11:47:54 -0600
+Date:   Fri, 18 Nov 2022 11:47:54 -0600
 From:   Nishanth Menon <nm@ti.com>
 To:     Andrew Davis <afd@ti.com>
 CC:     Apurva Nandan <a-nandan@ti.com>,
@@ -51,15 +51,15 @@ CC:     Apurva Nandan <a-nandan@ti.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-Subject: Re: [PATCH v3 3/4] arm64: dts: ti: Add initial support for J784S4 SoC
-Message-ID: <20221118174521.t2up5coqylvdgm3b@outhouse>
+Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
+Message-ID: <20221118174754.y37pq77drvla2uxj@tinderbox>
 References: <20221116130428.161329-1-a-nandan@ti.com>
- <20221116130428.161329-4-a-nandan@ti.com>
- <cd3b69a6-1162-ef0a-1927-e4f65d42e62f@ti.com>
+ <20221116130428.161329-5-a-nandan@ti.com>
+ <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <cd3b69a6-1162-ef0a-1927-e4f65d42e62f@ti.com>
+In-Reply-To: <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
 User-Agent: NeoMutt/20171215
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -71,65 +71,43 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11:32-20221118, Andrew Davis wrote:
+On 11:40-20221118, Andrew Davis wrote:
 > On 11/16/22 7:04 AM, Apurva Nandan wrote:
-[...]
-
-> > diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> > new file mode 100644
-> > index 000000000000..828f339ddbdc
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-> > @@ -0,0 +1,1008 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Device Tree Source for J784S4 SoC Family Main Domain peripherals
-> > + *
-> > + * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com/
-> > + */
-> > +
-> > +&cbass_main {
-> > +	msmc_ram: sram@70000000 {
-> > +		compatible = "mmio-sram";
-> > +		reg = <0x0 0x70000000 0x0 0x800000>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <1>;
-> > +		ranges = <0x0 0x0 0x70000000 0x800000>;
-> > +
-> > +		atf-sram@0 {
-> > +			reg = <0x0 0x20000>;
-> > +		};
-> > +
-> > +		tifs-sram@1f0000 {
-> > +			reg = <0x1f0000 0x10000>;
-> > +		};
-> > +
-> > +		l3cache-sram@200000 {
-> > +			reg = <0x200000 0x200000>;
-> > +		};
-> 
-> The amount of SRAM is boot time configurable (and may even change at runtime
-> if we work out a couple minor gotchas). Does it make more sense to have
-> this node fixed up in the bootloader based on the chosen amount of SRAM vs
-> L3-Cache?
-> 
-> Either way, do we need the l3cache-sram node here? I'm thinking the size
-> of the SRAM node itself should be modified. Since the L3 grows from the
-> end, all that is needed is to reduce the "reg =" size. At the same time
-> the l3-cache0 node below should gain in "cache-size" property.
-> 
-> (We don't need to do this for this series, the other J7x DTs have the
-> same issue, so maybe I'll go fix them all together sometime later)
-
-
-We do need to describe the sram used as l3cache node in dts and it is indeed
-fixedup by bootloader just like DDR sizes are fixed up if a different
-configuration is used. The sram fixup is done by using the nodename to
-change the size and location. This value should be the usual
-configuration such that a system can bootup if bootloader does'nt have
-fixup capability (Say TF-A booting straight to linux kernel).
 
 [...]
+
+> > +#include <dt-bindings/net/ti-dp83867.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include "k3-j784s4.dtsi"
+> > +
+> > +/ {
+> > +	compatible = "ti,j784s4-evm", "ti,j784s4";
+> > +	model = "Texas Instruments J784S4 EVM";
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial2:115200n8";
+> > +	};
+> > +
+> > +	aliases {
+> > +		serial2 = &main_uart8;
+> 
+> This feels hacky. Your chosen node picks serial2 as that is usually
+> the one that is wired up on K3 boards. But on this board it is main_uart8.
+> So why not have this be serial10, then choose
+> 
+> stdout-path = "serial10:115200n8";
+> 
+> Also, I've made comments on previous version of this series, it is
+> nice to include folks who have commented before in the CC for future
+> versions, that way our filters don't hide these away and we can more
+> easily check that our comments have been addressed.
+
+Please stick with the standard of serial2 as the linux console standard.
+We ended up with that to ease up capabilities of various distros to
+uniformly work across SoC and board variants.
+
+I do agree that phandle is the wrong approach here (baud etc information
+missing). "serial2:115200n8" is probably the way to do this right.
 
 -- 
 Regards,
