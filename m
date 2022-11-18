@@ -2,187 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7716462FFE0
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 23:15:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1479963004C
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 23:46:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiKRWPy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 17:15:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41788 "EHLO
+        id S230484AbiKRWqW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 17:46:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229925AbiKRWPx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 17:15:53 -0500
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2763AF08A;
-        Fri, 18 Nov 2022 14:15:52 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AIMFY8G130971;
-        Fri, 18 Nov 2022 16:15:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1668809734;
-        bh=YJ8Ee2BSlqS+12WdMmthz73OOuNqa7uireFaQ9RDJh4=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=qvIknZ4Giqd8DsqWz9adUGPsGhTLDCmKOc3spxKPDwJqs1dOswNmMibD4cA7+3uzz
-         lu2j/KMHtKHucEbxQMtRg2qffCGl1Le+/FKArEAE4DJ3FXtF7V9ZyDxRlJqa/F2lNK
-         +vXkJuDheccCGeL4kIAO478l16RKSMthg44Bddiw=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AIMFYWW025451
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 18 Nov 2022 16:15:34 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 18
- Nov 2022 16:15:34 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Fri, 18 Nov 2022 16:15:34 -0600
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AIMFYsY071765;
-        Fri, 18 Nov 2022 16:15:34 -0600
-Date:   Fri, 18 Nov 2022 16:15:34 -0600
-From:   Nishanth Menon <nm@ti.com>
-To:     Andrew Davis <afd@ti.com>
-CC:     Apurva Nandan <a-nandan@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        with ESMTP id S230391AbiKRWqV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 17:46:21 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01817942C8
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 14:46:20 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1owA7g-0007Qr-0q; Fri, 18 Nov 2022 23:46:12 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1owA7e-00588W-8e; Fri, 18 Nov 2022 23:46:11 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1owA7e-00Have-5x; Fri, 18 Nov 2022 23:46:10 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+To:     Angel Iglesias <ang.iglesiasg@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Grant Likely <grant.likely@linaro.org>,
+        Wolfram Sang <wsa@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
-Message-ID: <20221118221534.52rfyf5gsck3xrrb@sauciness>
-References: <20221116130428.161329-1-a-nandan@ti.com>
- <20221116130428.161329-5-a-nandan@ti.com>
- <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
- <20221118174754.y37pq77drvla2uxj@tinderbox>
- <8c123fa2-caab-d2dd-5eb4-688f1c6abb33@ti.com>
- <20221118180808.wnel7d6gswsnooww@junkman>
- <93242211-95e7-09a0-fced-5ef2deb9fc08@ti.com>
- <20221118192744.wish2vrxgy7dg7c2@unnerving>
- <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-i2c@vger.kernel.org, kernel@pengutronix.de,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 011/606] gpio: max732x: Convert to i2c's .probe_new()
+Date:   Fri, 18 Nov 2022 23:35:45 +0100
+Message-Id: <20221118224540.619276-12-uwe@kleine-koenig.org>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 15:08-20221118, Andrew Davis wrote:
-> On 11/18/22 1:27 PM, Nishanth Menon wrote:
-> > On 12:15-20221118, Andrew Davis wrote:
-> > > I don't see either of those addressed in that thread, only that
-> > > the aliases should go in the .dts files and be trimmed, nothing
-> > 
-> > Key is trimmed to what the system and ecosystem needs.
-> > 
-> > > stops us from:
-> > > 
-> > > chosen {
-> > > 	stdout-path = "serial10:115200n8";
-> > > };
-> > > 
-> > > aliases {
-> > > 	serial10 = &main_uart8;
-> > > };
-> > 
-> > Do we need 10 serial aliases? There are'nt 10 serial ports exposed in
-> > j782s2. ok - lets say we do this, then: [1] is needed to boot? but why
-> > do we need to do that for all armv8 platforms when aliases allows us
-> 
-> Why do we need SERIAL_8250_NR_UARTS at all, might be a better question.
-> These should be dynamically allocated if the number goes over the
-> default count imposed by the TTY framework. Maybe folks are still a
-> bit too afraid to touch the TTY subsystem core, I don't blame them..
-> 
-> > to trim it to just the 3 or 4 serial ports the platform really needs
-> > That + being able to use the convention that serial2 is always linux
-> > console, is'nt that a good thing? Hence recommending to just expose the
-> > serialports as aliases to exactly what we need while keeping serial2 as
-> > the linux console (which in this case happens to be main_uart8 - example
-> > as j721s2 does).
-> > 
-> 
-> "serial2 as the linux console" is *not* a convention, we just don't want to
-> fix up our bootloader/userspace to actually reason about what serial ports to
-> put logins on. Why not make ttyS10 the default, or ttyS666, it doesn't solve
-> your multi-distro issue either way since they usually only start a login on
-> ttyS0, console=, and/or the first virtual tty. Never on ttyS2. So you are
-> hacking up DT for a solution that doesn't do what you want in the end.
+From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-ttyS2 is an accidental convention not a "by design" or definition
-convention. I suspect we ended up here from old OMAP days - all
-platforms in k3 ended up with ttyS2. In hindsight, if I had to do it
-by design, I would probably have picked ttyS0, well, we did'nt.
+.probe_new() doesn't get the i2c_device_id * parameter, so determine
+that explicitly in the probe function.
 
-$ git grep stdout-path arch/arm/boot/dts|grep serial|cut -d '=' -f 2|cut -d ':' -f1|grep -v '&'|sort|uniq -c
-    379  "serial0
-     21  "serial1
-     33  "serial2
-     13  "serial3
-      1  "/slaves@3e000000/serial@0
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-max732x.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-$ git grep stdout-path arch/arm64/boot/dts|grep serial|cut -d '=' -f 2|cut -d ':' -f1|grep -v '&'|sort|uniq -c
-    245  "serial0
-     17  "serial0";
-      7  "serial1
-     49  "serial2
-      3  "serial3
-      2  "serial4
-      2  "serial5
-      2  "serial6
-
-$ git grep stdout-path arch/arm64/boot/dts/ti|grep serial|cut -d '=' -f 2|cut -d ':' -f1|grep -v '&'|sort|uniq -c
-      8  "serial2
-      1  "serial3
-
-I don't buy the argument here for 1-1 mapping of aliased serial
-instances to instances - why should main_uart8 be ttyS10, why not
-ttyS8 (it is equally valid - why was it called uart8?).. That mapping
-is just a convention we are choosing to create.
-
-The iot2050 ecosystem picked ttyS3 as the linux console for reasons of
-that ecosystem. K3 so far has selected ttyS2 as the convention for
-console - no matter where the serial instances have been located.
-
-I want to maintain consistency of existing TI platforms here without
-needing to shove a dozen things on existing users (yes j78-evm is a new
-board, but it is within the existing k3 s/w ecosystem and yes, getty,
-systemd etc are smarter today than once upon a time)
-
-So, given TI K3 history does'nt follow rest of the non-TI instances
-unfortunately - and I am going to put my foot down here - serial8 or 10
-is "fake" anyways - rationalization can be made in different ways. So
-pushing for one over the other is not something I will entertain.
-
-From usage model point of view - serial0 will be the best candidate as
-console followed by serial2 (purely statistically speaking). In K3
-context, it is just serial2 in TI board ecosystem.
-
-That is a discussion for pros and cons - Open to hearing opinions.
-Unless I hear 1000% strong reasons with _backing data_ - not an
-subjective "it is correct thing to do" - why we'd want to move TI
-board ecosystem (including all the pains of bootloader combinations
-etc) switch over to ttyS0[1], having a mix and churn for the s/w
-ecosystem of having to deal with ttyS0 and ttyS2 nodes in arm64/dts/ti
-at least for the TI board ecosystem.. I cant see why i want to put the
-ecosystem through another churn on consoles.. But, fine, i will keep
-my ears open. If there are no strong arguments with _data_, then we
-stick with serial2 and y'all can curse me for another decade+ for that
-call :)
-
-[1] I have'nt forgotten ttyO2 to ttyS2 transition of OMAP
- https://duckduckgo.com/?q=ttyO2+to+ttyS2+omap
+diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+index da6972117030..68e982cdee73 100644
+--- a/drivers/gpio/gpio-max732x.c
++++ b/drivers/gpio/gpio-max732x.c
+@@ -608,9 +608,9 @@ static struct max732x_platform_data *of_gpio_max732x(struct device *dev)
+ 	return pdata;
+ }
+ 
+-static int max732x_probe(struct i2c_client *client,
+-				   const struct i2c_device_id *id)
++static int max732x_probe(struct i2c_client *client)
+ {
++	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+ 	struct max732x_platform_data *pdata;
+ 	struct device_node *node;
+ 	struct max732x_chip *chip;
+@@ -707,7 +707,7 @@ static struct i2c_driver max732x_driver = {
+ 		.name		= "max732x",
+ 		.of_match_table	= of_match_ptr(max732x_of_table),
+ 	},
+-	.probe		= max732x_probe,
++	.probe_new	= max732x_probe,
+ 	.id_table	= max732x_id,
+ };
+ 
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+2.38.1
+
