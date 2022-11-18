@@ -2,102 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C4A362F7E3
-	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 15:41:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C606E62F941
+	for <lists+linux-gpio@lfdr.de>; Fri, 18 Nov 2022 16:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242123AbiKROl0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 18 Nov 2022 09:41:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41918 "EHLO
+        id S233929AbiKRP2i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 18 Nov 2022 10:28:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242188AbiKROlD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 09:41:03 -0500
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B384A051
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 06:39:43 -0800 (PST)
-Received: by mail-wm1-x32c.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso4171728wmp.5
-        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 06:39:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Y6Bg6qnbLbnNqXzsBHD84qTsLn1wOxnG7yqT2bB3ME=;
-        b=xSL2im09i1KIxS2mPzcxkjNvslnj6eMdv8/l3GIPKfG4be2IiNiuLJKAnl/n0kQ83D
-         ueBerELi5Z3NTPZ5fCLCgxXA9mPk70SfB35/gvlN67FuwH8rVgp5XUzjExACyecyM9Fz
-         Bkddcbdt9EhS9KqskfTAiQrXQm/eiyBeOSFvvh6CDUf3WGEwkfQRlk/6Ubkm+GT1RmFI
-         C2IvUn0oR1rLBUL/vfGd8WNtVWqEkiLuQOCCReOxeitCBqEicha3OmECgacodS862KHa
-         J54lBd7ktsG79azccKkmJMW3U3Y7Ip3DR5hGWToCbbb9QUxCThvX++tJIBsp0IDMLsuz
-         Jfeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Y6Bg6qnbLbnNqXzsBHD84qTsLn1wOxnG7yqT2bB3ME=;
-        b=a4QioL2/8jvEYMIMp0yvYx4R1jdSMqC3z3daUDr+CN5Je7ogOUaimfF8VYn0I24eQn
-         OI0sLyxifUB5w7sR7LQ1ySDDSR5Eiwlf616MZSwZhTS5n1cYzNuJ0tTWgkPWGn643KdY
-         D7n/3lH+fAcveo2ltVZKvKTuvk/s71Jiae+J+EWELQl/lZQkhr4+DjqNBJypAp+vEpZ/
-         9wAuqkVB0FlIDsjvvCSi2+d6rhMLN2P+YW9VxwtIU1dJfFWo4VFgKLFU5JnhNG0BBo6G
-         onMc+dINlfeFWBU70/FCLeNj7NLijQelgdmHU+PepdYJa2vV4nRKPYUuW9vkteVLhF4X
-         MQsA==
-X-Gm-Message-State: ANoB5pmNgrjmdbqBHfT9xSY023csBRIRYyPBgwofOWEPn8hn8zlPVLFi
-        t24tFrL4npIkH6HQftEewzNmtaelzlFnmg==
-X-Google-Smtp-Source: AA0mqf6+xja8YwiiyJEjzyuPpa/nrBlOVNTSsYyM8az4DVr4K6oearAVW2j9Gpgbp5j0npawgfzhtw==
-X-Received: by 2002:a05:600c:4e12:b0:3cf:d4f7:e70d with SMTP id b18-20020a05600c4e1200b003cfd4f7e70dmr5140565wmq.187.1668782381730;
-        Fri, 18 Nov 2022 06:39:41 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:f7cc:460c:56ae:45a? ([2a01:e0a:982:cbb0:f7cc:460c:56ae:45a])
-        by smtp.gmail.com with ESMTPSA id c2-20020a05600c0a4200b003cfd4cf0761sm10164756wmq.1.2022.11.18.06.39.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 18 Nov 2022 06:39:41 -0800 (PST)
-Message-ID: <7c722431-a866-7d19-d7b2-83535719aed0@linaro.org>
-Date:   Fri, 18 Nov 2022 15:39:40 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: convert semtech,sx150xq bindings
- to dt-schema
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        with ESMTP id S241890AbiKRP2e (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 18 Nov 2022 10:28:34 -0500
+X-Greylist: delayed 525 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 18 Nov 2022 07:28:31 PST
+Received: from polaris.svanheule.net (polaris.svanheule.net [IPv6:2a00:c98:2060:a004:1::200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26EC2E6B1
+        for <linux-gpio@vger.kernel.org>; Fri, 18 Nov 2022 07:28:28 -0800 (PST)
+Received: from vanadium.ugent.be (vanadium.ugent.be [157.193.99.61])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sander@svanheule.net)
+        by polaris.svanheule.net (Postfix) with ESMTPSA id A6A61348D6E;
+        Fri, 18 Nov 2022 16:19:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svanheule.net;
+        s=mail1707; t=1668784780;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=3uDpepbDz6oAsPmKRPLYkr5Mx+SABgVzOUZM4/B3U8Q=;
+        b=tWKaide1exK5/CcC1vSdRgb2ES/r1jatqYzrzVo5hm+hvY2Rbap3L0lRxZ58+gbxPQg5du
+        /1Po1XrDzGv/93WQdFwuiSkqAfStM2dB50QnpNwn9DDVs6/hCsUR3YR329ot+1GI4eUW2u
+        wkHjgltOhAlt1VZj6KGy01q2rah0taUqalfP8N87XzLjmzrN2lLiQpxxlTHHkf3mBKy4Tc
+        dqXuLawWIuXCbzl2/cdRHzcuL5qpogatjRxerI8wxyEu4WzYriTtPo3lkw/dLZ978wQ04a
+        amPLfGBKD4NBxMTnV1qVAcKMRhHhDDwTG/5A8Y4Vqnq64bI2ywM1Mw2oIoT13w==
+Message-ID: <79ba65cc117db8102bd8f7e30d6d44fdbd0542f1.camel@svanheule.net>
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: convert semtech,sx150xq
+ bindings to dt-schema
+From:   Sander Vanheule <sander@svanheule.net>
+To:     Neil Armstrong <neil.armstrong@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org
+Date:   Fri, 18 Nov 2022 16:19:39 +0100
+In-Reply-To: <20221005-mdm9615-sx1509q-yaml-v3-0-e8b349eb1900@linaro.org>
 References: <20221005-mdm9615-sx1509q-yaml-v3-0-e8b349eb1900@linaro.org>
- <CACRpkdYCUTb6-RdT0LPbmesxabUR1yMs5-YKCxxNcg+MC8Gf8A@mail.gmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <CACRpkdYCUTb6-RdT0LPbmesxabUR1yMs5-YKCxxNcg+MC8Gf8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/11/2022 09:56, Linus Walleij wrote:
-> On Tue, Nov 15, 2022 at 11:06 AM Neil Armstrong
-> <neil.armstrong@linaro.org> wrote:
-> 
->> This converts the Semtech SX150Xq bindings to dt-schemas, add necessary
->> bindings documentation to cover all differences between HW variants
->> and current bindings usage.
->>
->> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> The binding is a piece of art. Excellent work!
-
-Thanks ! Actually it was fun to write !
-
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> Yours,
-> Linus Walleij
+SGksCgpPbiBUdWUsIDIwMjItMTEtMTUgYXQgMTE6MDYgKzAxMDAsIE5laWwgQXJtc3Ryb25nIHdy
+b3RlOgo+IFRoaXMgY29udmVydHMgdGhlIFNlbXRlY2ggU1gxNTBYcSBiaW5kaW5ncyB0byBkdC1z
+Y2hlbWFzLCBhZGQgbmVjZXNzYXJ5Cj4gYmluZGluZ3MgZG9jdW1lbnRhdGlvbiB0byBjb3ZlciBh
+bGwgZGlmZmVyZW5jZXMgYmV0d2VlbiBIVyB2YXJpYW50cwo+IGFuZCBjdXJyZW50IGJpbmRpbmdz
+IHVzYWdlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9u
+Z0BsaW5hcm8ub3JnPgo+IFJldmlld2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
+Pgo+IC0tLQo+IFRvOiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4g
+VG86IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gVG86IEtyenlzenRvZiBLb3ps
+b3dza2kgPGtyenlzenRvZi5rb3psb3dza2krZHRAbGluYXJvLm9yZz4KPiBDYzogbGludXgtZ3Bp
+b0B2Z2VyLmtlcm5lbC5vcmcKPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiBDYzog
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwo+IC0tLQo+IENoYW5nZXMgaW4gdjM6Cj4gLSBS
+ZXNlbnQgd2l0aCBtaXNzaW5nIFRvOiBMaW51cyBXYWxsZWlqCj4gLSBMaW5rIHRvIHYyOiBodHRw
+czovL2xvcmUua2VybmVsLm9yZy9yLzIwMjIxMDA1LW1kbTk2MTUtc3gxNTA5cS15YW1sLXYyLTAt
+YTRhNWI4ZWVjYzdiQGxpbmFyby5vcmcKPiAKPiBDaGFuZ2VzIGluIHYyOgo+IC0gZml4ZWQgcm9i
+IGNvbW1lbnRzCj4gLSBhZGRlZCByb2IncyBSZXZpZXdlZC1ieQo+IC0gTGluayB0byB2MTogaHR0
+cHM6Ly9sb3JlLmtlcm5lbC5vcmcvci8yMDIyMTAwNS1tZG05NjE1LXN4MTUwOXEteWFtbC12MS0w
+LTBjMjY2NDliNjM3Y0BsaW5hcm8ub3JnCj4gLS0tCgpbc25pcF0KCj4gK8KgIC0gaWY6Cj4gK8Kg
+wqDCoMKgwqAgcHJvcGVydGllczoKPiArwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZToKPiArwqDC
+oMKgwqDCoMKgwqDCoMKgIGNvbnRhaW5zOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGVudW06
+Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gc2VtdGVjaCxzeDE1MDNxCj4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIC0gc2VtdGVjaCxzeDE1MDZxCj4gK8KgwqDCoCB0aGVuOgo+
+ICvCoMKgwqDCoMKgIHBhdHRlcm5Qcm9wZXJ0aWVzOgo+ICvCoMKgwqDCoMKgwqDCoCAnLWNmZyQn
+Ogo+ICvCoMKgwqDCoMKgwqDCoMKgwqAgcHJvcGVydGllczoKPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBwaW5zOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpdGVtczoKPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBhdHRlcm46ICdeZ3Bpb1swLTE1XSQnCgpbc25pcF0K
+Cj4gK8KgIC0gaWY6Cj4gK8KgwqDCoMKgwqAgcHJvcGVydGllczoKPiArwqDCoMKgwqDCoMKgwqAg
+Y29tcGF0aWJsZToKPiArwqDCoMKgwqDCoMKgwqDCoMKgIGNvbnRhaW5zOgo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGNvbnN0OiBzZW10ZWNoLHN4MTUwOXEKPiArwqDCoMKgIHRoZW46Cj4gK8Kg
+wqDCoMKgwqAgcGF0dGVyblByb3BlcnRpZXM6Cj4gK8KgwqDCoMKgwqDCoMKgICctY2ZnJCc6Cj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoCBwcm9wZXJ0aWVzOgo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+IHBpbnM6Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGl0ZW1zOgo+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgcGF0dGVybjogJ14ob3NjaW98Z3Bpb1swLTE1XSkkJwoKU29y
+cnkgdG8gYmUgc28gbGF0ZSB0byByZXBseSwgYnV0IGRvbid0IHRoZXNlIHBhdHRlcm5zIG9ubHkg
+bWF0Y2ggImdwaW8wIiwgImdwaW8xIiwgYW5kICJncGlvNSI/CgpBIHF1aWNrIHNlYXJjaCBmb3Ig
+c29tZSBkYXRhc2hlZXRzIHR1cm5lZCB1cCB0aGUgU1gxNTAzIGFuZCBTWDE1MDlRIHdpdGggMTYg
+R1BJT3MsIHNvIEkgYXNzdW1lIHRoZQppbnRlbnRpb24gd2FzIHRvIG1hdGNoICJncGlvMCIgdG8g
+ImdwaW8xNSIuIEkgdGhpbmsgdGhpcyBzaG91bGQgYmUgIl4oZ3Bpb1swLTldfGdwaW8xWzAtNV0p
+JCIgKG9yCnNvbWV0aGluZyBlcXVpdmFsZW50KS4KCkJlc3QsClNhbmRlcgo=
 
