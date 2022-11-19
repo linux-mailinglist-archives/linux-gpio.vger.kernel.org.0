@@ -2,107 +2,248 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42AF1630CA5
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Nov 2022 07:50:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70F74630E0B
+	for <lists+linux-gpio@lfdr.de>; Sat, 19 Nov 2022 11:15:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232230AbiKSGu0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Nov 2022 01:50:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43954 "EHLO
+        id S231351AbiKSKPt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 19 Nov 2022 05:15:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231847AbiKSGuU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Nov 2022 01:50:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C7D9193C3;
-        Fri, 18 Nov 2022 22:50:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 14FB6B82716;
-        Sat, 19 Nov 2022 06:50:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 86E7AC433B5;
-        Sat, 19 Nov 2022 06:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668840616;
-        bh=J6A2zN+GaxubPoA4pynMpJ9aRQjTm1qSEAaKvZV9V00=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=d+WNCYrodp79kOfNGIXr5PvvIs5GCF6E/TB0CDa2g+OZEp77Ua/U5QlZvwsWMDrK4
-         OlLD/U4jjbYyhWaiA4rct4JoYkz9IWVscixQD26JhUaXY3yUQEg8Y11+kSP0F7KpB8
-         zMZfwDOJzrlQ9jze8VoIW1mJ3xn1MyS9umDxW8U4aWjYwb6wOYhonyX7dPSQGn//c3
-         ES9sycuBVsgfSKQQ6UBEnGpryiRSmirdvQs2tXppPiSbnayeSEWB/Bx525GuMc+yZz
-         4Kon/n6VmXCwbfBd8TB8yHub9wkc/uggzN+T8rGWKeov06QFTXG5sVNeaRlrWw+yQP
-         EzUp1tL6honhQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 64E94E524E4;
-        Sat, 19 Nov 2022 06:50:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229500AbiKSKPt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Nov 2022 05:15:49 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F874B987;
+        Sat, 19 Nov 2022 02:15:47 -0800 (PST)
+Received: from kwepemi500024.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NDqKP3glBzRpDn;
+        Sat, 19 Nov 2022 18:15:21 +0800 (CST)
+Received: from [10.174.179.163] (10.174.179.163) by
+ kwepemi500024.china.huawei.com (7.221.188.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 19 Nov 2022 18:15:45 +0800
+Message-ID: <d1e86166-b2b0-a235-fe9e-be9ee4d93290@huawei.com>
+Date:   Sat, 19 Nov 2022 18:15:44 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-From:   patchwork-bot+chrome-platform@kernel.org
-Message-Id: <166884061640.19423.12726268813615488480.git-patchwork-notify@kernel.org>
-Date:   Sat, 19 Nov 2022 06:50:16 +0000
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
-In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-To:     =?utf-8?q?Uwe_Kleine-K=C3=B6nig_=3Cuwe=40kleine-koenig=2Eorg=3E?=@ci.codeaurora.org
-Cc:     ang.iglesiasg@gmail.com, lee.jones@linaro.org,
-        grant.likely@linaro.org, wsa@kernel.org, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-actions@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-pm@vger.kernel.org, kernel@puri.sm,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [rft, PATCH v5 1/1] gpiolib: fix memory leak in
+ gpiochip_setup_dev()
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Linus Walleij <linus.walleij@linaro.org>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liwei391@huawei.com>
+References: <20221118194508.50686-1-andriy.shevchenko@linux.intel.com>
+From:   Zeng Heng <zengheng4@huawei.com>
+In-Reply-To: <20221118194508.50686-1-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.179.163]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi500024.china.huawei.com (7.221.188.100)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello:
 
-This patch was applied to chrome-platform/linux.git (for-next)
-by Tzung-Bi Shih <tzungbi@kernel.org>:
+On 2022/11/19 3:45, Andy Shevchenko wrote:
+> From: Zeng Heng <zengheng4@huawei.com>
+>
+> Here is a backtrace report about memory leak detected in
+> gpiochip_setup_dev():
+>
+> unreferenced object 0xffff88810b406400 (size 512):
+>    comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
+>    backtrace:
+>      kmalloc_trace
+>      device_add		device_private_init at drivers/base/core.c:3361
+> 			(inlined by) device_add at drivers/base/core.c:3411
+>      cdev_device_add
+>      gpiolib_cdev_register
+>      gpiochip_setup_dev
+>      gpiochip_add_data_with_key
+>
+> gcdev_register() & gcdev_unregister() would call device_add() &
+> device_del() (no matter CONFIG_GPIO_CDEV is enabled or not) to
+> register/unregister device.
+>
+> However, if device_add() succeeds, some resource (like
+> struct device_private allocated by device_private_init())
+> is not released by device_del().
+>
+> Therefore, after device_add() succeeds by gcdev_register(), it
+> needs to call put_device() to release resource in the error handle
+> path.
+>
+> Here we move forward the register of release function, and let it
+> release every piece of resource by put_device() instead of kfree().
+>
+> While at it, fix another subtle issue, i.e. when gc->ngpio is equal
+> to 0, we still call kcalloc() and, in case of further error, kfree()
+> on the ZERO_PTR pointer, which is not NULL. It's not a bug per se,
+> but rather waste of the resources and potentially wrong expectation
+> about contents of the gdev->descs variable.
+>
+> Fixes: 159f3cd92f17 ("gpiolib: Defer gpio device setup until after gpiolib initialization")
+> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> changes in v5 (done by Andy):
+>    - refactored to avoid double checks on the same conditionals
+>    - moved kcalloc() after validating its parameter
+>    - compiled tested only by me (Andy)
 
-On Fri, 18 Nov 2022 23:35:34 +0100 you wrote:
-> Hello,
-> 
-> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
-> call-back type") from 2016 there is a "temporary" alternative probe
-> callback for i2c drivers.
-> 
-> This series completes all drivers to this new callback (unless I missed
-> something). It's based on current next/master.
-> A part of the patches depend on commit 662233731d66 ("i2c: core:
-> Introduce i2c_client_get_device_id helper function"), there is a branch that
-> you can pull into your tree to get it:
-> 
-> [...]
+I have applied the patch on local environment, and it works fine after 
+rough test
 
-Here is the summary with links:
-  - [512/606] platform/chrome: cros_ec: Convert to i2c's .probe_new()
-    https://git.kernel.org/chrome-platform/c/f9e510dc92df
+(which is based on QEMU simulated).
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Best regards,
 
+Zeng Heng
 
+> changes in v4:
+>    - add gpiochip_print_register_fail()
+> changes in v3:
+>    - use put_device() instead of kfree() explicitly
+> changes in v2:
+>    - correct fixes tag
+>
+>   drivers/gpio/gpiolib.c | 42 ++++++++++++++++++++++++++----------------
+>   1 file changed, 26 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index caa747fdcb72..119c9c3a2a50 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -580,12 +580,13 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>   	if (ret)
+>   		return ret;
+>   
+> +	/* From this point, the .release() function cleans up gpio_device */
+> +	gdev->dev.release = gpiodevice_release;
+> +
+>   	ret = gpiochip_sysfs_register(gdev);
+>   	if (ret)
+>   		goto err_remove_device;
+>   
+> -	/* From this point, the .release() function cleans up gpio_device */
+> -	gdev->dev.release = gpiodevice_release;
+>   	dev_dbg(&gdev->dev, "registered GPIOs %d to %d on %s\n", gdev->base,
+>   		gdev->base + gdev->ngpio - 1, gdev->chip->label ? : "generic");
+>   
+> @@ -651,10 +652,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   	struct fwnode_handle *fwnode = NULL;
+>   	struct gpio_device *gdev;
+>   	unsigned long flags;
+> -	int base = gc->base;
+>   	unsigned int i;
+> +	u32 ngpios = 0;
+> +	int base = 0;
+>   	int ret = 0;
+> -	u32 ngpios;
+>   
+>   	/* If the calling driver did not initialize firmware node, do it here */
+>   	if (gc->fwnode)
+> @@ -696,17 +697,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   	else
+>   		gdev->owner = THIS_MODULE;
+>   
+> -	gdev->descs = kcalloc(gc->ngpio, sizeof(gdev->descs[0]), GFP_KERNEL);
+> -	if (!gdev->descs) {
+> -		ret = -ENOMEM;
+> -		goto err_free_dev_name;
+> -	}
+> -
+>   	/*
+>   	 * Try the device properties if the driver didn't supply the number
+>   	 * of GPIO lines.
+>   	 */
+> -	if (gc->ngpio == 0) {
+> +	ngpios = gc->ngpio;
+> +	if (ngpios == 0) {
+>   		ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+>   		if (ret == -ENODATA)
+>   			/*
+> @@ -717,7 +713,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   			 */
+>   			ngpios = 0;
+>   		else if (ret)
+> -			goto err_free_descs;
+> +			goto err_free_dev_name;
+>   
+>   		gc->ngpio = ngpios;
+>   	}
+> @@ -725,13 +721,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   	if (gc->ngpio == 0) {
+>   		chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+>   		ret = -EINVAL;
+> -		goto err_free_descs;
+> +		goto err_free_dev_name;
+>   	}
+>   
+>   	if (gc->ngpio > FASTPATH_NGPIO)
+>   		chip_warn(gc, "line cnt %u is greater than fast path cnt %u\n",
+>   			  gc->ngpio, FASTPATH_NGPIO);
+>   
+> +	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
+> +	if (!gdev->descs) {
+> +		ret = -ENOMEM;
+> +		goto err_free_dev_name;
+> +	}
+> +
+>   	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
+>   	if (!gdev->label) {
+>   		ret = -ENOMEM;
+> @@ -750,11 +752,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   	 * it may be a pipe dream. It will not happen before we get rid
+>   	 * of the sysfs interface anyways.
+>   	 */
+> +	base = gc->base;
+>   	if (base < 0) {
+>   		base = gpiochip_find_base(gc->ngpio);
+>   		if (base < 0) {
+> -			ret = base;
+>   			spin_unlock_irqrestore(&gpio_lock, flags);
+> +			ret = base;
+> +			base = 0;
+>   			goto err_free_label;
+>   		}
+>   		/*
+> @@ -868,6 +872,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   err_free_gpiochip_mask:
+>   	gpiochip_remove_pin_ranges(gc);
+>   	gpiochip_free_valid_mask(gc);
+> +	if (gdev->dev.release) {
+> +		/* release() has been registered by gpiochip_setup_dev() */
+> +		put_device(&gdev->dev);
+> +		goto err_print_message;
+> +	}
+>   err_remove_from_list:
+>   	spin_lock_irqsave(&gpio_lock, flags);
+>   	list_del(&gdev->list);
+> @@ -881,13 +890,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>   err_free_ida:
+>   	ida_free(&gpio_ida, gdev->id);
+>   err_free_gdev:
+> +	kfree(gdev);
+> +err_print_message:
+>   	/* failures here can mean systems won't boot... */
+>   	if (ret != -EPROBE_DEFER) {
+>   		pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+> -		       gdev->base, gdev->base + gdev->ngpio - 1,
+> +		       base, base + (int)ngpios - 1,
+>   		       gc->label ? : "generic", ret);
+>   	}
+> -	kfree(gdev);
+>   	return ret;
+>   }
+>   EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
