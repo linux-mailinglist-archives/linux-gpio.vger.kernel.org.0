@@ -2,100 +2,78 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 463CC630E3A
-	for <lists+linux-gpio@lfdr.de>; Sat, 19 Nov 2022 12:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A9B9063137D
+	for <lists+linux-gpio@lfdr.de>; Sun, 20 Nov 2022 11:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231666AbiKSLKV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 19 Nov 2022 06:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44268 "EHLO
+        id S229713AbiKTK6L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 20 Nov 2022 05:58:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbiKSLKS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 19 Nov 2022 06:10:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F3F6B9E9;
-        Sat, 19 Nov 2022 03:10:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 99C4960A1F;
-        Sat, 19 Nov 2022 11:10:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 763BCC433C1;
-        Sat, 19 Nov 2022 11:10:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668856217;
-        bh=ene1SzTvsJEbW7r9yE4HzkF6rHfAR+aLIm+4UV/wgpo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AwWwg8hTEvU1lRotHevSh1bppQ+LWfLwM9aU/yyuaFSoeFCmSwjJ4hNXPYNKPqyxF
-         RwoQt69tGMzjEml+0YwDwVnLfETtKSINebD6ZDDIjJG2YZ26iP67zsjgz4cgG6uGnz
-         NeH6bx6FUo9hgiiy06aaBkM2k9pRw5peXY9fXGbpIdefsltNF4FVq05z66zkCjnicj
-         f/YnghTN3aq/ykMs6EmMfO5tnMvkQz4JaZBC1pmyIfU8l5HPFc7Qkk3nYySibldc2a
-         4zm4rXtEkUSkKLdGBy0DoGhHf7XI5Gph/tChnTnqwzMKjNhd3aisTxqnB1pP+2RhuX
-         Z5WZrjjMLqJaQ==
-Date:   Sat, 19 Nov 2022 12:10:11 +0100
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-actions@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Message-ID: <Y3i5kz6IL7tFbVwX@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-media@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-actions@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, alsa-devel@alsa-project.org,
-        linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-pm@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+        with ESMTP id S229610AbiKTK6L (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Nov 2022 05:58:11 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2098CF3B
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Nov 2022 02:58:10 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id g7so14968522lfv.5
+        for <linux-gpio@vger.kernel.org>; Sun, 20 Nov 2022 02:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uUXSxOgsLMhzEpNkySjXy0kcuEKDN5qHgUfta7WCO3Y=;
+        b=EXVtfntCJeagfksD+ZV0+0lxJVaPUf6tg3iMPra+nz9Idd0OaYGTetInQxd1uLpC0J
+         PKeHAk92Y8E5XQZLAYId2FG5jbf6zECdv0o3PvyxGQAk3p/2WgD7B6sR+cui7znJo146
+         UzDw7EqWNyzomV3WPrTMX5N4iC9zQ0JqBuRu1ZDI1F3Hk9o2EG2+FfFE/83tvLn5zLIM
+         M0PJroW+uWvMRq4SkRjtbuxVwD86JUjo6MSZiXivxF3019exQj1oGdPhZybPs6PZx+Vy
+         hIHhhD+6zd5tM7PfOQNa7t/aJGHlqhKEC5nCItw/Glb17jEKiwTqotBSifYJEXbIHey3
+         EyVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uUXSxOgsLMhzEpNkySjXy0kcuEKDN5qHgUfta7WCO3Y=;
+        b=2mTljnMTsgU7waIhYjNa+sqYjcZAQLUZHonKejayxMebVWs4oA36I6RvDsUKSCNWmE
+         xwjLe5x+fNT4Y4egkhpYiGMEDRiIadugEXATxYNVWseS6KnjhHs0V4wS6lH19vRsJ4JV
+         vreWBQLRaAIr0UVEGf8GhakioY8U9Adw2314xEn12Hz12qF2ADsuiyVrL/0WaEk/A3EL
+         EaMUvC2CBQncv1kdsI0Mbh+DvEHUbndAfCxVyJyj0wBrnEllNENlnGs+8HtxOLjGX5UX
+         ptfxMsxYoHYebTg8j5rGrwsfzVIpwqDQ5Blbka5omEzonUg0K25nVdaQeyy/tvzobguI
+         cKqA==
+X-Gm-Message-State: ANoB5pl3q+NcYRqkZ7LXWcKVyjamFcD/jMVvCWZ6o0PQEIp/sDedUf9J
+        mZEuizjtLQ8FRi9euj91qq9mBA==
+X-Google-Smtp-Source: AA0mqf4Mu65ldzDouhPwdjiSlJOg3hhY43q41zeKYBqg+S5wU0FjJx/xB5x5rYnFAP77xZ7jB/3z5g==
+X-Received: by 2002:a05:6512:3ca4:b0:4b4:b5c2:647c with SMTP id h36-20020a0565123ca400b004b4b5c2647cmr4574684lfv.42.1668941888449;
+        Sun, 20 Nov 2022 02:58:08 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id d20-20020a056512369400b004a2c3fd32edsm1486897lfs.144.2022.11.20.02.58.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 20 Nov 2022 02:58:07 -0800 (PST)
+Message-ID: <528648f2-17df-ab19-8ad4-76423bbc0ae4@linaro.org>
+Date:   Sun, 20 Nov 2022 11:58:05 +0100
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xRatB1/o2GNYTDWD"
-Content-Disposition: inline
-In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
+ QRU1000 pinctrl
+Content-Language: en-US
+To:     Melody Olvera <quic_molvera@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221118182039.29236-1-quic_molvera@quicinc.com>
+ <20221118182039.29236-2-quic_molvera@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221118182039.29236-2-quic_molvera@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -103,50 +81,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 18/11/2022 19:20, Melody Olvera wrote:
+> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
+>  1 file changed, 134 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+> new file mode 100644
+> index 000000000000..cb0c496d8666
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+> @@ -0,0 +1,134 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,qdu1000-tlmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
+> +
+> +maintainers:
+> +  - Melody Olvera <quic_molvera@quicinc.com>
+> +
+> +description: |
+> +  This Top Level Mode Multiplexer block (TLMM) is found in the QDU1000 and
+> +  QRU1000 platforms.
 
---xRatB1/o2GNYTDWD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It's better to keep consistent style which allows to do easy
+search/replace, than to have new files using their own sentences. So
+keep it the same as was unified in few recent commits.
 
-Hi Uwe,
+> +allOf:
+> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,qdu1000-tlmm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts: true
+> +  interrupt-controller: true
+> +  "#interrupt-cells": true
+> +  gpio-controller: true
+> +
+> +  gpio-reserved-ranges:
+> +    minItems: 1
+> +    maxItems: 75
 
-> This series completes all drivers to this new callback (unless I missed
-> something). It's based on current next/master.
+Technically you can have up to 76 separate ranges (151 GPIOs).
 
-Thanks for this work, really, but oh my poor inbox...
-
-> I don't think it's feasable to apply this series in one go, so I ask the
-> maintainers of the changed files to apply via their tree.
-
-This seems reasonable. It would have made sense to send "patch series
-per subsystem" then. So people only see the subset they are interested
-in. I know filename-to-subsys mapping is hardly ever perfect. But in my
-experience, even imperfect, it is more convenient than such a huge patch
-series.
-
-Happy hacking,
-
-   Wolfram
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
---xRatB1/o2GNYTDWD
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+Krzysztof
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmN4uY8ACgkQFA3kzBSg
-KbYEfw/+L6nVN4bUDqiN6AeU0yv+Wq/oAFkIUgM8TLT/4gzeEwPsCcTwHBaHQFEF
-sO9yZWukjVYlt2YlcEZglBVIAl7Ha17oQfv2HbWzZXl4cv8PEMfodh6PuOpcPuna
-P+RjiB40nPPxUt5hZ7EjiOpqML0Xy9G8X9Uzs5rA4Yt2OSXcGSYhCZb+U/Vygwlo
-VmLhSQhUnluCyhMZlbTn+bnmVCSHW8Bk5YBKOWygj8K7/LRYKfcNKXjMV35OsBix
-3rezawgwT9KZlZ6ABJZ6U/o5Lp91OP/XeUfhMp76fmAOBcrh25HhWcunmbfRNto7
-gsYho2Ov6yLtz3/Gq4gsDB2HULSajZW1behtfyfufpmkyGd8+C5+/uUjfltWtpqm
-qaAL4YC+kjzarFDRKtIINCqlixjh0VUUKCkf6c4IDCNoLD4HW5KGevjvMvG0kJ9S
-ftPKDwBpZ+cMZtpTcYgRQRiEb30VekQVyWM8SL+350sLO2dVhy7tjAX1jTnWZ843
-4L3c6tSTioFtNmuIREzKl4EX2xkZUq6ajI4QeAcleHXAsBKHB5kvDpfKYIfGZ49X
-mvIEEWRaUXGZAyqx2tMBXvuSA2aL+Gk9hrW3cvCHoBh6EkGfa6R4flw7yN0RkYHR
-Fzq+Jpg1jOHfQhNDoZ8yqFo2xQZQpp1oDdVAjW70IRrE5KPvV0k=
-=eSNj
------END PGP SIGNATURE-----
-
---xRatB1/o2GNYTDWD--
