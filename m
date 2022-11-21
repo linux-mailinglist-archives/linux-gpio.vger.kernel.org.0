@@ -2,121 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1288463178E
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 01:24:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF31C631B01
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 09:10:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229730AbiKUAYV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 20 Nov 2022 19:24:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
+        id S229952AbiKUIKj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 03:10:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiKUAYU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 20 Nov 2022 19:24:20 -0500
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2915C20F47;
-        Sun, 20 Nov 2022 16:24:19 -0800 (PST)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 16D9032004ED;
-        Sun, 20 Nov 2022 19:24:16 -0500 (EST)
-Received: from imap50 ([10.202.2.100])
-  by compute3.internal (MEProxy); Sun, 20 Nov 2022 19:24:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1668990255; x=
-        1669076655; bh=Lbw5JJiVpIzdsblo48QNaa3IzJ+C15i2ix45QhyZJas=; b=M
-        fDcu3Z5uw/5YgxWBYMyTE/sg4SXjkZwuaaGURh7wb7UZ2KHni+uyNQsUGY/s3Bn8
-        GQz5mKgA1oFce7mfQuHL/nxSAarNkO6XMEQ1/v9CEZERw5jVGjkdohm1I/TdpgzM
-        EXppbKYuJjV4TDEk+N2Z21OC056WaWf1094f8FpxnNS1jOmvYDUAUUBmwRdpb7ZV
-        5wWkzUAmBjdeuKoGwm1BiiK6TfwdEiCqLMHlubRCElV/aYhOCrNVq32wS3nycyMj
-        gxkkhOAGcygaxYH5y0OTerLwefavXOB5Xn7yuFYnDwamJX+L/kwWCJWPFfOWXO/b
-        D07IPewoR8XcmiADog4TQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1668990255; x=
-        1669076655; bh=Lbw5JJiVpIzdsblo48QNaa3IzJ+C15i2ix45QhyZJas=; b=I
-        a4xkDUmxNNO92Ux+hW3sFRn8L0GVi8pxYoRg8705AOtfQHFVKFf8Lsloi8JWJF2m
-        XtWn1Penq8Tqxcr5y/cz9hvMU2DyMXP7CiWY1ao9v5TVp3xK3XiRIx13acgs85g1
-        6xe7pHkQhKzavDqnjcoJBhc68K3GN3J4owhdZeCp+gDANpp7oqgcK5FzGa6OzK9s
-        m70OlME/ehV8OyabYTxgrw5aj3CZXjdB32BKDMNUDF2pCyRdUVbdBtBRZjJXR9wn
-        dR9+ENzG8TvZkbKImgd35uosP+wn2LfHebH9DKfiiVERp4JAwcfKbAbW7cXPY48/
-        ctOl3OJ+heFqCi1k6EZwA==
-X-ME-Sender: <xms:L8V6Y8koyv7VTAvIKtuafYYbfSYhDLN-RAt0XlyFudTZALI0nM0FnQ>
-    <xme:L8V6Y70P-kvkMU4j-QZ5-dCq3Q4qgc-JxChW8dbcbfaVLtv6cPShgJvRO5-va3QgY
-    vpEKdmvmJM1RoBwOQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrheehgddukecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtf
-    frrghtthgvrhhnpefgieeitedtleekheffveeiteegjeegffevfefhffekvddufeduvdev
-    jeegheehveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
-    hmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:L8V6Y6rZOGMHAMACrLHlugLWH3PDrN0DhSuoI2crGl5-KsjdRn_xPQ>
-    <xmx:L8V6Y4nVXqy9M-hFL6LriOhgSVzXlJU76Z6wA7CfPT9aNmgWdDV47g>
-    <xmx:L8V6Y63FyXyJ1iyN2nxfTzhhgvO-xVNqtjXnjQ9k9OohDCFloOoCqA>
-    <xmx:L8V6Y4xq6MB3MJ1xUdli5QHfrzQ2oE-kKxElk92es6Le93-LtfofKg>
-Feedback-ID: idfb84289:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 2B8D6170040C; Sun, 20 Nov 2022 19:24:15 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <b7ee82ac-1e64-45d9-8b30-5b697e36ad1f@app.fastmail.com>
-In-Reply-To: <20220905145555.674800-1-etienne.carriere@linaro.org>
-References: <20220905145555.674800-1-etienne.carriere@linaro.org>
-Date:   Mon, 21 Nov 2022 10:53:53 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Etienne Carriere" <etienne.carriere@linaro.org>,
-        linux-kernel@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        "Stephen Warren" <swarren@nvidia.com>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Laxman Dewangan" <ldewangan@nvidia.com>,
-        "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
-        =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>
-Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229598AbiKUIKi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 03:10:38 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448451705F
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 00:10:37 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id l12so17633727lfp.6
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 00:10:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TJc97tVz8Np7zrJgaUJukwhYzlchMMe5Vq2+9jU6jbQ=;
+        b=SpEAlxuayCmwUcK99ZovqDDz9D6NcYrSo+wxdtokbur947YGUw14kXFRonYWdq+JVw
+         E45Cd9MJy4T7jERoOYj5xFPVOUxEJLwofAPRhkvTSyvDik11obECn5AQDoBz0zJMPH/z
+         bQNfEqKDwWsq6f2LZs1CbPciuN9E3DdhopGdvqc9PJ0ozQ1U55EQfHONoJvK48FbGe6b
+         bQGzVMoGSHimVLwIcCNziHnWknVHzwysHHTTm+ENHaZZUCL2vstJ2SgXY+TkUy2okHMi
+         93bqbgugM6pWwkmHTBNYoeAG5LPH4dzzGFAaPxM3byxbYTO3nTf3JhCXP8/l0jFbL09J
+         ChyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TJc97tVz8Np7zrJgaUJukwhYzlchMMe5Vq2+9jU6jbQ=;
+        b=jEDXUhj7xCtZp17TOhnZW7nDhF2qtGeY6CB5W1AUetXq609u4E1VTe/BKoqUud6FUC
+         wQxSBLB6lLdMF9kYqgRKa+bqZrE68ukJZyb9a6//oUyuoTGkko0OmkCXD/5EF5udf/+H
+         k3umMhX+us65S3p5FNoRWtIHwyTVxDhnfkmmyi8aXRsSOO+ZXy9qeKJrx0+SE2sbML8R
+         XoJnGxbSaUs6hoaavNXniptI7CUxxYyGFpMB7iQ3+3X0R3aBQPi6eSkU/vwGLLGRhVOQ
+         dKd+7uoEsViLRupS0lNmPRjf+dkaKs9kY+XCaOL4ySzThF6xAPnNhL3tSCepNrYSrj7x
+         F3Og==
+X-Gm-Message-State: ANoB5pmCCF//vVnXidN6Xpm84NYgyFqZ5zud7NChf6+/sonAKkWbV2Tj
+        IuTEAUVPNXaGKuxOoG9JXvAlSw==
+X-Google-Smtp-Source: AA0mqf6KyeCKxMLGMfC55yIqgtSo3LQr+b32lyA0Ozz84vLlkwY2J3VVUUkHRRbpBTAhUetGzTs6cA==
+X-Received: by 2002:a19:2d52:0:b0:4b1:dc42:6f85 with SMTP id t18-20020a192d52000000b004b1dc426f85mr5261719lft.568.1669018235579;
+        Mon, 21 Nov 2022 00:10:35 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id g16-20020a19ee10000000b004b18830af7asm1917126lfb.54.2022.11.21.00.10.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 00:10:35 -0800 (PST)
+Message-ID: <cf20ac7b-ede5-2e2c-247e-f32f1fc7f6be@linaro.org>
+Date:   Mon, 21 Nov 2022 09:10:34 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sdm845-pinctrl: add GPIO hogs
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Abel Vesa <abel.vesa@linaro.org>
+References: <20221118162101.145267-1-krzysztof.kozlowski@linaro.org>
+ <20221120164133.GA3166916-robh@kernel.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221120164133.GA3166916-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 20/11/2022 17:41, Rob Herring wrote:
+> On Fri, Nov 18, 2022 at 05:21:01PM +0100, Krzysztof Kozlowski wrote:
+>> Allow GPIO hogs in pin controller node.  qcom/sdm845-cheza.dtsi already
+>> uses it.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> ---
+>>  .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml        | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml
+>> index c9627777ceb3..57bac7f7a4fc 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.yaml
+>> @@ -48,6 +48,11 @@ patternProperties:
+>>              $ref: "#/$defs/qcom-sdm845-tlmm-state"
+>>          additionalProperties: false
+>>  
+>> +  "-hog(-[0-9]+)?$":
+>> +    $ref: /schemas/gpio/gpio-hog.yaml
+> 
+> You can drop this and just do:
+> 
+> required:
+>   - gpio-hog
+> 
+> As that's what selects the hog schema. Kind of an odd pattern I guess. 
+> We could make gpio.yaml define hog nodes instead I suppose.
+
+Thanks, that's much less code.
 
 
-On Tue, 6 Sep 2022, at 00:25, Etienne Carriere wrote:
-> Changes gpio.h DT binding header file to be published under GPLv2 or
-> BSD-2-Clause license terms. This change allows this GPIO generic
-> bindings header file to be used in software components as bootloaders
-> and OSes that are not published under GPLv2 terms.
->
-> All contributors to gpio.h file in copy.
->
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Laxman Dewangan <ldewangan@nvidia.com>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
->
-> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+Best regards,
+Krzysztof
 
-Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
-Apologies for the delay, it took me a bit to find the right people to ta=
-lk to.
-
-Andrew
