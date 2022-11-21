@@ -2,122 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40607632549
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 15:14:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F58632796
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 16:14:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230225AbiKUOOV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 09:14:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53460 "EHLO
+        id S232016AbiKUPOr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 10:14:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbiKUOOG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 09:14:06 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4B313E3E
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 06:13:13 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id d6so19002897lfs.10
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 06:13:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/gVXU4CCpMPIIsF7rh9gJbLfWbegQjWmXHwfCSm7NwU=;
-        b=2vZDgAmcEFAnG7beqo8yOsnMhX7xoxr8Twde+OF3l7X5s1mJZRENAsF8iYf4iSSOcD
-         HPIwXDBc9VuzQ1ztQMRzTnCCT7qsYH0Pie4dcvoX3Jg65yWLmG9HA1EsDZ97HU/U/c7h
-         0NbE6dL2nRJzOacTLCidEaoFdx8mpnrWPpJHvInSlftidjLGe+B4j1d6SQ8l4ZGI4B4p
-         baI8AG7IEGmMRmJ3Cx2hhvNPFgNaLMV0e5eJLeGQTMurjcCxwCEFI4UNi8yy8Cbjumgs
-         x+leHufOY+q8CwXQPZrXknhzLlrvSmlQWQwLOQl7y6tY19gjo2PCjj0+2N0QInfMguJR
-         1qng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/gVXU4CCpMPIIsF7rh9gJbLfWbegQjWmXHwfCSm7NwU=;
-        b=j5ZlQgl34hcVHAjPbE3Koge4GMBCvU+To4JYEoqiB33+sOf2PF9AGGfqUo99TehuVa
-         uDUWn6epVvASiaNH5YPSkcDcGuQYSCLV70S4vo35Hz6MRtiLVePIhPNnuraW+nboHhZV
-         cfXeDxNffkMHKVt+Gq1Qc0St+2iRQCmUFSq7jb650BVNJj/NACxttBYXRZZZCiFfc2aP
-         5lrpOrW4fPqyID6Gq/VAKdNO6BtSwSw1ByxCD4QcT9lbwJzMYxLeORgdGw28x+3LgK8y
-         3yjPBQ+fD6Lp8suyxpRZxFWIlsccgt9eeSZGMTazpZ5NgEF1woKiVPp4PQtMQYWfyfq/
-         D61Q==
-X-Gm-Message-State: ANoB5pmSN+sycy2QWZUsH5EgrBmBNNXgl65TTh35FHBqs0YYrEX6UwZp
-        UjX+76eWz7U0n5ero44owonBWYcjDNgjxEf549yqOw==
-X-Google-Smtp-Source: AA0mqf4pU9ITMJWhUzbY67BsuOHiwvnX5tS6s4IeLo18VsqyrxcWY7ABSEGhlELnoarsP9UJrqEcDnf81Qt8fpRwh/c=
-X-Received: by 2002:a19:4909:0:b0:4b1:785c:838d with SMTP id
- w9-20020a194909000000b004b1785c838dmr5825636lfa.388.1669039991364; Mon, 21
- Nov 2022 06:13:11 -0800 (PST)
+        with ESMTP id S229463AbiKUPOI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 10:14:08 -0500
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B3DCFA73;
+        Mon, 21 Nov 2022 07:08:56 -0800 (PST)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.3ffe.de (Postfix) with ESMTPSA id 25C74230D;
+        Mon, 21 Nov 2022 16:08:54 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+        t=1669043334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ShPOxC+vc6kAIrStj2HW/8mEr6+lT3FK4X9HcTeMoPg=;
+        b=IlQZyAYQe3hDv2l9ZeBmKXQKfgyanqyB4reG447B/lnDD+KEp2prY3rs7NN6MBwQIZTujf
+        4+k0EtLtEjuLyHIlA84BP6Ljkw16yvuRd9bND2jqLLJyRiBWvUQGZHOxysCJy/6a0ZtZHn
+        h4c2PbqpQthoCw+pX/ds8ufPoZNFnDDk8IGlURzWFyaogGzIhbYHbC3jFwEDWC4YLeM8oo
+        JMSWuUjWARbv2CwwG5kuGfSbHMzROgcEP4UtO5bB4BoeCIHPtDyfiNOe5V9qIueDN9uUnO
+        R3o3R0RWAh1nGrifXKUVI+aGoHu5c+vJ7YXmMdI254Lu8qqqNMm0xRpdGDqv7g==
+From:   Michael Walle <michael@walle.cc>
+To:     Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 1/2] regmap: add regmap_might_sleep()
+Date:   Mon, 21 Nov 2022 16:08:42 +0100
+Message-Id: <20221121150843.1562603-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-References: <cover.1668768040.git.viresh.kumar@linaro.org> <daa3021e4c148d33a8d50c54841719082836c43a.1668768040.git.viresh.kumar@linaro.org>
-In-Reply-To: <daa3021e4c148d33a8d50c54841719082836c43a.1668768040.git.viresh.kumar@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 21 Nov 2022 15:12:57 +0100
-Message-ID: <CAMRc=MeXTD10OVZzp2zGTR6Vs2PXemzkrvpBqFE=YojS9mrMPw@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH V10 2/6] bindings: rust: Add libgpiod crate
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Wedson Almeida Filho <wedsonaf@gmail.com>,
-        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
-        stratos-dev@op-lists.linaro.org,
-        Gerard Ryan <g.m0n3y.2503@gmail.com>,
-        Alex Gaynor <alex.gaynor@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
-        y86-dev <y86-dev@protonmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> +/// Get the API version of the libgpiod library as a human-readable string.
-> +pub fn libgpiod_version() -> Result<&'static str> {
-> +    // SAFETY: The string returned by libgpiod is guaranteed to live forever.
-> +    let version = unsafe { gpiod::gpiod_version_string() };
-> +
-> +    if version.is_null() {
-> +        return Err(Error::NullString("GPIO library version"));
-> +    }
-> +
-> +    // SAFETY: The string is guaranteed to be valid here by the C API.
-> +    unsafe { CStr::from_ptr(version) }
-> +        .to_str()
-> +        .map_err(Error::StringNotUtf8)
-> +}
-> +
+With the dawn of MMIO gpio-regmap users, it is desirable to let
+gpio-regmap ask the regmap if it might sleep during an access so
+it can pass that information to gpiochip. Add a new regmap_might_sleep()
+to query the regmap.
 
-This is not a blocker, I will apply this series to master later and we
-can add modifications on top of that, but I am now questioning the
-need for this function here and also the value of __version__ in
-Python bindings.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/base/regmap/regmap.c | 13 +++++++++++++
+ include/linux/regmap.h       |  7 +++++++
+ 2 files changed, 20 insertions(+)
 
-Previously the python bindings were built with autotools as part of
-the whole library. In v2 python now has a proper setup.py script and I
-intend to publish the bindings on pypi. It can now be built separately
-from the rest of the libgpiod code as long as the system satisfies the
-dependency for libgpiod. Example: I will split the yocto recipe for
-libgpiod into one for the core lib + tools + C++ bindings and another
-for python that will go to meta-python. The latter will depend on the
-libgpiod package but will be built in a separate sysroot.
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index c6d6d53e8cd3..d12d669157f2 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -3486,6 +3486,19 @@ int regmap_get_reg_stride(struct regmap *map)
+ }
+ EXPORT_SYMBOL_GPL(regmap_get_reg_stride);
+ 
++/**
++ * regmap_might_sleep() - Returns whether a regmap access might sleep.
++ *
++ * @map: Register map to operate on.
++ *
++ * Returns true if an access to the register might sleep, else false.
++ */
++bool regmap_might_sleep(struct regmap *map)
++{
++	return map->can_sleep;
++}
++EXPORT_SYMBOL_GPL(regmap_might_sleep);
++
+ int regmap_parse_val(struct regmap *map, const void *buf,
+ 			unsigned int *val)
+ {
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index ca3434dca3a0..3faf5d5dbb26 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -1219,6 +1219,7 @@ static inline int regmap_write_bits(struct regmap *map, unsigned int reg,
+ int regmap_get_val_bytes(struct regmap *map);
+ int regmap_get_max_register(struct regmap *map);
+ int regmap_get_reg_stride(struct regmap *map);
++bool regmap_might_sleep(struct regmap *map);
+ int regmap_async_complete(struct regmap *map);
+ bool regmap_can_raw_write(struct regmap *map);
+ size_t regmap_get_raw_read_max(struct regmap *map);
+@@ -1905,6 +1906,12 @@ static inline int regmap_get_reg_stride(struct regmap *map)
+ 	return -EINVAL;
+ }
+ 
++static inline bool regmap_might_sleep(struct regmap *map)
++{
++	WARN_ONCE(1, "regmap API is disabled");
++	return true;
++}
++
+ static inline int regcache_sync(struct regmap *map)
+ {
+ 	WARN_ONCE(1, "regmap API is disabled");
+-- 
+2.30.2
 
-In that case keeping the libgpiod API version as the Python's package
-__version__ (which made sense before when that code was closely
-integrated with libgpiod core) is no longer necessary. I'm thinking
-about setting __version__ to v2.0.0 (because we already had python
-bindings with v1.x.y versioning out there) but decoupling it from
-libgpiod's API version.
-
-In your rust code all the crates already have their own versions that
-don't follow libgpiod's API's version. I think we should drop this
-function. What do you think?
-
-Also: is there a standardized way for crates to inspect their version?
-As in: println!(crate.version()) or something?
-
-Bart
