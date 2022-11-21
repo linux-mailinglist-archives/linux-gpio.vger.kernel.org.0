@@ -2,102 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 263A7631B5E
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 09:27:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 007B3631B9A
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 09:37:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbiKUI1s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 03:27:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55114 "EHLO
+        id S229909AbiKUIhP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 03:37:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbiKUI1r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 03:27:47 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B739DDF22;
-        Mon, 21 Nov 2022 00:27:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669019265; x=1700555265;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=UcAlxZZtX/L5C7vzngfeWVdeLqnyk1XDhH9IwX9rwJc=;
-  b=DU9agdos79kQmes2Ih4GQDCAPjQkVdyIFHrkfDJnEfXhh040x+p04zuN
-   7dUNplvHlIkuhCuTzJ8dZ8FKHzOdpbefESAjkfV4HGqzcQjROfi1jPj0l
-   GQ8lMagG30NY3yHng+efDUEI7tOgVzfyrEY2qWEhMTHKDH8OExdb6tHvE
-   Qf5Ay32pMWGGCD8EYRc7oxBe+lnTdF+75pC08Kpzv9hGkFj6SCWQxylei
-   g5E6RcWBJyDjBzQpAIrtDEsP3XLKKXlkI1MKQCvpTnmHdsj3WxnjuoXZZ
-   yk0V1ihg6f2UsB/AHVOw4e9CBr1fkM8voN8RQWjyh03bEx3vo/aVgaMmE
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="375647539"
-X-IronPort-AV: E=Sophos;i="5.96,180,1665471600"; 
-   d="scan'208";a="375647539"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Nov 2022 00:27:45 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10537"; a="640939047"
-X-IronPort-AV: E=Sophos;i="5.96,180,1665471600"; 
-   d="scan'208";a="640939047"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 21 Nov 2022 00:27:43 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ox29V-00FBEd-0G;
-        Mon, 21 Nov 2022 10:27:41 +0200
-Date:   Mon, 21 Nov 2022 10:27:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marijn Suijten <marijn.suijten@somainline.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Brian Masney <bmasney@redhat.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Unify access to the device properties
-Message-ID: <Y3s2fHkr29eMQvtt@smile.fi.intel.com>
-References: <20221116141728.72491-1-andriy.shevchenko@linux.intel.com>
- <20221120191622.kngdz462bmns7fwe@SoMainline.org>
+        with ESMTP id S229635AbiKUIhO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 03:37:14 -0500
+Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956381F2DF
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 00:37:12 -0800 (PST)
+Received: by mail-ed1-x532.google.com with SMTP id l24so2613140edj.8
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 00:37:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/twC/ha76jEiNVmOM5ygah60xUtG/ONv2QvD8LyUHR8=;
+        b=nSBCI7qcEXZMZy9n5XsZR2PvEFCeEWDrLwXXhHO23PsKyEBwla0aK8X/4NJvK6SGIv
+         BBm2SDyRt9Nas/brh3CNJSdtC5xDv4fKs45a++pe9cp1gcQGsnC48HDou5lbgTALzH+C
+         M7k8eulHknrjylWM83S5hPEIf7zce7oRkopuXJJ+OmuTzIst21IZIxp+1sJbs3NOKghK
+         NfgX5txuH4aqusDYCFM9Kzjik6vuVV/v/dhliPgLay8MplwUZW6WbEt9YViL3SISBGZT
+         pCbkB7vzr5ixcQ8isnnglqA/OQAt9nJVOA5Yqq8ZOLipS7MXzaRLkX0F6HO14Vr3A27r
+         8bjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/twC/ha76jEiNVmOM5ygah60xUtG/ONv2QvD8LyUHR8=;
+        b=G2iLn/De46/9JYPpK2A/UmdkCrm8qxXOsHJgcSwssIV73G3+uMPkMkP3UxA/Jl7m7F
+         y9oThCZRIOYhpWgs7cJ+vaqllqYKspXlKUH18HvOgCHwnL4z+NhYmh29U6KWQULqdDW4
+         AdjxzcLbAlSpU6oJmokmwVxFdzwBrrTOuv4XrNNGKTwKXhSAyucVvSZZHE1SnmBoD4OM
+         dQx4YHCWocxDnN1MKzUd4vNiG85pPuicFcDfLiMqb5IoatZRThiUmWx4Djs548ENHXj6
+         BfGm9S6YsaxqrnnylX0EHmDKrgBLzUUjiU1sfocJg0VPJqlpJZqw7bgJXiFxb5lYJvIR
+         HfpA==
+X-Gm-Message-State: ANoB5pmir42dlURvMY64GeK/oTd3NAkA5ArnohXDwQ6UU0Tp7OX73Fz+
+        lrTOeQp0bqtCgfexxeOu0/mGsJLh3JI9BZ6kqR2/Bw==
+X-Google-Smtp-Source: AA0mqf7H05bbHloVzMxMtfy6zpSK99wVNqcrzskS8PJRKysYmp6Z7Pu0/HvsVmzHLEI38tBbIW2VC0XE4rHZ6ihWALU=
+X-Received: by 2002:aa7:d555:0:b0:464:6485:419b with SMTP id
+ u21-20020aa7d555000000b004646485419bmr803045edr.382.1669019830478; Mon, 21
+ Nov 2022 00:37:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221120191622.kngdz462bmns7fwe@SoMainline.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220905145555.674800-1-etienne.carriere@linaro.org> <b7ee82ac-1e64-45d9-8b30-5b697e36ad1f@app.fastmail.com>
+In-Reply-To: <b7ee82ac-1e64-45d9-8b30-5b697e36ad1f@app.fastmail.com>
+From:   Etienne Carriere <etienne.carriere@linaro.org>
+Date:   Mon, 21 Nov 2022 09:36:59 +0100
+Message-ID: <CAN5uoS90ONkgZSsyP-dPHyO6SMCxH0yJ2vHaQ82G8jv0Og12rQ@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual license
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 20, 2022 at 08:16:22PM +0100, Marijn Suijten wrote:
-> On 2022-11-16 16:17:28, Andy Shevchenko wrote:
-> > Some of the functions are using struct fwnode_handle, some struct device
-> > pointer. In the GPIO library the firmware node of the GPIO device is the
-> > same as GPIO node of the GPIO chip. Due to this fact we may use former
-> > to access properties everywhere in the code.
-> > 
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> 
-> I presume this is a more complete version of [1], as this also happens
-> to address the crash on MSM [1], hence:
-> 
-> Tested-by: Marijn Suijten <marijn.suijten@somainline.org>
+Hello Andrew and all,
 
-Thank you!
+On Mon, 21 Nov 2022 at 01:24, Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+>
+>
+> On Tue, 6 Sep 2022, at 00:25, Etienne Carriere wrote:
+> > Changes gpio.h DT binding header file to be published under GPLv2 or
+> > BSD-2-Clause license terms. This change allows this GPIO generic
+> > bindings header file to be used in software components as bootloaders
+> > and OSes that are not published under GPLv2 terms.
+> >
+> > All contributors to gpio.h file in copy.
+> >
+> > Cc: Stephen Warren <swarren@nvidia.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Laxman Dewangan <ldewangan@nvidia.com>
+> > Cc: Andrew Jeffery <andrew@aj.id.au>
+> > Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> > Cc: Nuno S=C3=A1 <nuno.sa@analog.com>
+> > Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> >
+> > Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+>
+> Acked-by: Andrew Jeffery <andrew@aj.id.au>
+>
+> Apologies for the delay, it took me a bit to find the right people to tal=
+k to.
 
-> Just in case, this seems to depend on [3] or it fails to apply cleanly
-> because of the `const` change on `fwnode` (consider this irrelevant if
-> it has already been applied, I'm still on -next-20221115 for this
-> integration branch).
+Thanks a lot for closing looking at this change.
+I think all contributors now have acked it.
 
-But initial issue was induced by (my) patch which is only in gpio/for-next.
-It's supposed to be only Linux Next issue.
+Regards,
+Etienne
 
-> [1]: https://lore.kernel.org/all/Y3S62i7OzocP5QrT@orome/
-> [2]: https://lore.kernel.org/linux-arm-msm/20221115110800.35gl3j43lmbxm3jb@SoMainline.org/
-> [3]: https://lore.kernel.org/linux-gpio/20221031-gpiolib-swnode-v3-0-0282162b0fa4@gmail.com/
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> Andrew
