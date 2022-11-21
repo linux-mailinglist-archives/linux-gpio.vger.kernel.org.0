@@ -2,86 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2100A6323E2
+	by mail.lfdr.de (Postfix) with ESMTP id D6A946323E5
 	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 14:37:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbiKUNhR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 08:37:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43340 "EHLO
+        id S231130AbiKUNhS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 08:37:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231258AbiKUNgu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:36:50 -0500
-Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6B69C4941
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:36:47 -0800 (PST)
-Received: by mail-yb1-xb2e.google.com with SMTP id f201so13572460yba.12
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:36:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7fETgmcg+RZComtgQK4VwfLsjYwDPSbBGi7QkQgS63M=;
-        b=LgTESlEs9kToX/T0EAmm3YEataEKQTY6/rVzfeOL26hCaO0wGF6F6n6D4JElc8z7Of
-         sOQBcg3tHIClk/OC72lCdNPyDk87eyNNMw+VtsQclxzechHDagZsuHbJ4NgyCR9+d6CW
-         yGjN+Of3fewohlDiHN5l6BFFBNtUC7FeHJAYldH43t694E4cTAwVi0XElCBzq6GL3hUz
-         /9aoYJlhpl1JncmfZJTkLVsypQn1GA2HXtZSS8OCGrbtub+ExLPoxzqD47CkaIDzJZcA
-         tTXX/WWcXtDZLkO1If1IJ+jplONoaBx4W3Cx7ml7bbzv8KaPFbJD7YM+Bm2jaWBbjEUG
-         8zqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7fETgmcg+RZComtgQK4VwfLsjYwDPSbBGi7QkQgS63M=;
-        b=djhQ3i4ny3qIwsC/rDCE/uq2hkIBGUGLGWsNZ+4BTr4OjPZYH6EmXAOAa2+lkK7J2I
-         CkgKNljsS/EUZEBchcVa/XJYKpU/1ByvbxB3alVD0F3Owz7VM8euWUkvxdEvERAhwR/8
-         K6RbITALwQFccI9g6Kew8vgHegsNA2k7ke7Kq+OHm1509K3VpJFEU11fBUsyUacB5jSW
-         fcBC76KDFvUj4ZK/SwZ4M47hbRi9rX6K4cbhYsuURcdTYmjXd6LfFOQOwHYEsBqzi5DN
-         LNDiYQk7IIgHDiOGT0mt7JRa5QbgC77eYmS4p1Sk/94N90+LlXqqSPU3R3+1kvPO7WGv
-         zS7g==
-X-Gm-Message-State: ANoB5pmYKfYqEG/QnHuxSX/x9CScOpQ28Gsx0A/M9w74l9kMmiNnU3au
-        sgFBqv6w6onobg1/gG24KPlEqdglE3Zm5/c5DgnmURoCJD8=
-X-Google-Smtp-Source: AA0mqf57H3TO9gZIjfO4a+5v5wlwnlsXcU4w0wfFyEkE0W+ApaZ6mcQuJrZnYvZNfAXNLxOMMQKfDP5zl7cFfFTYcgI=
-X-Received: by 2002:a25:1843:0:b0:6dc:b9ec:7c87 with SMTP id
- 64-20020a251843000000b006dcb9ec7c87mr590091yby.322.1669037806948; Mon, 21 Nov
- 2022 05:36:46 -0800 (PST)
+        with ESMTP id S231179AbiKUNgs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:36:48 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBB01C287F;
+        Mon, 21 Nov 2022 05:36:45 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0A55B6602A03;
+        Mon, 21 Nov 2022 13:36:43 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1669037804;
+        bh=jCj7p/2m5lxy7d9NG/YjgHLCUygY93EdQ0KK5hgNvZA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=mAX2f8bUlgLnVsyJ4enAhMsz7tlnEUuGxUf25RPImr+HA5ujwyDYZOI70p0AczD7v
+         aQezIl/lWk90rKclG/R4aRjhEcNc0kPu2Wtgx18+/u6tFOx+aDch7W69Xol1xgea56
+         /yP3bIuRFOUv0CdorDNpMfNQqwbobWV7tP4eno/8yd4+EMgR0j8G3mlQNCrLls6q4s
+         yHRJAaNsZ0oEDP7QvZsWUtArgshvknj5cLWDe1JJsl5R9raD+1459ZxJSOxZrO1Kqq
+         pb9T38wq2e5WtzWOi3tetUZQmQrAGuUq+QEnPOpk5fR6YwxkBdmt0k3UGFZj2U1mnS
+         rKKQcac3aIn/w==
+Message-ID: <fa456fcc-5252-27e9-ebb9-afe360edabfb@collabora.com>
+Date:   Mon, 21 Nov 2022 14:36:41 +0100
 MIME-Version: 1.0
-References: <20221121132608.230645-1-renzhijie2@huawei.com>
-In-Reply-To: <20221121132608.230645-1-renzhijie2@huawei.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Nov 2022 14:36:34 +0100
-Message-ID: <CACRpkdb9Aw-8wXUFYnBy_LOpuTeB2RpnUB+QwWQiZ9R6BcwbGw@mail.gmail.com>
-Subject: Re: [PATCH -next] pinctrl: pinctrl-loongson2: fix Kconfig dependency
-To:     Ren Zhijie <renzhijie2@huawei.com>
-Cc:     zhanghongchen@loongson.cn, zhuyinbo@loongson.cn,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yusongping@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v5 2/7] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Improve pinctrl subnode and property descriptions
+Content-Language: en-US
+To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>
+Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20221118113028.145348-1-y.oudjana@protonmail.com>
+ <20221118113028.145348-3-y.oudjana@protonmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221118113028.145348-3-y.oudjana@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 2:31 PM Ren Zhijie <renzhijie2@huawei.com> wrote:
+Il 18/11/22 12:30, Yassine Oudjana ha scritto:
+> From: Yassine Oudjana <y.oudjana@protonmail.com>
+> 
+> Change "subnodes" to "subnode" in subnode description for better grammatical
+> accuracy, capitalize pinmux description, wrap all descriptions at 80 characters,
+> and remove literal style indicators from descriptions that don't need their new
+> lines preserved.
+> 
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
 
-> If CONFIG_PINCTRL_LOONGSON2=y and CONFIG_OF is not set,
-> gcc complained about undefined reference:
->
-> drivers/pinctrl/pinctrl-loongson2.o: In function `pinconf_generic_dt_node_to_map_all':
-> pinctrl-loongson2.c:(.text+0x1c4): undefined reference to
-> `pinconf_generic_dt_node_to_map'
->
-> To fix this error, add depends on OF to
-> config PINCTRL_LOONGSON2.
->
-> Fixes: f73f88acbc18 ("pinctrl: pinctrl-loongson2: add pinctrl driver support")
-> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Patch applied!
 
-Yours,
-Linus Walleij
