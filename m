@@ -2,79 +2,79 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 384136323FA
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 14:40:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CAF263240F
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 14:42:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231366AbiKUNj6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 08:39:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44418 "EHLO
+        id S230014AbiKUNmR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 08:42:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231410AbiKUNja (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:39:30 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01EE1B7382
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:39:08 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-381662c78a9so113500617b3.7
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:39:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Fsujk+z8GOWqWHX+4ujaDdwgp0FHFB6Yy2WQ5Xv8zI=;
-        b=NNymIeuUwmXGmojZ2pPdaYPi9evKPZ3tbZ6ZAFyDRDwtLKPC6FlLQoRm/oOv7VPu2+
-         d5XydAbN1iZAX+S+H2LcPeT1Iyc8b3F7V49V5PxiaRz5b8iVqaDpi9zu2RJVMlUY7Rxv
-         Y4CPE5tD3R1gptPMdCWEdhSRcVCyk6CwYTXVgOro8HPKC/qzKAFN2Q1BDKusBZhBpt61
-         pH7YntStUFHzTj7Voc99gMLd8x3C0aXRcNVDsvIc/5L4S6hNcCEWlfhjXvN1xwWdHXDn
-         lB2Y0q5V4tNGWdlr91U2uJQCj7/C2/jJUDdUqqg5b/Ldr87vmuKgk0CuZ1rQk0Ig2nJA
-         NLqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/Fsujk+z8GOWqWHX+4ujaDdwgp0FHFB6Yy2WQ5Xv8zI=;
-        b=KVcP61auMMtj8ejdKYhE34NKbQYDhCuuqB78AVyKNCmos0xsABj4tyIgmy6kDd9/oJ
-         tFec2s02El77ZHpGLQFDiu5VFDU5lbff6+yYxtsCSlOuDEfp66FgqgjhBbDXmyr/AxBx
-         4bWN+SL/LPf5KtExMv3h6xjeVgiwSZsWll5pniwYY5Mc2HfYoQGpfdHCAjkvIB1BL+gy
-         laeUVuk88OBAtDbBgYyWLmOdFpoVuNWKhCFmsm5Cy/v73DUpSo9QQRLUSojigomhJ1YH
-         624Ca4NDiEBHT0HDabJKrxGb2GlmKNKgabGktq9CQeeypJlG/UpLUk7bEc0ZZRaLC5AK
-         d0Mw==
-X-Gm-Message-State: ANoB5pnpzV6Vgim5jLDusNL2TNCUEDp+XHoSb/d4Wt0ckPmWB1gQxZ5g
-        q4Ce//KELL9emu+P2g5H1OQ0EfccFs0Q8Z/AMNeGNRaUywc=
-X-Google-Smtp-Source: AA0mqf6+aIVk8JJMyzd3/4pBc4UgSK1fbLvtiF4OKnsFjuz9Rl6wQ91IT+JCIKe8mi3q3pNo14OwHN/ZFXDncuDLpMk=
-X-Received: by 2002:a81:7909:0:b0:36f:d2d9:cdc4 with SMTP id
- u9-20020a817909000000b0036fd2d9cdc4mr1361030ywc.380.1669037947199; Mon, 21
- Nov 2022 05:39:07 -0800 (PST)
+        with ESMTP id S229903AbiKUNl5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:41:57 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233F32D1DE;
+        Mon, 21 Nov 2022 05:41:54 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 1862E6600368;
+        Mon, 21 Nov 2022 13:41:52 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1669038112;
+        bh=LEKyP7Lh1CGJUl09TE0Fs4DL19+CS3JViR/Mmqqgwrs=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=cSpESSFnz3CedZ2akD3CYVMgONzrJw4c6KypoOO4AiFgKjce6U8DtFf5C/iftIiRj
+         iC2XUupLKdaWDA2M8B6Bwlzy1tN8+s31SRO39vEwA3RVQzpwgbTGjUUZMWrizMjsab
+         WpiJSvJvudOO9HW7TxXmjiss9ddm+DRt9G/r7RlQGtGEcjvowgraMk8g4yosyyGRuT
+         d+0dAQUAnymgfIpGTdA8uEI2VDatrig6KfcSVnsvraOJ8oskUL8QLW00ab37sdYi0V
+         gmySM/oUrY7iQFcjDm6PPzAOFYwkrtBXv4+C0VFP8vssN0JFYzVTbQIBPwQ//VYXD1
+         nySEVAS7dOwuw==
+Message-ID: <fce278a4-b983-ffd2-52bd-0cbfed6e5294@collabora.com>
+Date:   Mon, 21 Nov 2022 14:41:49 +0100
 MIME-Version: 1.0
-References: <20221117123542.1154252-1-niyas.sait@linaro.org>
-In-Reply-To: <20221117123542.1154252-1-niyas.sait@linaro.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Nov 2022 14:38:56 +0100
-Message-ID: <CACRpkdbnx9TeGjUZBYYPvJASqCRWUd+3ZaVDkh4tHsqgy4yF+w@mail.gmail.com>
-Subject: Re: [PATCH] pinconf-generic: fix style issues in pin_config_param doc
-To:     Niyas Sait <niyas.sait@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v5 5/7] dt-bindings: pinctrl: mediatek,mt6779-pinctrl:
+ Document MT6765 pin controller
+Content-Language: en-US
+To:     Yassine Oudjana <yassine.oudjana@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Andy Teng <andy.teng@mediatek.com>
+Cc:     Yassine Oudjana <y.oudjana@protonmail.com>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <20221118113028.145348-1-y.oudjana@protonmail.com>
+ <20221118113028.145348-6-y.oudjana@protonmail.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221118113028.145348-6-y.oudjana@protonmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 1:35 PM Niyas Sait <niyas.sait@linaro.org> wrote:
+Il 18/11/22 12:30, Yassine Oudjana ha scritto:
+> From: Yassine Oudjana <y.oudjana@protonmail.com>
+> 
+> The MT6765 pin controller has had a driver for a while, but DT
+> bindings were never documented for it.
+> 
+> Signed-off-by: Yassine Oudjana <y.oudjana@protonmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-> Fixes following issues introduced in a  previous commit
-> to clarify values for pin config pull up and down types.
->
-> - replace spaces with tabs to be consistent with rest of the doc
-> - use capitalization for unit (ohms -> Ohms)
->
-> Signed-off-by: Niyas Sait <niyas.sait@linaro.org>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Patch applied!
 
-Yours,
-Linus Walleij
