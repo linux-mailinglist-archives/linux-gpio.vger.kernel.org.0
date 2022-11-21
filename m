@@ -2,98 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D4C632394
-	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 14:31:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0D3B63239E
+	for <lists+linux-gpio@lfdr.de>; Mon, 21 Nov 2022 14:32:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbiKUNa5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 08:30:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
+        id S230252AbiKUNcf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 08:32:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230339AbiKUNar (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:30:47 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA87ABFF6E
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:30:42 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id s18so13558523ybe.10
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 05:30:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GrD43smjCY3nWkLYSNjoj38of5EV+w5nYaqRZQqu6Z8=;
-        b=TUNYh4I3FrTN2Qk4H0EaCgVdh6VtCUkHQrl7IF/WS7A8JSbSrytMpvO9LkK9Chb/uQ
-         h9GLIhg4dMaSzvngUjH18KAVt1yZoCFimILjVFl+dkm1tcVzFl4XBl55R+EfA4twK5Ke
-         gYoxXpoho+NKdd3nXtxHF6h0GjlyIWZ0OAKcvzgF0MIpF6dOinFEk36siwVhJValvUyc
-         pueO/pGQ7t8JbKNXg4JSPMLpASYMygIVKHIG8S7hscoi39Di4OM/PV1uTKa10eaeqj5R
-         UQRz5lOvq6w2vbh0ZmtgIp+lsq0Y3AkQwctNRFuHzu8YKxkvctDEQvbADmqbEAxKtIVt
-         Kocw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GrD43smjCY3nWkLYSNjoj38of5EV+w5nYaqRZQqu6Z8=;
-        b=s9eRrBpQ/yH5IqUsmyelVEh4R9lC/+K5WTeKWGoNJ9voSPf4oGEItZnyZJTh5BSy3K
-         Da+M6ttaTPAa1KtyeMpn28y0joAaEZ/+v9PTcbffAHjpZAq+P2HRh2rxTU7tvku/8+i+
-         HsthsSnPoYHSPy20Q8XEOVSGdn6KBNA1ageLAiGwSySTYjjekCi4UzBHzwkLZ+UjrSCJ
-         Nod+LxKc5dK/4TL94zhvCJ8c8NKMcMJeJmqDFwB6lHNBK0r+vBBpvXX7hUcHYTQDiNty
-         kp3jyjJvsO8cI+y9gd7IAzm1rKtyOnUtDLWCp4jb//HzZTiWl1kQeM6nMG+DP41fzZFr
-         D5Cg==
-X-Gm-Message-State: ANoB5plUF8CLrh4RAbv/B0euAnmHRLK5ezU31fpP5wzVcrlNjfzm+Ux8
-        aQdV9JiFBNTkOyOEZE4FUicLMYB33R9ieqHwriP5mg==
-X-Google-Smtp-Source: AA0mqf534R8JnjgMAXUcVtn2pda2CXoOXsQXeOnwXivkvGmMe/kxz+dylSUO0uREdlZBWzAUitBn5prW6/5teaSJXAg=
-X-Received: by 2002:a25:1843:0:b0:6dc:b9ec:7c87 with SMTP id
- 64-20020a251843000000b006dcb9ec7c87mr563702yby.322.1669037441964; Mon, 21 Nov
- 2022 05:30:41 -0800 (PST)
+        with ESMTP id S230145AbiKUNca (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 08:32:30 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD06E3F;
+        Mon, 21 Nov 2022 05:32:25 -0800 (PST)
+Received: from kwepemi500022.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NG7WK6pH6zqSXM;
+        Mon, 21 Nov 2022 21:28:29 +0800 (CST)
+Received: from [10.67.111.83] (10.67.111.83) by kwepemi500022.china.huawei.com
+ (7.221.188.64) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Mon, 21 Nov
+ 2022 21:32:22 +0800
+Message-ID: <4b0ca9bc-00ba-1055-8bd9-68affd47b1bd@huawei.com>
+Date:   Mon, 21 Nov 2022 21:32:22 +0800
 MIME-Version: 1.0
-References: <20221121123803.3786-1-zhuyinbo@loongson.cn>
-In-Reply-To: <20221121123803.3786-1-zhuyinbo@loongson.cn>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 21 Nov 2022 14:30:30 +0100
-Message-ID: <CACRpkdbZS1HCvnTPnEHS6WSBvHUHmHOHs1YejuMcN9STn0+uPA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] gpio: loongson2ef: move driver to original location
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH -next] pinctrl: pinctrl-loongson2: fix Kconfig dependency
+To:     <linus.walleij@linaro.or>, <zhanghongchen@loongson.cn>,
+        <zhuyinbo@loongson.cn>
+CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yusongping@huawei.com>
+References: <20221121131422.217806-1-renzhijie2@huawei.com>
+From:   Ren Zhijie <renzhijie2@huawei.com>
+In-Reply-To: <20221121131422.217806-1-renzhijie2@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.83]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500022.china.huawei.com (7.221.188.64)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 1:38 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+Hi all,
 
-> This gpio driver doesn't cover CPU_LOONGSON64 platforms, because
-> of gpio address was wrong and I don't plan to support it thus
-> move this driver to arch/mips/loongson2ef/ so that I can drop the
-> shackles of the legacy driver and add a new driver that supports
-> dts/acpi to support LoongArch platforms.
+     I misspell the email address of linus, please ignore this email. 
+Thanks.
+
+Ren
+
+在 2022/11/21 21:14, Ren Zhijie 写道:
+> If CONFIG_PINCTRL_LOONGSON2=y and CONFIG_OF is not set,
+> gcc complained about undefined reference:
 >
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-
-Don't do this, we spent a lot of time to collect drivers in
-in drivers/gpio this is counter to our ambitions to have the
-drivers under drivers/* and only arch code under arch/*.
-
-Create a new file named loongson2-64bit.c or so and just
-ignore that this one exist is an option, as is actually
-integrating this driver properly.
-
-Yours,
-Linus Walleij
+> drivers/pinctrl/pinctrl-loongson2.o: In function `pinconf_generic_dt_node_to_map_all':
+> pinctrl-loongson2.c:(.text+0x1c4): undefined reference to
+> `pinconf_generic_dt_node_to_map'
+>
+> To fix this error, add depends on OF to
+> config PINCTRL_LOONGSON2.
+>
+> Fixes: f73f88acbc18 ("pinctrl: pinctrl-loongson2: add pinctrl driver support")
+> Signed-off-by: Ren Zhijie <renzhijie2@huawei.com>
+> ---
+>   drivers/pinctrl/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 35f167f70829..7d5f5458c72e 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -260,7 +260,7 @@ config PINCTRL_FALCON
+>   
+>   config PINCTRL_LOONGSON2
+>   	tristate "Pinctrl driver for the Loongson-2 SoC"
+> -	depends on LOONGARCH || COMPILE_TEST
+> +	depends on OF && (LOONGARCH || COMPILE_TEST)
+>   	select PINMUX
+>   	select GENERIC_PINCONF
+>   	help
