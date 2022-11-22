@@ -2,139 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89DC363363F
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 08:49:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41D8B63364C
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 08:51:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbiKVHtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 02:49:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59102 "EHLO
+        id S232585AbiKVHvP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 02:51:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232277AbiKVHs7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 02:48:59 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF285326C0
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 23:48:53 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id c1so22358296lfi.7
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 23:48:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w8q3Tqkz8w1zflvZZbd0OuOuonoFEDMsSq7hmze9ZXs=;
-        b=f22yi+xqcXW5FuVe86BK3lfg/qHcmgA6lPlQYRor0guywILgg2/Eu8BXRhWBeHNqZW
-         7disWPEBD8MNJ8mTXIA93ijDCHLI+xvcdLJAMrwPhMYSAOBEZNNJ5QEbh2Ayzg9MOwjY
-         xXcJqUrJAK92bqRiUG/odLy246dSDHkG/MdDWCDR18UqrhOwDRT3SaZ2itdY/L3RVkOB
-         RHIwgY16YjxMa0hGGdzcEmj9D6+rRNeLQUEsmaupAOrrt8o9NQ8wRms+G+suKoY1kk7T
-         ZghDqMaNX/onLP8n7MOm/ztfRlJxJlD0NFSjopAtEaZJcg632nwzMk1CYHuWVlr75KBG
-         vp/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w8q3Tqkz8w1zflvZZbd0OuOuonoFEDMsSq7hmze9ZXs=;
-        b=0cIpx6MvTkZnS6Swarnm6hyaaKBVcstMTN236AaZ1QsdnCSJqEzudZHdKGGYxB+bY6
-         SJp1ggMXhdSCzZM0/v0b8wBTy9POUz3Rlw3FJZSrNDlQCBwQG8fyEq9afGpF2KQ373hc
-         edglwhuyahvbeUdCpiI2adwnnUJZLPTeWbn8I3+ux+k6RvRgExR3D83cYLycNteUCZ2m
-         WTArruZjZNKrT8DU8UpX/c4pf5fbprWtbgLHOaroSn87tWjmIPI+Ho9zFXxypJp9o0pQ
-         h82VeFP8llWfbFzzHp0z4+oesfWA1y0ZhApvN6/CO4/HrsXoyAoxk5fpkSnGgv5k0HWw
-         PGNw==
-X-Gm-Message-State: ANoB5pnVRwvCUmXOjpmBprpdSbuVca9VdoA3i4grhc1Q9nvYmcaTq4Wt
-        ecORrwzVKG7R/RL1USGKr1238g==
-X-Google-Smtp-Source: AA0mqf6WFY2yzKLlEyj7ARsSRDcmrYj2hSJMjEFCY4gK/zwWuhI0/ySHS9KM1Lz0QLbU+127L2b44Q==
-X-Received: by 2002:ac2:4c29:0:b0:497:a1fe:b0ef with SMTP id u9-20020ac24c29000000b00497a1feb0efmr8392775lfq.311.1669103332101;
-        Mon, 21 Nov 2022 23:48:52 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id be34-20020a05651c172200b0026bf43a4d72sm1719731ljb.115.2022.11.21.23.48.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 21 Nov 2022 23:48:51 -0800 (PST)
-Message-ID: <03174a04-440d-a840-1e54-fbdbdfe296c3@linaro.org>
-Date:   Tue, 22 Nov 2022 08:48:50 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
- QRU1000 pinctrl
-Content-Language: en-US
-To:     Melody Olvera <quic_molvera@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S232373AbiKVHvO (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 02:51:14 -0500
+Received: from muru.com (muru.com [72.249.23.125])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 124B332B8C;
+        Mon, 21 Nov 2022 23:51:14 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id AEEB78061;
+        Tue, 22 Nov 2022 07:40:59 +0000 (UTC)
+Date:   Tue, 22 Nov 2022 09:51:12 +0200
+From:   Tony Lindgren <tony@atomide.com>
+To:     Andrew Davis <afd@ti.com>
+Cc:     Nishanth Menon <nm@ti.com>, Apurva Nandan <a-nandan@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221118182039.29236-1-quic_molvera@quicinc.com>
- <20221118182039.29236-2-quic_molvera@quicinc.com>
- <528648f2-17df-ab19-8ad4-76423bbc0ae4@linaro.org>
- <faf2d137-efab-93ab-f325-1fa507f166a7@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <faf2d137-efab-93ab-f325-1fa507f166a7@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Hari Nagalla <hnagalla@ti.com>
+Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
+Message-ID: <Y3x/cGYWLLB+J2zU@atomide.com>
+References: <20221116130428.161329-1-a-nandan@ti.com>
+ <20221116130428.161329-5-a-nandan@ti.com>
+ <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
+ <20221118174754.y37pq77drvla2uxj@tinderbox>
+ <8c123fa2-caab-d2dd-5eb4-688f1c6abb33@ti.com>
+ <20221118180808.wnel7d6gswsnooww@junkman>
+ <93242211-95e7-09a0-fced-5ef2deb9fc08@ti.com>
+ <20221118192744.wish2vrxgy7dg7c2@unnerving>
+ <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21/11/2022 21:38, Melody Olvera wrote:
-> 
-> 
-> On 11/20/2022 4:58 AM, Krzysztof Kozlowski wrote:
->> On 18/11/2022 19:20, Melody Olvera wrote:
->>> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
->>>
->>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->>> ---
->>>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
->>>  1 file changed, 134 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>> new file mode 100644
->>> index 000000000000..cb0c496d8666
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>> @@ -0,0 +1,134 @@
->>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>> +%YAML 1.2
->>> +---
->>> +$id: http://devicetree.org/schemas/pinctrl/qcom,qdu1000-tlmm.yaml#
->>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>> +
->>> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
->>> +
->>> +maintainers:
->>> +  - Melody Olvera <quic_molvera@quicinc.com>
->>> +
->>> +description: |
->>> +  This Top Level Mode Multiplexer block (TLMM) is found in the QDU1000 and
->>> +  QRU1000 platforms.
->> It's better to keep consistent style which allows to do easy
->> search/replace, than to have new files using their own sentences. So
->> keep it the same as was unified in few recent commits.
-> 
-> Ok... Just making sure that's what you want. Last PS you gave comments to change
-> the wording of this description to remove "This binding describes..." as we've done
-> in all the other qcom pinctrl/tlmm bindings. I can change the wording back to the
-> original, just want to be clear here.
+* Andrew Davis <afd@ti.com> [221118 21:05]:
+> Why do we need SERIAL_8250_NR_UARTS at all, might be a better question.
+> These should be dynamically allocated if the number goes over the
+> default count imposed by the TTY framework. Maybe folks are still a
+> bit too afraid to touch the TTY subsystem core, I don't blame them..
 
-I propose to have the same wording as other Qualcomm TLMM bindings,
-however you changed it to something not the same. Therefore I wonder -
-why having here different wording than all other bindings?
+The 8250 core preallocates a number of ports for use, see
+serial8250_isa_init_ports() and serial8250_register_8250_port(). As the
+serial port driver probes, the preallocated ports get re-assigned to
+the port driver.
 
-By going back to original - what do you mean? If it matches all others,
-then yes, but I doubt it.
+Maybe we could keep the static serial8250_ports[] and add those ports
+to a list where also the dynamically allocated ports would go..
 
-Just to be sure - are you working on proper (recent) trees or something old?
+Regards,
 
-Best regards,
-Krzysztof
-
+Tony
