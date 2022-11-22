@@ -2,147 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 068676341DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 17:48:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8963C6341F3
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 17:55:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232993AbiKVQs5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 11:48:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
+        id S234351AbiKVQzx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 11:55:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233868AbiKVQs4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 11:48:56 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81A56B399
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 08:48:55 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxWQM-0006Ic-4f; Tue, 22 Nov 2022 17:47:06 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxWQK-005t7P-10; Tue, 22 Nov 2022 17:47:04 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1oxWQJ-000q57-MW; Tue, 22 Nov 2022 17:47:03 +0100
-Date:   Tue, 22 Nov 2022 17:47:03 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-pwm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 6/7] pwm: lpss: Add devm_pwm_lpss_probe() stub
-Message-ID: <20221122164703.e3z42rou7ivu3djv@pengutronix.de>
-References: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
- <20221117110806.65470-7-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S234298AbiKVQzr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 11:55:47 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45EEB74CFC
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 08:55:44 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id y83so1444361yby.12
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 08:55:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=w+wyrIxhqHk31ol2o5xCMlBzrVjD6BuPwf4Pvlc7OOo=;
+        b=Gl5e6DzSmBq+DT18ZygzRYc1yfAYeADEv8y/kyd6t1EG8UUWPdpdZPLmTINYqQ90/7
+         5I4/qpCE0RlbV5o9KfybYtbfnPdY6HMn81TyjtLrvsq3K/A0LmQEC6YAz/7m781FLMWg
+         pvLOBVjqqFDgbaYHYPv0shpTJttLIrBWv3Fs9428XZLFPLOdFm+I8APwwUCUpjFJDyeL
+         K2CQDYUsWLZ8552ceuVz3qTkkVpKhRl+d9qSpDv37Qnkc2uka/x6ryYqGaffEA6rkerQ
+         +mIjYKEzg1AZ6ESPEYfnl/B3lPp8O9ti6iD99la9k2470pMvNJIKAcekUW8LIS0EH9KM
+         8MqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w+wyrIxhqHk31ol2o5xCMlBzrVjD6BuPwf4Pvlc7OOo=;
+        b=ORgEW1NREzrPueHYQseULRddIXuwvcio6Y2u48jvDKIlnV24mCCaBhQubKGilboHXo
+         tQR9GoDhZkLDuwROv0rnILMm41Y3zG5LEl0cNe0/YZisup4HRJVHg3iufktZ/6QjaC8K
+         zfJv85kCvsa7rWxM0N+JsnxjIgVehwJo/26SZynWLYnNcmhKMy2ysqx1+D7q67zy7Yzb
+         sSB6BYbwFji7QEemw8K2cf6MeJUOdbPJ/zAYkV0iFjKWqjBEDoG9ilkdDn/70U+v8CJA
+         dLeQpq2mzaUjRwoPZf2EIvJURJR3Eji5OWC+miuBoxt3+B383mGL59cHz2AorfOJNYYT
+         WOjQ==
+X-Gm-Message-State: ANoB5pkkw9x6JBV0VZxORHlOB02z3wbcPPCHgxHoSmQQF5irFzvT+rDW
+        2+NCGZn/ciHFCzJkz7HTNrwBWms1dd+pBfA71hM=
+X-Google-Smtp-Source: AA0mqf5DuApDAx+uJn7dwnthMVdmgxn4cbaHW3Pw7+IeR9J6+ezqrAErNXwDpyHFqMDcXop9siljUIq5ZUIhixRN13c=
+X-Received: by 2002:a25:44c5:0:b0:6cb:16d0:1ae1 with SMTP id
+ r188-20020a2544c5000000b006cb16d01ae1mr4166885yba.581.1669136143547; Tue, 22
+ Nov 2022 08:55:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rb5tprcr5gddrgn6"
-Content-Disposition: inline
-In-Reply-To: <20221117110806.65470-7-andriy.shevchenko@linux.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <CAMRc=Me-LcGx1GUFZ3NnxvbW=wcKnpJ+jpDHjYb+20+_7gSCfg@mail.gmail.com>
+In-Reply-To: <CAMRc=Me-LcGx1GUFZ3NnxvbW=wcKnpJ+jpDHjYb+20+_7gSCfg@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 22 Nov 2022 17:55:32 +0100
+Message-ID: <CANiq72=vU1inYDgZJR1ukKkQF=Pj93eD3=Cw6iFE+8xf_+Brbw@mail.gmail.com>
+Subject: Re: libgpiod: rust bindings and bindgen issue with C enums
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
---rb5tprcr5gddrgn6
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Nov 17, 2022 at 01:08:05PM +0200, Andy Shevchenko wrote:
-> In case the PWM LPSS module is not provided, allow users to be
-> compiled with the help of the devm_pwm_lpss_probe() stub.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Thierry Reding <thierry.reding@gmail.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+On Tue, Nov 22, 2022 at 4:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
 > ---
->  include/linux/platform_data/x86/pwm-lpss.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/include/linux/platform_data/x86/pwm-lpss.h b/include/linux/p=
-latform_data/x86/pwm-lpss.h
-> index c852fe24fe2a..6ef21b8baec7 100644
-> --- a/include/linux/platform_data/x86/pwm-lpss.h
-> +++ b/include/linux/platform_data/x86/pwm-lpss.h
-> @@ -4,6 +4,8 @@
->  #ifndef __PLATFORM_DATA_X86_PWM_LPSS_H
->  #define __PLATFORM_DATA_X86_PWM_LPSS_H
-> =20
-> +#include <linux/err.h>
-> +#include <linux/kconfig.h>
->  #include <linux/types.h>
-> =20
->  struct device;
-> @@ -27,7 +29,16 @@ struct pwm_lpss_boardinfo {
->  	bool other_devices_aml_touches_pwm_regs;
->  };
-> =20
-> +#if IS_REACHABLE(CONFIG_PWM_LPSS)
->  struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iom=
-em *base,
->  					  const struct pwm_lpss_boardinfo *info);
-> +#else
-> +static inline
-> +struct pwm_lpss_chip *devm_pwm_lpss_probe(struct device *dev, void __iom=
-em *base,
-> +					  const struct pwm_lpss_boardinfo *info)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +#endif	/* CONFIG_PWM_LPSS */
+> The expression that defines the value of an enumeration constant shall
+> be an integer constant expression that has a value representable as an
+> int.
+> ---
+>
+> and virtually all compilers store enum variables as signed integers,
 
-Hmm, this is actually never used, because if
-!IS_REACHABLE(CONFIG_PWM_LPSS), the only caller (that is added in patch
-7) has:
+I don't think this is true. Both GCC and Clang seem to pick an
+unsigned one if possible (for the enum, not the constants), e.g.
+https://godbolt.org/z/6zjzMdP3T. I assume bindgen is using the one
+decided by clang.
 
-	if (!IS_REACHABLE(CONFIG_PWM_LPSS))
-		return 0;
+Note that the quote of the standard is a constraint, i.e. the values
+of the constants need to fit in an `int` (and the compiler is required
+to issue a diagnostic if they don't, under `-Wpedantic` in GCC/Clang).
 
-before devm_pwm_lpss_probe() is called.
+> As enums are naturally signed integers in the C world - can we somehow
+> make bindgen default to c_int for all enum types?
 
-Not sure if it's safe to just drop this patch. The return value is
-neither -ENOSYS (which I would expect for a stub function like that) nor
--EINVAL (which for reasons unknown to me is used in the stub for
-pwmchip_add()).
+This would be https://github.com/rust-lang/rust-bindgen/issues/1966,
+where it has been suggested as an option (as well as the fact that the
+constants are not being generated as `c_int`).
 
-I would have a better feeling with -ENOSYS in your stub, but I don't
-feel really strong here.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rb5tprcr5gddrgn6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN8/QEACgkQwfwUeK3K
-7AljCgf9H8/JxkHipEZ8Aa79BqTgZHZ1aAEQGc0UHy6EhjUXQfsBafl8GepzjEJK
-P0NYAWNFQPaGmrJ6sXkK2F3SQiSK6wg6ByzxqxIkA/6mgR7wOMlRHy+wHdlZRx2O
-oz+tNuuPGbNaoI4b3Cb0SpZ4WdkhbSSQQPowk6iKyHKsGEkj65bgR5Vepz03SeDO
-4tTECcpqTPkqKmeWf9zu0FScFybpLDv2qhhzVtDrXelYAhRIysd/NawvEcf6QN0t
-3+Ex63Kr/lof0zOEyNDXxqzJcfvu7PfssPhKk/Tkcy3aRjBYIjyXDZkBlGI2UI7P
-KhY11oGTg82MSaWbbMhTQeJuGCDtzQ==
-=FMlB
------END PGP SIGNATURE-----
-
---rb5tprcr5gddrgn6--
+Cheers,
+Miguel
