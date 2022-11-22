@@ -2,161 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88866633F40
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 15:49:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF882634014
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 16:23:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233498AbiKVOt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 09:49:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35498 "EHLO
+        id S233856AbiKVPXp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 10:23:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233435AbiKVOtv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 09:49:51 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74A96BDF3;
-        Tue, 22 Nov 2022 06:49:46 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 7D40A21BE4;
-        Tue, 22 Nov 2022 14:49:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1669128585; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=j9AuGuLYTdJN+k3uXzcchb8mQnKbhGw+TLUgV+tqJrU=;
-        b=MEQS0+y9gcppN8qOpnYaqU7svgu2b3vPgGRXci1z6NL61cL4i98zh4U8k84lKJCd/gXFRo
-        Yn4RT0BvfG/CQMNRq0mzn65SnyEDIOv0RYOvo1nC+Uhzpjf3f12g+C8FW74uxEvRhF8K98
-        wR702WHORWcWBEPCtw7JhNzXykfXhKY=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 6EEC42C142;
-        Tue, 22 Nov 2022 14:49:44 +0000 (UTC)
-Date:   Tue, 22 Nov 2022 15:49:40 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Russell King <rmk+kernel@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, devicetree@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Y3zhhLoqAOaZ7rMz@alley>
-References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
- <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
+        with ESMTP id S233498AbiKVPXo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 10:23:44 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1333D20F42;
+        Tue, 22 Nov 2022 07:23:43 -0800 (PST)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AMDjBxO001933;
+        Tue, 22 Nov 2022 15:23:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Q7ZjNfTJzfwKzx48mpBS6iFDtNLUI7sNoo3WFNK1EI8=;
+ b=RkoX7f5AMlEJiz/WOH3bRVxqOOcSr0cCgnbDpqXehlz8lTfEohXf8yL5aa8m3UDIZIQS
+ TXushe1Qe4GSti+8Q61lM4ceeM7u1YaYPBfkWfEnnTHIiUYWzcqqMrE1fbUc/1MPcCx/
+ wn5TnBbFJsGFGfwvo6FkD76UdRVW5dHmNLjZRX9ovvrB6//Qt6o97UkxUPz/L4clejrJ
+ 3M+o+L5YD3U/k4lbaUoyfCyhPgQLxmcQ/ob29qvQR6HsI9nMKovfEaKcTBEKPMJIabJ6
+ 91N9rxRvxoLi37Cv/vrekG+XfYpbiYiZ3GoSGe5g/XdOkcDdBCCZyBtA6R2E6kZdSiWM oQ== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3m0hwpa2mx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Nov 2022 15:23:38 +0000
+Received: from nasanex01b.na.qualcomm.com (corens_vlan604_snip.qualcomm.com [10.53.140.1])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 2AMFNbOT008091
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 22 Nov 2022 15:23:37 GMT
+Received: from [10.110.15.183] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 22 Nov
+ 2022 07:23:36 -0800
+Message-ID: <2a50b68f-d2dd-bae5-29b3-f608813d5a3f@quicinc.com>
+Date:   Tue, 22 Nov 2022 09:23:35 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
+ QRU1000 pinctrl
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20221118182039.29236-1-quic_molvera@quicinc.com>
+ <20221118182039.29236-2-quic_molvera@quicinc.com>
+ <528648f2-17df-ab19-8ad4-76423bbc0ae4@linaro.org>
+ <faf2d137-efab-93ab-f325-1fa507f166a7@quicinc.com>
+ <03174a04-440d-a840-1e54-fbdbdfe296c3@linaro.org>
+Content-Language: en-US
+From:   Melody Olvera <quic_molvera@quicinc.com>
+In-Reply-To: <03174a04-440d-a840-1e54-fbdbdfe296c3@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Un3uGb_kciHmoMf7AZDU0lFkBTTBcM31
+X-Proofpoint-ORIG-GUID: Un3uGb_kciHmoMf7AZDU0lFkBTTBcM31
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-22_09,2022-11-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 mlxlogscore=999 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ spamscore=0 phishscore=0 adultscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2211220115
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue 2022-11-08 16:33:22, Russell King wrote:
-> From: Hector Martin <marcan@marcan.st>
-> 
-> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> it's useful to be able to print generic 4-character codes formatted as
-> an integer. Extend it to add format specifiers for printing generic
-> 32-bit FOURCCs with various endian semantics:
-> 
-> %p4ch   Host-endian
-> %p4cl	Little-endian
-> %p4cb	Big-endian
-> %p4cr	Reverse-endian
-> 
-> The endianness determines how bytes are interpreted as a u32, and the
-> FOURCC is then always printed MSByte-first (this is the opposite of
-> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> allow printing LSByte-first FOURCCs stored in host endian order
-> (other than the hex form being in character order, not the integer
-> value).
-> 
-> Signed-off-by: Hector Martin <marcan@marcan.st>
-> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> ---
->  Documentation/core-api/printk-formats.rst | 32 +++++++++++++++++++
->  lib/test_printf.c                         | 39 +++++++++++++++++++----
->  lib/vsprintf.c                            | 35 ++++++++++++++++----
->  3 files changed, 93 insertions(+), 13 deletions(-)
-> 
-> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-> index dbe1aacc79d0..92a488884cf8 100644
-> --- a/Documentation/core-api/printk-formats.rst
-> +++ b/Documentation/core-api/printk-formats.rst
-> @@ -625,6 +625,38 @@ Passed by reference.
->  	%p4cc	Y10  little-endian (0x20303159)
->  	%p4cc	NV12 big-endian (0xb231564e)
->  
-> +Generic FourCC code
-> +-------------------
-> +
-> +::
-> +	%p4c[hrbl]	gP00 (0x67503030)
-> +
-> +Print a generic FourCC code, as both ASCII characters and its numerical
-> +value as hexadecimal.
-> +
-> +The additional ``h``, ``r``, ``b``, and ``l`` specifiers are used to specify
-> +host, reversed, big or little endian order data respectively. Host endian
-> +order means the data is interpreted as a 32-bit integer and the most
-> +significant byte is printed first; that is, the character code as printed
-> +matches the byte order stored in memory on big-endian systems, and is reversed
-> +on little-endian systems.
 
-I though a bit more about the semantic and got a bit confused.
-It might be because I am not familiar with FourCC. Anyway,
-the description in the commit message provided some more clues.
 
-The following documentation looks be more clear to me:
+On 11/22/2022 1:48 AM, Krzysztof Kozlowski wrote:
+> On 21/11/2022 21:38, Melody Olvera wrote:
+>>
+>> On 11/20/2022 4:58 AM, Krzysztof Kozlowski wrote:
+>>> On 18/11/2022 19:20, Melody Olvera wrote:
+>>>> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
+>>>>
+>>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>>>> ---
+>>>>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
+>>>>  1 file changed, 134 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>> new file mode 100644
+>>>> index 000000000000..cb0c496d8666
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>> @@ -0,0 +1,134 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,qdu1000-tlmm.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
+>>>> +
+>>>> +maintainers:
+>>>> +  - Melody Olvera <quic_molvera@quicinc.com>
+>>>> +
+>>>> +description: |
+>>>> +  This Top Level Mode Multiplexer block (TLMM) is found in the QDU1000 and
+>>>> +  QRU1000 platforms.
+>>> It's better to keep consistent style which allows to do easy
+>>> search/replace, than to have new files using their own sentences. So
+>>> keep it the same as was unified in few recent commits.
+>> Ok... Just making sure that's what you want. Last PS you gave comments to change
+>> the wording of this description to remove "This binding describes..." as we've done
+>> in all the other qcom pinctrl/tlmm bindings. I can change the wording back to the
+>> original, just want to be clear here.
+> I propose to have the same wording as other Qualcomm TLMM bindings,
+> however you changed it to something not the same. Therefore I wonder -
+> why having here different wording than all other bindings?
+>
+> By going back to original - what do you mean? If it matches all others,
+> then yes, but I doubt it.
+>
+> Just to be sure - are you working on proper (recent) trees or something old?
 
-<proposal>
-Generic FourCC code
--------------------
+Original matched how it was done on other Qualcomm TLMM bindings. Feedback
+was to drop "This binding describes..." from [1], but all the Qualcomm TLMM
+bindings start with "This binding describes...". I'm looking at qcom tree for-next
+branch; should be recent, no?
 
-::
-	%p4c[hrbl]	gP00 (0x67503030)
+[1] https://lore.kernel.org/all/37c53d8c-2810-509a-7404-7ca24d79fed8@linaro.org/
 
-Print a generic FourCC code, as both ASCII characters and its numerical
-value as hexadecimal.
+Thanks,
+Melody
 
-The generic FourCC code is always printed in the the big-endian format,
-the most significant byte first. This is the opposite of V4L/DRM
-FOURCCs.
+>
+> Best regards,
+> Krzysztof
+>
 
-The additional ``h``, ``r``, ``b``, and ``l`` specifiers define what
-endianes is used to load the stored value as 32-bit integer. The value
-might be stored as host-endian, reverse-host-endian, big-endian,
-or little endian.
-
-Examples for a little-endian machine, host native load &(u32)0x67503030::
-
-	%p4ch	gP00 (0x67503030)
-	%p4cr	00Pg (0x30305067)
-	%p4cb	00Pg (0x30305067)
-	%p4cl	gP00 (0x67503030)
-
-Examples for a big-endian machine, host native load &(u32)0x67503030::
-
-	%p4ch	gP00 (0x67503030)
-	%p4cr	00Pg (0x30305067)
-	%p4cb	gP00 (0x67503030)
-	%p4cl	00Pg (0x30305067)
-</proposal>
-
-Best Regards,
-Petr
