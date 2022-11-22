@@ -2,93 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01825633F39
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 15:49:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88866633F40
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 15:49:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233249AbiKVOtb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 09:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35042 "EHLO
+        id S233498AbiKVOt4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 09:49:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233252AbiKVOtY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 09:49:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F47663FA;
-        Tue, 22 Nov 2022 06:49:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S233435AbiKVOtv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 09:49:51 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D74A96BDF3;
+        Tue, 22 Nov 2022 06:49:46 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 7D40A21BE4;
+        Tue, 22 Nov 2022 14:49:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1669128585; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=j9AuGuLYTdJN+k3uXzcchb8mQnKbhGw+TLUgV+tqJrU=;
+        b=MEQS0+y9gcppN8qOpnYaqU7svgu2b3vPgGRXci1z6NL61cL4i98zh4U8k84lKJCd/gXFRo
+        Yn4RT0BvfG/CQMNRq0mzn65SnyEDIOv0RYOvo1nC+Uhzpjf3f12g+C8FW74uxEvRhF8K98
+        wR702WHORWcWBEPCtw7JhNzXykfXhKY=
+Received: from suse.cz (unknown [10.100.201.202])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 862F06170B;
-        Tue, 22 Nov 2022 14:49:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 650C9C433D6;
-        Tue, 22 Nov 2022 14:49:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669128563;
-        bh=amq336iSJknmUhqq9B95Grn7nfD50cCH6FmElPI3irY=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=KPuK2qcNLXcxyi2N2jT2dny4Of5rmuhRhuGViA8WU2N8nfTW+lARzr5HYhlNnDhqd
-         v6xdgiiVB2qTw/0oNozBRb5HTF58e4xXNYolA/ph5xAQCAikHTo8i3RlMzHWySkwCK
-         tC4j3/u6pKUAQ93SGjPvy6pY8tR9cekrev1WR5fPBwORvegoJqq4AqMkPJToCPmB5m
-         s8R5HgrX/tqzM8fzTDSlcj2x4fJFKCQqtCzbIdOecCj0l2Q/BigdVfUOlYU/thgB+y
-         aiIeB3HUYZNGR0w91KAr2zI+gmOjtVhZo5xqhZmKVCZwFZRNpXzDqftbZKYlolSaK9
-         rou7mBTjEUCHA==
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Michael Walle <michael@walle.cc>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        by relay2.suse.de (Postfix) with ESMTPS id 6EEC42C142;
+        Tue, 22 Nov 2022 14:49:44 +0000 (UTC)
+Date:   Tue, 22 Nov 2022 15:49:40 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Russell King <rmk+kernel@armlinux.org.uk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     William Breathitt Gray <william.gray@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-In-Reply-To: <20221121150843.1562603-1-michael@walle.cc>
-References: <20221121150843.1562603-1-michael@walle.cc>
-Subject: Re: (subset) [PATCH 1/2] regmap: add regmap_might_sleep()
-Message-Id: <166912856112.213474.2362964124352816870.b4-ty@kernel.org>
-Date:   Tue, 22 Nov 2022 14:49:21 +0000
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, devicetree@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
+ extending %p4cc
+Message-ID: <Y3zhhLoqAOaZ7rMz@alley>
+References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
+ <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.10.0-dev-fc921
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 21 Nov 2022 16:08:42 +0100, Michael Walle wrote:
-> With the dawn of MMIO gpio-regmap users, it is desirable to let
-> gpio-regmap ask the regmap if it might sleep during an access so
-> it can pass that information to gpiochip. Add a new regmap_might_sleep()
-> to query the regmap.
+On Tue 2022-11-08 16:33:22, Russell King wrote:
+> From: Hector Martin <marcan@marcan.st>
 > 
+> %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
+> it's useful to be able to print generic 4-character codes formatted as
+> an integer. Extend it to add format specifiers for printing generic
+> 32-bit FOURCCs with various endian semantics:
 > 
+> %p4ch   Host-endian
+> %p4cl	Little-endian
+> %p4cb	Big-endian
+> %p4cr	Reverse-endian
+> 
+> The endianness determines how bytes are interpreted as a u32, and the
+> FOURCC is then always printed MSByte-first (this is the opposite of
+> V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
+> allow printing LSByte-first FOURCCs stored in host endian order
+> (other than the hex form being in character order, not the integer
+> value).
+> 
+> Signed-off-by: Hector Martin <marcan@marcan.st>
+> Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> ---
+>  Documentation/core-api/printk-formats.rst | 32 +++++++++++++++++++
+>  lib/test_printf.c                         | 39 +++++++++++++++++++----
+>  lib/vsprintf.c                            | 35 ++++++++++++++++----
+>  3 files changed, 93 insertions(+), 13 deletions(-)
+> 
+> diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+> index dbe1aacc79d0..92a488884cf8 100644
+> --- a/Documentation/core-api/printk-formats.rst
+> +++ b/Documentation/core-api/printk-formats.rst
+> @@ -625,6 +625,38 @@ Passed by reference.
+>  	%p4cc	Y10  little-endian (0x20303159)
+>  	%p4cc	NV12 big-endian (0xb231564e)
+>  
+> +Generic FourCC code
+> +-------------------
+> +
+> +::
+> +	%p4c[hrbl]	gP00 (0x67503030)
+> +
+> +Print a generic FourCC code, as both ASCII characters and its numerical
+> +value as hexadecimal.
+> +
+> +The additional ``h``, ``r``, ``b``, and ``l`` specifiers are used to specify
+> +host, reversed, big or little endian order data respectively. Host endian
+> +order means the data is interpreted as a 32-bit integer and the most
+> +significant byte is printed first; that is, the character code as printed
+> +matches the byte order stored in memory on big-endian systems, and is reversed
+> +on little-endian systems.
 
-Applied to
+I though a bit more about the semantic and got a bit confused.
+It might be because I am not familiar with FourCC. Anyway,
+the description in the commit message provided some more clues.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+The following documentation looks be more clear to me:
 
-Thanks!
+<proposal>
+Generic FourCC code
+-------------------
 
-[1/2] regmap: add regmap_might_sleep()
-      commit: a6d99022e56e8c1ddc4c75895ed9e3ce5da88453
+::
+	%p4c[hrbl]	gP00 (0x67503030)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Print a generic FourCC code, as both ASCII characters and its numerical
+value as hexadecimal.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+The generic FourCC code is always printed in the the big-endian format,
+the most significant byte first. This is the opposite of V4L/DRM
+FOURCCs.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+The additional ``h``, ``r``, ``b``, and ``l`` specifiers define what
+endianes is used to load the stored value as 32-bit integer. The value
+might be stored as host-endian, reverse-host-endian, big-endian,
+or little endian.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Examples for a little-endian machine, host native load &(u32)0x67503030::
 
-Thanks,
-Mark
+	%p4ch	gP00 (0x67503030)
+	%p4cr	00Pg (0x30305067)
+	%p4cb	00Pg (0x30305067)
+	%p4cl	gP00 (0x67503030)
+
+Examples for a big-endian machine, host native load &(u32)0x67503030::
+
+	%p4ch	gP00 (0x67503030)
+	%p4cr	00Pg (0x30305067)
+	%p4cb	gP00 (0x67503030)
+	%p4cl	00Pg (0x30305067)
+</proposal>
+
+Best Regards,
+Petr
