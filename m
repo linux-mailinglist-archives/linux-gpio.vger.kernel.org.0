@@ -2,56 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89D396344C8
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 20:43:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 713796347F5
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 21:18:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbiKVTnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 14:43:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
+        id S234798AbiKVUSS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 15:18:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232341AbiKVTnS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 14:43:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7427C443;
-        Tue, 22 Nov 2022 11:43:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E1A04B81D56;
-        Tue, 22 Nov 2022 19:43:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2610C433D6;
-        Tue, 22 Nov 2022 19:43:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669146194;
-        bh=FnvUAA+yXCryMxim9anvCTDLRrStYPDHhE1Mo1spq0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z/ODJsvuT+0eV2zbZJBb6f/EYKQReFze8s0xizTKzvjOtAqMhBIkhWTZClHk3EYlE
-         Eh/LhR0lTWgnsnchipCleyxYOUop+fRrhiUjAseBmLOHbopIpwYoiAI6S2hk11R+EP
-         NyxDfnGgBeeM7h9PXDwlylq2xVjs6fPgtcNpFLswSZzYrPTT7HlmASmTzvxFpzVEK7
-         GvT6wEGzJTGHghiXXvY2aScotn78zWEB5Dj/w5RI5w0yx3Ak+p7YEjeK6ucpf3650w
-         fUuqpgMObpfmD8fH1xLqD/qma5TcIkU0I0irT6NAByi5wvhVWuKGhdfCwwc/TR7IDz
-         D+0bSoUsL7DhQ==
-Date:   Tue, 22 Nov 2022 19:43:09 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        William Breathitt Gray <william.gray@linaro.org>
-Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
-Message-ID: <Y30mTVhne9vqgSlM@sirena.org.uk>
-References: <20221121150843.1562603-1-michael@walle.cc>
+        with ESMTP id S234840AbiKVUSI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 15:18:08 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADBB17407
+        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 12:18:03 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxZhX-0006Qx-Bo; Tue, 22 Nov 2022 21:17:03 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxZhR-005v1B-UM; Tue, 22 Nov 2022 21:16:58 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxZhS-000s7U-3N; Tue, 22 Nov 2022 21:16:58 +0100
+Date:   Tue, 22 Nov 2022 21:16:54 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        alsa-devel@alsa-project.org, linux-staging@lists.linux.dev,
+        linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
+        Grant Likely <grant.likely@linaro.org>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, chrome-platform@lists.linux.dev,
+        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
+        Angel Iglesias <ang.iglesiasg@gmail.com>,
+        gregkh@linuxfoundation.org, linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        openipmi-developer@lists.sourceforge.net,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Purism Kernel Team <kernel@puri.sm>,
+        patches@opensource.cirrus.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Wolfram Sang <wsa@kernel.org>, linux-crypto@vger.kernel.org,
+        kernel@pengutronix.de, netdev@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
+Message-ID: <20221122201654.5rdaisqho33buibj@pengutronix.de>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+ <20221122185818.3740200d@jic23-huawei>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="vY2Mmwx37l2oX2m0"
+        protocol="application/pgp-signature"; boundary="t3mjk627u66tfbb3"
 Content-Disposition: inline
-In-Reply-To: <20221121150843.1562603-1-michael@walle.cc>
-X-Cookie: That's what she said.
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221122185818.3740200d@jic23-huawei>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -59,55 +80,67 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---vY2Mmwx37l2oX2m0
-Content-Type: text/plain; charset=us-ascii
+--t3mjk627u66tfbb3
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 21, 2022 at 04:08:42PM +0100, Michael Walle wrote:
-> With the dawn of MMIO gpio-regmap users, it is desirable to let
-> gpio-regmap ask the regmap if it might sleep during an access so
-> it can pass that information to gpiochip. Add a new regmap_might_sleep()
-> to query the regmap.
+On Tue, Nov 22, 2022 at 06:58:18PM +0000, Jonathan Cameron wrote:
+>=20
+> Queued all of the below:
+> with one tweaked as per your suggestion and the highlighted one dropped o=
+n basis
+> I was already carrying the equivalent - as you pointed out.
+>=20
+> I was already carrying the required dependency.
+>=20
+> Includes the IIO ones in staging.
+>=20
+> Thanks,
+>=20
+> Jonathan
+>=20
+> p.s. I perhaps foolishly did this in a highly manual way so as to
+> also pick up Andy's RB.  So might have dropped one...
 
-The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
+You could have done:
 
-  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
+	H=3D$(git rev-parse @)
+	b4 am -P 49-190 20221118224540.619276-1-uwe@kleine-koenig.org
+	git am ...
+	git filter-branch -f --msg-filter "grep -v 'Signed-off-by: Jonathan'; echo=
+ 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>'; echo '=
+Signed-off-by: Jonathan Cameron <jic23@kernel.org>'" $H..
 
-are available in the Git repository at:
+(untested, but you get the idea).
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-might-sleep
+> Definitely would have been better as one patch per subsystem with
+> a cover letter suitable for replies like Andy's to be picked up
+> by b4.
 
-for you to fetch changes up to a6d99022e56e8c1ddc4c75895ed9e3ce5da88453:
+Next time I will go for one series per subsystem which I like better
+than one patch per subsystem.
 
-  regmap: add regmap_might_sleep() (2022-11-22 12:23:17 +0000)
+Best regards
+Uwe
 
-----------------------------------------------------------------
-regmap: Add regmap_might_sleep()
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-Add an interface allowing generic users to determine if a regmap might
-use sleeping operations.
-
-----------------------------------------------------------------
-Michael Walle (1):
-      regmap: add regmap_might_sleep()
-
- drivers/base/regmap/regmap.c | 13 +++++++++++++
- include/linux/regmap.h       |  7 +++++++
- 2 files changed, 20 insertions(+)
-
---vY2Mmwx37l2oX2m0
+--t3mjk627u66tfbb3
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN9JkwACgkQJNaLcl1U
-h9A8xwf/VK0xlFWr81nR7P0XOQiQJy+AACAlhakjRWX9+rRkYSp9iHNjHibKgbVy
-466ozDuXN9Czl7arUMPa2uP+sCVdckZwioKnRkHnizkuzm3h/DAPyTJK4tuu1QQJ
-Nq8l4jt4fKC6AUZpHK1Jioe1QePZ127dujH4kjYXWA/VSnbp7ThTltfqebmjicIu
-b54tSnao8WOjPn2hw6L29t56us2UzSTPupVDUTsZkTfB336HhSyw04yx7zPJNiqh
-0F+mXYSUl1M+8QKRYYRo+Q4wM+NEVp7TLUpZvf64mz5uROWVMdBCk6vsV0LtfM/z
-HwSMm1qxDp70ex9vgPw9WeO9zKXXgg==
-=jbZO
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN9LjMACgkQwfwUeK3K
+7An96wf/RMtsCSXVJy8BDrXiXMhey9OEm8p08ulRn0lKYlG54KR8nU/s77uuMjGS
+99aUfUU56Abxk02DuBv6N5Bax8nlFyIlUgkfaYPP9iN1TkF5XiucQ0Se4/haYL4A
+q11UqWIcKBS+5BL3K6Bl1Cqv4dPYpRvs99X3jlU6JmhFqJPPhPgAu0p74arSvLie
+kN6wgOGVdCjZTRD+Z7FxfIQPZqvVo7anPAynyk7XfgTXMSAK80JPR2UeMfvQ7yr2
+W28htsacTaJSnPOb1VIrhN8OytpxASYa120EJ8augNmBXC0IzvjosWI0LZnNljAU
+izPd/d6lzDCP0Mz/LU9QCBYUR1jxuQ==
+=KmMu
 -----END PGP SIGNATURE-----
 
---vY2Mmwx37l2oX2m0--
+--t3mjk627u66tfbb3--
