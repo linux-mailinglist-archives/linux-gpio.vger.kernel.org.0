@@ -2,178 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F166A6330BF
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 00:39:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 82502633469
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 05:27:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231676AbiKUXjU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 18:39:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46512 "EHLO
+        id S229935AbiKVE1f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 23:27:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbiKUXjT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 18:39:19 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853EB67120
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 15:39:18 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id kt23so32006559ejc.7
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 15:39:18 -0800 (PST)
+        with ESMTP id S229527AbiKVE1d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 23:27:33 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91D45F8C
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:27:32 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id d20so12471299plr.10
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:27:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4ehabT/SWyuxZAFQVGOlc3gf5GNfQZBfPsZlMRjNRcE=;
-        b=Z9Ppn1iS94cKQXbFfqIKO6UCL8nYmxAOoDhKQaH/HqikOla9W1FmIIM4OUciRY+9PW
-         mMLQ9BgPKROkY8OtqIgLH3EuQ0onG+GmXdwbnejEZFay+OVzsJ3bKl9OaLj4FsBvW+iZ
-         bUjdMT4NzMxTDubjC4llZsxWCuMD+Iad7Q1vI=
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7YVtA8N1sdHZLjx4HU/16XwPGz+35X2DZhKl7DshSd8=;
+        b=VcV32sLkT4dg94INfCWg5svMAmdQAemKvL5Z9EZNVfpDIIE9cgEh3TxtPOJMVagtdM
+         JyNvJcuvxkWTt+j/p7EfChp8+6E2KCfd6zfMaa0b7sWTI8xNXme8tphUjVqq7kjA0udh
+         T9T/2Osc3jpsMePSsRhbMxpGZStVrLhfixGUzrNdzIJUhqxTvhQ6guqjokPD+3y3mRHG
+         hekTkymqVyztFkyRWSvx9ti+Tiul1eP4jNjQ3Vmx0+NViH/SugkoNc8pZ3vIB64r70oA
+         eWMpA/1fbPu+gJnQoXehEQfJgCEUvXVUR2wA0PxjedhOMtcrWFSAUxcUB2wPC6CDkMiy
+         RtOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4ehabT/SWyuxZAFQVGOlc3gf5GNfQZBfPsZlMRjNRcE=;
-        b=vX6MJ4seuINAIZlZupOGotyljmlIcvx/9xkjaY06XxhKhC0pMsq6WrAOZ4vK0DX0RY
-         wir5bdzxrTdIFnI99E6kL5w34z3vAh+WrjRP1F9RYgmnfVQopJmiUYZ9SxfWF69VScyl
-         +OL5g/s9jMKw8Py2vs76VXe59BNiaqCBflfolFLekjJucWrotWafDQj/YxITeDnkI+Xe
-         3ulkptAfnxKcZEnFVJy8/y56wKXZX5lop8nJgfbmRpl6wntPBIa040j3HaXA2gjj6yjH
-         CqStfLSJqQfKNRYPm5UWbu72CdhjtNmWiLI2HU5lTCoCxGEZYOyujOxu/KUfDpJnzSm7
-         A/lA==
-X-Gm-Message-State: ANoB5pnXnVsw7na2oA+Svyeu6zPsJayRR7bm/Rj/7QOWpgi7QebB6uPT
-        VKwtZvGoNFLysiSK74tMPwCOmA==
-X-Google-Smtp-Source: AA0mqf6BvPDUi/dw2PVwPuhGcem2sPVKE+0SnBNbp3pnF6iT+L/QymDwd4laUxejvVIIaoQj+R5yXg==
-X-Received: by 2002:a17:907:8c0d:b0:7ae:70f9:114 with SMTP id ta13-20020a1709078c0d00b007ae70f90114mr17121024ejc.44.1669073956335;
-        Mon, 21 Nov 2022 15:39:16 -0800 (PST)
-Received: from alco.roam.corp.google.com (80.71.134.83.ipv4.parknet.dk. [80.71.134.83])
-        by smtp.gmail.com with ESMTPSA id f26-20020a17090631da00b007b27aefc578sm5411835ejf.126.2022.11.21.15.39.15
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7YVtA8N1sdHZLjx4HU/16XwPGz+35X2DZhKl7DshSd8=;
+        b=T2+EQSExI7rEihtk8/366Ore56VMaIF7/ImjYB54CBcoP7hnhYsqDNUJJk0gTnmWwp
+         E3YFqCJrNXW2ua9gw7kyI0r8D22/OadV6w+Tv4kohyn9Pp1O+tU/YOPBvVkJl3+Hfeyf
+         aWswqgLX3D8MTwYL6JBDg0WXWAeUY8I8oURoCoGVS6IuH2HjJ69eDv2HkmS812WlpJ+2
+         BVkmONwhuMSP+HTt5TgBlpdkDGfEn9bqa5nodR5jeAfUVFVbQ4bmDF166MwEVuTlhGV2
+         86AEmn6YH6FPD251T59fz7I1tk2Jh4p/LLZBqHNAg3I6WZy2xc0SFpUsaBUthUG3GDBb
+         FpdQ==
+X-Gm-Message-State: ANoB5platAVnfkLmKIMIzXruzHJX2iJttqE8s52rdS2Ytpd6Xsm8WGiI
+        X42kYEBe6nHsJ7Nfx42h6Epm8g==
+X-Google-Smtp-Source: AA0mqf5bhD1gPAUgGiV+j6kXZmbD45AFq/eng+fMyXHZ021KFn9+HHme4Yqg1oLH+9JqceZ2cl//sg==
+X-Received: by 2002:a17:90a:be11:b0:218:c83e:4735 with SMTP id a17-20020a17090abe1100b00218c83e4735mr3581872pjs.9.1669091252159;
+        Mon, 21 Nov 2022 20:27:32 -0800 (PST)
+Received: from localhost ([122.172.85.60])
+        by smtp.gmail.com with ESMTPSA id b12-20020a170902d40c00b00188fadb71ecsm9141530ple.16.2022.11.21.20.27.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 15:39:15 -0800 (PST)
-From:   Ricardo Ribalda <ribalda@chromium.org>
-Date:   Tue, 22 Nov 2022 00:38:55 +0100
-Subject: [PATCH v1 1/1] pinctrl: meditatek: Startup with the IRQs disabled
+        Mon, 21 Nov 2022 20:27:31 -0800 (PST)
+Date:   Tue, 22 Nov 2022 09:57:29 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Wedson Almeida Filho <wedsonaf@gmail.com>,
+        Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>,
+        stratos-dev@op-lists.linaro.org,
+        Gerard Ryan <g.m0n3y.2503@gmail.com>,
+        Alex Gaynor <alex.gaynor@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+        =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+        y86-dev <y86-dev@protonmail.com>
+Subject: Re: [libgpiod][PATCH V10 0/6] libgpiod: Add Rust bindings
+Message-ID: <20221122042729.whi3oeqxsrlddrqt@vireshk-i7>
+References: <cover.1668768040.git.viresh.kumar@linaro.org>
+ <CACRpkdaB1u9jwa+qXRZXG_1LSgO1-xVxfK_G1YwHe1LpSF5fzA@mail.gmail.com>
+ <CAMRc=McHUfLO4CbgRdBwGF0YktGFaQvbHszeNqcxRFifUNat4g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20221122-mtk-pinctrl-v1-1-bedf5655a3d2@chromium.org>
-References: <20221122-mtk-pinctrl-v1-0-bedf5655a3d2@chromium.org>
-In-Reply-To: <20221122-mtk-pinctrl-v1-0-bedf5655a3d2@chromium.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ross Zwisler <zwisler@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Ricardo Ribalda <ribalda@chromium.org>
-X-Mailer: b4 0.11.0-dev-d93f8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3212; i=ribalda@chromium.org;
- h=from:subject:message-id; bh=ULSRbYzh0w9ZAWNFdOlTTU/M16f8fiyJqpNG4+AGQnI=;
- b=owEBbQKS/ZANAwAKAdE30T7POsSIAcsmYgBjfAwfzhyYWIqnakB+IO0fgl8p763kk9dDJ1yT//Eb
- pC9/5NqJAjMEAAEKAB0WIQREDzjr+/4oCDLSsx7RN9E+zzrEiAUCY3wMHwAKCRDRN9E+zzrEiHr7D/
- 9lpg4m76+Y9UreH5QlwV4hPqKvzA2p1T6cb5XqoDvEv108OZStLOpQa+Nv/TFqLJuDLKz7GsRFn1AU
- rtiCLFLurNf7a8PNQkaPb2nYISiYS4uNl73QVNWwgpcBXNBGoiHPV9yvTpKb1f258JXu6Ek4Hov1OL
- u4/Wb9GwRWzd3UoJWQljRwjqpDlLtKFba4f//3Tx1OOTYHcM2VNuTbaAtFqNp6GNRYVv4b2yp3mM46
- k2Fvsgzu9XL0LamP0PDkWUZqncRQtgnCOiNptvMRZEYrRbiiPihfbxl2K2gZJ7fXv6PmQr+CT/IAas
- 9yWZT/xcjbt+Z9eq8vwQadAIRF3R4x82DWyMtVx1IkSNVqMzjODmdTYh9ak3YKOsV86lO+A/UnHgmi
- O++6IdmC/MELcw17t7E29N+ci2hnzqCLRmj83MlMlSV9syAyO9mY6Eleqg2+NItBpRNIjsMYZhivWx
- Qp5a2g8i2HSip7CY/AWrYkSeYerruih+K6rHB5cRsUguSb4I9bUiH0qg2X5dxhugBBIQ1D+WSxHfT2
- RnYSvamJXiiTR8SmAXzGv14j6p+3RvQJltlzZyAtdSmhU1c02dvSEGBUi7C8CQGpezwuB+sgGRXogT
- oO2SbXKlaHSKpyJIZJXiMsLtD5YtZ8V2YOtZoQFLpRmrK3FcoCHpdTM+7+Qg==
-X-Developer-Key: i=ribalda@chromium.org; a=openpgp;
- fpr=9EC3BB66E2FC129A6F90B39556A0D81F9F782DA9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=McHUfLO4CbgRdBwGF0YktGFaQvbHszeNqcxRFifUNat4g@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If the system is restarted via kexec(), the peripherals do not start
-with a known state.
+On 21-11-22, 21:22, Bartosz Golaszewski wrote:
+> On Mon, Nov 21, 2022 at 2:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> > This stuff is great for the GPIO and Rust communities. Also, looks finished.
+> > Here is a cheerful:
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-If the previous system had enabled an IRQs we will receive unexected
-IRQs that can lock the system.
+Thanks Linus.
 
-[   28.109251] watchdog: BUG: soft lockup - CPU#0 stuck for 26s!
-[swapper/0:0]
-[   28.109263] Modules linked in:
-[   28.109273] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-5.15.79-14458-g4b9edf7b1ac6 #1 9f2e76613148af94acccd64c609a552fb4b4354b
-[   28.109284] Hardware name: Google Elm (DT)
-[   28.109290] pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS
-		BTYPE=--)
-[   28.109298] pc : __do_softirq+0xa0/0x388
-[   28.109309] lr : __do_softirq+0x70/0x388
-[   28.109316] sp : ffffffc008003ee0
-[   28.109321] x29: ffffffc008003f00 x28: 000000000000000a x27:
-0000000000000080
-[   28.109334] x26: 0000000000000001 x25: ffffffefa7b350c0 x24:
-ffffffefa7b47480
-[   28.109346] x23: ffffffefa7b3d000 x22: 0000000000000000 x21:
-ffffffefa7b0fa40
-[   28.109358] x20: ffffffefa7b005b0 x19: ffffffefa7b47480 x18:
-0000000000065b6b
-[   28.109370] x17: ffffffefa749c8b0 x16: 000000000000018c x15:
-00000000000001b8
-[   28.109382] x14: 00000000000d3b6b x13: 0000000000000006 x12:
-0000000000057e91
-[   28.109394] x11: 0000000000000000 x10: 0000000000000000 x9 :
-ffffffefa7b47480
-[   28.109406] x8 : 00000000000000e0 x7 : 000000000f424000 x6 :
-0000000000000000
-[   28.109418] x5 : ffffffefa7dfaca0 x4 : ffffffefa7dfadf0 x3 :
-000000000000000f
-[   28.109429] x2 : 0000000000000000 x1 : 0000000000000100 x0 :
-0000000001ac65c5
-[   28.109441] Call trace:
-[   28.109447]  __do_softirq+0xa0/0x388
-[   28.109454]  irq_exit+0xc0/0xe0
-[   28.109464]  handle_domain_irq+0x68/0x90
-[   28.109473]  gic_handle_irq+0xac/0xf0
-[   28.109480]  call_on_irq_stack+0x28/0x50
-[   28.109488]  do_interrupt_handler+0x44/0x58
-[   28.109496]  el1_interrupt+0x30/0x58
-[   28.109506]  el1h_64_irq_handler+0x18/0x24
-[   28.109512]  el1h_64_irq+0x7c/0x80
-[   28.109519]  arch_local_irq_enable+0xc/0x18
-[   28.109529]  default_idle_call+0x40/0x140
-[   28.109539]  do_idle+0x108/0x290
-[   28.109547]  cpu_startup_entry+0x2c/0x30
-[   28.109554]  rest_init+0xe8/0xf8
-[   28.109562]  arch_call_rest_init+0x18/0x24
-[   28.109571]  start_kernel+0x338/0x42c
-[   28.109578]  __primary_switched+0xbc/0xc4
-[   28.109588] Kernel panic - not syncing: softlockup: hung tasks
+> Agreed. Series applied. Great work and thank you Viresh for the perseverance!
 
-Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+Thanks Bartosz.
 
-diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
-index 65d312967619..27f0a54e12bf 100644
---- a/drivers/pinctrl/mediatek/mtk-eint.c
-+++ b/drivers/pinctrl/mediatek/mtk-eint.c
-@@ -303,12 +303,15 @@ static struct irq_chip mtk_eint_irq_chip = {
- 
- static unsigned int mtk_eint_hw_init(struct mtk_eint *eint)
- {
--	void __iomem *reg = eint->base + eint->regs->dom_en;
-+	void __iomem *dom_en = eint->base + eint->regs->dom_en;
-+	void __iomem *mask_set = eint->base + eint->regs->mask_set;
- 	unsigned int i;
- 
- 	for (i = 0; i < eint->hw->ap_num; i += 32) {
--		writel(0xffffffff, reg);
--		reg += 4;
-+		writel(0xffffffff, dom_en);
-+		writel(0xffffffff, mask_set);
-+		dom_en += 4;
-+		mask_set += 4;
- 	}
- 
- 	return 0;
+Just for fun, I went back to see when I started doing this work. I
+shared my work with everyone for the first time on 31 Aug 2021. Almost
+15 months :)
+
+A special thanks to Miguel and Kent, who were very kind to allocate
+time to provide reviews for this work.
 
 -- 
-b4 0.11.0-dev-d93f8
+viresh
