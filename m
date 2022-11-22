@@ -2,77 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 044E5633703
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 09:26:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 528BD633733
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 09:32:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232746AbiKVI01 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 03:26:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58406 "EHLO
+        id S232926AbiKVIci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 03:32:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232753AbiKVI0F (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 03:26:05 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467AB41988
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 00:26:04 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id z192so16517666yba.0
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 00:26:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHfIRD4f+Yn8Fl62Qot9TMpI8tFW13Z6l2x2lSSTitE=;
-        b=SCUiOBvnpXCviXeMDgpgtdtFL4rVZLzq2rrYSkdo/zIbWcX4OqiuYwc3BszfstOc1D
-         UPZypoGUJFCzOFHBCOIPlmMJzX5XmqY/3IILLtdCNyZT2JKU/8OiQGOm8TDSJl39WRkQ
-         zKJQI9FkZ5gbnazfCex2hcGBTZYn1ed8NfmJ7booTR9gERJlLQ3XrldyMyBOalbZwBV0
-         inLM+LHCellFWZNlugR4RqQfW+GWFqPUJik87TbWKt7TMKLar8vpWiG4AXTkxr6OH1+4
-         hPvNeuqhDqPJ5X3XEzXUhIbucxbRSlBmzk0HU9lBqNRo7e6JEreg41YqtBOgBNgpTLw1
-         Ss9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WHfIRD4f+Yn8Fl62Qot9TMpI8tFW13Z6l2x2lSSTitE=;
-        b=yA+AMxGb0CEdjr0jz0Cy0ByGJ6IwZZRbndS8V+ou4hGAOb88AsaOZvkGV7TerngzVN
-         MlUXAdGMIIkdgwFK3PdUwWwcNZOabPGxNHIgpI7t52UVArGyy8N6or+nDfLCjmLjyccA
-         AeBgnNTBnHdo/UIurIYzGby3FHv9aoXbh9Oa1DbUxgAU5EMpYt5LU72B37EquhYYdF/e
-         4JoL01gmnbQJWlj8a7sZgW2i55R4zmbuFO1DQYOGeplIIlf5h4NyPGIX64YPkJ5+7KD+
-         i90/DxI6g/BpdhGZO2Qt4GFD1B3UTDsCttSc1eKTnirMVc+wDxW1ZqWngqF1T4nBy03i
-         dTQg==
-X-Gm-Message-State: ANoB5pm//QJayWwDYJhuXkFrIxSCRjiz5+m7sRuAa3IP0aerBKQ8sL67
-        GaD2ImSkp24RPvuNbRQ4UNC0wfUJ/58ZxqdOMFID8o28nUY=
-X-Google-Smtp-Source: AA0mqf4FXwkM9PSYg7UPw+kZ61kmmJEJN0jDUIIx+1v57VzgCvZFd91aVCeSVEA1zEBq5fZL381GRxG5yDJGTTukcjw=
-X-Received: by 2002:a25:734a:0:b0:6dc:324a:7561 with SMTP id
- o71-20020a25734a000000b006dc324a7561mr20760399ybc.52.1669105563407; Tue, 22
- Nov 2022 00:26:03 -0800 (PST)
-MIME-Version: 1.0
-References: <3b6b8597792a393d0f21b8489dd933663dfd2b90.1669045778.git.geert+renesas@glider.be>
-In-Reply-To: <3b6b8597792a393d0f21b8489dd933663dfd2b90.1669045778.git.geert+renesas@glider.be>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 22 Nov 2022 09:25:52 +0100
-Message-ID: <CACRpkdYZbNWAD7mZBCHE3XzkLdLZ2fPUODzvk1wTPiGny-Se0w@mail.gmail.com>
-Subject: Re: [PATCH resend] pinctrl: starfive: Use existing variable gpio
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Emil Renner Berthing <kernel@esmil.dk>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232938AbiKVIcN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 03:32:13 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D46342F75;
+        Tue, 22 Nov 2022 00:32:08 -0800 (PST)
+Received: from mxct.zte.com.cn (unknown [192.168.251.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NGctt5Czcz4xVnd;
+        Tue, 22 Nov 2022 16:32:06 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NGctr6m4fz4y0vD;
+        Tue, 22 Nov 2022 16:32:04 +0800 (CST)
+Received: from xaxapp01.zte.com.cn ([10.88.40.50])
+        by mse-fl2.zte.com.cn with SMTP id 2AM8VtXJ081424;
+        Tue, 22 Nov 2022 16:31:55 +0800 (+08)
+        (envelope-from ye.xingchen@zte.com.cn)
+Received: from mapi (xaxapp02[null])
+        by mapi (Zmail) with MAPI id mid31;
+        Tue, 22 Nov 2022 16:31:57 +0800 (CST)
+Date:   Tue, 22 Nov 2022 16:31:57 +0800 (CST)
+X-Zmail-TransId: 2afa637c88fdffffffffc4f937cf
+X-Mailer: Zmail v1.0
+Message-ID: <202211221631577017318@zte.com.cn>
+Mime-Version: 1.0
+From:   <ye.xingchen@zte.com.cn>
+To:     <agross@kernel.org>
+Cc:     <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHBpbmN0cmw6IHFjb206IHJlbW92ZSBkdXBsaWNhdGUgaW5jbHVkZWQgaGVhZGVyIGZpbGVz?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl2.zte.com.cn 2AM8VtXJ081424
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.250.138.novalocal with ID 637C8906.001 by FangMail milter!
+X-FangMail-Envelope: 1669105926/4NGctt5Czcz4xVnd/637C8906.001/192.168.251.13/[192.168.251.13]/mxct.zte.com.cn/<ye.xingchen@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 637C8906.001/4NGctt5Czcz4xVnd
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_00,SORTED_RECIPS,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 21, 2022 at 4:51 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+From: ye xingchen <ye.xingchen@zte.com.cn>
 
-> Use the existing variable "gpio", instead of obtaining the hwirq number
-> again.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+linux/seq_file.h is included more than once.
 
-Patch applied.
+Signed-off-by: ye xingchen <ye.xingchen@zte.com.cn>
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c       | 1 -
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c | 1 -
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c  | 1 -
+ 3 files changed, 3 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 8fbb953c4bbe..47e9a8b0d474 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -622,7 +622,6 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ }
+
+ #ifdef CONFIG_DEBUG_FS
+-#include <linux/seq_file.h>
+
+ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 				  struct pinctrl_dev *pctldev,
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+index b1748791a01e..99314925bb13 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c
+@@ -536,7 +536,6 @@ static int pm8xxx_gpio_of_xlate(struct gpio_chip *chip,
+
+
+ #ifdef CONFIG_DEBUG_FS
+-#include <linux/seq_file.h>
+
+ static void pm8xxx_gpio_dbg_show_one(struct seq_file *s,
+ 				  struct pinctrl_dev *pctldev,
+diff --git a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+index 30a934245c1b..a46650db678a 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
++++ b/drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c
+@@ -536,7 +536,6 @@ static int pm8xxx_mpp_of_xlate(struct gpio_chip *chip,
+
+
+ #ifdef CONFIG_DEBUG_FS
+-#include <linux/seq_file.h>
+
+ static void pm8xxx_mpp_dbg_show_one(struct seq_file *s,
+ 				  struct pinctrl_dev *pctldev,
+-- 
+2.25.1
