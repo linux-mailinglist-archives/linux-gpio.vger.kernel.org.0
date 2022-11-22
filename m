@@ -2,92 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 79136633C3E
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 13:17:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B5E6633CC2
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 13:43:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233702AbiKVMRO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 07:17:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60468 "EHLO
+        id S232625AbiKVMnc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 07:43:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233680AbiKVMRN (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 07:17:13 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723F9303C6
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 04:17:12 -0800 (PST)
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4NGjpq5QPxzJnpN;
-        Tue, 22 Nov 2022 20:13:55 +0800 (CST)
-Received: from dggpemm500002.china.huawei.com (7.185.36.229) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 22 Nov 2022 20:17:10 +0800
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- dggpemm500002.china.huawei.com (7.185.36.229) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 22 Nov 2022 20:17:10 +0800
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-To:     <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <acourbot@nvidia.com>
-CC:     <linux-gpio@vger.kernel.org>, <yangyingliang@huawei.com>,
-        <wangxiongfeng2@huawei.com>
-Subject: [PATCH] drivers: gpio: amd8111: Fix PCI device reference count leak
-Date:   Tue, 22 Nov 2022 20:35:08 +0800
-Message-ID: <20221122123508.112090-1-wangxiongfeng2@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        with ESMTP id S231864AbiKVMnb (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 07:43:31 -0500
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0AC164CC;
+        Tue, 22 Nov 2022 04:43:30 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 6CD801F86C;
+        Tue, 22 Nov 2022 12:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1669121009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+LttO4rwpoEUKx+mKrlRotB9foBpDXaTdB6zGT0DKgM=;
+        b=ECk0gdBvt1mE2jQiltgYhsFiQNQPIPXHcekRdV1hpQDSitwE3iuuWa2Nl+Yuv4JL+Xb7qX
+        wgSOiTlj8GL42umxGL1Ajp3XsnlksRR9pDJV92RYvqEHo1At21rVmtPN7zv9gZ3FI/qxdB
+        0bICCWaFXg9/uyIBG8u7x6+OEwXd3k8=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id C30942C142;
+        Tue, 22 Nov 2022 12:43:28 +0000 (UTC)
+Date:   Tue, 22 Nov 2022 13:43:28 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asahi@lists.linux.dev, devicetree@vger.kernel.org,
+        Hector Martin <marcan@marcan.st>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sven Peter <sven@svenpeter.dev>
+Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
+ extending %p4cc
+Message-ID: <Y3zD8DSB7zZK0M13@alley>
+References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
+ <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
+ <Y3Jf7xz2CQjJuEeT@alley>
+ <Y3Jptob4bGL9Weel@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500002.china.huawei.com (7.185.36.229)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y3Jptob4bGL9Weel@shell.armlinux.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-for_each_pci_dev() is implemented by pci_get_device(). The comment of
-pci_get_device() says that it will increase the reference count for the
-returned pci_dev and also decrease the reference count for the input
-pci_dev @from if it is not NULL.
+On Mon 2022-11-14 16:15:50, Russell King (Oracle) wrote:
+> On Mon, Nov 14, 2022 at 04:34:07PM +0100, Petr Mladek wrote:
+> > On Tue 2022-11-08 16:33:22, Russell King wrote:
+> > > From: Hector Martin <marcan@marcan.st>
+> > > 
+> > > %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
+> > > it's useful to be able to print generic 4-character codes formatted as
+> > > an integer. Extend it to add format specifiers for printing generic
+> > > 32-bit FOURCCs with various endian semantics:
+> > > 
+> > > %p4ch   Host-endian
+> > > %p4cl	Little-endian
+> > > %p4cb	Big-endian
+> > > %p4cr	Reverse-endian
+> > > 
+> > > The endianness determines how bytes are interpreted as a u32, and the
+> > > FOURCC is then always printed MSByte-first (this is the opposite of
+> > > V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
+> > > allow printing LSByte-first FOURCCs stored in host endian order
+> > > (other than the hex form being in character order, not the integer
+> > > value).
+> > > 
+> > > Signed-off-by: Hector Martin <marcan@marcan.st>
+> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
+> > 
+> > Reviewed-by: Petr Mladek <pmladek@suse.com>
+> > 
+> > See one nit below.
+> > 
+> > > --- a/lib/vsprintf.c
+> > > +++ b/lib/vsprintf.c
+> > > @@ -1762,27 +1762,50 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
+> > >  	char output[sizeof("0123 little-endian (0x01234567)")];
+> > >  	char *p = output;
+> > >  	unsigned int i;
+> > > +	bool pixel_fmt = false;
+> > >  	u32 orig, val;
+> > >  
+> > > -	if (fmt[1] != 'c' || fmt[2] != 'c')
+> > > +	if (fmt[1] != 'c')
+> > >  		return error_string(buf, end, "(%p4?)", spec);
+> > >  
+> > >  	if (check_pointer(&buf, end, fourcc, spec))
+> > >  		return buf;
+> > >  
+> > >  	orig = get_unaligned(fourcc);
+> > > -	val = orig & ~BIT(31);
+> > > +	switch (fmt[2]) {
+> > > +	case 'h':
+> > > +		val = orig;
+> > > +		break;
+> > > +	case 'r':
+> > > +		val = orig = swab32(orig);
+> > 
+> > I do not like much these multi assignments. I think that the result
+> > was not even defined in some older C standards. Though, I can't find
+> > it now. And even make W=3 does not warn about it.
+> 
+> Err.
+> 
+> It's been supported for decades. I learnt about it back in 1992 when
+> I was introduced to C by another experienced C programmer. It's been
+> supported in ANSI C compilers. The Norcroft C compiler (which is
+> strict ANSI) on Acorn platforms back in the late 1980s/1990s even
+> supported it.
 
-If we break for_each_pci_dev() loop with pdev not NULL, we need to call
-pci_dev_put() to decrease the reference count. Add the missing
-pci_dev_put() after the 'out' label. Since pci_dev_put() can handle NULL
-input parameter, there is no problem for the 'Device not found' branch.
-For the normal path, add pci_dev_put() in amd_gpio_exit().
+Ah, the problem probably was with a more complicated assignment.
+For example, the result of the following code is not obvious:
 
-Fixes: f942a7de047d ("gpio: add a driver for GPIO pins found on AMD-8111 south bridge chips")
-Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
----
- drivers/gpio/gpio-amd8111.c | 4 ++++
- 1 file changed, 4 insertions(+)
+	  a = b = a++;
 
-diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
-index 14e6b3e64add..6f3ded619c8b 100644
---- a/drivers/gpio/gpio-amd8111.c
-+++ b/drivers/gpio/gpio-amd8111.c
-@@ -226,7 +226,10 @@ static int __init amd_gpio_init(void)
- 		ioport_unmap(gp.pm);
- 		goto out;
- 	}
-+	return 0;
-+
- out:
-+	pci_dev_put(pdev);
- 	return err;
- }
- 
-@@ -234,6 +237,7 @@ static void __exit amd_gpio_exit(void)
- {
- 	gpiochip_remove(&gp.chip);
- 	ioport_unmap(gp.pm);
-+	pci_dev_put(gp.pdev);
- }
- 
- module_init(amd_gpio_init);
--- 
-2.20.1
-
+Best Regards,
+Petr
