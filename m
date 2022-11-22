@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82502633469
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 05:27:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8A6633480
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 05:38:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbiKVE1f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 21 Nov 2022 23:27:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50064 "EHLO
+        id S229817AbiKVEih (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 21 Nov 2022 23:38:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiKVE1d (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 23:27:33 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91D45F8C
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:27:32 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id d20so12471299plr.10
-        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:27:32 -0800 (PST)
+        with ESMTP id S229866AbiKVEif (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 21 Nov 2022 23:38:35 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E4D1262A
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:38:34 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id v3so13066728pgh.4
+        for <linux-gpio@vger.kernel.org>; Mon, 21 Nov 2022 20:38:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YVtA8N1sdHZLjx4HU/16XwPGz+35X2DZhKl7DshSd8=;
-        b=VcV32sLkT4dg94INfCWg5svMAmdQAemKvL5Z9EZNVfpDIIE9cgEh3TxtPOJMVagtdM
-         JyNvJcuvxkWTt+j/p7EfChp8+6E2KCfd6zfMaa0b7sWTI8xNXme8tphUjVqq7kjA0udh
-         T9T/2Osc3jpsMePSsRhbMxpGZStVrLhfixGUzrNdzIJUhqxTvhQ6guqjokPD+3y3mRHG
-         hekTkymqVyztFkyRWSvx9ti+Tiul1eP4jNjQ3Vmx0+NViH/SugkoNc8pZ3vIB64r70oA
-         eWMpA/1fbPu+gJnQoXehEQfJgCEUvXVUR2wA0PxjedhOMtcrWFSAUxcUB2wPC6CDkMiy
-         RtOg==
+        bh=aoGuonu3cc7/axg5LLUcxMp5sIpIox+T02FpdarZAbA=;
+        b=J06QTidBL3aFWtJrSYvImkqFn4stFYUrZRjfWjEFJClve2nqBh5bpLPfBq/UDhR0uh
+         naY5K6RGMPvJ4DbMUgFvUvk95Oew0SJdoSzAZ2BiyLBrN1fMlAQPoGHO+zml9mAl/AET
+         zOvbqgTZhuvHBe6gZ4ttaBaPMS3ggHsag1YLUez4sdLUjhFZw2CmTYqtcTEyZuuXa4lh
+         XUO7LXmvAw54w0KClzEgreOxAR2+BUAVf3cmnSZVg2DC0TorapPuxtEJFks+oUsAq1/g
+         2LfQ31NUaoFrHPXYoL7TYzAZGq3NUG7foOztFYWuCRtGO3kwoKfXL4INwF6EZ8EcZPeH
+         t6jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7YVtA8N1sdHZLjx4HU/16XwPGz+35X2DZhKl7DshSd8=;
-        b=T2+EQSExI7rEihtk8/366Ore56VMaIF7/ImjYB54CBcoP7hnhYsqDNUJJk0gTnmWwp
-         E3YFqCJrNXW2ua9gw7kyI0r8D22/OadV6w+Tv4kohyn9Pp1O+tU/YOPBvVkJl3+Hfeyf
-         aWswqgLX3D8MTwYL6JBDg0WXWAeUY8I8oURoCoGVS6IuH2HjJ69eDv2HkmS812WlpJ+2
-         BVkmONwhuMSP+HTt5TgBlpdkDGfEn9bqa5nodR5jeAfUVFVbQ4bmDF166MwEVuTlhGV2
-         86AEmn6YH6FPD251T59fz7I1tk2Jh4p/LLZBqHNAg3I6WZy2xc0SFpUsaBUthUG3GDBb
-         FpdQ==
-X-Gm-Message-State: ANoB5platAVnfkLmKIMIzXruzHJX2iJttqE8s52rdS2Ytpd6Xsm8WGiI
-        X42kYEBe6nHsJ7Nfx42h6Epm8g==
-X-Google-Smtp-Source: AA0mqf5bhD1gPAUgGiV+j6kXZmbD45AFq/eng+fMyXHZ021KFn9+HHme4Yqg1oLH+9JqceZ2cl//sg==
-X-Received: by 2002:a17:90a:be11:b0:218:c83e:4735 with SMTP id a17-20020a17090abe1100b00218c83e4735mr3581872pjs.9.1669091252159;
-        Mon, 21 Nov 2022 20:27:32 -0800 (PST)
+        bh=aoGuonu3cc7/axg5LLUcxMp5sIpIox+T02FpdarZAbA=;
+        b=MDyBc4Jx7ENRwpAiW5sVKiBoS+QL62dyNWrifVkMIDovhoP8bUgzczi0kAEPv3oilH
+         3buRmPP8DUP5clXA80gbXTjj/kndr6/N/8JN4I6WD80bZU8TizXDoR8WeAZFjzHw1sHD
+         vaGGK+H7ZZEMZMxZKtlVjhjyOEZe4LrO9sGj8I3gQJbHf+PibvSHrh82bu+k1mg9lhzC
+         DxSKyuBasuov1S+CkZPG2LpU/jlZVQ5M4DdX2teG0+twX9fA93GPO/25KViIUoMUjcZv
+         wE8iU2Fvni5a5xYtU3Cl0aFQcA0eqrwUprgh+FxTUn8iQhCA8eH/v2ToWZjVaq1qwBUm
+         nqYA==
+X-Gm-Message-State: ANoB5pl3RLxXghZLil+ZOUAgEzYiyhYqTr7kIx6qosybI9a7LAomjfK+
+        JT/KHA52+dzS/e+/JjUHh7CmcA==
+X-Google-Smtp-Source: AA0mqf4WI60F+SrUFL/Pf3WnjinqzTfkNtS1BwvskGWc5Vz3y2AGmX2ilN/lAuPaIhV9sl0Eef5OjQ==
+X-Received: by 2002:a62:fb11:0:b0:56b:dbab:5362 with SMTP id x17-20020a62fb11000000b0056bdbab5362mr23525536pfm.47.1669091913626;
+        Mon, 21 Nov 2022 20:38:33 -0800 (PST)
 Received: from localhost ([122.172.85.60])
-        by smtp.gmail.com with ESMTPSA id b12-20020a170902d40c00b00188fadb71ecsm9141530ple.16.2022.11.21.20.27.31
+        by smtp.gmail.com with ESMTPSA id b127-20020a636785000000b004468cb97c01sm8374919pgc.56.2022.11.21.20.38.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 20:27:31 -0800 (PST)
-Date:   Tue, 22 Nov 2022 09:57:29 +0530
+        Mon, 21 Nov 2022 20:38:32 -0800 (PST)
+Date:   Tue, 22 Nov 2022 10:08:31 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
@@ -64,15 +64,15 @@ Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
         =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
         y86-dev <y86-dev@protonmail.com>
-Subject: Re: [libgpiod][PATCH V10 0/6] libgpiod: Add Rust bindings
-Message-ID: <20221122042729.whi3oeqxsrlddrqt@vireshk-i7>
+Subject: Re: [libgpiod][PATCH V10 2/6] bindings: rust: Add libgpiod crate
+Message-ID: <20221122043831.hemnrbyily25rhhk@vireshk-i7>
 References: <cover.1668768040.git.viresh.kumar@linaro.org>
- <CACRpkdaB1u9jwa+qXRZXG_1LSgO1-xVxfK_G1YwHe1LpSF5fzA@mail.gmail.com>
- <CAMRc=McHUfLO4CbgRdBwGF0YktGFaQvbHszeNqcxRFifUNat4g@mail.gmail.com>
+ <daa3021e4c148d33a8d50c54841719082836c43a.1668768040.git.viresh.kumar@linaro.org>
+ <CAMRc=MeXTD10OVZzp2zGTR6Vs2PXemzkrvpBqFE=YojS9mrMPw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=McHUfLO4CbgRdBwGF0YktGFaQvbHszeNqcxRFifUNat4g@mail.gmail.com>
+In-Reply-To: <CAMRc=MeXTD10OVZzp2zGTR6Vs2PXemzkrvpBqFE=YojS9mrMPw@mail.gmail.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -82,24 +82,40 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21-11-22, 21:22, Bartosz Golaszewski wrote:
-> On Mon, Nov 21, 2022 at 2:46 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > This stuff is great for the GPIO and Rust communities. Also, looks finished.
-> > Here is a cheerful:
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On 21-11-22, 15:12, Bartosz Golaszewski wrote:
+> This is not a blocker, I will apply this series to master later and we
+> can add modifications on top of that, but I am now questioning the
+> need for this function here and also the value of __version__ in
+> Python bindings.
+> 
+> Previously the python bindings were built with autotools as part of
+> the whole library. In v2 python now has a proper setup.py script and I
+> intend to publish the bindings on pypi. It can now be built separately
+> from the rest of the libgpiod code as long as the system satisfies the
+> dependency for libgpiod. Example: I will split the yocto recipe for
+> libgpiod into one for the core lib + tools + C++ bindings and another
+> for python that will go to meta-python. The latter will depend on the
+> libgpiod package but will be built in a separate sysroot.
+> 
+> In that case keeping the libgpiod API version as the Python's package
+> __version__ (which made sense before when that code was closely
+> integrated with libgpiod core) is no longer necessary. I'm thinking
+> about setting __version__ to v2.0.0 (because we already had python
+> bindings with v1.x.y versioning out there) but decoupling it from
+> libgpiod's API version.
+> 
+> In your rust code all the crates already have their own versions that
+> don't follow libgpiod's API's version. I think we should drop this
+> function. What do you think?
 
-Thanks Linus.
+whatever you and Kent decide is fine with me :)
 
-> Agreed. Series applied. Great work and thank you Viresh for the perseverance!
+> Also: is there a standardized way for crates to inspect their version?
+> As in: println!(crate.version()) or something?
 
-Thanks Bartosz.
-
-Just for fun, I went back to see when I started doing this work. I
-shared my work with everyone for the first time on 31 Aug 2021. Almost
-15 months :)
-
-A special thanks to Miguel and Kent, who were very kind to allocate
-time to provide reviews for this work.
+I think that would be "version!()" [1].
 
 -- 
 viresh
+
+[1] https://crates.io/crates/version
