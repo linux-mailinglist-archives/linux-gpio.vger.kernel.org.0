@@ -2,45 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E49B633840
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 10:23:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF4C6338F9
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 10:48:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232341AbiKVJXS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 04:23:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
+        id S233360AbiKVJsh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 04:48:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232108AbiKVJXR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 04:23:17 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2CD420F4E;
-        Tue, 22 Nov 2022 01:23:15 -0800 (PST)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: kholk11)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id B95126602AC7;
-        Tue, 22 Nov 2022 09:23:13 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1669108994;
-        bh=+mlBG/PJoJUc9mB4Fvqa/9O1jnPv1xX0SkB4mOqIHso=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=oATMFKxm8m+2BgI44UwSDJAtyNhdFHigDVbG6Z/9SiyBYFGV3ZSsbTLtST5gWh4KS
-         WJBQZWAGGa15Wiouudki0IYlWOUr+2EMIMnTehAUHfNbLwtF+sLHKydXIjqxCUz0AU
-         LuMRfxHk7vmryAUL9TDH1bxQDN8kjiY3HKNWtUu4CjarTpgLJ2tq8+RycPBNTjCLuy
-         PBnTp5ozH8QzSoabVMpb2uQqPng+rhyMbWe7oP8MxvyyQGyDwxugiijioK/ssdQRYx
-         q8cLwz48saX8Ksw857B93cNidbMc2/zl9LtpiF5RnE1QzdeoCkggEj5A96UEpZx51M
-         nfOBhknwD4Q5g==
-Message-ID: <a176dc88-add7-7ce2-16c8-2bd7c6821399@collabora.com>
-Date:   Tue, 22 Nov 2022 10:23:11 +0100
+        with ESMTP id S233357AbiKVJs2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 04:48:28 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 663DF2F034;
+        Tue, 22 Nov 2022 01:48:27 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id v7so10323334wmn.0;
+        Tue, 22 Nov 2022 01:48:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tl1tm9PBQRn+U8KTXYVM7yfK2dKQwpuC0dLGysAV9zQ=;
+        b=HncGcit0JoF2eoepnzm5Rv32O9ZhxWzVNhT7fpQi/1ZmJGUeAbzWvDcx9M3pZ3oIwx
+         ldJmCOWN4Z6eqtDSMq5LPBLAbtiUjRYIswQgC1C0R0psNdmJTMCo1rejd6YUYDz+cVeH
+         sC/A5nf8K7kNntAGI0Iv2CziEE67b/UBccc2zi5HKiRavU4EZ+KxmgVCf9UJRc7dhK4p
+         6NqWVOu6DBKbyqlcI3v+sA9I6nxvOHLtHR1XEnUgs5bG1JjTbHJreWkKf4Z+iahunve6
+         LLwr54w5OIK7goNbOfvqBmRG7xdHslCdi32FSwsk2KL+mGk3ADXGg2mmApbLaCP8IBVV
+         asxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tl1tm9PBQRn+U8KTXYVM7yfK2dKQwpuC0dLGysAV9zQ=;
+        b=RjvrSrq9Ak0QSCAVw3AUwZ2PIpMrgsLwZZh5PaW78XfzSJcEBtZdDfpxWh+7RDS84r
+         96RZA7DxBe+h5O135b3P4VFB0Rp5f+e0BM+jmXzDzayLSSxzpalqaFxsP+fqqqJ2sWcq
+         RQqgjM5bzqhWoOtpwmkCM6A08RmmGpG92YA4BnHGi4cHSDbBDYwe9/c97DEB0cROHoNE
+         aX9pZnBwG7ELCxxkjidusLIJUwk0iy4v4KmUUvFZA1RZS5u6YGSFsmBGsNXF3ZrC/3W4
+         98LZjJ1SWhxokjOWcGtScLqzaZy6UK1KhtORsW2qTWhjjwZkcrvurK9dh2nwpVUW6lct
+         VcRw==
+X-Gm-Message-State: ANoB5pl7+p3EsACZZ2umSz+8KWRwqwEGp45ayOafpx1ksSAJMviJ+mss
+        f1AqPkFzqAyO+HNTpf7wcoA=
+X-Google-Smtp-Source: AA0mqf4VO8MfjcSudJMvl2CWKuZCsx4k/rCFtYAaXTgc4VK3ZNFtczyk6V0r6HIhWkk5vTZ91wqM2g==
+X-Received: by 2002:a05:600c:4151:b0:3cf:6fd1:d94e with SMTP id h17-20020a05600c415100b003cf6fd1d94emr15195821wmm.61.1669110505672;
+        Tue, 22 Nov 2022 01:48:25 -0800 (PST)
+Received: from [192.168.2.177] ([207.188.167.132])
+        by smtp.gmail.com with ESMTPSA id o18-20020a05600c4fd200b003cfa26c410asm23525460wmq.20.2022.11.22.01.48.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Nov 2022 01:48:24 -0800 (PST)
+Message-ID: <412024b7-c4ce-bae6-edd0-b415c930c088@gmail.com>
+Date:   Tue, 22 Nov 2022 10:48:22 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
+ Thunderbird/102.4.2
 Subject: Re: [PATCH v1 1/1] pinctrl: meditatek: Startup with the IRQs disabled
 Content-Language: en-US
 To:     Ricardo Ribalda <ribalda@chromium.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
         Sean Wang <sean.wang@kernel.org>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Ross Zwisler <zwisler@kernel.org>,
@@ -51,21 +68,23 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         "Joel Fernandes (Google)" <joel@joelfernandes.org>
 References: <20221122-mtk-pinctrl-v1-0-bedf5655a3d2@chromium.org>
  <20221122-mtk-pinctrl-v1-1-bedf5655a3d2@chromium.org>
-From:   AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
 In-Reply-To: <20221122-mtk-pinctrl-v1-1-bedf5655a3d2@chromium.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Il 22/11/22 00:38, Ricardo Ribalda ha scritto:
+
+
+On 22/11/2022 00:38, Ricardo Ribalda wrote:
 > If the system is restarted via kexec(), the peripherals do not start
 > with a known state.
 > 
@@ -125,6 +144,30 @@ Il 22/11/22 00:38, Ricardo Ribalda ha scritto:
 > 
 > Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-
+> 
+> diff --git a/drivers/pinctrl/mediatek/mtk-eint.c b/drivers/pinctrl/mediatek/mtk-eint.c
+> index 65d312967619..27f0a54e12bf 100644
+> --- a/drivers/pinctrl/mediatek/mtk-eint.c
+> +++ b/drivers/pinctrl/mediatek/mtk-eint.c
+> @@ -303,12 +303,15 @@ static struct irq_chip mtk_eint_irq_chip = {
+>   
+>   static unsigned int mtk_eint_hw_init(struct mtk_eint *eint)
+>   {
+> -	void __iomem *reg = eint->base + eint->regs->dom_en;
+> +	void __iomem *dom_en = eint->base + eint->regs->dom_en;
+> +	void __iomem *mask_set = eint->base + eint->regs->mask_set;
+>   	unsigned int i;
+>   
+>   	for (i = 0; i < eint->hw->ap_num; i += 32) {
+> -		writel(0xffffffff, reg);
+> -		reg += 4;
+> +		writel(0xffffffff, dom_en);
+> +		writel(0xffffffff, mask_set);
+> +		dom_en += 4;
+> +		mask_set += 4;
+>   	}
+>   
+>   	return 0;
+> 
