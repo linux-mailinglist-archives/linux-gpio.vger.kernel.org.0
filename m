@@ -2,142 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B5E6633CC2
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 13:43:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 834C4633D04
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 14:01:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232625AbiKVMnc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 07:43:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
+        id S232749AbiKVNA6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 08:00:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231864AbiKVMnb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 07:43:31 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0AC164CC;
-        Tue, 22 Nov 2022 04:43:30 -0800 (PST)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 6CD801F86C;
-        Tue, 22 Nov 2022 12:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1669121009; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+LttO4rwpoEUKx+mKrlRotB9foBpDXaTdB6zGT0DKgM=;
-        b=ECk0gdBvt1mE2jQiltgYhsFiQNQPIPXHcekRdV1hpQDSitwE3iuuWa2Nl+Yuv4JL+Xb7qX
-        wgSOiTlj8GL42umxGL1Ajp3XsnlksRR9pDJV92RYvqEHo1At21rVmtPN7zv9gZ3FI/qxdB
-        0bICCWaFXg9/uyIBG8u7x6+OEwXd3k8=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C30942C142;
-        Tue, 22 Nov 2022 12:43:28 +0000 (UTC)
-Date:   Tue, 22 Nov 2022 13:43:28 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        asahi@lists.linux.dev, devicetree@vger.kernel.org,
-        Hector Martin <marcan@marcan.st>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sven Peter <sven@svenpeter.dev>
-Subject: Re: [PATCH v3 2/7] lib/vsprintf: Add support for generic FOURCCs by
- extending %p4cc
-Message-ID: <Y3zD8DSB7zZK0M13@alley>
-References: <Y2qEpgIdpRTzTQbN@shell.armlinux.org.uk>
- <E1osRXO-002mvw-Fp@rmk-PC.armlinux.org.uk>
- <Y3Jf7xz2CQjJuEeT@alley>
- <Y3Jptob4bGL9Weel@shell.armlinux.org.uk>
+        with ESMTP id S232252AbiKVNAz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 08:00:55 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3D661BAE;
+        Tue, 22 Nov 2022 05:00:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669122054; x=1700658054;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=MmhbBkqNMvSGc76GKa0mJ/p1EKwUawSKuKvJH3qKXFA=;
+  b=MFfL2EZ901M+nnDfMD15Y7DqyLHvvcrUZVpXyYNZDfCetvkVqbsBs6UL
+   QhrEg7mjSYqsif0NODFCMCRppw7SWj9ByZ29oVzGzTymV5N4mHr+L2DbS
+   q/UEBZUwlD0VvTZG374Tlpop9wn6Tg+1UwGvSx3ANxx9YKinnk6WqOhMR
+   c1JUpEdZuMoFxdrrfUKAizxegtUW+ORm0SahebpdrSsf2VhBPhkcpkQXj
+   F77eQ3ZEJadtoTHW9kzJ873GJbsHftlifUuLG9aS0Q3OLkJGk1Rl+DLr6
+   GZML5uYJ7c5dqMXD7HQVFJ9wWOmGcSyvigbTbTf1n8A1WlFX/D4fu3kKM
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="315626941"
+X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
+   d="scan'208";a="315626941"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2022 05:00:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10538"; a="747342883"
+X-IronPort-AV: E=Sophos;i="5.96,184,1665471600"; 
+   d="scan'208";a="747342883"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 22 Nov 2022 05:00:47 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oxStJ-00Fpwi-3B;
+        Tue, 22 Nov 2022 15:00:45 +0200
+Date:   Tue, 22 Nov 2022 15:00:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pwm@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 0/7] pinctrl: intel: Enable PWM optional feature
+Message-ID: <Y3zH/etMuIQ5l+SK@smile.fi.intel.com>
+References: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3Jptob4bGL9Weel@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221117110806.65470-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon 2022-11-14 16:15:50, Russell King (Oracle) wrote:
-> On Mon, Nov 14, 2022 at 04:34:07PM +0100, Petr Mladek wrote:
-> > On Tue 2022-11-08 16:33:22, Russell King wrote:
-> > > From: Hector Martin <marcan@marcan.st>
-> > > 
-> > > %p4cc is designed for DRM/V4L2 FOURCCs with their specific quirks, but
-> > > it's useful to be able to print generic 4-character codes formatted as
-> > > an integer. Extend it to add format specifiers for printing generic
-> > > 32-bit FOURCCs with various endian semantics:
-> > > 
-> > > %p4ch   Host-endian
-> > > %p4cl	Little-endian
-> > > %p4cb	Big-endian
-> > > %p4cr	Reverse-endian
-> > > 
-> > > The endianness determines how bytes are interpreted as a u32, and the
-> > > FOURCC is then always printed MSByte-first (this is the opposite of
-> > > V4L/DRM FOURCCs). This covers most practical cases, e.g. %p4cr would
-> > > allow printing LSByte-first FOURCCs stored in host endian order
-> > > (other than the hex form being in character order, not the integer
-> > > value).
-> > > 
-> > > Signed-off-by: Hector Martin <marcan@marcan.st>
-> > > Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-> > 
-> > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > 
-> > See one nit below.
-> > 
-> > > --- a/lib/vsprintf.c
-> > > +++ b/lib/vsprintf.c
-> > > @@ -1762,27 +1762,50 @@ char *fourcc_string(char *buf, char *end, const u32 *fourcc,
-> > >  	char output[sizeof("0123 little-endian (0x01234567)")];
-> > >  	char *p = output;
-> > >  	unsigned int i;
-> > > +	bool pixel_fmt = false;
-> > >  	u32 orig, val;
-> > >  
-> > > -	if (fmt[1] != 'c' || fmt[2] != 'c')
-> > > +	if (fmt[1] != 'c')
-> > >  		return error_string(buf, end, "(%p4?)", spec);
-> > >  
-> > >  	if (check_pointer(&buf, end, fourcc, spec))
-> > >  		return buf;
-> > >  
-> > >  	orig = get_unaligned(fourcc);
-> > > -	val = orig & ~BIT(31);
-> > > +	switch (fmt[2]) {
-> > > +	case 'h':
-> > > +		val = orig;
-> > > +		break;
-> > > +	case 'r':
-> > > +		val = orig = swab32(orig);
-> > 
-> > I do not like much these multi assignments. I think that the result
-> > was not even defined in some older C standards. Though, I can't find
-> > it now. And even make W=3 does not warn about it.
+On Thu, Nov 17, 2022 at 01:07:59PM +0200, Andy Shevchenko wrote:
 > 
-> Err.
+> This is a continuation of the previously applied PWM LPSS cleanup series.
+> Now, we would like to enable PWM optional feature that may be embedded
+> into Intel pin control IPs (starting from Sky Lake platforms).
 > 
-> It's been supported for decades. I learnt about it back in 1992 when
-> I was introduced to C by another experienced C programmer. It's been
-> supported in ANSI C compilers. The Norcroft C compiler (which is
-> strict ANSI) on Acorn platforms back in the late 1980s/1990s even
-> supported it.
+> I would like to route this via Intel pin control tree with issuing
+> an immutable branch for both PINCTRL and PWM subsystems, but I'm
+> open for other suggestions.
+> 
+> Hans, I dared to leave your Rb tags, however the patches are slightly
+> differ, because of the Uwe's suggestion on how to handle the missing
+> headers. I hope you are okay with that. If not, please comment what
+> must be amended then.
+> 
+> Uwe, the patches 3 and 6 still need your blessing.
 
-Ah, the problem probably was with a more complicated assignment.
-For example, the result of the following code is not obvious:
+Uwe, do you think they are ready to go?
 
-	  a = b = a++;
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Best Regards,
-Petr
+
