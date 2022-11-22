@@ -2,111 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0896B634450
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 20:08:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 89D396344C8
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 20:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234612AbiKVTIS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 14:08:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38964 "EHLO
+        id S232355AbiKVTnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 14:43:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234478AbiKVTIQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 14:08:16 -0500
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45AE913DC2
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 11:08:15 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id a19so3065094uan.2
-        for <linux-gpio@vger.kernel.org>; Tue, 22 Nov 2022 11:08:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3i0puDYuQfNg42mrqEO5a8y7CMQy6Tgfm5+1RaPhGaM=;
-        b=B1vpTyk9mVifiOdom6HSphwjv6KC98MMhODUUNmjxEkIOQh9fIL0QkxlFfgQn1kRcr
-         g3vINaAZUZcSgaxlP2Fq+jloeF2Z8c0JUodMMrmWrBKlfjK2CNNY8JMHJQbqSJmeAsIH
-         roe1I48o8zaxqkIfWpYuhQIzXAdbepnaSScvVePSAFrIMt7zP6YldIx2vrDC1sW2xnTA
-         Fakicjj2KavA3q+M5oa6d7Iot78JFANW/aK3cCioPLAKstZTtqbzH41LYoohQIMEg3We
-         YHXje8TMsyDxnnzk7kTQKTTVYXg3vY3BaHkDCJ6YDZNBnZGeJSEB/GBAP5OBUCD0N2IC
-         u6Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3i0puDYuQfNg42mrqEO5a8y7CMQy6Tgfm5+1RaPhGaM=;
-        b=K91RDy0OqAvxOatU8uUCZ3zWYEdSP58doq1mdlfKw/WqWTNKp/ThKAHMILrf1lwl2G
-         k0L8Y+hc2xNI0T1ZPCTvzjNC5W9kv07OkW+wGeWcqucqsVc06TdRcFpv2O1fkl4N12Bc
-         iF59Jayrw5E00CoVZLZi6hNJbCbzkiDbkflye0kP1BaIU2u7LbgRwso/U0lDFhij9nCo
-         SCxmJus9e4QIA4eU/u3S5OLuqyRGKskHpYpyJIbSXPtHQWAHFNThKgVBthcSJeLKNBsE
-         lNbbn5b/hgBJOLICMGGlz/oEABSGQMwko/F9u5gXBkyk7U7bZbqrAB/ctRtvgojKNEmZ
-         DhMA==
-X-Gm-Message-State: ANoB5pkafZt5kVTMQJumDIXiP2lumXChaRZEuuytna4ZHf2OKXZQkZPe
-        zLv7ws5xNLwzJ1Igxj4TBwClmYQcngwuRuZoPtWv1q3MKxF2cQ==
-X-Google-Smtp-Source: AA0mqf66OKaz+9v8vRUOUfBV4c0TLWP/Tr26f4Us6GPSEkoQa5VOgvfYiY7JcuIxCbuUcbl9jiAnHUEuRkzQLPLQTcU=
-X-Received: by 2002:ab0:5a6e:0:b0:415:715c:1e70 with SMTP id
- m43-20020ab05a6e000000b00415715c1e70mr5871893uad.81.1669144094395; Tue, 22
- Nov 2022 11:08:14 -0800 (PST)
+        with ESMTP id S232341AbiKVTnS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 14:43:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7427C443;
+        Tue, 22 Nov 2022 11:43:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E1A04B81D56;
+        Tue, 22 Nov 2022 19:43:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2610C433D6;
+        Tue, 22 Nov 2022 19:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669146194;
+        bh=FnvUAA+yXCryMxim9anvCTDLRrStYPDHhE1Mo1spq0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z/ODJsvuT+0eV2zbZJBb6f/EYKQReFze8s0xizTKzvjOtAqMhBIkhWTZClHk3EYlE
+         Eh/LhR0lTWgnsnchipCleyxYOUop+fRrhiUjAseBmLOHbopIpwYoiAI6S2hk11R+EP
+         NyxDfnGgBeeM7h9PXDwlylq2xVjs6fPgtcNpFLswSZzYrPTT7HlmASmTzvxFpzVEK7
+         GvT6wEGzJTGHghiXXvY2aScotn78zWEB5Dj/w5RI5w0yx3Ak+p7YEjeK6ucpf3650w
+         fUuqpgMObpfmD8fH1xLqD/qma5TcIkU0I0irT6NAByi5wvhVWuKGhdfCwwc/TR7IDz
+         D+0bSoUsL7DhQ==
+Date:   Tue, 22 Nov 2022 19:43:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Michael Walle <michael@walle.cc>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: Re: [PATCH 1/2] regmap: add regmap_might_sleep()
+Message-ID: <Y30mTVhne9vqgSlM@sirena.org.uk>
+References: <20221121150843.1562603-1-michael@walle.cc>
 MIME-Version: 1.0
-References: <CAMRc=Me-LcGx1GUFZ3NnxvbW=wcKnpJ+jpDHjYb+20+_7gSCfg@mail.gmail.com>
- <CANiq72=vU1inYDgZJR1ukKkQF=Pj93eD3=Cw6iFE+8xf_+Brbw@mail.gmail.com>
-In-Reply-To: <CANiq72=vU1inYDgZJR1ukKkQF=Pj93eD3=Cw6iFE+8xf_+Brbw@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 22 Nov 2022 20:08:03 +0100
-Message-ID: <CAMRc=Me2hHmEohYwCvnrKVhxNSHts9wrtNCRMp4neBu1AcZnOQ@mail.gmail.com>
-Subject: Re: libgpiod: rust bindings and bindgen issue with C enums
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vY2Mmwx37l2oX2m0"
+Content-Disposition: inline
+In-Reply-To: <20221121150843.1562603-1-michael@walle.cc>
+X-Cookie: That's what she said.
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 5:55 PM Miguel Ojeda
-<miguel.ojeda.sandonis@gmail.com> wrote:
->
-> On Tue, Nov 22, 2022 at 4:38 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> >
-> > ---
-> > The expression that defines the value of an enumeration constant shall
-> > be an integer constant expression that has a value representable as an
-> > int.
-> > ---
-> >
-> > and virtually all compilers store enum variables as signed integers,
->
-> I don't think this is true. Both GCC and Clang seem to pick an
-> unsigned one if possible (for the enum, not the constants), e.g.
-> https://godbolt.org/z/6zjzMdP3T. I assume bindgen is using the one
-> decided by clang.
->
-> Note that the quote of the standard is a constraint, i.e. the values
-> of the constants need to fit in an `int` (and the compiler is required
-> to issue a diagnostic if they don't, under `-Wpedantic` in GCC/Clang).
->
-> > As enums are naturally signed integers in the C world - can we somehow
-> > make bindgen default to c_int for all enum types?
->
-> This would be https://github.com/rust-lang/rust-bindgen/issues/1966,
-> where it has been suggested as an option (as well as the fact that the
-> constants are not being generated as `c_int`).
->
 
-IIUC this is not done yet.
+--vY2Mmwx37l2oX2m0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Viresh' code makes the assumption that all Enums are unsigned
-integers. This would be easy to just convert to signed ints but having
-both types supported seems impossible. For instance there's the
-InvalidEnumValue error that takes an u32. There are more instances
-where the enum's type matters.
+On Mon, Nov 21, 2022 at 04:08:42PM +0100, Michael Walle wrote:
+> With the dawn of MMIO gpio-regmap users, it is desirable to let
+> gpio-regmap ask the regmap if it might sleep during an access so
+> it can pass that information to gpiochip. Add a new regmap_might_sleep()
+> to query the regmap.
 
-What should I do in this case to accommodate two types for enums? I'm
-bad at rust so I don't even know. In C++ I'd probably use templates if
-I had this problem. So generics?
+The following changes since commit 9abf2313adc1ca1b6180c508c25f22f9395cc780:
 
-Bart
+  Linux 6.1-rc1 (2022-10-16 15:36:24 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-might-sleep
+
+for you to fetch changes up to a6d99022e56e8c1ddc4c75895ed9e3ce5da88453:
+
+  regmap: add regmap_might_sleep() (2022-11-22 12:23:17 +0000)
+
+----------------------------------------------------------------
+regmap: Add regmap_might_sleep()
+
+Add an interface allowing generic users to determine if a regmap might
+use sleeping operations.
+
+----------------------------------------------------------------
+Michael Walle (1):
+      regmap: add regmap_might_sleep()
+
+ drivers/base/regmap/regmap.c | 13 +++++++++++++
+ include/linux/regmap.h       |  7 +++++++
+ 2 files changed, 20 insertions(+)
+
+--vY2Mmwx37l2oX2m0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN9JkwACgkQJNaLcl1U
+h9A8xwf/VK0xlFWr81nR7P0XOQiQJy+AACAlhakjRWX9+rRkYSp9iHNjHibKgbVy
+466ozDuXN9Czl7arUMPa2uP+sCVdckZwioKnRkHnizkuzm3h/DAPyTJK4tuu1QQJ
+Nq8l4jt4fKC6AUZpHK1Jioe1QePZ127dujH4kjYXWA/VSnbp7ThTltfqebmjicIu
+b54tSnao8WOjPn2hw6L29t56us2UzSTPupVDUTsZkTfB336HhSyw04yx7zPJNiqh
+0F+mXYSUl1M+8QKRYYRo+Q4wM+NEVp7TLUpZvf64mz5uROWVMdBCk6vsV0LtfM/z
+HwSMm1qxDp70ex9vgPw9WeO9zKXXgg==
+=jbZO
+-----END PGP SIGNATURE-----
+
+--vY2Mmwx37l2oX2m0--
