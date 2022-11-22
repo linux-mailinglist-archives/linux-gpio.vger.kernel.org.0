@@ -2,70 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41D8B63364C
-	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 08:51:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF5D6335DA
+	for <lists+linux-gpio@lfdr.de>; Tue, 22 Nov 2022 08:33:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232585AbiKVHvP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 02:51:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        id S232334AbiKVHdl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 22 Nov 2022 02:33:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232373AbiKVHvO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 02:51:14 -0500
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 124B332B8C;
-        Mon, 21 Nov 2022 23:51:14 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AEEB78061;
-        Tue, 22 Nov 2022 07:40:59 +0000 (UTC)
-Date:   Tue, 22 Nov 2022 09:51:12 +0200
-From:   Tony Lindgren <tony@atomide.com>
-To:     Andrew Davis <afd@ti.com>
-Cc:     Nishanth Menon <nm@ti.com>, Apurva Nandan <a-nandan@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Hari Nagalla <hnagalla@ti.com>
-Subject: Re: [PATCH v3 4/4] arm64: dts: ti: Add support for J784S4 EVM board
-Message-ID: <Y3x/cGYWLLB+J2zU@atomide.com>
-References: <20221116130428.161329-1-a-nandan@ti.com>
- <20221116130428.161329-5-a-nandan@ti.com>
- <b57433e7-b309-bd1c-f794-3da74021f03c@ti.com>
- <20221118174754.y37pq77drvla2uxj@tinderbox>
- <8c123fa2-caab-d2dd-5eb4-688f1c6abb33@ti.com>
- <20221118180808.wnel7d6gswsnooww@junkman>
- <93242211-95e7-09a0-fced-5ef2deb9fc08@ti.com>
- <20221118192744.wish2vrxgy7dg7c2@unnerving>
- <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
+        with ESMTP id S231948AbiKVHdk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 02:33:40 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F18F213F1F;
+        Mon, 21 Nov 2022 23:33:37 -0800 (PST)
+Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4NGbZp3ysrz15Mns;
+        Tue, 22 Nov 2022 15:33:06 +0800 (CST)
+Received: from kwepemm600020.china.huawei.com (7.193.23.147) by
+ dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 22 Nov 2022 15:33:35 +0800
+Received: from localhost.localdomain (10.175.112.125) by
+ kwepemm600020.china.huawei.com (7.193.23.147) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Tue, 22 Nov 2022 15:33:34 +0800
+From:   Peng Zhang <zhangpeng362@huawei.com>
+To:     <damien.lemoal@wdc.com>, <linus.walleij@linaro.org>,
+        <seanga2@gmail.com>, <palmerdabbelt@google.com>
+CC:     <linux-riscv@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sunnanyong@huawei.com>,
+        <wangkefeng.wang@huawei.com>, ZhangPeng <zhangpeng362@huawei.com>
+Subject: [PATCH] pinctrl: call of_node_put() when breaking out of for_each_available_child_of_node()
+Date:   Tue, 22 Nov 2022 07:58:53 +0000
+Message-ID: <20221122075853.2496680-1-zhangpeng362@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d5e41f6-16a8-4298-ccd3-6db60f94eb47@ti.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemm600020.china.huawei.com (7.193.23.147)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-* Andrew Davis <afd@ti.com> [221118 21:05]:
-> Why do we need SERIAL_8250_NR_UARTS at all, might be a better question.
-> These should be dynamically allocated if the number goes over the
-> default count imposed by the TTY framework. Maybe folks are still a
-> bit too afraid to touch the TTY subsystem core, I don't blame them..
+From: ZhangPeng <zhangpeng362@huawei.com>
 
-The 8250 core preallocates a number of ports for use, see
-serial8250_isa_init_ports() and serial8250_register_8250_port(). As the
-serial port driver probes, the preallocated ports get re-assigned to
-the port driver.
+Since for_each_available_child_of_node() will increase the refcount of
+node, we need to call of_node_put() manually when breaking out of the
+iteration.
 
-Maybe we could keep the static serial8250_ports[] and add those ports
-to a list where also the dynamically allocated ports would go..
+Fixes: d4c34d09ab03 ("pinctrl: Add RISC-V Canaan Kendryte K210 FPIOA driver")
+Signed-off-by: ZhangPeng <zhangpeng362@huawei.com>
+---
+ drivers/pinctrl/pinctrl-k210.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Regards,
+diff --git a/drivers/pinctrl/pinctrl-k210.c b/drivers/pinctrl/pinctrl-k210.c
+index ecab6bf63dc6..ad4db99094a7 100644
+--- a/drivers/pinctrl/pinctrl-k210.c
++++ b/drivers/pinctrl/pinctrl-k210.c
+@@ -862,8 +862,10 @@ static int k210_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
+ 	for_each_available_child_of_node(np_config, np) {
+ 		ret = k210_pinctrl_dt_subnode_to_map(pctldev, np, map,
+ 						     &reserved_maps, num_maps);
+-		if (ret < 0)
++		if (ret < 0) {
++			of_node_put(np);
+ 			goto err;
++		}
+ 	}
+ 	return 0;
+ 
+-- 
+2.25.1
 
-Tony
