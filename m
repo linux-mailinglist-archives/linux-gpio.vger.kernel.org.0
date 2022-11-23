@@ -2,117 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59A286365D8
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 17:30:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A9766365FE
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 17:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237795AbiKWQaZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 11:30:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
+        id S239036AbiKWQlt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 11:41:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236601AbiKWQaY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 11:30:24 -0500
-Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1951C1007A
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 08:30:23 -0800 (PST)
-Received: by mail-yb1-xb33.google.com with SMTP id i131so21440319ybc.9
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 08:30:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5iELkw5vCNW3WN6W/KE81SmHIlacrKw4q765aXBAO20=;
-        b=tTLNv2bAOnB7ruAP0FieQk5nhcnM9w5MvIGKuS2eeFv5GxUWmZgiPOla5vHARrehwl
-         f0+zCJ6Wy3DqR90+tAUJax+39S4d0133XUQ2uTLLgarT9uii3G55M6yhIwb+rwwFjLNv
-         iGtvoGAu5QJjSYXISID/c7z1cQRVn99PfPdO5eMzDIkpNr5rFo235fEEKXPIO/djpuXU
-         0nWHBee7m9clhF65j4YuzyE8MphVJIfc9YwzaPUJNQOW5qzl0H1/T/wrVN/uSBWUPTi8
-         /Pl3elslP+a4NovJNymfyRFv0I5DozgKm2dz7DpWaBxHksYg8SsGlsdzEgrcrFfejJ6J
-         UyZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5iELkw5vCNW3WN6W/KE81SmHIlacrKw4q765aXBAO20=;
-        b=iWqwEDO3yE+uBmAiQqOtM/q8G2DydNo6/DNpQx7QpgsiDsi22G87y78s24KbKe6n9h
-         OAl68iGF/Y3sYRjhO3nLc+yXsQgmnuSLJpQqcCMzVtPNHLo8R9BcRLptenWjlEpxCsuN
-         yuFrFA8N0adIHHNHf6KmLJWEwz6M/DObatkUzlGXOSjFSQrKHmIjUDL0foSRZZ0l7oPV
-         ikJ/PD5NzJ+aQlhotbvviyStBa6G4Esspkxp/avKJ6PVpLvQ1+sjZ6dkV3t82NYzKwUq
-         xkaRUb78s+UgNr+9gg3vwXl2nsPVyDI03Q5UdAPTNzaw5goWrdiQGwgY9lxbgb/MPZiy
-         CyAw==
-X-Gm-Message-State: ANoB5plL0jFBWAeO50aGf9Zww6UCULYg3Ms93ICi9zTbQmOI0bypJXXZ
-        v5YF8IJUIYSp8q9RcKb6eI4HLlTXTyeI/CYTSaz93w==
-X-Google-Smtp-Source: AA0mqf569QCE+MWM0v1v+JM5Zq53zSxeY91vaYogzbrr/hmgBDIQZD2oWK9eWbXoxV8jHkiVQmtNTCS6vUhvZ+osmPk=
-X-Received: by 2002:a25:73ca:0:b0:6d2:1a07:d35b with SMTP id
- o193-20020a2573ca000000b006d21a07d35bmr8768692ybc.518.1669221017651; Wed, 23
- Nov 2022 08:30:17 -0800 (PST)
+        with ESMTP id S239050AbiKWQlo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 11:41:44 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43ACDBFF76
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 08:41:42 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxsoY-0000eV-Mk; Wed, 23 Nov 2022 17:41:34 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxsoW-0065Of-I6; Wed, 23 Nov 2022 17:41:33 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1oxsoW-0013ca-Fp; Wed, 23 Nov 2022 17:41:32 +0100
+Date:   Wed, 23 Nov 2022 17:41:32 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Angel Iglesias <ang.iglesiasg@gmail.com>,
+        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
+        Grant Likely <grant.likely@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 011/606] gpio: max732x: Convert to i2c's .probe_new()
+Message-ID: <20221123164132.gfglkwgknqkwywnq@pengutronix.de>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+ <20221118224540.619276-12-uwe@kleine-koenig.org>
+ <CAMRc=Mfjcs-BBFhr8O1O956f4jdvAzY9ofZs1fme8+Ki=T60JA@mail.gmail.com>
+ <CAMRc=MfwSabay==DcyONc4AVgOPETsA5x3wuLX05Ndvfwiv4bg@mail.gmail.com>
 MIME-Version: 1.0
-References: <202211232331.BVAg4Q0c-lkp@intel.com> <CAMuHMdUuyGPDDE=xZQd3_Ne1DbiU+1vEXB5XuicOz6zM73tvPA@mail.gmail.com>
-In-Reply-To: <CAMuHMdUuyGPDDE=xZQd3_Ne1DbiU+1vEXB5XuicOz6zM73tvPA@mail.gmail.com>
-From:   Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date:   Wed, 23 Nov 2022 17:30:06 +0100
-Message-ID: <CACMJSetN2_0o0jdxrCPSdA=51iObKnhfcFTTKPG0FkBQs-gXkg@mail.gmail.com>
-Subject: Re: [brgl:gpio/for-next 56/58] drivers/gpio/gpio-max732x.c:613:42:
- warning: initialization of 'const struct i2c_device_id *' from 'int' makes
- pointer from integer without a cast
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     kernel test robot <lkp@intel.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="36dcbx36m5fgzyhv"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfwSabay==DcyONc4AVgOPETsA5x3wuLX05Ndvfwiv4bg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 23 Nov 2022 at 17:09, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> On Wed, Nov 23, 2022 at 4:49 PM kernel test robot <lkp@intel.com> wrote:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-> > head:   3687a82b1db1c827cc4b367e3efde3235f68d9f6
-> > commit: 95889cd3c8d8c64b3cd0baaecdaca2d82312b5fc [56/58] gpio: max732x: Convert to i2c's .probe_new()
-> > config: m68k-allyesconfig
-> > compiler: m68k-linux-gcc (GCC) 12.1.0
-> > reproduce (this is a W=1 build):
-> >         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >         chmod +x ~/bin/make.cross
-> >         # https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?id=95889cd3c8d8c64b3cd0baaecdaca2d82312b5fc
-> >         git remote add brgl https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-> >         git fetch --no-tags brgl gpio/for-next
-> >         git checkout 95889cd3c8d8c64b3cd0baaecdaca2d82312b5fc
-> >         # save the config file
-> >         mkdir build_dir && cp config build_dir/.config
-> >         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k SHELL=/bin/bash drivers/gpio/
-> >
-> > If you fix the issue, kindly add following tag where applicable
-> > | Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > All warnings (new ones prefixed by >>):
-> >
-> >    drivers/gpio/gpio-max732x.c: In function 'max732x_probe':
-> >    drivers/gpio/gpio-max732x.c:613:42: error: implicit declaration of function 'i2c_client_get_device_id'; did you mean 'i2c_get_device_id'? [-Werror=implicit-function-declaration]
-> >      613 |         const struct i2c_device_id *id = i2c_client_get_device_id(client);
-> >          |                                          ^~~~~~~~~~~~~~~~~~~~~~~~
-> >          |                                          i2c_get_device_id
-> > >> drivers/gpio/gpio-max732x.c:613:42: warning: initialization of 'const struct i2c_device_id *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-> >    cc1: some warnings being treated as errors
-> >
-> >
-> > vim +613 drivers/gpio/gpio-max732x.c
-> >
-> >    610
-> >    611  static int max732x_probe(struct i2c_client *client)
-> >    612  {
-> >  > 613          const struct i2c_device_id *id = i2c_client_get_device_id(client);
->
-> Depends on commit 662233731d66cf41 ("i2c: core: Introduce
-> i2c_client_get_device_id helper function") in i2c/i2c/for-next?
->
 
-Yes, already backed those out. Thanks.
+--36dcbx36m5fgzyhv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+On Wed, Nov 23, 2022 at 04:49:05PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Nov 23, 2022 at 10:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrot=
+e:
+> >
+> > On Fri, Nov 18, 2022 at 11:46 PM Uwe Kleine-K=F6nig <uwe@kleine-koenig.=
+org> wrote:
+> > >
+> > > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > >
+> > > .probe_new() doesn't get the i2c_device_id * parameter, so determine
+> > > that explicitly in the probe function.
+> > >
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > ---
+> > >  drivers/gpio/gpio-max732x.c | 6 +++---
+> > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
+> > > index da6972117030..68e982cdee73 100644
+> > > --- a/drivers/gpio/gpio-max732x.c
+> > > +++ b/drivers/gpio/gpio-max732x.c
+> > > @@ -608,9 +608,9 @@ static struct max732x_platform_data *of_gpio_max7=
+32x(struct device *dev)
+> > >         return pdata;
+> > >  }
+> > >
+> > > -static int max732x_probe(struct i2c_client *client,
+> > > -                                  const struct i2c_device_id *id)
+> > > +static int max732x_probe(struct i2c_client *client)
+> > >  {
+> > > +       const struct i2c_device_id *id =3D i2c_client_get_device_id(c=
+lient);
+> > >         struct max732x_platform_data *pdata;
+> > >         struct device_node *node;
+> > >         struct max732x_chip *chip;
+> > > @@ -707,7 +707,7 @@ static struct i2c_driver max732x_driver =3D {
+> > >                 .name           =3D "max732x",
+> > >                 .of_match_table =3D of_match_ptr(max732x_of_table),
+> > >         },
+> > > -       .probe          =3D max732x_probe,
+> > > +       .probe_new      =3D max732x_probe,
+> > >         .id_table       =3D max732x_id,
+> > >  };
+> > >
+> > > --
+> > > 2.38.1
+> > >
+> >
+> > Applied, thanks!
+> >
+> > Bartosz
+>=20
+> Ugh, backing it out, I thought these patches were independent.
+
+They depend on i2c_client_get_device_id which you can get into your tree
+either by pulling in
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/client_d=
+evice_id_helper-immutable
+
+or by waiting until this hits Linus Torvald's tree and updating to that.
+
+I'd like to see the gpio patches go in via the gpio tree. If you choose
+not to pull in the above and apply now, I will resend (per subsystem)
+the remaining patches based on the next -rc1 containing that function.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--36dcbx36m5fgzyhv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmN+TTkACgkQwfwUeK3K
+7AkvdAf8Cvzw5JtqcCfsVyR4MO/uWqGhDkWy1cos3ftRKc2I/0HlSJdOXQJzRvUT
+7XZ+gL366ZC9w04+ZEMydwjeUxKwUbi/PLQVJp2u0M2scmsw7BymGlK9MO6nQ8TC
+lmFHWpcC03yPESjqLASdy2o+WXmvzvxaKme1NaDuOyV7BLJuJxm73LbR8kwutYq3
+D8wltjMPA0xqc+vPaU87LuIdRdKBJfDvl0r5aKAs8QMvSQiIxMtuPgq8bSd6s3ip
+gXIV23MhwgXSHTM2151FjDThN20U93HY9y7lEucHb7Lsh+qww3RBFFo4lNJy+IsN
+Zmtytj51t9PlB1OS1lYJJZL8lN7CIg==
+=+6fc
+-----END PGP SIGNATURE-----
+
+--36dcbx36m5fgzyhv--
