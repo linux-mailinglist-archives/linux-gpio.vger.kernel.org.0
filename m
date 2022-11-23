@@ -2,131 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92AEA636499
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:50:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6FB663649F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:50:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237585AbiKWPuI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 10:50:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39060 "EHLO
+        id S238639AbiKWPuh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 10:50:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238796AbiKWPtk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:49:40 -0500
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6B1C6899
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:49:17 -0800 (PST)
-Received: by mail-vk1-xa2c.google.com with SMTP id v81so8914062vkv.5
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:49:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jivc45dTXvLm1YRXWATZxQPSyvJMgufwFq3xGWuqv3M=;
-        b=HhGGX95JXkc8p/cmrwB5sqv/RmAgSIe6Y1pIc6pBWtss4VPKEWpXS5pYXhmooshnuM
-         rcTc1CheQ5j1WJBjffdRCu8xo7NIx/+fg90KRf35VV2y45j14D8dcDy9Nxy6HSeMqpnI
-         vw8Bj8w5QAnm7jbG345EfuyFaELsS/TqhxRxtD7+Inj3LuI1wNwYCp4rsksYzFpniw3O
-         kYwVPAfVhwbbGP/Wpll/QJK5hsohJ88WWafxcQRsVQthMkA6/oKK4qQK3FtOsJtZWK6V
-         AN1bYOHyr0OnYpouDiUWTbMLFtpsksrU//fePasFTt1AHx/qfO9FLNoN8US8gPDAORAQ
-         /5HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jivc45dTXvLm1YRXWATZxQPSyvJMgufwFq3xGWuqv3M=;
-        b=Wp/LcfgKT0qZls9D07KpDxzMb3izXtfIbOGhnxII8LfWgWQ6j6GGo0f2TeM6lRDfOI
-         SHiHFmsNFT85JuV3F/ew8WB6EoaJDQ0Vac/Wm9J5xk+tf0qUiYYAQcMBkQyiUHVD52oU
-         mqw5bam2jPrfD34me6CEfK/3vgCxkFPOWniZ5PSmj6rUT1Wk3U2aRlRJYUoSOETWvgQ4
-         4+BWDLKUDu1LwNGnVUR9k8KNiFV732jSEg8Z+7SPCBLzokpJwc6EWrd1zy1e4XCOKfHu
-         xQrpMgvxwgnpMV7E9oWTkziQ3NJyl6/BrfWDEqQU14t90K3DADpLY7FxqDYFSHqjoJIn
-         dMCg==
-X-Gm-Message-State: ANoB5pmWIUrDXK2rM9i9sKYeKSjv+P3U6jwauUY8ExXRLrQb8O8WvS2W
-        j6WRKI7sFIMgkswI4vV3O75KpFp65JGB/4NFU9n5LA==
-X-Google-Smtp-Source: AA0mqf4OTkJmqH0nX+bnMDHlcETQbnZux4XMI/LgC9yc/Mif5H9e9AKyW0o+PZg050EBQBNhpu0Aadhu7D6IO6KKtHE=
-X-Received: by 2002:a1f:54c1:0:b0:3b7:65cc:8ebc with SMTP id
- i184-20020a1f54c1000000b003b765cc8ebcmr10691674vkb.5.1669218556496; Wed, 23
- Nov 2022 07:49:16 -0800 (PST)
+        with ESMTP id S238744AbiKWPuI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:50:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9E2FC604D;
+        Wed, 23 Nov 2022 07:49:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 94278B820D2;
+        Wed, 23 Nov 2022 15:49:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5620C433C1;
+        Wed, 23 Nov 2022 15:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669218581;
+        bh=T0mf0ijZQTzNBNeBPF5fkFm6qTXOYlAmsvGjPYhocZE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QYvvVVFg3xABYgJQEwfoWni/oYrfqNnbcqqcQVrcp6uxcLqxAT3Hv4qpUOukDjTs/
+         0p7LoCYEfkSeEAiiX+7nrXQkbqjw1137EJi8AGbebG+uSGbSuFWy6ItixRDZdgYjzd
+         wI4+oGGgg+c8KPKVUQ5ZdWR+K+nR9Wh8y+eMc16I0PC838GB+J3v6zlQjhWOtg1c1c
+         6e5RsTLcd6FqRQaHdPekbba0bcco/SKnkdwTGzLKgRh+Lpo1he1WOZKJOaw2ZEIIXQ
+         GRY+SoMl3sj6Xk7pnSLZNQi8V4EhDNugotUmyQAc8a1pA6HLWIGeNLAtS34DQuw57+
+         eXjalnxk49wTQ==
+Date:   Wed, 23 Nov 2022 15:49:30 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 7/9] dt-bindings: drop redundant part of title
+ (beginning)
+Message-ID: <Y35BCpD/tr/7prMh@sirena.org.uk>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-8-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221118224540.619276-12-uwe@kleine-koenig.org> <CAMRc=Mfjcs-BBFhr8O1O956f4jdvAzY9ofZs1fme8+Ki=T60JA@mail.gmail.com>
-In-Reply-To: <CAMRc=Mfjcs-BBFhr8O1O956f4jdvAzY9ofZs1fme8+Ki=T60JA@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 23 Nov 2022 16:49:05 +0100
-Message-ID: <CAMRc=MfwSabay==DcyONc4AVgOPETsA5x3wuLX05Ndvfwiv4bg@mail.gmail.com>
-Subject: Re: [PATCH 011/606] gpio: max732x: Convert to i2c's .probe_new()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uLB1Llf0h2iQ6rin"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-8-krzysztof.kozlowski@linaro.org>
+X-Cookie: I'm rated PG-34!!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 10:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Nov 18, 2022 at 11:46 PM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig=
-.org> wrote:
-> >
-> > From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> >
-> > .probe_new() doesn't get the i2c_device_id * parameter, so determine
-> > that explicitly in the probe function.
-> >
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/gpio/gpio-max732x.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-> > index da6972117030..68e982cdee73 100644
-> > --- a/drivers/gpio/gpio-max732x.c
-> > +++ b/drivers/gpio/gpio-max732x.c
-> > @@ -608,9 +608,9 @@ static struct max732x_platform_data *of_gpio_max732=
-x(struct device *dev)
-> >         return pdata;
-> >  }
-> >
-> > -static int max732x_probe(struct i2c_client *client,
-> > -                                  const struct i2c_device_id *id)
-> > +static int max732x_probe(struct i2c_client *client)
-> >  {
-> > +       const struct i2c_device_id *id =3D i2c_client_get_device_id(cli=
-ent);
-> >         struct max732x_platform_data *pdata;
-> >         struct device_node *node;
-> >         struct max732x_chip *chip;
-> > @@ -707,7 +707,7 @@ static struct i2c_driver max732x_driver =3D {
-> >                 .name           =3D "max732x",
-> >                 .of_match_table =3D of_match_ptr(max732x_of_table),
-> >         },
-> > -       .probe          =3D max732x_probe,
-> > +       .probe_new      =3D max732x_probe,
-> >         .id_table       =3D max732x_id,
-> >  };
-> >
-> > --
-> > 2.38.1
-> >
->
-> Applied, thanks!
->
-> Bartosz
 
-Ugh, backing it out, I thought these patches were independent.
+--uLB1Llf0h2iQ6rin
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In that case:
+On Mon, Nov 21, 2022 at 12:06:13PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "Devicetree binding", but instead just describe the hardware.
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--uLB1Llf0h2iQ6rin
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+QQkACgkQJNaLcl1U
+h9C5lAf8Dpp6enFuhrAPv0ZsgsZe6xWsOHu4pelgjbPEH8V7tDwUPWITXN5vLI3+
+RuqFuOP0hYHIa9rUjaI4dZX0sPV7cFMF2BdyjTFdczyAizXljoNVh2r23soCG0RX
+66rxbmsNE++z+1DObKtZgJoutGaB/ZAqMpW0t0XJERPq1KbjBGmy8D/fIq8lvoy/
+4297MfYX3okBCVVhPRX/v+unG3sVqED0Bhdjpo/bwY0150YItakf4eVUXwFxfvTK
+25XCxunGEShq5zi//+/abs2X89ZjhqLTfJtYtUVnj1xtSfEqoRb6mf82WrkieRvA
+dYORYgupqLBXMecamcwbhHMcJBNZ3w==
+=hyWV
+-----END PGP SIGNATURE-----
+
+--uLB1Llf0h2iQ6rin--
