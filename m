@@ -2,150 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2496D6362A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:02:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22FC563632D
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:20:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237676AbiKWPCG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 10:02:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
+        id S238621AbiKWPUX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 10:20:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237496AbiKWPCF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:02:05 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0725F2F3A4;
-        Wed, 23 Nov 2022 07:02:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669215725; x=1700751725;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cu3IGHk+KWNT4/J9/yQSAfLQbKsbIpwvyl5b794H6aw=;
-  b=bB6AxfCUBvndPrkYs4+8EVAERCMFneLV4Fhy7QzMhWbWxuRxe4g907hF
-   1zyAODwz217vS3AS2BUWDUSIjQ0zoL3m95ujEo9YuqlB/AROHmu8YPg9T
-   MMIO8E/9g27scjjfRwvfBP+joWOu7dfidSjA106JAnWTV/tr3YE8eVyN9
-   Dz6UNDss2Y2zzRE0VU1iaN+1XxWu+MnjXA0ZHzkcghzl3vBd0/ixyO3H7
-   9u1iA8NqpZDt9lpgx0Zz6rtYjBejCS8RjCMq1ihSn0M0G8+VwjsgpC9hn
-   sZiENVUmdr/Q+Z6SocNtEvXljORT3WbCIEETtIZU9qyats+bc9VT2WV4M
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="378341376"
-X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
-   d="scan'208";a="378341376"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 07:01:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="635941367"
-X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
-   d="scan'208";a="635941367"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 23 Nov 2022 07:01:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oxrG5-00GKhH-1v;
-        Wed, 23 Nov 2022 17:01:53 +0200
-Date:   Wed, 23 Nov 2022 17:01:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        michael@walle.cc, broonie@kernel.org
-Subject: Re: [PATCH v3 3/9] gpio: 104-dio-48e: Migrate to the regmap-irq API
-Message-ID: <Y3414YhVjqKakddV@smile.fi.intel.com>
-References: <cover.1669100542.git.william.gray@linaro.org>
- <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
+        with ESMTP id S238736AbiKWPUI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:20:08 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6123F90598
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:20:07 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id x17so16418337wrn.6
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:20:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ziwsq9banwczERpMX+Bo3ns23w7Dd8VFWVq2lIRwuKE=;
+        b=h+z4P+mLFJgnkVRXVdp3prIBBPkAdi+FwhU/MWCM+45GjS344kKmGvvfC2NWJqctNL
+         /b8fuSL1ttsIggGguMPLdLrNDm7QUjnWFhx1eKOzGTWwc7ABYnK8CYQn+mKfE6i9vuwq
+         jhwmETeTCYfTEC8YfaPYjjA8FG+UsOIFbQPcZkes8iHOP2u6ioYsBCdYSq5Z2IS8HHWX
+         sCTmfDmipwpLQN2bayLosN2jXgN2GknoCWPZwFLaQu/ac8PlZVf1fmWWEw0opiJnqw1z
+         hWUWqpSuWYnYRc/ITfDNE4+8FKZ7UVQiQcHqQol87JeGPzcsTjd/cjsAq+QRTtsA9EZG
+         Mn/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ziwsq9banwczERpMX+Bo3ns23w7Dd8VFWVq2lIRwuKE=;
+        b=gHQQrJh/akuiJzRPVdhEsqErBh+5NEZ5cwAvIAmHiFnHSkJUTSYv896dcnQj9N5E6S
+         UxsmO8HT6OXMzrWpO453qhpIZw5lJhnIkvdeLduqdUbnndP+qpZrq4U4G1pwJIbdDCYo
+         0qF2NRlKqB/x0A4m3EhfCyWorDXCt4k36nYyUDwzp4LVxs5XuGI17N3e0Aamgss/1GqJ
+         lwA6R5WyEcaPhrPxl/DSiDjEfinNykuuIxw5Ce/RvWDwCfHmv7YhiY/HuCvzgFPfNYzQ
+         EgfSfTOrti055Hk9banege/Mq04INLfaUUGUb0KHW07aSqlJRC8uohKk09RFt4xYLoEy
+         5h5A==
+X-Gm-Message-State: ANoB5plEyePMpDJL6vxZ/Cop4XGmDoHRDzWZeD3GlAQriUUuYJdSvAGg
+        cs/o+eGUDchuLpCrkG1o5jqYRw==
+X-Google-Smtp-Source: AA0mqf63XHGjwyrqrPkF1+AicWGQJXD0EFyrzQk6d2t/8H6zregd0KnivxFbLhZYRfMBIHYCQ0kaNg==
+X-Received: by 2002:a5d:48cf:0:b0:236:4983:285f with SMTP id p15-20020a5d48cf000000b002364983285fmr17585786wrs.576.1669216805925;
+        Wed, 23 Nov 2022 07:20:05 -0800 (PST)
+Received: from localhost.localdomain ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id l10-20020adff48a000000b002366ded5864sm16764914wro.116.2022.11.23.07.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Nov 2022 07:20:05 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [PATCH v2 0/4] pinctrl: qcom: Add support for SM8550
+Date:   Wed, 23 Nov 2022 17:19:57 +0200
+Message-Id: <20221123152001.694546-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 02:11:00AM -0500, William Breathitt Gray wrote:
-> The regmap API supports IO port accessors so we can take advantage of
-> regmap abstractions rather than handling access to the device registers
-> directly in the driver.
-> 
-> For the 104-dio-48e we have the following IRQ registers (0xB and 0xF):
-> 
->     Base Address +B (Write): Enable Interrupt
->     Base Address +B (Read): Disable Interrupt
->     Base Address +F (Read/Write): Clear Interrupt
-> 
-> Any write to 0xB will enable interrupts, while any read will disable
-> interrupts. Interrupts are cleared by a read or any write to 0xF.
-> There's no IRQ status register, so software has to assume that if an
-> interrupt is raised then it was for the 104-DIO-48E device.
+This patchset adds pinctrl support for the new Qualcomm SM8550 SoC,
+One thing needed by SM8550 is the I2C specific pull feature.
 
-...
+To: Andy Gross <agross@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh+dt@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 
-> +/* only bit 3 on each respective Port C supports interrupts */
-> +#define DIO48E_REGMAP_IRQ(_ppi) \
-> +	[19 + (_ppi) * 24] = { \
-> +		.mask = BIT(_ppi), \
-> +		.type = { .types_supported = IRQ_TYPE_EDGE_RISING, }, \
+Abel Vesa (2):
+  dt-bindings: pinctrl: qcom: Add SM8550 pinctrl
+  pinctrl: qcom: Add SM8550 pinctrl driver
 
-When {} on a single line, the trailing comma is not needed.
+Neil Armstrong (2):
+  dt-bindings: pinctrl: qcom,tlmm-common: document i2c pull property
+  pinctrl: qcom: add support for i2c specific pull feature
 
-		.type = { .types_supported = IRQ_TYPE_EDGE_RISING }, \
-
-would work as well.
-
-A nit: I would put \ on the same column by using TABs before each of them.
-
->  	}
-
-...
-
-> +	/* if all previously masked, enable interrupts when unmasking */
-> +	if (prev_mask == all_masked) {
-> +		err = regmap_write(map, DIO48E_ENABLE_INTERRUPT, 0x00);
-> +		if (err)
-> +			return err;
-> +	/* if all are currently masked, disable interrupts */
-> +	} else if (mask_buf == all_masked) {
-> +		err = regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
-> +		if (err)
-> +			return err;
-> +	}
-
-Haven't looked at the rest of the series, but if there is nothing with this
-code piece, the above can be optimized to
-
-	if (prev_mask == all_masked)
-		return regmap_write(map, DIO48E_ENABLE_INTERRUPT, 0x00);
-
-	if (mask_buf == all_masked)
-		return regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
-
-...
-
-> +	/* Initialize device interrupt state */
-> +	err = regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
-> +	if (err)
-> +		return err;
-
-Use ->init_hw() callback for this.
-
-...
-
-> +	err = devm_regmap_add_irq_chip(dev, map, irq[id], 0, 0, chip,
-> +				       &chip_data);
-
-I would leave this on one line. It's only 82.
-
-> +	if (err) {
-> +		dev_err(dev, "IRQ registration failed (%d)\n", err);
-> +		return err;
-> +	}
+ .../bindings/pinctrl/qcom,sm8550-tlmm.yaml    |  163 ++
+ .../bindings/pinctrl/qcom,tlmm-common.yaml    |    3 +
+ drivers/pinctrl/qcom/Kconfig                  |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c            |   20 +
+ drivers/pinctrl/qcom/pinctrl-msm.h            |    1 +
+ drivers/pinctrl/qcom/pinctrl-sm8550.c         | 1790 +++++++++++++++++
+ 7 files changed, 1988 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm8550-tlmm.yaml
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-sm8550.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
