@@ -2,130 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5D536364B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:52:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DBD76364CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:53:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235918AbiKWPw1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 10:52:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39518 "EHLO
+        id S235918AbiKWPxq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 10:53:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236766AbiKWPvl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:51:41 -0500
-Received: from mail-vk1-xa33.google.com (mail-vk1-xa33.google.com [IPv6:2607:f8b0:4864:20::a33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2239DCD94D
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:50:55 -0800 (PST)
-Received: by mail-vk1-xa33.google.com with SMTP id j24so8938906vkk.0
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 07:50:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lk0yfEtk3BvnUHwTPrp3NjmYiw9JacTy/YeEdlh9ydw=;
-        b=IY4N6ZpBuG6R8rdLkhlKx0WqDftmupfzYYuCl9n6aPp4pmn3PmGuSibHJBo9Eqijm2
-         vBvpEQcNVB0PoxKHy9s++hWwFQKsWI9K13WeKPRTfhR5LcpuBFFSjY0c8tUIwBFPuYmH
-         lR6pFjB9n3ym8zzWPvXLm1lz5ztqPpIAfZ9XMnrnZzeQFhROVp3H5sCX0VuOTtQt2ZK9
-         q/2lHr+LWXDybHf/fq6T4VnXO3xYri9pQLChrLu0xIX7xKgGs0u4FFy8p30bKkiEs9iC
-         kB5tGyCyHxH2r4fCCzea5LAgNINvMt0jU9sDynyYV07QXrTzLg5UubCFA0NaW9YlLXSS
-         3y5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lk0yfEtk3BvnUHwTPrp3NjmYiw9JacTy/YeEdlh9ydw=;
-        b=XsYxE9+stxCoEEdzWdb4PboQ+X4JSFis0MweYDUXJ9YKeJTtuAWHtl5dkpcSWJw7AY
-         Csq8VpqCVzLVGNgmaLOCu4I9jTky59XFtOdACtRPadtqlMCEpUz/rT91KMBXPexKSvFC
-         oQAwgYQuXYGB7jCKwzY1wMEJRulg9j7+glnq7d14ToQ2dNeEAmUI8E1lPTtVXYV9y8Ds
-         ehajEIpPNVeJ3KwYI2yPcg1Zze+f+fbjo06K7+osB3XTWHAhTDHD/6EUnDgFOoGhh+jQ
-         IRH7dIsV2KjNRbk6IvWhuxZl2itzRhlF/lx4WGy5zPcjFyH1egvDCw1oxt3p4v0OR9w7
-         VhGQ==
-X-Gm-Message-State: ANoB5pkAgWZw5WtnhYB6uJSOjeTJ3wCW7XLH45ssQrTr87E0rAhXIp5m
-        AjzdiXKz8VXrZNqjwQqctsABYGjhbMoHDgmcDPkjtQ==
-X-Google-Smtp-Source: AA0mqf66qAjspGrg7C5iAS9j9Oucom4zx2aarOvSmzlAYEKQ3K1iN2thxwAPDtEjVXeIFxZXBuFd2Tlm/xIymBGZuZw=
-X-Received: by 2002:a1f:54c1:0:b0:3b7:65cc:8ebc with SMTP id
- i184-20020a1f54c1000000b003b765cc8ebcmr10695118vkb.5.1669218654732; Wed, 23
- Nov 2022 07:50:54 -0800 (PST)
+        with ESMTP id S238785AbiKWPxB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:53:01 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121AC5A6EA;
+        Wed, 23 Nov 2022 07:52:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73E2E61DD9;
+        Wed, 23 Nov 2022 15:52:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5EEC43144;
+        Wed, 23 Nov 2022 15:52:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669218776;
+        bh=ZtsEDAGH6M1Hm2mKwIp+nkyl3EOfULlsa+PR5Jh+/yY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aCYae1otHmgUnvQhYydPYexYhzz0miYjM4zpf8c2mnxAms5CtVYUfAM7tWuXKgBlL
+         NCzjlOivqXZ6UqIGFo6Q3BntqxLP3hoWG6T432NPpsWDwgRF2tNVlSSreyLi6w5epT
+         5yRu6zDAJOHqLx2PKvtXWr2dbpMJrrYdASELSXDQ7oXGnQVROdJjqD20wCxJmK/TbF
+         LxosEZjoFf2ROozxpxjVeaVFcuzQLwzX93rS2p4/AwotUvzWq5hYJvRgCJVOQBQ8wc
+         Y+r3iBPxcrfDRitsbVrK4soZK4ULKoO7A7tHxHwHfbIwT8fluQgTwO6NOBHUOHbov+
+         PWGuJ73a1veDQ==
+Date:   Wed, 23 Nov 2022 15:52:45 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 9/9] dt-bindings: drop redundant part of title (manual)
+Message-ID: <Y35BzU80hf36eRyo@sirena.org.uk>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-10-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221118224540.619276-14-uwe@kleine-koenig.org> <CAMRc=Mc8QByAUsp5N1mD+rs-BayHs3A9sjjivzX_jGP2oQfHPg@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc8QByAUsp5N1mD+rs-BayHs3A9sjjivzX_jGP2oQfHPg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 23 Nov 2022 16:50:43 +0100
-Message-ID: <CAMRc=MeB7gVQ5RFLBHFb49Nf4UOZejsir2OmpRU+pkF8jZf+tg@mail.gmail.com>
-Subject: Re: [PATCH 013/606] gpio: pcf857x: Convert to i2c's .probe_new()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="QAOhPtWQs4kr9fZE"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-10-krzysztof.kozlowski@linaro.org>
+X-Cookie: I'm rated PG-34!!
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 10:48 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Fri, Nov 18, 2022 at 11:46 PM Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig=
-.org> wrote:
-> >
-> > From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> >
-> > .probe_new() doesn't get the i2c_device_id * parameter, so determine
-> > that explicitly in the probe function.
-> >
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> >  drivers/gpio/gpio-pcf857x.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-> > index e98ea47d7237..cec2f2c78255 100644
-> > --- a/drivers/gpio/gpio-pcf857x.c
-> > +++ b/drivers/gpio/gpio-pcf857x.c
-> > @@ -247,9 +247,9 @@ static const struct irq_chip pcf857x_irq_chip =3D {
-> >
-> >  /*--------------------------------------------------------------------=
------*/
-> >
-> > -static int pcf857x_probe(struct i2c_client *client,
-> > -                        const struct i2c_device_id *id)
-> > +static int pcf857x_probe(struct i2c_client *client)
-> >  {
-> > +       const struct i2c_device_id *id =3D i2c_client_get_device_id(cli=
-ent);
-> >         struct pcf857x_platform_data    *pdata =3D dev_get_platdata(&cl=
-ient->dev);
-> >         struct device_node              *np =3D client->dev.of_node;
-> >         struct pcf857x                  *gpio;
-> > @@ -422,7 +422,7 @@ static struct i2c_driver pcf857x_driver =3D {
-> >                 .name   =3D "pcf857x",
-> >                 .of_match_table =3D of_match_ptr(pcf857x_of_table),
-> >         },
-> > -       .probe  =3D pcf857x_probe,
-> > +       .probe_new =3D pcf857x_probe,
-> >         .remove =3D pcf857x_remove,
-> >         .shutdown =3D pcf857x_shutdown,
-> >         .id_table =3D pcf857x_id,
-> > --
-> > 2.38.1
-> >
->
-> Applied, thanks!
->
-> Bartosz
 
-Same story as with the other ones:
+--QAOhPtWQs4kr9fZE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Nov 21, 2022 at 12:06:15PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "Devicetree binding" or a "schema", but instead just describe
+> the hardware.
+
+Acked-by: Mark Brown <broonie@kernel.org>
+
+--QAOhPtWQs4kr9fZE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+QcwACgkQJNaLcl1U
+h9AXjAf8DK+4g+6i+PYcdDNKGnFY/1uo0vNGE7MKgsNgIAMn42Y9Tw++ts0ZwHYw
+EDuQqMblUcsp9NKWMs1LVsvQ2YGAbZUXjgUzWpiImszGWwmUf6DZkjwNojGA5ngh
+GAGhKyUYUGXRb0MKJ1X4O3pobituSQSnz8UWlDrpBOO2OiWnWvdbURWlhNYNqMSm
+70ahwExSo8nv/Dxkvf+GV0FHLToE5K4JZxqRh/Gn0l0206IYzY4jvEbCq0DEuZPH
+Jt7Az6phpVvce86sAHnvukNdIa0EQ/8pR+v9idvZiGVY5NJvdJA54BR+1AoXlMna
+RQueknzjRrsbdQSr0xa/wr8lQW5rpw==
+=Wum3
+-----END PGP SIGNATURE-----
+
+--QAOhPtWQs4kr9fZE--
