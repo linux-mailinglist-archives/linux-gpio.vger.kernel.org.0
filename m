@@ -2,110 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3060A6360AE
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 14:57:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2496D6362A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 16:02:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236618AbiKWN5k (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 08:57:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45466 "EHLO
+        id S237676AbiKWPCG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 10:02:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236767AbiKWN4v (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 08:56:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBB3101F;
-        Wed, 23 Nov 2022 05:51:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ED9E961CEC;
-        Wed, 23 Nov 2022 13:51:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B70F3C433D6;
-        Wed, 23 Nov 2022 13:51:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669211504;
-        bh=yn6IQg9xUUV9CgWL40Zq6y52rg1mn5sa8oD03o5v7Xs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UKfpNKKUztgIyNLf4JyG/Wh9x1SnC70ZZ6CMkTeLD14mkOzGlAm4+qghDz9TTaJEY
-         oavU1DO373ElaIHQhIEpVZi9OKHf+AB7y5AZ3a0QM4K6Mda5mlxZI6uj77Y+34o3+z
-         tC1+zaqNCkF1IRGWjNnvY9xTloZLlUjIwvwDNzzHVs6iAjJgjo18LVCElB+Z+suDGy
-         RWQBO44v5C47KQUPl5LJXsrQ6VqWTj1W9The96h2CM4sfIP1b0DOy3ZhTq1Wp6bXDL
-         C50DRWElKcd6PEaRVrgU5hEWY/A3MmvIZ+aqD+I2bHVUKaydHWSJ+FVF1rDhM8vyJp
-         Av8NqbWSqNyRA==
-Date:   Wed, 23 Nov 2022 13:51:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: drop redundant part of title of
- shared bindings
-Message-ID: <Y34lZFSBEwuI6G+a@sirena.org.uk>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
- <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S237496AbiKWPCF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 10:02:05 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0725F2F3A4;
+        Wed, 23 Nov 2022 07:02:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669215725; x=1700751725;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=cu3IGHk+KWNT4/J9/yQSAfLQbKsbIpwvyl5b794H6aw=;
+  b=bB6AxfCUBvndPrkYs4+8EVAERCMFneLV4Fhy7QzMhWbWxuRxe4g907hF
+   1zyAODwz217vS3AS2BUWDUSIjQ0zoL3m95ujEo9YuqlB/AROHmu8YPg9T
+   MMIO8E/9g27scjjfRwvfBP+joWOu7dfidSjA106JAnWTV/tr3YE8eVyN9
+   Dz6UNDss2Y2zzRE0VU1iaN+1XxWu+MnjXA0ZHzkcghzl3vBd0/ixyO3H7
+   9u1iA8NqpZDt9lpgx0Zz6rtYjBejCS8RjCMq1ihSn0M0G8+VwjsgpC9hn
+   sZiENVUmdr/Q+Z6SocNtEvXljORT3WbCIEETtIZU9qyats+bc9VT2WV4M
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="378341376"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="378341376"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 07:01:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10540"; a="635941367"
+X-IronPort-AV: E=Sophos;i="5.96,187,1665471600"; 
+   d="scan'208";a="635941367"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 23 Nov 2022 07:01:55 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oxrG5-00GKhH-1v;
+        Wed, 23 Nov 2022 17:01:53 +0200
+Date:   Wed, 23 Nov 2022 17:01:53 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michael@walle.cc, broonie@kernel.org
+Subject: Re: [PATCH v3 3/9] gpio: 104-dio-48e: Migrate to the regmap-irq API
+Message-ID: <Y3414YhVjqKakddV@smile.fi.intel.com>
+References: <cover.1669100542.git.william.gray@linaro.org>
+ <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="sez8m7aAndejrS5d"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
-X-Cookie: I'm rated PG-34!!
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, Nov 22, 2022 at 02:11:00AM -0500, William Breathitt Gray wrote:
+> The regmap API supports IO port accessors so we can take advantage of
+> regmap abstractions rather than handling access to the device registers
+> directly in the driver.
+> 
+> For the 104-dio-48e we have the following IRQ registers (0xB and 0xF):
+> 
+>     Base Address +B (Write): Enable Interrupt
+>     Base Address +B (Read): Disable Interrupt
+>     Base Address +F (Read/Write): Clear Interrupt
+> 
+> Any write to 0xB will enable interrupts, while any read will disable
+> interrupts. Interrupts are cleared by a read or any write to 0xF.
+> There's no IRQ status register, so software has to assume that if an
+> interrupt is raised then it was for the 104-DIO-48E device.
 
---sez8m7aAndejrS5d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+...
 
-On Mon, Nov 21, 2022 at 12:06:07PM +0100, Krzysztof Kozlowski wrote:
-> The Devicetree bindings document does not have to say in the title that
-> it is a "binding", but instead just describe the hardware.  For shared
-> (re-usable) schemas, name them all as "common properties".
+> +/* only bit 3 on each respective Port C supports interrupts */
+> +#define DIO48E_REGMAP_IRQ(_ppi) \
+> +	[19 + (_ppi) * 24] = { \
+> +		.mask = BIT(_ppi), \
+> +		.type = { .types_supported = IRQ_TYPE_EDGE_RISING, }, \
 
-Acked-by: Mark Brown <broonie@kernel.org>
+When {} on a single line, the trailing comma is not needed.
 
---sez8m7aAndejrS5d
-Content-Type: application/pgp-signature; name="signature.asc"
+		.type = { .types_supported = IRQ_TYPE_EDGE_RISING }, \
 
------BEGIN PGP SIGNATURE-----
+would work as well.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmN+JWMACgkQJNaLcl1U
-h9CJ0gf/ajSRpLgN3RoHR7wLxFr99y5vWRywVoOaKU+lLq3UY2O6a9ssY8wOblzx
-J9LbUP4Acep2fofTZCX1Ks2sTUHXNBB95SaeCwpSD/MX2HltHr0QvTGh8Lc9EfRf
-f4l/ayjov4DbVsOJ019O7MKSgyuKezLb6Rj/5S38OrqdREbbzDoFe2ah8rSxpA8m
-OQPEsY4eAbVfELEo/JQ86QYXN8gT6p3qA0+8IxDb0D+iLi3JCIz3GTrn+ZCudWRS
-DkbD00vhGbeEaAbI/ufYp/KUWT0wfIoONENSAdGhmGMd+deqbmOt1Ryt+YoEt49j
-pRMeSDCxuBZIpBjQfw7H+5ofOT8jsg==
-=hoZL
------END PGP SIGNATURE-----
+A nit: I would put \ on the same column by using TABs before each of them.
 
---sez8m7aAndejrS5d--
+>  	}
+
+...
+
+> +	/* if all previously masked, enable interrupts when unmasking */
+> +	if (prev_mask == all_masked) {
+> +		err = regmap_write(map, DIO48E_ENABLE_INTERRUPT, 0x00);
+> +		if (err)
+> +			return err;
+> +	/* if all are currently masked, disable interrupts */
+> +	} else if (mask_buf == all_masked) {
+> +		err = regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
+> +		if (err)
+> +			return err;
+> +	}
+
+Haven't looked at the rest of the series, but if there is nothing with this
+code piece, the above can be optimized to
+
+	if (prev_mask == all_masked)
+		return regmap_write(map, DIO48E_ENABLE_INTERRUPT, 0x00);
+
+	if (mask_buf == all_masked)
+		return regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
+
+...
+
+> +	/* Initialize device interrupt state */
+> +	err = regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
+> +	if (err)
+> +		return err;
+
+Use ->init_hw() callback for this.
+
+...
+
+> +	err = devm_regmap_add_irq_chip(dev, map, irq[id], 0, 0, chip,
+> +				       &chip_data);
+
+I would leave this on one line. It's only 82.
+
+> +	if (err) {
+> +		dev_err(dev, "IRQ registration failed (%d)\n", err);
+> +		return err;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
