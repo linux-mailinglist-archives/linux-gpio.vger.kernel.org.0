@@ -2,155 +2,182 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0B126351E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 09:06:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9430E63521B
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 09:18:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236292AbiKWIGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 03:06:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
+        id S236472AbiKWIST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 03:18:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236288AbiKWIGl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 03:06:41 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E342473BAD
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 00:06:38 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id z24so20531032ljn.4
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 00:06:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B6cOJ2RyO4287A5TDNYLOHVXILZYrUSo7rBAF/7psbU=;
-        b=yZqDJewosUXUBvEyc+i+WXnmApQ6mehi697kfcSvCEgD1EF5xhcMMUjzG2F7g6qzBL
-         8/IghwHdV01ms8QTLmpslZRGNAcNUlc6iK1IjMYC/ynKcHp9Co7pmkknD4+1VKUZoAqg
-         DPrDNjii7QlVfWsd0b1wLMjR1d79zCHi4m0Ri4AWVGteMMQHylwARCNY4z5b9eSO3bzC
-         m2vvzM9eSPu8VejF6dVY3QAMxLkXX0oRXgce4a+4ClE4xXDG+Ytq6BVer2tFyh1yzH+c
-         zcDM6ViYZMAQyvmEaFRHVNnthGKW+JbObW4u7/Z5NfHL1Hax1mzzmy7ukfcrK2xzRQuv
-         zAWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B6cOJ2RyO4287A5TDNYLOHVXILZYrUSo7rBAF/7psbU=;
-        b=ZWZcfrhm9L+Q3bZpkPaBp29DDeKHEPkw4W76z5GVfATIW7SY9SwYnL7j3ztr4PG9JJ
-         8fv3F130wL6gFbaVuTjDYdGBJbdYM2Fwr26wsw2cmtaNMdU0guwEsr786AZfo7I8Uggc
-         /HEsU6dgjQh4aThqJmIrwUX5WTSBKvMxHslmYtUHWJIhZ1UTI7bufkxEToUuXhKsTk+c
-         PyNMz4kRt0EBFFjLy8eYpyYzDBtoma9oZ1fOczB7G0smhJNNtnaHmxyyBuchODYx17NT
-         j9uMQo9LdMHGrKVc71jQ0xb59Iw7xrPSbK62fkwr4xhrNyQtR3H4HLJhKT+qhoKn9uUY
-         hGeA==
-X-Gm-Message-State: ANoB5plC6tzR2K6ECpj1Ou5QF+/daLqEATP8LszwYN8RtzVFmla3maN/
-        FruKjqdoLN80gxETVA4jZNMDBg==
-X-Google-Smtp-Source: AA0mqf6WUDTgWlouRyuC8lK93w5GFF+vwsReaMBl9jKSV8AY3j+3Hq0TqYz3DrOZSeIHYlIAn1PHMA==
-X-Received: by 2002:a2e:2ac2:0:b0:26d:d55f:f1cf with SMTP id q185-20020a2e2ac2000000b0026dd55ff1cfmr8033907ljq.175.1669190797104;
-        Wed, 23 Nov 2022 00:06:37 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id c5-20020ac244a5000000b00494a603953dsm2825230lfm.89.2022.11.23.00.06.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 23 Nov 2022 00:06:36 -0800 (PST)
-Message-ID: <1d13e913-d425-8cb0-d954-d1d7bc340f38@linaro.org>
-Date:   Wed, 23 Nov 2022 09:06:35 +0100
+        with ESMTP id S236483AbiKWISN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 03:18:13 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A052242F50
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 00:18:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669191487; x=1700727487;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=qxiMW1cO0tZVcF0/qrwXkURAuuucAMdpLze/u6hTqv4=;
+  b=jFi4SrV4W2ybKki/Si5lWti8GJI7Xanq4nSpYIqb1Y/2EPIBxbJPc1Pf
+   0BWvlxerOXOvXWmFmDW2SdVdH89CDHejUKrqz8Vd+fffU8jFLCv3fZ28x
+   VNogT+9fJCbd0Dqjyw7mrhB+Y8YWLeoItK3HqMzISeDrfWw4x9O917/vj
+   qePdD7stmtUCohnsX2Lnj9fcbyLmcsQjHrWeNqXDIKRzJP6TRFHaxUDkb
+   00V+5AYNiPY9pJs4Pv9MLURRtHb3fjSuHLkkcGIemTahywZc6kMOPLmM/
+   cx105s7h7qMouu7jqgob++HRM1mb0O5ZE722pqFBI5JYcWplYf9nt9cxv
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="311639569"
+X-IronPort-AV: E=Sophos;i="5.96,186,1665471600"; 
+   d="scan'208";a="311639569"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Nov 2022 00:18:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10539"; a="816395504"
+X-IronPort-AV: E=Sophos;i="5.96,186,1665471600"; 
+   d="scan'208";a="816395504"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 23 Nov 2022 00:18:03 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oxkxG-0002Um-2C;
+        Wed, 23 Nov 2022 08:18:02 +0000
+Date:   Wed, 23 Nov 2022 16:17:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ a8acc11643082a706de86a19f1f824712d971984
+Message-ID: <637dd706.UMyrER0Me5vdoDsh%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
- QRU1000 pinctrl
-Content-Language: en-US
-To:     Melody Olvera <quic_molvera@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221118182039.29236-1-quic_molvera@quicinc.com>
- <20221118182039.29236-2-quic_molvera@quicinc.com>
- <528648f2-17df-ab19-8ad4-76423bbc0ae4@linaro.org>
- <faf2d137-efab-93ab-f325-1fa507f166a7@quicinc.com>
- <03174a04-440d-a840-1e54-fbdbdfe296c3@linaro.org>
- <2a50b68f-d2dd-bae5-29b3-f608813d5a3f@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <2a50b68f-d2dd-bae5-29b3-f608813d5a3f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 22/11/2022 16:23, Melody Olvera wrote:
-> 
-> 
-> On 11/22/2022 1:48 AM, Krzysztof Kozlowski wrote:
->> On 21/11/2022 21:38, Melody Olvera wrote:
->>>
->>> On 11/20/2022 4:58 AM, Krzysztof Kozlowski wrote:
->>>> On 18/11/2022 19:20, Melody Olvera wrote:
->>>>> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
->>>>>
->>>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
->>>>> ---
->>>>>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
->>>>>  1 file changed, 134 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..cb0c496d8666
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
->>>>> @@ -0,0 +1,134 @@
->>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>>> +%YAML 1.2
->>>>> +---
->>>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,qdu1000-tlmm.yaml#
->>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>>> +
->>>>> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
->>>>> +
->>>>> +maintainers:
->>>>> +  - Melody Olvera <quic_molvera@quicinc.com>
->>>>> +
->>>>> +description: |
->>>>> +  This Top Level Mode Multiplexer block (TLMM) is found in the QDU1000 and
->>>>> +  QRU1000 platforms.
->>>> It's better to keep consistent style which allows to do easy
->>>> search/replace, than to have new files using their own sentences. So
->>>> keep it the same as was unified in few recent commits.
->>> Ok... Just making sure that's what you want. Last PS you gave comments to change
->>> the wording of this description to remove "This binding describes..." as we've done
->>> in all the other qcom pinctrl/tlmm bindings. I can change the wording back to the
->>> original, just want to be clear here.
->> I propose to have the same wording as other Qualcomm TLMM bindings,
->> however you changed it to something not the same. Therefore I wonder -
->> why having here different wording than all other bindings?
->>
->> By going back to original - what do you mean? If it matches all others,
->> then yes, but I doubt it.
->>
->> Just to be sure - are you working on proper (recent) trees or something old?
-> 
-> Original matched how it was done on other Qualcomm TLMM bindings. Feedback
-> was to drop "This binding describes..." from [1], but all the Qualcomm TLMM
-> bindings start with "This binding describes...". I'm looking at qcom tree for-next
-> branch; should be recent, no?
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: a8acc11643082a706de86a19f1f824712d971984  pinctrl: k210: call of_node_put()
 
-No. It's not recent for anything else than managed by Bjorn. You need to
-base the patches on maintainer's trees, which is usually the easiest to
-achieve via linux-next (especially that these changes were in my tree
-for some time before I sent them to Linus).
+elapsed time: 1375m
 
-Your all other patches might have similar issues - wrong base or not
-good example/starting point.
+configs tested: 101
+configs skipped: 2
 
-Best regards,
-Krzysztof
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+i386                 randconfig-a011-20221121
+i386                 randconfig-a013-20221121
+i386                 randconfig-a014-20221121
+i386                 randconfig-a015-20221121
+i386                 randconfig-a016-20221121
+i386                 randconfig-a012-20221121
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64               randconfig-a012-20221121
+x86_64                              defconfig
+x86_64               randconfig-a011-20221121
+x86_64               randconfig-a014-20221121
+x86_64               randconfig-a016-20221121
+x86_64               randconfig-a013-20221121
+x86_64               randconfig-a015-20221121
+x86_64                               rhel-8.3
+powerpc                           allnoconfig
+powerpc                          allmodconfig
+mips                             allyesconfig
+arc                                 defconfig
+s390                             allmodconfig
+sh                               allmodconfig
+alpha                               defconfig
+x86_64                           allyesconfig
+s390                                defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+i386                                defconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+ia64                             allmodconfig
+s390                             allyesconfig
+m68k                             allyesconfig
+arc                  randconfig-r043-20221120
+riscv                randconfig-r042-20221121
+arc                  randconfig-r043-20221121
+s390                 randconfig-r044-20221121
+i386                             allyesconfig
+x86_64                            allnoconfig
+m68k                       m5208evb_defconfig
+arm                          gemini_defconfig
+arm                            pleb_defconfig
+parisc                generic-64bit_defconfig
+sh                     sh7710voipgw_defconfig
+i386                          randconfig-c001
+arm                                 defconfig
+powerpc                      pcm030_defconfig
+powerpc                mpc7448_hpc2_defconfig
+arc                         haps_hs_defconfig
+arc                      axs103_smp_defconfig
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+powerpc                      makalu_defconfig
+ia64                      gensparse_defconfig
+xtensa                          iss_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+loongarch                           defconfig
+loongarch                         allnoconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+sparc                               defconfig
+csky                                defconfig
+x86_64                                  kexec
+arm                              allyesconfig
+arm64                            allyesconfig
+
+clang tested configs:
+x86_64               randconfig-a004-20221121
+x86_64               randconfig-a001-20221121
+x86_64               randconfig-a003-20221121
+x86_64               randconfig-a002-20221121
+x86_64               randconfig-a005-20221121
+x86_64               randconfig-a006-20221121
+i386                 randconfig-a001-20221121
+i386                 randconfig-a003-20221121
+i386                 randconfig-a005-20221121
+i386                 randconfig-a002-20221121
+i386                 randconfig-a006-20221121
+i386                 randconfig-a004-20221121
+hexagon              randconfig-r041-20221120
+hexagon              randconfig-r041-20221121
+hexagon              randconfig-r045-20221120
+hexagon              randconfig-r045-20221121
+riscv                randconfig-r042-20221120
+s390                 randconfig-r044-20221120
+x86_64                        randconfig-k001
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
