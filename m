@@ -2,249 +2,155 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD32E6351D8
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 09:04:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0B126351E2
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 09:06:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236088AbiKWIE2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 03:04:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43222 "EHLO
+        id S236292AbiKWIGm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 03:06:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234151AbiKWIE1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 03:04:27 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D59415810;
-        Wed, 23 Nov 2022 00:04:25 -0800 (PST)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8Bx2+oI1H1jSjEAAA--.482S3;
-        Wed, 23 Nov 2022 16:04:24 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxXuAB1H1jLZ4YAA--.63486S3;
-        Wed, 23 Nov 2022 16:04:22 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v6 2/2] dt-bindings: gpio: add loongson gpio
-Date:   Wed, 23 Nov 2022 16:04:14 +0800
-Message-Id: <20221123080414.14005-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221123080414.14005-1-zhuyinbo@loongson.cn>
-References: <20221123080414.14005-1-zhuyinbo@loongson.cn>
+        with ESMTP id S236288AbiKWIGl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 03:06:41 -0500
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E342473BAD
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 00:06:38 -0800 (PST)
+Received: by mail-lj1-x22c.google.com with SMTP id z24so20531032ljn.4
+        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 00:06:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B6cOJ2RyO4287A5TDNYLOHVXILZYrUSo7rBAF/7psbU=;
+        b=yZqDJewosUXUBvEyc+i+WXnmApQ6mehi697kfcSvCEgD1EF5xhcMMUjzG2F7g6qzBL
+         8/IghwHdV01ms8QTLmpslZRGNAcNUlc6iK1IjMYC/ynKcHp9Co7pmkknD4+1VKUZoAqg
+         DPrDNjii7QlVfWsd0b1wLMjR1d79zCHi4m0Ri4AWVGteMMQHylwARCNY4z5b9eSO3bzC
+         m2vvzM9eSPu8VejF6dVY3QAMxLkXX0oRXgce4a+4ClE4xXDG+Ytq6BVer2tFyh1yzH+c
+         zcDM6ViYZMAQyvmEaFRHVNnthGKW+JbObW4u7/Z5NfHL1Hax1mzzmy7ukfcrK2xzRQuv
+         zAWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B6cOJ2RyO4287A5TDNYLOHVXILZYrUSo7rBAF/7psbU=;
+        b=ZWZcfrhm9L+Q3bZpkPaBp29DDeKHEPkw4W76z5GVfATIW7SY9SwYnL7j3ztr4PG9JJ
+         8fv3F130wL6gFbaVuTjDYdGBJbdYM2Fwr26wsw2cmtaNMdU0guwEsr786AZfo7I8Uggc
+         /HEsU6dgjQh4aThqJmIrwUX5WTSBKvMxHslmYtUHWJIhZ1UTI7bufkxEToUuXhKsTk+c
+         PyNMz4kRt0EBFFjLy8eYpyYzDBtoma9oZ1fOczB7G0smhJNNtnaHmxyyBuchODYx17NT
+         j9uMQo9LdMHGrKVc71jQ0xb59Iw7xrPSbK62fkwr4xhrNyQtR3H4HLJhKT+qhoKn9uUY
+         hGeA==
+X-Gm-Message-State: ANoB5plC6tzR2K6ECpj1Ou5QF+/daLqEATP8LszwYN8RtzVFmla3maN/
+        FruKjqdoLN80gxETVA4jZNMDBg==
+X-Google-Smtp-Source: AA0mqf6WUDTgWlouRyuC8lK93w5GFF+vwsReaMBl9jKSV8AY3j+3Hq0TqYz3DrOZSeIHYlIAn1PHMA==
+X-Received: by 2002:a2e:2ac2:0:b0:26d:d55f:f1cf with SMTP id q185-20020a2e2ac2000000b0026dd55ff1cfmr8033907ljq.175.1669190797104;
+        Wed, 23 Nov 2022 00:06:37 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id c5-20020ac244a5000000b00494a603953dsm2825230lfm.89.2022.11.23.00.06.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Nov 2022 00:06:36 -0800 (PST)
+Message-ID: <1d13e913-d425-8cb0-d954-d1d7bc340f38@linaro.org>
+Date:   Wed, 23 Nov 2022 09:06:35 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxXuAB1H1jLZ4YAA--.63486S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF45Wry5Zw45GFWxWFg_yoWrtFWrp3
-        WDZFZxX3y2gr13tF45Ka17Zr4fAr1kC3WruwnxC3yxtrWUKwnxXFWfWFykG3Z3WrWUXF13
-        JwsrurWrta43Aw7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-        1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-        cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-        0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-        6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2
-        Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-        1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26ryj
-        6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-        0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-        cSsGvfC2KfnxnUUI43ZEXa7IU86yIUUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v4 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
+ QRU1000 pinctrl
+Content-Language: en-US
+To:     Melody Olvera <quic_molvera@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221118182039.29236-1-quic_molvera@quicinc.com>
+ <20221118182039.29236-2-quic_molvera@quicinc.com>
+ <528648f2-17df-ab19-8ad4-76423bbc0ae4@linaro.org>
+ <faf2d137-efab-93ab-f325-1fa507f166a7@quicinc.com>
+ <03174a04-440d-a840-1e54-fbdbdfe296c3@linaro.org>
+ <2a50b68f-d2dd-bae5-29b3-f608813d5a3f@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <2a50b68f-d2dd-bae5-29b3-f608813d5a3f@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the Loongson platform gpio binding with DT schema format using
-json-schema.
+On 22/11/2022 16:23, Melody Olvera wrote:
+> 
+> 
+> On 11/22/2022 1:48 AM, Krzysztof Kozlowski wrote:
+>> On 21/11/2022 21:38, Melody Olvera wrote:
+>>>
+>>> On 11/20/2022 4:58 AM, Krzysztof Kozlowski wrote:
+>>>> On 18/11/2022 19:20, Melody Olvera wrote:
+>>>>> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
+>>>>>
+>>>>> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+>>>>> ---
+>>>>>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
+>>>>>  1 file changed, 134 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>>> new file mode 100644
+>>>>> index 000000000000..cb0c496d8666
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,qdu1000-tlmm.yaml
+>>>>> @@ -0,0 +1,134 @@
+>>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>>> +%YAML 1.2
+>>>>> +---
+>>>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,qdu1000-tlmm.yaml#
+>>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>>> +
+>>>>> +title: Qualcomm Technologies, Inc. QDU1000/QRU1000 TLMM block
+>>>>> +
+>>>>> +maintainers:
+>>>>> +  - Melody Olvera <quic_molvera@quicinc.com>
+>>>>> +
+>>>>> +description: |
+>>>>> +  This Top Level Mode Multiplexer block (TLMM) is found in the QDU1000 and
+>>>>> +  QRU1000 platforms.
+>>>> It's better to keep consistent style which allows to do easy
+>>>> search/replace, than to have new files using their own sentences. So
+>>>> keep it the same as was unified in few recent commits.
+>>> Ok... Just making sure that's what you want. Last PS you gave comments to change
+>>> the wording of this description to remove "This binding describes..." as we've done
+>>> in all the other qcom pinctrl/tlmm bindings. I can change the wording back to the
+>>> original, just want to be clear here.
+>> I propose to have the same wording as other Qualcomm TLMM bindings,
+>> however you changed it to something not the same. Therefore I wonder -
+>> why having here different wording than all other bindings?
+>>
+>> By going back to original - what do you mean? If it matches all others,
+>> then yes, but I doubt it.
+>>
+>> Just to be sure - are you working on proper (recent) trees or something old?
+> 
+> Original matched how it was done on other Qualcomm TLMM bindings. Feedback
+> was to drop "This binding describes..." from [1], but all the Qualcomm TLMM
+> bindings start with "This binding describes...". I'm looking at qcom tree for-next
+> branch; should be recent, no?
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Change in v6:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v5:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v4:
-		1. Remove the string "series".
-		2. Add the reviewed-by information.
-Change in v3:
-		1. Separate some changes of MAINTAINERS file and enter the first patch.
-Change in v2:
-		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
-		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
-		   "loongson,support_irq" and kernel driver will initial them that depend
-		   compatible in kernel.
-		3. Fixup maintainer for this driver.
+No. It's not recent for anything else than managed by Bjorn. You need to
+base the patches on maintainer's trees, which is usually the easiest to
+achieve via linux-next (especially that these changes were in my tree
+for some time before I sent them to Linus).
 
- .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+Your all other patches might have similar issues - wrong base or not
+good example/starting point.
 
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-new file mode 100644
-index 000000000000..fb86e8ce6349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson GPIO controller.
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-gpio
-+      - loongson,ls7a-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 64
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - ngpios
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpio-ranges
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio0: gpio@1fe00500 {
-+      compatible = "loongson,ls2k-gpio";
-+      reg = <0x1fe00500 0x38>;
-+      ngpios = <64>;
-+      #gpio-cells = <2>;
-+      gpio-controller;
-+      gpio-ranges = <&pctrl 0 0 15>,
-+                    <&pctrl 16 16 15>,
-+                    <&pctrl 32 32 10>,
-+                    <&pctrl 44 44 20>;
-+      interrupt-parent = <&liointc1>;
-+      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
-+                   <29 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2854da69cabb..b8a02a60973d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12055,6 +12055,7 @@ LOONGSON GPIO DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
- F:	drivers/gpio/gpio-loongson-64bit.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
--- 
-2.31.1
+Best regards,
+Krzysztof
 
