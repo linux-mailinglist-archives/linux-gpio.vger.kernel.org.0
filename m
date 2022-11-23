@@ -2,76 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57FDC634F15
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 05:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 531C4634F9F
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 06:36:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235836AbiKWEj7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 22 Nov 2022 23:39:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
+        id S235633AbiKWFgA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 00:36:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235952AbiKWEjo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 22 Nov 2022 23:39:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1811D9B386;
-        Tue, 22 Nov 2022 20:39:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B54961A3F;
-        Wed, 23 Nov 2022 04:39:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 225EEC433C1;
-        Wed, 23 Nov 2022 04:39:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669178381;
-        bh=EVw4Vc0/gYpVHxzZAdah2zLNd6pA0gTQaK+joP95BKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QeBxZCprwCTU86Pqv1jbwEiUULNLeEVvPC1vdnFLEOwo4ZjJ9TnndaaoA5XZ55BlH
-         dFNUaBxj1NdIgxQuslei2pAmnW/Z2yQ9Ez0pbOGy0w60FJfyM8TQpvvGSwo4X/CPnL
-         iGkeDfTcaooUjn+RtR+b8weXzQXvnVb2mgoYJ2ygsOCLKSiOMGNGANIMuXfckChAz+
-         PyeRCc3K/Sfw5tX54bqUCF6lgw/E5TKozvtW8vmrDPLBxXa96QLuq80CiTdUw3XPSv
-         11aAf/r27UgMrIlh/qUbpu0OZ3U7Hl/Jm7U0evtgaaia6qFgX/rpiLMZNJZusN3NFD
-         cRxjZ+VpqSyfQ==
-Date:   Wed, 23 Nov 2022 10:09:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Viresh Kumar <vireshk@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v2 5/9] dt-bindings: drop redundant part of title (end,
- part two)
-Message-ID: <Y32kCHhdLjQvSnE3@matsya>
-References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
- <20221121110615.97962-6-krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229717AbiKWFf7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 00:35:59 -0500
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AB982233;
+        Tue, 22 Nov 2022 21:35:58 -0800 (PST)
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5ZZnr093934;
+        Tue, 22 Nov 2022 23:35:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1669181735;
+        bh=HRUVEW1J10nUGyiZYAFBBzOycKc14vOPd2IPySe5Pw4=;
+        h=From:To:CC:Subject:Date;
+        b=AEYvuyVBLediJMMHGlXQhaZCcC9Co1fkIv6G2kzzm/2RH3ADOxU5lL4bXXRT6Xbh4
+         nDdbMpbHUwMvPnlTi7cM7uo9+Ah3sz7OZ/rbk+77tYVncp9fIEmVaa/wK+Zzf/l5sl
+         czyhGau3cKB16/5rw+OT7WuejxHPCBNKFh+Gwarg=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AN5ZZC7002620
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 22 Nov 2022 23:35:35 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 22
+ Nov 2022 23:35:35 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Tue, 22 Nov 2022 23:35:35 -0600
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5ZWbS011255;
+        Tue, 22 Nov 2022 23:35:34 -0600
+From:   Matt Ranostay <mranostay@ti.com>
+To:     <michael@walle.cc>, <vigneshr@ti.com>, <robh@kernel.org>,
+        <krzysztof.kozlowski@linaro.org>, <a.zummo@towertech.it>,
+        <linus.walleij@linaro.org>, <lee@kernel.org>, <brgl@bgdev.pl>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>, Matt Ranostay <mranostay@ti.com>
+Subject: [PATCH v5 0/4] mfd: add tps6594 support for Jacinto platforms
+Date:   Tue, 22 Nov 2022 21:35:08 -0800
+Message-ID: <20221123053512.1195309-1-mranostay@ti.com>
+X-Mailer: git-send-email 2.38.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221121110615.97962-6-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,42 +63,63 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 21-11-22, 12:06, Krzysztof Kozlowski wrote:
-> The Devicetree bindings document does not have to say in the title that
-> it is a "binding", but instead just describe the hardware.
-> 
-> Drop trailing "Node|Tree|Generic bindings" in various forms (also with
-> trailling full stop):
-> 
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [nN]ode [bB]indings\?\.\?$/title: \1/' {} \;
-> 
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [tT]ree [bB]indings\?\.\?$/title: \1/' {} \;
-> 
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [gG]eneric [bB]indings\?\.\?$/title: \1/' {} \;
-> 
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [bB]indings\? description\.\?$/title: \1/' {} \;
-> 
->   find Documentation/devicetree/bindings/ -type f -name '*.yaml' \
->     -not -name 'trivial-devices.yaml' \
->     -exec sed -i -e 's/^title: \(.*\) [bB]indings\? document\.\?$/title: \1/' {} \;
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+This patchset series adds support for the TPS6594 PMIC along with
+initial support for its RTC + GPIO interface, and poweroff sequence.
 
->  Documentation/devicetree/bindings/phy/brcm,ns2-pcie-phy.yaml    | 2 +-
->  Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.yaml      | 2 +-
->  Documentation/devicetree/bindings/phy/ti,phy-gmii-sel.yaml      | 2 +-
+Changes from v1:
+* Corrected devicetree documentation issues found with dt-schema
+* Changed MFD references to PMIC reflecting the more valid use of driver
+* Cleaning up variable naming and ordering within functions
+* Adding gpio + regulator cells for upcoming driver support
+* Switching from .probe to .probe_new API
+* Revising comments within drivers to be more concise
+* Adding device tree nodes for j721s2 and j721e platforms
 
-Acked-By: Vinod Koul <vkoul@kernel.org>
+Changes from v2:
+* Adding gpio-tps6594x driver support
+* Enabling gpio cell in MFD driver
+
+Changes from v3:
+* Refactoring gpio driver to use regmap gpio helpers
+* Changing rtc driver to use more of device resource management
+* Minor code changes related to error messages that aren't useful
+  being dropped
+* Dropped wildcard in device-tree compatible, and i2c device id
+* Dropped device tree changes from the series; since these should
+  be in their own series later
+
+Changes from v4:
+* Corrected commit messages for device tree documentation
+* Added TPS6954 datasheet PDF to devicetree documentation
+* Renamed all references, including filenames + configuration options,
+  from tps6594x to tps6594 dropping the unneeded wildcard
+
+Keerthy (2):
+  mfd: tps6594: Add support for TPS6594 PMIC devices
+  rtc: rtc-tps6594: Add support for TPS6594 PMIC RTC
+
+Matt Ranostay (2):
+  dt-bindings: mfd: ti,tps6594: add TPS6594 PMIC support
+  gpio: gpio-tps6594: add GPIO support for TPS6594 PMIC
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |  69 ++++++++
+ drivers/gpio/Kconfig                          |   9 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-tps6594.c                   |  78 +++++++++
+ drivers/mfd/Kconfig                           |  14 ++
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/tps6594.c                         | 113 +++++++++++++
+ drivers/rtc/Kconfig                           |  10 ++
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-tps6594.c                     | 155 ++++++++++++++++++
+ include/linux/mfd/tps6594.h                   |  88 ++++++++++
+ 11 files changed, 539 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+ create mode 100644 drivers/gpio/gpio-tps6594.c
+ create mode 100644 drivers/mfd/tps6594.c
+ create mode 100644 drivers/rtc/rtc-tps6594.c
+ create mode 100644 include/linux/mfd/tps6594.h
 
 -- 
-~Vinod
+2.38.GIT
+
