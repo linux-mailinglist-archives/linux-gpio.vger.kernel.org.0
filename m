@@ -2,54 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A371634FAB
-	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 06:36:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 906F8634FA5
+	for <lists+linux-gpio@lfdr.de>; Wed, 23 Nov 2022 06:36:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235779AbiKWFgL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 23 Nov 2022 00:36:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
+        id S235718AbiKWFgH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 23 Nov 2022 00:36:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbiKWFgK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 00:36:10 -0500
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34538220E;
-        Tue, 22 Nov 2022 21:36:09 -0800 (PST)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5ZqYR091873;
-        Tue, 22 Nov 2022 23:35:52 -0600
+        with ESMTP id S229717AbiKWFgG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 23 Nov 2022 00:36:06 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F75A8220E;
+        Tue, 22 Nov 2022 21:36:05 -0800 (PST)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5ZvWT069671;
+        Tue, 22 Nov 2022 23:35:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1669181752;
-        bh=pA7rNBLnZJLX6IHNL1cRAdQltQJ9JWw3hDD16aE5CXY=;
+        s=ti-com-17Q1; t=1669181758;
+        bh=NdO5jA3a9LFnnECIA7JkH+5Zum+nigvcUum3+kHD5KU=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Ak2CzTGILo9EvlgR+bYkVlwJWyUMXc6lPzbI+rtviWjFhjL9nKqR/XN7s4wSsSsMs
-         WUjM58b/J4swf9jypSqndUfv4DxUdgQa1SDNXrvGLqBr/y/otpoeCxb/MRnMKS6Oa9
-         agtMznJtScNV8JX6kYuDsKU8VWtY71OuPc73mPl0=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AN5Zq9u002736
+        b=bLxgDAwOfyX3N40QnVDrriHadmNhCnNCO6SZY+x2/EPtJxOL5pUE7rvfqiaiJoY5A
+         WtY7hQ0eJRECEZhDwYORQR5MsTxFyE7r+o3hqOTSlQWD3QSUANS9U76pqs/dY307mU
+         qPCfrTTzh0sE7BN9ZJy15TDKmwWGzTxdGsCJRdNA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2AN5ZvM2047985
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 22 Nov 2022 23:35:52 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 22 Nov 2022 23:35:57 -0600
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 22
- Nov 2022 23:35:52 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ Nov 2022 23:35:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Tue, 22 Nov 2022 23:35:52 -0600
+ Frontend Transport; Tue, 22 Nov 2022 23:35:57 -0600
 Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5ZmKo112823;
-        Tue, 22 Nov 2022 23:35:51 -0600
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2AN5Zs96119355;
+        Tue, 22 Nov 2022 23:35:56 -0600
 From:   Matt Ranostay <mranostay@ti.com>
 To:     <michael@walle.cc>, <vigneshr@ti.com>, <robh@kernel.org>,
         <krzysztof.kozlowski@linaro.org>, <a.zummo@towertech.it>,
         <linus.walleij@linaro.org>, <lee@kernel.org>, <brgl@bgdev.pl>
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-rtc@vger.kernel.org>, Keerthy <j-keerthy@ti.com>,
-        Matt Ranostay <mranostay@ti.com>
-Subject: [PATCH v5 3/4] rtc: rtc-tps6594: Add support for TPS6594 PMIC RTC
-Date:   Tue, 22 Nov 2022 21:35:11 -0800
-Message-ID: <20221123053512.1195309-4-mranostay@ti.com>
+        <linux-rtc@vger.kernel.org>, Matt Ranostay <mranostay@ti.com>
+Subject: [PATCH v5 4/4] gpio: gpio-tps6594: add GPIO support for TPS6594 PMIC
+Date:   Tue, 22 Nov 2022 21:35:12 -0800
+Message-ID: <20221123053512.1195309-5-mranostay@ti.com>
 X-Mailer: git-send-email 2.38.GIT
 In-Reply-To: <20221123053512.1195309-1-mranostay@ti.com>
 References: <20221123053512.1195309-1-mranostay@ti.com>
@@ -66,214 +65,149 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+Add support for TPS6594 PMICs GPIO interface that has 11 that can be
+configured as input or outputs.
 
-Add support for TPS6594 PMIC RTC. However, currently only get/set of
-time + date functionality is supported.
-
-Signed-off-by: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Matt Ranostay <mranostay@ti.com>
 ---
- drivers/rtc/Kconfig       |  10 +++
- drivers/rtc/Makefile      |   1 +
- drivers/rtc/rtc-tps6594.c | 155 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 166 insertions(+)
- create mode 100644 drivers/rtc/rtc-tps6594.c
+ drivers/gpio/Kconfig        |  9 +++++
+ drivers/gpio/Makefile       |  1 +
+ drivers/gpio/gpio-tps6594.c | 78 +++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/tps6594.h |  4 ++
+ 4 files changed, 92 insertions(+)
+ create mode 100644 drivers/gpio/gpio-tps6594.c
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index ab9a1f814119..519dc544b083 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -588,6 +588,16 @@ config RTC_DRV_TPS65910
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-tps65910.
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index ec7cfd4f52b1..f34b3746075a 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1405,6 +1405,15 @@ config GPIO_TPS65912
+ 	help
+ 	  This driver supports TPS65912 GPIO chip.
  
-+config RTC_DRV_TPS6594
-+	tristate "TI TPS6594 RTC driver"
++config GPIO_TPS6594
++	tristate "TI TPS6594 GPIO driver"
 +	depends on MFD_TPS6594 || COMPILE_TEST
++	select REGMAP
++	select GPIO_REGMAP
 +	help
-+	  If you say yes here you get support for the RTC of TI TPS6594 series PMIC
-+	  chips.
++	  Select this option to enable GPIO driver for the TPS6954
++	  PMIC chip family. There are 11 GPIOs that can be configured.
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called rtc-tps6594.
-+
- config RTC_DRV_RC5T583
- 	tristate "RICOH 5T583 RTC driver"
- 	depends on MFD_RC5T583
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index d3c042dcbc73..4493a13f989d 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -175,6 +175,7 @@ obj-$(CONFIG_RTC_DRV_TEST)	+= rtc-test.o
- obj-$(CONFIG_RTC_DRV_TI_K3)	+= rtc-ti-k3.o
- obj-$(CONFIG_RTC_DRV_TPS6586X)	+= rtc-tps6586x.o
- obj-$(CONFIG_RTC_DRV_TPS65910)	+= rtc-tps65910.o
-+obj-$(CONFIG_RTC_DRV_TPS6594)	+= rtc-tps6594.o
- obj-$(CONFIG_RTC_DRV_TWL4030)	+= rtc-twl.o
- obj-$(CONFIG_RTC_DRV_V3020)	+= rtc-v3020.o
- obj-$(CONFIG_RTC_DRV_VT8500)	+= rtc-vt8500.o
-diff --git a/drivers/rtc/rtc-tps6594.c b/drivers/rtc/rtc-tps6594.c
+ config GPIO_TPS68470
+ 	tristate "TPS68470 GPIO"
+ 	depends on INTEL_SKL_INT3472
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 010587025fc8..31bef1cc112f 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -159,6 +159,7 @@ obj-$(CONFIG_GPIO_TPS65218)		+= gpio-tps65218.o
+ obj-$(CONFIG_GPIO_TPS6586X)		+= gpio-tps6586x.o
+ obj-$(CONFIG_GPIO_TPS65910)		+= gpio-tps65910.o
+ obj-$(CONFIG_GPIO_TPS65912)		+= gpio-tps65912.o
++obj-$(CONFIG_GPIO_TPS6594)		+= gpio-tps6594.o
+ obj-$(CONFIG_GPIO_TPS68470)		+= gpio-tps68470.o
+ obj-$(CONFIG_GPIO_TQMX86)		+= gpio-tqmx86.o
+ obj-$(CONFIG_GPIO_TS4800)		+= gpio-ts4800.o
+diff --git a/drivers/gpio/gpio-tps6594.c b/drivers/gpio/gpio-tps6594.c
 new file mode 100644
-index 000000000000..6e85ea8551a2
+index 000000000000..983c37a77266
 --- /dev/null
-+++ b/drivers/rtc/rtc-tps6594.c
-@@ -0,0 +1,155 @@
-+// SPDX-License-Identifier: GPL-2.0-only
++++ b/drivers/gpio/gpio-tps6594.c
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * rtc-tps6594.c -- TPS6594 Real Time Clock driver.
++ * GPIO driver for TI TPS6594 PMICs
 + *
-+ * Copyright (C) 2022 Texas Instruments Incorporated - https://www.ti.com
++ * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
 + */
 +
-+#include <linux/bcd.h>
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/tps6594.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/rtc.h>
-+#include <linux/types.h>
 +#include <linux/platform_device.h>
 +#include <linux/regmap.h>
 +
-+struct tps6594_rtc {
-+	struct rtc_device	*rtc;
-+	struct device		*dev;
-+};
++#include <linux/gpio/regmap.h>
++#include <linux/gpio/driver.h>
++#include <linux/mfd/tps6594.h>
 +
-+#define TPS6594_RTC_POLL	20000
-+#define TPS6594_RTC_TIMEOUT	100000
++#define GPIO_BANK_SIZE	8
++#define GPIO_CFG_MASK	BIT(0)
 +
-+#define TPS6594_NUM_TIME_REGS	(TPS6594_RTC_YEARS - TPS6594_RTC_SECONDS + 1)
-+
-+static int tps6594_rtc_read_time(struct device *dev, struct rtc_time *tm)
++static int tps6594_regmap_xlate(struct gpio_regmap *gpio,
++				    unsigned int base, unsigned int offset,
++				    unsigned int *reg, unsigned int *mask)
 +{
-+	unsigned char rtc_data[TPS6594_NUM_TIME_REGS];
-+	struct tps6594 *tps6594 = dev_get_drvdata(dev->parent);
-+	int ret;
++	if (base == TPS6594_GPIO_CONF) {
++		*reg = base + offset;
++		*mask = GPIO_CFG_MASK;
++	} else {
++		unsigned int line = offset % GPIO_BANK_SIZE;
++		unsigned int stride = offset / GPIO_BANK_SIZE;
 +
-+	/* Reset TPS6594_RTC_CTRL_REG_GET_TIME bit to zero, required for latch */
-+	ret = regmap_update_bits(tps6594->regmap, TPS6594_RTC_CTRL_1,
-+		TPS6594_RTC_CTRL_REG_GET_TIME, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Copy RTC counting registers to static registers or latches */
-+	ret = regmap_update_bits(tps6594->regmap, TPS6594_RTC_CTRL_1,
-+		TPS6594_RTC_CTRL_REG_GET_TIME, TPS6594_RTC_CTRL_REG_GET_TIME);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regmap_bulk_read(tps6594->regmap, TPS6594_RTC_SECONDS,
-+			rtc_data, TPS6594_NUM_TIME_REGS);
-+	if (ret < 0)
-+		return ret;
-+
-+	tm->tm_sec = bcd2bin(rtc_data[0]);
-+	tm->tm_min = bcd2bin(rtc_data[1]);
-+	tm->tm_hour = bcd2bin(rtc_data[2]);
-+	tm->tm_mday = bcd2bin(rtc_data[3]);
-+	tm->tm_mon = bcd2bin(rtc_data[4]) - 1;
-+	tm->tm_year = bcd2bin(rtc_data[5]) + 100;
-+
-+	return ret;
-+}
-+
-+static int tps6594_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	unsigned char rtc_data[TPS6594_NUM_TIME_REGS];
-+	struct tps6594 *tps6594 = dev_get_drvdata(dev->parent);
-+	unsigned int val;
-+	int ret;
-+
-+	rtc_data[0] = bin2bcd(tm->tm_sec);
-+	rtc_data[1] = bin2bcd(tm->tm_min);
-+	rtc_data[2] = bin2bcd(tm->tm_hour);
-+	rtc_data[3] = bin2bcd(tm->tm_mday);
-+	rtc_data[4] = bin2bcd(tm->tm_mon + 1);
-+	rtc_data[5] = bin2bcd(tm->tm_year - 100);
-+
-+	/* Stop RTC while updating the RTC time registers */
-+	ret = regmap_update_bits(tps6594->regmap, TPS6594_RTC_CTRL_1,
-+				 TPS6594_RTC_CTRL_REG_STOP_RTC, 0);
-+	if (ret < 0) {
-+		dev_err(dev, "RTC stop failed, err = %d\n", ret);
-+		return ret;
++		*reg = base + stride;
++		*mask = BIT(line);
 +	}
 +
-+	/* Waiting till RTC isn't running */
-+	ret = regmap_read_poll_timeout(tps6594->regmap, TPS6594_RTC_STATUS,
-+				       val, !(val & TPS6594_RTC_STATUS_RUN),
-+				       TPS6594_RTC_POLL, TPS6594_RTC_TIMEOUT);
-+	if (ret) {
-+		dev_err(dev, "RTC_STATUS is still RUNNING\n");
-+		return ret;
-+	}
-+
-+	ret = regmap_bulk_write(tps6594->regmap, TPS6594_RTC_SECONDS,
-+		rtc_data, TPS6594_NUM_TIME_REGS);
-+	if (ret < 0) {
-+		dev_err(dev, "RTC_SECONDS reg write failed, err = %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Start back RTC */
-+	ret = regmap_update_bits(tps6594->regmap, TPS6594_RTC_CTRL_1,
-+				 TPS6594_RTC_CTRL_REG_STOP_RTC,
-+				 TPS6594_RTC_CTRL_REG_STOP_RTC);
-+	if (ret < 0)
-+		dev_err(dev, "RTC start failed, err = %d\n", ret);
-+
-+	return ret;
++	return 0;
 +}
 +
-+static const struct rtc_class_ops tps6594_rtc_ops = {
-+	.read_time	= tps6594_rtc_read_time,
-+	.set_time	= tps6594_rtc_set_time,
-+};
-+
-+static int tps6594_rtc_probe(struct platform_device *pdev)
++static int tps6594_gpio_probe(struct platform_device *pdev)
 +{
-+	struct tps6594_rtc *tps6594_rtc;
++	struct gpio_regmap_config config = {0};
++	struct regmap *regmap;
 +
-+	tps6594_rtc = devm_kzalloc(&pdev->dev, sizeof(*tps6594_rtc), GFP_KERNEL);
-+	if (!tps6594_rtc)
-+		return -ENOMEM;
++	regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!regmap)
++		return -ENODEV;
 +
-+	tps6594_rtc->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, tps6594_rtc);
++	config.regmap = regmap;
++	config.parent = &pdev->dev;
++	config.ngpio = 11;
++	config.ngpio_per_reg = GPIO_BANK_SIZE;
 +
-+	tps6594_rtc->rtc = devm_rtc_allocate_device(&pdev->dev);
-+	if (IS_ERR(tps6594_rtc->rtc))
-+		return PTR_ERR(tps6594_rtc->rtc);
++	config.reg_dat_base = TPS6594_GPIO_IN;
++	config.reg_set_base = TPS6594_GPIO_OUT;
++	config.reg_dir_out_base = TPS6594_GPIO_CONF;
++	config.reg_mask_xlate = tps6594_regmap_xlate;
 +
-+	tps6594_rtc->rtc->ops = &tps6594_rtc_ops;
-+
-+	return devm_rtc_register_device(tps6594_rtc->rtc);
++	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
 +}
 +
-+static const struct of_device_id of_tps6594_rtc_match[] = {
-+	{ .compatible = "ti,tps6594-rtc", },
++static const struct of_device_id of_tps6594_gpio_match[] = {
++	{ .compatible = "ti,tps6594-gpio", },
 +	{},
 +};
-+MODULE_DEVICE_TABLE(of, of_tps6594_rtc_match);
++MODULE_DEVICE_TABLE(of, of_tps6594_gpio_match);
 +
-+static struct platform_driver tps6594_rtc_driver = {
-+	.probe		= tps6594_rtc_probe,
-+	.driver		= {
-+		.name	= "tps6594-rtc",
-+		.of_match_table = of_tps6594_rtc_match,
++static struct platform_driver tps6594_gpio_driver = {
++	.driver = {
++		.name = "tps6594-gpio",
++		.of_match_table = of_tps6594_gpio_match,
 +	},
++	.probe = tps6594_gpio_probe,
 +};
++module_platform_driver(tps6594_gpio_driver);
 +
-+module_platform_driver(tps6594_rtc_driver);
-+
-+MODULE_ALIAS("platform:tps6594-rtc");
-+MODULE_DESCRIPTION("TI TPS6594 series RTC driver");
-+MODULE_AUTHOR("Keerthy J <j-keerthy@ti.com>");
++MODULE_ALIAS("platform:tps6594-gpio");
++MODULE_AUTHOR("Matt Ranostay <mranostay@ti.com>");
++MODULE_DESCRIPTION("TPS6594 GPIO driver");
 +MODULE_LICENSE("GPL");
+diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
+index f721ec9880dd..758b1bc44178 100644
+--- a/include/linux/mfd/tps6594.h
++++ b/include/linux/mfd/tps6594.h
+@@ -21,6 +21,10 @@
+ #define TPS6594_FSM_I2C_TRIGGERS		0x85
+ #define TPS6594_FSM_NSLEEP_TRIGGERS		0x86
+ 
++#define TPS6594_GPIO_CONF			0x31
++#define TPS6594_GPIO_OUT			0x3d
++#define TPS6594_GPIO_IN			0x3f
++
+ #define TPS6594_RTC_SECONDS			0xb5
+ #define TPS6594_RTC_MINUTES			0xb6
+ #define TPS6594_RTC_HOURS			0xb7
 -- 
 2.38.GIT
 
