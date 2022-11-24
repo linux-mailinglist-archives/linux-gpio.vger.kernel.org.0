@@ -2,183 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 420C0637B0D
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 15:05:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14F35637B6C
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 15:27:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbiKXOFi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Nov 2022 09:05:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33732 "EHLO
+        id S229497AbiKXO1u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Nov 2022 09:27:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbiKXOFS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 09:05:18 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9056018E3A
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:05:07 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id d6so2685400lfs.10
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:05:07 -0800 (PST)
+        with ESMTP id S229595AbiKXO1u (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 09:27:50 -0500
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F119F5A8
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:27:47 -0800 (PST)
+Received: by mail-vs1-xe2b.google.com with SMTP id u124so1686955vsb.5
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:27:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9xSkgvbeKVsRIQO54MHan2onCSxwrrD+XXDauFHX6PI=;
-        b=P+xZZji/4tykRi30u7V2uwiVkrvWzXBWGMMoHkM4301eJiR/jE5ccK1+Ecc+6t0ZUM
-         4Y0Wdv7M+oFgNT7bIf/IcId35reHixuxppTjBt1Ry+gx0er+Bbc9u4FpxSKa6tz6LSxs
-         JNPCufmert60WDsyliHiruKHfRqHlSFpFxU9CuQK1+ejbIyg90jRInYn6JLW1jXd7N2H
-         3On35QTA0nGIGvHek++EYd+rigB8T7hutawzV6CR0U2PFfAtO+zH+Run0f5lmZIujzJO
-         OP8T+J+jOJR14PIoLbXznCqHnADsIBP6xj8f0ka2YZZVOXaVvxaX4u4ebALdHRrRdXUP
-         C9YQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C2GOy6Ki/r7t/SYtvH76xrNGZn20ufhGUU7LAZ0xlkA=;
+        b=RJ2JF1HD15MJP0pBXfnGx7+Z/yZUNCOpV7gbV3xPsskaGn3tBYhtfSiaSG4dJB0BNs
+         zKF4dsGHhf/EynYAwr/hMUESV+GMZeUYtKkmTKhYP8BSH7zw0RdGqtOIVBl9DjVPdpbL
+         FsRSOmtMd7QZg4WSCL0ZvPytt3Pa2DIWOlMeNloDab0s84PqqJJYgB49j5SEdSX/xRlJ
+         GgfMaAABnHqhCLCa2Qj1NesCuN09CxYfg08qyLFNclA+Sac5gCdmz4XRePFjrG8ox4Xl
+         k3E7oQ5UFKuP0GNuiRbVGeOnluMeJkxP7mWNXXuGQxampouugSgpXoWSeK5oFutV34cm
+         kpNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9xSkgvbeKVsRIQO54MHan2onCSxwrrD+XXDauFHX6PI=;
-        b=QRu+YySz8Dh23KKE59Tdpe178Xtwcdcag8Jz0XpxyizBzWq9ZK3X+2qPYkH331MPai
-         MFuu1WRM2eKFF3Fj639uAOf7buL+ROGlL1aW36PQxRKSIyOj++gFnX/5W1+giJHNcNZG
-         MCFjwEkFhwJdpnutB+bBap2k/TtcAWd3Ugq1qejIhOfNidEwEweqFUdv7YkdDrvbIIwY
-         CpPHHph+nfpsOcVNycVGmL3waeTaKGcnUHKZfSXuuzC6GWpgH1Bsc8ydcYwlb5Ddessj
-         X1gGg6qmYnHLJDx0dsLMvk3HRnJ0A6aKoziZ7nnEU9VzU9t9V5B9txBi0dqIokv05Fmu
-         MImw==
-X-Gm-Message-State: ANoB5pnvILL8PRQ2rNkmJ+6fmvDpgSTfirzirVeKGo1Pu01j4/Gfkkbp
-        EX/np2Vxlr8w3i1K1PdXBgpEjQ==
-X-Google-Smtp-Source: AA0mqf7oXX8it2c2jTo0y8WBHPqGA85ZEeqGBI4LuwDFD9dN4491p2jbDYdj+PZoLvjFuMPo3q1MNA==
-X-Received: by 2002:a05:6512:4029:b0:4b4:e26b:2c28 with SMTP id br41-20020a056512402900b004b4e26b2c28mr4473023lfb.356.1669298705766;
-        Thu, 24 Nov 2022 06:05:05 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id by37-20020a05651c1a2500b0026ddaf38b0fsm104763ljb.96.2022.11.24.06.05.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Nov 2022 06:05:05 -0800 (PST)
-Message-ID: <86732e73-fb66-0a90-5e64-50049e0f6507@linaro.org>
-Date:   Thu, 24 Nov 2022 15:05:04 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C2GOy6Ki/r7t/SYtvH76xrNGZn20ufhGUU7LAZ0xlkA=;
+        b=E4iRBDPql6FD13nnQlof0G4cJfZ/6tjrX+nrmeMGtgddlel11eHHea3ZV0+PSD7kHZ
+         o50DzTKHCjJGGJB2s+BWh8hhJhyaSoDpiEEvDpfB54Ak+vMvS2LT/GbtMEzqralh2DFB
+         EIdwNdhjoSualMwaLc0OmUtp8RrIYGlQBSh6mT3EFVY2riaGKxIdIi7uXiqmMzGjSVHQ
+         pQq8wfyaQikFKlNgzV6/734mh1udWCZqJzfRziyFAExv9PVbIqyxfZyVGbaHnRuNcSe1
+         hf6ndMx+SjUHuSJ76fT+498xEp42tDitZL3BnnOCodNChV6aqb2MOXhV8C1XgVUdlJmx
+         PTXA==
+X-Gm-Message-State: ANoB5plfhDWeBqJvaZe7b48womJ/JGvh4NYpQ8UYXGTfXQzVi3pdYVVT
+        EJh2gBTIsulvwBEh7s2zbLondVE2toT7WLVadEFBlA==
+X-Google-Smtp-Source: AA0mqf4aJ/wn8/rZOpjcNmDgKuBNSY7gQc4XYDzGpWeNqqtWmfWzsOAVWg92uaXpGMVQk1UUbpJznBJem3pCyRO9b+4=
+X-Received: by 2002:a67:fbd6:0:b0:3ac:38c7:1bdd with SMTP id
+ o22-20020a67fbd6000000b003ac38c71bddmr9516770vsr.9.1669300066238; Thu, 24 Nov
+ 2022 06:27:46 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v5 1/4] dt-bindings: mfd: ti,tps6594: add TPS6594 PMIC
- support
-Content-Language: en-US
-To:     Matt Ranostay <mranostay@ti.com>, michael@walle.cc,
-        vigneshr@ti.com, robh@kernel.org, a.zummo@towertech.it,
-        linus.walleij@linaro.org, lee@kernel.org, brgl@bgdev.pl
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <20221123053512.1195309-1-mranostay@ti.com>
- <20221123053512.1195309-2-mranostay@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221123053512.1195309-2-mranostay@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <CAMRc=Me-LcGx1GUFZ3NnxvbW=wcKnpJ+jpDHjYb+20+_7gSCfg@mail.gmail.com>
+ <CANiq72=vU1inYDgZJR1ukKkQF=Pj93eD3=Cw6iFE+8xf_+Brbw@mail.gmail.com>
+ <CAMRc=Me2hHmEohYwCvnrKVhxNSHts9wrtNCRMp4neBu1AcZnOQ@mail.gmail.com>
+ <CAMRc=Mf=ZbVJQJU0QkBMoRUFp1DrV1BJ0nVFn62jd6YMq83HNg@mail.gmail.com>
+ <20221124104501.2bfllqmpfegdcs3m@vireshk-i7> <Y39yackN2u7q2Fxs@sol>
+In-Reply-To: <Y39yackN2u7q2Fxs@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 24 Nov 2022 15:27:35 +0100
+Message-ID: <CAMRc=MdUTXVV1tzvFdU8c9B_CeHjYB77A-EW4gSoK+VG8PbB_A@mail.gmail.com>
+Subject: Re: libgpiod: rust bindings and bindgen issue with C enums
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/11/2022 06:35, Matt Ranostay wrote:
-> Add documentation for the TPS6594 PMIC including its RTC and GPIO
-> functionalities.
+On Thu, Nov 24, 2022 at 2:32 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Thu, Nov 24, 2022 at 04:15:01PM +0530, Viresh Kumar wrote:
+> > On 23-11-22, 19:37, Bartosz Golaszewski wrote:
+> > > Could you take a look at https://github.com/brgl/libgpiod-private?
+> > > There's a branch called topic/further-libgpiod-v2-updates. Can you
+> > > check out commit 5a4e08d546a8ec32757e6c9cc59d7a16939721ea and tell me
+> > > how you'd make rust bindings work with it because I'm out of ideas
+> > > (and my comfort zone)?
+> >
+> > https://github.com/vireshk/libgpiod brgl/fix
+> >
+> > For the benefit of others, I am pasting the entire diff of Rust changes required
+> > to make the C library enums named.
+> >
+> > The part that can be improved, but I am not sure how, is the Error enum. Maybe
+> > Miguel or Kent can help ?
+> >
+> > The problem is that the InvalidEnumValue Error needs to be generic, which makes
+> > it:
+> >
+> > "
+> > pub enum Error<E> {
+> >     ...
+> >     InvalidEnumValue(&'static str, E),
+> > };
+> >
+> > pub type Result<T, E> = std::result::Result<T, Error<E>>;
+> > "
+> >
+> > Where E can be i32 or u32. Currently I just cast it everywhere as i32 to make
+> > it work.
+> >
+>
+> I don't see this as a problem for generics.  Whether the enum is signed
+> or unsigned doesn't need to affect the Error variant, much less the whole
+> Error type.  The Error doesn't need to respresent the type of the source
+> of the error, it needs to represent the type required to convey
+> information to the user.
+> Just accepting that the InvalidEnumValue variant expects i32, and casting
+> from u32 if necessary, seems appropriate to me.  Unless there are some
+> extreme values you are concerned about - but then you always switch it
+> up to  i64 ;-).
+>
 
-Back in September I asked to use get_maintainers.pl to CC people. Can
-you please tell me, why you still prefer not to use it's output and
-instead use a bit different email addresses?
+In that case: Viresh: can I include your changes in my patch (giving
+you credit as a co-author)?
 
-How many times same feedback should be given?
+Bart
 
-> 
-> Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> ---
->  .../devicetree/bindings/mfd/ti,tps6594.yaml   | 69 +++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
-> new file mode 100644
-> index 000000000000..0de0db87dbf7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/ti,tps6594.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: TPS6594 Power Management Integrated Circuit (PMIC)
-> +
-> +description: |
-> +  TPS6594 Power Management Integrated Circuit (PMIC)
-> +  https://www.ti.com/lit/ds/symlink/tps6594-q1.pdf
-> +
-> +maintainers:
-> +  - Keerthy <j-keerthy@ti.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,tps6594
-> +
-> +  reg:
-> +    const: 0x48
-> +
-> +  ti,system-power-controller:
-> +    type: boolean
-> +    description: PMIC is controlling the system power.
-> +
-> +  rtc:
-> +    type: object
-> +    $ref: /schemas/rtc/rtc.yaml#
-> +    unevaluatedProperties: false
-> +    properties:
-> +      compatible:
-> +        const: ti,tps6594-rtc
-> +
-> +  gpio:
-> +    type: object
-> +    unevaluatedProperties: false
-> +    properties:
-> +      compatible:
-> +        const: ti,tps6594-gpio
-> +
-> +additionalProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    i2c0 {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        pmic: pmic@48 {
-> +            compatible = "ti,tps6594";
-> +            reg = <0x48>;
-> +
-> +            rtc {
-> +                compatible = "ti,tps6594-rtc";
-
-No resources? No properties? Usually such nodes are not useful at all.
-Rob pointed this some times in different cases, but I don't remember if
-we resolved it here.
-
-> +            };
-> +
-> +            gpio {
-> +                compatible = "ti,tps6594-gpio";
-
-Same question.
-
-> +            };
-> +        };
-> +    };
-> +
-> +...
-
-Best regards,
-Krzysztof
-
+> What is the problem that generics solve - that a subsequent bindgen or
+> gpiod.h change might change signage on you?  If so then cast them all
+> - even if the cast isn't necessary at present.
+>
+> Cheers,
+> Kent.
