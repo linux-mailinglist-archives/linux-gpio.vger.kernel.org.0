@@ -2,81 +2,153 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A34B8637324
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 08:56:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C48CD6373D2
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 09:23:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbiKXH4f (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Nov 2022 02:56:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
+        id S229658AbiKXIXH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Nov 2022 03:23:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbiKXH4f (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 02:56:35 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3044AB10C6
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 23:56:34 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id n20so2471477ejh.0
-        for <linux-gpio@vger.kernel.org>; Wed, 23 Nov 2022 23:56:34 -0800 (PST)
+        with ESMTP id S229606AbiKXIXG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 03:23:06 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71E0B2CC8B
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 00:23:05 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id i2so888003vsc.1
+        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 00:23:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kvw1s/ifL6k/4l89T8FEL+yx0midrfBcnNd6rOBmvpo=;
-        b=d7tem1nPLJYCeaNqDgXOK7SsPmi1EYQSAQD1PlTUyT5gP/ERglOnhMgCv99jJm4HDM
-         Fb0PUfsO7szeTjZ9wd3Zc6zMR7C9zuiofwYuP+/51JWT1OvUPxtI1tLlJgrG/Z4Fcs+o
-         DUXa1bVeQajVbohsAskymvTIWCV/xSwnB3alincTwwWXupiZyPN2ljI0XchTvmVEvGhe
-         QAd06vjYEd8CmC2agw+qX7rrRBvrLZB7XQO2zs1/eRbhbErxZ762EFyFKzEAHbNUP4JQ
-         +J6xQYrvBkHNvAllRQCozDb2MfKhS/GDj4LGHukPr/ZRLegCLnoBqEVSAAM2boiw4pVS
-         3Law==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5qmRgK6iHDDD9jUd+afLu/0d0Ew0cdPS8bY9iC3x34M=;
+        b=wrIlOBoMs6QQSclG7dH6GjVcfyrqXV0yQ1u3aG+e1sAqHH9Y+hHttWomM3LZqUw32k
+         nkJkU1eMPUhvTLG6ds11eZR6MuazdqHYrPsVYBbaVDditxbUQVOrm1O2ywORTCwjS7EP
+         +U7cMnomLkAZQb/5Hfdo/iUhj+31WBKdr6OnrupJVbqcemQ4R3q87icWxkahNWilgqtU
+         S06UZIzovWkovRY41VSUfHF03vkQYG4LDoLdIbNpzbEcEX8Dv0jYLZN/DJrlEYW+e+Gn
+         mO3WdJO1WCkFBf5RZT4w8Do+nJXlo5dFYteduLDUxfR0RvZ/pWDjKcIcvFVb46fCWxfs
+         r11A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:sender:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kvw1s/ifL6k/4l89T8FEL+yx0midrfBcnNd6rOBmvpo=;
-        b=6jzfXNjxCCzj29qqKCBR51pu7fuuIiGl+lEwgCi4hJlmcdgeIU+FJHw/I6MIlsNemJ
-         JqSweIkrY/jeCqNCP++jCwlg/NMeXwMjrzZrGmqatzD0WRbnKDJFPY4rECaiObZl20L6
-         wQLz+4SlalqLh/S0F7qF/b7ld6gPpgFaNMoZzB6NjUxwVMEuhFdJ2MiOxaL+DH9t8lC/
-         hWIv32VAC4rjz34soA587+yNbOCYfLQpKThTXQuOoWqjEr8VCs4nbzyNRykO9ZUBV94b
-         WMBZzyOTUp5bPgUZ5Sj7iB0BiOilS+WZWvFZhBHHqO272SLhmBOYA8/gWqMo+0ZDUumf
-         20bA==
-X-Gm-Message-State: ANoB5pm/z8VCMbmWpr9Eo7iCY6s+3UwCvepiqS3piDRUmQL/9ihpqNTX
-        SY5G6ZkoOfYr1IXB0CrqwXd0FOdlkgCTmJqH0Xk=
-X-Google-Smtp-Source: AA0mqf4ZygkkgmgB6SFm1VUfEhaMYKXgK49rQyhBsRJYW5Rb4tJ9faZHR6MGzihkiPlYS2nbUnsVBWMCEw5oRlHMBwA=
-X-Received: by 2002:a17:906:f252:b0:7ae:4236:bfb5 with SMTP id
- gy18-20020a170906f25200b007ae4236bfb5mr1961768ejb.428.1669276592667; Wed, 23
- Nov 2022 23:56:32 -0800 (PST)
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5qmRgK6iHDDD9jUd+afLu/0d0Ew0cdPS8bY9iC3x34M=;
+        b=jm/VE8+duCDU/noT7MmfUXbFBcx3b71EmOw1/tHhIpJI1jlGWZ0BqbFdIiA29sgoge
+         gakf0DBd8r1NiPtPalXQ4BFcf97nObDn7J18HFvWvue0bpKHQP1NBqGPcB6fQOPC+fmn
+         6eAxh87r99/ractgiHNytK9v8X7vHCwEJc2tMg4yR7r6zqKZ12COH18E+R3rb2nhTaxv
+         gRCi5mcdpjz/v//z+DwLJkNN40Q56qjrHIro18bL83DzW5K2gnww6yYaPAinLbhJTSXv
+         9Qr03+RxfnpHJ1+l5XdFZfe6N7/LrNLRIDqfgIiEkvIgvMqLCPSBaBIIKSjquHBVkCfw
+         hdRg==
+X-Gm-Message-State: ANoB5plaxsN61SqR6TFUij4qhZdbgSuPmvgsmHC3RQ/6tGkFGTmN1I4x
+        0wk8UTiOtfHvdGqje8LQ0lKHb5zAudsWGJNrWR2nxA==
+X-Google-Smtp-Source: AA0mqf5soPczq85B7Su9wnMaQiQuhCvUW6GSUbGBrWPQb6CMzXdAbt/bQwCjTHuBblb7HRlAv3kudwdSeixLE4PUChQ=
+X-Received: by 2002:a05:6102:829:b0:3b0:6449:baba with SMTP id
+ k9-20020a056102082900b003b06449babamr6403999vsb.61.1669278184524; Thu, 24 Nov
+ 2022 00:23:04 -0800 (PST)
 MIME-Version: 1.0
-Sender: edwardjohnson.tg@gmail.com
-Received: by 2002:a05:6f02:61f:b0:26:bb4d:1ea0 with HTTP; Wed, 23 Nov 2022
- 23:56:31 -0800 (PST)
-From:   Lisa Johnson <lissjohnson402@gmail.com>
-Date:   Wed, 23 Nov 2022 19:56:31 -1200
-X-Google-Sender-Auth: ObNOMZ_5TPk3XUkCnX1UVTWjjp4
-Message-ID: <CAFW+7NSXp5YsU+A5Cn3ca_1jSzmAP23fqbZCAqXo_JrEXOCf0Q@mail.gmail.com>
-Subject: Remain Blessed.
-To:     undisclosed-recipients:;
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+ <20221118224540.619276-12-uwe@kleine-koenig.org> <CAMRc=Mfjcs-BBFhr8O1O956f4jdvAzY9ofZs1fme8+Ki=T60JA@mail.gmail.com>
+ <CAMRc=MfwSabay==DcyONc4AVgOPETsA5x3wuLX05Ndvfwiv4bg@mail.gmail.com> <20221123164132.gfglkwgknqkwywnq@pengutronix.de>
+In-Reply-To: <20221123164132.gfglkwgknqkwywnq@pengutronix.de>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 24 Nov 2022 09:22:53 +0100
+Message-ID: <CAMRc=Mf=h_nVAzRhY_YEuiur+9Wbx+kEwPj-iB=PqHn3ULYJ6A@mail.gmail.com>
+Subject: Re: [PATCH 011/606] gpio: max732x: Convert to i2c's .probe_new()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Angel Iglesias <ang.iglesiasg@gmail.com>,
+        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
+        Grant Likely <grant.likely@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-I am Lisa Johnson
+On Wed, Nov 23, 2022 at 5:41 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Wed, Nov 23, 2022 at 04:49:05PM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Nov 23, 2022 at 10:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:
+> > >
+> > > On Fri, Nov 18, 2022 at 11:46 PM Uwe Kleine-K=C3=B6nig <uwe@kleine-ko=
+enig.org> wrote:
+> > > >
+> > > > From: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> > > >
+> > > > .probe_new() doesn't get the i2c_device_id * parameter, so determin=
+e
+> > > > that explicitly in the probe function.
+> > > >
+> > > > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.d=
+e>
+> > > > ---
+> > > >  drivers/gpio/gpio-max732x.c | 6 +++---
+> > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732=
+x.c
+> > > > index da6972117030..68e982cdee73 100644
+> > > > --- a/drivers/gpio/gpio-max732x.c
+> > > > +++ b/drivers/gpio/gpio-max732x.c
+> > > > @@ -608,9 +608,9 @@ static struct max732x_platform_data *of_gpio_ma=
+x732x(struct device *dev)
+> > > >         return pdata;
+> > > >  }
+> > > >
+> > > > -static int max732x_probe(struct i2c_client *client,
+> > > > -                                  const struct i2c_device_id *id)
+> > > > +static int max732x_probe(struct i2c_client *client)
+> > > >  {
+> > > > +       const struct i2c_device_id *id =3D i2c_client_get_device_id=
+(client);
+> > > >         struct max732x_platform_data *pdata;
+> > > >         struct device_node *node;
+> > > >         struct max732x_chip *chip;
+> > > > @@ -707,7 +707,7 @@ static struct i2c_driver max732x_driver =3D {
+> > > >                 .name           =3D "max732x",
+> > > >                 .of_match_table =3D of_match_ptr(max732x_of_table),
+> > > >         },
+> > > > -       .probe          =3D max732x_probe,
+> > > > +       .probe_new      =3D max732x_probe,
+> > > >         .id_table       =3D max732x_id,
+> > > >  };
+> > > >
+> > > > --
+> > > > 2.38.1
+> > > >
+> > >
+> > > Applied, thanks!
+> > >
+> > > Bartosz
+> >
+> > Ugh, backing it out, I thought these patches were independent.
+>
+> They depend on i2c_client_get_device_id which you can get into your tree
+> either by pulling in
+>
+>         https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c=
+/client_device_id_helper-immutable
+>
+> or by waiting until this hits Linus Torvald's tree and updating to that.
+>
+> I'd like to see the gpio patches go in via the gpio tree. If you choose
+> not to pull in the above and apply now, I will resend (per subsystem)
+> the remaining patches based on the next -rc1 containing that function.
+>
 
-I sent you a letter a month ago, but I'm not sure you received it, Did
-you receive my previous message ?? I have a very important project, I
-want to discuss with you, Please get back to me as soon as you read my
-message, So that I can tell you more about myself and  send you my
-pictures.I have prayed about this, and I am doing it with all my
-heart.
+That's alright, I pulled Wolfram's branch and re-applied the three patches.
 
-
-I await your response.
-
-Thank you
-
-Lisa
+Bart
