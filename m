@@ -2,127 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F8B7638026
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 21:25:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 294D16380E6
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 23:29:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229481AbiKXUZV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Nov 2022 15:25:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52688 "EHLO
+        id S229563AbiKXW3R (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Nov 2022 17:29:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKXUZU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 15:25:20 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAC15B7027
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 12:25:18 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id 7so2869592ybp.13
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 12:25:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=J8sxuo2UPMLbk/V0b/6PsXoto/AsE3qIgIJ53xxnA+8=;
-        b=DzXikZWt9RzyR2Tig/Uev1rpm8j3JK/odvcOSeTkB+jtQRuRWy7GNIsighIyvp/Bl6
-         VFXnor0yB/AuevLW5+ZNmQ8EMviA+lpiielFCoGza7EuVZHn2CCzQjlLLO4oMQs9Xsb2
-         6fn40o9SiNJ01WyhjA54A1HNqjV7IZHKM+MdzlR0FlwD6Z0kXN+pkAhyHrCRvcxyw9Iv
-         F5NjoDe/x+sCpJ3ZvrXnX1izL5zG1dFhZYtwcwTTqy5nRyrwaxgkUrezk8vACnzeOiSe
-         FVQj0Jv54ZpJfdKEPUXLnzLUhsYdKhdXm7MwySiY6LZYEHWEsQL6EkBeSryVl/wUEpbV
-         Dvxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=J8sxuo2UPMLbk/V0b/6PsXoto/AsE3qIgIJ53xxnA+8=;
-        b=tvptQ0xIl6LSNLnPKo+0l6TVnfHNqEtHcXc0ik2YU2QYzFza2QFrhWW5JOQHmuzWVH
-         rAN4It9veB0HSmZYtNa2SV9a6/V93Ge/B2u1K/7gzbtkVcnNInWr0TgXvfKboyBHWJHC
-         rWumSb51fPoDUpF+ziZT56bsFZA19BYodq/WBJXVfyqxbzscv8nIYIZyLrCpc3fzrwGg
-         r80MoColX+PeRIDrpMjdnUUb8zaZR3oVv9TbRNc1TtWkUVrD9NJikJZS9jpWw+C2WuQH
-         KguQ04rt6amN75rOuPlJhjn0cIGjdvY7cSSglBGCmcpI1ulFEL0rCjJb1nWyqSrAvM9D
-         SFiA==
-X-Gm-Message-State: ANoB5pkwulCFhNYEx+4C+eHBMaijvKwyxF0D6LnFin//mfINSjyp+6qF
-        9WxmCXNlPTmA2l5+kqmApoeZ0yPZdJmL590e4dfa6ePlbbs=
-X-Google-Smtp-Source: AA0mqf4vQwrE8ITUtBgb8RTbYfpPz89lsJSFGC64L/IZhQQoE/1PgQrK42KWyAw8k1ncUEeY0d73XK1ja31mipt0Phw=
-X-Received: by 2002:ab0:3724:0:b0:418:dbdc:cd6f with SMTP id
- s4-20020ab03724000000b00418dbdccd6fmr9125053uag.66.1669321506207; Thu, 24 Nov
- 2022 12:25:06 -0800 (PST)
+        with ESMTP id S229455AbiKXW3Q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 17:29:16 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09ADB8FB0A;
+        Thu, 24 Nov 2022 14:29:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669328951; x=1700864951;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=RCRRDp08lZIx9uPRpzFvsZ4CNT2lsbwsHsXdZTgGwTE=;
+  b=bsWpOpWy4zovYpWqxnSMAbSBcpGFtV0aSxR5lOEMh/06mKWobS/zgvZS
+   GsP69ch6N+DeaAzRKyZhdVq9AFlp0c/FhYihJiUXakYdhPThk8TwbDly0
+   H8gU/EPsFKIgOvvhsrxuDzQQEGj/7LnaKD51BaCzKZZJeGfnjcJ1e9xlP
+   OKvrjw4IR6eYTuLPEKBc4dgaTwyRBydvpszrr3Iml4g3Gn1H+hUGVKRTh
+   FnuewuSzviPdj2/fIqGy2YHl4Iduoe8sBp6V3G678fU0yRHswKBMStdxn
+   j48n+ApEFZ9xLVfiAGNHl9CUbuadZEJZPO5KaoyEKFCJxGf9h76S9dqkl
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="314407970"
+X-IronPort-AV: E=Sophos;i="5.96,191,1665471600"; 
+   d="scan'208";a="314407970"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Nov 2022 14:29:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10541"; a="644608935"
+X-IronPort-AV: E=Sophos;i="5.96,191,1665471600"; 
+   d="scan'208";a="644608935"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 24 Nov 2022 14:29:09 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 604B9128; Fri, 25 Nov 2022 00:29:35 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Dale Smith <dalepsmith@gmail.com>,
+        John Harris <jmharris@gmail.com>
+Subject: [PATCH v1 1/1] pinctrl: intel: Save and restore pins in "direct IRQ" mode
+Date:   Fri, 25 Nov 2022 00:29:26 +0200
+Message-Id: <20221124222926.72326-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-References: <cc4926af-95bb-4178-a760-d55821dfb626@www.fastmail.com>
-In-Reply-To: <cc4926af-95bb-4178-a760-d55821dfb626@www.fastmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 24 Nov 2022 21:24:55 +0100
-Message-ID: <CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com>
-Subject: Re: [libgpiod]: Meson wrap for libgpiod
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     bartekgola@gmail.com, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Aug 13, 2021 at 4:24 AM Andrew Jeffery <andrew@aj.id.au> wrote:
->
-> Hi Bartosz,
->
-> I use libgpiod as part of supporting various platforms in
-> OpenBMC[1][2], among other things. OpenBMC generally targets ARM SoCs,
-> and this means cross-compiling applications and their dependencies as
-> part of the day-to-day work.
->
-> While cross-compilation for (complex) userspace can be achieved using
-> distro systems like buildroot and openembedded/bitbake or their SDKs,
-> the meson build system[3] provides dependency resolution and (cross)
-> builds as explicit features through subprojects[4] and the wrap package
-> system[5]. In my experience, these features are compelling.
->
-> To help me develop userspace applications that depend on libgpiod I've
-> opened a pull-request against meson's wrap database[6] to add libgpiod
-> support for v1.6.3:
->
-> https://github.com/mesonbuild/wrapdb/pull/130
->
-> Meson overlays this reimplementation of the build system along side the
-> source as shipped in the tag, enabling meson dependency management
-> without any impact on the upstream project. However, as you might
-> guess, the wrap implementation is non-trivial as it transliterates the
-> autotools scripts. While maintenance of this approach doesn't require
-> any work on your part, it does have to adapt as the autotools scripts
-> change. As such:
->
-> How do you feel about switching from autotools to meson for the build
-> system of libgpiod?
->
-> If this is something you're interested in we can rebase the work in the
-> pull-request above on libgpiod master and have something that's mostly
-> ready. If you're not interested, I can at least carry on maintaining
-> the wrap, but I felt like it was worth asking the question :)
->
-> Interested in your thoughts!
->
-> Andrew
->
-> [1] https://www.openbmc.org/
-> [2] https://github.com/openbmc/openbmc/
-> [3] https://mesonbuild.com/
-> [4] https://mesonbuild.com/Subprojects.html
-> [5] https://mesonbuild.com/Wrap-dependency-system-manual.html
-> [6] https://mesonbuild.com/Wrapdb-projects.html
+The firmware on some systems may configure GPIO pins to be
+an interrupt source in so called "direct IRQ" mode. In such
+cases the GPIO controller driver has no idea if those pins
+are being used or not. At the same time, there is a known bug
+in the firmwares that don't restore the pin settings correctly
+after suspend, i.e. by an unknown reason the Rx value becomes
+inverted.
 
-Hey Andrew!
+Hence, let's save and restore the pins that are configured
+as GPIOs in the input mode with GPIROUTIOXAPIC bit set.
 
-The libgpiod project has undergone significant changes recently. A new
-major release (v2) is getting closer and I'm thinking that it may be
-the right moment to rethink updating the build system. Would you be
-willing to take a look at the current master branch and see if you can
-swap our current autotools in favor of meson while keeping all the
-current switches in place (translated to meson of course)?
+Cc: stable@vger.kernel.org
+Reported-and-tested-by: Dale Smith <dalepsmith@gmail.com>
+Reported-and-tested-by: John Harris <jmharris@gmail.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=214749
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
 
-I would be willing to accept meson into the master branch as the main
-and only build system for libgpiod.
+Linus, I hope that this can still make v6.1 release. I'm not going to
+send a PR for this change unless you insist.
 
-Thanks,
-Bartosz
+ drivers/pinctrl/intel/pinctrl-intel.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 739030e24093..57553ac77518 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -446,9 +446,14 @@ static void __intel_gpio_set_direction(void __iomem *padcfg0, bool input)
+ 	writel(value, padcfg0);
+ }
+ 
++static int __intel_gpio_get_gpio_mode(u32 value)
++{
++	return (value & PADCFG0_PMODE_MASK) >> PADCFG0_PMODE_SHIFT;
++}
++
+ static int intel_gpio_get_gpio_mode(void __iomem *padcfg0)
+ {
+-	return (readl(padcfg0) & PADCFG0_PMODE_MASK) >> PADCFG0_PMODE_SHIFT;
++	return __intel_gpio_get_gpio_mode(readl(padcfg0));
+ }
+ 
+ static void intel_gpio_set_gpio_mode(void __iomem *padcfg0)
+@@ -1705,6 +1710,7 @@ EXPORT_SYMBOL_GPL(intel_pinctrl_get_soc_data);
+ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int pin)
+ {
+ 	const struct pin_desc *pd = pin_desc_get(pctrl->pctldev, pin);
++	u32 value;
+ 
+ 	if (!pd || !intel_pad_usable(pctrl, pin))
+ 		return false;
+@@ -1719,6 +1725,25 @@ static bool intel_pinctrl_should_save(struct intel_pinctrl *pctrl, unsigned int
+ 	    gpiochip_line_is_irq(&pctrl->chip, intel_pin_to_gpio(pctrl, pin)))
+ 		return true;
+ 
++	/*
++	 * The firmware on some systems may configure GPIO pins to be
++	 * an interrupt source in so called "direct IRQ" mode. In such
++	 * cases the GPIO controller driver has no idea if those pins
++	 * are being used or not. At the same time, there is a known bug
++	 * in the firmwares that don't restore the pin settings correctly
++	 * after suspend, i.e. by an unknown reason the Rx value becomes
++	 * inverted.
++	 *
++	 * Hence, let's save and restore the pins that are configured
++	 * as GPIOs in the input mode with GPIROUTIOXAPIC bit set.
++	 *
++	 * See https://bugzilla.kernel.org/show_bug.cgi?id=214749.
++	 */
++	value = readl(intel_get_padcfg(pctrl, pin, PADCFG0));
++	if ((value & PADCFG0_GPIROUTIOXAPIC) && (value & PADCFG0_GPIOTXDIS) &&
++	    (__intel_gpio_get_gpio_mode(value) == PADCFG0_PMODE_GPIO))
++		return true;
++
+ 	return false;
+ }
+ 
+-- 
+2.35.1
+
