@@ -2,123 +2,146 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E9DC637BB1
-	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 15:46:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D824637BE9
+	for <lists+linux-gpio@lfdr.de>; Thu, 24 Nov 2022 15:54:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiKXOql (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 24 Nov 2022 09:46:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50240 "EHLO
+        id S229964AbiKXOyN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 24 Nov 2022 09:54:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiKXOqk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 09:46:40 -0500
-Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177F8F41A1
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:46:39 -0800 (PST)
-Received: by mail-yb1-xb30.google.com with SMTP id b73so2044704yba.4
-        for <linux-gpio@vger.kernel.org>; Thu, 24 Nov 2022 06:46:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3s17i79Ve6r+tRIi+mNbEIOEiUA9iI9GQi6nDnSp3P8=;
-        b=pETj17R/zey2tTr7t5nAPIo72MR1flEjjp2gP/Y6pebJaXEG22tdP1+4kDbmh2KDk2
-         FBH4h5nTSFmd8yEFtQg5TrWEKGyEngRFbVp9CkFv/emN1pFy48kTegdm4HLRVvVsX4wX
-         TAsVvfKNf8GFJQtiyHTEAV9ana8gTNVTXc/g+PuNXutMe46Hwwna0VyCSYSZK0vXQ5lN
-         mPaGop/GXCi2qAuuEnQNS4iMNWp6Ue7/VvsyxemcAiTBZDzlosKt64bGoOEf61uaQOPc
-         6Rl9dqh7L7nq2XFAsr/wPJRQ+6sO67QgvF2Uu3z1sbJnAVeDBygjbMjzfPvK1Ersn8fJ
-         U7tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3s17i79Ve6r+tRIi+mNbEIOEiUA9iI9GQi6nDnSp3P8=;
-        b=JHTveenm+fjiVzH9Xaytxtb+ar1Q7i94QZZ5g49OPEruUXDnnEZP4QvnbShj4a5cik
-         tvHJTlbGP3NHtHWwEiF+Ef3stTJ3sZc7JRH1o3B5huXEy6iOFVoz925ZBin1vDxIARTB
-         K2WC7UB335c9xDo4KN/BW4vG10wCLvhjd9hqCazWgW5+MQZKx8R3QB3m+RXYvw2fSLW5
-         s3mvbaEzEVYnQnX91kQwWx+XTHXEND3SKlaRiUNxV10Mv8ofdRZENYJ0E0hiSEmEvI8H
-         9Xwhu2Bgc7cnHojWssCNmTBEhkeuvuNtJTAkYDMB2sSjKYxEeYILJOc7d5C9Awvlb+nF
-         dJIw==
-X-Gm-Message-State: ANoB5pmXLSKatANXRXUO0ImZ/NuMhcdQ72ewmbky0ICPuZHUFcp07eKT
-        NArmFM63OJS9+vYqR2afj6EKeBUlndPQOKtRVu+mNZn7Mo3cHQ==
-X-Google-Smtp-Source: AA0mqf6DnbTsoMsALQAlm28NaWe5ZSPnYmpxIHtAhj1KJAaM8lRh+oFM7bfGek4Fy7g//njpHtZXNK02bDQ2d1CUTZc=
-X-Received: by 2002:a25:bd4a:0:b0:6e4:c63f:ea6d with SMTP id
- p10-20020a25bd4a000000b006e4c63fea6dmr20460571ybm.323.1669301198285; Thu, 24
- Nov 2022 06:46:38 -0800 (PST)
+        with ESMTP id S229436AbiKXOx5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 24 Nov 2022 09:53:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA1311A737;
+        Thu, 24 Nov 2022 06:53:27 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A26F62180;
+        Thu, 24 Nov 2022 14:53:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F372C433C1;
+        Thu, 24 Nov 2022 14:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669301606;
+        bh=unIV7Ik3dkhviLx7pqEUl7Hj+P8gzwLYsPUrycbdr2U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Bjiga38QWyzLlfhROr4+WaCyo1J6wcTkIZj/mwam3dWvx1Hx5xajOxzVB7myXCa9N
+         WNBAdzWlxBlBs+KppJLdJyV66PPHOF5WPs6Mou2/YQUFWDhxzmXFlw/QhsRkqhAbvM
+         IKZb4468eQJJDEnwbqI3IOZWGOuAGFvAZoZxBeBNa28SexV/3o2GKds11UG+j34jMn
+         qFVJwi+/7WO3rd5ejlO/fFF8/Xvu1SgSJacWq2/ZXhnbl5m/YnXscTIWOW5JF6sv2/
+         7AIFZSfR+8FP0gVVdcX2vRVTsiUKBtO1qb0RumfwgoMEoegx4yHbgmeuc5IR3fUnJ3
+         WdioSmYng4A7g==
+Received: by mercury (Postfix, from userid 1000)
+        id E481A106092A; Thu, 24 Nov 2022 15:53:23 +0100 (CET)
+Date:   Thu, 24 Nov 2022 15:53:23 +0100
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-watchdog@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Viresh Kumar <vireshk@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: drop redundant part of title of
+ shared bindings
+Message-ID: <20221124145323.tevilddtr7ajdd7l@mercury.elektranox.org>
+References: <20221121110615.97962-1-krzysztof.kozlowski@linaro.org>
+ <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-References: <CAMRc=Me-LcGx1GUFZ3NnxvbW=wcKnpJ+jpDHjYb+20+_7gSCfg@mail.gmail.com>
- <CANiq72=vU1inYDgZJR1ukKkQF=Pj93eD3=Cw6iFE+8xf_+Brbw@mail.gmail.com>
- <CAMRc=Me2hHmEohYwCvnrKVhxNSHts9wrtNCRMp4neBu1AcZnOQ@mail.gmail.com>
- <CAMRc=Mf=ZbVJQJU0QkBMoRUFp1DrV1BJ0nVFn62jd6YMq83HNg@mail.gmail.com>
- <20221124104501.2bfllqmpfegdcs3m@vireshk-i7> <Y39yackN2u7q2Fxs@sol>
-In-Reply-To: <Y39yackN2u7q2Fxs@sol>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Thu, 24 Nov 2022 15:46:27 +0100
-Message-ID: <CANiq72=ufe1eGRVAcHcn9TZiMx2-HC-QQPZMbss5ErSdcpMyBA@mail.gmail.com>
-Subject: Re: libgpiod: rust bindings and bindgen issue with C enums
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="kmrqy5oh67vgmowj"
+Content-Disposition: inline
+In-Reply-To: <20221121110615.97962-2-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Nov 24, 2022 at 2:32 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> I don't see this as a problem for generics.  Whether the enum is signed
-> or unsigned doesn't need to affect the Error variant, much less the whole
-> Error type.  The Error doesn't need to respresent the type of the source
-> of the error, it needs to represent the type required to convey
-> information to the user.
-> Just accepting that the InvalidEnumValue variant expects i32, and casting
-> from u32 if necessary, seems appropriate to me.  Unless there are some
-> extreme values you are concerned about - but then you always switch it
-> up to  i64 ;-).
 
-Yeah, I am not sure what a generic `Error` buys us here.
+--kmrqy5oh67vgmowj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If one really wants to preserve whether it is signed or not, that is
-only two possibilities, not an open set of them. Moreover, I imagine
-one wants to constraint them for users, rather than let users provide
-the type `E`.
+Hi,
 
-Thus one could have a sum type with 2 variants like
-`InvalidEnumValue(..., Either<i32, u32>)` or something more explicit.
+On Mon, Nov 21, 2022 at 12:06:07PM +0100, Krzysztof Kozlowski wrote:
+> The Devicetree bindings document does not have to say in the title that
+> it is a "binding", but instead just describe the hardware.  For shared
+> (re-usable) schemas, name them all as "common properties".
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Acked-by: Guenter Roeck <linux@roeck-us.net> # watchdog
+> Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com> # IIO
+> Acked-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  .../devicetree/bindings/power/reset/restart-handler.yaml        | 2 +-
 
-But that is assuming there is a need to preserve it. What is the
-variant meant to be used for by users? e.g. if it is just for
-reporting, it probably doesn't matter. Actually, does the user even
-need the number? Could `InvalidArguments` be enough?
+=2E..
 
-Looking at it a bit more, I am confused why the error is possible to
-begin with. There is `Value::new()` which appears to be public and can
-return `InvalidEnumValue`, but why should it be used by users? They
-should create the `enum` directly, no? And for the other `new()`s that
-also return `InvalidEnumValue`s, I see they are `pub(crate)`. That is
-what I would expect, but still, why is the error a possibility to
-begin with?
+> diff --git a/Documentation/devicetree/bindings/power/reset/restart-handle=
+r.yaml b/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> index 1f9a2aac53c0..378b404af7fd 100644
+> --- a/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> +++ b/Documentation/devicetree/bindings/power/reset/restart-handler.yaml
+> @@ -4,7 +4,7 @@
+>  $id: http://devicetree.org/schemas/power/reset/restart-handler.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+> =20
+> -title: Restart and shutdown handler generic binding
+> +title: Restart and Shutdown Handler Common Properties
+> =20
+>  maintainers:
+>    - Sebastian Reichel <sre@kernel.org>
 
-For instance, somewhere else the library does `Direction::new(...)`
-with a value from the C side. The values from the C side must be
-correct, i.e. it is a bug otherwise, right? Thus one can trust them,
-or assert them, or if one wants to avoid panics for something that is
-a bug, one could return a `InternalLibraryError` with no extra
-information, because there is really not much users can do with the
-error details apart from knowing there is a bug in either the Rust or
-the C side.
+Acked-by: Sebastian Reichel <sre@kernel.org>
 
-I have taken a quick look at the C++ side for that same case, and from
-a quick look, C++ appears to throw if the mappings are wrong, so it
-sounds to me like you can similarly assert the validity in Rust and
-remove the `InvalidEnumValue` variant altogether.
+-- Sebastian
 
-Cheers,
-Miguel
+--kmrqy5oh67vgmowj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmN/hVMACgkQ2O7X88g7
++pqhwA/+M2Nr4azK150ufJYwasgPUHr+IvgiGG6zZbVydz4jcsik67ma/TlLQV0F
+e576CX8Tqzz90OcmpIPWvWr/+Ev0QWetfOvG+4+Io9Zh+w7Er6dnLWZuv3DbPDD8
+b5KbXY0fKBBc30RQVk7T0uhq0Qd/gJ38fOALFl7nymMSzekfDuYm+HNn9gURaxuK
+C3EKJDXCLhT05/DBQK4rx+CVy6tMk8oiQOrrESyGeHRrRv/7va6TjIKRqXoekdAx
+GEA6CF1jXwzX0TnUppKNjGdVeBw8UkflkU8lJrBozSSpo+IzaaT333jOhsX2ROKB
+uDDWkC4CAOVIXnLhUBSNJGm9ifZm906c/zyoZ77EzYNtsFESq5znEyTryuOfzjiS
+ykyxB/WkNLxxJf5Wcu4gqGks0KrnM7aE+pfV+cqViSgGi8ykIUwEjrbY15w34I4M
+1etdToVgbUEaL+ThZaymJ9xWhcWq2NHBTTHIgL2AA34rSqaJe1f990424jUT/SYZ
+7N4jCoDiJPK56gJJe5NRPSvz4LjlFa8bTB3rXioMA4Ep21+e4VrBT6TqERx/Jkaa
+RdEjPVIF6pkxOepaBigKGkjvwDj4AvwdIglKaIXcccH+I55OxMOyPj3FXgaOLB+5
+o6kJsJkqqpyU0tWJqBmeQED3yqn/Zz7XZZ4SunfkjJLBqxop5Ec=
+=r+Zg
+-----END PGP SIGNATURE-----
+
+--kmrqy5oh67vgmowj--
