@@ -2,135 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6787638A4F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 13:41:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 865E7638D7F
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 16:33:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229947AbiKYMk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Nov 2022 07:40:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36746 "EHLO
+        id S229664AbiKYPdE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Nov 2022 10:33:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230099AbiKYMkl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 07:40:41 -0500
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316496421
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 04:40:12 -0800 (PST)
-Received: by mail-wr1-x430.google.com with SMTP id q7so5698208wrr.8
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 04:40:12 -0800 (PST)
+        with ESMTP id S229453AbiKYPdE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 10:33:04 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 752FC2528E
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 07:33:01 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id p16so3742400wmc.3
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 07:33:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=msWrrKQCqw0BYu4YAgOQYq+Ad0KCUwCY+JcS8it2gqA=;
-        b=JecijIkyNmwA4BnrdxMbg4rKUhOJGdz4NIPDdbm13gQEMUUXybXa9Lbt9qmNWX7e1O
-         zIYkJN5M3MBpaPU8TyTsWjgPn/hvwlGW2VdPkrsTQ5gJvLZEsZjSiZ0kseOw2q+x5Wh8
-         bKuMrPgCAleS83Xl5SGDO5FyjucfcywIYo0UvAw0cRvEZla2pZv7oUFGL6PU342F5Lif
-         udGhRLf9oF8EETcW5CR8TEcPmQwaH9kKl8OiEtjKmcx/R1UaAlEEpnmViC4BByXhdKx3
-         HZytGnLCi0iS5FnAzMcfTQlShWI6sNJt/UY4xZOdd/gPSzyBatIQ8pi4llGAraHdN9LJ
-         WWQA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QdhY8dSfIHRpJ/W0A2WJrfMn7+PAB93k5IaJhxpKlZM=;
+        b=DjXvbel7vNNzZLkFArDYsCqy/oiIAtcFqjCyaOcL6WqERexX5DnU/PBbmTG/GSyj3f
+         Q/7pbwxOLldT09F4kHnelKFDMEFQNborkJAf9AYf1mT8hOpEHr8DG0y6JMEEZeksfkAt
+         qWHpY85iUasRn0z06vW1SBmEXIRBaJds2SPs8zPRAu2js33fVz0SFdIbRFg4FCaUOMQc
+         Y2wIH/SdGAATo0q+6Pml4niKxs7zKym4YlFzgJIzzPnZtFiFKKb0gZq6cGH5kAgSvgsQ
+         cFN0jKYyQlNODbhOaCWtpOzetiTWNMV9DU9squ2JKIqjpWGXEqMPIyc/KVMAakOftKQE
+         dyhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=msWrrKQCqw0BYu4YAgOQYq+Ad0KCUwCY+JcS8it2gqA=;
-        b=B9rWRKpaAsKAyu1fWipY3DYIfKg7E0u3EmMyEBsNgQE+aLqLQfYnOprEEFFWc9NZMj
-         vrO9DN/MNe8B76N8Cz71ujoBvu2gGmZltwE1d5+x0w0F6GJszkGSKYqzlspyQo5xrCGd
-         uhIV2TRZqYa+YpVOuVc4kco5clRx07vTbYkcCuHhWzk5rIsaq66StM5EfEhv+3nSsqfR
-         ynC6QJvscdX4GRKAIpVeb857y563/DaitG/69U/3HMJ3vlbeigIFRezT/cM22rSx4mt9
-         J2NlPnCRESfFbpfD6M+LIlD2SNQsAAf1k4v2zmKbvD7NTPpDuVsqiI+UFqj0q7Pf3m1q
-         B7Rg==
-X-Gm-Message-State: ANoB5pm7Wm6fwYTk6jsJPgqQiGNaAl9Nw2AUSisJNbxCTJBeEp3zXb45
-        UZzD98NfY+bhBVGU0HKbUqrr6Q==
-X-Google-Smtp-Source: AA0mqf7SU4JG52DSfbxYGLy0nDnf2sWj1aJ3f88ziA6uYVgDNYSKYTbg15BOYRm/8bzeQIYnE7iPPQ==
-X-Received: by 2002:a05:6000:783:b0:241:bc34:3149 with SMTP id bu3-20020a056000078300b00241bc343149mr17608825wrb.351.1669380010680;
-        Fri, 25 Nov 2022 04:40:10 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:84a5:7e09:b15:f1fe? ([2a01:e0a:982:cbb0:84a5:7e09:b15:f1fe])
-        by smtp.gmail.com with ESMTPSA id m16-20020a05600c3b1000b003cfd0bd8c0asm5798032wms.30.2022.11.25.04.40.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 25 Nov 2022 04:40:10 -0800 (PST)
-Message-ID: <8602cacd-f552-e843-5c17-681b099069a3@linaro.org>
-Date:   Fri, 25 Nov 2022 13:40:09 +0100
+        bh=QdhY8dSfIHRpJ/W0A2WJrfMn7+PAB93k5IaJhxpKlZM=;
+        b=XK4v3b9J8oJ/6td77uZu9uQmAVlnbB0McSVZzyxwhhF6t2vXakgvVQxZwc5Xli+bBN
+         QsmkQyhgQ7AEjJu/0wpfmOskuUXb3W70lGs+PEbAN7EwHmGD7r8LvhG/LROn8O2FBTz+
+         mDQyFrxSg5PKEe6FUZXrCiy34HfLh/RF2X3kE10X0isc6buspEm6sD0vufJcK1yuR1jA
+         cwE0osKSAOz/QXuifVIoxHsqc3auTtQRPGEGojPWGt/Y6IbCsdi9rWsk3RtJl7pDoLP1
+         TQvqncIz1g2Rq55PMmgpG5+xozmH4okconY7A7j1E2efpyCz8RWPF/9WBZ/uvXx0YkYo
+         DtXw==
+X-Gm-Message-State: ANoB5plDhRPMX7k+G95zI1/G9+f+RaBKoZLKxV+Bpbsw7lrCeZxlgDe9
+        HpIndyQ6OltdO3Nih5vj4CCLZw==
+X-Google-Smtp-Source: AA0mqf7u0NuOrULp5suF59qZYyLgW16/6bb9guWGp1Z0GtROaqu0HuI4QDtfng0LamY8GZb3FDBEsA==
+X-Received: by 2002:a05:600c:3acd:b0:3cf:550e:d7a2 with SMTP id d13-20020a05600c3acd00b003cf550ed7a2mr20624038wms.97.1669390380255;
+        Fri, 25 Nov 2022 07:33:00 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:febe:f1eb:8f01:12f8])
+        by smtp.gmail.com with ESMTPSA id o7-20020a5d4087000000b002366b17ca8bsm4539256wrp.108.2022.11.25.07.32.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 25 Nov 2022 07:32:59 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpiolib: cdev: fix NULL-pointer dereferences
+Date:   Fri, 25 Nov 2022 16:32:57 +0100
+Message-Id: <20221125153257.528826-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From:   neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,tlmm-common: document
- i2c pull property
-Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20221123152001.694546-1-abel.vesa@linaro.org>
- <20221123152001.694546-3-abel.vesa@linaro.org>
- <CACRpkdZtkHCkfUAcezSJvmei=HOezK6oyx+4C5kBrEtU+vAB-g@mail.gmail.com>
- <fecb2dd6-9be2-78dc-4598-cc338fbdc2a2@linaro.org>
- <CACRpkdZJaz9BEorQa7dTNkgTkwZjJNB-MWrpKFxHRgdsf3xJww@mail.gmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <CACRpkdZJaz9BEorQa7dTNkgTkwZjJNB-MWrpKFxHRgdsf3xJww@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 25/11/2022 10:47, Linus Walleij wrote:
-> On Thu, Nov 24, 2022 at 2:24 PM Neil Armstrong
-> <neil.armstrong@linaro.org> wrote:
->> On 24/11/2022 14:11, Linus Walleij wrote:
->>> On Wed, Nov 23, 2022 at 4:20 PM Abel Vesa <abel.vesa@linaro.org> wrote:
->>>
->>>> From: Neil Armstrong <neil.armstrong@linaro.org>
->>>>
->>>> Document the new i2c_pull property introduced for SM8550 setting
->>>> an I2C specific pull mode on I2C able pins.
->>>>
->>>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
->>>> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
->>> (...)
->>>> +      qcom,i2c-pull:
->>>> +        type: boolean
->>>> +        description: enable bias pull feature designed for I2C on pin
->>>
->>> But what is this?
->>>
->>> I2C buses are usually just plain old bias-high-impedance, high-z
->>> or open drain, wire-or or whatever you want to call it.
->>>
->>> But now there is some special i2c mode, huh?
->>>
->>> The description is pretty much "it is what it is"... can we have
->>> some explanation about what this means electrically speaking
->>> and why you cannot use bias-high-impedance?
->>
->> I'll try to get some more info, but so far I only found what I wrote in the bindings.
-> 
-> Björn: can you see if you can get some clarity about the i2c
-> bias thing?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-As I understood, it enables an "I2C resistor" on the pin, removing the need
-of an external pull-up resistor on the line.
+There are several places where we can crash the kernel by requesting
+lines, unbinding the GPIO device, then calling any of the system calls
+relevant to the GPIO character device's annonymous file descriptors:
+ioctl(), read(), poll().
 
-I assume the classical pull-up bias is not strong enough to replace an actual
-resistor on the PCB.
+While I observed it with the GPIO simulator, it will also happen for any
+of the GPIO devices that can be hot-unplugged - for instance any HID GPIO
+expander (e.g. CP2112).
 
-Neil
+This affects both v1 and v2 uAPI.
 
-> 
-> Yours,
-> Linus Walleij
+Fix this by simply checking if the GPIO chip pointer is not NULL.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib-cdev.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 0cb6b468f364..d5632742942a 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -201,6 +201,9 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
+ 	unsigned int i;
+ 	int ret;
+ 
++	if (!lh->gdev->chip)
++		return -ENODEV;
++
+ 	switch (cmd) {
+ 	case GPIOHANDLE_GET_LINE_VALUES_IOCTL:
+ 		/* NOTE: It's okay to read values of output lines */
+@@ -1384,6 +1387,9 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
+ 	struct linereq *lr = file->private_data;
+ 	void __user *ip = (void __user *)arg;
+ 
++	if (!lr->gdev->chip)
++		return -ENODEV;
++
+ 	switch (cmd) {
+ 	case GPIO_V2_LINE_GET_VALUES_IOCTL:
+ 		return linereq_get_values(lr, ip);
+@@ -1716,6 +1722,9 @@ static __poll_t lineevent_poll(struct file *file,
+ 	struct lineevent_state *le = file->private_data;
+ 	__poll_t events = 0;
+ 
++	if (!le->gdev->chip)
++		return -ENODEV;
++
+ 	poll_wait(file, &le->wait, wait);
+ 
+ 	if (!kfifo_is_empty_spinlocked_noirqsave(&le->events, &le->wait.lock))
+@@ -1740,6 +1749,9 @@ static ssize_t lineevent_read(struct file *file,
+ 	ssize_t ge_size;
+ 	int ret;
+ 
++	if (!le->gdev->chip)
++		return -ENODEV;
++
+ 	/*
+ 	 * When compatible system call is being used the struct gpioevent_data,
+ 	 * in case of at least ia32, has different size due to the alignment
+@@ -1821,6 +1833,9 @@ static long lineevent_ioctl(struct file *file, unsigned int cmd,
+ 	void __user *ip = (void __user *)arg;
+ 	struct gpiohandle_data ghd;
+ 
++	if (!le->gdev->chip)
++		return -ENODEV;
++
+ 	/*
+ 	 * We can get the value for an event line but not set it,
+ 	 * because it is input by definition.
+-- 
+2.37.2
 
