@@ -2,143 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F56638E8F
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 17:49:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67D4D638F69
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 18:56:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbiKYQtu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Nov 2022 11:49:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54808 "EHLO
+        id S229597AbiKYR4P (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Nov 2022 12:56:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbiKYQtc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 11:49:32 -0500
-Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AEA151C1E
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 08:48:14 -0800 (PST)
-Received: by mail-vk1-xa2d.google.com with SMTP id v81so2350973vkv.5
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 08:48:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=oTTfcoRrU0StocsPWITcDvFwfydUNrOq1yx22xUwc4Q=;
-        b=1/nali5o+yPtp4fa9mMqVuWhgtggT9rmWJAcyW7yCYDuCAsKGn83MiacJOkMqX9gnR
-         jn81xEr5sxQ+84Va4jRJCkqUTAnSK11UqTFOLTDyeVZkakwYLLxwB+EZuPPh1jfX2kSd
-         YzGSCtKx0Mu+5rb28AkZJ2SkvsceH+qfd1wDhUa2WNJAM4e/Tn8l1F06Ts7FGYwYzsEv
-         CdNeFDYRxZOINrTTENRhTuVE/oBq5iF5jfsJRToNoRmtvYV4Yt6CKlEB93vrMWs8DlkT
-         UyqfDE4Cq0fSjIpFn8I1yAOsVTrW8ZLjPgmHJ4u0RopAc/6qBmVmRn8Z4Rn0cXllY8IK
-         yP6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oTTfcoRrU0StocsPWITcDvFwfydUNrOq1yx22xUwc4Q=;
-        b=wfEWSjSZj+0/fItTLt4BG5pKQqCSP9tqzCwZbyWelifn1BxRV6v8M2uhEjqrXyJyRj
-         QfvLcRANQsBbCruKnXAzW5yKJy5W07ijmmxWuRXpJ0sSj9fT15iy1o9tu4KupKtVfl7o
-         5kpN4pWxDRftgNlsCCyXHvEXMjZSq3+tcDHh5SDoftqgK4KknOCfo5DtvwN3D1BP9Zre
-         SOb3gvZfHuRxSgbNtBMjMVGhUhgeOhx5iZVZaPN620ssNsUFHRlGD5/9/wSPDxVd1no+
-         IlgymGkOJn9gbFn+4Oxhl9MZ9cUhjWZ6ZMzsmoOnpdUacbJHNPPOBYZYS0qudf2VMkel
-         2o5w==
-X-Gm-Message-State: ANoB5pkqPXtIEtIwGe9WEebXdNT9DHPdRXfJrw6UYO6ALbVOAPKwXAYM
-        ZHy2EEw2gvy07Kr1Tc3fC3p+gc6dXH6Sjpz80HEmLQ==
-X-Google-Smtp-Source: AA0mqf7wHcHs+jZ+23bnrrfy2o/9bDG2JM2tDK5A631Aa7acT4B45duF7qHXru/VFEJ0uirx+8nZ6eYRaCexumSmXBI=
-X-Received: by 2002:ac5:c915:0:b0:3b8:7fbd:9554 with SMTP id
- t21-20020ac5c915000000b003b87fbd9554mr11745712vkl.27.1669394893661; Fri, 25
- Nov 2022 08:48:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20221125153257.528826-1-brgl@bgdev.pl> <Y4DsTxPH1tv5eEwf@sol>
-In-Reply-To: <Y4DsTxPH1tv5eEwf@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 25 Nov 2022 17:48:02 +0100
-Message-ID: <CAMRc=Me83-_oiGEmwy4BUrzLEMT6ZsoMwWYsb6iXwg19yHMHdQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: fix NULL-pointer dereferences
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S229491AbiKYR4O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 12:56:14 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CDD0240A5;
+        Fri, 25 Nov 2022 09:56:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669398974; x=1700934974;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dGozxIeI3Hdihd+DZCG3wMJNJscHR7IQT+pzisHO0dw=;
+  b=PEHplHBWj5K4xgAKzId5N2yIhtdX/eWA7YUZGjuB8oCTOVaJnTeMHiHK
+   z5zVXqmh4itKCT0A/yxyMLvPre8z1ffqdgAnX1gg9mxqIHpopCclhiSVh
+   J7fF60z3fWkRmyWHJZcB8YRoyHq2UsSqs+aSEfTjlFDr6UowvrqqsAKlL
+   731hxfCVb8+ezrD5/Nd+mV7WHVv+2onAHhvM62kNHHv4HdobxOP3Y4V68
+   Y8Su0/X3GRKqhM4N2xR+j3bQc0RJHFjy1Epi3XKa7RUSzRImAxyjF0O4A
+   zvoi5/g5jq8DBNHSctL2pMf9mX5/fvQWLHbbuiREQELg2A+P87ZMyGbvk
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="297876025"
+X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
+   d="scan'208";a="297876025"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 09:56:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="817198720"
+X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
+   d="scan'208";a="817198720"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 25 Nov 2022 09:56:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1oycvq-00HLBW-0p;
+        Fri, 25 Nov 2022 19:56:10 +0200
+Date:   Fri, 25 Nov 2022 19:56:09 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH] gpiolib: cdev: fix NULL-pointer dereferences
+Message-ID: <Y4EBubusGqo4IroP@smile.fi.intel.com>
+References: <20221125153257.528826-1-brgl@bgdev.pl>
+ <Y4DsTxPH1tv5eEwf@sol>
+ <CAMRc=Me83-_oiGEmwy4BUrzLEMT6ZsoMwWYsb6iXwg19yHMHdQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Me83-_oiGEmwy4BUrzLEMT6ZsoMwWYsb6iXwg19yHMHdQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Nov 25, 2022 at 04:32:57PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > There are several places where we can crash the kernel by requesting
-> > lines, unbinding the GPIO device, then calling any of the system calls
-> > relevant to the GPIO character device's annonymous file descriptors:
-> > ioctl(), read(), poll().
-> >
-> > While I observed it with the GPIO simulator, it will also happen for any
-> > of the GPIO devices that can be hot-unplugged - for instance any HID GPIO
-> > expander (e.g. CP2112).
-> >
-> > This affects both v1 and v2 uAPI.
-> >
-> > Fix this by simply checking if the GPIO chip pointer is not NULL.
-> >
->
-> Fixes: ??
->
-> And split for v1 and v2 as the Fixes for those will differ?
->
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index 0cb6b468f364..d5632742942a 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -201,6 +201,9 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
-> >       unsigned int i;
-> >       int ret;
-> >
-> > +     if (!lh->gdev->chip)
-> > +             return -ENODEV;
-> > +
->
-> Is there anything to prevent the chip being removed by another thread
-> between this check and subsequent usage?
->
+On Fri, Nov 25, 2022 at 05:48:02PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Nov 25, 2022 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
 
-Eh... not really, no. The issue we have here seems to be the same as
-the one Laurent Pinchart described back in 2015[1] and revisited
-during his 2022 linux plumbers presentation[2], except he blamed it on
-devres, whereas I think the problem is much deeper and devres has
-nothing to do with it.
+...
 
-Ideally we'd need a global fortifying of the driver model against
-hot-unplug related device unbinding.
+> Then at the subsystem level, the GPIO device struct would need a lock
+> that would be taken by every user-space operation AND the code
+> unregistering the device so that we don't do what you described (i.e.
+> if there's a thread doing a read(), then let's wait until it returns
+> before we drop the device).
 
-After a quick glance at the relevant code, I think we'd need to add
-some flag to struct file for the vfs to check on any fs operation and
-return an error early if user-space tries to operate on an fd
-associated with a removed device. I'm not sure yet if that's feasible
-globally or even the right solution at all - just brainstorming here.
+It's called a reference counting, basically you need to get device and then
+put when it makes sense.
 
-Then at the subsystem level, the GPIO device struct would need a lock
-that would be taken by every user-space operation AND the code
-unregistering the device so that we don't do what you described (i.e.
-if there's a thread doing a read(), then let's wait until it returns
-before we drop the device).
+> This wouldn't fix the case in which the same situation happened in a
+> kernel driver but crashing the kernel from within is a much lesser
+> offense than allowing user-space to crash it.
 
-This wouldn't fix the case in which the same situation happened in a
-kernel driver but crashing the kernel from within is a much lesser
-offense than allowing user-space to crash it.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-So this patch is just papering over for now I suppose.
 
-Bart
-
-[1] https://lkml.org/lkml/2015/7/14/741
-[2] https://www.youtube.com/watch?v=kW8LHWlJPTU
