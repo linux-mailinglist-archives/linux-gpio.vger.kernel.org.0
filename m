@@ -2,62 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03E0D6390F0
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 22:03:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 78C2B6390F4
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 22:09:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbiKYVDW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Nov 2022 16:03:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48240 "EHLO
+        id S229787AbiKYVJB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Nov 2022 16:09:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbiKYVDV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 16:03:21 -0500
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDEA7442C6
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 13:03:18 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id y15so1922106uan.6
-        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 13:03:18 -0800 (PST)
+        with ESMTP id S229709AbiKYVJB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 16:09:01 -0500
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4000D2980D
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 13:09:00 -0800 (PST)
+Received: by mail-ua1-x933.google.com with SMTP id s16so1921607uaq.12
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 13:09:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OVEFqwCX0va+VfJ7c+eGlux97SoQeyh4xYOkEeZpCiI=;
-        b=5kpozuC8hYlXhFyeFbWRwWNpcWQ04RgM5YwI8JPfPklrr+LrcPKGJq6P5tqWAr2OGB
-         j9Z4/lUd3QB0P76YCwSM6krQPxjiDz96rOa9tN0lUEgEL8Fn2ekZcK0pM7iwvgNaWhlY
-         Td+Q6iOGsoykmpBC/aF4spDDi82QSnQ0Yd+H3K0VPWP0eyj9yKQQrsqMwiiThQh5OpDR
-         7w9z6M8/t9TkxmiwQ6oCJ3RZLIfTX8Z4Ttz+9oQo8nNSLNLFmAp6nSwl0ETbEppyNofL
-         y+5anKUiY2u0eePOQo2Cy2jtuGdRzKnq1MaBG6izLxAVt35uNUUrF0qumnAL2JbHcqfe
-         UG7Q==
+        bh=VqUh3nU3SRcgOclun+gRgMDO5gYRQgy6WrNbTHAP11I=;
+        b=gI6q31P8fsvL0dSuQOv35NK4zfSt+CfLns25q2oXH5BlC17D/6Rp+lxuR8CFok1Dp/
+         PcTISkdqvW/APU0FuwjnaT2ajjaBLe6+29pgWNAbNkGwrICCf8kInqDqmjFS95T+ZlOy
+         R41jfpZUpLcIPi4LF3AQ+wxq/CDTArUm9RwPNZ64xwaDL4FMIqTaeoo0oGBZwzJpYpel
+         lCfNvIRBEdGpWH0psSo75VgW1SzEABxDEP5bfX2NOb8Z7qMkoHGZu/404VGokWRuIrLA
+         p4E1yCwuR7DGDMPYPWZuRO2a//HORmzFpZS08QXwoEqKKTRlsmgtC4I4OPlGWMgGvsma
+         6Hzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OVEFqwCX0va+VfJ7c+eGlux97SoQeyh4xYOkEeZpCiI=;
-        b=3UlAP0e2mZnnZ9HbSWI9ZIc2rhua+8CYNOZIioIfNmq4QQE9yKbc3GrO7A/XVCPFcC
-         aR5wnywHlxweSZ40GJ9TBnw5sOIUm9rnXj3Z69CIIgtzSB+Bnqa+22IOh0hzqyJLwx11
-         h0yx+BeedPmS6HsWarcoTQC7Uq7auyB+d72GssmpNh/56DuiR6C34cDJlsEcX9MI/Vsr
-         GEbzvTErYfxov4OBSS/Ibi1dVWxLiFZeSrxgZT1XPQ4iN1yojN2IDvawb0UXszjlC5Ru
-         IBJY8XuVZ2wW7lv3//MxseyXX6UiPMewOGYY0RxVC7DcwyHlWlUV5im1Y21UL+0U1qDh
-         DmFQ==
-X-Gm-Message-State: ANoB5plgSgXBI0Y5qtSd7s0b/ey42lu0AAXyfhN+7B8b2+vp4DyVb8CV
-        XQpyMqfT4JQQBdvM9qtrxC5CaiFXRwVi+oLWDRfI5ltHG8e25Q==
-X-Google-Smtp-Source: AA0mqf67ml0/y5Y6L0uB229FME78wZM/z+mBuVEXKMVNFI9Rv0NZ/gTWjiZKnZ5pNjCI7CxDjsDgzvDXrqcFxcDotaY=
-X-Received: by 2002:ab0:6015:0:b0:418:c2fa:f8a6 with SMTP id
- j21-20020ab06015000000b00418c2faf8a6mr15600391ual.119.1669410197837; Fri, 25
- Nov 2022 13:03:17 -0800 (PST)
+        bh=VqUh3nU3SRcgOclun+gRgMDO5gYRQgy6WrNbTHAP11I=;
+        b=wLNFD4cOvAFdsf08GcoXKUzPVGNWZDfdBMHOp4JXMkP4VqfFOHDDKExA98wJVzEaBH
+         MvPSq+iaSHLZFEmG0twExQ+L82Vgk3/TlPp54aD+GBxJo931czIIEohgF93rn5xwfH6O
+         NJmVfrfwpnU47VIoq4nUigalvYHH54I+p+LVaVVHRTViH+PKimciZgdzRit2EINDZuAH
+         f087RAnlB7FaHDaktYj7CT/6i37D96+1lZ8W0XKOMTvMvZg1pAPj6bxOQe8qPMMb1LSc
+         lZIkofexOqDNXr0kT74FNsluKFUBgpLzE1pJiTa7CbE76PakCOCaNesHAZpmcnF0hrPN
+         NxEg==
+X-Gm-Message-State: ANoB5pnqMLqoojcqe1AUOTz1lyzNosZjAYDgMRlKMh1zvSkgjWuijFEP
+        o+dI1T5FjMdDxts+dD1VmhbjnR2hWvN7gN+RIcW0kg==
+X-Google-Smtp-Source: AA0mqf7NgmSaoMgXf9KynFQJ2AZTx5ugzQaXwaGF3yvjOyAeGTOER8626+/FoWtNgDOZcM0bLf/DXOQFG7FYN1HITp4=
+X-Received: by 2002:ab0:5a6e:0:b0:415:715c:1e70 with SMTP id
+ m43-20020ab05a6e000000b00415715c1e70mr15599039uad.81.1669410539200; Fri, 25
+ Nov 2022 13:08:59 -0800 (PST)
 MIME-Version: 1.0
-References: <20221125153257.528826-1-brgl@bgdev.pl> <Y4DsTxPH1tv5eEwf@sol>
- <CAMRc=Me83-_oiGEmwy4BUrzLEMT6ZsoMwWYsb6iXwg19yHMHdQ@mail.gmail.com> <Y4EBubusGqo4IroP@smile.fi.intel.com>
-In-Reply-To: <Y4EBubusGqo4IroP@smile.fi.intel.com>
+References: <20221118194508.50686-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221118194508.50686-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 25 Nov 2022 22:03:06 +0100
-Message-ID: <CAMRc=MdHtJC4Tmn3KgcnefmHTrpXy=ROAAXJLN9uv=ouJ-hQSw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: cdev: fix NULL-pointer dereferences
+Date:   Fri, 25 Nov 2022 22:08:48 +0100
+Message-ID: <CAMRc=MeJNCPobQmR-46aj1GGqAe0urgHuRzvyu7EN=y2fT5pgA@mail.gmail.com>
+Subject: Re: [rft, PATCH v5 1/1] gpiolib: fix memory leak in gpiochip_setup_dev()
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Zeng Heng <zengheng4@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -68,42 +66,196 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 6:56 PM Andy Shevchenko
+On Fri, Nov 18, 2022 at 8:44 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Fri, Nov 25, 2022 at 05:48:02PM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Nov 25, 2022 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
+> From: Zeng Heng <zengheng4@huawei.com>
 >
-> ...
+> Here is a backtrace report about memory leak detected in
+> gpiochip_setup_dev():
 >
-> > Then at the subsystem level, the GPIO device struct would need a lock
-> > that would be taken by every user-space operation AND the code
-> > unregistering the device so that we don't do what you described (i.e.
-> > if there's a thread doing a read(), then let's wait until it returns
-> > before we drop the device).
+> unreferenced object 0xffff88810b406400 (size 512):
+>   comm "python3", pid 1682, jiffies 4295346908 (age 24.090s)
+>   backtrace:
+>     kmalloc_trace
+>     device_add          device_private_init at drivers/base/core.c:3361
+>                         (inlined by) device_add at drivers/base/core.c:3411
+>     cdev_device_add
+>     gpiolib_cdev_register
+>     gpiochip_setup_dev
+>     gpiochip_add_data_with_key
 >
-> It's called a reference counting, basically you need to get device and then
-> put when it makes sense.
+> gcdev_register() & gcdev_unregister() would call device_add() &
+> device_del() (no matter CONFIG_GPIO_CDEV is enabled or not) to
+> register/unregister device.
+>
+> However, if device_add() succeeds, some resource (like
+> struct device_private allocated by device_private_init())
+> is not released by device_del().
+>
+> Therefore, after device_add() succeeds by gcdev_register(), it
+> needs to call put_device() to release resource in the error handle
+> path.
+>
+> Here we move forward the register of release function, and let it
+> release every piece of resource by put_device() instead of kfree().
+>
+> While at it, fix another subtle issue, i.e. when gc->ngpio is equal
+> to 0, we still call kcalloc() and, in case of further error, kfree()
+> on the ZERO_PTR pointer, which is not NULL. It's not a bug per se,
+> but rather waste of the resources and potentially wrong expectation
+> about contents of the gdev->descs variable.
+>
+> Fixes: 159f3cd92f17 ("gpiolib: Defer gpio device setup until after gpiolib initialization")
+> Signed-off-by: Zeng Heng <zengheng4@huawei.com>
+> Co-developed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> changes in v5 (done by Andy):
+>   - refactored to avoid double checks on the same conditionals
+>   - moved kcalloc() after validating its parameter
+>   - compiled tested only by me (Andy)
+> changes in v4:
+>   - add gpiochip_print_register_fail()
+> changes in v3:
+>   - use put_device() instead of kfree() explicitly
+> changes in v2:
+>   - correct fixes tag
+>
+>  drivers/gpio/gpiolib.c | 42 ++++++++++++++++++++++++++----------------
+>  1 file changed, 26 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index caa747fdcb72..119c9c3a2a50 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -580,12 +580,13 @@ static int gpiochip_setup_dev(struct gpio_device *gdev)
+>         if (ret)
+>                 return ret;
+>
+> +       /* From this point, the .release() function cleans up gpio_device */
+> +       gdev->dev.release = gpiodevice_release;
+> +
+>         ret = gpiochip_sysfs_register(gdev);
+>         if (ret)
+>                 goto err_remove_device;
+>
+> -       /* From this point, the .release() function cleans up gpio_device */
+> -       gdev->dev.release = gpiodevice_release;
+>         dev_dbg(&gdev->dev, "registered GPIOs %d to %d on %s\n", gdev->base,
+>                 gdev->base + gdev->ngpio - 1, gdev->chip->label ? : "generic");
+>
+> @@ -651,10 +652,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>         struct fwnode_handle *fwnode = NULL;
+>         struct gpio_device *gdev;
+>         unsigned long flags;
+> -       int base = gc->base;
+>         unsigned int i;
+> +       u32 ngpios = 0;
+> +       int base = 0;
+>         int ret = 0;
+> -       u32 ngpios;
+>
+>         /* If the calling driver did not initialize firmware node, do it here */
+>         if (gc->fwnode)
+> @@ -696,17 +697,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>         else
+>                 gdev->owner = THIS_MODULE;
+>
+> -       gdev->descs = kcalloc(gc->ngpio, sizeof(gdev->descs[0]), GFP_KERNEL);
+> -       if (!gdev->descs) {
+> -               ret = -ENOMEM;
+> -               goto err_free_dev_name;
+> -       }
+> -
+>         /*
+>          * Try the device properties if the driver didn't supply the number
+>          * of GPIO lines.
+>          */
+> -       if (gc->ngpio == 0) {
+> +       ngpios = gc->ngpio;
+> +       if (ngpios == 0) {
+>                 ret = device_property_read_u32(&gdev->dev, "ngpios", &ngpios);
+>                 if (ret == -ENODATA)
+>                         /*
+> @@ -717,7 +713,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>                          */
+>                         ngpios = 0;
+>                 else if (ret)
+> -                       goto err_free_descs;
+> +                       goto err_free_dev_name;
+>
+>                 gc->ngpio = ngpios;
+>         }
+> @@ -725,13 +721,19 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>         if (gc->ngpio == 0) {
+>                 chip_err(gc, "tried to insert a GPIO chip with zero lines\n");
+>                 ret = -EINVAL;
+> -               goto err_free_descs;
+> +               goto err_free_dev_name;
+>         }
+>
+>         if (gc->ngpio > FASTPATH_NGPIO)
+>                 chip_warn(gc, "line cnt %u is greater than fast path cnt %u\n",
+>                           gc->ngpio, FASTPATH_NGPIO);
+>
+> +       gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
+> +       if (!gdev->descs) {
+> +               ret = -ENOMEM;
+> +               goto err_free_dev_name;
+> +       }
+> +
+>         gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
+>         if (!gdev->label) {
+>                 ret = -ENOMEM;
+> @@ -750,11 +752,13 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>          * it may be a pipe dream. It will not happen before we get rid
+>          * of the sysfs interface anyways.
+>          */
+> +       base = gc->base;
+>         if (base < 0) {
+>                 base = gpiochip_find_base(gc->ngpio);
+>                 if (base < 0) {
+> -                       ret = base;
+>                         spin_unlock_irqrestore(&gpio_lock, flags);
+> +                       ret = base;
+> +                       base = 0;
+>                         goto err_free_label;
+>                 }
+>                 /*
+> @@ -868,6 +872,11 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  err_free_gpiochip_mask:
+>         gpiochip_remove_pin_ranges(gc);
+>         gpiochip_free_valid_mask(gc);
+> +       if (gdev->dev.release) {
+> +               /* release() has been registered by gpiochip_setup_dev() */
+> +               put_device(&gdev->dev);
+> +               goto err_print_message;
+> +       }
+>  err_remove_from_list:
+>         spin_lock_irqsave(&gpio_lock, flags);
+>         list_del(&gdev->list);
+> @@ -881,13 +890,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+>  err_free_ida:
+>         ida_free(&gpio_ida, gdev->id);
+>  err_free_gdev:
+> +       kfree(gdev);
+> +err_print_message:
+>         /* failures here can mean systems won't boot... */
+>         if (ret != -EPROBE_DEFER) {
+>                 pr_err("%s: GPIOs %d..%d (%s) failed to register, %d\n", __func__,
+> -                      gdev->base, gdev->base + gdev->ngpio - 1,
+> +                      base, base + (int)ngpios - 1,
+>                        gc->label ? : "generic", ret);
+>         }
+> -       kfree(gdev);
+>         return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
+> --
+> 2.35.1
 >
 
-Andy: I am aware of struct device reference counting but this isn't
-it. You can count references all you want, but when I disconnect my
-CP2112, the USB bus calls gpiochip_remove(), struct gpio_chip * inside
-struct gpio_device is set to NULL and while the underlying struct
-device itself is still alive, the GPIO chip is no longer usable.
-
-Reference counting won't help because the device is no longer there,
-so this behavior is correct but there's an issue with user-space still
-being able to hold certain resources and we need to make sure that
-when it tries to use them, we return an error instead of crashing.
-
-I think that a good solution is to make sure, we cannot set gdev->gc
-to NULL as long as there are user-space operations in progress. After
-all, it's better to try to send a USB request to an unplugged device
-than to dereference a NULL pointer. To that end, we could have a
-user-space lock that would also be taken by gpiochip_remove().
-
-But this is still a per-subsystem solution. Most other subsystems
-suffer from the same issue.
+Queued for fixes, thanks!
 
 Bartosz
