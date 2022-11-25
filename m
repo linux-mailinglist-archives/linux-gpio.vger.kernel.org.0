@@ -2,67 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EA3C63911E
-	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 22:33:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F13B63912B
+	for <lists+linux-gpio@lfdr.de>; Fri, 25 Nov 2022 22:40:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbiKYVdi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 25 Nov 2022 16:33:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38512 "EHLO
+        id S230053AbiKYVkp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 25 Nov 2022 16:40:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230075AbiKYVdg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 16:33:36 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E35B26122;
-        Fri, 25 Nov 2022 13:33:34 -0800 (PST)
+        with ESMTP id S229806AbiKYVko (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 25 Nov 2022 16:40:44 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C1557B56
+        for <linux-gpio@vger.kernel.org>; Fri, 25 Nov 2022 13:40:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669412014; x=1700948014;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pY4yQrfrdHBInr63yt3UqXabjin1uiUkELI23CKrcLE=;
-  b=mTHbmqLxMhi0AYLgky+2AN2eb1VC6CvEKJSjtIpQFadfd9w9sw8P4K3G
-   AjtqIS2QF0FnAIOTHUIlSEN0CpkvhHAYnkSDfUlWWz64pwuYfNWbuR03I
-   yARrVpnce1D8lLVIZBrOQzubdqgXCXSFEDoQDr8e6lKKCqDFaNwLfRK2h
-   6A/et0eZF70KNu4a8MD9HPNAp4fetF6JhOqmZ0h3ncyQ50K8LWWIz+CBE
-   ImVURgcaaPj/IxRWfJEgBsz09AhZPHkTRUIDc83XLwgwKEHWyo3MFD2WN
-   cOpJhr2+GLXUGUbomLxJWf/dedlS/8xEbfZ9VnLJxqMzwJghhzTLAk78V
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="341447330"
+  t=1669412443; x=1700948443;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=atuZ5imtxhJSKOevUZ7LXDHtgbW8YPtXbKYHIQUAZUo=;
+  b=QXXaF3sneJ9Rpl2gEpSz3iNDUsGW3jDUGVABgjopakeaaag3DphJi6i/
+   pTwGZ3zZLV8ETmhZJmBeM51IAavUck5o4aawphxjxLDjXgkNAjTegGdRi
+   JhXkJHX9C8U3InGPq+dSAaz5WdQ1D6K4lkEi3dpnzN9HxGWayAq4lyQlH
+   vieN0aptzf94/PmZJ6HUOZZHjfpvX7emaiAUJJRFTY0Gkz7jKWaysx7ey
+   7NAeMwpNC6SkiJ/8KwyejsE0fho4gf9YFFPVLCVDi19gmCfoX2aCzFtu8
+   GzPBQ4fZPdn6VqRDIza57zxSpQN0XDrDL3zjaTEQtxpT76fYTJ/+MSjft
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="302114176"
 X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
-   d="scan'208";a="341447330"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 13:33:33 -0800
+   d="scan'208";a="302114176"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Nov 2022 13:40:43 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="748696380"
+X-IronPort-AV: E=McAfee;i="6500,9779,10542"; a="817235331"
 X-IronPort-AV: E=Sophos;i="5.96,194,1665471600"; 
-   d="scan'208";a="748696380"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 25 Nov 2022 13:33:32 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1oygKA-00HQnO-2L;
-        Fri, 25 Nov 2022 23:33:30 +0200
-Date:   Fri, 25 Nov 2022 23:33:30 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: cdev: fix NULL-pointer dereferences
-Message-ID: <Y4E0qoab4sbBY5la@smile.fi.intel.com>
-References: <20221125153257.528826-1-brgl@bgdev.pl>
- <Y4DsTxPH1tv5eEwf@sol>
- <CAMRc=Me83-_oiGEmwy4BUrzLEMT6ZsoMwWYsb6iXwg19yHMHdQ@mail.gmail.com>
- <Y4EBubusGqo4IroP@smile.fi.intel.com>
- <CAMRc=MdHtJC4Tmn3KgcnefmHTrpXy=ROAAXJLN9uv=ouJ-hQSw@mail.gmail.com>
+   d="scan'208";a="817235331"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 25 Nov 2022 13:40:42 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oygR7-0005XE-1R;
+        Fri, 25 Nov 2022 21:40:41 +0000
+Date:   Sat, 26 Nov 2022 05:40:17 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 7963ba02b2d1de681ba1ee33060db42eb4cf4c07
+Message-ID: <63813641.5AD08B7Mgbou4uHH%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdHtJC4Tmn3KgcnefmHTrpXy=ROAAXJLN9uv=ouJ-hQSw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -71,49 +63,79 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 10:03:06PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Nov 25, 2022 at 6:56 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Fri, Nov 25, 2022 at 05:48:02PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Nov 25, 2022 at 5:24 PM Kent Gibson <warthog618@gmail.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 7963ba02b2d1de681ba1ee33060db42eb4cf4c07  gpio: pcf857x: Convert to i2c's .probe_new()
 
-...
+elapsed time: 2166m
 
-> > > Then at the subsystem level, the GPIO device struct would need a lock
-> > > that would be taken by every user-space operation AND the code
-> > > unregistering the device so that we don't do what you described (i.e.
-> > > if there's a thread doing a read(), then let's wait until it returns
-> > > before we drop the device).
-> >
-> > It's called a reference counting, basically you need to get device and then
-> > put when it makes sense.
-> 
-> Andy: I am aware of struct device reference counting but this isn't
-> it. You can count references all you want, but when I disconnect my
-> CP2112, the USB bus calls gpiochip_remove(), struct gpio_chip * inside
-> struct gpio_device is set to NULL and while the underlying struct
-> device itself is still alive, the GPIO chip is no longer usable.
-> 
-> Reference counting won't help because the device is no longer there,
-> so this behavior is correct but there's an issue with user-space still
-> being able to hold certain resources and we need to make sure that
-> when it tries to use them, we return an error instead of crashing.
+configs tested: 58
+configs skipped: 2
 
-Thank you for the detailed explanation of the case.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> I think that a good solution is to make sure, we cannot set gdev->gc
-> to NULL as long as there are user-space operations in progress. After
-> all, it's better to try to send a USB request to an unplugged device
-> than to dereference a NULL pointer. To that end, we could have a
-> user-space lock that would also be taken by gpiochip_remove().
-> 
-> But this is still a per-subsystem solution. Most other subsystems
-> suffer from the same issue.
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+arc                  randconfig-r043-20221124
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+s390                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+sh                               allmodconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a001
+x86_64                        randconfig-a004
+x86_64                        randconfig-a006
+i386                          randconfig-a003
+powerpc                           allnoconfig
+i386                          randconfig-a005
+mips                             allyesconfig
+powerpc                          allmodconfig
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+i386                                defconfig
+i386                             allyesconfig
+x86_64                            allnoconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
 
-Yeah, many subsystems are not ready for hotplug...
+clang tested configs:
+riscv                randconfig-r042-20221124
+hexagon              randconfig-r041-20221124
+hexagon              randconfig-r045-20221124
+s390                 randconfig-r044-20221124
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                        randconfig-a012
+x86_64                        randconfig-a016
+x86_64                        randconfig-a014
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+x86_64                        randconfig-a005
+i386                          randconfig-a004
+i386                          randconfig-a006
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
