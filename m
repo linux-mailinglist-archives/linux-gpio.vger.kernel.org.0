@@ -2,136 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0EFA63981E
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Nov 2022 20:16:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E958639854
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Nov 2022 22:54:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbiKZTQk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Nov 2022 14:16:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
+        id S229568AbiKZVyL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Nov 2022 16:54:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiKZTQj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Nov 2022 14:16:39 -0500
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17FC140ED;
-        Sat, 26 Nov 2022 11:16:38 -0800 (PST)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 207185C0080;
-        Sat, 26 Nov 2022 14:16:38 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Sat, 26 Nov 2022 14:16:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
-        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
-         s=fm2; t=1669490198; x=1669576598; bh=M7EPshB7W7XmXZsnaKJ1Jh7xA
-        ayYTnVyi38A+Cdf158=; b=fiipHUSG5HUsY0rj9sFAIRYo91pZ/V2qyYK2a2mpZ
-        5ejmy8kAXmGVksqWLdTaVW9BtZTeWn8zVCig/ditGo7qlLEQ/otdyXGV3ySNGgRA
-        GSE3IX42/LMlHimDnrHXMciqhd/ZGVHrP/DR8hW5vpo1wFC6Zmce/gBdjbM1zu+j
-        y2dBrPASdAlquLXqXuPiWBGWj/g6dGpm9a/DIybRkClBVlQ5K0FDri52lR0AvjcS
-        K8BVopYn/+nBAQkC2o5+nJJIQDZcuVLJoL352tXKEtEMQ//Vlx2a21A+lvEKW6Jw
-        irgjYyy9/0rkPHPvHM8SAez6Vv2FbDhXAvjPXXe/ixncA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:message-id
-        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
-        1669490198; x=1669576598; bh=M7EPshB7W7XmXZsnaKJ1Jh7xAayYTnVyi38
-        A+Cdf158=; b=cBLL/19fpvDhvBNLNAEZ4w+zUMsiseZENBA8wPfLjvvp0g5eK3w
-        VPNz0VqiwnA+NO4I7Q51XDEM+h8Tb/Cxshso/9JvxEDh7IsPj5vbqgXr6tEoRSmB
-        PRTY4Vi6YBcS1/obv0/dnhFRpjBv2XO6sJadbIdsIhmEHWqmttN+Zenz7dmMSCo6
-        ZEk/207s1cgoLzNBx5tqR898FMf/Ln4lqJ6ucNxrgo/emUJIsN7Jw72zoMWNj74s
-        7y4NF9EhIEe2ClzFS8DTvOr1QuescgmnA9ae5W06+Gx6Bj+aTEH5RWUxLUIHqaB4
-        5q5zNqOLVrTuJC59gb8dADdKRAQvfTHNJxw==
-X-ME-Sender: <xms:FWaCY6CBGe6KXjhlqeewLQIx_vB18FCYYAPcjT5m0Z1mTjgVgDprwQ>
-    <xme:FWaCY0gNyNKhj6Fiy1XJVV5RcL9MyLaovz3bRW80wbODHJBOS-jnAoFQsNMCeuARK
-    PYhkoAhFW2ssZUr7g>
-X-ME-Received: <xmr:FWaCY9mv3CCKZDBtd2maxAV3g-JAr8mcB0plToVHHXFyxEt_Vu65eidXCZu2gXlIqpixuHH5Sc0JDNCfcaTCkAebKDzhpqJ45tCdW1TbJ_mj9-mTmiY7Pu2VrmiDqWllvbB6uA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrieejgdduvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
-    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
-    grthhtvghrnhepkeevlefhjeeuleeltedvjedvfeefteegleehueejffehgffffeekhefh
-    hfekkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
-X-ME-Proxy: <xmx:FWaCY4xB49LAJM29IXKBIpDuvKt1QYSp_BZlhpztZz7ZosxPWivNew>
-    <xmx:FWaCY_R0-gh013bc0SxG-bvs3tRwEmT2BvmO1rAPxlopAo1K4n5u-Q>
-    <xmx:FWaCYzagjcFvVu5Xi7DNLTNOeYMZ7OxPlJXVqr2tvk-3natwzkRnpQ>
-    <xmx:FmaCY4R57ws_sMay55q3zvyDq1SZoKvggCk07VsTy1TjOsac4VLExg>
-Feedback-ID: i0ad843c9:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 26 Nov 2022 14:16:37 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     Fabien Poussin <fabien.poussin@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-Subject: [PATCH] pinctrl: sunxi: d1: Add CAN bus pinmuxes
-Date:   Sat, 26 Nov 2022 13:16:36 -0600
-Message-Id: <20221126191636.6673-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.37.4
+        with ESMTP id S229554AbiKZVyK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Nov 2022 16:54:10 -0500
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC0217884
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Nov 2022 13:54:09 -0800 (PST)
+Received: by mail-yb1-xb33.google.com with SMTP id d128so8969302ybf.10
+        for <linux-gpio@vger.kernel.org>; Sat, 26 Nov 2022 13:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zqe81NVe4wdrr2qX6L4lKfxkGOclAd0cUZt1hvJHh6k=;
+        b=KSesdFAk+hx2US2lXbKFOn0Csy1YQU/Q4fmPt3IHZVJjZQh6iVjthC8P0w9jg8Weim
+         Nzxu6WUEVv2q/uHzt0SwvOZViEwISSJW+DSBA8jsnM4qt/56XSpR5l23VkH+cxImmgLU
+         39e0RqgGVD3EG49hxlE4QkbCmSixA4q17vObjYhW39wAZgn6vclsseAnpff6Pg7uDK8Z
+         zs0yxHw7TkG92GRjJOd3S01JujZqsZtTyEBznfSjOiD6J49b6phBn/HEZVDeZCZQtecx
+         3MnevQ2ZREIW455Qx4UcJiRG4N4Rx/g/BWdFCRC11O2VNT+l2Md1ZGhxNQJnebIEuc4T
+         M5tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Zqe81NVe4wdrr2qX6L4lKfxkGOclAd0cUZt1hvJHh6k=;
+        b=y+uzGt9yLGMefEju9qHOlMNAtw/9OitPOFvvuiXXdbk4v7z0Wm9eJwzbZTOdmPt43q
+         3FpjldukShv3dGZTZekfxNEg/EpXpOhkllgTNNmDyIxKa2XMo+DmU5r0LFpc9EnX6kyY
+         3TvzOXvlsco7IHvy0pvie2+cXK0f54Vko/BOGSNnHhvqlxO7pjxe5i3ZiaE5JJ07F7D1
+         6X+8uZucEWKz5cXQ05Gu96t4DyR8xOzWPDomo0+12oC/JfZ37ticcf0aN1N0fltJXX1N
+         cRPue7GJl+aQb1GtK1lOCdUOjXZaZHRFS5oMod/Be4QeC/A/tS04dnsHOg2/7FEhKnHh
+         uxEQ==
+X-Gm-Message-State: ANoB5pm7mvBpcQQ2bcPTVQ/CMATKp28ak33uYxABFpG8bNuLNYT5U4CU
+        /CEnkNCLrcSrMP0/eokuRebqaV0RpkTssv8CZnaIew==
+X-Google-Smtp-Source: AA0mqf78FRQ1441202IFUwXz8NzZChqqyuytSPBEfAvEooJvd057yNmqCvNaVpwYu33ZVh/g47KT0G8ilKiWDJ9YkDE=
+X-Received: by 2002:a25:c7c8:0:b0:6bd:1ca1:afd6 with SMTP id
+ w191-20020a25c7c8000000b006bd1ca1afd6mr40579650ybe.43.1669499648876; Sat, 26
+ Nov 2022 13:54:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221123152001.694546-1-abel.vesa@linaro.org> <20221123152001.694546-3-abel.vesa@linaro.org>
+ <CACRpkdZtkHCkfUAcezSJvmei=HOezK6oyx+4C5kBrEtU+vAB-g@mail.gmail.com>
+ <fecb2dd6-9be2-78dc-4598-cc338fbdc2a2@linaro.org> <CACRpkdZJaz9BEorQa7dTNkgTkwZjJNB-MWrpKFxHRgdsf3xJww@mail.gmail.com>
+ <8602cacd-f552-e843-5c17-681b099069a3@linaro.org>
+In-Reply-To: <8602cacd-f552-e843-5c17-681b099069a3@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Sat, 26 Nov 2022 22:53:57 +0100
+Message-ID: <CACRpkdbqjNJH_QvWyEPceUUxRQ2tOpErNOWA0rg5GNwq7PfUFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,tlmm-common: document
+ i2c pull property
+To:     neil.armstrong@linaro.org
+Cc:     Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Fabien Poussin <fabien.poussin@gmail.com>
+On Fri, Nov 25, 2022 at 1:40 PM <neil.armstrong@linaro.org> wrote:
 
-The D1 pin controller contains muxes for two CAN buses. While the CAN
-bus controllers are only documented for the T113 SoC, the pin controller
-is the same across all SoC variants.
+> As I understood, it enables an "I2C resistor" on the pin, removing the need
+> of an external pull-up resistor on the line.
+>
+> I assume the classical pull-up bias is not strong enough to replace an actual
+> resistor on the PCB.
 
-Signed-off-by: Fabien Poussin <fabien.poussin@gmail.com>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
+In that case I think this should be an argument to bias-pull-up like:
 
- drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c | 4 ++++
- 1 file changed, 4 insertions(+)
+bias-pull-up = <360000>;
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-index 40858b881298..9cc94be1046d 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
-@@ -47,6 +47,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
- 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN2 */
- 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D18 */
- 		SUNXI_FUNCTION(0x7, "uart4"),		/* TX */
-+		SUNXI_FUNCTION(0x8, "can0"),		/* TX */
- 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 2)),
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
- 		SUNXI_FUNCTION(0x0, "gpio_in"),
-@@ -57,6 +58,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
- 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN0 */
- 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D19 */
- 		SUNXI_FUNCTION(0x7, "uart4"),		/* RX */
-+		SUNXI_FUNCTION(0x8, "can0"),		/* RX */
- 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 3)),
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 4),
- 		SUNXI_FUNCTION(0x0, "gpio_in"),
-@@ -67,6 +69,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
- 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN1 */
- 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D20 */
- 		SUNXI_FUNCTION(0x7, "uart5"),		/* TX */
-+		SUNXI_FUNCTION(0x8, "can1"),		/* TX */
- 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 4)),
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
- 		SUNXI_FUNCTION(0x0, "gpio_in"),
-@@ -77,6 +80,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
- 		SUNXI_FUNCTION(0x5, "pwm0"),
- 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D21 */
- 		SUNXI_FUNCTION(0x7, "uart5"),		/* RX */
-+		SUNXI_FUNCTION(0x8, "can1"),		/* RX */
- 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 5)),
- 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
- 		SUNXI_FUNCTION(0x0, "gpio_in"),
--- 
-2.37.4
+Nominally the pull up is in ohms:
 
+  bias-pull-up:
+    oneOf:
+      - type: boolean
+      - $ref: /schemas/types.yaml#/definitions/uint32
+    description: pull up the pin. Takes as optional argument on hardware
+      supporting it the pull strength in Ohm.
+
+Then the driver can choose to shunt in this extra I2C resistance
+from the resistance passed as argument. So no special property
+is needed, provided you can get an idea about the resistance
+provided here.
+
+Yours,
+Linus Walleij
