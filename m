@@ -2,131 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A7F6396D4
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Nov 2022 16:44:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0EFA63981E
+	for <lists+linux-gpio@lfdr.de>; Sat, 26 Nov 2022 20:16:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbiKZPoI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Nov 2022 10:44:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
+        id S229464AbiKZTQk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 26 Nov 2022 14:16:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiKZPoI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Nov 2022 10:44:08 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E0EF7A;
-        Sat, 26 Nov 2022 07:44:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669477447; x=1701013447;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=TYZva1qhZaDDzx7ssD6565IlpCg24ayIFbcaC7tY8Tc=;
-  b=afaV5wieNPUjxu0caJC6JdakAXQOqaG+mJP11E9sBOfdvxW/FCdDmoSq
-   uszGkpjb5nf3De548PRwyr8tA0gjYkdzZijT5eCkTI9MaUL7wuDEK5FNd
-   DHxxEedinEuG50v1wryTy8tuS2GfxLpPE0gycyCpJAkwIvhrwC+gn8YZP
-   vqGEDAZKZz5uKM+4zWczaOB+RJUrHWVl1v9DiPG/G1MsaoSG/5NPhScuG
-   JcNKVf2MOUenZM/iTJdfierEPIRgcSWgA7CVeokYeMdRvPe3t3BpDN/xD
-   57LDEQ+dPBOukc9S9pF7aZDWoHCdzdL+VmK/32YN6VaBwDrOJGpoZ9vaZ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10543"; a="376747252"
-X-IronPort-AV: E=Sophos;i="5.96,196,1665471600"; 
-   d="scan'208";a="376747252"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Nov 2022 07:44:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10543"; a="620587303"
-X-IronPort-AV: E=Sophos;i="5.96,196,1665471600"; 
-   d="scan'208";a="620587303"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga006.jf.intel.com with ESMTP; 26 Nov 2022 07:43:54 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1oyxLL-000Bco-1n;
-        Sat, 26 Nov 2022 17:43:51 +0200
-Date:   Sat, 26 Nov 2022 17:43:51 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        alsa-devel@alsa-project.org, linux-staging@lists.linux.dev,
-        linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-i2c@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-leds@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-serial@vger.kernel.org, linux-input@vger.kernel.org,
-        Grant Likely <grant.likely@linaro.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-watchdog@vger.kernel.org, chrome-platform@lists.linux.dev,
-        linux-actions@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        gregkh@linuxfoundation.org, linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Purism Kernel Team <kernel@puri.sm>,
-        patches@opensource.cirrus.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Wolfram Sang <wsa@kernel.org>, linux-crypto@vger.kernel.org,
-        kernel@pengutronix.de, netdev@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Message-ID: <Y4I0N3KpU/LSJYpd@smile.fi.intel.com>
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221122185818.3740200d@jic23-huawei>
- <20221122201654.5rdaisqho33buibj@pengutronix.de>
+        with ESMTP id S229462AbiKZTQj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Nov 2022 14:16:39 -0500
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17FC140ED;
+        Sat, 26 Nov 2022 11:16:38 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 207185C0080;
+        Sat, 26 Nov 2022 14:16:38 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Sat, 26 Nov 2022 14:16:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        cc:cc:content-transfer-encoding:date:date:from:from:in-reply-to
+        :message-id:mime-version:reply-to:sender:subject:subject:to:to;
+         s=fm2; t=1669490198; x=1669576598; bh=M7EPshB7W7XmXZsnaKJ1Jh7xA
+        ayYTnVyi38A+Cdf158=; b=fiipHUSG5HUsY0rj9sFAIRYo91pZ/V2qyYK2a2mpZ
+        5ejmy8kAXmGVksqWLdTaVW9BtZTeWn8zVCig/ditGo7qlLEQ/otdyXGV3ySNGgRA
+        GSE3IX42/LMlHimDnrHXMciqhd/ZGVHrP/DR8hW5vpo1wFC6Zmce/gBdjbM1zu+j
+        y2dBrPASdAlquLXqXuPiWBGWj/g6dGpm9a/DIybRkClBVlQ5K0FDri52lR0AvjcS
+        K8BVopYn/+nBAQkC2o5+nJJIQDZcuVLJoL352tXKEtEMQ//Vlx2a21A+lvEKW6Jw
+        irgjYyy9/0rkPHPvHM8SAez6Vv2FbDhXAvjPXXe/ixncA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:message-id
+        :mime-version:reply-to:sender:subject:subject:to:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+        1669490198; x=1669576598; bh=M7EPshB7W7XmXZsnaKJ1Jh7xAayYTnVyi38
+        A+Cdf158=; b=cBLL/19fpvDhvBNLNAEZ4w+zUMsiseZENBA8wPfLjvvp0g5eK3w
+        VPNz0VqiwnA+NO4I7Q51XDEM+h8Tb/Cxshso/9JvxEDh7IsPj5vbqgXr6tEoRSmB
+        PRTY4Vi6YBcS1/obv0/dnhFRpjBv2XO6sJadbIdsIhmEHWqmttN+Zenz7dmMSCo6
+        ZEk/207s1cgoLzNBx5tqR898FMf/Ln4lqJ6ucNxrgo/emUJIsN7Jw72zoMWNj74s
+        7y4NF9EhIEe2ClzFS8DTvOr1QuescgmnA9ae5W06+Gx6Bj+aTEH5RWUxLUIHqaB4
+        5q5zNqOLVrTuJC59gb8dADdKRAQvfTHNJxw==
+X-ME-Sender: <xms:FWaCY6CBGe6KXjhlqeewLQIx_vB18FCYYAPcjT5m0Z1mTjgVgDprwQ>
+    <xme:FWaCY0gNyNKhj6Fiy1XJVV5RcL9MyLaovz3bRW80wbODHJBOS-jnAoFQsNMCeuARK
+    PYhkoAhFW2ssZUr7g>
+X-ME-Received: <xmr:FWaCY9mv3CCKZDBtd2maxAV3g-JAr8mcB0plToVHHXFyxEt_Vu65eidXCZu2gXlIqpixuHH5Sc0JDNCfcaTCkAebKDzhpqJ45tCdW1TbJ_mj9-mTmiY7Pu2VrmiDqWllvbB6uA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrieejgdduvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufgrmhhuvghl
+    ucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecuggftrf
+    grthhtvghrnhepkeevlefhjeeuleeltedvjedvfeefteegleehueejffehgffffeekhefh
+    hfekkeegnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epshgrmhhuvghlsehshhholhhlrghnugdrohhrgh
+X-ME-Proxy: <xmx:FWaCY4xB49LAJM29IXKBIpDuvKt1QYSp_BZlhpztZz7ZosxPWivNew>
+    <xmx:FWaCY_R0-gh013bc0SxG-bvs3tRwEmT2BvmO1rAPxlopAo1K4n5u-Q>
+    <xmx:FWaCYzagjcFvVu5Xi7DNLTNOeYMZ7OxPlJXVqr2tvk-3natwzkRnpQ>
+    <xmx:FmaCY4R57ws_sMay55q3zvyDq1SZoKvggCk07VsTy1TjOsac4VLExg>
+Feedback-ID: i0ad843c9:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 26 Nov 2022 14:16:37 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Chen-Yu Tsai <wens@csie.org>,
+        Jernej Skrabec <jernej.skrabec@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     Fabien Poussin <fabien.poussin@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH] pinctrl: sunxi: d1: Add CAN bus pinmuxes
+Date:   Sat, 26 Nov 2022 13:16:36 -0600
+Message-Id: <20221126191636.6673-1-samuel@sholland.org>
+X-Mailer: git-send-email 2.37.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221122201654.5rdaisqho33buibj@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 09:16:54PM +0100, Uwe Kleine-König wrote:
-> On Tue, Nov 22, 2022 at 06:58:18PM +0000, Jonathan Cameron wrote:
+From: Fabien Poussin <fabien.poussin@gmail.com>
 
-> > Queued all of the below:
-> > with one tweaked as per your suggestion and the highlighted one dropped on basis
-> > I was already carrying the equivalent - as you pointed out.
-> > 
-> > I was already carrying the required dependency.
-> > 
-> > Includes the IIO ones in staging.
-> > 
+The D1 pin controller contains muxes for two CAN buses. While the CAN
+bus controllers are only documented for the T113 SoC, the pin controller
+is the same across all SoC variants.
 
-> > p.s. I perhaps foolishly did this in a highly manual way so as to
-> > also pick up Andy's RB.  So might have dropped one...
-> 
-> You could have done:
-> 
-> 	H=$(git rev-parse @)
-> 	b4 am -P 49-190 20221118224540.619276-1-uwe@kleine-koenig.org
-> 	git am ...
-> 	git filter-branch -f --msg-filter "grep -v 'Signed-off-by: Jonathan'; echo 'Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>'; echo 'Signed-off-by: Jonathan Cameron <jic23@kernel.org>'" $H..
-> 
-> (untested, but you get the idea).
+Signed-off-by: Fabien Poussin <fabien.poussin@gmail.com>
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
 
-That's, for example (just last from the history as is), how I usually do it
-(tested):
+ drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- git filter-branch --msg-filter 'sed -e "/Signed-off-by: Andy Shevchenko/ a Tested-by: Daniel Scally <dan.scally@ideasonboard.com>"' -f HEAD~4..HEAD
-
-
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
+index 40858b881298..9cc94be1046d 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun20i-d1.c
+@@ -47,6 +47,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
+ 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN2 */
+ 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D18 */
+ 		SUNXI_FUNCTION(0x7, "uart4"),		/* TX */
++		SUNXI_FUNCTION(0x8, "can0"),		/* TX */
+ 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 2)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
+ 		SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -57,6 +58,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
+ 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN0 */
+ 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D19 */
+ 		SUNXI_FUNCTION(0x7, "uart4"),		/* RX */
++		SUNXI_FUNCTION(0x8, "can0"),		/* RX */
+ 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 3)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 4),
+ 		SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -67,6 +69,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
+ 		SUNXI_FUNCTION(0x5, "i2s2_din"),	/* DIN1 */
+ 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D20 */
+ 		SUNXI_FUNCTION(0x7, "uart5"),		/* TX */
++		SUNXI_FUNCTION(0x8, "can1"),		/* TX */
+ 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 4)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 5),
+ 		SUNXI_FUNCTION(0x0, "gpio_in"),
+@@ -77,6 +80,7 @@ static const struct sunxi_desc_pin d1_pins[] = {
+ 		SUNXI_FUNCTION(0x5, "pwm0"),
+ 		SUNXI_FUNCTION(0x6, "lcd0"),		/* D21 */
+ 		SUNXI_FUNCTION(0x7, "uart5"),		/* RX */
++		SUNXI_FUNCTION(0x8, "can1"),		/* RX */
+ 		SUNXI_FUNCTION_IRQ_BANK(0xe, 0, 5)),
+ 	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
+ 		SUNXI_FUNCTION(0x0, "gpio_in"),
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.37.4
 
