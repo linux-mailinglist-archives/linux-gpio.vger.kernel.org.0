@@ -2,73 +2,154 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F3F7639D71
-	for <lists+linux-gpio@lfdr.de>; Sun, 27 Nov 2022 22:59:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DA89639D72
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Nov 2022 23:00:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbiK0V7q (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 27 Nov 2022 16:59:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43000 "EHLO
+        id S229563AbiK0WAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Nov 2022 17:00:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbiK0V7p (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Nov 2022 16:59:45 -0500
-Received: from smtp.smtpout.orange.fr (smtp-17.smtpout.orange.fr [80.12.242.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7AEB8DECB
-        for <linux-gpio@vger.kernel.org>; Sun, 27 Nov 2022 13:59:44 -0800 (PST)
-Received: from pop-os.home ([86.243.100.34])
-        by smtp.orange.fr with ESMTPA
-        id zPZLoGIZNzQOKzPZLocc9q; Sun, 27 Nov 2022 22:52:12 +0100
-X-ME-Helo: pop-os.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 27 Nov 2022 22:52:12 +0100
-X-ME-IP: 86.243.100.34
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH] gpio: Do not include <linux/kernel.h> when not really needed.
-Date:   Sun, 27 Nov 2022 22:52:10 +0100
-Message-Id: <3f75784c57dc0682b5e1758daddd93fee6bb4b27.1669585920.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229515AbiK0WAq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Nov 2022 17:00:46 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAF7DECB
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Nov 2022 14:00:44 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id n186so9818731oih.7
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Nov 2022 14:00:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fSqT2ziZe11V4stP6hX7PoNGl+KrR2XZl2qyRP90t9E=;
+        b=mRH7eCr3oQl29U3axHsnZy9kt+hpnjU3+26wwZzQ62fzzwq5jahhc9zoYYtexhQLp4
+         Zcab+JQ4eg4qnDt2gWPqVy+SagbQejlyH+Pk64fAoNjrxdbw9ol1VsanTAHv0NSuB7We
+         QA6ZlzD7qE6cXyBTK23vdfWEAKpGzirCMGoIrQg/CSCGIUICaqjO52w5Qu+xR8bsWhuv
+         r58TZdLCxYisjUSaYgvRlc3nO9TStlYVhvjifqEnEx7vRCR52Q4QedqEybYT5NGvODRQ
+         Hf26M0aQxSCBj29Y2WAeIA4a2tKf7sS8/fKu4X3/i4updlPZJnpTxo+IirYeW4dIrOPK
+         n+Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fSqT2ziZe11V4stP6hX7PoNGl+KrR2XZl2qyRP90t9E=;
+        b=EVHmfbPzwnntB2M6oDnQwgP4eTeH3vsfo8dSzUttVn7FIderuP6mt7S+iBrR78rPfh
+         S2l7FkxITVdM2NvtxM95iSoFIpIH//Jn4Fkz8AgJAKnqCwq1VkukGsbq7TdNQytrHU/6
+         zMLL1ggjBWdpGLyGDtMvju0gNfK+uBNItFxd2DSOp9BjVqtN/6crcIPuWecAkDcNWtSK
+         qI7IlK9dBN8uJDkQyIjN4KnIenepCljNPLb2Wf0xl9cVTXHVA9ExpPJ7N5yoGZxLcFIW
+         dOdQ+CsSnTRe/RfcKyRCfbcDw2IRfuh8KFwlSLq19oUGAWWqovKLmDG2iCZX3AkUkMNe
+         RyIQ==
+X-Gm-Message-State: ANoB5pnZXrtmHl6IFOVug4Y0nm/PHFCEtVVxE4FgtqTDkk3KlwxNEals
+        fzFgWV0Glft/1BK9WbS2YKHPBQ==
+X-Google-Smtp-Source: AA0mqf6s3X073r0zxMTMDTtn3gFD1xmlZXOeyLY+X0/5kFPk+W+zyAsfcYL1MU9sZdzi3GOK5GkFjQ==
+X-Received: by 2002:a05:6808:655:b0:35a:2e4b:4c44 with SMTP id z21-20020a056808065500b0035a2e4b4c44mr15000804oih.263.1669586443496;
+        Sun, 27 Nov 2022 14:00:43 -0800 (PST)
+Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id s6-20020a4ac806000000b004a05629149bsm677606ooq.17.2022.11.27.14.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Nov 2022 14:00:42 -0800 (PST)
+Date:   Sun, 27 Nov 2022 17:00:40 -0500
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     Michael Walle <michael@walle.cc>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org
+Subject: Re: [PATCH v3 3/9] gpio: 104-dio-48e: Migrate to the regmap-irq API
+Message-ID: <Y4PeCBy/8slpMp2R@fedora>
+References: <cover.1669100542.git.william.gray@linaro.org>
+ <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
+ <Y3414YhVjqKakddV@smile.fi.intel.com>
+ <Y3ykg1Vc96Px6ovg@fedora>
+ <3a23df35a35cdba19eeb10c75b5bca97@walle.cc>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s3ya4vK15ghsrGGf"
+Content-Disposition: inline
+In-Reply-To: <3a23df35a35cdba19eeb10c75b5bca97@walle.cc>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-<linux/kernel.h> is included only for using container_of().
-Include <linux/container_of.h> instead, it is much lighter.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Not sure if the prefix should be gpio or gpiolib.
+--s3ya4vK15ghsrGGf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Let see if build-bots spot something which is inherit via kernel.h
----
- include/linux/of_gpio.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Sun, Nov 27, 2022 at 07:31:48PM +0100, Michael Walle wrote:
+> Hi,
+>=20
+> [sorry this mail was just delivered now, although it seems
+> to be sent last Tuesday.]
 
-diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-index a5166eb93437..6db627257a7b 100644
---- a/include/linux/of_gpio.h
-+++ b/include/linux/of_gpio.h
-@@ -34,7 +34,7 @@ enum of_gpio_flags {
- 
- #ifdef CONFIG_OF_GPIO
- 
--#include <linux/kernel.h>
-+#include <linux/container_of.h>
- 
- /*
-  * OF GPIO chip for memory mapped banks
--- 
-2.34.1
+Actually I just sent it today, but you're right that it seems to have a
+date of last Tuesday, so I must have configured something wrong on my
+end before I sent it (sorry).
 
+>=20
+> Am 2022-11-22 11:29, schrieb William Breathitt Gray:
+> > On Wed, Nov 23, 2022 at 05:01:53PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Nov 22, 2022 at 02:11:00AM -0500, William Breathitt Gray
+> > > wrote:
+> > > > +	/* Initialize device interrupt state */
+> > > > +	err =3D regmap_read(map, DIO48E_DISABLE_INTERRUPT, &val);
+> > > > +	if (err)
+> > > > +		return err;
+> > >=20
+> > > Use ->init_hw() callback for this.
+> >=20
+> > In a subsequent patch 7/9 we remove direct gpio_chip registration in
+> > favor of the i8255 library registration via gpio_regmap. It doesn't look
+> > like gpio_regmap_register() sets the init_hw() callback.
+> >=20
+> > Michael, do you see any issues if I introduce init_hw() to
+> > gpio_regmap_config? Or do you think this IRQ initialization belongs
+> > somewhere else?
+>=20
+> Something like the following?
+>   gpiochip->init_hw =3D config.irq_init_hw;
+>=20
+> gpiochip doesn't seem to be the correct place, gpiochip_add_irqchip()
+> is a noop for gpio-regmap, right? So using gpiochip_irqchip_init_hw()
+> seems wrong.
+>=20
+> Maybe make gpio-regmap call it on its own? But really we just connect
+> the regmap-irq to the gpiochip irqdomain.
+
+I think you're right, it feels strange to handle IRQ initialization via
+the GPIO framework. Maybe somewhere in regmap_irq might be more
+appropriate?
+
+> What is the purpose of the
+> .init_hw callback? I've looked at other drivers which use regmap-irq
+> and they all seem to just initialize the hardware in their _probe().
+>=20
+> -michael
+
+I'm not opposed to initializing the hardware in _probe(), although I can
+see merit in pushing that operation instead closer to the framework
+where the initialization is actually relevant.
+
+Andy, maybe you can shed some light about .init_hw; I think you
+introduced it to gpiolib in commit 9411e3aaa6342.
+
+William Breathitt Gray
+
+--s3ya4vK15ghsrGGf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCY4PeCAAKCRC1SFbKvhIj
+K73/AQD/c/ICZCQAd1nYvZNfmkfuslnbIWNQbkV2Pcv+42hzUQEAjZsetUe8+/Ox
+38xhXR0oZQabGUoopQu3g0lelfpQqwg=
+=vrdf
+-----END PGP SIGNATURE-----
+
+--s3ya4vK15ghsrGGf--
