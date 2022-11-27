@@ -2,85 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FB7763985D
-	for <lists+linux-gpio@lfdr.de>; Sat, 26 Nov 2022 22:59:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D19BE639AF5
+	for <lists+linux-gpio@lfdr.de>; Sun, 27 Nov 2022 14:20:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbiKZV7m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 26 Nov 2022 16:59:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53230 "EHLO
+        id S229595AbiK0NUj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 27 Nov 2022 08:20:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiKZV7l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 26 Nov 2022 16:59:41 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE709186CE
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Nov 2022 13:59:40 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-3c21d6e2f3aso11420557b3.10
-        for <linux-gpio@vger.kernel.org>; Sat, 26 Nov 2022 13:59:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=I/dQ/AL3GhIvg/IGU1TmUg1kijFekoVJBnMdB4tHzc8=;
-        b=mhl2jGiXqfl83oDCA1CRqw9XstvZ97xKDcIOgo9OGhG4fQKKOFjpjMuwWDZc8rK3C5
-         MXgbOLTKSe8QxRD393Wa5LCSXlQJsEh7PbT7CMBGglk2Jla88ZS7OmdVvfrg6YQGaC1A
-         s+W04vPdDbSZ8j+jSuryPs460b21SaDpe7ShcrnH8NKx1VEvB6VmXCwb1lJEnBr72G3A
-         FTuOoypuJDAPCnSg/omVtOG7yeErceBMn9tQ/tS2LoSksbxOdwBQ6rSnKVPk0VAk78Nr
-         2R+rP4X7Ru/ciVuysvqG9QaVFIdgxDI9jcvIIzKg29C1GzaY9rj+yKQ9YdAupJE0PAjY
-         X5Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=I/dQ/AL3GhIvg/IGU1TmUg1kijFekoVJBnMdB4tHzc8=;
-        b=2snY6QH/wAx+2bygWD0x4WMm2uTa9lMVwJLouFNP/FMbk10R0Y6YoDIPCKjROVGdQo
-         gEphhoWNZMaXTHM6t7yHWrCY5Rd5VTFiZYT3J4ucFYARPh0s5S4hJsPHVskxFxFQe+Tn
-         6NmIQvonjGugMhno85mFtsJpBW8SzsZM+9lWp8oZVUl7wE1joyIiw5m+zx4StfOAv1H6
-         adSiQtim2EcNpDo8KboufOF3tngb55xRLch5nrbeAM0AXyH0Qu1H5PnB8a64hx7u10Is
-         OJachJDVbwZrT92RYu+qXa0JZIs/RWvEcacD8Li+MnvD0xcxqvgTgMicJoB2eClKSlQP
-         F6sQ==
-X-Gm-Message-State: ANoB5plV/Eim2a0LQGwMJ9MaW3xTrpVKNoAa633aDxDKRGDprbONuuDj
-        P6AE6xvTkTFDiYNkwjYjPI55an0UsOzooTdg+5H4vA==
-X-Google-Smtp-Source: AA0mqf5HWHKZ58JKLQNVM9mMIEcgOofezD/C1oF5+FTMAsQmkLOrgsEE1hY2f/X4s9cuBF7m4EpmjOKXYlNfuwZYZQs=
-X-Received: by 2002:a81:3855:0:b0:38b:17c4:4297 with SMTP id
- f82-20020a813855000000b0038b17c44297mr24953109ywa.446.1669499980172; Sat, 26
- Nov 2022 13:59:40 -0800 (PST)
+        with ESMTP id S229631AbiK0NUi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 27 Nov 2022 08:20:38 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD03EE30
+        for <linux-gpio@vger.kernel.org>; Sun, 27 Nov 2022 05:20:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669555236; x=1701091236;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Kf+CgvxRKHPTdFrM+PyldxLiUu9O8TF5nI6nkOLjvIc=;
+  b=BgUOynhxi0L6pt9IANNvpAzEbmxThClbj7BvUoz6b9zRiny9aEDkPnbI
+   d2YhEj0S3LChX8F1LaCWofmOdRzz7ndqcU0tUqSH6jiseoxSErn1w5Xo+
+   vJHM/u7JCooFGdO0Crv6PKf/v0sCQrZabVYSwZrYpZBRSlCB1jLjl5/Sk
+   QOBfsXoQbIDr838xZU8+q9XT77uxmmqeBJCJp2bcOzK72lbWi7mpxFiOx
+   WQAXfduVvzXiJ9dY5A3axpE1oA2u0py6xGpiWi5Yk+udHt/j4FTUuJ2Rv
+   gHwUvQqH/ow+m46ymCH52/3A1MTcdaOzHi1ZjX97H4AwsTApiP24spRUF
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="314706538"
+X-IronPort-AV: E=Sophos;i="5.96,198,1665471600"; 
+   d="scan'208";a="314706538"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Nov 2022 05:20:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="817547897"
+X-IronPort-AV: E=Sophos;i="5.96,198,1665471600"; 
+   d="scan'208";a="817547897"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 27 Nov 2022 05:20:34 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ozHaD-000725-1b;
+        Sun, 27 Nov 2022 13:20:33 +0000
+Date:   Sun, 27 Nov 2022 21:19:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 94c590928e100cebb0a3cd7ddf7b566dbca311f5
+Message-ID: <638363ff.GVa8iWIceKmkQzji%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20221126191636.6673-1-samuel@sholland.org>
-In-Reply-To: <20221126191636.6673-1-samuel@sholland.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 26 Nov 2022 22:59:29 +0100
-Message-ID: <CACRpkda4rmNgM9BsTph9_f_2uX6OOEjC5NZPhBL9S9zvQBLrqw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: sunxi: d1: Add CAN bus pinmuxes
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Fabien Poussin <fabien.poussin@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Nov 26, 2022 at 8:16 PM Samuel Holland <samuel@sholland.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 94c590928e100cebb0a3cd7ddf7b566dbca311f5  Merge branch 'devel' into for-next
 
-> From: Fabien Poussin <fabien.poussin@gmail.com>
->
-> The D1 pin controller contains muxes for two CAN buses. While the CAN
-> bus controllers are only documented for the T113 SoC, the pin controller
-> is the same across all SoC variants.
->
-> Signed-off-by: Fabien Poussin <fabien.poussin@gmail.com>
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+elapsed time: 855m
 
-Patch applied so we get some linux-next rotation on this before
-the merge window. If someone protests, I can always pull it out.
+configs tested: 58
+configs skipped: 2
 
-Yours,
-Linus Walleij
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+powerpc                           allnoconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+um                             i386_defconfig
+s390                                defconfig
+um                           x86_64_defconfig
+arc                  randconfig-r043-20221127
+riscv                randconfig-r042-20221127
+x86_64                              defconfig
+s390                             allyesconfig
+s390                 randconfig-r044-20221127
+x86_64                        randconfig-a013
+x86_64                          rhel-8.3-func
+arc                              allyesconfig
+x86_64                           rhel-8.3-syz
+x86_64                    rhel-8.3-kselftests
+alpha                            allyesconfig
+ia64                             allmodconfig
+x86_64                        randconfig-a002
+m68k                             allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                               rhel-8.3
+x86_64                        randconfig-a006
+x86_64                           allyesconfig
+x86_64                        randconfig-a011
+i386                          randconfig-a001
+x86_64                        randconfig-a004
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a003
+m68k                             allmodconfig
+x86_64                        randconfig-a015
+i386                          randconfig-a005
+sh                               allmodconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                                defconfig
+i386                             allyesconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+
+clang tested configs:
+hexagon              randconfig-r045-20221127
+hexagon              randconfig-r041-20221127
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+x86_64                        randconfig-a016
+i386                          randconfig-a004
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+i386                          randconfig-a006
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
