@@ -2,113 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 730BD63A31D
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 09:32:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A265C63A32F
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 09:35:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbiK1Icu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 03:32:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
+        id S230203AbiK1IfL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 03:35:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbiK1Ict (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 03:32:49 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4885F71
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 00:32:48 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id g7so16204120lfv.5
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 00:32:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=983vZmfe7jg3PD5EB3eQ9LeCd23DV+eV1fr/DcjdUm8=;
-        b=CjVdRdltMTd1Id79iqrTL6Zur0PPWkP39IltMT39Kf03+T+sPoC+4iWi1M8cdJbUb9
-         Qh8nD2yt4fRd0gd9rH/GeAwFUb0P7Q7W83sHjOdHY8zVF3Q2G40GtKcnqCfaaLvTzBsd
-         yRYt4immw2ZPDiRAiU26EqQCmoN3h6shyYUoVmIeC5mxNLiU1oSV0NDCiN/nkcQZ6AlW
-         bd4a3nTuF7ivIZAFsVZcX/WZgMsPv0yp7GmZ0Sm/yU9nQMWPOy0eWXOXHF/lCF4bYsD4
-         DKXhrYglw6DNAm7DkBpeZXHJ9d9OT2C5HxFWqFb573XtMRpKcTvd2SYbhUMp5fZs109j
-         DXXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=983vZmfe7jg3PD5EB3eQ9LeCd23DV+eV1fr/DcjdUm8=;
-        b=2KrWRXgHHm5j6asvLWm7Mw/rtdsqiB14wvsuSrO2OqSIE7pIyWUlgKP/BkViKMtmoj
-         F6m+Xg3JksoacTGw4bBEZvoFd6bETcXVw+jPL+fMb1wDQ43bG4ZTbStcbHyhoQVxlUoZ
-         in3gIWv6FxFrzyUcftHRYk06Nmvisd3J9NGrOLUJpJ3dnAjv9CxDxd19IbFVGEEChpGN
-         Az65btoCoZPxXelhkXJFKmG726W0gcnS9iyv1Zz77Bi1eTL/DjjHXUMmYuLq29JArtnK
-         s/WtQhbbuHLx/sYmWqSkdaUxSPqcnBNTkKHlixAbY4Aw7tFgXfCVY//DCAQ+ZRfJhp8t
-         iTgQ==
-X-Gm-Message-State: ANoB5pnOZ61hg5sNexQ06J+p3x/5SZKkkvD20gXBIDwZEdXA3lsxl7+q
-        VJzSkPjuvLJ0bRlRwCNv7CdBVw==
-X-Google-Smtp-Source: AA0mqf7AFRRbcu4251GazNH8EBAc/6JlexTcxGgKBsiqYhIA67n+8prqtL2Sq/j3X5x6hAj6biLCgQ==
-X-Received: by 2002:ac2:430e:0:b0:4b4:9c0b:f4d3 with SMTP id l14-20020ac2430e000000b004b49c0bf4d3mr16235202lfh.349.1669624366437;
-        Mon, 28 Nov 2022 00:32:46 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id bf37-20020a2eaa25000000b002793cf0e9e8sm1162098ljb.122.2022.11.28.00.32.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 00:32:46 -0800 (PST)
-Message-ID: <093ea507-4c42-1af9-4896-64c1a918432e@linaro.org>
-Date:   Mon, 28 Nov 2022 09:32:45 +0100
+        with ESMTP id S229670AbiK1IfJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 03:35:09 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6389217AB2
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 00:35:08 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZbS-0006zr-L5; Mon, 28 Nov 2022 09:35:02 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZbP-000mPo-0P; Mon, 28 Nov 2022 09:34:59 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1ozZbO-000sPB-Uc; Mon, 28 Nov 2022 09:34:58 +0100
+Date:   Mon, 28 Nov 2022 09:34:58 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Biju Das <biju.das.jz@bp.renesas.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v4 2/2] drivers: pinctrl: renesas: Add RZ/G2L POEG driver
+ support
+Message-ID: <20221128083458.dxj3vsxpxa2xyxap@pengutronix.de>
+References: <20221111194059.718154-1-biju.das.jz@bp.renesas.com>
+ <20221111194059.718154-3-biju.das.jz@bp.renesas.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl
- definitions
-Content-Language: en-US
-To:     Jianlong Huang <jianlong.huang@starfivetech.com>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        linux-kernel@vger.kernel.org
-References: <20221118011108.70715-1-hal.feng@starfivetech.com>
- <20221118011108.70715-2-hal.feng@starfivetech.com>
- <eb3974a3-f715-f5b0-cac7-551af26bd17b@linaro.org>
- <08db0f3b-5222-9460-26ba-0e6380d16583@linaro.org>
- <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7ex4m54enwiwrlrh"
+Content-Disposition: inline
+In-Reply-To: <20221111194059.718154-3-biju.das.jz@bp.renesas.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/11/2022 01:48, Jianlong Huang wrote:
 
->>>> +/* aon_iomux doen */
->>>> +#define GPOEN_AON_PTC0_OE_N_4			2
->>>> +#define GPOEN_AON_PTC0_OE_N_5			3
->>>> +#define GPOEN_AON_PTC0_OE_N_6			4
->>>> +#define GPOEN_AON_PTC0_OE_N_7			5
->>>> +
->>>
->>> It looks like you add register constants to the bindings. Why? The
->>> bindings are not the place to represent hardware programming model. Not
->>> mentioning that there is no benefit in this.
->>
->> Also: this entire file should be dropped, but if it stays, you have to
->> name it matching bindings or compatible (vendor,device.h).
-> 
-> Thanks your comments.
-> These macros are used to configure pinctrl in dts, so the file should stay,
+--7ex4m54enwiwrlrh
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Why they should stay? What's the reason? If it is not a constant used by
-driver, then register values should not be placed in the bindings, so
-drop it.
+On Fri, Nov 11, 2022 at 07:40:59PM +0000, Biju Das wrote:
+> The output pins of the RZ/G2L general PWM timer (GPT) can be disabled
+> by using the port output enabling function for the GPT (POEG).
+>=20
+> This patch adds basic support using s/w control through sysfs=20
+> to enable/disable output from GPT.
+>=20
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-Best regards,
-Krzysztof
+PSA: There is nothing in this patch that is relevant for PWMs, so I'm
+marking it as "handled-elsewhere" in the PWM patchwork. I guess the
+series was sent to the PWM list to give some context for the series "Add
+support for linking gpt with poeg"
+(https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D327828&state=
+=3D*)
 
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7ex4m54enwiwrlrh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOEcq8ACgkQwfwUeK3K
+7AmdlAgAkfsScIb7tA0S4ihxTBvBI+fu8xIGm8CCLVHEO64YX9JPA8fjO/ltTLix
+LYEFPbJub89P+5oMWVOowwP1RzoxFmWL8+rE4iIc/FqvQWGvUDViEEiYO0cE6N4J
+KvFT2tO/6FE+2jbqnMYeJXw/yvVy2//hunpwDnN49cEhWMAJ35SFQK15aqiDYjns
+Pi321KgWFI63Vrz97Olz2caq5JCG3c4BkcbASB2c2GH/1gqDCiWSaDhHkdosvTWd
+QMOtwFy/mDqtLaXkXjzLGqj4CeYuz2NhJ/hoVplmyGuSYlrEJbe6y/rpR4z4YhMe
+YMIVpgxCc4pNe7BAOZ4Thp5Fs0qXAQ==
+=VL0y
+-----END PGP SIGNATURE-----
+
+--7ex4m54enwiwrlrh--
