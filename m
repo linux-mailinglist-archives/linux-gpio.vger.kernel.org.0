@@ -2,64 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1139963B130
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 19:24:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF3163B1BA
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 20:00:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233284AbiK1SYB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 13:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35346 "EHLO
+        id S232364AbiK1TAs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 14:00:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233407AbiK1SXj (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 13:23:39 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0062F67E;
-        Mon, 28 Nov 2022 10:12:51 -0800 (PST)
+        with ESMTP id S231734AbiK1TAr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 14:00:47 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6BD425280;
+        Mon, 28 Nov 2022 11:00:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669659171; x=1701195171;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xaWF9C0/0D+j8i7P82sI3ZUSgtkWKl8JwJRUvbYeeK8=;
-  b=VN4efkW/4/rPV8edTo/WptaEG7cVmMPzBzpn1p62mEye8J2DA3BSBHR+
-   715LdMFDfPPtfpfMhsQoKnTLHV+eojFRpwWBPVrd64sBuT62V37DFw+TH
-   SjAYhEAo0XA1AXoSZ9fvk/fT1uORC33kyelUc6QEQ23MVWFAHcxfGPADf
-   RedXCbfEUnmegxRipudZxkiqNh6ES/uAi8HlGGWcCCxsDhCUZXYmEt7hF
-   Hf1XblvbzvOE5kMBXovP8Ey7KIczNPOj1PeYkFOOOSPdxwiVR7QH/WOUD
-   vjpjiBi6DuXO38vgFuC16edPOA9c+70a3dey3tKLbqkJWJ/zgp2qiMdBW
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="316748383"
+  t=1669662047; x=1701198047;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=mUQHV/DcKFfPtd53tvm4FTuNIbAukvui9T3fDp+KlAc=;
+  b=cDbhoIZPo1m0xawMQXLbmewSWDUKr8XK9OICb6mF7C5rSBBrmi53Aj3m
+   dyx7wgq/obQ8+j1FEjILEb9qo5x1iWWjzxUoSbCgGGAHJxjjxAxSeY104
+   NBE0BzuPmMRYHWMitM0s8glQ1u87xCMbdWDVPE8LN58epWX7z94aE8iWD
+   fsJNJ88uFygia4vZsry60Ck9Np9WYHGeUwHW3cqW1MMk62DelO9IHN6O9
+   qJLYk7YA+4Za8PZ2VjMZHaKtRJeKrfkeBWRfBkxjq3ZNoiLEsgGcf7ZzB
+   b/eJODpF4yxN63doZFPVaX3DQnJcUgXKlpxxFGTphzOZDYmjZKqUXQAZa
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="313628916"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="316748383"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 10:11:40 -0800
+   d="scan'208";a="313628916"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 11:00:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="643486605"
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="712083610"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="643486605"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 28 Nov 2022 10:11:37 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ozibQ-001Kan-0S;
-        Mon, 28 Nov 2022 20:11:36 +0200
-Date:   Mon, 28 Nov 2022 20:11:35 +0200
+   d="scan'208";a="712083610"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 28 Nov 2022 11:00:30 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 3DE3D10E; Mon, 28 Nov 2022 21:00:57 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Brian Masney <bmasney@redhat.com>,
-        Marijn Suijten <marijn.suijten@somainline.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: Unify access to the device properties
-Message-ID: <Y4T513bRjE0dptt+@smile.fi.intel.com>
-References: <20221116141728.72491-1-andriy.shevchenko@linux.intel.com>
- <Y4EJv2gCR8nj3hHj@smile.fi.intel.com>
- <CAMRc=MdBDsN36CEvmFB_1pH9o5kzMMuSfGQmWKgDA6iaOqURYw@mail.gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v2 1/2] gpiolib: Provide to_gpio_device() helper
+Date:   Mon, 28 Nov 2022 21:00:54 +0200
+Message-Id: <20221128190055.6350-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdBDsN36CEvmFB_1pH9o5kzMMuSfGQmWKgDA6iaOqURYw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -69,22 +60,69 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 07:01:42PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Nov 25, 2022 at 7:30 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Wed, Nov 16, 2022 at 04:17:28PM +0200, Andy Shevchenko wrote:
+Provide to_gpio_device() helper which can be utilized in the existing
+and future code.
 
-...
+While at it, make sure it becomes no-op at compilation time.
 
-> > Bart, can this be applied?
-> 
-> Sure, now applied. Got carried away with this use-after-free from
-> userspace problem.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: made helper static inline (Bart)
+ drivers/gpio/gpiolib.c | 2 +-
+ drivers/gpio/gpiolib.h | 9 +++++++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a11480634213..ccd47da4ec66 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -548,7 +548,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+ 
+ static void gpiodevice_release(struct device *dev)
+ {
+-	struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
++	struct gpio_device *gdev = to_gpio_device(dev);
+ 	unsigned long flags;
+ 
+ 	spin_lock_irqsave(&gpio_lock, flags);
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index d900ecdbac46..e443c1023a37 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -20,9 +20,9 @@
+ 
+ /**
+  * struct gpio_device - internal state container for GPIO devices
+- * @id: numerical ID number for the GPIO chip
+  * @dev: the GPIO device struct
+  * @chrdev: character device for the GPIO device
++ * @id: numerical ID number for the GPIO chip
+  * @mockdev: class device used by the deprecated sysfs interface (may be
+  * NULL)
+  * @owner: helps prevent removal of modules exporting active GPIOs
+@@ -47,9 +47,9 @@
+  * userspace.
+  */
+ struct gpio_device {
+-	int			id;
+ 	struct device		dev;
+ 	struct cdev		chrdev;
++	int			id;
+ 	struct device		*mockdev;
+ 	struct module		*owner;
+ 	struct gpio_chip	*chip;
+@@ -72,6 +72,11 @@ struct gpio_device {
+ #endif
+ };
+ 
++static inline struct gpio_device *to_gpio_device(struct device *dev)
++{
++	return container_of(dev, struct gpio_device, dev);
++}
++
+ /* gpio suffixes used for ACPI and device tree lookup */
+ static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
