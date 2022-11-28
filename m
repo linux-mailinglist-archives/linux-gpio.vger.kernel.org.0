@@ -2,62 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3291B63B36D
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 21:38:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B87C63B371
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 21:39:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234219AbiK1UiO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 15:38:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48236 "EHLO
+        id S233213AbiK1UjX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 15:39:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234224AbiK1Uh5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 15:37:57 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365FCE84
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:37:31 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-381662c78a9so118188947b3.7
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:37:31 -0800 (PST)
+        with ESMTP id S234278AbiK1UjF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 15:39:05 -0500
+Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BCC2E9D7
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:38:58 -0800 (PST)
+Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-3cbdd6c00adso24664657b3.11
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:38:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Be9fcRFb+iBXtwrEt2w+xItkZ62HJRwPRVzp0QrUGXs=;
-        b=MkXQB5OgJq8mcUlg1oxBB/+/M1OdRykLerdCz/RALQ7YP98YD5Hp95vOvkH7PMmrQn
-         rSaaDU29SiwDCUB2QgelBIP75pHs7ittRdmNjf/DAfkaSuqtEdm4k4c6YFm84aS/yqsE
-         bbN/xg44PhNQDVqdm8TZxXM5Aif9KJAFQKp5vpxiI9CFOXE5ZNvcKte7bVpHX4oQ1R9S
-         2+b2pLM+kBawV5Lb1rrXheTpK0QL/jkR3lSMwz0x3CxGa+41/162ZHxOWdzvxayj9OSl
-         P+bc41WXLZwEwoWjfJkBgzmNl1yVEv1MftxFlqYOFDMGw80mKiSGC4wCQ/imCnAs6yrC
-         XRWw==
+        bh=muN8RjWN+Kk1tkZlkfOhxDOhOOQmpR5jlCuN7XjP+2E=;
+        b=q5JM7pHFmELZeHnpHidYiCODzHF+QAGAhFU217+CTT57oE4dVif6++o6K50hwFHvub
+         GqUZVVnHlpYs1zjxVbAACaMd4QnJXeFhC5lWpxZq2GIXKhLl0zp1jrupPQQYsw7GcPRr
+         Frl7yriSDyKqGj1m4M5F6otjH8Zfepn268EWl9ozmboLJ0SZSZjMgQwjwXpOSQgi6pXt
+         Xs0uO92CvOriyA7EdwoDwtsOLDYLrFhJk7V3mwI/uCXV0X8e6u9rqhv49jBuUAtBG0B9
+         p22y91enUq8tASBQdtQA4p4VaN+7Z2msm8a04CA/5MDXLVmoLxm1seI5gvBpAuoZrTQP
+         xHzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Be9fcRFb+iBXtwrEt2w+xItkZ62HJRwPRVzp0QrUGXs=;
-        b=IJf+RXnZ2kY26TykrXUl0mztAIm0FxE80tn0BWoHzOlwaH5Bk+wC01LaXrVbYOb1+J
-         O1AILfxgR/ZOaDO7qUWX/SoKO3acbd3enGAiPpJ7K8Nw/spBviAv4uW4KyZODQh5Nv1r
-         nczCSa6Wkp7o1JQTf1k/v38ZqytnyewwrcwRZVMdjHBaFFxle6Ik5Mi6/HXoHzyDf5Mn
-         Tui5UUYeNrTXKzH3C56OFvX6IAkId4tPZ2E3rKXwjMINsq69X5+IzF24pQbDB0goPIrS
-         eELxBSdRmUct5/VzsQtEqMhAXu+VoM7iiPW00XhqjLPuylt9rI2DsU3fDFs7Tnd8hjTN
-         CFCg==
-X-Gm-Message-State: ANoB5pnbWxVHWGlgTWC1wSECzMIvVZ/1xelUOvRXhH5Tb37xok6OLBkA
-        jUv0r+jmkSx/tHuoYkQXRkQDssYJIIuXFewzhnWxIA==
-X-Google-Smtp-Source: AA0mqf4aBg2mwDM8RJm0Cjg/v7cTvSlnBRa9Z2/ZVsQUyCqFE6E6HBJlcn8f1czkYtVuaDfYqb2WId3bsK/c3teKXLI=
-X-Received: by 2002:a0d:fdc7:0:b0:37a:e8f:3cd3 with SMTP id
- n190-20020a0dfdc7000000b0037a0e8f3cd3mr49928758ywf.187.1669667851150; Mon, 28
- Nov 2022 12:37:31 -0800 (PST)
+        bh=muN8RjWN+Kk1tkZlkfOhxDOhOOQmpR5jlCuN7XjP+2E=;
+        b=IMuK0+EjLNfas9VoQscTgxEbs6Hx1ki67veYMEU3j97UB/shoK9+QFkgg8qhgXHItV
+         tO7mvFWZq0paWtTSmfngusbfPjnMwVa6aMYdh39xgR0G3XBk7bLbKp7ArTpEnRFX7qvO
+         HXug8aq7hR5Huf9lGUXdAq8N/aWxckGnWabbYbnHbk9ICzvcU18C/YhEPCCml+0SarCP
+         w0ek1zXuUvlU9vLcGji8e/sa7zfYSCUA4toe40cHNRdkAHvU/oVNDSQA/gWaH3FUI7GN
+         N2KghNCBFd47NHWcWBltL2qFiJ7hTVE0MubbS4SYiAGD8m3zcgte0crze9VkvaY8g+3u
+         2W8w==
+X-Gm-Message-State: ANoB5pl2IwiaJgMPryfy4e9w6mmgo8VJAHAn3QDEx7OpUUbxahPZWJMV
+        OtqNv1oCewHHDxHJZiBHemc6o+giiu+gtZ/gt5LP1A==
+X-Google-Smtp-Source: AA0mqf6gWm+H1zYyuY1SDwCQ3Sa/CADq5W0A5MpWNxSJDYAUdfP1Y2O6xr6J4M+q7rShfdBptLBQ1OEZfYKCsYNKDH4=
+X-Received: by 2002:a81:7909:0:b0:36f:d2d9:cdc4 with SMTP id
+ u9-20020a817909000000b0036fd2d9cdc4mr34522067ywc.380.1669667937231; Mon, 28
+ Nov 2022 12:38:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20221128175214.602612-1-brgl@bgdev.pl>
-In-Reply-To: <20221128175214.602612-1-brgl@bgdev.pl>
+References: <20221118092218.480147-1-mranostay@ti.com> <20221118092218.480147-5-mranostay@ti.com>
+In-Reply-To: <20221118092218.480147-5-mranostay@ti.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 28 Nov 2022 21:37:20 +0100
-Message-ID: <CACRpkdb+C64AF_N3goRz206k_YfoHn3_kietet6yvz=FrbuUWw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date:   Mon, 28 Nov 2022 21:38:46 +0100
+Message-ID: <CACRpkdZ9Ld7OMFXJW8zrEjMG1rxp_emi5iVWxE4F8h94BXe4og@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] gpio: gpio-tps6594x: add GPIO support for TPS6594x PMIC
+To:     Matt Ranostay <mranostay@ti.com>
+Cc:     vigneshr@ti.com, robh@kernel.org, krzysztof.kozlowski@linaro.org,
+        a.zummo@towertech.it, lee@kernel.org, brgl@bgdev.pl,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -68,22 +67,15 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 6:52 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+On Fri, Nov 18, 2022 at 10:22 AM Matt Ranostay <mranostay@ti.com> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Add support for TPS6594X PMICs GPIO interface that has 11 that can be
+> configured as input or outputs.
 >
-> This is a second iteration of the changes that aim at fixing the situation
-> in which the user-space can provoke a NULL-pointer derefence in the kernel
-> when a GPIO device that's in use by user-space is removed.
->
-> v1 -> v2:
-> - add missing gdev->chip checks in patch 1/2
-> - add a second patch that protects the structures that can be accessed
->   by user-space calls against concurrent removal
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
 
-Thanks for looking into this.
+This looks really neat and clean with gpio-regmap.
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-for the series.
 
 Yours,
 Linus Walleij
