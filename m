@@ -2,136 +2,218 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA61763B10E
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 19:20:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E786E63B121
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 19:21:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234038AbiK1SUS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 13:20:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53378 "EHLO
+        id S234280AbiK1SVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 13:21:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232893AbiK1STY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 13:19:24 -0500
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEB482AE0F
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 10:04:39 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id y18so4145232uae.8
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 10:04:39 -0800 (PST)
+        with ESMTP id S233260AbiK1SVM (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 13:21:12 -0500
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9991A24F21
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 10:08:15 -0800 (PST)
+Received: by mail-vs1-xe33.google.com with SMTP id 128so11406976vsz.12
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 10:08:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aRgzKDDptj0PxBFeuEtEc9q33zQBrpSSLaR4YtDSbi4=;
-        b=C9ZJknN+wkJeX8M3Cjm9f3H3y/u6tuWrAoxCrAgggba7HtYO0uFWrecbxIS5Dbtsnp
-         HhUCP5UvL+eQXK1pa/Tt4BtBynUTozu86apzWmnxbkVRkH11tujGhqd3tXsGs/R9MNJy
-         SrXBzC/TQoi79Lcp0SlQstazoA3dRRMpy77LxmXbhzGKILbAmsk5ErRGJJ7t5/nKr2bL
-         eYM1/hhxt9aThMHStNm1la/suz0AvHkvIZfV1+mlE74IjSNYYh4hDUPHb/NVejv4xkOb
-         QQC/oZ0L+bgcE1SvrjaAb42+vRdQAA/rtZ+NeQToJXfUcRmzzJ09m551ffblm4RccNvY
-         qDfg==
+        bh=XiKD6ppGzG5ZpI3cTFBiLcU8vTXLdTb3vib9toIv4h8=;
+        b=kZVXla1pGI1G/+OHC2g0O2VBAu1aLsZtDuRFOiKZ+VXGSlVP1HWYVhNbUvgVv7WCCq
+         4AvwjmttHrl9vu4qR/yjzvjP0Rm85PECb/90hUfLNnuk4XVUOtALxI/3j3fm/NBrsFJF
+         mcmvFe4ExxMR/h447GvPvMsBH5+iDsdAwQumXH0NYpwewwJaH8sdkkwWLowTO9cNz1k5
+         0qRpQUA4SYxasVWlpwJKsgFI9HZjKxoPhtX8cxC59yur/shZCZeSRsw/BCn4uTuRXn1F
+         PFdwhpAUlyoRMgCBkKoKlwy2EZJLkcMsgmjaKsCG3czxQ4P7wB35vmpuBgBPuRth7Ol0
+         NcAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aRgzKDDptj0PxBFeuEtEc9q33zQBrpSSLaR4YtDSbi4=;
-        b=bqf89bAbQgTiZorKG6jHimQcrGqW2kOhK/8Gg0cdH5Za3shPWdJh96U47N25m/MObo
-         87SB/kAFx6QUdWj2Bc79WHUMDfWHs5XbdFudSmpXmC9+WIaTRje3qZhL7qXyZKfUifg8
-         bmpRUcnjuHXgqXGZQBw8bupb+lJLbBubE8P74TXKrsixTdgdcK1ogG91bWPAWG87kjyv
-         68Y5mwWxp+Gpu6OO5SuvOMVT8bN9qh6xyxFrL2OKvotUUkXH51nTxrO2gvhT2E2CzA9O
-         nIv9ATEnn0D9souMxdUJeFQe2nqMCnkgmj4kpxhFqEuORH94FUOzPYWpS/IzZQK2W/tU
-         HfYA==
-X-Gm-Message-State: ANoB5pkl5c7BxzzHnXsi96w6FXmlLVZZoTey8QT7H1InGiJGKuhDqS69
-        knHgItoq3vLnXiObSEf0CXOBZ5GN5nUzMDvvdd4yew==
-X-Google-Smtp-Source: AA0mqf64DMzI4oiza1999/BrhLICzwvgy6pMHkTJ5IIJZxW9075dgEkwf5Ft3rQnDp9xVNlkFxDXk3btaU4mmPD0aMI=
-X-Received: by 2002:ab0:7785:0:b0:415:65dc:4733 with SMTP id
- x5-20020ab07785000000b0041565dc4733mr21352191uar.87.1669658678871; Mon, 28
- Nov 2022 10:04:38 -0800 (PST)
+        bh=XiKD6ppGzG5ZpI3cTFBiLcU8vTXLdTb3vib9toIv4h8=;
+        b=G9nTrRTISuM9/z40phMyqhXsU7UEcbccsFis0owXbevRB2QOS9deIbfzNfmsGoZZya
+         jO3Fpj+kLzFk72LNF7MaiBCPDCHeKtdxGcG5ZN1NbtaoJFG3yQN1pyocrNAFDm5y9J4d
+         FwZn2+RKwpC0aR7PN30wZXi0wQO+OEGzUbPHR4f9iFH3/+WkciIE1j2Kz2cKEHQu+ALF
+         9J0+JMxmVdYckWORjO9RR7b5/9aoQ4iawh/KJ4XiR79wP8Htp96ln5QaD4O1j5hxdaaD
+         LVXf0zdNHUo5aGSp5JG0+3pNsayDzgwWVnxc6PK4pd8o2UpWXquiRBi9xnZnn8urOxfc
+         OVAg==
+X-Gm-Message-State: ANoB5pmdy4Xrh2sctVSfbBhxxOBwMnNYY03KpFs4Wg0A4vbbr3kS20ta
+        86Z1COyThM7jvuLgcQmCP454+BeygRRlZZE8CZBe8w==
+X-Google-Smtp-Source: AA0mqf6fPFJYgunNTLJH3p4ifumRkKwZ6waXF0adKpQmLaXx0pegGIEWEUuxjiyBpumotWSqLhYVGQLH0+SKWW5pPoA=
+X-Received: by 2002:a67:e8d7:0:b0:3b0:767f:e291 with SMTP id
+ y23-20020a67e8d7000000b003b0767fe291mr14518815vsn.47.1669658892929; Mon, 28
+ Nov 2022 10:08:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20221125181158.67265-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221125181158.67265-1-andriy.shevchenko@linux.intel.com>
+References: <20221118092218.480147-1-mranostay@ti.com> <20221118092218.480147-5-mranostay@ti.com>
+In-Reply-To: <20221118092218.480147-5-mranostay@ti.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 28 Nov 2022 19:04:28 +0100
-Message-ID: <CAMRc=MccBY8ov4CGB3uWNBsWSAw48vWY8mekZg53QB1pF+itLg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] gpiolib: Provide to_gpio_device() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 28 Nov 2022 19:08:01 +0100
+Message-ID: <CAMRc=Mf1wSHfBhJz4z+SS3gH+ZKa5Hyar-gziteyfoOy8s7tsg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/4] gpio: gpio-tps6594x: add GPIO support for TPS6594x PMIC
+To:     Matt Ranostay <mranostay@ti.com>
+Cc:     vigneshr@ti.com, robh@kernel.org, krzysztof.kozlowski@linaro.org,
+        a.zummo@towertech.it, linus.walleij@linaro.org, lee@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 7:11 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Nov 18, 2022 at 10:22 AM Matt Ranostay <mranostay@ti.com> wrote:
 >
-> Provide to_gpio_device() helper which can be utilized in the existing
-> and future code.
+> Add support for TPS6594X PMICs GPIO interface that has 11 that can be
+> configured as input or outputs.
 >
-> While at it, make sure it becomes no-op at compilation time.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
 > ---
->  drivers/gpio/gpiolib.c | 2 +-
->  drivers/gpio/gpiolib.h | 6 ++++--
->  2 files changed, 5 insertions(+), 3 deletions(-)
+>  drivers/gpio/Kconfig         |  9 +++++
+>  drivers/gpio/Makefile        |  1 +
+>  drivers/gpio/gpio-tps6594x.c | 78 ++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/tps6594x.h |  4 ++
+>  4 files changed, 92 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-tps6594x.c
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 119c9c3a2a50..9b935288db9d 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -547,7 +547,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_valid);
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index ec7cfd4f52b1..6b65c790efe7 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1405,6 +1405,15 @@ config GPIO_TPS65912
+>         help
+>           This driver supports TPS65912 GPIO chip.
 >
->  static void gpiodevice_release(struct device *dev)
->  {
-> -       struct gpio_device *gdev = container_of(dev, struct gpio_device, dev);
-> +       struct gpio_device *gdev = to_gpio_device(dev);
->         unsigned long flags;
->
->         spin_lock_irqsave(&gpio_lock, flags);
-> diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-> index d900ecdbac46..027674025561 100644
-> --- a/drivers/gpio/gpiolib.h
-> +++ b/drivers/gpio/gpiolib.h
-> @@ -20,9 +20,9 @@
->
->  /**
->   * struct gpio_device - internal state container for GPIO devices
-> - * @id: numerical ID number for the GPIO chip
->   * @dev: the GPIO device struct
->   * @chrdev: character device for the GPIO device
-> + * @id: numerical ID number for the GPIO chip
->   * @mockdev: class device used by the deprecated sysfs interface (may be
->   * NULL)
->   * @owner: helps prevent removal of modules exporting active GPIOs
-> @@ -47,9 +47,9 @@
->   * userspace.
->   */
->  struct gpio_device {
-> -       int                     id;
->         struct device           dev;
->         struct cdev             chrdev;
-> +       int                     id;
->         struct device           *mockdev;
->         struct module           *owner;
->         struct gpio_chip        *chip;
-> @@ -72,6 +72,8 @@ struct gpio_device {
->  #endif
->  };
->
-> +#define to_gpio_device(_dev_)  container_of(_dev_, struct gpio_device, dev)
+> +config GPIO_TPS6594X
+> +       tristate "TI TPS6594X GPIO driver"
+> +       depends on MFD_TPS6594X || COMPILE_TEST
+> +       select REGMAP
+> +       select GPIO_REGMAP
+> +       help
+> +         Select this option to enable GPIO driver for the TPS6954X
+> +         PMIC chip family. There are 11 GPIOs that can be configured.
 > +
-
-Just make it a static inline, please.
-
-Bartosz
-
->  /* gpio suffixes used for ACPI and device tree lookup */
->  static __maybe_unused const char * const gpio_suffixes[] = { "gpios", "gpio" };
+>  config GPIO_TPS68470
+>         tristate "TPS68470 GPIO"
+>         depends on INTEL_SKL_INT3472
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 010587025fc8..9892f9adc5b5 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -159,6 +159,7 @@ obj-$(CONFIG_GPIO_TPS65218)         += gpio-tps65218.o
+>  obj-$(CONFIG_GPIO_TPS6586X)            += gpio-tps6586x.o
+>  obj-$(CONFIG_GPIO_TPS65910)            += gpio-tps65910.o
+>  obj-$(CONFIG_GPIO_TPS65912)            += gpio-tps65912.o
+> +obj-$(CONFIG_GPIO_TPS6594X)            += gpio-tps6594x.o
+>  obj-$(CONFIG_GPIO_TPS68470)            += gpio-tps68470.o
+>  obj-$(CONFIG_GPIO_TQMX86)              += gpio-tqmx86.o
+>  obj-$(CONFIG_GPIO_TS4800)              += gpio-ts4800.o
+> diff --git a/drivers/gpio/gpio-tps6594x.c b/drivers/gpio/gpio-tps6594x.c
+> new file mode 100644
+> index 000000000000..733fedba70cb
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-tps6594x.c
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * GPIO driver for TI TPS6594x PMICs
+> + *
+> + * Copyright (C) 2022 Texas Instruments Incorporated - http://www.ti.com/
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/mfd/tps6594x.h>
+> +
+> +#define GPIO_BANK_SIZE 8
+> +#define GPIO_CFG_MASK  BIT(0)
+> +
+> +static int tps6594x_regmap_xlate(struct gpio_regmap *gpio,
+> +                                   unsigned int base, unsigned int offset,
+> +                                   unsigned int *reg, unsigned int *mask)
+> +{
+> +       if (base == TPS6594X_GPIO_CONF) {
+> +               *reg = base + offset;
+> +               *mask = GPIO_CFG_MASK;
+> +       } else {
+> +               unsigned int line = offset % GPIO_BANK_SIZE;
+> +               unsigned int stride = offset / GPIO_BANK_SIZE;
+> +
+> +               *reg = base + stride;
+> +               *mask = BIT(line);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int tps6594x_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct gpio_regmap_config config = {0};
+> +       struct regmap *regmap;
+> +
+> +       regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +       if (!regmap)
+> +               return -ENODEV;
+> +
+> +       config.regmap = regmap;
+> +       config.parent = &pdev->dev;
+> +       config.ngpio = 11;
+> +       config.ngpio_per_reg = GPIO_BANK_SIZE;
+> +
+> +       config.reg_dat_base = TPS6594X_GPIO_IN;
+> +       config.reg_set_base = TPS6594X_GPIO_OUT;
+> +       config.reg_dir_out_base = TPS6594X_GPIO_CONF;
+> +       config.reg_mask_xlate = tps6594x_regmap_xlate;
+> +
+> +       return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(&pdev->dev, &config));
+> +}
+> +
+> +static const struct of_device_id of_tps6594x_gpio_match[] = {
+> +       { .compatible = "ti,tps6594-gpio", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, of_tps6594x_gpio_match);
+> +
+> +static struct platform_driver tps6594x_gpio_driver = {
+> +       .driver = {
+> +               .name = "tps6594-gpio",
+> +               .of_match_table = of_tps6594x_gpio_match,
+> +       },
+> +       .probe = tps6594x_gpio_probe,
+> +};
+> +module_platform_driver(tps6594x_gpio_driver);
+> +
+> +MODULE_ALIAS("platform:tps6594-gpio");
+> +MODULE_AUTHOR("Matt Ranostay <mranostay@ti.com>");
+> +MODULE_DESCRIPTION("TPS6594X GPIO driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/tps6594x.h b/include/linux/mfd/tps6594x.h
+> index 5a6af0da9223..155618e4d5d0 100644
+> --- a/include/linux/mfd/tps6594x.h
+> +++ b/include/linux/mfd/tps6594x.h
+> @@ -21,6 +21,10 @@
+>  #define TPS6594X_FSM_I2C_TRIGGERS              0x85
+>  #define TPS6594X_FSM_NSLEEP_TRIGGERS           0x86
 >
+> +#define TPS6594X_GPIO_CONF                     0x31
+> +#define TPS6594X_GPIO_OUT                      0x3d
+> +#define TPS6594X_GPIO_IN                       0x3f
+> +
+>  #define TPS6594X_RTC_SECONDS                   0xb5
+>  #define TPS6594X_RTC_MINUTES                   0xb6
+>  #define TPS6594X_RTC_HOURS                     0xb7
 > --
-> 2.35.1
+> 2.38.GIT
 >
+
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
