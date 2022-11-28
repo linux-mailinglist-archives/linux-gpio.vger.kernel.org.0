@@ -2,114 +2,101 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBC7863A5D3
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 11:14:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C44463AA45
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 14:59:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiK1KOc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 05:14:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51118 "EHLO
+        id S231502AbiK1N7T (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 08:59:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbiK1KOc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 05:14:32 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693D013E35;
-        Mon, 28 Nov 2022 02:14:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669630471; x=1701166471;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=x0vkDNxcTGDBQx1tdJF7VOl/Y7E12BTrTMtu7ZOaq8Y=;
-  b=FiLEkTPsu5Gt8yKtJGSkVj2+Fb3GuJrmkwSpbyW2V4yr4lsTTrqhI8/f
-   +RUfpb6h6m4zM52mRIa1WBduu1XJoQHWzhstFLiAo3M38SYmJE9M6k8kB
-   pf+JTo3QgfIOsVKGVHkzGFKZPRLPLCjf2ou3dJb1x5A/rel+Qq8uRD7t0
-   N9JESRUyPWF5HKBDIOo8wTRl1DncsrYWeob8TAEgJKx+8TFL/7OOcVQSo
-   uBYPBoqnZr6kNSMTZRgatvtlUGRnl40lwuAhsaeoSf8nAhlFBSOm0BLrO
-   iPJxui2HZ67Y3n/NO1PkkxUrTDkGTtVPJoK7kiK+5+3Zr25CRvhrLj0Ul
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="341710981"
-X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="341710981"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 02:14:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="637168198"
-X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="637168198"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 28 Nov 2022 02:14:27 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1ozb9d-0014Vw-37;
-        Mon, 28 Nov 2022 12:14:25 +0200
-Date:   Mon, 28 Nov 2022 12:14:25 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] gpio: Do not include <linux/kernel.h> when not really
- needed.
-Message-ID: <Y4SKAbUM52tanAvc@smile.fi.intel.com>
-References: <3f75784c57dc0682b5e1758daddd93fee6bb4b27.1669585920.git.christophe.jaillet@wanadoo.fr>
+        with ESMTP id S231814AbiK1N7R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 08:59:17 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08C80DA4;
+        Mon, 28 Nov 2022 05:59:17 -0800 (PST)
+Received: by mail-qk1-f178.google.com with SMTP id x18so7222787qki.4;
+        Mon, 28 Nov 2022 05:59:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p0zTEKDX0VhiLo8/RmLm+g9EPehQ6o7qAmHvISgsBhk=;
+        b=3g9tIFns9Xal9zSYy0Hwqq9MNhkVOLMVSBHRfsQnZgvcG6ZrqTINNzCxguMw9hQCbV
+         jF9Xx1H4Y4SdESsGwURRVj8Y2FZEDX2S9ly3K1+mfB2GNy/+gC7KJC6K1/yU9QN7kJcV
+         xbCSSGIphOkyDXjCm2fFECno+3Bh1u3UoKBiyZi1hmJLHCx6F8Nsp8HMdSWKM1rNGoN3
+         VWH01R9CV0JhiGlo8fqxsnMfkED9JYyARacqR9KHatDE8FrUZyQjGK/5+OKK56cFmgIE
+         YFFgwTumzqX7GPEa6O4uvycFX/kGeCCG2ohO96bMWOt8cfeKB3eaReQhYRCORyMO/qdi
+         MsJA==
+X-Gm-Message-State: ANoB5pnbjsmMpX7n67Kl/ifzEhqoelzUUZcK4JEYSXmFqhpjhAWIo+c0
+        ITsCKNd3eaTP9lHLyWQuPpCW6VK909+Epg==
+X-Google-Smtp-Source: AA0mqf6dAsA9jUzYnaab/Kda7py9bNU4Ib+8VCRZ5gesrrDLbn3NuGoq1JVFWReIW0XJG47ao7+Wqg==
+X-Received: by 2002:a05:620a:51d0:b0:6ee:909e:ed6c with SMTP id cx16-20020a05620a51d000b006ee909eed6cmr30379259qkb.264.1669643955986;
+        Mon, 28 Nov 2022 05:59:15 -0800 (PST)
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
+        by smtp.gmail.com with ESMTPSA id t8-20020ac865c8000000b003a5d7b54894sm6939579qto.31.2022.11.28.05.59.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Nov 2022 05:59:15 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-3bfd998fa53so53406317b3.5;
+        Mon, 28 Nov 2022 05:59:15 -0800 (PST)
+X-Received: by 2002:a81:f80f:0:b0:38e:e541:d8ca with SMTP id
+ z15-20020a81f80f000000b0038ee541d8camr46504823ywm.283.1669643955136; Mon, 28
+ Nov 2022 05:59:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3f75784c57dc0682b5e1758daddd93fee6bb4b27.1669585920.git.christophe.jaillet@wanadoo.fr>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <CACRpkdaJy5hhrMfdZWtpoBUxBEc1QnxaX4pRzQVUBoEoKqrwzA@mail.gmail.com>
+In-Reply-To: <CACRpkdaJy5hhrMfdZWtpoBUxBEc1QnxaX4pRzQVUBoEoKqrwzA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 28 Nov 2022 14:59:04 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUbSdJWqgd6+=FbWRyB+YcgCtbfLk-zgrozwecOGn9JNg@mail.gmail.com>
+Message-ID: <CAMuHMdUbSdJWqgd6+=FbWRyB+YcgCtbfLk-zgrozwecOGn9JNg@mail.gmail.com>
+Subject: Re: [GIT PULL] pin control fixes for v6.1
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sun, Nov 27, 2022 at 10:52:10PM +0100, Christophe JAILLET wrote:
-> <linux/kernel.h> is included only for using container_of().
-> Include <linux/container_of.h> instead, it is much lighter.
+Hi Linus,
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+On Wed, Nov 16, 2022 at 3:59 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> What took time for me was to figure out how to get the
+> GPG password entry for signing the tag come up in
+> curses on a remote machine instead of giving up when
+> trying to open the secure little signing widget that locks
+> the desktop UI which it doesn't have. Comes down to
+> export PINENTRY_USER_DATA=USE_TTY=1
+> then creating .gnupg/gpg-agent.conf setting up
+> pinentry-program /usr/bin/pinentry-curses.
+> Well that was not intuitive, especially not an
+> environment variable containing an environment
+> variable. GPG might need some UX polish (or maybe
+> it's the distros that do this to us). Anyway here it is!
 
-Thanks for doing this! We really don't want to see kernel.h to be included by
-other headers in the include/linux, include/asm, etc.
+I don't remember the exact commands I used when preparing for last
+ELC-E, but some Googling suggests:
 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> Not sure if the prefix should be gpio or gpiolib.
+    sudo apt install pinentry-tty
+    sudo update-alternatives --config pinentry
 
-I'm not sure either because this more for the consumers, I would leave gpio.
+At least I do have
+/etc/alternatives/pinentry -> /usr/bin/pinentry-curses
 
-> Let see if build-bots spot something which is inherit via kernel.h
-> ---
->  include/linux/of_gpio.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> index a5166eb93437..6db627257a7b 100644
-> --- a/include/linux/of_gpio.h
-> +++ b/include/linux/of_gpio.h
-> @@ -34,7 +34,7 @@ enum of_gpio_flags {
->  
->  #ifdef CONFIG_OF_GPIO
->  
-> -#include <linux/kernel.h>
-> +#include <linux/container_of.h>
->  
->  /*
->   * OF GPIO chip for memory mapped banks
-> -- 
-> 2.34.1
-> 
-> 
+Gr{oetje,eeting}s,
 
--- 
-With Best Regards,
-Andy Shevchenko
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
