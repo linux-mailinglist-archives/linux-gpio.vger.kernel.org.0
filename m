@@ -2,81 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A744C63B376
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 21:40:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74A6E63B387
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 21:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232635AbiK1UkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 15:40:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        id S234301AbiK1Umo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 15:42:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232798AbiK1UkU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 15:40:20 -0500
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 867B9FFE
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:40:19 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-3704852322fso118408477b3.8
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:40:19 -0800 (PST)
+        with ESMTP id S234043AbiK1Uma (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 15:42:30 -0500
+Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A52A24975
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:42:29 -0800 (PST)
+Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-3691e040abaso118414937b3.9
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 12:42:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=op85UqNDqqhgXPMT/OztrzjGize6Ei8/DsgSNPRSCmo=;
-        b=qbSO/OrmasG6lZEdP1Oog/0qXiVsGH1Q0tIr4+Cd7Vo81RNBg23uaKLEAV/uOOvdZg
-         0oDPp2HMMAdSmmGuk2xXUO0r8v6WSEepC5/ZgM5aWsFrCn1fCpDVoY0OAUbkCwDKsC/r
-         HWux8ZaXqWX/dFJyyGfXNhdyLIDz6QMU/vkxVcSwtO79JoYBf7VgFR6xkeCskJJsZQwR
-         gGS5LvjE9Ow+RmlwFGI9MZ363QCAXpANX3dVNcI5AWZd1hG4afVrdWMTMev0CoQ0gk6A
-         o9Wu7pIfPDbEueUeK3pFpu2tt6JMWCkjQxzAQaDU+wi+50TvQDj0ZrElxEgJECgo1Hmx
-         UcPg==
+        bh=9XNZWTdwXKMxfdvP8XVrQ3AwvmDQFwgMMk54i8ewFlQ=;
+        b=NFaDxuhSPxiblhrcutZ+DlS8yXONDE32MflzeG2qIsWQqksFRmnsqhCPxhgCWKkmDE
+         iWkhKkP4yzQvGVcQSvf+QnrgguMe4tM/QGzeMlS6U5+DMLEnz/SCNT2HUFh+aWCMK5FK
+         auKnCuncKzsBtmHE+5KB9Epg4PDdLzcJwpcy/VfApVNPhEE2giswd5objQxrNHBSkqgN
+         kOEMNxczo7tj9GI3n21nkrLhY+2kq8jZVdtB8hm0U2l6HXtuv6Ce35H0IrF+svbymciW
+         Ybt8MwNWlV1aliIGbhy9jhO/tqq8F699EKGRtbfCrHvJ1Rhx4e9FoGCPMk+66d8vpdou
+         9/Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=op85UqNDqqhgXPMT/OztrzjGize6Ei8/DsgSNPRSCmo=;
-        b=q5xcfgJvtjZx431cj1WrdYm0Jg4d4nn5/Fb8/fQK2fBh2JtxpmiwkeSgVv1P5o2KX9
-         /fUAkbGOQj3f0G9L6bNVdQLg2gEoOmlPBSjiw++bgOHroq/uNVkWGP9u0kewtlxlcw3g
-         AVwERzLT/OgFV9iN0CGxoU6q+d1l7y8R4HwODpMMrFayt3WHdjoQacD2pAi4aQ2vpdqk
-         3pE0nZMkdW2miHlF4z/aweIOE4MjLywNMOe1pb69sNjRVY49xTaeGUdy0WxzacirzZjm
-         lXkmK+ZdF6dvOaOS5NV3jIiLPlrNJKNYVF4pgG5a5awU7mQQB8BYNmN1Vey6IxBXhDy1
-         CJOw==
-X-Gm-Message-State: ANoB5pnGThIUlCW0RVjU7ylg53HtjVckuBD0iZ+w4dDSUl78FMBmkimP
-        +MWmToDb87L9qvFwtLnCYvyTKRHzkz5kLWn7EFmSPw==
-X-Google-Smtp-Source: AA0mqf6JfsCkbSGr9tJ8T2eyfoQ+ES4RRKRycWV86sboEeJs+mS8JErCkbvNzAH42lS2REB8eWzig3+tz7HDPacXsKQ=
-X-Received: by 2002:a0d:d711:0:b0:3c3:dc9f:d24f with SMTP id
- z17-20020a0dd711000000b003c3dc9fd24fmr8756155ywd.343.1669668018805; Mon, 28
- Nov 2022 12:40:18 -0800 (PST)
+        bh=9XNZWTdwXKMxfdvP8XVrQ3AwvmDQFwgMMk54i8ewFlQ=;
+        b=dhVerba21iars4qhjycOIM9tl8FH9gMA6l3NbtX/3qTfZGDxkJ1mJsWUbOJspSLjjp
+         ZHkOZugqpiqAaJA2FerKhVOHrT0mLvbVusX6vhK+Pw+DZ4BpMHkEkFDXOrUH3swkkcfb
+         rVy/e1WLSMnxMRnXQ7W7OldK4MLcOoiR78bW8IC/I5NIUNGlBNSz4mwwnra9eAWGnNBF
+         vE1w5XiPKqfL2tFa1UlPIkcNAbNE/pyQSsW17NseSbanmhKIQdcougPfhewRr+p2pukS
+         h2NUGGfrxw0Pcv2RbQC6uGO/2tse6k3G0mZhDLPVMIBw1wyWhFjkVBFO8xHZfZfNXQxP
+         6miQ==
+X-Gm-Message-State: ANoB5pm0rvbpphN7/bsFO6VXSuehfIGA9X7HHrgP1ZawLuGjTghgR/eS
+        sohuI9o62Bi9WCcABJ77cQxvbCM48z6qvDSHNeYtpA==
+X-Google-Smtp-Source: AA0mqf4EmE+lBmfS6cyx7PEKMJy3ChRF933leTXIgvZ5dLEbEdOAVVJpVULFQtWBQhgUQZ52/kYbSXj5dEx0yoW0jQE=
+X-Received: by 2002:a81:5748:0:b0:3b1:eee3:32a with SMTP id
+ l69-20020a815748000000b003b1eee3032amr23603644ywb.325.1669668148485; Mon, 28
+ Nov 2022 12:42:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20221128190055.6350-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221128190055.6350-1-andriy.shevchenko@linux.intel.com>
+References: <20221124222926.72326-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221124222926.72326-1-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 28 Nov 2022 21:40:07 +0100
-Message-ID: <CACRpkdYmwNHvA8fzkQjKPfvYx3RgAQUU2DqzgFFE+hKGpn0oRw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: Provide to_gpio_device() helper
+Date:   Mon, 28 Nov 2022 21:42:16 +0100
+Message-ID: <CACRpkda1sdqxnP0Lc2qnWOq5PH4_8vTvNiwn3ibE7+uZwLv0Gg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: Save and restore pins in "direct
+ IRQ" mode
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy@kernel.org>, stable@vger.kernel.org,
+        Dale Smith <dalepsmith@gmail.com>,
+        John Harris <jmharris@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 8:00 PM Andy Shevchenko
+On Thu, Nov 24, 2022 at 11:29 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> Provide to_gpio_device() helper which can be utilized in the existing
-> and future code.
+> The firmware on some systems may configure GPIO pins to be
+> an interrupt source in so called "direct IRQ" mode. In such
+> cases the GPIO controller driver has no idea if those pins
+> are being used or not. At the same time, there is a known bug
+> in the firmwares that don't restore the pin settings correctly
+> after suspend, i.e. by an unknown reason the Rx value becomes
+> inverted.
 >
-> While at it, make sure it becomes no-op at compilation time.
+> Hence, let's save and restore the pins that are configured
+> as GPIOs in the input mode with GPIROUTIOXAPIC bit set.
 >
+> Cc: stable@vger.kernel.org
+> Reported-and-tested-by: Dale Smith <dalepsmith@gmail.com>
+> Reported-and-tested-by: John Harris <jmharris@gmail.com>
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=214749
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>
+> Linus, I hope that this can still make v6.1 release. I'm not going to
+> send a PR for this change unless you insist.
 
-Looks helpful.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied for fixes, plan is to get it to Torvalds
+ASAP!
 
 Yours,
 Linus Walleij
