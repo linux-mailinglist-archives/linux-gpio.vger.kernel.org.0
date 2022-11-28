@@ -2,41 +2,41 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EA4C63B468
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 22:47:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D346A63B463
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 22:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233972AbiK1VrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 16:47:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38996 "EHLO
+        id S233403AbiK1VqR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 16:46:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231608AbiK1VrE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 16:47:04 -0500
+        with ESMTP id S232860AbiK1VqQ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 16:46:16 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F083D2FFF9
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B0D2FFE3
         for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 13:44:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669671866;
+        s=mimecast20190719; t=1669671865;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ijZvrHfxzqLtf9v5WhrCliu1xtsXettjChSs9tCIBZo=;
-        b=ao0V4dA/GiKuky9D6YcmTq+gR3buqqSCJcXlGymGhrYvIBgxNafzil/A93KccW/bGjvShl
-        m5d5sSSXYq0Ny1PQB8iLbL+NIQWXbvIf0TcN94Xp99ZY33CCIVc/1v0oqCz11Y/+clzz6Y
-        ZaJkPAE7Y6s/avlSbiMcc09vAEnwHNc=
+        bh=w6RkPyT4Az4Oqk+MW9n0yAQ0aGyPFE38zf6k639wdOg=;
+        b=IGdgvidQ2rP815DJ7pwmUFRrY4U+UbQDL+6SrjIa245/0W7eIiFmSTUjj42TzqHug1mY9n
+        4bfAYL7mJ4vPp/+VV2H4S2ECv8Mq562BgAMMNYlUvAQN94hLCOwSwzaEzKc0C+AeiMvuC6
+        QWihDcthKx95+5vuPyFX5XdxirewhAo=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-108-wfWKXQ0gMViXqONqWAwVAA-1; Mon, 28 Nov 2022 16:44:20 -0500
-X-MC-Unique: wfWKXQ0gMViXqONqWAwVAA-1
+ us-mta-650-_v_EHgyHOMiDWvbifqOSjQ-1; Mon, 28 Nov 2022 16:44:22 -0500
+X-MC-Unique: _v_EHgyHOMiDWvbifqOSjQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 142E3886463;
-        Mon, 28 Nov 2022 21:44:20 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4803101245C;
+        Mon, 28 Nov 2022 21:44:21 +0000 (UTC)
 Received: from shalem.redhat.com (unknown [10.39.192.115])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7911F40C6EC2;
-        Mon, 28 Nov 2022 21:44:18 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4865340C6EC2;
+        Mon, 28 Nov 2022 21:44:20 +0000 (UTC)
 From:   Hans de Goede <hdegoede@redhat.com>
 To:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Hans de Goede <hdegoede@redhat.com>,
         platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
         Sakari Ailus <sakari.ailus@linux.intel.com>,
         Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-Subject: [PATCH 4/5] media: ov8865: Add support for a privacy-led GPIO
-Date:   Mon, 28 Nov 2022 22:44:07 +0100
-Message-Id: <20221128214408.165726-5-hdegoede@redhat.com>
+Subject: [PATCH 5/5] platform/x86: int3472: Add support for the back privacy LED on Surface Go models
+Date:   Mon, 28 Nov 2022 22:44:08 +0100
+Message-Id: <20221128214408.165726-6-hdegoede@redhat.com>
 In-Reply-To: <20221128214408.165726-1-hdegoede@redhat.com>
 References: <20221128214408.165726-1-hdegoede@redhat.com>
 MIME-Version: 1.0
@@ -66,62 +66,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add support for a privacy-led GPIO.
+The back camera on the Surface Go series has a privacy LED too,
+this is connected to the indicator-LED-A output of the tps68470 PMIC.
 
-Making the privacy LED to controlable from userspace, as using the LED
-class subsystem would do, would make it too easy for spy-ware to disable
-the LED.
-
-To avoid this have the sensor driver directly control the LED.
+Add a GPIO mapping for this. Together with the patches to add support
+for the indicator-LED outputs to the gpio-tps68470 driver + the patch to
+add privacy LED support to the ov8865 drivers this fixes the back privacy
+LED on the Surface Go models not turning on when the back camera is
+active.
 
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 ---
-Note an additional advantage of directly controlling the GPIO is that
-GPIOs are tied directly to consumer devices. Where as with a LED class
-device, there would need to be some mechanism to tie the right LED
-(e.g front or back) to the right sensor.
----
- drivers/media/i2c/ov8865.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/platform/x86/intel/int3472/tps68470_board_data.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/i2c/ov8865.c b/drivers/media/i2c/ov8865.c
-index cae1866134a0..fe86b166b28b 100644
---- a/drivers/media/i2c/ov8865.c
-+++ b/drivers/media/i2c/ov8865.c
-@@ -688,6 +688,7 @@ struct ov8865_sensor {
- 	struct i2c_client *i2c_client;
- 	struct gpio_desc *reset;
- 	struct gpio_desc *powerdown;
-+	struct gpio_desc *privacy_led;
- 	struct regulator *avdd;
- 	struct regulator *dvdd;
- 	struct regulator *dovdd;
-@@ -2432,10 +2433,12 @@ static int ov8865_sensor_power(struct ov8865_sensor *sensor, bool on)
- 
- 		gpiod_set_value_cansleep(sensor->reset, 0);
- 		gpiod_set_value_cansleep(sensor->powerdown, 0);
-+		gpiod_set_value_cansleep(sensor->privacy_led, 1);
- 
- 		/* Time to enter streaming mode according to power timings. */
- 		usleep_range(10000, 12000);
- 	} else {
-+		gpiod_set_value_cansleep(sensor->privacy_led, 0);
- 		gpiod_set_value_cansleep(sensor->powerdown, 1);
- 		gpiod_set_value_cansleep(sensor->reset, 1);
- 
-@@ -3009,6 +3012,12 @@ static int ov8865_probe(struct i2c_client *client)
- 		goto error_endpoint;
+diff --git a/drivers/platform/x86/intel/int3472/tps68470_board_data.c b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+index 309eab9c0558..ac40fdc13876 100644
+--- a/drivers/platform/x86/intel/int3472/tps68470_board_data.c
++++ b/drivers/platform/x86/intel/int3472/tps68470_board_data.c
+@@ -134,6 +134,7 @@ static struct gpiod_lookup_table surface_go_int347a_gpios = {
+ 	.table = {
+ 		GPIO_LOOKUP("tps68470-gpio", 9, "reset", GPIO_ACTIVE_LOW),
+ 		GPIO_LOOKUP("tps68470-gpio", 7, "powerdown", GPIO_ACTIVE_LOW),
++		GPIO_LOOKUP("tps68470-gpio", 10, "privacy-led", GPIO_ACTIVE_HIGH),
+ 		{ }
  	}
- 
-+	sensor->privacy_led = devm_gpiod_get_optional(dev, "privacy-led", GPIOD_OUT_LOW);
-+	if (IS_ERR(sensor->privacy_led)) {
-+		ret = PTR_ERR(sensor->privacy_led);
-+		goto error_endpoint;
-+	}
-+
- 	/* External Clock */
- 
- 	sensor->extclk = devm_clk_get(dev, NULL);
+ };
 -- 
 2.38.1
 
