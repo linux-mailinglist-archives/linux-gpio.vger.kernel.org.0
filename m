@@ -2,124 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E42863A5A7
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 11:05:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBC7863A5D3
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 11:14:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229910AbiK1KFJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 05:05:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46362 "EHLO
+        id S230211AbiK1KOc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 05:14:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbiK1KFC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 05:05:02 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB5EBC10;
-        Mon, 28 Nov 2022 02:05:02 -0800 (PST)
+        with ESMTP id S229911AbiK1KOc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 05:14:32 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693D013E35;
+        Mon, 28 Nov 2022 02:14:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669629902; x=1701165902;
+  t=1669630471; x=1701166471;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=rWoPYCatGVSUuaybeArVFuG56qUBlKkuVtRtbcp/0WA=;
-  b=ZFT3Sk1XpiPTOq1Ha8tR772b+9XoEFHrSMEKtsiFFiXgjktLvzqFnsWV
-   MlU6EmmYaqrvu2QRldBixHpJm6zJAVXbbVlyBn1gSZ53oAe+K95i5rUly
-   hmpTUygK3tOON+b9wBeFgBXdRYXwb3xBwveT9iAbDhvf78OGZvMeSr8bO
-   Rd4oT9Ab0mYWw4wzQRnnxjjYdWjJliAL62tyCthOLkJ1BbEiKBjR6NJmP
-   hrjzV/FQUDauXmkLvck4e7ZIpMiQd3IXHLxESY0npSIszNdGSmlnHArn/
-   0rvAbwiAKitx67IwVMNzRWGQn66tghCa4+1LT08S1hn8WDF3o1L+EWvo3
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="312430791"
+  bh=x0vkDNxcTGDBQx1tdJF7VOl/Y7E12BTrTMtu7ZOaq8Y=;
+  b=FiLEkTPsu5Gt8yKtJGSkVj2+Fb3GuJrmkwSpbyW2V4yr4lsTTrqhI8/f
+   +RUfpb6h6m4zM52mRIa1WBduu1XJoQHWzhstFLiAo3M38SYmJE9M6k8kB
+   pf+JTo3QgfIOsVKGVHkzGFKZPRLPLCjf2ou3dJb1x5A/rel+Qq8uRD7t0
+   N9JESRUyPWF5HKBDIOo8wTRl1DncsrYWeob8TAEgJKx+8TFL/7OOcVQSo
+   uBYPBoqnZr6kNSMTZRgatvtlUGRnl40lwuAhsaeoSf8nAhlFBSOm0BLrO
+   iPJxui2HZ67Y3n/NO1PkkxUrTDkGTtVPJoK7kiK+5+3Zr25CRvhrLj0Ul
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="341710981"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="312430791"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 02:05:02 -0800
+   d="scan'208";a="341710981"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 02:14:30 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="711906853"
+X-IronPort-AV: E=McAfee;i="6500,9779,10544"; a="637168198"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="711906853"
+   d="scan'208";a="637168198"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 28 Nov 2022 02:04:59 -0800
+  by orsmga007.jf.intel.com with ESMTP; 28 Nov 2022 02:14:27 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ozb0U-0014FO-0b;
-        Mon, 28 Nov 2022 12:04:58 +0200
-Date:   Mon, 28 Nov 2022 12:04:57 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Michael Walle <michael@walle.cc>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, broonie@kernel.org
-Subject: Re: [PATCH v3 3/9] gpio: 104-dio-48e: Migrate to the regmap-irq API
-Message-ID: <Y4SHyWrYobT88Mgr@smile.fi.intel.com>
-References: <cover.1669100542.git.william.gray@linaro.org>
- <80fc819bcafe9697b6e02c0750d3cf0ea4ec9e1b.1669100542.git.william.gray@linaro.org>
- <Y3414YhVjqKakddV@smile.fi.intel.com>
- <Y3ykg1Vc96Px6ovg@fedora>
- <3a23df35a35cdba19eeb10c75b5bca97@walle.cc>
- <Y4PeCBy/8slpMp2R@fedora>
- <Y4SEjVpLUd1wA8nd@smile.fi.intel.com>
- <Y4SFv9bRc1mlVf2r@smile.fi.intel.com>
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1ozb9d-0014Vw-37;
+        Mon, 28 Nov 2022 12:14:25 +0200
+Date:   Mon, 28 Nov 2022 12:14:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] gpio: Do not include <linux/kernel.h> when not really
+ needed.
+Message-ID: <Y4SKAbUM52tanAvc@smile.fi.intel.com>
+References: <3f75784c57dc0682b5e1758daddd93fee6bb4b27.1669585920.git.christophe.jaillet@wanadoo.fr>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y4SFv9bRc1mlVf2r@smile.fi.intel.com>
+In-Reply-To: <3f75784c57dc0682b5e1758daddd93fee6bb4b27.1669585920.git.christophe.jaillet@wanadoo.fr>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 11:56:15AM +0200, Andy Shevchenko wrote:
-> On Mon, Nov 28, 2022 at 11:51:10AM +0200, Andy Shevchenko wrote:
-> > On Sun, Nov 27, 2022 at 05:00:40PM -0500, William Breathitt Gray wrote:
-> > > On Sun, Nov 27, 2022 at 07:31:48PM +0100, Michael Walle wrote:
-> > > > Am 2022-11-22 11:29, schrieb William Breathitt Gray:
+On Sun, Nov 27, 2022 at 10:52:10PM +0100, Christophe JAILLET wrote:
+> <linux/kernel.h> is included only for using container_of().
+> Include <linux/container_of.h> instead, it is much lighter.
 
-...
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
 
-> > > > gpiochip doesn't seem to be the correct place, gpiochip_add_irqchip()
-> > > > is a noop for gpio-regmap, right? So using gpiochip_irqchip_init_hw()
-> > > > seems wrong.
-> > > > 
-> > > > Maybe make gpio-regmap call it on its own? But really we just connect
-> > > > the regmap-irq to the gpiochip irqdomain.
-> > > 
-> > > I think you're right, it feels strange to handle IRQ initialization via
-> > > the GPIO framework. Maybe somewhere in regmap_irq might be more
-> > > appropriate?
-> > 
-> > The problem that that callback solves is possible interrupt storm, spurious
-> > interrupts, and Use Before Initialized.
-> > 
-> > If you can guarantee that in your case it never happens, add a comment
-> > and go on.
-> > 
-> > (It might be useful to tweak code a bit and try CONFIG_DEBUG_SHIRQ=y)
-> > 
-> > > > What is the purpose of the
-> > > > .init_hw callback? I've looked at other drivers which use regmap-irq
-> > > > and they all seem to just initialize the hardware in their _probe().
-> > > > 
-> > > > -michael
-> > > 
-> > > I'm not opposed to initializing the hardware in _probe(), although I can
-> > > see merit in pushing that operation instead closer to the framework
-> > > where the initialization is actually relevant.
-> > > 
-> > > Andy, maybe you can shed some light about .init_hw; I think you
-> > > introduced it to gpiolib in commit 9411e3aaa6342.
-> > 
-> > It seems that commit message doesn't fully  explain the situation behind
-> > that change. But it was observed in real life, see above.
+Thanks for doing this! We really don't want to see kernel.h to be included by
+other headers in the include/linux, include/asm, etc.
+
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> Not sure if the prefix should be gpio or gpiolib.
+
+I'm not sure either because this more for the consumers, I would leave gpio.
+
+> Let see if build-bots spot something which is inherit via kernel.h
+> ---
+>  include/linux/of_gpio.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> FWIW, real life example:
-> e986f0e602f1 ("pinctrl: intel: fix unexpected interrupt")
-
-And another one (seems found from SW perspective):
-a33912061607 ("gpio: lynxpoint: Move hardware initialization to callback")
+> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+> index a5166eb93437..6db627257a7b 100644
+> --- a/include/linux/of_gpio.h
+> +++ b/include/linux/of_gpio.h
+> @@ -34,7 +34,7 @@ enum of_gpio_flags {
+>  
+>  #ifdef CONFIG_OF_GPIO
+>  
+> -#include <linux/kernel.h>
+> +#include <linux/container_of.h>
+>  
+>  /*
+>   * OF GPIO chip for memory mapped banks
+> -- 
+> 2.34.1
+> 
+> 
 
 -- 
 With Best Regards,
