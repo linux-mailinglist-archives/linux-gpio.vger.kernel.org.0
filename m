@@ -2,59 +2,62 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0A2D63B1C1
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 20:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6459063B1F1
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 20:12:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232447AbiK1TB3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 14:01:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
+        id S233202AbiK1TMo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 14:12:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233081AbiK1TBZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 14:01:25 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB64C26AC0;
-        Mon, 28 Nov 2022 11:01:24 -0800 (PST)
+        with ESMTP id S233199AbiK1TMm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 14:12:42 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE5A6164;
+        Mon, 28 Nov 2022 11:12:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669662085; x=1701198085;
+  t=1669662761; x=1701198761;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=DnYg4XqVVvxprNVrqnW/iQllU52ccsTpeN+jbAJ6iS0=;
-  b=f0/QqnORBWLQoNiTaM1KlH+I4MlTNSDtUJakyl8meEfR2KDsdLJzq4BM
-   URNAkb3Ivt6r6s0D01mv0Nqb1JRkFAmA5UKm+R8s4fLbj9voQA45iINMv
-   AtnHLTnEUIXzO/2OWOZucy4puSD2hvDmgBkXQxuVDYK6c8t4MvO3AObsS
-   I5DkCasxPbuTNPlyr1c4CB94ng6Q5xDkp0BNXng4HFIlotL+RfcIdc2Fj
-   yB3g+vFDCq6zethlvVlPotD7lV2HPgILNassqawzCQpZF97ogJM5S/d2N
-   LBnGRAoynu8oOObhy1f5O3CFCMx/cpcI+Fs6tqNvAV90xVokLVsHfS+c1
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="313629213"
+  bh=tpKVBl91w441Ol1xAG26hVyxvG2xyFS2cEqH3COpaGE=;
+  b=Or/KfyYaTyLuxpjaLJ1ySe73510+ZI+D6lmObpH/OqFmQP+DMCY+KfYC
+   B7TiZ7HBdb1C+u3d+VgODnVFLq5UgIsFMGzICVJ7cTC3QxUBW2CwiqJYy
+   xdJzAyY7ich0R7LdBYcUp4Ii/C6aGED2Pj3NI3QH4U5BEOvk8GC3F5Bsd
+   45PNHMJEMB6s3kH/t8bZnVfkNlGUlJ2u//c6owQihJhA76QosKoDK4fou
+   wiIOJyq2rBxuTRPyJjFfwtu9epmiQTquzlCbJSVrd2jAD9TAlUPtjbdTC
+   RTkfXNd+GZpwk+jdgSteJjeUfubr2udt6c5DPcLHLTnb8aayyfcgUs4QE
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="379186455"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="313629213"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 11:01:23 -0800
+   d="scan'208";a="379186455"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2022 11:12:21 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="785749910"
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="732260822"
 X-IronPort-AV: E=Sophos;i="5.96,200,1665471600"; 
-   d="scan'208";a="785749910"
+   d="scan'208";a="732260822"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 28 Nov 2022 11:01:22 -0800
+  by FMSMGA003.fm.intel.com with ESMTP; 28 Nov 2022 11:12:19 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ozjNY-001MCf-2U;
-        Mon, 28 Nov 2022 21:01:20 +0200
-Date:   Mon, 28 Nov 2022 21:01:20 +0200
+        id 1ozjYA-001MTs-11;
+        Mon, 28 Nov 2022 21:12:18 +0200
+Date:   Mon, 28 Nov 2022 21:12:18 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/2] gpiolib: Provide to_gpio_device() helper
-Message-ID: <Y4UFgMeqK+n9ya90@smile.fi.intel.com>
-References: <20221125181158.67265-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MccBY8ov4CGB3uWNBsWSAw48vWY8mekZg53QB1pF+itLg@mail.gmail.com>
+        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Dale Smith <dalepsmith@gmail.com>,
+        John Harris <jmharris@gmail.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: Save and restore pins in "direct
+ IRQ" mode
+Message-ID: <Y4UIEpICwI9NdoL+@smile.fi.intel.com>
+References: <20221124222926.72326-1-andriy.shevchenko@linux.intel.com>
+ <Y4BcguSaNlh7VbLQ@black.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMRc=MccBY8ov4CGB3uWNBsWSAw48vWY8mekZg53QB1pF+itLg@mail.gmail.com>
+In-Reply-To: <Y4BcguSaNlh7VbLQ@black.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -65,18 +68,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Nov 28, 2022 at 07:04:28PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Nov 25, 2022 at 7:11 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-
-...
-
-> > +#define to_gpio_device(_dev_)  container_of(_dev_, struct gpio_device, dev)
-> > +
+On Fri, Nov 25, 2022 at 08:11:14AM +0200, Mika Westerberg wrote:
+> On Fri, Nov 25, 2022 at 12:29:26AM +0200, Andy Shevchenko wrote:
+> > The firmware on some systems may configure GPIO pins to be
+> > an interrupt source in so called "direct IRQ" mode. In such
+> > cases the GPIO controller driver has no idea if those pins
+> > are being used or not. At the same time, there is a known bug
+> > in the firmwares that don't restore the pin settings correctly
+> > after suspend, i.e. by an unknown reason the Rx value becomes
+> > inverted.
+> > 
+> > Hence, let's save and restore the pins that are configured
+> > as GPIOs in the input mode with GPIROUTIOXAPIC bit set.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Reported-and-tested-by: Dale Smith <dalepsmith@gmail.com>
+> > Reported-and-tested-by: John Harris <jmharris@gmail.com>
+> > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=214749
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Just make it a static inline, please.
+> Thanks Andy!
+> 
+> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Made in v2. Thanks for review!
+Thank you!
+
+Linus, this would be nice to have in v6.1 release, if possible.
 
 -- 
 With Best Regards,
