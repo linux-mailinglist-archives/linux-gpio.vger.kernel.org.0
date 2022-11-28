@@ -2,58 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6419063A266
-	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 09:00:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 730BD63A31D
+	for <lists+linux-gpio@lfdr.de>; Mon, 28 Nov 2022 09:32:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbiK1IAJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 03:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
+        id S229895AbiK1Icu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 03:32:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbiK1IAI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 03:00:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0A0711A3E;
-        Mon, 28 Nov 2022 00:00:03 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B5EF61018;
-        Mon, 28 Nov 2022 08:00:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BFB0C433C1;
-        Mon, 28 Nov 2022 08:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669622402;
-        bh=sSP+y58dUYdr/Ye6OLHQOoGvusu/KoVqOieYdy6sw9A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dU8AM9dy2tYGxHKw1fk6Zik0APTZu5x6iKL3BDP2vPnO+Xm9Rcr15Dp7HStEgXKPM
-         4wKyn5Ghl+x4pCCmKt4BAT9RJmM2dszRnm8CkdtDf92CfPXjm5KtsSSKB2r1brXFGT
-         PAeqqoZRT0AQ2TZbqM8HhRLK3mpX6lfhFjbaPbs+O57O2gfHmAqJ+HUoaPi+DcAGQd
-         xBSnS0TABr23O549lTBGLHH4DabQkk9aFf5XX//X2D5Ze/Cj5RDlZxuD83Foitm0L7
-         xA+TvvkzMTfYycZzFJ5TNeoP5TI8BvMMekUQV55fNJsKC5dS8WWY3DuDeLoHwe243x
-         hRGKFhQ4fbxeg==
-Received: by pali.im (Postfix)
-        id 900AD87A; Mon, 28 Nov 2022 08:59:59 +0100 (CET)
-Date:   Mon, 28 Nov 2022 08:59:59 +0100
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
-        u.kleine-koenig@pengutronix.de, lee.jones@linaro.org,
-        andrew@lunn.ch, thomas.petazzoni@free-electrons.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] dt-bindings: gpio: gpio-mvebu: deprecate
- armadaxp-gpio
-Message-ID: <20221128075959.3a3io5nhaizm7uxj@pali>
-References: <20220526012946.3862776-1-chris.packham@alliedtelesis.co.nz>
- <20220526012946.3862776-3-chris.packham@alliedtelesis.co.nz>
+        with ESMTP id S229674AbiK1Ict (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 03:32:49 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D4885F71
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 00:32:48 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id g7so16204120lfv.5
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 00:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=983vZmfe7jg3PD5EB3eQ9LeCd23DV+eV1fr/DcjdUm8=;
+        b=CjVdRdltMTd1Id79iqrTL6Zur0PPWkP39IltMT39Kf03+T+sPoC+4iWi1M8cdJbUb9
+         Qh8nD2yt4fRd0gd9rH/GeAwFUb0P7Q7W83sHjOdHY8zVF3Q2G40GtKcnqCfaaLvTzBsd
+         yRYt4immw2ZPDiRAiU26EqQCmoN3h6shyYUoVmIeC5mxNLiU1oSV0NDCiN/nkcQZ6AlW
+         bd4a3nTuF7ivIZAFsVZcX/WZgMsPv0yp7GmZ0Sm/yU9nQMWPOy0eWXOXHF/lCF4bYsD4
+         DKXhrYglw6DNAm7DkBpeZXHJ9d9OT2C5HxFWqFb573XtMRpKcTvd2SYbhUMp5fZs109j
+         DXXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=983vZmfe7jg3PD5EB3eQ9LeCd23DV+eV1fr/DcjdUm8=;
+        b=2KrWRXgHHm5j6asvLWm7Mw/rtdsqiB14wvsuSrO2OqSIE7pIyWUlgKP/BkViKMtmoj
+         F6m+Xg3JksoacTGw4bBEZvoFd6bETcXVw+jPL+fMb1wDQ43bG4ZTbStcbHyhoQVxlUoZ
+         in3gIWv6FxFrzyUcftHRYk06Nmvisd3J9NGrOLUJpJ3dnAjv9CxDxd19IbFVGEEChpGN
+         Az65btoCoZPxXelhkXJFKmG726W0gcnS9iyv1Zz77Bi1eTL/DjjHXUMmYuLq29JArtnK
+         s/WtQhbbuHLx/sYmWqSkdaUxSPqcnBNTkKHlixAbY4Aw7tFgXfCVY//DCAQ+ZRfJhp8t
+         iTgQ==
+X-Gm-Message-State: ANoB5pnOZ61hg5sNexQ06J+p3x/5SZKkkvD20gXBIDwZEdXA3lsxl7+q
+        VJzSkPjuvLJ0bRlRwCNv7CdBVw==
+X-Google-Smtp-Source: AA0mqf7AFRRbcu4251GazNH8EBAc/6JlexTcxGgKBsiqYhIA67n+8prqtL2Sq/j3X5x6hAj6biLCgQ==
+X-Received: by 2002:ac2:430e:0:b0:4b4:9c0b:f4d3 with SMTP id l14-20020ac2430e000000b004b49c0bf4d3mr16235202lfh.349.1669624366437;
+        Mon, 28 Nov 2022 00:32:46 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id bf37-20020a2eaa25000000b002793cf0e9e8sm1162098ljb.122.2022.11.28.00.32.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Nov 2022 00:32:46 -0800 (PST)
+Message-ID: <093ea507-4c42-1af9-4896-64c1a918432e@linaro.org>
+Date:   Mon, 28 Nov 2022 09:32:45 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220526012946.3862776-3-chris.packham@alliedtelesis.co.nz>
-User-Agent: NeoMutt/20180716
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl
+ definitions
+Content-Language: en-US
+To:     Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Hal Feng <hal.feng@starfivetech.com>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Conor Dooley <conor@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        linux-kernel@vger.kernel.org
+References: <20221118011108.70715-1-hal.feng@starfivetech.com>
+ <20221118011108.70715-2-hal.feng@starfivetech.com>
+ <eb3974a3-f715-f5b0-cac7-551af26bd17b@linaro.org>
+ <08db0f3b-5222-9460-26ba-0e6380d16583@linaro.org>
+ <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,89 +86,29 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thursday 26 May 2022 13:29:45 Chris Packham wrote:
-> Commit 5f79c651e81e ("arm: mvebu: use global interrupts for GPIOs on
-> Armada XP") the marvell,armadaxp-gpio compatible obsolete.
+On 28/11/2022 01:48, Jianlong Huang wrote:
 
-No, marvell,armadaxp-gpio is required for per-cpu interrupt support. I fixed it recently:
-https://lore.kernel.org/linux-devicetree/20220714115515.5748-2-pali@kernel.org/
-https://lore.kernel.org/linux-devicetree/20220714183328.4137-3-pali@kernel.org/
-
-> The driver code still exists to handle the armadaxp behaviour but all
-> the in-tree boards use the marvell,armada-370-gpio.  Document the
-> marvell,armadaxp-gpio compatible as deprecated.
-
-For per-cpu interrupt support is marvell,armadaxp-gpio needed and
-therefore it cannot be deprecated.
-
-What can be deprecated is marvell,armada-370-gpio and it can be replaced
-by marvell,orion-gpio, which covers _all_ SoCs starting from the oldest
-one = Orion. See discussion for more details:
-https://lore.kernel.org/linux-devicetree/20220725200417.nwthxzvdv2bzd5ej@pengutronix.de/
-
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
+>>>> +/* aon_iomux doen */
+>>>> +#define GPOEN_AON_PTC0_OE_N_4			2
+>>>> +#define GPOEN_AON_PTC0_OE_N_5			3
+>>>> +#define GPOEN_AON_PTC0_OE_N_6			4
+>>>> +#define GPOEN_AON_PTC0_OE_N_7			5
+>>>> +
+>>>
+>>> It looks like you add register constants to the bindings. Why? The
+>>> bindings are not the place to represent hardware programming model. Not
+>>> mentioning that there is no benefit in this.
+>>
+>> Also: this entire file should be dropped, but if it stays, you have to
+>> name it matching bindings or compatible (vendor,device.h).
 > 
-> Notes:
->     This could potentially be squashed into the first commit but it seemed
->     more proper to do a straight 1:1 conversion of the old binding then
->     clean things up to match reality.
->     
->     Changes in v4:
->     - New
-> 
->  .../devicetree/bindings/gpio/gpio-mvebu.yaml  | 24 +++++++------------
->  1 file changed, 8 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> index d1695e7bd825..459ec35864fe 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
-> @@ -21,17 +21,21 @@ properties:
->            - enum:
->                - marvell,mv78200-gpio
->                - marvell,armada-370-gpio
-> -              - marvell,armadaxp-gpio
->            - const: marvell,orion-gpio
->  
-> +      - description: Deprecated binding
-> +        items:
-> +          - const: marvell,armadaxp-gpio
-> +          - const: marvell,orion-gpio
-> +        deprecated: true
-> +
->    reg:
->      description: |
->        Address and length of the register set for the device. Not used for
->        marvell,armada-8k-gpio.
->  
-> -      For the "marvell,armadaxp-gpio" variant a second entry is expected for
-> -      the per-cpu registers. For other variants second entry can be provided,
-> -      for the PWM function using the GPIO Blink Counter on/off registers.
-> +      A second entry can be provided, for the PWM function using the GPIO Blink
-> +      Counter on/off registers.
->      minItems: 1
->      maxItems: 2
->  
-> @@ -103,18 +107,6 @@ allOf:
->        required:
->          - reg
->  
-> -  - if:
-> -      properties:
-> -        compatible:
-> -          contains:
-> -            const: marvell,armadaxp-gpio
-> -    then:
-> -      properties:
-> -        reg:
-> -          minItems: 2
-> -        reg-names:
-> -          minItems: 2
-> -
->  unevaluatedProperties: true
->  
->  examples:
-> -- 
-> 2.36.1
-> 
+> Thanks your comments.
+> These macros are used to configure pinctrl in dts, so the file should stay,
+
+Why they should stay? What's the reason? If it is not a constant used by
+driver, then register values should not be placed in the bindings, so
+drop it.
+
+Best regards,
+Krzysztof
+
