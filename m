@@ -2,47 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEF8263C473
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 16:59:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB7F863C499
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 17:04:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235645AbiK2P7U (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 10:59:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56434 "EHLO
+        id S236164AbiK2QEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 11:04:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235803AbiK2P65 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 10:58:57 -0500
-Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F946930A;
-        Tue, 29 Nov 2022 07:57:56 -0800 (PST)
-Received: from EXMBX165.cuchost.com (unknown [175.102.18.54])
-        (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-        (Client CN "EXMBX165", Issuer "EXMBX165" (not verified))
-        by ex01.ufhost.com (Postfix) with ESMTP id D4F4224E023;
-        Tue, 29 Nov 2022 23:57:52 +0800 (CST)
-Received: from EXMBX065.cuchost.com (172.16.6.65) by EXMBX165.cuchost.com
- (172.16.6.75) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 29 Nov
- 2022 23:57:52 +0800
-Received: from [192.168.0.104] (219.128.233.15) by EXMBX065.cuchost.com
- (172.16.6.65) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Tue, 29 Nov
- 2022 23:57:51 +0800
-Message-ID: <8677051a-604a-210c-066c-75db444d6f09@starfivetech.com>
-Date:   Tue, 29 Nov 2022 23:58:30 +0800
+        with ESMTP id S235781AbiK2QEe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 11:04:34 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE571F2C9
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 08:02:44 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id u27so11727777lfc.9
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 08:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=13+qbJOmWTqxbFOdDOLgCT6uW4S43S5+kJ0NK9uACko=;
+        b=eFbk+HGJxPawBYhTluxHbS2J74enMGNbBWPwjZnYQ/CWkejbCh/CQwm7RT79kNoj4V
+         26fei0JhV0J1NsodfAftlgIIS7xDdt/QA51zN29aHc/+AnUmU7cYMno6t72DjXbtdjfC
+         jonXr6tyqeXSXj17TU1/lroRd1ZFQebUiNEHvRw88JSpFwClmZ/Hrcss3A+3XvsUHTUO
+         J5lRk5BZ2JVrGGCH1/ponGmfnIJNNg6pj5xFJtrYtJAunfy/6Fm2Ndp9/XB+m6xXXaix
+         z/xG/Ryq0S/NoARPexwy4IvXPc21KD7C+B46voVXGO2VbNQul00ARFNX4nveIjPKCIJb
+         L0NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=13+qbJOmWTqxbFOdDOLgCT6uW4S43S5+kJ0NK9uACko=;
+        b=O6f+rLArIRyF5DFAU9I6sN/i9w+iZJtXGq58LQfgWSBxQii74sbvJFziZFeu+z3haR
+         AXguGIqaY4swvgydMxiC5slhsDt697dLPX+t+xZcfBZdNm9yk0HllUpmc8xovrqnjJN0
+         N3cQXzyVuNZK2Ivhx0I5VSa64Nvgl6hFzJdZRompKxZyNH7Ua4EQty2X8zJB3hj/Lfkb
+         42g5flGPTfO77z56p8AlmeVo205kFdfcIQPHW0j5XJG9tguw1bWlz2a+0fsECNEYwAf5
+         SQnnG8MWX1N6POM81NWJfYynKBSHPvBKYs5OYgYXD/qZppHNPKSiSt2izRXoT52zqM9E
+         jIbA==
+X-Gm-Message-State: ANoB5pnvDOVkNsHMSCpJcHmVOTMdGbGvf8Gm2wihD79jOJKZ6x/iVCAF
+        sWJT6IoQd4K55D4X4F3Pcc0aUQ==
+X-Google-Smtp-Source: AA0mqf47BgiluiyNP/9thR/1gKkiA3+Yk8TNqaH4cPXqRpLVYA73Z5o8kzd7SJcWMxMO4FCNHl26ww==
+X-Received: by 2002:ac2:4bd0:0:b0:4af:ad36:7a85 with SMTP id o16-20020ac24bd0000000b004afad367a85mr19013323lfq.617.1669737761605;
+        Tue, 29 Nov 2022 08:02:41 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id w18-20020a2e9992000000b00278e7800715sm1570514lji.16.2022.11.29.08.02.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 08:02:41 -0800 (PST)
+Message-ID: <0a8c3ed4-c16a-4014-94f6-cf177630e605@linaro.org>
+Date:   Tue, 29 Nov 2022 17:02:39 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
 Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl
  definitions
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+Content-Language: en-US
+To:     Jianlong Huang <jianlong.huang@starfivetech.com>,
         Hal Feng <hal.feng@starfivetech.com>,
-        <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Conor Dooley <conor@kernel.org>,
+        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+Cc:     Conor Dooley <conor@kernel.org>,
         Palmer Dabbelt <palmer@dabbelt.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org
 References: <20221118011108.70715-1-hal.feng@starfivetech.com>
  <20221118011108.70715-2-hal.feng@starfivetech.com>
  <eb3974a3-f715-f5b0-cac7-551af26bd17b@linaro.org>
@@ -53,93 +78,36 @@ References: <20221118011108.70715-1-hal.feng@starfivetech.com>
  <339be655-aee7-e1a4-51be-28ea20de6792@linaro.org>
  <3db802d6-114f-097a-6c69-e7b40e4d2764@starfivetech.com>
  <f52e31a5-a12a-b95e-b99c-1af8f8b41c3b@linaro.org>
-Content-Language: en-US
-From:   Jianlong Huang <jianlong.huang@starfivetech.com>
-In-Reply-To: <f52e31a5-a12a-b95e-b99c-1af8f8b41c3b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+ <8677051a-604a-210c-066c-75db444d6f09@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <8677051a-604a-210c-066c-75db444d6f09@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [219.128.233.15]
-X-ClientProxiedBy: EXCAS066.cuchost.com (172.16.6.26) To EXMBX065.cuchost.com
- (172.16.6.65)
-X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, 29 Nov 2022 15:58:12 +0100, Krzysztof Kozlowski wrote:
-> On 29/11/2022 15:46, Jianlong Huang wrote:
->> On Tue, 29 Nov 2022 08:49:49 +0100, Krzysztof Kozlowski wrote:
->>> On 29/11/2022 02:47, Jianlong Huang wrote:
->>>> On Mon, 28 Nov 2022 09:32:45 +0100, Krzysztof Kozlowski wrote:
->>>>> On 28/11/2022 01:48, Jianlong Huang wrote:
->>>>>
->>>>>>>>> +/* aon_iomux doen */
->>>>>>>>> +#define GPOEN_AON_PTC0_OE_N_4			2
->>>>>>>>> +#define GPOEN_AON_PTC0_OE_N_5			3
->>>>>>>>> +#define GPOEN_AON_PTC0_OE_N_6			4
->>>>>>>>> +#define GPOEN_AON_PTC0_OE_N_7			5
->>>>>>>>> +
->>>>>>>>
->>>>>>>> It looks like you add register constants to the bindings. Why? The
->>>>>>>> bindings are not the place to represent hardware programming model. Not
->>>>>>>> mentioning that there is no benefit in this.
->>>>>>>
->>>>>>> Also: this entire file should be dropped, but if it stays, you have to
->>>>>>> name it matching bindings or compatible (vendor,device.h).
->>>>>>
->>>>>> Thanks your comments.
->>>>>> These macros are used to configure pinctrl in dts, so the file should stay,
->>>>>
->>>>> Why they should stay? What's the reason? If it is not a constant used by
->>>>> driver, then register values should not be placed in the bindings, so
->>>>> drop it.
->>>>>
->>>>
->>>> Thanks.
->>>>
->>>> These macros in binding header(example, DOUT, DOEN etc) will be used in DTS,
->>>> and driver will parse the DT for pinctrl configuration.
->>>>
->>>> Example in dts:
->>>> uart0_pins: uart0-0 {
->>>> 	tx-pins {
->>>> 		pinmux = <GPIOMUX(5, GPOUT_SYS_UART0_TX, GPOEN_ENABLE, GPI_NONE)>;
+On 29/11/2022 16:58, Jianlong Huang wrote:
 >>>
->>> This is usage in DTS and is not an argument to store register
->>> addresses/offsets as bindings. What is the usage (of define, not value)
->>> in the driver?
->>>
->> 
->> The existing implementation reuse the macros for DTS and driver.
+>>> Drivers rarely reference macros directly, mostly parsing dts and writing them to registers.
+>>
+>> So drivers do not use macros? Then there is no reason to store them in
+>> bindings? What do you "bind" if there is no usage (and we do not talk
+>> about DTS...)?
+>>
 > 
-> Where in the driver? Grep gives zero results.
-> 
->> Do you mean we need to separate the macros, one for DTS and one for driver usage?
-> 
-> No, if driver uses them it is fine. The problem is I cannot find it
-> anywhere.
-> 
->> Or you have any better suggestion?
->> 
->> These macros are the value of register, not register addresses/offsets,
->> except for with prefix of GPI.
-> 
-> Still, values are not usually part of bindings.
-> 
->> 
->> Drivers rarely reference macros directly, mostly parsing dts and writing them to registers.
-> 
-> So drivers do not use macros? Then there is no reason to store them in
-> bindings? What do you "bind" if there is no usage (and we do not talk
-> about DTS...)?
-> 
+> Where do you suggest to store these macros used in DTS?
 
-Where do you suggest to store these macros used in DTS?
+Sometimes they do not need storing. If they are worth, then in the DTS
+headers. Few platforms (Samsung, All of NXP, Mediatek, Sama5/Atmel) are
+doing it already.
 
 Best regards,
-Jianlong Huang
+Krzysztof
 
