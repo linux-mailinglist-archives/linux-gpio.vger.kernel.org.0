@@ -2,111 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DA5063C659
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 18:22:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 860B063C97B
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 21:42:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236451AbiK2RWq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 12:22:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54604 "EHLO
+        id S234987AbiK2UmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 15:42:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236543AbiK2RWn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 12:22:43 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FEA6A1A4;
-        Tue, 29 Nov 2022 09:22:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669742561; x=1701278561;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kISIMw8JT051+G5GMquysEX+2T4slewd3zmpmeqLw/U=;
-  b=arrYDfScCUXY5TcUBQyXxlI90lfJuJSB1Iiq5FmqPknOn2fzxCJmwXHX
-   L1/NCmDY1UdgI4RacdtZCGZdXjdxiRxGgAhqq2ea+4oFNaFX7k+Fifrkg
-   P/gEGhJViTX6iU9k5lV+ySBH7h8e1WAqoLMV1cXHUwd1c/OmFr9ZccWWq
-   yfA9IRItA+nrxl12AfMlSXm0On5+1WZhCexjm9xNZVPK1sPcWForPpzch
-   kbc79B4Wz0ovNO0vbV5oWUEZUJWZ18Iqta9hsBqU4VADeNMtj23A+DrUO
-   t0BIK+mm6tH5xCDw98G1cKnTiN/MDPR8xwZdYv87VwFyLEm3yk26n02bE
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="302774422"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="302774422"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 08:54:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="888917446"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="888917446"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga006.fm.intel.com with ESMTP; 29 Nov 2022 08:54:24 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p03sE-001nJC-1r;
-        Tue, 29 Nov 2022 18:54:22 +0200
-Date:   Tue, 29 Nov 2022 18:54:22 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-Message-ID: <Y4Y5Pomzhc/uK5c4@smile.fi.intel.com>
-References: <20221129123553.353410-1-brgl@bgdev.pl>
+        with ESMTP id S233743AbiK2UmK (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 15:42:10 -0500
+X-Greylist: delayed 33597 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Nov 2022 12:42:07 PST
+Received: from 20.mo583.mail-out.ovh.net (20.mo583.mail-out.ovh.net [91.121.55.239])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB2A686BD
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 12:42:07 -0800 (PST)
+Received: from player158.ha.ovh.net (unknown [10.110.103.195])
+        by mo583.mail-out.ovh.net (Postfix) with ESMTP id D58DA25161
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 11:15:27 +0000 (UTC)
+Received: from milecki.pl (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
+        (Authenticated sender: rafal@milecki.pl)
+        by player158.ha.ovh.net (Postfix) with ESMTPSA id 46A5F3138E659;
+        Tue, 29 Nov 2022 11:15:24 +0000 (UTC)
+Authentication-Results: garm.ovh; auth=pass (GARM-103G0058d0926ac-28bf-4aef-bf3b-464d960ad17b,
+                    EBB6FAEB9E2E49B041ED7FFF0E08AB355E9D3184) smtp.auth=rafal@milecki.pl
+X-OVh-ClientIp: 194.187.74.233
+Message-ID: <aa4cb998-2820-1d5c-c6fe-663515b7bd7f@milecki.pl>
+Date:   Tue, 29 Nov 2022 12:15:22 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221129123553.353410-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
+ Thunderbird/96.0
+Subject: Re: [PATCH] pinctrl: thunderbay: fix possible memory leak in
+ thunderbay_add_functions()
+To:     Gaosheng Cui <cuigaosheng1@huawei.com>,
+        lakshmi.sowjanya.d@intel.com, linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org
+References: <20221129105820.1539875-1-cuigaosheng1@huawei.com>
+From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+In-Reply-To: <20221129105820.1539875-1-cuigaosheng1@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Ovh-Tracer-Id: 16847684732605541289
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvgedrjeeggddvhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttdefjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnheptdegteehuedtvddukedutdekteevheetgeelheffteekheejteffgfevgeekfeeunecukfhppeduvdejrddtrddtrddupdduleegrddukeejrdejgedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehrrghfrghlsehmihhlvggtkhhirdhplheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 01:35:51PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 29.11.2022 11:58, Gaosheng Cui wrote:
+> The memory of funcs is allocated by thunderbay_build_functions(),
+> thunderbay_add_functions() will free funcs when everything is ok,
+> but it will not be freed when thunderbay_add_functions() fails,
+> then there will be a memory leak, so add kfree() when
+> thunderbay_add_functions() fails to fix it.
 > 
-> This is a second iteration of the changes that aim at fixing the situation
-> in which the user-space can provoke a NULL-pointer derefence in the kernel
-> when a GPIO device that's in use by user-space is removed.
+> Fixes: 25d2e41cf59b ("pinctrl: thunderbay: rework loops looking for groups names")
+> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+> ---
+>   drivers/pinctrl/pinctrl-thunderbay.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> I didn't add the review tags as the code changes significantly.
+> diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
+> index 9328b17485cf..10a7380af8e6 100644
+> --- a/drivers/pinctrl/pinctrl-thunderbay.c
+> +++ b/drivers/pinctrl/pinctrl-thunderbay.c
+> @@ -784,8 +784,10 @@ static int thunderbay_add_functions(struct thunderbay_pinctrl *tpc, struct funct
+>   
+>   		group_names = devm_kcalloc(tpc->dev, func->num_group_names,
+>   					   sizeof(*group_names), GFP_KERNEL);
+> -		if (!group_names)
+> +		if (!group_names) {
+> +			kfree(funcs);
+>   			return -ENOMEM;
+> +		}
+>   
+>   		for (j = 0; j < tpc->soc->npins; j++) {
+>   			const struct pinctrl_pin_desc *pin_info = &thunderbay_pins[j];
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+I'm wondering if moving that kfree(funcs) to the caller
+(thunderbay_build_functions()) would make code a bit cleaner.
 
-Some nit-picks are in the individual reply(ies).
-
-> v2 -> v3:
-> - drop the helper variable in patch 1/2 as we won't be using it in 2/2
-> - refactor patch 2/2 to use locking wrappers around the syscall callbacks
-> 
-> v1 -> v2:
-> - add missing gdev->chip checks in patch 1/2
-> - add a second patch that protects the structures that can be accessed
->   by user-space calls against concurrent removal
-> 
-> Bartosz Golaszewski (2):
->   gpiolib: cdev: fix NULL-pointer dereferences
->   gpiolib: protect the GPIO device against being dropped while in use by
->     user-space
-> 
->  drivers/gpio/gpiolib-cdev.c | 190 +++++++++++++++++++++++++++++++-----
->  drivers/gpio/gpiolib.c      |   3 +
->  drivers/gpio/gpiolib.h      |   5 +
->  3 files changed, 176 insertions(+), 22 deletions(-)
-> 
-> -- 
-> 2.37.2
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+If you take a look at thunderbay_build_functions() it takes care of
+allocating and reallocating so maybe kfree() should belong there too?
