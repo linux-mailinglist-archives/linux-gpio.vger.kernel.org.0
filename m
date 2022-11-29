@@ -2,130 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DD7563BB56
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 09:15:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C6263BBA6
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 09:31:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230149AbiK2IPH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 03:15:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
+        id S230318AbiK2Ibf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 03:31:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbiK2IPE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 03:15:04 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9EAE54772
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 00:15:03 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id y16so1028012wrm.2
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 00:15:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+tGnGmsd8SAIBQy5l4bYfSlkJXwSsNSEiUXV0JrZ7G4=;
-        b=KTldDQLc2tfmlmwHTPtlzERRJy+/jbYo9EsHIxk7O1mjZbOw9VlAAiNseOhv+Le/EY
-         4ZiEDc1QvJwrXaMN6eFvxqerNsnilHxvYyrnTSMXoCXQXWCPxQKf25zugw93LCUDO5aa
-         4y3Nd84D1+RvRWa6FCu8bT7RsBUZ1MNfy19ToCyxmF+kg59jjg4efRoZHY6F+te3aCe1
-         zs+dBujwbjothGnT2zaJGuKkewhnmrNOePYr5sLSz1BX4weqKuRwLldukQ/T1+wuXGGv
-         ADbztyNZqjIHoGHQtVI6FXqyrZZRqhmc6Azgbd+G2sLa3JZh4glG7ZPJpZRRfwAWYI8t
-         AN/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+tGnGmsd8SAIBQy5l4bYfSlkJXwSsNSEiUXV0JrZ7G4=;
-        b=uSMXGt8/MQgNhiUE+vicTWFG7D8e7Bz7ZnTtRFnE0XMXYTR4wCp1o8loNLLjS216/d
-         cMTZZdw3qC5BYOm7xmVlChbg5R9uS3HFEQx94wKm4BU20aflLFGfEB/dEKXLLU1jl8pd
-         UkMxUVnlqOHZAJMQ9wxwe0zQAcTEsNVHg2ZiQmXJtYaj/odzDznw/+5V3duoKv6ZTRwE
-         4uU0B3HJXnBgJE92/hPoxRn2qHg+r/2O4s6OmI+J6QY/j+gubPiIsxZNOu3MQUXrKHL7
-         cspOAy2PsG+VP51PgnaCTsGYdftzJKkhwDyAnbXXfeAhSlZM/vhimuQ+IMUGzbBw0SrD
-         7H5w==
-X-Gm-Message-State: ANoB5pkoGBsZJhv+72fox6CTDERu6rUe90/F+mup6A1h62GV5w5IHkH1
-        gBP3gLVjkklVS59xllJUL9R1GQ==
-X-Google-Smtp-Source: AA0mqf4cGPQC7b3hpyexGmaRKYiejcRHPv4RznEDcAyvSpiAKZOUZqQXpPilrMkBaqhOfPiP9RWS7w==
-X-Received: by 2002:a5d:6503:0:b0:22e:35e8:382d with SMTP id x3-20020a5d6503000000b0022e35e8382dmr33962143wru.475.1669709702171;
-        Tue, 29 Nov 2022 00:15:02 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:2f85:a28c:5df7:9cd2? ([2a01:e0a:982:cbb0:2f85:a28c:5df7:9cd2])
-        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b003b4c979e6bcsm1242431wms.10.2022.11.29.00.15.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 00:15:01 -0800 (PST)
-Message-ID: <f6ffd433-1652-fb4f-8657-928e7407ba5f@linaro.org>
-Date:   Tue, 29 Nov 2022 09:15:02 +0100
+        with ESMTP id S230339AbiK2Iap (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 03:30:45 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C3F59844;
+        Tue, 29 Nov 2022 00:30:02 -0800 (PST)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 973A766023A1;
+        Tue, 29 Nov 2022 08:29:59 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1669710600;
+        bh=XnYqiFVLP4BtH3oXv8+Wi85TZoEBQEB4dmv9jhrnXLo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=GnSd9BQuynt5Ll+SAJX0Wv2Wp5gdL5erByXb769tHIfyJ6b7loqfpKNyFpYU87J9y
+         /1Kfpa1zrUYHneQ93OPXC+Gxi2VmChmkr5Hex92ruzEzJJxe0arVP96XSuJS8tHNGk
+         uXsl44HT6vYEOIxQxSQ8hT83Zdxw94bYxMaib4VIvueYMldCnqGuWeWNaRCBSZXt0g
+         O9OJ6Vlke/xa7JT45ic9W+QZNOT0YAyZDHGV+kgZ9AyX4q80TI+kLargPaa4if4xV1
+         wpiszhZuihW+JxoPLtcFarfp87jtsU/164769C2xCn0JKq2vnm0I4kXUxw+NnITV2R
+         AuRpb2dmD6/hA==
+Message-ID: <e30a76e7-3bb7-5e19-2bc1-ab8a0c67d73e@collabora.com>
+Date:   Tue, 29 Nov 2022 09:29:56 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,tlmm-common: document
- i2c pull property
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v3 3/7] dt-bindings: pinctrl: mediatek,mt65xx: Deprecate
+ pins-are-numbered
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <20221123152001.694546-1-abel.vesa@linaro.org>
- <20221123152001.694546-3-abel.vesa@linaro.org>
- <CACRpkdZtkHCkfUAcezSJvmei=HOezK6oyx+4C5kBrEtU+vAB-g@mail.gmail.com>
- <fecb2dd6-9be2-78dc-4598-cc338fbdc2a2@linaro.org>
- <CACRpkdZJaz9BEorQa7dTNkgTkwZjJNB-MWrpKFxHRgdsf3xJww@mail.gmail.com>
- <8602cacd-f552-e843-5c17-681b099069a3@linaro.org>
- <CACRpkdbqjNJH_QvWyEPceUUxRQ2tOpErNOWA0rg5GNwq7PfUFQ@mail.gmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <CACRpkdbqjNJH_QvWyEPceUUxRQ2tOpErNOWA0rg5GNwq7PfUFQ@mail.gmail.com>
+To:     =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
+        devicetree@vger.kernel.org
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        krzysztof.kozlowski@linaro.org, matthias.bgg@gmail.com,
+        khilman@baylibre.com, linux-gpio@vger.kernel.org,
+        linus.walleij@linaro.org
+References: <20221129023401.278780-1-bero@baylibre.com>
+ <20221129023401.278780-4-bero@baylibre.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221129023401.278780-4-bero@baylibre.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Il 29/11/22 03:33, Bernhard Rosenkränzer ha scritto:
+> Make pins-are-numbered optional and deprecate it
+> 
+> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On 26/11/2022 22:53, Linus Walleij wrote:
-> On Fri, Nov 25, 2022 at 1:40 PM <neil.armstrong@linaro.org> wrote:
-> 
->> As I understood, it enables an "I2C resistor" on the pin, removing the need
->> of an external pull-up resistor on the line.
->>
->> I assume the classical pull-up bias is not strong enough to replace an actual
->> resistor on the PCB.
-> 
-> In that case I think this should be an argument to bias-pull-up like:
-> 
-> bias-pull-up = <360000>;
-> 
-> Nominally the pull up is in ohms:
-> 
->    bias-pull-up:
->      oneOf:
->        - type: boolean
->        - $ref: /schemas/types.yaml#/definitions/uint32
->      description: pull up the pin. Takes as optional argument on hardware
->        supporting it the pull strength in Ohm.
-> 
-> Then the driver can choose to shunt in this extra I2C resistance
-> from the resistance passed as argument. So no special property
-> is needed, provided you can get an idea about the resistance
-> provided here.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-I like this alternative, I'll try to figure out if we can find a value
-to match against.
-
-Thanks,
-Neil
-
-> 
-> Yours,
-> Linus Walleij
 
