@@ -2,82 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 966B863BAF6
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 08:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD7563BB56
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 09:15:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbiK2HuN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 02:50:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        id S230149AbiK2IPH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 03:15:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbiK2Htx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 02:49:53 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D66751C3F
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 23:49:52 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id d6so21206085lfs.10
-        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 23:49:52 -0800 (PST)
+        with ESMTP id S230094AbiK2IPE (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 03:15:04 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9EAE54772
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 00:15:03 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id y16so1028012wrm.2
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 00:15:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7AuujM8+aeCGquyh830lAMw8HGWJigyKqEFa19drNo=;
-        b=JnFA7pQpspbBCPizM4zXsJ2NveZL9iZ/llMZEhzqu7vCVdKlZ4PTn0pq+bfzFkzg3d
-         IS+b2xLwuCS21piN8BlNpd06VA8M0S+7CWR+R03IecplidnP28JkUyt/g5WTgwoVvXgp
-         tuvDxCox7+cWHOihucgZ6qTF6VvdamNeBjQMJD+jm7UorwcUWlwzviKR9GAi0QvrceHA
-         lHdNl7TIkKuZpiArMc5X4ctiMD+OPvyLTuv99KbfY4YZNda7oAChMjuMqxfcEozTZ2Bi
-         8R1MlDP5ueTcz8zha7imXyQ9ssyQcYvwyM90VP75nW1FfeN120UmNvovCs46BNksfKZ7
-         DGxQ==
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=+tGnGmsd8SAIBQy5l4bYfSlkJXwSsNSEiUXV0JrZ7G4=;
+        b=KTldDQLc2tfmlmwHTPtlzERRJy+/jbYo9EsHIxk7O1mjZbOw9VlAAiNseOhv+Le/EY
+         4ZiEDc1QvJwrXaMN6eFvxqerNsnilHxvYyrnTSMXoCXQXWCPxQKf25zugw93LCUDO5aa
+         4y3Nd84D1+RvRWa6FCu8bT7RsBUZ1MNfy19ToCyxmF+kg59jjg4efRoZHY6F+te3aCe1
+         zs+dBujwbjothGnT2zaJGuKkewhnmrNOePYr5sLSz1BX4weqKuRwLldukQ/T1+wuXGGv
+         ADbztyNZqjIHoGHQtVI6FXqyrZZRqhmc6Azgbd+G2sLa3JZh4glG7ZPJpZRRfwAWYI8t
+         AN/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z7AuujM8+aeCGquyh830lAMw8HGWJigyKqEFa19drNo=;
-        b=XNdSPZHtCpM/w2KQgQYzpQCiMGEpP33uItWP9KynYfvRRaDcS/S1IqPa1Nzvi9fmKl
-         ZJr6/IRzPwer6WXYc++80rtyYkLyujTJVmvMYagXjx8nqH2QIEarIhgR4snQQY1pKtCn
-         b0EP42bv+P1tGrGjZwv/fKeZhLUmwqq4LztjkMzqX/PVqcNP+xEDpgqDs5biS2G0HybV
-         nGrrOib+eYcOBSS2PSFFbNVXULK0sBh6YWngr6gMVVASydsq4eVZNZjIxQCGxxEInKhK
-         z79TJnSVHbEJWUnmJyGkwZ+rQU8Mzq6kk5Hpe0KkmclRF/QbC9fy6g3XhCdkDnSowd2t
-         Qv6g==
-X-Gm-Message-State: ANoB5pn0MPEVXt+eMhC/rzKl1s5a37lkFl7/MPQqKLM8y4NkJssTHnXK
-        1izoU05+CPdLYe1pXeE5RAamAw==
-X-Google-Smtp-Source: AA0mqf64LWlV5ymRt0Y4uGdG28tz9Pfe50jqdaNDybjAyLGTK+WsiZup0t4YfLvpdkzBf8U5SobnWA==
-X-Received: by 2002:a19:7708:0:b0:4a2:6b44:d742 with SMTP id s8-20020a197708000000b004a26b44d742mr20417340lfc.191.1669708190485;
-        Mon, 28 Nov 2022 23:49:50 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id w9-20020a05651234c900b004b4823f02b0sm2084055lfr.152.2022.11.28.23.49.49
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+tGnGmsd8SAIBQy5l4bYfSlkJXwSsNSEiUXV0JrZ7G4=;
+        b=uSMXGt8/MQgNhiUE+vicTWFG7D8e7Bz7ZnTtRFnE0XMXYTR4wCp1o8loNLLjS216/d
+         cMTZZdw3qC5BYOm7xmVlChbg5R9uS3HFEQx94wKm4BU20aflLFGfEB/dEKXLLU1jl8pd
+         UkMxUVnlqOHZAJMQ9wxwe0zQAcTEsNVHg2ZiQmXJtYaj/odzDznw/+5V3duoKv6ZTRwE
+         4uU0B3HJXnBgJE92/hPoxRn2qHg+r/2O4s6OmI+J6QY/j+gubPiIsxZNOu3MQUXrKHL7
+         cspOAy2PsG+VP51PgnaCTsGYdftzJKkhwDyAnbXXfeAhSlZM/vhimuQ+IMUGzbBw0SrD
+         7H5w==
+X-Gm-Message-State: ANoB5pkoGBsZJhv+72fox6CTDERu6rUe90/F+mup6A1h62GV5w5IHkH1
+        gBP3gLVjkklVS59xllJUL9R1GQ==
+X-Google-Smtp-Source: AA0mqf4cGPQC7b3hpyexGmaRKYiejcRHPv4RznEDcAyvSpiAKZOUZqQXpPilrMkBaqhOfPiP9RWS7w==
+X-Received: by 2002:a5d:6503:0:b0:22e:35e8:382d with SMTP id x3-20020a5d6503000000b0022e35e8382dmr33962143wru.475.1669709702171;
+        Tue, 29 Nov 2022 00:15:02 -0800 (PST)
+Received: from ?IPV6:2a01:e0a:982:cbb0:2f85:a28c:5df7:9cd2? ([2a01:e0a:982:cbb0:2f85:a28c:5df7:9cd2])
+        by smtp.gmail.com with ESMTPSA id n21-20020a05600c3b9500b003b4c979e6bcsm1242431wms.10.2022.11.29.00.15.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Nov 2022 23:49:50 -0800 (PST)
-Message-ID: <339be655-aee7-e1a4-51be-28ea20de6792@linaro.org>
-Date:   Tue, 29 Nov 2022 08:49:49 +0100
+        Tue, 29 Nov 2022 00:15:01 -0800 (PST)
+Message-ID: <f6ffd433-1652-fb4f-8657-928e7407ba5f@linaro.org>
+Date:   Tue, 29 Nov 2022 09:15:02 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl
- definitions
+ Thunderbird/102.4.2
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: qcom,tlmm-common: document
+ i2c pull property
 Content-Language: en-US
-To:     Jianlong Huang <jianlong.huang@starfivetech.com>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        linux-kernel@vger.kernel.org
-References: <20221118011108.70715-1-hal.feng@starfivetech.com>
- <20221118011108.70715-2-hal.feng@starfivetech.com>
- <eb3974a3-f715-f5b0-cac7-551af26bd17b@linaro.org>
- <08db0f3b-5222-9460-26ba-0e6380d16583@linaro.org>
- <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
- <093ea507-4c42-1af9-4896-64c1a918432e@linaro.org>
- <30c21787-0c48-ff50-1d63-8e69bdcdbe30@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <30c21787-0c48-ff50-1d63-8e69bdcdbe30@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+References: <20221123152001.694546-1-abel.vesa@linaro.org>
+ <20221123152001.694546-3-abel.vesa@linaro.org>
+ <CACRpkdZtkHCkfUAcezSJvmei=HOezK6oyx+4C5kBrEtU+vAB-g@mail.gmail.com>
+ <fecb2dd6-9be2-78dc-4598-cc338fbdc2a2@linaro.org>
+ <CACRpkdZJaz9BEorQa7dTNkgTkwZjJNB-MWrpKFxHRgdsf3xJww@mail.gmail.com>
+ <8602cacd-f552-e843-5c17-681b099069a3@linaro.org>
+ <CACRpkdbqjNJH_QvWyEPceUUxRQ2tOpErNOWA0rg5GNwq7PfUFQ@mail.gmail.com>
+Organization: Linaro Developer Services
+In-Reply-To: <CACRpkdbqjNJH_QvWyEPceUUxRQ2tOpErNOWA0rg5GNwq7PfUFQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
@@ -89,47 +90,42 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/11/2022 02:47, Jianlong Huang wrote:
-> On Mon, 28 Nov 2022 09:32:45 +0100, Krzysztof Kozlowski wrote:
->> On 28/11/2022 01:48, Jianlong Huang wrote:
->>
->>>>>> +/* aon_iomux doen */
->>>>>> +#define GPOEN_AON_PTC0_OE_N_4			2
->>>>>> +#define GPOEN_AON_PTC0_OE_N_5			3
->>>>>> +#define GPOEN_AON_PTC0_OE_N_6			4
->>>>>> +#define GPOEN_AON_PTC0_OE_N_7			5
->>>>>> +
->>>>>
->>>>> It looks like you add register constants to the bindings. Why? The
->>>>> bindings are not the place to represent hardware programming model. Not
->>>>> mentioning that there is no benefit in this.
->>>>
->>>> Also: this entire file should be dropped, but if it stays, you have to
->>>> name it matching bindings or compatible (vendor,device.h).
->>>
->>> Thanks your comments.
->>> These macros are used to configure pinctrl in dts, so the file should stay,
->>
->> Why they should stay? What's the reason? If it is not a constant used by
->> driver, then register values should not be placed in the bindings, so
->> drop it.
->>
-> 
-> Thanks.
-> 
-> These macros in binding header(example, DOUT, DOEN etc) will be used in DTS,
-> and driver will parse the DT for pinctrl configuration.
-> 
-> Example in dts:
-> uart0_pins: uart0-0 {
-> 	tx-pins {
-> 		pinmux = <GPIOMUX(5, GPOUT_SYS_UART0_TX, GPOEN_ENABLE, GPI_NONE)>;
+Hi Linus,
 
-This is usage in DTS and is not an argument to store register
-addresses/offsets as bindings. What is the usage (of define, not value)
-in the driver?
+On 26/11/2022 22:53, Linus Walleij wrote:
+> On Fri, Nov 25, 2022 at 1:40 PM <neil.armstrong@linaro.org> wrote:
+> 
+>> As I understood, it enables an "I2C resistor" on the pin, removing the need
+>> of an external pull-up resistor on the line.
+>>
+>> I assume the classical pull-up bias is not strong enough to replace an actual
+>> resistor on the PCB.
+> 
+> In that case I think this should be an argument to bias-pull-up like:
+> 
+> bias-pull-up = <360000>;
+> 
+> Nominally the pull up is in ohms:
+> 
+>    bias-pull-up:
+>      oneOf:
+>        - type: boolean
+>        - $ref: /schemas/types.yaml#/definitions/uint32
+>      description: pull up the pin. Takes as optional argument on hardware
+>        supporting it the pull strength in Ohm.
+> 
+> Then the driver can choose to shunt in this extra I2C resistance
+> from the resistance passed as argument. So no special property
+> is needed, provided you can get an idea about the resistance
+> provided here.
 
+I like this alternative, I'll try to figure out if we can find a value
+to match against.
 
-Best regards,
-Krzysztof
+Thanks,
+Neil
+
+> 
+> Yours,
+> Linus Walleij
 
