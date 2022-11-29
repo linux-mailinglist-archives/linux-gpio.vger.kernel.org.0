@@ -2,112 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB7F863C499
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 17:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2EA363C4FC
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 17:21:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236164AbiK2QEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 11:04:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34622 "EHLO
+        id S234009AbiK2QVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 11:21:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235781AbiK2QEe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 11:04:34 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CE571F2C9
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 08:02:44 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id u27so11727777lfc.9
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 08:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=13+qbJOmWTqxbFOdDOLgCT6uW4S43S5+kJ0NK9uACko=;
-        b=eFbk+HGJxPawBYhTluxHbS2J74enMGNbBWPwjZnYQ/CWkejbCh/CQwm7RT79kNoj4V
-         26fei0JhV0J1NsodfAftlgIIS7xDdt/QA51zN29aHc/+AnUmU7cYMno6t72DjXbtdjfC
-         jonXr6tyqeXSXj17TU1/lroRd1ZFQebUiNEHvRw88JSpFwClmZ/Hrcss3A+3XvsUHTUO
-         J5lRk5BZ2JVrGGCH1/ponGmfnIJNNg6pj5xFJtrYtJAunfy/6Fm2Ndp9/XB+m6xXXaix
-         z/xG/Ryq0S/NoARPexwy4IvXPc21KD7C+B46voVXGO2VbNQul00ARFNX4nveIjPKCIJb
-         L0NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=13+qbJOmWTqxbFOdDOLgCT6uW4S43S5+kJ0NK9uACko=;
-        b=O6f+rLArIRyF5DFAU9I6sN/i9w+iZJtXGq58LQfgWSBxQii74sbvJFziZFeu+z3haR
-         AXguGIqaY4swvgydMxiC5slhsDt697dLPX+t+xZcfBZdNm9yk0HllUpmc8xovrqnjJN0
-         N3cQXzyVuNZK2Ivhx0I5VSa64Nvgl6hFzJdZRompKxZyNH7Ua4EQty2X8zJB3hj/Lfkb
-         42g5flGPTfO77z56p8AlmeVo205kFdfcIQPHW0j5XJG9tguw1bWlz2a+0fsECNEYwAf5
-         SQnnG8MWX1N6POM81NWJfYynKBSHPvBKYs5OYgYXD/qZppHNPKSiSt2izRXoT52zqM9E
-         jIbA==
-X-Gm-Message-State: ANoB5pnvDOVkNsHMSCpJcHmVOTMdGbGvf8Gm2wihD79jOJKZ6x/iVCAF
-        sWJT6IoQd4K55D4X4F3Pcc0aUQ==
-X-Google-Smtp-Source: AA0mqf47BgiluiyNP/9thR/1gKkiA3+Yk8TNqaH4cPXqRpLVYA73Z5o8kzd7SJcWMxMO4FCNHl26ww==
-X-Received: by 2002:ac2:4bd0:0:b0:4af:ad36:7a85 with SMTP id o16-20020ac24bd0000000b004afad367a85mr19013323lfq.617.1669737761605;
-        Tue, 29 Nov 2022 08:02:41 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id w18-20020a2e9992000000b00278e7800715sm1570514lji.16.2022.11.29.08.02.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 08:02:41 -0800 (PST)
-Message-ID: <0a8c3ed4-c16a-4014-94f6-cf177630e605@linaro.org>
-Date:   Tue, 29 Nov 2022 17:02:39 +0100
+        with ESMTP id S231151AbiK2QVq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 11:21:46 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741CBCC2;
+        Tue, 29 Nov 2022 08:21:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669738906; x=1701274906;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JeBtJMXrRl19Xe+AbxNLnPJPEyfS8wbk+W2gbNYchuk=;
+  b=THJJwDgtTswErvphdN3sxrCL7AbKH5g0a9cace8V8Pyhk7b/Mf42p3fV
+   7tcemEbBRunNgDnKAoroY95hw8+8WZlRGFoMqLF1eHwp7ynm4+N9EkPdP
+   nPtslxtzQGXLm7OCgQcQG/fmUs9N9cOwhBxa70X8izhy7tdLwSlUoV6/7
+   OWgdJ+oC2OZCaF3T/AFdANXI/iP7hqytzWz1/ydnb0FOfoHKpA2JFO+d7
+   jnjRxZ4H5Gwz6zHacK66Zfkn/p8nBQHKTjHAf99uKbCJmSRn2oDNr2YLh
+   5yIGNDqxK/QL1BqBJXneMW9r4hxO34mEDQwHenI3bN7KWCK/NzDlleBPP
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="315183928"
+X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
+   d="scan'208";a="315183928"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 08:21:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="786093704"
+X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
+   d="scan'208";a="786093704"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2022 08:21:29 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p03MO-001mWX-13;
+        Tue, 29 Nov 2022 18:21:28 +0200
+Date:   Tue, 29 Nov 2022 18:21:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 2/2] gpiolib: Introduce gpio_device_get() and
+ gpio_device_put()
+Message-ID: <Y4YxiHISfSs8crRa@smile.fi.intel.com>
+References: <20221125181158.67265-1-andriy.shevchenko@linux.intel.com>
+ <20221125181158.67265-2-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mf14Q7_gMXaK+hZ8PdV2U5GiL97QRc3SGKLPqmEuSyDxA@mail.gmail.com>
+ <Y4YbkUX+bTM5ZEGg@smile.fi.intel.com>
+ <CAMRc=MfAJpcvCj+NZcg554XC07VYXAb2p9vb+fq6x_O4j+trjQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/5] dt-bindings: pinctrl: Add StarFive JH7110 pinctrl
- definitions
-Content-Language: en-US
-To:     Jianlong Huang <jianlong.huang@starfivetech.com>,
-        Hal Feng <hal.feng@starfivetech.com>,
-        linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Conor Dooley <conor@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        linux-kernel@vger.kernel.org
-References: <20221118011108.70715-1-hal.feng@starfivetech.com>
- <20221118011108.70715-2-hal.feng@starfivetech.com>
- <eb3974a3-f715-f5b0-cac7-551af26bd17b@linaro.org>
- <08db0f3b-5222-9460-26ba-0e6380d16583@linaro.org>
- <0ceba170-f844-e733-a49e-e67746f9f836@starfivetech.com>
- <093ea507-4c42-1af9-4896-64c1a918432e@linaro.org>
- <30c21787-0c48-ff50-1d63-8e69bdcdbe30@starfivetech.com>
- <339be655-aee7-e1a4-51be-28ea20de6792@linaro.org>
- <3db802d6-114f-097a-6c69-e7b40e4d2764@starfivetech.com>
- <f52e31a5-a12a-b95e-b99c-1af8f8b41c3b@linaro.org>
- <8677051a-604a-210c-066c-75db444d6f09@starfivetech.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <8677051a-604a-210c-066c-75db444d6f09@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MfAJpcvCj+NZcg554XC07VYXAb2p9vb+fq6x_O4j+trjQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29/11/2022 16:58, Jianlong Huang wrote:
->>>
->>> Drivers rarely reference macros directly, mostly parsing dts and writing them to registers.
->>
->> So drivers do not use macros? Then there is no reason to store them in
->> bindings? What do you "bind" if there is no usage (and we do not talk
->> about DTS...)?
->>
+On Tue, Nov 29, 2022 at 04:49:34PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Nov 29, 2022 at 3:47 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Nov 29, 2022 at 02:54:10PM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Nov 25, 2022 at 7:11 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > Introduce gpio_device_get() and gpio_device_put() helpers
+> > > > and convert existing users.
+> >
+> > > This doesn't apply to my for-next branch, can you rebase and resend
+> > > (just this one, the other is applied).
+> >
+> > The problem is that you don't merge or cherry-pick fixes into your
+> > for-next branch and they are getting diverged.
+> >
+> > In PDx86 subsystem we decided to cherry-pick the fixes into for-next.
+> > Some other subsystems are doing back-merges (but I remember that Linus
+> > T. complained about back merges, although I dunno if it's still
+> > the case). Some subsystems merges their fixes into for-next, dunno
+> > if it's the best practice either.
+> >
+> > That said, this can be submitted after v6.2-rc1 is out.
 > 
-> Where do you suggest to store these macros used in DTS?
+> I do merge tags if I need to. Normally you'd mention any requirements
+> for the series in the cover letter.
 
-Sometimes they do not need storing. If they are worth, then in the DTS
-headers. Few platforms (Samsung, All of NXP, Mediatek, Sama5/Atmel) are
-doing it already.
+It's my fault. But thanks for clarifying the process.
 
-Best regards,
-Krzysztof
+> I have not sent any fixes so far in this release cycle BTW.
+
+Yes, that's now obvious...
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
