@@ -2,258 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 216BC63B794
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 03:01:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 596B463B7E9
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 03:34:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234944AbiK2CBA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 28 Nov 2022 21:01:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
+        id S235059AbiK2CeH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 28 Nov 2022 21:34:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234693AbiK2CA7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 21:00:59 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 14B4D450BF;
-        Mon, 28 Nov 2022 18:00:56 -0800 (PST)
-Received: from loongson.cn (unknown [10.180.13.64])
-        by gateway (Coremail) with SMTP id _____8DxOenYZ4Vj3+EBAA--.1315S3;
-        Tue, 29 Nov 2022 10:00:56 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.180.13.64])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxR1fRZ4Vj89odAA--.57349S3;
-        Tue, 29 Nov 2022 10:00:54 +0800 (CST)
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v9 2/2] dt-bindings: gpio: add loongson gpio
-Date:   Tue, 29 Nov 2022 10:00:47 +0800
-Message-Id: <20221129020047.12151-2-zhuyinbo@loongson.cn>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20221129020047.12151-1-zhuyinbo@loongson.cn>
-References: <20221129020047.12151-1-zhuyinbo@loongson.cn>
+        with ESMTP id S234590AbiK2CeG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 28 Nov 2022 21:34:06 -0500
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F02002A972
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 18:34:04 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id b8so17938090edf.11
+        for <linux-gpio@vger.kernel.org>; Mon, 28 Nov 2022 18:34:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2wIPJTHkD+bylj39gTMFm3DTXuPW9bL6vkGIzsV8aw=;
+        b=kZurQYlwJIRzTT+7zqhkAVIxZypR4Ym0x21fe9bnwCAsqwvJR3TgpGxd88mHYJPm60
+         LX3Zp6nshIqrm/lDU+Va90uCJdbBfnFx54Pa1g98o7iTTEH/uIS7obpjSO+yHcX+15q7
+         jtfPifPzJKnKO6y1bWCOOeVy05p0Lu1/MRZ6+n6HSI3Ak1OSE5/P1MbgdRr8cP+b92QP
+         coG/3EtVGGfQ9NRoOUWInj0l71Yrm5wOABzV725Ia6FZQZjeAeNlVjIZjteS9eAogSyA
+         11LA1BueA/e0g3FQ6uoXH7ehNiaD42FNk/FB1CO/tGlEeiyz1+fbvFgyOSSvvpuW+F6U
+         sPNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2wIPJTHkD+bylj39gTMFm3DTXuPW9bL6vkGIzsV8aw=;
+        b=bFeGonXjayIiXdUvObPqIHX7Fo7McDUVUum4ql384L5b+LlK+0fXTmbzYCkxyCFurM
+         rkfjl+YPN/vSiPYDMKegRDbE+onF1QhENW9QLyX1EYjd/qRm75fSUrVPrIx++NdtCnub
+         WlNNZdg2Az0/b1qN9hv8EjQRVc0jQCVMQZyf22d1JhQQ5yL0f5wUYVlIVjA10B0/XV0Q
+         kmJgK38rheWIT7+1/DJOkGKPMvIrdDRxn7lYkiJeXdY9qbBZ7is9FM/IAdudzhNQ12up
+         wvlBJdXhNAUYzwV7QZRTxm3QSo8wx7//vEo/KUt5k1NqoRBCZ2o5+uPQxAR4PRjmkzZ5
+         WktA==
+X-Gm-Message-State: ANoB5pneHsd+8lQP7LS52MYYRGYNVVPBrV5JXdy340Oub8rikDmGtmxh
+        G6e0HoWgv0JDKXOUKy5tdoL/1g==
+X-Google-Smtp-Source: AA0mqf4bZWNrCN097oenITVW9XWxiWgQvZ3xepStot6lQY8viV0QFaDmX5vyZpw8BbxpzDBGEe+PQw==
+X-Received: by 2002:a05:6402:4008:b0:458:dd63:e339 with SMTP id d8-20020a056402400800b00458dd63e339mr31534833eda.81.1669689243478;
+        Mon, 28 Nov 2022 18:34:03 -0800 (PST)
+Received: from c64.fritz.box ([81.221.122.240])
+        by smtp.gmail.com with ESMTPSA id a4-20020aa7d744000000b004615f7495e0sm5733817eds.8.2022.11.28.18.34.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Nov 2022 18:34:03 -0800 (PST)
+From:   =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+To:     devicetree@vger.kernel.org
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        krzysztof.kozlowski@linaro.org, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com, khilman@baylibre.com,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: [PATCH v3 0/7] Remove the pins-are-numbered DT property
+Date:   Tue, 29 Nov 2022 03:33:54 +0100
+Message-Id: <20221129023401.278780-1-bero@baylibre.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxR1fRZ4Vj89odAA--.57349S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxXF47tF4DJw1xAF47Ww45Wrg_yoW7Jw1UpF
-        1DZFZxX3y2gr1ayFs8Ka17Xr4fAr1kC3Wruwn8C34xtrWUKw13XFWfWFykG3Z3WrWUXF13
-        JwsxurWrJa43Aw7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bfAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr
-        1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkE
-        cVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F4
-        0Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC
-        6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2
-        Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-        1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j
-        6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr
-        0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUv
-        cSsGvfC2KfnxnUUI43ZEXa7IU86yIUUUUUU==
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add the Loongson platform gpio binding with DT schema format using
-json-schema.
+During the review of my MT8365 support patchset
+(https://lore.kernel.org/linux-mediatek/20221117210356.3178578-1-bero@baylibre.com/),
+the issue of the "pins-are-numbered" DeviceTree property has come up.
 
-Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Change in v9:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v8:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v7:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v6:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v5:
-		1. NO change, but other patch in this series of patches set has
-		   change.
-Change in v4:
-		1. Remove the string "series".
-		2. Add the reviewed-by information.
-Change in v3:
-		1. Separate some changes of MAINTAINERS file and enter the first patch.
-Change in v2:
-		1. Drop "loongson,gpio_base" and "gpio-ranges" will cover it.
-		1. Drop "loongson,conf_offset", "loongson,out_offset", "loongson,in_offset",
-		   "loongson,support_irq" and kernel driver will initial them that depend
-		   compatible in kernel.
-		3. Fixup maintainer for this driver.
+This property is unique to Mediatek MT65xx and STM32 pinctrls, and
+doesn't seem to serve any purpose (both the Mediatek and STM32 drivers
+simply refuse to deal with a device unless pins-are-numbered is set to
+true).
 
- .../bindings/gpio/loongson,ls-gpio.yaml       | 126 ++++++++++++++++++
- MAINTAINERS                                   |   1 +
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
+There is no other use of this property in the kernel or in other projects
+using DeviceTrees (checked u-boot and FreeBSD -- in both of those, the
+flag is present in Mediatek and STM devicetrees, but not used anywhere).
 
-diff --git a/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-new file mode 100644
-index 000000000000..fb86e8ce6349
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
-@@ -0,0 +1,126 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/loongson,ls-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson GPIO controller.
-+
-+maintainers:
-+  - Yinbo Zhu <zhuyinbo@loongson.cn>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - loongson,ls2k-gpio
-+      - loongson,ls7a-gpio
-+
-+  reg:
-+    maxItems: 1
-+
-+  ngpios:
-+    minimum: 1
-+    maximum: 64
-+
-+  "#gpio-cells":
-+    const: 2
-+
-+  gpio-controller: true
-+
-+  gpio-ranges: true
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 64
-+
-+required:
-+  - compatible
-+  - reg
-+  - ngpios
-+  - "#gpio-cells"
-+  - gpio-controller
-+  - gpio-ranges
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    gpio0: gpio@1fe00500 {
-+      compatible = "loongson,ls2k-gpio";
-+      reg = <0x1fe00500 0x38>;
-+      ngpios = <64>;
-+      #gpio-cells = <2>;
-+      gpio-controller;
-+      gpio-ranges = <&pctrl 0 0 15>,
-+                    <&pctrl 16 16 15>,
-+                    <&pctrl 32 32 10>,
-+                    <&pctrl 44 44 20>;
-+      interrupt-parent = <&liointc1>;
-+      interrupts = <28 IRQ_TYPE_LEVEL_LOW>,
-+                   <29 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <30 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <26 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <>,
-+                   <>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>,
-+                   <27 IRQ_TYPE_LEVEL_LOW>;
-+    };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2854da69cabb..b8a02a60973d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12055,6 +12055,7 @@ LOONGSON GPIO DRIVER
- M:	Yinbo Zhu <zhuyinbo@loongson.cn>
- L:	linux-gpio@vger.kernel.org
- S:	Maintained
-+F:	Documentation/devicetree/bindings/gpio/loongson,ls-gpio.yaml
- F:	drivers/gpio/gpio-loongson-64bit.c
- 
- LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)
+There is also no known use in userspace (in fact, a userland application
+relying on the property would be broken because it would get true on
+any Mediatek or STM chipset and false on all others, even though other
+chipsets use numbered pins).
+
+This patchset removes all uses of pins-are-numbered and marks the
+property as deprecated.
+
+v3:
+  - No functional changes; add recent Reviewed-Bys and Acked-Bys,
+    add linux-gpio to Cc
+
+v2:
+  - Deprecate the property instead of removing it completely from
+    schemas
+  - squash some related commits
+
+
+Bernhard Rosenkränzer (7):
+  pinctrl: mediatek: common: Remove check for pins-are-numbered
+  pinctrl: stm32: Remove check for pins-are-numbered
+  dt-bindings: pinctrl: mediatek,mt65xx: Deprecate pins-are-numbered
+  dt-bindings: pinctrl: st,stm32: Deprecate pins-are-numbered
+  arm64: dts: mediatek: Remove pins-are-numbered property
+  ARM: dts: mediatek: Remove pins-are-numbered property
+  ARM: dts: stm32: Remove the pins-are-numbered property
+
+ .../bindings/pinctrl/mediatek,mt65xx-pinctrl.yaml          | 5 ++---
+ .../devicetree/bindings/pinctrl/st,stm32-pinctrl.yaml      | 7 +++----
+ arch/arm/boot/dts/mt2701.dtsi                              | 1 -
+ arch/arm/boot/dts/mt7623.dtsi                              | 1 -
+ arch/arm/boot/dts/mt8135.dtsi                              | 1 -
+ arch/arm/boot/dts/stm32f4-pinctrl.dtsi                     | 1 -
+ arch/arm/boot/dts/stm32f7-pinctrl.dtsi                     | 1 -
+ arch/arm/boot/dts/stm32h743.dtsi                           | 1 -
+ arch/arm/boot/dts/stm32mp131.dtsi                          | 1 -
+ arch/arm/boot/dts/stm32mp151.dtsi                          | 2 --
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi                  | 1 -
+ arch/arm64/boot/dts/mediatek/mt8167.dtsi                   | 1 -
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi               | 1 -
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi                   | 1 -
+ arch/arm64/boot/dts/mediatek/mt8516.dtsi                   | 1 -
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c              | 6 ------
+ drivers/pinctrl/stm32/pinctrl-stm32.c                      | 5 -----
+ 17 files changed, 5 insertions(+), 32 deletions(-)
+
 -- 
-2.31.1
+2.38.1
 
