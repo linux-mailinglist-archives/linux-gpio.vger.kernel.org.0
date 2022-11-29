@@ -2,108 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2EA363C4FC
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 17:21:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 019DD63C506
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 17:23:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234009AbiK2QVr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 11:21:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S235700AbiK2QXd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 11:23:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231151AbiK2QVq (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 11:21:46 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741CBCC2;
-        Tue, 29 Nov 2022 08:21:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669738906; x=1701274906;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JeBtJMXrRl19Xe+AbxNLnPJPEyfS8wbk+W2gbNYchuk=;
-  b=THJJwDgtTswErvphdN3sxrCL7AbKH5g0a9cace8V8Pyhk7b/Mf42p3fV
-   7tcemEbBRunNgDnKAoroY95hw8+8WZlRGFoMqLF1eHwp7ynm4+N9EkPdP
-   nPtslxtzQGXLm7OCgQcQG/fmUs9N9cOwhBxa70X8izhy7tdLwSlUoV6/7
-   OWgdJ+oC2OZCaF3T/AFdANXI/iP7hqytzWz1/ydnb0FOfoHKpA2JFO+d7
-   jnjRxZ4H5Gwz6zHacK66Zfkn/p8nBQHKTjHAf99uKbCJmSRn2oDNr2YLh
-   5yIGNDqxK/QL1BqBJXneMW9r4hxO34mEDQwHenI3bN7KWCK/NzDlleBPP
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="315183928"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="315183928"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 08:21:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="786093704"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="786093704"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2022 08:21:29 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p03MO-001mWX-13;
-        Tue, 29 Nov 2022 18:21:28 +0200
-Date:   Tue, 29 Nov 2022 18:21:28 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 2/2] gpiolib: Introduce gpio_device_get() and
- gpio_device_put()
-Message-ID: <Y4YxiHISfSs8crRa@smile.fi.intel.com>
-References: <20221125181158.67265-1-andriy.shevchenko@linux.intel.com>
- <20221125181158.67265-2-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mf14Q7_gMXaK+hZ8PdV2U5GiL97QRc3SGKLPqmEuSyDxA@mail.gmail.com>
- <Y4YbkUX+bTM5ZEGg@smile.fi.intel.com>
- <CAMRc=MfAJpcvCj+NZcg554XC07VYXAb2p9vb+fq6x_O4j+trjQ@mail.gmail.com>
+        with ESMTP id S232155AbiK2QXc (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 11:23:32 -0500
+Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0386D28724
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 08:23:30 -0800 (PST)
+Received: from ramsan.of.borg ([84.195.186.194])
+        by albert.telenet-ops.be with bizsmtp
+        id qGPT2802r4C55Sk06GPTuz; Tue, 29 Nov 2022 17:23:28 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1p03OJ-0023Kq-56; Tue, 29 Nov 2022 17:23:27 +0100
+Received: from geert by rox.of.borg with local (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1p03OI-003Lee-OO; Tue, 29 Nov 2022 17:23:26 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] gpio: mpfs: Make the irqchip immutable
+Date:   Tue, 29 Nov 2022 17:23:22 +0100
+Message-Id: <4ee1a396acc34871dbae73a5b032915f745795ec.1669738949.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MfAJpcvCj+NZcg554XC07VYXAb2p9vb+fq6x_O4j+trjQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 04:49:34PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Nov 29, 2022 at 3:47 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Nov 29, 2022 at 02:54:10PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Nov 25, 2022 at 7:11 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > >
-> > > > Introduce gpio_device_get() and gpio_device_put() helpers
-> > > > and convert existing users.
-> >
-> > > This doesn't apply to my for-next branch, can you rebase and resend
-> > > (just this one, the other is applied).
-> >
-> > The problem is that you don't merge or cherry-pick fixes into your
-> > for-next branch and they are getting diverged.
-> >
-> > In PDx86 subsystem we decided to cherry-pick the fixes into for-next.
-> > Some other subsystems are doing back-merges (but I remember that Linus
-> > T. complained about back merges, although I dunno if it's still
-> > the case). Some subsystems merges their fixes into for-next, dunno
-> > if it's the best practice either.
-> >
-> > That said, this can be submitted after v6.2-rc1 is out.
-> 
-> I do merge tags if I need to. Normally you'd mention any requirements
-> for the series in the cover letter.
+Commit 6c846d026d49 ("gpio: Don't fiddle with irqchips marked as
+immutable") added a warning to indicate if the gpiolib is altering the
+internals of irqchips.  Following this change the following warning is
+now observed for the gpio-mpfs driver:
 
-It's my fault. But thanks for clarifying the process.
+    gpio gpiochip0: (20122000.gpio): not an immutable chip, please consider fixing it!
 
-> I have not sent any fixes so far in this release cycle BTW.
+Fix this by making the irqchip in the gpio-mpfs driver immutable.
 
-Yes, that's now obvious...
+While at it, drop of the unneeded masking of the hwirq number, as it is
+always smaller than the number of GPIOs/interrupts handled by the
+controller.
 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Not tested with interrupts, as there are no inputs described in the
+Icicle DTS yet.
+---
+ drivers/gpio/gpio-mpfs.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-mpfs.c b/drivers/gpio/gpio-mpfs.c
+index 168be0b90cf8c656..fd294b581ae77369 100644
+--- a/drivers/gpio/gpio-mpfs.c
++++ b/drivers/gpio/gpio-mpfs.c
+@@ -168,8 +168,9 @@ static void mpfs_gpio_irq_unmask(struct irq_data *data)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
+ 	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
+-	int gpio_index = irqd_to_hwirq(data) % MAX_NUM_GPIO;
++	int gpio_index = irqd_to_hwirq(data);
+ 
++	gpiochip_enable_irq(gc, gpio_index);
+ 	mpfs_gpio_direction_input(gc, gpio_index);
+ 	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_IRQ_REG, gpio_index, 1);
+ 	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index),
+@@ -180,11 +181,12 @@ static void mpfs_gpio_irq_mask(struct irq_data *data)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(data);
+ 	struct mpfs_gpio_chip *mpfs_gpio = gpiochip_get_data(gc);
+-	int gpio_index = irqd_to_hwirq(data) % MAX_NUM_GPIO;
++	int gpio_index = irqd_to_hwirq(data);
+ 
+ 	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_IRQ_REG, gpio_index, 1);
+ 	mpfs_gpio_assign_bit(mpfs_gpio->base + MPFS_GPIO_CTRL(gpio_index),
+ 			     MPFS_GPIO_EN_INT, 0);
++	gpiochip_disable_irq(gc, gpio_index);
+ }
+ 
+ static const struct irq_chip mpfs_gpio_irqchip = {
+@@ -192,7 +194,8 @@ static const struct irq_chip mpfs_gpio_irqchip = {
+ 	.irq_set_type = mpfs_gpio_irq_set_type,
+ 	.irq_mask	= mpfs_gpio_irq_mask,
+ 	.irq_unmask	= mpfs_gpio_irq_unmask,
+-	.flags = IRQCHIP_MASK_ON_SUSPEND,
++	.flags = IRQCHIP_IMMUTABLE | IRQCHIP_MASK_ON_SUSPEND,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static void mpfs_gpio_irq_handler(struct irq_desc *desc)
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
