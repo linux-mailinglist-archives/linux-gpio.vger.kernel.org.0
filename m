@@ -2,110 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CB2863BF02
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:31:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CA5B63BF1D
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:34:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229840AbiK2Lbq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 06:31:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        id S232490AbiK2LeA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 06:34:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233148AbiK2LbV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:31:21 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947514B76D
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:31:20 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id ho10so33051435ejc.1
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:31:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4SBREMO46IWUVHDdknE2mCnK5ku/aIdl62hn5ufWe8c=;
-        b=GOT6wc5D9VGVXXeMCBS4529s09Y666ibvEIulR/fQNvZhtOoeOoDhXj3eoHLQsugPI
-         RrvTPkqioQy9R4UWLKywOGa8k4jNFvLOd8j6hS52UkNn1PyfD4uOXUTHR+eFV57cIxxD
-         a5gRu35Qubgqk5CMepGOQYdZgStCgQ59QePpsaBsXHbFALDYgdtJiE7Gog4Purh2uTWQ
-         tREVvROCnwRCWRr9jACpYzLvj3Grp+xg/Wjmq+iL7HMiA/KQVgGsjAKuXhmk1DSxSEU1
-         DFNR0qcJCyFrVHlcyYlDxLVlvpymN9ZNUJ4yWoamzs8TeCnqac7GDsr/1uhOESHbsY/f
-         gkQA==
+        with ESMTP id S230274AbiK2Ldh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:33:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE37319C
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:32:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669721557;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/d4T5zjZ2/xv0d6C4B2qXDDWBIIfOQ90oEadaEWlU8I=;
+        b=Zl6w2h6KnNuBP5zIpcdreIKmCf2aRx7lWfbKj9rnS3VjafcKneBVrzM6/l5vrfGmgstT7a
+        ffEcFt5VZLzHeoOIRhF/qzRgdKsZU6efrZAHD1PkDwHu9N3M3mvI6XZr+I+fQHN6eQp5dZ
+        8tNNMDLwirfLV/mcFLZNexkkZKlQKbU=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-408-KLQa3LiAMYqLbnM-yVJkxw-1; Tue, 29 Nov 2022 06:32:36 -0500
+X-MC-Unique: KLQa3LiAMYqLbnM-yVJkxw-1
+Received: by mail-ej1-f71.google.com with SMTP id xj11-20020a170906db0b00b0077b6ecb23fcso6337347ejb.5
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:32:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4SBREMO46IWUVHDdknE2mCnK5ku/aIdl62hn5ufWe8c=;
-        b=lu0oKfUig4noX2QoKBMA9QLmhScHQ6uJB7SQMSs0p7KXx1anC2Te0H1DZP0WY867zS
-         7PDUP6gxEqyf+vpw2Jw39pyseSYH+Nn2S+aU90I/QYkmaj2QdSXSxOP8qEWCN3P1iern
-         DzRKYs8tEgRhng24p/SJNVaQS00lsCGD28GZ5+lr8npD4gGJAHOWEMPmj6gK4wRptfJt
-         39vR29w4fUtxq2579/TDsInStPzGaFKdNGJs70n30N4ynMr91o85/pDtvaIS18nQDzGX
-         Z+jZ7+sHoBk6AD7l6U1/EL0swSdoYktKeMee2aluLzViHEf8zHaCAViKeH40H1CPZyDu
-         Atpw==
-X-Gm-Message-State: ANoB5pkalxFMeFE7Be6u41QVGJEI0S1ueiuNXyD4XNAuaNG2cnLOBapZ
-        UpbEeoqzf3z7r139k5dG040=
-X-Google-Smtp-Source: AA0mqf6tVT3cveJ3vxMslDzdW8O/6bnUH3rTf0e4oPrFLwU24+MJgg1wbKTWJHvYcanj5ZRRAxp5XQ==
-X-Received: by 2002:a17:906:6a8e:b0:78d:a136:7332 with SMTP id p14-20020a1709066a8e00b0078da1367332mr46868120ejr.355.1669721474666;
-        Tue, 29 Nov 2022 03:31:14 -0800 (PST)
-Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
-        by smtp.gmail.com with ESMTPSA id sb16-20020a1709076d9000b0078db5bddd9csm6055883ejc.22.2022.11.29.03.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 03:31:14 -0800 (PST)
-From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-        linux-gpio@vger.kernel.org, Gaosheng Cui <cuigaosheng1@huawei.com>,
-        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: [PATCH] pinctrl: keembay: fix memleak in keembay_build_functions()
-Date:   Tue, 29 Nov 2022 12:31:08 +0100
-Message-Id: <20221129113108.17127-1-zajec5@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/d4T5zjZ2/xv0d6C4B2qXDDWBIIfOQ90oEadaEWlU8I=;
+        b=ZAqLOR72elxUtfAegnHzC5VOQKdL50yUOSBjQQpQ/zSfHNiVc8MbDfEIA5F4ILSDmK
+         Q0OL47dxXSSRoqVUaBSNdD3bIoYEmvPb5E2rfWqaKr5D62Hs/FTXTuD7Kdv8IqWuRTfI
+         tF4QljsPqjwNRAU6SGX4+pLOu5WeNK09IYENWC1Uoly9iLafqWI0Md5AUGSPshCFUlNa
+         DHAUJX4SRlj5sIkPpQGvvmSxxraYinZ+mqb7kOiHdOZ0+ZtUh8WdSBEWYcxXu18FNRJ7
+         haELXXS8W6egf3H6KOCUVYAMfBeTAcxYv31oI3iDLdUz8Y3Lu0BU2ga+zGMi2o25+eZK
+         QBFA==
+X-Gm-Message-State: ANoB5plB0MUiX7BWCga2miD4hUmQdnGzzbV7qv2DP8sUlqt909+6Nk0v
+        C6MJzK75r6MYBAQkB7AtR9qS1AsWa/SuO2c7VcpfrFESEqPav7kLzpRU0ryXpm9KiUxN5Cwg1sO
+        l/doMbBmBMBNm765ckXbiUQ==
+X-Received: by 2002:aa7:c788:0:b0:458:b9f9:9fba with SMTP id n8-20020aa7c788000000b00458b9f99fbamr35342093eds.305.1669721555247;
+        Tue, 29 Nov 2022 03:32:35 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf47O6/boMZ9eapNP4eorwpxZfjoAbJB/XrVKiwje3UMF6/g6R0k8vp0N7qnRMo1p06c2veGNg==
+X-Received: by 2002:aa7:c788:0:b0:458:b9f9:9fba with SMTP id n8-20020aa7c788000000b00458b9f99fbamr35342077eds.305.1669721555084;
+        Tue, 29 Nov 2022 03:32:35 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id d26-20020a170906305a00b007415f8ffcbbsm6096378ejd.98.2022.11.29.03.32.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 03:32:34 -0800 (PST)
+Message-ID: <007a6345-62e7-20ee-1a48-4adb4a9fa9df@redhat.com>
+Date:   Tue, 29 Nov 2022 12:32:33 +0100
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 3/5] gpio: tps68470: Add support for the indicator LED
+ outputs
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <20221128214408.165726-4-hdegoede@redhat.com>
+ <CAHp75VcJJtYsxbAYt2FjqSEJGhjpok7Dsh3vp46VyOm3=5_2FQ@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VcJJtYsxbAYt2FjqSEJGhjpok7Dsh3vp46VyOm3=5_2FQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+Hi Andy,
 
-Add missing kfree().
+Thank you for the reviews.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-This is NOT run-time tested, Lakshmi would you like to test it first?
----
- drivers/pinctrl/pinctrl-keembay.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+On 11/29/22 11:28, Andy Shevchenko wrote:
+> On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> The tps68470 has support for 2 indicator LED outputs called
+>> ileda and iledb, at support for these as GPIO pins 10 + 11.
+> 
+> add ?
 
-diff --git a/drivers/pinctrl/pinctrl-keembay.c b/drivers/pinctrl/pinctrl-keembay.c
-index 152c35bce8ec..51b684201b20 100644
---- a/drivers/pinctrl/pinctrl-keembay.c
-+++ b/drivers/pinctrl/pinctrl-keembay.c
-@@ -1599,6 +1599,7 @@ static int keembay_add_functions(struct keembay_pinctrl *kpc,
- static int keembay_build_functions(struct keembay_pinctrl *kpc)
- {
- 	struct function_desc *keembay_funcs, *new_funcs;
-+	int err;
- 	int i;
- 
- 	/*
-@@ -1643,7 +1644,11 @@ static int keembay_build_functions(struct keembay_pinctrl *kpc)
- 		return -ENOMEM;
- 	}
- 
--	return keembay_add_functions(kpc, new_funcs);
-+	err = keembay_add_functions(kpc, new_funcs);
-+
-+	kfree(new_funcs);
-+
-+	return err;
- }
- 
- static const struct keembay_pin_soc keembay_data = {
--- 
-2.34.1
+This models ileda and iledb outputs *as* GPIO pins 10 + 11
+on the linux gpiochip.
+
+But yes it also adds gpio pins 10 + 11 to the gpiochip, so
+either one works I guess :)
+
+> 
+> ...
+> 
+>> +static void tps68470_gpio_get_reg_and_mask(bool get, unsigned int offset,
+>> +                                          unsigned int *reg, int *mask)
+> 
+> Hmm... Usual way is to put the get/set flag at the end of the list of
+> parameters.
+
+For functions returning values by reference I always follow the
+pattern of input parameters first, then output parameters.
+
+> Also why not naming it as 'dir' to avoid confusion with the _get in
+> the function name?
+
+Because dir is meaningless without an enum to to define what a dir
+of 0/false means. Where as get is clear without such an enum.
+get is set to true when this function is called from
+tps68470_gpio_get() and false when it is called from
+tps68470_gpio_set(). It does not get more straight forward then that.
+
+Regards,
+
+Hans
+
+
+
+
+> 
+>> +{
+>> +       if (offset < TPS68470_N_REGULAR_GPIO) {
+>> +               if (get)
+>> +                       *reg = TPS68470_REG_GPDI;
+>> +               else
+>> +                       *reg = TPS68470_REG_GPDO;
+>> +               *mask = BIT(offset);
+>> +       } else if (offset < (TPS68470_N_REGULAR_GPIO + TPS68470_N_LOGIC_OUTPUT)) {
+>> +               *reg = TPS68470_REG_SGPO;
+>> +               *mask = BIT(offset - TPS68470_N_REGULAR_GPIO);
+>> +       } else {
+>> +               *reg = TPS68470_REG_ILEDCTL;
+>> +               if (offset == (TPS68470_N_REGULAR_GPIO + TPS68470_N_LOGIC_OUTPUT))
+>> +                       *mask = TPS68470_ILEDCTL_ENA;
+>> +               else
+>> +                       *mask = TPS68470_ILEDCTL_ENB;
+>> +       }
+>> +}
+> 
 
