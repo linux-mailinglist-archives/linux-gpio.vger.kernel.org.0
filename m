@@ -2,150 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB7B963BEEB
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:28:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB2863BF02
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:31:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229954AbiK2L2s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 06:28:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35542 "EHLO
+        id S229840AbiK2Lbq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 06:31:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbiK2L2r (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:28:47 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CC6C30
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:27:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669721265;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JNeN8GPpJrHlbWssIOBz2DcHNIKoFYFW+IzzrdE30Ic=;
-        b=h6xlXG/DLOh5TdVxySv7rCwJKYeRRbkOkIkqtquV3zA1tSiOaZg9Dp/qSrmsFr+EFDG0rD
-        Zy3Pl0bZnolyGaQ2r13X+uItOYitO7BGyOzXR9TLSgDXf64j+kGlkkdMGomj8KOI5pdBQD
-        balEdH4p47k68AbG5ZEthCHrQtNt1dk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-648-sO2vxGAFM5ar2lvAvWlsOw-1; Tue, 29 Nov 2022 06:27:43 -0500
-X-MC-Unique: sO2vxGAFM5ar2lvAvWlsOw-1
-Received: by mail-ej1-f69.google.com with SMTP id nb1-20020a1709071c8100b007ae4083d6f5so6291010ejc.15
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:27:43 -0800 (PST)
+        with ESMTP id S233148AbiK2LbV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:31:21 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947514B76D
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:31:20 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id ho10so33051435ejc.1
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:31:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4SBREMO46IWUVHDdknE2mCnK5ku/aIdl62hn5ufWe8c=;
+        b=GOT6wc5D9VGVXXeMCBS4529s09Y666ibvEIulR/fQNvZhtOoeOoDhXj3eoHLQsugPI
+         RrvTPkqioQy9R4UWLKywOGa8k4jNFvLOd8j6hS52UkNn1PyfD4uOXUTHR+eFV57cIxxD
+         a5gRu35Qubgqk5CMepGOQYdZgStCgQ59QePpsaBsXHbFALDYgdtJiE7Gog4Purh2uTWQ
+         tREVvROCnwRCWRr9jACpYzLvj3Grp+xg/Wjmq+iL7HMiA/KQVgGsjAKuXhmk1DSxSEU1
+         DFNR0qcJCyFrVHlcyYlDxLVlvpymN9ZNUJ4yWoamzs8TeCnqac7GDsr/1uhOESHbsY/f
+         gkQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JNeN8GPpJrHlbWssIOBz2DcHNIKoFYFW+IzzrdE30Ic=;
-        b=T5KIkarraRx6RSM7MJ8plooad21azeJtFZGhg95mCBkQ94pt+08DK/sGvaY07aq8zL
-         ZxGV0V8C3reOeTCR/GOjp17EB1NRk4UA930yO6b3tH36rSG8G64JAGUL2TgoebmQshtf
-         UuQyA2Z++XpESyEtDyN0iASskQAdjrI48RfZ42234x6dYjX7QOBvLTcuUWeIwa91g2Ry
-         wiPU8hL2yM6zGg3Sk9Blu2bq2gl6qgw+ud50k3PNtF74udUOrvrytQb5g2T4eLkSPKuB
-         7b6u4o10hucuGrtsNKJBPszgwbc1lhozp2tS2Rhe2ig+6tZDi/bLi8kCvUewd1QmwaBo
-         zNkw==
-X-Gm-Message-State: ANoB5pm+ww+ewN+uFj0Xfl9r4nFlSMew3Imgl/lTwGqYxNRyN7ejscnB
-        xlaDf+fFP1eNp+a/9QlAU5iipIVeXKZu7qoQj3Xa65CjigtgOhwqyQlCOtpR4SOwVUeB24DCDDy
-        qpfTF+Y8/YAr42JnM7QBUfQ==
-X-Received: by 2002:a05:6402:2488:b0:467:3ea1:acdd with SMTP id q8-20020a056402248800b004673ea1acddmr52740582eda.96.1669721262538;
-        Tue, 29 Nov 2022 03:27:42 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf40Atovb0T/uPocwF34I4V7PN+Lzr4d20b7/Ii4B2B97qox/i3YuuKF9f/Z0Ewh2ohVjnBEBg==
-X-Received: by 2002:a05:6402:2488:b0:467:3ea1:acdd with SMTP id q8-20020a056402248800b004673ea1acddmr52740565eda.96.1669721262322;
-        Tue, 29 Nov 2022 03:27:42 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id v3-20020a056402174300b004691de0e25bsm6171213edx.54.2022.11.29.03.27.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Nov 2022 03:27:41 -0800 (PST)
-Message-ID: <9a4336d1-3222-fe50-f234-93ab175d606a@redhat.com>
-Date:   Tue, 29 Nov 2022 12:27:40 +0100
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4SBREMO46IWUVHDdknE2mCnK5ku/aIdl62hn5ufWe8c=;
+        b=lu0oKfUig4noX2QoKBMA9QLmhScHQ6uJB7SQMSs0p7KXx1anC2Te0H1DZP0WY867zS
+         7PDUP6gxEqyf+vpw2Jw39pyseSYH+Nn2S+aU90I/QYkmaj2QdSXSxOP8qEWCN3P1iern
+         DzRKYs8tEgRhng24p/SJNVaQS00lsCGD28GZ5+lr8npD4gGJAHOWEMPmj6gK4wRptfJt
+         39vR29w4fUtxq2579/TDsInStPzGaFKdNGJs70n30N4ynMr91o85/pDtvaIS18nQDzGX
+         Z+jZ7+sHoBk6AD7l6U1/EL0swSdoYktKeMee2aluLzViHEf8zHaCAViKeH40H1CPZyDu
+         Atpw==
+X-Gm-Message-State: ANoB5pkalxFMeFE7Be6u41QVGJEI0S1ueiuNXyD4XNAuaNG2cnLOBapZ
+        UpbEeoqzf3z7r139k5dG040=
+X-Google-Smtp-Source: AA0mqf6tVT3cveJ3vxMslDzdW8O/6bnUH3rTf0e4oPrFLwU24+MJgg1wbKTWJHvYcanj5ZRRAxp5XQ==
+X-Received: by 2002:a17:906:6a8e:b0:78d:a136:7332 with SMTP id p14-20020a1709066a8e00b0078da1367332mr46868120ejr.355.1669721474666;
+        Tue, 29 Nov 2022 03:31:14 -0800 (PST)
+Received: from localhost.lan (ip-194-187-74-233.konfederacka.maverick.com.pl. [194.187.74.233])
+        by smtp.gmail.com with ESMTPSA id sb16-20020a1709076d9000b0078db5bddd9csm6055883ejc.22.2022.11.29.03.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 03:31:14 -0800 (PST)
+From:   =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+        linux-gpio@vger.kernel.org, Gaosheng Cui <cuigaosheng1@huawei.com>,
+        =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: [PATCH] pinctrl: keembay: fix memleak in keembay_build_functions()
+Date:   Tue, 29 Nov 2022 12:31:08 +0100
+Message-Id: <20221129113108.17127-1-zajec5@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
- the wrong register
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
-References: <20221128214408.165726-1-hdegoede@redhat.com>
- <20221128214408.165726-2-hdegoede@redhat.com>
- <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
-Content-Language: en-US, nl
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On 11/29/22 11:22, Andy Shevchenko wrote:
-> On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
->> so that the actual value of the pin is read, rather then the value the pin
-> 
-> than
+Add missing kfree().
 
-Ack.
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+This is NOT run-time tested, Lakshmi would you like to test it first?
+---
+ drivers/pinctrl/pinctrl-keembay.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->> would output when put in output mode.
-> 
-> I don't see it here and haven't checked the context, but the idea is
-> to check the direction and return either input (if pin is in input
-> mode) or [cached] output.If it's the case, the patch looks good to me.
-
-No the idea is to always actually use the input register when reading
-the pins, independent of the input/output mode. Instead of always
-reading the [cached] output register value.
-
-The input buffer will still work when the device is in output mode
-and if somehow an external force is pushing the pin low/high against
-the output value then the input buffer will correctly reflect this
-(assuming the output is current limited and thus the magic smoke
-stays inside the chip).
-
-Regards,
-
-Hans
-
-
-
-> 
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/gpio/gpio-tps68470.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
->> index aaddcabe9b35..778a72cf800c 100644
->> --- a/drivers/gpio/gpio-tps68470.c
->> +++ b/drivers/gpio/gpio-tps68470.c
->> @@ -30,7 +30,7 @@ static int tps68470_gpio_get(struct gpio_chip *gc, unsigned int offset)
->>  {
->>         struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
->>         struct regmap *regmap = tps68470_gpio->tps68470_regmap;
->> -       unsigned int reg = TPS68470_REG_GPDO;
->> +       unsigned int reg = TPS68470_REG_GPDI;
->>         int val, ret;
->>
->>         if (offset >= TPS68470_N_REGULAR_GPIO) {
->> --
->> 2.38.1
->>
-> 
-> 
+diff --git a/drivers/pinctrl/pinctrl-keembay.c b/drivers/pinctrl/pinctrl-keembay.c
+index 152c35bce8ec..51b684201b20 100644
+--- a/drivers/pinctrl/pinctrl-keembay.c
++++ b/drivers/pinctrl/pinctrl-keembay.c
+@@ -1599,6 +1599,7 @@ static int keembay_add_functions(struct keembay_pinctrl *kpc,
+ static int keembay_build_functions(struct keembay_pinctrl *kpc)
+ {
+ 	struct function_desc *keembay_funcs, *new_funcs;
++	int err;
+ 	int i;
+ 
+ 	/*
+@@ -1643,7 +1644,11 @@ static int keembay_build_functions(struct keembay_pinctrl *kpc)
+ 		return -ENOMEM;
+ 	}
+ 
+-	return keembay_add_functions(kpc, new_funcs);
++	err = keembay_add_functions(kpc, new_funcs);
++
++	kfree(new_funcs);
++
++	return err;
+ }
+ 
+ static const struct keembay_pin_soc keembay_data = {
+-- 
+2.34.1
 
