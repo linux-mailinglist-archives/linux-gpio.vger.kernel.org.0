@@ -2,105 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7826963BF6A
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:53:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 592EF63BF69
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 12:53:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232772AbiK2Lxg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 06:53:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54254 "EHLO
+        id S229923AbiK2Lxb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 06:53:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232052AbiK2Lxf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:53:35 -0500
-X-Greylist: delayed 985 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Nov 2022 03:53:33 PST
-Received: from 11.mo550.mail-out.ovh.net (11.mo550.mail-out.ovh.net [188.165.48.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC5055A8F
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 03:53:33 -0800 (PST)
-Received: from player763.ha.ovh.net (unknown [10.109.146.143])
-        by mo550.mail-out.ovh.net (Postfix) with ESMTP id 0070525293
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 11:37:06 +0000 (UTC)
-Received: from milecki.pl (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
-        (Authenticated sender: rafal@milecki.pl)
-        by player763.ha.ovh.net (Postfix) with ESMTPSA id 96EE33144B9F5;
-        Tue, 29 Nov 2022 11:37:00 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-99G003f4d50c74-976e-459a-a7ad-12d1a0dc17fd,
-                    EBB6FAEB9E2E49B041ED7FFF0E08AB355E9D3184) smtp.auth=rafal@milecki.pl
-X-OVh-ClientIp: 194.187.74.233
-Message-ID: <6a7329e3-448f-bf1f-dfd3-34f6dd495408@milecki.pl>
-Date:   Tue, 29 Nov 2022 12:36:59 +0100
+        with ESMTP id S232052AbiK2Lxa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 06:53:30 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248A855A8F;
+        Tue, 29 Nov 2022 03:53:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669722809; x=1701258809;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HFscW1vRVjDuP/maev1P0KzZMtKtQZ3cNE4ZEQ6OaFs=;
+  b=kdPoHOTjRmSN945EQdzkslfvJqogBxbk1lHPFNI/6ZQo9wLLjRkP7RzO
+   wS1I2gr5+yO82/zDR6rQuJNcVAy8ngYvShvmM1ncz8HK7nNhcX1tsWPKa
+   MPYF/XgndPYytmqTCuxDt5//mqClNIKdNRxYqsPwHkUYlTIsGYFs4IUMP
+   W8NrNh2MV7PLtG3mNNWQLji2Qzj0smYD3sV/n8wP0LO8JJZLTA00BbdQv
+   uLn4XmIys1OMLiGhW1p/Cw1Gf9QhGakxXrOOOK3M4OwQFN12A2LjhGfLN
+   xzsTEe7o6I+xzCiEo4FtXcx2KvJLQ898sq8XHh5zsqfLGOwUqipBde3Dk
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="294784518"
+X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
+   d="scan'208";a="294784518"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 03:53:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="972644627"
+X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
+   d="scan'208";a="972644627"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga005.fm.intel.com with ESMTP; 29 Nov 2022 03:53:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1ozzAz-001goI-2E;
+        Tue, 29 Nov 2022 13:53:25 +0200
+Date:   Tue, 29 Nov 2022 13:53:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux pin control <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [GIT PULL] intel-pinctrl for 6.2-2
+Message-ID: <Y4XytaKH9QH+wDSG@smile.fi.intel.com>
+References: <Y30YOvHpqvte9otX@black.fi.intel.com>
+ <CACRpkdZa7hOuU5e-i+_=TqM_Ttec6tvzgXXPm8giy=NiFO2tEA@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
- Thunderbird/96.0
-Subject: Re: [PATCH v2] pinctrl: thunderbay: fix possible memory leak in
- thunderbay_build_functions()
-To:     Gaosheng Cui <cuigaosheng1@huawei.com>,
-        lakshmi.sowjanya.d@intel.com, linus.walleij@linaro.org,
-        kiran.kumar1.s@intel.com
-Cc:     linux-gpio@vger.kernel.org
-References: <20221129113410.1555592-1-cuigaosheng1@huawei.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-In-Reply-To: <20221129113410.1555592-1-cuigaosheng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 17213039251098807209
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrtddtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeftrghfrghlucfoihhlvggtkhhiuceorhgrfhgrlhesmhhilhgvtghkihdrphhlqeenucggtffrrghtthgvrhhnpedtgeetheeutddvudekuddtkeetveehteegleehffetkeehjeetfffgveegkeefueenucfkphepuddvjedrtddrtddruddpudelgedrudekjedrjeegrddvfeefnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpeeorhgrfhgrlhesmhhilhgvtghkihdrphhlqedpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhgphhiohesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtddpmhhouggvpehsmhhtphhouhht
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZa7hOuU5e-i+_=TqM_Ttec6tvzgXXPm8giy=NiFO2tEA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 29.11.2022 12:34, Gaosheng Cui wrote:
-> The thunderbay_add_functions() will free memory of thunderbay_funcs
-> when everything is ok, but thunderbay_funcs will not be freed when
-> thunderbay_add_functions() fails, then there will be a memory leak,
-> so add kfree() when thunderbay_add_functions() fails to fix it.
+On Mon, Nov 28, 2022 at 09:25:02PM +0100, Linus Walleij wrote:
+> On Tue, Nov 22, 2022 at 7:42 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> Fixes: 12422af8194d ("pinctrl: Add Intel Thunder Bay pinctrl driver")
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
-> ---
-> v2:
-> - Free the memory in thunderbay_build_functions, and update the commit
->    message and the fixes tag, thanks!
->   drivers/pinctrl/pinctrl-thunderbay.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
+> > This is an immutable tag with PWM feature enablement for Intel pin control IPs.
+> > It's targeting v6.2 and have been reviewed by all stakeholders.
+> >
+> > The idea is that PWM and pin control subsystem soak up it independently.
 > 
-> diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
-> index 9328b17485cf..84b64c3217a5 100644
-> --- a/drivers/pinctrl/pinctrl-thunderbay.c
-> +++ b/drivers/pinctrl/pinctrl-thunderbay.c
-> @@ -817,6 +817,7 @@ static int thunderbay_build_functions(struct thunderbay_pinctrl *tpc)
->   	struct function_desc *thunderbay_funcs;
->   	void *ptr;
->   	int pin;
-> +	int ret;
->   
->   	/*
->   	 * Allocate maximum possible number of functions. Assume every pin
-> @@ -860,7 +861,13 @@ static int thunderbay_build_functions(struct thunderbay_pinctrl *tpc)
->   		return -ENOMEM;
->   
->   	thunderbay_funcs = ptr;
-> -	return thunderbay_add_functions(tpc, thunderbay_funcs);
-> +	ret = thunderbay_add_functions(tpc, thunderbay_funcs);
-> +	if (ret < 0) {
-> +		kfree(thunderbay_funcs);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
->   }
->   
->   static int thunderbay_pinconf_set_tristate(struct thunderbay_pinctrl *tpc,
+> I wanted to give Thierry the option to say if he's pulling this in,
+> but it needs rotation in linux-next so I've pulled it into the pin
+> control tree now.
 
-Sorry, I probably wasn't precise enough.
+Thank you!
 
-This patch still leaves *existing* kfree(funcs); in the
-thunderbay_add_functions(). Maybe you can get rid of that one and just
-handle freeing in the thunderbay_build_functions()?
+Note, that Thierry and Uwe gave their respective tags to the patches.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
