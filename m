@@ -2,100 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDD5C63BFE0
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 13:16:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E74D263BFE8
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 13:20:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbiK2MQc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 07:16:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44716 "EHLO
+        id S232484AbiK2MUx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 07:20:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233711AbiK2MQ1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 07:16:27 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43C2D5D686;
-        Tue, 29 Nov 2022 04:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669724187; x=1701260187;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=vkHb10UWl0EmeYONEXD8X8afsmS+52X0M20NY2od828=;
-  b=LkcPxuTj9frfK45N0mDHBSCBdmcbmpAKP8UA7Tk9mOSI+Ty037h2KMzD
-   e2f1My8I7RGDE1X0QYQFSpJFBwOJkGwGLXEKZYEdlkSzxn5sagcCwl6Bl
-   RMIHKVMpPEDHU5sp15FzDEygHxS36UhRTxpdppP1NCsPSXQBFGZCeeYQz
-   +ZTXcdrATUreJy3wzLTiw6YMvxIpoH967NeyQ09UvjNiEsIi4IltiATOm
-   45MiyF9kTHLN0akUIBI3plG07mbqRcN2uU+j+brcA+z0v1UX3JsE7hKxU
-   Y26hIVvZ5g39Gubg7CzTYVpmJIDsXBQUo12zfedSSl4yX/aqgmnGYaoWz
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="377239413"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="377239413"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 04:16:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10545"; a="786019470"
-X-IronPort-AV: E=Sophos;i="5.96,203,1665471600"; 
-   d="scan'208";a="786019470"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Nov 2022 04:16:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ozzWz-001hFK-1X;
-        Tue, 29 Nov 2022 14:16:09 +0200
-Date:   Tue, 29 Nov 2022 14:16:09 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Linux pin control <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [GIT PULL] intel-pinctrl for 6.2-2
-Message-ID: <Y4X4CQqafmtct26C@smile.fi.intel.com>
-References: <Y30YOvHpqvte9otX@black.fi.intel.com>
- <CACRpkdZa7hOuU5e-i+_=TqM_Ttec6tvzgXXPm8giy=NiFO2tEA@mail.gmail.com>
- <Y4X0QUVIIddOK2+I@orome>
+        with ESMTP id S232401AbiK2MUw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 07:20:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46BC35D69C
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 04:20:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669724401;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h+VylQnPU570h37x9UjTHWMzANF3h54ZhxETOQFnrz0=;
+        b=MKpBRtXFtR8cjVM+tO0Y9MTPRifC4xqFuzUuCSHAZ0W7jKTET76MndetKLTZLCZuw88I0B
+        Fr5zz4RYBrUayyZ9eT/Lz9D0gzLw+rDjSGXtLOqyJQNuXOTeoOEUWFzNy8GcmqyhXseaem
+        Ur8PyUJjIkdFpI0KBUDqQD/BjBIG5M0=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-57--Ew_xnT6MX--uILZ98IBJw-1; Tue, 29 Nov 2022 07:20:00 -0500
+X-MC-Unique: -Ew_xnT6MX--uILZ98IBJw-1
+Received: by mail-ej1-f70.google.com with SMTP id qw20-20020a1709066a1400b007af13652c92so6474875ejc.20
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 04:20:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h+VylQnPU570h37x9UjTHWMzANF3h54ZhxETOQFnrz0=;
+        b=l23kD/7ZEuudRO/E41T2KIVvdDHjviNGPcMcQnXkU9msRi7zaS/NOXV/3R5ic19v/e
+         9S5iKqHrI3P1PbUYXz45Ds+Tw4DCa4hW0g+pnEP+doPtGnC7LPb/PLTV5p2J8xlss3JT
+         V6cmu0QzNpiwaxiEQ17DILKg9UlC0pC7c5zZ2BlwGg7MyRNTPQFkCt3RoweO+we9YPDq
+         gky307jvdwZfGI3rXwRbls9k8hv5Zd1rsqWVh+K7VNrF+r4R7ARsStLTNFocRT+s7YQf
+         hQXOqtQG3euBZJ3TRdWDSJxU6D9rlEsnA7oy7Op9lQbsUtpvjIwOtti0Pqw+ZDKu0U59
+         0dJg==
+X-Gm-Message-State: ANoB5pkqCV3C9rtbbtDDB1kFP52HSnhBS9B2kn4/2iPwiR1LPLfTSDwQ
+        j48P9oWuiQHbDlczXFQgPldLqb7bqU6NfF7lhqF4kywkv6jkT6XsMhzCDgEFztgTjonuNZemL86
+        YMYP9bprm7DO7DYYYtgz38w==
+X-Received: by 2002:a17:906:9718:b0:7bf:1090:ded6 with SMTP id k24-20020a170906971800b007bf1090ded6mr9925696ejx.577.1669724398863;
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf7AHtlWkiqkj0UM5H1WUvDEAl7vxBq2J7zflwfg6xETHeUCVzMRyvKFjB4eYzNpFz3dqSSvNA==
+X-Received: by 2002:a17:906:9718:b0:7bf:1090:ded6 with SMTP id k24-20020a170906971800b007bf1090ded6mr9925685ejx.577.1669724398673;
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id d25-20020a50fe99000000b004588ef795easm6138657edt.34.2022.11.29.04.19.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Nov 2022 04:19:58 -0800 (PST)
+Message-ID: <1eb61f7a-3b93-32a1-21bf-6929bbb40d36@redhat.com>
+Date:   Tue, 29 Nov 2022 13:19:57 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y4X0QUVIIddOK2+I@orome>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
+ the wrong register
+Content-Language: en-US, nl
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <20221128214408.165726-2-hdegoede@redhat.com>
+ <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
+ <9a4336d1-3222-fe50-f234-93ab175d606a@redhat.com>
+ <CAHp75VdEd2-YMm2kGdRh2n7WwTJDEmOk68O4ydHU1m3W+Z83Lg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHp75VdEd2-YMm2kGdRh2n7WwTJDEmOk68O4ydHU1m3W+Z83Lg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 01:00:01PM +0100, Thierry Reding wrote:
-> On Mon, Nov 28, 2022 at 09:25:02PM +0100, Linus Walleij wrote:
-> > On Tue, Nov 22, 2022 at 7:42 PM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > > This is an immutable tag with PWM feature enablement for Intel pin control IPs.
-> > > It's targeting v6.2 and have been reviewed by all stakeholders.
-> > >
-> > > The idea is that PWM and pin control subsystem soak up it independently.
-> > 
-> > I wanted to give Thierry the option to say if he's pulling this in,
-> > but it needs rotation in linux-next so I've pulled it into the pin
-> > control tree now.
+Hi,
+
+On 11/29/22 12:56, Andy Shevchenko wrote:
+> On Tue, Nov 29, 2022 at 1:27 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>> On 11/29/22 11:22, Andy Shevchenko wrote:
+>>> On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>>>
+>>>> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+>>>> so that the actual value of the pin is read, rather then the value the pin
+>>>
+>>> than
+>>
+>> Ack.
+>>
+>>>> would output when put in output mode.
+>>>
+>>> I don't see it here and haven't checked the context, but the idea is
+>>> to check the direction and return either input (if pin is in input
+>>> mode) or [cached] output.If it's the case, the patch looks good to me.
+>>
+>> No the idea is to always actually use the input register when reading
+>> the pins, independent of the input/output mode. Instead of always
+>> reading the [cached] output register value.
 > 
-> My recollection is that Andy wanted to take this through the Intel pin
-> control tree, so there's no need for me to pick this up as well unless
-> perhaps for conflict resolution (which I'm not seeing right now).
+> But why? This makes a little sense to me.
 
-The idea was to have an immutable tag that all parties, who are involved,
-can pull. It means if you don't need it, it's fine, since the main route
-is Intel pin control as you said.
+I don't understand what your problem is with this patch ?
 
-Thank you!
+This is standard behavior for GPIO drivers, the get() callback
+always reads the actual pin values when there is a registers
+to get the actual pin-values. AFAIK this is no different from what
+countless other GPIO drivers do ?
 
--- 
-With Best Regards,
-Andy Shevchenko
+>> The input buffer will still work when the device is in output mode
+> 
+> Does this hardware support HiZ?
 
+Yes the 7 standard GPIO pins can be put in input mode, aka HiZ mode.
+
+>> and if somehow an external force is pushing the pin low/high against
+>> the output value then the input buffer will correctly reflect this
+>> (assuming the output is current limited and thus the magic smoke
+>> stays inside the chip).
+> 
+> Exactly, when smoke comes out, the hardware is broken and code,
+> whatever is it, makes no difference at all.
+
+The GPIO part of the TPS68470 supports open-drain outputs, to correctly
+get the actual value on the pin from the get() callback, the GPDI
+register must be used. And being able to detect some outside chip
+forcing the line low in open-drain mode is important to be able to
+e.g. implement a software I2C master.
+
+As I mentioned above actually using the input buffer value in
+the get() method is standard behavior for GPIO drivers, exactly
+for reasons like allowing a sw I2C master implementation to
+detect clock stretching or conflicts (in the multi master case).
+
+I really don't understand what is so controversial about this
+patch?
+
+Note the datasheet describes the GPDO / GPDI bit 0  values as:
+
+GPDO bit 0: "Control of the GPIO0 output"
+GPDI bit 0: "State of the GPIO0 input"
+
+So clearly GPDI is the correct register to use for the get()
+callback, which is what this patch is doing.
+
+Regards,
+
+Hans
 
