@@ -2,57 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36A3363BDE4
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 11:24:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0806863BDEF
+	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 11:25:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232574AbiK2KX3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 05:23:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46080 "EHLO
+        id S229641AbiK2KZ1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 05:25:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231673AbiK2KXB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 05:23:01 -0500
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD8B163E1;
-        Tue, 29 Nov 2022 02:22:58 -0800 (PST)
-Received: by mail-qk1-x732.google.com with SMTP id k4so9346914qkj.8;
-        Tue, 29 Nov 2022 02:22:58 -0800 (PST)
+        with ESMTP id S229616AbiK2KZ0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 05:25:26 -0500
+Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2AE6464;
+        Tue, 29 Nov 2022 02:25:25 -0800 (PST)
+Received: by mail-qk1-x729.google.com with SMTP id z1so9338364qkl.9;
+        Tue, 29 Nov 2022 02:25:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=LO8RI0jr7bJrxY0cMQR0w9JdTdn6jpW6eDbtgUcb5TM=;
-        b=g/3uxiW2w6dm6n5CQ4DjHRjR2mK4VLwrG8YR3Zr5cVrpiR5RcxsllHD+j9QOIGhVZf
-         BDozoOL8Ck4CGIlItLS+97x8ayxG1fND3Hj9rXXCQsWT5nahLDXDfqZ/XXHRC0wEgHIr
-         HiXTHTBwcSb+6epR7p50lvM4CLx3SeBRL+kd1r4oDrlAsBARCOTgQKtlpfkRlM8/UVJ9
-         2QD6bCg2dbEmIAnkB0ofDjRKzPwoacLNeFS2do7sLE3NCFvkrQTjmItb12K3QXJllEZP
-         xWkQ2PwyQp+yQU3wa1b0i5q0rdzL+5BWU70BlpEu4cGblPK0ZmD+kh1Z/aFtlI3BPbcW
-         3FKA==
+        bh=oAL8AlKBYgUFWtZVzv9Iail4F4qVLePZC+TwQDfZc34=;
+        b=b/NmtlJowU1Ua/KbeSwxovv409oa6qMZX3FDUSWqjP1dLwBUDNMtIHNOBv7JuJUdYU
+         hZsECBBl+AgzZ6xv+UMF/XNFI9Wdqe/hpoD7HO4fTTzaSX1ciJgZkLkAr0eTfb7QKqwk
+         MzUMzGHtlNwlI9cDpEDQKM+hVK2nsJuFWMvSLsqeofgz18aYamsAZHRXUHmNizqgVG8B
+         wCDJS+W+hDmfT6nutXFxgQSl0euDX16brgpVZkiQguc8DkCE4zGjGdCrF2dY/N0/Awvr
+         spfNnYrWehWqNmyseKv3+UZb0hvVoyknn08dQufGpbg7L0YD3JSQydxiehqLifyP7MnU
+         mc7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=LO8RI0jr7bJrxY0cMQR0w9JdTdn6jpW6eDbtgUcb5TM=;
-        b=rOLOZxxfI99nyqkkIaatGNRq1M7OPmkHH5GjsfwZPqxNytWlaUmzS61rpheYzSExus
-         gtcEYNRxUE73HQtZU25WJuw5HoX9gSwpJAjf8v2xzB4cYL/rNsXROy85c+jexr1qfmM3
-         zDg/UttI99ZHQ6a7PgBJ2QZ4Ua0uv8Mx+UeH6sJTWqw4EfIE1AQFKcj5pTlFxn40FLNu
-         8HVun3E8FKFNF8R/mUFqm+6o8AChjpYgVF0vY+Lj0yCpj14HP6d0MKKP9zAQLiNUI1B7
-         ffZVes0/pARtXCRJou++0YuQ9kwjSeppKCUDqrnYJvUUETl7QlavDcGKyAVuQSa96hoz
-         04RA==
-X-Gm-Message-State: ANoB5pkMRnEY4hxCySiVtJJ3XRPlPRboDGkiM/SAsowe+3Y6TykSvM4x
-        quq8kLrj7Ay8ZJHn2mcaGdxWUnQdELYGK5mlfjk=
-X-Google-Smtp-Source: AA0mqf6U2varNApHDZTWUqBYkp99y+gnTiId4wt8LQ4sHtS5r98TBSQgiCD8zmhudYzc8pwjJPs5IE4JHPNH6Ruhl3E=
-X-Received: by 2002:a37:b404:0:b0:6fa:4a82:1152 with SMTP id
- d4-20020a37b404000000b006fa4a821152mr51095200qkf.504.1669717377965; Tue, 29
- Nov 2022 02:22:57 -0800 (PST)
+        bh=oAL8AlKBYgUFWtZVzv9Iail4F4qVLePZC+TwQDfZc34=;
+        b=e68ESwJq1/qeZl4XwiaY+eu2sHI67ZPIZgxMRbr24hy/FXr3eHJ77c9Cug0/uWYzjf
+         b9CYCKjpj56z5IjV7oCDUMjlg9WrG4uTdbSPy8dqJBU5r65mtTk/h5p2nVNfEeYPfBW0
+         xDgFjds70v2lRa1A47JvHovf265xuANQ4EOoQmyf2wrZJcXWYfRDwOVgYbeHSU8pZ+L7
+         O3u7sDoU0A7sML8W1Tc4lAoafCRqyrRvUueK1ULla8IXhD6rAXyMaESlnodOErhbM+2K
+         x0MOTBxA/XqzeuLjcoKzNWWEl6uQ6yAjcVu4rbiRf0fkkA+Ok1Ppf93w5VUOeuT9uuFE
+         q7vQ==
+X-Gm-Message-State: ANoB5plbV6MPHN60PrnIcKWIDWPK2h3ceKgIeWCQnfxImlZqahgF9byX
+        u2oGtD0jh6Txynyj7LoIGKAYApmZ0K2F8VWe+pA=
+X-Google-Smtp-Source: AA0mqf5VsQQXvf0cIY/BQzUIxW4Lj8C3B3qluGwzXtK1bxDaZt656IZNu2tT39whMK/dL2+cP7Ez1wBjDU+almRbmMo=
+X-Received: by 2002:a05:620a:21ce:b0:6fa:d149:6d47 with SMTP id
+ h14-20020a05620a21ce00b006fad1496d47mr32956545qka.734.1669717524938; Tue, 29
+ Nov 2022 02:25:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20221128214408.165726-1-hdegoede@redhat.com> <20221128214408.165726-2-hdegoede@redhat.com>
-In-Reply-To: <20221128214408.165726-2-hdegoede@redhat.com>
+References: <20221128214408.165726-1-hdegoede@redhat.com> <20221128214408.165726-3-hdegoede@redhat.com>
+In-Reply-To: <20221128214408.165726-3-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 29 Nov 2022 12:22:20 +0200
-Message-ID: <CAHp75VcXfh46z4m+R4bDTZbcWrqEmebzg-2gT_P+2uAYTNPoYQ@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpio: tps68470: Fix tps68470_gpio_get() reading from
- the wrong register
+Date:   Tue, 29 Nov 2022 12:24:48 +0200
+Message-ID: <CAHp75Vc=8CqOPURA=ot9UMSOJknM7LJLqqX70Qu_NjmAKs2pig@mail.gmail.com>
+Subject: Re: [PATCH 2/5] gpio: tps68470: Make tps68470_gpio_output() always
+ set the initial value
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>,
@@ -76,35 +76,40 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Mon, Nov 28, 2022 at 11:44 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
-> so that the actual value of the pin is read, rather then the value the pin
+> Make tps68470_gpio_output() call tps68470_gpio_set() for output-only pins
+> too, so that the initial value passed to gpiod_direction_output() is
+> honored for these pins too.
 
-than
+This smells like a fix. Shouldn't be the Fixes tag?
 
-> would output when put in output mode.
-
-I don't see it here and haven't checked the context, but the idea is
-to check the direction and return either input (if pin is in input
-mode) or [cached] output.If it's the case, the patch looks good to me.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/gpio/gpio-tps68470.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpio-tps68470.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
 > diff --git a/drivers/gpio/gpio-tps68470.c b/drivers/gpio/gpio-tps68470.c
-> index aaddcabe9b35..778a72cf800c 100644
+> index 778a72cf800c..2ca86fbe1d84 100644
 > --- a/drivers/gpio/gpio-tps68470.c
 > +++ b/drivers/gpio/gpio-tps68470.c
-> @@ -30,7 +30,7 @@ static int tps68470_gpio_get(struct gpio_chip *gc, unsigned int offset)
->  {
+> @@ -91,13 +91,13 @@ static int tps68470_gpio_output(struct gpio_chip *gc, unsigned int offset,
 >         struct tps68470_gpio_data *tps68470_gpio = gpiochip_get_data(gc);
 >         struct regmap *regmap = tps68470_gpio->tps68470_regmap;
-> -       unsigned int reg = TPS68470_REG_GPDO;
-> +       unsigned int reg = TPS68470_REG_GPDI;
->         int val, ret;
 >
->         if (offset >= TPS68470_N_REGULAR_GPIO) {
+> +       /* Set the initial value */
+> +       tps68470_gpio_set(gc, offset, value);
+> +
+>         /* rest are always outputs */
+>         if (offset >= TPS68470_N_REGULAR_GPIO)
+>                 return 0;
+>
+> -       /* Set the initial value */
+> -       tps68470_gpio_set(gc, offset, value);
+> -
+>         return regmap_update_bits(regmap, TPS68470_GPIO_CTL_REG_A(offset),
+>                                  TPS68470_GPIO_MODE_MASK,
+>                                  TPS68470_GPIO_MODE_OUT_CMOS);
 > --
 > 2.38.1
 >
