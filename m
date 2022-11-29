@@ -2,89 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 860B063C97B
-	for <lists+linux-gpio@lfdr.de>; Tue, 29 Nov 2022 21:42:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCF3963CC02
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 00:57:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234987AbiK2UmK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 15:42:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43854 "EHLO
+        id S229690AbiK2X5y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 18:57:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233743AbiK2UmK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 15:42:10 -0500
-X-Greylist: delayed 33597 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Nov 2022 12:42:07 PST
-Received: from 20.mo583.mail-out.ovh.net (20.mo583.mail-out.ovh.net [91.121.55.239])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAB2A686BD
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 12:42:07 -0800 (PST)
-Received: from player158.ha.ovh.net (unknown [10.110.103.195])
-        by mo583.mail-out.ovh.net (Postfix) with ESMTP id D58DA25161
-        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 11:15:27 +0000 (UTC)
-Received: from milecki.pl (ip-194-187-74-233.konfederacka.maverick.com.pl [194.187.74.233])
-        (Authenticated sender: rafal@milecki.pl)
-        by player158.ha.ovh.net (Postfix) with ESMTPSA id 46A5F3138E659;
-        Tue, 29 Nov 2022 11:15:24 +0000 (UTC)
-Authentication-Results: garm.ovh; auth=pass (GARM-103G0058d0926ac-28bf-4aef-bf3b-464d960ad17b,
-                    EBB6FAEB9E2E49B041ED7FFF0E08AB355E9D3184) smtp.auth=rafal@milecki.pl
-X-OVh-ClientIp: 194.187.74.233
-Message-ID: <aa4cb998-2820-1d5c-c6fe-663515b7bd7f@milecki.pl>
-Date:   Tue, 29 Nov 2022 12:15:22 +0100
+        with ESMTP id S230293AbiK2X5l (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 18:57:41 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9174A25A;
+        Tue, 29 Nov 2022 15:57:33 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id o1so10722613pfp.12;
+        Tue, 29 Nov 2022 15:57:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYMDmlsvjozIL5WOmq1zpgn4QhNwIkK2G4uNnYQOjuk=;
+        b=hXTSncZ/do9WkQnengsdG54Eb/LOE5zQ80xuJXTxQeKqwEd+eK8zetZRndZwfpNqXY
+         NolX03Q9qHqsv+jK7aZ95ph4Cg5J54bYlE+z5x1krEnCxOGbmSY7qBw8pstXBMbX6xCD
+         CnhVyMLGMeT9SzXjoiS34wWK0yA+cv7mx/mnsOaZjWPNi7d7w0vif3UzkXuJmorFRL7b
+         Ng2rkfTMoxfju98F3/+pIm7mNS4PVUJJGDOUQcTmvNcSkslsn6S2LH5NcjTvrIpX+dkS
+         69QeuYgAX7g+LOoAF6F+x3rPYZ2mvCewZ3PxipdaRXkjmNpacfbSzgWcnZ/6o2xAac6k
+         jDEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FYMDmlsvjozIL5WOmq1zpgn4QhNwIkK2G4uNnYQOjuk=;
+        b=fzOrYHceSShEuPMyalki4s+guFicsJkc1YstEAL1wH1fMZwrzX+7bEftuVXgskutYx
+         DBI3vUyBS2sF8k/G+AMm+yq/gvWSpZjCiVJjN3LskOIFH1q4n/3bnBAj0+JZcEliR5fw
+         M0etecyueoFOJTe6smcJRZsWAJAeJxH3gBlJmflwaIiSyzqEk2RmSKc2+fer6owwa22g
+         U20eU3zbKRqPse+fP+5UCyytngh6NSTqRHroVsJvnJ+AI+s2QFNdpCcH4U7MFI8tq9Yf
+         U+5M1b4ooryM90UdKqKSpmvaSCncctNS9OiTRKl1BPIu0B0D6yWCVqV5vPwZanKn4TH0
+         9PKQ==
+X-Gm-Message-State: ANoB5plM2A76G/iNjRfY4C+QlyDHNO6odyCQyDoT9rDUnoGQrIoFdEm9
+        EHqj66OBPXMvzxT78X4EYZI=
+X-Google-Smtp-Source: AA0mqf5vn97HJ2AWPh8OLCPTXpCymTiMwpM6M4PRuB27mCC2bgSz7yiGw1Po5rWFTmtvLnaOQTx2sg==
+X-Received: by 2002:a63:5a53:0:b0:477:ae2f:3292 with SMTP id k19-20020a635a53000000b00477ae2f3292mr30795903pgm.267.1669766252976;
+        Tue, 29 Nov 2022 15:57:32 -0800 (PST)
+Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
+        by smtp.gmail.com with ESMTPSA id i4-20020a626d04000000b0056d98e359a5sm35622pfc.165.2022.11.29.15.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Nov 2022 15:57:32 -0800 (PST)
+Date:   Wed, 30 Nov 2022 07:57:26 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 2/2] gpiolib: protect the GPIO device against being
+ dropped while in use by user-space
+Message-ID: <Y4acZkkuUa5Peq+r@sol>
+References: <20221129123553.353410-1-brgl@bgdev.pl>
+ <20221129123553.353410-3-brgl@bgdev.pl>
+ <Y4Y5BjTwVCF5bAn5@smile.fi.intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:96.0) Gecko/20100101
- Thunderbird/96.0
-Subject: Re: [PATCH] pinctrl: thunderbay: fix possible memory leak in
- thunderbay_add_functions()
-To:     Gaosheng Cui <cuigaosheng1@huawei.com>,
-        lakshmi.sowjanya.d@intel.com, linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org
-References: <20221129105820.1539875-1-cuigaosheng1@huawei.com>
-From:   =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-In-Reply-To: <20221129105820.1539875-1-cuigaosheng1@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 16847684732605541289
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvgedrjeeggddvhecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthejredttdefjeenucfhrhhomheptfgrfhgrlhcuofhilhgvtghkihcuoehrrghfrghlsehmihhlvggtkhhirdhplheqnecuggftrfgrthhtvghrnheptdegteehuedtvddukedutdekteevheetgeelheffteekheejteffgfevgeekfeeunecukfhppeduvdejrddtrddtrddupdduleegrddukeejrdejgedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehrrghfrghlsehmihhlvggtkhhirdhplheqpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqghhpihhosehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeefpdhmohguvgepshhmthhpohhuth
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y4Y5BjTwVCF5bAn5@smile.fi.intel.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 29.11.2022 11:58, Gaosheng Cui wrote:
-> The memory of funcs is allocated by thunderbay_build_functions(),
-> thunderbay_add_functions() will free funcs when everything is ok,
-> but it will not be freed when thunderbay_add_functions() fails,
-> then there will be a memory leak, so add kfree() when
-> thunderbay_add_functions() fails to fix it.
+On Tue, Nov 29, 2022 at 06:53:26PM +0200, Andy Shevchenko wrote:
+> On Tue, Nov 29, 2022 at 01:35:53PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > 
+> > While any of the GPIO cdev syscalls is in progress, the kernel can call
+> > gpiochip_remove() (for instance, when a USB GPIO expander is disconnected)
+> > which will set gdev->chip to NULL after which any subsequent access will
+> > cause a crash.
+> > 
+> > To avoid that: use an RW-semaphore in which the syscalls take it for
+> > reading (so that we don't needlessly prohibit the user-space from calling
+> > syscalls simultaneously) while gpiochip_remove() takes it for writing so
+> > that it can only happen once all syscalls return.
 > 
-> Fixes: 25d2e41cf59b ("pinctrl: thunderbay: rework loops looking for groups names")
-> Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
-> ---
->   drivers/pinctrl/pinctrl-thunderbay.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
+> ...
 > 
-> diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
-> index 9328b17485cf..10a7380af8e6 100644
-> --- a/drivers/pinctrl/pinctrl-thunderbay.c
-> +++ b/drivers/pinctrl/pinctrl-thunderbay.c
-> @@ -784,8 +784,10 @@ static int thunderbay_add_functions(struct thunderbay_pinctrl *tpc, struct funct
->   
->   		group_names = devm_kcalloc(tpc->dev, func->num_group_names,
->   					   sizeof(*group_names), GFP_KERNEL);
-> -		if (!group_names)
-> +		if (!group_names) {
-> +			kfree(funcs);
->   			return -ENOMEM;
-> +		}
->   
->   		for (j = 0; j < tpc->soc->npins; j++) {
->   			const struct pinctrl_pin_desc *pin_info = &thunderbay_pins[j];
+> I would do
+> 
+> typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
+> 
+> and so on and use that one in the respective parameters.
+> 
+> BUT. Since it's a fix, up to you which one to choose.
+> 
 
-I'm wondering if moving that kfree(funcs) to the caller
-(thunderbay_build_functions()) would make code a bit cleaner.
+FWIW, the typedef looks cleaner to me too.
 
-If you take a look at thunderbay_build_functions() it takes care of
-allocating and reallocating so maybe kfree() should belong there too?
+> > +static __poll_t call_poll_locked(struct file *file,
+> > +				 struct poll_table_struct *wait,
+> > +				 struct gpio_device *gdev,
+> > +				 __poll_t (*func)(struct file *,
+> > +						  struct poll_table_struct *))
+> > +{
+> > +	__poll_t ret;
+> > +
+> > +	down_read(&gdev->sem);
+> > +	ret = func(file, wait);
+> > +	up_read(&gdev->sem);
+> > +
+> > +	return ret;
+> > +}
+> 
+> ...
+> 
+> > +	down_write(&gdev->sem);
+> 
+> + Blank line?
+> 
+
+Agreed.
+
+> >  	/* FIXME: should the legacy sysfs handling be moved to gpio_device? */
+> >  	gpiochip_sysfs_unregister(gdev);
+> >  	gpiochip_free_hogs(gc);
+> 
+> ...
+> 
+> >  	gcdev_unregister(gdev);
+> 
+> + Blank line ?
+> 
+
+Disagree with this one though.
+The comment prior to the gcdev_unregister() appears to apply to the block,
+so the following lines should remain grouped.
+
+Other than those nits, the series looks good to me.
+
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
+
+Cheers,
+Kent.
+
+> > +	up_write(&gdev->sem);
+> >  	put_device(&gdev->dev);
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
