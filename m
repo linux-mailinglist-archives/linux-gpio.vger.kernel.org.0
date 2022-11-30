@@ -2,59 +2,63 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97F4263DA65
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 17:19:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DE4D63DA6C
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 17:21:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbiK3QTV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 11:19:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41608 "EHLO
+        id S229734AbiK3QVF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 11:21:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiK3QTV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 11:19:21 -0500
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D0F72B603
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:19:18 -0800 (PST)
-Received: by mail-vk1-xa36.google.com with SMTP id n191so3835920vkf.2
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:19:18 -0800 (PST)
+        with ESMTP id S229449AbiK3QVF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 11:21:05 -0500
+Received: from mail-vk1-xa2f.google.com (mail-vk1-xa2f.google.com [IPv6:2607:f8b0:4864:20::a2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 322632C132
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:21:04 -0800 (PST)
+Received: by mail-vk1-xa2f.google.com with SMTP id f68so8690788vkc.8
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:21:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OteFkO9esJgmiZK8aK5d5h2QBFGFHGPbQU7z1FM6znY=;
-        b=ZRWTpHaXdqQOoUxtB7/+E71lLZlsOKXo3ZSyzVyFQ1Nfy7dq6Gl/CSSPz/38x5r1qH
-         HM1SEK0WHC0SLVtYCKM+E1FxeSki6a4tWkirN8F/WxkyyZl/wqQVCRWwTXPvt2g8Q4MU
-         NF2NIb0+SFS/sVlN+2EOMMrOw2LuAIPJoK9P2SJpRoaysZkCanklJTns5f8/kC6Kl7LR
-         fFB3I1rNR+mCnzRzlqvu/Z7G9o24/FyDkNu8PGiNOqjUZqZN52wLAPVtwK1gqTW/QaNc
-         W2X/+obhEcWuXhBGrSGrb4cf7XvRCeg5TDGntpE305XnW52eRR43rIH2gnrasUnZzOof
-         x2gw==
+        bh=UoyZVxA0aeRkEY8DynjV9LhVIJFEwgcgT6m1261Zygc=;
+        b=b5ey7Yfqw1pkomNYrJWTEaCpGjP2CjsyRNBbachvh96oEg+teIOr93v/bEuOJLmFA0
+         fhZE/w2drsULc5oSpAsZD6atx19hMnSbkVZv6GQIMPMKpl92x4Sf3tTCtwqY6DbYxIaK
+         BUvrx/PshzDJtkI6hSk4hLAnj44AUof41T389z+r5Zp+YIO5X9jODOisiJHA4YmtarOi
+         IynlvkuctjzCaD4kXwdob7baM1pGJkUFKD7BFSX43Yxk018/Dm0VOOYc1U7pRFtALn0M
+         95o2yHYfgmQxZ8QWI37n6X86GM/9oOMe1GhekFb8TuCUBwjcAqkUUuCE19xhXnwRwQUh
+         nR1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OteFkO9esJgmiZK8aK5d5h2QBFGFHGPbQU7z1FM6znY=;
-        b=KFzCqI02/KcaYGR7hwC1vbfXOxxdU8MlZx3T95toLRNItPhmTBsFlNLVn8ebENhUd4
-         tyJVMpgb7M7CRJvrDPFgb4LVT702YXqplhCQYaz6x/3DX2yTrXHQBjKqXbTJf0B59n4n
-         nAQykVaHkAfhT5lwpr4C0RS2jMCqlhoVO8z9nA0S0IiDcFC8eFWOLE0rOJ/JxcNaZQgx
-         KU6kXafdcpajPBE1bN7OAPyMpf+3qB6QZrCbIttA8Z3No0qSlnMKF8vnGQuKQcOUUCea
-         L+OBOe1+SBcBQew08BG1yey0y627/Km1CFHtNhb4FvGH1eMP6l50u9pLJ8Q1XLlZgorR
-         AnbQ==
-X-Gm-Message-State: ANoB5pkRilobppHvPydeVbmcertuIYG+Vc7R9vtZZm6U3J86uedlEe/Y
-        O8tOFw3yoG0/jlznkHZscHTtoJpdwiOky9aRDzFPaA==
-X-Google-Smtp-Source: AA0mqf6EwIh79YzPkSp9qoKap4Tr05mKhK0XLr8i+w+9v9S3OB/+HQRMjqmNkyNrGwuqGwjs8A/ndLIABER0oYkmjeM=
-X-Received: by 2002:a1f:54c1:0:b0:3b7:65cc:8ebc with SMTP id
- i184-20020a1f54c1000000b003b765cc8ebcmr30490630vkb.5.1669825157074; Wed, 30
- Nov 2022 08:19:17 -0800 (PST)
+        bh=UoyZVxA0aeRkEY8DynjV9LhVIJFEwgcgT6m1261Zygc=;
+        b=vPqJ8uJo5xHlbi6Za4186wE27h7KxeGTZuB9HmYsR73dae/Di2UQZfpDoo2mzwYV0+
+         hu8ptYdFgfAHWruEwPGU9fF3SHiddWmJKvtoXy0Ni/bw4yII3dbDX0xAn+GQsExEIzA4
+         hRhKGAk5SZ3tpnGV/txnGVMwcSzJFEowYEAzkJD2LXJceq1nUuIaYN7z0t1SgA8lqjfV
+         BbUqbJI3LoWRA8xpAJ06kXfgNBW8GEZdtRG8HhqXbGg5G2EUMRpeV980e16xvx+FLuZW
+         Dp22YeiD+cbwvP/c5dXrJURSe9eln0OalD+5inCmlroeJBMIhxMQbhbOAIbnb94r6CsQ
+         l5kA==
+X-Gm-Message-State: ANoB5pkfog9GD0bN+CEbiDO9bPuLBhbdHZWy1DD8eggxLFLrnAsMn8Ym
+        UCNKvr2jGchdWHZhvJebBkna1omwOcVXRpJjOrgbGw==
+X-Google-Smtp-Source: AA0mqf5ONF6N3CS9hm98hypUN9JMuCvInMH5iIQha33mWFioYK6dFKNTqqu9l/5bQwp4gBOkBb0X3sRFxfI+ic6WEwk=
+X-Received: by 2002:a1f:1342:0:b0:3bc:cc16:f662 with SMTP id
+ 63-20020a1f1342000000b003bccc16f662mr11507400vkt.33.1669825263307; Wed, 30
+ Nov 2022 08:21:03 -0800 (PST)
 MIME-Version: 1.0
-References: <20221122123508.112090-1-wangxiongfeng2@huawei.com>
-In-Reply-To: <20221122123508.112090-1-wangxiongfeng2@huawei.com>
+References: <20221130124231.1054001-1-brgl@bgdev.pl> <20221130124231.1054001-8-brgl@bgdev.pl>
+ <Y4djKAW2Y1RQb98Z@smile.fi.intel.com>
+In-Reply-To: <Y4djKAW2Y1RQb98Z@smile.fi.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 30 Nov 2022 17:19:06 +0100
-Message-ID: <CAMRc=MddeOwcONCLyGP+aOn0c6hBuH0seWzYFA4KPVCzx81FOQ@mail.gmail.com>
-Subject: Re: [PATCH] drivers: gpio: amd8111: Fix PCI device reference count leak
-To:     Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Cc:     linus.walleij@linaro.org, acourbot@nvidia.com,
-        linux-gpio@vger.kernel.org, yangyingliang@huawei.com
+Date:   Wed, 30 Nov 2022 17:20:52 +0100
+Message-ID: <CAMRc=MfUo2dq6qCiP4q0K0W2b=fBWdb9Jo3b6b=u9DQDQNArDw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 07/11] bindings: rust: make reuse happy
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -65,53 +69,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 1:17 PM Xiongfeng Wang
-<wangxiongfeng2@huawei.com> wrote:
+On Wed, Nov 30, 2022 at 3:05 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> for_each_pci_dev() is implemented by pci_get_device(). The comment of
-> pci_get_device() says that it will increase the reference count for the
-> returned pci_dev and also decrease the reference count for the input
-> pci_dev @from if it is not NULL.
+> On Wed, Nov 30, 2022 at 01:42:27PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Add missing license text files and use the CC0-1.0 license for the
+> > rust-specific .gitignore file.
 >
-> If we break for_each_pci_dev() loop with pdev not NULL, we need to call
-> pci_dev_put() to decrease the reference count. Add the missing
-> pci_dev_put() after the 'out' label. Since pci_dev_put() can handle NULL
-> input parameter, there is no problem for the 'Device not found' branch.
-> For the normal path, add pci_dev_put() in amd_gpio_exit().
+> ...
 >
-> Fixes: f942a7de047d ("gpio: add a driver for GPIO pins found on AMD-8111 south bridge chips")
-> Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
-> ---
->  drivers/gpio/gpio-amd8111.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> > diff --git a/bindings/rust/.gitignore b/bindings/rust/.gitignore
+> > index 95054d9..6fe7bde 100644
+> > --- a/bindings/rust/.gitignore
+> > +++ b/bindings/rust/.gitignore
+> > @@ -1,4 +1,6 @@
 >
-> diff --git a/drivers/gpio/gpio-amd8111.c b/drivers/gpio/gpio-amd8111.c
-> index 14e6b3e64add..6f3ded619c8b 100644
-> --- a/drivers/gpio/gpio-amd8111.c
-> +++ b/drivers/gpio/gpio-amd8111.c
-> @@ -226,7 +226,10 @@ static int __init amd_gpio_init(void)
->                 ioport_unmap(gp.pm);
->                 goto out;
->         }
-> +       return 0;
-> +
->  out:
-> +       pci_dev_put(pdev);
->         return err;
->  }
+> > -# Added by cargo
 >
-> @@ -234,6 +237,7 @@ static void __exit amd_gpio_exit(void)
->  {
->         gpiochip_remove(&gp.chip);
->         ioport_unmap(gp.pm);
-> +       pci_dev_put(gp.pdev);
->  }
->
->  module_init(amd_gpio_init);
-> --
-> 2.20.1
+> Seems like automatically generated, which means that next time something comes
+> here may well screw up the below.
 >
 
-Applied for fixes, thanks!
+I think the comment refers to the *ignored* files *added* by cargo,
+not saying that .gitignore was added by cargo.
+
+Viresh, please confirm.
 
 Bart
