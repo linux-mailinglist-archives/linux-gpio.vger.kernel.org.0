@@ -2,228 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6985163D8A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 15:59:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B94A863D8DE
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 16:09:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbiK3O7D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 09:59:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54540 "EHLO
+        id S229472AbiK3PJ5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 10:09:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbiK3O7A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 09:59:00 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D12142981
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 06:58:55 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id g7so27367265lfv.5
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 06:58:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pl2InFbLzXPnwLz/BDdvIJ0HA7H7JI78J3GfTa9SOrs=;
-        b=hYA09kJlnmYDZUv/QcyTuR8k+MOtEInjm61sfk7jr37iMoviJ2BdqIKzIh+9ExHlux
-         72ELiyV0H6nXUEu6fso3lwuXkvc/uMGYGJpvqaLpZRgMInruZlYtsUWobNqGwLwr3ycP
-         gAvVzLAz2JckcF9R/q87y1MInIqlf0EPKBzdOkZcCih89X/prwOqD1Ja9qufcIllfeZH
-         sC3pk/qSBChKy1rf/ITJJ2fXL3J+eccGEsI6j0lot+5sCK0cak4+ZtVeCfWVgwUiWecx
-         WJ+oLD/D/8jSA2Ys3p8JeRk2YP2d3Z7+WO6UEiLFiMhHlcgnIdOLBcueC2yLTSm7iUcU
-         9+ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pl2InFbLzXPnwLz/BDdvIJ0HA7H7JI78J3GfTa9SOrs=;
-        b=tY5nnDybFigTwIYVige9gGidNcyh3ebUUgUcfY9rgsBCbqxy7evqCUgYnZau05wFw5
-         GSmRo2vvTHaSGvLTGRI64ggFHMqKJ9ZCm/NYT8jMA16kNGqyxCkQkJYBpy3YzS5AwQzR
-         QeceCklP4Rpk363LUS5bM+Pe4yJESCPGnyL3bzk/SIpwljX0IvbC8Zw8NHGwGuHlJEBk
-         n5pMYs++7pzaEDwtmQ7dvg8kGCrehEIpZOL3IjL+fmFERhmydj8u+3C0aCBMPRE2hPat
-         cP8COIfZo++qU4rNVG6n5LFTeO/Yammyg3ZtYeHpMp9DKvyN+GqbG7g8uDUAlKCrdrAU
-         K7hw==
-X-Gm-Message-State: ANoB5plfmkBFtMSl+4HgK59HxnlSFdnRzRL0MfJTy4VH7T3DPNlwZmAN
-        mdmQ3VCIaJqhG4WXepnsnhAoFw==
-X-Google-Smtp-Source: AA0mqf45fgbVjjbldIXdB9H5YpsizXMDOt91gJQXars+ZMhuW5DggTaINvTYwluNiGS7CWzmc24EJw==
-X-Received: by 2002:a05:6512:20c3:b0:4a2:776f:f3c6 with SMTP id u3-20020a05651220c300b004a2776ff3c6mr19691347lfr.302.1669820333591;
-        Wed, 30 Nov 2022 06:58:53 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id v5-20020ac258e5000000b00492ea54beeasm280631lfo.306.2022.11.30.06.58.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Nov 2022 06:58:53 -0800 (PST)
-Message-ID: <6ad95ce3-887d-48fd-3c08-f50d4e666ded@linaro.org>
-Date:   Wed, 30 Nov 2022 15:58:52 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
+        with ESMTP id S229456AbiK3PJ4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 10:09:56 -0500
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2084.outbound.protection.outlook.com [40.107.7.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64636BC34
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 07:09:55 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CUzUZOShtf1lk9AUfbtOTvWXEzWUyKlHMsZC8pPk7KuAy61rWPcc+fo4mmx4YoqmFdwXEvbekhJPGnfqDM2om9eoF4xHk81SW2jPV1OURA+f4g3ywlOw8JtP5NPGwQ0SS+t6uro8qiWtDQfBDCQFFJKrJTLU9m2nEyl40op66hBCe3cJQRz1rn3cvNgILBptyyfyW3gyocPQDlVuUwyggTdKm/VHtEPtbiGyALYOK0JtGv+wAnrSq0e/YE6yGxU41tYtsO4krn1s4nIMJ1IT1EJY3YUQVbEdE/osBT9xD0WwwfsuSgtVuw7fWLNjwnK4sAGNaQmjdjs9OrCoaQFfHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gEjm+Z/PVGDIEmVlbHiqK3QW+XbtdP2sp/J0f4xUwZA=;
+ b=mnM2uvpuV0AcoXDDe40QFLkSFtEgSvP/rhf/BYg61zvjIoVIkZ6pbpOjXL52hJnCfAVpWEfeSd9lbn8lehPVfe9aM166qMbK/+UaCfuuJoUQpdaDu9ih/wn7MvWBxyJrMz5kV1MgEk5q1P+3yXngxPWpXt4Jh8fTWPBmZ6DlFVvJ0ZDQBWOMj0H10BksDTXrmj6YGILXsGLAfWDqfoCk+AYMMBtCa7c3SS6lO3JyVmFCR1Btv1+TL3hUpq1oLRS4zADabz03/gg5NHQbRFLJi3UGl74V6G8XrMs0DNMsuLPw7tlesYkj7VnsZvTiy7KRRkn09tmGcB1JUJiBrVPrHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
+ dkim=pass header.d=siemens.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gEjm+Z/PVGDIEmVlbHiqK3QW+XbtdP2sp/J0f4xUwZA=;
+ b=Y0oQRDEP9X50FX1BC9Wlsi6ijChDy8V0KjZs7B4gKkHrXb4pbv1gmedAMGsFNaDa0iZNT3RddxIQ4GaZwpFjzAXmJXo/5JHXOel1c5Avan/1fTma8/ROBFYGGp/KoBubVT0eNp68fEwOn1DY8KwpvJKUibAPR58YOqHKTvyFm0Gz/2KH9Bs+7OzSSPwOE3sO23thrsF6TjmS5tm5rcWR1UpsGAEMTR/qMxRID9uLJjajrezurSj+GK3RALVJL0GQaN7jLQgSnMsEzoot/+wMgybnbN5UWFplKGIXMk+/UHdl2e94CwdTjEgh00w7hLUbhWw20x1fjKaOL3u1alAlOA==
+Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:23e::20)
+ by DU0PR10MB5655.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:319::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Wed, 30 Nov
+ 2022 15:09:52 +0000
+Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ddda:691a:9da:c150]) by PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::ddda:691a:9da:c150%3]) with mapi id 15.20.5857.023; Wed, 30 Nov 2022
+ 15:09:51 +0000
+From:   "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
+To:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+CC:     "Kiszka, Jan" <jan.kiszka@siemens.com>
+Subject: Question regarding runtime pinctrl (2nd try)
+Thread-Topic: Question regarding runtime pinctrl (2nd try)
+Thread-Index: AQHZBM3Lq/cXs1to5Uuhi20fkVKuVw==
+Date:   Wed, 30 Nov 2022 15:09:50 +0000
+Message-ID: <7abfb823b92a4451d442b001ea7e49017ff3a3c8.camel@siemens.com>
+Reply-To: "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-To:     Chester Lin <clin@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     s32@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Larisa Grigore <larisa.grigore@nxp.com>,
-        Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
-        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>
-References: <20221128054820.1771-1-clin@suse.com>
- <20221128054820.1771-2-clin@suse.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221128054820.1771-2-clin@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=siemens.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR10MB5520:EE_|DU0PR10MB5655:EE_
+x-ms-office365-filtering-correlation-id: deb65abe-174e-4aec-fac8-08dad2e4edc2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: sODn91LS/z6P6uLFY2tSk/wKaMu1HtIjgS8UDZUILPzFc7S0bkzVATKVX/05KOv94uMcLh0UuCv2kunB4wdg1qa7OM9T968f9/sPipVFodLjnsdRjrmV6TD6CU9c2D2JUWlGOAyQR1c+tFeNPVZvgV+k0B1bkC1/YHlLdpkiyQ0hO9fiL5IwGoOdI4LPyYe4a8TTOBoDJx9iKMq/GcuXSVSPovDxTirdXXPqbyTE3zeUZcrenEVA1E+x8EuBW5WwGGeSk/LiQqqyhl62/dvDTUPkwJqE0zQTAlQPob3MP4gVJ8DPPf2uC8W7Lh06q7V7TrJo3Fly3zZJf4+qgygIEvWzmEYZ0dHBU245Sv6RfE7NxQwmdesMDAFvuOHsWKLzU1bPC/2r2RrCfze+aRDMifuQsz1lxfzOCPiZXoGFI9WhxdcnU80bfDYVwNuCHtZugaQ5e2QS7ZdsO06Mjmw00K+9k0D0NFhD4yz1IE2/fwOLngGW3UCYlqyTj+vTPb2GfIhk/06mTQp+Gl3LQOJQt+yg9wgDeC3OoIo7TYzkg4mNymBea5pAaDL/XSMN84IIXjJW1SiNxib+Am98Uv6xE4VlK+QKA4xl6hHGaXbVIfZqRgivjHGtXMncSovrVuCzMZd8Kd5Mim/xK8tZZ9jdgFIt4ivxcPfRTYPl+BIjHGwX8wows+/KCoAIZ6zToIPqpKnI8TL4WWU8re0ri6PfJLpZGd0esdg4ei6zyw9IXv0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(346002)(376002)(39860400002)(396003)(136003)(451199015)(966005)(71200400001)(478600001)(107886003)(6486002)(6512007)(6506007)(86362001)(66899015)(2616005)(8936002)(38070700005)(5660300002)(6916009)(186003)(8676002)(316002)(3450700001)(91956017)(66446008)(36756003)(83380400001)(66946007)(66476007)(76116006)(66556008)(64756008)(4326008)(82960400001)(38100700002)(41300700001)(122000001)(2906002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?anEwTzBjbVp3K1NRQ2RBWFpKS295L2M2Nk1uNGVzZDhkTExvU3pWUSs2OE5x?=
+ =?utf-8?B?NW83dmJKNUZuekNhdkE1ZWkzMGdyT3V3K2V2dndIQ3g0R1RYYXhTSUZzTFc5?=
+ =?utf-8?B?QmJDMVJ5bVQ1TkNjWFVJeDFncXU3MERVbTYvd3ZEMFBNSldEYjF1TDNxYTZj?=
+ =?utf-8?B?b1BzTm9ZRC91Um8vcjh1eEJ4UGo3NEwvRzZYRnorRDkvZU50R0NRb3hUSEVB?=
+ =?utf-8?B?N2Y1WndqbEptcWcwQ3VOY0g1SkRQbXo0NGlYSDR5Z2JxQ2JHNy9zMEFSSjY4?=
+ =?utf-8?B?L3p6NGpWc2h6dWlRQ1dLT0FLL0pEY2IxMi9aclIvUXlkanhPa081ZUFhNmdD?=
+ =?utf-8?B?MlFIR2ZEZ2VKNkt1UWtGRU01ZkpsY0RHMEcwZWUwQlQ4dlF2ZmlBZyt0VVFO?=
+ =?utf-8?B?dlZBTStNVTN5NE9oUFlhcHY3QU96MGJET1ZZNU1OYkljZVZSSkFBTjRhM1Yv?=
+ =?utf-8?B?ME00UUphY05ZZEhwOEdtVVdWMDdMQU5YSGRFVldnREcraCs3am5QbW91NHZR?=
+ =?utf-8?B?Z0FjQ1I3bmM2OHNYdDRtQW90RmJDaWg2T1BzdzlaZzRNNGVrZmF1VG9XTTJw?=
+ =?utf-8?B?V1krNjg3OE9NT1JzZ2thdlhER2VYOXJ0MXNHdEhqSkZaVXdKYVBBd21FbzJ4?=
+ =?utf-8?B?aVVBV0hxdGU3ZnRjZU5US1pMYUkxcVhLTmNGN0loSXF1SXNPK0NZSjhLN2hT?=
+ =?utf-8?B?ZDdPQ0V2VTA1c01pUlRXSTFMck1xZVJPRFNuVDRnNSsvQmxTRTluYnpjVUlV?=
+ =?utf-8?B?dTY1dzNxQjE4ekdxaHNscTFvTUJXM0p4TC8wbU1NMlVSaTRSWTY1bURBVHNk?=
+ =?utf-8?B?bEphRk9lV3VjSHg1cXlkOGE4eHRhTlhsTXJRWHk3RVJudHlRMjRheUFTZGVz?=
+ =?utf-8?B?U0Nrckw3UDI4V21KQXhrZXNsa3g3OW0wdU1NWHVsQjBsYUo4aFJySUJhMlUx?=
+ =?utf-8?B?cXlQRERHenZyaUYzMTF6bXU3ZGtvNU5mOXhHdVlyYmd4OHI2dFZaUnVXVFE1?=
+ =?utf-8?B?cndhNU9HNS9mcWhUL0h1N25UUGlwN1BKcjA5R3RwaDBISDY5Yks5NndXdGdG?=
+ =?utf-8?B?Nkc0aUNuOTlkcXlyUEIxV1BIUUNjV2lnb0tnUXBhblRzUEZCdXp5cUttTlcv?=
+ =?utf-8?B?VVlDTGs0Wm9UZmZiay9melhaUDhlZ1pvaUUzek9hNFNMancvbWNJMWIxa0NN?=
+ =?utf-8?B?blIzK3FMTXJ4aGY2aFNNWWNvTGRkNEJobTJtNS9mQ0ZZOENQSFJRWndLdTlx?=
+ =?utf-8?B?dlpaeS8rNklDRUpRREYwZjdMRzJIQXFZWm1IUTJHYzR3YTlOVUE2SlJoZ1F0?=
+ =?utf-8?B?cjd5RFcyTWtrVy9LT0oxTkRPTmV2R3p2alNYRTVDNHRiQmpiRFhTZS9NandS?=
+ =?utf-8?B?TS9ldGlDcjVRd3BQTnZVeDRKTXFnUHFJOW5vc3dhWFhsS3VQV2UwYzBBaith?=
+ =?utf-8?B?MUJ3M2l0VGtTQXpNME93UER3eGNkbGJKd29kNXovRUtOelFiQjA4TlQyeVkx?=
+ =?utf-8?B?N281UjlpTHM0OWRnUmRaV215NFFaTFNwSkdRNDNwTW9JcFNGT1lrSUpyd05Y?=
+ =?utf-8?B?OFNyRG9LZHhwc3BCQnJ2eTBsR0Z6ZVUyMmVJOWo3bWt0eGdmdTNIck8vRjFn?=
+ =?utf-8?B?Qm9HQVZ0VWJzSmhadnRFb2p2UEQwWUFxSFpsZFlEVDZIeHA2TjE3bjQrL0Qx?=
+ =?utf-8?B?YjRRQy8xNkU1MzdNY0pRUGU3cE5BZmtrQTNGY05TRmtJY2NJa1d2bmk1ZmZi?=
+ =?utf-8?B?a3RnYWFtRGpxSUk5ZWN5QWlGWVVBMDRJY3pMV0sxWGcwNGlBSHJmWnJURHQr?=
+ =?utf-8?B?MmgvWTRrTUtmNkFkYzdhNTBSNGt0K1JUOWphNm82ZW5aa2ZaYk91OVdMNWUr?=
+ =?utf-8?B?bWhKZ2pkeTNCQ1diMGFnNUJqTHp2NXZROEdzOHdjb3ByR01MQWVvbE5qcXVV?=
+ =?utf-8?B?ZXdvTmltM2QvMHVlUWFXUW85dDgxSm10U1hOeE1KanAvQjB6Z05UaTIyWVdp?=
+ =?utf-8?B?UFBIdU05KzZHRFF4bzZmVkRjQWxrOWFycjVjcFJ6VDB3MGtsNHA2WEl2dXhO?=
+ =?utf-8?B?OGEwR0xMU21BcHJyRXRQZVU0dVdNRER4WUpMY3VpU1kyQi8wZ0V3QUhYeDha?=
+ =?utf-8?B?UURWemhBS3VlbkJpbEF0Q09lNHBHOHBnTXlmYkxEK1pHVzkvUmhhOGZ4S0Er?=
+ =?utf-8?B?cEdvYy81TCtYcytobnNMK05hbEFyaHBHM1FZNWZETi9vc0FjQzZOeHNINng2?=
+ =?utf-8?Q?wAVMgr5a3pDtPklO/GEPXWcYucvmGGnU49JNBDb22s=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D82189BF46A514408D88705F222BB6F7@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: siemens.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: deb65abe-174e-4aec-fac8-08dad2e4edc2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2022 15:09:50.9388
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: F6WrDP468eezmp/Auvhs9MsgdYPBk+5ExOyGtCsVNTRnqR+0I55ALcMIMvvA6r1oPOYSJ0h87pYXzCy8QxSSjnz9CXIhpj3ArQP+WrC5hvc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB5655
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 28/11/2022 06:48, Chester Lin wrote:
-> Add DT schema for the pinctrl driver of NXP S32 SoC family.
-> 
-> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
-> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
-> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@nxp.com>
-> Signed-off-by: Chester Lin <clin@suse.com>
-> ---
-> 
-> Changes in v2:
-> - Remove the "nxp,pins" property since it has been moved into the driver.
-> - Add descriptions for reg entries.
-> - Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
-> - Fix schema issues and revise the example.
-> - Fix the copyright format suggested by NXP.
-> 
->  .../pinctrl/nxp,s32cc-siul2-pinctrl.yaml      | 125 ++++++++++++++++++
->  1 file changed, 125 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..2fc25a9362af
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
-
-Usually filename matches the compatible (or family name), so any reason
-why compatible is "nxp,s32g2" but filename is "nxp,s32cc"?
-
-> @@ -0,0 +1,125 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright 2022 NXP
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nxp,s32cc-siul2-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP S32 Common Chassis SIUL2 iomux controller
-> +
-> +maintainers:
-> +  - Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
-> +  - Chester Lin <clin@suse.com>
-> +
-> +description: |
-> +  Core driver for the pin controller found on S32 Common Chassis SoC.
-
-If "Core driver for the" refers to Linux driver, then drop it. If refers
-to something else, please elaborate.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nxp,s32g2-siul2-pinctrl
-> +
-> +  reg:
-> +    description:
-> +      A list of MSCR/IMCR register regions to be reserved.
-> +      - MSCR (Multiplexed Signal Configuration Register)
-> +        An MSCR register can configure the associated pin as either a GPIO pin
-> +        or a function output pin depends on the selected signal source.
-> +      - IMCR (Input Multiplexed Signal Configuration Register)
-> +        An IMCR register can configure the associated pin as function input
-> +        pin depends on the selected signal source.
-> +    minItems: 5
-> +    items:
-> +      - description: MSCR registers group 0 managed by the SIUL2 controller 0
-> +      - description: MSCR registers group 1 managed by the SIUL2 controller 1
-> +      - description: MSCR registers group 2 managed by the SIUL2 controller 1
-> +      - description: IMCR registers group 0 managed by the SIUL2 controller 0
-> +      - description: IMCR registers group 1 managed by the SIUL2 controller 1
-> +      - description: IMCR registers group 2 managed by the SIUL2 controller 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-required goes after all properties, so below patternProperties.
-> +
-> +patternProperties:
-> +  '-pins$':
-> +    type: object
-> +    additionalProperties: false
-> +
-> +    patternProperties:
-> +      '-grp[0-9]$':
-> +        type: object
-> +        allOf:
-> +          - $ref: pinmux-node.yaml#
-> +          - $ref: pincfg-node.yaml#
-> +        unevaluatedProperties: false
-> +        description:
-> +          Pinctrl node's client devices specify pin muxes using subnodes,
-> +          which in turn use the standard properties.
-
-All properties are accepted? What about values, e.g. for drive strength?
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +
-> +    /* Pins functions (SSS field) */
-> +    #define FUNC0  0
-> +    #define FUNC1  1
-> +    #define FUNC2  2
-> +    #define FUNC3  3
-> +    #define FUNC4  4
-> +    #define FUNC5  5
-> +    #define FUNC6  6
-> +    #define FUNC7  7
-> +
-> +    #define S32CC_PINMUX(PIN, FUNC) (((PIN) << 4) | (FUNC))
-> +
-> +    #define S32CC_SLEW_208MHZ  0
-> +    #define S32CC_SLEW_166MHZ  4
-> +    #define S32CC_SLEW_150MHZ  5
-> +    #define S32CC_SLEW_133MHZ  6
-> +    #define S32CC_SLEW_83MHZ   7
-> +
-> +    pinctrl@4009c240 {
-> +        compatible = "nxp,s32g2-siul2-pinctrl";
-> +
-> +        /*
-> +         * There are two SIUL2 controllers in S32G2:
-> +         *
-> +         *   siul2_0 @ 0x4009c000
-> +         *   siul2_1 @ 0x44010000
-> +         *
-> +         * Every SIUL2 controller has multiple register types, and here
-> +         * only MSCR and IMCR registers need to be revealed for kernel
-> +         * to configure pinmux. Please note that some indexes are reserved,
-> +         * such as MSCR102-MSCR111 in the following reg property.
-> +         */
-> +
-
-Either this should be part of description or should be dropped. It blows
-example and probably duplicates DTS.
-
-
-Best regards,
-Krzysztof
-
+SGVsbG8sDQoNCkkgZ290IG5vIHJlc3BvbnNlIHNpbmNlIGxhc3QgdGltZSBzbyBJIHRyeSBpdCBh
+Z2FpbiwgYnV0IHdpdGggYSBiaXQgbW9yZSBrbm93bGVkZ2UgdGhpcyB0aW1lLg0KDQpBZnRlciBj
+YXJlZnVsbHkgcmVhZGluZyB0aGUgcGluY3RybCBkb2N1bWVudGF0aW9uIChkcml2ZXItYXBpL3Bp
+bi1jb250cm9sLnJzdCkgaXQgd2FzIHZlcnkgY2xlYXIgZm9yIG1lIHRoYXQgc3VjaCBhbiBpbnRl
+cmZhY2UgYWxyZWFkeSBleGlzdHMgYW5kIGlzDQphY2Nlc3NhYmxlIHZpYSBkZWJ1Z2ZzLiBUaGUg
+ZG9jdW1lbnRhdGlvbiBpcyB2ZXJ5IGNsZWFyIGFuZCBzZWxmLWV4cGxhbmF0b3J5LiBUaGFua3Mg
+Zm9yIHRoYXQhDQpBdCB0aGUgdGltZSBvZiB3cml0aW5nIG15IGxhc3QgZW1haWwgWzFdIEkgdG9v
+ayBhIGxvb2sgaW50byBhbiBvbGRlciBCU1Aga2VybmVsIHdoZXJlIHRoaXMgZmVhdHVyZSBoYXMg
+bm90IGJlZW4gaW1wbGVtZW50ZWQsIHlldC4gSSBtdXN0IGFwb2xvZ2l6ZSBmb3INCnRoYXQuLi4N
+Cg0KTm93IG15IGxhc3QgY29uY2VybiBpcyB1c2luZyBkZWJ1Z2ZzIG9uIGEgcHJvZHVjdGl2ZSBz
+eXN0ZW0uIElNSE8gZGVidWdmcyBpcyBub3QgdGhlIHJpZ2h0IGludGVyZmFjZSB0byBpbnRlcmFj
+dCANCm9uIGEgcHJvZHVjdGl2ZSBzeXN0ZW0uICBFc3BlY2lhbGx5IHdoZW4gd2hlbiBhIHVucHJp
+dmlsZWdlZCBwcm9jZXNzIHdhbnRzIHRvIGludGVyYWN0IHdpdGggYW4gaW50ZXJmYWNlIG9mZmVy
+ZWQgYnkgZGVidWdmcy4gSXQncyBwb3NzaWJsZSB0byBjaGFuZ2UNCnBlcm1pc3Npb25zIG9uIGZp
+bGVzIGFuZCBmb2xkZXJzIHRoZXJlIGJ1dCBuZXZlcnRoZWxlc3MgSSB0aGluayB0aGF0IHRoaXMg
+aXMgbm90IHRoZSB3YXkgdG8gZ28sIHNpbmNlIGRlYnVnZnMgd2FzIGRlc2lnbmVkIHRvIG9mZmVy
+IGludGVyZmFjZXMgdG8gcHJpdmlsZWdlZA0KcHJvY2Vzc2VzIG9ubHkuIA0KDQpNeSBwcm9wb3Nh
+bCB3b3VsZCBiZSB0byBpbXBsZW1lbnQgYW4gY2hhcmRldiBpbnRlcmZhY2UgZm9yIHRoYXQgYW5k
+IHVzaW5nIHVkZXYgcnVsZXMgdG8gYXNzaWduIGNvcnJlY3QgcGVybWlzc2lvbnMgdG8gdGhhdC4g
+V2l0aCB0aGlzIGludGVyZmFjZSBJIGNhbiB0aGVuDQpzZWxlY3QgdGhlIGFjdGl2ZSBwaW5jdHJs
+LWdyb3VwcyB3aGljaCBoYXZlIGJlZW4gZGVmaW5lZCBpbiB0aGUgZGV2aWNlIHRyZWUgYmVmb3Jl
+LiANCkkgY291bGQgYWxzbyBpbWFnaW5lIHRvIHB1dCB0aGUgaW50ZXJmYWNlIGludG8gdGhlIHN5
+c2ZzICh0aGF0IHdvdWxkIGJlIHZlcnkgY2xvc2UgdG8gdGhlIGRlYnVnZnMgaW1wbGVtZW50YXRp
+b24gSSB0aGluaykuDQoNCldoYXQgZG8geW91IHRoaW5rIGFib3V0IGl0PyBBbSBJIHN0aWxsIG1p
+c3Npbmcgc29tZXRoaW5nPyANCg0KDQpbMV0gaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtZ3Bp
+byZtPTE2Njg1MDY0MDkyMDEyMA0KDQpjaGVlcnMsDQpCZW5lZGlrdA0K
