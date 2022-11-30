@@ -2,128 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E1563D77F
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 15:04:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A9863D789
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 15:05:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbiK3OEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 09:04:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
+        id S229695AbiK3OFj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 09:05:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbiK3OEU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 09:04:20 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19E62ED63
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 06:04:18 -0800 (PST)
+        with ESMTP id S229731AbiK3OFg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 09:05:36 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E27794B74F
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 06:05:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669817058; x=1701353058;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=2PgY5BkgK0WH8WLv5b9dVmohgMfVbOxR7Gtvlo38ZyM=;
-  b=jBYHDQ3uf7DGpbJFSeQMqv77sBRh0WbPY/SoTEq2Bm6sPDIyd65r1wTY
-   5oy7ndQMmuVfbCSRAPiWEnQyu8VpPUtW+Il10ullcvDAegtfKCMNO3lr2
-   UKJF91gqQKV6HCBDyZor6Zfq1sy6WChpWyQbG2vkz+KdF+BuKCyuNcHrG
-   +0xFhfqVQ9qgbuW3Tg1eI1Eo+QT3iwX05q7CDO3W7xFaTpDxQB29YoLpi
-   GFYFTM75YdioAIRrYwkAlgWDUE6Q3SG27G+qxNVNc19ls1Ab4rlQSE97d
-   q61Diwmdoy8+hvfwf9qtNFQLOya/U83rMWV4XRDV351Q7nMGdfG6PfGPS
+  t=1669817132; x=1701353132;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=6Jsv03cH4HEYQqbz4YCpBDtpOgrIGQCtUzR68qaPjzk=;
+  b=W6LO6x+heSJlZwLSckt2e1xQgjseCLxSSniVTdXX6lB8M9Kl7TLGNW7D
+   f9wm1AcXcUae2We4v85kygb29Gq16e5iQb4SWKdstBBkQE2P05a9h/GEp
+   WhLoCghRfX0ehVFuz5lT7szjEBYm6EB4a2cydNhCT81+lHfkZy4djG2Qx
+   K4aecLpHfaLDbrWC73jsp5zCyml+ItUcDwso6Z7P2dz8F+d3XXRYfMGOm
+   sCF3iL9O5iACWMRgX0asp3EEA2WO7P0KgqAQiZD8NdItBVm+cqBGK4G2f
+   ZeljRcRwRRlqfhsywMY5GHptoATsX91zGIET9ffpBA686NqFUDTUPl07K
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="295764828"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="342322931"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="295764828"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 06:04:18 -0800
+   d="scan'208";a="342322931"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 06:05:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="638000651"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="768840705"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="638000651"
-Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 30 Nov 2022 06:04:17 -0800
-Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p0NhA-000BFU-1a;
-        Wed, 30 Nov 2022 14:04:16 +0000
-Date:   Wed, 30 Nov 2022 22:03:30 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 3b7c7478eda00945987d45f902bc3942c89243d3
-Message-ID: <638762b2.4jVA7cvdI7Zi97A9%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+   d="scan'208";a="768840705"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP; 30 Nov 2022 06:05:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p0NiL-002IIN-0A;
+        Wed, 30 Nov 2022 16:05:29 +0200
+Date:   Wed, 30 Nov 2022 16:05:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 07/11] bindings: rust: make reuse happy
+Message-ID: <Y4djKAW2Y1RQb98Z@smile.fi.intel.com>
+References: <20221130124231.1054001-1-brgl@bgdev.pl>
+ <20221130124231.1054001-8-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20221130124231.1054001-8-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 3b7c7478eda00945987d45f902bc3942c89243d3  gpiolib: Provide to_gpio_device() helper
+On Wed, Nov 30, 2022 at 01:42:27PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Add missing license text files and use the CC0-1.0 license for the
+> rust-specific .gitignore file.
 
-elapsed time: 743m
+...
 
-configs tested: 47
-configs skipped: 2
+> diff --git a/bindings/rust/.gitignore b/bindings/rust/.gitignore
+> index 95054d9..6fe7bde 100644
+> --- a/bindings/rust/.gitignore
+> +++ b/bindings/rust/.gitignore
+> @@ -1,4 +1,6 @@
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> -# Added by cargo
 
-gcc tested configs:
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-powerpc                           allnoconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-syz
-x86_64                           rhel-8.3-kvm
-x86_64                         rhel-8.3-kunit
-x86_64                              defconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-x86_64                           allyesconfig
-arc                  randconfig-r043-20221128
-sh                               allmodconfig
-mips                             allyesconfig
-powerpc                          allmodconfig
-i386                                defconfig
-ia64                             allmodconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-i386                             allyesconfig
-x86_64                            allnoconfig
-arm64                            allyesconfig
-arm                                 defconfig
-arm                              allyesconfig
+Seems like automatically generated, which means that next time something comes
+here may well screw up the below.
 
-clang tested configs:
-hexagon              randconfig-r045-20221128
-hexagon              randconfig-r041-20221128
-riscv                randconfig-r042-20221128
-s390                 randconfig-r044-20221128
-x86_64               randconfig-a013-20221128
-x86_64               randconfig-a012-20221128
-x86_64               randconfig-a014-20221128
-x86_64               randconfig-a011-20221128
-x86_64               randconfig-a016-20221128
-x86_64               randconfig-a015-20221128
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
+> +# SPDX-License-Identifier: CC0-1.0
+> +# SPDX-FileCopyrightText: 2022 Linaro Ltd.
+> +# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+With Best Regards,
+Andy Shevchenko
+
+
