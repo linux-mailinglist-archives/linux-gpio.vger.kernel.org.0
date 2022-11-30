@@ -2,103 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B37763D763
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 14:59:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E1563D77F
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 15:04:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbiK3N7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 08:59:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
+        id S229515AbiK3OEe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 09:04:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbiK3N73 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 08:59:29 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3D429C9A
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 05:59:27 -0800 (PST)
+        with ESMTP id S229746AbiK3OEU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 09:04:20 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E19E62ED63
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 06:04:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669816767; x=1701352767;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=wvU7oIxGAwkvjRmle78W/XpCDKJzt3FhK7wEMNS5ac0=;
-  b=LTBdBkR10colZeEotV+sCCLlkVEh+/gMcNsNsocLYtuuV8nsXwI7jC44
-   IP+YHszCByNCWC4/CLlFPRth8gR/pDv85aw+J4iGT/OLIl71zFXl2Cffp
-   bwqHZOhqz9lBZu9xUxeTn0lGNQGBPVhpaJ8/m5y2/dyKfd1Lf76ol3Cw3
-   6c8lUcEntUT6l+8DIkqlrH33uokQKf93yFwoaI01rYWloizBuq8VahtWb
-   KUhaoDHtvK5vbwldFf81GlvtbUsxuCDOI/N5eO3Wu/7x0DlCWVqkGuO9o
-   EWsfOFANnj5238HoMtvjaPkQ2BZh/JNkm3C6XpAzvzApmSRnZwnnGrlCF
+  t=1669817058; x=1701353058;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2PgY5BkgK0WH8WLv5b9dVmohgMfVbOxR7Gtvlo38ZyM=;
+  b=jBYHDQ3uf7DGpbJFSeQMqv77sBRh0WbPY/SoTEq2Bm6sPDIyd65r1wTY
+   5oy7ndQMmuVfbCSRAPiWEnQyu8VpPUtW+Il10ullcvDAegtfKCMNO3lr2
+   UKJF91gqQKV6HCBDyZor6Zfq1sy6WChpWyQbG2vkz+KdF+BuKCyuNcHrG
+   +0xFhfqVQ9qgbuW3Tg1eI1Eo+QT3iwX05q7CDO3W7xFaTpDxQB29YoLpi
+   GFYFTM75YdioAIRrYwkAlgWDUE6Q3SG27G+qxNVNc19ls1Ab4rlQSE97d
+   q61Diwmdoy8+hvfwf9qtNFQLOya/U83rMWV4XRDV351Q7nMGdfG6PfGPS
    A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="303001006"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="295764828"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="303001006"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 05:59:27 -0800
+   d="scan'208";a="295764828"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 06:04:18 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="707651881"
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="638000651"
 X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="707651881"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Nov 2022 05:59:25 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p0NcR-002I9w-39;
-        Wed, 30 Nov 2022 15:59:23 +0200
-Date:   Wed, 30 Nov 2022 15:59:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 02/11] treewide: apply formatting changes with
- clang-format
-Message-ID: <Y4dhu0rgNoyvR7cf@smile.fi.intel.com>
-References: <20221130124231.1054001-1-brgl@bgdev.pl>
- <20221130124231.1054001-3-brgl@bgdev.pl>
+   d="scan'208";a="638000651"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 30 Nov 2022 06:04:17 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1p0NhA-000BFU-1a;
+        Wed, 30 Nov 2022 14:04:16 +0000
+Date:   Wed, 30 Nov 2022 22:03:30 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 3b7c7478eda00945987d45f902bc3942c89243d3
+Message-ID: <638762b2.4jVA7cvdI7Zi97A9%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221130124231.1054001-3-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 01:42:22PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> Use linux kernel's .clang-format file to automatically improve the coding
-> style of libgpiod's C code base. We don't import the file into the
-> repository as it's not perfect and certain converted fragments were
-> rolled back because they looked better before the conversion.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 3b7c7478eda00945987d45f902bc3942c89243d3  gpiolib: Provide to_gpio_device() helper
 
-...
+elapsed time: 743m
 
->  		if (gpiod_line_settings_get_direction(
-> -				per_line->node->settings) !=
-> +			    per_line->node->settings) !=
->  		    GPIOD_LINE_DIRECTION_OUTPUT)
->  			continue;
+configs tested: 47
+configs skipped: 2
 
-Personally I percept this as an ugly indented code...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-One reason is too strict 80 or whatever rule (we are almost in
-the second quarter of the 21st century!), another is that trailing
-opening parenthesis.
+gcc tested configs:
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+s390                             allyesconfig
+powerpc                           allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-kvm
+x86_64                         rhel-8.3-kunit
+x86_64                              defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+x86_64                           allyesconfig
+arc                  randconfig-r043-20221128
+sh                               allmodconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+i386                                defconfig
+ia64                             allmodconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+i386                             allyesconfig
+x86_64                            allnoconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
 
-That said, some of the changes in this patch I like, some I disgust.
-Quite controversial to me, but it's your project and esp. taking into
-account that it's a user space, the kernel or other project rules are
-not applicable in a general sense anyway.
+clang tested configs:
+hexagon              randconfig-r045-20221128
+hexagon              randconfig-r041-20221128
+riscv                randconfig-r042-20221128
+s390                 randconfig-r044-20221128
+x86_64               randconfig-a013-20221128
+x86_64               randconfig-a012-20221128
+x86_64               randconfig-a014-20221128
+x86_64               randconfig-a011-20221128
+x86_64               randconfig-a016-20221128
+x86_64               randconfig-a015-20221128
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
