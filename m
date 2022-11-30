@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F290063D5CD
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 13:42:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7474063D5CB
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 13:42:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbiK3Mmx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 07:42:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
+        id S234863AbiK3Mmw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 07:42:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235019AbiK3Mmt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 07:42:49 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83FB319C12
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:39 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id r133-20020a1c448b000000b003d076ee89d6so273499wma.0
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:39 -0800 (PST)
+        with ESMTP id S235013AbiK3Mmm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 07:42:42 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4811C1A203
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:40 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id bx10so14815076wrb.0
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zkYEHBQpt1i7fAMZ3ERUqlriHgqzZWw9jVWMN7Pb0KE=;
-        b=kF5OGSe+t7NSiQHkj9kh94UL6V3+eIBHxllpYHoAAXRwKPXwIUIr7rtZKs16/rb/Cv
-         KpjalpTgVBQBlKm9rkTY3N/LVzdjVKls4Veel1HReeLUvSXMfKIMngPa4S9rlp5Biq47
-         nBX3IINS13O9O1g1Xj8l8eMWnxpYy75LRT+Rm6KBcjKMZx5V+MDf8nA0141u7FhBdQRE
-         F2e0HIByuVIvOnqPshrgNAvxd8tmuM9yqgvpcafhG8xz7+ILwYnDHIK/GUxczeeuoSxX
-         D0KENT1BaoPedSb1IZ7POYmhojag/kLrY5OGaHyNuwoA8+u0ydCu10+QJrXPqPt5a3+o
-         ruNQ==
+        bh=vJMIlBROsaNe4gxNcCnDB6MLPqghliTCjuy3UxJV31w=;
+        b=oy/j/l1S/FH/3Glhz9G7UbyWuCKl1tFhXwVHVSX2jmV2qnlnv0NDoiEzmRMRe6hceX
+         RXt7fM4kWPb79mqKYfsryB5ec25dkA27NoKLjb5TWgZeVgsKBE0MNa2VBAS18Mu59dcx
+         9hYIpKxTnJWqTMeGuvFC2cIgMjUvwYBsQSkN1/twHWQo8r2owVLFqC2MNzAly/o4kdca
+         flo5OFTj2QAwaxK59++kjktDrXyhIvy8QFkTPPMyYJYyQ4uNwBi8k3TquY4subVcuS6Y
+         kAlNBqrbI7NRKx7HCigAczdgMEVdwutD7442NKHh3MYbBRsx3aaFq1RFykxc35ONzXRc
+         +PbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zkYEHBQpt1i7fAMZ3ERUqlriHgqzZWw9jVWMN7Pb0KE=;
-        b=d0gEl3I6VwSPvVZKatSnYF2CnEf7OdRG4MkZ9UEU9rw9dB29maEGtnMfJTYbuGzAY6
-         ALsfgrSKdaK3FZqHtvhUnL74MX9BQHBlaAf1Cu9X5I69EiXzKzEahqsa+4totKsojOdg
-         KQ4R65KeMt4kZuj2TMJKb+9gENX9AYw7YuwiCHFImR+Pi3XwCnIJbMJKZ8a/mV8NOoEh
-         kh6gzGpnvfsR+lsABix1bLnuN+UHniGs58nM6WLwQE4wzhdSLOs9pFFrZzCK8mNroXMa
-         OW3afUe3B8HXqCzG+pfqeigow+UqRADadwveilgA29uTg/UOB6mVs7dZOUJqKJF9WWqU
-         cdgg==
-X-Gm-Message-State: ANoB5pnB92nKLQdISebW1uuoD/VUlZuaeWfwxXUa6ul9yt3LWyblEP0f
-        k5+E+y1mWx9msjrk2IQ0V/xBAA==
-X-Google-Smtp-Source: AA0mqf6spmGAa8N715xxK5XJTW8NaDRRq1lbHGGbU4exm87zRYY9N6bb8cD38A7PMBGh3z7O3LEcag==
-X-Received: by 2002:a05:600c:6888:b0:3d0:57ea:318f with SMTP id fn8-20020a05600c688800b003d057ea318fmr11747004wmb.69.1669812157854;
-        Wed, 30 Nov 2022 04:42:37 -0800 (PST)
+        bh=vJMIlBROsaNe4gxNcCnDB6MLPqghliTCjuy3UxJV31w=;
+        b=6YNlION13GTPqhuKAaHKyKYTsrRk1eab805DeEwhmZ3UQr93+gqp8s4AAiPxm/syjy
+         pNOQVVC9a1gxcLQ69NMrvThvGu7BQXGedi+Jo6d3W2N4ug+Hkli6wFlFJaGgp1KGjVN+
+         4Jn5+WDRsBIn1A6PK2TxV65zXbX7Fd/U7qeu64UcLuOHwoGO8xYFNJLx2hCtUv+YLWu0
+         Fi5h+dqmJIEl4tG/WGHdeWrNJ49JK5y7MKk6hs4w+AeAYb2OWku3krS8/5GruIqJTubV
+         1dGqVeFJxtJkmY18LtmXJVl5rL/uAJTBDR3sPEc/zjqQ1RH8tmfnGL1POdWO7Ab+28LO
+         tvmA==
+X-Gm-Message-State: ANoB5plfh6twsjd5KwA3dP6OU5qiSR4EJCFQfNc6OBrUDENwYnJbxiTA
+        /dtQNN3DgFrNpPJL+ky0hRPCcQ==
+X-Google-Smtp-Source: AA0mqf6K1XTtQS4Q5FkLA5TL1O5IXtYDZ0XemLIsflsAs3V2ibkgnCVLiv6Lw9xDgRVFwqH0/keFNg==
+X-Received: by 2002:adf:eecf:0:b0:241:d333:c95d with SMTP id a15-20020adfeecf000000b00241d333c95dmr30224552wrp.301.1669812158622;
+        Wed, 30 Nov 2022 04:42:38 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:458c:6db9:e033:a468])
         by smtp.gmail.com with ESMTPSA id z2-20020a5d4402000000b00226dba960b4sm1514985wrq.3.2022.11.30.04.42.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 04:42:37 -0800 (PST)
+        Wed, 30 Nov 2022 04:42:38 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH 03/11] treewide: use plural 'events' in read_edge_event() functions
-Date:   Wed, 30 Nov 2022 13:42:23 +0100
-Message-Id: <20221130124231.1054001-4-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 04/11] treewide: rename EVENT_CLOCK to CLOCK
+Date:   Wed, 30 Nov 2022 13:42:24 +0100
+Message-Id: <20221130124231.1054001-5-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221130124231.1054001-1-brgl@bgdev.pl>
 References: <20221130124231.1054001-1-brgl@bgdev.pl>
@@ -75,916 +75,533 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The read_edge_event() family of functions should actually be called
-read_edge_events() as they universally allow to read more than one
-event. We're converting wait_edge_event() too for consistency.
+While we use it for edge event timestamps exclusively at the moment,
+the actual enum names shouldn't limit its application and simply just
+refer to existing clock types known by the GPIO uAPI. The relevant
+functions are still called set/get_event_clock() as it's in line with
+their functionality.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/cxx/edge-event-buffer.cpp            |  2 +-
- bindings/cxx/examples/gpiomoncxx.cpp          |  2 +-
- bindings/cxx/gpiodcxx/line-request.hpp        |  6 +-
- bindings/cxx/line-request.cpp                 | 10 ++--
- bindings/cxx/tests/tests-edge-event.cpp       | 56 +++++++++----------
- bindings/python/examples/gpiomon.py           |  2 +-
- bindings/python/gpiod/ext/request.c           |  8 +--
- bindings/python/gpiod/line_request.py         |  6 +-
- bindings/python/tests/tests_edge_event.py     | 38 ++++++-------
- .../rust/libgpiod/examples/gpio_events.rs     |  2 +-
- bindings/rust/libgpiod/examples/gpiomon.rs    |  2 +-
- bindings/rust/libgpiod/src/event_buffer.rs    |  2 +-
- bindings/rust/libgpiod/src/line_request.rs    |  4 +-
- bindings/rust/libgpiod/tests/edge_event.rs    | 24 ++++----
- bindings/rust/libgpiod/tests/line_request.rs  |  2 +-
- include/gpiod.h                               | 10 ++--
- lib/line-request.c                            | 10 ++--
- tests/tests-edge-event.c                      | 46 +++++++--------
- tools/gpiomon.c                               |  2 +-
- 19 files changed, 117 insertions(+), 117 deletions(-)
+ bindings/cxx/line-info.cpp                |  6 +++---
+ bindings/cxx/line-settings.cpp            | 14 ++++++-------
+ bindings/python/gpiod/ext/line-settings.c |  2 +-
+ bindings/python/gpiod/ext/module.c        |  6 +++---
+ bindings/rust/libgpiod/src/lib.rs         | 22 ++++++++++-----------
+ include/gpiod.h                           | 20 +++++++++----------
+ lib/line-config.c                         |  4 ++--
+ lib/line-info.c                           | 10 +++++-----
+ lib/line-settings.c                       | 16 +++++++--------
+ tests/tests-line-config.c                 |  2 +-
+ tests/tests-line-info.c                   | 12 ++++++------
+ tests/tests-line-settings.c               | 24 +++++++++++------------
+ tools/gpiomon.c                           | 14 ++++++-------
+ tools/tools-common.c                      |  4 ++--
+ 14 files changed, 78 insertions(+), 78 deletions(-)
 
-diff --git a/bindings/cxx/edge-event-buffer.cpp b/bindings/cxx/edge-event-buffer.cpp
-index ff398f1..3c551df 100644
---- a/bindings/cxx/edge-event-buffer.cpp
-+++ b/bindings/cxx/edge-event-buffer.cpp
-@@ -36,7 +36,7 @@ edge_event_buffer::impl::impl(unsigned int capacity)
+diff --git a/bindings/cxx/line-info.cpp b/bindings/cxx/line-info.cpp
+index 944e34d..5eb2a3f 100644
+--- a/bindings/cxx/line-info.cpp
++++ b/bindings/cxx/line-info.cpp
+@@ -37,9 +37,9 @@ const ::std::map<int, line::edge> edge_mapping = {
+ };
  
- int edge_event_buffer::impl::read_events(const line_request_ptr& request, unsigned int max_events)
+ const ::std::map<int, line::clock> clock_mapping = {
+-	{ GPIOD_LINE_EVENT_CLOCK_MONOTONIC,	line::clock::MONOTONIC },
+-	{ GPIOD_LINE_EVENT_CLOCK_REALTIME,	line::clock::REALTIME },
+-	{ GPIOD_LINE_EVENT_CLOCK_HTE,		line::clock::HTE }
++	{ GPIOD_LINE_CLOCK_MONOTONIC,		line::clock::MONOTONIC },
++	{ GPIOD_LINE_CLOCK_REALTIME,		line::clock::REALTIME },
++	{ GPIOD_LINE_CLOCK_HTE,			line::clock::HTE }
+ };
+ 
+ } /* namespace */
+diff --git a/bindings/cxx/line-settings.cpp b/bindings/cxx/line-settings.cpp
+index 17c5ca2..58860db 100644
+--- a/bindings/cxx/line-settings.cpp
++++ b/bindings/cxx/line-settings.cpp
+@@ -57,13 +57,13 @@ const ::std::map<line::drive, gpiod_line_drive> drive_mapping = {
+ 
+ const ::std::map<gpiod_line_drive, line::drive> reverse_drive_mapping = make_reverse_maping(drive_mapping);
+ 
+-const ::std::map<line::clock, gpiod_line_event_clock> clock_mapping = {
+-	{ line::clock::MONOTONIC,	GPIOD_LINE_EVENT_CLOCK_MONOTONIC },
+-	{ line::clock::REALTIME,	GPIOD_LINE_EVENT_CLOCK_REALTIME },
+-	{ line::clock::HTE,		GPIOD_LINE_EVENT_CLOCK_HTE }
++const ::std::map<line::clock, gpiod_line_clock> clock_mapping = {
++	{ line::clock::MONOTONIC,	GPIOD_LINE_CLOCK_MONOTONIC },
++	{ line::clock::REALTIME,	GPIOD_LINE_CLOCK_REALTIME },
++	{ line::clock::HTE,		GPIOD_LINE_CLOCK_HTE }
+ };
+ 
+-const ::std::map<gpiod_line_event_clock, line::clock>
++const ::std::map<gpiod_line_clock, line::clock>
+ reverse_clock_mapping = make_reverse_maping(clock_mapping);
+ 
+ const ::std::map<line::value, gpiod_line_value> value_mapping = {
+@@ -257,7 +257,7 @@ GPIOD_CXX_API ::std::chrono::microseconds line_settings::debounce_period() const
+ 
+ GPIOD_CXX_API line_settings& line_settings::set_event_clock(line::clock event_clock)
  {
--	int ret = ::gpiod_line_request_read_edge_event(request.get(),
-+	int ret = ::gpiod_line_request_read_edge_events(request.get(),
- 						       this->buffer.get(), max_events);
- 	if (ret < 0)
- 		throw_from_errno("error reading edge events from file descriptor");
-diff --git a/bindings/cxx/examples/gpiomoncxx.cpp b/bindings/cxx/examples/gpiomoncxx.cpp
-index c351567..4f765ba 100644
---- a/bindings/cxx/examples/gpiomoncxx.cpp
-+++ b/bindings/cxx/examples/gpiomoncxx.cpp
-@@ -56,7 +56,7 @@ int main(int argc, char **argv)
- 	::gpiod::edge_event_buffer buffer;
+-	set_mapped_value<line::clock, gpiod_line_event_clock,
++	set_mapped_value<line::clock, gpiod_line_clock,
+ 			 ::gpiod_line_settings_set_event_clock>(this->_m_priv->settings.get(),
+ 								event_clock, clock_mapping);
  
- 	for (;;) {
--		request.read_edge_event(buffer);
-+		request.read_edge_events(buffer);
+@@ -266,7 +266,7 @@ GPIOD_CXX_API line_settings& line_settings::set_event_clock(line::clock event_cl
  
- 		for (const auto& event: buffer)
- 			print_event(event);
-diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
-index 659251b..f9f0322 100644
---- a/bindings/cxx/gpiodcxx/line-request.hpp
-+++ b/bindings/cxx/gpiodcxx/line-request.hpp
-@@ -180,7 +180,7 @@ public:
- 	 * @return True if at least one event is ready to be read. False if the
- 	 *         wait timed out.
- 	 */
--	bool wait_edge_event(const ::std::chrono::nanoseconds& timeout) const;
-+	bool wait_edge_events(const ::std::chrono::nanoseconds& timeout) const;
- 
- 	/**
- 	 * @brief Read a number of edge events from this request up to the
-@@ -188,7 +188,7 @@ public:
- 	 * @param buffer Edge event buffer to read events into.
- 	 * @return Number of events read.
- 	 */
--	::std::size_t read_edge_event(edge_event_buffer& buffer);
-+	::std::size_t read_edge_events(edge_event_buffer& buffer);
- 
- 	/**
- 	 * @brief Read a number of edge events from this request.
-@@ -197,7 +197,7 @@ public:
- 	 *                   capacity of the buffer.
- 	 * @return Number of events read.
- 	 */
--	::std::size_t read_edge_event(edge_event_buffer& buffer, ::std::size_t max_events);
-+	::std::size_t read_edge_events(edge_event_buffer& buffer, ::std::size_t max_events);
- 
- private:
- 
-diff --git a/bindings/cxx/line-request.cpp b/bindings/cxx/line-request.cpp
-index be0bac5..34c5850 100644
---- a/bindings/cxx/line-request.cpp
-+++ b/bindings/cxx/line-request.cpp
-@@ -192,11 +192,11 @@ GPIOD_CXX_API int line_request::fd() const
- 	return ::gpiod_line_request_get_fd(this->_m_priv->request.get());
- }
- 
--GPIOD_CXX_API bool line_request::wait_edge_event(const ::std::chrono::nanoseconds& timeout) const
-+GPIOD_CXX_API bool line_request::wait_edge_events(const ::std::chrono::nanoseconds& timeout) const
+ GPIOD_CXX_API line::clock line_settings::event_clock() const
  {
- 	this->_m_priv->throw_if_released();
+-	return get_mapped_value<line::clock, gpiod_line_event_clock,
++	return get_mapped_value<line::clock, gpiod_line_clock,
+ 				::gpiod_line_settings_get_event_clock>(
+ 							this->_m_priv->settings.get(),
+ 							reverse_clock_mapping);
+diff --git a/bindings/python/gpiod/ext/line-settings.c b/bindings/python/gpiod/ext/line-settings.c
+index 8ec1390..2cacbef 100644
+--- a/bindings/python/gpiod/ext/line-settings.c
++++ b/bindings/python/gpiod/ext/line-settings.c
+@@ -29,7 +29,7 @@ line_settings_init(line_settings_object *self, PyObject *args, PyObject *kwargs)
+ 		NULL
+ 	};
  
--	int ret = ::gpiod_line_request_wait_edge_event(this->_m_priv->request.get(),
-+	int ret = ::gpiod_line_request_wait_edge_events(this->_m_priv->request.get(),
- 						       timeout.count());
- 	if (ret < 0)
- 		throw_from_errno("error waiting for edge events");
-@@ -204,13 +204,13 @@ GPIOD_CXX_API bool line_request::wait_edge_event(const ::std::chrono::nanosecond
- 	return ret;
- }
- 
--GPIOD_CXX_API ::std::size_t line_request::read_edge_event(edge_event_buffer& buffer)
-+GPIOD_CXX_API ::std::size_t line_request::read_edge_events(edge_event_buffer& buffer)
- {
--	return this->read_edge_event(buffer, buffer.capacity());
-+	return this->read_edge_events(buffer, buffer.capacity());
- }
- 
- GPIOD_CXX_API ::std::size_t
--line_request::read_edge_event(edge_event_buffer& buffer, ::std::size_t max_events)
-+line_request::read_edge_events(edge_event_buffer& buffer, ::std::size_t max_events)
- {
- 	this->_m_priv->throw_if_released();
- 
-diff --git a/bindings/cxx/tests/tests-edge-event.cpp b/bindings/cxx/tests/tests-edge-event.cpp
-index ca42c42..19a6ab3 100644
---- a/bindings/cxx/tests/tests-edge-event.cpp
-+++ b/bindings/cxx/tests/tests-edge-event.cpp
-@@ -51,7 +51,7 @@ TEST_CASE("edge_event wait timeout", "[edge-event]")
- 		)
- 		.do_request();
- 
--	REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
-+	REQUIRE_FALSE(request.wait_edge_events(::std::chrono::milliseconds(100)));
- }
- 
- TEST_CASE("output mode and edge detection don't work together", "[edge-event]")
-@@ -113,23 +113,23 @@ TEST_CASE("waiting for and reading edge events works", "[edge-event]")
- 
- 		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 2);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		auto event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::RISING_EDGE);
- 		REQUIRE(event.line_offset() == 2);
- 		ts_rising = event.timestamp_ns();
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::FALLING_EDGE);
- 		REQUIRE(event.line_offset() == 2);
- 		ts_falling = event.timestamp_ns();
- 
--		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
-+		REQUIRE_FALSE(request.wait_edge_events(::std::chrono::milliseconds(100)));
- 
- 		thread.join();
- 
-@@ -149,14 +149,14 @@ TEST_CASE("waiting for and reading edge events works", "[edge-event]")
- 
- 		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 6);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		auto event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::RISING_EDGE);
- 		REQUIRE(event.line_offset() == 6);
- 
--		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
-+		REQUIRE_FALSE(request.wait_edge_events(::std::chrono::milliseconds(100)));
- 
- 		thread.join();
- 	}
-@@ -174,14 +174,14 @@ TEST_CASE("waiting for and reading edge events works", "[edge-event]")
- 
- 		::std::thread thread(trigger_falling_and_rising_edge, ::std::ref(sim), 7);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		auto event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::FALLING_EDGE);
- 		REQUIRE(event.line_offset() == 7);
- 
--		REQUIRE_FALSE(request.wait_edge_event(::std::chrono::milliseconds(100)));
-+		REQUIRE_FALSE(request.wait_edge_events(::std::chrono::milliseconds(100)));
- 
- 		thread.join();
- 	}
-@@ -199,8 +199,8 @@ TEST_CASE("waiting for and reading edge events works", "[edge-event]")
- 
- 		::std::thread thread(trigger_rising_edge_events_on_two_offsets, ::std::ref(sim), 0, 1);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		auto event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::RISING_EDGE);
-@@ -208,8 +208,8 @@ TEST_CASE("waiting for and reading edge events works", "[edge-event]")
- 		REQUIRE(event.global_seqno() == 1);
- 		REQUIRE(event.line_seqno() == 1);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer, 1) == 1);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer, 1) == 1);
- 		REQUIRE(buffer.num_events() == 1);
- 		event = buffer.get_event(0);
- 		REQUIRE(event.type() == event_type::RISING_EDGE);
-@@ -251,8 +251,8 @@ TEST_CASE("reading multiple events", "[edge-event]")
- 	{
- 		::gpiod::edge_event_buffer buffer;
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer) == 3);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer) == 3);
- 		REQUIRE(buffer.num_events() == 3);
- 
- 		for (const auto& event: buffer) {
-@@ -266,8 +266,8 @@ TEST_CASE("reading multiple events", "[edge-event]")
- 	{
- 		::gpiod::edge_event_buffer buffer(2);
- 
--		REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--		REQUIRE(request.read_edge_event(buffer) == 2);
-+		REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+		REQUIRE(request.read_edge_events(buffer) == 2);
- 		REQUIRE(buffer.num_events() == 2);
- 	}
- }
-@@ -300,8 +300,8 @@ TEST_CASE("edge_event_buffer can be moved", "[edge-event]")
- 
- 	::std::this_thread::sleep_for(::std::chrono::milliseconds(500));
- 
--	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--	REQUIRE(request.read_edge_event(buffer) == 3);
-+	REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+	REQUIRE(request.read_edge_events(buffer) == 3);
- 
- 	SECTION("move constructor works")
- 	{
-@@ -337,14 +337,14 @@ TEST_CASE("edge_event can be copied and moved", "[edge-event]")
- 
- 	sim.set_pull(0, pull::PULL_UP);
- 	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
--	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--	REQUIRE(request.read_edge_event(buffer) == 1);
-+	REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+	REQUIRE(request.read_edge_events(buffer) == 1);
- 	auto event = buffer.get_event(0);
- 
- 	sim.set_pull(0, pull::PULL_DOWN);
- 	::std::this_thread::sleep_for(::std::chrono::milliseconds(10));
--	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--	REQUIRE(request.read_edge_event(buffer) == 1);
-+	REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+	REQUIRE(request.read_edge_events(buffer) == 1);
- 	auto copy = buffer.get_event(0);
- 
- 	SECTION("copy constructor works")
-@@ -406,8 +406,8 @@ TEST_CASE("stream insertion operators work for edge_event and edge_event_buffer"
- 	sim.set_pull(0, pull::PULL_DOWN);
- 	::std::this_thread::sleep_for(::std::chrono::milliseconds(30));
- 
--	REQUIRE(request.wait_edge_event(::std::chrono::seconds(1)));
--	REQUIRE(request.read_edge_event(buffer) == 2);
-+	REQUIRE(request.wait_edge_events(::std::chrono::seconds(1)));
-+	REQUIRE(request.read_edge_events(buffer) == 2);
- 
- 	sbuf << buffer;
- 
-diff --git a/bindings/python/examples/gpiomon.py b/bindings/python/examples/gpiomon.py
-index 58d47a5..702d7c8 100755
---- a/bindings/python/examples/gpiomon.py
-+++ b/bindings/python/examples/gpiomon.py
-@@ -22,5 +22,5 @@ if __name__ == "__main__":
-         config={tuple(lines): gpiod.LineSettings(edge_detection=Edge.BOTH)},
-     ) as request:
-         while True:
--            for event in request.read_edge_event():
-+            for event in request.read_edge_events():
-                 print(event)
-diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/ext/request.c
-index 62378f5..d3e1448 100644
---- a/bindings/python/gpiod/ext/request.c
-+++ b/bindings/python/gpiod/ext/request.c
-@@ -249,7 +249,7 @@ static PyObject *request_reconfigure_lines(request_object *self, PyObject *args)
- 	Py_RETURN_NONE;
- }
- 
--static PyObject *request_read_edge_event(request_object *self, PyObject *args)
-+static PyObject *request_read_edge_events(request_object *self, PyObject *args)
- {
- 	PyObject *max_events_obj, *event_obj, *events, *type;
- 	size_t max_events, num_events, i;
-@@ -273,7 +273,7 @@ static PyObject *request_read_edge_event(request_object *self, PyObject *args)
- 		return NULL;
- 
- 	Py_BEGIN_ALLOW_THREADS;
--	ret = gpiod_line_request_read_edge_event(self->request,
-+	ret = gpiod_line_request_read_edge_events(self->request,
- 						 self->buffer, max_events);
- 	Py_END_ALLOW_THREADS;
- 	if (ret < 0)
-@@ -336,8 +336,8 @@ static PyMethodDef request_methods[] = {
- 		.ml_flags = METH_VARARGS,
+-	enum gpiod_line_event_clock event_clock;
++	enum gpiod_line_clock event_clock;
+ 	enum gpiod_line_direction direction;
+ 	enum gpiod_line_value output_value;
+ 	unsigned long debounce_period;
+diff --git a/bindings/python/gpiod/ext/module.c b/bindings/python/gpiod/ext/module.c
+index 8725ef2..12fb92c 100644
+--- a/bindings/python/gpiod/ext/module.c
++++ b/bindings/python/gpiod/ext/module.c
+@@ -80,15 +80,15 @@ static const struct module_const module_constants[] = {
  	},
  	{
--		.ml_name = "read_edge_event",
--		.ml_meth = (PyCFunction)request_read_edge_event,
-+		.ml_name = "read_edge_events",
-+		.ml_meth = (PyCFunction)request_read_edge_events,
- 		.ml_flags = METH_VARARGS,
+ 		.name = "CLOCK_MONOTONIC",
+-		.val = GPIOD_LINE_EVENT_CLOCK_MONOTONIC,
++		.val = GPIOD_LINE_CLOCK_MONOTONIC,
  	},
- 	{ }
-diff --git a/bindings/python/gpiod/line_request.py b/bindings/python/gpiod/line_request.py
-index 1796069..a0f97b7 100644
---- a/bindings/python/gpiod/line_request.py
-+++ b/bindings/python/gpiod/line_request.py
-@@ -169,7 +169,7 @@ class LineRequest:
- 
-         self._req.reconfigure_lines(line_cfg)
- 
--    def wait_edge_event(
-+    def wait_edge_events(
-         self, timeout: Optional[Union[timedelta, float]] = None
-     ) -> bool:
-         """
-@@ -187,7 +187,7 @@ class LineRequest:
- 
-         return poll_fd(self.fd, timeout)
- 
--    def read_edge_event(self, max_events: Optional[int] = None) -> list[EdgeEvent]:
-+    def read_edge_events(self, max_events: Optional[int] = None) -> list[EdgeEvent]:
-         """
-         Read a number of edge events from a line request.
- 
-@@ -200,7 +200,7 @@ class LineRequest:
-         """
-         self._check_released()
- 
--        return self._req.read_edge_event(max_events)
-+        return self._req.read_edge_events(max_events)
- 
-     def __str__(self):
-         """
-diff --git a/bindings/python/tests/tests_edge_event.py b/bindings/python/tests/tests_edge_event.py
-index c443772..430b27d 100644
---- a/bindings/python/tests/tests_edge_event.py
-+++ b/bindings/python/tests/tests_edge_event.py
-@@ -23,7 +23,7 @@ class EdgeEventWaitTimeout(TestCase):
-             sim.dev_path,
-             {0: gpiod.LineSettings(edge_detection=Edge.BOTH)},
-         ) as req:
--            self.assertEqual(req.wait_edge_event(timedelta(microseconds=10000)), False)
-+            self.assertEqual(req.wait_edge_events(timedelta(microseconds=10000)), False)
- 
-     def test_event_wait_timeout_float(self):
-         sim = gpiosim.Chip()
-@@ -32,7 +32,7 @@ class EdgeEventWaitTimeout(TestCase):
-             sim.dev_path,
-             {0: gpiod.LineSettings(edge_detection=Edge.BOTH)},
-         ) as req:
--            self.assertEqual(req.wait_edge_event(0.01), False)
-+            self.assertEqual(req.wait_edge_events(0.01), False)
- 
- 
- class EdgeEventInvalidConfig(TestCase):
-@@ -82,16 +82,16 @@ class WaitingForEdgeEvents(TestCase):
-             )
-             self.thread.start()
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.RISING_EDGE)
-             self.assertEqual(event.line_offset, 2)
-             ts_rising = event.timestamp_ns
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.FALLING_EDGE)
-@@ -109,14 +109,14 @@ class WaitingForEdgeEvents(TestCase):
-             )
-             self.thread.start()
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.RISING_EDGE)
-             self.assertEqual(event.line_offset, 6)
- 
--            self.assertFalse(req.wait_edge_event(timedelta(microseconds=10000)))
-+            self.assertFalse(req.wait_edge_events(timedelta(microseconds=10000)))
- 
-     def test_rising_edge_event(self):
-         with gpiod.request_lines(
-@@ -127,14 +127,14 @@ class WaitingForEdgeEvents(TestCase):
-             )
-             self.thread.start()
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.FALLING_EDGE)
-             self.assertEqual(event.line_offset, 6)
- 
--            self.assertFalse(req.wait_edge_event(timedelta(microseconds=10000)))
-+            self.assertFalse(req.wait_edge_events(timedelta(microseconds=10000)))
- 
-     def test_sequence_numbers(self):
-         with gpiod.request_lines(
-@@ -145,8 +145,8 @@ class WaitingForEdgeEvents(TestCase):
-             )
-             self.thread.start()
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.RISING_EDGE)
-@@ -154,8 +154,8 @@ class WaitingForEdgeEvents(TestCase):
-             self.assertEqual(event.global_seqno, 1)
-             self.assertEqual(event.line_seqno, 1)
- 
--            self.assertTrue(req.wait_edge_event(timedelta(seconds=1)))
--            events = req.read_edge_event()
-+            self.assertTrue(req.wait_edge_events(timedelta(seconds=1)))
-+            events = req.read_edge_events()
-             self.assertEqual(len(events), 1)
-             event = events[0]
-             self.assertEqual(event.event_type, EventType.RISING_EDGE)
-@@ -185,8 +185,8 @@ class ReadingMultipleEdgeEvents(TestCase):
-         del self.sim
- 
-     def test_read_multiple_events(self):
--        self.assertTrue(self.request.wait_edge_event(timedelta(seconds=1)))
--        events = self.request.read_edge_event()
-+        self.assertTrue(self.request.wait_edge_events(timedelta(seconds=1)))
-+        events = self.request.read_edge_events()
-         self.assertEqual(len(events), 3)
- 
-         for event in events:
-@@ -205,7 +205,7 @@ class EdgeEventStringRepresentation(TestCase):
-             path=sim.dev_path, config={0: gpiod.LineSettings(edge_detection=Edge.BOTH)}
-         ) as req:
-             sim.set_pull(0, Pull.UP)
--            event = req.read_edge_event()[0]
-+            event = req.read_edge_events()[0]
-             self.assertRegex(
-                 str(event),
-                 "<EdgeEvent type=Type\.RISING_EDGE timestamp_ns=[0-9]+ line_offset=0 global_seqno=1 line_seqno=1>",
-diff --git a/bindings/rust/libgpiod/examples/gpio_events.rs b/bindings/rust/libgpiod/examples/gpio_events.rs
-index 9810050..04267d9 100644
---- a/bindings/rust/libgpiod/examples/gpio_events.rs
-+++ b/bindings/rust/libgpiod/examples/gpio_events.rs
-@@ -45,7 +45,7 @@ fn main() -> Result<()> {
-     let request = chip.request_lines(&rconfig, &lconfig)?;
- 
-     loop {
--        match request.wait_edge_event(None) {
-+        match request.wait_edge_events(None) {
-             Err(x) => {
-                 println!("{:?}", x);
-                 return Err(Error::InvalidArguments);
-diff --git a/bindings/rust/libgpiod/examples/gpiomon.rs b/bindings/rust/libgpiod/examples/gpiomon.rs
-index c38652c..f17a81f 100644
---- a/bindings/rust/libgpiod/examples/gpiomon.rs
-+++ b/bindings/rust/libgpiod/examples/gpiomon.rs
-@@ -44,7 +44,7 @@ fn main() -> Result<()> {
-     let request = chip.request_lines(&rconfig, &lconfig)?;
- 
-     loop {
--        match request.wait_edge_event(None) {
-+        match request.wait_edge_events(None) {
-             Err(x) => {
-                 println!("{:?}", x);
-                 return Err(Error::InvalidArguments);
-diff --git a/bindings/rust/libgpiod/src/event_buffer.rs b/bindings/rust/libgpiod/src/event_buffer.rs
-index b56be9a..5a72ddb 100644
---- a/bindings/rust/libgpiod/src/event_buffer.rs
-+++ b/bindings/rust/libgpiod/src/event_buffer.rs
-@@ -106,7 +106,7 @@ impl Buffer {
- 
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
-         let ret = unsafe {
--            gpiod::gpiod_line_request_read_edge_event(
-+            gpiod::gpiod_line_request_read_edge_events(
-                 request.request,
-                 self.buffer,
-                 self.events.len().try_into().unwrap(),
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index 3215ab8..c16ec9f 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -178,7 +178,7 @@ impl Request {
+ 	{
+ 		.name = "CLOCK_REALTIME",
+-		.val = GPIOD_LINE_EVENT_CLOCK_REALTIME,
++		.val = GPIOD_LINE_CLOCK_REALTIME,
+ 	},
+ 	{
+ 		.name = "CLOCK_HTE",
+-		.val = GPIOD_LINE_EVENT_CLOCK_HTE,
++		.val = GPIOD_LINE_CLOCK_HTE,
+ 	},
+ 	{
+ 		.name = "EDGE_EVENT_TYPE_RISING",
+diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
+index d7a0615..1b2c765 100644
+--- a/bindings/rust/libgpiod/src/lib.rs
++++ b/bindings/rust/libgpiod/src/lib.rs
+@@ -45,9 +45,9 @@ use gpiod::{
+     gpiod_line_edge_GPIOD_LINE_EDGE_FALLING as GPIOD_LINE_EDGE_FALLING,
+     gpiod_line_edge_GPIOD_LINE_EDGE_NONE as GPIOD_LINE_EDGE_NONE,
+     gpiod_line_edge_GPIOD_LINE_EDGE_RISING as GPIOD_LINE_EDGE_RISING,
+-    gpiod_line_event_clock_GPIOD_LINE_EVENT_CLOCK_HTE as GPIOD_LINE_EVENT_CLOCK_HTE,
+-    gpiod_line_event_clock_GPIOD_LINE_EVENT_CLOCK_MONOTONIC as GPIOD_LINE_EVENT_CLOCK_MONOTONIC,
+-    gpiod_line_event_clock_GPIOD_LINE_EVENT_CLOCK_REALTIME as GPIOD_LINE_EVENT_CLOCK_REALTIME,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_HTE as GPIOD_LINE_CLOCK_HTE,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_MONOTONIC as GPIOD_LINE_CLOCK_MONOTONIC,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_REALTIME as GPIOD_LINE_CLOCK_REALTIME,
+     gpiod_line_value_GPIOD_LINE_VALUE_ACTIVE as GPIOD_LINE_VALUE_ACTIVE,
+     gpiod_line_value_GPIOD_LINE_VALUE_INACTIVE as GPIOD_LINE_VALUE_INACTIVE,
+     gpiod_line_value_GPIOD_LINE_VALUE_ERROR as GPIOD_LINE_VALUE_ERROR,
+@@ -393,20 +393,20 @@ pub mod line {
      }
  
-     /// Wait for edge events on any of the lines associated with the request.
--    pub fn wait_edge_event(&self, timeout: Option<Duration>) -> Result<bool> {
-+    pub fn wait_edge_events(&self, timeout: Option<Duration>) -> Result<bool> {
-         let timeout = match timeout {
-             Some(x) => x.as_nanos() as i64,
-             // Block indefinitely
-@@ -186,7 +186,7 @@ impl Request {
-         };
- 
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
--        let ret = unsafe { gpiod::gpiod_line_request_wait_edge_event(self.request, timeout) };
-+        let ret = unsafe { gpiod::gpiod_line_request_wait_edge_events(self.request, timeout) };
- 
-         match ret {
-             -1 => Err(Error::OperationFailed(
-diff --git a/bindings/rust/libgpiod/tests/edge_event.rs b/bindings/rust/libgpiod/tests/edge_event.rs
-index 571e574..45c1cfc 100644
---- a/bindings/rust/libgpiod/tests/edge_event.rs
-+++ b/bindings/rust/libgpiod/tests/edge_event.rs
-@@ -89,7 +89,7 @@ mod edge_event {
-             // Rising event
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -103,7 +103,7 @@ mod edge_event {
-             // Falling event
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -117,7 +117,7 @@ mod edge_event {
-             // No events available
-             assert!(!config
-                 .request()
--                .wait_edge_event(Some(Duration::from_millis(100)))
-+                .wait_edge_events(Some(Duration::from_millis(100)))
-                 .unwrap());
- 
-             assert!(ts_falling > ts_rising);
-@@ -138,7 +138,7 @@ mod edge_event {
-             // Rising event
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -151,7 +151,7 @@ mod edge_event {
-             // No events available
-             assert!(!config
-                 .request()
--                .wait_edge_event(Some(Duration::from_millis(100)))
-+                .wait_edge_events(Some(Duration::from_millis(100)))
-                 .unwrap());
+     impl EventClock {
+-        pub(crate) fn new(clock: gpiod::gpiod_line_event_clock) -> Result<Self> {
++        pub(crate) fn new(clock: gpiod::gpiod_line_clock) -> Result<Self> {
+             Ok(match clock {
+-                GPIOD_LINE_EVENT_CLOCK_MONOTONIC => EventClock::Monotonic,
+-                GPIOD_LINE_EVENT_CLOCK_REALTIME => EventClock::Realtime,
+-                GPIOD_LINE_EVENT_CLOCK_HTE => EventClock::HTE,
++                GPIOD_LINE_CLOCK_MONOTONIC => EventClock::Monotonic,
++                GPIOD_LINE_CLOCK_REALTIME => EventClock::Realtime,
++                GPIOD_LINE_CLOCK_HTE => EventClock::HTE,
+                 _ => return Err(Error::InvalidEnumValue("Eventclock", clock as i32)),
+             })
          }
  
-@@ -170,7 +170,7 @@ mod edge_event {
-             // Falling event
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -183,7 +183,7 @@ mod edge_event {
-             // No events available
-             assert!(!config
-                 .request()
--                .wait_edge_event(Some(Duration::from_millis(100)))
-+                .wait_edge_events(Some(Duration::from_millis(100)))
-                 .unwrap());
-         }
- 
-@@ -202,7 +202,7 @@ mod edge_event {
-             let mut buf = request::Buffer::new(0).unwrap();
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -217,7 +217,7 @@ mod edge_event {
-             // Rising event GPIO 1
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let mut events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -232,7 +232,7 @@ mod edge_event {
-             // No events available
-             assert!(!config
-                 .request()
--                .wait_edge_event(Some(Duration::from_millis(100)))
-+                .wait_edge_events(Some(Duration::from_millis(100)))
-                 .unwrap());
-         }
- 
-@@ -251,7 +251,7 @@ mod edge_event {
-             // Read multiple events
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let events = config.request().read_edge_events(&mut buf).unwrap();
-@@ -287,7 +287,7 @@ mod edge_event {
-             // Read multiple events
-             assert!(config
-                 .request()
--                .wait_edge_event(Some(Duration::from_secs(1)))
-+                .wait_edge_events(Some(Duration::from_secs(1)))
-                 .unwrap());
- 
-             let events = config.request().read_edge_events(&mut buf).unwrap();
-diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
-index 286cd6c..c3fc37b 100644
---- a/bindings/rust/libgpiod/tests/line_request.rs
-+++ b/bindings/rust/libgpiod/tests/line_request.rs
-@@ -231,7 +231,7 @@ mod line_request {
-             // No events available
-             assert!(!config
-                 .request()
--                .wait_edge_event(Some(Duration::from_millis(100)))
-+                .wait_edge_events(Some(Duration::from_millis(100)))
-                 .unwrap());
+-        pub(crate) fn gpiod_clock(&self) -> gpiod::gpiod_line_event_clock {
++        pub(crate) fn gpiod_clock(&self) -> gpiod::gpiod_line_clock {
+             match self {
+-                EventClock::Monotonic => GPIOD_LINE_EVENT_CLOCK_MONOTONIC,
+-                EventClock::Realtime => GPIOD_LINE_EVENT_CLOCK_REALTIME,
+-                EventClock::HTE => GPIOD_LINE_EVENT_CLOCK_HTE,
++                EventClock::Monotonic => GPIOD_LINE_CLOCK_MONOTONIC,
++                EventClock::Realtime => GPIOD_LINE_CLOCK_REALTIME,
++                EventClock::HTE => GPIOD_LINE_CLOCK_HTE,
+             }
          }
      }
 diff --git a/include/gpiod.h b/include/gpiod.h
-index f4bb5f2..fc9d4c0 100644
+index fc9d4c0..2ad028d 100644
 --- a/include/gpiod.h
 +++ b/include/gpiod.h
-@@ -1008,8 +1008,8 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
-  * Lines must have edge detection set for edge events to be emitted.
-  * By default edge detection is disabled.
-  */
--int gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
--				       int64_t timeout_ns);
-+int gpiod_line_request_wait_edge_events(struct gpiod_line_request *request,
-+					int64_t timeout_ns);
+@@ -308,14 +308,14 @@ enum gpiod_line_drive {
+ };
  
  /**
-  * @brief Read a number of edge events from a line request.
-@@ -1022,9 +1022,9 @@ int gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
-  * @note Any exising events in the buffer are overwritten.  This is not an
-  *       append operation.
+- * @brief Event clock settings.
++ * @brief Clock settings.
   */
--int gpiod_line_request_read_edge_event(struct gpiod_line_request *request,
--				       struct gpiod_edge_event_buffer *buffer,
--				       size_t max_events);
-+int gpiod_line_request_read_edge_events(struct gpiod_line_request *request,
-+					struct gpiod_edge_event_buffer *buffer,
-+					size_t max_events);
+-enum gpiod_line_event_clock {
+-	GPIOD_LINE_EVENT_CLOCK_MONOTONIC = 1,
++enum gpiod_line_clock {
++	GPIOD_LINE_CLOCK_MONOTONIC = 1,
+ 	/**< Line uses the monotonic clock for edge event timestamps. */
+-	GPIOD_LINE_EVENT_CLOCK_REALTIME,
++	GPIOD_LINE_CLOCK_REALTIME,
+ 	/**< Line uses the realtime clock for edge event timestamps. */
+-	GPIOD_LINE_EVENT_CLOCK_HTE,
++	GPIOD_LINE_CLOCK_HTE,
+ 	/**< Line uses the hardware timestamp engine for event timestamps. */
+ };
+ 
+@@ -465,10 +465,10 @@ gpiod_line_info_get_debounce_period_us(struct gpiod_line_info *info);
+  * @brief Get the event clock setting used for edge event timestamps for the
+  *	  line.
+  * @param info GPIO line info object.
+- * @return Returns ::GPIOD_LINE_EVENT_CLOCK_MONOTONIC or
+- *	   ::GPIOD_LINE_EVENT_CLOCK_REALTIME.
++ * @return Returns ::GPIOD_LINE_CLOCK_MONOTONIC, ::GPIOD_LINE_CLOCK_HTE or
++ *	   ::GPIOD_LINE_CLOCK_REALTIME.
+  */
+-enum gpiod_line_event_clock
++enum gpiod_line_clock
+ gpiod_line_info_get_event_clock(struct gpiod_line_info *info);
  
  /**
-  * @}
-diff --git a/lib/line-request.c b/lib/line-request.c
-index 5936593..58dc3c9 100644
---- a/lib/line-request.c
-+++ b/lib/line-request.c
-@@ -223,16 +223,16 @@ GPIOD_API int gpiod_line_request_get_fd(struct gpiod_line_request *request)
+@@ -684,14 +684,14 @@ gpiod_line_settings_get_debounce_period_us(
+  * @return 0 on success, -1 on failure.
+  */
+ int gpiod_line_settings_set_event_clock(struct gpiod_line_settings *settings,
+-				enum gpiod_line_event_clock event_clock);
++				enum gpiod_line_clock event_clock);
+ 
+ /**
+  * @brief Get event clock setting.
+  * @param settings Line settings object.
+  * @return Current event clock setting.
+  */
+-enum gpiod_line_event_clock
++enum gpiod_line_clock
+ gpiod_line_settings_get_event_clock(struct gpiod_line_settings *settings);
+ 
+ /**
+diff --git a/lib/line-config.c b/lib/line-config.c
+index 436f4e8..ce23792 100644
+--- a/lib/line-config.c
++++ b/lib/line-config.c
+@@ -343,10 +343,10 @@ static uint64_t make_kernel_flags(struct gpiod_line_settings *settings)
+ 		flags |= GPIO_V2_LINE_FLAG_ACTIVE_LOW;
+ 
+ 	switch (gpiod_line_settings_get_event_clock(settings)) {
+-	case GPIOD_LINE_EVENT_CLOCK_REALTIME:
++	case GPIOD_LINE_CLOCK_REALTIME:
+ 		flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME;
+ 		break;
+-	case GPIOD_LINE_EVENT_CLOCK_HTE:
++	case GPIOD_LINE_CLOCK_HTE:
+ 		flags |= GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE;
+ 		break;
+ 	default:
+diff --git a/lib/line-info.c b/lib/line-info.c
+index 75d886f..6c2c9ce 100644
+--- a/lib/line-info.c
++++ b/lib/line-info.c
+@@ -17,7 +17,7 @@ struct gpiod_line_info {
+ 	enum gpiod_line_bias bias;
+ 	enum gpiod_line_drive drive;
+ 	enum gpiod_line_edge edge;
+-	enum gpiod_line_event_clock event_clock;
++	enum gpiod_line_clock event_clock;
+ 	bool debounced;
+ 	unsigned long debounce_period_us;
+ };
+@@ -93,7 +93,7 @@ gpiod_line_info_get_edge_detection(struct gpiod_line_info *info)
+ 	return info->edge;
  }
+ 
+-GPIOD_API enum gpiod_line_event_clock
++GPIOD_API enum gpiod_line_clock
+ gpiod_line_info_get_event_clock(struct gpiod_line_info *info)
+ {
+ 	return info->event_clock;
+@@ -164,11 +164,11 @@ gpiod_line_info_from_uapi(struct gpio_v2_line_info *uapi_info)
+ 		info->edge = GPIOD_LINE_EDGE_NONE;
+ 
+ 	if (uapi_info->flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME)
+-		info->event_clock = GPIOD_LINE_EVENT_CLOCK_REALTIME;
++		info->event_clock = GPIOD_LINE_CLOCK_REALTIME;
+ 	else if (uapi_info->flags & GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE)
+-		info->event_clock = GPIOD_LINE_EVENT_CLOCK_HTE;
++		info->event_clock = GPIOD_LINE_CLOCK_HTE;
+ 	else
+-		info->event_clock = GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
++		info->event_clock = GPIOD_LINE_CLOCK_MONOTONIC;
+ 
+ 	/*
+ 	 * We assume that the kernel returns correct configuration and that no
+diff --git a/lib/line-settings.c b/lib/line-settings.c
+index dcd0f6b..808819c 100644
+--- a/lib/line-settings.c
++++ b/lib/line-settings.c
+@@ -14,7 +14,7 @@ struct gpiod_line_settings {
+ 	enum gpiod_line_drive drive;
+ 	enum gpiod_line_bias bias;
+ 	bool active_low;
+-	enum gpiod_line_event_clock event_clock;
++	enum gpiod_line_clock event_clock;
+ 	long debounce_period_us;
+ 	enum gpiod_line_value output_value;
+ };
+@@ -45,7 +45,7 @@ GPIOD_API void gpiod_line_settings_reset(struct gpiod_line_settings *settings)
+ 	settings->drive = GPIOD_LINE_DRIVE_PUSH_PULL;
+ 	settings->active_low = false;
+ 	settings->debounce_period_us = 0;
+-	settings->event_clock = GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
++	settings->event_clock = GPIOD_LINE_CLOCK_MONOTONIC;
+ 	settings->output_value = GPIOD_LINE_VALUE_INACTIVE;
+ }
+ 
+@@ -192,16 +192,16 @@ gpiod_line_settings_get_debounce_period_us(struct gpiod_line_settings *settings)
  
  GPIOD_API int
--gpiod_line_request_wait_edge_event(struct gpiod_line_request *request,
--				   int64_t timeout_ns)
-+gpiod_line_request_wait_edge_events(struct gpiod_line_request *request,
-+				    int64_t timeout_ns)
+ gpiod_line_settings_set_event_clock(struct gpiod_line_settings *settings,
+-				    enum gpiod_line_event_clock event_clock)
++				    enum gpiod_line_clock event_clock)
  {
- 	return gpiod_poll_fd(request->fd, timeout_ns);
+ 	switch (event_clock) {
+-	case GPIOD_LINE_EVENT_CLOCK_MONOTONIC:
+-	case GPIOD_LINE_EVENT_CLOCK_REALTIME:
+-	case GPIOD_LINE_EVENT_CLOCK_HTE:
++	case GPIOD_LINE_CLOCK_MONOTONIC:
++	case GPIOD_LINE_CLOCK_REALTIME:
++	case GPIOD_LINE_CLOCK_HTE:
+ 		settings->event_clock = event_clock;
+ 		break;
+ 	default:
+-		settings->event_clock = GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
++		settings->event_clock = GPIOD_LINE_CLOCK_MONOTONIC;
+ 		errno = EINVAL;
+ 		return -1;
+ 	}
+@@ -209,7 +209,7 @@ gpiod_line_settings_set_event_clock(struct gpiod_line_settings *settings,
+ 	return 0;
  }
  
- GPIOD_API int
--gpiod_line_request_read_edge_event(struct gpiod_line_request *request,
--				   struct gpiod_edge_event_buffer *buffer,
--				   size_t max_events)
-+gpiod_line_request_read_edge_events(struct gpiod_line_request *request,
-+				    struct gpiod_edge_event_buffer *buffer,
-+				    size_t max_events)
+-GPIOD_API enum gpiod_line_event_clock
++GPIOD_API enum gpiod_line_clock
+ gpiod_line_settings_get_event_clock(struct gpiod_line_settings *settings)
  {
- 	return gpiod_edge_event_buffer_read_fd(request->fd, buffer, max_events);
+ 	return settings->event_clock;
+diff --git a/tests/tests-line-config.c b/tests/tests-line-config.c
+index 5dc9022..c615084 100644
+--- a/tests/tests-line-config.c
++++ b/tests/tests-line-config.c
+@@ -110,7 +110,7 @@ GPIOD_TEST_CASE(too_many_attrs)
+ 							 settings);
+ 
+ 	gpiod_line_settings_set_event_clock(settings,
+-					    GPIOD_LINE_EVENT_CLOCK_REALTIME);
++					    GPIOD_LINE_CLOCK_REALTIME);
+ 	offset = 7;
+ 	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
+ 							 settings);
+diff --git a/tests/tests-line-info.c b/tests/tests-line-info.c
+index 4751db2..1627764 100644
+--- a/tests/tests-line-info.c
++++ b/tests/tests-line-info.c
+@@ -88,7 +88,7 @@ GPIOD_TEST_CASE(line_info_basic_properties)
+ 	g_assert_cmpint(gpiod_line_info_get_drive(info4), ==,
+ 			GPIOD_LINE_DRIVE_PUSH_PULL);
+ 	g_assert_cmpint(gpiod_line_info_get_event_clock(info4), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
+ 	g_assert_false(gpiod_line_info_is_debounced(info4));
+ 	g_assert_cmpuint(gpiod_line_info_get_debounce_period_us(info4), ==, 0);
  }
-diff --git a/tests/tests-edge-event.c b/tests/tests-edge-event.c
-index 5eb275c..b9e29b2 100644
---- a/tests/tests-edge-event.c
-+++ b/tests/tests-edge-event.c
-@@ -51,7 +51,7 @@ GPIOD_TEST_CASE(edge_event_wait_timeout)
+@@ -372,13 +372,13 @@ GPIOD_TEST_CASE(event_clock)
+ 	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
+ 							 settings);
+ 	gpiod_line_settings_set_event_clock(settings,
+-					    GPIOD_LINE_EVENT_CLOCK_REALTIME);
++					    GPIOD_LINE_CLOCK_REALTIME);
+ 	offset = 1;
+ 	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
+ 							 settings);
  
- 	request = gpiod_test_request_lines_or_fail(chip, NULL, line_cfg);
+ 	gpiod_line_settings_set_event_clock(settings,
+-					    GPIOD_LINE_EVENT_CLOCK_HTE);
++					    GPIOD_LINE_CLOCK_HTE);
+ 	offset = 2;
+ 	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, &offset, 1,
+ 							 settings);
+@@ -396,9 +396,9 @@ GPIOD_TEST_CASE(event_clock)
+ 	info2 = gpiod_test_get_line_info_or_fail(chip, 2);
  
--	ret = gpiod_line_request_wait_edge_event(request, 1000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000);
+ 	g_assert_cmpint(gpiod_line_info_get_event_clock(info0), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
+ 	g_assert_cmpint(gpiod_line_info_get_event_clock(info1), ==,
+-			GPIOD_LINE_EVENT_CLOCK_REALTIME);
++			GPIOD_LINE_CLOCK_REALTIME);
+ 	g_assert_cmpint(gpiod_line_info_get_event_clock(info2), ==,
+-			GPIOD_LINE_EVENT_CLOCK_HTE);
++			GPIOD_LINE_CLOCK_HTE);
+ }
+diff --git a/tests/tests-line-settings.c b/tests/tests-line-settings.c
+index e6c0277..b86fd26 100644
+--- a/tests/tests-line-settings.c
++++ b/tests/tests-line-settings.c
+@@ -28,7 +28,7 @@ GPIOD_TEST_CASE(default_config)
+ 	g_assert_cmpuint(gpiod_line_settings_get_debounce_period_us(settings),
+ 			 ==, 0);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
+ 	g_assert_cmpint(gpiod_line_settings_get_output_value(settings), ==,
+ 			GPIOD_LINE_VALUE_INACTIVE);
+ }
+@@ -207,28 +207,28 @@ GPIOD_TEST_CASE(set_event_clock)
+ 	settings = gpiod_test_create_line_settings_or_fail();
+ 
+ 	ret = gpiod_line_settings_set_event_clock(settings,
+-					GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++					GPIOD_LINE_CLOCK_MONOTONIC);
  	g_assert_cmpint(ret, ==, 0);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
+ 
+ 	ret = gpiod_line_settings_set_event_clock(settings,
+-					GPIOD_LINE_EVENT_CLOCK_REALTIME);
++					GPIOD_LINE_CLOCK_REALTIME);
+ 	g_assert_cmpint(ret, ==, 0);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_REALTIME);
++			GPIOD_LINE_CLOCK_REALTIME);
+ 
+ 	ret = gpiod_line_settings_set_event_clock(settings,
+-					GPIOD_LINE_EVENT_CLOCK_HTE);
++					GPIOD_LINE_CLOCK_HTE);
+ 	g_assert_cmpint(ret, ==, 0);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_HTE);
++			GPIOD_LINE_CLOCK_HTE);
+ 
+ 	ret = gpiod_line_settings_set_event_clock(settings, 999);
+ 	g_assert_cmpint(ret, <, 0);
+ 	g_assert_cmpint(errno, ==, EINVAL);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
  }
  
-@@ -130,11 +130,11 @@ GPIOD_TEST_CASE(read_both_events)
+ GPIOD_TEST_CASE(set_output_value)
+@@ -268,7 +268,7 @@ GPIOD_TEST_CASE(copy_line_settings)
+ 	gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_BOTH);
+ 	gpiod_line_settings_set_debounce_period_us(settings, 2000);
+ 	gpiod_line_settings_set_event_clock(settings,
+-					    GPIOD_LINE_EVENT_CLOCK_REALTIME);
++					    GPIOD_LINE_CLOCK_REALTIME);
  
- 	/* First event. */
+ 	copy = gpiod_line_settings_copy(settings);
+ 	g_assert_nonnull(copy);
+@@ -281,7 +281,7 @@ GPIOD_TEST_CASE(copy_line_settings)
+ 	g_assert_cmpint(gpiod_line_settings_get_debounce_period_us(copy), ==,
+ 			2000);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(copy), ==,
+-			GPIOD_LINE_EVENT_CLOCK_REALTIME);
++			GPIOD_LINE_CLOCK_REALTIME);
+ }
  
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
+ GPIOD_TEST_CASE(reset_settings)
+@@ -294,7 +294,7 @@ GPIOD_TEST_CASE(reset_settings)
+ 	gpiod_line_settings_set_edge_detection(settings, GPIOD_LINE_EDGE_BOTH);
+ 	gpiod_line_settings_set_debounce_period_us(settings, 2000);
+ 	gpiod_line_settings_set_event_clock(settings,
+-					    GPIOD_LINE_EVENT_CLOCK_REALTIME);
++					    GPIOD_LINE_CLOCK_REALTIME);
  
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
+ 	gpiod_line_settings_reset(settings);
  
-@@ -150,11 +150,11 @@ GPIOD_TEST_CASE(read_both_events)
- 
- 	/* Second event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -207,11 +207,11 @@ GPIOD_TEST_CASE(read_rising_edge_event)
- 
- 	/* First event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -226,7 +226,7 @@ GPIOD_TEST_CASE(read_rising_edge_event)
- 
- 	/* Second event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000);
- 	g_assert_cmpint(ret, ==, 0); /* Time-out. */
- 
- 	g_thread_join(thread);
-@@ -266,11 +266,11 @@ GPIOD_TEST_CASE(read_falling_edge_event)
- 
- 	/* First event is the second generated. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -285,7 +285,7 @@ GPIOD_TEST_CASE(read_falling_edge_event)
- 
- 	/* No more events. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000);
- 	g_assert_cmpint(ret, ==, 0); /* Time-out. */
- 
- 	g_thread_join(thread);
-@@ -340,7 +340,7 @@ GPIOD_TEST_CASE(read_rising_edge_event_polled)
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -355,7 +355,7 @@ GPIOD_TEST_CASE(read_rising_edge_event_polled)
- 
- 	/* Second event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000);
- 	g_assert_cmpint(ret, ==, 0); /* Time-out. */
- 
- 	g_thread_join(thread);
-@@ -399,7 +399,7 @@ GPIOD_TEST_CASE(read_both_events_blocking)
- 
- 	/* First event. */
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -414,7 +414,7 @@ GPIOD_TEST_CASE(read_both_events_blocking)
- 
- 	/* Second event. */
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -478,11 +478,11 @@ GPIOD_TEST_CASE(seqno)
- 
- 	/* First event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -497,11 +497,11 @@ GPIOD_TEST_CASE(seqno)
- 
- 	/* Second event. */
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_join_thread_and_return_if_failed(thread);
- 
-@@ -545,11 +545,11 @@ GPIOD_TEST_CASE(event_copy)
- 
- 	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000000000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000000000);
- 	g_assert_cmpint(ret, >, 0);
- 	gpiod_test_return_if_failed();
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 1);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 1);
- 	g_assert_cmpint(ret, ==, 1);
- 	gpiod_test_return_if_failed();
- 
-@@ -603,11 +603,11 @@ GPIOD_TEST_CASE(reading_more_events_than_the_queue_contains_doesnt_block)
- 	g_gpiosim_chip_set_pull(sim, 2, G_GPIOSIM_PULL_UP);
- 	g_usleep(500);
- 
--	ret = gpiod_line_request_read_edge_event(request, buffer, 12);
-+	ret = gpiod_line_request_read_edge_events(request, buffer, 12);
- 	g_assert_cmpint(ret, ==, 7);
- 	gpiod_test_return_if_failed();
- 
--	ret = gpiod_line_request_wait_edge_event(request, 1000);
-+	ret = gpiod_line_request_wait_edge_events(request, 1000);
- 	g_assert_cmpint(ret, ==, 0);
- 	gpiod_test_return_if_failed();
+@@ -310,7 +310,7 @@ GPIOD_TEST_CASE(reset_settings)
+ 	g_assert_cmpuint(gpiod_line_settings_get_debounce_period_us(settings),
+ 			 ==, 0);
+ 	g_assert_cmpint(gpiod_line_settings_get_event_clock(settings), ==,
+-			GPIOD_LINE_EVENT_CLOCK_MONOTONIC);
++			GPIOD_LINE_CLOCK_MONOTONIC);
+ 	g_assert_cmpint(gpiod_line_settings_get_output_value(settings), ==,
+ 			GPIOD_LINE_VALUE_INACTIVE);
  }
 diff --git a/tools/gpiomon.c b/tools/gpiomon.c
-index ba457e4..0bc057a 100644
+index 0bc057a..93ff463 100644
 --- a/tools/gpiomon.c
 +++ b/tools/gpiomon.c
-@@ -451,7 +451,7 @@ int main(int argc, char **argv)
- 			if (pollfds[i].revents == 0)
- 				continue;
+@@ -28,7 +28,7 @@ struct config {
+ 	const char *chip_id;
+ 	const char *consumer;
+ 	const char *fmt;
+-	enum gpiod_line_event_clock event_clock;
++	enum gpiod_line_clock event_clock;
+ 	int timestamp_fmt;
+ };
  
--			ret = gpiod_line_request_read_edge_event(requests[i],
-+			ret = gpiod_line_request_read_edge_events(requests[i],
- 					 event_buffer, EVENT_BUF_SIZE);
- 			if (ret < 0)
- 				die_perror("error reading line events");
+@@ -98,13 +98,13 @@ static int parse_edges_or_die(const char *option)
+ static int parse_event_clock_or_die(const char *option)
+ {
+ 	if (strcmp(option, "realtime") == 0)
+-		return GPIOD_LINE_EVENT_CLOCK_REALTIME;
++		return GPIOD_LINE_CLOCK_REALTIME;
+ 	if (strcmp(option, "hte") != 0)
+-		return GPIOD_LINE_EVENT_CLOCK_HTE;
++		return GPIOD_LINE_CLOCK_HTE;
+ 	if (strcmp(option, "monotonic") != 0)
+ 		die("invalid event clock: %s", option);
+ 
+-	return GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
++	return GPIOD_LINE_CLOCK_MONOTONIC;
+ }
+ 
+ static int parse_config(int argc, char **argv, struct config *cfg)
+@@ -206,10 +206,10 @@ static int parse_config(int argc, char **argv, struct config *cfg)
+ 	/* setup default clock/format combinations, where not overridden */
+ 	if (cfg->event_clock == 0) {
+ 		if (cfg->timestamp_fmt)
+-			cfg->event_clock = GPIOD_LINE_EVENT_CLOCK_REALTIME;
++			cfg->event_clock = GPIOD_LINE_CLOCK_REALTIME;
+ 		else
+-			cfg->event_clock = GPIOD_LINE_EVENT_CLOCK_MONOTONIC;
+-	} else if ((cfg->event_clock == GPIOD_LINE_EVENT_CLOCK_REALTIME) &&
++			cfg->event_clock = GPIOD_LINE_CLOCK_MONOTONIC;
++	} else if ((cfg->event_clock == GPIOD_LINE_CLOCK_REALTIME) &&
+ 		   (cfg->timestamp_fmt == 0)) {
+ 		cfg->timestamp_fmt = 1;
+ 	}
+diff --git a/tools/tools-common.c b/tools/tools-common.c
+index 4477ac8..44988d4 100644
+--- a/tools/tools-common.c
++++ b/tools/tools-common.c
+@@ -286,10 +286,10 @@ static void print_event_clock(struct gpiod_line_info *info)
+ 	const char *name;
+ 
+ 	switch (gpiod_line_info_get_event_clock(info)) {
+-	case GPIOD_LINE_EVENT_CLOCK_REALTIME:
++	case GPIOD_LINE_CLOCK_REALTIME:
+ 		name = "realtime";
+ 		break;
+-	case GPIOD_LINE_EVENT_CLOCK_HTE:
++	case GPIOD_LINE_CLOCK_HTE:
+ 		name = "hte";
+ 		break;
+ 	default:
 -- 
 2.37.2
 
