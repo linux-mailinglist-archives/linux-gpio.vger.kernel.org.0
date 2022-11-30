@@ -2,106 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CFF763DA75
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 17:23:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBA5463DAE2
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 17:41:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbiK3QXN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 11:23:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44496 "EHLO
+        id S230333AbiK3QlH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 11:41:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbiK3QXM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 11:23:12 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3831F43AE2;
-        Wed, 30 Nov 2022 08:23:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669825392; x=1701361392;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hf3CqjgbQVSqURsLVEcOjIfYwu6rzu6lTTAG6MwSyW8=;
-  b=nIN6e4zvGwSPBEtnTMGqLlYVHC+GvQuesS1WZBqFIsX+c6+7MqFHZuMG
-   FGWNsG586Y7Pz9ddn3FjU8gEBEHm4WcdXiIcOLVBmp5NmlGUohkYiLFuo
-   GRlcaui1XE/Fk+WvVS52KfnNgDJpdJPiDUIqVw9+gG5xVq+7zl/yx9CKU
-   l+CwRXyg9ekgfjuxzJUGX0L2j8oXHiPS9Ll1c1VE5yoPl3M/A3sAMXxBE
-   qV64WeU07003wGqivK2s7h3DW3xCU3sMNzoMTeWD5s0ZoWo6QwbTbfbUk
-   8jeLa+QF6tp7QFqziYHj78cR01rPygY8zXJcyCxjGcIo5ed3cUmRExa8H
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="401714824"
-X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="401714824"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 08:22:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="707705570"
-X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
-   d="scan'208";a="707705570"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Nov 2022 08:22:44 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p0Pr8-002Lcb-2k;
-        Wed, 30 Nov 2022 18:22:42 +0200
-Date:   Wed, 30 Nov 2022 18:22:42 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
- return in ->get() callback
-Message-ID: <Y4eDUnMgYvOEy/nI@smile.fi.intel.com>
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
- <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
- <8a53e88b-1e74-bf34-62a1-780a1b29bcbc@redhat.com>
- <f54df574-2763-5b3e-84a3-debf13777996@redhat.com>
+        with ESMTP id S230337AbiK3QlC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 11:41:02 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F768BD27
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:40:52 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id h11so20741504wrw.13
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 08:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=e0stMIEcV03gNHfzUJA1nfzyWs03vejKMOsqKQ04xZc=;
+        b=BiOo2yg86E8eOMnjFPP9PYT+tSSWEOwxmE/2SV4WaoeSx6FmeH6eayWgRY84WFn2lS
+         +i8Dnm+GAp2wRvrFUMcuKVjutDJIcAkmW08bjraZxjy9OUdsgS5jbPCA/hQMr35zxZqn
+         M39dVeJvRqWPGZDel7apTXndc3Z3PG1F18eBMLkI0aheJVqZhIxXzqV4oR4nMDaGWKqe
+         x3Rc8R2pzjqcorIZcOmy4neFSAesnyGPMkV+4Iqq4tJO4QeHyP166dhXeKjWzuQQFa+c
+         7ukSmuRjjK+KJqocDsJxPlIyqfWrIkSvAe6nYgcT3EF6R0UTNWX60HG3eBkyeFjcK+Kp
+         xHag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=e0stMIEcV03gNHfzUJA1nfzyWs03vejKMOsqKQ04xZc=;
+        b=kQnS/zBoRvk34C1nOXl8DCTSlfNuGDqAJayPlXqhlTgIaTsUYLQPhG0oBEwOFn0++I
+         15LBiiYH+kQqBVMCKU4oEaBHEUJlexHZMSJtWnIUYc+5RmoMBd6kULpwb87PygdmtPiY
+         n8KvO4Pnfs33Dpq0LVXZkLrpvEhNe7AVy1+wacT4jcWyiW/taG90pT1iewf6k81XkulZ
+         F/ASKsyxDI93lPHXjnDo+jXmK17pPuB9YTFpFk4vSBgHXu4eWuRadHmR4qPIN4wzCOMm
+         GHpN4nlETcHkSkkIbIi5z9gbxtvxe0f/hHOs6AIWiWJJK34nGt1MzUzWhMz8cSvU3ohw
+         ExQg==
+X-Gm-Message-State: ANoB5pk7tB3Yhp49iVISFYmS1WRXR2IkJ90ybuUHNYgdrfTdgUKzxjyI
+        FiS57uu+k9UsrcSb2EKs+Xh4LnKyRsGOgFAX
+X-Google-Smtp-Source: AA0mqf5sWIERO+Km0Cu7StCt1Ph6aHb1KS7WI9VcwQoSRHY/eXuZVUrgfzeQpEwLdOfAuCDv9Rmj3A==
+X-Received: by 2002:adf:ea43:0:b0:22e:433a:46ba with SMTP id j3-20020adfea43000000b0022e433a46bamr31729304wrn.575.1669826450914;
+        Wed, 30 Nov 2022 08:40:50 -0800 (PST)
+Received: from localhost.localdomain ([212.228.7.114])
+        by smtp.gmail.com with ESMTPSA id k26-20020a05600c1c9a00b003b47b80cec3sm7003110wms.42.2022.11.30.08.40.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Nov 2022 08:40:50 -0800 (PST)
+From:   Niyas Sait <niyas.sait@linaro.org>
+To:     linux-gpio@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+        mika.westerberg@linux.intel.com, rafael@kernel.org,
+        linus.walleij@linaro.org, fugang.duan@linaro.org
+Cc:     Niyas Sait <niyas.sait@linaro.org>
+Subject: [PATCH v3 0/2] pinctrl: add ACPI support to pin controller
+Date:   Wed, 30 Nov 2022 16:40:25 +0000
+Message-Id: <20221130164027.682898-1-niyas.sait@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f54df574-2763-5b3e-84a3-debf13777996@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 05:14:38PM +0100, Hans de Goede wrote:
-> On 11/30/22 17:12, Hans de Goede wrote:
-> > On 11/30/22 16:55, Andy Shevchenko wrote:
+This is a proposal for adding ACPI support to pin controller.
 
-...
+The patch supports following resources introduced in ACPI from v6.2
 
-> > IHMO the rules for get() should simply be:
-> > 
-> > 1. Device has an input buffer:
-> >    Return input-buffer value for the pin.
-> > 
-> > 2. Devices does not have an input buffer:
-> >    Return last set output-buffer value
-> 
-> Quick correction device should be pin here, because it
-> if there is an input buffer or not can differ per pin.
-> So IHMO the rules for get() should simply be:
-> 
-> 1. pin has an input buffer:
->    return input-buffer value for the pin.
-> 
-> 2. pin does not have an input buffer:
->    return the value last set for the pin's output-buffer
+- PinFunction
+- PinConfig
+- PinGroupFunction
+- PinGroupConfig
+- PinGroup
 
-"pin" misleads here. The "pin" can be in native function which may have not be
-even connected to GPIO buffers. There are different hardware topologies.
+The patch has been tested on NXP I.MX8MP platform with ACPI. Please checkout [1]
+and [2] to see prototype driver and firmware implementation.
 
-So, no, not a "pin".
+--
+V3: 1, Reworked interface between pinctrl-acpi subsystem and driver
+    2, Dropped API to get ACPI pin groups as they are no longer required
+    3, Fix styling issues pointed out by Mika Westerberg
+    4, Added helper functions and refactored code for simplicity
+    5, Added documentation
+
+V2: 1, Fix styling issues pointed out by Mika Westerberg
+    2, Added a new interface to free pin group descriptor
+    3, Added vendor length to the descriptors
+    4, Reworked map_config_acpi_to_general to pass an error value
+    5, Few refactoring to keep functions shorter
+    6, Dropped new generic pinconf types added in v1
+
+[1] https://github.com/nsait-linaro/linux-patches/blob/main/0001-imx8mp-add-ACPI-support-for-pin-controller.patch
+[2] https://github.com/nsait-linaro/linux-patches/blob/main/0001-add-acpi-pinctrl-support-for-i2c-controllers.patch
+
+Niyas Sait (2):
+  pinctrl: add support for ACPI pin function and config resources
+  pinctrl: add support for ACPI pin groups
+
+ Documentation/driver-api/index.rst            |   1 +
+ Documentation/driver-api/pin-control-acpi.rst | 297 ++++++++
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/core.c                        |  18 +-
+ drivers/pinctrl/core.h                        |   3 +
+ drivers/pinctrl/pinctrl-acpi.c                | 672 ++++++++++++++++++
+ drivers/pinctrl/pinctrl-acpi.h                |  77 ++
+ include/linux/pinctrl/pinctrl.h               |  15 +
+ 8 files changed, 1080 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/driver-api/pin-control-acpi.rst
+ create mode 100644 drivers/pinctrl/pinctrl-acpi.c
+ create mode 100644 drivers/pinctrl/pinctrl-acpi.h
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
