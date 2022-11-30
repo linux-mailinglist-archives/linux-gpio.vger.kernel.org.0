@@ -2,101 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EBD363D5D4
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 13:43:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B37763D763
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 14:59:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235162AbiK3MnG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 07:43:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53796 "EHLO
+        id S229456AbiK3N7a (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 08:59:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbiK3Mmv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 07:42:51 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80BCC2611F
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:46 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id o5so17881720wrm.1
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 04:42:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ZEJJxh2XaMBv4jBFweZR3RGB2Sg6NR3wHGmrq3luIQ=;
-        b=zhyI9XpBkTltr35y55zqhU2COjvOkMrFg7IV+5xnJoEUC0wczqrY2j3R05pqciYBje
-         VMOl0g0/TjJwQc0Wn796sUQTur5duKO0gRqqGI989L/oAqb6Xwy9ugu13E0b4JmGNiGQ
-         +Hy3tFuOjXHiMyF5UFU2p6WgDf76txfdWopDj1Rcv8jjjaj067oXYR2ZmcJKWml71En1
-         7ebsSYKc2VkqQ1k4da+zKTSIteDY1JpCtJEBut8IEA0d/pMBvUDH6lhkvfo+Dai/A2G/
-         LdFt++g7t/h2y7oGN84x7TPKGyiH0JoncmH8ilpBqx3KmzwEIrwq85SBHKAy4W5tSfxk
-         M0JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ZEJJxh2XaMBv4jBFweZR3RGB2Sg6NR3wHGmrq3luIQ=;
-        b=53JQ1fS5u9GbD23JUnviHZevskA2Rrm8l9DRxqx5w6UvqaRbk5Xei4roJ3tHI5Cpon
-         0OHArvwCnSaCCUlay2GULTG9O9oZA1bf5qHSI/MjNwi/ZOyKqJn0uzdr/xvfnRjHUVFD
-         B/PtWg7GXINMkCbSl866a1YArer9b09bDGjJDoRYzztxlDa1RBzhY1aNNBMs5EsicA3J
-         eqlPwgV68vUWWBNf6ZPRGxZYpNB0WdcbjAIpxJBA25OD92AOfiGDFn5heZElhtifGeFK
-         ljzQQo+mLaobTRSOzWhfRSNADMCYYca6SZWzEQ9SXQBBQVD/HbJpW8DdtMWN4mz4YY2c
-         XDDA==
-X-Gm-Message-State: ANoB5pmuZjdyVffPicP7dXFB9zCrOTR/PGojcRuw11MOck8HrffzKzh7
-        IYauCj5SELhwL50Zoj+Rer1upg==
-X-Google-Smtp-Source: AA0mqf4v1agqbKlMFyKdoPqa50oxuX67XEvWKvEwylQidu89jyBAehw4fMxEXic7Rn2DIc/UmIZ2XA==
-X-Received: by 2002:a05:6000:783:b0:241:bc34:3149 with SMTP id bu3-20020a056000078300b00241bc343149mr32173543wrb.351.1669812165081;
-        Wed, 30 Nov 2022 04:42:45 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:458c:6db9:e033:a468])
-        by smtp.gmail.com with ESMTPSA id z2-20020a5d4402000000b00226dba960b4sm1514985wrq.3.2022.11.30.04.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 04:42:44 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
+        with ESMTP id S230322AbiK3N73 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 08:59:29 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3D429C9A
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 05:59:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669816767; x=1701352767;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wvU7oIxGAwkvjRmle78W/XpCDKJzt3FhK7wEMNS5ac0=;
+  b=LTBdBkR10colZeEotV+sCCLlkVEh+/gMcNsNsocLYtuuV8nsXwI7jC44
+   IP+YHszCByNCWC4/CLlFPRth8gR/pDv85aw+J4iGT/OLIl71zFXl2Cffp
+   bwqHZOhqz9lBZu9xUxeTn0lGNQGBPVhpaJ8/m5y2/dyKfd1Lf76ol3Cw3
+   6c8lUcEntUT6l+8DIkqlrH33uokQKf93yFwoaI01rYWloizBuq8VahtWb
+   KUhaoDHtvK5vbwldFf81GlvtbUsxuCDOI/N5eO3Wu/7x0DlCWVqkGuO9o
+   EWsfOFANnj5238HoMtvjaPkQ2BZh/JNkm3C6XpAzvzApmSRnZwnnGrlCF
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="303001006"
+X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
+   d="scan'208";a="303001006"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2022 05:59:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="707651881"
+X-IronPort-AV: E=Sophos;i="5.96,206,1665471600"; 
+   d="scan'208";a="707651881"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Nov 2022 05:59:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p0NcR-002I9w-39;
+        Wed, 30 Nov 2022 15:59:23 +0200
+Date:   Wed, 30 Nov 2022 15:59:23 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH 11/11] bindings: python: extend setup.py
-Date:   Wed, 30 Nov 2022 13:42:31 +0100
-Message-Id: <20221130124231.1054001-12-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20221130124231.1054001-1-brgl@bgdev.pl>
+Subject: Re: [libgpiod][PATCH 02/11] treewide: apply formatting changes with
+ clang-format
+Message-ID: <Y4dhu0rgNoyvR7cf@smile.fi.intel.com>
 References: <20221130124231.1054001-1-brgl@bgdev.pl>
+ <20221130124231.1054001-3-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221130124231.1054001-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Nov 30, 2022 at 01:42:22PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Use linux kernel's .clang-format file to automatically improve the coding
+> style of libgpiod's C code base. We don't import the file into the
+> repository as it's not perfect and certain converted fragments were
+> rolled back because they looked better before the conversion.
 
-Add additional information to setup.py. This will be visible in the EGG
-file.
+...
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/setup.py | 5 +++++
- 1 file changed, 5 insertions(+)
+>  		if (gpiod_line_settings_get_direction(
+> -				per_line->node->settings) !=
+> +			    per_line->node->settings) !=
+>  		    GPIOD_LINE_DIRECTION_OUTPUT)
+>  			continue;
 
-diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-index c90d7d7..7ad5de3 100644
---- a/bindings/python/setup.py
-+++ b/bindings/python/setup.py
-@@ -39,4 +39,9 @@ setup(
-     packages=find_packages(include=["gpiod"]),
-     ext_modules=extensions,
-     version=__version__,
-+    author="Bartosz Golaszewski",
-+    author_email="brgl@bgdev.pl",
-+    description="Python bindings for libgpiod",
-+    platforms=["linux"],
-+    license="LGPLv2.1",
- )
+Personally I percept this as an ugly indented code...
+
+One reason is too strict 80 or whatever rule (we are almost in
+the second quarter of the 21st century!), another is that trailing
+opening parenthesis.
+
+That said, some of the changes in this patch I like, some I disgust.
+Quite controversial to me, but it's your project and esp. taking into
+account that it's a user space, the kernel or other project rules are
+not applicable in a general sense anyway.
+
 -- 
-2.37.2
+With Best Regards,
+Andy Shevchenko
+
 
