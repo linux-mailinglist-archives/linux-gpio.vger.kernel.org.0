@@ -2,157 +2,139 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF3963CC02
-	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 00:57:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E97D63CCA5
+	for <lists+linux-gpio@lfdr.de>; Wed, 30 Nov 2022 01:51:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229690AbiK2X5y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 29 Nov 2022 18:57:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46832 "EHLO
+        id S229845AbiK3Avw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 29 Nov 2022 19:51:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230293AbiK2X5l (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 18:57:41 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9174A25A;
-        Tue, 29 Nov 2022 15:57:33 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id o1so10722613pfp.12;
-        Tue, 29 Nov 2022 15:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FYMDmlsvjozIL5WOmq1zpgn4QhNwIkK2G4uNnYQOjuk=;
-        b=hXTSncZ/do9WkQnengsdG54Eb/LOE5zQ80xuJXTxQeKqwEd+eK8zetZRndZwfpNqXY
-         NolX03Q9qHqsv+jK7aZ95ph4Cg5J54bYlE+z5x1krEnCxOGbmSY7qBw8pstXBMbX6xCD
-         CnhVyMLGMeT9SzXjoiS34wWK0yA+cv7mx/mnsOaZjWPNi7d7w0vif3UzkXuJmorFRL7b
-         Ng2rkfTMoxfju98F3/+pIm7mNS4PVUJJGDOUQcTmvNcSkslsn6S2LH5NcjTvrIpX+dkS
-         69QeuYgAX7g+LOoAF6F+x3rPYZ2mvCewZ3PxipdaRXkjmNpacfbSzgWcnZ/6o2xAac6k
-         jDEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FYMDmlsvjozIL5WOmq1zpgn4QhNwIkK2G4uNnYQOjuk=;
-        b=fzOrYHceSShEuPMyalki4s+guFicsJkc1YstEAL1wH1fMZwrzX+7bEftuVXgskutYx
-         DBI3vUyBS2sF8k/G+AMm+yq/gvWSpZjCiVJjN3LskOIFH1q4n/3bnBAj0+JZcEliR5fw
-         M0etecyueoFOJTe6smcJRZsWAJAeJxH3gBlJmflwaIiSyzqEk2RmSKc2+fer6owwa22g
-         U20eU3zbKRqPse+fP+5UCyytngh6NSTqRHroVsJvnJ+AI+s2QFNdpCcH4U7MFI8tq9Yf
-         U+5M1b4ooryM90UdKqKSpmvaSCncctNS9OiTRKl1BPIu0B0D6yWCVqV5vPwZanKn4TH0
-         9PKQ==
-X-Gm-Message-State: ANoB5plM2A76G/iNjRfY4C+QlyDHNO6odyCQyDoT9rDUnoGQrIoFdEm9
-        EHqj66OBPXMvzxT78X4EYZI=
-X-Google-Smtp-Source: AA0mqf5vn97HJ2AWPh8OLCPTXpCymTiMwpM6M4PRuB27mCC2bgSz7yiGw1Po5rWFTmtvLnaOQTx2sg==
-X-Received: by 2002:a63:5a53:0:b0:477:ae2f:3292 with SMTP id k19-20020a635a53000000b00477ae2f3292mr30795903pgm.267.1669766252976;
-        Tue, 29 Nov 2022 15:57:32 -0800 (PST)
-Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
-        by smtp.gmail.com with ESMTPSA id i4-20020a626d04000000b0056d98e359a5sm35622pfc.165.2022.11.29.15.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Nov 2022 15:57:32 -0800 (PST)
-Date:   Wed, 30 Nov 2022 07:57:26 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 2/2] gpiolib: protect the GPIO device against being
- dropped while in use by user-space
-Message-ID: <Y4acZkkuUa5Peq+r@sol>
-References: <20221129123553.353410-1-brgl@bgdev.pl>
- <20221129123553.353410-3-brgl@bgdev.pl>
- <Y4Y5BjTwVCF5bAn5@smile.fi.intel.com>
+        with ESMTP id S229641AbiK3Avw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 29 Nov 2022 19:51:52 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C77726A
+        for <linux-gpio@vger.kernel.org>; Tue, 29 Nov 2022 16:51:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669769511; x=1701305511;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2/LwrSN+rajkAnk8/6BvvPewvsYI+B7m96MMsQscd7s=;
+  b=O/eMUHCRf8I6VYM88w5PRi7YFiQ6/ZS//my3BIVihC57Iv0ccwK94zkO
+   +gbfSi0BPVoqs8Wqn1l2AFqtay/EsL/qeeio/FCtoMM2X5vSC7VFx4UJj
+   9/uRctMDIOJHZoj10n0PfwL76h+cBVYh8oZNkTQ3771acZto2t2RBTlcP
+   z8ARKeclbmWaIeAMpS++ILO6dwBGb02JMMiyQnwzuLuFJsNDaNu4eINf5
+   p6VRvlsm9WrDFZ+iN2mFovfGPiX17Oid/yNe7rfvTZd34GfZCsa1ePmhg
+   zsL/C7iNkkf5k7F43J7P1bH5cGAq1dtZueMIN8em8Q0rNdPLhe5ZtvKx2
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="298637807"
+X-IronPort-AV: E=Sophos;i="5.96,204,1665471600"; 
+   d="scan'208";a="298637807"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2022 16:50:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10546"; a="889081117"
+X-IronPort-AV: E=Sophos;i="5.96,204,1665471600"; 
+   d="scan'208";a="889081117"
+Received: from lkp-server01.sh.intel.com (HELO 64a2d449c951) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Nov 2022 16:50:08 -0800
+Received: from kbuild by 64a2d449c951 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1p0BId-0009ED-36;
+        Wed, 30 Nov 2022 00:50:07 +0000
+Date:   Wed, 30 Nov 2022 08:49:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 4ef339bc053a62dac9017f80f7bb8cff0412bd29
+Message-ID: <6386a8a7.zGiBXK9yn7tG7dD9%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y4Y5BjTwVCF5bAn5@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 06:53:26PM +0200, Andy Shevchenko wrote:
-> On Tue, Nov 29, 2022 at 01:35:53PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > 
-> > While any of the GPIO cdev syscalls is in progress, the kernel can call
-> > gpiochip_remove() (for instance, when a USB GPIO expander is disconnected)
-> > which will set gdev->chip to NULL after which any subsequent access will
-> > cause a crash.
-> > 
-> > To avoid that: use an RW-semaphore in which the syscalls take it for
-> > reading (so that we don't needlessly prohibit the user-space from calling
-> > syscalls simultaneously) while gpiochip_remove() takes it for writing so
-> > that it can only happen once all syscalls return.
-> 
-> ...
-> 
-> I would do
-> 
-> typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
-> 
-> and so on and use that one in the respective parameters.
-> 
-> BUT. Since it's a fix, up to you which one to choose.
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 4ef339bc053a62dac9017f80f7bb8cff0412bd29  gpiolib: Unify access to the device properties
 
-FWIW, the typedef looks cleaner to me too.
+elapsed time: 1732m
 
-> > +static __poll_t call_poll_locked(struct file *file,
-> > +				 struct poll_table_struct *wait,
-> > +				 struct gpio_device *gdev,
-> > +				 __poll_t (*func)(struct file *,
-> > +						  struct poll_table_struct *))
-> > +{
-> > +	__poll_t ret;
-> > +
-> > +	down_read(&gdev->sem);
-> > +	ret = func(file, wait);
-> > +	up_read(&gdev->sem);
-> > +
-> > +	return ret;
-> > +}
-> 
-> ...
-> 
-> > +	down_write(&gdev->sem);
-> 
-> + Blank line?
-> 
+configs tested: 58
+configs skipped: 2
 
-Agreed.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> >  	/* FIXME: should the legacy sysfs handling be moved to gpio_device? */
-> >  	gpiochip_sysfs_unregister(gdev);
-> >  	gpiochip_free_hogs(gc);
-> 
-> ...
-> 
-> >  	gcdev_unregister(gdev);
-> 
-> + Blank line ?
-> 
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+powerpc                           allnoconfig
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+sh                               allmodconfig
+mips                             allyesconfig
+arc                  randconfig-r043-20221128
+powerpc                          allmodconfig
+m68k                             allmodconfig
+x86_64                              defconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+i386                 randconfig-a002-20221128
+i386                 randconfig-a003-20221128
+i386                 randconfig-a001-20221128
+i386                 randconfig-a005-20221128
+i386                 randconfig-a004-20221128
+x86_64                               rhel-8.3
+i386                 randconfig-a006-20221128
+x86_64                           allyesconfig
+i386                                defconfig
+ia64                             allmodconfig
+x86_64               randconfig-a001-20221128
+x86_64               randconfig-a003-20221128
+x86_64               randconfig-a004-20221128
+x86_64               randconfig-a002-20221128
+x86_64               randconfig-a005-20221128
+x86_64               randconfig-a006-20221128
+i386                             allyesconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allmodconfig
+s390                                defconfig
+s390                             allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
 
-Disagree with this one though.
-The comment prior to the gcdev_unregister() appears to apply to the block,
-so the following lines should remain grouped.
+clang tested configs:
+hexagon              randconfig-r041-20221128
+riscv                randconfig-r042-20221128
+hexagon              randconfig-r045-20221128
+s390                 randconfig-r044-20221128
+x86_64               randconfig-a012-20221128
+x86_64               randconfig-a014-20221128
+x86_64               randconfig-a011-20221128
+x86_64               randconfig-a013-20221128
+x86_64               randconfig-a016-20221128
+x86_64               randconfig-a015-20221128
+i386                 randconfig-a012-20221128
+i386                 randconfig-a015-20221128
+i386                 randconfig-a011-20221128
+i386                 randconfig-a013-20221128
+i386                 randconfig-a014-20221128
+i386                 randconfig-a016-20221128
 
-Other than those nits, the series looks good to me.
-
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
-
-Cheers,
-Kent.
-
-> > +	up_write(&gdev->sem);
-> >  	put_device(&gdev->dev);
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
