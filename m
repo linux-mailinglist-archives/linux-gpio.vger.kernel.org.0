@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A295F63E782
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 03:10:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA7B463E78E
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 03:13:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbiLACKQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 30 Nov 2022 21:10:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45360 "EHLO
+        id S229515AbiLACNT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 30 Nov 2022 21:13:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbiLACKP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 21:10:15 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331D543857
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 18:10:15 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id k5so505323pjo.5
-        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 18:10:15 -0800 (PST)
+        with ESMTP id S229521AbiLACNS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 30 Nov 2022 21:13:18 -0500
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14112862F8
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 18:13:13 -0800 (PST)
+Received: by mail-pj1-x102e.google.com with SMTP id b11so536231pjp.2
+        for <linux-gpio@vger.kernel.org>; Wed, 30 Nov 2022 18:13:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7f0wGpyUJqWOFegqP3U+OdFiKgJ4C0iSz0pi6NTuBa0=;
-        b=k2cYT3ejyMvGsqkm3W5UwMbTTFI8LXMWJYNSnOI0f+uLX8UspRbcHV9atYX4kqsIBP
-         jKg2Ezk/Q/o/HUSI7bFi/ti/0gBve+jnDZ2lhHsbKDJEI0d5uHt58s9PDYcg4+LpQR3Y
-         aRM3e0+qmBaIPP58NBKy+TpRRVd8jxcP4jCyP9clO6mrwV5CO//Kg5R4Wry9DvsrKqFP
-         E8nrlDlkUV9SW706DrrvGWgKBLf4HIOkD7Twe/N9s7/rYu3b29DWowMO7/PyCeGyPUj5
-         4yYX4qMpGSKHZ11JaMmWWpAkQ2/Bq4BaykThg004J8Yq437+yNgYX1puHZ0D0+BrtfOw
-         r63w==
+        bh=uhhaW5L4qQQvZSgJ+Fz8LQknFSlhTfaaSAy31qKA854=;
+        b=GOBR6ryGXVJxP/+26oxPobmi5xrZHfeXejbZMuiw4ZCSJ626vus8bz0FDXu92aF3CF
+         TRb5wZoEaW26tOtORwwFN/70hklDAoJrWr9LxLESrsRIxmD/2jAzwBXnX3Yo5ipzf/bA
+         Toux3kwL5llQzw4nrvqf1S2gOCF/xeccxu/zeGoTSdhOUxQRC8WbhBKpqrJtVeQnc3HI
+         0WFovQPop67N9MSPFz0mSVFt+INEXIY/O73VtU26SkPY0YvbttfHOIou0LpZbmLzcVCn
+         gM1207AL+P6WD45izXdsQNFRUjwrOZwci532e9DPaVX1E8ivVJL0/P9Y0yqGsznwjNHJ
+         Bjfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7f0wGpyUJqWOFegqP3U+OdFiKgJ4C0iSz0pi6NTuBa0=;
-        b=yAgGsr6mWA/5JbOVsKzWbyvUd669RunpX6VMJCCajDB0Ocga4ZXPEQIu4SjNyWsQEX
-         wGQXOaEG2dvWs74KoYIpS9ebnARk+LGnLj2JYgAt3RtC+IVWMNKukw7FYJg37zoEmW5M
-         3c6WbFR9DGnTKr+n3IwBBizf0UV/aoTpFBKCMwmrys+tWit0vM5DwvEyfZrXZxyxVX1N
-         SJMWhtVIVTLK9vaNJIlLeD3HZa7i292poLP3sohQPR1WtlVhWKnpfbMGNcoU/7/PbRcD
-         rxTAXAf502y0pRSw30mSZNX57iMLfcc79JJSfRNFgZGAbabNA3q3cg5aL4/okYuk0meL
-         PoXw==
-X-Gm-Message-State: ANoB5pnOVZVgsafJaIArT8NkHoGGVfcT/CB81n7X16eZEn46KBOz6OR0
-        Ojz29kTkviNgmTnDEpiZ+b7Ysw==
-X-Google-Smtp-Source: AA0mqf4ucrvXbSTTrjN5sJ8E+88D4tY9stP6AOLngGfSo9Bm+Skw0VGqZdySg2pqeFLPcMDVamaGCA==
-X-Received: by 2002:a17:90a:f98d:b0:219:70c7:cf80 with SMTP id cq13-20020a17090af98d00b0021970c7cf80mr2771194pjb.40.1669860614775;
-        Wed, 30 Nov 2022 18:10:14 -0800 (PST)
+        bh=uhhaW5L4qQQvZSgJ+Fz8LQknFSlhTfaaSAy31qKA854=;
+        b=goDnZU9IxaJ6BHFNWOD9tzTv3kHQCBLHpxE2sH2CdJ7Kx91U/qlJhSPfnD7HWszJee
+         Q/HSF21lVyVZtnjOHewUI3/xHvPRgnr7iPPDOeYNXR7Bha8Wlj56LblqEsSlWnc6DWbK
+         TKbIS7wGx1e0RTvx2Mns13JoHdglJB8YwcQqudvqG12oh+JtVVpA8WQfoPfjQ2a28o4C
+         Xz5/hBVu6swYwv+xS3O3db9K41+ru/XxScpyxI38Y7OwA+QaoUWmHtc2QocuQ5okkuZ9
+         TuPJryClFGucwb8K8AGS+5Ki/RHg201gpELf9f/lsDMAyNdeEltw7jCp3VDjuARdjCEu
+         XXoQ==
+X-Gm-Message-State: ANoB5pkPcgz1isDUvpkf9hSSd+4a8NrfbKI/qS5YEg2JMXBEpCl0hdkT
+        q8q7dCG5ZnWpqDbRmV/f6Xn5hw==
+X-Google-Smtp-Source: AA0mqf5d8oD2V3iLBFGL7pEpm66KJfDm++Hged023ao0u0Kkb1Jcf9E2v3w5uMV3KGsbwlPN8fZf3w==
+X-Received: by 2002:a17:902:6b8b:b0:188:a40b:47c9 with SMTP id p11-20020a1709026b8b00b00188a40b47c9mr45338250plk.75.1669860792596;
+        Wed, 30 Nov 2022 18:13:12 -0800 (PST)
 Received: from localhost ([122.172.87.149])
-        by smtp.gmail.com with ESMTPSA id x28-20020aa79a5c000000b0056b8181861esm2106187pfj.19.2022.11.30.18.10.13
+        by smtp.gmail.com with ESMTPSA id qa8-20020a17090b4fc800b0021904307a53sm1881778pjb.19.2022.11.30.18.13.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 18:10:14 -0800 (PST)
-Date:   Thu, 1 Dec 2022 07:40:10 +0530
+        Wed, 30 Nov 2022 18:13:12 -0800 (PST)
+Date:   Thu, 1 Dec 2022 07:43:08 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Kent Gibson <warthog618@gmail.com>,
@@ -56,14 +56,15 @@ Cc:     Kent Gibson <warthog618@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [libgpiod][PATCH 05/11] gpiosim: rename HOG_DIR to DIRECTION
-Message-ID: <20221201021010.mvrbnz4lgdpsnpg3@vireshk-i7>
+Subject: Re: [libgpiod][PATCH 08/11] bindings: rust: include rust sources in
+ the release tarballs
+Message-ID: <20221201021308.cgg657jki6cehhlu@vireshk-i7>
 References: <20221130124231.1054001-1-brgl@bgdev.pl>
- <20221130124231.1054001-6-brgl@bgdev.pl>
+ <20221130124231.1054001-9-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221130124231.1054001-6-brgl@bgdev.pl>
+In-Reply-To: <20221130124231.1054001-9-brgl@bgdev.pl>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -74,7 +75,34 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 30-11-22, 13:42, Bartosz Golaszewski wrote:
->  bindings/rust/gpiosim-sys/src/lib.rs   | 12 ++++++------
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Rust sources and Cargo files are not added to EXTRA_DIST. Add them so that
+> they end up in the release tarballs generated by autotools.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  bindings/rust/Makefile.am                       |  4 ++++
+>  bindings/rust/gpiosim-sys/Makefile.am           |  6 ++++++
+>  bindings/rust/gpiosim-sys/src/Makefile.am       |  5 +++++
+>  bindings/rust/libgpiod-sys/Makefile.am          |  6 ++++++
+>  bindings/rust/libgpiod-sys/src/Makefile.am      |  5 +++++
+>  bindings/rust/libgpiod/Makefile.am              |  6 ++++++
+>  bindings/rust/libgpiod/examples/Makefile.am     | 14 ++++++++++++++
+>  bindings/rust/libgpiod/src/Makefile.am          | 15 +++++++++++++++
+>  bindings/rust/libgpiod/tests/Makefile.am        | 15 +++++++++++++++
+>  bindings/rust/libgpiod/tests/common/Makefile.am |  5 +++++
+>  configure.ac                                    |  9 +++++++++
+>  11 files changed, 90 insertions(+)
+>  create mode 100644 bindings/rust/gpiosim-sys/Makefile.am
+>  create mode 100644 bindings/rust/gpiosim-sys/src/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod-sys/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod-sys/src/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod/examples/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod/src/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod/tests/Makefile.am
+>  create mode 100644 bindings/rust/libgpiod/tests/common/Makefile.am
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
