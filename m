@@ -2,128 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 605D863F28C
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 15:17:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 019EE63F2A3
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 15:21:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231871AbiLAOR4 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 1 Dec 2022 09:17:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
+        id S231806AbiLAOVY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Dec 2022 09:21:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231873AbiLAORW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 09:17:22 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5A5AAFCE3;
-        Thu,  1 Dec 2022 06:17:16 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F40CED1;
-        Thu,  1 Dec 2022 06:17:23 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0F8B3F73D;
-        Thu,  1 Dec 2022 06:17:09 -0800 (PST)
-Date:   Thu, 1 Dec 2022 14:17:07 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        dri-devel@lists.freedesktop.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Satya Priya <quic_c_skakit@quicinc.com>,
-        Pavel Machek <pavel@ucw.cz>,
-        Guenter Roeck <groeck@chromium.org>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-riscv@lists.infradead.org, linux-leds@vger.kernel.org,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        chrome-platform@lists.linux.dev,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Orson Zhai <orsonzhai@gmail.com>, linux-sunxi@lists.linux.dev,
-        linux-pwm@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-amlogic@lists.infradead.org,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Scott Branden <sbranden@broadcom.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Michael Walle <michael@walle.cc>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an
- error code
-Message-ID: <20221201141707.28af0d1d@donnerap.cambridge.arm.com>
-In-Reply-To: <20221201131604.beq4l22d42tjy6dm@pengutronix.de>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
-        <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-        <20221201102252.52ace284@donnerap.cambridge.arm.com>
-        <20221201131604.beq4l22d42tjy6dm@pengutronix.de>
-Organization: ARM
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        with ESMTP id S231830AbiLAOVX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 09:21:23 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22B7DAFCE1
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 06:21:21 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id g12so2733113lfh.3
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 06:21:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n1YbJ7GxHRoJTWKCcpMV5cChgDKSibhJGs2SkuVSM8k=;
+        b=MjxOApHUka4IJMZj8cmJSvql8lGIvwK4nFkwXkulNvtSe4XyGNPhy+9u/4N3STKJHf
+         j/iZvUPvnSMJ3mQ2K3Lw3KqyVL6QR316RESQjKyU6v5pQHkwYX7LEHAJ0j/Z5jSAgd1y
+         XE+0w25O5MiOJ6gmFIHctdZzalR3Z2Rdgo5RuTFDFrx8RrDz1W9NrJNpc02edoy9APDv
+         4gMkxfyz+UEmBsNAHnZO16Ymzx3icW72a6xdwvRUAF+05mb6MfIZ8JKIWLe17rW2ueoB
+         1fAW7cPvg2HJUQo5u0FRfaZaoPE/9oDZcwU75weaNyuHvJr5b/LsqG958h56iVUcMkEq
+         mphA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n1YbJ7GxHRoJTWKCcpMV5cChgDKSibhJGs2SkuVSM8k=;
+        b=tzJ1yQ7RdlzopNvuhOuLV5obLq61RBv6dT2fxzjawKhEjdpI67+XS8hCnXMYg2cV+W
+         w379wZDWkEQNr5O8SpOKlr/KNcEWk0NWMkckTRIDPwGSKBmoLfzMw6vvzL2HXRV6JhDt
+         pz67jiqzf0PVG5ih+9MEJVKoiaBAgQn6POOOnkH4uFIyQ/e4jkoYkZDXod/Wt6k8gbcN
+         gPucWuC47qiI/a40bRc3C5mtWfQ+TZKbqB9jh+ejmBkRfKjLyGNn4Y2MmwUSMlX/55/5
+         fcdXAx7nZtC7pEYprAA7RBsVgA6fJwpZpDCp71cwCA9PowlVm3ZeWDG6osjehuaCCrvY
+         MTLQ==
+X-Gm-Message-State: ANoB5pnCwKn1q8DYukM5KF/oes9PjAHWVyB3ybHCjsgsKGQyhj+dn3yp
+        E7CEyeAz58HGB3rq+lEsf31H8R6B9cKkbpdmTHmvvg70knA=
+X-Google-Smtp-Source: AA0mqf7mY+DtzAlbgKFScEuvxuoYcE0KqlD1q/lIIykbQmfxluUHBx3EJRcalzKN3QH6IvZjTZ6Lzm02DSt5tb4Ogvc=
+X-Received: by 2002:ac2:43d8:0:b0:4a2:45ce:a169 with SMTP id
+ u24-20020ac243d8000000b004a245cea169mr23508788lfl.51.1669904479417; Thu, 01
+ Dec 2022 06:21:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221130124231.1054001-1-brgl@bgdev.pl> <20221130124231.1054001-3-brgl@bgdev.pl>
+ <Y4dhu0rgNoyvR7cf@smile.fi.intel.com>
+In-Reply-To: <Y4dhu0rgNoyvR7cf@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 1 Dec 2022 15:21:07 +0100
+Message-ID: <CAMRc=McdumwogXRFn6rMf8u4W0eSP=gTbp2WcB4oekPRgMSM_w@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 02/11] treewide: apply formatting changes with clang-format
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, 1 Dec 2022 14:16:04 +0100
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
+On Wed, Nov 30, 2022 at 2:59 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Nov 30, 2022 at 01:42:22PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Use linux kernel's .clang-format file to automatically improve the coding
+> > style of libgpiod's C code base. We don't import the file into the
+> > repository as it's not perfect and certain converted fragments were
+> > rolled back because they looked better before the conversion.
+>
+> ...
+>
+> >               if (gpiod_line_settings_get_direction(
+> > -                             per_line->node->settings) !=
+> > +                         per_line->node->settings) !=
+> >                   GPIOD_LINE_DIRECTION_OUTPUT)
+> >                       continue;
+>
+> Personally I percept this as an ugly indented code...
+>
+> One reason is too strict 80 or whatever rule (we are almost in
+> the second quarter of the 21st century!), another is that trailing
+> opening parenthesis.
 
-Hi Uwe,
+This is very much a question of personal preference and as the
+maintainer I get to pick and choose the coding style for the project
+but let me provide a personal argument in favor of the 80 line limit.
+I mostly work with C and use a single big screen for work. When the
+limit is set to 80 chars (or 88 which is standard for python), I get
+to have four columns of code on my screen and still work comfortably.
+Unless it really adds to the readability, I prefer to keep it.
 
-> Hello Andre,
-> 
-> On Thu, Dec 01, 2022 at 10:22:52AM +0000, Andre Przywara wrote:
-> > Just one comment: I don't see a sunxi specific patch later in the series,
-> > though it seems we have at least one error error exit (see prescaler == 0
-> > above). Plus potentially another exit if clk_get_rate() (at the very
-> > beginning) fails.
-> > Shall I send a patch for that?  
-> 
-> That would we very welcome. I mentioned that shortly in the cover
-> letter, I wasn't entirely sure how to handle that prescaler = 0 case.
+Bart
 
-Ah right, sorry, I missed that.
-So the Allwinner manual somehow marks those prescaler encodings as reserved
-or invalid (it's just a "/" in there), and we never set those values in the
-driver (there is an explicit check). So it could only be a leftover from
-firmware/bootloader, or someone poking at this register behind our back.
-I am tempted to just return some -EINVAL. As the current code stands, we
-don't manipulate any state flags before that check, so it doesn't
-really matter, but would be best practise, at least.
-
-Cheers,
-Andre
+>
+> That said, some of the changes in this patch I like, some I disgust.
+> Quite controversial to me, but it's your project and esp. taking into
+> account that it's a user space, the kernel or other project rules are
+> not applicable in a general sense anyway.
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
