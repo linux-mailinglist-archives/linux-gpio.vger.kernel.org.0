@@ -2,245 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CB8863EAC5
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 09:03:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F28D63EB17
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 09:29:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbiLAIDx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Dec 2022 03:03:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42816 "EHLO
+        id S229551AbiLAI3Z (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Dec 2022 03:29:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiLAIDw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 03:03:52 -0500
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE602EF65
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 00:03:50 -0800 (PST)
-Received: by mail-wr1-x433.google.com with SMTP id d1so1332363wrs.12
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 00:03:49 -0800 (PST)
+        with ESMTP id S229499AbiLAI3X (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 03:29:23 -0500
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50514C16
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 00:29:20 -0800 (PST)
+Received: by mail-vk1-xa32.google.com with SMTP id j9so481981vkk.13
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 00:29:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
-        b=Lo8p+aDFlKlZfG6pP0n7RZNEjwZK+wrouNetRK3rZv63MbeCUctT1ieDjkKZxl3LvQ
-         1IUxcYuylIWjoy7vKgfrNL5bEmzdei5+43ayKtzqRIyOjWYlsoDieQD7IgspPDeYN4Rg
-         g0Tg2r6urLUhUddkFA8F1g+Y6MZ6LYzNVPQKNUdc62bCqGXALe+tEuJdy6U6nHFQ1VTs
-         pd9A/smgMPI5kbQN+yqEnGZNPKCbNRwE4VhlqdS4p01McAPr9GKRJDIzQjVNyphai7am
-         M+pt/qh8ja70rWDWaq5xcHGdzPkZEr0JVoVeIN0FLdIf+5vnAZEi/TDzF6dIxj4puvKU
-         V1rw==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=J5aXxabjxfpWWlF7moDeWgXun9KipdKjdh653edP+wY=;
+        b=WVJzZFiasqQsL93GmfCg1LMSzZynGzjL6nLBKBch8MCPxE/vZbcWzEKPplRdLZuZef
+         tC8cZ7ReuYDUv8SML89PD0SU1A4UYkA56Mz+O9+jZ/JCdX+udiZ24i4y+IY7uhuQ+Mqm
+         yx6fIC6Iq+dYnTqdS5MlnSHELHhuSSZEPt8sOJyiHxsxXsElpkSq9qFuvBNUK1Jz2CVa
+         rdjHKLDz5s+BbpCpLmwLaN35+ZsvfyOsSZoV4Josk94m7w0UoSlcU1EoLUtNl8+VJM+5
+         iBsmT+wflZyzZpADjtYKUNfqVGvhnkZLuXeS38pnBWa+sEwv1/viiFoM9fIFoTfryQDr
+         HlpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:reply-to:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RAIQbbxtK2nJ1NbUghrZ93yJMEm2LyReQuktQwQ+yXw=;
-        b=6pMxIO7DqVC7hX9P8Omp9a7Ttj2oAh2A3v8/l2kcpb9I6AdUIeKOx4a3nAIB93xU7n
-         uqfVObf5k0zJrAqmVyEOe99K0MJMUWkvsdP0m5Y6g4LjHv5Op6jmJzggKJRhBHSdAaEZ
-         k4H8GOIgE1aImF4vEb9pE4N/k67QUXunyjz3vzORLQLHU5QHvb28XXp7nJFx5hepGnit
-         oYd/melF6C1cxeLlzTlgC+TWU5zeAqvvgslLrB7n/GcPJDMdNONiTiWfBp6XlnfNiBW3
-         BHUGB8Q8EcVw6Hrv/pXeP5YS8IjSZplVf2tbjD5u0MSy3fjYVPmBGj4nqBqthKer7n4N
-         17wQ==
-X-Gm-Message-State: ANoB5pniSo8APxRcWPLZp2E4uZwt12YGUxJuB5drNtHzECAKQphaCptf
-        H1n0/anl0g13KgOg/+fIz8CZoA==
-X-Google-Smtp-Source: AA0mqf54lvafHdVKKM2CGBzb3Ly91fbeS37TZTU/o75hgaix+kcG2rGxchFiaWC/vEjl7eP4KzxYJQ==
-X-Received: by 2002:a05:6000:1d92:b0:241:6e0a:bfe6 with SMTP id bk18-20020a0560001d9200b002416e0abfe6mr31726074wrb.34.1669881828568;
-        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:bec0:73a:70e1:228f? ([2a01:e0a:982:cbb0:bec0:73a:70e1:228f])
-        by smtp.gmail.com with ESMTPSA id az39-20020a05600c602700b003cf78aafdd7sm4517313wmb.39.2022.12.01.00.03.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Dec 2022 00:03:48 -0800 (PST)
-Message-ID: <b19c4956-3f92-f6be-7d61-9b826e5d6fe1@linaro.org>
-Date:   Thu, 1 Dec 2022 09:03:45 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=J5aXxabjxfpWWlF7moDeWgXun9KipdKjdh653edP+wY=;
+        b=NRdlRKkmGTE1A4VgmYss9o1annTxWKWek4pdMAzwgaPHD+gykmbo4HqH0xY/KssoJQ
+         cRttJFXDGg17cuFYyboQBQnDxt7CWY16YlZ4OpHOwdHHn8h59hZa8nmu7cuFRrTMUiSU
+         dzJVNnynauxZTCRUCNm9kA7Ea9K5iTkUwpfbuuqkGxRd1rJcb1/0zHnUFxQa+5lwRDyq
+         gqnHvWI1Cc6hLfKoEcAyXo8v3tYQ7ssqFAv709OFLLnE+cHJ4OKTfXvKeRJAcfqebxE1
+         G6Z19xb076avz2ZxL8Grk8PMsNfYBYA4GcdZghNMTmHIwttU72Q8+DYAQMvQ+X0Zwm+5
+         hpjg==
+X-Gm-Message-State: ANoB5plR8zh0eWec6Pxs+dVG94y8N5ZQHScMm2g1xIlSXFa4CMmZL++Y
+        QR2pSZx21h+nn1VZm4IknGGUmD4kGjPHXIIb+R6hmg==
+X-Google-Smtp-Source: AA0mqf5LcJUY/T96kCfKpA7qMC0ecoNbLScHEmFR1hoLPNoCB2aOobuBCr9PEwA+9JX5THmdiPe6PhvV9Z+iaIQfkS0=
+X-Received: by 2002:a1f:54c1:0:b0:3b7:65cc:8ebc with SMTP id
+ i184-20020a1f54c1000000b003b765cc8ebcmr32153127vkb.5.1669883359437; Thu, 01
+ Dec 2022 00:29:19 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error
- code
-Content-Language: en-US
-To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
+References: <20221130124231.1054001-1-brgl@bgdev.pl> <20221130124231.1054001-8-brgl@bgdev.pl>
+ <Y4djKAW2Y1RQb98Z@smile.fi.intel.com> <CAMRc=MfUo2dq6qCiP4q0K0W2b=fBWdb9Jo3b6b=u9DQDQNArDw@mail.gmail.com>
+ <20221201022012.cc24ljwdmu6zuuak@vireshk-i7>
+In-Reply-To: <20221201022012.cc24ljwdmu6zuuak@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 1 Dec 2022 09:29:08 +0100
+Message-ID: <CAMRc=MfNK9u87Q17cjbpRcF3Y0Wxnka7mhPWVBV=crrvgppBCA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 07/11] bindings: rust: make reuse happy
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Douglas Anderson <dianders@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Satya Priya <quic_c_skakit@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Organization: Linaro Developer Services
-In-Reply-To: <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 30/11/2022 16:21, Uwe Kleine-König wrote:
-> .get_state() might fail in some cases. To make it possible that a driver
-> signals such a failure change the prototype of .get_state() to return an
-> error code.
-> 
-> This patch was created using coccinelle and the following semantic patch:
-> 
-> @p1@
-> identifier getstatefunc;
-> identifier driver;
-> @@
->   struct pwm_ops driver = {
->          ...,
->          .get_state = getstatefunc
->          ,...
->   };
-> 
-> @p2@
-> identifier p1.getstatefunc;
-> identifier chip, pwm, state;
-> @@
-> -void
-> +int
->   getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct pwm_state *state)
->   {
->     ...
-> -  return;
-> +  return 0;
->     ...
->   }
-> 
-> plus the actual change of the prototype in include/linux/pwm.h (plus some
-> manual fixing of indentions and empty lines).
-> 
-> So for now all drivers return success unconditionally. They are adapted
-> in the following patches to make the changes easier reviewable.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> ---
->   drivers/gpio/gpio-mvebu.c             |  9 ++++++---
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
->   drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
->   drivers/pwm/pwm-atmel.c               |  6 ++++--
->   drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
->   drivers/pwm/pwm-crc.c                 | 10 ++++++----
->   drivers/pwm/pwm-cros-ec.c             |  8 +++++---
->   drivers/pwm/pwm-dwc.c                 |  6 ++++--
->   drivers/pwm/pwm-hibvt.c               |  6 ++++--
->   drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
->   drivers/pwm/pwm-imx27.c               |  8 +++++---
->   drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
->   drivers/pwm/pwm-iqs620a.c             |  6 ++++--
->   drivers/pwm/pwm-keembay.c             |  6 ++++--
->   drivers/pwm/pwm-lpss.c                |  6 ++++--
->   drivers/pwm/pwm-meson.c               |  8 +++++---
->   drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
->   drivers/pwm/pwm-pca9685.c             |  8 +++++---
->   drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
->   drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
->   drivers/pwm/pwm-sifive.c              |  6 ++++--
->   drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
->   drivers/pwm/pwm-sprd.c                |  8 +++++---
->   drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
->   drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
->   drivers/pwm/pwm-sunplus.c             |  6 ++++--
->   drivers/pwm/pwm-visconti.c            |  6 ++++--
->   drivers/pwm/pwm-xilinx.c              |  8 +++++---
->   include/linux/pwm.h                   |  4 ++--
->   29 files changed, 146 insertions(+), 89 deletions(-)
-> 
+On Thu, Dec 1, 2022 at 3:20 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 30-11-22, 17:20, Bartosz Golaszewski wrote:
+> > On Wed, Nov 30, 2022 at 3:05 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Wed, Nov 30, 2022 at 01:42:27PM +0100, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Add missing license text files and use the CC0-1.0 license for the
+> > > > rust-specific .gitignore file.
+> > >
+> > > ...
+> > >
+> > > > diff --git a/bindings/rust/.gitignore b/bindings/rust/.gitignore
+> > > > index 95054d9..6fe7bde 100644
+> > > > --- a/bindings/rust/.gitignore
+> > > > +++ b/bindings/rust/.gitignore
+> > > > @@ -1,4 +1,6 @@
+> > >
+> > > > -# Added by cargo
+> > >
+> > > Seems like automatically generated, which means that next time something comes
+> > > here may well screw up the below.
+> > >
+> >
+> > I think the comment refers to the *ignored* files *added* by cargo,
+> > not saying that .gitignore was added by cargo.
+>
+> Yes. Cargo, by itself, updated the root folder's .gitignore I think and I had to
+> copy/paste stuff here.
+>
 
-<snip>
+OMG cargo cares about the VCS of the project it builds? Good to know I guess.
 
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 57112f438c6d..16d79ca5d8f5 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -318,8 +318,8 @@ static unsigned int meson_pwm_cnt_to_ns(struct pwm_chip *chip,
->   	return cnt * fin_ns * (channel->pre_div + 1);
->   }
->   
-> -static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> -				struct pwm_state *state)
-> +static int meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			       struct pwm_state *state)
->   {
->   	struct meson_pwm *meson = to_meson_pwm(chip);
->   	struct meson_pwm_channel_data *channel_data;
-> @@ -327,7 +327,7 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->   	u32 value, tmp;
->   
->   	if (!state)
-> -		return;
-> +		return 0;
->   
->   	channel = &meson->channels[pwm->hwpwm];
->   	channel_data = &meson_pwm_per_channel_data[pwm->hwpwm];
-> @@ -357,6 +357,8 @@ static void meson_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->   		state->period = 0;
->   		state->duty_cycle = 0;
->   	}
-> +
-> +	return 0;
->   }
->   
->   static const struct pwm_ops meson_pwm_ops = {
-
-<snip>
-
-For pwm-meson:
-
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
-
+Bart
