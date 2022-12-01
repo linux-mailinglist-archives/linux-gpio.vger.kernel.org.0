@@ -2,92 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCA6B63F269
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 15:14:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 605D863F28C
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 15:17:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbiLAOOO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Dec 2022 09:14:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58018 "EHLO
+        id S231871AbiLAOR4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-gpio@lfdr.de>); Thu, 1 Dec 2022 09:17:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231414AbiLAOON (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 09:14:13 -0500
-Received: from mail-lf1-x131.google.com (mail-lf1-x131.google.com [IPv6:2a00:1450:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5C52AC1A1
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 06:14:09 -0800 (PST)
-Received: by mail-lf1-x131.google.com with SMTP id s8so2673462lfc.8
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 06:14:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=03vjQd7Kvpm2Il5S+crg2SRfXFsHiGIxeUvBAe5B0eE=;
-        b=reO/Wq4P5pT9rRVlRZzQ50yZpyMt03KawM5w6DT5GC7MECmMe5ELTQ0c2hN/O/EFIe
-         /irRtvaMbRn3fHzRFI5M/G47jCffnpGnWY55+9XENxTPN+mIdfaC0ezP7EkJ99EIX1zS
-         pXC4lvM7x2JlhqgYpgPQ5+T58/m7fNyL7YDahPlQCqkZupeFGDVykg77X/lb3MzYy7fy
-         Yb2DCw4W5xiwlWTY/YuBK/SDRj3jfPisKUv8BtSxQKx5cytE3a/rCNM8jEmrsh8zEooO
-         RgpFIGwJjEQzLUUHr0xkUgOWKo3aUancBGfPJMvSmccCf8PjknJXR+BcN3FmtVN776ZL
-         7/8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=03vjQd7Kvpm2Il5S+crg2SRfXFsHiGIxeUvBAe5B0eE=;
-        b=kDkuQTDcGasTwKDdqNyzNMe5MIJ+zEjxWZNuh6T/7PdhATtcdcUn3ly0if9gZHbgl9
-         JUWZRWsfUJJNfU+F9h+/eyiRlewzUMVxMQxNu8jgI7Ihczbnpo+LNB4r1GYeEawSnp+c
-         vc6EoKFf/DJqNRAZ0mekNlohA0+QDwL1wEFEIy/by0H1Z51reoaFBqlaaEsHlD2iWrRA
-         wUcBUgzibUN0ZxmrtB30K8fSIVjEs/v1g7PcGMmIAFdqz9prUT2ajL1XjGb0MVsVpqXD
-         L4rSVyrmBK9WyRRS6YK1LNf7BbhD2zhlSCb1Gwk6mQ3xDW538XaOv5fVxed+mF24kDjf
-         qdig==
-X-Gm-Message-State: ANoB5pmQx8vQtsL2ta3VMULxVDocxEeAYvyhw0EoV+WthJMC27MylgIY
-        bxc5NDE4wb7zgZlXnTD4w4snIKLmEUoEfr8LrFjq1A==
-X-Google-Smtp-Source: AA0mqf4mtkqHFM1auobpdA+4106PJm/e4eyouGzDlTHgHJmxdX7q9XFRSv3bn15E0o21TISdJHVtajVKQOzM1BDmyyc=
-X-Received: by 2002:a05:6512:3d14:b0:4aa:7eed:f70c with SMTP id
- d20-20020a0565123d1400b004aa7eedf70cmr17954804lfv.630.1669904048270; Thu, 01
- Dec 2022 06:14:08 -0800 (PST)
-MIME-Version: 1.0
-References: <20221201125928.3031325-1-brgl@bgdev.pl> <CAMRc=MfGi52s+LcTrBnBPDV91SbC4vf1prrLUpzQ_KZQQZGBuQ@mail.gmail.com>
- <Y4izMVZBhXGj1jbj@smile.fi.intel.com>
-In-Reply-To: <Y4izMVZBhXGj1jbj@smile.fi.intel.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 1 Dec 2022 15:13:55 +0100
-Message-ID: <CAMRc=MedXBgh+JnTL0qUOrhKJ+w0vcVZTk-k2TKJzdbk_TNtVQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Kent Gibson <warthog618@gmail.com>,
+        with ESMTP id S231873AbiLAORW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 09:17:22 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B5A5AAFCE3;
+        Thu,  1 Dec 2022 06:17:16 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F40CED1;
+        Thu,  1 Dec 2022 06:17:23 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0F8B3F73D;
+        Thu,  1 Dec 2022 06:17:09 -0800 (PST)
+Date:   Thu, 1 Dec 2022 14:17:07 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Satya Priya <quic_c_skakit@quicinc.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-riscv@lists.infradead.org, linux-leds@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        chrome-platform@lists.linux.dev,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Orson Zhai <orsonzhai@gmail.com>, linux-sunxi@lists.linux.dev,
+        linux-pwm@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Scott Branden <sbranden@broadcom.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Michael Walle <michael@walle.cc>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an
+ error code
+Message-ID: <20221201141707.28af0d1d@donnerap.cambridge.arm.com>
+In-Reply-To: <20221201131604.beq4l22d42tjy6dm@pengutronix.de>
+References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+        <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+        <20221201102252.52ace284@donnerap.cambridge.arm.com>
+        <20221201131604.beq4l22d42tjy6dm@pengutronix.de>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 1, 2022 at 2:59 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Thu, Dec 01, 2022 at 02:00:06PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Dec 1, 2022 at 1:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> ...
->
-> > I know Kent and Linus left their review tags already, I will add them
-> > when applying.
->
-> I guess it's good enough, go ahead with it.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+On Thu, 1 Dec 2022 14:16:04 +0100
+Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote:
 
-Can you leave your Reviewed-by here too?
+Hi Uwe,
 
-Bart
+> Hello Andre,
+> 
+> On Thu, Dec 01, 2022 at 10:22:52AM +0000, Andre Przywara wrote:
+> > Just one comment: I don't see a sunxi specific patch later in the series,
+> > though it seems we have at least one error error exit (see prescaler == 0
+> > above). Plus potentially another exit if clk_get_rate() (at the very
+> > beginning) fails.
+> > Shall I send a patch for that?  
+> 
+> That would we very welcome. I mentioned that shortly in the cover
+> letter, I wasn't entirely sure how to handle that prescaler = 0 case.
+
+Ah right, sorry, I missed that.
+So the Allwinner manual somehow marks those prescaler encodings as reserved
+or invalid (it's just a "/" in there), and we never set those values in the
+driver (there is an explicit check). So it could only be a leftover from
+firmware/bootloader, or someone poking at this register behind our back.
+I am tempted to just return some -EINVAL. As the current code stands, we
+don't manipulate any state flags before that check, so it doesn't
+really matter, but would be best practise, at least.
+
+Cheers,
+Andre
