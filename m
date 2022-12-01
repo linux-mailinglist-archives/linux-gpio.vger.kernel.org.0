@@ -2,173 +2,226 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D03EB63EF34
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 12:17:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C5E863EF65
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 12:23:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230496AbiLALRW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Dec 2022 06:17:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58358 "EHLO
+        id S230368AbiLALXm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Dec 2022 06:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231274AbiLALQu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 06:16:50 -0500
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC122B2B56;
-        Thu,  1 Dec 2022 03:12:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1669893141; x=1701429141;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=oqwp1prmygFipaS7+KydzauQtsm23Yws4T/2+sBogyI=;
-  b=v8G6tiH0dwPUW+p3XYtyTbv4LmVyKSzwGtkk1RtBOdAilgPS2Wy+VgJg
-   lpoywgE0PGMFQ0sIy2J4PlDpkk9wYmDxktF5KOGQ9FlpCvxmM8v89BVSS
-   nA/cgKVNF0yxuef2XOn/TyQpHAKLAqU0IQ1IF3/Hb2x7S1NIEvFx3diW0
-   5EFHKlbH0LVTk0EaGakRzXxYNzpYl7osHO9HhQFry9YEFCY/QXqAIotvW
-   Ag7l5Te+CbqBtd5j0i1FtkWIqGL754C+bvSM6BwcyoX95SpEAnACVwpsV
-   FBx0lLQCLu+BLGxGHyQvG+Ibo/I7Fp6niz9vd4YgILK8m0KqzVNFJZ3Cr
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="202161679"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 01 Dec 2022 04:12:19 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Thu, 1 Dec 2022 04:12:19 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Thu, 1 Dec 2022 04:12:10 -0700
-Date:   Thu, 1 Dec 2022 11:11:51 +0000
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
+        with ESMTP id S229717AbiLALXP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 06:23:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0CCD99F11
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 03:19:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669893540;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z/oQ1dp8pm6na7x2qMu5KCqO3dPrhF5h5HwNnQ1rRCE=;
+        b=K2W5n4XPemHcT0JrC/WoTXIxVGJmGAFf+giwtXpm51XbXVzn5PIO1xroV3KWGPk1yBOKen
+        JoGoKizsGjwCP4shEfDEeG2fS9Mz9khjgf5CJuHmDV+Op5AeAv2xtnLq1OtJihtyXBwdkk
+        IP7FlGySq6vOwjs/M1HUzhmJOM402hc=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-199-XInBnBS6OxGOES3pKFWpUA-1; Thu, 01 Dec 2022 06:18:57 -0500
+X-MC-Unique: XInBnBS6OxGOES3pKFWpUA-1
+Received: by mail-ej1-f70.google.com with SMTP id ne29-20020a1709077b9d00b007c0905baae1so1143364ejc.8
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 03:18:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/oQ1dp8pm6na7x2qMu5KCqO3dPrhF5h5HwNnQ1rRCE=;
+        b=N11S/dEC1d8H6uoJM8svRnYnKocTAaBHgw45YC5Mf1tG9BixiYqmJbYKBJsrmc5r3F
+         2ZDLGwNvYxVA3hYGqgIn1LGCQa/0Iy1qKa075ruKneJ7e29w7oVJ6MFsg5pq+ojSaB6/
+         RaejJg7KFCLnG5TKMv44FeSyKwGpVTl6cRH2ta70850O3afcTafs4ASV19KurDReMwSI
+         iDijrIiEnVD7sJSFaWrfl33nx/LnyAFFD/MS99hNmEhV57Kc2hTC8lRn/6IYmTmGS6UX
+         MhHfJrvD497ao53BtFIRLH7YBYl4A8jVZSF9IgZyQ7Y1KvxpluCq70o7I4fg8xF7XxeX
+         R0jQ==
+X-Gm-Message-State: ANoB5pkCh5Gt8Bm8vQfMQsvz+moiwjOcna8Nj+0Fc5cZa08TV56koiKV
+        QkL2WWrrj8oEaSdrWbnfN+EsuOI8cRHzJLkVFBG8oWaM5/6YKBpNqKD2SsEUZO7f6Zs0E3gP4qZ
+        r9FNTEQgeDI7D3z1vV0nyAg==
+X-Received: by 2002:a05:6402:1103:b0:46a:779:4c6a with SMTP id u3-20020a056402110300b0046a07794c6amr38920930edv.201.1669893536375;
+        Thu, 01 Dec 2022 03:18:56 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf6c2vc5K+ZToGa38uefpAv8Oh7GdnueV57HtH+dNAkwQmO4405Upj0dcXYRwImA2NFqe5iu5w==
+X-Received: by 2002:a05:6402:1103:b0:46a:779:4c6a with SMTP id u3-20020a056402110300b0046a07794c6amr38920902edv.201.1669893536080;
+        Thu, 01 Dec 2022 03:18:56 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id l2-20020a056402124200b004615f7495e0sm1635425edw.8.2022.12.01.03.18.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 Dec 2022 03:18:55 -0800 (PST)
+Message-ID: <5ea0bc88-ccc4-4b67-c444-2b4df0084bd2@redhat.com>
+Date:   Thu, 1 Dec 2022 12:18:54 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
+ return in ->get() callback
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        "Douglas Anderson" <dianders@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        "Broadcom internal kernel review list" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        "NXP Linux Team" <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        "Jerome Brunet" <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Heiko Stuebner" <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        "Orson Zhai" <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Satya Priya <quic_c_skakit@quicinc.com>,
-        <linux-pwm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <chrome-platform@lists.linux.dev>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-rpi-kernel@lists.infradead.org>,
-        <linux-rockchip@lists.infradead.org>,
-        <linux-riscv@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-sunxi@lists.linux.dev>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>
-Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <Y4iL9xf5bJM5pyeR@wendy>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Jonathan Corbet <corbet@lwn.net>
+References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
+ <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
+ <8a53e88b-1e74-bf34-62a1-780a1b29bcbc@redhat.com>
+ <Y4eC6W/wstJFLrEr@smile.fi.intel.com>
+Content-Language: en-US, nl
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <Y4eC6W/wstJFLrEr@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hey Uwe!
+Hi,
 
-On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-König wrote:
-> Hello,
+On 11/30/22 17:20, Andy Shevchenko wrote:
+> On Wed, Nov 30, 2022 at 05:12:13PM +0100, Hans de Goede wrote:
+>> On 11/30/22 16:55, Andy Shevchenko wrote:
+>>> The ->get() callback depending on other settings and hardware support
+>>> may return different values, while the line outside the chip is kept
+>>> in the same state. Let's discuss that in the documentation.
 > 
-> I forgot about this series and was remembered when I talked to Conor
-> Dooley about how .get_state() should behave in an error case.
-
-In the context of "my" driver, get_state() the proposal was to fail with
--ETIMEDOUT rather than block a caller, potentially, for seconds or
-report a potentially "random" state.
-
-Specifically, values writen to the registers that control the PWM duty
-cycle are not visible to the cpu until the changes have propagated to
-the waveform at the start of a new period.
-The timeout would occur if the bit that signifies that the "shadow
-registers" contain a value which has not yet propagated. This bit is
-per PWM "controller" and not per PWM channel.
-
-Returning from apply() without waiting, possibly for seconds, for the
-writes to become visible could cause get_state() to see anything between
-the new and old states, inclusive!
-
-If anyone cares at all, the discussion is here:
-https://lore.kernel.org/linux-pwm/20221110093512.333881-1-conor.dooley@microchip.com/T/#m800eeabad29067940a5684e54106fd0bb7261944
-
-> In v1 Thierry had the concern:
+> ...
 > 
-> | That raises the question about what to do in these cases. If we return
-> | an error, that could potentially throw off consumers. So perhaps the
-> | closest would be to return a disabled PWM?
-> | Or perhaps it'd be up to the
-> | consumer to provide some fallback configuration for invalidly configured
-> | or unconfigured PWMs.
+>>> +Considerations of the ->get() returned value
+>>> +--------------------------------------------
+>>> +
+>>> +Due to different possible electrical configurations and software applications
+>>> +the value that ->get() callback returns may vary depending on the other settings.
+>>> +This will allow to use pins in the I2C emulation mode or other not so standard
+>>> +uses.
+>>> +
+>>> +The below table gathered the most used cases.
+>>> +
+>>> +==========  ==========  ===============  =======================
+>>> +  Input       Output         State        What value to return?
+>>> +==========  ==========  ===============  =======================
+>>> + Disabled    Disabled    Hi-Z             input buffer
+>>> + Disabled    OS/OD/etc   Single ended     [cached] output buffer
+>>
+>> You need to clarify what single-ended means here. You mean a pin
+>> which is only capable of output I guess ?  So now way to figure
+>> out if another participant in the OS/OD bus has its transistor
+>> in the "on" state this pulling the bus high / low agains the bias
+>> resistor(s) which determine the state of the bus in rest ?
+>>
+>> Or you mean that the bus is uni-directional, even then being
+>> able to detect a short-circuit is useful.
 > 
-> .get_state() is only called in pwm_device_request on a pwm_state that a
-> consumer might see. Before my series a consumer might have seen a
-> partial modified pwm_state (because .get_state() might have modified
-> .period, then stumbled and returned silently). The last patch ensures
-> that this partial modification isn't given out to the consumer. Instead
-> they now see the same as if .get_state wasn't implemented at all.
+> It's described in the previous chapter(s).
+> 
+>>> +    x        Push-Pull   Out              [cached] output buffer
+>>
+>> Why, most GPIO drivers are protected against short-circuit to
+>> GND / Vdd and actually reading the input-buffer here will allow
+>> GPIO API consumers to detect such short-circuits if they are
+>> interested in this.  This would e.g. be useful to detect
+>> mis-wiring on devices like the Raspberry Pi were users often
+>> connect extra peripherals through breadboards.
+> 
+> I think it is nonsense from electronics point of view.
+> 
+>> IMHO for pins with an input buffer get() should simply
+>> always return the contents of the input buffer. This is what
+>> I believe almost all GPIO drivers currently do and also
+>> keeps the get() methods KISS.
+> 
+> As you can see, I disagree on this.
+> 
+>> Actually implementing the behavior you suggest here requires
+>> the get() method to differentiate between push-pull and
+>> other mode. This makes the get() method implementation
+>> needlessly complicated and will likely be a source of bugs
+>> as people will get this wrong in some cases and people
+>> will very likely not test all possible combinations from
+>> this big table you are adding here.
+> 
+> People already are getting wrong this and here is no documentation
+> on what to do to get it right.
+> 
+>> IHMO the rules for get() should simply be:
+>>
+>> 1. Device has an input buffer:
+>>    Return input-buffer value for the pin.
+> 
+> I disagree on this. It makes no sense to read real hw wire state when output
+> is enabled. If somebody does a short circuit, it's not a Linux issue and
+> should be recognized on the PCB side (using oscilloscope, multi-meter, etc).
 
-Getting the same thing as if get_state() did not exist seems
-preferable to me in this context than "lying" and pretending that a PWM
-is disabled or potentially inconsistent reports from get_state() that I
-mentioned above.
+What is the disadvantage of reading the real hw wire state ? 
 
-TL;DR, I quite like the ability to return an error and not mislead the
-caller.
+The list of advantages / disadvantages I can come up with GPIO
+controllers which always allow access to the input buffers is:
 
-Thanks for sending a v2 of this so quickly :)
-Conor.
+Disadvantanges of having get() always return the input-buffer
+
+1. It is slower then returning the last output value cached on
+   the kernel side. But this too wil complicate the driver
+   code, since this requires populating the cache at boot
+   (or relying on regmap caching)
+
+Advantages of having get() always return the input-buffer:
+
+1. It leads to a very simple / KISS get() implementation
+2. One has to wonder why a GPIO API consumer puts a pin
+   in push/pull output mode and then calls get() anyways ?
+   This is an unlikely scenario (making disadvantage 1.
+   not a problem) and in the unlikely case that an API
+   consumer does this they likely want the real hw wire state.
+
+I guess the reason why you want to return a cached output value
+is because not all GPIO controllers allow access to the input
+buffer when in output mode ? At least that is the only good reason
+I can come up with ?
+
+Specifically there are GPIO controllers which have a single data
+register for the GPIOs rather then separate data in + data out
+registers.  Even then chances are that a read from the data
+register *always* goes to the input-buffer rather then reading
+the last written value when in output mode. This is likely since
+simply always latching the data from the input-buffer on a read
+from a shared in/out data register is easier to implement in hw.
+
+So thinking more about this, I believe that the answer what
+to return on a get() from a GPIO configured as push/pull output
+is implementation dependent. For GPIO chips with a shared in/out
+data register it is the value of that register, which may be
+a cached output value or the input-buffer value and for GPIO
+chips with a separate register to read the input-buffer it
+should simply always be the input buffer.
+
+Regards,
+
+Hans
+
+
+
+
+
+> 
+>> 2. Devices does not have an input buffer:
+>>    Return last set output-buffer value
+> 
+>>> + Enabled     Disabled    In               input buffer
+>>> + Enabled     OS/OD/etc   Bidirectional    input buffer
+>>> +==========  ==========  ===============  =======================
+>>> +
+>>> +The [cached] here is used in a broader sense: either pure software cache, or
+>>> +read back value from the GPIO output buffer (not all hardware support that).
+> 
 
