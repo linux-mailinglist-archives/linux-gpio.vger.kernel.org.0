@@ -2,202 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE09B63F02A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 13:08:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8347863F037
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 13:12:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiLAMIg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Dec 2022 07:08:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
+        id S231210AbiLAMM4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Dec 2022 07:12:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbiLAMIf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 07:08:35 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B92485673;
-        Thu,  1 Dec 2022 04:08:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1669896514; x=1701432514;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v8Awrxaj1ue8HHnJerJK41Na9ZZisQbb0WsAzLQjuhc=;
-  b=c9WzpMgwmBsNd/modFAdE+NvU+A/O8741e83dv40DyMD5n2zwZAvowqZ
-   VbSZLyfF7r1hCwien05Iv5LgQG07x42NGLSlsvM4LJwYfEJE5S3Rr2KqJ
-   T5DgDHPAe5haGEC+Audlc2jTnxjcHuyOCn0qEQG2ZiRUbJjFXddtwoz6X
-   rT8ke16sMw4n6wYvWaWDmDLIfueH65Tc+ODy9+ra1YA9MaBpr1Ar4myX+
-   rgWlQwle5pmgg7Em9rfyleTd2tIxFi8O9PYrbZZ6UFFUAKnDwzSs7S+vv
-   s46uSWQDBO8cnikxPYzB4IeRas0I5Uk2BTC83PU1SmA1MbSGA7chJ9XEX
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="314366862"
-X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="314366862"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2022 04:07:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10547"; a="675415280"
-X-IronPort-AV: E=Sophos;i="5.96,209,1665471600"; 
-   d="scan'208";a="675415280"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 01 Dec 2022 04:07:17 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p0iLT-002m5J-2D;
-        Thu, 01 Dec 2022 14:07:15 +0200
-Date:   Thu, 1 Dec 2022 14:07:15 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
+        with ESMTP id S230309AbiLAMMz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 07:12:55 -0500
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 560E616596
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 04:12:53 -0800 (PST)
+Received: by mail-vk1-xa30.google.com with SMTP id u9so736622vkk.4
+        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 04:12:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/Rol9bw83CkoxtGyUtiilh1SIXA2LJM2CJhcjmTXNIc=;
+        b=Q4OggyrX/Axw7OOOfmOPW/vOxf6sfnNI5XbAA4CsmLVIKEbfgjRYX1gXeHtJ2Ie+qg
+         tlwtbvq1vU78J7LdRSHj516WssI/PwNauH1jWRNmxFE3ZLPNCqsx44QZWbbo+yQ2GzXZ
+         k6rt9CEyXl6A0WoNoZ/XgYWKzOwEnKB/OxLCjF5nV/H4FeuaU3VXqRzfZhQ2mpQXwDBJ
+         7uV9t88RRlDpvllrcL4Je6Mh/fWSnjMS/GWgFEQRAMS3LOIxcF4/hYClmBPj2vAj6cZn
+         eJn2FOk1Tcu+LiKR/h42Ih2f5+X8WnjnsJ7ICJMOGkZG1lBMpklcyRjLNlHPKVC7KiKv
+         B7WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/Rol9bw83CkoxtGyUtiilh1SIXA2LJM2CJhcjmTXNIc=;
+        b=72jy5UY0MpDnWNFMfbhSTeNqNOcjptZxWxFp3Q5YehlJr5/+vFYFWgmI3s85iwVnaH
+         S2m+UuKkHThAPVcWwiU0sAeKmGyAYBqg5gwtJflpi3/r8vgbmSXDz9YkGe6z0atj/X5j
+         rFe6Ir8Uxs5aIIKKBG7MxgoZQMKysDjJf67e1/LIEmwSiyooRIo+gk3Asq2bY8JwHTQN
+         L3xvhYxDrcHO0QOlJgaobS2LBade4ZLPu+Pp4Y+ILOSQuZA1T5bJwKoZqunKY995py4Z
+         WmHS+CepTUFP5I7fNRpr1cGrTCrvdNcQ72FYu0tNzypZ+2UifLO6AwUzwyYn+ll8pdWA
+         x9rg==
+X-Gm-Message-State: ANoB5pmJeoKy0nPyUqgJ3oF/K+OMCEAHZPtCJHhkkjLVGKDb4E5vPhRC
+        41D55qlZN8h+xkXXIFRJDqw08h+z0ifd0rdX0mYLUQ==
+X-Google-Smtp-Source: AA0mqf4aZT6ISsIpwleKcNpxXXjGDZ3wBaomcxNFq0Xzu5mVS5wCQ79yzbKUP//rlifMsvqTc/DuU/saIQUN7yMBl1Y=
+X-Received: by 2002:ac5:c915:0:b0:3b8:7fbd:9554 with SMTP id
+ t21-20020ac5c915000000b003b87fbd9554mr27692649vkl.27.1669896772309; Thu, 01
+ Dec 2022 04:12:52 -0800 (PST)
+MIME-Version: 1.0
+References: <20221201083335.819190-1-brgl@bgdev.pl> <20221201083335.819190-3-brgl@bgdev.pl>
+ <Y4iXoC+AE6AH5ze4@smile.fi.intel.com>
+In-Reply-To: <Y4iXoC+AE6AH5ze4@smile.fi.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 1 Dec 2022 13:12:41 +0100
+Message-ID: <CAMRc=McBPpLx4Gac-uR1S9-kQBE=AVLbFfWSrTWN6RNXwvaTRw@mail.gmail.com>
+Subject: Re: [PATCH v5 2/2] gpiolib: protect the GPIO device against being
+ dropped while in use by user-space
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v5 1/2] gpiolib: cdev: fix NULL-pointer dereferences
-Message-ID: <Y4iY8wFBhMh7paXT@smile.fi.intel.com>
-References: <20221201083335.819190-1-brgl@bgdev.pl>
- <20221201083335.819190-2-brgl@bgdev.pl>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221201083335.819190-2-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 01, 2022 at 09:33:34AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> There are several places where we can crash the kernel by requesting
-> lines, unbinding the GPIO device, then calling any of the system calls
-> relevant to the GPIO character device's annonymous file descriptors:
-> ioctl(), read(), poll().
-> 
-> While I observed it with the GPIO simulator, it will also happen for any
-> of the GPIO devices that can be hot-unplugged - for instance any HID GPIO
-> expander (e.g. CP2112).
-> 
-> This affects both v1 and v2 uAPI.
-> 
-> This fixes it partially by checking if gdev->chip is not NULL but it
-> doesn't entirely remedy the situation as we still have a race condition
-> in which another thread can remove the device after the check.
-> 
-> Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
-> Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
-> Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-> Fixes: a54756cb24ea ("gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL")
-> Fixes: 7b8e00d98168 ("gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 0cb6b468f364..911d91668903 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -201,6 +201,9 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
->  	unsigned int i;
->  	int ret;
->  
-> +	if (!lh->gdev->chip)
-> +		return -ENODEV;
-> +
->  	switch (cmd) {
->  	case GPIOHANDLE_GET_LINE_VALUES_IOCTL:
->  		/* NOTE: It's okay to read values of output lines */
-> @@ -1384,6 +1387,9 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
->  	struct linereq *lr = file->private_data;
->  	void __user *ip = (void __user *)arg;
->  
-> +	if (!lr->gdev->chip)
-> +		return -ENODEV;
-> +
->  	switch (cmd) {
->  	case GPIO_V2_LINE_GET_VALUES_IOCTL:
->  		return linereq_get_values(lr, ip);
-> @@ -1410,6 +1416,9 @@ static __poll_t linereq_poll(struct file *file,
->  	struct linereq *lr = file->private_data;
->  	__poll_t events = 0;
->  
-> +	if (!lr->gdev->chip)
-> +		return 0;
+On Thu, Dec 1, 2022 at 1:01 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Dec 01, 2022 at 09:33:35AM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > While any of the GPIO cdev syscalls is in progress, the kernel can call
+> > gpiochip_remove() (for instance, when a USB GPIO expander is disconnected)
+> > which will set gdev->chip to NULL after which any subsequent access will
+> > cause a crash.
+> >
+> > To avoid that: use an RW-semaphore in which the syscalls take it for
+> > reading (so that we don't needlessly prohibit the user-space from calling
+> > syscalls simultaneously) while gpiochip_remove() takes it for writing so
+> > that it can only happen once all syscalls return.
+> >
+> > Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
+> > Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and GPIO_V2_LINE_GET_VALUES_IOCTL")
+> > Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL and GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
+> > Fixes: a54756cb24ea ("gpiolib: cdev: support GPIO_V2_LINE_SET_CONFIG_IOCTL")
+> > Fixes: 7b8e00d98168 ("gpiolib: cdev: support GPIO_V2_LINE_SET_VALUES_IOCTL")
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > Reviewed-by: Kent Gibson <warthog618@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 166 +++++++++++++++++++++++++++++++-----
+> >  drivers/gpio/gpiolib.c      |   4 +
+> >  drivers/gpio/gpiolib.h      |   5 ++
+> >  3 files changed, 153 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index 911d91668903..18c5e70ee7de 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -84,6 +84,53 @@ struct linehandle_state {
+> >       GPIOHANDLE_REQUEST_OPEN_DRAIN | \
+> >       GPIOHANDLE_REQUEST_OPEN_SOURCE)
+> >
+> > +typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
+> > +typedef long (*ioctl_fn)(struct file *, unsigned int, unsigned long);
+> > +typedef ssize_t (*read_fn)(struct file *, char __user *,
+> > +                        size_t count, loff_t *);
+> > +
+> > +static __poll_t call_poll_locked(struct file *file,
+> > +                              struct poll_table_struct *wait,
+> > +                              struct gpio_device *gdev, poll_fn func)
+> > +{
+> > +     __poll_t ret;
+> > +
+> > +     if (!down_read_trylock(&gdev->sem))
+>
+> > +             return 0;
+>
+> EPOLLHUP?
+>
 
-EPOLLHUP ?
+Or even EPOLLERR | EPOLLHUP.
 
->  	poll_wait(file, &lr->wait, wait);
->  
->  	if (!kfifo_is_empty_spinlocked_noirqsave(&lr->events,
-> @@ -1429,6 +1438,9 @@ static ssize_t linereq_read(struct file *file,
->  	ssize_t bytes_read = 0;
->  	int ret;
->  
-> +	if (!lr->gdev->chip)
-> +		return -ENODEV;
-> +
->  	if (count < sizeof(le))
->  		return -EINVAL;
->  
-> @@ -1716,6 +1728,9 @@ static __poll_t lineevent_poll(struct file *file,
->  	struct lineevent_state *le = file->private_data;
->  	__poll_t events = 0;
->  
-> +	if (!le->gdev->chip)
-> +		return 0;
-> +
->  	poll_wait(file, &le->wait, wait);
->  
->  	if (!kfifo_is_empty_spinlocked_noirqsave(&le->events, &le->wait.lock))
-> @@ -1740,6 +1755,9 @@ static ssize_t lineevent_read(struct file *file,
->  	ssize_t ge_size;
->  	int ret;
->  
-> +	if (!le->gdev->chip)
-> +		return -ENODEV;
-> +
->  	/*
->  	 * When compatible system call is being used the struct gpioevent_data,
->  	 * in case of at least ia32, has different size due to the alignment
-> @@ -1821,6 +1839,9 @@ static long lineevent_ioctl(struct file *file, unsigned int cmd,
->  	void __user *ip = (void __user *)arg;
->  	struct gpiohandle_data ghd;
->  
-> +	if (!le->gdev->chip)
-> +		return -ENODEV;
-> +
->  	/*
->  	 * We can get the value for an event line but not set it,
->  	 * because it is input by definition.
-> @@ -2407,6 +2428,9 @@ static __poll_t lineinfo_watch_poll(struct file *file,
->  	struct gpio_chardev_data *cdev = file->private_data;
->  	__poll_t events = 0;
->  
-> +	if (!cdev->gdev->chip)
-> +		return 0;
-> +
->  	poll_wait(file, &cdev->wait, pollt);
->  
->  	if (!kfifo_is_empty_spinlocked_noirqsave(&cdev->events,
-> @@ -2425,6 +2449,9 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
->  	int ret;
->  	size_t event_size;
->  
-> +	if (!cdev->gdev->chip)
-> +		return -ENODEV;
-> +
->  #ifndef CONFIG_GPIO_CDEV_V1
->  	event_size = sizeof(struct gpio_v2_line_info_changed);
->  	if (count < event_size)
-> -- 
-> 2.37.2
-> 
+Sorry in advance for the noise but I really want to get those fixes in
+this week, so I'll send a new iteration shortly.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
