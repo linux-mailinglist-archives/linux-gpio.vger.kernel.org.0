@@ -2,117 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71D4463F10B
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 14:00:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 332E863F162
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Dec 2022 14:16:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbiLANAr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 1 Dec 2022 08:00:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41002 "EHLO
+        id S231260AbiLANQr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 1 Dec 2022 08:16:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbiLANAW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 08:00:22 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FA49076E
-        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 05:00:20 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id d6so2356439lfs.10
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Dec 2022 05:00:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqSDmVNHy2Q/xp7vUIn4GRUx5KsEEXqp4VrjsuGNq4s=;
-        b=GWZ9/ieTuTI9IwJNdlzJl89iG/PxyDMcSExhXalcV/QL2salUZIyMHgVuMyAmujFIZ
-         7TfnWtYgTRSwaIPoU+q9Uzn++kd+ROyDzS/HPmfAF+Ihd4kezoYVGzxj+eHmjRf2vNFM
-         uA/pMvzS80Rr3DQf/FXdjzw13w5x35p5ON3Q7OBQq5Js8zWs7vxRMzFChOc/E4dfZ9Dq
-         kLN9UDZ7b8zMJcYkHc4ccIbyqI8G5pfbXGZLZkeaJHz/nqiCYg7qtP/RWKdGy2OmKUF5
-         T8n7FcIgOUAG1n7WEAKCv/5IDRxpK/aG6BgoHKiUpmTk19xLboFnAE7MkSNo9JLQDs/d
-         CVJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DqSDmVNHy2Q/xp7vUIn4GRUx5KsEEXqp4VrjsuGNq4s=;
-        b=em9UVI9reh5P61N85Z2oKD5Z34FysZoEjqy0VB25huCQwaBiftXEKp3qQxdTVn10vY
-         XSovm85RJbpHnYSaMwaoNIZkPksRn5346fWDPILuIoxuNBGHe6QgrpVV3Vlr56pyN/Bt
-         vsoKSX7q2m3+zUoSJhMDA+23/yHdeh/RXSL17vwQ7tdRaUXV53ss1koHhuz6sXeQd3n9
-         +nUm0ttiCYAAD7ak8bXwEXIlD/wBnQ2pi6q9uo7n6wUbSNOmUPXo1OBTW731NEOGpmha
-         a7oBpqfD2AL45lrNPf3kHqwsB7CI+/ZZq9LVvQY4PNuqciJ8vNIXB+GLgy8dSn8zqNyt
-         T+sg==
-X-Gm-Message-State: ANoB5pn6/3oLwSNI1PuJR1oQQXZQ3H7YQ9hG1D5zbDyvyfIum+52hhzy
-        TOYfcwDNy2zUefYaiR6f7qGPCDjfbESVrwZ2OIG3Og==
-X-Google-Smtp-Source: AA0mqf5R857XX+UFJqQpjaqhYKzw9X+9ySGbZ8XUm/uBjY0zMq+ynm/BGLtWKE9462T04BciuPaCEZBWWXNe5BC8k+0=
-X-Received: by 2002:a05:6512:3b88:b0:4a3:9533:f4c9 with SMTP id
- g8-20020a0565123b8800b004a39533f4c9mr17381527lfv.615.1669899618856; Thu, 01
- Dec 2022 05:00:18 -0800 (PST)
-MIME-Version: 1.0
-References: <20221201125928.3031325-1-brgl@bgdev.pl>
-In-Reply-To: <20221201125928.3031325-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Thu, 1 Dec 2022 14:00:06 +0100
-Message-ID: <CAMRc=MfGi52s+LcTrBnBPDV91SbC4vf1prrLUpzQ_KZQQZGBuQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-To:     Kent Gibson <warthog618@gmail.com>,
+        with ESMTP id S231341AbiLANQn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 1 Dec 2022 08:16:43 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49159A8943
+        for <linux-gpio@vger.kernel.org>; Thu,  1 Dec 2022 05:16:42 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0jQF-0005k0-SY; Thu, 01 Dec 2022 14:16:15 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0jQ4-001aku-EN; Thu, 01 Dec 2022 14:16:05 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p0jQ4-001nfp-Ga; Thu, 01 Dec 2022 14:16:04 +0100
+Date:   Thu, 1 Dec 2022 14:16:04 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        dri-devel@lists.freedesktop.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Satya Priya <quic_c_skakit@quicinc.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Guenter Roeck <groeck@chromium.org>,
+        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-riscv@lists.infradead.org, linux-leds@vger.kernel.org,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        chrome-platform@lists.linux.dev,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Samuel Holland <samuel@sholland.org>,
+        Sean Anderson <sean.anderson@seco.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Hammer Hsieh <hammerh0314@gmail.com>,
+        linux-rockchip@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Orson Zhai <orsonzhai@gmail.com>, linux-sunxi@lists.linux.dev,
+        linux-pwm@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Stephen Boyd <swboyd@chromium.org>, linux-gpio@vger.kernel.org,
+        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+        linux-mediatek@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-amlogic@lists.infradead.org,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Scott Branden <sbranden@broadcom.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Michael Walle <michael@walle.cc>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error
+ code
+Message-ID: <20221201131604.beq4l22d42tjy6dm@pengutronix.de>
+References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+ <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+ <20221201102252.52ace284@donnerap.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ohce74rjo6dhumlo"
+Content-Disposition: inline
+In-Reply-To: <20221201102252.52ace284@donnerap.cambridge.arm.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 1, 2022 at 1:59 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> This is (hopefully) the final iteration of the changes that aim at fixing
-> the situation in which the user-space can provoke a NULL-pointer derefence
-> in the kernel when a GPIO device that's in use by user-space is removed.
->
-> v5 -> v6:
-> - signal an error in poll callbacks instead of returning 0 which would make
->   the user-space assume a timeout occurred (which could lead to user-space
->   spinning a timeout loop forever)
->
-> v4 -> v5:
-> - try to acquire the semaphore for reading and bail out of syscall callbacks
->   immediately in case of lock contention
->
-> v3 -> v4:
-> - use function typedefs to make code cleaner
-> - add a blank line after down_write()
->
-> v2 -> v3:
-> - drop the helper variable in patch 1/2 as we won't be using it in 2/2
-> - refactor patch 2/2 to use locking wrappers around the syscall callbacks
->
-> v1 -> v2:
-> - add missing gdev->chip checks in patch 1/2
-> - add a second patch that protects the structures that can be accessed
->   by user-space calls against concurrent removal
->
-> Bartosz Golaszewski (2):
->   gpiolib: cdev: fix NULL-pointer dereferences
->   gpiolib: protect the GPIO device against being dropped while in use by
->     user-space
->
->  drivers/gpio/gpiolib-cdev.c | 193 ++++++++++++++++++++++++++++++++----
->  drivers/gpio/gpiolib.c      |   4 +
->  drivers/gpio/gpiolib.h      |   5 +
->  3 files changed, 180 insertions(+), 22 deletions(-)
->
-> --
-> 2.37.2
->
 
-I know Kent and Linus left their review tags already, I will add them
-when applying.
+--ohce74rjo6dhumlo
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bart
+Hello Andre,
+
+On Thu, Dec 01, 2022 at 10:22:52AM +0000, Andre Przywara wrote:
+> Just one comment: I don't see a sunxi specific patch later in the series,
+> though it seems we have at least one error error exit (see prescaler =3D=
+=3D 0
+> above). Plus potentially another exit if clk_get_rate() (at the very
+> beginning) fails.
+> Shall I send a patch for that?
+
+That would we very welcome. I mentioned that shortly in the cover
+letter, I wasn't entirely sure how to handle that prescaler =3D 0 case.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--ohce74rjo6dhumlo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOIqREACgkQwfwUeK3K
+7Anj8wf/RTNhxYSv59Ka1mlJPxXTgymtejOcjGY7Mbrq9aaYBt0Hmzz6T20Siom0
+QSRZvBBJxLeC6sMsbo0Fz9qdDLt4Y9eWczlHASjdcke40fNWNcUpjo7GqJ8hMfD9
+/aBk/LIrTHuSJDWkLiUxCXgg/mPhVdSfgltE3xCWRU/+rQxWvEnKjFCDDnQvwGlJ
+XDzUeAMWwhWAOAeq69ypA0qbVXlCnpA7rRbuNpgviLuXPg8B8sCx+fEPtsGCAwh1
+W/lWgOdahAH40o8lldqWf0S/1Bb95qmDKjx/yI1gsCQpycDwDEgQeueUPRTMz912
+rL27K8cypWE75vkt7PMvSDMIkNan0w==
+=aHcT
+-----END PGP SIGNATURE-----
+
+--ohce74rjo6dhumlo--
