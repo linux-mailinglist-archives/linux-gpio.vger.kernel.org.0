@@ -2,88 +2,151 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D23B6408BA
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 15:48:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B6B46408C0
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 15:50:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233183AbiLBOst (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Dec 2022 09:48:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
+        id S233499AbiLBOt6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Dec 2022 09:49:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbiLBOss (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 09:48:48 -0500
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B18BDFD8
-        for <linux-gpio@vger.kernel.org>; Fri,  2 Dec 2022 06:48:46 -0800 (PST)
-Received: by mail-ua1-x935.google.com with SMTP id e26so1734372uaa.7
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Dec 2022 06:48:46 -0800 (PST)
+        with ESMTP id S232265AbiLBOt5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 09:49:57 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33695D2D85
+        for <linux-gpio@vger.kernel.org>; Fri,  2 Dec 2022 06:49:56 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id 128so4803911vsz.12
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Dec 2022 06:49:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OuRJnTeKjq6r9MP1xf+PA8XGnVHD2Jj2xuTkOIE2tQk=;
-        b=twdZXXS67RdfArXAJw6kcz/cz8vYVZPOq3b130pTjReT9osmyrVEKuLFy2G5Mcx2md
-         5kQCBNSgUq4cFpRwMBGMEkdnOwyETrzp/0pNio0FwDRXo4Dhnv6QJE03oKH/dchUaS0/
-         PI80t3r2Msf1MKHzHjXGEbu46hie45f3xX6XqZdbnat5HOh0OnFk8cSKwxxI2AstrrI9
-         gF4/FXShFcdSDTmqqSz1jg69tU5E2JoeIO+jov3u29rOZSRT8BNq53jNgtLEFhJa/BCW
-         4CA1HMHaW1KAE20njaB2bp6wpVDTN+Iw7Sqkfg+Ha69NqEDz7aVFRBPyniLtJh6Xug23
-         kYtw==
+        bh=LwKp7YBF8+BNhNNgEh8PMnKC4MGb0f7CjXdYQAvgABM=;
+        b=Y/i8wa2FRUJ3n5zX6A0rW0Fa1iRkzphVQh1lE9PyreOEaWAIOwu7XfSllE9Bl2RWU8
+         zI8cC9cnfGFkr11DeUEFDzQz+BnAULAnOYWmimdcrRqvf08ttGis47jdgresU62iG5lE
+         GwIlJeCtvZ9t1RTyLJxrZd/ysIjS8NXsz4ntLZJi2woFtfYKhj5LWNtzPbQna4cGw+Zr
+         t3WMJ/3IwsKS5nrvnusMbqpK5yL5NqepJTA0/PicnKQByhdS9TbzK+QTVR/H0060LRIv
+         iu23wXJcgLAaNmgMM4JWjD5L4htmvvENMfS3ddgVtMeTJK+bOWgkMqamCP2TeK8yky7L
+         uwgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=OuRJnTeKjq6r9MP1xf+PA8XGnVHD2Jj2xuTkOIE2tQk=;
-        b=T8rvwhedCDq+02r8LiGnIbMr0bV8CQmsB27XuUhjYHz9zz8YWA7BuTg2zia63qeSGS
-         aSfCbYHgm1UeDYZTFU7CWjxc0Lk2eGBWhgDuA/nA0Q0mBaEvk2Uhy5B6l1eVSizzAD60
-         41gSyG0hU8ZkybtbIbxJx1fmfJOWho+5CKCdB3DEBUjJJuY/p0766sCquV4K36/2XvSO
-         qpUFBueECtynL3Up3hz8dd328kMCykdF5zYz2QbhMQZMnx75TVz9hEIkd7pNhkYfLlRU
-         NMaNUKIxZtYpdGPCL0wYRqHTlOfoov0V6h8mkdhV4F5y4KVK3ZUoXaUSo4joYf/wPY9+
-         PLFQ==
-X-Gm-Message-State: ANoB5pkTrCB1nmThwMdHU2WaacZVNh3qqkuGQzKbWpq4l3LYsM8PoKva
-        z8aKz4ZUdrVKiBrad3lg8sQokRm2t55iDdmrVZXB+g==
-X-Google-Smtp-Source: AA0mqf5UrkL+mO8lgA+r75PXKEDapjawSRlt4JOXRkCclgc78M/8JXJ/f8uZycm3gMKctvTYCo6b8W32UIk6+S2Z12I=
-X-Received: by 2002:ab0:734e:0:b0:419:18c7:58d with SMTP id
- k14-20020ab0734e000000b0041918c7058dmr16962245uap.119.1669992525433; Fri, 02
- Dec 2022 06:48:45 -0800 (PST)
+        bh=LwKp7YBF8+BNhNNgEh8PMnKC4MGb0f7CjXdYQAvgABM=;
+        b=xHwhkgqn+sjl81bJy5k5oVm+9azvGox7uXMhxuo5D603eodGtKXClIET9izOP2BFeH
+         ipfuHMfy8Z0KpeuEwUJEyOFcEiBijavQJg/PupcoRRJE+IsrSjwI/neU+0MqGgsmNHsv
+         HFoJrLJlzZmZw1rd+LlCQHXFZ2o0WGXJ6C8r/gE/xsgCwhsNH1BxWwA8SIROmSjPUonl
+         F+CBTSeI0GD8u6AqTmQMLRcb2b6t4pKRnsoyrmndA5tvZ+OMKoIz5wwMdDF1ReNOeTnR
+         ZRteu+mkSP5dtnNcNoc70CrvFW8gAYYDpLEYnfj5uysn2063rrmwDgcih/QKz+8XAsCg
+         F4Yg==
+X-Gm-Message-State: ANoB5pnSgwrOJ8dRnEGUY7ILYmvktwhic0hM/0ECBr3c8CTnQq9Zun0z
+        9ztcQJEPOBV5LxNO593WY8fdxJ5pA5r3D4g3fJbw/Ols0/ji9Q==
+X-Google-Smtp-Source: AA0mqf7pBeAdmidjj+BDq+93ELTbr4P4aLS8tDMFYNZUOs4gx/OA+MP6GJBmqIAGTIxGEAyqG1T2wxuipA3/1tfvNaA=
+X-Received: by 2002:a05:6102:722:b0:3b0:eec8:ce04 with SMTP id
+ u2-20020a056102072200b003b0eec8ce04mr5912547vsg.16.1669992595230; Fri, 02 Dec
+ 2022 06:49:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20221202140454.273333-1-vincent@systemli.org> <Y4oMCYksMaQ6KYwU@smile.fi.intel.com>
-In-Reply-To: <Y4oMCYksMaQ6KYwU@smile.fi.intel.com>
+References: <20221202095455.83356-1-brgl@bgdev.pl>
+In-Reply-To: <20221202095455.83356-1-brgl@bgdev.pl>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 2 Dec 2022 15:48:34 +0100
-Message-ID: <CAMRc=Mc2XtcbZPh5pic_uYiOuie0+5KdMO2hJav2HYGc_3ygfw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix compiling when CONFIG_GPIO_CDEV_V1 is not defined
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Nick Hainke <vincent@systemli.org>, linux-next@vger.kernel.org,
+Date:   Fri, 2 Dec 2022 15:49:44 +0100
+Message-ID: <CAMRc=MdqYiJ4JpWzN0ry5woH9XT5L2J2mMBRgW40XBh6nsfHmQ@mail.gmail.com>
+Subject: Re: [GIT PULL] gpio: fixes for v6.1-rc8
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 2, 2022 at 3:30 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Dec 2, 2022 at 10:54 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> On Fri, Dec 02, 2022 at 03:04:54PM +0100, Nick Hainke wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Thank you for the report!
+> Linus,
 >
-> I believe Bart needs to fold it into his patch / PR, because
-> it's not good to send a broken PR to Linus.
+> Here's the last round of fixes for the upcoming release. The two resource leak
+> fixes are self-explanatory. The two character device commits need some more
+> backstory:
 >
+> I recently listened to Laurent Pinchart's talk from this year's LPC[1] where he
+> discussed an issue with many subsystems that export device nodes to user-space
+> where one can open the device file, unbind the underlying device from the
+> driver, then call any of the relevant system calls and observe the kernel crash
+> with a NULL-pointer derefence.
+>
+> I verified that the problem exists with the GPIO subsystem as well. The reason
+> for that is: when a GPIO chip is removed, we drop the chip's data from the
+> GPIO device and set the relevant pointer to NULL but don't check it in syscall
+> callbacks in the character device's code. That's fixed by the first patch.
+>
+> However that fix alone leaves the character device vulnerable to a race
+> condition in which the GPIO chip is removed when a syscall is in progress.
+> To avoid that, we have a second fix that uses a lock to protect the device's
+> structure from being disabled before all syscall callbacks returned.
+>
+> Laurent blamed the issue on devres but I believe the problem comes from the
+> fact that many driver developers are simply unaware that resources exported
+> to user-space need to survive the driver unbind and only be released when the
+> device's reference count goes down to 0. Devres' docs are pretty clear on that:
+> the resources get freed on driver unbind. Resources that should survive it,
+> must not be managed. This is however a topic for a separate discussion which
+> I intend to start soon.
+>
+> Please pull,
+> Bartosz Golaszewski
+>
+> [1] https://www.youtube.com/watch?v=kW8LHWlJPTU
+>
+> The following changes since commit b7b275e60bcd5f89771e865a8239325f86d9927d:
+>
+>   Linux 6.1-rc7 (2022-11-27 13:31:48 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.1-rc8
+>
+> for you to fetch changes up to 98d8b93c617139aeaf745c1573c02d86830f25d1:
+>
+>   gpiolib: protect the GPIO device against being dropped while in use by user-space (2022-12-01 19:17:47 +0100)
+>
+> ----------------------------------------------------------------
+> gpio fixes for v6.1-rc8
+>
+> - fix a memory leak in gpiochip_setup_dev() in core gpiolib
+> - fix a reference leak in gpio-amd8111
+> - fix a problem with user-space being able to trigger a NULL-pointer
+>   dereference ovet the GPIO character device
+>
+> ----------------------------------------------------------------
+> Bartosz Golaszewski (2):
+>       gpiolib: cdev: fix NULL-pointer dereferences
+>       gpiolib: protect the GPIO device against being dropped while in use by user-space
+>
+> Xiongfeng Wang (1):
+>       gpio: amd8111: Fix PCI device reference count leak
+>
+> Zeng Heng (1):
+>       gpiolib: fix memory leak in gpiochip_setup_dev()
+>
+>  drivers/gpio/gpio-amd8111.c |   4 +
+>  drivers/gpio/gpiolib-cdev.c | 193 +++++++++++++++++++++++++++++++++++++++-----
+>  drivers/gpio/gpiolib.c      |  46 +++++++----
+>  drivers/gpio/gpiolib.h      |   5 ++
+>  4 files changed, 210 insertions(+), 38 deletions(-)
 
-Ah cr*p, I saw today's next build went fine, so I assumed the patch
-was good to go and sent the PR.
+Linus,
 
-Yeah, if Nick is fine with that, I'd like to squash it with the
-offending commit or we'll break bisectability.
-
-Thanks for the report.
+Please don't pull this just yet, there's a build issue that was
+reported to me with the last commit in that PR. I need to fix it and
+redo the PR.
 
 Bartosz
