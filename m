@@ -2,153 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B26C7640837
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 15:14:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D81364086F
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 15:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232784AbiLBOOm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Dec 2022 09:14:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47158 "EHLO
+        id S233441AbiLBOan (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Dec 2022 09:30:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233526AbiLBOOl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 09:14:41 -0500
-X-Greylist: delayed 495 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 02 Dec 2022 06:14:38 PST
-Received: from mail1.systemli.org (mail1.systemli.org [IPv6:2a11:7980:3::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB28D5856;
-        Fri,  2 Dec 2022 06:14:37 -0800 (PST)
-From:   Nick Hainke <vincent@systemli.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=systemli.org;
-        s=default; t=1669989978;
-        bh=OCDmhgTyLSlPbP6Fb/y2O3SRRjzGG9cASZpxCloAR/Q=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T7TUKpDz70v2AFSYhpEV346WKTBGdXd39XXHYLh5gm9OYs4BjOy8vtTVmKRFwI5K6
-         UWezPLCLaV4tDcW6ZyYXa39GSkswcx8iO0/N1gXOixipC5S6UeuU0ud877rfuvfd+k
-         jzFAO1narFdHRUQvQZ5Zyg1zXyz1muC4Rc1w27hup88PiWBpldQRSNdKh9xVdsNSre
-         zfufjLl0npPno0IwYMo3YXAyz4L430anX8YWKzF+g1b0sZWXGw1S2eNQp6J8sEmBqo
-         uIkSUVAIS05xTs6PdcN5WjaSUokOKKfTTErB+d6B46i9kz0qn9IyL0WgoGTQPnq+Yc
-         lMcbP+9eOoMeA==
-To:     vincent@systemli.org
+        with ESMTP id S233332AbiLBOam (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 09:30:42 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74CBBDB;
+        Fri,  2 Dec 2022 06:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1669991441; x=1701527441;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=nTnEijI8Fb2UVr0W+JyDLaLc4bx6bhIBKTbFLfhAcuI=;
+  b=l+nqzCxzUcqfCXJz8IPC1hml78Eexak2zIFD0UJIoNgtqEqeLmDNLxKN
+   +84EAHaJ/3NGFf6hTm/NYRoxmq/XlwP/EdubM3wICBbraVhHrLFg8og9D
+   ySVigk0sv45rhwnY6zaqSj8NOC6MfdqetOEyHaQwkIGAIR6EMuH+IABFu
+   OvNA0viKFiw8Z+f/OqSKw4r3f7j1v/iXaeFTaO6VgJ9UVCCZZ+z0EN/xy
+   mwU1PdZ2ED8Es/c+Tav1MH6WFrAonstJSes4c6n0WU+1IYWpT+L7IjXOV
+   tOkVC4rHtKQq0ZcjL5VHWPkAEdbFidgpFRu/M7ONkXmwxoKDHMdf++BYx
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="342900903"
+X-IronPort-AV: E=Sophos;i="5.96,212,1665471600"; 
+   d="scan'208";a="342900903"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 06:30:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10548"; a="819449631"
+X-IronPort-AV: E=Sophos;i="5.96,212,1665471600"; 
+   d="scan'208";a="819449631"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 02 Dec 2022 06:30:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p173h-003Vm8-2J;
+        Fri, 02 Dec 2022 16:30:33 +0200
+Date:   Fri, 2 Dec 2022 16:30:33 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Nick Hainke <vincent@systemli.org>
 Cc:     linux-next@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] gpiolib: fix compiling when CONFIG_GPIO_CDEV_V1 is not defined
-Date:   Fri,  2 Dec 2022 15:04:54 +0100
-Message-Id: <20221202140454.273333-1-vincent@systemli.org>
+        Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: fix compiling when CONFIG_GPIO_CDEV_V1 is not
+ defined
+Message-ID: <Y4oMCYksMaQ6KYwU@smile.fi.intel.com>
+References: <20221202140454.273333-1-vincent@systemli.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221202140454.273333-1-vincent@systemli.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-If CONFIG_GPIO_CDEV_V1 is not defined compiling will fail with:
+On Fri, Dec 02, 2022 at 03:04:54PM +0100, Nick Hainke wrote:
 
-drivers/gpio/gpiolib-cdev.c: In function 'linereq_ioctl':
-drivers/gpio/gpiolib-cdev.c:1468:16: error: implicit declaration of
- function 'call_ioctl_locked' [-Werror=implicit-function-declaration]
- 1468 |         return call_ioctl_locked(file, cmd, arg, lr->gdev,
-      |                ^~~~~~~~~~~~~~~~~
-drivers/gpio/gpiolib-cdev.c: In function 'linereq_poll':
-drivers/gpio/gpiolib-cdev.c:1503:16: error: implicit declaration of
- function 'call_poll_locked'; did you mean 'wake_up_all_locked'?
- [-Werror=implicit-function-declaration]
- 1503 |         return call_poll_locked(file, wait, lr->gdev,
-                                      linereq_poll_unlocked);
-      |                ^~~~~~~~~~~~~~~~
-      |                wake_up_all_locked
-drivers/gpio/gpiolib-cdev.c: In function 'linereq_read':
-drivers/gpio/gpiolib-cdev.c:1566:16: error: implicit declaration of
- function 'call_read_locked'; did you mean 'xa_head_locked'?
- [-Werror=implicit-function-declaration]
- 1566 |         return call_read_locked(file, buf, count, f_ps, lr->gdev,
-      |                ^~~~~~~~~~~~~~~~
-      |                xa_head_locked
+Thank you for the report!
 
-Move "call_poll_locked", "call_ioctl_locked", "call_read_locked" and
-the necessary typedefs "poll_fn", "ioctl_fn", "read_fn" in front of the
-ifdef-statement checking CONFIG_GPIO_CDEV_V1.
+I believe Bart needs to fold it into his patch / PR, because
+it's not good to send a broken PR to Linus.
 
-Fixes: 98d8b93c6171 ("gpiolib: protect the GPIO device against being dropped while in use by user-space")
+> If CONFIG_GPIO_CDEV_V1 is not defined compiling will fail with:
+> 
+> drivers/gpio/gpiolib-cdev.c: In function 'linereq_ioctl':
+> drivers/gpio/gpiolib-cdev.c:1468:16: error: implicit declaration of
+>  function 'call_ioctl_locked' [-Werror=implicit-function-declaration]
+>  1468 |         return call_ioctl_locked(file, cmd, arg, lr->gdev,
+>       |                ^~~~~~~~~~~~~~~~~
+> drivers/gpio/gpiolib-cdev.c: In function 'linereq_poll':
+> drivers/gpio/gpiolib-cdev.c:1503:16: error: implicit declaration of
+>  function 'call_poll_locked'; did you mean 'wake_up_all_locked'?
+>  [-Werror=implicit-function-declaration]
+>  1503 |         return call_poll_locked(file, wait, lr->gdev,
+>                                       linereq_poll_unlocked);
+>       |                ^~~~~~~~~~~~~~~~
+>       |                wake_up_all_locked
+> drivers/gpio/gpiolib-cdev.c: In function 'linereq_read':
+> drivers/gpio/gpiolib-cdev.c:1566:16: error: implicit declaration of
+>  function 'call_read_locked'; did you mean 'xa_head_locked'?
+>  [-Werror=implicit-function-declaration]
+>  1566 |         return call_read_locked(file, buf, count, f_ps, lr->gdev,
+>       |                ^~~~~~~~~~~~~~~~
+>       |                xa_head_locked
 
-Signed-off-by: Nick Hainke <vincent@systemli.org>
----
- drivers/gpio/gpiolib-cdev.c | 50 ++++++++++++++++++-------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+Above is a bit too noisy for the commit message. It can be trimmed 3x times.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e8079c1d2e1b..067e26a00775 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -61,31 +61,6 @@ static_assert(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
-  * GPIO line handle management
-  */
- 
--#ifdef CONFIG_GPIO_CDEV_V1
--/**
-- * struct linehandle_state - contains the state of a userspace handle
-- * @gdev: the GPIO device the handle pertains to
-- * @label: consumer label used to tag descriptors
-- * @descs: the GPIO descriptors held by this handle
-- * @num_descs: the number of descriptors held in the descs array
-- */
--struct linehandle_state {
--	struct gpio_device *gdev;
--	const char *label;
--	struct gpio_desc *descs[GPIOHANDLES_MAX];
--	u32 num_descs;
--};
--
--#define GPIOHANDLE_REQUEST_VALID_FLAGS \
--	(GPIOHANDLE_REQUEST_INPUT | \
--	GPIOHANDLE_REQUEST_OUTPUT | \
--	GPIOHANDLE_REQUEST_ACTIVE_LOW | \
--	GPIOHANDLE_REQUEST_BIAS_PULL_UP | \
--	GPIOHANDLE_REQUEST_BIAS_PULL_DOWN | \
--	GPIOHANDLE_REQUEST_BIAS_DISABLE | \
--	GPIOHANDLE_REQUEST_OPEN_DRAIN | \
--	GPIOHANDLE_REQUEST_OPEN_SOURCE)
--
- typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
- typedef long (*ioctl_fn)(struct file *, unsigned int, unsigned long);
- typedef ssize_t (*read_fn)(struct file *, char __user *,
-@@ -133,6 +108,31 @@ static ssize_t call_read_locked(struct file *file, char __user *buf,
- 	return ret;
- }
- 
-+#ifdef CONFIG_GPIO_CDEV_V1
-+/**
-+ * struct linehandle_state - contains the state of a userspace handle
-+ * @gdev: the GPIO device the handle pertains to
-+ * @label: consumer label used to tag descriptors
-+ * @descs: the GPIO descriptors held by this handle
-+ * @num_descs: the number of descriptors held in the descs array
-+ */
-+struct linehandle_state {
-+	struct gpio_device *gdev;
-+	const char *label;
-+	struct gpio_desc *descs[GPIOHANDLES_MAX];
-+	u32 num_descs;
-+};
-+
-+#define GPIOHANDLE_REQUEST_VALID_FLAGS \
-+	(GPIOHANDLE_REQUEST_INPUT | \
-+	GPIOHANDLE_REQUEST_OUTPUT | \
-+	GPIOHANDLE_REQUEST_ACTIVE_LOW | \
-+	GPIOHANDLE_REQUEST_BIAS_PULL_UP | \
-+	GPIOHANDLE_REQUEST_BIAS_PULL_DOWN | \
-+	GPIOHANDLE_REQUEST_BIAS_DISABLE | \
-+	GPIOHANDLE_REQUEST_OPEN_DRAIN | \
-+	GPIOHANDLE_REQUEST_OPEN_SOURCE)
-+
- static int linehandle_validate_flags(u32 flags)
- {
- 	/* Return an error if an unknown flag is set */
+> Move "call_poll_locked", "call_ioctl_locked", "call_read_locked" and
+> the necessary typedefs "poll_fn", "ioctl_fn", "read_fn" in front of the
+> ifdef-statement checking CONFIG_GPIO_CDEV_V1.
+
+> Fixes: 98d8b93c6171 ("gpiolib: protect the GPIO device against being dropped while in use by user-space")
+> 
+> Signed-off-by: Nick Hainke <vincent@systemli.org>
+
+Mustn't be blank line(s) in the tag block.
+
 -- 
-2.38.1
+With Best Regards,
+Andy Shevchenko
+
 
