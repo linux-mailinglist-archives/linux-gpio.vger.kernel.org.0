@@ -2,179 +2,346 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18CA2640EE0
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 21:08:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63229640F2F
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Dec 2022 21:28:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234232AbiLBUIc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 2 Dec 2022 15:08:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43496 "EHLO
+        id S234497AbiLBU2W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 2 Dec 2022 15:28:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiLBUIb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 15:08:31 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2043.outbound.protection.outlook.com [40.107.92.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3279E94922;
-        Fri,  2 Dec 2022 12:08:29 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oa9EuMK/EgYi01bOXqDVw9RRmjPcK7eS4z71XM1/9992scbm022RAZw4ruyvewyEcirazBD+Ntue8dn6foDSis2WswI/gLhwTJydrHrXWkMfF3OLt61thzwHaKJn2+h8WsAi2E5fVuIxju0RL60flndQgIo/oCcdXWv8HSswB+mm9TF9DDsYc6ToDyR9C2sPJZYC+/WLrnS8eL0sWFYrmE8NK0ITK8sNfVgOkn6of8cj/6eIZBc4O/cqHscz3EMM5M4f+piNVZtGcJJAOhBN2SMIRR9W8qDrx1s+oFl9vauCCgtk7+zp4GeS5hX6xd0PT+pniDJHTZJX533Y5tUWKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cl7S9wVVFdAAT6WPdM38C0d6oGTLObKoAQJQhti6iWw=;
- b=STYesy/wPJbZqdQEL/qUIeiM/OJXuZwa3q/AKJXcen8ZwDTd0JKik2B1UnK/dcXFgjWZUuqy8u6CXuZtA+urMZihJGP+dWEJTMofL7NwywQumyOUoAppksd7skb3ll4+3eCmTtnHc12p9gnVLwJrAOiG6o0i3+VSHUbhl2NyVCo5uBE6OeP+J2Dx3qmleugmaCa8GfhQGpb6LoN4/G/D+b9vYnPXRO6gbPDWBbR781TVumhhx1fMM1X4NH4kSVz8iQc97jNnG+UQPBM+shX2NltLdelpzWTkW8oa2dChq2qhXxnIc3dmCHD4nOf7D6J8hoVjee9ebE2s+gVMPbCnOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cl7S9wVVFdAAT6WPdM38C0d6oGTLObKoAQJQhti6iWw=;
- b=g8puoceeTtsdZxKa84FhJJn9J+u4kzjKMh6AVpP9WGtJeVc020uY0kCKr6vIWPPG+xxgkpK3uRS7TdEL+u659h/IDQn3f8ZFVukbfO5IUS1LbzuBIAno605qLeiYzDPeKy2Ts5ntood1bs7hRqu8bikDtSegfME4lWiQcaBnBz5MOhWm2BrVUmXWaj4/XpQwq9wgwfdriHjw7XWZcWVC7qtLIlZaK2UHVZAL+UN3gpfhU1fZwQsDnmti0nkK3akqMUZdCipH6bjbsazoYCSrXuFJmMn9RO7OXgWNWT6JCQS7Hep49VldLRALcNhI7gUgazqX/PYWMl0blm5sxU29NA==
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com (2603:10b6:610:2a::13)
- by DM4PR12MB6637.namprd12.prod.outlook.com (2603:10b6:8:bb::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5857.23; Fri, 2 Dec
- 2022 20:08:27 +0000
-Received: from CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::fd39:3377:9967:5b10]) by CH2PR12MB3895.namprd12.prod.outlook.com
- ([fe80::fd39:3377:9967:5b10%4]) with mapi id 15.20.5857.023; Fri, 2 Dec 2022
- 20:08:27 +0000
-From:   Asmaa Mnebhi <asmaa@nvidia.com>
-To:     Asmaa Mnebhi <asmaa@nvidia.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
-Subject: RE: [PATCH v1 0/2] Add NVIDIA BlueField-3 GPIO driver and pin
- controller
-Thread-Topic: [PATCH v1 0/2] Add NVIDIA BlueField-3 GPIO driver and pin
- controller
-Thread-Index: AQHY6WB/328y28TN9keN4WyugN82065bQNew
-Date:   Fri, 2 Dec 2022 20:08:27 +0000
-Message-ID: <CH2PR12MB389596CA10C6B487EA7A0B5BD7179@CH2PR12MB3895.namprd12.prod.outlook.com>
-References: <20221026172843.27236-1-asmaa@nvidia.com>
-In-Reply-To: <20221026172843.27236-1-asmaa@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH2PR12MB3895:EE_|DM4PR12MB6637:EE_
-x-ms-office365-filtering-correlation-id: fa852c84-633d-4e3b-5c4b-08dad4a0f975
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rFn3vLKU1iqXjDFiLI6FxkJygWCEVKHK28kXbEHzNmxnH7ftC1c8M5dYMmbkgBvaW4RdxmRKGDc+Rw7X+n94ShAEobnAIvug6dTcBnF2JDsK3Q0KQ0CpDVZkS/9oKAFqKpYEq8lGXW3zekbqfu8VUQl8L/CG2Edg5SbYsrNpbbNFBJ/EodCUoe6M++bduvuK8N+EnRXguywDY/uPdPhVJfaSkqdaNekJzvoZ6HlXz8trsEmFOPGwfvnO+R7Zz2ozFPUhlDe7HxztnWxuGot/cmXhP7FD3kUbXYNu9IKEDxrhutvTyDWhI6wNnYUS1Ju6Axg72A8Z1atW0+U317R0a1QsL+udy/0sNn3AM1xCS8kc8gpO/Ghv4pr5PqXbzeNkYsO5JvkJ6uWpYMPEIdD7WNFrsK8zr9e102UD5jsirIsbRBbv48MYyEzhHJJuJCfFk74gNSYUv3WoklzG957NHm77RxUVj1uKH0H/U6bp00NmOvINbOnNbXpnkIQtk42SFOYbE3YkBLgVhoUCFcXlMEpsPxAR5KH57mN+hnKXYNr2Wu4LWD9ZrtzN2bQOg+Q/yQCIgI+dlnD4wXKtATbz0G8sHVVVvkqw1ZyBN5KIBpuCFh3jC0qmJM9TZa02ijThwX29vfgpCRcn/32VcI9MywPfc5sPdkJGlGis3+uq6LAU2gjjiEUNAH1jXl9XKOcW4MkgK+4LpjzcbJQsk+1jig==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3895.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(136003)(366004)(376002)(396003)(346002)(451199015)(86362001)(55016003)(186003)(122000001)(38100700002)(83380400001)(8936002)(38070700005)(66446008)(7696005)(53546011)(26005)(52536014)(5660300002)(6506007)(9686003)(64756008)(8676002)(110136005)(66556008)(76116006)(66946007)(71200400001)(478600001)(2906002)(41300700001)(66476007)(316002)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?InO2hYT+5Gua9HLdzyDqBmBpsRN/5q51qBL64X6VfY53iOigZBEAPnwCYOZf?=
- =?us-ascii?Q?a9gWNNt5Obmi6T+6X1LOUDLkuyot037zo60FUA+7tZzTpC/IVs4JrRI4UZXU?=
- =?us-ascii?Q?E6DXLWy5xKzu1Lo4ng9ewHF3I5MgPOWQ8dCo+eRyb/PtFxqyni31HC7O9Ypb?=
- =?us-ascii?Q?mkUwPiG00EgK67UkzOcyeXXLreKR7mZ208jkE2VnsmTYslwkK1abjnGrQoHK?=
- =?us-ascii?Q?KnVV9l0G7JV7DcCI5mpnO8PqKKYWYjKPREsXjdC0dCJVOA92SAFJ0daXsISK?=
- =?us-ascii?Q?jubQT1TGmKv9AqqZkMLQqeknZ4ZNlYp2re/48i4cryJmrE87DLIkH+z0FieS?=
- =?us-ascii?Q?Vx8Ad9BElr8Qb0KrZAovDLRxw6zYTAunREozez6pLj72I8unoIFS5XFaBzJs?=
- =?us-ascii?Q?D4OuiC5wboEySYFeicsOOhdLe9cBA7brAGBz+3cH1Zqq2FY1bGcPSyyuMnXv?=
- =?us-ascii?Q?/24EDdT0WizRb0xU6rkNNKWtD73Hlk3sLTM2ikMKiVMpizQJz41iJbJpm0Do?=
- =?us-ascii?Q?VNgBhjFERuJdqYHqastYJmZXuH9qnIiBl5alwvLGDgfVzuekS8v6XnIkJwz7?=
- =?us-ascii?Q?aAO4J5R/kqPL8tgTYcFXNAk7VDb3XG6yEzAOTGmVWr5t2XlKgbUyaztACA5j?=
- =?us-ascii?Q?KZfJCJxRafNkmXyPv8KGKCGxs784NFHfjz/Aa+EaJU0hJXkulgJF7V9RWMOM?=
- =?us-ascii?Q?w8qUDpZX33sTYPKb1DfWNSjJ92TwKHll0hNoaVrxLLdtD+26rp+sj7EJZQmF?=
- =?us-ascii?Q?k+3yp7p0Z4fEbg+3PMESjeoh/JlR/LCuNZ/RkV76F56o8TDbz9+tbiUCxUbY?=
- =?us-ascii?Q?n48QwHbJtE9ejgYRB6PiZiGe+lU5+/On/YaSSjeb4hY3FbbafC034VERlyup?=
- =?us-ascii?Q?emEkEglyzRF0MNtqOM9Y1/kVhiY2VSwL+8eegYsxolDk0zFfFxmPIZe3ZgDN?=
- =?us-ascii?Q?Bm8puwiqX8XuUp12jX1zuhXsTiV9P6NkitVscN6t8qG8palWQDvH/Zz/iZvx?=
- =?us-ascii?Q?Mvkn6b0oxZN0a/R2YY36gtlJ+BKoe7aUQh6imA7oOej8c5Ve2Om4ioLkHWPX?=
- =?us-ascii?Q?RxGPeP5ZfwjVNhi25Yr+gYFcOsQydus9i3uvNWZaHeO5maFOqpoLmaCJe8Ku?=
- =?us-ascii?Q?kMef9Il5dpM4RCRzhR5UwMcSpbfnAaG3TR1GKLF0MQ/tEA4cN8h4i8V0PnSc?=
- =?us-ascii?Q?YcyWC4RT9BtIa00xZW3jDLY0ZgGUF+ZkBe3gRL4zowIU1kJrwmcC85zodNFF?=
- =?us-ascii?Q?UHlz+toD9kxnaYCi9tnAU9xFRwYjuaUvC0g2f4knGgOnBdolTE8+vEwQL41C?=
- =?us-ascii?Q?ptyHUOvBjYaHWiWEBEG+hI12OyQYWERBN7jqutd9HrnQCcq+7SgVPOTMLL6q?=
- =?us-ascii?Q?jXaE3Z7EvvT84GpJcozh7RyJRCuXJHj50/ykt0gZpyHUAE1Jx9bDkfR1kSBf?=
- =?us-ascii?Q?Fx0gxLcOJUCtE/BkbEXz1MuwYJUV2PnlQcZurJnXLxPntdKAyI8vdWjjLgUg?=
- =?us-ascii?Q?eQjIjSn2tnVd/fDlmdhHgqjnoqkw7KZUrMzWTPldDWOUObNQ1PYZgfR/Vh5d?=
- =?us-ascii?Q?AaNNXlkpy+LZ3sg+IsI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S234230AbiLBU2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 2 Dec 2022 15:28:21 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C041880E6;
+        Fri,  2 Dec 2022 12:28:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670012900; x=1701548900;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pTmM9irbiVTFt1TOj5d7Db3AR6HNGp9QjtL11O1jE0g=;
+  b=m8/vL528lFAgNlqAewn0wLAlm9lr1PtLxQFsdwx8qp+ubO/OLcJuW3Cs
+   mFKdFfhxExDN4W1hyUVsXRGT0x3f2HVb2rXQMUnr4qnB7u6rYbKTRwKmI
+   wh2d8LPsmVgMvYUiG8tP0ILMdSqQtKFmSC8rk25UXAdliaHjpVG+lk7DE
+   4qfb6ylgr+c4rZxbzXeOBMK/GY+mlMg7lf1+vWJjPvd+7jZ1iyrxsabFE
+   b/Nxswhv8rGwzn/8yiWRnJ5le8MjssTgvJvcdgXev+aQWJ0hFTOvY34mO
+   HN0Ytg0crpo7ZFE3qORS6IZTf76LDl7QGDm3H5n+c/TmmSkZ5ZA65xh90
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="343002454"
+X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
+   d="scan'208";a="343002454"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2022 12:28:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10549"; a="622821884"
+X-IronPort-AV: E=Sophos;i="5.96,213,1665471600"; 
+   d="scan'208";a="622821884"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP; 02 Dec 2022 12:28:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p1Cdg-003fVZ-0I;
+        Fri, 02 Dec 2022 22:28:04 +0200
+Date:   Fri, 2 Dec 2022 22:28:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     William Breathitt Gray <william.gray@linaro.org>
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        michael@walle.cc, broonie@kernel.org
+Subject: Re: [PATCH v4 6/9] gpio: i8255: Migrate to gpio-regmap API
+Message-ID: <Y4pf0+0ZtRQ9V4Nm@smile.fi.intel.com>
+References: <cover.1669996866.git.william.gray@linaro.org>
+ <cfad1695a50443ce88407d3472264036c52e6bd2.1669996867.git.william.gray@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3895.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa852c84-633d-4e3b-5c4b-08dad4a0f975
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Dec 2022 20:08:27.1264
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5xj+i/WCXdH1wwCQ40PMn1o/oMKQAM9eOznj5dVZ6twtCKAHelrozybMPuYGlUkUH8k5JqCyBbChk+q5LdE2mQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6637
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cfad1695a50443ce88407d3472264036c52e6bd2.1669996867.git.william.gray@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Fri, Dec 02, 2022 at 11:27:12AM -0500, William Breathitt Gray wrote:
+> The regmap API supports IO port accessors so we can take advantage of
+> regmap abstractions rather than handling access to the device registers
+> directly in the driver.
+> 
+> By leveraging the gpio-regmap API, the i8255 library is reduced to
+> simply a devm_i8255_regmap_register() function, a configuration
+> structure struct i8255_regmap_config, and a helper macro
+> i8255_volatile_regmap_range() provided to simplify volatile PPI register
+> hinting for the regmap.
+> 
+> Legacy functions and code will be removed once all consumers have
+> migrated to the new i8255 library interface.
 
-Could you please review this patch?
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks.
-Asmaa
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+> ---
+>  drivers/gpio/Kconfig      |   1 +
+>  drivers/gpio/gpio-i8255.c | 119 ++++++++++++++++++++++++++++++++++----
+>  drivers/gpio/gpio-i8255.h |  28 +++++++++
+>  3 files changed, 136 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index dd34039fc31b..88dfdc62992f 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -831,6 +831,7 @@ menu "Port-mapped I/O GPIO drivers"
+>  
+>  config GPIO_I8255
+>  	tristate
+> +	select GPIO_REGMAP
+>  	help
+>  	  Enables support for the i8255 interface library functions. The i8255
+>  	  interface library provides functions to facilitate communication with
+> diff --git a/drivers/gpio/gpio-i8255.c b/drivers/gpio/gpio-i8255.c
+> index 9b97db418df1..9ecb2e9b97f9 100644
+> --- a/drivers/gpio/gpio-i8255.c
+> +++ b/drivers/gpio/gpio-i8255.c
+> @@ -4,23 +4,31 @@
+>   * Copyright (C) 2022 William Breathitt Gray
+>   */
+>  #include <linux/bitmap.h>
+> +#include <linux/device.h>
+>  #include <linux/err.h>
+>  #include <linux/export.h>
+> +#include <linux/gpio/regmap.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/regmap.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/types.h>
+>  
+>  #include "gpio-i8255.h"
+>  
+> +#define I8255_NGPIO 24
+> +#define I8255_NGPIO_PER_REG 8
+>  #define I8255_CONTROL_PORTC_LOWER_DIRECTION BIT(0)
+>  #define I8255_CONTROL_PORTB_DIRECTION BIT(1)
+>  #define I8255_CONTROL_PORTC_UPPER_DIRECTION BIT(3)
+>  #define I8255_CONTROL_PORTA_DIRECTION BIT(4)
+>  #define I8255_CONTROL_MODE_SET BIT(7)
+> -#define I8255_PORTA 0
+> -#define I8255_PORTB 1
+> -#define I8255_PORTC 2
+> +#define I8255_PORTA 0x0
+> +#define I8255_PORTB 0x1
+> +#define I8255_PORTC 0x2
+> +#define I8255_CONTROL 0x3
+> +#define I8255_REG_DAT_BASE I8255_PORTA
+> +#define I8255_REG_DIR_IN_BASE I8255_CONTROL
+>  
+>  static int i8255_get_port(struct i8255 __iomem *const ppi,
+>  			  const unsigned long io_port, const unsigned long mask)
+> @@ -31,20 +39,19 @@ static int i8255_get_port(struct i8255 __iomem *const ppi,
+>  	return ioread8(&ppi[bank].port[ppi_port]) & mask;
+>  }
+>  
+> -static u8 i8255_direction_mask(const unsigned long offset)
+> +static int i8255_direction_mask(const unsigned int offset)
+>  {
+> -	const unsigned long port_offset = offset % 8;
+> -	const unsigned long io_port = offset / 8;
+> -	const unsigned long ppi_port = io_port % 3;
+> +	const unsigned int stride = offset / I8255_NGPIO_PER_REG;
+> +	const unsigned int line = offset % I8255_NGPIO_PER_REG;
+>  
+> -	switch (ppi_port) {
+> +	switch (stride) {
+>  	case I8255_PORTA:
+>  		return I8255_CONTROL_PORTA_DIRECTION;
+>  	case I8255_PORTB:
+>  		return I8255_CONTROL_PORTB_DIRECTION;
+>  	case I8255_PORTC:
+>  		/* Port C can be configured by nibble */
+> -		if (port_offset >= 4)
+> +		if (line >= 4)
+>  			return I8255_CONTROL_PORTC_UPPER_DIRECTION;
+>  		return I8255_CONTROL_PORTC_LOWER_DIRECTION;
+>  	default:
+> @@ -53,6 +60,49 @@ static u8 i8255_direction_mask(const unsigned long offset)
+>  	}
+>  }
+>  
+> +static int i8255_ppi_init(struct regmap *const map, const unsigned int base)
+> +{
+> +	int err;
+> +
+> +	/* Configure all ports to MODE 0 output mode */
+> +	err = regmap_write(map, base + I8255_CONTROL, I8255_CONTROL_MODE_SET);
+> +	if (err)
+> +		return err;
+> +
+> +	/* Initialize all GPIO to output 0 */
+> +	err = regmap_write(map, base + I8255_PORTA, 0x00);
+> +	if (err)
+> +		return err;
+> +	err = regmap_write(map, base + I8255_PORTB, 0x00);
+> +	if (err)
+> +		return err;
+> +	return regmap_write(map, base + I8255_PORTC, 0x00);
+> +}
+> +
+> +static int i8255_reg_mask_xlate(struct gpio_regmap *gpio, unsigned int base,
+> +				unsigned int offset, unsigned int *reg,
+> +				unsigned int *mask)
+> +{
+> +	const unsigned int ppi = offset / I8255_NGPIO;
+> +	const unsigned int ppi_offset = offset % I8255_NGPIO;
+> +	const unsigned int stride = ppi_offset / I8255_NGPIO_PER_REG;
+> +	const unsigned int line = ppi_offset % I8255_NGPIO_PER_REG;
+> +
+> +	switch (base) {
+> +	case I8255_REG_DAT_BASE:
+> +		*reg = base + stride + ppi * 4;
+> +		*mask = BIT(line);
+> +		return 0;
+> +	case I8255_REG_DIR_IN_BASE:
+> +		*reg = base + ppi * 4;
+> +		*mask = i8255_direction_mask(ppi_offset);
+> +		return 0;
+> +	default:
+> +		/* Should never reach this path */
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+>  static void i8255_set_port(struct i8255 __iomem *const ppi,
+>  			   struct i8255_state *const state,
+>  			   const unsigned long io_port,
+> @@ -93,7 +143,7 @@ void i8255_direction_input(struct i8255 __iomem *const ppi,
+>  	spin_lock_irqsave(&state[bank].lock, flags);
+>  
+>  	state[bank].control_state |= I8255_CONTROL_MODE_SET;
+> -	state[bank].control_state |= i8255_direction_mask(offset);
+> +	state[bank].control_state |= i8255_direction_mask(offset % 24);
+>  
+>  	iowrite8(state[bank].control_state, &ppi[bank].control);
+>  
+> @@ -125,7 +175,7 @@ void i8255_direction_output(struct i8255 __iomem *const ppi,
+>  	spin_lock_irqsave(&state[bank].lock, flags);
+>  
+>  	state[bank].control_state |= I8255_CONTROL_MODE_SET;
+> -	state[bank].control_state &= ~i8255_direction_mask(offset);
+> +	state[bank].control_state &= ~i8255_direction_mask(offset % 24);
+>  
+>  	iowrite8(state[bank].control_state, &ppi[bank].control);
+>  
+> @@ -165,7 +215,7 @@ int i8255_get_direction(const struct i8255_state *const state,
+>  	const unsigned long io_port = offset / 8;
+>  	const unsigned long bank = io_port / 3;
+>  
+> -	return !!(state[bank].control_state & i8255_direction_mask(offset));
+> +	return !!(state[bank].control_state & i8255_direction_mask(offset % 24));
+>  }
+>  EXPORT_SYMBOL_NS_GPL(i8255_get_direction, I8255);
+>  
+> @@ -282,6 +332,51 @@ void i8255_state_init(struct i8255_state *const state,
+>  }
+>  EXPORT_SYMBOL_NS_GPL(i8255_state_init, I8255);
+>  
+> +/**
+> + * devm_i8255_regmap_register - Register an i8255 GPIO controller
+> + * @dev:	device that is registering this i8255 GPIO device
+> + * @config:	configuration for i8255_regmap_config
+> + *
+> + * Registers an Intel 8255 Programmable Peripheral Interface GPIO controller.
+> + * Returns 0 on success and negative error number on failure.
+> + */
+> +int devm_i8255_regmap_register(struct device *const dev,
+> +			       const struct i8255_regmap_config *const config)
+> +{
+> +	struct gpio_regmap_config gpio_config = {0};
+> +	unsigned long i;
+> +	int err;
+> +
+> +	if (!config->parent)
+> +		return -EINVAL;
+> +
+> +	if (!config->map)
+> +		return -EINVAL;
+> +
+> +	if (!config->num_ppi)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < config->num_ppi; i++) {
+> +		err = i8255_ppi_init(config->map, i * 4);
+> +		if (err)
+> +			return err;
+> +	}
+> +
+> +	gpio_config.parent = config->parent;
+> +	gpio_config.regmap = config->map;
+> +	gpio_config.ngpio = I8255_NGPIO * config->num_ppi;
+> +	gpio_config.names = config->names;
+> +	gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(I8255_REG_DAT_BASE);
+> +	gpio_config.reg_set_base = GPIO_REGMAP_ADDR(I8255_REG_DAT_BASE);
+> +	gpio_config.reg_dir_in_base = GPIO_REGMAP_ADDR(I8255_REG_DIR_IN_BASE);
+> +	gpio_config.ngpio_per_reg = I8255_NGPIO_PER_REG;
+> +	gpio_config.irq_domain = config->domain;
+> +	gpio_config.reg_mask_xlate = i8255_reg_mask_xlate;
+> +
+> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
+> +}
+> +EXPORT_SYMBOL_NS_GPL(devm_i8255_regmap_register, I8255);
+> +
+>  MODULE_AUTHOR("William Breathitt Gray");
+>  MODULE_DESCRIPTION("Intel 8255 Programmable Peripheral Interface");
+>  MODULE_LICENSE("GPL");
+> diff --git a/drivers/gpio/gpio-i8255.h b/drivers/gpio/gpio-i8255.h
+> index d9084aae9446..3daa0b145890 100644
+> --- a/drivers/gpio/gpio-i8255.h
+> +++ b/drivers/gpio/gpio-i8255.h
+> @@ -26,6 +26,34 @@ struct i8255_state {
+>  	u8 control_state;
+>  };
+>  
+> +struct device;
+> +struct irq_domain;
+> +struct regmap;
+> +
+> +#define i8255_volatile_regmap_range(_base) regmap_reg_range(_base, _base + 0x2)
+> +
+> +/**
+> + * struct i8255_regmap_config - Configuration for the register map of an i8255
+> + * @parent:	parent device
+> + * @map:	regmap for the i8255
+> + * @num_ppi:	number of i8255 Programmable Peripheral Interface
+> + * @names:	(optional) array of names for gpios
+> + * @domain:	(optional) IRQ domain if the controller is interrupt-capable
+> + *
+> + * Note: The regmap is expected to have cache enabled and i8255 control
+> + * registers not marked as volatile.
+> + */
+> +struct i8255_regmap_config {
+> +	struct device *parent;
+> +	struct regmap *map;
+> +	int num_ppi;
+> +	const char *const *names;
+> +	struct irq_domain *domain;
+> +};
+> +
+> +int devm_i8255_regmap_register(struct device *dev,
+> +			       const struct i8255_regmap_config *config);
+> +
+>  void i8255_direction_input(struct i8255 __iomem *ppi, struct i8255_state *state,
+>  			   unsigned long offset);
+>  void i8255_direction_output(struct i8255 __iomem *ppi,
+> -- 
+> 2.38.1
+> 
 
------Original Message-----
-From: Asmaa Mnebhi <asmaa@nvidia.com>=20
-Sent: Wednesday, October 26, 2022 1:29 PM
-To: linus.walleij@linaro.org; linux-gpio@vger.kernel.org; linux-kernel@vger=
-.kernel.org; andy.shevchenko@gmail.com; bgolaszewski@baylibre.com; linux-ac=
-pi@vger.kernel.org
-Cc: Asmaa Mnebhi <asmaa@nvidia.com>
-Subject: [PATCH v1 0/2] Add NVIDIA BlueField-3 GPIO driver and pin controll=
-er
-Importance: High
+-- 
+With Best Regards,
+Andy Shevchenko
 
-This series of patches addresses maintainers' comments from a previous patc=
-h which supported the GPIO driver for BlueField-3 SoC:
-"[PATCH v1 1/1] Add driver for Mellanox BlueField-3 GPIO controller"
-Instead of creating v2 for that patch, I am creating a new series starting =
-patch v1 because there are 2 drivers involved.
-
-It was suggested to follow the linux gpio standards, and separate the pin c=
-ontroller functionality from the gpio functionality.
-Instead of creating a followup v2 patch, I am creating a new series because=
- there are 2 drivers (2 patches) involved now:
-1) NVIDIA BlueField-3 GPIO driver as front end
-2) NVIDIA BlueField-3 pin controller as back end
-
-Moved the FW_CONTROL_CLEAR/SET code to the pin controller so that there are=
- 2 GPIO mux selectors:
-1) default hardware functionality
-2) gpio functionality where software can control the GPIO value when
-   the direction is set to output.
-
-Removed support to the GPIO sysfs since its use is deprecated and risky.
-Instead, used libgpiod to test this code.
-
-Asmaa Mnebhi (2):
-  Support NVIDIA BlueField-3 GPIO controller
-  Support NVIDIA BlueField-3 pinctrl driver
-
- drivers/gpio/Kconfig            |   7 +
- drivers/gpio/Makefile           |   1 +
- drivers/gpio/gpio-mlxbf3.c      | 314 ++++++++++++++++++++++++++++
- drivers/pinctrl/Kconfig         |   9 +
- drivers/pinctrl/Makefile        |   1 +
- drivers/pinctrl/pinctrl-mlxbf.c | 353 ++++++++++++++++++++++++++++++++
- 6 files changed, 685 insertions(+)
- create mode 100644 drivers/gpio/gpio-mlxbf3.c  create mode 100644 drivers/=
-pinctrl/pinctrl-mlxbf.c
-
---
-2.30.1
 
