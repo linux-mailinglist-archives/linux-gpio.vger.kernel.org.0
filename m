@@ -2,91 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EDCE641558
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 10:39:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA9EE641585
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 11:04:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbiLCJjD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Dec 2022 04:39:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52570 "EHLO
+        id S229462AbiLCKEA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Dec 2022 05:04:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbiLCJjC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 04:39:02 -0500
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576DF5B86D
-        for <linux-gpio@vger.kernel.org>; Sat,  3 Dec 2022 01:38:57 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-3c090251d59so71724887b3.4
-        for <linux-gpio@vger.kernel.org>; Sat, 03 Dec 2022 01:38:57 -0800 (PST)
+        with ESMTP id S229497AbiLCKD7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 05:03:59 -0500
+Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A16584DE5
+        for <linux-gpio@vger.kernel.org>; Sat,  3 Dec 2022 02:03:58 -0800 (PST)
+Received: by mail-yb1-xb2c.google.com with SMTP id d131so5438218ybh.4
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Dec 2022 02:03:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=r1oGywp14JWZ15FPL7OnZRGPM4ko/b7n8s59nLxtj8U=;
-        b=s9QB5ECunL2ghBjfUzx+lJx+SxjrYch/xmnA+GUEUXdT8mq8nvvxfX3V1ncfLSXyHe
-         EQOqbDQ88d8lyvV1TSdn7VjZkbgpDWeN9lOYQjn19674NnrhsA9QU1m9+6hWIHpNqIjs
-         /qSJL5/81qi9XrhCqCFN7kc7oNTk+G/hxvRyKrjnr3XN7MslAb42mzzDBMWkYrAeu4ZE
-         4MqoxvWsuWKzhMqfsOmyEzzEvGYzVR9Tq6HuAtgOtYOg0wI8AKtPJTSmhLvlSRiJE+CB
-         p0kIIf8tMgwDo8sdm0KWuiz/RB3GEkpWpnz1jFYWbMsfMToAY0S7h/PD1aRE5ZxfhEdq
-         6CnQ==
+        bh=N6E8CnP3iI5t13RtsJQQcTXnbZ3ZGPTmoPz8kIfTx4U=;
+        b=k0vaNbXpIr1SS/R+YqWWkyExuOQIYt3c8XfhEfqDa9Z2UuX4cdm9VdUn/4gHGMUxtH
+         5FyGA8rU9sdTo1UFjoFc5JgDdVGmXSAMsZY35MJUnaSncVbVYJXR5j+p4TrjstZjq8xz
+         JCOEDr9BdvQQTTPf+fFgcjUCv9YGPv4mVcHvxJXJ93CWUynMjTGe4Blq/e83y+RDFEbV
+         XMjN1RKwqXqIe+4mElvNvFbFzfFjRxyuttUTmR4wfjxopzy3yay/5qCYu1jvusRq7z6t
+         DH2pwodZDL90KwVCuHcpmsO0+iSnBUNAUL3svPVBSnVusbSa4QZJnaqVQwCqoNaXBs8x
+         3gXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=r1oGywp14JWZ15FPL7OnZRGPM4ko/b7n8s59nLxtj8U=;
-        b=yrcvT9WZck78acXFNAYmVzoq1gd/ZL3GZZpRhkV2vpNix1tY8FZMutbM1DzIBsGDEX
-         IbDUta26hyuTJlNbcEmsVpytfQpWPb7bGfKNvbZmH2QuVc/4nIbnaeGrtpKOs+cEmCE/
-         75WwH1MQc0oIwLX/6gCA22D9GK13UDekBATJXZGWWR+f0fegZHvCXMKRPGBgMA/siLi3
-         QovfsDfIrPlLilEMaN0yqe42fI47aSywjAIO0e5fVL0qKwkL5XK5/FaxbZh4YAyrn5+K
-         r71/0HJjD3Hi0BHF3n8l4PXUNdgdzvvk35bO7pxF17QbPS9sbjjq9sUjPneQnpaSNtgq
-         c8cg==
-X-Gm-Message-State: ANoB5pnR9KuwJu3yBF2gYZyV6SwV0O24mljqYJu3IsADkf8THQBKrAH9
-        OWTKydnxu2oxCPpzj/5leg8yFUkpShnvDt4xXMcpkw==
-X-Google-Smtp-Source: AA0mqf6rtGoiX62tAlxDjk/WCyDBCu/w/wp+MD9OtLZHeHdONq/EZ7raekDVvTX5ZPXLENYFYKZblujPRMvOkyzLEmk=
-X-Received: by 2002:a81:7909:0:b0:36f:d2d9:cdc4 with SMTP id
- u9-20020a817909000000b0036fd2d9cdc4mr54837574ywc.380.1670060336538; Sat, 03
- Dec 2022 01:38:56 -0800 (PST)
+        bh=N6E8CnP3iI5t13RtsJQQcTXnbZ3ZGPTmoPz8kIfTx4U=;
+        b=WBT6ZGKq5U7/OLw5CWKkTfnq7boDeC1ga3XwEGxGUpHkomFFfXx4iWBZ/FQwXOd/c8
+         +fzDwY81/lU644caUk3EQY6CiV6P6ZYQjC96vuFO0DHIKQ66aqg9GRNixTpPOC6gu8FT
+         CQ9QUQDiSqNxU2qv5Z6LKSw6Z8L5HAEAjocwFbAjDlGjuplvhYZE3WfED/QChV2BcZkt
+         bpF3hvXP5GrCv/YzXJ6sV4vImMaBFbc1asA6+BctElmTqeLYDii7HzyQR3rSFMecEf2j
+         sLnc40IhWX9RbhtERmY/WQ1TnVLklaG9D9Z7Hn2SDwIFD1y8JvCefcVB3wjoeyCoF1m/
+         Jv9w==
+X-Gm-Message-State: ANoB5plIHOu4lt5hF9CYhXNRmEBVDxnjqmDsGfMIIUK3TZptw8JrZlOy
+        c5VWzX0czq800uFH0A9y/uv+tx1pfybQpSFLCv+wbg==
+X-Google-Smtp-Source: AA0mqf6D4lrppamEcD0PVhGEQxhIID44UmELO3zkV8dlr+HoqpZTBr+TgBXi4XgTOEHh0lS6bXQVtURTpgndyWewC8k=
+X-Received: by 2002:a25:d8d4:0:b0:6f0:36e2:5fc2 with SMTP id
+ p203-20020a25d8d4000000b006f036e25fc2mr46503178ybg.52.1670061837556; Sat, 03
+ Dec 2022 02:03:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com> <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
+References: <20221201123220.7893-1-zhuyinbo@loongson.cn>
+In-Reply-To: <20221201123220.7893-1-zhuyinbo@loongson.cn>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 3 Dec 2022 10:38:45 +0100
-Message-ID: <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
- return in ->get() callback
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Kent Gibson <warthog618@gmail.com>
-Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Hans de Goede <hdegoede@redhat.com>
+Date:   Sat, 3 Dec 2022 11:03:46 +0100
+Message-ID: <CACRpkdZm-4-5625szX_VqJoQH1OQZnw+jH3SqWsb9nr3S0Nbmw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] gpio: loongson: add gpio driver support
+To:     Yinbo Zhu <zhuyinbo@loongson.cn>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Bibo Mao <maobibo@loongson.cn>,
+        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        Arnaud Patard <apatard@mandriva.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Hongchen Zhang <zhanghongchen@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Thu, Dec 1, 2022 at 1:33 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+(...)
+> +config GPIO_LOONGSON_64BIT
+> +       tristate "Loongson 64 bit GPIO support"
+> +       depends on LOONGARCH || COMPILE_TEST
+> +       select GPIO_GENERIC
+> +       select GPIOLIB_IRQCHIP
 
-> +The below table gathered the most used cases.
-> +
-> +==========  ==========  ===============  =======================
-> +  Input       Output         State        What value to return?
-> +==========  ==========  ===============  =======================
-> + Disabled    Disabled    Hi-Z             input buffer
-> + Disabled    OS/OD/etc   Single ended     [cached] output buffer
-> +    x        Push-Pull   Out              [cached] output buffer
-> + Enabled     Disabled    In               input buffer
-> + Enabled     OS/OD/etc   Bidirectional    input buffer
-> +==========  ==========  ===============  =======================
+If the kernelbots start complaining you might need to add a:
 
-This looks about right to me, but we need more input, Kent?
+select IRQ_DOMAIN_HIERARCHY
+
+here.
 
 Yours,
 Linus Walleij
