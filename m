@@ -2,106 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8DD8641646
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 12:05:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C866E64168D
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 13:10:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229497AbiLCLFG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Dec 2022 06:05:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
+        id S229563AbiLCMKt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Dec 2022 07:10:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbiLCLFF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 06:05:05 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AC9521F9E5;
-        Sat,  3 Dec 2022 03:05:02 -0800 (PST)
-Received: from loongson.cn (unknown [117.133.84.183])
-        by gateway (Coremail) with SMTP id _____8Axz+tdLYtjDPgCAA--.6899S3;
-        Sat, 03 Dec 2022 19:05:01 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxBldcLYtjzwclAA--.7740S3;
-        Sat, 03 Dec 2022 19:05:00 +0800 (CST)
-Message-ID: <b6b34bc4-4089-9c02-81b2-9eaf2c9a4663@loongson.cn>
-Date:   Sat, 3 Dec 2022 19:04:59 +0800
+        with ESMTP id S229542AbiLCMKt (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 07:10:49 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE5045EC1
+        for <linux-gpio@vger.kernel.org>; Sat,  3 Dec 2022 04:09:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670069388;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QF9fv85ZYD8u1Tcz/z3zMYQdnjBegRaXvPl7jptww0Q=;
+        b=KiT2THYNn/qd/WLSLRviczwCiAKRVdkl6b1RRw3UWkBAZNrBX74UZpLiSVA+LChFaM5x5w
+        cZjoGT14vk0TQMWRvPjj7IHmO/HZoTJ/PZhUvrnLALzw2ZYt7RRP5Hxn2E/b6O0lQwM/Yd
+        wSOfifKT+ZrOLcixj/lAylkKEL8R3iI=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-108-wbiDgEXaPZuMPfa4CE-GZg-1; Sat, 03 Dec 2022 07:09:47 -0500
+X-MC-Unique: wbiDgEXaPZuMPfa4CE-GZg-1
+Received: by mail-ed1-f69.google.com with SMTP id w4-20020a05640234c400b004631f8923baso3470631edc.5
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Dec 2022 04:09:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QF9fv85ZYD8u1Tcz/z3zMYQdnjBegRaXvPl7jptww0Q=;
+        b=qiVJLjxMyiFhJf5qzu4t97Yj3eBezuabbEYeajxOjAU4NMHff3/qlUKFDbnWMwYkqS
+         ERrFuu5LzAS3mOlkDFuihRrCPO1cBPpTX92zuVUB5SzoaX13q1yFZan/UpoU9cGclafo
+         xskgyAm+31GoUWyw4QPOZQtgGD77qm4RkBt0G3wum47Hcr9jlLhsvzj6eo5PnPxBMLXp
+         ffRe6DGaHRKofuIDM7N0YvgdkiA94A5calPpKli6Q5bXSLoaNghGITrzHij9lAW9yqAr
+         ZYunEu+va3zlTE2A8V8m8H8XT+eY1TTPbbfQLEcLh7gjY3nrGssd6KxXSTNyDF+DXinG
+         EW6Q==
+X-Gm-Message-State: ANoB5plq5pKcqAvjhXbo0J9zcVlDiT6DqzLPXYsiwo4AMu0QOfUFVGf+
+        +2VswOYh/WYvH0ruiyq0+gKBVnpqjA12rAaZTH/SNejueulhq3Q8W9B3wDc42IAg4w+m5G1/iMp
+        IXJAFsNSjtMhG46qSDH+k2Q==
+X-Received: by 2002:a17:906:2c51:b0:7b2:8c66:9bda with SMTP id f17-20020a1709062c5100b007b28c669bdamr21320496ejh.732.1670069386187;
+        Sat, 03 Dec 2022 04:09:46 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5ZcvyoU7z1e4iYoIvOCZM0CZ5JzfOs6XEyPrG60h/v2cIKxkFPHgpQqvXzmBZMuLPgdP2zGQ==
+X-Received: by 2002:a17:906:2c51:b0:7b2:8c66:9bda with SMTP id f17-20020a1709062c5100b007b28c669bdamr21320476ejh.732.1670069385937;
+        Sat, 03 Dec 2022 04:09:45 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id p8-20020a170906a00800b007ad69e9d34dsm4160575ejy.54.2022.12.03.04.09.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 03 Dec 2022 04:09:45 -0800 (PST)
+Message-ID: <8246b761-d83d-de59-fa30-a82d6bbc9533@redhat.com>
+Date:   Sat, 3 Dec 2022 13:09:44 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH v1] gpio: loongson: enable irqdomain hierarchy config
+Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
+ return in ->get() callback
+Content-Language: en-US, nl
 To:     Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kent Gibson <warthog618@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>
-References: <20221203105825.15886-1-zhuyinbo@loongson.cn>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <20221203105825.15886-1-zhuyinbo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxBldcLYtjzwclAA--.7740S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrKFyDWry8Ww1rCr1ftrW5Wrg_yoW3uFX_Cw
-        nF9Fs3Xr1UCryq9F4a9r4fZry2kayUWr1fZw1vq343X34xX3WUuw1a93Z5W3W7Wr17WFZ5
-        ZrWfAryIyryxWjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-        17CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
-        IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84AC
-        jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
-        8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
-        52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-        80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCj
-        c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-        0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-        c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26ryj6F1UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
-        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8mQ6JUUUUU==
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Jonathan Corbet <corbet@lwn.net>
+References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
+ <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Linus,
 
-在 2022/12/3 18:58, Yinbo Zhu 写道:
-> The loongson gpio driver need select IRQ_DOMAIN_HIERARCHY and add
-> such support.
->
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->   drivers/gpio/Kconfig | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 55b7c5bae4aa..0f014411703e 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -395,6 +395,7 @@ config GPIO_LOONGSON_64BIT
->   	depends on LOONGARCH || COMPILE_TEST
->   	select GPIO_GENERIC
->   	select GPIOLIB_IRQCHIP
-> +	select IRQ_DOMAIN_HIERARCHY
->   	help
->   	  Say yes here to support the GPIO functionality of a number of
->   	  Loongson series of chips. The Loongson GPIO controller supports
+On 12/3/22 10:38, Linus Walleij wrote:
+> On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+>> +The below table gathered the most used cases.
+>> +
+>> +==========  ==========  ===============  =======================
+>> +  Input       Output         State        What value to return?
+>> +==========  ==========  ===============  =======================
+>> + Disabled    Disabled    Hi-Z             input buffer
+>> + Disabled    OS/OD/etc   Single ended     [cached] output buffer
+>> +    x        Push-Pull   Out              [cached] output buffer
+>> + Enabled     Disabled    In               input buffer
+>> + Enabled     OS/OD/etc   Bidirectional    input buffer
+>> +==========  ==========  ===============  =======================
+> 
+> This looks about right to me, but we need more input, Kent?
 
-Hi Bartosz,
+As I already mentioned in earlier replies to me this
+seems to make things needlessly complicated for GPIO chips
+where there are separate registers for reading the input-buffer vs
+setting the output-buffer.
 
+To implement the above drivers for these would need to check if
+the pin is in push/pull mode and then read the register setting
+the output-buffer in get() while reading the register reading
+from the input-buffer in other cases in get().
 
-please help merge this patch on top of the existing series.
+I fail to see any downsides to just always reading
+the register reading the input-buffer on GPIO chips like this,
+when the pin in in push/pull output mode that should simply
+give us the right value and when it does not this could
+help detect short-circuits to Gnd/Vdd.
 
+Where as I fear that implementing 2 different strategies in
+get() for these kinda GPIO chips, will most likely be a
+source of bug. Esp. since testing all the permutations
+from the above table is going to be tricky in many cases.
 
-Thanks,
+If we go this route and demand that drivers for GPIO chips
+with a separate (read-only) register for the input-buffer
+sometimes read the register for the output-buffer on get()
+can we then add a helper to the core which returns which
+of the 2 registers should be used so that drivers don't
+have to duplicate the logic for checking this ?
 
-Yinbo
+Regards,
+
+Hans
+
 
