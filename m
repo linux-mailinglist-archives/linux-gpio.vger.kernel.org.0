@@ -2,56 +2,57 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 554C764154C
-	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 10:34:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA9B64154E
+	for <lists+linux-gpio@lfdr.de>; Sat,  3 Dec 2022 10:35:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiLCJeI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 3 Dec 2022 04:34:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        id S229498AbiLCJfP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 3 Dec 2022 04:35:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbiLCJeD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 04:34:03 -0500
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0710A186D7
-        for <linux-gpio@vger.kernel.org>; Sat,  3 Dec 2022 01:34:02 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3bf4ade3364so71692237b3.3
-        for <linux-gpio@vger.kernel.org>; Sat, 03 Dec 2022 01:34:01 -0800 (PST)
+        with ESMTP id S229501AbiLCJfN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 3 Dec 2022 04:35:13 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4C1218E08
+        for <linux-gpio@vger.kernel.org>; Sat,  3 Dec 2022 01:35:12 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id o127so8779170yba.5
+        for <linux-gpio@vger.kernel.org>; Sat, 03 Dec 2022 01:35:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fkGQMlu6wKeISp0zA+NNxO3uj0UvahfyytXWgxy5oAU=;
-        b=arD8BDwE7ELF18ggu6/9RjwoeoBeB7H0+DwUtSejo+QUHEQbiDhl5V0CuZ0vTGpe6p
-         hviivVCkjZoYd3PiKOH/6ZWghRadFalG22ZeSIyVKijrgJxiqaGrN05NEYSUvql2pOl0
-         7yJk+iIsmF5I8snfE7ZDtQLoM66T+V9rLh4cBo4Vf2vy4oe0KhJxNVTiQirmga+YYWcd
-         l64TvE0bmLdeg8gW04V8XaSzDtQBPmfj8MOuaV9XfDJLH4uykJI/wSQeThYIGP+dyk8a
-         WGYau/0LOh43OvwlcTY38Jv4f0H72w4JzqpWEG5PUkxI8YTmF/rAxnMxkxJKf6PY1n5Z
-         yjew==
+        bh=vtrfFxLIH+KLlkwI+VYMEBrcCrDD9/VNajjGq7Nb1f4=;
+        b=NVmWpl3QjoGFtPR4rDJHOoTnQYlO5GHybiR2vphJYM1XpTVLpHIkfNd2wQZ6LtTDp3
+         vCvrQCjnj9qWcOUXMSnMba6qcboV+zVLK3NJR5d9ual0qeT9hFnC0cr/ZoenLJCQDycB
+         p348AQq44S7N6fLPCPX3KjLf+xwnx20E6CFXhM6+kKwLAHnpoGlM8n45DKJFElO2gAWI
+         kRGptrIyJYXUwPpGrUcr/QgSQBJ7v9ZdwH6O2xsjvLmdOt80D+J3VEfQfhwfnlP45/uu
+         xCyle3Pbhdwg/TgcmeZ2gOY+XDtq3eouP6TBaOXcquCaXuVGam+xqsEMSmtcuhfzJCEq
+         n+kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fkGQMlu6wKeISp0zA+NNxO3uj0UvahfyytXWgxy5oAU=;
-        b=sA0jnYvBL5XYzWnof37e5VnuyJ6tRjR49mrOA46kilyWQ10fieU5rbykKFgxjZTrq4
-         cAbQU97fuDZNVWeoovxvBGszHrkxuVR1lFcpGch8Xl9cV6ygp7mplKhy+V3d7rNsubhB
-         p/F0nqARb7iABlINmFN22P3+TmEvU8WgwyIBfsS2nQg3uUfuAHKWLj8Ix9YvgNCOd5IL
-         /RjuR60girlENGNp2EsMBeFnHmGop+1/BjqxygVuLVSkqHnk3ul6UwoPrbsWG+C1A8hB
-         fhfJBVSO5qdZFrjdRehCD2oqEfJMd2ehMJKGUzn22gVKOO1Mi7Qjylug2X+jYyHIHVfh
-         dfdg==
-X-Gm-Message-State: ANoB5pne0VCgAKyOxPNUkD+3HWb8ESD8WmDqARtpzH+0ye3cM6Zrpi2Y
-        ckQ5exSKUiq+ldPLla/+Mje6VGURSdSslfzwzVL2vw==
-X-Google-Smtp-Source: AA0mqf5rx5euZ8EgLbXLgUOq9u5gJklMo7bbGhLHT4FySZEtgNpgveMbe3VSrDmx8xMO3lU2qWmHQ5iT6VRng/f7FGc=
-X-Received: by 2002:a81:5748:0:b0:3b1:eee3:32a with SMTP id
- l69-20020a815748000000b003b1eee3032amr43455788ywb.325.1670060041225; Sat, 03
- Dec 2022 01:34:01 -0800 (PST)
+        bh=vtrfFxLIH+KLlkwI+VYMEBrcCrDD9/VNajjGq7Nb1f4=;
+        b=q2YB3xf5nb9hEVKZmukbFGepfIen3gwRkM3HXC9Er3jbzZpd9Qqr443aTAkYIrEyn6
+         hZJiVzQ+MTpyQuxpkV7GJanlyd0/nKR4/IPDH2zXOPlkEqGyhXqIj1iY50Gvh5elb/dG
+         PFIv2tU5jbzynpcIIwiYqCLarBStETJw/d1u/Wwb8r9FSm6GnbEzDR5spxBJp54rVzMI
+         dwmDz5J6lX1//KxQkEDjpcBFrRfa/mhoREGBJ+rN5Nko90tygbHzduf8m7XsdcSVStgG
+         +Sw3zaTDVlU43A26XKxOzFMY1gAq+zQn+gGYdqV51xZ17FfBs/BKnGfqNYLxfjstJm7s
+         XLwQ==
+X-Gm-Message-State: ANoB5pkFChmRQ/+34bEfPv+xXsdjYdE2Dn0CyjdFH/0Fp4+BehpKuqDx
+        2DChXLAjP8EzYqlFyefwTdj+B65Rfk6GZTX4xIwYVQ==
+X-Google-Smtp-Source: AA0mqf5lBr0i9TGCKJKQdl+c9tGgeapNQTrWM8pNJ2m+aX5ucbgHP6s/tq92nHKFL7pOBCILVQLukaUFbCxSZ2MnAf0=
+X-Received: by 2002:a25:c7cb:0:b0:6fc:834c:9c89 with SMTP id
+ w194-20020a25c7cb000000b006fc834c9c89mr8728927ybe.43.1670060111875; Sat, 03
+ Dec 2022 01:35:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
+References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com> <20221130155519.20362-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221130155519.20362-3-andriy.shevchenko@linux.intel.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sat, 3 Dec 2022 10:33:50 +0100
-Message-ID: <CACRpkdYVU2KJMw=FRxCLXbpWY+42RGheHvnqzg2bo2=JjTRCOw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/3] Documentation: gpio: Input mode is not true Hi-Z
+Date:   Sat, 3 Dec 2022 10:35:00 +0100
+Message-ID: <CACRpkdbhavSEFUiqEDO1cJXzmiQ8iHE25ciEt=c8NY-SQLAhow@mail.gmail.com>
+Subject: Re: [PATCH v1 3/3] Documentation: gpio: Replace leading TABs by
+ spaces in the code blocks
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -72,17 +73,14 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 
-> The true Hi-Z (a.k.a. high impedance) mode is when pin is completely
-> disconnected from the chip. This includes input buffer as well.
-> Nevertheless, some hardware may not support that mode and they are
-> considering input only as Hi-Z, but more precisely it is an equivalent
-> to that, in electronics it's basically "an antenna mode".
->
-> Sligthly correct documentation to take the above into consideration.
+> The code blocks are indented with two spaces, if the leading TAB
+> is occurred the syntax highlighting might be broken in some editors.
+> To prevent that unify all code blocks by using spaces instead of
+> leading TAB(s).
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
