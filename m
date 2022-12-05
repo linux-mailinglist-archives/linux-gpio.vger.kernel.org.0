@@ -2,194 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23F8A642954
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:27:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6621642958
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:27:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232249AbiLEN1E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:27:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
+        id S230170AbiLEN1r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 08:27:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232216AbiLEN1E (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:27:04 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B441C91B
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:27:02 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id b3so18533378lfv.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:27:02 -0800 (PST)
+        with ESMTP id S232181AbiLEN1q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:27:46 -0500
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59022636
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:27:43 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id b189so5143660vsc.10
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:27:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEi78HiNqFu1GIW9u8amVgxX/62kZk14mkEDDfKjOlw=;
-        b=wULoWNjWdPEj015yU7ZjIaleb6j0cazdL0S5zb2z9XwLgDDk+pvyBEDf7xnBNQOhmU
-         SqWC09iRraTtFbthsqu2Htgivb5dL/P+aFyy/5IhfgIz3njpam02ClcjyOF76OUvpzAZ
-         z58JwiW+aKvjEeDeeRcJt7N3sQxVUInqP6gq8R7lgRERdR4QEEXJFxuCsiR0D84BfMCM
-         XKc/SoTlbuVY8LGMO++uA2Vv9Tbw7etSTLjgUHt5A+yX9O3AsDiy85ucwDVerCaV8Po6
-         iQYJdIJ9U8o/K6McA3PxGO9E+odbTxdfp4aW3/sc73mK3HkFkZyH/5MTF+5E0Ucff2TB
-         S8Ag==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BWHrd3aLhgiG+UaB7zepCdXrcCvVH/+UbuBW6Y4vPms=;
+        b=oQaqYktN4GfhVf6d4AhOUfJBWdgUz4tAneBabWPCmF5z2H9n3CKigTPgxfAgMzJsIc
+         U7gdvKqweprQ//B0jNc21O0y0vfKA7F1YXPOnDYCwdl92RRDTYjVtEgfdjxmg3j7c7YV
+         /RBZ2xO4hHr6btntRxN6YDaQVAMeV2yYqe7tSuhpeCD0gsLbs6v0gHdenT867wxHgcHd
+         tu3Q4758DeSfblHE/0w6pIsavo0AVmO8P0Np5u/vL+Wvfc/ciCys22PjV8ndvKvWR/3m
+         M1JYrJri5xu1WTYXcR9nWWJwOOlD7qQF33G4BKjf6etIEuntKVgD7WU8g9Est1M5dwRO
+         zd7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZEi78HiNqFu1GIW9u8amVgxX/62kZk14mkEDDfKjOlw=;
-        b=ndhpPCios8tSCmj3+97fNPXOnk87RsCb1y7gMiRBFnVpNnqXelF6kuVjbUebIE2NJ7
-         Kxxs62iwQV03LE0WVuvka35M0sIOd57NKFeIW1aMDjgWLpG5PViOm4Up7a1b1RZXWyut
-         MbZaMUETMjyVDhcdfQHCdQfjHJnYcMQPtw0cKnpkTWUalJKgMGQCNFsxv1kfMPxpOXJQ
-         NdPHZ0NbUHYm6BmhDiL95/rtJ2+fcC9oOrUrCuCZio4S9OatCq5fwRdQ+/4BJ34e77FO
-         b44V4fDs9hLPbhsOhH02DqpCZxGxwn3WUg6IMMcOTZbxtRH2Gg2o91mZIgltKDckJakI
-         tRaQ==
-X-Gm-Message-State: ANoB5plw3KZrgKnBUV4FreFclwbXwhQ2c6itUwBqa5zn/cgKz2zuMtTu
-        Oxdx2eDF3xlegixNtlaQx+qWww==
-X-Google-Smtp-Source: AA0mqf66sPDMG05cHXegksgvrRpbkt97pW9nIcGQHTSWPQQ8qIruQpc5+4gvNdjbwE4Ix5RJxC9sQg==
-X-Received: by 2002:a19:ee07:0:b0:4b5:2830:8998 with SMTP id g7-20020a19ee07000000b004b528308998mr8514983lfb.267.1670246820897;
-        Mon, 05 Dec 2022 05:27:00 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id d23-20020ac244d7000000b004b5748fa3afsm441063lfm.107.2022.12.05.05.26.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Dec 2022 05:27:00 -0800 (PST)
-Message-ID: <e6ee1ec2-1649-3e7e-9dbe-e94d636d8476@linaro.org>
-Date:   Mon, 5 Dec 2022 14:26:59 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BWHrd3aLhgiG+UaB7zepCdXrcCvVH/+UbuBW6Y4vPms=;
+        b=1bWBuDTzVEUtJZu2m0FKXzOUwnk3x2KT9DF7DIvjJNBOndc7qwV7Iwe80PF04badS9
+         PzKfSOHj6kyp1F9njEk6WZYTqr1tV3VL3nfPFRnDWbCxGk42yk7Q13pK5JiH+av7d8WH
+         aKTVdbCdkiPVBh4FWr6YW409/sUB/kr6AghZ3XIEOGKlSI8KMMeVb0FD27DyML+mz/go
+         k/0VCaI0Hg99liccB7OZFykNIOz0NtnRmOgGsve1s3fx76K4KXH4uwcvkPGhBaGFtCOe
+         Qhbfe4qaQ5GdH8TeVM9uVFcMM2xzrcDRZUD7MdsQ9gHLwGY31wF4VqbB5OqfOVFV3tBa
+         2BYg==
+X-Gm-Message-State: ANoB5pnkySWScg9CGfAOMQLTsKbBZ14gLOLIIJA50tfvBi6v+BYqjVG4
+        ocr4wOzo/hVp+qxqjfT09dN0vt/fCu33FtF4bp5ZKQ==
+X-Google-Smtp-Source: AA0mqf5A4j7MgpGLkC3roqQQoGqGMJqzd2JWHpfvBJdQpbm0KVMQ3bcwRnlZNug9SoQuKy3j9YKfb7jMFBNmx8VPeH8=
+X-Received: by 2002:a67:ca86:0:b0:3b1:33bd:7fc7 with SMTP id
+ a6-20020a67ca86000000b003b133bd7fc7mr3453591vsl.13.1670246862914; Mon, 05 Dec
+ 2022 05:27:42 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
-Content-Language: en-US
-To:     Chester Lin <clin@suse.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+References: <20221205123903.159838-1-brgl@bgdev.pl> <Y43rPdus/9INC390@smile.fi.intel.com>
+ <Y43rmRW1S8PvMJW4@smile.fi.intel.com> <Y43vgFY+qnqH8+0P@sol>
+In-Reply-To: <Y43vgFY+qnqH8+0P@sol>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Dec 2022 14:27:32 +0100
+Message-ID: <CAMRc=MeMA+11Gdb2kaCrS5G+05PONT7i9Nw0VH+B7bJA3apydw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/2] gpiolib: don't allow user-space to crash the
+ kernel with hot-unplugs
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        s32@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Larisa Grigore <larisa.grigore@nxp.com>,
-        Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
-        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>,
-        ghennadi.procopciuc@oss.nxp.com
-References: <20221128054820.1771-1-clin@suse.com>
- <20221128054820.1771-2-clin@suse.com>
- <6ad95ce3-887d-48fd-3c08-f50d4e666ded@linaro.org>
- <Y42MyyLumVa8phpd@linux-8mug>
- <e839274d-6696-63aa-14e6-f52a534c9ed2@linaro.org>
- <Y43Qdco0y61C4l1I@linux-8mug>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y43Qdco0y61C4l1I@linux-8mug>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Nick Hainke <vincent@systemli.org>, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05/12/2022 12:05, Chester Lin wrote:
-> On Mon, Dec 05, 2022 at 10:02:14AM +0100, Krzysztof Kozlowski wrote:
->> On 05/12/2022 07:16, Chester Lin wrote:
->>> Hi Krzysztof,
->>>
->>> On Wed, Nov 30, 2022 at 03:58:52PM +0100, Krzysztof Kozlowski wrote:
->>>> On 28/11/2022 06:48, Chester Lin wrote:
->>>>> Add DT schema for the pinctrl driver of NXP S32 SoC family.
->>>>>
->>>>> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
->>>>> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
->>>>> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@nxp.com>
->>>>> Signed-off-by: Chester Lin <clin@suse.com>
->>>>> ---
->>>>>
->>>>> Changes in v2:
->>>>> - Remove the "nxp,pins" property since it has been moved into the driver.
->>>>> - Add descriptions for reg entries.
->>>>> - Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
->>>>> - Fix schema issues and revise the example.
->>>>> - Fix the copyright format suggested by NXP.
->>>>>
->>>>>  .../pinctrl/nxp,s32cc-siul2-pinctrl.yaml      | 125 ++++++++++++++++++
->>>>>  1 file changed, 125 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>>>> new file mode 100644
->>>>> index 000000000000..2fc25a9362af
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>>>
->>>> Usually filename matches the compatible (or family name), so any reason
->>>> why compatible is "nxp,s32g2" but filename is "nxp,s32cc"?
->>>>
->>>
->>> According to NXP, the S32CC is a microarch which is adapted by different S32 SoCs,
->>> such as S32G2/G3 and S32R45. Some common IPs are implemented in S32CC, such as
->>> serial, pinctrl, mmc, gmac and some other peripheral interfaces. S32R45 has
->>> different pinouts compared to S32G2, which means that there would not be just
->>> "s32g2-siul2-pinctrl" but also "s32r45-siul2-pinctrl" in the compatible enum if
->>> S32R45 has to be upstreamed in the future. For this case, it seems to be
->>> inappropriate that adding a compatible name without any "s32g" keyword in the
->>> filename "nxp,s32g2-.." unless creating a new yaml for each platform, such as
->>> nxp,s32r45-siul2-pinctl.yaml.
->>
->> First, you can always rename a file if such need arises. Maybe new SoCs
->> will come, maybe not.
->>
->> Second, when you actually upstream new SoC it might anyway require new
->> bindings file, because pinctrls are quite specific and it is usually
->> difficult to support multiple devices in a nice, readable way in one
->> file. Therefore anyway another file is quite likely.
->>
-> 
-> Thanks for your guidance. Will fix it.
-> 
->> (...)
->>
->>>>> +
->>>>> +patternProperties:
->>>>> +  '-pins$':
->>>>> +    type: object
->>>>> +    additionalProperties: false
->>>>> +
->>>>> +    patternProperties:
->>>>> +      '-grp[0-9]$':
->>>>> +        type: object
->>>>> +        allOf:
->>>>> +          - $ref: pinmux-node.yaml#
->>>>> +          - $ref: pincfg-node.yaml#
->>>>> +        unevaluatedProperties: false
->>>>> +        description:
->>>>> +          Pinctrl node's client devices specify pin muxes using subnodes,
->>>>> +          which in turn use the standard properties.
->>>>
->>>> All properties are accepted? What about values, e.g. for drive strength?
->>>
->>> For those unsupported properties such as drive-strength, the s32g2 pinctrl driver
->>> returns -EOPNOTSUPP.
->>
->> I don't care what the driver is doing, we do not discuss the driver. You
->> need to describe properly the hardware and I doubt that hardware accepts
->> all drive-strengths, all forms of pull resistors (so any Ohm value).
->>
->> Add constrains.
->>
-> 
-> Thanks for the suggestion. IIUC, I should specifically described the supported
-> pinmux and pincfg properties in this schema and then add an "additionalProperties: false"
+On Mon, Dec 5, 2022 at 2:17 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Mon, Dec 05, 2022 at 03:01:13PM +0200, Andy Shevchenko wrote:
+> > On Mon, Dec 05, 2022 at 02:59:42PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Dec 05, 2022 at 01:39:01PM +0100, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > Linus Torvalds pointed out that using trylock here is wrong. This iteration
+> > > > drops it in favor of unconditional locks but keeps all the fixes that came
+> > > > later.
+> > > >
+> > > > I will also not send it for this release but make it part of the updates PR
+> > > > for v6.2 to give it some time in next.
+> > > >
+> > > > v7 -> v8:
+> > > > - don't use down_read_trylock(), just go straight for a full lock
+> > >
+> > > Yep, it was a good wrap-up explanation.
+> >
+> > But he also suggested to fold NULL check into call_*_locked(). Any points why
+> > you decided not to go that way?
+> >
+>
+> He also mentioned making it more back-portable.
+> Does that mean splitting out the patches for uAPI v1 and v2, if not for
+> each of the Fixes? Or does he mean back-porting it to 6.1?
 
-Yes.
+I think he mentioned not sending it for v6.1 that late in the cycle
+and instead sending it for v6.2 and backporting it to v6.1. I'm afraid
+that backporting of this fix will require some manual labor anyway.
+We'll want to backport it to branches that don't have v2 yet after
+all, where that code resided elsewhere.
 
-> in the end in order to constrain unsupported properties listed in the pattern
-> pin groups.
-
-You mean functions? or node names? The node names can be anything, can't
-they?
-
-If your drive strengths or slew rates have some limits, then I expect
-them here.
-
-Best regards,
-Krzysztof
-
+Bartosz
