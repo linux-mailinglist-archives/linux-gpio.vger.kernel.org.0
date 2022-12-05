@@ -2,105 +2,112 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6621642958
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:27:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94BB664295F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:28:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbiLEN1r (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:27:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51662 "EHLO
+        id S232262AbiLEN2E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 08:28:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbiLEN1q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:27:46 -0500
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59022636
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:27:43 -0800 (PST)
-Received: by mail-vs1-xe35.google.com with SMTP id b189so5143660vsc.10
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:27:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BWHrd3aLhgiG+UaB7zepCdXrcCvVH/+UbuBW6Y4vPms=;
-        b=oQaqYktN4GfhVf6d4AhOUfJBWdgUz4tAneBabWPCmF5z2H9n3CKigTPgxfAgMzJsIc
-         U7gdvKqweprQ//B0jNc21O0y0vfKA7F1YXPOnDYCwdl92RRDTYjVtEgfdjxmg3j7c7YV
-         /RBZ2xO4hHr6btntRxN6YDaQVAMeV2yYqe7tSuhpeCD0gsLbs6v0gHdenT867wxHgcHd
-         tu3Q4758DeSfblHE/0w6pIsavo0AVmO8P0Np5u/vL+Wvfc/ciCys22PjV8ndvKvWR/3m
-         M1JYrJri5xu1WTYXcR9nWWJwOOlD7qQF33G4BKjf6etIEuntKVgD7WU8g9Est1M5dwRO
-         zd7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BWHrd3aLhgiG+UaB7zepCdXrcCvVH/+UbuBW6Y4vPms=;
-        b=1bWBuDTzVEUtJZu2m0FKXzOUwnk3x2KT9DF7DIvjJNBOndc7qwV7Iwe80PF04badS9
-         PzKfSOHj6kyp1F9njEk6WZYTqr1tV3VL3nfPFRnDWbCxGk42yk7Q13pK5JiH+av7d8WH
-         aKTVdbCdkiPVBh4FWr6YW409/sUB/kr6AghZ3XIEOGKlSI8KMMeVb0FD27DyML+mz/go
-         k/0VCaI0Hg99liccB7OZFykNIOz0NtnRmOgGsve1s3fx76K4KXH4uwcvkPGhBaGFtCOe
-         Qhbfe4qaQ5GdH8TeVM9uVFcMM2xzrcDRZUD7MdsQ9gHLwGY31wF4VqbB5OqfOVFV3tBa
-         2BYg==
-X-Gm-Message-State: ANoB5pnkySWScg9CGfAOMQLTsKbBZ14gLOLIIJA50tfvBi6v+BYqjVG4
-        ocr4wOzo/hVp+qxqjfT09dN0vt/fCu33FtF4bp5ZKQ==
-X-Google-Smtp-Source: AA0mqf5A4j7MgpGLkC3roqQQoGqGMJqzd2JWHpfvBJdQpbm0KVMQ3bcwRnlZNug9SoQuKy3j9YKfb7jMFBNmx8VPeH8=
-X-Received: by 2002:a67:ca86:0:b0:3b1:33bd:7fc7 with SMTP id
- a6-20020a67ca86000000b003b133bd7fc7mr3453591vsl.13.1670246862914; Mon, 05 Dec
- 2022 05:27:42 -0800 (PST)
-MIME-Version: 1.0
-References: <20221205123903.159838-1-brgl@bgdev.pl> <Y43rPdus/9INC390@smile.fi.intel.com>
- <Y43rmRW1S8PvMJW4@smile.fi.intel.com> <Y43vgFY+qnqH8+0P@sol>
-In-Reply-To: <Y43vgFY+qnqH8+0P@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 5 Dec 2022 14:27:32 +0100
-Message-ID: <CAMRc=MeMA+11Gdb2kaCrS5G+05PONT7i9Nw0VH+B7bJA3apydw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nick Hainke <vincent@systemli.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S232277AbiLEN2C (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:28:02 -0500
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E3264F3
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:28:00 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id A5F1F5C00E4;
+        Mon,  5 Dec 2022 08:27:59 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Mon, 05 Dec 2022 08:27:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1670246879; x=1670333279; bh=KuspcGKCFc
+        EQt+MG2SJBWlK48nNiLGqvcCqh6umf4dU=; b=omyBLB7Ejy5Ad1Rexf2Q3uFfSb
+        /gPYrrgj14UNdwAT8ghVapYrSJIdKYPM7itDO1Jk7DqHHJOFGbhJ7tacqJhOFZGE
+        RvWTHx9NvBh8j96DTrIy6OR+TpO9ZT07poLQlkbkgBpeTjpzs3L0+Kf5nq/0nfrb
+        2Gma6LVHGIaN4o/NeMF9uOW/0UbmxZ/laYTRFEfh60UTxU+tVs/BhqFABwFytKpw
+        Io2OLYS5UC62csYr+coaRiEPYhUe+jyTWYIXpSZ6F/Qg9UnO1mlnM2I9j3TxAcJ3
+        +rftaS/mtXJMfyJ/rap7RP3r9UnVAsdap8Vkaa11qZYn86q0Z9ZB04ItX68Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1670246879; x=1670333279; bh=KuspcGKCFcEQt+MG2SJBWlK48nNi
+        LGqvcCqh6umf4dU=; b=F7DTq3ykSmswHCut3Ar6lbKx8r9FOF/td5/2XiTjbA0o
+        6aTBIW9CaAo509Y9a0IJULLvhkzQRvbOhCIKzF7CELgxzqGc9UWzzH+FHew9gp3b
+        A29xMEwagbD4paLCfpmngT2tj1bUneORmp5Mr1CFs7MYo9LUjnmFN0mZXH/o3H44
+        Pa67/Sh+eoxLxnnfz+wAf2dDO0hAocs2d42Pgt0zbl8r1t3r54VfU6YH8v+8Ujc/
+        2y1Cqzk1LlgNBqMrXabdmHIE9knDiEjNMmeqe2+jArz3wtoTTyo5pmNF7v98PdLI
+        3Ryjwwv0TUWijhPWVbKR2GTf/767P7ghVDNUzNyX7A==
+X-ME-Sender: <xms:3_GNY8i2La8qvDe-i6R3h80xHlgQ8mC-pC-1EPo_YoG0-CfHaoxtAA>
+    <xme:3_GNY1CfBOFcYQLSnEkDzoJQIJZy-DfpMhbpWG4Ncdz_S9BLhlmMQPXWt5DqXyITJ
+    ucDcqWWnxgxPsan4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeggdehvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepofgfggfkjghffffhvfevufgtsehttd
+    ertderredtnecuhfhrohhmpedftehnughrvgifucflvghffhgvrhihfdcuoegrnhgurhgv
+    fiesrghjrdhiugdrrghuqeenucggtffrrghtthgvrhhnpedvvedvieeuteehiefftdfhje
+    evvdetffevgffhhfeuudffhedvkeefveeiueejleenucffohhmrghinhepkhgvrhhnvghl
+    rdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:3_GNY0ENOitkvP9r88I61BG1loPZRqwVc5CVZz1RV6sprFLeLJGNzw>
+    <xmx:3_GNY9R2b2pL9G2aYUSE6ML-cloWCO7rPmwNnRrVHt5WIHKkWDS5sQ>
+    <xmx:3_GNY5zU6xVDxRV5NeabyPqNCwDFVgO8gDVOKU5B1U3ASVb-Vz63SA>
+    <xmx:3_GNY3YxaRIxamsoni4P17NjomdnOD7VtJFOj_tJYQqZojwO4iC68w>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 788BC1700089; Mon,  5 Dec 2022 08:27:59 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+Mime-Version: 1.0
+Message-Id: <49112892-07e4-4c1a-8ee6-d112cc9fb65f@app.fastmail.com>
+In-Reply-To: <6e539372-b898-4732-b924-15993e52b4d9@app.fastmail.com>
+References: <cc4926af-95bb-4178-a760-d55821dfb626@www.fastmail.com>
+ <CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com>
+ <6e539372-b898-4732-b924-15993e52b4d9@app.fastmail.com>
+Date:   Mon, 05 Dec 2022 23:57:39 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+Cc:     =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bartekgola@gmail.com>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod]: Meson wrap for libgpiod
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 5, 2022 at 2:17 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Mon, Dec 05, 2022 at 03:01:13PM +0200, Andy Shevchenko wrote:
-> > On Mon, Dec 05, 2022 at 02:59:42PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Dec 05, 2022 at 01:39:01PM +0100, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > Linus Torvalds pointed out that using trylock here is wrong. This iteration
-> > > > drops it in favor of unconditional locks but keeps all the fixes that came
-> > > > later.
-> > > >
-> > > > I will also not send it for this release but make it part of the updates PR
-> > > > for v6.2 to give it some time in next.
-> > > >
-> > > > v7 -> v8:
-> > > > - don't use down_read_trylock(), just go straight for a full lock
-> > >
-> > > Yep, it was a good wrap-up explanation.
-> >
-> > But he also suggested to fold NULL check into call_*_locked(). Any points why
-> > you decided not to go that way?
-> >
->
-> He also mentioned making it more back-portable.
-> Does that mean splitting out the patches for uAPI v1 and v2, if not for
-> each of the Fixes? Or does he mean back-porting it to 6.1?
+Hi Bartosz,
 
-I think he mentioned not sending it for v6.1 that late in the cycle
-and instead sending it for v6.2 and backporting it to v6.1. I'm afraid
-that backporting of this fix will require some manual labor anyway.
-We'll want to backport it to branches that don't have v2 yet after
-all, where that code resided elsewhere.
+On Fri, 25 Nov 2022, at 14:12, Andrew Jeffery wrote:
+> Hi!
+>
+> On Fri, 25 Nov 2022, at 06:54, Bartosz Golaszewski wrote:
+>> Hey Andrew!
+>>
+>> The libgpiod project has undergone significant changes recently. A new
+>> major release (v2) is getting closer and I'm thinking that it may be
+>> the right moment to rethink updating the build system. Would you be
+>> willing to take a look at the current master branch and see if you can
+>> swap our current autotools in favor of meson while keeping all the
+>> current switches in place (translated to meson of course)?
+>>
+>> I would be willing to accept meson into the master branch as the main
+>> and only build system for libgpiod.
+>
+> Awesome, let me look into it. I'll let you know whether I can get 
+> something together quickly.
+>
 
-Bartosz
+I've put together a WIP series (though perhaps RFC was a better
+description?):
+
+https://lore.kernel.org/all/20221205132207.94775-1-andrew@aj.id.au/
+
+Andrew
