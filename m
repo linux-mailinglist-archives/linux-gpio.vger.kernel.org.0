@@ -2,72 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C074F6429EA
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:53:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F67642A2D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 15:17:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232477AbiLENxA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:53:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44400 "EHLO
+        id S229891AbiLEORy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 09:17:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232476AbiLENwP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:52:15 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E760313D00
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:52:12 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id m14so18672033wrh.7
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:52:12 -0800 (PST)
+        with ESMTP id S231468AbiLEORv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 09:17:51 -0500
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACBD465BC
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 06:17:50 -0800 (PST)
+Received: by mail-vk1-xa32.google.com with SMTP id 6so3288824vkz.0
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 06:17:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3uc9R8Uf/pCe2qvKF4aFF/8KuZBFNDVNUUa6PyIFKSQ=;
-        b=RkjkX1iZ5R0Yaqz0WAQr37pobuFT+aJMIBmxyWhCn6lx6BNIMq1ZuMmZIi5eq7x44P
-         fI58BD0j/5M2j/PhK/mv6zK5XSPQDLjr6cFSQp7/290ryoDIthzp7GH6pCqbcq33Czws
-         tu72Agr5scZe48h6R/exhLO7qC5J7LJHAdfIpgHSs/TOAB91haaBQlcCdornhma56CwQ
-         ycTatCKwkajBhUQxSrgwuayQvqRmJiKpekpHKYhpb1GxoDvybMyrHy6uIu+xb5lkoK2+
-         FovoXA66R3UESptREd5ICtcrnTOQjuIuFFfqsAAV8nHpPZfoa2l91ZG/fM1sUtWdxAEz
-         1lXg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=22pLMwBH1rtTFEZpepzYeNTw8Z740XqmLZskpCypPXg=;
+        b=TKko72a/Gd1QQitFWsaTEF0WK2rNGMJIfCfRh/vXYteF40qVMqITx54mAKdhvOYoeU
+         fxuchHjpMcoRS4j2xbtta9NXDeGwD/KHb6/tuoQIlmQyAAOLUm0eU4nPZ0fskSJaAJD9
+         fPKsGVsqjZAoWVvX0H+fJEOMrfvQQLLXT10wPDvsruOVf35DURqugxt6bgZRoWsmpyHC
+         nrZuv0kHV+18aOlwgHxKGg5CQaJpa7HhLdGOAhLQ1iCSTgdEcSmHWkAOA/Hw98sBHm+A
+         c6CW/VKHspV/3CjhH85RUk+4zvRrO+6ok6KezAXxE3EoynrBd8gTFZDCl0YCcJ5tkbbV
+         n55w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3uc9R8Uf/pCe2qvKF4aFF/8KuZBFNDVNUUa6PyIFKSQ=;
-        b=cW77OhY4pPylKx3AF7AmE+8B0pzeDHeFEDr2faHTZT+BzNhj35DODGBChF28Eoh2O/
-         SCMF2bQQ/7IhqPVkgdDaOy8xQVqGQTeWlqxyn5m2KrNeob/0P86Cy0PFFjybScsBJeFS
-         +knYo68nIOEIaQHraU76cpyT9voI6V7Zto+yYptKhEIT0lkKGl3YfusReTthwXKZYL+P
-         MfR0Wznzs5BxM5N/mX2h0Rfss7yLIQrNPPBQZEIbjUPLdW1VIljXWj0VPQZF+u/uALWn
-         I4Pl76zcx+At8iKrdDO3Zg9vE/l9ipmLN4TSfHJMV2kinMlnY+Hxy7fb1Ca8W73Zpb6v
-         U7Rw==
-X-Gm-Message-State: ANoB5pnMV9O1P6jXNMS8YdZQflHfmMJez1SyHlCsZwW2+JQ2eLyArZM7
-        G85fv5iHeKFqwZcpZ3tchu1yyQ==
-X-Google-Smtp-Source: AA0mqf5FPRwt19PLh2T1fJ+ixYYqormZd+LI8rffdiI7G4LLSJQHjGxKOWRYJ5cKOJWEYhztpWv1xA==
-X-Received: by 2002:adf:fec6:0:b0:242:4697:d828 with SMTP id q6-20020adffec6000000b002424697d828mr8422358wrs.494.1670248331460;
-        Mon, 05 Dec 2022 05:52:11 -0800 (PST)
-Received: from predatorhelios.baylibre (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id a3-20020adffac3000000b0024245e543absm9012700wrs.88.2022.12.05.05.52.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 05:52:11 -0800 (PST)
-From:   =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>
-To:     devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        krzysztof.kozlowski@linaro.org, matthias.bgg@gmail.com,
-        angelogioacchino.delregno@collabora.com, khilman@baylibre.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH v4 3/3] ARM: dts: stm32: Remove the pins-are-numbered property
-Date:   Mon,  5 Dec 2022 14:51:58 +0100
-Message-Id: <20221205135158.1842465-4-bero@baylibre.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221205135158.1842465-1-bero@baylibre.com>
-References: <20221205135158.1842465-1-bero@baylibre.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=22pLMwBH1rtTFEZpepzYeNTw8Z740XqmLZskpCypPXg=;
+        b=mYimOxRzxEnCACPH6BattbJrMDGUAanSp6RKURuE90KwM1J3GS7f0grfqJyqRG7R9t
+         6f82fdDsgv5Mto0U3r9+vNzWpVdw38A7qg3SepxpflZNmbkhdrlzXm6seXVxhVSglziV
+         tUZ5AFMWL+V0bRBoK2jBQXK+c/JDfmEfJjqU6NDhJO8R/91ZQ2kfFSiFxrHAVC3qJyOK
+         mRbtmHHPK2zjHYd9Zvdq1e71wvqtbjmH/iC6bi5dTJ06457X1rLEqj/bLCR/YdNp+LE8
+         RxcOkxTmpSmCzbh3YaiRLtH/65K/uzKSTt7ZcSoh85U0upFw5MiKAf5WQUB7kC0HoJ03
+         d8tQ==
+X-Gm-Message-State: ANoB5pkTTyi3woipqGcrnD6t2lHYoI1/r4TZWH6Q2vSX/C3HxWuH3Ltd
+        lj9rTKPjyywP9/aJ94ssuDhTbegkjOgrCk/hoxyW5g==
+X-Google-Smtp-Source: AA0mqf4QctcEpsut3oeYCsHj7JhgIWgtc75R1J/t+emCjH4Yy8dtQlGwvDT48TFbBXjhnv0kGoRylYnxyZ+xIfD0YC4=
+X-Received: by 2002:a1f:54c1:0:b0:3b7:65cc:8ebc with SMTP id
+ i184-20020a1f54c1000000b003b765cc8ebcmr40476289vkb.5.1670249869756; Mon, 05
+ Dec 2022 06:17:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cc4926af-95bb-4178-a760-d55821dfb626@www.fastmail.com>
+ <CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com>
+ <6e539372-b898-4732-b924-15993e52b4d9@app.fastmail.com> <49112892-07e4-4c1a-8ee6-d112cc9fb65f@app.fastmail.com>
+In-Reply-To: <49112892-07e4-4c1a-8ee6-d112cc9fb65f@app.fastmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 5 Dec 2022 15:17:38 +0100
+Message-ID: <CAMRc=McBhSi824Z3WT82SygLkfqP4jAbR7mzi131aQ5-A6GFQg@mail.gmail.com>
+Subject: Re: [libgpiod]: Meson wrap for libgpiod
+To:     Andrew Jeffery <andrew@aj.id.au>
+Cc:     =?UTF-8?Q?Bartosz_Go=C5=82aszewski?= <bartekgola@gmail.com>,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,86 +67,39 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Remove the pins-are-numbered property from STM32 DeviceTrees
+On Mon, Dec 5, 2022 at 2:27 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> Hi Bartosz,
+>
+> On Fri, 25 Nov 2022, at 14:12, Andrew Jeffery wrote:
+> > Hi!
+> >
+> > On Fri, 25 Nov 2022, at 06:54, Bartosz Golaszewski wrote:
+> >> Hey Andrew!
+> >>
+> >> The libgpiod project has undergone significant changes recently. A new
+> >> major release (v2) is getting closer and I'm thinking that it may be
+> >> the right moment to rethink updating the build system. Would you be
+> >> willing to take a look at the current master branch and see if you can
+> >> swap our current autotools in favor of meson while keeping all the
+> >> current switches in place (translated to meson of course)?
+> >>
+> >> I would be willing to accept meson into the master branch as the main
+> >> and only build system for libgpiod.
+> >
+> > Awesome, let me look into it. I'll let you know whether I can get
+> > something together quickly.
+> >
+>
+> I've put together a WIP series (though perhaps RFC was a better
+> description?):
+>
+> https://lore.kernel.org/all/20221205132207.94775-1-andrew@aj.id.au/
+>
+> Andrew
 
-Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- arch/arm/boot/dts/stm32f4-pinctrl.dtsi | 1 -
- arch/arm/boot/dts/stm32f7-pinctrl.dtsi | 1 -
- arch/arm/boot/dts/stm32h743.dtsi       | 1 -
- arch/arm/boot/dts/stm32mp131.dtsi      | 1 -
- arch/arm/boot/dts/stm32mp151.dtsi      | 2 --
- 5 files changed, 6 deletions(-)
+Thank you! I will take a look shortly. Just for the future: Cc me
+directly on the patches you send (brgl@bgdev.pl), otherwise I may miss
+them in my inbox.
 
-diff --git a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-index 500bcc302d422..4523c63475e4c 100644
---- a/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f4-pinctrl.dtsi
-@@ -51,7 +51,6 @@ pinctrl: pinctrl@40020000 {
- 			ranges = <0 0x40020000 0x3000>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&syscfg 0x8>;
--			pins-are-numbered;
- 
- 			gpioa: gpio@40020000 {
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-index 8f37aefa73150..c8e6c52fb248e 100644
---- a/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32f7-pinctrl.dtsi
-@@ -15,7 +15,6 @@ pinctrl: pinctrl@40020000 {
- 			ranges = <0 0x40020000 0x3000>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&syscfg 0x8>;
--			pins-are-numbered;
- 
- 			gpioa: gpio@40020000 {
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-index 28e3deb20e1e1..f30796f7adf36 100644
---- a/arch/arm/boot/dts/stm32h743.dtsi
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -588,7 +588,6 @@ pinctrl: pinctrl@58020000 {
- 			ranges = <0 0x58020000 0x3000>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&syscfg 0x8>;
--			pins-are-numbered;
- 
- 			gpioa: gpio@58020000 {
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/stm32mp131.dtsi b/arch/arm/boot/dts/stm32mp131.dtsi
-index accc3824f7e98..6b86e031f60e6 100644
---- a/arch/arm/boot/dts/stm32mp131.dtsi
-+++ b/arch/arm/boot/dts/stm32mp131.dtsi
-@@ -547,7 +547,6 @@ pinctrl: pinctrl@50002000 {
- 			ranges = <0 0x50002000 0x8400>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&exti 0x60 0xff>;
--			pins-are-numbered;
- 
- 			gpioa: gpio@50002000 {
- 				gpio-controller;
-diff --git a/arch/arm/boot/dts/stm32mp151.dtsi b/arch/arm/boot/dts/stm32mp151.dtsi
-index 5491b6c4dec20..4e437d3f2ed66 100644
---- a/arch/arm/boot/dts/stm32mp151.dtsi
-+++ b/arch/arm/boot/dts/stm32mp151.dtsi
-@@ -1660,7 +1660,6 @@ pinctrl: pinctrl@50002000 {
- 			ranges = <0 0x50002000 0xa400>;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&exti 0x60 0xff>;
--			pins-are-numbered;
- 
- 			gpioa: gpio@50002000 {
- 				gpio-controller;
-@@ -1789,7 +1788,6 @@ pinctrl_z: pinctrl@54004000 {
- 			#size-cells = <1>;
- 			compatible = "st,stm32mp157-z-pinctrl";
- 			ranges = <0 0x54004000 0x400>;
--			pins-are-numbered;
- 			interrupt-parent = <&exti>;
- 			st,syscfg = <&exti 0x60 0xff>;
- 
--- 
-2.38.1
-
+Bart
