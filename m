@@ -2,228 +2,119 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B72EF642550
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 10:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C9B642595
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 10:18:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbiLEJD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 04:03:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52808 "EHLO
+        id S230254AbiLEJS0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 04:18:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232095AbiLEJCr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 04:02:47 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987BC1BB
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 01:02:17 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id p36so13132519lfa.12
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 01:02:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dMxaUycmxl+S2uvPgIxMwOG2DftPOi9wfPWh+AneDcw=;
-        b=p3j+D/Wc9M3g6mr5ZEjzMfyRifRhIHwMJypgDKfta9PMuwgoTVGNReurNgJgM40RID
-         i6nOixIcHO+ZSqF1YUnjcQZ7B2WQGbiEIbL/v7r2pLEPDa17J/q1dU9j5VC4jItH073l
-         n/JBYUwbmGRZ275nF9CH3drL4fbAlmRELBdtigLgppWgKB8IbOf/TtiXeA3ksgRoSOk/
-         AhKb8FNLb7TJtIYXrHmYMPI9iIvVkWaYnAHUltNlqsXWPJCEVQ4SDYBPplDA4tMFtoKk
-         cubhx/a9UDW8SGhFdPwe9OSMu8mNFXhv+TfxvfBMLYlwmqrpMrn9TRJ7zLFFwsHGXugs
-         +Sxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dMxaUycmxl+S2uvPgIxMwOG2DftPOi9wfPWh+AneDcw=;
-        b=2Xn731lZEGJ6YPI56Yj7D9t0HapXp0RRri2llecQFKkoaWcawIGIhzZ/2wxUuEd20b
-         klkiU8WBOEMTmvzdT6tjfyMTowygg4G48bX486HF3FErIS3RuE41BvrO6a2QHebnMT8A
-         zRur6JwvY7RiPLcxHfoHIEoysl3hOw9Cn3ujAY90t+WKIObxW87GpJedCVG4n++RVtii
-         a0sie6Pqe3W6v9Hon6M8rbB1YznjeipkMDH/EII9zjzf4Wumunpd7YH94rQ/4CY1WO2e
-         +q7nF8aOxTbUlSXHJitUeo2c2fsBGpjcBdhFHcuSVPcqrSMPVkKTxcONsRM4KZksoSDH
-         dPxQ==
-X-Gm-Message-State: ANoB5pmjKuWvTVJqax0MqTf1GHyE1AyrAXUXAVbDnRY14q58//hdTPC9
-        j1jwsB4Oopg9KG+ZnzxkhFgOoA==
-X-Google-Smtp-Source: AA0mqf40OKDV1s//nLvesSXyQnTAgCIILP/C93w3TBXdq9B6xV9CZ5i6fZyJP1TzIyYZqpsla/JVew==
-X-Received: by 2002:ac2:5e2a:0:b0:4b5:6b51:c5ef with SMTP id o10-20020ac25e2a000000b004b56b51c5efmr1864900lfg.336.1670230935845;
-        Mon, 05 Dec 2022 01:02:15 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id h24-20020a2e9018000000b0027a00aab48fsm227356ljg.66.2022.12.05.01.02.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Dec 2022 01:02:15 -0800 (PST)
-Message-ID: <e839274d-6696-63aa-14e6-f52a534c9ed2@linaro.org>
-Date:   Mon, 5 Dec 2022 10:02:14 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
-Content-Language: en-US
-To:     Chester Lin <clin@suse.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
+        with ESMTP id S230193AbiLEJSZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 04:18:25 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C521260E;
+        Mon,  5 Dec 2022 01:18:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670231903; x=1701767903;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=id2QpeunLoL/GwF3eD1EcwAHBc8SwBuv+Uk51QZf5tQ=;
+  b=Jwiu3kuVdDGxYES3CzUNkTaPcTwi3myl71yK1yvb7G8DwzPIcrYX76k/
+   LGxAKuSKEXXiVi1O4X1oDGTg299jt3fAPi5uLcVrXaLMKemM97eZwmXcg
+   NNA/ilzYDd2f9afDj2BEQuS9EMAGi24u1nKR03T2aFDXmCqea5Q6s0TO0
+   73/q1TyPXmkLpLIf+gIDgrV5NCxy5i8s+191nGobd7DtRuA5xYXwft/07
+   FhNkUxyQAyhW7z+4G9mAkrhspkKui2ER+nys8AKT6IkAs9g4vYRGem2hf
+   sPzbm72pHHzQhE8depsbZbmmA/fR4Ej+w9aDuaAoRLHXJErFhDKQHJcO8
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10551"; a="296659661"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="296659661"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 01:18:23 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10551"; a="714330536"
+X-IronPort-AV: E=Sophos;i="5.96,219,1665471600"; 
+   d="scan'208";a="714330536"
+Received: from punajuuri.fi.intel.com (HELO paasikivi.fi.intel.com) ([10.237.72.43])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2022 01:18:21 -0800
+Received: from paasikivi.fi.intel.com (localhost [127.0.0.1])
+        by paasikivi.fi.intel.com (Postfix) with SMTP id AA3102033F;
+        Mon,  5 Dec 2022 11:18:18 +0200 (EET)
+Date:   Mon, 5 Dec 2022 09:18:18 +0000
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        s32@nxp.com, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Larisa Grigore <larisa.grigore@nxp.com>,
-        Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
-        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Matthias Brugger <mbrugger@suse.com>,
-        ghennadi.procopciuc@oss.nxp.com
-References: <20221128054820.1771-1-clin@suse.com>
- <20221128054820.1771-2-clin@suse.com>
- <6ad95ce3-887d-48fd-3c08-f50d4e666ded@linaro.org>
- <Y42MyyLumVa8phpd@linux-8mug>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y42MyyLumVa8phpd@linux-8mug>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/5] gpio/media/int3472: Add support for tps68470
+ privacy-LED output
+Message-ID: <Y423WoW/QksbCwIK@paasikivi.fi.intel.com>
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221128214408.165726-1-hdegoede@redhat.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 05/12/2022 07:16, Chester Lin wrote:
-> Hi Krzysztof,
+Hi Hans,
+
+On Mon, Nov 28, 2022 at 10:44:03PM +0100, Hans de Goede wrote:
+> Hi All,
 > 
-> On Wed, Nov 30, 2022 at 03:58:52PM +0100, Krzysztof Kozlowski wrote:
->> On 28/11/2022 06:48, Chester Lin wrote:
->>> Add DT schema for the pinctrl driver of NXP S32 SoC family.
->>>
->>> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
->>> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
->>> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@nxp.com>
->>> Signed-off-by: Chester Lin <clin@suse.com>
->>> ---
->>>
->>> Changes in v2:
->>> - Remove the "nxp,pins" property since it has been moved into the driver.
->>> - Add descriptions for reg entries.
->>> - Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
->>> - Fix schema issues and revise the example.
->>> - Fix the copyright format suggested by NXP.
->>>
->>>  .../pinctrl/nxp,s32cc-siul2-pinctrl.yaml      | 125 ++++++++++++++++++
->>>  1 file changed, 125 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>> new file mode 100644
->>> index 000000000000..2fc25a9362af
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
->>
->> Usually filename matches the compatible (or family name), so any reason
->> why compatible is "nxp,s32g2" but filename is "nxp,s32cc"?
->>
+> While working on the earlier discussed changes for dealing with
+> the privacy LED for "discrete" INT3472 ACPI devices I was wondering
+> "how are we dealing with the privacy LED when the INT3472 ACPI device
+> is a tps68470?".
 > 
-> According to NXP, the S32CC is a microarch which is adapted by different S32 SoCs,
-> such as S32G2/G3 and S32R45. Some common IPs are implemented in S32CC, such as
-> serial, pinctrl, mmc, gmac and some other peripheral interfaces. S32R45 has
-> different pinouts compared to S32G2, which means that there would not be just
-> "s32g2-siul2-pinctrl" but also "s32r45-siul2-pinctrl" in the compatible enum if
-> S32R45 has to be upstreamed in the future. For this case, it seems to be
-> inappropriate that adding a compatible name without any "s32g" keyword in the
-> filename "nxp,s32g2-.." unless creating a new yaml for each platform, such as
-> nxp,s32r45-siul2-pinctl.yaml.
+> Well it turns out we were not dealing with this at all, leading to
+> the privacy LED on the back of the Surface Go series not lighting up
+> when the back camera is on.
 
-First, you can always rename a file if such need arises. Maybe new SoCs
-will come, maybe not.
+The tps68470 on ACPI was originally only supported via the OP region
+interface and on all of those systems the privacy LED was hard wired. So
+the LED outputs were not supported. Thanks for adding them.
 
-Second, when you actually upstream new SoC it might anyway require new
-bindings file, because pinctrls are quite specific and it is usually
-difficult to support multiple devices in a nice, readable way in one
-file. Therefore anyway another file is quite likely.
-
-(...)
-
->>> +
->>> +patternProperties:
->>> +  '-pins$':
->>> +    type: object
->>> +    additionalProperties: false
->>> +
->>> +    patternProperties:
->>> +      '-grp[0-9]$':
->>> +        type: object
->>> +        allOf:
->>> +          - $ref: pinmux-node.yaml#
->>> +          - $ref: pincfg-node.yaml#
->>> +        unevaluatedProperties: false
->>> +        description:
->>> +          Pinctrl node's client devices specify pin muxes using subnodes,
->>> +          which in turn use the standard properties.
->>
->> All properties are accepted? What about values, e.g. for drive strength?
 > 
-> For those unsupported properties such as drive-strength, the s32g2 pinctrl driver
-> returns -EOPNOTSUPP.
+> This series fixes this, it consists of:
+> 
+> Patches 1-2: 2 small bugfixes to the gpio-tps68470 code
+> Patch3:      Add support for the indicator LED outputs on the tps68470 as GPIOs
+> Patch4:      Add support for a privacy LED to the ov8865 sensor driver
+> Patch5:      Add gpio-lookup table entry for the privacy LED.
+> 
+> There is one small issue here, I believe that patches 1-3 need to land before
+> 4 + 5 do. Once 4 + 5 have landed the ov8865 driver will try to get a
+> GPIO with pin number 10 from the gpio-tps68470 provider and without patch 3,
+> that will fail because only pins 0-9 exist until patch 3 lands.
+> 
+> The easiest way to avoid this issue would be for me to merge patches 1-3 +
+> 5 through the pdx86 tree. GPIO subsystem maintainers, may I have your ack
+> for this ?
+> 
+> Note patch 4 is not a problem without patch 5, it uses gpiod_get_optional,
+> so as long as there is no lookup entry for a "privacy-led" GPIO it is
+> a no-op.
 
-I don't care what the driver is doing, we do not discuss the driver. You
-need to describe properly the hardware and I doubt that hardware accepts
-all drive-strengths, all forms of pull resistors (so any Ohm value).
+For the patches:
 
-Add constrains.
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
->>
->>> +
->>> +additionalProperties: false
->>> +
->>> +examples:
->>> +  - |
->>> +
->>> +    /* Pins functions (SSS field) */
->>> +    #define FUNC0  0
->>> +    #define FUNC1  1
->>> +    #define FUNC2  2
->>> +    #define FUNC3  3
->>> +    #define FUNC4  4
->>> +    #define FUNC5  5
->>> +    #define FUNC6  6
->>> +    #define FUNC7  7
+Although I'd still like to see another, better scaling solution for
+controlling privacy LEDs.
 
-This is another surprise - functions are texts, not numbers.
+-- 
+Kind regards,
 
->>> +
->>> +    #define S32CC_PINMUX(PIN, FUNC) (((PIN) << 4) | (FUNC))
->>> +
->>> +    #define S32CC_SLEW_208MHZ  0
->>> +    #define S32CC_SLEW_166MHZ  4
->>> +    #define S32CC_SLEW_150MHZ  5
->>> +    #define S32CC_SLEW_133MHZ  6
->>> +    #define S32CC_SLEW_83MHZ   7
-
-Don't store register values in the bindings examples. Instead you need
-to be explain the slew-rate property.
-
->>> +
->>> +    pinctrl@4009c240 {
->>> +        compatible = "nxp,s32g2-siul2-pinctrl";
->>> +
->>> +        /*
->>> +         * There are two SIUL2 controllers in S32G2:
->>> +         *
->>> +         *   siul2_0 @ 0x4009c000
->>> +         *   siul2_1 @ 0x44010000
->>> +         *
->>> +         * Every SIUL2 controller has multiple register types, and here
->>> +         * only MSCR and IMCR registers need to be revealed for kernel
->>> +         * to configure pinmux. Please note that some indexes are reserved,
->>> +         * such as MSCR102-MSCR111 in the following reg property.
->>> +         */
->>> +
->>
->> Either this should be part of description or should be dropped. It blows
->> example and probably duplicates DTS.
->>
->>
->> Best regards,
->> Krzysztof
->>
-
-Best regards,
-Krzysztof
-
+Sakari Ailus
