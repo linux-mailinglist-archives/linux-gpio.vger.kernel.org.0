@@ -2,117 +2,121 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A78ED6420E7
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 01:57:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48AB8642128
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 02:43:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbiLEA5h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 4 Dec 2022 19:57:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40328 "EHLO
+        id S231325AbiLEBnm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 4 Dec 2022 20:43:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbiLEA5g (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Dec 2022 19:57:36 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CFA34BC01;
-        Sun,  4 Dec 2022 16:57:32 -0800 (PST)
-Received: from loongson.cn (unknown [117.133.84.183])
-        by gateway (Coremail) with SMTP id _____8CxpfD7QY1jHCoDAA--.7225S3;
-        Mon, 05 Dec 2022 08:57:31 +0800 (CST)
-Received: from [192.168.1.2] (unknown [117.133.84.183])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_eH6QY1jcKklAA--.27000S3;
-        Mon, 05 Dec 2022 08:57:30 +0800 (CST)
-Message-ID: <2b86e0a3-2367-c7e8-1086-ee79ffb19907@loongson.cn>
-Date:   Mon, 5 Dec 2022 08:57:30 +0800
+        with ESMTP id S231241AbiLEBnm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 4 Dec 2022 20:43:42 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FCA11A0D;
+        Sun,  4 Dec 2022 17:43:40 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id 62so9166546pgb.13;
+        Sun, 04 Dec 2022 17:43:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNMafDYB6fFOhMeLCFBhocV85I901cqUWy+zYzgU/+A=;
+        b=CcKYdzH9sH1aup47JAWXgTTzOSCAXuOQIOTXwgCDADvT6pELae63ql1xb8GxQcdhmp
+         FMvFd955pItJ1noIOEF2MRDq78O+eh07dYd6E9SAlW+vi+UuWhwvWY/WLQWP9SHSXgVm
+         /Sp1a3qVcf+uCB8ICu+lEoNiU1rME/1YuuOKgcYGeFVmFtxQqHFeM5FyK1KLZA6qrIjI
+         w+ZRblKqlt5DaZPsG0vZaiOoAsl/IDqp0zp5tM8o29sc4EJPCUD0lRzi3yLqsCx2CgwB
+         Uk1ZSf99NmpvO7D7X45+O/AY1qm6ccMWAgh6c3edjEVVq4pAK4siyImVHD6jJnKcylBo
+         S0dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CNMafDYB6fFOhMeLCFBhocV85I901cqUWy+zYzgU/+A=;
+        b=3+BeysnQBT1s2WDfthcrMFJJpOSaERpw4BULrObKs7koNUZCeAtX9xEGqBLTI3NNsR
+         cMyTLYXOEOTBVWT1yAwtWsHqWPtHjeQoCK4EN+fR8AqTW61PFglICJpDWbkxo0nx3Ijo
+         yBnrQFEGm4y9XsHzK38dO6zbOc8HK+glpYo/ch5lKIJKI6Zl6EpLvtDNQ20Ztj/B8VU9
+         IiMyY834dmeKQdpM9vDLkWr9cpE44jCmduL3I2XsIbXzt5pALQ3zkAvUH1yyajjn1Hu0
+         RrQKugpaPaQcm2c9D540C37OUGIF4PwFRQH7Pf5jFvIPX2SmX2UtJ5vq0lnUEzRX5ApQ
+         RbGw==
+X-Gm-Message-State: ANoB5pm1oBw7fr4fBTpmF9f3bW30mFDg1XJXHv5JlvCctRvf7ImEoeiD
+        mqLYWXEIwoMAm7YitlODEHc=
+X-Google-Smtp-Source: AA0mqf4v14Ev65Y4uH0oqDEhOh8gjfDQqOjIRgj0b1FJvkJb7iB5hHurHGblso4ZBldrYbGEzLYL5Q==
+X-Received: by 2002:a05:6a00:2908:b0:56b:d738:9b with SMTP id cg8-20020a056a00290800b0056bd738009bmr62308196pfb.61.1670204619863;
+        Sun, 04 Dec 2022 17:43:39 -0800 (PST)
+Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
+        by smtp.gmail.com with ESMTPSA id n9-20020aa79849000000b005769ccca18csm3049702pfq.85.2022.12.04.17.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Dec 2022 17:43:39 -0800 (PST)
+Date:   Mon, 5 Dec 2022 09:43:32 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
+ return in ->get() callback
+Message-ID: <Y41MxPthLjitvzEl@sol>
+References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
+ <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
+ <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v1] gpio: loongson: enable irqdomain hierarchy config
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>
-References: <20221203105825.15886-1-zhuyinbo@loongson.cn>
- <b6b34bc4-4089-9c02-81b2-9eaf2c9a4663@loongson.cn>
- <CAMRc=MdqOA_xU6TdcMspF=GMYx0MbKv0MzrTNOuZ7W=kg2skDw@mail.gmail.com>
-From:   Yinbo Zhu <zhuyinbo@loongson.cn>
-In-Reply-To: <CAMRc=MdqOA_xU6TdcMspF=GMYx0MbKv0MzrTNOuZ7W=kg2skDw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx_eH6QY1jcKklAA--.27000S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoW7XF4kWrWrCFy8GF4UtrWfuFg_yoWkArg_Cw
-        nFyFs7Cr1UGr929FsI9rWfZr9IkayDWr1rC3Wqqw13Xw12qay8uw1Yvwn3W3W7WrW7WFn7
-        ZrWSyFy7ZrWIgjkaLaAFLSUrUUUUnb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUO
-        17CY07I20VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2
-        IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84AC
-        jcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM2
-        8EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE
-        52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I
-        80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
-        c4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI
-        0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8VWrMxC20s026xCaFVCj
-        c4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
-        1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8FAp5UUUUU==
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Sat, Dec 03, 2022 at 10:38:45AM +0100, Linus Walleij wrote:
+> On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > +The below table gathered the most used cases.
+> > +
+> > +==========  ==========  ===============  =======================
+> > +  Input       Output         State        What value to return?
+> > +==========  ==========  ===============  =======================
+> > + Disabled    Disabled    Hi-Z             input buffer
+> > + Disabled    OS/OD/etc   Single ended     [cached] output buffer
+> > +    x        Push-Pull   Out              [cached] output buffer
+> > + Enabled     Disabled    In               input buffer
+> > + Enabled     OS/OD/etc   Bidirectional    input buffer
+> > +==========  ==========  ===============  =======================
+> 
+> This looks about right to me, but we need more input, Kent?
+> 
 
-在 2022/12/3 23:01, Bartosz Golaszewski 写道:
-> On Sat, Dec 3, 2022 at 12:05 PM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
->>
->> 在 2022/12/3 18:58, Yinbo Zhu 写道:
->>> The loongson gpio driver need select IRQ_DOMAIN_HIERARCHY and add
->>> such support.
->>>
->>> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
->>> ---
->>>    drivers/gpio/Kconfig | 1 +
->>>    1 file changed, 1 insertion(+)
->>>
->>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->>> index 55b7c5bae4aa..0f014411703e 100644
->>> --- a/drivers/gpio/Kconfig
->>> +++ b/drivers/gpio/Kconfig
->>> @@ -395,6 +395,7 @@ config GPIO_LOONGSON_64BIT
->>>        depends on LOONGARCH || COMPILE_TEST
->>>        select GPIO_GENERIC
->>>        select GPIOLIB_IRQCHIP
->>> +     select IRQ_DOMAIN_HIERARCHY
->>>        help
->>>          Say yes here to support the GPIO functionality of a number of
->>>          Loongson series of chips. The Loongson GPIO controller supports
->> Hi Bartosz,
->>
->>
->> please help merge this patch on top of the existing series.
->>
-> I applied this, but please don't ping me an hour after you submit a
-> patch on a Saturday.
->
-> Bart
+Firstly, I'm all for tightening up the driver contract, and hope that
+whatever is decided will also be updated in driver.h itself.
 
-okay, I'll pay attention later.
+I can also understand Andy wanting to add support for Bidirectional
+using the existing API.
 
+But, and please correct me if I'm wrong, the user has no control over
+whether an open drain output is single ended or bidirectional, and
+no visibility as to which the driver supports or chooses.
+So the contract is still vague.
 
-Thanks,
+My preference would be for the driver API to be extended with a new
+callback for the output buffer, say get_output(), and have the existing
+get() always return the input buffer.  Both would return an error if the
+buffer is unavailable or disconnected, e.g. in the Hi-Z case.
+As per Hans' suggestions, this would keep the drivers simple.
 
-Yinbo.
+Then cdev could determine the approriate buffer to return, depending
+on the mode.  Or, better yet, we extend that through the uAPI and
+handball that decision to the user.
+
+Cheers,
+Kent.
 
