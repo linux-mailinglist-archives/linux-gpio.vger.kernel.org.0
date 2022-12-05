@@ -2,76 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 394BB642BE7
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 16:36:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B803642C2E
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 16:44:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231801AbiLEPgJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 10:36:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43320 "EHLO
+        id S233105AbiLEPo4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 10:44:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231802AbiLEPgH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 10:36:07 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1F162D2;
-        Mon,  5 Dec 2022 07:36:06 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id o12so11550312pjo.4;
-        Mon, 05 Dec 2022 07:36:06 -0800 (PST)
+        with ESMTP id S233106AbiLEPof (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 10:44:35 -0500
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB091FCC1
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 07:44:13 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id bg10so9056807wmb.1
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 07:44:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=U1vH1dvrgSyDnedzoMQstWazi20nrn3iOOtx2zZamBg=;
-        b=gXYdttr/hZGmqCeq49R45h++zeLTuzTtdy5viSA5VeqJIUlCP4fCq4hGlPTuXAeWSB
-         O85YPq35CJQsSpSf70AJyL8tYDKuSdAcQbswkkGD9FFUnYwUqISjZP1QYQVBBifGHp/+
-         qsfkDKv4Li/ZFV9U6Nf5AtKHblX8swFcifPv/fmqtJ13I+Y+56bm67T7Lw7YwHbPbWEX
-         m1OBU2jafVf49PlIKOKMgN9+g9Sixh1NVRppGTIKQL5e30YZ3d/YKiw954tq2+A74Gyr
-         emZ6e6zrZaVXPbZLgthM1zGLncjLx9F3IIVchi0q8A3cCM52w8EjbETOjw2TvBxYrltA
-         qgUg==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+dSXXpqkOfI6iX7DPdSwqjx/kWkV+rgw6PUOKgDniLQ=;
+        b=F/C+bNc5BVLGPws2uUTW988I2HivgvoZ6p+JTXlCKQhLvg6SR0Id5SgeBJYoSbP2NN
+         SZdBKtDy7cP558innIXM8hj/D/ypDsRwAMH9FtPW5UQBRCUQMO6sKA3pxrCz3Hb1pXaf
+         5NPuer/nJXago+X6AiCJ8bhQwDhOfNN1fcsuq4cTvJX+0hSWW0b95i0Plk8cXtZDWrti
+         CwWJ26Jx1YgoeKJNI5I/o5rzgb/q63UJ+Teb9F3zISXW6OL+PB0E+kiwl39OJKVTI/ZV
+         yE1Ew4qvEC+fmVoRcfFhLiZQNljxRJpKbI0xoZMFKqXedvb0S0XZUF5lHU2LyfiGY1iI
+         SWxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U1vH1dvrgSyDnedzoMQstWazi20nrn3iOOtx2zZamBg=;
-        b=EilNxQhnVc4WEeuK4ohahOvQJNtooKLAIgxSzNLu2nGtOPEoXv3OLQ/TGddmhhRN45
-         ajFlEykyrGpCpkr79tnki4Lmux51sqmpIRZuZVQvwzJU1FqFYMnbZ9bLtn36biYXD18j
-         cfzJIZKKbhzUrYf9pk7pGmgMg2ECjQ7Eeemr5R/N280k9M2ETkDQVX7k2BN8ZZj2aLTF
-         9yagjihs9Jkd7RDUjd56gjUAIccipNvrXhsoj+hXEBb0uX7YvwWyk6XvLMRZb3y40Q/4
-         D+0bSrPUf2MztO0nIuxf/55e29MttPy7Zjwcr9E3pPo2RL4nCkld3ade60P944WmebGT
-         VNjg==
-X-Gm-Message-State: ANoB5pkCVlAHaMGStx5a8d7GQAl5XFGaiA1bQCqjnO+AtnOxdkXffpeG
-        Qb7zf3SBKMU15stoZT16C8A=
-X-Google-Smtp-Source: AA0mqf5c4Cau2Vpe+MTJhXmVTeWAFvXgR1+7eJNPK0+/QMr+kP4KI5MC3I3jE/FLZwxuUJisPRQDhQ==
-X-Received: by 2002:a17:903:3306:b0:189:7d4d:b9a3 with SMTP id jk6-20020a170903330600b001897d4db9a3mr43284505plb.156.1670254566271;
-        Mon, 05 Dec 2022 07:36:06 -0800 (PST)
-Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
-        by smtp.gmail.com with ESMTPSA id g2-20020a17090adb0200b0020ad53b5883sm9440899pjv.14.2022.12.05.07.36.02
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+dSXXpqkOfI6iX7DPdSwqjx/kWkV+rgw6PUOKgDniLQ=;
+        b=egnvnY+XnjcHm/SgpdTn8/2jIZ7YjnHfmSCGlkDajQbuUKXeE4Zn5I78eLdYcHqfkL
+         UzhQu+pWRcyIN5p6Ye/BpGiPVV/BIAxjys3+29H4GhJtTqXZNTUZoL/+b3i6khOboQyU
+         mRfwDrBkKy+yW0/tfzjsCutygZpnX5mFP2B40m2aKuOqmaa4dSenLjCtIxYXf/HPtHoV
+         WDLh88R/ZA6Ax3CVX3SdwB/eNQ2Cj/5O84FlXe+Q884p289ggMvMdj5nSBNzYvLeczjS
+         gzxC8TyWslfonLPfzJo4E9c9BoiQBeCy4O7DRRhQc8+lMns/s/DL3ERMI4LSb6anJkbD
+         /IEQ==
+X-Gm-Message-State: ANoB5pnl61Qwm2eQIbvkqn2iiWhoPvjY3HrpXtLfyFNlATEWYYpZMNqQ
+        1wTeLBUvJpE8oflz+5qUL9MxJg==
+X-Google-Smtp-Source: AA0mqf4E5jtwThvGtdIMYPeAhjZeLR7tS4TUtwsfcdIqLLF0Beo0ruECcXsW5Q1Na9dKzT0WSXkutA==
+X-Received: by 2002:a05:600c:3c87:b0:3d0:58bb:9fa3 with SMTP id bg7-20020a05600c3c8700b003d058bb9fa3mr27348653wmb.39.1670255052235;
+        Mon, 05 Dec 2022 07:44:12 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:1845:911d:bbf3:b5df])
+        by smtp.gmail.com with ESMTPSA id i10-20020a1c540a000000b003cfc02ab8basm21138060wmb.33.2022.12.05.07.44.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 07:36:05 -0800 (PST)
-Date:   Mon, 5 Dec 2022 23:35:59 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
- return in ->get() callback
-Message-ID: <Y44P3811P1KB5pEl@sol>
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
- <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
- <Y41MxPthLjitvzEl@sol>
- <Y43fQFBcPgKtuKRZ@smile.fi.intel.com>
+        Mon, 05 Dec 2022 07:44:11 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [libgpiod][PATCH] gpiosim: fix a resource leak
+Date:   Mon,  5 Dec 2022 16:44:09 +0100
+Message-Id: <20221205154409.1012081-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y43fQFBcPgKtuKRZ@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,72 +70,190 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 02:08:32PM +0200, Andy Shevchenko wrote:
-> On Mon, Dec 05, 2022 at 09:43:32AM +0800, Kent Gibson wrote:
-> > On Sat, Dec 03, 2022 at 10:38:45AM +0100, Linus Walleij wrote:
-> > > On Wed, Nov 30, 2022 at 4:55 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > 
-> > > > +The below table gathered the most used cases.
-> > > > +
-> > > > +==========  ==========  ===============  =======================
-> > > > +  Input       Output         State        What value to return?
-> > > > +==========  ==========  ===============  =======================
-> > > > + Disabled    Disabled    Hi-Z             input buffer
-> > > > + Disabled    OS/OD/etc   Single ended     [cached] output buffer
-> > > > +    x        Push-Pull   Out              [cached] output buffer
-> > > > + Enabled     Disabled    In               input buffer
-> > > > + Enabled     OS/OD/etc   Bidirectional    input buffer
-> > > > +==========  ==========  ===============  =======================
-> > > 
-> > > This looks about right to me, but we need more input, Kent?
-> > > 
-> > 
-> > Firstly, I'm all for tightening up the driver contract, and hope that
-> > whatever is decided will also be updated in driver.h itself.
-> > 
-> > I can also understand Andy wanting to add support for Bidirectional
-> > using the existing API.
-> > 
-> > But, and please correct me if I'm wrong, the user has no control over
-> > whether an open drain output is single ended or bidirectional, and
-> > no visibility as to which the driver supports or chooses.
-> > So the contract is still vague.
-> > 
-> > My preference would be for the driver API to be extended with a new
-> > callback for the output buffer, say get_output(), and have the existing
-> > get() always return the input buffer.  Both would return an error if the
-> > buffer is unavailable or disconnected, e.g. in the Hi-Z case.
-> > As per Hans' suggestions, this would keep the drivers simple.
-> 
-> That's not about keeping driver simple, it's about how from hardware
-> (electrical) point of view we should recognize the GPIO signal value.
-> And I disagree on the input buffer to be always involved (in particular,
-> not all hardware may support that anyway). That said, I will send an answer
-> to all you guys, but just to make sure that we are on the different pages
-> here I state yet another time that this is not about solely software p.o.v.
-> And yes, there is no simple answer to the question.
-> 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-To be clear, my suggestion is focussed on providing visibility to allow
-the user to determine if their hardware supports their use case - without
-them having to get out a scope to check.
-And it doesn't care what those use cases are.
+If we set the number of lines to x, set line names or hogs for lines
+from 0 through x, then set the number of lines to (x - y), we will not
+unlink all the line directories as we only iterate up to num_lines in
+bank_release().
 
-The fact that it also keeps the driver logic simple is a happy
-coincidence, but I agree with Hans that that is a huge benefit and so
-reiterated it above.  My bad if that gave the impression that was my
-primary focus.
+Allocate a small structure for every line we create a lineX directory
+for and iterate over it in bank_release() to know exactly which ones
+need freeing.
 
-> > Then cdev could determine the approriate buffer to return, depending
-> > on the mode.  Or, better yet, we extend that through the uAPI and
-> > handball that decision to the user.
-> 
-> TL;DR: I don't like this idea.
-> 
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ tests/gpiosim/gpiosim.c | 92 ++++++++++++++++++++++++++---------------
+ 1 file changed, 58 insertions(+), 34 deletions(-)
 
-And yours paints us into a corner.
-
-Cheers,
-Kent.
+diff --git a/tests/gpiosim/gpiosim.c b/tests/gpiosim/gpiosim.c
+index 45a0013..a8410f3 100644
+--- a/tests/gpiosim/gpiosim.c
++++ b/tests/gpiosim/gpiosim.c
+@@ -228,6 +228,12 @@ static void list_del(struct list_head *entry)
+ 	     !list_entry_is_head(pos, head, member); \
+ 	     pos = list_next_entry(pos, member))
+ 
++#define list_for_each_entry_safe(pos, next, head, member) \
++	for (pos = list_first_entry(head, typeof(*pos), member), \
++	     next = list_next_entry(pos, member); \
++	     !list_entry_is_head(pos, head, member); \
++	     pos = next, next = list_next_entry(next, member))
++
+ static int open_write_close(int base_fd, const char *where, const char *what)
+ {
+ 	ssize_t written, size;
+@@ -411,6 +417,12 @@ struct gpiosim_bank {
+ 	int cfs_dir_fd;
+ 	int sysfs_dir_fd;
+ 	size_t num_lines;
++	struct list_head lines;
++};
++
++struct gpiosim_line {
++	struct list_head siblings;
++	unsigned int offset;
+ };
+ 
+ static inline struct gpiosim_ctx *to_gpiosim_ctx(struct refcount *ref)
+@@ -841,15 +853,18 @@ static void bank_release(struct refcount *ref)
+ {
+ 	struct gpiosim_bank *bank = to_gpiosim_bank(ref);
+ 	struct gpiosim_dev *dev = bank->dev;
+-	unsigned int i;
++	struct gpiosim_line *line, *tmp;
+ 	char buf[64];
+ 
+-	/* FIXME should be based on dirent because num_lines can change. */
+-	for (i = 0; i < bank->num_lines; i++) {
+-		snprintf(buf, sizeof(buf), "line%u/hog", i);
++	list_for_each_entry_safe(line, tmp, &bank->lines, siblings) {
++		snprintf(buf, sizeof(buf), "line%u/hog", line->offset);
+ 		unlinkat(bank->cfs_dir_fd, buf, AT_REMOVEDIR);
+-		snprintf(buf, sizeof(buf), "line%u", i);
++
++		snprintf(buf, sizeof(buf), "line%u", line->offset);
+ 		unlinkat(bank->cfs_dir_fd, buf, AT_REMOVEDIR);
++
++		list_del(&line->siblings);
++		free(line);
+ 	}
+ 
+ 	list_del(&bank->siblings);
+@@ -900,6 +915,7 @@ GPIOSIM_API struct gpiosim_bank *gpiosim_bank_new(struct gpiosim_dev *dev)
+ 	bank->item_name = item_name;
+ 	bank->num_lines = 1;
+ 	bank->id = id;
++	list_init(&bank->lines);
+ 
+ 	return bank;
+ 
+@@ -969,25 +985,34 @@ GPIOSIM_API int gpiosim_bank_set_num_lines(struct gpiosim_bank *bank,
+ 	return 0;
+ }
+ 
+-/*
+- * Create a sub-directory under given bank's configfs directory. Do nothing
+- * if the directory exists and is writable. Mode is O_RDONLY.
+- */
+-static int bank_mkdirat(struct gpiosim_bank *bank, const char *path)
++static int bank_make_line_dir(struct gpiosim_bank *bank, unsigned int offset)
+ {
++	struct gpiosim_line *line;
++	char buf[32];
+ 	int ret;
+ 
+-	ret = faccessat(bank->cfs_dir_fd, path, W_OK, 0);
++	snprintf(buf, sizeof(buf), "line%u", offset);
++
++	ret = faccessat(bank->cfs_dir_fd, buf, W_OK, 0);
++	if (!ret)
++		return 0;
++	if (ret && errno != ENOENT)
++		return -1;
++
++	line = malloc(sizeof(*line));
++	if (!line)
++		return -1;
++
++	ret = mkdirat(bank->cfs_dir_fd, buf, O_RDONLY);
+ 	if (ret) {
+-		if (errno == ENOENT) {
+-			ret = mkdirat(bank->cfs_dir_fd, path, O_RDONLY);
+-			if (ret)
+-				return -1;
+-		} else {
+-			return -1;
+-		}
++		free(line);
++		return -1;
+ 	}
+ 
++	memset(line, 0, sizeof(*line));
++	line->offset = offset;
++	list_add(&line->siblings, &bank->lines);
++
+ 	return 0;
+ }
+ 
+@@ -996,24 +1021,18 @@ GPIOSIM_API int gpiosim_bank_set_line_name(struct gpiosim_bank *bank,
+ 					   const char *name)
+ {
+ 	char buf[32];
+-	int ret, fd;
++	int ret;
+ 
+ 	if (!dev_check_pending(bank->dev))
+ 		return -1;
+ 
+-	snprintf(buf, sizeof(buf), "line%u", offset);
+-
+-	ret = bank_mkdirat(bank, buf);
++	ret = bank_make_line_dir(bank, offset);
+ 	if (ret)
+ 		return -1;
+ 
+-	fd = openat(bank->cfs_dir_fd, buf, O_RDONLY);
+-	if (fd < 0)
+-		return -1;
++	snprintf(buf, sizeof(buf), "line%u/name", offset);
+ 
+-	ret = open_write_close(fd, "name", name ?: "");
+-	close(fd);
+-	return ret;
++	return open_write_close(bank->cfs_dir_fd, buf, name ?: "");
+ }
+ 
+ GPIOSIM_API int gpiosim_bank_hog_line(struct gpiosim_bank *bank,
+@@ -1040,17 +1059,22 @@ GPIOSIM_API int gpiosim_bank_hog_line(struct gpiosim_bank *bank,
+ 	if (!dev_check_pending(bank->dev))
+ 		return -1;
+ 
+-	snprintf(buf, sizeof(buf), "line%u", offset);
+-
+-	ret = bank_mkdirat(bank, buf);
++	ret = bank_make_line_dir(bank, offset);
+ 	if (ret)
+ 		return -1;
+ 
+ 	snprintf(buf, sizeof(buf), "line%u/hog", offset);
+ 
+-	ret = bank_mkdirat(bank, buf);
+-	if (ret)
+-		return -1;
++	ret = faccessat(bank->cfs_dir_fd, buf, W_OK, 0);
++	if (ret) {
++		if (errno == ENOENT) {
++			ret = mkdirat(bank->cfs_dir_fd, buf, O_RDONLY);
++			if (ret)
++				return -1;
++		} else {
++			return -1;
++		}
++	}
+ 
+ 	fd = openat(bank->cfs_dir_fd, buf, O_RDONLY);
+ 	if (fd < 0)
+-- 
+2.37.2
 
