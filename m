@@ -2,69 +2,69 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D2EF642940
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:22:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD06642942
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:22:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232231AbiLENWc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:22:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
+        id S232167AbiLENWg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 08:22:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232243AbiLENWZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:22:25 -0500
+        with ESMTP id S232246AbiLENWa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:22:30 -0500
 Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657231C927
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:22:23 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id D16ED5C00F4
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 08:22:21 -0500 (EST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 369041C908
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:22:24 -0800 (PST)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9E7055C00F3
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 08:22:23 -0500 (EST)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Mon, 05 Dec 2022 08:22:21 -0500
+  by compute1.internal (MEProxy); Mon, 05 Dec 2022 08:22:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
         :content-transfer-encoding:date:date:from:from:in-reply-to
         :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1670246541; x=1670332941; bh=Bg
-        6F3mOEmrQsn+IeTcx6qFny54XneeogI3UwqyGXFks=; b=imrtqaTKPlRlTv0SO3
-        otOvk1JVBBhtAUTH2C1cLYYXCPoMBhtcT7PvXIF9Db6plthBrrUxWqucMg+zdiVR
-        4qr2gMESwmHb9elDKCUiHxV0+gNnLe7aZ62mrXGDwatcAzHWq37/JF9cNQPZMQQP
-        RaL6/wha8cC+U/U7CynBDgCDNui7zR506dEsSpfIfpjhc6+5pTnH6NYlsrmPR3m1
-        iTjGCdrjZoYOq0Z0OjrS23VcqbBJeAYlzmQjaCoIvjJWXmOGqY/1n/Yqv+HY/gRz
-        EXLO6VXm+DKZ14DCVHmZxlnUV+01eTAV4oKOHZENHdcNl+NU0MOmRObz7RN2sDt5
-        zs5Q==
+        :subject:subject:to:to; s=fm3; t=1670246543; x=1670332943; bh=6g
+        IrBqclFp/Gu1v6WAdxwGy1zHj5XQmGwyOz1w2GyVk=; b=UCg7rVMUbOrcMfTEIY
+        6nbPjVbKx2/Vmf7ibbF9VnAvALAbiEhqyE3zxAbJ4Sv3UGz521SK6VbXn5a2W36I
+        ZYFq9QR28ANuI2wYdpArrpgivN6SjEXApPZbcCLMtbrHh4noIbxwCyqAx6uPVSec
+        7XK+faA8udjNw5e9XDnml7tkW7YpWdeubSuGl+eG1bBCTt7c40t9GrZqkZ7iuMOg
+        F3ttjK3erCa9QNxLb2pC821aanV4qJjNT0FjLj1C4ww+iQiw8ZB7GBMG3ZEOmU5J
+        j3rmPhT9LsJTp3RpyTkC1QsxN71178cFS+u5CKF9qptPo1BpjpMEsSHBFkpAW6by
+        2JnA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:date
         :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
         :message-id:mime-version:references:reply-to:sender:subject
         :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1670246541; x=1670332941; bh=Bg6F3mOEmrQsn
-        +IeTcx6qFny54XneeogI3UwqyGXFks=; b=LTaFdEBBdKpJPfeH9bGdYfyRlMiUf
-        W8IKK6Xmph4RvFL0fjCLYY5S0QBJ8yvbmZnPwzaD65DIpvSiQ5ndeDo+j6n13MIr
-        Iy+nSIzajIbbnlbBaBESOeMSmIUatTzTOpWRH/PsDYhTzNcr+R6mrkJHiyLU6I5w
-        +W3NTO6SOHGtX9aro7n4mvk6g2T07SwVV9wWNt/WC45LQlO5DtbOaJ41boa1zQIP
-        ipiTcDDTMi9/gp5TmYU1fvqgsbYnJEybMw53QjeM0rkxSbslprMZ39Wzk8gB0HjK
-        ymhB0fmdx+Zhox02Sfq1SBoQMw+hRq6I2hUVUzuOVz9Z7wcRhz37zz4EA==
-X-ME-Sender: <xms:jfCNY2q6XvpChNvXQ4nNrHtTlNMxrh8ZL2UMSLpz40SplMrwAaoabw>
-    <xme:jfCNY0q3fsP4iW9uyAC-po-hCEp1shEhKnhrsQDPTb0saC1UI2XRbLptXJdEReLqw
-    AGj8r38su6eo8H_sw>
-X-ME-Received: <xmr:jfCNY7PeODEizmOI8cwAVu58w8Q7QYW7Ai33FjDSOKVun9k0c5AEaMzlTJunhoIbmzhVx84ghKjoRXz6dUwjDi2MwuWE49qWe1WbcA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeggdehtdcutefuodetggdotefrodftvf
+        :x-sasl-enc; s=fm1; t=1670246543; x=1670332943; bh=6gIrBqclFp/Gu
+        1v6WAdxwGy1zHj5XQmGwyOz1w2GyVk=; b=nlGPEm32GuJRjv4pb90RpxS7TZZ/9
+        vP887uuVClcA+cMzI/sZ7Sdx+a4Q/5J4NFjkvMh3l4ruhGmpaBw4sKmV9//hH7ZF
+        j6UOeOpPbL64RX8Veril9W5EtUYtx9HVw8HldXA7c0opKV8XLGxuo/Kk5RjnDlVy
+        EclQurgmEKYll3UMKvmSTchWS+3MrXsBuT28c1rrqBrNwvBr2kamhBXKkvFTnNSP
+        DnKLYGHCus0iMhGOAL00WGMPpBJOvTHQv+1OBtUNeaynzBhXRP/cCbbzcqZ5qUu/
+        zwMAj/25NpqAKrkyiFEkttO3mBZNO9osTstPlRsOb6j14+1ofZ5e2PW7g==
+X-ME-Sender: <xms:j_CNYzbXjKBUDzfKU2QMnTlu8j-h1UzSE_kRAdBNMGWiaDdTp4QYLQ>
+    <xme:j_CNYyZCEGcT4FA3h2sjMWjsU_HLXlhAZ_IGXSPaDY1tB-XLUTF1XlxQyJle_r1KH
+    l6fXwxjAleboFex9A>
+X-ME-Received: <xmr:j_CNY1-mwmOyzoGBc-qQHOHmX3Z7y5XdhcE3-Tj4fsWt764R4L8Ky4sv1Iy7J-8bb9jaL2POjm0FEB5J2mqGn1WxkegUqgxUkOC1ng>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeggdehudcutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecunecujfgurhephffvufffkffojghfggfgsedtkeertd
     ertddtnecuhfhrohhmpeetnhgurhgvficulfgvfhhfvghrhicuoegrnhgurhgvfiesrghj
     rdhiugdrrghuqeenucggtffrrghtthgvrhhnpeejgfdvveehteekveeggeellefgleette
     ejffelffdvudduveeiffegteelvefhteenucevlhhushhtvghrufhiiigvpedtnecurfgr
     rhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:jfCNY14QM9mPDBqtFFPJHWASu8JL9hKgtQHXBsHQvvLcAsf9GuywcA>
-    <xmx:jfCNY14wXjJQL987J6f8afPc5NXgWodSvArSROSBYTCkBDnO760aPA>
-    <xmx:jfCNY1ioHa1adp532IRtKL8P9tCq5LW6WZ199RkgBJZV0kCadhrB-w>
-    <xmx:jfCNY2XJosraBOCB_qLwldh_VIh4zYNULAeSMARBDjpwjVwt1UKmXw>
+X-ME-Proxy: <xmx:j_CNY5qc0WETibV36-NkuAkQ2IRuSyLj2o-rMcUqYhemL4cM1tSAcQ>
+    <xmx:j_CNY-rNLR9aW6wPVnVyU14IcWE3xfRZDbPQPmJ825ZAXu94cTSL0Q>
+    <xmx:j_CNY_SEH668rWL5Mf11UYK7wX7A3U6ZMMzGyp2r-V4GjeW_o8UHXw>
+    <xmx:j_CNY8FTcPshWWuX5oylL4Z76LMKaD3_P2Z4_Ep5YHdqOjpRgqeOKA>
 Feedback-ID: idfb84289:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-gpio@vger.kernel.org>; Mon, 5 Dec 2022 08:22:20 -0500 (EST)
+ <linux-gpio@vger.kernel.org>; Mon, 5 Dec 2022 08:22:22 -0500 (EST)
 From:   Andrew Jeffery <andrew@aj.id.au>
 To:     linux-gpio@vger.kernel.org
-Subject: [libgpiod][WIP PATCH 1/2] Introduce meson as a build system
-Date:   Mon,  5 Dec 2022 23:52:06 +1030
-Message-Id: <20221205132207.94775-2-andrew@aj.id.au>
+Subject: [libgpiod][WIP PATCH 2/2] Remove autotools in favour of meson
+Date:   Mon,  5 Dec 2022 23:52:07 +1030
+Message-Id: <20221205132207.94775-3-andrew@aj.id.au>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20221205132207.94775-1-andrew@aj.id.au>
 References: <20221205132207.94775-1-andrew@aj.id.au>
@@ -79,771 +79,979 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-So far meson builds the core library, tools and tests, as well as the
-C++, Python and Rust bindings.
-
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- Doxyfile.in                               |  2 +-
- bindings/cxx/examples/meson.build         |  9 +++
- bindings/cxx/gpiodcxx/meson.build         | 19 +++++
- bindings/cxx/meson.build                  | 49 ++++++++++++
- bindings/cxx/tests/meson.build            | 26 +++++++
- bindings/meson.build                      | 14 ++++
- bindings/python/examples/meson.build      | 12 +++
- bindings/python/gpiod/ext/meson.build     | 14 ++++
- bindings/python/gpiod/meson.build         | 17 +++++
- bindings/python/meson.build               | 16 ++++
- bindings/python/tests/gpiosim/meson.build | 12 +++
- bindings/python/tests/meson.build         | 17 +++++
- bindings/rust/gpiosim-sys/build.rs        |  9 ++-
- bindings/rust/libgpiod-sys/build.rs       |  9 ++-
- bindings/rust/meson.build                 | 30 ++++++++
- include/meson.build                       |  7 ++
- lib/meson.build                           | 30 ++++++++
- man/meson.build                           | 21 ++++++
- meson.build                               | 91 +++++++++++++++++++++++
- meson_options.txt                         |  9 +++
- tests/gpiosim/meson.build                 | 24 ++++++
- tests/meson.build                         | 30 ++++++++
- tools/meson.build                         | 69 +++++++++++++++++
- 23 files changed, 529 insertions(+), 7 deletions(-)
- create mode 100644 bindings/cxx/examples/meson.build
- create mode 100644 bindings/cxx/gpiodcxx/meson.build
- create mode 100644 bindings/cxx/meson.build
- create mode 100644 bindings/cxx/tests/meson.build
- create mode 100644 bindings/meson.build
- create mode 100644 bindings/python/examples/meson.build
- create mode 100644 bindings/python/gpiod/ext/meson.build
- create mode 100644 bindings/python/gpiod/meson.build
- create mode 100644 bindings/python/meson.build
- create mode 100644 bindings/python/tests/gpiosim/meson.build
- create mode 100644 bindings/python/tests/meson.build
- create mode 100644 bindings/rust/meson.build
- create mode 100644 include/meson.build
- create mode 100644 lib/meson.build
- create mode 100644 man/meson.build
- create mode 100644 meson.build
- create mode 100644 meson_options.txt
- create mode 100644 tests/gpiosim/meson.build
- create mode 100644 tests/meson.build
- create mode 100644 tools/meson.build
+ Makefile.am                               |  43 ----
+ autogen.sh                                |  17 --
+ bindings/Makefile.am                      |  22 --
+ bindings/cxx/Makefile.am                  |  48 ----
+ bindings/cxx/examples/Makefile.am         |  26 ---
+ bindings/cxx/gpiodcxx/Makefile.am         |  20 --
+ bindings/cxx/tests/Makefile.am            |  32 ---
+ bindings/python/Makefile.am               |  35 ---
+ bindings/python/examples/Makefile.am      |  10 -
+ bindings/python/gpiod/Makefile.am         |  17 --
+ bindings/python/gpiod/ext/Makefile.am     |  11 -
+ bindings/python/setup.py                  |  47 ----
+ bindings/python/tests/Makefile.am         |  17 --
+ bindings/python/tests/gpiosim/Makefile.am |   7 -
+ bindings/rust/Makefile.am                 |  19 --
+ bindings/rust/meson.build                 |   3 +
+ configure.ac                              | 272 ----------------------
+ include/Makefile.am                       |   4 -
+ lib/Makefile.am                           |  27 ---
+ man/Makefile.am                           |  16 --
+ tests/Makefile.am                         |  34 ---
+ tests/gpiosim/Makefile.am                 |  16 --
+ tools/Makefile.am                         |  39 ----
+ 23 files changed, 3 insertions(+), 779 deletions(-)
+ delete mode 100644 Makefile.am
+ delete mode 100755 autogen.sh
+ delete mode 100644 bindings/Makefile.am
+ delete mode 100644 bindings/cxx/Makefile.am
+ delete mode 100644 bindings/cxx/examples/Makefile.am
+ delete mode 100644 bindings/cxx/gpiodcxx/Makefile.am
+ delete mode 100644 bindings/cxx/tests/Makefile.am
+ delete mode 100644 bindings/python/Makefile.am
+ delete mode 100644 bindings/python/examples/Makefile.am
+ delete mode 100644 bindings/python/gpiod/Makefile.am
+ delete mode 100644 bindings/python/gpiod/ext/Makefile.am
+ delete mode 100644 bindings/python/setup.py
+ delete mode 100644 bindings/python/tests/Makefile.am
+ delete mode 100644 bindings/python/tests/gpiosim/Makefile.am
+ delete mode 100644 bindings/rust/Makefile.am
+ delete mode 100644 configure.ac
+ delete mode 100644 include/Makefile.am
+ delete mode 100644 lib/Makefile.am
+ delete mode 100644 man/Makefile.am
+ delete mode 100644 tests/Makefile.am
+ delete mode 100644 tests/gpiosim/Makefile.am
+ delete mode 100644 tools/Makefile.am
 
-diff --git a/Doxyfile.in b/Doxyfile.in
-index 9c85e2113edc..5e2b59c3631b 100644
---- a/Doxyfile.in
-+++ b/Doxyfile.in
-@@ -6,7 +6,7 @@
- # General configuration
- PROJECT_NAME           = libgpiod
- PROJECT_NUMBER         = @VERSION_STR@
--OUTPUT_DIRECTORY       = doc
-+OUTPUT_DIRECTORY       = @DOC_DIR@
- OUTPUT_LANGUAGE        = English
- EXTRACT_ALL            = NO
- EXTRACT_PRIVATE        = NO
-diff --git a/bindings/cxx/examples/meson.build b/bindings/cxx/examples/meson.build
-new file mode 100644
-index 000000000000..ffbd6c009ae8
---- /dev/null
-+++ b/bindings/cxx/examples/meson.build
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+executable('gpiodetectcxx', 'gpiodetectcxx.cpp', dependencies: gpiodcxx_dep)
-+executable('gpiofindcxx', 'gpiofindcxx.cpp', dependencies: gpiodcxx_dep)
-+executable('gpiogetcxx', 'gpiogetcxx.cpp', dependencies: gpiodcxx_dep)
-+executable('gpioinfocxx', 'gpioinfocxx.cpp', dependencies: gpiodcxx_dep)
-+executable('gpiomoncxx', 'gpiomoncxx.cpp', dependencies: gpiodcxx_dep)
-+executable('gpiosetcxx', 'gpiosetcxx.cpp', dependencies: gpiodcxx_dep)
-diff --git a/bindings/cxx/gpiodcxx/meson.build b/bindings/cxx/gpiodcxx/meson.build
-new file mode 100644
-index 000000000000..a0f416ba8a74
---- /dev/null
-+++ b/bindings/cxx/gpiodcxx/meson.build
-@@ -0,0 +1,19 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+install_headers('chip.hpp',
-+		'chip-info.hpp',
-+		'edge-event-buffer.hpp',
-+		'edge-event.hpp',
-+		'exception.hpp',
-+		'info-event.hpp',
-+		'line.hpp',
-+		'line-config.hpp',
-+		'line-info.hpp',
-+		'line-request.hpp',
-+		'line-settings.hpp',
-+		'misc.hpp',
-+		'request-builder.hpp',
-+		'request-config.hpp',
-+		'timestamp.hpp',
-+		subdir: 'gpiodcxx')
-diff --git a/bindings/cxx/meson.build b/bindings/cxx/meson.build
-new file mode 100644
-index 000000000000..4bb43111ce18
---- /dev/null
-+++ b/bindings/cxx/meson.build
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+add_languages('cpp', native: false)
-+
-+gpiodcxx_abi_version = '1.1.1'
-+
-+gpiodcxx = library('gpiodcxx',
-+		   'chip.cpp',
-+		   'chip-info.cpp',
-+		   'edge-event-buffer.cpp',
-+		   'edge-event.cpp',
-+		   'exception.cpp',
-+		   'info-event.cpp',
-+		   'internal.cpp',
-+		   'line.cpp',
-+		   'line-config.cpp',
-+		   'line-info.cpp',
-+		   'line-request.cpp',
-+		   'line-settings.cpp',
-+		   'misc.cpp',
-+		   'request-builder.cpp',
-+		   'request-config.cpp',
-+		   cpp_args: '-DGPIOD_CXX_BUILD',
-+		   include_directories: gpiod_includes,
-+		   gnu_symbol_visibility: 'hidden',
-+		   version: gpiodcxx_abi_version,
-+		   dependencies: gpiod_dep,
-+	           install: true)
-+
-+pkg.generate(gpiodcxx,
-+	     name: 'libgpiodcxx',
-+	     description: 'C++ bindings for libgpiod')
-+
-+gpiodcxx_dep = declare_dependency(link_with: gpiodcxx,
-+				  include_directories: include_directories('.'),
-+				  dependencies: gpiod_dep,
-+				  version: gpiodcxx_abi_version)
-+
-+install_headers('gpiod.hpp')
-+subdir('gpiodcxx')
-+
-+if get_option('examples')
-+    subdir('examples')
-+endif
-+
-+if get_option('tests')
-+    subdir('tests')
-+endif
-diff --git a/bindings/cxx/tests/meson.build b/bindings/cxx/tests/meson.build
-new file mode 100644
-index 000000000000..9dc8fdf491c5
---- /dev/null
-+++ b/bindings/cxx/tests/meson.build
-@@ -0,0 +1,26 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+catch2_dep = dependency('catch2')
-+
-+executable('gpiod-cxx-test',
-+	   'check-kernel.cpp',
-+	   'gpiod-cxx-test-main.cpp',
-+	   'gpiosim.cpp',
-+	   'helpers.cpp',
-+	   'tests-chip.cpp',
-+	   'tests-chip-info.cpp',
-+	   'tests-edge-event.cpp',
-+	   'tests-info-event.cpp',
-+	   'tests-line.cpp',
-+	   'tests-line-config.cpp',
-+	   'tests-line-info.cpp',
-+	   'tests-line-request.cpp',
-+	   'tests-line-settings.cpp',
-+	   'tests-misc.cpp',
-+	   'tests-request-config.cpp',
-+	   dependencies: [ catch2_dep,
-+			   gpiodcxx_dep,
-+			   gpiosim_dep,
-+			   threads_dep ],
-+	   install: true)
-diff --git a/bindings/meson.build b/bindings/meson.build
-new file mode 100644
-index 000000000000..bf7ad3669b5b
---- /dev/null
-+++ b/bindings/meson.build
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+if get_option('bindings').contains('cxx')
-+    subdir('cxx')
-+endif
-+
-+if get_option('bindings').contains('python')
-+    subdir('python')
-+endif
-+
-+if get_option('bindings').contains('rust')
-+    subdir('rust')
-+endif
-diff --git a/bindings/python/examples/meson.build b/bindings/python/examples/meson.build
-new file mode 100644
-index 000000000000..f8cd2455fbcd
---- /dev/null
-+++ b/bindings/python/examples/meson.build
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+install_data('gpiodetect.py',
-+	     'gpiofind.py',
-+	     'gpioget.py',
-+	     'gpioinfo.py',
-+	     'gpiomon.py',
-+	     'gpioset.py',
-+	     'helpers.py',
-+	     install_dir: get_option('datadir') / meson.project_name(),
-+	     install_mode: 'rwxr-xr-x')
-diff --git a/bindings/python/gpiod/ext/meson.build b/bindings/python/gpiod/ext/meson.build
-new file mode 100644
-index 000000000000..0128ae26a085
---- /dev/null
-+++ b/bindings/python/gpiod/ext/meson.build
-@@ -0,0 +1,14 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+gpiodpyext = python3.extension_module('_ext',
-+				      'chip.c',
-+				      'common.c',
-+				      'line-config.c',
-+				      'line-settings.c',
-+				      'module.c',
-+				      'request.c',
-+				      c_args: '-D_GNU_SOURCE',
-+				      dependencies: [gpiod_dep, python3_dep],
-+				      subdir: 'gpiod',
-+				      install: true)
-diff --git a/bindings/python/gpiod/meson.build b/bindings/python/gpiod/meson.build
-new file mode 100644
-index 000000000000..90d4517d5361
---- /dev/null
-+++ b/bindings/python/gpiod/meson.build
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+subdir('ext')
-+
-+python3.install_sources('chip_info.py',
-+			'chip.py',
-+			'edge_event.py',
-+			'exception.py',
-+			'info_event.py',
-+			'__init__.py',
-+			'internal.py',
-+			'line_info.py',
-+			'line.py',
-+			'line_request.py',
-+			'line_settings.py',
-+			subdir: 'gpiod')
-diff --git a/bindings/python/meson.build b/bindings/python/meson.build
-new file mode 100644
-index 000000000000..26f7ff13e0dd
---- /dev/null
-+++ b/bindings/python/meson.build
-@@ -0,0 +1,16 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+python = import('python')
-+python3 = python.find_installation('python3')
-+python3_dep = python3.dependency()
-+
-+subdir('gpiod')
-+
-+if get_option('examples')
-+    subdir('examples')
-+endif
-+
-+if get_option('tests')
-+    subdir('tests')
-+endif
-diff --git a/bindings/python/tests/gpiosim/meson.build b/bindings/python/tests/gpiosim/meson.build
-new file mode 100644
-index 000000000000..82ea6d07df4d
---- /dev/null
-+++ b/bindings/python/tests/gpiosim/meson.build
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+gpiodsimpyext = python3.extension_module('_ext',
-+					 'ext.c',
-+					 c_args: '-D_GNU_SOURCE',
-+					 dependencies: [gpiosim_dep, python3_dep],
-+					 subdir: 'gpiod/tests/gpiosim',
-+					 install: true)
-+python3.install_sources('chip.py',
-+		        '__init__.py',
-+		        subdir: 'gpiod/tests/gpiosim')
-diff --git a/bindings/python/tests/meson.build b/bindings/python/tests/meson.build
-new file mode 100644
-index 000000000000..e33a24e7da0f
---- /dev/null
-+++ b/bindings/python/tests/meson.build
-@@ -0,0 +1,17 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+subdir('gpiosim')
-+
-+python3.install_sources('helpers.py',
-+			'__init__.py',
-+			'__main__.py',
-+			'tests_chip_info.py',
-+			'tests_chip.py',
-+			'tests_edge_event.py',
-+			'tests_info_event.py',
-+			'tests_line_info.py',
-+			'tests_line_request.py',
-+			'tests_line_settings.py',
-+			'tests_module.py',
-+			subdir: 'gpiod/tests')
-diff --git a/bindings/rust/gpiosim-sys/build.rs b/bindings/rust/gpiosim-sys/build.rs
-index 0651c6115322..86312af20e36 100644
---- a/bindings/rust/gpiosim-sys/build.rs
-+++ b/bindings/rust/gpiosim-sys/build.rs
-@@ -9,15 +9,17 @@ use std::path::PathBuf;
- 
- fn generate_bindings() {
-     // Tell cargo to invalidate the built crate whenever following files change
--    println!("cargo:rerun-if-changed=../../../tests/gpiosim/gpiosim.h");
-+    let source_dep = env::var("GPIOD_CARGO_SIM_SOURCE_DEP").unwrap();
-+    println!("cargo:rerun-if-changed={source_dep}");
- 
-     // The bindgen::Builder is the main entry point
-     // to bindgen, and lets you build up options for
-     // the resulting bindings.
-+    let header_dep = env::var("GPIOD_CARGO_SIM_HEADER_DEP").unwrap();
-     let bindings = bindgen::Builder::default()
-         // The input header we would like to generate
-         // bindings for.
--        .header("../../../tests/gpiosim/gpiosim.h")
-+        .header(header_dep)
-         // Tell cargo to invalidate the built crate whenever any of the
-         // included header files changed.
-         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-@@ -38,6 +40,7 @@ fn main() {
- 
-     println!("cargo:rustc-link-lib=kmod");
-     println!("cargo:rustc-link-lib=mount");
--    println!("cargo:rustc-link-search=./../../tests/gpiosim/.libs/");
-+    let link_dir = env::var("GPIOD_CARGO_SIM_LINK_DIR").unwrap();
-+    println!("cargo:rustc-link-search={link_dir}");
-     println!("cargo:rustc-link-lib=static=gpiosim");
- }
-diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
-index 274069eb9e9d..4dd6c54c935f 100644
---- a/bindings/rust/libgpiod-sys/build.rs
-+++ b/bindings/rust/libgpiod-sys/build.rs
-@@ -9,15 +9,17 @@ use std::path::PathBuf;
- 
- fn generate_bindings() {
-     // Tell cargo to invalidate the built crate whenever following files change
--    println!("cargo:rerun-if-changed=../../../include/gpiod.h");
-+    let source_dep = env::var("GPIOD_CARGO_LIB_SOURCE_DEP").unwrap();
-+    println!("cargo:rerun-if-changed={source_dep}");
- 
-     // The bindgen::Builder is the main entry point
-     // to bindgen, and lets you build up options for
-     // the resulting bindings.
-+    let header_dep = env::var("GPIOD_CARGO_LIB_HEADER_DEP").unwrap();
-     let bindings = bindgen::Builder::default()
-         // The input header we would like to generate
-         // bindings for.
--        .header("../../../include/gpiod.h")
-+        .header(header_dep)
-         // Tell cargo to invalidate the built crate whenever any of the
-         // included header files changed.
-         .parse_callbacks(Box::new(bindgen::CargoCallbacks))
-@@ -36,6 +38,7 @@ fn generate_bindings() {
- fn main() {
-     generate_bindings();
- 
--    println!("cargo:rustc-link-search=./../../lib/.libs/");
-+    let link_dir = env::var("GPIOD_CARGO_LIB_LINK_DIR").unwrap();
-+    println!("cargo:rustc-link-search={link_dir}");
-     println!("cargo:rustc-link-lib=static=gpiod");
- }
+diff --git a/Makefile.am b/Makefile.am
+deleted file mode 100644
+index dfc6c95b76cd..000000000000
+--- a/Makefile.am
++++ /dev/null
+@@ -1,43 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-ACLOCAL_AMFLAGS = -I m4
+-AUTOMAKE_OPTIONS = foreign
+-SUBDIRS = include lib
+-
+-EXTRA_DIST = \
+-	LICENSES/CC-BY-SA-4.0.txt \
+-	LICENSES/GPL-2.0-only.txt \
+-	LICENSES/GPL-2.0-or-later.txt \
+-	LICENSES/LGPL-2.1-or-later.txt \
+-	LICENSES/LGPL-3.0-or-later.txt \
+-	LICENSES/Linux-syscall-note.txt
+-
+-if WITH_TOOLS
+-
+-SUBDIRS += tools man
+-
+-endif
+-
+-if WITH_TESTS
+-
+-SUBDIRS += tests
+-
+-endif
+-
+-# Build bindings after core tests. When building tests for bindings, we need
+-# libgpiomockup to be already present.
+-SUBDIRS += bindings
+-
+-if HAS_DOXYGEN
+-
+-doc: Doxyfile
+-	@doxygen Doxyfile
+-.PHONY: doc
+-
+-clean-local:
+-	rm -rf doc
+-
+-EXTRA_DIST += Doxyfile
+-
+-endif
+diff --git a/autogen.sh b/autogen.sh
+deleted file mode 100755
+index 420b821b7837..000000000000
+--- a/autogen.sh
++++ /dev/null
+@@ -1,17 +0,0 @@
+-#!/bin/sh
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-# SPDX-FileCopyrightText: 2017 Thierry Reding <treding@nvidia.com>
+-
+-srcdir=`dirname $0`
+-test -z "$srcdir" && srcdir=.
+-
+-ORIGDIR=`pwd`
+-cd "$srcdir"
+-
+-autoreconf --force --install --verbose || exit 1
+-cd $ORIGDIR || exit $?
+-
+-if test -z "$NOCONFIGURE"; then
+-	exec "$srcdir"/configure "$@"
+-fi
+diff --git a/bindings/Makefile.am b/bindings/Makefile.am
+deleted file mode 100644
+index 004ae23dbc58..000000000000
+--- a/bindings/Makefile.am
++++ /dev/null
+@@ -1,22 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-SUBDIRS = .
+-
+-if WITH_BINDINGS_CXX
+-
+-SUBDIRS += cxx
+-
+-endif
+-
+-if WITH_BINDINGS_PYTHON
+-
+-SUBDIRS += python
+-
+-endif
+-
+-if WITH_BINDINGS_RUST
+-
+-SUBDIRS += rust
+-
+-endif
+diff --git a/bindings/cxx/Makefile.am b/bindings/cxx/Makefile.am
+deleted file mode 100644
+index f719072bb30e..000000000000
+--- a/bindings/cxx/Makefile.am
++++ /dev/null
+@@ -1,48 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-lib_LTLIBRARIES = libgpiodcxx.la
+-libgpiodcxx_la_SOURCES =	\
+-	chip.cpp		\
+-	chip-info.cpp		\
+-	edge-event-buffer.cpp	\
+-	edge-event.cpp		\
+-	exception.cpp		\
+-	info-event.cpp		\
+-	internal.cpp		\
+-	internal.hpp		\
+-	line.cpp		\
+-	line-config.cpp		\
+-	line-info.cpp		\
+-	line-request.cpp	\
+-	line-settings.cpp	\
+-	misc.cpp		\
+-	request-builder.cpp	\
+-	request-config.cpp
+-
+-libgpiodcxx_la_CXXFLAGS = -Wall -Wextra -g -std=gnu++17
+-libgpiodcxx_la_CXXFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
+-libgpiodcxx_la_CXXFLAGS += $(PROFILING_CFLAGS)
+-libgpiodcxx_la_CXXFLAGS += -DGPIOD_CXX_BUILD
+-libgpiodcxx_la_LDFLAGS = -version-info $(subst .,:,$(ABI_CXX_VERSION))
+-libgpiodcxx_la_LDFLAGS += -lgpiod -L$(top_builddir)/lib
+-libgpiodcxx_la_LDFLAGS += $(PROFILING_LDFLAGS)
+-
+-include_HEADERS = gpiod.hpp
+-
+-pkgconfigdir = $(libdir)/pkgconfig
+-pkgconfig_DATA = libgpiodcxx.pc
+-
+-SUBDIRS = gpiodcxx .
+-
+-if WITH_TESTS
+-
+-SUBDIRS += tests
+-
+-endif
+-
+-if WITH_EXAMPLES
+-
+-SUBDIRS += examples
+-
+-endif
+diff --git a/bindings/cxx/examples/Makefile.am b/bindings/cxx/examples/Makefile.am
+deleted file mode 100644
+index c7ec3cfa8349..000000000000
+--- a/bindings/cxx/examples/Makefile.am
++++ /dev/null
+@@ -1,26 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
+-AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17
+-AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
+-
+-noinst_PROGRAMS = \
+-		gpiodetectcxx \
+-		gpiofindcxx \
+-		gpiogetcxx \
+-		gpioinfocxx \
+-		gpiomoncxx \
+-		gpiosetcxx
+-
+-gpiodetectcxx_SOURCES = gpiodetectcxx.cpp
+-
+-gpiofindcxx_SOURCES = gpiofindcxx.cpp
+-
+-gpiogetcxx_SOURCES = gpiogetcxx.cpp
+-
+-gpioinfocxx_SOURCES = gpioinfocxx.cpp
+-
+-gpiomoncxx_SOURCES = gpiomoncxx.cpp
+-
+-gpiosetcxx_SOURCES = gpiosetcxx.cpp
+diff --git a/bindings/cxx/gpiodcxx/Makefile.am b/bindings/cxx/gpiodcxx/Makefile.am
+deleted file mode 100644
+index e3a3b9b38e61..000000000000
+--- a/bindings/cxx/gpiodcxx/Makefile.am
++++ /dev/null
+@@ -1,20 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2021 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-otherincludedir = $(includedir)/gpiodcxx
+-otherinclude_HEADERS = \
+-	chip.hpp \
+-	chip-info.hpp \
+-	edge-event-buffer.hpp \
+-	edge-event.hpp \
+-	exception.hpp \
+-	info-event.hpp \
+-	line.hpp \
+-	line-config.hpp \
+-	line-info.hpp \
+-	line-request.hpp \
+-	line-settings.hpp \
+-	misc.hpp \
+-	request-builder.hpp \
+-	request-config.hpp \
+-	timestamp.hpp
+diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
+deleted file mode 100644
+index 4971dd469290..000000000000
+--- a/bindings/cxx/tests/Makefile.am
++++ /dev/null
+@@ -1,32 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
+-AM_CXXFLAGS += -I$(top_srcdir)/tests/gpiosim/
+-AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17 $(CATCH2_CFLAGS)
+-AM_CXXFLAGS += $(PROFILING_CFLAGS)
+-AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
+-AM_LDFLAGS += -lgpiosim -L$(top_builddir)/tests/gpiosim/
+-AM_LDFLAGS += $(PROFILING_LDFLAGS)
+-AM_LDFLAGS += -pthread
+-
+-bin_PROGRAMS = gpiod-cxx-test
+-
+-gpiod_cxx_test_SOURCES =			\
+-		check-kernel.cpp		\
+-		gpiod-cxx-test-main.cpp		\
+-		gpiosim.cpp			\
+-		gpiosim.hpp			\
+-		helpers.cpp			\
+-		helpers.hpp			\
+-		tests-chip.cpp			\
+-		tests-chip-info.cpp		\
+-		tests-edge-event.cpp		\
+-		tests-info-event.cpp		\
+-		tests-line.cpp			\
+-		tests-line-config.cpp		\
+-		tests-line-info.cpp		\
+-		tests-line-request.cpp		\
+-		tests-line-settings.cpp		\
+-		tests-misc.cpp			\
+-		tests-request-config.cpp
+\ No newline at end of file
+diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
+deleted file mode 100644
+index 3212a8fcec3c..000000000000
+--- a/bindings/python/Makefile.am
++++ /dev/null
+@@ -1,35 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-EXTRA_DIST = setup.py
+-
+-if WITH_TESTS
+-
+-BUILD_TESTS = 1
+-
+-endif
+-
+-all-local:
+-	GPIOD_VERSION_STRING=$(VERSION_STR) \
+-	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
+-	$(PYTHON) setup.py build_ext --inplace \
+-		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
+-		--library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
+-
+-install-exec-local:
+-	GPIOD_WITH_TESTS= \
+-	$(PYTHON) setup.py install --prefix=$(prefix)
+-
+-SUBDIRS = gpiod
+-
+-if WITH_TESTS
+-
+-SUBDIRS += tests
+-
+-endif
+-
+-if WITH_EXAMPLES
+-
+-SUBDIRS += examples
+-
+-endif
+diff --git a/bindings/python/examples/Makefile.am b/bindings/python/examples/Makefile.am
+deleted file mode 100644
+index f42b80e900a8..000000000000
+--- a/bindings/python/examples/Makefile.am
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-EXTRA_DIST = \
+-	gpiodetect.py \
+-	gpiofind.py \
+-	gpioget.py \
+-	gpioinfo.py \
+-	gpiomon.py \
+-	gpioset.py
+diff --git a/bindings/python/gpiod/Makefile.am b/bindings/python/gpiod/Makefile.am
+deleted file mode 100644
+index 278f823972d8..000000000000
+--- a/bindings/python/gpiod/Makefile.am
++++ /dev/null
+@@ -1,17 +0,0 @@
+-# SPDX-License-Identifier: LGPL-2.1-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-SUBDIRS = ext
+-
+-EXTRA_DIST = \
+-	chip_info.py \
+-	chip.py \
+-	edge_event.py \
+-	exception.py \
+-	info_event.py \
+-	__init__.py \
+-	internal.py \
+-	line_info.py \
+-	line.py \
+-	line_request.py \
+-	line_settings.py
+diff --git a/bindings/python/gpiod/ext/Makefile.am b/bindings/python/gpiod/ext/Makefile.am
+deleted file mode 100644
+index 9c81b1790bc4..000000000000
+--- a/bindings/python/gpiod/ext/Makefile.am
++++ /dev/null
+@@ -1,11 +0,0 @@
+-# SPDX-License-Identifier: LGPL-2.1-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-EXTRA_DIST = \
+-	chip.c \
+-	common.c \
+-	internal.h \
+-	line-config.c \
+-	line-settings.c \
+-	module.c \
+-	request.c
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+deleted file mode 100644
+index ec8f99d4013d..000000000000
+--- a/bindings/python/setup.py
++++ /dev/null
+@@ -1,47 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-from os import environ
+-from setuptools import setup, Extension, find_packages
+-
+-gpiod_ext = Extension(
+-    "gpiod._ext",
+-    sources=[
+-        "gpiod/ext/chip.c",
+-        "gpiod/ext/common.c",
+-        "gpiod/ext/line-config.c",
+-        "gpiod/ext/line-settings.c",
+-        "gpiod/ext/module.c",
+-        "gpiod/ext/request.c",
+-    ],
+-    define_macros=[("_GNU_SOURCE", "1")],
+-    libraries=["gpiod"],
+-    extra_compile_args=["-Wall", "-Wextra"],
+-)
+-
+-gpiosim_ext = Extension(
+-    "tests.gpiosim._ext",
+-    sources=["tests/gpiosim/ext.c"],
+-    define_macros=[("_GNU_SOURCE", "1")],
+-    libraries=["gpiosim"],
+-    extra_compile_args=["-Wall", "-Wextra"],
+-)
+-
+-extensions = [gpiod_ext]
+-with_tests = bool(environ["GPIOD_WITH_TESTS"])
+-if with_tests:
+-    extensions.append(gpiosim_ext)
+-
+-# FIXME Find a better way to get the version
+-version = None
+-try:
+-    version = environ["GPIOD_VERSION_STR"]
+-except KeyError:
+-    pass
+-
+-setup(
+-    name="gpiod",
+-    packages=find_packages(include=["gpiod"]),
+-    ext_modules=extensions,
+-    version=version,
+-)
+diff --git a/bindings/python/tests/Makefile.am b/bindings/python/tests/Makefile.am
+deleted file mode 100644
+index 7dcdebb28d09..000000000000
+--- a/bindings/python/tests/Makefile.am
++++ /dev/null
+@@ -1,17 +0,0 @@
+-# SPDX-License-Identifier: LGPL-2.1-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-SUBDIRS = gpiosim
+-
+-EXTRA_DIST = \
+-	helpers.py \
+-	__init__.py \
+-	__main__.py \
+-	tests_chip_info.py \
+-	tests_chip.py \
+-	tests_edge_event.py \
+-	tests_info_event.py \
+-	tests_line_info.py \
+-	tests_line_request.py \
+-	tests_line_settings.py \
+-	tests_module.py
+diff --git a/bindings/python/tests/gpiosim/Makefile.am b/bindings/python/tests/gpiosim/Makefile.am
+deleted file mode 100644
+index 7004f3af7568..000000000000
+--- a/bindings/python/tests/gpiosim/Makefile.am
++++ /dev/null
+@@ -1,7 +0,0 @@
+-# SPDX-License-Identifier: LGPL-2.1-or-later
+-# SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-EXTRA_DIST = \
+-	chip.py \
+-	ext.c \
+-	__init__.py
+diff --git a/bindings/rust/Makefile.am b/bindings/rust/Makefile.am
+deleted file mode 100644
+index a0d0772b01cb..000000000000
+--- a/bindings/rust/Makefile.am
++++ /dev/null
+@@ -1,19 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2022 Linaro Ltd.
+-# SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
+-
+-command = cargo build --release --lib
+-
+-if WITH_TESTS
+-command += --tests
+-endif
+-
+-if WITH_EXAMPLES
+-command += --examples
+-endif
+-
+-all:
+-	$(command)
+-
+-clean:
+-	cargo clean
 diff --git a/bindings/rust/meson.build b/bindings/rust/meson.build
-new file mode 100644
-index 000000000000..68f27f473282
---- /dev/null
+index 68f27f473282..07831b31c3cd 100644
+--- a/bindings/rust/meson.build
 +++ b/bindings/rust/meson.build
-@@ -0,0 +1,30 @@
-+cargo = find_program('cargo')
-+cargo_manifest = files('Cargo.toml')
-+cargo_build_dir = meson.project_build_root() / 'cargo-build'
-+cargo_build_cmd = [cargo, 'build', '--manifest-path', cargo_manifest, '--target-dir', cargo_build_dir, '--release', '--lib']
-+
-+if get_option('tests')
-+    cargo_build_cmd += '--tests'
-+endif
-+
-+if get_option('examples')
-+    cargo_build_cmd += '--examples'
-+endif
-+
-+cargo_env = environment()
-+gpiod_h_p = meson.project_source_root() / '@0@'.format(gpiod_h[0])
-+cargo_env.set('GPIOD_CARGO_LIB_SOURCE_DEP', gpiod_h_p)
-+cargo_env.set('GPIOD_CARGO_LIB_HEADER_DEP', gpiod_h_p)
-+cargo_env.set('GPIOD_CARGO_LIB_LINK_DIR', meson.project_build_root() / 'lib')
-+gpiosim_h_p = meson.project_source_root() / '@0@'.format(gpiosim_h[0])
-+cargo_env.set('GPIOD_CARGO_SIM_SOURCE_DEP', gpiosim_h_p)
-+cargo_env.set('GPIOD_CARGO_SIM_HEADER_DEP', gpiosim_h_p)
-+cargo_env.set('GPIOD_CARGO_SIM_LINK_DIR', meson.project_build_root() / 'tests' / 'gpiosim')
-+
-+cargo_build = custom_target('cargo-build',
-+			    input: 'Cargo.toml',
-+			    output: 'cargo-build',
-+			    env: cargo_env,
-+			    command: cargo_build_cmd,
-+			    build_by_default: true,
-+			    install: false)
-diff --git a/include/meson.build b/include/meson.build
-new file mode 100644
-index 000000000000..ca3337e5990f
---- /dev/null
-+++ b/include/meson.build
-@@ -0,0 +1,7 @@
+@@ -1,3 +1,6 @@
 +# SPDX-License-Identifier: LGPL-2.1-or-later
 +# Copyright 2022 IBM Corp.
 +
-+gpiod_includes = include_directories('.')
-+
-+gpiod_h = files('gpiod.h')
-+install_headers(gpiod_h)
-diff --git a/lib/meson.build b/lib/meson.build
-new file mode 100644
-index 000000000000..159a176b0130
---- /dev/null
-+++ b/lib/meson.build
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+gpiod_abi_version = '2.2.1'
-+
-+gpiod = library('gpiod',
-+		'chip.c',
-+		'chip-info.c',
-+		'edge-event.c',
-+		'info-event.c',
-+		'internal.c',
-+		'line-config.c',
-+		'line-info.c',
-+		'line-request.c',
-+		'line-settings.c',
-+		'misc.c',
-+		'request-config.c',
-+		c_args: ['-include', '@0@'.format(config_h)],
-+		include_directories: gpiod_includes,
-+		gnu_symbol_visibility: 'hidden',
-+		version: gpiod_abi_version,
-+		install: true)
-+
-+pkg.generate(gpiod,
-+	     name: 'libgpiod',
-+	     description: 'Library and tools for the Linux GPIO chardev')
-+
-+gpiod_dep = declare_dependency(link_with: gpiod,
-+			       include_directories: gpiod_includes,
-+			       version: gpiod_abi_version)
-diff --git a/man/meson.build b/man/meson.build
-new file mode 100644
-index 000000000000..8430429932e9
---- /dev/null
-+++ b/man/meson.build
-@@ -0,0 +1,21 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+if get_option('documentation').contains('man')
-+    help2man = find_program('help2man')
-+    genmanpage = [ help2man,
-+		   '@INPUT@',
-+		   '--include=@CURRENT_SOURCE_DIR@/template',
-+		   '--output=@OUTPUT@',
-+		   '--no-info' ]
-+    man1 = get_option('prefix') / get_option('mandir') / 'man1'
-+    foreach t : tools
-+	custom_target('@0@.1'.format(t.name()),
-+		      input: t,
-+		      output: '@BASENAME@.1',
-+		      depend_files: 'template',
-+		      command: genmanpage,
-+		      install: true,
-+		      install_dir: man1)
-+    endforeach
-+endif
-diff --git a/meson.build b/meson.build
-new file mode 100644
-index 000000000000..02f355aae50b
---- /dev/null
-+++ b/meson.build
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+project('libgpiod', 'c',
-+	default_options: [ 'buildtype=debugoptimized',
-+			   'warning_level=2',
-+			   'c_std=gnu99',
-+			   'cpp_std=gnu++17',
-+			   'default_library=both' ],
-+	version: '2.0.0',
-+	license: 'LGPL-2.1-or-later',
-+	meson_version: '>=0.58.2')
-+
-+add_project_arguments('-D_GNU_SOURCE', language: 'c')
-+
-+pkg = import('pkgconfig')
-+
-+cc = meson.get_compiler('c')
-+
-+version = meson.project_version().split('.')
-+extra_version = '.'.join([version[0], version[1]]) + '-devel'
-+config = configuration_data()
-+config.set_quoted('GPIOD_VERSION_STR', extra_version)
-+config_h = configure_file(output: 'config.h', configuration: config)
-+
-+# TODO: Deal with AC_FUNC_MALLOC
-+
-+lib_header_deps = [ 'getopt.h',
-+		    'dirent.h',
-+		    'sys/poll.h',
-+		    'sys/sysmacros.h',
-+		    'linux/version.h',
-+		    'linux/const.h',
-+		    'linux/ioctl.h',
-+		    'linux/types.h' ]
-+
-+foreach h : lib_header_deps
-+    if not cc.has_header(h)
-+	error(f'@h@ not found (needed to build the library)')
-+    endif
-+endforeach
-+
-+lib_function_deps = { 'ioctl' : '#include <sys/ioctl.h>',
-+		      'asprintf' : '#include <stdio.h>',
-+		      'scandir' : '#include <dirent.h>',
-+		      'alphasort' : '#include <dirent.h>',
-+		      'ppoll' : '#include <poll.h>',
-+		      'realpath' : '#include <stdlib.h>' }
-+
-+foreach fn, prefix : lib_function_deps
-+    if not cc.has_function(fn, prefix: prefix, args: '-D_GNU_SOURCE')
-+	error(f'@fn@ not found (needed to build the library)')
-+    endif
-+endforeach
-+
-+subdir('include')
-+subdir('lib')
-+
-+if get_option('documentation').contains('inline')
-+    doxygen = find_program('doxygen')
-+    find_program('dot') # Required by doxygen
-+    doc_dir = meson.current_build_dir()
-+    doxyconf = configuration_data()
-+    doxyconf.set('VERSION_STR', extra_version)
-+    doxyconf.set('DOC_DIR', doc_dir)
-+    doxyconf.set('top_srcdir', meson.current_source_dir())
-+    doxyfile = configure_file(input: 'Doxyfile.in',
-+			      output: 'Doxyfile',
-+			      configuration: doxyconf)
-+    doxygen_install_dir = get_option('datadir') / 'doc' / meson.project_name()
-+    custom_target('doxygen',
-+		  input: doxyfile,
-+		  output: ['html', 'man', 'xml'],
-+		  command: [doxygen, doxyfile],
-+		  install: true,
-+	          install_dir: doxygen_install_dir)
-+endif
-+
-+if get_option('tests')
-+    threads_dep = dependency('threads')
-+    subdir('tests')
-+endif
-+
-+foreach b : get_option('bindings')
-+    subdir('bindings' / b)
-+endforeach
-+
-+if get_option('tools')
-+    subdir('tools')
-+    subdir('man')
-+endif
-diff --git a/meson_options.txt b/meson_options.txt
-new file mode 100644
-index 000000000000..1df374b4a6eb
---- /dev/null
-+++ b/meson_options.txt
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2021 IBM Corp.
-+
-+option('bindings', type: 'array', choices: ['cxx', 'python', 'rust'], description: 'Language bindings for libgpiod', value: [])
-+option('documentation', type: 'array', choices: ['man', 'inline'], description: 'Generate documentation for the tools and library', value: ['man'])
-+option('examples', type: 'boolean', description: 'enabling building code examples', value: 'false')
-+option('gpioset-interactive', type: 'feature', description: 'enable gpioset interactive mode', value: 'auto')
-+option('tests', type: 'boolean', description: 'enable libgpiod tests', value: 'false')
-+option('tools', type: 'boolean', description: 'enable libgpiod command-line tools', value: 'false')
-diff --git a/tests/gpiosim/meson.build b/tests/gpiosim/meson.build
-new file mode 100644
-index 000000000000..4b99452dc12e
---- /dev/null
-+++ b/tests/gpiosim/meson.build
-@@ -0,0 +1,24 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+kmod_dep = dependency('libkmod', version: '>=18')
-+mount_dep = dependency('mount', version: '>=2.33.1')
-+
-+gpiosim_includes = include_directories('.')
-+
-+gpiosim_abi_version = '0.0.1'
-+gpiosim = library('gpiosim',
-+                  'gpiosim.c',
-+                  c_args: ['-include', '@0@'.format(config_h)],
-+                  dependencies: [kmod_dep, mount_dep],
-+                  include_directories: gpiod_includes,
-+                  gnu_symbol_visibility: 'hidden',
-+                  version: gpiosim_abi_version,
-+                  install: true)
-+
-+gpiosim_dep = declare_dependency(link_with: gpiosim,
-+                                 include_directories: gpiosim_includes,
-+                                 version: gpiosim_abi_version)
-+
-+gpiosim_h = files('gpiosim.h')
-+install_headers(gpiosim_h)
-diff --git a/tests/meson.build b/tests/meson.build
-new file mode 100644
-index 000000000000..32f7e6c42f12
---- /dev/null
-+++ b/tests/meson.build
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+subdir('gpiosim')
-+
-+glib_dep = dependency('glib-2.0', version: '>=2.50')
-+gobject_dep = dependency('gobject-2.0', version: '>=2.50')
-+
-+executable('gpiod-test',
-+	   'gpiod-test.c',
-+	   'gpiod-test-helpers.c',
-+	   'gpiod-test-sim.c',
-+	   'tests-chip.c',
-+	   'tests-chip-info.c',
-+	   'tests-edge-event.c',
-+	   'tests-info-event.c',
-+	   'tests-line-config.c',
-+	   'tests-line-info.c',
-+	   'tests-line-request.c',
-+	   'tests-line-settings.c',
-+	   'tests-misc.c',
-+	   'tests-request-config.c',
-+	   c_args: '-DG_LOG_DOMAIN="gpiod-test"',
-+	   dependencies: [ glib_dep,
-+			   gobject_dep,
-+			   gpiod_dep,
-+			   gpiosim_dep,
-+			   kmod_dep,
-+			   threads_dep ],
-+	   install: true)
-diff --git a/tools/meson.build b/tools/meson.build
-new file mode 100644
-index 000000000000..f7f1fc9b10c0
---- /dev/null
-+++ b/tools/meson.build
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: LGPL-2.1-or-later
-+# Copyright 2022 IBM Corp.
-+
-+if not cc.has_function('daemon', prefix: '#include <unistd.h>', args: '-D_GNU_SOURCE')
-+    error(f'@fn@ not found (needed to build tools')
-+endif
-+
-+tools_common_dep = declare_dependency(sources: ['tools-common.c', 'tools-common.h'])
-+
-+tools_c_args = ['-include', '@0@'.format(config_h)]
-+tools_deps = [ gpiod_dep, tools_common_dep ]
-+
-+tools = []
-+
-+gpiodetect = executable('gpiodetect',
-+			'gpiodetect.c',
-+			c_args: tools_c_args,
-+			dependencies: tools_deps,
-+			install: true)
-+tools += gpiodetect
-+
-+gpioinfo = executable('gpioinfo',
-+		      'gpioinfo.c',
-+		      c_args: tools_c_args,
-+		      dependencies: tools_deps,
-+		      install: true)
-+tools += gpioinfo
-+
-+gpioget = executable('gpioget',
-+		     'gpioget.c',
-+		     c_args: tools_c_args,
-+		     dependencies: tools_deps,
-+		     install: true)
-+tools += gpioget
-+
-+gpioset_c_args = tools_c_args
-+gpioset_deps = tools_deps
-+edit_dep = dependency('libedit', version: '>=3.1', required: get_option('gpioset-interactive'))
-+if edit_dep.found()
-+    gpioset_c_args += '-DGPIOSET_INTERACTIVE'
-+    gpioset_deps += edit_dep
-+endif
-+gpioset = executable('gpioset',
-+		     'gpioset.c',
-+		     c_args: gpioset_c_args,
-+		     dependencies: gpioset_deps,
-+		     install: true)
-+tools += gpioset
-+
-+gpiomon = executable('gpiomon',
-+		     'gpiomon.c',
-+		     c_args: tools_c_args,
-+		     dependencies: tools_deps,
-+		     install: true)
-+tools += gpiomon
-+
-+gpionotify = executable('gpionotify',
-+			'gpionotify.c',
-+			c_args: tools_c_args,
-+			dependencies: tools_deps,
-+			install: true)
-+tools += gpionotify
-+
-+if get_option('tests')
-+    install_data('gpio-tools-test',
-+		 'gpio-tools-test.bats',
-+		 install_dir: get_option('bindir'),
-+		 install_mode: 'rwxr-xr-x')
-+endif
+ cargo = find_program('cargo')
+ cargo_manifest = files('Cargo.toml')
+ cargo_build_dir = meson.project_build_root() / 'cargo-build'
+diff --git a/configure.ac b/configure.ac
+deleted file mode 100644
+index ccbb88a511cb..000000000000
+--- a/configure.ac
++++ /dev/null
+@@ -1,272 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-AC_PREREQ([2.69])
+-
+-AC_INIT([libgpiod], [2.0])
+-AC_SUBST(EXTRA_VERSION, [-devel])
+-
+-AC_DEFINE_UNQUOTED([GPIOD_VERSION_STR],
+-			["$PACKAGE_VERSION$EXTRA_VERSION"],
+-			[Full library version string.])
+-AC_SUBST(VERSION_STR, [$PACKAGE_VERSION$EXTRA_VERSION])
+-
+-# From the libtool manual:
+-#
+-# (...)
+-# 3. If the library source code has changed at all since the last update, then
+-#    increment revision ('c:r:a' becomes 'c:r+1:a').
+-# 4. If any interfaces have been added, removed, or changed since the last
+-#    update, increment current, and set revision to 0.
+-# 5. If any interfaces have been added since the last public release, then
+-#    increment age.
+-# 6. If any interfaces have been removed or changed since the last public
+-#    release, then set age to 0.
+-#
+-# Define the libtool version as (C.R.A):
+-# NOTE: this version only applies to the core C library.
+-AC_SUBST(ABI_VERSION, [4.1.2])
+-# Have a separate ABI version for C++ bindings:
+-AC_SUBST(ABI_CXX_VERSION, [2.1.1])
+-# ABI version for libgpiosim (we need this since it can be installed if we
+-# enable install-tests).
+-AC_SUBST(ABI_GPIOSIM_VERSION, [0.1.0])
+-
+-AC_CONFIG_AUX_DIR([autostuff])
+-AC_CONFIG_MACRO_DIRS([m4])
+-AM_INIT_AUTOMAKE([foreign subdir-objects])
+-
+-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+-m4_pattern_forbid([^AX_],
+-	[Unexpanded AX_ macro found. Please install GNU autoconf-archive.])
+-
+-AC_ARG_VAR([PYTHON_CPPFLAGS],
+-	[Compiler flags to find Python headers [default: auto-detect]])
+-AC_ARG_VAR([PYTHON_LIBS],
+-	[Libraries to link into Python extensions [default: auto-detect]])
+-
+-AC_CONFIG_SRCDIR([lib])
+-AC_CONFIG_HEADERS([config.h])
+-
+-AC_DEFINE([_GNU_SOURCE], [], [We want GNU extensions])
+-
+-# Silence warning: ar: 'u' modifier ignored since 'D' is the default
+-AC_SUBST(AR_FLAGS, [cr])
+-
+-AM_PROG_AR
+-AC_PROG_CC
+-AC_PROG_CXX
+-AC_PROG_INSTALL
+-AC_PROG_EGREP
+-
+-LT_INIT
+-
+-AC_DEFUN([ERR_NOT_FOUND],
+-	[AC_MSG_ERROR([$1 not found (needed to build $2)], [1])])
+-
+-AC_DEFUN([FUNC_NOT_FOUND_LIB],
+-	[ERR_NOT_FOUND([$1()], [the library])])
+-
+-AC_DEFUN([HEADER_NOT_FOUND_LIB],
+-	[ERR_NOT_FOUND([$1 header], [the library])])
+-
+-AC_DEFUN([HEADER_NOT_FOUND_TESTS],
+-	[ERR_NOT_FOUND([$1 header], [the test suite])])
+-
+-AC_DEFUN([HEADER_NOT_FOUND_CXX],
+-	[ERR_NOT_FOUND([$1 header], [C++ bindings])])
+-
+-# This is always checked (library needs this)
+-AC_HEADER_STDC
+-AC_FUNC_MALLOC
+-AC_CHECK_FUNC([ioctl], [], [FUNC_NOT_FOUND_LIB([ioctl])])
+-AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_LIB([asprintf])])
+-AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_LIB([scandir])])
+-AC_CHECK_FUNC([alphasort], [], [FUNC_NOT_FOUND_LIB([alphasort])])
+-AC_CHECK_FUNC([ppoll], [], [FUNC_NOT_FOUND_LIB([ppoll])])
+-AC_CHECK_FUNC([realpath], [], [FUNC_NOT_FOUND_LIB([realpath])])
+-AC_CHECK_HEADERS([getopt.h], [], [HEADER_NOT_FOUND_LIB([getopt.h])])
+-AC_CHECK_HEADERS([dirent.h], [], [HEADER_NOT_FOUND_LIB([dirent.h])])
+-AC_CHECK_HEADERS([sys/poll.h], [], [HEADER_NOT_FOUND_LIB([sys/poll.h])])
+-AC_CHECK_HEADERS([sys/sysmacros.h], [], [HEADER_NOT_FOUND_LIB([sys/sysmacros.h])])
+-AC_CHECK_HEADERS([linux/version.h], [], [HEADER_NOT_FOUND_LIB([linux/version.h])])
+-AC_CHECK_HEADERS([linux/const.h], [], [HEADER_NOT_FOUND_LIB([linux/const.h])])
+-AC_CHECK_HEADERS([linux/ioctl.h], [], [HEADER_NOT_FOUND_LIB([linux/ioctl.h])])
+-AC_CHECK_HEADERS([linux/types.h], [], [HEADER_NOT_FOUND_LIB([linux/types.h])])
+-
+-AC_ARG_ENABLE([tools],
+-	[AS_HELP_STRING([--enable-tools],[enable libgpiod command-line tools [default=no]])],
+-	[if test "x$enableval" = xyes; then with_tools=true; fi],
+-	[with_tools=false])
+-AM_CONDITIONAL([WITH_TOOLS], [test "x$with_tools" = xtrue])
+-
+-AC_DEFUN([FUNC_NOT_FOUND_TOOLS],
+-	[ERR_NOT_FOUND([$1()], [tools])])
+-
+-AC_ARG_ENABLE([gpioset-interactive],
+-	[AS_HELP_STRING([--enable-gpioset-interactive],
+-		[enable gpioset interactive mode [default=no]])],
+-	[if test "x$enableval" = xyes; then with_gpioset_interactive=true; fi],
+-	[with_gpioset_interactive=false])
+-AM_CONDITIONAL([WITH_GPIOSET_INTERACTIVE],
+-	[test "x$with_gpioset_interactive" = xtrue])
+-
+-AS_IF([test "x$with_tools" = xtrue],
+-	[# These are only needed to build tools
+-	AC_CHECK_FUNC([daemon], [], [FUNC_NOT_FOUND_TOOLS([daemon])])
+-	AS_IF([test "x$with_gpioset_interactive" = xtrue],
+-		[PKG_CHECK_MODULES([LIBEDIT], [libedit >= 3.1])])
+-	])
+-
+-AC_ARG_ENABLE([tests],
+-	[AS_HELP_STRING([--enable-tests],[enable libgpiod tests [default=no]])],
+-	[if test "x$enableval" = xyes; then with_tests=true; fi],
+-	[with_tests=false])
+-AM_CONDITIONAL([WITH_TESTS], [test "x$with_tests" = xtrue])
+-
+-AC_ARG_ENABLE([profiling],
+-	[AS_HELP_STRING([--enable-profiling],
+-		[enable gcov profiling on the core library and tests [default=no]])],
+-	[if test "x$enableval" = xyes; then with_profiling=true; fi],
+-	[with_profiling=false])
+-if test "x$with_profiling" = xtrue
+-then
+-	AC_SUBST(PROFILING_CFLAGS, ["-fprofile-arcs -ftest-coverage"])
+-	AC_SUBST(PROFILING_LDFLAGS, ["-lgcov"])
+-fi
+-
+-AC_DEFUN([FUNC_NOT_FOUND_TESTS],
+-	[ERR_NOT_FOUND([$1()], [tests])])
+-
+-if test "x$with_tests" = xtrue
+-then
+-	# For libgpiosim
+-	AC_CHECK_FUNC([qsort], [], [FUNC_NOT_FOUND_TESTS([qsort])])
+-	PKG_CHECK_MODULES([KMOD], [libkmod >= 18])
+-	PKG_CHECK_MODULES([MOUNT], [mount >= 2.33.1])
+-
+-	# For core library tests
+-	PKG_CHECK_MODULES([GLIB], [glib-2.0 >= 2.50])
+-	PKG_CHECK_MODULES([GOBJECT], [gobject-2.0 >= 2.50])
+-
+-	if test "x$with_tools" = xtrue
+-	then
+-		AC_CHECK_PROG([has_bats], [bats], [true], [false])
+-		if test "x$has_bats" = "xfalse"
+-		then
+-			AC_MSG_NOTICE([bats not found - gpio-tools tests cannot be run])
+-		fi
+-	fi
+-fi
+-
+-AC_ARG_ENABLE([examples],
+-	[AS_HELP_STRING([--enable-examples], [enable building code examples[default=no]])],
+-	[if test "x$enableval" = xyes; then with_examples=true; fi],
+-	[with_examples=false])
+-AM_CONDITIONAL([WITH_EXAMPLES], [test "x$with_examples" = xtrue])
+-
+-AC_ARG_ENABLE([bindings-cxx],
+-	[AS_HELP_STRING([--enable-bindings-cxx],[enable C++ bindings [default=no]])],
+-	[if test "x$enableval" = xyes; then with_bindings_cxx=true; fi],
+-	[with_bindings_cxx=false])
+-AM_CONDITIONAL([WITH_BINDINGS_CXX], [test "x$with_bindings_cxx" = xtrue])
+-
+-if test "x$with_bindings_cxx" = xtrue
+-then
+-	LT_LANG([C++])
+-	# This needs autoconf-archive
+-	AX_CXX_COMPILE_STDCXX_11([ext], [mandatory])
+-
+-	if test "x$with_tests" = xtrue
+-	then
+-		PKG_CHECK_MODULES([CATCH2], [catch2],, [
+-			AC_LANG_PUSH([C++])
+-			AC_CHECK_HEADERS([catch2/catch.hpp], [], [HEADER_NOT_FOUND_CXX([catch2/catch.hpp])])
+-			AC_LANG_POP([C++])
+-		])
+-	fi
+-
+-	if test "x$with_examples" = xtrue
+-	then
+-		# Examples use C++17 features
+-		AX_CXX_COMPILE_STDCXX([17], [ext], [mandatory])
+-	fi
+-fi
+-
+-AC_ARG_ENABLE([bindings-python],
+-	[AS_HELP_STRING([--enable-bindings-python],[enable python3 bindings [default=no]])],
+-	[if test "x$enableval" = xyes; then with_bindings_python=true; fi],
+-	[with_bindings_python=false])
+-AM_CONDITIONAL([WITH_BINDINGS_PYTHON], [test "x$with_bindings_python" = xtrue])
+-
+-if test "x$with_bindings_python" = xtrue
+-then
+-	AM_PATH_PYTHON([3.0], [],
+-		[AC_MSG_ERROR([python3 not found - needed for python bindings])])
+-	AC_CHECK_PROG([has_python_config], [python3-config], [true], [false])
+-	if test "x$has_python_config" = xfalse
+-	then
+-		AC_MSG_ERROR([python3-config not found - needed for python bindings])
+-	fi
+-	AS_IF([test -z "$PYTHON_CPPFLAGS"],
+-		[AC_SUBST(PYTHON_CPPFLAGS, [`$PYTHON-config --includes`])])
+-	AS_IF([test -z "$PYTHON_LIBS"],
+-		[AC_SUBST(PYTHON_LIBS, [`$PYTHON-config --libs`])])
+-fi
+-
+-AC_ARG_ENABLE([bindings-rust],
+-	[AS_HELP_STRING([--enable-bindings-rust],[enable rust bindings [default=no]])],
+-	[if test "x$enableval" = xyes; then with_bindings_rust=true; fi],
+-	[with_bindings_rust=false])
+-AM_CONDITIONAL([WITH_BINDINGS_RUST], [test "x$with_bindings_rust" = xtrue])
+-
+-if test "x$with_bindings_rust" = xtrue
+-then
+-	AC_CHECK_PROG([has_cargo], [cargo], [true], [false])
+-	if test "x$has_cargo" = xfalse
+-	then
+-		AC_MSG_ERROR([cargo not found - needed for rust bindings])
+-	fi
+-fi
+-
+-AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
+-AM_CONDITIONAL([HAS_DOXYGEN], [test "x$has_doxygen" = xtrue])
+-if test "x$has_doxygen" = xfalse
+-then
+-	AC_MSG_NOTICE([doxygen not found - documentation cannot be generated])
+-fi
+-AM_COND_IF([HAS_DOXYGEN], [AC_CONFIG_FILES([Doxyfile])])
+-
+-if test "x$cross_compiling" = xno
+-then
+-	AC_CHECK_PROG([has_help2man], [help2man], [true], [false])
+-fi
+-AM_CONDITIONAL([WITH_MANPAGES], [test "x$has_help2man" = xtrue])
+-if test "x$has_help2man" = xfalse
+-then
+-	AC_MSG_NOTICE([help2man not found - man pages cannot be generated automatically])
+-fi
+-
+-AC_CONFIG_FILES([Makefile
+-		 include/Makefile
+-		 lib/Makefile
+-		 lib/libgpiod.pc
+-		 tools/Makefile
+-		 tests/Makefile
+-		 tests/gpiosim/Makefile
+-		 bindings/cxx/libgpiodcxx.pc
+-		 bindings/Makefile
+-		 bindings/cxx/Makefile
+-		 bindings/cxx/gpiodcxx/Makefile
+-		 bindings/cxx/examples/Makefile
+-		 bindings/cxx/tests/Makefile
+-		 bindings/python/Makefile
+-		 bindings/python/gpiod/Makefile
+-		 bindings/python/gpiod/ext/Makefile
+-		 bindings/python/examples/Makefile
+-		 bindings/python/tests/Makefile
+-		 bindings/python/tests/gpiosim/Makefile
+-		 bindings/rust/Makefile
+-		 man/Makefile])
+-
+-AC_OUTPUT
+diff --git a/include/Makefile.am b/include/Makefile.am
+deleted file mode 100644
+index 7f986ec61169..000000000000
+--- a/include/Makefile.am
++++ /dev/null
+@@ -1,4 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-include_HEADERS = gpiod.h
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+deleted file mode 100644
+index dd90abd130b1..000000000000
+--- a/lib/Makefile.am
++++ /dev/null
+@@ -1,27 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-lib_LTLIBRARIES = libgpiod.la
+-libgpiod_la_SOURCES =	chip.c \
+-			chip-info.c \
+-			edge-event.c \
+-			info-event.c \
+-			internal.h \
+-			internal.c \
+-			line-config.c \
+-			line-info.c \
+-			line-request.c \
+-			line-settings.c \
+-			misc.c \
+-			request-config.c \
+-			uapi/gpio.h
+-
+-libgpiod_la_CFLAGS = -Wall -Wextra -g -std=gnu89
+-libgpiod_la_CFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
+-libgpiod_la_CFLAGS += -include $(top_builddir)/config.h
+-libgpiod_la_CFLAGS += $(PROFILING_CFLAGS)
+-libgpiod_la_LDFLAGS = -version-info $(subst .,:,$(ABI_VERSION))
+-libgpiod_la_LDFLAGS+= $(PROFILING_LDFLAGS)
+-
+-pkgconfigdir = $(libdir)/pkgconfig
+-pkgconfig_DATA = libgpiod.pc
+diff --git a/man/Makefile.am b/man/Makefile.am
+deleted file mode 100644
+index 201a52b5bfd8..000000000000
+--- a/man/Makefile.am
++++ /dev/null
+@@ -1,16 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-if WITH_MANPAGES
+-
+-dist_man1_MANS = gpiodetect.man gpioinfo.man gpioget.man gpioset.man gpiomon.man gpionotify.man
+-
+-%.man: $(top_builddir)/tools/$(*F)
+-	help2man $(top_builddir)/tools/$(*F) --include=$(srcdir)/template --output=$(builddir)/$@ --no-info
+-
+-clean-local:
+-	rm -f $(dist_man1_MANS)
+-
+-endif
+-
+-EXTRA_DIST = template
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+deleted file mode 100644
+index 392f03c641cf..000000000000
+--- a/tests/Makefile.am
++++ /dev/null
+@@ -1,34 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-SUBDIRS = gpiosim
+-
+-AM_CFLAGS = -I$(top_srcdir)/include/ -I$(top_srcdir)/tests/gpiosim/
+-AM_CFLAGS += -include $(top_builddir)/config.h
+-AM_CFLAGS += -Wall -Wextra -g -std=gnu89 $(GLIB_CFLAGS) $(GOBJECT_CFLAGS)
+-AM_CFLAGS += -DG_LOG_DOMAIN=\"gpiod-test\"
+-AM_CFLAGS += $(PROFILING_CFLAGS)
+-AM_LDFLAGS = -pthread
+-LDADD = $(top_builddir)/lib/libgpiod.la
+-LDADD += $(top_builddir)/tests/gpiosim/libgpiosim.la
+-LDADD += $(GLIB_LIBS) $(GOBJECT_LIBS)
+-
+-bin_PROGRAMS = gpiod-test
+-
+-gpiod_test_SOURCES =			\
+-		gpiod-test.c		\
+-		gpiod-test.h		\
+-		gpiod-test-helpers.c	\
+-		gpiod-test-helpers.h	\
+-		gpiod-test-sim.c	\
+-		gpiod-test-sim.h	\
+-		tests-chip.c		\
+-		tests-chip-info.c	\
+-		tests-edge-event.c	\
+-		tests-info-event.c	\
+-		tests-line-config.c	\
+-		tests-line-info.c	\
+-		tests-line-request.c	\
+-		tests-line-settings.c	\
+-		tests-misc.c		\
+-		tests-request-config.c
+\ No newline at end of file
+diff --git a/tests/gpiosim/Makefile.am b/tests/gpiosim/Makefile.am
+deleted file mode 100644
+index 05dce7919477..000000000000
+--- a/tests/gpiosim/Makefile.am
++++ /dev/null
+@@ -1,16 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2021-2022 Bartosz Golaszewski <brgl@bgdev.pl>
+-
+-lib_LTLIBRARIES = libgpiosim.la
+-noinst_PROGRAMS = gpiosim-selftest
+-
+-AM_CFLAGS = -Wall -Wextra -g -fvisibility=hidden -std=gnu89
+-AM_CFLAGS += -include $(top_builddir)/config.h
+-
+-libgpiosim_la_SOURCES = gpiosim.c gpiosim.h
+-libgpiosim_la_CFLAGS = $(AM_CFLAGS) $(KMOD_CFLAGS) $(MOUNT_CFLAGS)
+-libgpiosim_la_LDFLAGS = -version-info $(subst .,:,$(ABI_GPIOSIM_VERSION))
+-libgpiosim_la_LDFLAGS += $(KMOD_LIBS) $(MOUNT_LIBS) -pthread
+-
+-gpiosim_selftest_SOURCES = gpiosim-selftest.c
+-gpiosim_selftest_LDADD = libgpiosim.la
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+deleted file mode 100644
+index defe1b025201..000000000000
+--- a/tools/Makefile.am
++++ /dev/null
+@@ -1,39 +0,0 @@
+-# SPDX-License-Identifier: GPL-2.0-or-later
+-# SPDX-FileCopyrightText: 2017-2021 Bartosz Golaszewski <bartekgola@gmail.com>
+-
+-AM_CFLAGS = -I$(top_srcdir)/include/ -include $(top_builddir)/config.h
+-AM_CFLAGS += -Wall -Wextra -g -std=gnu89
+-
+-noinst_LTLIBRARIES = libtools-common.la
+-libtools_common_la_SOURCES = tools-common.c tools-common.h
+-
+-LDADD = libtools-common.la $(top_builddir)/lib/libgpiod.la
+-
+-if WITH_GPIOSET_INTERACTIVE
+-
+-AM_CFLAGS += -DGPIOSET_INTERACTIVE
+-LDADD += $(LIBEDIT_LIBS)
+-
+-endif
+-
+-bin_PROGRAMS = gpiodetect gpioinfo gpioget gpioset gpiomon gpionotify
+-
+-gpiodetect_SOURCES = gpiodetect.c
+-
+-gpioinfo_SOURCES = gpioinfo.c
+-
+-gpioget_SOURCES = gpioget.c
+-
+-gpioset_SOURCES = gpioset.c
+-
+-gpiomon_SOURCES = gpiomon.c
+-
+-gpionotify_SOURCES = gpionotify.c
+-
+-EXTRA_DIST = gpio-tools-test gpio-tools-test.bats
+-
+-if WITH_TESTS
+-
+-bin_SCRIPTS = gpio-tools-test gpio-tools-test.bats
+-
+-endif
 -- 
 2.37.2
 
