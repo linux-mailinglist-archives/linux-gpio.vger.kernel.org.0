@@ -2,73 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 864B2642925
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:18:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 34D49642933
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:20:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232181AbiLENSI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:18:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42854 "EHLO
+        id S231742AbiLENUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 08:20:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231786AbiLENR7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:17:59 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D556C6F;
-        Mon,  5 Dec 2022 05:17:59 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id k88-20020a17090a4ce100b00219d0b857bcso2788395pjh.1;
-        Mon, 05 Dec 2022 05:17:59 -0800 (PST)
+        with ESMTP id S231648AbiLENUf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:20:35 -0500
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C781C10C
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:20:34 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so14786549pjs.4
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:20:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rLKigQMd2CQVI8yL/UX9DqNgGI+BKPrbaicLA6hflXk=;
-        b=AUzt+MIZmSmyj1QldTDRZbHT+OnTPbDo0O9IwoJus5VrCMpZKFVWi5JtIVO/3EEfMe
-         +ExsNVqvk0GPgt9QmHdwhKm3KzdJNmk9/dlYJyF08/k8W/dfp+lb7FLcXLRU1YbaPNfV
-         nbCek2RzzlRTiv/SD9+tU9f23azeAqo4pJhZuqPRfrI2OkzF+aOZKPxDN7iSBqERedE2
-         Q54R/oKtvgBHvcYgLHWmkuz4zNnHGj02Xfkzpy6aJLw3TRgO9c3bJTHFK7cFm/A5Graa
-         Rn/FMIsZg9D0481bvSUWn11FGNcX9oo+HpHNEY48SwtZNFokKOJUiKRUY93nmjxzMAQt
-         6uXw==
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VttxQNRn5wLcDZe0QBlfyaPIZnI+zBiatgv1ExvlsSA=;
+        b=xSQoB37UuJKY4tgp5wdRFk+Jl7R8ZVhz7LrwXSbrbklLb9YmO/YJV3aWfjWuMzXxvj
+         omoun5S6Ud66T3ElLc81i5TsPhZoAR39ojH/1Wi5QSdttzgYrmTsy/M4lIBg/B3IOetD
+         h3immFNZ5DIsJUSfnVrO9h21CRqUHIJN/0LBiCEmBco61C1XqF4DCSnQhvABC3ephT/4
+         t6YCxd/sJ5lVnZo36pg543Hs6D6FRmWspx4S9qqt3OQQzZxATzMCC0hOnzJxbyH+GkjI
+         OHTDUczl1V59I2H72EN1VUfq/Tfhm3rHppWTPBzCK7D5gJz+f1cu9mH1cgy2xVjA5cdz
+         6OFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rLKigQMd2CQVI8yL/UX9DqNgGI+BKPrbaicLA6hflXk=;
-        b=uDfbPanUR+G24HKpPXfaIGpldKOF2d5hdE5vkPWbb7YXDqf4mzy3DDKyjhwARcyZF7
-         dbajdoxI3x/saYkVKINsznxEOJ0ZmGLnScu3MLGXSzv8lJGBv0z88MWKprG0hAm0hfHV
-         rH4lKEjK8tQL+qEcoHM05ODYdkRzOe95UB2ttHntcQjnyknC0bb+8JKed+ci3arRsmt6
-         7Lt+e0BADxyC/8nhT6/BtyyZG4g6oDLzkPT18ATond4zePOWzPUPBzuYBKiEbbQDcQmi
-         yTTFfGMzUYsPmbyjww40t9eC3h+yPEGjcG854MwBqcpOxsURY09G1zFIPnTmL7dOrmeM
-         DWMQ==
-X-Gm-Message-State: ANoB5pkCAOE66iwKRDQ66dpKG/hzruwAtuK1jqnfEVU4XBktq/+tOR8i
-        7+cA0qG2j1yCVIhJKTkKI8kx/a7/8qU=
-X-Google-Smtp-Source: AA0mqf6m+bljBfXAHeH1bwAI6cFsgQW6Hp8knb5gC4vpyQwCdJerzQIzzqdhPdQI+RtBe7JQv48Unw==
-X-Received: by 2002:a17:90b:1947:b0:219:de9b:f3a7 with SMTP id nk7-20020a17090b194700b00219de9bf3a7mr3318038pjb.78.1670246278659;
-        Mon, 05 Dec 2022 05:17:58 -0800 (PST)
-Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
-        by smtp.gmail.com with ESMTPSA id u10-20020a170902e5ca00b00188f07c10c9sm10581930plf.192.2022.12.05.05.17.55
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VttxQNRn5wLcDZe0QBlfyaPIZnI+zBiatgv1ExvlsSA=;
+        b=gHQgoTZGaxsw778juGnIg0JPGPtji+do9XKYLmQTk5gnMnpIj1e32xAW4qkj+pPtH8
+         1mrBvOtb+ZNKlR4ZhiOc/f5d8Qq87KEJq8RWcw7sJg2U0xMm3MHb3h7bvZzjPbTc/kTc
+         s0O15NvBBq5ejv52cBN/Z+POhE5xS/ow8eVisc9gu3Jm14Bn5DPeHkuFthwyeYwpm8g4
+         JvvYBPrk7Ky6y69IZTwDPaJUpbGzS6UfV+xqk3JV5rv0xbvwt5IJFY2Kdn5/NpV9V//X
+         OhCP2bZ9VxY+0egtc3ikHJRvKKTfCpgDCBSbfdlzuG73ht2pgctR3prMJUew2qfcYYX0
+         0W5Q==
+X-Gm-Message-State: ANoB5pksP5ZvS6SlWZZkqPn0/0l4QQFOueTxKlxQB6iOb5ppX84e4/TH
+        cg9BfxvrHfM3bEpyAkABIyoQWQ==
+X-Google-Smtp-Source: AA0mqf4PU5MhibxptEdBYx/Cd3SYioOJVCBMu5pSY3SfrC83bIr+4Og81l5n1VthaeXFLy+b7Gr+uw==
+X-Received: by 2002:a17:90a:5298:b0:217:e054:9ac8 with SMTP id w24-20020a17090a529800b00217e0549ac8mr96191538pjh.246.1670246434046;
+        Mon, 05 Dec 2022 05:20:34 -0800 (PST)
+Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
+        by smtp.gmail.com with ESMTPSA id p7-20020a170902780700b001899007a721sm10496368pll.193.2022.12.05.05.20.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 05:17:58 -0800 (PST)
-Date:   Mon, 5 Dec 2022 21:17:52 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nick Hainke <vincent@systemli.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v8 0/2] gpiolib: don't allow user-space to crash the
- kernel with hot-unplugs
-Message-ID: <Y43vgFY+qnqH8+0P@sol>
-References: <20221205123903.159838-1-brgl@bgdev.pl>
- <Y43rPdus/9INC390@smile.fi.intel.com>
- <Y43rmRW1S8PvMJW4@smile.fi.intel.com>
+        Mon, 05 Dec 2022 05:20:33 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     matthias.bgg@gmail.com,
+        Bernhard =?utf-8?Q?Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
+        devicetree@vger.kernel.org
+Cc:     linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        krzysztof.kozlowski@linaro.org,
+        angelogioacchino.delregno@collabora.com,
+        linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH v3 5/7] arm64: dts: mediatek: Remove pins-are-numbered
+ property
+In-Reply-To: <20221129023401.278780-6-bero@baylibre.com>
+References: <20221129023401.278780-1-bero@baylibre.com>
+ <20221129023401.278780-6-bero@baylibre.com>
+Date:   Mon, 05 Dec 2022 05:20:32 -0800
+Message-ID: <7ho7si56n3.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y43rmRW1S8PvMJW4@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,30 +79,22 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 03:01:13PM +0200, Andy Shevchenko wrote:
-> On Mon, Dec 05, 2022 at 02:59:42PM +0200, Andy Shevchenko wrote:
-> > On Mon, Dec 05, 2022 at 01:39:01PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > 
-> > > Linus Torvalds pointed out that using trylock here is wrong. This iteration
-> > > drops it in favor of unconditional locks but keeps all the fixes that came
-> > > later.
-> > > 
-> > > I will also not send it for this release but make it part of the updates PR
-> > > for v6.2 to give it some time in next.
-> > > 
-> > > v7 -> v8:
-> > > - don't use down_read_trylock(), just go straight for a full lock
-> > 
-> > Yep, it was a good wrap-up explanation.
-> 
-> But he also suggested to fold NULL check into call_*_locked(). Any points why
-> you decided not to go that way?
-> 
+Matthias,
 
-He also mentioned making it more back-portable.
-Does that mean splitting out the patches for uAPI v1 and v2, if not for
-each of the Fixes? Or does he mean back-porting it to 6.1?
+Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com> writes:
 
-Cheers,
-Kent.
+> Remove the unnecessary pins-are-numbered property from
+> arm64 Mediatek DeviceTrees
+>
+> Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com>
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
+> Acked-by: Kevin Hilman <khilman@baylibre.com>
+
+Now that the driver/binding parts are queued, I'm assuming you'll take this=
+ patch
+(and patch 6) via the mediatek tree?
+
+Thanks,
+
+Kevin
