@@ -2,71 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34D49642933
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:20:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B90064293A
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 14:21:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231742AbiLENUg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 08:20:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45968 "EHLO
+        id S232206AbiLENVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 08:21:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231648AbiLENUf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:20:35 -0500
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C781C10C
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:20:34 -0800 (PST)
-Received: by mail-pj1-x1029.google.com with SMTP id e7-20020a17090a77c700b00216928a3917so14786549pjs.4
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:20:34 -0800 (PST)
+        with ESMTP id S231686AbiLENVi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 08:21:38 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434261C404
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 05:21:37 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id k79so11316768pfd.7
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 05:21:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=VttxQNRn5wLcDZe0QBlfyaPIZnI+zBiatgv1ExvlsSA=;
-        b=xSQoB37UuJKY4tgp5wdRFk+Jl7R8ZVhz7LrwXSbrbklLb9YmO/YJV3aWfjWuMzXxvj
-         omoun5S6Ud66T3ElLc81i5TsPhZoAR39ojH/1Wi5QSdttzgYrmTsy/M4lIBg/B3IOetD
-         h3immFNZ5DIsJUSfnVrO9h21CRqUHIJN/0LBiCEmBco61C1XqF4DCSnQhvABC3ephT/4
-         t6YCxd/sJ5lVnZo36pg543Hs6D6FRmWspx4S9qqt3OQQzZxATzMCC0hOnzJxbyH+GkjI
-         OHTDUczl1V59I2H72EN1VUfq/Tfhm3rHppWTPBzCK7D5gJz+f1cu9mH1cgy2xVjA5cdz
-         6OFw==
+        bh=9z1JhFIl54hhe1hJzAGSFqm4Ab0z60pwIOimmNR2/Lc=;
+        b=bA7kTiuyMy0akuLe9I6Y5TgP9Gy1UA4+voCgPw03Dv31AGXnaMq3Tu3xCLVfTtBYuT
+         BmEHqWRXfM4T0tjjyfH0OPzCnL56qn2UHFc63E/NNkDRq1UyeZ+LZcH5nSiRFJCcB1GU
+         aWom9nox5uFGWQj8KSr7ur8u7qzEutw3B0+D32rFqRRV62cAXlUZdFHg6e8mDpao/8Vg
+         iJkRjCgxZLp2Y7MtBQcwFlWMXcrEUllkujlYGIQOkZbpsS85kaD//C+49imHis3uiDNX
+         jFB4Hwp/hOxExMtsTQtiqDVOD6l7M4SZ59B4NsAsAAEJvbXqyp0SRf5BFKM2opyA09di
+         1Xyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:references
          :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VttxQNRn5wLcDZe0QBlfyaPIZnI+zBiatgv1ExvlsSA=;
-        b=gHQgoTZGaxsw778juGnIg0JPGPtji+do9XKYLmQTk5gnMnpIj1e32xAW4qkj+pPtH8
-         1mrBvOtb+ZNKlR4ZhiOc/f5d8Qq87KEJq8RWcw7sJg2U0xMm3MHb3h7bvZzjPbTc/kTc
-         s0O15NvBBq5ejv52cBN/Z+POhE5xS/ow8eVisc9gu3Jm14Bn5DPeHkuFthwyeYwpm8g4
-         JvvYBPrk7Ky6y69IZTwDPaJUpbGzS6UfV+xqk3JV5rv0xbvwt5IJFY2Kdn5/NpV9V//X
-         OhCP2bZ9VxY+0egtc3ikHJRvKKTfCpgDCBSbfdlzuG73ht2pgctR3prMJUew2qfcYYX0
-         0W5Q==
-X-Gm-Message-State: ANoB5pksP5ZvS6SlWZZkqPn0/0l4QQFOueTxKlxQB6iOb5ppX84e4/TH
-        cg9BfxvrHfM3bEpyAkABIyoQWQ==
-X-Google-Smtp-Source: AA0mqf4PU5MhibxptEdBYx/Cd3SYioOJVCBMu5pSY3SfrC83bIr+4Og81l5n1VthaeXFLy+b7Gr+uw==
-X-Received: by 2002:a17:90a:5298:b0:217:e054:9ac8 with SMTP id w24-20020a17090a529800b00217e0549ac8mr96191538pjh.246.1670246434046;
-        Mon, 05 Dec 2022 05:20:34 -0800 (PST)
+        bh=9z1JhFIl54hhe1hJzAGSFqm4Ab0z60pwIOimmNR2/Lc=;
+        b=xdcChedbKTejLYVAcCCDfMZcV/OCcPcEkMz0/LS/t8wRF/5/2aczx6HDMdagfahefy
+         kjaRteO/sBDYE7r0Kau7UNMQVva6sbIsWOp5xFjxEjdOd10JKeE8pGt9znW9SSTOXgbB
+         IaQg6iAi8UkJJSLEkTmDAnE7Ssto4j8a0PQ2bZ1BuygHTp8AwjMbGFrUjHGV3XLldgqY
+         In//kuiFIH9okF+h50WLQgVmgKXyX2ebq0ElSiGXLGmFma6AsiFeZuV8GJTtw7msRkIv
+         NedLVbzFszUBctBtvW0NIxnHU9mapvR2DnvH0kPwmDus/j2t6QCmJPLo6smzK24UpT5y
+         EKfg==
+X-Gm-Message-State: ANoB5pnPp8meKqNwuA0Xr3DvqFrgz5ceMxr9NXpo8cDbOHY9B2lIeU9I
+        l8hepQaX67ZYu8KIJ8Jb8kQMYQ==
+X-Google-Smtp-Source: AA0mqf7MiItBstwxtCl5bK9j7nFlFPOtd2lA9WFHspdb9k/DZyXPDYMrLQK0IU6wIzVKzqL9WVWUQw==
+X-Received: by 2002:a63:4742:0:b0:478:cd7d:3f55 with SMTP id w2-20020a634742000000b00478cd7d3f55mr1407966pgk.624.1670246496752;
+        Mon, 05 Dec 2022 05:21:36 -0800 (PST)
 Received: from localhost (63-228-113-140.tukw.qwest.net. [63.228.113.140])
-        by smtp.gmail.com with ESMTPSA id p7-20020a170902780700b001899007a721sm10496368pll.193.2022.12.05.05.20.33
+        by smtp.gmail.com with ESMTPSA id g2-20020a655942000000b00476c2180dbcsm8250956pgu.29.2022.12.05.05.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 05:20:33 -0800 (PST)
+        Mon, 05 Dec 2022 05:21:36 -0800 (PST)
 From:   Kevin Hilman <khilman@baylibre.com>
-To:     matthias.bgg@gmail.com,
+To:     alexandre.torgue@foss.st.com,
         Bernhard =?utf-8?Q?Rosenkr=C3=A4nzer?= <bero@baylibre.com>,
         devicetree@vger.kernel.org
 Cc:     linux-mediatek@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
-        krzysztof.kozlowski@linaro.org,
-        angelogioacchino.delregno@collabora.com,
+        mcoquelin.stm32@gmail.com, krzysztof.kozlowski@linaro.org,
+        matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
         linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH v3 5/7] arm64: dts: mediatek: Remove pins-are-numbered
+Subject: Re: [PATCH v3 7/7] ARM: dts: stm32: Remove the pins-are-numbered
  property
-In-Reply-To: <20221129023401.278780-6-bero@baylibre.com>
+In-Reply-To: <20221129023401.278780-8-bero@baylibre.com>
 References: <20221129023401.278780-1-bero@baylibre.com>
- <20221129023401.278780-6-bero@baylibre.com>
-Date:   Mon, 05 Dec 2022 05:20:32 -0800
-Message-ID: <7ho7si56n3.fsf@baylibre.com>
+ <20221129023401.278780-8-bero@baylibre.com>
+Date:   Mon, 05 Dec 2022 05:21:36 -0800
+Message-ID: <7hlenm56lb.fsf@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
@@ -79,21 +78,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Matthias,
+Alexandre,
 
 Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com> writes:
 
-> Remove the unnecessary pins-are-numbered property from
-> arm64 Mediatek DeviceTrees
+> Remove the pins-are-numbered property from STM32 DeviceTrees
 >
 > Signed-off-by: Bernhard Rosenkr=C3=A4nzer <bero@baylibre.com>
-> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
-ora.com>
-> Acked-by: Kevin Hilman <khilman@baylibre.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Now that the driver/binding parts are queued, I'm assuming you'll take this=
- patch
-(and patch 6) via the mediatek tree?
+Now that the driver & binding qre queued, I'm assuming you'll queue this
+one via the stm32 tree?
 
 Thanks,
 
