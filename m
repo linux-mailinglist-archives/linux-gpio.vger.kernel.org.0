@@ -2,74 +2,80 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36313642383
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 08:20:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B72EF642550
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 10:03:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231803AbiLEHUm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 02:20:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56128 "EHLO
+        id S232012AbiLEJD0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 04:03:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231766AbiLEHUe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 02:20:34 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C1813F64
-        for <linux-gpio@vger.kernel.org>; Sun,  4 Dec 2022 23:20:27 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id h10so7658058wrx.3
-        for <linux-gpio@vger.kernel.org>; Sun, 04 Dec 2022 23:20:27 -0800 (PST)
+        with ESMTP id S232095AbiLEJCr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 04:02:47 -0500
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 987BC1BB
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 01:02:17 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id p36so13132519lfa.12
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 01:02:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8HHI5OYeBtZ9OhzgG0GgRcAo9rRNF7SWXi0ONFtD8zg=;
-        b=Gtyf27NLGwz2XiJyAx4nDCn5tqBs80SxwiPZ3G6suWCTkrGsFh610dWxT453KuuVpm
-         MjglVG6XAHAsh1cBCGbeiOVYBxsZzYX0t425WmazuQ979cKQqTv64wEanGsxcMQfJnB7
-         5W7dx4W/DuAPA2lvsctDADQvD4cRhAz3OiY6UAxc6EHLGnwb2J4FP/n8xRHmo2zDA/NO
-         j8taob140c1zU0OZwCXrM57L2WXjgH2jtslWoPEDlZb1LeCouI3gsy1JCkjHWhDpqpTN
-         NVwinMu3+eD4B0wDrfWWMSAK53wXyONEBkajceqml3GBPDpRzaipTrp74M6q0ddHa/KO
-         UpvA==
+        bh=dMxaUycmxl+S2uvPgIxMwOG2DftPOi9wfPWh+AneDcw=;
+        b=p3j+D/Wc9M3g6mr5ZEjzMfyRifRhIHwMJypgDKfta9PMuwgoTVGNReurNgJgM40RID
+         i6nOixIcHO+ZSqF1YUnjcQZ7B2WQGbiEIbL/v7r2pLEPDa17J/q1dU9j5VC4jItH073l
+         n/JBYUwbmGRZ275nF9CH3drL4fbAlmRELBdtigLgppWgKB8IbOf/TtiXeA3ksgRoSOk/
+         AhKb8FNLb7TJtIYXrHmYMPI9iIvVkWaYnAHUltNlqsXWPJCEVQ4SDYBPplDA4tMFtoKk
+         cubhx/a9UDW8SGhFdPwe9OSMu8mNFXhv+TfxvfBMLYlwmqrpMrn9TRJ7zLFFwsHGXugs
+         +Sxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8HHI5OYeBtZ9OhzgG0GgRcAo9rRNF7SWXi0ONFtD8zg=;
-        b=8ASMqpcxj3+Xo+vwsbg01URJM5VXSrg9st0fkJWNj3j6PNezoFhc+QC5d6qd5SVFQ6
-         sp5gSnc3VdGeDEtyPAX2LCquN8AE+7KQtH68fsLCU3Svbs0fjBg9SNehndMKXlZZXhaF
-         tQUlVLZLRM/TfZgihYBdIUWc2lYoJvc6XC8wTviz7cFSmH0DBx8yDuPAbRLCohg6NQH8
-         ANPKH3e4cvfH1CgFsbzdgfQP6LcupCl1WXseRmJHeseysogiN2TW1nX+GOAj61CbKYtK
-         kp0AgHQh3pqTnL6VILEDrVlT2EOqY6JkhEXw2iDIGfOD5FvWOjq9Gj3Af01s98Cq7TSu
-         GJbg==
-X-Gm-Message-State: ANoB5pm+9nVuL0Nb/kO6dNfwgH8COXNK91Y0zh1Ih21do2ooaEqFO9UR
-        2IxZ4mWh4qzez21fW5YkO4fuX/FY4OH3+FD77Ho=
-X-Google-Smtp-Source: AA0mqf5nO4+4Z/GwlwROnBTkRpD+efTpWzHkE+bzi2nICroLKVvSxMtFnYzLVI9kdIy6X9Coc6H2JQ==
-X-Received: by 2002:a5d:5712:0:b0:242:4bac:a100 with SMTP id a18-20020a5d5712000000b002424baca100mr6266840wrv.117.1670224826319;
-        Sun, 04 Dec 2022 23:20:26 -0800 (PST)
-Received: from [192.168.1.166] ([212.228.7.114])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b003c6f8d30e40sm22274069wmq.31.2022.12.04.23.20.25
+        bh=dMxaUycmxl+S2uvPgIxMwOG2DftPOi9wfPWh+AneDcw=;
+        b=2Xn731lZEGJ6YPI56Yj7D9t0HapXp0RRri2llecQFKkoaWcawIGIhzZ/2wxUuEd20b
+         klkiU8WBOEMTmvzdT6tjfyMTowygg4G48bX486HF3FErIS3RuE41BvrO6a2QHebnMT8A
+         zRur6JwvY7RiPLcxHfoHIEoysl3hOw9Cn3ujAY90t+WKIObxW87GpJedCVG4n++RVtii
+         a0sie6Pqe3W6v9Hon6M8rbB1YznjeipkMDH/EII9zjzf4Wumunpd7YH94rQ/4CY1WO2e
+         +q7nF8aOxTbUlSXHJitUeo2c2fsBGpjcBdhFHcuSVPcqrSMPVkKTxcONsRM4KZksoSDH
+         dPxQ==
+X-Gm-Message-State: ANoB5pmjKuWvTVJqax0MqTf1GHyE1AyrAXUXAVbDnRY14q58//hdTPC9
+        j1jwsB4Oopg9KG+ZnzxkhFgOoA==
+X-Google-Smtp-Source: AA0mqf40OKDV1s//nLvesSXyQnTAgCIILP/C93w3TBXdq9B6xV9CZ5i6fZyJP1TzIyYZqpsla/JVew==
+X-Received: by 2002:ac2:5e2a:0:b0:4b5:6b51:c5ef with SMTP id o10-20020ac25e2a000000b004b56b51c5efmr1864900lfg.336.1670230935845;
+        Mon, 05 Dec 2022 01:02:15 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id h24-20020a2e9018000000b0027a00aab48fsm227356ljg.66.2022.12.05.01.02.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Dec 2022 23:20:25 -0800 (PST)
-Message-ID: <ae60701e-a2f1-4945-d9e0-e8ecd1c82f62@linaro.org>
-Date:   Mon, 5 Dec 2022 07:20:24 +0000
+        Mon, 05 Dec 2022 01:02:15 -0800 (PST)
+Message-ID: <e839274d-6696-63aa-14e6-f52a534c9ed2@linaro.org>
+Date:   Mon, 5 Dec 2022 10:02:14 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.5.0
-Subject: Re: [PATCH v3 1/2] pinctrl: add support for ACPI pin function and
- config resources
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, mika.westerberg@linux.intel.com,
-        rafael@kernel.org, linus.walleij@linaro.org, fugang.duan@linaro.org
-References: <20221130164027.682898-1-niyas.sait@linaro.org>
- <20221130164027.682898-2-niyas.sait@linaro.org>
- <Y4fE6CPLHKPdjt9y@smile.fi.intel.com>
- <a23d0da6-6f80-a7d5-a0fb-a10e1a408129@linaro.org>
- <Y4fnoOKngSLW7dfb@smile.fi.intel.com>
- <a033178f-89f8-1843-ee02-321da8c2ca90@linaro.org>
- <Y4kzG3K1LlC5ZcQi@smile.fi.intel.com>
-From:   Niyas Sait <niyas.sait@linaro.org>
-In-Reply-To: <Y4kzG3K1LlC5ZcQi@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Chester Lin <clin@suse.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        s32@nxp.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>,
+        ghennadi.procopciuc@oss.nxp.com
+References: <20221128054820.1771-1-clin@suse.com>
+ <20221128054820.1771-2-clin@suse.com>
+ <6ad95ce3-887d-48fd-3c08-f50d4e666ded@linaro.org>
+ <Y42MyyLumVa8phpd@linux-8mug>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <Y42MyyLumVa8phpd@linux-8mug>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
@@ -80,45 +86,144 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 01/12/2022 23:04, Andy Shevchenko wrote:
-> That's why third (?) time I'm asking you to provide a design level
-> documentation of your approach to understand it better.
+On 05/12/2022 07:16, Chester Lin wrote:
+> Hi Krzysztof,
 > 
-
-Sorry Andy. I made a wrong assumption that the docs added would clarify 
-things. I will put together a design document.
-
-
-> The pin control has provider-consumer idea behind. When a*consumer*  device
-> is being probed, it tries to configure its pins based on the data collected
-> in the pin control device that*provides*  the resources. At this point of
-> time the pin control subsystem parses tables (currently DT and board files)
-> for that. For the pin control device itself, the registration of it also
-> parses tables but for the*provider*.
+> On Wed, Nov 30, 2022 at 03:58:52PM +0100, Krzysztof Kozlowski wrote:
+>> On 28/11/2022 06:48, Chester Lin wrote:
+>>> Add DT schema for the pinctrl driver of NXP S32 SoC family.
+>>>
+>>> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+>>> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>
+>>> Signed-off-by: Andrei Stefanescu <andrei.stefanescu@nxp.com>
+>>> Signed-off-by: Chester Lin <clin@suse.com>
+>>> ---
+>>>
+>>> Changes in v2:
+>>> - Remove the "nxp,pins" property since it has been moved into the driver.
+>>> - Add descriptions for reg entries.
+>>> - Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
+>>> - Fix schema issues and revise the example.
+>>> - Fix the copyright format suggested by NXP.
+>>>
+>>>  .../pinctrl/nxp,s32cc-siul2-pinctrl.yaml      | 125 ++++++++++++++++++
+>>>  1 file changed, 125 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
+>>> new file mode 100644
+>>> index 000000000000..2fc25a9362af
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32cc-siul2-pinctrl.yaml
+>>
+>> Usually filename matches the compatible (or family name), so any reason
+>> why compatible is "nxp,s32g2" but filename is "nxp,s32cc"?
+>>
 > 
-> Now, the pin control device driver (*provider*) may or may not have
-> (a subset of) the pin functions and pin groups hard coded in the driver.
-> This can be used by the pin control subsystem as well as data that comes
-> from the tables. The data from the tables, nevertheless, is not really
-> needs names of the functions, because it's not what is programmed into
-> HW registers. That's why when driver doesn't have that information, it's
-> fine to generate it.
-> 
-> Also note, that in ACPI all Pin*() descriptors are optional and we need
-> to cover all such cases, I already pointed out to my preliminary research,
-> which I have done 5 years ago, where I tried to understand how it should
-> be covered for the most used cases.
-> 
-> I think I stopped with my solution in particular due to the problems with
-> the power management interaction with pin control, i.e. string-based odd
-> states (4 of which are hard coded in the pin control core code).
+> According to NXP, the S32CC is a microarch which is adapted by different S32 SoCs,
+> such as S32G2/G3 and S32R45. Some common IPs are implemented in S32CC, such as
+> serial, pinctrl, mmc, gmac and some other peripheral interfaces. S32R45 has
+> different pinouts compared to S32G2, which means that there would not be just
+> "s32g2-siul2-pinctrl" but also "s32r45-siul2-pinctrl" in the compatible enum if
+> S32R45 has to be upstreamed in the future. For this case, it seems to be
+> inappropriate that adding a compatible name without any "s32g" keyword in the
+> filename "nxp,s32g2-.." unless creating a new yaml for each platform, such as
+> nxp,s32r45-siul2-pinctl.yaml.
 
-Let's start with the design document. ACPI have far fewer information 
-for the pin controller compared to DT. I am not quite sure how we can 
-generate data from Pin(*) descriptions for the pin controller reliably. 
-Let me first put together the design document, hopefully that will help.
+First, you can always rename a file if such need arises. Maybe new SoCs
+will come, maybe not.
 
--- 
-Niyas
+Second, when you actually upstream new SoC it might anyway require new
+bindings file, because pinctrls are quite specific and it is usually
+difficult to support multiple devices in a nice, readable way in one
+file. Therefore anyway another file is quite likely.
+
+(...)
+
+>>> +
+>>> +patternProperties:
+>>> +  '-pins$':
+>>> +    type: object
+>>> +    additionalProperties: false
+>>> +
+>>> +    patternProperties:
+>>> +      '-grp[0-9]$':
+>>> +        type: object
+>>> +        allOf:
+>>> +          - $ref: pinmux-node.yaml#
+>>> +          - $ref: pincfg-node.yaml#
+>>> +        unevaluatedProperties: false
+>>> +        description:
+>>> +          Pinctrl node's client devices specify pin muxes using subnodes,
+>>> +          which in turn use the standard properties.
+>>
+>> All properties are accepted? What about values, e.g. for drive strength?
+> 
+> For those unsupported properties such as drive-strength, the s32g2 pinctrl driver
+> returns -EOPNOTSUPP.
+
+I don't care what the driver is doing, we do not discuss the driver. You
+need to describe properly the hardware and I doubt that hardware accepts
+all drive-strengths, all forms of pull resistors (so any Ohm value).
+
+Add constrains.
+
+>>
+>>> +
+>>> +additionalProperties: false
+>>> +
+>>> +examples:
+>>> +  - |
+>>> +
+>>> +    /* Pins functions (SSS field) */
+>>> +    #define FUNC0  0
+>>> +    #define FUNC1  1
+>>> +    #define FUNC2  2
+>>> +    #define FUNC3  3
+>>> +    #define FUNC4  4
+>>> +    #define FUNC5  5
+>>> +    #define FUNC6  6
+>>> +    #define FUNC7  7
+
+This is another surprise - functions are texts, not numbers.
+
+>>> +
+>>> +    #define S32CC_PINMUX(PIN, FUNC) (((PIN) << 4) | (FUNC))
+>>> +
+>>> +    #define S32CC_SLEW_208MHZ  0
+>>> +    #define S32CC_SLEW_166MHZ  4
+>>> +    #define S32CC_SLEW_150MHZ  5
+>>> +    #define S32CC_SLEW_133MHZ  6
+>>> +    #define S32CC_SLEW_83MHZ   7
+
+Don't store register values in the bindings examples. Instead you need
+to be explain the slew-rate property.
+
+>>> +
+>>> +    pinctrl@4009c240 {
+>>> +        compatible = "nxp,s32g2-siul2-pinctrl";
+>>> +
+>>> +        /*
+>>> +         * There are two SIUL2 controllers in S32G2:
+>>> +         *
+>>> +         *   siul2_0 @ 0x4009c000
+>>> +         *   siul2_1 @ 0x44010000
+>>> +         *
+>>> +         * Every SIUL2 controller has multiple register types, and here
+>>> +         * only MSCR and IMCR registers need to be revealed for kernel
+>>> +         * to configure pinmux. Please note that some indexes are reserved,
+>>> +         * such as MSCR102-MSCR111 in the following reg property.
+>>> +         */
+>>> +
+>>
+>> Either this should be part of description or should be dropped. It blows
+>> example and probably duplicates DTS.
+>>
+>>
+>> Best regards,
+>> Krzysztof
+>>
+
+Best regards,
+Krzysztof
+
