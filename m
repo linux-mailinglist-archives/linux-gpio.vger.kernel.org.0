@@ -2,252 +2,303 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 865A4643609
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 21:50:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 316F76436D8
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 22:27:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230450AbiLEUub (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 15:50:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52724 "EHLO
+        id S233846AbiLEV10 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 16:27:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbiLEUua (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 15:50:30 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27BF528E24;
-        Mon,  5 Dec 2022 12:50:29 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id ud5so1437225ejc.4;
-        Mon, 05 Dec 2022 12:50:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GVCjiKCCl/VeQNWt8PtvAxtZLBRlpY2z5UZuNcs/Lew=;
-        b=XvJr+2rJm7JOHlq9x+fOv7NDm86bbibMxBpK63VeMD2EMqGdhu2XuWkgvVLdDR0z70
-         rNjTyDDxW9o5ErSENlsUnIfCC0WhZuejJ2yih0mLoHswCM2M58xZp+WRXrhKHNzoDC98
-         eywNrn9703v1hEHCC19pIxnm9UAOmv/ciCyk8aNqL1llwB1pwKlrAN3g0vWuCDVwec3u
-         b2oe64W6gGqXEP/w77AW1mJZUnpIQaflKXXD7S2AxRLNn+kpk5aBgHioUah3AXqYRLz0
-         Ni6YsVblS514+p5ZnwbjXWkaD6uhuoaqZS6tGC11waKPWHF6EekaoetSMeNIEbDaBvy2
-         bqLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GVCjiKCCl/VeQNWt8PtvAxtZLBRlpY2z5UZuNcs/Lew=;
-        b=l2M8ynsz2HoWPY5DGl3tECJI4DmuEGNZMu6Qv7RdAfRuDsT5JkJlkzx4OZhhnL63Kg
-         4rDL8aBsmHOHoVFx28hgR6a6H0YYMpS+Z30QNdWQqJLjz1gEgRCGCyUwXjou+DNpWqZy
-         GwFLRVPjfSfPKrzH9P0JlCMq5s1VhPO+UZ/ioiqMvfgARwV9iN4jvTG42HNaQ8A4HMYK
-         5+XHwoJ9St1xVBbcRBherZ8rDD4kvE+JlLzi9fKiIof1LOc2Cj0kX7ujDZUtBU44dgjZ
-         A06ANMScIUG4UXh3ZNVwqAAAfBMNfTCwltPAmraxqCL6W5h3gKQsHgPRYmAFBQFyIYqH
-         asqg==
-X-Gm-Message-State: ANoB5plzBZuTC74h96aTnGlOd5ZV5NVRJBiYcwz9RyaH13HJwXbIStRH
-        gF7L1lxulEy5UG7Yz6GLzR0=
-X-Google-Smtp-Source: AA0mqf5OSt768BV9vzFy9k66tV39xf6Wmy4SS9KX61nTQHi4Fa5yPtn/xJX8Qo/SjgdCekjDSrIRXw==
-X-Received: by 2002:a17:906:4b4a:b0:7c0:e5cb:aad8 with SMTP id j10-20020a1709064b4a00b007c0e5cbaad8mr7371981ejv.407.1670273427580;
-        Mon, 05 Dec 2022 12:50:27 -0800 (PST)
-Received: from kista.localnet (82-149-19-102.dynamic.telemach.net. [82.149.19.102])
-        by smtp.gmail.com with ESMTPSA id g9-20020a17090670c900b0077f324979absm6580859ejk.67.2022.12.05.12.50.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 12:50:27 -0800 (PST)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Conor Dooley <conor.dooley@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Douglas Anderson <dianders@chromium.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Satya Priya <quic_c_skakit@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error code
-Date:   Mon, 05 Dec 2022 21:50:24 +0100
-Message-ID: <22881769.6Emhk5qWAg@kista>
-In-Reply-To: <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de> <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
+        with ESMTP id S233995AbiLEV0x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 16:26:53 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A7972CDDD;
+        Mon,  5 Dec 2022 13:26:31 -0800 (PST)
+Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A5E58589;
+        Mon,  5 Dec 2022 22:26:29 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1670275589;
+        bh=ykxVdfAcneei+kvnGOJA1yr2LQxy/pKopvkCyrxCRCU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V6QXXG8l9KGcR4H7C7c9REwyWV5W5Gfr8lVRt9GAasYiram4DiAqWuJi/7i5MNOSS
+         eXDRCiw7/nZfH6zcXjSbkX+N/+CxYldWqxNlSJ7jBPfDgRx7/+pOGWv3KDmQvZMBkB
+         D3cLbFanLgPftgQNqvxRkdcRCt20D/5vVVXEGCu4=
+Date:   Mon, 5 Dec 2022 23:26:27 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        platform-driver-x86@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-media@vger.kernel.org
+Subject: Re: [PATCH 0/5] gpio/media/int3472: Add support for tps68470
+ privacy-LED output
+Message-ID: <Y45iA/0kMlS9fjZ4@pendragon.ideasonboard.com>
+References: <20221128214408.165726-1-hdegoede@redhat.com>
+ <CACRpkda+3e6jLq4WkyiCFcvL_rO1tAf_TvO5B9kikkii+6vSnA@mail.gmail.com>
+ <f79b9397-64af-894a-411c-5595fa136008@redhat.com>
+ <e04eaaa0-1a5d-7f8f-9cd9-4a2117f83aab@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e04eaaa0-1a5d-7f8f-9cd9-4a2117f83aab@redhat.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dne sreda, 30. november 2022 ob 16:21:38 CET je Uwe Kleine-K=F6nig napisal(=
-a):
-> .get_state() might fail in some cases. To make it possible that a driver
-> signals such a failure change the prototype of .get_state() to return an
-> error code.
->=20
-> This patch was created using coccinelle and the following semantic patch:
->=20
-> @p1@
-> identifier getstatefunc;
-> identifier driver;
-> @@
->  struct pwm_ops driver =3D {
->         ...,
->         .get_state =3D getstatefunc
->         ,...
->  };
->=20
-> @p2@
-> identifier p1.getstatefunc;
-> identifier chip, pwm, state;
-> @@
-> -void
-> +int
->  getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct
-> pwm_state *state) {
->    ...
-> -  return;
-> +  return 0;
->    ...
->  }
->=20
-> plus the actual change of the prototype in include/linux/pwm.h (plus some
-> manual fixing of indentions and empty lines).
->=20
-> So for now all drivers return success unconditionally. They are adapted
-> in the following patches to make the changes easier reviewable.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/gpio/gpio-mvebu.c             |  9 ++++++---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 14 ++++++++------
->  drivers/leds/rgb/leds-qcom-lpg.c      | 14 ++++++++------
->  drivers/pwm/pwm-atmel.c               |  6 ++++--
->  drivers/pwm/pwm-bcm-iproc.c           |  8 +++++---
->  drivers/pwm/pwm-crc.c                 | 10 ++++++----
->  drivers/pwm/pwm-cros-ec.c             |  8 +++++---
->  drivers/pwm/pwm-dwc.c                 |  6 ++++--
->  drivers/pwm/pwm-hibvt.c               |  6 ++++--
->  drivers/pwm/pwm-imx-tpm.c             |  8 +++++---
->  drivers/pwm/pwm-imx27.c               |  8 +++++---
->  drivers/pwm/pwm-intel-lgm.c           |  6 ++++--
->  drivers/pwm/pwm-iqs620a.c             |  6 ++++--
->  drivers/pwm/pwm-keembay.c             |  6 ++++--
->  drivers/pwm/pwm-lpss.c                |  6 ++++--
->  drivers/pwm/pwm-meson.c               |  8 +++++---
->  drivers/pwm/pwm-mtk-disp.c            | 12 +++++++-----
->  drivers/pwm/pwm-pca9685.c             |  8 +++++---
->  drivers/pwm/pwm-raspberrypi-poe.c     |  8 +++++---
->  drivers/pwm/pwm-rockchip.c            | 12 +++++++-----
->  drivers/pwm/pwm-sifive.c              |  6 ++++--
->  drivers/pwm/pwm-sl28cpld.c            |  8 +++++---
->  drivers/pwm/pwm-sprd.c                |  8 +++++---
->  drivers/pwm/pwm-stm32-lp.c            |  8 +++++---
->  drivers/pwm/pwm-sun4i.c               | 12 +++++++-----
->  drivers/pwm/pwm-sunplus.c             |  6 ++++--
->  drivers/pwm/pwm-visconti.c            |  6 ++++--
->  drivers/pwm/pwm-xilinx.c              |  8 +++++---
->  include/linux/pwm.h                   |  4 ++--
->  29 files changed, 146 insertions(+), 89 deletions(-)
->=20
-<snip>
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index c8445b0a3339..37d75e252d4e 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -108,9 +108,9 @@ static inline void sun4i_pwm_writel(struct
-> sun4i_pwm_chip *chip, writel(val, chip->base + offset);
->  }
->=20
-> -static void sun4i_pwm_get_state(struct pwm_chip *chip,
-> -				struct pwm_device *pwm,
-> -				struct pwm_state *state)
-> +static int sun4i_pwm_get_state(struct pwm_chip *chip,
-> +			       struct pwm_device *pwm,
-> +			       struct pwm_state *state)
->  {
->  	struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
->  	u64 clk_rate, tmp;
-> @@ -132,7 +132,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  		state->duty_cycle =3D DIV_ROUND_UP_ULL(state->period, 2);
->  		state->polarity =3D PWM_POLARITY_NORMAL;
->  		state->enabled =3D true;
-> -		return;
-> +		return 0;
->  	}
->=20
->  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
-> @@ -142,7 +142,7 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  		prescaler =3D prescaler_table[PWM_REG_PRESCAL(val, pwm-
->hwpwm)];
->=20
->  	if (prescaler =3D=3D 0)
-> -		return;
-> +		return 0;
->=20
->  	if (val & BIT_CH(PWM_ACT_STATE, pwm->hwpwm))
->  		state->polarity =3D PWM_POLARITY_NORMAL;
-> @@ -162,6 +162,8 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->=20
->  	tmp =3D (u64)prescaler * NSEC_PER_SEC * PWM_REG_PRD(val);
->  	state->period =3D DIV_ROUND_CLOSEST_ULL(tmp, clk_rate);
-> +
-> +	return 0;
->  }
->=20
->  static int sun4i_pwm_calculate(struct sun4i_pwm_chip *sun4i_pwm,
+Hi Hans,
 
-=46or sun4i:
+On Mon, Dec 05, 2022 at 04:01:20PM +0100, Hans de Goede wrote:
+> On 12/3/22 13:28, Hans de Goede wrote:
+> > On 12/3/22 10:32, Linus Walleij wrote:
+> >> On Mon, Nov 28, 2022 at 10:44 PM Hans de Goede wrote:
+> >>
+> >>> Patches 1-2: 2 small bugfixes to the gpio-tps68470 code
+> >>
+> >> Good, please merge this.
+> >>
+> >>> Patch3:      Add support for the indicator LED outputs on the tps68470 as GPIOs
+> >>> Patch4:      Add support for a privacy LED to the ov8865 sensor driver
+> >>> Patch5:      Add gpio-lookup table entry for the privacy LED.
+> >>
+> >> OK so I have to call out the hippo in the room:
+> >>
+> >> these "gpios" are not called "gpios" anywhere else than in this
+> >> patch. General purpose input/output, remember. These are special
+> >> purpose LED control registers.
+> >>
+> >> So can you provide a good explanation why these registers aren't
+> >> handled in the drivers/led subsystem instead?
+> > 
+> > This was discussed in another thread:
+> > 
+> > https://lore.kernel.org/platform-driver-x86/20221124200007.390901-1-hdegoede@redhat.com/
+> > 
+> > There were 2 problems identified which has lead to the current
+> > direction of just modelling at as an (output only) GPIO:
+> > 
+> > 1. The LED class allows userspace control of the LED which is
+> > bad from a privacy pov. This will make it easy, too easy
+> > (was the conclusion) for spy-ware to turn on the camera without
+> > the LED turning on.
+> > 
+> > Later in the thread it was pointed out that there is a flag to
+> > suspend userspace control, we could use this to permanently disable
+> > userspace control which I guess would be some what of a solution,
+> > although we would then also need to look into disallow changing
+> > triggers, because I think those could still be used as a way around
+> > this.
+> 
+> I have spend today looking into the feasibility of using the LED
+> class subsystem instead of modelling these on/off only LEDs as a GPIO.
+> 
+> Good news, there is a LED_SYSFS_DISABLE flag which also stops
+> userspace from messing with the trigger of the LED, so this
+> first issue can easily be fixed.
+> 
+> > 2. GPIO(s) can be tied directly to the device so that on a device
+> > with both front and back privacy-LEDs (real world example) doing
+> >  gpiod_get(dev, "privacy-led") gets us the right privacy-led,
+> > where as with LED class devices tying the sensor and LED class
+> > device is going to be tricky.
+> > 
+> >> IIUC the leds subsystem has gained support for leds as resources.
+> > 
+> > Interesting that would mitigate problem 2 from above and since
+> > people keep circling back to "its a LED please use the LED class",
+> > this is definitely worth looking into.
+> > 
+> > Do you have any pointers / examples about led class devices as
+> > resources?
+> 
+> I have been looking into this, but atm the only way to tie a
+> led-classdev to a device is through a fwnode reference.
+> 
+> Since this is x86 where there is no DTS file where we can
+> easily add this, I have been looking into doing this with
+> swnode-s.
+> 
+> LED directly attached to main SoC GPIO
+> ======================================
+> 
+> For the simple LED is attached to a GPIO on the main
+> SoC case, this requires 2 steps:
+> 
+> 1. Have the INT3472 code register a LED classdev for the
+> privacy-led instead of a GPIO lookup table entry. This LED
+> classdev must have a swnode as fwnode, so that we can put
+> a reference to that swnode in a "leds" reference-array 
+> property on the sensor i2c_client. This is about a 100
+> lines of extra code and seems fine / doable.
+> 
+> 2. Add a "leds" reference-array property on the
+> i2c_client device by adding a swnode with this property
+> to the i2c_client device.  This sounds straight forward
+> (once we have the swnode for the LED class-device to point to)
+> but this is actually not straight forward at all.
+> 
+> There is a whole bunch of properties which needs to be
+> added on the sensor to describe the media-graph between
+> the sensor and the IPU, as well as what VCM (if any) is paired
+> up with the sensor. These properties are all added through
+> adding a swnode from the CSI bridge driver:
+> 
+> drivers/media/pci/intel/ipu3/cio2-bridge.c
+> 
+> But a device can only have one swnode added. So we cannot
+> add a swnode to the sensor i2c_client in the INT3472 code.
+> 
+> Instead the only thing which we could do is give the swnode
+> for the privacy LED classdev a predictable name, derived
+> from the sensor's device name and then
+> have drivers/media/pci/intel/ipu3/cio2-bridge.c
+> call software_node_find_by_name() to get the swnode and
+> have it add the "leds" reference-array property on the
+> i2c_client device for the sensor.
+> 
+> However the INT3472 code is shared between multiple ISP/IPU
+> implementations, so then we would need to duplicate this code
+> for the other IPU versions (currently IPU6 which is out of tree),
+> further complicating things.
+> 
+> And this is for the direct usage of a SoC GPIO case.
+> 
+> 
+> LED attached to TPS68470 PMIC indicator LED pin
+> ===============================================
+> 
+> In this case the LED-classdev should be instantiated
+> by a driver for a new TPS68470 MFD cell. But this
+> also introduces a bunch of probe ordering systems,
+> so modelling things as a LED classdev here would involve:
+> 
+> 1. Making the IN3472 code create + register a swnode for
+> the LED classdev, this must be done here because of
+> probe ordering.
+> 
+> 2. Make the IN3472 code create a new TPS68470 MFD cell
+> and pass the swnode as fwnode to this cell.
+> 
+> 3. Write a new driver for the new TPS68470 MFD cell,
+> which registers a LED classdev using the fwnode from
+> the MFD cell as fwnode for the LED classdev.
+> 
+> 
+> And this still does not solve the issue of how to get
+> the privacy-LED as LED classdev model to work on the IPU6.
+> 
+> Alternative approach
+> ====================
+> 
+> An alternative approach, would be to add support for LED
+> lookup tables to the LED class code (like we already have
+> for GPIOs) and use this to allow tying a LED classdev to
+> a struct device on non devicetree platforms.
+> 
+> Given the problems with the swnode approach from above
+> I believe that this would actually be better then
+> the swnode approach.
+> 
+> Lookup tables like this use device-names, so we don't need
+> to have swnode-s ready for both the provider and the consumer
+> at the time of adding the lookup table entry. Instead all
+> that is necessary is to know the device-names of both
+> the provider and the consumer which are both known in
+> advance.
 
-Acked-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Thank you for all this research.
 
-Best regards,
-Jernej
+> Is this really worth all the trouble ?
+> ======================================
+> 
+> So I really have to wonder what is using the LED 
+> classdev / framework actually buying us over using
+> modelling these on/off only LEDs as a GPIO ?
+> 
+> I know that some (x86) have a flash-LED for the back
+> camera and given the experience with trying to tie
+> a LED class dev to a specific struct device (to the
+> sensor's i2c_client) I guess we are eventually going to
+> need some sort of lookup tables for tying LED class
+> devices to a specific device anyways.
 
+Probably, but for those, the effort will pay off better, as we need to
+control the flash from userspace. For the privacy LED, I doubt we'll
+ever seen a system where we'll have to control it through more than an
+enable bit (for instance, an RGB or intensity-controlled privacy LED
+sounds very unlikely), so a GPIO is fine with me.
 
+> That and we want to avoid moving from the current
+> approach (for some INT3472 using devices) of tying
+> the privacy LED on/off to the INT3472 registered
+> clk being enabled/disabled to modelling this as
+> GPIOs, to then later modelling it as LED class
+> devices after all.
+> 
+> To avoid this double conversion issue I'm going to
+> give the LED class route a second go, replacing
+> the swnode approach which I tried today with
+> a lookup-table approach.
+> 
+> > ###
+> > 
+> > Note though that these indicator LED outputs, both functionality
+> > wise as well as at the register level of this PMIC only support
+> > turning them on/off. So this maps pretty well to the GPIO subsystem
+> > and all the functionality of the LED class subsystem is mostly
+> > functionality which we want to avoid since we don't want userspace
+> > control, neither directly through sysfs or by attaching triggers.
+> > 
+> > So this does map pretty well to just modelling it as a GPIO,
+> > if we model this as a LED then we end up having to workaround
+> > a bunch of stuff the LED subsytem does which we do not want in
+> > this case. And this may even require patches to the LED subsystem
+> > to disallow userspace changing the trigger (I would need to check).
+> > 
+> > So from my pov modelling this as an output-only GPIO pin is
+> > actually a more KISS solution then involving the LED subsystem...
+> > 
+> >> I don't mind a LED driver inside of the GPIO driver if that is what
+> >> it takes as a compromise, just that it should be handled by the right
+> >> subsystem.
+> > 
+> > The PMIC already is a MFD device, so if we go the LED class route
+> > we can just add a separate MFD child device for the new LED driver
+> > to bind to.
+> > 
+> >> Given that flash leds which are used by cameras are already in
+> >> drivers/leds/flash this should be no different and there will be more
+> >> cameras with these privacy leds.
+> > 
+> > Actually this patch is for the back camera privacy LED on a
+> > Microsoft Surface Go tablet. The front camera privacy LED is
+> > directly attached to a GPIO of the main SoC. So for that camera
+> > just adding a GPIO lookup table entry to map the ACPI provided
+> > GPIO info to a "privacy-led" GPIO on the sensor i2c_client device
+> > (which we already do for the "reset" and "powerdown" gpios) also
+> > by far is the most KISS approach.
+> > 
+> > Doing things this way in the code translating the ACPI "magic"
+> > to standard Linux device-model stuff is literary a single line
+> > of code (add an extra case: to an existing list of cases in a
+> > switch-case). Where as instantiating a LED class device for this
+> > and then somehow tying that to the i2c_client for the sensor will
+> > be more code.
+> > 
+> > So again treating these on/off only LEDs, where we want to
+> > *disallow* userspace control, as a GPIO is by far the most KISS
+> > solution.
+
+-- 
+Regards,
+
+Laurent Pinchart
