@@ -2,99 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3433B643822
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Dec 2022 23:30:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED4C06439A9
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 00:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233247AbiLEWao (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 17:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
+        id S230280AbiLEXnT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 18:43:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233178AbiLEWak (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 17:30:40 -0500
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5024562C1;
-        Mon,  5 Dec 2022 14:30:39 -0800 (PST)
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 73F5F1C09F4; Mon,  5 Dec 2022 23:30:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
-        t=1670279436;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0beeeN3x4oja6CoA48n0dgddbavIjL+s5ouQp7TTWtU=;
-        b=Glfr3eDW908ut8l8ZtyxnivFsAwFhKrd91OZ8Hn4B5DsYqkFacSwVHpMdO+0ZJbEke3io+
-        rZJ6H6RfHZXL+x1iQ654lTF809RKZz+X/69jMIvQbgjOVGWGx/4uVo747OBUmRhyZzWmxv
-        I6Gh8EjJUSygmU/FfosMXAkJOwmFGvg=
-Date:   Mon, 5 Dec 2022 23:30:35 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Douglas Anderson <dianders@chromium.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Michael Walle <michael@walle.cc>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Samuel Holland <samuel@sholland.org>,
-        Hammer Hsieh <hammerh0314@gmail.com>,
-        Nobuhiro Iwamatsu <nobuhiro1.iwamatsu@toshiba.co.jp>,
-        Sean Anderson <sean.anderson@seco.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Satya Priya <quic_c_skakit@quicinc.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v2 01/11] pwm: Make .get_state() callback return an error
- code
-Message-ID: <Y45xC/Gwhrr+fctN@duo.ucw.cz>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ZBm0pYJnT4srarSL"
-Content-Disposition: inline
-In-Reply-To: <20221130152148.2769768-2-u.kleine-koenig@pengutronix.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        with ESMTP id S232145AbiLEXnS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 18:43:18 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D454B167F4
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 15:43:14 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id AEFF05C0284;
+        Mon,  5 Dec 2022 18:43:11 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Mon, 05 Dec 2022 18:43:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1670283791; x=1670370191; bh=hQ3zzu9l9j
+        YbUHVuSzVtJy9yQqoOfpfrv4OtCyRPW8s=; b=duWYik8Lr94XNYgNQnClQtBKC9
+        yaWx6ca/75TfhrI4SU5+Jve0a7qlOA1iwgkpdg1kCG5pLhqtF9fduDeU3VcZpWgE
+        tqHT9cLga79v6imimDgNwsOrgq1Acld6+ZvehJ+iv/nWIkMvROqD96HVe2eQV4wH
+        RL6deGb7vTxlPa+RYqLZqSP/reujrVwIdl+10t8litVJxVGriUeeRG0ROkHLTkBl
+        5nGPALKqZaOJvi7JDA1H8O69RpSbCqvvPMz8ATKpvMujTd6gBFnUOht5j0tvFlKE
+        Rx2wFycuu2RCp5QvYvEFQ2OwuJYm/OJxA1YWi+nM21B/qAwIzza8zMJi7hww==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1670283791; x=1670370191; bh=hQ3zzu9l9jYbUHVuSzVtJy9yQqoO
+        fpfrv4OtCyRPW8s=; b=iyUfQZyegYKOpv/2OzXZraB5GcYoiDV5lbnTXCNR6BeV
+        +V/sAYKo4l2j/qQipSsbM4w7q5pPp02kbfvqlX1hpaH+MNrjf93zkwaxNA4XLeCF
+        Zn/LRZx4+953N6qeT3PJQcplYyhAVBksmhhT0nXi7B5upNoIuWK/rV4qTSovwRsE
+        7SFmbtpJ4bnkoXKdXY+QCD22vcPj+4DyFUXH+HP+3vILZWtlR0rvW0LWY7aONUE5
+        a2FRLXyjyh7cVdQh4/LmiIWUX9QaMDB7Mvak9OuQ+wYcR8u3H+mRQVIgFIceTzhi
+        cYK9IERP1uGi+JA2/m6o9UV3VYkuI0+16AplJroIRg==
+X-ME-Sender: <xms:D4KOYwxfsfnCtb_El727wrxtPECew2HFFY6V72XSMY-TB_AqsSMGsA>
+    <xme:D4KOY0Rc8PoFh9Rr9eJuDsk4ASOTqJsZp849nYOa4Wt--Cs5VYydZMr7Qe8CKS43f
+    wlPB838YlWhcZyF3Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudehgddufecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepvdevvdeiueetheeiffdthfejvedvteffvefghffhueduffehvdekfeev
+    ieeujeelnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:D4KOYyW5TMnvZBDg3j3Pk3t34WttHUNpFWyIcXbPPxGipDVr-eib9Q>
+    <xmx:D4KOY-h-Aa1XyavDUysodarcxlby2AHwoGrGFrEvF8zvXxvMl6QkLw>
+    <xmx:D4KOYyA9y2tJXTyI-KP6doboFZYXm0N-fLn_C9_DzIqwIAJeqADbdw>
+    <xmx:D4KOY9N0PVjn6JNHgIMXBaJHchaQy0LxVotSCink11A77dGxS5P20Q>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 154D31700089; Mon,  5 Dec 2022 18:43:10 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+Mime-Version: 1.0
+Message-Id: <192b4b5c-22f7-4859-b3c2-165eca677328@app.fastmail.com>
+In-Reply-To: <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+References: <20221205132207.94775-1-andrew@aj.id.au>
+ <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+Date:   Tue, 06 Dec 2022 10:12:49 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to meson
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -102,137 +86,102 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Tue, 6 Dec 2022, at 05:25, Bartosz Golaszewski wrote:
+> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>>
+>> Hello,
+>>
+>> Based on a recent poke [1] and in-between meetings I've put together a
+>> WIP series that converts libgpiod's build from autotools to meson. As
+>> far as I'm aware the meson build supports all the significant options to
+>> enable or disable features exposed by the autotools build:
+>>
+>> * Tests
+>> * Tools
+>>   * Interactive gpioset
+>> * Bindings
+>>   * C++
+>>   * Python
+>>   * Rust
+>> * Documentation
+>>   * Manpages
+>>   * Doxygen
+>>
+>> [1] https://lore.kernel.org/all/CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com/
+>>
+>> Meson has pretty good support for handling python and so the patch does
+>> away with setup.py entirely.
+>
+> Eek! No, please do keep setup.py. Autotools too is capable of building
+> python C extensions on its own and it's what we use in v1 but I want
+> the python code to be built the standard python way. I actually plan
+> to post libgpiod v2 on pypi and split out building python bindings
+> into a separate bitbake recipe in meta-openembedded using the
+> setuptools3 class.
+>
+> So let's keep setup.py and just call it from meson.
 
---ZBm0pYJnT4srarSL
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Okay. As I was working my way thought I did wonder whether it might be 
+better to split out the bindings where they have their own build 
+systems (python, rust) so the relationships go one direction. Currently 
+we have the library build system referring to the bindings referring to 
+the library which seems like a kinda awful sandwich. This is evident in 
+the build.rs files for the rust libraries.
 
-Hi!
+>
+>> However, the rust case isn't quite so
+>> simple. In order to handle the dependencies of the rust bindings I've
+>> called out to cargo through a custom target. It's not great, but from
+>> what I could see it seems to be the path of least resistance given
+>> meson's support for rust.
+>>
+>> There's no support for installing the rust bindings through meson, but
+>> this is not worse than the support we appeared to have under autotools.
+>>
+>
+> I think Viresh too wants to keep cargo as the building agent for the rust code.
 
-> .get_state() might fail in some cases. To make it possible that a driver
-> signals such a failure change the prototype of .get_state() to return an
-> error code.
->=20
-> This patch was created using coccinelle and the following semantic patch:
->=20
-> @p1@
-> identifier getstatefunc;
-> identifier driver;
-> @@
->  struct pwm_ops driver =3D {
->         ...,
->         .get_state =3D getstatefunc
->         ,...
->  };
->=20
-> @p2@
-> identifier p1.getstatefunc;
-> identifier chip, pwm, state;
-> @@
-> -void
-> +int
->  getstatefunc(struct pwm_chip *chip, struct pwm_device *pwm, struct pwm_s=
-tate *state)
->  {
->    ...
-> -  return;
-> +  return 0;
->    ...
->  }
->=20
-> plus the actual change of the prototype in include/linux/pwm.h (plus some
-> manual fixing of indentions and empty lines).
->=20
-> So for now all drivers return success unconditionally. They are adapted
-> in the following patches to make the changes easier reviewable.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Right; I think this is the only sensible approach given current rust 
+support in meson.
 
-LED part:
+>
+>> It's worth noting that you'll probably want to disable the rust bindings
+>> if you need to run the install phase for libgpiod under e.g. sudo but
+>> have used rustup to install cargo for your unpriviledged user.
+>>
+>
+> Current autotools setup doesn't install rust bindings at all, can we
+> keep it this way?
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+It is that way in what I've posted, but `meson install` re-runs part of the
+build phase which is what causes complications in this specific scenario. If
+you can run cargo as root then it shouldn't interfere (... setting aside
+potential issues running cargo as root). I didn't figure out whether I could
+*avoid* re-building the custom target in the install phase.
 
-Best regards,
-							Pavel
+>>
+>> We end up with a net reduction of 254 LOC for the build system, and,
+>> IMO, a single and fairly readable language to express it. Along with
+>> that comes easy integration as a dependency in other (meson) projects
+>> and a straight-forward path for their cross-compilation.
+>>
+>> Let me know what you think.
+>
+> Meson has a steep learning curve but I really want to move over to it
+> now and will put in the time to learn it. Thanks for doing it. The
+> patches are functional from what I tested so far.
 
->  static const struct pwm_ops ti_sn_pwm_ops =3D {
-> diff --git a/drivers/leds/rgb/leds-qcom-lpg.c b/drivers/leds/rgb/leds-qco=
-m-lpg.c
-> index 02f51cc61837..741cc2fd817d 100644
-> --- a/drivers/leds/rgb/leds-qcom-lpg.c
-> +++ b/drivers/leds/rgb/leds-qcom-lpg.c
-> @@ -968,8 +968,8 @@ static int lpg_pwm_apply(struct pwm_chip *chip, struc=
-t pwm_device *pwm,
->  	return ret;
->  }
-> =20
-> -static void lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> -			      struct pwm_state *state)
-> +static int lpg_pwm_get_state(struct pwm_chip *chip, struct pwm_device *p=
-wm,
-> +			     struct pwm_state *state)
->  {
->  	struct lpg *lpg =3D container_of(chip, struct lpg, pwm);
->  	struct lpg_channel *chan =3D &lpg->channels[pwm->hwpwm];
-> @@ -982,20 +982,20 @@ static void lpg_pwm_get_state(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> =20
->  	ret =3D regmap_read(lpg->map, chan->base + LPG_SIZE_CLK_REG, &val);
->  	if (ret)
-> -		return;
-> +		return 0;
-> =20
->  	refclk =3D lpg_clk_rates[val & PWM_CLK_SELECT_MASK];
->  	if (refclk) {
->  		ret =3D regmap_read(lpg->map, chan->base + LPG_PREDIV_CLK_REG, &val);
->  		if (ret)
-> -			return;
-> +			return 0;
-> =20
->  		pre_div =3D lpg_pre_divs[FIELD_GET(PWM_FREQ_PRE_DIV_MASK, val)];
->  		m =3D FIELD_GET(PWM_FREQ_EXP_MASK, val);
-> =20
->  		ret =3D regmap_bulk_read(lpg->map, chan->base + PWM_VALUE_REG, &pwm_va=
-lue, sizeof(pwm_value));
->  		if (ret)
-> -			return;
-> +			return 0;
-> =20
->  		state->period =3D DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * LPG_RESOLUTION =
-* pre_div * (1 << m), refclk);
->  		state->duty_cycle =3D DIV_ROUND_UP_ULL((u64)NSEC_PER_SEC * pwm_value *=
- pre_div * (1 << m), refclk);
-> @@ -1006,13 +1006,15 @@ static void lpg_pwm_get_state(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
-> =20
->  	ret =3D regmap_read(lpg->map, chan->base + PWM_ENABLE_CONTROL_REG, &val=
-);
->  	if (ret)
-> -		return;
-> +		return 0;
-> =20
->  	state->enabled =3D FIELD_GET(LPG_ENABLE_CONTROL_OUTPUT, val);
->  	state->polarity =3D PWM_POLARITY_NORMAL;
-> =20
->  	if (state->duty_cycle > state->period)
->  		state->duty_cycle =3D state->period;
-> +
-> +	return 0;
->  }
+Great!
 
---=20
-People of Russia, stop Putin before his war on Ukraine escalates.
+>
+> One thing I'd love to see changed is: put all API and ABI version
+> number next to each other in a single place so that there's less risk
+> of forgetting to update one of them when making a release. Is that
+> possible?
 
---ZBm0pYJnT4srarSL
-Content-Type: application/pgp-signature; name="signature.asc"
+Absolutely. In the spirit of keeping things that are together together 
+I distributed them into the meson.build file containing the 
+specification of the associated library target. But we can just move 
+those variables into the root meson.build file without any problems.
 
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCY45xCwAKCRAw5/Bqldv6
-8qEdAKCcIFDwtp8cJpPtW1EpTb0IJOYYKwCdGtyKdQYCFKVLwV+BGw7lryK0MC8=
-=gb+Q
------END PGP SIGNATURE-----
-
---ZBm0pYJnT4srarSL--
+Andrew
