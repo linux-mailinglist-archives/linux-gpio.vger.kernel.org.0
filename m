@@ -2,109 +2,163 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE726644D45
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 21:30:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56039644E55
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 23:05:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbiLFUaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Dec 2022 15:30:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60288 "EHLO
+        id S229796AbiLFWFX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Dec 2022 17:05:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbiLFUax (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 15:30:53 -0500
-Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F7E240474;
-        Tue,  6 Dec 2022 12:30:27 -0800 (PST)
-Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-12c8312131fso18879275fac.4;
-        Tue, 06 Dec 2022 12:30:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=70BHd3Bha/3SVQ9Fqr3IAXA2KJogPif1rbxfcGanlLI=;
-        b=l6qMrOMc1gVbYuhlAszHRHks1h0MPjaq7mTYN4fRdwTET6syx9uRLKz2nOhZth5ccC
-         179CPtZ+JPBMvoGJ5p/ir3tq6lLPajNnfuGK5nuv7ZoVzv+iZNgaXLhaYNwRWgWtI6CQ
-         Xb9QH9uVVLoznqXYEnZ4MkC5Wkx1B+D9+42TN1CPtlYKnooXzMig+smn9LZ7lMFP/kJO
-         Xi+OT4oMFALrp7UpAlxb1mBJ9JvcxwzNEHw/RZcHz49GF2dIClvRbSqLN+c5cvxXtxoE
-         oC/YA9UXvqmOwBQdQBrDoUw30C8HrvS+XHFF/QqfEWbE6WU+p7hve8ePHqb7jR3+jstr
-         AhEg==
-X-Gm-Message-State: ANoB5pnYXvPy3lQOawa2nmCiumfGJi2QdipMvzBzOy1jvwU8Vcis0tY3
-        9lkE2lAcrJUIcCsImRNVOg==
-X-Google-Smtp-Source: AA0mqf5/7tA6GtNa+ooZZfrQ3D2c18qvAkkUxKQVVV1LX5FQdtjOnvkYmlxagHeWWB71G/nuMbts8g==
-X-Received: by 2002:a05:6870:c0d1:b0:144:a87e:727d with SMTP id e17-20020a056870c0d100b00144a87e727dmr4999479oad.153.1670358626695;
-        Tue, 06 Dec 2022 12:30:26 -0800 (PST)
-Received: from robh_at_kernel.org ([4.31.143.193])
-        by smtp.gmail.com with ESMTPSA id u33-20020a05687100a100b0013ae39d0575sm11279086oaa.15.2022.12.06.12.30.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Dec 2022 12:30:26 -0800 (PST)
-Received: (nullmailer pid 8554 invoked by uid 1000);
-        Tue, 06 Dec 2022 20:30:25 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Edmund Berenson <edmund.berenson@emlix.com>
-Cc:     Lukasz Zemla <Lukasz.Zemla@woodward.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <20221206124456.4159-1-edmund.berenson@emlix.com>
-References: <20221206124456.4159-1-edmund.berenson@emlix.com>
-Message-Id: <167035855162.6750.5481578237893135512.robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: max7317: add gpio driver bindings
-Date:   Tue, 06 Dec 2022 14:30:25 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S229523AbiLFWFW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 17:05:22 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0CE30567
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Dec 2022 14:05:19 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 5FAF23200A46;
+        Tue,  6 Dec 2022 17:05:15 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Tue, 06 Dec 2022 17:05:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1670364314; x=1670450714; bh=IIla1X70vM
+        amSN12yM4wlsylWzkH9XKvj2ukhKL+/DA=; b=Wx8NJBg5thsjurypra22a/goYo
+        2stxA3vbsKrO/ZrprwZVWYQftPL/rf0Rh+s2IDSUbeByfz1RqSyeuHEgY35u+fYu
+        or/O10mhBwNiht9lgizIqMHfMtiBGhFC+8wxfnHDk207irGzcOUMsJeczgxADoPU
+        EuSjubsoqCmIA5I92HBe6ci1iekvMICbbosHAq0xv4Ad4/9h3Mnj2KRpEejMYz6r
+        gI8JJ0o3F2unTjqo/F++tNpYNjoemdM7PZv4QV2CRovl+xecBg2JYOakbsIgBFFO
+        xmIW/uM8y3jTdyWh0VcADQ21azCK38gtyxVSb3oCyebHg72tVlvLuUpqtTmA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1670364314; x=1670450714; bh=IIla1X70vMamSN12yM4wlsylWzkH
+        9XKvj2ukhKL+/DA=; b=ECuezOgpnnm8Z8B7lPM5oaKFJtI69Ra5TTAf2/xw+TDf
+        2xVBpzzs7GKsTXGpbwooYeVaaFV2jo+fvasJzxbvSEQ/t37MWzos1Z0etc7tLUwq
+        P3/qyz3MY8WZyfkovvR3l9IvaA/mnSWSyWEigKgdj0p4l3ofN4Fd5Ionpnsl8+2P
+        knRgMNRcaPdhK6SIipvYRwJA0A0bZSHlbbAjQ9dIOreXKMQ71/LMs0aAknVMxaQE
+        ZcqJYAmFNG4gWv7276WNqXGrJUGSq8PGmRMuu5s7eQR1QBTUIOim18d0JP58iBFR
+        MHPT1WBEZpfLETpYzehONFmhFHIwKHLjS/3rkhKCGQ==
+X-ME-Sender: <xms:mryPY79ErIe2I43BD_R5sucOcBIr0MVHzDu7XVzBj9CZFht3AiUP7g>
+    <xme:mryPY3v7JtTzVPEtngtJGEtIJ7lFatIx_ANONhy2-bL5RANK7aFpiK-vWM2CfQCja
+    UJmKvndrU75IaJWaw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeigdduheejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtf
+    frrghtthgvrhhnpedvtdegvdeklefgteevgfduiefgtdehtddttdfhiefggfefgeekkeev
+    uedvkefhleenucffohhmrghinheptggtrggthhgvrdguvghvpdhmvghsohhnsghuihhlug
+    drtghomhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhm
+    pegrnhgurhgvfiesrghjrdhiugdrrghu
+X-ME-Proxy: <xmx:mryPY5DtTdFUrv1aN1NBVWzSEbD3t-_HkDPt50fESQUCetmqyyuyfg>
+    <xmx:mryPY3fyQEdtCJGYgS-LsbYn96CN4U9tkCvTtj3QB1F8L-Qf5q4IRA>
+    <xmx:mryPYwPrdaTAsZfQN-dl6qdmX0T7PdJMR7BtJ1gaik2KKGM0yFA3Zw>
+    <xmx:mryPY1qeFilmXzs_uy-gi6NY5uvhg3KOEf8pXpvcFVRglHo7AOoFPw>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 6EDB61700089; Tue,  6 Dec 2022 17:05:14 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+Mime-Version: 1.0
+Message-Id: <7fc4db18-cebc-4894-b3d7-12c9470e6a93@app.fastmail.com>
+In-Reply-To: <Y49Xi1WO1yPjvMYq@smile.fi.intel.com>
+References: <20221205132207.94775-1-andrew@aj.id.au>
+ <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+ <Y49Xi1WO1yPjvMYq@smile.fi.intel.com>
+Date:   Wed, 07 Dec 2022 08:34:20 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>
+Cc:     "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to meson
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi Andy,
 
-On Tue, 06 Dec 2022 13:44:55 +0100, Edmund Berenson wrote:
-> Add driver bindings for the maxim max7317 spi
-> gpio expander.
-> 
-> Co-developed-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Lukasz Zemla <Lukasz.Zemla@woodward.com>
-> Signed-off-by: Edmund Berenson <edmund.berenson@emlix.com>
-> ---
->  .../bindings/gpio/gpio-max7317.yaml           | 52 +++++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
-> 
+On Wed, 7 Dec 2022, at 01:24, Andy Shevchenko wrote:
+> On Mon, Dec 05, 2022 at 07:55:29PM +0100, Bartosz Golaszewski wrote:
+>> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>
+> ...
+>
+>> > Meson defaults to using ninja as its backend, and automatically exploits
+>> > ccache[2] when available to keep repeated builds speedy.
+>
+> ...which is a bad idea for a clean build.
+>
+>> It does show! Full rebuild with autotools:
+>> 
+>> real 0m43,902s
+>> user 2m40,010s
+>> sys 0m20,172s
+>> 
+>> Full rebuild with meson:
+>> 
+>> real 0m10,001s
+>> user 1m1,334s
+>> sys 0m12,205s
+>> 
+>> More than 4x faster now.
+>
+> And risk to have a badly formed binaries (yes, very little risk, but > 0).
+>
+>> > [2] https://ccache.dev/
+>
+> ccache has downside of its own use. If we have a common storage for ccache --
+> the collision is just matter of time (yes, have seen that in real life).
+>
+> OTOH requiring per-project ccache storage makes a little sense for the end user
+> as they quite likely won't rebuild it many times.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Valid points. However I think they're addressed by:
 
-yamllint warnings/errors:
+1. Not installing ccache on the system, or
+2. Overriding the auto-detection behaviour of `meson setup ...` 
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml: 'maintainers' is a required property
-	hint: Metaschema for devicetree binding documentation
-	from schema $id: http://devicetree.org/meta-schemas/base.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-max7317.example.dtb: gpio5@0: 'spi-max-frequency' does not match any of the regexes: 'pinctrl-[0-9]+'
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/gpio/gpio-max7317.yaml
+Regarding 2, you can specify the CC and CXX environment variables to force its hand:
 
-doc reference errors (make refcheckdocs):
+```
+$ command -v ccache
+/usr/bin/ccache
+$ CC=cc CXX=c++ meson setup -Dbindings=cxx build
+The Meson build system
+Version: 0.63.0
+...
+C compiler for the host machine: cc (gcc 12.2.0 "cc (Ubuntu 12.2.0-3ubuntu1) 12.2.0")
+...
+C++ compiler for the host machine: c++ (gcc 12.2.0 "c++ (Ubuntu 12.2.0-3ubuntu1) 12.2.0")
+...
+```
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20221206124456.4159-1-edmund.berenson@emlix.com
+Compared to the default behaviour:
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+```
+$ meson setup -Dbindings=cxx build
+The Meson build system
+Version: 0.63.0
+...
+C compiler for the host machine: ccache cc (gcc 12.2.0 "cc (Ubuntu 12.2.0-3ubuntu1) 12.2.0")
+...
+C++ compiler for the host machine: ccache c++ (gcc 12.2.0 "c++ (Ubuntu 12.2.0-3ubuntu1) 12.2.0")
+...
+```
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+This use of the CC and CXX variables is covered in the documentation:
 
-pip3 install dtschema --upgrade
+https://mesonbuild.com/Feature-autodetection.html#ccache
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+Andrew
