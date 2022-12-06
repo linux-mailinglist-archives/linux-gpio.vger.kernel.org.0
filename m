@@ -2,109 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02DD9644753
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 16:01:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF603644924
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 17:25:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234982AbiLFPB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Dec 2022 10:01:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        id S234447AbiLFQZn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Dec 2022 11:25:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233206AbiLFPBB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 10:01:01 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A872F39F
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Dec 2022 06:54:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670338448; x=1701874448;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hB5LRJZTijTRKy0u/I20Ep24TCC5lNSOSNlZO8Ua9yU=;
-  b=dEq3Pvlk5TgRS5FPFT53hCjRX1LhpPkwQjlZM+WeogoR/3gA06/bjYKb
-   Ap1cmM2XZ8LlxFGJW8qPR05/RLT93e51jOHpA8jO3G2Onrgxko0to8s8Y
-   n2UuwUMKpSRGYFCImBNL/4tPth7m1cHuXhB18kxxskKzxz+S74vPKNqjr
-   sfZ7VB6HWpxJ6k1FLXkqb9T3W3N1tedYWPZLV1OSGZJKWWmscV+simJ25
-   kURhPsqtv3HqHCBEtadnhiAXqFM8ntQXBb8D16+u9HrRO5AIAvsCosRkA
-   nT+FnITh7jkGIwJh6hdlNnlP5DD225Qd3MNUdQf4jTyoFVEN+kXaQZ6Fo
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="380932191"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="380932191"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 06:54:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="735023697"
-X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
-   d="scan'208";a="735023697"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Dec 2022 06:54:05 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p2ZKe-005Lpq-0V;
-        Tue, 06 Dec 2022 16:54:04 +0200
-Date:   Tue, 6 Dec 2022 16:54:03 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to
- meson
-Message-ID: <Y49Xi1WO1yPjvMYq@smile.fi.intel.com>
-References: <20221205132207.94775-1-andrew@aj.id.au>
- <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+        with ESMTP id S231255AbiLFQZi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 11:25:38 -0500
+Received: from mail-oi1-x232.google.com (mail-oi1-x232.google.com [IPv6:2607:f8b0:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06B72A243
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Dec 2022 08:25:32 -0800 (PST)
+Received: by mail-oi1-x232.google.com with SMTP id m204so17493056oib.6
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Dec 2022 08:25:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/ais45k9vzwCVRwJ6whVGyw5sNpBkvpT+u93PldECuY=;
+        b=SJXK9Njs3/WtQdYO1n5tuMWFnm8eLIT/BZjadd4iLnQyhAXZ8ONXFwPHzYKYFKmvRY
+         RUbmsPRvmSN+4oRKBXgX6i4ctkwgVYGNtMm2wdZFidfCSaQ/DQ5AEL6FMxUl0f7Vqi/N
+         T0dFcibaJyb7eo5g6dZzXHexJ1NL2vz4ACpEiBj9q+fnBYHC2WM/yLNoY640QEfGORVL
+         q3dXAZiHthjklcd02ga4DtsYdCLhAJK+YRTSkfjhD91SGLZT+gmG1wBYXQfyNTybrdWy
+         1ej3vsNkXbAOc2pSxX2XFUQEI92czeXwYRrMKtznQZsR9SW0y3QbuZ+2/3P50aDtpYBQ
+         0zvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/ais45k9vzwCVRwJ6whVGyw5sNpBkvpT+u93PldECuY=;
+        b=aE927xxjArSZ1mZ8t1fa2Bc6uySIdkGtfNxSH2007EEM9srJJrT4X/e9FbEjvsr4jg
+         2Xi0ag1ws/6HYu2JT6xuX50e28PKEq/Z6giN+XL7DK1EPBtdNa68L55neErs2oUE02tr
+         x3VeekdbeZXBIHmDMAZq6BpmccBPAlIThSrYZU5RNkK1X7CrtJhh9FHBjrckfb/0q6KZ
+         BJmfHHFc/b6U+qcdIjjw4dE31YPBOBnlJF5dBqZcXA117bpS7i2+ixJPx77vZXcMBgns
+         tdEC12Eug4+0XUw2GF02sciSY9QZz0cPtWcJ+XCu1/Cj72pRLjJN5sCmSMXplwHNcQ8o
+         xOWQ==
+X-Gm-Message-State: ANoB5pllQJnmLbsRmRB+B8wranZbMPWH57uHVSrfvCg9KxVBJ5XVCT/b
+        5+yfisVCAFWBQGaNMohSxmnBTqlF1lLMaNOzmJJPUw==
+X-Google-Smtp-Source: AA0mqf7slrigjIb2YU0eOuwcUhtuWW55HhFXBRbOprBZ/PpE0rScnzOSK1B/21a3d6JGXEaZoNeytI+ZqJu+h+XBOmM=
+X-Received: by 2002:aca:de45:0:b0:354:58db:8639 with SMTP id
+ v66-20020acade45000000b0035458db8639mr32339713oig.152.1670343932030; Tue, 06
+ Dec 2022 08:25:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221129023401.278780-1-bero@baylibre.com> <CACRpkda75U=b50rK=WecNvaEoTdN2UzGyEwfPRaO6jG9FGyWhw@mail.gmail.com>
+In-Reply-To: <CACRpkda75U=b50rK=WecNvaEoTdN2UzGyEwfPRaO6jG9FGyWhw@mail.gmail.com>
+From:   =?UTF-8?Q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+Date:   Tue, 6 Dec 2022 17:25:21 +0100
+Message-ID: <CAP2ifjN-czBPKsm6o9U0Zx3dgau6bydFSrZmtwNJecSQu9VMzg@mail.gmail.com>
+Subject: Re: [PATCH v3 0/7] Remove the pins-are-numbered DT property
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+        krzysztof.kozlowski@linaro.org, matthias.bgg@gmail.com,
+        angelogioacchino.delregno@collabora.com, khilman@baylibre.com,
+        linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 05, 2022 at 07:55:29PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+On Sat, Dec 3, 2022 at 10:22 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Bero,
+>
+> long time no see!
 
-...
+Hi Linus,
+indeed, I've been doing mostly userland stuff lately, and my latest
+kernel patch was x86 (got to keep all of my hardware working ;) ). Now
+that I've changed jobs, I'm expecting to be more active on the kernel
+side (though still doing a lot of userland).
 
-> > Meson defaults to using ninja as its backend, and automatically exploits
-> > ccache[2] when available to keep repeated builds speedy.
+> > This patchset removes all uses of pins-are-numbered and marks the
+> > property as deprecated.
+>
+> I don't remember any more why this property was introduced, but
+> I am happy to see it go.
 
-...which is a bad idea for a clean build.
+I couldn't find why it was introduced either (and git blame wasn't
+much help). I'm assuming there was some other mode in vendor trees
+that never made it into mainline (but the flag for switching between
+the modes did).
 
-> It does show! Full rebuild with autotools:
-> 
-> real 0m43,902s
-> user 2m40,010s
-> sys 0m20,172s
-> 
-> Full rebuild with meson:
-> 
-> real 0m10,001s
-> user 1m1,334s
-> sys 0m12,205s
-> 
-> More than 4x faster now.
+> I applied patches 1-4 to the pin control tree for v6.2,
+> please funnel the rest through mediatek/stm32 and
+> SoC trees!
 
-And risk to have a badly formed binaries (yes, very little risk, but > 0).
+Thanks! Remaining patches reposted and currently waiting.
 
-> > [2] https://ccache.dev/
-
-ccache has downside of its own use. If we have a common storage for ccache --
-the collision is just matter of time (yes, have seen that in real life).
-
-OTOH requiring per-project ccache storage makes a little sense for the end user
-as they quite likely won't rebuild it many times.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+ttyl
+bero
