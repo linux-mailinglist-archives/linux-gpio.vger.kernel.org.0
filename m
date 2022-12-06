@@ -2,154 +2,128 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 943256439C8
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 01:06:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AD8286439EF
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 01:27:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231756AbiLFAGx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 5 Dec 2022 19:06:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38240 "EHLO
+        id S229456AbiLFA1e (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 5 Dec 2022 19:27:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229938AbiLFAGw (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 19:06:52 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 996A71CB2F
-        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 16:06:51 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id g10so12351062plo.11
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Dec 2022 16:06:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=X2MMDhUizP3WBWRG5ccW0F16JbQiIETWC1OhNXHCNV8=;
-        b=cjdVQ3Lzh1KfISl2amub6olcNSSOdvDag9t+l71lCfV1/d4+p/6jMRl/1a9XHqnDuQ
-         NAs95aDRu/4+GTd1nEDuZ2/8hx9x/8AAhchIoizwjgNnvjwZv0+BSI0nu77NacQn8HYH
-         zxbRVwwPgMf/7UMqmH+QYvjcKrzxyYRQo/C7NgDTduOg1ZnAispRJAZm2/5OK/N+MvwD
-         OUpS6WAX0E+LLBr64rkIQigAtvZMeJTjOiIldECS5M+jN8zb1picy4DvMGNkegTjxPkS
-         3G5GQRGmN2N+THbEGsCMpEAXfe7VV/K/K8kSZ2d5IJCp1uoooGpjttfZrHZAiF2ZMFNX
-         +jcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X2MMDhUizP3WBWRG5ccW0F16JbQiIETWC1OhNXHCNV8=;
-        b=y/HfP8dH1xUdgK9WaUAZbD+wF6/9wrGjo02Gffgi3ukNnNfFdFpSxxRFh1Q3JT9cBs
-         d6rzgv90pj6yE5mafNU2i1fXN0Q+96fgKQxAsk4LYeqOTiLaB2S5BvHN7ZIldeuJncKw
-         mQP1ZTiXT1huB6RvW9UMipIXvkRQBS532X8ZFfBDqZYxbetD2Tf0E0dOoWfdc0whxKws
-         9jvubsFqUu1RqcSZG7bkbHGz6N1zlxOdLsPttlwj0hhPiH/vhNBdVeH6cPAKROyowSbP
-         7aEURB1Ds6lZRP2S60gKFKBvLOnfVno8Bdhp516IcmHUaXETmgDhbsqJBSJvWGpSFLm2
-         NbvA==
-X-Gm-Message-State: ANoB5pnfoq3Ziju9Du6WyemQSCiQuJ11LFOf8blKYll9s+cv+oo+9SN7
-        /p+g5tVs4zEPK73L/6FIyoZQXFF0xtlhr5vR
-X-Google-Smtp-Source: AA0mqf4QQycaZIkBej6HkvSeJO7Sq+SCa/nnbKIIc+wT/W1wwQTzCsmY9e844VldLlQML3qKQXLgJw==
-X-Received: by 2002:a17:90b:2705:b0:218:78ae:bdaa with SMTP id px5-20020a17090b270500b0021878aebdaamr91620261pjb.162.1670285211042;
-        Mon, 05 Dec 2022 16:06:51 -0800 (PST)
-Received: from localhost ([122.172.87.149])
-        by smtp.gmail.com with ESMTPSA id x1-20020aa79561000000b005763f7606a2sm7420698pfq.200.2022.12.05.16.06.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Dec 2022 16:06:50 -0800 (PST)
-Date:   Tue, 6 Dec 2022 05:36:48 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andrew Jeffery <andrew@aj.id.au>,
-        Kent Gibson <warthog618@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        =?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>
-Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to
- meson
-Message-ID: <20221206000648.tyc57i4b6jwyb4y2@vireshk-i7>
+        with ESMTP id S230348AbiLFA1d (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 5 Dec 2022 19:27:33 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F47CC
+        for <linux-gpio@vger.kernel.org>; Mon,  5 Dec 2022 16:27:32 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id A0E635C020E;
+        Mon,  5 Dec 2022 19:27:31 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Mon, 05 Dec 2022 19:27:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1670286451; x=1670372851; bh=9elvlFBfNH
+        bL0nwSHRhs490CW4rYJe+qzpl97jgt3ho=; b=VTSZXSIiXIF2r01l/xeUeCKDin
+        odpdgNOLoheQEKul61DcNL1EPmiL0AEiycOPSbXIIhdQ339rduJU5243rY1O+TlB
+        /UgDDRjoIeuqBeqNL/0Lvzjp6zzKrALE04LOBFWsd7/3q/SkBkxBJuq7sKkgYFPs
+        LAlP9IGuiDSvPeEv0Rw6+8aWH5Fr3RCYL/hRpP4GldY76z1+bv6glxNSEpNTQUSI
+        nxQ2zeeb18x05igHz24UuyrLKje3feBxekjFY8pIoQ9kmGwZ0FkQ9S9WoeaxTofE
+        /0anhBfBNsaxfdfSZ0gAt+6r8Oos4vPXvPFoqfZwtiPH6+Xb9GfCdVwgvVkg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1670286451; x=1670372851; bh=9elvlFBfNHbL0nwSHRhs490CW4rY
+        Je+qzpl97jgt3ho=; b=U3z2o9Im7E8va+fZFMlbqyH2SG1SZeUvqB8S9klCG7on
+        ZKAp+jU5MjPqlqGxykC37eYxjjeLQEtgZMBsufDuaiV7b+gbgQ5l1EIswOybIsd2
+        qry5qLivAwDRjgz65N7tY2lQK+1kCXT6PKDVNXG11hlDNmtB0432II3WoRP5G3vt
+        Ok2QgkSd35lBVGJ5tyRPuu09EefES40pArdBWzzpHncsMLIzIgH1Dql25EJxPVBv
+        A+CC44GhzImHZx5ssgM3FHrG+T9r2aCS/0wFgMarMW/ISXwU6wlAO9Sp9fBITZ0g
+        zAELPE2tNLx5ewQPQ0gfxsREjnvVFh5SRlD0mmpvuQ==
+X-ME-Sender: <xms:c4yOY7aS3Co-MTyu3Z9wPujH0TP2hZXeOvjrq3Nop2Pe9nEI50D9qA>
+    <xme:c4yOY6YXeMe0qcP0IIf-iXRJnv-mYGCnntIGXCvPss7AWwgc_nvEM9j84H8gCskRL
+    ULqijgGmAD9T2Owdw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudehgddvvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhepkedvkeejkefgjeduffetteegjeekteetudevtdfftdeluddthfehveef
+    teekieetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    eprghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:c4yOY9-NyYu_ZcQB28G3JwbWdX5vbBtdE_FAijKPb8MSEfKORU1uKQ>
+    <xmx:c4yOYxouvwpPpTFco1L4d1joV0XM4hSjLRylyaw28G-vBpeG09AjYw>
+    <xmx:c4yOY2rBDZ_UT2cJUoUn9LB2PJ3uzACDMxPj9IeBFB3nR4rWIsUsdw>
+    <xmx:c4yOYzBkVCOJuNuHbH_M8zNV_TMr0kVrAvVcYkfop6cfZ4iNgcUiKg>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 65D201700089; Mon,  5 Dec 2022 19:27:31 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+Mime-Version: 1.0
+Message-Id: <72c1c5ef-8cc4-4ff7-9048-c9095e930e83@app.fastmail.com>
+In-Reply-To: <20221206000648.tyc57i4b6jwyb4y2@vireshk-i7>
 References: <20221205132207.94775-1-andrew@aj.id.au>
  <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <20221206000648.tyc57i4b6jwyb4y2@vireshk-i7>
+Date:   Tue, 06 Dec 2022 10:56:57 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>
+Cc:     "Kent Gibson" <warthog618@gmail.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>,
+        =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>
+Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to meson
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-+ Miguel/Bjorn.
 
-On 05-12-22, 19:55, Bartosz Golaszewski wrote:
-> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
-> >
-> > Hello,
-> >
-> > Based on a recent poke [1] and in-between meetings I've put together a
-> > WIP series that converts libgpiod's build from autotools to meson. As
-> > far as I'm aware the meson build supports all the significant options to
-> > enable or disable features exposed by the autotools build:
-> >
-> > * Tests
-> > * Tools
-> >   * Interactive gpioset
-> > * Bindings
-> >   * C++
-> >   * Python
-> >   * Rust
-> > * Documentation
-> >   * Manpages
-> >   * Doxygen
-> >
-> > [1] https://lore.kernel.org/all/CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com/
-> >
-> > Meson has pretty good support for handling python and so the patch does
-> > away with setup.py entirely.
-> 
-> Eek! No, please do keep setup.py. Autotools too is capable of building
-> python C extensions on its own and it's what we use in v1 but I want
-> the python code to be built the standard python way. I actually plan
-> to post libgpiod v2 on pypi and split out building python bindings
-> into a separate bitbake recipe in meta-openembedded using the
-> setuptools3 class.
-> 
-> So let's keep setup.py and just call it from meson.
-> 
-> > However, the rust case isn't quite so
-> > simple. In order to handle the dependencies of the rust bindings I've
-> > called out to cargo through a custom target. It's not great, but from
-> > what I could see it seems to be the path of least resistance given
-> > meson's support for rust.
-> >
-> > There's no support for installing the rust bindings through meson, but
-> > this is not worse than the support we appeared to have under autotools.
-> >
-> 
-> I think Viresh too wants to keep cargo as the building agent for the rust code.
 
-I am not the best guy to ask around Rust tooling in general and
-probably Kent / Miguel can help here.
+On Tue, 6 Dec 2022, at 10:36, Viresh Kumar wrote:
+> + Miguel/Bjorn.
+>
+> On 05-12-22, 19:55, Bartosz Golaszewski wrote:
+>> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>> > However, the rust case isn't quite so
+>> > simple. In order to handle the dependencies of the rust bindings I've
+>> > called out to cargo through a custom target. It's not great, but from
+>> > what I could see it seems to be the path of least resistance given
+>> > meson's support for rust.
+>> >
+>> > There's no support for installing the rust bindings through meson, but
+>> > this is not worse than the support we appeared to have under autotools.
+>> >
+>> 
+>> I think Viresh too wants to keep cargo as the building agent for the rust code.
+>
+> I am not the best guy to ask around Rust tooling in general and
+> probably Kent / Miguel can help here.
+>
+> Sorry for the stupid question, but what does "installing the rust
+> bindings" mean here ?
 
-Sorry for the stupid question, but what does "installing the rust
-bindings" mean here ? FWIW, for me the only thing that matters is that
-we are able to build the rust bindings, along with Make, and run tests
-somehow to make sure nothing broke. Since this is a library crate, the
-user crate will mark its dependency and do the build itself too.
+There's probably no useful meaning given what you've said below :)
 
-> > It's worth noting that you'll probably want to disable the rust bindings
-> > if you need to run the install phase for libgpiod under e.g. sudo but
-> > have used rustup to install cargo for your unpriviledged user.
-> >
-> 
-> Current autotools setup doesn't install rust bindings at all, can we
-> keep it this way?
-> 
-> > Also, if you've used rustup to install the rust toolchain you may also
-> > need to install clang in order to pick up C toolchain headers for
-> > consumption by bindgen.
+> FWIW, for me the only thing that matters is that
+> we are able to build the rust bindings, along with Make, and run tests
+> somehow to make sure nothing broke. Since this is a library crate, the
+> user crate will mark its dependency and do the build itself too.
 
-Yeah, from what I remember, we do need clang support for bindgen.
+My experience with rust is (unfortunately) superficial; the meson
+conversion achieves the same outcome as the autotools integration (runs
+`cargo build ...`). If that's enough then I don't think there are any
+further issues.
 
-> > Anyway, feedback on the rust part is definitely appreciated. Maybe
-> > there's a better approach?
-
--- 
-viresh
+Andrew
