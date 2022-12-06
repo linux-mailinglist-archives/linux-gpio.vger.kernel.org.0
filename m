@@ -2,93 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D25164460E
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 15:49:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02DD9644753
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 16:01:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235071AbiLFOtA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Dec 2022 09:49:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45832 "EHLO
+        id S234982AbiLFPB0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Dec 2022 10:01:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231641AbiLFOs6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 09:48:58 -0500
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B73C26574
-        for <linux-gpio@vger.kernel.org>; Tue,  6 Dec 2022 06:48:05 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3e45d25de97so97899397b3.6
-        for <linux-gpio@vger.kernel.org>; Tue, 06 Dec 2022 06:48:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qAOa1VhlRWQEWutYVn7vsc8dfFCMbpsWAMAMKpfYJbc=;
-        b=iAQthZPcPJ5luFrqpYx+Hvc4oHP8Ccb4UYtmP0xE+RPeft+3SA0p4DC6T0FzLpemL2
-         OErbcqBm3jSUWcVaV4ng/cZcErre30SLODycpD4+V6p/uE1/8bCA7174JQn8PQ+2TANI
-         98JRA9Ehie8pPmpahFZJtVMjzXb5X7KZcB59LEHTMZSFfNaMSJWDdJuhWIglmtfMEZ6x
-         z+YUx6VImUd0rHWlYQdkTxlfSmk/Xewjbm/IXYYXjGBtO5XLew7NXCcF/icLxcDMjkG6
-         ggtLh71tcx1qsoVTK3d/SGdsz2jVRir0hRxiu2PZDDTBcAolekBuLf11tjjUx6AJn2nx
-         i8Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qAOa1VhlRWQEWutYVn7vsc8dfFCMbpsWAMAMKpfYJbc=;
-        b=kKrwJ9hbeG/6/PDc4nTb6vOkhScSJJi7XvfRDxSm6OMMmnsSxvhmlH5S/ZDwD1Wwi9
-         1H2TU89Y3oHSd69GgxjpnFJHaXiMjAf1/r5ffac1hQH8/hZb+JNd5Jiv8plbpI0kU9en
-         mInwbE4cRiYZerNbvlY3vvlFl5p4WD+XUAYL+u+X3igxYKE/3n7DcsBHaQNl9auAwEZs
-         0gM2nndTZ+0Rdut6V2wBkrLosrJAfx71x8lNtdjLwZoS7FNAS7psGHgMKXZDxX6Ef+Up
-         UUhxbBQPC+4REZJNJYFzeMyOLHrUzwHo+0yqugH+97G+frOmaQ5n+KAbVzGxcZYSgRCL
-         WmIA==
-X-Gm-Message-State: ANoB5pkmDnKD4zabZVLtOrrfLBG2Ho0JS5dLPyTnpKvgVukVC6dnC+FW
-        0s9EbpCJkwsIBeIIK+zjD7BsHUcKDazleDw6uQIuJNpFQXrqcA==
-X-Google-Smtp-Source: AA0mqf4b9tOLZLYYojLjivmAujfjzfHVMh/sYYeoG+Kpfejl5KHbHnNiGiv5U2z1dPMfEMZ2g09GHiB1kUUyrfb4Ln8=
-X-Received: by 2002:a0d:e645:0:b0:3bb:6406:3df1 with SMTP id
- p66-20020a0de645000000b003bb64063df1mr47726538ywe.319.1670338084259; Tue, 06
- Dec 2022 06:48:04 -0800 (PST)
+        with ESMTP id S233206AbiLFPBB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 10:01:01 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19A872F39F
+        for <linux-gpio@vger.kernel.org>; Tue,  6 Dec 2022 06:54:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670338448; x=1701874448;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hB5LRJZTijTRKy0u/I20Ep24TCC5lNSOSNlZO8Ua9yU=;
+  b=dEq3Pvlk5TgRS5FPFT53hCjRX1LhpPkwQjlZM+WeogoR/3gA06/bjYKb
+   Ap1cmM2XZ8LlxFGJW8qPR05/RLT93e51jOHpA8jO3G2Onrgxko0to8s8Y
+   n2UuwUMKpSRGYFCImBNL/4tPth7m1cHuXhB18kxxskKzxz+S74vPKNqjr
+   sfZ7VB6HWpxJ6k1FLXkqb9T3W3N1tedYWPZLV1OSGZJKWWmscV+simJ25
+   kURhPsqtv3HqHCBEtadnhiAXqFM8ntQXBb8D16+u9HrRO5AIAvsCosRkA
+   nT+FnITh7jkGIwJh6hdlNnlP5DD225Qd3MNUdQf4jTyoFVEN+kXaQZ6Fo
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="380932191"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="380932191"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2022 06:54:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10553"; a="735023697"
+X-IronPort-AV: E=Sophos;i="5.96,222,1665471600"; 
+   d="scan'208";a="735023697"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Dec 2022 06:54:05 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p2ZKe-005Lpq-0V;
+        Tue, 06 Dec 2022 16:54:04 +0200
+Date:   Tue, 6 Dec 2022 16:54:03 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to
+ meson
+Message-ID: <Y49Xi1WO1yPjvMYq@smile.fi.intel.com>
+References: <20221205132207.94775-1-andrew@aj.id.au>
+ <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
 MIME-Version: 1.0
-References: <20211015164809.22009-1-asmaa@nvidia.com> <20211015164809.22009-2-asmaa@nvidia.com>
- <CACRpkdbvR0+5gKUH7eE2tZ1H9DR-WiYyh9KSnUTesYiZ=AezNw@mail.gmail.com> <CAHp75VfaoS4yu0UOJj4V2N+4tWdD0JF47TFgfKCGt7SC-Uhfaw@mail.gmail.com>
-In-Reply-To: <CAHp75VfaoS4yu0UOJj4V2N+4tWdD0JF47TFgfKCGt7SC-Uhfaw@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 6 Dec 2022 15:47:52 +0100
-Message-ID: <CACRpkdYqrdT4K8wZGkjo=+zbtQ9R7GvdOLzEeHQUx=Xr54en6Q@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] gpio: mlxbf2: Introduce IRQ support
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Asmaa Mnebhi <asmaa@nvidia.com>, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org, andrew@lunn.ch, kuba@kernel.org,
-        bgolaszewski@baylibre.com, davem@davemloft.net, rjw@rjwysocki.net,
-        davthompson@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 3, 2022 at 1:36 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Sat, Dec 3, 2022 at 12:14 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Fri, Oct 15, 2021 at 6:48 PM Asmaa Mnebhi <asmaa@nvidia.com> wrote:
-> >
-> > > Introduce standard IRQ handling in the gpio-mlxbf2.c
-> > > driver.
-> > >
-> > > Signed-off-by: Asmaa Mnebhi <asmaa@nvidia.com>
-> >
-> > Looks good to me!
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> It was more than a year ago :-)
+On Mon, Dec 05, 2022 at 07:55:29PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
 
-:D
+...
 
-Searched my inbox in some weird way.
+> > Meson defaults to using ninja as its backend, and automatically exploits
+> > ccache[2] when available to keep repeated builds speedy.
+
+...which is a bad idea for a clean build.
+
+> It does show! Full rebuild with autotools:
+> 
+> real 0m43,902s
+> user 2m40,010s
+> sys 0m20,172s
+> 
+> Full rebuild with meson:
+> 
+> real 0m10,001s
+> user 1m1,334s
+> sys 0m12,205s
+> 
+> More than 4x faster now.
+
+And risk to have a badly formed binaries (yes, very little risk, but > 0).
+
+> > [2] https://ccache.dev/
+
+ccache has downside of its own use. If we have a common storage for ccache --
+the collision is just matter of time (yes, have seen that in real life).
+
+OTOH requiring per-project ccache storage makes a little sense for the end user
+as they quite likely won't rebuild it many times.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Yours,
-Linus Walleij
