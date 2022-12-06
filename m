@@ -2,35 +2,35 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0F08644033
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 10:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60FB964405E
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Dec 2022 10:51:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235233AbiLFJuT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 6 Dec 2022 04:50:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
+        id S234331AbiLFJvc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 6 Dec 2022 04:51:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234325AbiLFJuB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 04:50:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACDC2BC0;
-        Tue,  6 Dec 2022 01:49:31 -0800 (PST)
+        with ESMTP id S233853AbiLFJuT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 6 Dec 2022 04:50:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D922034C;
+        Tue,  6 Dec 2022 01:50:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2952C615FF;
-        Tue,  6 Dec 2022 09:49:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C23BC4347C;
-        Tue,  6 Dec 2022 09:49:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F104615E7;
+        Tue,  6 Dec 2022 09:50:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF3F6C4347C;
+        Tue,  6 Dec 2022 09:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670320170;
+        s=k20201202; t=1670320207;
         bh=p4GOASrrw7BbRUax2gtf0OMf5bM0UdngPhO3xqzted4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kN5gwgehU88/7cx7s7vbbxFWacWzR7oByy4dspn7/PgG9eEnI/Wz0lGwihJYoPehW
-         x/wi4aACuRivn3SZINo66fTukrtW3ArtYrkH+WQvXPODV0G40QnZbr0y8x+i/+y+YU
-         kANIMvOFiX5IsKNlhxfpO1liaC7q8acO0wjGDkwEItGUDKx/z+evD0UhZw0R3iKY0T
-         t/lh0ENRsZLtCOUIAdYIzWqUIoDJ67bwj73StcWlyZAT/EYT2WoWbc6/QO8b85qLhd
-         lKXZIsBvwUqsjXM3szwCIoKyLPRYYwLQy7w4OY5ZBphEp1qu8Yby0PtTO263kNXSK/
-         shaOhrcBNZRZA==
+        b=QidMdmkzfp/+HVTlevOfjIgujF53bTTgjs/BlRt68FcW6h3aeL/IioGtpOgEb5RZt
+         SzLPPD7qjGKUorherFzyb231zlOJTvfEgEFFZSzXiGoBNhSX67fh1l/x+rCjLHhxJL
+         /ujxAn2VY6hI6NAx/uuwSBqfpRqyrnUpAwvs9J3lOwx7QWiP593VVouV7idYFwMylT
+         EcNoKYM0BGaDIJYRH9blviD9XMvtQu0hD1iNRejR/NtSH1T5hEBVLqhuFgkkPNtSoM
+         lEpTV4LqOdrqrLWVsMV5A47jS02ovy8LWGD5H53jiJ1SPo4ZLLWevmbiUmJ5oB3BP6
+         3FWp5T47OYyEw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ricardo Ribalda <ribalda@chromium.org>,
@@ -41,12 +41,12 @@ Cc:     Ricardo Ribalda <ribalda@chromium.org>,
         Sasha Levin <sashal@kernel.org>, sean.wang@kernel.org,
         linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.0 05/13] pinctrl: meditatek: Startup with the IRQs disabled
-Date:   Tue,  6 Dec 2022 04:49:08 -0500
-Message-Id: <20221206094916.987259-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 05/12] pinctrl: meditatek: Startup with the IRQs disabled
+Date:   Tue,  6 Dec 2022 04:49:47 -0500
+Message-Id: <20221206094955.987437-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221206094916.987259-1-sashal@kernel.org>
-References: <20221206094916.987259-1-sashal@kernel.org>
+In-Reply-To: <20221206094955.987437-1-sashal@kernel.org>
+References: <20221206094955.987437-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
