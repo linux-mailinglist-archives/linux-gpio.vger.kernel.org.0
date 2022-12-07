@@ -2,66 +2,65 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E52A664630F
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Dec 2022 22:11:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D3E6646344
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Dec 2022 22:32:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbiLGVLN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Dec 2022 16:11:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48490 "EHLO
+        id S229694AbiLGVci (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Dec 2022 16:32:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbiLGVKy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Dec 2022 16:10:54 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF63073F6E;
-        Wed,  7 Dec 2022 13:10:14 -0800 (PST)
+        with ESMTP id S229679AbiLGVch (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Dec 2022 16:32:37 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511D73B6;
+        Wed,  7 Dec 2022 13:32:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670447414; x=1701983414;
+  t=1670448754; x=1701984754;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=MtXPm73TQE1igv2+AuaMTBvBWWXlqUK8fRBvyXcN/Og=;
-  b=lEgJPet6yz0UyAq+tf0yRh0gV35vJScxvY/4JDEACYBBK2bDamjrDDpD
-   9b/SOCDN6QA5O2eiNCNeXRwXm04HS/JxbMhe7PpY+DcBSN1SMQ7jpe8Au
-   H47UEaM7SECCypB1olXQ4MaWm+yAp7509g60r6mQKXFmUJCZvs0Fq2/T0
-   7IqWBw6P5Thl0CcUdjmR4t9ZNXNa3R5kR0GxNdX06xh8zSnoS4VfZWd49
-   W+KAFl7Yb5ZuiAde0bxrSnNb/8mCJWecsxIQWaj7uGVYxKeV/Z3TarJcv
-   O/5OpFOAJTychAPQxAWd5xCPadpJNB5qLPWRgGtwET7J0dCt4a7NRuXOB
+  bh=Boy6f1IbdP95LjK6U18wGNCSm3i0uKJ518Rnzce12TY=;
+  b=BcIGmCnW+wn9ttmF84ZI0ZrkN245KEnQPggzl0OLTiNAS3TsffTk+jW0
+   fVcyFPAJwz+bGBibXnNuzSGlNI9oRtKmoOk5A5Veej99mwPCR7/Umf/1t
+   ASZOT9aXKuU9n7r+Pq2bj0O6iWs97RQIC5pBS9j7iZka94TBOnqPWEIib
+   P4V4U/TBmEbC1BIYSGenLnoYhrQEhs74A1W1aPm9uxs87CVL9SnDmbW7u
+   uuMKwhc9joEiCrRpOc1aOkHplITF9mnHNTJnAcxBQsoKzJREXgetzQx1T
+   FhPOK/uTozOlFBUoOINlLGVpg8euBVA5V34aPaavXL8Vf33xYlA1V33FN
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="379173336"
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="317020490"
 X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
-   d="scan'208";a="379173336"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 13:10:14 -0800
+   d="scan'208";a="317020490"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2022 13:32:33 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="735537370"
+X-IronPort-AV: E=McAfee;i="6500,9779,10554"; a="715337852"
 X-IronPort-AV: E=Sophos;i="5.96,225,1665471600"; 
-   d="scan'208";a="735537370"
+   d="scan'208";a="715337852"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Dec 2022 13:10:10 -0800
+  by fmsmga004.fm.intel.com with ESMTP; 07 Dec 2022 13:32:30 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p31g8-005ziT-2i;
-        Wed, 07 Dec 2022 23:10:08 +0200
-Date:   Wed, 7 Dec 2022 23:10:08 +0200
+        id 1p321l-00609q-05;
+        Wed, 07 Dec 2022 23:32:29 +0200
+Date:   Wed, 7 Dec 2022 23:32:28 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     "larry.lai" <larry.lai@yunjingtech.com>
 Cc:     lee@kernel.org, linus.walleij@linaro.org, pavel@ucw.cz,
         linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
         linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw,
         musa.lin@yunjingtech.com, jack.chang@yunjingtech.com,
-        noah.hung@yunjingtech.com, Javier Arteaga <javier@emutex.com>,
-        Nicola Lunghi <nicola.lunghi@emutex.com>
-Subject: Re: [RFC 1/3] mfd: Add support for UP board CPLD/FPGA
-Message-ID: <Y5EBMCWEPgCFPnMj@smile.fi.intel.com>
+        noah.hung@yunjingtech.com
+Subject: Re: [RFC 2/3] pinctrl: Add support pin control for UP board CPLD/FPGA
+Message-ID: <Y5EGbLxzSFMgGE87@smile.fi.intel.com>
 References: <20221207163359.26564-1-larry.lai@yunjingtech.com>
- <20221207163359.26564-2-larry.lai@yunjingtech.com>
+ <20221207163359.26564-3-larry.lai@yunjingtech.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221207163359.26564-2-larry.lai@yunjingtech.com>
+In-Reply-To: <20221207163359.26564-3-larry.lai@yunjingtech.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,373 +68,279 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 08, 2022 at 12:33:57AM +0800, larry.lai wrote:
+On Thu, Dec 08, 2022 at 12:33:58AM +0800, larry.lai wrote:
 > The UP Squared board <http://www.upboard.com> implements certain
-> features (pin control, onboard LEDs or CEC) through an on-board CPLD/FPGA.
-> 
-> This mfd driver implements the line protocol to read and write registers
-> from the FPGA through regmap. The register address map is also included.
-> 
-> The UP Boards provide a few I/O pin headers (for both GPIO and
-> functions), including a 40-pin Raspberry Pi compatible header.
-> 
-> This patch implements support for the FPGA-based pin controller that
-> manages direction and enable state for those header pins.
-> 
-> Partial support UP boards:
-> * UP core + CREX
-> * UP core + CRST02
+> features (pin control) through an on-board FPGA.
+
+(I already reviewed previous version and you have my tag, but some new comments
+ which may be already answered, sorry for the repetition in such cases).
+
+Actually... based on the below comments I have to withdraw my tag.
+This driver may not go into upstream in the current form.
+
+I'm puzzled if it's indeed the code I have reviewed?
 
 ...
 
 > +#include <linux/acpi.h>
-> +#include <linux/dmi.h>
 
-> +#include <linux/gpio.h>
-
-I'm not sure if you read my previous emails regarding the topic.
-This header must not be in the new code.
-
-> +#include <linux/kernel.h>
-> +#include <linux/leds.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/upboard-fpga.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-
-
-Missing bits.h and err.h at least.
+This is actually not needed, but property.h.
+See below how.
 
 ...
 
-> +struct upboard_fpga_data {
-> +	const struct regmap_config *regmapconf;
-
-No need to repeat regmap twice.
-
-> +	const struct mfd_cell *cells;
-> +	size_t ncells;
-> +};
-
-...
-
-> +#define MENUFACTURER_ID_MASK		0xFF
-
-GENMASK()?
-
-...
-
-> +#define FIRMWARE_ID_MASK		0xF
-
-Ditto.
-
-...
-
-> +/* Apollo Lake GPIO pin number mapping to FPGA LED */
-> +#define APL_GPIO_218			507
-
-No way. It should be addressed as GPIO chip reference and relative pin
-(or GPIO, whichever suits better for your purposes) number.
-
-...
-
-> +/* For UP Board Series FPGA register read/write protocols 		      */
-> +/* EMUTEX specs: 						              */
-> +/* D0   D1  D2  D3  D4  D5  D6  D7  D8  D9 .... D22  D23                      */
-> +/* [RW][        address           ][	    DATA        ]                     */
-> +
-> +/* Read Sequence:                                                             */
-> +/*      ___   ____________________________________________________   _________*/
-> +/* clr:    \_/ <--low-pulse does start the write-readback         \_/<--start */
-> +/*	          sequence with partital reset of internal 	  new sequence*/
-> +/*	          registers but the CONF-REG. 	  		              */
-> +/*        ____________________________________________________________________*/
-> +/* rst: _/       _   _   _        _   _   _   __       __   __   _            */
-> +/* stb: STB#1->_/1\_/2\_/3\_...._/7\_/8\_/9\_/10\_..../23\_/24\_/<-STB#25 edge*/
-> +/*						                   is needed  */
-> +/*	  						           to ACK     */
-> +/*             (D0 - D7 stb rising latch)                                     */
-> +/* data_in:     D0  D1  D2  .... D6  D7  don't ........ care(DC)              */
-> +/* data_out:    don't ...........care(DC)  D8   D9 ....  D22  D23   	      */
-> +/*					  (D8 - D23 stb falling latch) 	      */
-> +/* flag_Read:				  _________...._________              */
-> +/*      __DC_   ____________...._________/                      \_            */
-> +/* counter:								      */
-> +/*    [00]DC[00][01][02] ............[08][9][10]............[24][00]	      */
-> +/* CONF-REG:					                              */
-> +/*    [00] [				CONF-REG               ]              */
-> +/* wreg:   							              */
-> +/*    [00]DC[00][  wreg=SHFT(wreg)  ][ADR][DATA][wreg=SHFT(wreg]	      */
-> +/* wreg2:		  						      */
-> +/*    					  [	   (COPY)=ADDR ]	      */
-
-This has too many /* */ and TABs vs space mix... Please, fix it.
-
-Is it SPI 24-bit bit-banging? Why spi-gpio can't be utilized for it?
-
-...
-
-> +/* Write Sequence:                                                   	      */
-> +/*      ___   ____________________________________________________   _________*/
-> +/* clr:    \_/ <--low-pulse does start the write-readback         \_/<--start */
-> +/*	          sequence with partital reset of internal 	  new sequence*/
-> +/*	          registers but the CONF-REG. 	  			      */
-> +/*        ____________________________________________________________________*/
-> +/* rst: _/       _   _   _        _   _   _   __       __   __   _            */
-> +/* stb: STB#1->_/1\_/2\_/3\_...._/7\_/8\_/9\_/10\_..../23\_/24\_/<-STB#25 edge*/
-> +/*						                   is needed  */
-> +/*								   to ACK     */
-> +/*             (D0 - D23 stb rising latch)                                    */
-> +/* data_in:     D0  D1  D2  .... D6  D7  D8  D9 ....  D22  D23                */
-> +/* data_out:    don't ................................care (DC)               */
-> +/* flag_Read:			 					      */
-> +/*      __DC_   ____________....__________________________________            */
-> +/* counter:								      */
-> +/*    [00]DC[00][01][02] ............[08][9][10]............[24][00]          */
-> +/* wreg:								      */
-> +/*    [00]DC[00][wreg=SHFT(wreg)&dat_in ][SHFT(wreg)&dat_in][DAT]             */
-> +/* wreg2:							              */
-> +/*    					 [     (COPY)=ADDR     ]	      */
-> +/* CONF-REG:								      */
-> +/*    [00] [	     CONF-REG = OLD VALUE		       ][CONF-REG=DAT]*/
-
-
-Same comments as per above.
-
-...
-
-> +		gpiod_set_value(fpga->datain_gpio, (reg >> i) & 0x1);
-
-!!(reg & BIT(i))
-
-...
-
-> +		gpiod_set_value(fpga->datain_gpio, (val >> i) & 0x1);
-
-Ditto.
-
-But see above.
-
-...
-
-> +static struct gpio_led upboard_gpio_leds[] = {
-> +	{
-> +		.name = "upboard:blue:",
-> +		.gpio = APL_GPIO_218,
-
-You must understand that it won't work with dynamic GPIO bases which will be
-enabled in v6.2-rc1. And even in general it must not be like this.
-
-> +		.default_state = LEDS_GPIO_DEFSTATE_KEEP,
-> +	},
-> +};
-
-...
-
-> +	enum gpiod_flags flags;
-> +
-> +	flags = fpga->uninitialised ? GPIOD_OUT_LOW : GPIOD_ASIS;
-
-Can be united.
-
-...
-
-> +	/*
-> +	 * The SoC pinctrl driver may not support reserving the GPIO line for
-> +	 * FPGA reset without causing an undesired reset pulse. This will clear
-> +	 * any settings on the FPGA, so only do it if we must.
-> +	 * Reset gpio defaults HIGH, get gpio and set to LOW, then set back to
-> +	 * HIGH as a pulse.
-> +	 */
-> +	if (fpga->uninitialised) {
-> +		fpga->reset_gpio = devm_gpiod_get(fpga->dev, "reset", GPIOD_OUT_LOW);
-> +		if (IS_ERR(fpga->reset_gpio))
-> +			return PTR_ERR(fpga->reset_gpio);
-
-No sleep for the hardware to be really reset?
-
-> +		gpiod_set_value(fpga->reset_gpio, 1);
-> +	}
-
-> +/*
-> + * MFD upboard-fpga is acpi driver and can recognize the AANT ID from different
-
-ACPI
-
-> + * kind of upboards. We get the led gpio initialized information from this
-
-LED GPIO
-
-> + * then add led-upboard driver.
-> + */
-
-...
-
-> +	int blue_gpio = -1, yellow_gpio = -1, green_gpio = -1, red_gpio = -1;
-
-NAK.
-
-...
-
-> +		blue_gpio = desc_to_gpio(desc);
-
-NAK.
-
-...
-
-> +		yellow_gpio = desc_to_gpio(desc);
-
-NAK.
-
-...
-
-> +		green_gpio = desc_to_gpio(desc);
-
-NAK.
-
-...
-
-> +		red_gpio = desc_to_gpio(desc);
-
-NAK.
-
-...
-
-> +/*
-> + *	Refer https://www.kernel.org/doc/htmldocs/writing_musb_glue_layer/device-platform-data.html,
-> + *	the id field could be set to -1 (equivalent to PLATFORM_DEVID_NONE),
-> + *  -2 (equivalent to PLATFORM_DEVID_AUTO) or start with 0 for the first
-> + *	device of this kind if we want a specific id number.
-> + */
-
-Useless comment. Just use the proper definition.
-
-> +	if (devm_mfd_add_devices(fpga->dev, 0,
-> +				 upboard_gpio_led_cells,
-> +				 ARRAY_SIZE(upboard_gpio_led_cells),
-> +				 NULL, 0, NULL)) {
-> +		dev_info(fpga->dev, "Failed to add GPIO leds");
-> +	}
-
-
-	ret = ...(...);
-	if (ret)
-		dev_warn(...);
-
-
-...
-
-> +	/* get fpga/EC protocol hardware version */
-> +	acpi_evaluate_integer(ACPI_HANDLE(&pdev->dev), "_HRV", NULL, &hrv);
-
-No error check?
-
-...
-
-> +	system_id = dmi_first_match(upboard_dmi_table);
-> +	if (system_id)
-> +		quirks = (unsigned long)system_id->driver_data;
-> +
-> +	if (hrv == UPFPGA_PROTOCOL_V1_HRV &&
-> +	    (quirks & UPFPGA_QUIRK_HRV1_IS_PROTO2))
-> +		hrv = UPFPGA_PROTOCOL_V2_HRV;
-
-Maybe it's easier to provide driver data?
-
-...
-
-> +	fpga_data = (const struct upboard_fpga_data *) id->driver_data;
-
-
-Use device_get_match_data().
-
-...
-
-> +	if (quirks & UPFPGA_QUIRK_UNINITIALISED) {
-> +		dev_info(&pdev->dev, "FPGA not initialised by this BIOS");
-
-dev_warn()?
-
-> +		fpga->uninitialised = true;
-> +	}
-
-...
-
-> +	dev_set_drvdata(&pdev->dev, fpga);
-
-platform_set_drvdata().
-
-> +	fpga->dev = &pdev->dev;
-> +	fpga->regmap = devm_regmap_init(&pdev->dev, NULL,
-> +					fpga, fpga_data->regmapconf);
-
-Can be one line and you can actually have
-
-	struct device *dev = &pdev->dev;
-
-at the top of the function.
-
-> +	fpga->regmapconf = fpga_data->regmapconf;
-
-Why is it done if you know that error might happen?
-
-> +	if (IS_ERR(fpga->regmap))
-> +		return PTR_ERR(fpga->regmap);
-
-...
-
-> +	/* gpio leds initialize */
-
-GPIO LEDs
-
-...
-
-> +		ret =  devm_mfd_add_devices(&pdev->dev, 0,
-
-Use proper definition.
-
-> +					    upboard_gpio_led_cells,
-> +					    ARRAY_SIZE(upboard_gpio_led_cells),
-> +					    NULL, 0, NULL);
-
-> +			dev_err(&pdev->dev, "Failed to add GPIO leds");
+> +static int upboard_fpga_request_enable(struct pinctrl_dev *pctldev,
+> +				       struct pinctrl_gpio_range *range,
+> +				       unsigned int pin)
+> +{
+> +	const struct pin_desc * const pd = pin_desc_get(pctldev, pin);
+> +	const struct upboard_pin *p;
+> +	int ret;
+
+> +	if (!pd)
+> +		return -EINVAL;
+
+When this can be true?
+Ditto for other functions with this conditional.
+
+> +	p = pd->drv_data;
+> +	if (p->funcbit) {
+> +		ret = regmap_field_write(p->funcbit, 0);
+> +		if (ret)
 > +			return ret;
-
-	return dev_err_probe();
-
-> +		}
 > +	}
+> +
+> +	if (p->enbit) {
+> +		ret = regmap_field_write(p->enbit, 1);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +};
 
-+ blank line.
+...
 
-> +	return devm_mfd_add_devices(&pdev->dev, 0,
+> +	struct upboard_pinctrl *pctrl = container_of(gc, struct upboard_pinctrl, chip);
 
-Use proper definition.
+Don't you set a private data of GPIO chip to point to your custom structure?
 
-> +				    fpga_data->cells,
-> +				    fpga_data->ncells,
-> +				    NULL, 0, NULL);
+Either way, I would recommend to make gpio_chip a first member in your
+upboard_pinctrl.
+
+...
+
+> +			int mode = 1;
+
+See below about default.
+
+> +			unsigned int val;
+> +
+> +			switch (pctrl->ident) {
+> +			case 15:
+> +				mode = 2;
+> +			break;
+> +			}
+
+Wrong indentation, missing default.
+Same for the rest below.
+
+> +		} else if (strstr(pctrl->pctldesc->pins[offset[i]].name,
+> +				  "UART")) {
+
+One line would be better to read, same for the rest below.
+
+...
+
+> +		/* input pins */
+> +		if (strstr(pctrl->pctldesc->pins[offset[i]].name, "RX"))
+> +			input = true;
+> +		if (strstr(pctrl->pctldesc->pins[offset[i]].name, "CTS"))
+> +			input = true;
+> +		if (strstr(pctrl->pctldesc->pins[offset[i]].name, "ADC"))
+> +			input = true;
+> +		if (strstr(pctrl->pctldesc->pins[offset[i]].name, "MISO"))
+> +			input = true;
+> +		if (strstr(pctrl->pctldesc->pins[offset[i]].name, "DIN"))
+> +			input = true;
+
+Can you have this in some static const data structure that is associated with
+pin list?
+
+...
+
+> +static void upboard_gpio_free(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +	struct upboard_pinctrl *pctrl = container_of(gc, struct upboard_pinctrl, chip);
+> +	int gpio = upboard_rpi_to_native_gpio(gc, offset);
+> +	unsigned int pin = pctrl->rpi_mapping[offset];
+> +	char name[strlen(pctrl->pctldesc->pins[pin].name)];
+> +	char *p;
+
+> +	if (gpio < 0)
+> +		return;
+
+When this can be true?
+Same to the rest below.
+
+> +	pinctrl_gpio_free(gpio);
+> +
+> +	strcpy(name, pctrl->pctldesc->pins[pin].name);
+> +	p = name;
+> +	upboard_alt_func_enable(gc, strsep(&p, "_"));
 > +}
 
 ...
 
-Move ACPI ID table here, it's not needed to have it upper.
+> +	/* APL03 open drain GPIO */
+> +	if (pctrl->ident == 9) {
+> +		if (pin == 0 || pin == 1) {
+> +			int val = readl(pctrl->pins[pin].regs);
+> +
+> +			if (value)
+> +				val |= PADCFG0_GPIOTXDIS;
+> +			else
+> +				val &= ~PADCFG0_GPIOTXDIS;
+> +			writel(val, pctrl->pins[pin].regs);
 
-> +static struct platform_driver upboard_fpga_driver = {
-> +	.driver = {
-> +		.name = "upboard-fpga",
-> +		.acpi_match_table = upboard_fpga_acpi_match,
-> +	},
+Huh?!
+
+If we need OD support in the pinctrl-intel, add it there.
+
+> +		}
+
+...
+
+> +	if (strstr(dev_name(&pdev->dev), "INTC1055:00") ||
+> +	    strstr(dev_name(&pdev->dev), "INT34C5:00")) {
+> +		struct intel_pinctrl *intel_pctrl = gpiochip_get_data(gc);
+> +		struct pinctrl_dev *pctldev;
+> +		struct pinctrl_gpio_range *range;
+> +
+> +		pctldev = intel_pctrl->pctldev;
+> +		if (pctldev == NULL)
+> +			return NULL;
+> +
+> +		range = pinctrl_find_gpio_range_from_pin(pctldev, pin);
+> +		if (range)
+> +			pin = pin - range->pin_base;
+> +		else
+> +			return NULL;
+> +
+> +		if (range->pin_base < 67)
+> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +		else if (range->pin_base < 171)
+> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +		else if (range->pin_base < 260)
+> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+> +		else
+> +			res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+> +	}
+> +
+> +	if (IS_ERR(res)) {
+> +		dev_err(gc->parent, "upboard resource get failed");
+> +		return NULL;
+> +	}
+
+> +	base = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> +	offset = readl(base + PADBAR);
+> +	value = readl(base + REVID);
+> +
+> +	if (((value & REVID_MASK) >> REVID_SHIFT) >= 0x94)
+> +		nregs = 4;
+> +	else
+> +		nregs = 2;
+> +
+> +	return base + offset + reg + pin * nregs * 4;
+> +}
+
+What the heck is this?!
+Was it really in the version I have reviewed before?
+
+...
+
+> +static void upboard_irq_ack(struct irq_data *d)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +
+> +	dev_info(NULL, "upboard_irq_ack");
+
+Besides dev_info() and strange NULL, why do you need these messages? What for?
+Same to the rest below.
+
+> +}
+
+...
+
+> +	data->parent_data = irq_get_irq_data(pctrl->pins[offset].irq);
+> +	if (data->parent_data) {
+> +		dev_info(NULL, "%s: no NULL", __func__);
+
+What?!
+
+> +		return irq_chip_set_type_parent(data, type);
+> +	}
+> +
+> +	dev_info(NULL, "%s: NULL", __func__);
+
+Ditto.
+
+...
+
+> +static struct irq_chip upboard_gpio_irqchip = {
+> +	.name = "upboard-gpio-irq",
+> +	.irq_ack = upboard_irq_ack,
+> +	.irq_mask = upboard_irq_mask,
+> +	.irq_unmask = upboard_irq_unmask,
+> +	.irq_set_type = upboard_irq_chip_set_type,
+> +	.flags = IRQCHIP_MASK_ON_SUSPEND | IRQCHIP_SKIP_SET_WAKE,
+
+It should be set IMMUTABLE.
+
 > +};
 
 ...
 
-The header file missing several forward declarations and inclusions, like
+> +	hid = acpi_device_hid(adev);
+> +	if (!strcmp(hid, "AANT0F00") || !strcmp(hid, "AANT0F04") ||
+> +	    !strcmp(hid, "AANT0000")) {
 
-#include <linux/types.h>
+This is done via ACPI ID table (but without announcing it as module supported
+hardware) and corresponding match functions.
 
-struct regmap;
+> +		pctldesc = &upboard_up_pinctrl_desc;
+> +		rpi_mapping = upboard_up_rpi_mapping;
+> +		ngpio  = ARRAY_SIZE(upboard_up_rpi_mapping);
+> +	} else if (!strcmp(hid, "AANT0F01")) {
+> +		pctldesc = &upboard_up2_pinctrl_desc;
+> +		rpi_mapping = upboard_up2_rpi_mapping;
+> +		ngpio  = ARRAY_SIZE(upboard_up2_rpi_mapping);
+> +	} else if (!strcmp(hid, "AANT0F02")) {
+> +		pctldesc = &upboard_upcore_crex_pinctrl_desc;
+> +		rpi_mapping = upboard_upcore_crex_rpi_mapping;
+> +		ngpio  = ARRAY_SIZE(upboard_upcore_crex_rpi_mapping);
+> +	} else if (!strcmp(hid, "AANT0F03")) {
+> +		pctldesc = &upboard_upcore_crst02_pinctrl_desc;
+> +		rpi_mapping = upboard_upcore_crst02_rpi_mapping;
+> +		ngpio  = ARRAY_SIZE(upboard_upcore_crst02_rpi_mapping);
+> +	} else
+> +		return -ENODEV;
+
+...
+
+> +	pins = devm_kzalloc(&pdev->dev,
+> +			    sizeof(*pins) * pctldesc->npins,
+> +			    GFP_KERNEL);
+
+devm_kcalloc() or even devm_kmalloc_array().
+
+> +	if (!pins)
+> +		return -ENOMEM;
+
+...
+
+I stopped here since I don't believe that I have given a tag to this earlier...
+If it's the case, I don't know what I have got that day.
 
 -- 
 With Best Regards,
