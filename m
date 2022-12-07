@@ -2,77 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD51C64573B
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Dec 2022 11:12:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74ADC64575A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Dec 2022 11:17:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230312AbiLGKMH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 7 Dec 2022 05:12:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40984 "EHLO
+        id S230340AbiLGKQt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 7 Dec 2022 05:16:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230242AbiLGKMD (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Dec 2022 05:12:03 -0500
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6CEA4092E;
-        Wed,  7 Dec 2022 02:12:02 -0800 (PST)
-Received: by mail-pf1-x432.google.com with SMTP id n3so12861568pfq.10;
-        Wed, 07 Dec 2022 02:12:02 -0800 (PST)
+        with ESMTP id S230426AbiLGKQd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 7 Dec 2022 05:16:33 -0500
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41FC0419AF
+        for <linux-gpio@vger.kernel.org>; Wed,  7 Dec 2022 02:16:30 -0800 (PST)
+Received: by mail-vs1-xe2c.google.com with SMTP id m4so16785778vsc.6
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Dec 2022 02:16:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p+P1xMnkCCBz9CXQ/HSo+U65ScICwkDZ83BVNMvEKZk=;
-        b=NZsAuyNjTb4ztrX0KgkavB2VvvMs21qQi3kR56jkqnPSEYFcfuCrPgNJqSvgnfBFVp
-         6SmeY90qC82fFxB0YYLdKwSaG9Gng35gGvug8pg6bDX8APJNPwcgYtOb5iAdChL6fGve
-         3k98IbCHJgV+/WG8SQhubAQ9NQShX2qOdqye5lONQ0aKW44Z2m60t3sc8nCzzcQn+Zyn
-         Dp29sAAS0JG1mLNe53IO/3NMbj5jjdMqLLEd2gW0ZOAQxM6vx83lmLIkE8UdxNohsEtb
-         rKosAsRiItTOhnaw0ydWwbR5b/Ln0gsgLkg163grxi0ApWKYChjOlx3Xwwend6dp3C3C
-         BM4w==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9tmwwKx6MV0vgFrkFBncMusD86WdMjC6AKDczb4IO9c=;
+        b=VnW+SNqw4viODQ7B5ZCtWi0TWtz4+jw2AVRdz/q11GTQZhZE0b0GNT5Ys0mvrxv3uK
+         1j7HCEDsQruezUUXE9wWwO+s06aErtn0oH03DyuRkahLEsF38JE3XHnogWlE5gKi6/PU
+         xY3mOZB+inq5nYZ7/PJwKJSu9IKdrV21tHwY7w0n6OfEk/9gAxkd+rEXABvrv3Sjy8Si
+         Hj/d1KKF9rUwzhWeO7yzmQSDHrFtpH7ucY1e8gjD/6yUFaBWOVL3DF8wrxsyb5/XBR5M
+         /dpdLAWGTUbFuESYCdKitrgHrhX7M3iZY1ZDxU/pYrCDMdJq2ejoVWEOzDrwQLGL6uq4
+         JGgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p+P1xMnkCCBz9CXQ/HSo+U65ScICwkDZ83BVNMvEKZk=;
-        b=4K3nMixH91XkNA2c1Hlcrt2Vq6VqAbzHZ4xWt29/ACBK5sQa2jsCN2eqGT6UI9BhEH
-         4h2XP9RYzdfwccCsZMYjD3sRbaAQYYPZbEEBPDt0RkN1AzQ1ViyuhldZfLb+p+JZiDhO
-         GE08ebMW1XExF1vEMw7BXF8LaRXNrMysWdgtdTLw6zph3FN+eSXXcHULPjhjwTveyKtw
-         dYpwvfZLipgBaY13+INW/Sakk+bn5tQSNBsH3UDlRMSsjk5eKugE0Egd67gwGAGET3pM
-         v+wlVY8veU3WPiTZUmQLeoMxPVwzNz6VqXcqaYNV4/d2f2vEBwnYvpiJYFNWb7gi9h+8
-         xtxQ==
-X-Gm-Message-State: ANoB5pkD0iemhl/V5Gl4mJW+m+xXZ2yczo2bNOTPJO0AWUTHGwmWyQvP
-        qlGOTZTAjNsEVyls4TL8fgU=
-X-Google-Smtp-Source: AA0mqf6HUg62PrOsODpLPCv8Q5It7/v8kLLYdJaBk9BU/+DnNWPO1P84+r0fZhFEy8CQmMCCfOD58Q==
-X-Received: by 2002:a63:cd44:0:b0:478:1391:fc43 with SMTP id a4-20020a63cd44000000b004781391fc43mr42038466pgj.431.1670407922191;
-        Wed, 07 Dec 2022 02:12:02 -0800 (PST)
-Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
-        by smtp.gmail.com with ESMTPSA id c6-20020a170902d48600b0017f72a430adsm14257355plg.71.2022.12.07.02.11.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Dec 2022 02:12:01 -0800 (PST)
-Date:   Wed, 7 Dec 2022 18:11:55 +0800
-From:   Kent Gibson <warthog618@gmail.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [PATCH v1 2/3] Documentation: gpio: Add a section on what to
- return in ->get() callback
-Message-ID: <Y5Bm6+ZKMaWCPDxi@sol>
-References: <20221130155519.20362-1-andriy.shevchenko@linux.intel.com>
- <20221130155519.20362-2-andriy.shevchenko@linux.intel.com>
- <CACRpkdaQWZE6=BNEh5hSH9=jBK=TcLoD1uUb=JyNYmHFvaSAfg@mail.gmail.com>
- <Y41MxPthLjitvzEl@sol>
- <CACRpkdb67ygsEuZhRZ9TGmmNXhiU2LsuefD0-48xtCLx3fq-KA@mail.gmail.com>
- <Y5BjJmz5Mvdr8cAR@smile.fi.intel.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9tmwwKx6MV0vgFrkFBncMusD86WdMjC6AKDczb4IO9c=;
+        b=rc/WRw/3nnepNky2ERn/P41kO9VXGsVzDEXR8kkhsSx5pZIN7nEmUVEu9D48NbHei3
+         xfK3uJvrJ6dVzDnA3E2djX47NL93wwI6KFq4SAKV1AxcNr2ebTV8BU8p3I8bk9/pJXuF
+         GXbFXpCfkYduSRG+VeOAF+NoVuG3oe8epdjNHa1jsmhqAUwYpUMgkTvrZQN88/g+WfJL
+         5u7OlRfmCZB6CRsLIqF/ePSYjuOYtZNQsm8pBeaTVoqLw16YjtaAuwIlPPpnAAfyf6VN
+         dV/8exa68gvRFzJph9A+59KLRBZusPfp4f0+Ep08uHLcJDc7Ld/r9CbI0o8PB3VZtBbN
+         hF6w==
+X-Gm-Message-State: ANoB5plasH0tmvlgLNsW9kvNJtwqPspu3e08xzUndI2HmvRU03nCc9kN
+        qVdW5R2Iq8X1qWbkE8Jf63DM6AmKg4CkfkWEhtZ/WQ==
+X-Google-Smtp-Source: AA0mqf6Dv2l4nAMvQ6d5Ka5C8njs2nEuVJoWrU8QnYQhSWYe0G/lcx7vl1EBBgXgTvITTUyNvDzO0mOewXhv8SxdmAk=
+X-Received: by 2002:a05:6102:722:b0:3b0:eec8:ce04 with SMTP id
+ u2-20020a056102072200b003b0eec8ce04mr15489833vsg.16.1670408189916; Wed, 07
+ Dec 2022 02:16:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y5BjJmz5Mvdr8cAR@smile.fi.intel.com>
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20221207093937.62048-1-warthog618@gmail.com>
+In-Reply-To: <20221207093937.62048-1-warthog618@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 7 Dec 2022 11:16:19 +0100
+Message-ID: <CAMRc=Mf1JjryzGY6zYoUY+a_BSrU81TWfJS1EHrof4pEFvv6Jw@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] tools: gpioset: remove pointless whitespace
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,39 +64,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 07, 2022 at 11:55:50AM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 07, 2022 at 01:06:46AM +0100, Linus Walleij wrote:
-> > On Mon, Dec 5, 2022 at 2:43 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > 
-> > > My preference would be for the driver API to be extended with a new
-> > > callback for the output buffer, say get_output(), and have the existing
-> > > get() always return the input buffer.
-> > 
-> > This has a certain elegance to it, as it cuts to the bone of the
-> > problem and partition it in two halves, reflecting the two pieces
-> > of hardware: input and output buffer. Also follows Rusty Russells
-> > API hierarchy.
-> 
-> The (one of) problem is that not all hardware may support input and output
-> be enabled at the same time.
+On Wed, Dec 7, 2022 at 10:39 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Remove pointless whitespace in interact().
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
+>  tools/gpioset.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/tools/gpioset.c b/tools/gpioset.c
+> index c49d229..68b3922 100644
+> --- a/tools/gpioset.c
+> +++ b/tools/gpioset.c
+> @@ -842,8 +842,7 @@ static void interact(struct gpiod_line_request **requests,
+>                 }
+>
+>                 printf("unknown command: '%s'\n", words[0]);
+> -               printf("Try the 'help' command\n")
+> -                       ;
+> +               printf("Try the 'help' command\n");
+>
+>  cmd_ok:
+>                 for (i = 0; isspace(line[i]); i++)
+> --
+> 2.38.1
+>
 
-Exactly - and you want to hide that from the user.
+I've already fixed that automatically with my clang-format sweep of
+the tree, thanks!
 
-> What would that new API return in that case
-> and how it would be better with get() returning the value depending on
-> direction?
-> 
-
-It would return an error for whichever is not supported.  So get()
-returns an error when the input buffer is unavailable, and get_output()
-returns an error when the output buffer is unavailable.  And that is for
-whatever reason, e.g. the selected mode or lacking hardware or driver
-support.
-
-It is better because the user is explicitly informed that the buffer
-they are trying to read from is not supported by the current
-configuration.  And they get to choose which buffer they want to read
-as they see fit - not have that selection made for them by magic.
-
-Cheers,
-Kent.
+Bart
