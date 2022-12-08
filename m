@@ -2,312 +2,273 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB559646D36
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Dec 2022 11:40:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38D84646E26
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Dec 2022 12:12:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbiLHKke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Dec 2022 05:40:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        id S229513AbiLHLMJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Dec 2022 06:12:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbiLHKkR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Dec 2022 05:40:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0711858BCF;
-        Thu,  8 Dec 2022 02:35:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 44D0DB82378;
-        Thu,  8 Dec 2022 10:35:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E072C433C1;
-        Thu,  8 Dec 2022 10:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670495721;
-        bh=25+oqWLVjVrNbO+hRmvsDdetN1PXbmACQaV7gHg5mrg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p/7DK0Rg5WFAxDIZdcmlM5pPNbiQgfKKYPA92P3viUVs9wQwEsjrn6c0BudU1l3RT
-         0pdTEElaOqXYzCWO3xDA+ZvPF3OYsEcCc03qhkmGTiInQHTRQg8CPe+ZiMsJZBEeB4
-         21LU22cveZ9zALMGWCyxOgv9aVmDjoRr7obf6ns6jzFvsjXIFOziXW1rgiefE/LGmP
-         tQv68MyiPKFWGmwSsp2sfP+223xG2jggznzF6MxaNlIdhEAgSAEmjNih9HD7bvXdhJ
-         cVbn4ii27zhIHOkpSmadZWTvrjOLPRnFIc/7yRGxOkGz3+yo6pt3sAmKszazb+0jCR
-         3rb1xEWE5hKCg==
-Date:   Thu, 8 Dec 2022 10:35:16 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Larry Lai <larry.lai@yunjingtech.com>
-Cc:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "GaryWang@aaeon.com.tw" <GaryWang@aaeon.com.tw>,
-        Musa Lin <musa.lin@yunjingtech.com>,
-        Jack Chang <jack.chang@yunjingtech.com>,
-        Noah Hung <noah.hung@yunjingtech.com>,
-        Javier Arteaga <javier@emutex.com>,
-        Nicola Lunghi <nicola.lunghi@emutex.com>
-Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH V3 1/3] mfd: Add
- support for UP board CPLD/FPGA
-Message-ID: <Y5G95OknX2dcBhDw@google.com>
-References: <20221109090957.13167-1-larry.lai@yunjingtech.com>
- <20221109090957.13167-2-larry.lai@yunjingtech.com>
- <Y3T+B1zq/XYluO5s@google.com>
- <SG2PR06MB37427F013BD702117467B8A7F91A9@SG2PR06MB3742.apcprd06.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SG2PR06MB37427F013BD702117467B8A7F91A9@SG2PR06MB3742.apcprd06.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229797AbiLHLLg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Dec 2022 06:11:36 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 582B3C38
+        for <linux-gpio@vger.kernel.org>; Thu,  8 Dec 2022 03:11:05 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id C5A455C005B;
+        Thu,  8 Dec 2022 06:11:03 -0500 (EST)
+Received: from imap50 ([10.202.2.100])
+  by compute6.internal (MEProxy); Thu, 08 Dec 2022 06:11:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm1; t=1670497863; x=1670584263; bh=c2ixqHyxMI
+        rEHZcEy0yrEzJKfzAA2VF1mAaH80LTbCM=; b=CeGCxuoNtU1zqABRHgSkzvW1vE
+        QqEHYKi39CUHqrwC4SPabVenB8v2C67dsb7vCaqUkReKD3m3cWDt3/pjnjpu4pPj
+        02M0j2mbXK90qYd8Si3MjV09wqiQrfp93Tvtla6lI+nE6bGn7aUpXq1v+MFwyp5w
+        urijA28YXbCVZ9eEUhOzhFkbOszUbbezJBkA5OW3b21ETOTPygTC+0z8O9NdzoBx
+        uF8IbOaef+oefy1c9vi92pIWCXE8lpdSmNrcniSQNwZQrLOpnCPHlXIbaKewL4OH
+        91OwXcff/6MBZ85lhoeqkYNASC1+M+jqsFTCM6agBcnOtLWLsUMLQvpV+IgA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; t=1670497863; x=1670584263; bh=c2ixqHyxMIrEHZcEy0yrEzJKfzAA
+        2VF1mAaH80LTbCM=; b=Au/0MWacTRkV4q/9Lvmw0W1ZMHZnftwCKwalTnt3RBqt
+        wkesSfduK0GEMjah01kROq1mK3ul3RGqEjDoc6GTHCVwc0jFfJU326eQDZSLKrlU
+        FkpX6pYMPR+Ag6iSpWfgD9lDd4HnpwAh6D2vDhIjG4T4IZJByq2uzPhpn/YQosqj
+        dAf0Ugk1rQttlEhsHqZm9m+P9zYWQ02jVIDbXrb5n6PXxRkf7K1e+Qciw1R0e7R/
+        AwcR4xmFwovXek9MHhcuWSloZjT8Ntrae0lJakVSANXKUyIkGtoFDiElwe/N9j4r
+        YuT92IWu0R5kazlIpDG7UAAhJcqXdfnW0xsc7jGWZA==
+X-ME-Sender: <xms:R8aRYx4GUqCEezmQ4_dBg7HO-raJx4P30qkNRRVsaqG83YkC6ryHzg>
+    <xme:R8aRY-6qCeRy5pVoA8kmL8BT1UvzHiL_AcW67gFlGofcexmG84youCUM3-K-6LctG
+    3rpEpzsLMEqfiCGDQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddtgddvhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetnhgu
+    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecuggftrf
+    grthhtvghrnhephfehueffhedufeevudeuleeuueefieekffdvkeegueduffeghedvvddt
+    jedutdehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpmhgvshhonhgsuhhilhgurd
+    gtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
+    rghnughrvgifsegrjhdrihgurdgruh
+X-ME-Proxy: <xmx:R8aRY4fzd7a_Skmf3wG-9OMMi6J4SHBUTUPNiqUpBNzz_48y5Sa1Sw>
+    <xmx:R8aRY6JmNU0ktRLM7c4Zf1vaQq6Go_r-XSyE44qgqcgCMjLlvBMTog>
+    <xmx:R8aRY1IDji8Ta_USRviqXtFfO3ntYJKjCeddf8gsQdy5GTxOhfeagA>
+    <xmx:R8aRY12jL-uw96VlesaL0k2h2UvfOcZLw4NENz9IkFSKbhwDznvNeQ>
+Feedback-ID: idfb84289:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2D7211700089; Thu,  8 Dec 2022 06:11:03 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
+Mime-Version: 1.0
+Message-Id: <387f1d7d-8122-4533-8385-3e37dbd7ca7d@app.fastmail.com>
+In-Reply-To: <CAMRc=MchiuLWy1yrO-HNVtUFyJjFK2Jdp_aBjomL9n5JAgv_Vw@mail.gmail.com>
+References: <20221205132207.94775-1-andrew@aj.id.au>
+ <CAMRc=Md9hpypoB_CYrGecp5ZkkmMJFWuZXo4LzbAkZdiv5oOag@mail.gmail.com>
+ <01a47fff-c21d-4309-a7a2-fa7a87f4e024@app.fastmail.com>
+ <CAMRc=MchiuLWy1yrO-HNVtUFyJjFK2Jdp_aBjomL9n5JAgv_Vw@mail.gmail.com>
+Date:   Thu, 08 Dec 2022 21:39:59 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Bartosz Golaszewski" <brgl@bgdev.pl>
+Cc:     "Viresh Kumar" <viresh.kumar@linaro.org>,
+        "Kent Gibson" <warthog618@gmail.com>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][WIP PATCH 0/2] Convert the build from autotools to meson
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 07 Dec 2022, Larry Lai wrote:
 
-> Dear Jones,
-> 
->         Thank you for spending time to review this code, please kindly check the following comments with Larry (11/25) beginning .
->         Some of issues we will fix in new RFC_1125, some may need you give us more examples or comments.
-> We also explained more detail about the FPGA read and write protocol in RFC_1125.
-> 
-> Best Regards,
-> Larry Lai
-> 
-> 寄件者: Lee Jones <lee@kernel.org>
-> 日期: 星期三, 2022年11月16日 下午11:13
-> 收件者: Larry Lai <larry.lai@yunjingtech.com>
-> 副本: andriy.shevchenko@linux.intel.com <andriy.shevchenko@linux.intel.com>, linus.walleij@linaro.org <linus.walleij@linaro.org>, pavel@ucw.cz <pavel@ucw.cz>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org <linux-gpio@vger.kernel.org>, linux-leds@vger.kernel.org <linux-leds@vger.kernel.org>, GaryWang@aaeon.com.tw <GaryWang@aaeon.com.tw>, Musa Lin <musa.lin@yunjingtech.com>, Jack Chang <jack.chang@yunjingtech.com>, Noah Hung <noah.hung@yunjingtech.com>, Javier Arteaga <javier@emutex.com>, Nicola Lunghi <nicola.lunghi@emutex.com>
-> 主旨: Re: [PATCH V3 1/3] mfd: Add support for UP board CPLD/FPGA
 
-Please fix your mailer so that these headers do not end up in the
-email body.
+On Thu, 8 Dec 2022, at 19:57, Bartosz Golaszewski wrote:
+> On Thu, Dec 8, 2022 at 5:23 AM Andrew Jeffery <andrew@aj.id.au> wrote:
+>>
+>>
+>>
+>> On Tue, 6 Dec 2022, at 05:25, Bartosz Golaszewski wrote:
+>> > On Mon, Dec 5, 2022 at 2:22 PM Andrew Jeffery <andrew@aj.id.au> wrote:
+>> >>
+>> >> Hello,
+>> >>
+>> >> Based on a recent poke [1] and in-between meetings I've put together a
+>> >> WIP series that converts libgpiod's build from autotools to meson. As
+>> >> far as I'm aware the meson build supports all the significant options to
+>> >> enable or disable features exposed by the autotools build:
+>> >>
+>> >> * Tests
+>> >> * Tools
+>> >>   * Interactive gpioset
+>> >> * Bindings
+>> >>   * C++
+>> >>   * Python
+>> >>   * Rust
+>> >> * Documentation
+>> >>   * Manpages
+>> >>   * Doxygen
+>> >>
+>> >> [1] https://lore.kernel.org/all/CAMRc=Mda8UnyH+_GxeX_4MyKd+DPN0BVH5K+J+VWnMJNC1vwTQ@mail.gmail.com/
+>> >>
+>> >> Meson has pretty good support for handling python and so the patch does
+>> >> away with setup.py entirely.
+>> >
+>> > Eek! No, please do keep setup.py. Autotools too is capable of building
+>> > python C extensions on its own and it's what we use in v1 but I want
+>> > the python code to be built the standard python way. I actually plan
+>> > to post libgpiod v2 on pypi and split out building python bindings
+>> > into a separate bitbake recipe in meta-openembedded using the
+>> > setuptools3 class.
+>> >
+>> > So let's keep setup.py and just call it from meson.
+>>
+>> I've poked at this for a little while and it's not a great experience.
+>> Meson's design pushes back against calling out in this way, and I don't
+>> really have the motivation to carry on fighting it to make it do what
+>> you request. Unless someone else has that motivation, I think there are
+>> two options if meson is still desired:
+>>
+>> 1. Use the meson python support as posted in this series
+>> 2. Split out the python (and probably rust) bindings, keeping the
+>>    dependency relationships pointing in one direction and using the
+>>    language's own package management tooling.
+>>
+>> Given there's nothing to do in the install phase for rust we don't have
+>> as big of an issue there, but it is problematic for python.
+>>
+>> Let me know which way you want to go, including if you want to abandon
+>> meson :)
+>>
+>
+> No, I don't want to abandon it. What is the problem exactly? Is meson
+> unable to simply add external commands to its ninja output?
 
-> On Wed, 09 Nov 2022, chengwei wrote:
-> 
-> > The UP Squared board <http://www.upboard.com> implements certain
-> > features (pin control, onboard LEDs or CEC) through an on-board CPLD/FPGA.
-> >
-> > This mfd driver implements the line protocol to read and write registers
-> > from the FPGA through regmap. The register address map is also included.
-> >
-> > The UP Boards provide a few I/O pin headers (for both GPIO and
-> > functions), including a 40-pin Raspberry Pi compatible header.
-> >
-> > This patch implements support for the FPGA-based pin controller that
-> > manages direction and enable state for those header pins.
-> >
-> > Partial support UP boards:
-> > * UP core + CREX
-> > * UP core + CRST02
-> >
-> > PATCH V3:
-> > (1) fixed kernel test robot compiler warning
-> >
-> > PATCH V2:
-> > (1) Synchronizing upboard github to rc2
-> > (2) Refer 2022/10/31 Lee Jones review, fixed some of the issues.
-> 
-> The change log should be below the '---' below.
+Not as far as I'm aware. I think it's best covered by this policy 
+description:
 
-Please fix your mailer to quote the message you're replying to.
+https://mesonbuild.com/Mixing-build-systems.html
 
-Then you can omit the "Larry ..." tags.
+There are some things that might make it sound feasible but aren't 
+actually appropriate:
 
-> Larry (11/25) : We already fixed it on RFC 1125, thx.
+1. run_command(): https://mesonbuild.com/Reference-manual_functions.html#run_command
+2. run_target(): https://mesonbuild.com/Reference-manual_functions.html#run_target
+3. custom_target(): https://mesonbuild.com/Reference-manual_functions.html#custom_target
 
-You don't have to reply to comments if you agree with them.
+run_command() isn't appropriate as it executes in the `meson setup`
+phase. run_target() isn't appropriate as it disregards any output
+artifacts and so has no impact in the `meson install` phase.
 
-> > Signed-off-by: Javier Arteaga <javier@emutex.com>
-> > [merge various fixes]
-> 
-> Drop this line please.
-> 
-> > Signed-off-by: Nicola Lunghi <nicola.lunghi@emutex.com>
-> > Signed-off-by: chengwei <larry.lai@yunjingtech.com>
-> 
-> Full name?
-> Larry (11/25) : We already fixed it on RFC 1125, thx.
-> 
-> > ---
-> >  drivers/mfd/Kconfig              |  12 +
-> >  drivers/mfd/Makefile             |   1 +
-> >  drivers/mfd/upboard-fpga.c       | 620 +++++++++++++++++++++++++++++++
-> >  include/linux/mfd/upboard-fpga.h |  56 +++
-> >  4 files changed, 689 insertions(+)
-> >  create mode 100644 drivers/mfd/upboard-fpga.c
-> >  create mode 100644 include/linux/mfd/upboard-fpga.h
-> >
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index abb58ab1a1a4..c1d72a70e5f2 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
+custom_target() is probably closest to what is required, but there's a
+lot of pain in trying to get the artifacts to line up for correct
+deployment in the `meson install` phase. This is exacerbated by the
+requirement that setup.py be run from its containing directory in the
+source tree. Further, I couldn't get all the options to line up such
+that setuptools would relocate its output into meson's own build tree
+(and out of the source tree). Here's a not entirely working attempt at
+abusing custom_target() to that end:
 
-[...]
+```
+diff --git a/bindings/python/meson.build b/bindings/python/meson.build
+index 26f7ff13e0dd..136d10824345 100644
+--- a/bindings/python/meson.build
++++ b/bindings/python/meson.build
+@@ -3,14 +3,31 @@
+ 
+ python = import('python')
+ python3 = python.find_installation('python3')
+-python3_dep = python3.dependency()
+ 
+-subdir('gpiod')
++python_build_dir = 'python-build'
++python_install_dir = 'python-install'
++python_include_dirs = '../../include:../../tests/gpiosim'
++python_lib_dirs = '@0@/lib:@0@/tests/gpiosim'.format(meson.project_build_root())
++python_install_cmd = [ python3.full_path(), '@INPUT@', '--no-user-cfg',
++                      'build_ext', '--include-dirs', python_include_dirs, '--library-dirs', python_lib_dirs,
++                      'install', '--root', python_build_dir, '--prefix', get_option('prefix')]
+ 
+-if get_option('examples')
+-    subdir('examples')
+-endif
++python_env = environment()
++python_env.set('GPIOD_WITH_TESTS', get_option('tests').to_string())
+ 
+-if get_option('tests')
+-    subdir('tests')
+-endif
++python_setuptools = custom_target('python-setuptools',
++                                 input: 'setup.py',
++                                 output: python_build_dir,
++                                 depends: [gpiod, gpiosim],
++                                 env: python_env,
++                                 command: python_install_cmd)
++
++cp = find_program('cp')
++
++custom_target('python-install',
++             input: 'setup.py',
++             output: python_install_dir,
++             depends: python_setuptools,
++             command: [ cp, '-r', meson.current_source_dir() / python_build_dir, meson.current_build_dir() / python_install_dir ],
++             install: true,
++             install_dir: get_option('prefix'))
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index ec8f99d4013d..9eddae7466a1 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -1,9 +1,14 @@
+ # SPDX-License-Identifier: GPL-2.0-or-later
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+-from os import environ
++import os
++import sys
++
++from os import environ, path
+ from setuptools import setup, Extension, find_packages
+ 
++os.chdir(path.dirname(sys.argv[0]) or '.')
++
+ gpiod_ext = Extension(
+     "gpiod._ext",
+     sources=[
+```
 
-> > +#define UPBOARD_DEVID 0
-> 
-> No, that's not what this means.
-> 
-> Please use the defines already provided for you.
-> Larry (11/25) :  please refer https://www.kernel.org/doc/htmldocs/writing_musb_glue_layer/device-platform-data.html
-> The id field could be set to -1 (equivalent to PLATFORM_DEVID_NONE),
-> -2 (equivalent to PLATFORM_DEVID_AUTO) or start with 0 for the first
-> device of this kind if we want a specific id number.
+This commits a bunch of crimes:
 
-Just use '0' in-place.
+1. Assumes the structure of the meson build directory via the paths in
+   python_lib_dirs
+2. Adds a chdir() in setup.py to relocate the process out of the meson
+   build directory back into the source tree
+3. Assumes the chdir() operation in the setup of python_include_dirs
+   rather than relying on meson's built-in dependency tracking as the
+   inc objects are opaque[1]
+4. Hacks the setuptools output back into the meson build directory using
+   a crufty target invoking `cp` so meson can locate the artifacts in the
+   `meson install` phase 
+5. Still doesn't correctly install the artifacts in the end due to
+   restrictions on path mangling (can't strip off the parent directory)
+   and the fact that we're trying to install an entire tree rather than
+   specific files.
 
-[...]
+[1] https://mesonbuild.com/Reference-manual_returned_inc.html
 
-> > +static struct upboard_led_data upboard_up2_led_data[] = {
-> > +     { .bit = 0, .colour = "blue" },
-> > +     { .bit = 1, .colour = "yellow" },
-> > +     { .bit = 2, .colour = "green" },
-> > +     { .bit = 3, .colour = "red" },
-> > +};
-> > +
-> > +static const struct mfd_cell upboard_up2_mfd_cells[] = {
-> > +     { .name = "upboard-pinctrl" },
-> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 0),
-> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 1),
-> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 2),
-> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 3),
-> > +};
-> > +
-> > +static const struct upboard_fpga_data upboard_up2_fpga_data = {
-> > +     .regmapconf = &upboard_up2_regmap_config,
-> > +     .cells = upboard_up2_mfd_cells,
-> > +     .ncells = ARRAY_SIZE(upboard_up2_mfd_cells),
-> > +};
-> 
-> You'd be better off getting rid of 'struct upboard_fpga_data'
-> altogether.
-> Larry (11/25) : we cannot understand it clearly. could you kindly give us more examples, thanks.
+It might feel like install_data() or install_subdir() could be used
+here, but from experiment their behaviour also seems unfit to be used
+in this context.
 
-You shouldn't mix platform initialisation strategies.  Doing so gets
-messy real quick.  So no passing MFD data through ACPI or DT
-match-data please.  Pass device IDs though, then match on those
-instead.
+At least, that's what I've experimented with. Maybe others can see the 
+way through here, but it really is fighting against the policy linked 
+earlier.
 
-[...]
-
-> > +static void upboard_led_gpio_init(struct upboard_fpga *fpga)
-> 
-> Should this all live in drivers/led?
-> Larry (11/25) :  MFD upboard-fpga is acpi driver and can recognize the AANT ID from different kind of upboards.
-> We get the led gpio initialized information from this then add led-upboard driver.
-
-MFD doesn't know (or want to know) about LEDs.
-
-Please place all LED initialisation inside the LED driver.
-
-> > +{
-> > +     struct gpio_led blue_led, yellow_led, green_led, red_led;
-> > +     struct gpio_desc *desc;
-> > +     int blue_gpio = -1, yellow_gpio = -1, green_gpio = -1, red_gpio = -1;
-> > +     int leds = 0;
-> > +     static struct gpio_led upboard_gpio_leds[8];
-> > +     static struct gpio_led_platform_data upboard_gpio_led_platform_data;
-> > +     static const struct mfd_cell upboard_gpio_led_cells[] = {
-> > +             MFD_CELL_BASIC("leds-gpio", NULL,
-> > +                            &upboard_gpio_led_platform_data,
-> > +                            sizeof(upboard_gpio_led_platform_data), 0)
-> > +     };
-> > +
-> > +     desc = devm_gpiod_get(fpga->dev, "blue", GPIOD_OUT_LOW);
-> > +
-> > +     if (!IS_ERR(desc)) {
-> > +             blue_gpio = desc_to_gpio(desc);
-> > +             leds++;
-> > +             devm_gpiod_put(fpga->dev, desc);
-> > +     }
-> > +     desc = devm_gpiod_get(fpga->dev, "yellow", GPIOD_OUT_LOW);
-> > +     if (!IS_ERR(desc)) {
-> > +             yellow_gpio = desc_to_gpio(desc);
-> > +             leds++;
-> > +             devm_gpiod_put(fpga->dev, desc);
-> > +     }
-> > +     desc = devm_gpiod_get(fpga->dev, "green", GPIOD_OUT_LOW);
-> > +     if (!IS_ERR(desc)) {
-> > +             green_gpio = desc_to_gpio(desc);
-> > +             leds++;
-> > +             devm_gpiod_put(fpga->dev, desc);
-> > +     }
-> > +     desc = devm_gpiod_get(fpga->dev, "red", GPIOD_OUT_LOW);
-> > +     if (!IS_ERR(desc)) {
-> > +             red_gpio = desc_to_gpio(desc);
-> > +             leds++;
-> > +             devm_gpiod_put(fpga->dev, desc);
-> > +     }
-> > +
-> > +     if (leds == 0)  //no leds
-> > +             return;
-> > +
-> > +     leds = 0;
-> > +     if (blue_gpio > -1) {
-> > +             blue_led.name = "upboard:blue:";
-> > +             blue_led.gpio = blue_gpio;
-> > +             blue_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
-> > +             upboard_gpio_leds[leds++] = blue_led;
-> > +     }
-> > +     if (yellow_gpio > -1) {
-> > +             yellow_led.name = "upboard:yellow:";
-> > +             yellow_led.gpio = yellow_gpio;
-> > +             yellow_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
-> > +             upboard_gpio_leds[leds++] = yellow_led;
-> > +     }
-> > +     if (green_gpio > -1) {
-> > +             green_led.name = "upboard:green:";
-> > +             green_led.gpio = green_gpio;
-> > +             green_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
-> > +             upboard_gpio_leds[leds++] = green_led;
-> > +     }
-> > +     if (red_gpio > -1) {
-> > +             red_led.name = "upboard:red:";
-> > +             red_led.gpio = red_gpio;
-> > +             red_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
-> > +             upboard_gpio_leds[leds++] = red_led;
-> > +     }
-> > +
-> > +     upboard_gpio_led_platform_data.num_leds = leds;
-> > +     upboard_gpio_led_platform_data.leds = upboard_gpio_leds;
-> > +
-> > +     if (devm_mfd_add_devices(fpga->dev, UPBOARD_DEVID,
-> > +                              upboard_gpio_led_cells,
-> > +                              ARRAY_SIZE(upboard_gpio_led_cells),
-> > +                              NULL, 0, NULL)) {
-> > +             dev_info(fpga->dev, "Failed to add GPIO leds");
-> > +     }
-> > +}
-> > +
-> > +static const struct acpi_device_id upboard_fpga_acpi_match[] = {
-> > +     { "AANT0000", (kernel_ulong_t)&upboard_pinctrl_data },
-> > +     { "AANT0F00", (kernel_ulong_t)&upboard_up_fpga_data },
-> > +     { "AANT0F01", (kernel_ulong_t)&upboard_up2_fpga_data },
-> > +     { "AANT0F02", (kernel_ulong_t)&upboard_upcore_crex_fpga_data },
-> > +     { "AANT0F03", (kernel_ulong_t)&upboard_upcore_crst02_fpga_data },
-> > +     { "AANT0F04", (kernel_ulong_t)&upboard_up_fpga_data },
-> > +     { }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, upboard_fpga_acpi_match);
-> 
-> Please don't push MFD configuration data through the ACPI API.
-
-Ah look, I already said this.
-
-> Larry (11/25) : we cannot understand it clearly. could you kindly give us more  examples, thanks.
-
-All of these point to MFD cell initialisation structs.  Please don't
-do that.  Assign each platform with an ID, then pull that ID out of
-the ACPI match-data and assign local 'cells', 'ncells', etc based on
-the ID.
-
-[...]
-
--- 
-Lee Jones [李琼斯]
+Andrew
