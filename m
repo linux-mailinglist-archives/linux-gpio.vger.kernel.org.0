@@ -2,152 +2,312 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F875646C06
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Dec 2022 10:37:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB559646D36
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Dec 2022 11:40:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229957AbiLHJhs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 8 Dec 2022 04:37:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35496 "EHLO
+        id S230214AbiLHKke (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 8 Dec 2022 05:40:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbiLHJhr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Dec 2022 04:37:47 -0500
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2078.outbound.protection.outlook.com [40.107.102.78])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCCFFACD
-        for <linux-gpio@vger.kernel.org>; Thu,  8 Dec 2022 01:37:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mh+0LwYY99kRkQfE0W2r4bs5oTTnbDfScbkGErQI8PswkeimExLxjUSnmU2cidNwdTqHkFvoO+rrgKWDxp2/ambgHxuHkDSZUayH/myLKSZyV8Q9T3uPuzCqG4CPW+H2n2ZPZ/WGiSSrWLLZbd8LrsEzF/8WZF1mAUEjqHJOKjVTzAjD7GBhvsj1Q49rsBH6gI4lBimGxfBrA+qAKg3URB8tgQBDWsUzprmglb0KOnrfg9b07r0b96U3AmdGUWZl4GBxTXz3nsMZ4QJaPLjfIWrzu3M+wiE4dSB7zGZonDCCwxw44q7UjA4pH/h04hLgYZ4e9iHjj5PhWNEKGQYxbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AtB25DTdeZidKcKRIgWNtqYioJT8AlXNWaSIpJRlFNg=;
- b=UVrBadxj0XCd9ZywrkTk9DrKGyK94nJ7NWvIzLaHPPyHcqD4IcAjpO8gVg5vbAU9M0Ub7AXemHU4qOKsX9Vv19VHdJ+KkfG2URjXetuWvIFLdt9MSk8mKR5dQsCfPW5hifcc3CFB/ZqG2V6tDfRLn3TfFVfjwwbWDULPQMPkP00wWpRb6vQBCjOJo4G59rW26AFaruQ08P1lbT/kAq+MhGeN/Bd8sTf8oHUQU+bK/ZCMME8UrVoM96us7CyPNFa5qHAgEnsh2Snp4XpfzU7Wuo7l+bke/mQQbrOFthTDs0RybUYRl5X7NF80WGCC2BUMur4u7amzJapc8lzVpgSNuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AtB25DTdeZidKcKRIgWNtqYioJT8AlXNWaSIpJRlFNg=;
- b=IQGGGWzt2bEEijzJ+ypJvIu1nGfj9ym9Rzpm1N9ZuDRbwh7ygvYmXnWt1j4aPnHti7BA1YByw9d/ixkPCfwoP1VRLs41dsgt4dyoc4dthoDM6Y7CaJY70qZn/yZfvuKfujDWDyH979yP+7AlVFc9AJg5iQOlOIVSubz8kiJ0yS0=
-Received: from DM6PR17CA0004.namprd17.prod.outlook.com (2603:10b6:5:1b3::17)
- by DM6PR12MB4356.namprd12.prod.outlook.com (2603:10b6:5:2aa::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Thu, 8 Dec
- 2022 09:37:42 +0000
-Received: from DM6NAM11FT009.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:1b3:cafe::62) by DM6PR17CA0004.outlook.office365.com
- (2603:10b6:5:1b3::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.10 via Frontend
- Transport; Thu, 8 Dec 2022 09:37:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT009.mail.protection.outlook.com (10.13.173.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5901.16 via Frontend Transport; Thu, 8 Dec 2022 09:37:42 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 8 Dec
- 2022 03:37:39 -0600
-From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-To:     <Shyam-sundar.S-k@amd.com>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     <Rajesh1.Kumar@amd.com>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        Guruvendra Punugupati <Guruvendra.Punugupati@amd.com>
-Subject: [PATCH] pinctrl: amd: Add Z-state wake control bits
-Date:   Thu, 8 Dec 2022 15:07:04 +0530
-Message-ID: <20221208093704.1151928-1-Basavaraj.Natikar@amd.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229564AbiLHKkR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 8 Dec 2022 05:40:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0711858BCF;
+        Thu,  8 Dec 2022 02:35:30 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 44D0DB82378;
+        Thu,  8 Dec 2022 10:35:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E072C433C1;
+        Thu,  8 Dec 2022 10:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670495721;
+        bh=25+oqWLVjVrNbO+hRmvsDdetN1PXbmACQaV7gHg5mrg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=p/7DK0Rg5WFAxDIZdcmlM5pPNbiQgfKKYPA92P3viUVs9wQwEsjrn6c0BudU1l3RT
+         0pdTEElaOqXYzCWO3xDA+ZvPF3OYsEcCc03qhkmGTiInQHTRQg8CPe+ZiMsJZBEeB4
+         21LU22cveZ9zALMGWCyxOgv9aVmDjoRr7obf6ns6jzFvsjXIFOziXW1rgiefE/LGmP
+         tQv68MyiPKFWGmwSsp2sfP+223xG2jggznzF6MxaNlIdhEAgSAEmjNih9HD7bvXdhJ
+         cVbn4ii27zhIHOkpSmadZWTvrjOLPRnFIc/7yRGxOkGz3+yo6pt3sAmKszazb+0jCR
+         3rb1xEWE5hKCg==
+Date:   Thu, 8 Dec 2022 10:35:16 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Larry Lai <larry.lai@yunjingtech.com>
+Cc:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "GaryWang@aaeon.com.tw" <GaryWang@aaeon.com.tw>,
+        Musa Lin <musa.lin@yunjingtech.com>,
+        Jack Chang <jack.chang@yunjingtech.com>,
+        Noah Hung <noah.hung@yunjingtech.com>,
+        Javier Arteaga <javier@emutex.com>,
+        Nicola Lunghi <nicola.lunghi@emutex.com>
+Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH V3 1/3] mfd: Add
+ support for UP board CPLD/FPGA
+Message-ID: <Y5G95OknX2dcBhDw@google.com>
+References: <20221109090957.13167-1-larry.lai@yunjingtech.com>
+ <20221109090957.13167-2-larry.lai@yunjingtech.com>
+ <Y3T+B1zq/XYluO5s@google.com>
+ <SG2PR06MB37427F013BD702117467B8A7F91A9@SG2PR06MB3742.apcprd06.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT009:EE_|DM6PR12MB4356:EE_
-X-MS-Office365-Filtering-Correlation-Id: 438cf455-214a-4c67-cb9b-08dad8ffdabc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: KJFKLUhAQFP7DZRupi60FAWJmI8Hg+KtM+yW9pheZirAOTajOFdAuvf6ox3tI+CRhqQ7fRmISeYJeOfBIQvs6h7ei5GIBB7O6JE0SO+2U1fnsbPkxHfQGHqG7VmcgYpirGEGG8DCvlfUgnSQhA4jBkAX5nNRCSclDCBCSBqP3v3VGvKr4Kxst1cQGeq+/L5Mn82+ISwFHr9MaKQJiHO1BrxFPzHaO5r9dUm4v6NOf7KJXEBTIBZG8TGHojmtRwkz7AbfmlJnJzH45qszBRiucJNCfezibqqCikn0jecDwcXmlMRN4QMVQRfvjEWNSN6aIV/FUsGKaoWlNwWoGiZJThNaMqA4OgIlXiBPmRqZbt7zSraiPZJRhtKXtQp5S5yrKLIrdlemz59A/oivWGJhkUfido4cIh755vfjZTfAxG9MUC7EHDmRdGPOZR/zp/r7p4cxQ+E44n6gUTD91ti2h8xeiRA3IvMBWdJ7wKPflQXteAIcoP+s8zYBikIVjA/aMsNBJ1Ul/0t87viPUd7HS7iZCA4AQIAuo3ua3ix5xiYhBLxul4KynJMu+YfJ+05yt6tv3+ksKSijfi8kkdnHrHPphPcGnAShe2Q+ql9nuUONQdTHOpuh4zOqGIVQPkQwmTUCgCsCmGbY7i7I6i/7eaHWAQlSqsI7qX9ER17EHq6ArmxbZvw8Dyp8QDbvOxYTfDkw2/nOMBmXJN57Ou9qY7IAeWrPZTNaBxePGf142XtcArFwc+ijRJxMqE6+okMn
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(376002)(136003)(346002)(451199015)(46966006)(40470700004)(36840700001)(426003)(47076005)(40460700003)(186003)(86362001)(41300700001)(478600001)(7696005)(81166007)(36756003)(40480700001)(82310400005)(82740400003)(83380400001)(36860700001)(8676002)(336012)(2616005)(16526019)(1076003)(356005)(5660300002)(70586007)(26005)(6666004)(2906002)(110136005)(54906003)(316002)(4326008)(70206006)(8936002)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2022 09:37:42.3631
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 438cf455-214a-4c67-cb9b-08dad8ffdabc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT009.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4356
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <SG2PR06MB37427F013BD702117467B8A7F91A9@SG2PR06MB3742.apcprd06.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-GPIO registers include Bit 27 for WakeCntrlZ used to enable wake in
-Z state. Hence add Z-state wake control bits to debugfs output to
-debug and analyze Z-states problems.
+On Wed, 07 Dec 2022, Larry Lai wrote:
 
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Suggested-by: Mario Limonciello <mario.limonciello@amd.com>
-Tested-by: Guruvendra Punugupati <Guruvendra.Punugupati@amd.com>
----
- drivers/pinctrl/pinctrl-amd.c | 7 +++++++
- drivers/pinctrl/pinctrl-amd.h | 1 +
- 2 files changed, 8 insertions(+)
+> Dear Jones,
+> 
+>         Thank you for spending time to review this code, please kindly check the following comments with Larry (11/25) beginning .
+>         Some of issues we will fix in new RFC_1125, some may need you give us more examples or comments.
+> We also explained more detail about the FPGA read and write protocol in RFC_1125.
+> 
+> Best Regards,
+> Larry Lai
+> 
+> 寄件者: Lee Jones <lee@kernel.org>
+> 日期: 星期三, 2022年11月16日 下午11:13
+> 收件者: Larry Lai <larry.lai@yunjingtech.com>
+> 副本: andriy.shevchenko@linux.intel.com <andriy.shevchenko@linux.intel.com>, linus.walleij@linaro.org <linus.walleij@linaro.org>, pavel@ucw.cz <pavel@ucw.cz>, linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org <linux-gpio@vger.kernel.org>, linux-leds@vger.kernel.org <linux-leds@vger.kernel.org>, GaryWang@aaeon.com.tw <GaryWang@aaeon.com.tw>, Musa Lin <musa.lin@yunjingtech.com>, Jack Chang <jack.chang@yunjingtech.com>, Noah Hung <noah.hung@yunjingtech.com>, Javier Arteaga <javier@emutex.com>, Nicola Lunghi <nicola.lunghi@emutex.com>
+> 主旨: Re: [PATCH V3 1/3] mfd: Add support for UP board CPLD/FPGA
 
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 6be896871718..e944003bb84a 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -218,6 +218,7 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
- 	char *orientation;
- 	char debounce_value[40];
- 	char *debounce_enable;
-+	char *wake_cntrlz;
- 
- 	for (bank = 0; bank < gpio_dev->hwbank_num; bank++) {
- 		unsigned int time = 0;
-@@ -305,6 +306,12 @@ static void amd_gpio_dbg_show(struct seq_file *s, struct gpio_chip *gc)
- 				wake_cntrl2 = " ∅";
- 			seq_printf(s, "S4/S5 %s| ", wake_cntrl2);
- 
-+			if (pin_reg & BIT(WAKECNTRL_Z_OFF))
-+				wake_cntrlz = "⏰";
-+			else
-+				wake_cntrlz = " ∅";
-+			seq_printf(s, "Z %s| ", wake_cntrlz);
-+
- 			if (pin_reg & BIT(PULL_UP_ENABLE_OFF)) {
- 				pull_up_enable = "+";
- 				if (pin_reg & BIT(PULL_UP_SEL_OFF))
-diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
-index c8635998465d..81ae8319a1f0 100644
---- a/drivers/pinctrl/pinctrl-amd.h
-+++ b/drivers/pinctrl/pinctrl-amd.h
-@@ -42,6 +42,7 @@
- #define OUTPUT_ENABLE_OFF		23
- #define SW_CNTRL_IN_OFF			24
- #define SW_CNTRL_EN_OFF			25
-+#define WAKECNTRL_Z_OFF			27
- #define INTERRUPT_STS_OFF		28
- #define WAKE_STS_OFF			29
- 
+Please fix your mailer so that these headers do not end up in the
+email body.
+
+> On Wed, 09 Nov 2022, chengwei wrote:
+> 
+> > The UP Squared board <http://www.upboard.com> implements certain
+> > features (pin control, onboard LEDs or CEC) through an on-board CPLD/FPGA.
+> >
+> > This mfd driver implements the line protocol to read and write registers
+> > from the FPGA through regmap. The register address map is also included.
+> >
+> > The UP Boards provide a few I/O pin headers (for both GPIO and
+> > functions), including a 40-pin Raspberry Pi compatible header.
+> >
+> > This patch implements support for the FPGA-based pin controller that
+> > manages direction and enable state for those header pins.
+> >
+> > Partial support UP boards:
+> > * UP core + CREX
+> > * UP core + CRST02
+> >
+> > PATCH V3:
+> > (1) fixed kernel test robot compiler warning
+> >
+> > PATCH V2:
+> > (1) Synchronizing upboard github to rc2
+> > (2) Refer 2022/10/31 Lee Jones review, fixed some of the issues.
+> 
+> The change log should be below the '---' below.
+
+Please fix your mailer to quote the message you're replying to.
+
+Then you can omit the "Larry ..." tags.
+
+> Larry (11/25) : We already fixed it on RFC 1125, thx.
+
+You don't have to reply to comments if you agree with them.
+
+> > Signed-off-by: Javier Arteaga <javier@emutex.com>
+> > [merge various fixes]
+> 
+> Drop this line please.
+> 
+> > Signed-off-by: Nicola Lunghi <nicola.lunghi@emutex.com>
+> > Signed-off-by: chengwei <larry.lai@yunjingtech.com>
+> 
+> Full name?
+> Larry (11/25) : We already fixed it on RFC 1125, thx.
+> 
+> > ---
+> >  drivers/mfd/Kconfig              |  12 +
+> >  drivers/mfd/Makefile             |   1 +
+> >  drivers/mfd/upboard-fpga.c       | 620 +++++++++++++++++++++++++++++++
+> >  include/linux/mfd/upboard-fpga.h |  56 +++
+> >  4 files changed, 689 insertions(+)
+> >  create mode 100644 drivers/mfd/upboard-fpga.c
+> >  create mode 100644 include/linux/mfd/upboard-fpga.h
+> >
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index abb58ab1a1a4..c1d72a70e5f2 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+
+[...]
+
+> > +#define UPBOARD_DEVID 0
+> 
+> No, that's not what this means.
+> 
+> Please use the defines already provided for you.
+> Larry (11/25) :  please refer https://www.kernel.org/doc/htmldocs/writing_musb_glue_layer/device-platform-data.html
+> The id field could be set to -1 (equivalent to PLATFORM_DEVID_NONE),
+> -2 (equivalent to PLATFORM_DEVID_AUTO) or start with 0 for the first
+> device of this kind if we want a specific id number.
+
+Just use '0' in-place.
+
+[...]
+
+> > +static struct upboard_led_data upboard_up2_led_data[] = {
+> > +     { .bit = 0, .colour = "blue" },
+> > +     { .bit = 1, .colour = "yellow" },
+> > +     { .bit = 2, .colour = "green" },
+> > +     { .bit = 3, .colour = "red" },
+> > +};
+> > +
+> > +static const struct mfd_cell upboard_up2_mfd_cells[] = {
+> > +     { .name = "upboard-pinctrl" },
+> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 0),
+> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 1),
+> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 2),
+> > +     UPBOARD_LED_CELL(upboard_up2_led_data, 3),
+> > +};
+> > +
+> > +static const struct upboard_fpga_data upboard_up2_fpga_data = {
+> > +     .regmapconf = &upboard_up2_regmap_config,
+> > +     .cells = upboard_up2_mfd_cells,
+> > +     .ncells = ARRAY_SIZE(upboard_up2_mfd_cells),
+> > +};
+> 
+> You'd be better off getting rid of 'struct upboard_fpga_data'
+> altogether.
+> Larry (11/25) : we cannot understand it clearly. could you kindly give us more examples, thanks.
+
+You shouldn't mix platform initialisation strategies.  Doing so gets
+messy real quick.  So no passing MFD data through ACPI or DT
+match-data please.  Pass device IDs though, then match on those
+instead.
+
+[...]
+
+> > +static void upboard_led_gpio_init(struct upboard_fpga *fpga)
+> 
+> Should this all live in drivers/led?
+> Larry (11/25) :  MFD upboard-fpga is acpi driver and can recognize the AANT ID from different kind of upboards.
+> We get the led gpio initialized information from this then add led-upboard driver.
+
+MFD doesn't know (or want to know) about LEDs.
+
+Please place all LED initialisation inside the LED driver.
+
+> > +{
+> > +     struct gpio_led blue_led, yellow_led, green_led, red_led;
+> > +     struct gpio_desc *desc;
+> > +     int blue_gpio = -1, yellow_gpio = -1, green_gpio = -1, red_gpio = -1;
+> > +     int leds = 0;
+> > +     static struct gpio_led upboard_gpio_leds[8];
+> > +     static struct gpio_led_platform_data upboard_gpio_led_platform_data;
+> > +     static const struct mfd_cell upboard_gpio_led_cells[] = {
+> > +             MFD_CELL_BASIC("leds-gpio", NULL,
+> > +                            &upboard_gpio_led_platform_data,
+> > +                            sizeof(upboard_gpio_led_platform_data), 0)
+> > +     };
+> > +
+> > +     desc = devm_gpiod_get(fpga->dev, "blue", GPIOD_OUT_LOW);
+> > +
+> > +     if (!IS_ERR(desc)) {
+> > +             blue_gpio = desc_to_gpio(desc);
+> > +             leds++;
+> > +             devm_gpiod_put(fpga->dev, desc);
+> > +     }
+> > +     desc = devm_gpiod_get(fpga->dev, "yellow", GPIOD_OUT_LOW);
+> > +     if (!IS_ERR(desc)) {
+> > +             yellow_gpio = desc_to_gpio(desc);
+> > +             leds++;
+> > +             devm_gpiod_put(fpga->dev, desc);
+> > +     }
+> > +     desc = devm_gpiod_get(fpga->dev, "green", GPIOD_OUT_LOW);
+> > +     if (!IS_ERR(desc)) {
+> > +             green_gpio = desc_to_gpio(desc);
+> > +             leds++;
+> > +             devm_gpiod_put(fpga->dev, desc);
+> > +     }
+> > +     desc = devm_gpiod_get(fpga->dev, "red", GPIOD_OUT_LOW);
+> > +     if (!IS_ERR(desc)) {
+> > +             red_gpio = desc_to_gpio(desc);
+> > +             leds++;
+> > +             devm_gpiod_put(fpga->dev, desc);
+> > +     }
+> > +
+> > +     if (leds == 0)  //no leds
+> > +             return;
+> > +
+> > +     leds = 0;
+> > +     if (blue_gpio > -1) {
+> > +             blue_led.name = "upboard:blue:";
+> > +             blue_led.gpio = blue_gpio;
+> > +             blue_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+> > +             upboard_gpio_leds[leds++] = blue_led;
+> > +     }
+> > +     if (yellow_gpio > -1) {
+> > +             yellow_led.name = "upboard:yellow:";
+> > +             yellow_led.gpio = yellow_gpio;
+> > +             yellow_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+> > +             upboard_gpio_leds[leds++] = yellow_led;
+> > +     }
+> > +     if (green_gpio > -1) {
+> > +             green_led.name = "upboard:green:";
+> > +             green_led.gpio = green_gpio;
+> > +             green_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+> > +             upboard_gpio_leds[leds++] = green_led;
+> > +     }
+> > +     if (red_gpio > -1) {
+> > +             red_led.name = "upboard:red:";
+> > +             red_led.gpio = red_gpio;
+> > +             red_led.default_state = LEDS_GPIO_DEFSTATE_KEEP;
+> > +             upboard_gpio_leds[leds++] = red_led;
+> > +     }
+> > +
+> > +     upboard_gpio_led_platform_data.num_leds = leds;
+> > +     upboard_gpio_led_platform_data.leds = upboard_gpio_leds;
+> > +
+> > +     if (devm_mfd_add_devices(fpga->dev, UPBOARD_DEVID,
+> > +                              upboard_gpio_led_cells,
+> > +                              ARRAY_SIZE(upboard_gpio_led_cells),
+> > +                              NULL, 0, NULL)) {
+> > +             dev_info(fpga->dev, "Failed to add GPIO leds");
+> > +     }
+> > +}
+> > +
+> > +static const struct acpi_device_id upboard_fpga_acpi_match[] = {
+> > +     { "AANT0000", (kernel_ulong_t)&upboard_pinctrl_data },
+> > +     { "AANT0F00", (kernel_ulong_t)&upboard_up_fpga_data },
+> > +     { "AANT0F01", (kernel_ulong_t)&upboard_up2_fpga_data },
+> > +     { "AANT0F02", (kernel_ulong_t)&upboard_upcore_crex_fpga_data },
+> > +     { "AANT0F03", (kernel_ulong_t)&upboard_upcore_crst02_fpga_data },
+> > +     { "AANT0F04", (kernel_ulong_t)&upboard_up_fpga_data },
+> > +     { }
+> > +};
+> > +MODULE_DEVICE_TABLE(acpi, upboard_fpga_acpi_match);
+> 
+> Please don't push MFD configuration data through the ACPI API.
+
+Ah look, I already said this.
+
+> Larry (11/25) : we cannot understand it clearly. could you kindly give us more  examples, thanks.
+
+All of these point to MFD cell initialisation structs.  Please don't
+do that.  Assign each platform with an ID, then pull that ID out of
+the ACPI match-data and assign local 'cells', 'ncells', etc based on
+the ID.
+
+[...]
+
 -- 
-2.25.1
-
+Lee Jones [李琼斯]
