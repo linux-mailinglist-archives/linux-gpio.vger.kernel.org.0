@@ -2,302 +2,334 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 750F064828D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Dec 2022 13:47:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E784F6483F0
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Dec 2022 15:39:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbiLIMrL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Dec 2022 07:47:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57470 "EHLO
+        id S229561AbiLIOjq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Dec 2022 09:39:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbiLIMrJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Dec 2022 07:47:09 -0500
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2087.outbound.protection.outlook.com [40.107.7.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A299058BD5
-        for <linux-gpio@vger.kernel.org>; Fri,  9 Dec 2022 04:47:05 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZLdZUwkmcAPfvATb84Ue1EshxoxWcC7Os4RJrYOdjSLrJqqmZu8I0ccC6sWmc0YrSWkMdG77KMaIR5MrshL0+rZceBzNJ47UeWOuQlJP7ZWpAreFMNxXfPzu5adbjgsjPt2ClpN021L8ykKoQh4AbtPxnNfJyyWPpzxclyVmBWD82u8kgWQudhS6u2wrcj2LIFx0A2Fdt0oB++QAKUQVOdqTkIpyOj3OAuC4vTVMc2zWKx53Lu6IJ29klJJW0D1tluNz1ShKjY10wgraj76hPuFSwJhwDnYSwKTNAYbQ3988NSSzickCgu9RedlqUoAKWtJIQgMzUA6BwzsXt7RnwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PMaeIme6nDlPkCMzGC44uK8DWs5pDXdG7yYkc+UWk2w=;
- b=OAHA6BIIDErPNBgzXDUOSc8v5S/UVnWyEdkNRwwu42fAHQnWGFqSElv7utzx5ndDtZv86tphEohe/c2eP13hxMpGW7UxdHw3pBpD6ZRr1B7jEKcB5hsRhIW5KPzKSRxkRpfksIefIi1K5k5nCX74F4LrHlFctijjKFQOqPYVnpX+iB5VN7zMRxllQsiSZOnp1tpL6LUv7Agtj6RCIFMgww+Yt8SHrnyj9bMAXLnZ7NOREp8RldzPJ6SC7wbFotgC9sSQT4qHp/yYgCv236yJ42b6LRURbsAY2TFoJj1rodNUjRZkldQqy4OwArymw1HhraqPkG6gY2a4oJPpy/F66Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=siemens.com; dmarc=pass action=none header.from=siemens.com;
- dkim=pass header.d=siemens.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=siemens.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PMaeIme6nDlPkCMzGC44uK8DWs5pDXdG7yYkc+UWk2w=;
- b=S7hcAdrp6JYhG2cKHsgoO13/GFebuAibFnJZrKU4aMMouDmpBk5hBYXnj6v2WQvvywnDtAWj8tOPrMPA3ehdY7E+NCATUqiX36OJvOfu7t2rMaJUurf2Gu8gy0dImO+VH3UuvmDgKI/1IyWJQc58EjpgrIp6XHRsSiNl62YEGy7y4g7cfctqvh9+i6V4GcCzF5k2frWYcujxrdWN3iedRmtJJv0/2WTx3zJwOqafUO4HRMmwqM+g23urIqFXV95zO33MmIjwx/rFSLiQ/1JcKMLL+4bjVe+AlOPjDelk2KMcl0A23o+QvNiR6RQdVgXCkr6CoGxWX+NgOOKDqvAynA==
-Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:23e::20)
- by DU0PR10MB7028.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:41f::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.16; Fri, 9 Dec
- 2022 12:47:02 +0000
-Received: from PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ddda:691a:9da:c150]) by PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::ddda:691a:9da:c150%3]) with mapi id 15.20.5880.014; Fri, 9 Dec 2022
- 12:47:02 +0000
-From:   "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
-To:     "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
-CC:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        with ESMTP id S229571AbiLIOjh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Dec 2022 09:39:37 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 678F426AA1
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Dec 2022 06:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1670596776; x=1702132776;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HO6Po07nu5ICc6xSEw51dwdxl+7cDHNt18Q7r00ifNc=;
+  b=hb8zI/F+RWhZekQ09+w7O18lh45HFAOoli6Qj7CmJ2x1FaeBZ1H9bGAK
+   KTOZeWgrXOpo4iqsRqfq3vwlnFgUhIzkkTA5pw8TxH+kq3m50Bfhzg06R
+   YZ5hzTmQkLOpgzy0xPnFRBaMjBY1hz8gk4zyA2HLq86JEo4biKls6oFNQ
+   GXruWW7Bt/szv0DUlLWkDezxIBHsDzvtHAsjxpxZfHnLY7j1ikL7STZjH
+   ydbkgtlWGwcfByZ4Te7qAP+9UZGC1H4RamsJm112zz6gg1/QBxnR7eprL
+   EspT3AV3UF24b7CxX30QJfFwzOsPGle7EraOd59uylM/kWojvm+SNTWf8
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="317498027"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="317498027"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 06:39:35 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="710907136"
+X-IronPort-AV: E=Sophos;i="5.96,230,1665471600"; 
+   d="scan'208";a="710907136"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Dec 2022 06:39:34 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1p3eXE-006zGH-2t;
+        Fri, 09 Dec 2022 16:39:32 +0200
+Date:   Fri, 9 Dec 2022 16:39:32 +0200
+From:   "andriy.shevchenko@intel.com" <andriy.shevchenko@intel.com>
+To:     "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "Kiszka, Jan" <jan.kiszka@siemens.com>
 Subject: Re: Question regarding runtime pinctrl (2nd try)
-Thread-Topic: Question regarding runtime pinctrl (2nd try)
-Thread-Index: AQHZBM3Lq/cXs1to5Uuhi20fkVKuV65Xm34AgAeI0wCAACShAIADFOgAgACQZYCAAqDMgA==
-Date:   Fri, 9 Dec 2022 12:47:02 +0000
-Message-ID: <384250eb009dcea07a0b687e3b2d5a2127a5e92b.camel@siemens.com>
+Message-ID: <Y5NIpM5zD8O8NXyQ@smile.fi.intel.com>
 References: <7abfb823b92a4451d442b001ea7e49017ff3a3c8.camel@siemens.com>
-         <Y4d6OosnHIDB2h6s@smile.fi.intel.com>
-         <21ea48401aa3d652a379bf6aa412c660d3f4f0e5.camel@siemens.com>
-         <Y43q+Be+uOzaDJAi@smile.fi.intel.com>
-         <87e807ea2542b86c043e065cd9c80ce0a556479b.camel@siemens.com>
-         <Y5D54VpeMg/rRHCd@smile.fi.intel.com>
-In-Reply-To: <Y5D54VpeMg/rRHCd@smile.fi.intel.com>
-Reply-To: "Niedermayr, BENEDIKT" <benedikt.niedermayr@siemens.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=siemens.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR10MB5520:EE_|DU0PR10MB7028:EE_
-x-ms-office365-filtering-correlation-id: 4388519f-21e4-4e5a-6927-08dad9e37818
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LzAlS4N+1DF0k9jezDRI8FHFVyGBb+aYbmrdL9LiN5jHmp9zRzvCol8fF7PlBjmB3X2oR7dTVkmUuXth78qQe0S89TJC7Mw2I/p+ukLtrgMLaa/6wJASrxnSbAFKpPEo/rdhnb02wT3x13ajSlieF1VgTWUWLMRfCjxAwSShxodstq3Rcx/jsWxN3Gd/85q4K0Njn8YqcYUG9e0d6rf2ACintNPTrUP/rfZVpOpDgTHZm729s+SAskI2O6pgckpLHbXAJgZrRW/trB3giF1EmUWpyUv6Wig8+TXV65xRUaAupu4VX9G8ZtAEyzjqn2ino6HdJcumDs3pQUmPjxP+bznoR5sMYGlUAvyUfpV+aQ1c7daCdkm4Zbp4pqP62vZwbV+EDjrLPRpvW0jqncuSc167Hj/b5imtEuYCB/AqHm6wwltg8E3sX126l8dF0tPsNVqLmmaEL7DpgqNsGSAM2UoPASVYyTZCUwY+805adGIkQYa58yiEbBDd36CqwO+ZZX1bmXREYKCHCAHeF4Ej0sYjSJily3D38EKDTH14FI9mWsIRT//3Ja3LZalk+A8C8r916Aj36itT79N9yHrWrpaH0Ft8yrpkiiiHLihxc01SGiTR0AUgbEyuQLPsr1GfEC1QNLknMLLos5vRr7212h8o2BTmJIMlKxEsJqVQn7MU3Lcp9sEVXFrBn9usZSm1jXckzuH/d6ClVJqkSZxWDQ+7gRwsUIlphx4Xj/t9Sf0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(451199015)(91956017)(66946007)(66476007)(66556008)(8936002)(8676002)(4326008)(76116006)(66446008)(36756003)(64756008)(41300700001)(83380400001)(478600001)(6512007)(186003)(26005)(38070700005)(71200400001)(966005)(6486002)(107886003)(6506007)(38100700002)(122000001)(2616005)(316002)(6916009)(86362001)(54906003)(2906002)(66899015)(3450700001)(4001150100001)(82960400001)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?U0dUcVVvMW1jYStVVnBSaVpjVzgvL2pPT294MnNWTmk0eitIMGxOV0EvSHpP?=
- =?utf-8?B?TmMxMGFMMFBtdjlpYmNxUWU1RmVxNkNXZnRPYnlhb0NDcG9vNHBMcHhHZUc4?=
- =?utf-8?B?Z2lGRUw5bzBrMDM4N2wra1pndGpQUEZXUjIzcStkYm1SWmtHRHJmWks3YTRi?=
- =?utf-8?B?Q0lCSTVZdnFaUzAzQk1lKzA3SDhRWlZYQVVKT1FQRDdaa2pvRnZ0Q3UyMXN0?=
- =?utf-8?B?Zk5NM1dKVVd5dUNwZHNFa2Z1REVVQ010QTVrdFlPYVNaR1d2TEticysyei80?=
- =?utf-8?B?Q200K3BlRWtxZ3RSMkpLbkdSWXdid2FLLzBQMVJIOVlDZGwzM243ZUVHWDQr?=
- =?utf-8?B?bzhRSEt6cmdlV2FaTVRuVVRCT1BScXZBYUZ6bmJvZDBkdENzU0daNjlIOTRs?=
- =?utf-8?B?M3lDVE5Vb2tNbGhFL1VzbXFwVTZtdlZudnpJcFZkTHF2TExDWHlFSzJualFW?=
- =?utf-8?B?YjJJL2JRMmNZQzJTZmRWL3BtVUVPaldwbTJkOHJrMFA2bzN3MmxTY0xySVl1?=
- =?utf-8?B?OVBOSzF4bmlRK0gxMVVBbVpsZ0V4UUxkRGJrVHBzM20xT1JSNmF1b3ZSOU9J?=
- =?utf-8?B?WUxxSVpZUldWVm9PU2lmdzhEeGV6ZFJvSEE3NDE4SDlMSHpyUnJnaTRZZDlx?=
- =?utf-8?B?Ulg2THNGeGJQNnNQbkV3WW0zQ3Jxa1l2K3VNQi9KeS90TTlHQVRWVmdiSnZp?=
- =?utf-8?B?MTMzRmlMUENiM0ROcEdST3lVU1ZiU3I5SEIwR0ZvQ1BaODdDTkppWStMaHls?=
- =?utf-8?B?K2FKcURsSEFBZ012UXlZbnpaQlJwMDd5T1dmYmRLdm85MjVXeHhQMitnR0Jk?=
- =?utf-8?B?VlJEWEtheHV1OHFISFY1OEJUSGhqa09MZVVyS3NhUjUwZmozNHJKZzh0MVZN?=
- =?utf-8?B?clBXQUtTMkcrSVY4aWwvbmVoOHIzSTIyYVU5NW92aGthallRSTBKTXlzN0ZB?=
- =?utf-8?B?UUdjOWpobU9ZVzhjb09EUDMxQmI5TDg5NEFPeWRHbXdWZHNYS2t3MW9rUnVQ?=
- =?utf-8?B?WStSQ3JXWXl0c2VjSk1pbE02ekxUWktVRzQ5OHVRLzBMRXkzYUd1enpkakN0?=
- =?utf-8?B?VnJseXllR3FLQ1hyOS82ai9DaVFUL0ROUUFtOW5qdktUaG01MGsvVDB1WCtz?=
- =?utf-8?B?amsyc2F0SXdJMTd2R2Z4WS80ZE50Ry9oNzNCQVl1ZmFwT0NUWDdZZ05tZWxH?=
- =?utf-8?B?MjkvL3dka3VwS2wySk5EL3drdm1BYmJ2bHhaZllKYW5XN0xaQnRVckExWUY2?=
- =?utf-8?B?VHpZS3RPNHhjaVB1L3hlMHozU2draVpidUVEcm5YSzA5bWVCeVRZV1FzNi9Q?=
- =?utf-8?B?Qy9GQUh2eTYvTGJNYlJ4elpjc1FRVU1JM3VGenBzUm4yd0NBcm9zc0UyZXZi?=
- =?utf-8?B?azc0Qk96THhROXN6b1BnM293Ulh4Y3FURXZOUFZONHBhc0VJMC93U0hCQUE3?=
- =?utf-8?B?U3Avczg0SEVyMnRsWFJpNS9iSEYwZU1hTDM3dWEwczlkMmdBSDBHUzl2QVJM?=
- =?utf-8?B?Vjc3TjM5N21SdU5UL201MGQwYmdoQUxUTnR1aFpGZ1R1b2RVOVplcEtkY0c3?=
- =?utf-8?B?b2dXMWdXTnErUmJ1MkJCVndod1VMdVVoTitoNWwyNHhPeEdVV2QvVXZvbWNs?=
- =?utf-8?B?TVhic0dYeVc4L0R5ZXhvZy9QTmFjaU1iUVhQeTJPVlRycmo4Vm5QY1dJbVBH?=
- =?utf-8?B?SWVmVVZtWld6azRCSWMvWVBTNkQ4c2IvU2RmaURXMmMzNzlybWErOFhaZGVy?=
- =?utf-8?B?bXRDelNOUmcwRnBDUzU1bVp6Vkp0RXlZV1hJMXJ3dkRMT1pqc2diUEhUNmlF?=
- =?utf-8?B?RmFSZnlKSFk1TzQ5OWtnMktVQmp4dDY4M0R3N0w4eHJHeUQxcEMyQXErZlFE?=
- =?utf-8?B?Y04vVU81alM2WFJlTkRLUmREN1Z5UVdJVHlyb0ZXR05kSnhQZmd4OXBGWHQw?=
- =?utf-8?B?ZWlTWGx6aEdIZDRBMnpqaklyUi9jVTZXZm51eWVrVkMwYTNNVm9BN2E2eFZh?=
- =?utf-8?B?TURxWXNGNXl2V25ZeHQ0L1VzNWtTbks2Q3RDQU9JYnRyZmJvVzJ4VUlRSG1t?=
- =?utf-8?B?SGRLRk9VU0ZXNnB5VU4rVG43eFB6MzNmdGZNNzRNOFE4Sk1LMGtXSysvSzdN?=
- =?utf-8?B?cVpmWGkwMlNuS1dPYmdKRVpyNGlxVUN2TmFIRW5ad0VIMWhNMnIycTFQRkNI?=
- =?utf-8?Q?RqSdb+F/8DGZii92wXw8DJw=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CA381A0810B6C143BEC08793F1CF9022@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+ <Y4d6OosnHIDB2h6s@smile.fi.intel.com>
+ <21ea48401aa3d652a379bf6aa412c660d3f4f0e5.camel@siemens.com>
+ <Y43q+Be+uOzaDJAi@smile.fi.intel.com>
+ <87e807ea2542b86c043e065cd9c80ce0a556479b.camel@siemens.com>
+ <Y5D54VpeMg/rRHCd@smile.fi.intel.com>
+ <384250eb009dcea07a0b687e3b2d5a2127a5e92b.camel@siemens.com>
 MIME-Version: 1.0
-X-OriginatorOrg: siemens.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR10MB5520.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4388519f-21e4-4e5a-6927-08dad9e37818
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2022 12:47:02.1547
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 38ae3bcd-9579-4fd4-adda-b42e1495d55a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: kfxRWjthFUAwSnTVX8mRFVZbyncVvAE5oXVYi5HyHF3wM0OKmVMyQM0hRbUBEfRcyHmAHaoCZkOPYgUw+y9M85tEufQ9sQJ9FtCOZRH2JEw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR10MB7028
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <384250eb009dcea07a0b687e3b2d5a2127a5e92b.camel@siemens.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-T24gV2VkLCAyMDIyLTEyLTA3IGF0IDIyOjM4ICswMjAwLCBhbmRyaXkuc2hldmNoZW5rb0BpbnRl
-bC5jb20gd3JvdGU6DQo+IE9uIFdlZCwgRGVjIDA3LCAyMDIyIGF0IDEyOjAyOjA4UE0gKzAwMDAs
-IE5pZWRlcm1heXIsIEJFTkVESUtUIHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAyMi0xMi0wNSBhdCAx
-NDo1OCArMDIwMCwgYW5kcml5LnNoZXZjaGVua29AaW50ZWwuY29tIHdyb3RlOg0KPiA+ID4gT24g
-TW9uLCBEZWMgMDUsIDIwMjIgYXQgMTA6NDc6MjdBTSArMDAwMCwgTmllZGVybWF5ciwgQkVORURJ
-S1Qgd3JvdGU6DQo+ID4gPiA+IE9uIFdlZCwgMjAyMi0xMS0zMCBhdCAxNzo0MyArMDIwMCwgQW5k
-eSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gPiA+IE9uIFdlZCwgTm92IDMwLCAyMDIyIGF0IDAz
-OjA5OjUwUE0gKzAwMDAsIE5pZWRlcm1heXIsIEJFTkVESUtUDQo+ID4gPiA+ID4gd3JvdGU6DQo+
-IA0KPiBTb21ldGhpbmcgaXMgd3Jvbmcgd2l0aCB5b3VyIG1haWwgdXNlciBhZ2VudCBvciBlZGl0
-b3IuIFRoZSBsaW5lcyBhcmUNCj4gcXVpdGUNCj4gbG9uZy4gUGxlYXNlLCBtYWtlIHN1cmUgeW91
-IHdyYXAgdGhlbSBzb21ld2hlcmUgYXQgfjc2IGNoYXJhY3RlcnMgcGVyDQo+IGxpbmUuDQo+IA0K
-VGhhbmsgZm9yIHRoYXQuIEkgZml4ZWQgaXQgbm93Lg0KDQo+ID4gPiA+ID4gPiBIZWxsbywNCj4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gSSBnb3Qgbm8gcmVzcG9uc2Ugc2luY2UgbGFzdCB0aW1l
-IHNvIEkgdHJ5IGl0IGFnYWluLCBidXQgd2l0aCBhDQo+ID4gPiA+ID4gPiBiaXQgbW9yZQ0KPiA+
-ID4gPiA+ID4ga25vd2xlZGdlIHRoaXMgdGltZS4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-QWZ0ZXIgY2FyZWZ1bGx5IHJlYWRpbmcgdGhlIHBpbmN0cmwgZG9jdW1lbnRhdGlvbg0KPiA+ID4g
-PiA+ID4gKGRyaXZlci1hcGkvcGluLWNvbnRyb2wucnN0KSBpdCB3YXMgdmVyeSBjbGVhciBmb3Ig
-bWUgdGhhdCBzdWNoDQo+ID4gPiA+ID4gPiBhbiBpbnRlcmZhY2UNCj4gPiA+ID4gPiA+IGFscmVh
-ZHkgZXhpc3RzIGFuZCBpcyBhY2Nlc3NhYmxlIHZpYSBkZWJ1Z2ZzLiBUaGUgZG9jdW1lbnRhdGlv
-bg0KPiA+ID4gPiA+ID4gaXMgdmVyeSBjbGVhcg0KPiA+ID4gPiA+ID4gYW5kIHNlbGYtZXhwbGFu
-YXRvcnkuIFRoYW5rcyBmb3IgdGhhdCENCj4gPiA+ID4gPiA+IEF0IHRoZSB0aW1lIG9mIHdyaXRp
-bmcgbXkgbGFzdCBlbWFpbCBbMV0gSSB0b29rIGEgbG9vayBpbnRvIGFuDQo+ID4gPiA+ID4gPiBv
-bGRlciBCU1ANCj4gPiA+ID4gPiA+IGtlcm5lbCB3aGVyZSB0aGlzIGZlYXR1cmUgaGFzIG5vdCBi
-ZWVuIGltcGxlbWVudGVkLCB5ZXQuIEkgbXVzdA0KPiA+ID4gPiA+ID4gYXBvbG9naXplIGZvcg0K
-PiA+ID4gPiA+ID4gdGhhdC4uLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBOb3cgbXkgbGFz
-dCBjb25jZXJuIGlzIHVzaW5nIGRlYnVnZnMgb24gYSBwcm9kdWN0aXZlIHN5c3RlbS4NCj4gPiA+
-ID4gPiA+IElNSE8gZGVidWdmcyBpcw0KPiA+ID4gPiA+ID4gbm90IHRoZSByaWdodCBpbnRlcmZh
-Y2UgdG8gaW50ZXJhY3Qgb24gYSBwcm9kdWN0aXZlIHN5c3RlbS4NCj4gPiA+ID4gPiANCj4gPiA+
-ID4gPiBBbmQgdGhpcyBpcyBhIHBvaW50LiBOby1vbmUgc2hvdWxkIHRyeSBpdCBvbiB0aGUgcHJv
-ZHVjdGlvbg0KPiA+ID4gPiA+IHN5c3RlbXMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBFc3Bl
-Y2lhbGx5IHdoZW4NCj4gPiA+ID4gPiA+IHdoZW4gYSB1bnByaXZpbGVnZWQgcHJvY2VzcyB3YW50
-cyB0byBpbnRlcmFjdCB3aXRoIGFuIGludGVyZmFjZQ0KPiA+ID4gPiA+ID4gb2ZmZXJlZCBieQ0K
-PiA+ID4gPiA+ID4gZGVidWdmcy4gSXQncyBwb3NzaWJsZSB0byBjaGFuZ2UNCj4gPiA+ID4gPiA+
-IHBlcm1pc3Npb25zIG9uIGZpbGVzIGFuZCBmb2xkZXJzIHRoZXJlIGJ1dCBuZXZlcnRoZWxlc3Mg
-SSB0aGluaw0KPiA+ID4gPiA+ID4gdGhhdCB0aGlzIGlzDQo+ID4gPiA+ID4gPiBub3QgdGhlIHdh
-eSB0byBnbywgc2luY2UgZGVidWdmcyB3YXMgZGVzaWduZWQgdG8gb2ZmZXINCj4gPiA+ID4gPiA+
-IGludGVyZmFjZXMgdG8NCj4gPiA+ID4gPiA+IHByaXZpbGVnZWQgcHJvY2Vzc2VzIG9ubHkuDQo+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gQ29ycmVjdC4NCj4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IE15
-IHByb3Bvc2FsIHdvdWxkIGJlIHRvIGltcGxlbWVudCBhbiBjaGFyZGV2IGludGVyZmFjZSBmb3Ig
-dGhhdA0KPiA+ID4gPiA+ID4gYW5kIHVzaW5nDQo+ID4gPiA+ID4gPiB1ZGV2IHJ1bGVzIHRvIGFz
-c2lnbiBjb3JyZWN0IHBlcm1pc3Npb25zIHRvIHRoYXQuIFdpdGggdGhpcw0KPiA+ID4gPiA+ID4g
-aW50ZXJmYWNlIEkgY2FuDQo+ID4gPiA+ID4gPiB0aGVuIHNlbGVjdCB0aGUgYWN0aXZlIHBpbmN0
-cmwtZ3JvdXBzIHdoaWNoIGhhdmUgYmVlbiBkZWZpbmVkIGluDQo+ID4gPiA+ID4gPiB0aGUgZGV2
-aWNlDQo+ID4gPiA+ID4gPiB0cmVlIGJlZm9yZS4NCj4gPiA+ID4gPiA+IEkgY291bGQgYWxzbyBp
-bWFnaW5lIHRvIHB1dCB0aGUgaW50ZXJmYWNlIGludG8gdGhlIHN5c2ZzICh0aGF0DQo+ID4gPiA+
-ID4gPiB3b3VsZCBiZSB2ZXJ5DQo+ID4gPiA+ID4gPiBjbG9zZSB0byB0aGUgZGVidWdmcyBpbXBs
-ZW1lbnRhdGlvbiBJIHRoaW5rKS4NCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gV2hhdCBkbyB5
-b3UgdGhpbmsgYWJvdXQgaXQ/IEFtIEkgc3RpbGwgbWlzc2luZyBzb21ldGhpbmc/DQo+ID4gPiA+
-ID4gDQo+ID4gPiA+ID4gSW4gbXkgb3BpbmlvbiAtLSBubyBnby4NCj4gPiA+ID4gPiANCj4gPiA+
-ID4gPiBUaGUgcGxhdGZvcm0gZGVzY3JpcHRpb24gKEFDUEksIERULCBvciBib2FyZCBmaWxlcykg
-c2hvdWxkIGtub3cNCj4gPiA+ID4gPiB3aGF0IHRoZXkgYXJlDQo+ID4gPiA+ID4gZG9pbmcuIElm
-IHNvbWV0aGluZyBtaXNzaW5nIHRvIGFjaGlldmUgd2hhdCB5b3UgbmVlZCB2aWEgZXhpc3RpbmcN
-Cj4gPiA+ID4gPiBpbnRlcmZhY2VzDQo+ID4gPiA+ID4gd2UgcmF0aGVyIHRoaW5rIGFib3V0IHRo
-YXQsIGJ1dCBubywgdGhlIGRlYnVnZnMgc3RheXMgYW5kIG9ubHkgZm9yDQo+ID4gPiA+ID4gdGhl
-IHB1cnBvc2VzDQo+ID4gPiA+ID4gb2YgZGV2ZWxvcG1lbnQgb24gdGhlICJJIGtub3cgd2hhdCBJ
-J20gZG9pbmciIGJhc2lzLg0KPiA+ID4gPiA+IA0KPiA+ID4gPiBPay4gSWYgSSBnb3QgeW91IHJp
-Z2h0LCB5b3UgbWVhbnQgdGhhdCB0aGVyZSBpcyBubyB3YXkgdG8gcmVwbGFjZQ0KPiA+ID4gPiB0
-aGUNCj4gPiA+ID4gZGVidWdmcyBpbnRlcmZhY2U/DQo+ID4gPiA+IA0KPiA+ID4gPiBTbyBpbnN0
-ZWFkIHJlcGxhY2luZyB0aGUgZGVidWdmcyBpbnRlcmZhY2UgSSB3b3VsZCByYXRoZXIgYWRkIGEN
-Cj4gPiA+ID4gc2Vjb25kDQo+ID4gPiA+IGludGVyZmFjZSB0aGF0IGNvZXhpc3RzIHdpdGggZGVi
-dWdmcy4NCj4gPiA+IA0KPiA+ID4gSSBtZWFudCB0aGF0IHRoaXMgZmVhdHVyZSBxdWl0ZSBsaWtl
-bHkgd2lsbCBzdGF5IGluIHRoZSBkZWJ1Z2ZzIHJlYWxtLg0KPiA+ID4gTm8gbmV3DQo+ID4gPiBp
-bnRlcmZhY2UgaXMgbmVlZGVkIGZvciBzdXJlLg0KPiA+ID4gDQo+ID4gPiA+IFVuZm9ydHVuYXRl
-bGx5IHRoZXJlIGlzIG5vIGludGVyZmFjZSBhdmFpbGFibGUgZm9yIHJ1bnRpbWUNCj4gPiA+ID4g
-Y29uZmlndXJhdGlvbiwgeWV0Lg0KPiA+ID4gDQo+ID4gPiBUaGVyZSBpcyBubyBleHBsYW5hdGlv
-biB3aHkgeW91IG5lZWQgdGhhdC4NCj4gPiA+IFRoaXMgaXMgdGhlIG1haW4gcG9pbnQgb2YgdGhp
-cyBkaXNjdXNzaW9uLCByaWdodD8NCj4gPiA+IA0KPiA+ID4gPiBUaGUgb25seSBhbHRlcm5hdGl2
-ZSANCj4gPiA+ID4gaXMgdG8gYWNjZXNzICIvZGV2L21lbSIsIGJ1dCB0aGlzIGlzIHRoZSBtb3N0
-IHF1ZXN0aW9uYWJsZSBzb2x1dGlvbg0KPiA+ID4gPiBmcm9tDQo+ID4gPiA+IGEgc2VjdXJpdHkg
-cGVyc3BlY3RpdmUuDQo+ID4gPiANCj4gPiA+IEl0J3Mgbm90IGFuIGFsdGVybmF0aXZlIGF0IGFs
-bCwgaXQncyBzaW1wbGUgbm8gZ28gdmFyaWFudC4NCj4gPiA+IA0KPiA+ID4gPiBUaGVyZSBzaG91
-bGQgYmUgYSB3YXkgdG8gYXZvaWQgdW5zZWN1cmUgIi9kZXYvbWVtIiBpbXBsZW1lbnRhdGlvbnMN
-Cj4gPiA+ID4gYnV0DQo+ID4gPiA+IGN1cnJlbnRseSB0aGlzIGlzIHRoZSBvbmx5IHdheSB0byBh
-Y2hpZXZlIHJ1bnRpbWUgY29uZmlndXJhdGlvbiB3aXRoDQo+ID4gPiA+IHJlYXNvbmFibGUgZWZm
-b3J0LiAgSU1ITyB0aGUgY3VycmVudCBhcmNoaXRlY3R1cmUgbGVhZHMgdG8gbG90IG9mDQo+ID4g
-PiA+IHVuc2VjdXJlIGltcGxlbWVudGF0aW9ucyBvdXQgdGhlcmUuDQo+ID4gPiA+IA0KPiA+ID4g
-PiBGb3IgZXhhbXBsZSB0aGUgcmFzcGJlcnJ5cGkga2VybmVsIHRyaWVzIHRvIHdvcmthcm91bmQg
-dGhpcyBpc3N1ZSBieQ0KPiA+ID4gPiBwcm92aWRpbmcgYSAiL2Rldi9ncGlvbWVtIg0KPiA+ID4g
-DQo+ID4gPiBUaGlzIGlzIGV2ZW4gd29yc2UgdGhhbiBtb3JlIHN0YW5kYXJkIC9kZXYvbWVtIGlu
-dGVyZmFjZS4NCj4gPiA+IA0KPiA+ID4gPiBpbnRlcmZhY2UgdGhhdCBvbmx5IHByb3ZpZGVzIG1h
-cHBpbmdzIHRvIHRoZSBncGlvIHJlZ2lzdGVyDQo+ID4gPiA+IHNldChkcml2ZXJzL2NoYXIvYnJv
-YWRjb20vYmNtMjgzNS1ncGlvbWVtLmMpLiANCj4gPiA+ID4gVGhpcyByZWR1Y2VzIHBvc3NpYmxl
-IHZ1bG5lcmFiaWxpdGllcyBidXQgdGhleSBzdGlsbCBwZXJzaXN0IHNpbmNlOg0KPiA+ID4gPiAN
-Cj4gPiA+ID4gLSBtbWFwKCkgY2Fubm90IG1hcCBtZW1vcnkgbGVzcyB0aGFuIFBBR0VfU0laRSwg
-d2hpY2ggbWVhbnMgdGhhdA0KPiA+ID4gPiBtZW1vcnkNCj4gPiA+ID4gb3V0c2lkZSBvZiB0aGUg
-R1BJTyByZWdpc3RlcnMgaXMgYWNjZXNzYWJsZS4gDQo+ID4gPiA+IC0gaXQncyBwb3NzaWJsZSB0
-byBzZWxlY3QgdW50ZXN0ZWQgIHBpbiBjb25maWd1cmF0aW9ucyB3aGljaCBtYXkgbm90DQo+ID4g
-PiA+IGJlDQo+ID4gPiA+IGVsZWN0cmljYWwgZmluZS4NCj4gPiA+ID4gDQo+ID4gPiA+IEkgbGlr
-ZSB0aGUgY3VycmVudCBhcmNoaXRlY3R1cmUgc2luY2UgSSBkZWZpbmUgcGluZ3JvdXBzIGluIHRo
-ZQ0KPiA+ID4gPiBwbGF0Zm9ybQ0KPiA+ID4gPiBkZXNjcmlwdGlvbiB3aGljaCBoYXZlIGJlZW4g
-dGVzdGVkIGFuZCB0aGVuIHNlbGVjdCBvbmUgb2YgdGhlbQ0KPiA+ID4gPiBkdXJpbmcNCj4gPiA+
-ID4gcnVudGltZS4gIEl0J3MganVzdCB0aGUgaW50ZXJmYWNlIGl0c2VsZiB3aGljaCBpcyBub3Qg
-c3VmZmljaWVudA0KPiA+ID4gPiBlbm91Z2gNCj4gPiA+ID4gd2hlbiBpdCBjb21lcyB0byBzZWN1
-cml0eS4gIA0KPiA+ID4gDQo+ID4gPiBTdGlsbCBubyBjbHVlLCB3aGF0IHlvdSBhcmUgdHJ5aW5n
-IHRvIGFjaGlldmUgYW5kIHdoeS4gVXNlIGNhc2UsDQo+ID4gPiBwbGVhc2U/DQo+ID4gSXQgYWxy
-ZWFkeSBtZW50aW9uZWQgdGhlIHVzZSBjYXNlIGhlcmUgWzFdLg0KPiANCj4gKFRvbyBtYW55IFsx
-XTpzKQ0KPiANCj4gPiBCdXQgbGV0IG1lIGV4cGxhaW4gaXQgYWdhaW4gYW5kDQo+ID4gaW4gc2xp
-Z2h0bHkgb3RoZXIgd29yZHMuDQo+IA0KPiBUaGFuayB5b3UsIGl0IGhlbHBzLiBTZWUgbXkgY29t
-bWVudHMgYmVsb3cuDQo+IA0KPiA+IFdlIGFyZSBjdXJyZW50bHkgd29ya2luZyBvbiBwbGF0Zm9y
-bXMgdGhhdCBjYW4gYmUgZXh0ZW5kZWQgd2l0aA0KPiA+IGRpZmZlcmVudA0KPiA+IHR5cGVzIG9m
-IElPLVNoaWVsZHMuIFRoZSBwaW5tdXggY29uZmlndXJhdGlvbiBpcyBjdXJyZW50bHkgZG9uZSBi
-eSBhDQo+ID4gdXNlcnNwYWNlIGFwcGxpY2F0aW9uIHRoYXQgb2ZmZXJzIGEgbmN1cnNlcy1saWtl
-IEdVSSBpbnRlcmZhY2UuIFRoZXJlDQo+ID4geW91IGNhbg0KPiA+IHNlbGVjdCB0aGUgcGlubXV4
-IGNvbmZpZ3VyYXRpb24gZm9yIGVhY2ggcGluIHJlZ2FyZGluZyBvbiB0aGUgSU8tU2hpZWxkDQo+
-ID4geW91DQo+ID4gYXJlIHVzaW5nLg0KPiANCj4gVGhpcyBpcyB2ZXJ5IGRhbmdlcm91cyBmZWF0
-dXJlLiBXaGlsZSBpdCBtaWdodCB3b3JrIGluIHlvdXIgY2FzZSBpdCBtYXkNCj4gZGFtYWdlDQo+
-IHRoZSB1c2VycycgaGFyZHdhcmUgaWYgdGhleSBkb24ndCBrbm93IHdoYXQgdGhleSBhcmUgZG9p
-bmcuDQo+IA0KPiBXaGF0IHByZXZlbnRzIHlvdSB0byBjcmVhdGUgYSBEVCAvIEFDUEkgb3Zlcmxh
-eSBhbmQgbG9hZCBpdD8NCj4gT2theSwgc2VlbXMgdGhlIGFuc3dlciBpcyBiZWxvdy4uLg0KPiAN
-Cj4gPiBJIGFscmVhZHkgbWVudGlvbmVkIGhvdyBwaW5tdXhpbmcgd29ya3Mgd2l0aCB0aGlzIGZy
-YW1ld29yayBhbmQgd2UgaGF2ZQ0KPiA+IHRoZQ0KPiA+IHNhbWUgb3BpbmlvbiBhYm91dCB1c2lu
-ZyAvZGV2L21lbSBsaWtlIHlvdS4gIFdlbGwsIG5vdyB3ZSdyZSBhcmUgbG9va2luZw0KPiA+IGZv
-cg0KPiA+IG90aGVyIHNvbHV0aW9ucy4NCj4gPiANCj4gPiBGb3IgZXhhbXBsZSB1c2luZyBkZXZp
-Y2UgdHJlZSBvdmVybGF5cyAod3JpdHRlbiBzdGF0aWNhbGx5IG9yIGdlbmVyYXRlZCkNCj4gPiBm
-b3INCj4gPiBlYWNoIGRpZmZlcmVudCBraW5kIG9mIHNoaWVsZCB3b3VsZCBiZSB0ZWNobmljYWxs
-eSBmaW5lLCBidXQgZG9lc24ndA0KPiA+IHNjYWxlDQo+ID4gdmVyeSB3ZWxsIHdpdGggaW5jcmVh
-c2luZyBudW1iZXIgb2Ygc2hpZWxkcyBhbmQgaG9zdCBwbGF0Zm9ybXMuDQo+IA0KPiBJIGFncmVl
-IHdpdGggdGhpcy4NCj4gDQo+ID4gQW5kIGlmIHRoZSBob3N0IHBsYXRmb3JtIGlzIG5vbiBBUk0g
-YmFzZWQgdGhpcyBhcHByb2FjaCBtYXkgbm90IHdvcmsuDQo+IA0KPiBXaHk/DQo+IA0KPiA+IEZ1
-cnRoZXJtb3JlIHdlIG5lZWQgdG8gZGVhbCBhbHNvIHdpdGggQUNQSSBzdHVmZiBvbiB4ODYuDQo+
-IA0KPiBBbmQ/Li4NCj4gQUNQSSBzdXBwb3J0cyBvdmVybGF5cy4NCg0KVGhhbmtzISBJbXBvcnRh
-bnQgaW5mb3JtYXRpb24uIEkgd2Fzbid0IGF3YXJlIG9mIHRoYXQuDQoNCj4gDQo+ID4gUmVjb21w
-aWxpbmcgdGhlIGRldmljZS10cmVlL2tlcm5lbCBmb3IgZWFjaCBzaGllbGQgYW5kIGhvc3QgcGxh
-dGZvcm0gaXMNCj4gPiBwb3NzaWJsZSwgYnV0IGZyb20gYSB1c2Vyc3BhY2UgZGV2ZWxvcGVyIHBv
-aW50IG9mIHZpZXcgdGhpcyBtZWFucyBlZmZvcmQNCj4gPiBhbmQNCj4gPiBtYXkgcmVxdWlyZSBt
-b3JlIGtub3dsZWRnZSBhYm91dCB0aGUgaGFyZHdhcmUgKG9yIHlvdSBuZWVkIHRvIHJlcXVlc3QN
-Cj4gPiBmb3INCj4gPiBmZWF0dXJlcyBmcm9tIHlvdXIgQlNQIHByb3ZpZGVyKS4NCj4gDQo+IFll
-cywgYW5kIGl0J3MgYSBnb29kIHRoaW5nLCByaWdodD8NCk1heWJlIHRoYXQncyBhIHF1ZXN0aW9u
-IHdlIHNob3VsZCBhc2sgdGhlbSA6LXwNCg0KPiANCj4gPiBJIGFsc28gdGhpbmsgYWJvdXQgdGhl
-IHF1ZXN0aW9uLCB3aHkgYXJlIHRoZXJlIGZyYW1ld29ya3Mgb3V0IHRoZXJlIHRoYXQNCj4gPiB0
-cnkNCj4gPiB0byBzb2x2ZSB0aGF0IHBhcnQgb2YgdGhlIHByb2JsZW0gKHdpcmluZy1waSwgZWNs
-aXBzZS1tcmFhLCBldGMuKS4gIEkNCj4gPiB0aGluaw0KPiA+IHRoZXNlIGZyYW1ld29ya3MgdHJ5
-IHRvIGFkZHJlc3MsIGFtb25nIG90aGVyIHRoaW5ncywgdGhvc2UgaXNzdWVzLiAgU28NCj4gPiBp
-dCdzDQo+ID4gbm90IG9ubHkgYWJvdXQgb3VyIHNwZWNpYWwgdXNlIGNhc2UuIElNSE8gdGhlcmUg
-YXJlIG1hbnkgdXNlIGNhc2VzIHdoZXJlDQo+ID4gdGhpcw0KPiA+IHdvdWxkIG1ha2Ugc2Vuc2Us
-IG90aGVyd2lzZSB0aGVzZSBmcmFtZXdvcmtzIHdvdWxkIGhhdmUgbmV2ZXIgY29tZSBpbnRvDQo+
-ID4gYmVpbmcuDQo+ID4gDQo+ID4gSSBob3BlIHRoaXMgY2xhcmlmaWVzIG15IHBvaW50IG9mIHZp
-ZXcgYSBiaXQgYmV0dGVyLg0KPiANCj4gRGVmaW5pdGVseS4NCj4gDQo+IEJ1dCBhZ2Fpbiwgd2hh
-dCB5b3UgYXJlIHByb3Bvc2luZyBpcyBub3QgZm9yIHByb2R1Y3Rpb24sIGJ1dCBmb3INCj4gcHJv
-dG90eXBpbmcuDQo+IFRoYXQncyB3aHkgaXQncyB1bmRlciBkZWJ1Z2ZzLiBNb3Jlb3ZlciwgaXQn
-cyBkYW5nZXJvdXMgZnJvbSBlbGVjdHJpY2FsDQo+IHBvaW50DQo+IG9mIHZpZXcgcmVjb25maWd1
-cmUgcGlucyBhdCBydW4tdGltZS4gVGhpcyBmZWF0dXJlIHZlcnkgd2VsbCBtYXkgZGFtYWdlDQo+
-IHRoZQ0KPiBoYXJkd2FyZSBvciBldmVuIGtpbGwgc29tZWJvZHkgKGlmIHlvdSB0aGluayBvZiBh
-IGhlYXZ5IHJvYm90cykuDQpGaXJzdCBvZiBhbGwsIHRoYW5rIHlvdSB2ZXJ5IG11Y2ggZm9yIHNo
-YXJpbmcgeW91ciB2YWx1YWJsZSBvcGluaW9uISANCg0KVGhlcmUgaXMgb25lIG1vcmUgcXVlc3Rp
-b24gSSBoYXZlIG5vdy4NClNvIHBpbi1jb25maWd1cmF0aW9uIGF0IHJ1bnRpbWUgaXMgYSBkYW5n
-ZXJvdXMgdGhpbmcgYW5kIHRoZXJlIGFyZQ0Kc2l0dWF0aW9ucyB3aGVyZSBJIGZ1bGx5IGFncmVl
-IHdpdGggeW91Lg0KDQpCdXQgd2hhdCBhYm91dCB0aGUgR1BJTyBwaW5tdXhpbmcuIEkgZGl2ZWQg
-aW50byB0aGUgcGluY3RybC9ncGlvIHN1YnN5c3RlbXMNCmFuZCBpdCBzZWVtcyB0aGF0IGEgZ3Bp
-byBwaW4gaXMgYXV0b21hdGljYWxseSBtdXhlZCBpbiB3aGVuIHJlcXVlc3RpbmcgaXQNCihncGlv
-X3JlcXVlc3RfZW5hYmxlKCkpLiBUaGlzIGlzIGFsc28gcG90ZW50aWFsbHkgZGFuZ2Vyb3VzIHJ1
-bnRpbWUNCnJlY29uZmlndXJhdGlvbiwgcmlnaHQ/IEJ1dCB0aGF0IGxhbmRlZCBpbnRvIGEgc3Rh
-YmxlIHByb2R1Y3Rpb24gaW50ZXJmYWNlLg0KDQpLbm93IEkgYXNrIG15c2VsZiBpZiB0aGF0IGNv
-dWxkIGFsc28gYmUgYXBwbGllZCB0byBpMmMsIHNwaSwgdWFydCBpbnRlcmZhY2VzDQphcyB3ZWxs
-Pw0KRm9yIGV4YW1wbGU6IGlmIG9uZSByZXF1ZXN0cyB0aGUgdGhlIGkyYyBpbnRlcmZhY2UgYnkg
-Y2FsbGluZyBvcGVuKCkgKG9yIGFuDQppb2N0bCkgdG8gL2Rldi9pMmMtWC4gV291bGQgaXQgdGhl
-biBiZSBwb3NzaWJsZSB0byBtdXggdGhvc2UgcGlucyBpbi4gDQpJdCB3b3VsZCBiZSBhbG1vc3Qg
-YW5hbG9nIHRvIHRoZSBjdXJyZW50IGdwaW8gaW1wbGVtZW50YXRpb24uDQpJdCdzIGp1c3QgYW4g
-aWRlYSBhbmQgSSBkb24ndCBrbm93IHdldGhlciB0aGlzIGlzIHRlY2huaWNhbGx5IHBvc3NpYmxl
-DQpvciBob3cgbXVjaCBlZmZvcnQgdGhpcyBtZWFucy4NCg0KSSdtIGN1cnJlbnRseSBqdXN0IGxv
-b2tpbmcgZm9yIGRpZmZlcmVudCBraW5kcyBvZiBpbXBsZW1lbnRhdGlvbg0KcG9zc2liaWxpdGll
-cy4gQW5kIGlmIHRoZXJlIGlzIG9uZSBzb2x1dGlvbiB0aGF0IG1heSBoYXZlIHRoZSBjaGFuY2Ug
-dG8gZ2V0DQp1cHN0cmVhbSwgSSB3b3VsZCByYXRoZXIgc3RpY2sgdG8gdGhhdCBvbmUuDQoNCj4g
-DQo+IFRoZSBzb2x1dGlvbnMgZm9yIHRoZSBkZXZlbG9wZXJzIHdobyBLTk9XIHdoYXQgdGhleSBB
-UkUgRE9JTkcgYXJlOg0KPiAxKSBvdmVybGF5czsNCj4gMikgZGVidWdmczsNCj4gMykgcmVib290
-Lg0KPiANCj4gQ2hvb3NlIG9uZSwgc3VpdGFibGUgZm9yIHlvdSBhbmQgZ28gd2l0aCBpdC4NCj4g
-DQo+ID4gWzFdIGh0dHBzOi8vbWFyYy5pbmZvLz9sPWxpbnV4LWdwaW8mbT0xNjY4NTA2NDA5MjAx
-MjANCj4gPiANCj4gPiA+ID4gPiA+IFsxXSBodHRwczovL21hcmMuaW5mby8/bD1saW51eC1ncGlv
-Jm09MTY2ODUwNjQwOTIwMTIwDQoNCmNoZWVycywNCkJlbmVkaWt0DQo=
+On Fri, Dec 09, 2022 at 12:47:02PM +0000, Niedermayr, BENEDIKT wrote:
+> On Wed, 2022-12-07 at 22:38 +0200, andriy.shevchenko@intel.com wrote:
+> > On Wed, Dec 07, 2022 at 12:02:08PM +0000, Niedermayr, BENEDIKT wrote:
+> > > On Mon, 2022-12-05 at 14:58 +0200, andriy.shevchenko@intel.com wrote:
+> > > > On Mon, Dec 05, 2022 at 10:47:27AM +0000, Niedermayr, BENEDIKT wrote:
+> > > > > On Wed, 2022-11-30 at 17:43 +0200, Andy Shevchenko wrote:
+> > > > > > On Wed, Nov 30, 2022 at 03:09:50PM +0000, Niedermayr, BENEDIKT
+> > > > > > wrote:
+
+> > > > > > > I got no response since last time so I try it again, but with a
+> > > > > > > bit more
+> > > > > > > knowledge this time.
+> > > > > > > 
+> > > > > > > After carefully reading the pinctrl documentation
+> > > > > > > (driver-api/pin-control.rst) it was very clear for me that such
+> > > > > > > an interface
+> > > > > > > already exists and is accessable via debugfs. The documentation
+> > > > > > > is very clear
+> > > > > > > and self-explanatory. Thanks for that!
+> > > > > > > At the time of writing my last email [1] I took a look into an
+> > > > > > > older BSP
+> > > > > > > kernel where this feature has not been implemented, yet. I must
+> > > > > > > apologize for
+> > > > > > > that...
+> > > > > > > 
+> > > > > > > Now my last concern is using debugfs on a productive system.
+> > > > > > > IMHO debugfs is
+> > > > > > > not the right interface to interact on a productive system.
+> > > > > > 
+> > > > > > And this is a point. No-one should try it on the production
+> > > > > > systems.
+> > > > > > 
+> > > > > > > Especially when
+> > > > > > > when a unprivileged process wants to interact with an interface
+> > > > > > > offered by
+> > > > > > > debugfs. It's possible to change
+> > > > > > > permissions on files and folders there but nevertheless I think
+> > > > > > > that this is
+> > > > > > > not the way to go, since debugfs was designed to offer
+> > > > > > > interfaces to
+> > > > > > > privileged processes only.
+> > > > > > 
+> > > > > > Correct.
+> > > > > > 
+> > > > > > > My proposal would be to implement an chardev interface for that
+> > > > > > > and using
+> > > > > > > udev rules to assign correct permissions to that. With this
+> > > > > > > interface I can
+> > > > > > > then select the active pinctrl-groups which have been defined in
+> > > > > > > the device
+> > > > > > > tree before.
+> > > > > > > I could also imagine to put the interface into the sysfs (that
+> > > > > > > would be very
+> > > > > > > close to the debugfs implementation I think).
+> > > > > > > 
+> > > > > > > What do you think about it? Am I still missing something?
+> > > > > > 
+> > > > > > In my opinion -- no go.
+> > > > > > 
+> > > > > > The platform description (ACPI, DT, or board files) should know
+> > > > > > what they are
+> > > > > > doing. If something missing to achieve what you need via existing
+> > > > > > interfaces
+> > > > > > we rather think about that, but no, the debugfs stays and only for
+> > > > > > the purposes
+> > > > > > of development on the "I know what I'm doing" basis.
+> > > > > > 
+> > > > > Ok. If I got you right, you meant that there is no way to replace
+> > > > > the
+> > > > > debugfs interface?
+> > > > > 
+> > > > > So instead replacing the debugfs interface I would rather add a
+> > > > > second
+> > > > > interface that coexists with debugfs.
+> > > > 
+> > > > I meant that this feature quite likely will stay in the debugfs realm.
+> > > > No new
+> > > > interface is needed for sure.
+> > > > 
+> > > > > Unfortunatelly there is no interface available for runtime
+> > > > > configuration, yet.
+> > > > 
+> > > > There is no explanation why you need that.
+> > > > This is the main point of this discussion, right?
+> > > > 
+> > > > > The only alternative 
+> > > > > is to access "/dev/mem", but this is the most questionable solution
+> > > > > from
+> > > > > a security perspective.
+> > > > 
+> > > > It's not an alternative at all, it's simple no go variant.
+> > > > 
+> > > > > There should be a way to avoid unsecure "/dev/mem" implementations
+> > > > > but
+> > > > > currently this is the only way to achieve runtime configuration with
+> > > > > reasonable effort.  IMHO the current architecture leads to lot of
+> > > > > unsecure implementations out there.
+> > > > > 
+> > > > > For example the raspberrypi kernel tries to workaround this issue by
+> > > > > providing a "/dev/gpiomem"
+> > > >
+> > > > This is even worse than more standard /dev/mem interface.
+> > > >
+> > > > > interface that only provides mappings to the gpio register
+> > > > > set(drivers/char/broadcom/bcm2835-gpiomem.c).
+> > > > > This reduces possible vulnerabilities but they still persist since:
+> > > > > 
+> > > > > - mmap() cannot map memory less than PAGE_SIZE, which means that
+> > > > > memory
+> > > > > outside of the GPIO registers is accessable.
+> > > > > - it's possible to select untested  pin configurations which may not
+> > > > > be
+> > > > > electrical fine.
+> > > > > 
+> > > > > I like the current architecture since I define pingroups in the
+> > > > > platform
+> > > > > description which have been tested and then select one of them
+> > > > > during
+> > > > > runtime.  It's just the interface itself which is not sufficient
+> > > > > enough
+> > > > > when it comes to security.
+> > > > 
+> > > > Still no clue, what you are trying to achieve and why. Use case,
+> > > > please?
+> > > It already mentioned the use case here [1].
+> > 
+> > (Too many [1]:s)
+> > 
+> > > But let me explain it again and
+> > > in slightly other words.
+> > 
+> > Thank you, it helps. See my comments below.
+> > 
+> > > We are currently working on platforms that can be extended with
+> > > different
+> > > types of IO-Shields. The pinmux configuration is currently done by a
+> > > userspace application that offers a ncurses-like GUI interface. There
+> > > you can
+> > > select the pinmux configuration for each pin regarding on the IO-Shield
+> > > you
+> > > are using.
+> > 
+> > This is very dangerous feature. While it might work in your case it may
+> > damage
+> > the users' hardware if they don't know what they are doing.
+> > 
+> > What prevents you to create a DT / ACPI overlay and load it?
+> > Okay, seems the answer is below...
+> > 
+> > > I already mentioned how pinmuxing works with this framework and we have
+> > > the
+> > > same opinion about using /dev/mem like you.  Well, now we're are looking
+> > > for
+> > > other solutions.
+> > > 
+> > > For example using device tree overlays (written statically or generated)
+> > > for
+> > > each different kind of shield would be technically fine, but doesn't
+> > > scale
+> > > very well with increasing number of shields and host platforms.
+> > 
+> > I agree with this.
+> > 
+> > > And if the host platform is non ARM based this approach may not work.
+> > 
+> > Why?
+> > 
+> > > Furthermore we need to deal also with ACPI stuff on x86.
+> > 
+> > And?..
+> > ACPI supports overlays.
+> 
+> Thanks! Important information. I wasn't aware of that.
+> 
+> > > Recompiling the device-tree/kernel for each shield and host platform is
+> > > possible, but from a userspace developer point of view this means efford
+> > > and
+> > > may require more knowledge about the hardware (or you need to request
+> > > for
+> > > features from your BSP provider).
+> > 
+> > Yes, and it's a good thing, right?
+> Maybe that's a question we should ask them :-|
+> 
+> > > I also think about the question, why are there frameworks out there that
+> > > try
+> > > to solve that part of the problem (wiring-pi, eclipse-mraa, etc.).  I
+> > > think
+> > > these frameworks try to address, among other things, those issues.  So
+> > > it's
+> > > not only about our special use case. IMHO there are many use cases where
+> > > this
+> > > would make sense, otherwise these frameworks would have never come into
+> > > being.
+> > > 
+> > > I hope this clarifies my point of view a bit better.
+> > 
+> > Definitely.
+> > 
+> > But again, what you are proposing is not for production, but for
+> > prototyping.
+> > That's why it's under debugfs. Moreover, it's dangerous from electrical
+> > point
+> > of view reconfigure pins at run-time. This feature very well may damage
+> > the
+> > hardware or even kill somebody (if you think of a heavy robots).
+> First of all, thank you very much for sharing your valuable opinion!
+> 
+> There is one more question I have now.
+> So pin-configuration at runtime is a dangerous thing and there are
+> situations where I fully agree with you.
+
+> But what about the GPIO pinmuxing. I dived into the pinctrl/gpio subsystems
+> and it seems that a gpio pin is automatically muxed in when requesting it
+> (gpio_request_enable()). This is also potentially dangerous runtime
+> reconfiguration, right? But that landed into a stable production interface.
+
+Yeah, that is left to the consideration by software and firmware developers.
+Some pin control hardware supports locking down dangerous pins, some uses
+specifically crafted DTS to reserve those ranges, some (haven't checked myself)
+have stop-list in the drivers. But general rule, that user must have as little
+influence to the critical infrastructure as possible.
+
+> Know I ask myself if that could also be applied to i2c, spi, uart interfaces
+> as well?
+> For example: if one requests the the i2c interface by calling open() (or an
+> ioctl) to /dev/i2c-X. Would it then be possible to mux those pins in.
+
+But this is done based on platform description, so when OS sees the device
+enabled in the firmware, it loads the driver and that triggers pinmuxing
+(see driver/base/ code how and when it calls the pin control subsystem).
+
+> It would be almost analog to the current gpio implementation.
+> It's just an idea and I don't know wether this is technically possible
+> or how much effort this means.
+> 
+> I'm currently just looking for different kinds of implementation
+> possibilities. And if there is one solution that may have the chance to get
+> upstream, I would rather stick to that one.
+
+The solution you proposed. i.e. to make pin muxing runtime possible as an ABI
+is NAK from me. But I'm not a maintainer of GPIO nor pin control subsystem.
+You need to talk to them (I dunno why you sent your message without Cc'ing
+involved maintainers).
+
+> > The solutions for the developers who KNOW what they ARE DOING are:
+> > 1) overlays;
+> > 2) debugfs;
+> > 3) reboot.
+> > 
+> > Choose one, suitable for you and go with it.
+> > 
+> > > [1] https://marc.info/?l=linux-gpio&m=166850640920120
+> > > 
+> > > > > > > [1] https://marc.info/?l=linux-gpio&m=166850640920120
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
