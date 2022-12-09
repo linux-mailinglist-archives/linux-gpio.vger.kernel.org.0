@@ -2,118 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D65648A4D
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Dec 2022 22:48:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CFDC648A72
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Dec 2022 23:00:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbiLIVsG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 9 Dec 2022 16:48:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
+        id S229722AbiLIWAe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 9 Dec 2022 17:00:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbiLIVsC (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Dec 2022 16:48:02 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E23F1FCD2;
-        Fri,  9 Dec 2022 13:48:01 -0800 (PST)
+        with ESMTP id S229677AbiLIWAd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 9 Dec 2022 17:00:33 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 944E89D883
+        for <linux-gpio@vger.kernel.org>; Fri,  9 Dec 2022 14:00:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670622481; x=1702158481;
+  t=1670623232; x=1702159232;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=VyW/tMWJvyoCTirAlG73DmAZL480LWhJqZ6Zbp5E2tY=;
-  b=LcZPK7567S9GLSQgbaAz2YpWqOE2KUKCIGZq4zvg0fcwVXX1GPQ0QNlJ
-   lC5lXdo6syO2jR2moI+RkJMVPLg5byCczeHSV6cLU2VRFB0MZ5ZovraNQ
-   AzNT/Ty56pKMiQkW+enUcL3L2/ZkFBX/1x8CUIR8UsWzheMnSfRz72Kcw
-   dJMFLthDkbi/c++m87o0IUVETJPGXPkNgFkUb+acYB4Z/XsPxcoGLBZht
-   ye/kE6LAFVcCAA2PUaTJDHpJhj6r7siYRVp45vKI+rkWlmx837xPjRyha
-   eqtWaJKyEjDpCPQvzGq2qvyizkeU6oCRELMLgT3K6JsPrCV1FdLPANwYK
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="319415092"
+   mime-version:in-reply-to;
+  bh=/Nk79F07Qs/JqBkaS7YDEEY90sb/3xzQogXJfT6XvzY=;
+  b=jp/SOafb4eY/AhRTxCk7/3DcdZ2StGtV5ft2bfvm2N5zZegIzHbqAl06
+   rN8UYaPfV3IPEEIEot0a3dCiZoo7TqGThyKx201+/T7ESblb+xspmoqUQ
+   hhuu+OzKjYTBQrOwtFWrK5xO8f8dCiurb+UIDyKMCDH+vxCr2JcdymlV5
+   ACRXf+QT/x++qlad7aSRBxYijr8MlK+Cwb3KcG8x7dJrLyciOTkvq+lr5
+   6IZb3prz8GmRomivrodCp8tgsoRiJ1R/BOGf2rwPKJxU0W1RpT/SrJLLu
+   O5CP3VmZty0wJXL37dhenYQZtO90Uy0AuAhM3qqVxEpaiUJrTlQIakOQe
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="315192446"
 X-IronPort-AV: E=Sophos;i="5.96,232,1665471600"; 
-   d="scan'208";a="319415092"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 13:48:01 -0800
+   d="scan'208";a="315192446"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2022 14:00:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="821856456"
+X-IronPort-AV: E=McAfee;i="6500,9779,10556"; a="789848115"
 X-IronPort-AV: E=Sophos;i="5.96,232,1665471600"; 
-   d="scan'208";a="821856456"
+   d="scan'208";a="789848115"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP; 09 Dec 2022 13:47:57 -0800
+  by fmsmga001.fm.intel.com with ESMTP; 09 Dec 2022 14:00:30 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@intel.com>)
-        id 1p3lDn-007CW5-0p;
-        Fri, 09 Dec 2022 23:47:55 +0200
-Date:   Fri, 9 Dec 2022 23:47:54 +0200
+        id 1p3lPw-007CrQ-1N;
+        Sat, 10 Dec 2022 00:00:28 +0200
+Date:   Sat, 10 Dec 2022 00:00:28 +0200
 From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <Y5OtCjQOQjjltGPa@smile.fi.intel.com>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+To:     haibo.chen@nxp.com
+Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, linux-imx@nxp.com,
+        linux-gpio@vger.kernel.org, martyn.welch@collabora.com
+Subject: Re: [PATCH 2/2] gpio: pca953x: avoid logically dead code
+Message-ID: <Y5Ov/LJtxpB0WMBN@smile.fi.intel.com>
+References: <20221209075040.2141042-1-haibo.chen@nxp.com>
+ <20221209075040.2141042-2-haibo.chen@nxp.com>
+ <Y5OjDFIM5hqVQKib@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <Y5OjDFIM5hqVQKib@smile.fi.intel.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,SUSPICIOUS_RECIPS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-König wrote:
-> Hello,
-> 
-> I forgot about this series and was remembered when I talked to Conor
-> Dooley about how .get_state() should behave in an error case.
-> 
-> Compared to (implicit) v1, sent with Message-Id: 20220916151506.298488-1-u.kleine-koenig@pengutronix.de
-> I changed:
-> 
->  - Patch #1 which does the prototype change now just adds "return 0" to
->    all implementations and so gets simpler and doesn't change behaviour.
->    The adaptions to the different .get_state() implementations are split
->    out into individual patches to ease review.
->  - One minor inconsistency fixed in "pwm: Handle .get_state() failures"
->    that I noticed while looking into this patch.
->  - I skipped changing sun4i.c as I don't know how to handle the error
->    there. Someone might want to have a look. (That's not ideal, but it's
->    not worse than the same issue before this series.)
-> 
-> In v1 Thierry had the concern:
-> 
-> | That raises the question about what to do in these cases. If we return
-> | an error, that could potentially throw off consumers. So perhaps the
-> | closest would be to return a disabled PWM? Or perhaps it'd be up to the
-> | consumer to provide some fallback configuration for invalidly configured
-> | or unconfigured PWMs.
-> 
-> .get_state() is only called in pwm_device_request on a pwm_state that a
-> consumer might see. Before my series a consumer might have seen a
-> partial modified pwm_state (because .get_state() might have modified
-> .period, then stumbled and returned silently). The last patch ensures
-> that this partial modification isn't given out to the consumer. Instead
-> they now see the same as if .get_state wasn't implemented at all.
+On Fri, Dec 09, 2022 at 11:05:16PM +0200, Andy Shevchenko wrote:
+> On Fri, Dec 09, 2022 at 03:50:40PM +0800, haibo.chen@nxp.com wrote:
+> > From: Haibo Chen <haibo.chen@nxp.com>
 
-I'm wondering why we didn't see a compiler warning about mistyped function
-prototypes in some drivers.
+...
 
-P.S. The series is good thing to do, thank you.
+> > -	if (reg >= 0x30) {
+> > +	if (reg >= 0x30 && reg < 0x54) {
+> >  		/*
+> >  		 * Reserved block between 14h and 2Fh does not align on
+> >  		 * expected bank boundaries like other devices.
+> 
+> Can we convert this to a switch case with ranges?
+
+Looking into code more, I think we can accept this (patch 2) as a fix for now
+and clean up later on.
+
+The problem is that it really depends on the patch 1 which we need to figure
+out what the correct fix would be.
 
 -- 
 With Best Regards,
