@@ -2,98 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D7C56490C8
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Dec 2022 21:57:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D420B6490F3
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Dec 2022 23:05:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbiLJU50 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Dec 2022 15:57:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
+        id S229905AbiLJWFy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Dec 2022 17:05:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbiLJU5Y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Dec 2022 15:57:24 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D2C71705D;
-        Sat, 10 Dec 2022 12:57:23 -0800 (PST)
+        with ESMTP id S229845AbiLJWFk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Dec 2022 17:05:40 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DC0213D24;
+        Sat, 10 Dec 2022 14:05:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670705843; x=1702241843;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=8tRXcUKxGagfde91ZdUSDF88p8/b8+3NQn8nn2kaumc=;
-  b=NcB/GMthv49QkttcaJVa5iz/7pK2kbtiV/PAs9kKRZ9Bmto3zvimo4Bu
-   MD6rD9kttG4K4hiwbvwvlxsCLmV9i6amFqB03xp8U2XlgxV3vMmk5ZLza
-   F0RUSV4K5AJm84AXmaKV5bTahtJ87jB4h6xLK88kia3x7794QZXUJkoOL
-   BC+hfWbH/7p8Z4A9wh/E9qGmFKLLeLFvhs4RwxAlqE8it+0ZF58R1iJ3n
-   TUeMHMIyv6epzi25e4pK0Ad6xYcWZwZ/qYgzjcA18p7rUEvsAr8UvMJ1c
-   IAKhMqIB8OJtO7/QlKfVl88IOG1tlZ/7rt/LADvG9p0RYqdisThCudOQf
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="315286169"
+  t=1670709939; x=1702245939;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=nkgtRUpy/gZUYkzHWEcPgSfI8fgT7IazaxmYic/RiEE=;
+  b=dPlu4OvgESPDicL/HRR07nzbCj17SybpwfB9WMCv6HFoCbMfEf0bYgVK
+   qWBGEvFenvQgaEtIfVyOdEfgLv9tTjA7/FASwgVhOfpOB1kmwPj+uuB5I
+   JtWU86djkJsEHvnGL7T/zCtK4K+aTfF4omWTbjhZOgqVT7P4iMfxiOT6G
+   QdffMFR1kGCrIyU9QqbVKZofoXfRdTaRX4/CVRXTByPLjoGqOxMZltV3k
+   brm3yUeB3N8A0B8VZhrXNFFrHm88VQhp1Crrb1ewtr1eUkZDfWnjga73k
+   S9IjkMpOD6mKKGdWUQ1VTzqnq7KSku0DYvIAp9LVEJiqxaoHlrsZlyQzN
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="298001327"
 X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
-   d="scan'208";a="315286169"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2022 12:57:23 -0800
+   d="scan'208";a="298001327"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2022 14:05:38 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="678489946"
-X-IronPort-AV: E=Sophos;i="5.96,234,1665471600"; 
-   d="scan'208";a="678489946"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 10 Dec 2022 12:57:18 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1p46uK-007g2g-33;
-        Sat, 10 Dec 2022 22:57:16 +0200
-Date:   Sat, 10 Dec 2022 22:57:16 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <Y5TyrO5maz5VYic3@smile.fi.intel.com>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <Y5OtCjQOQjjltGPa@smile.fi.intel.com>
- <20221210091833.vdfir63nq4kpj5cm@pengutronix.de>
+X-IronPort-AV: E=McAfee;i="6500,9779,10557"; a="754448424"
+X-IronPort-AV: E=Sophos;i="5.96,235,1665471600"; 
+   d="scan'208";a="754448424"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Dec 2022 14:05:36 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 47584179; Sun, 11 Dec 2022 00:06:05 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Haibo Chen <haibo.chen@nxp.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/4] gpio: pca953x: avoid to use uninitialized value pinctrl
+Date:   Sun, 11 Dec 2022 00:05:58 +0200
+Message-Id: <20221210220601.77648-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221210091833.vdfir63nq4kpj5cm@pengutronix.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,SUSPICIOUS_RECIPS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 10, 2022 at 10:18:33AM +0100, Uwe Kleine-König wrote:
-> On Fri, Dec 09, 2022 at 11:47:54PM +0200, Andy Shevchenko wrote:
-> > On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-König wrote:
+From: Haibo Chen <haibo.chen@nxp.com>
 
-...
+There is a variable pinctrl declared without initializer. And then
+has the case (switch operation chose the default case) to directly
+use this uninitialized value, this is not a safe behavior. So here
+initialize the pinctrl as 0 to avoid this issue.
+This is reported by Coverity.
 
-> > I'm wondering why we didn't see a compiler warning about mistyped function
-> > prototypes in some drivers.
-> 
-> I don't understand where you expected a warning. Care to elaborate?
+Fixes: 13c5d4ce8060 ("gpio: pca953x: Add support for PCAL6534")
+Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: used default case (Andy)
+ drivers/gpio/gpio-pca953x.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-intel-lpss.c has the prototype that returns an int. IIRC it was like this
-before your patches. Now the above wondering passage...
-
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index a59d61cd44b2..5299e5bb76d6 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -474,6 +474,9 @@ static u8 pcal6534_recalc_addr(struct pca953x_chip *chip, int reg, int off)
+ 	case PCAL6524_DEBOUNCE:
+ 		pinctrl = ((reg & PCAL_PINCTRL_MASK) >> 1) + 0x1c;
+ 		break;
++	default:
++		pinctrl = 0;
++		break;
+ 	}
+ 
+ 	return pinctrl + addr + (off / BANK_SZ);
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.35.1
 
