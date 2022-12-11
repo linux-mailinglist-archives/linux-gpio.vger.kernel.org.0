@@ -2,117 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24B6F64910F
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Dec 2022 23:42:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A07E6491FE
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Dec 2022 03:37:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiLJWmM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 10 Dec 2022 17:42:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48112 "EHLO
+        id S229953AbiLKCg4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 10 Dec 2022 21:36:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbiLJWmL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Dec 2022 17:42:11 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B1D210FE2
-        for <linux-gpio@vger.kernel.org>; Sat, 10 Dec 2022 14:42:10 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xi-0008S6-Bo; Sat, 10 Dec 2022 23:42:02 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xe-003fjR-2X; Sat, 10 Dec 2022 23:41:58 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p48Xe-0046bD-4d; Sat, 10 Dec 2022 23:41:58 +0100
-Date:   Sat, 10 Dec 2022 23:41:54 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        chrome-platform@lists.linux.dev, linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-sunxi@lists.linux.dev
-Subject: Re: [PATCH v2 00/11] pwm: Allow .get_state to fail
-Message-ID: <20221210224154.733cd5qnrkpexq22@pengutronix.de>
-References: <20221130152148.2769768-1-u.kleine-koenig@pengutronix.de>
- <Y5OtCjQOQjjltGPa@smile.fi.intel.com>
- <20221210091833.vdfir63nq4kpj5cm@pengutronix.de>
- <Y5TyrO5maz5VYic3@smile.fi.intel.com>
+        with ESMTP id S229960AbiLKCgy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 10 Dec 2022 21:36:54 -0500
+X-Greylist: delayed 642 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 10 Dec 2022 18:36:49 PST
+Received: from webmail.no-log.org (webmail.no-log.org [80.67.172.39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894C113E90;
+        Sat, 10 Dec 2022 18:36:48 -0800 (PST)
+Received: from webmail.no-log.org (webmail.no-log.org [80.67.172.39])
+        by webmail.no-log.org (Postfix) with ESMTP id 086E0825F6;
+        Sun, 11 Dec 2022 03:25:50 +0100 (CET)
+X-Squirrel-UserHash: V14GBR0HRykaRAADAkByWl1KAAAFRyEdSg==
+X-Squirrel-FromHash: AVRfCVhbXX4=
+Message-ID: <dfe2460d670a5f238cad2cb026c500dd.squirrel@webmail.no-log.org>
+Date:   Sun, 11 Dec 2022 03:25:50 +0100
+Subject: Reply
+From:   "Mrs Susanne Hanna" <claire.guillet1@no-log.org>
+Reply-To: hanna.susanne@aol.com
+User-Agent: SquirrelMail/1.4.23 [SVN]
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7qhswmbpkvtzgvtu"
-Content-Disposition: inline
-In-Reply-To: <Y5TyrO5maz5VYic3@smile.fi.intel.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-0.1 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=no
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Priority: 3 (Normal)
+Importance: Normal
+X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,HK_NAME_MR_MRS,MISSING_HEADERS,
+        REPLYTO_WITHOUT_TO_CC,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5843]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  1.0 MISSING_HEADERS Missing To: header
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  1.0 HK_NAME_MR_MRS No description available.
+        *  1.6 REPLYTO_WITHOUT_TO_CC No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
---7qhswmbpkvtzgvtu
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hello Andy,
 
-On Sat, Dec 10, 2022 at 10:57:16PM +0200, Andy Shevchenko wrote:
-> On Sat, Dec 10, 2022 at 10:18:33AM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Fri, Dec 09, 2022 at 11:47:54PM +0200, Andy Shevchenko wrote:
-> > > On Wed, Nov 30, 2022 at 04:21:37PM +0100, Uwe Kleine-K=F6nig wrote:
->=20
-> ...
->=20
-> > > I'm wondering why we didn't see a compiler warning about mistyped fun=
-ction
-> > > prototypes in some drivers.
-> >=20
-> > I don't understand where you expected a warning. Care to elaborate?
->=20
-> intel-lpss.c has the prototype that returns an int. IIRC it was like this
+Money was donated to you.
+Contact: hanna.susanne@aol.com
 
-Do you mean drivers/mfd/intel-lpss.c? That one doesn't implement a PWM?!
-
-And drivers/pwm/pwm-lpss.c is adapted by this series.
-
-One of us is confused ...
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---7qhswmbpkvtzgvtu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmOVCy8ACgkQwfwUeK3K
-7Amqbgf7B9CvBJP4sV+MCHwNOkar+hN65y/IFZl8+KJEQzokHbdag/I7vBvxqm0q
-cOWhTR13j1UZBW5bl06bB5K03JJLpAqFVemlvCMxww0G9e7f5gJ+UkkFy64Wg5eN
-S9IGKBbgBZqZIpEpYNRSatcmsUacaV1aKHKYrOkgrkFno+a3jk9SGNUtdwvLyvwW
-6rpJPqUEOQo4dqB3YPj/VZL13P7B92K3qIsBu0lxz20qstp5wjIpMF1Gsky+6Sf+
-WgVSbrTrTjMwtDpEfb9/ZMXWohTWu0FeaTliafQxjCiNCIgmejFgLEdmalOZ4NXx
-gh5E3k8VT1fe4RAogpC5ofieweL1YA==
-=ikaL
------END PGP SIGNATURE-----
-
---7qhswmbpkvtzgvtu--
