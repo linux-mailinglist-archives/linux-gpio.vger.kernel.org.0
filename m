@@ -2,143 +2,114 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65C7F649EFA
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 13:40:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A537649F67
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 14:08:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231370AbiLLMk5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Dec 2022 07:40:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51436 "EHLO
+        id S232258AbiLLNIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Dec 2022 08:08:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiLLMk4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 07:40:56 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD63C2C6;
-        Mon, 12 Dec 2022 04:40:54 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 054416CF;
-        Mon, 12 Dec 2022 13:40:52 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1670848853;
-        bh=9RKOLkgQNbJtHqKawJ6wOsZq6akcu9gDWHqS3sR1D1A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HuHZen4rwQH8gN4eWbpOohWlwB/mM1fNBJPkI2Yie72Yv70FZ0CllUJDuV2XrFp/P
-         /AM8eR5VC7zp/zxx3xNzN2KbBJhc3p0L3HPdCoCDQhLvK5leyqkAXRKzFoKBnw34hh
-         Et6C7J4kjVxFcLTSrx+a9iirx4qs984k15OEbH7M=
-Date:   Mon, 12 Dec 2022 14:40:50 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [RFC PATCH 0/3] gpiolib: ramp-up delay support
-Message-ID: <Y5chUvK+SLMpm9XY@pendragon.ideasonboard.com>
-References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
+        with ESMTP id S232048AbiLLNH6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 08:07:58 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE14D6441
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:07:51 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so5071639wms.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:07:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M5yuV9jd97R81uDazuj6Xzn2nQRDFmr1/RjN3Yc1W2U=;
+        b=8COUZHtUWTRPsp14Y0Sk3z9fvujNJj0DQepHFAVugiJvB918gp3oHwgyBkUoWq51Qa
+         nnYtfpFk9AoKIdNXM1cauY2lk3TIPDGUm6k+wO6Qg8YLBj1fG1/mznNTgABWRVb3slP8
+         Q6ceNEZiPiSCGcOtAtxOwdRag3a+gCGtYHg3WTLT0Ge9FilcFX9jzUxVLJKxCVflZVZh
+         CVyuy9L4YC3mLOcUzVgKef8K3opHmRcadQBaLzDMkYo8SfhjpLCWSclju2SeWm4jjGLA
+         QyO0+lT2v5K/vTNjJX5g9zZwghp2pv7RwbG27An9hyFd+enSXqo+zMUfEUmdqVgFrtf/
+         L3dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M5yuV9jd97R81uDazuj6Xzn2nQRDFmr1/RjN3Yc1W2U=;
+        b=7xBwSItECGP/V75fETXmouGwk2ETv9TVfpxdYrZ+3uyiXc2bThabDhqaO0t4jHuKyH
+         faeAWul23uHOos7SmbYOpbATkCwIK3Y7BZphWlI+tBtjD7aqRJCBt3fCpJSL585YYu5K
+         lify8KieJ6T1Zn5Dmzes0hyNQB7McNYGUrQj+Xcw9QiiZt1Z/y2yLYUE3Z/D9Fgih8s9
+         ppp7VIXMd7r8IFbSGejA6a0Bgq9C872EAzsvtouV+zZdsv3R9bGIw4JTbIQigTip9MK5
+         ZzuR1mGA9CmBASpyg1pvPsbF9nDKLCZsel0vZ7GPgl3gYOtXEVeZgGKWKxc+TxusztLk
+         Sy5w==
+X-Gm-Message-State: ANoB5pmKdgnX16otHvSxzNiNSZ5LooSZacQZ4/M87yNjHxw6mx3yKALJ
+        juQ43RszhaW3MUIWWLy4mjI35FbyjVkcd4o2
+X-Google-Smtp-Source: AA0mqf4MoBDUAd5xQ6VFh8EbzCBzqe4szK5HnulC7sIiYS7H23IC2XsHAi1J0o87pRzHoT0vu+SIig==
+X-Received: by 2002:a05:600c:908:b0:3d1:fb5d:dd67 with SMTP id m8-20020a05600c090800b003d1fb5ddd67mr12039182wmp.23.1670850470397;
+        Mon, 12 Dec 2022 05:07:50 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8f39:2597:6684:1762])
+        by smtp.gmail.com with ESMTPSA id i2-20020a1c5402000000b003c6c182bef9sm11220360wmb.36.2022.12.12.05.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Dec 2022 05:07:49 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH] gpio: sim: set a limit on the number of GPIOs
+Date:   Mon, 12 Dec 2022 14:07:48 +0100
+Message-Id: <20221212130748.443416-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Alexander,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Mon, Dec 12, 2022 at 11:35:22AM +0100, Alexander Stein wrote:
-> Hi all,
-> 
-> this series is an RFC for a general approach to solve the issue at [1]. While
+With the removal of ARCH_NR_GPIOS in commit 7b61212f2a07 ("gpiolib: Get
+rid of ARCH_NR_GPIOS") the gpiolib core no longer sanitizes the number
+of GPIOs for us. This causes the gpio-sim selftests to now fail when
+setting the number of GPIOs to 99999 and expecting the probe() to fail.
 
-I'm impressed by how fast you came up with a solution :-)
+Set a sane limit of 1024 on the number of simulated GPIOs and bail out
+of probe if it's exceeded.
 
-> a device specific property works as well, a more generic approach is preferred.
-> In short: When enabling a GPIO the actual ramp-up time might be (much) bigger
-> than what software usually assume, in my case >100ms. Adding a delay to each
-> driver is cumbersome.
-> Instead the (optional) ramp-up delay is added to each gpio_desc. The delays can
-> be specified per gpio-controller, similar to 'gpio-line-names'. Actually the
-> parsing code is almost a 1:1 copy of devprop_gpiochip_set_names().
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Link: https://lore.kernel.org/oe-lkp/202212112236.756f5db9-oliver.sang@intel.com
+Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-sim.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-While I like consistency, I wonder if it wouldn't be better in this case
-to use a list of <gpio-number delay> cells in gpio-ramp-up-delays-us. In
-typical use cases, very few GPIOs will need a delay, and a GPIO
-controller could support a very large number of GPIOs, which would make
-your current proposal cumbersome.
-
-> Due to
-> (temporary) memory allocation, I opted for a separate function, there is code
-> duplication, but handling both properties in a single function seemed too
-> tedious, let alone the to be added ramp-down delays.
-> 
-> This feature could also be added as a callback in gpio_chip, but the callbacks
-> have to be added to each driver then. I would prefer a single one-fits-all
-> implementation and another indirection in the GPIO call chain.
-
-Agreed.
-
-> Laurent suggest to add a GPIO delay node in DT. IMHO this increased the DT
-> complexity unnecessarily. But comments are welcome.
-
-It's an alternative approach that could be considered if this one is
-rejected, but I have a preference for your solution.
-
-> The following 3 patches are a proof-of-concept on my platform, consisting of:
-> Patch 1 is the proposed bindings and straight forward.
-> Patch 2 is the current implementation
-> Patch 3 is an actual usage example for specifying the delays
-> 
-> TODO:
-> 1. Adding ramp-down delays (Just the inverse copy of ramp-up delay)
-> 2. Should these delays take active low flags into account?
-
-How so ?
-
-> 3. How to deal with setting multiple GPIOs at once?
-> 
-> I skipped 1. for now, because this is just a copy with ramp-up being replaced
-> with ramp-down.
-> 
-> I'm not that well versed in gpiolib code, so I'm not sure if I got all placed
-> where GPIOs are set. So patch 2 might be incomplete.
-> 
-> For now I skipped setting multiple GPIOs at once completely, so to get some
-> feedback on this approach. A possible solution is to check for the bigest delay
-> in the set and use that for all afterwards. But I'm not sure about the overhead
-> in this case.
-
-I assume you're talking about the gpiod_set_array_value() API. That
-sounds OK as an initial implementation, a caller of that function needs
-to be prepared for the GPIOs being set in a random order due to hardware
-delays, so it shouldn't break the API contract. I would however state
-this explicitly in the function documentation.
-
-> I hope there is some feedback. While thinking about this issue appears to be
-> more widespread than I expected.
-> 
-> Best regards,
-> Alexander
-> 
-> [1] https://lore.kernel.org/all/20221209083339.3780776-1-alexander.stein@ew.tq-group.com/
-> 
-> Alexander Stein (3):
->   dt-bindings: gpio: Add optional ramp-up delay property
->   gpiolib: Add support for optional ramp-up delays
->   arm64: dts: mba8mx: Add GPIO ramp-up delays
-> 
->  .../devicetree/bindings/gpio/gpio.txt         | 22 +++++
->  arch/arm64/boot/dts/freescale/mba8mx.dtsi     |  5 ++
->  drivers/gpio/gpiolib.c                        | 80 +++++++++++++++++++
->  drivers/gpio/gpiolib.h                        |  3 +
->  4 files changed, 110 insertions(+)
-
+diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+index 1020c2feb249..60514bc5454f 100644
+--- a/drivers/gpio/gpio-sim.c
++++ b/drivers/gpio/gpio-sim.c
+@@ -31,6 +31,7 @@
+ 
+ #include "gpiolib.h"
+ 
++#define GPIO_SIM_NGPIO_MAX	1024
+ #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
+ #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
+ 
+@@ -371,6 +372,9 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (num_lines > GPIO_SIM_NGPIO_MAX)
++		return -ERANGE;
++
+ 	ret = fwnode_property_read_string(swnode, "gpio-sim,label", &label);
+ 	if (ret) {
+ 		label = devm_kasprintf(dev, GFP_KERNEL, "%s-%s",
 -- 
-Regards,
+2.37.2
 
-Laurent Pinchart
