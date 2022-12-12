@@ -2,65 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A537649F67
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 14:08:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E6541649F78
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 14:09:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbiLLNIB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Dec 2022 08:08:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
+        id S231766AbiLLNJ6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Dec 2022 08:09:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232048AbiLLNH6 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 08:07:58 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE14D6441
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:07:51 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so5071639wms.2
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:07:51 -0800 (PST)
+        with ESMTP id S232102AbiLLNJp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 08:09:45 -0500
+Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD3A12772
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:09:45 -0800 (PST)
+Received: by mail-vs1-xe31.google.com with SMTP id h26so11130965vsr.5
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 05:09:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=M5yuV9jd97R81uDazuj6Xzn2nQRDFmr1/RjN3Yc1W2U=;
-        b=8COUZHtUWTRPsp14Y0Sk3z9fvujNJj0DQepHFAVugiJvB918gp3oHwgyBkUoWq51Qa
-         nnYtfpFk9AoKIdNXM1cauY2lk3TIPDGUm6k+wO6Qg8YLBj1fG1/mznNTgABWRVb3slP8
-         Q6ceNEZiPiSCGcOtAtxOwdRag3a+gCGtYHg3WTLT0Ge9FilcFX9jzUxVLJKxCVflZVZh
-         CVyuy9L4YC3mLOcUzVgKef8K3opHmRcadQBaLzDMkYo8SfhjpLCWSclju2SeWm4jjGLA
-         QyO0+lT2v5K/vTNjJX5g9zZwghp2pv7RwbG27An9hyFd+enSXqo+zMUfEUmdqVgFrtf/
-         L3dA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MfSNgM+0twrLLGfHzA5jy5Kw8VIHD18ejk8+Mb6CtJ0=;
+        b=rYO3dJiJZOs+iJnATRiTkZhoadeFr62QwF4jBPS+moNgk1+RvtCFy/duXZHHE+6KKl
+         yJQWuFALXyAszzU3rFHaN+rQKQVVUXYj/Zr4MPAj86J+leVP78vM32l1KgpDxYeAzQUB
+         f79Arx8T1FezwmX73lqCtsSEYF6SWlvPTloTcstnTWRv4v4wOL8sOA1gpjbu+rWan4zv
+         BzpIe5cQBSN5pxvUQr8wHpqVLSYVG3T3Ii1i2wY07LEKRm0uL17JVt6iGCxyUyqhJmCo
+         Z1NaWIfgI5pwS6LS6XzgXFari/y0gNDOPeh5LqweLqZrc9UZ8DbmrllmS7dLWRLrEMoZ
+         JGFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=M5yuV9jd97R81uDazuj6Xzn2nQRDFmr1/RjN3Yc1W2U=;
-        b=7xBwSItECGP/V75fETXmouGwk2ETv9TVfpxdYrZ+3uyiXc2bThabDhqaO0t4jHuKyH
-         faeAWul23uHOos7SmbYOpbATkCwIK3Y7BZphWlI+tBtjD7aqRJCBt3fCpJSL585YYu5K
-         lify8KieJ6T1Zn5Dmzes0hyNQB7McNYGUrQj+Xcw9QiiZt1Z/y2yLYUE3Z/D9Fgih8s9
-         ppp7VIXMd7r8IFbSGejA6a0Bgq9C872EAzsvtouV+zZdsv3R9bGIw4JTbIQigTip9MK5
-         ZzuR1mGA9CmBASpyg1pvPsbF9nDKLCZsel0vZ7GPgl3gYOtXEVeZgGKWKxc+TxusztLk
-         Sy5w==
-X-Gm-Message-State: ANoB5pmKdgnX16otHvSxzNiNSZ5LooSZacQZ4/M87yNjHxw6mx3yKALJ
-        juQ43RszhaW3MUIWWLy4mjI35FbyjVkcd4o2
-X-Google-Smtp-Source: AA0mqf4MoBDUAd5xQ6VFh8EbzCBzqe4szK5HnulC7sIiYS7H23IC2XsHAi1J0o87pRzHoT0vu+SIig==
-X-Received: by 2002:a05:600c:908:b0:3d1:fb5d:dd67 with SMTP id m8-20020a05600c090800b003d1fb5ddd67mr12039182wmp.23.1670850470397;
-        Mon, 12 Dec 2022 05:07:50 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8f39:2597:6684:1762])
-        by smtp.gmail.com with ESMTPSA id i2-20020a1c5402000000b003c6c182bef9sm11220360wmb.36.2022.12.12.05.07.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 05:07:49 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH] gpio: sim: set a limit on the number of GPIOs
-Date:   Mon, 12 Dec 2022 14:07:48 +0100
-Message-Id: <20221212130748.443416-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        bh=MfSNgM+0twrLLGfHzA5jy5Kw8VIHD18ejk8+Mb6CtJ0=;
+        b=3BqagnQumUPP+iok5PGm1Bw/orqkqn3rDz6a78fXoi7sufXybjMkSXm6/DbwUIjFDg
+         hImsNWjw9uHSZgrY2+lPES6LqsfQphRzJB+1kYgDgdkqru6fhenBIA2jweRvynmjg8JE
+         KGlF+wceJ0Oiu1/4s/0GbJk3FopIlcUlkcg4ujJsFD1AmghNwTLp6AB7oxOihxy2OUaC
+         ILhuzTeMBZtyzx5kMZ0xYDGswUCPEEuo6UhpXo1bwT11j0a8KgomF5deZoD9M7GMwow4
+         F1qzd2ENmnjnulY4ch5yVUrUPBNj/cjYvfuS7IOgHUzq4JOGRBviSGl6eXayazJ1gF0B
+         Pw4A==
+X-Gm-Message-State: ANoB5pldEAPIt+WOrpkRFHTLnolQYhXihEjdKUoB0QO6UMWmap7LDhjZ
+        15BEoVDTePfWSe3UpXMishqIBp2mivtQGUoh7lHzvA==
+X-Google-Smtp-Source: AA0mqf4K403z6dN136I2BMaYSifIt4AdRVsBbWxuNKvguf08JE8WKXwBSQ934w1A60y7X2W/uPzbLP6YgZQyH/KWFgs=
+X-Received: by 2002:a67:fc4b:0:b0:3b1:298c:45f9 with SMTP id
+ p11-20020a67fc4b000000b003b1298c45f9mr12621504vsq.61.1670850584104; Mon, 12
+ Dec 2022 05:09:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202212112236.756f5db9-oliver.sang@intel.com>
+In-Reply-To: <202212112236.756f5db9-oliver.sang@intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 12 Dec 2022 14:09:33 +0100
+Message-ID: <CAMRc=Meh-u3ZoMksKs8Hf89gJ=wRaFNdCaeWfXNS13Fu6fs9bA@mail.gmail.com>
+Subject: Re: [linux-next:master] [gpiolib] 7b61212f2a: kernel-selftests.gpio.gpio-sim.sh.fail
+To:     kernel test robot <oliver.sang@intel.com>
+Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        oe-lkp@lists.linux.dev, lkp@intel.com,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -70,46 +69,64 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Sun, Dec 11, 2022 at 4:08 PM kernel test robot <oliver.sang@intel.com> wrote:
+>
+>
+> Greeting,
+>
+> FYI, we noticed kernel-selftests.gpio.gpio-sim.sh.fail due to commit (built with gcc-11):
+>
+> commit: 7b61212f2a07a5afd213c8876e52b5c9946441e2 ("gpiolib: Get rid of ARCH_NR_GPIOS")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>
+> [test failed on linux-next/master f925116b24c0c42dc6d5ab5111c55fd7f74e8dc7]
+>
+> in testcase: kernel-selftests
+> version: kernel-selftests-x86_64-2ed09c3b-1_20221128
+> with following parameters:
+>
+>         group: group-01
+>
+> test-description: The kernel contains a set of "self tests" under the tools/testing/selftests/ directory. These are intended to be small unit tests to exercise individual code paths in the kernel.
+> test-url: https://www.kernel.org/doc/Documentation/kselftest.txt
+>
+>
+> on test machine: 4 threads Intel(R) Xeon(R) CPU E3-1225 v5 @ 3.30GHz (Skylake) with 16G memory
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>
+>
+>
+>
+> If you fix the issue, kindly add following tag
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Link: https://lore.kernel.org/oe-lkp/202212112236.756f5db9-oliver.sang@intel.com
+>
+>
+> # selftests: gpio: gpio-sim.sh
+> # trap: SIGTERM: bad trap
+> # 1. chip_name and dev_name attributes
+> # 1.1. Chip name is communicated to user
+> # 1.2. chip_name returns 'none' if the chip is still pending
+> # 1.3. Device name is communicated to user
+> # 2. Creating and configuring simulated chips
+> # 2.1. Default number of lines is 1
+> # 2.2. Number of lines can be specified
+> # 2.3. Label can be set
+> # 2.4. Label can be left empty
+> # 2.5. Line names can be configured
+> # 2.6. Line config can remain unused if offset is greater than number of lines
+> # 2.7. Line configfs directory names are sanitized
+> # 2.8. Multiple chips can be created
+> # 2.9. Can't modify settings when chip is live
+> # 2.10. Can't create line items when chip is live
+> # 2.11. Probe errors are propagated to user-space
+> # Probe error was not propagated
+> # GPIO gpio-sim test FAIL
+> not ok 2 selftests: gpio: gpio-sim.sh # exit=1
+>
+>
 
-With the removal of ARCH_NR_GPIOS in commit 7b61212f2a07 ("gpiolib: Get
-rid of ARCH_NR_GPIOS") the gpiolib core no longer sanitizes the number
-of GPIOs for us. This causes the gpio-sim selftests to now fail when
-setting the number of GPIOs to 99999 and expecting the probe() to fail.
+Just sent out a fix.
 
-Set a sane limit of 1024 on the number of simulated GPIOs and bail out
-of probe if it's exceeded.
-
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Link: https://lore.kernel.org/oe-lkp/202212112236.756f5db9-oliver.sang@intel.com
-Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 1020c2feb249..60514bc5454f 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -31,6 +31,7 @@
- 
- #include "gpiolib.h"
- 
-+#define GPIO_SIM_NGPIO_MAX	1024
- #define GPIO_SIM_PROP_MAX	4 /* Max 3 properties + sentinel. */
- #define GPIO_SIM_NUM_ATTRS	3 /* value, pull and sentinel */
- 
-@@ -371,6 +372,9 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	if (num_lines > GPIO_SIM_NGPIO_MAX)
-+		return -ERANGE;
-+
- 	ret = fwnode_property_read_string(swnode, "gpio-sim,label", &label);
- 	if (ret) {
- 		label = devm_kasprintf(dev, GFP_KERNEL, "%s-%s",
--- 
-2.37.2
-
+Bart
