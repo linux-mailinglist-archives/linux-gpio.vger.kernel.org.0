@@ -2,61 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70CD2649C7D
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 11:42:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C4E0649C79
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 11:42:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232114AbiLLKmQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Dec 2022 05:42:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
+        id S232032AbiLLKmO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Dec 2022 05:42:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbiLLKlB (ORCPT
+        with ESMTP id S232025AbiLLKlB (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 05:41:01 -0500
 Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DB7D11A2A;
-        Mon, 12 Dec 2022 02:35:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A26691181A;
+        Mon, 12 Dec 2022 02:35:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1670841337; x=1702377337;
+  t=1670841339; x=1702377339;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=f2aMQWwuwPULO2V9GusZCdf7rDoCWIltL+nrLOH5sFo=;
-  b=d6QUxB6ffHsROuzah2NBafXOZ1/xDG3lAqtzhMwmx1NwAvB2LZw5cDyi
-   kaYOFFFuyVjC3Az6ip4ExY7QyXnM0p6HouzT4Wznq+nD01J+OHpwcxnbl
-   RViyDVXBrIT0NpbMb9g43bmcYJ1IEDB6cXoSMFYy1tn6oxjj0enr8Tw3D
-   QRAzey4X2vIXU1uUVU1PbnJ0hVBtbawTFBUucUnqqe8EYfwKFx89NlBFL
-   ozDCaNtxof4WwX/L/ldK/uwSBqA96xX5BAqDUs3TwpjGOXM2ztXI+rwYZ
-   pyGOqW3j6EcpjXoWBFfVwhepW9OJ/iZfxajW0OXJs9a0IGsg4//3Lr/0t
-   A==;
+  bh=PcuD8RuvqGmj+VYkkwi9nKNinGEefx1DYZFE4duHoLk=;
+  b=K2s32RZfgU0MjqUqVP1HTQDDgEulVEM4W28YuVHKxkHFyw7tMzOd+Z2s
+   9UIkNurUp3hKqHsF5MRW0ND0TUM38Um98ARykEEw3oGkZLVXlESG/NiV+
+   6qFGcGQiUN6OumWHd+J3seoGchSCFihczpCtErlqYpNkvP58b67W6+qE9
+   sVxJUV3lmhxAzKw8ScUhdprnqpSS4I5L4e69s0p7u1b/R70XiWEkZms7o
+   JacLHgmzBGq1aKQKeLN6AusfpvBPmcw3ctTnDtfHpopIsN7nBIcVppZVV
+   5d15UKiraRMCyFwPR8lcEF1UXI/GD+YfotCEzueSuBm4LqZWsAcMJ7GsB
+   w==;
 X-IronPort-AV: E=Sophos;i="5.96,238,1665439200"; 
-   d="scan'208";a="27892496"
+   d="scan'208";a="27892498"
 Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 12 Dec 2022 11:35:32 +0100
+  by mx1-pgp.tq-group.com with ESMTP; 12 Dec 2022 11:35:33 +0100
 Received: from mx1.tq-group.com ([192.168.6.7])
   by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 12 Dec 2022 11:35:32 +0100
+  Mon, 12 Dec 2022 11:35:33 +0100
 X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 12 Dec 2022 11:35:32 +0100
+        by tq-pgp-pr1.tq-net.de on Mon, 12 Dec 2022 11:35:33 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1670841332; x=1702377332;
+  t=1670841333; x=1702377333;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=f2aMQWwuwPULO2V9GusZCdf7rDoCWIltL+nrLOH5sFo=;
-  b=TewM85Ugf8I8o04K9hThGTn1z37szyGSpmTpTWR6ith+1DkHp7aPi5gR
-   i6WgRBpd+b9AUjdMzsWeQUA+LVX9MU3lRqggZYFJOrjg8/y4sDOVmD4l+
-   1w5sw8rJNJ2BUR8w8aUFCHRMtoYv/HfIv14aBqkgi4mvRciR47YXJCGU3
-   gCtPpupohY+vUaha/nkaVjUlGb3X/+Emra84X0kRacfRqQC1k59Ban9GI
-   iTl24hvC/qY4bo6+PiMv+OrCqdBKYs+x/jL1lPUAF42+tSOP16wddIhEU
-   WwvCdaDSsM6pi9YKjci2+bio13KIeeLIg01jX8hI5lBs+HOorfkZV2Dm/
+  bh=PcuD8RuvqGmj+VYkkwi9nKNinGEefx1DYZFE4duHoLk=;
+  b=WhkoOFAoZhVuQc+ff/NuE71/vHizjHvY2EjSRE5NUuLbpdRgYbmH6ke0
+   PVNeZhQ2twqeXGnzCiS+LshbsIqPyfHLtKcrLBDT8FFVD/m5h5Vx+Aak+
+   uOtJ/0iWHsVbxWDm9cHCcolgr51BnxBecVQ68+ztUs+NNwI20t7lSwub/
+   uWjOq+o4x0X1qKI/9zHc5yJ08PgczCNPqpGKaV7z8gV7j2yaSAtI9AtIf
+   0pSolctlqDTsNvwhn3AJPAjBiNDyW1QxC5vCHv8jvDFD8eR6qpFNNUUJW
+   cNNyi5HwMMv9KtyGxQHZ5VY/lXR3QJHVwb3JY/jlmtqczTjYVOGLc7nbL
    Q==;
 X-IronPort-AV: E=Sophos;i="5.96,238,1665439200"; 
-   d="scan'208";a="27892494"
+   d="scan'208";a="27892497"
 Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 12 Dec 2022 11:35:32 +0100
+  by mx1.tq-group.com with ESMTP; 12 Dec 2022 11:35:33 +0100
 Received: from steina-w.tq-net.de (unknown [10.123.53.21])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 7384A280072;
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id A777E280073;
         Mon, 12 Dec 2022 11:35:32 +0100 (CET)
 From:   Alexander Stein <alexander.stein@ew.tq-group.com>
 To:     Linus Walleij <linus.walleij@linaro.org>,
@@ -67,9 +67,9 @@ Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
         linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
         Marek Vasut <marex@denx.de>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [RFC PATCH 1/3] dt-bindings: gpio: Add optional ramp-up delay property
-Date:   Mon, 12 Dec 2022 11:35:23 +0100
-Message-Id: <20221212103525.231298-2-alexander.stein@ew.tq-group.com>
+Subject: [RFC PATCH 2/3] gpiolib: Add support for optional ramp-up delays
+Date:   Mon, 12 Dec 2022 11:35:24 +0100
+Message-Id: <20221212103525.231298-3-alexander.stein@ew.tq-group.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
 References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
@@ -84,49 +84,162 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This adds a ramp-up delay (in us) for adding a delay after enabling
-GPIO. This is necessary if the ramp-up time is increased by some external
-components. Usually this is quite fast, but certain combinations can
-increase this to grater than 100ms.
+These delays are added when specified per GPIO line and GPIO is set
+to high level, including any active low flag.
 
 Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 ---
- .../devicetree/bindings/gpio/gpio.txt         | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/gpio/gpiolib.c | 80 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/gpio/gpiolib.h |  3 ++
+ 2 files changed, 83 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 5663e71b751fc..b87669dce9a61 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -182,6 +182,28 @@ gpio-controller@00000000 {
- 		"poweroff", "reset";
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 5a66d9616d7cc..5848caf0b1e12 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -20,6 +20,7 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/fs.h>
+ #include <linux/compat.h>
++#include <linux/delay.h>
+ #include <linux/file.h>
+ #include <uapi/linux/gpio.h>
+ 
+@@ -432,6 +433,73 @@ static int devprop_gpiochip_set_names(struct gpio_chip *chip)
+ 	return 0;
  }
  
-+Optionally, a GPIO controller may have a "gpio-ramp-up-delays-us" property.
-+This is an array of u32 defining the ramp-up delays of the GPIO lines
-+going out of the GPIO controller. This might be necessary if external
-+components (e.g. capacitors, resistors) increase the ramp up time notably.
-+The delay are assigned starting from line offset 0 from
-+left to right from the passed array. An incomplete array (where the number
-+of passed delays are less than ngpios) will still be used up until the last
-+provided valid line index. Setting to will not add any delay.
++/*
++ * devprop_gpiochip_set_delays - Set GPIO line delays using device properties
++ * @chip: GPIO chip whose delays should be set, if possible
++ *
++ * Looks for device property "gpio-ramp-up-delays-us" and if it exists assigns
++ * GPIO delays for the chip.
++ */
++static int devprop_gpiochip_set_delays(struct gpio_chip *chip)
++{
++	struct gpio_device *gdev = chip->gpiodev;
++	struct device *dev = &gdev->dev;
++	u32 *delays;
++	int ret, i;
++	int count;
 +
-+Example:
++	count = device_property_count_u32(dev, "gpio-ramp-up-delays-us");
++	if (count < 0)
++		return 0;
 +
-+gpio-controller@00000000 {
-+	compatible = "foo";
-+	reg = <0x00000000 0x1000>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	gpio-ramp-up-delays-us = <0>, <0>, <0>, <0>,
-+				 <0>, <0>, <120000>, <0>,
-+				 <0>, <0>, <0>, <0>,
-+				 <0>, <0>, <0>, <0>;
++	/*
++	 * When offset is set in the driver side we assume the driver internally
++	 * is using more than one gpiochip per the same device. We have to stop
++	 * setting delays if the specified ones with 'gpio-ramp-up-delays-us'
++	 * are less than the offset in the device itself. This means all the
++	 * lines are not present for every single pin within all the internal
++	 * gpiochips.
++	 */
++	if (count <= chip->offset) {
++		dev_warn(dev, "gpio-ramp-up-delays-us too short (length %d), cannot map delays for the gpiochip at offset %u\n",
++			 count, chip->offset);
++		return 0;
++	}
++
++	delays = kcalloc(count, sizeof(*delays), GFP_KERNEL);
++	if (!delays)
++		return -ENOMEM;
++
++	ret = device_property_read_u32_array(dev, "gpio-ramp-up-delays-us",
++					     delays, count);
++	if (ret < 0) {
++		dev_warn(dev, "failed to read GPIO rampup delays: %d\n", ret);
++		kfree(delays);
++		return ret;
++	}
++
++	/*
++	 * When more than one gpiochip per device is used, 'count' can
++	 * contain at most number gpiochips x chip->ngpio. We have to
++	 * correctly distribute all defined lines taking into account
++	 * chip->offset as starting point from where we will assign
++	 * the delays to pins from the 'delays' array. Since property
++	 * 'gpio-ramp-up-delays-us' cannot contains gaps, we have to be sure
++	 * we only assign those pins that really exists since chip->ngpio
++	 * can be different of the chip->offset.
++	 */
++	count = (count > chip->offset) ? count - chip->offset : count;
++	if (count > chip->ngpio)
++		count = chip->ngpio;
++
++	for (i = 0; i < count; i++)
++		gdev->descs[i].ramp_up_delay_us = delays[chip->offset + i];
++
++	kfree(delays);
++
++	return 0;
 +}
 +
- The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
- providing automatic GPIO request and configuration as part of the
- gpio-controller's driver probe function.
+ static unsigned long *gpiochip_allocate_mask(struct gpio_chip *gc)
+ {
+ 	unsigned long *p;
+@@ -806,6 +874,9 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
+ 			goto err_remove_from_list;
+ 	}
+ 	ret = devprop_gpiochip_set_names(gc);
++	if (ret)
++		goto err_remove_from_list;
++	ret = devprop_gpiochip_set_delays(gc);
+ 	if (ret)
+ 		goto err_remove_from_list;
+ 
+@@ -2962,6 +3033,9 @@ static void gpio_set_open_drain_value_commit(struct gpio_desc *desc, bool value)
+ 		gpiod_err(desc,
+ 			  "%s: Error in set_value for open drain err %d\n",
+ 			  __func__, ret);
++
++	if (desc->ramp_up_delay_us && value)
++		fsleep(desc->ramp_up_delay_us);
+ }
+ 
+ /*
+@@ -2987,6 +3061,9 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ 		gpiod_err(desc,
+ 			  "%s: Error in set_value for open source err %d\n",
+ 			  __func__, ret);
++
++	if (desc->ramp_up_delay_us && value)
++		fsleep(desc->ramp_up_delay_us);
+ }
+ 
+ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+@@ -2996,6 +3073,9 @@ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ 	gc = desc->gdev->chip;
+ 	trace_gpio_value(desc_to_gpio(desc), 0, value);
+ 	gc->set(gc, gpio_chip_hwgpio(desc), value);
++
++	if (desc->ramp_up_delay_us && value)
++		fsleep(desc->ramp_up_delay_us);
+ }
+ 
+ /*
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index b3c2db6eba80c..3d7e5781e00d2 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -143,6 +143,7 @@ extern struct list_head gpio_devices;
+  * @name:		Line name
+  * @hog:		Pointer to the device node that hogs this line (if any)
+  * @debounce_period_us:	Debounce period in microseconds
++ * @ramp_up_delay_us:	Enable propagation delay in microseconds
+  *
+  * These are obtained using gpiod_get() and are preferable to the old
+  * integer-based handles.
+@@ -184,6 +185,8 @@ struct gpio_desc {
+ 	/* debounce period in microseconds */
+ 	unsigned int		debounce_period_us;
+ #endif
++	/* enable propagation delay in microseconds */
++	unsigned int		ramp_up_delay_us;
+ };
+ 
+ #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
 -- 
 2.34.1
 
