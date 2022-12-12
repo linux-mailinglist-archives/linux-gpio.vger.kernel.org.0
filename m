@@ -2,128 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EC6D64A506
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 17:39:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2201364A9ED
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Dec 2022 23:05:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232844AbiLLQjI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 12 Dec 2022 11:39:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        id S231752AbiLLWFI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 12 Dec 2022 17:05:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232841AbiLLQii (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 11:38:38 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B580514D0C
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 08:37:04 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id c17so13623551edj.13
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 08:37:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
-        b=lIFXcScE+1mmzH1SBNLfPzmU2yyZ22FDa7zo6/O0Bw9aIOxDeXxYkEVfus52JWuhda
-         4ouELocZnEhmnwFppolEYq4c3c7RHYAqD4pax4M3unQDLONiM/9+ejXSM9E2FE+Z0v02
-         plxbNMhSLCExfq6g58BwEJLatQLzpt/xLWOhKWfMwSgaHbhPuPfGnoShEU2Q/8V0GhBe
-         I8mO/6POKEHTvHhiQrSmT3i/DlcfyH1o4pAMtSuNXvNoHj+mOy3GKKCsRTSQGVPFd3Z7
-         AQYI0FN6wamo3RnZf0VXDCwVvMRjPWjYDkKYXDeP5o/vQIFIn9FanCQzU/XNFNQHrfWF
-         2geA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lvYON1Uq6UT3Qph7OPPr0NH47G6rUYR8O1BO9MFwJow=;
-        b=MTRuES3KLs599M3exNn/SyWcfYADWHgShzOA8/m9fF9XsGKdBsNlnZtNtivxYcNBOh
-         PNzLXcJsjP74elR4BFEGaClX6cYbsX03jy7QiIsrkhfvwdydOy4HaiVl5XXi8DoHHqGP
-         MLDDnBdF5cju0we26ftWQeTQY3Da1uhHhp53YCOk9gEMOX9wWSlsREWWYn/bmoKCH+ym
-         U+nBPgoBPKK//60o1re3AMguy1vCM9YXjPMYQXD2fhnl24hmA3fwlFOx4LOHykqCKknP
-         /e3YcW1oIe8PmKZUtSEx/3ejw5zt47GIyIQhTTiCkRIO8HfxRNLJygPVp/EM/0OGJtnZ
-         VlZQ==
-X-Gm-Message-State: ANoB5pk7i46CdlZGUvIAAMO4VT2S4R48a/niTSU7AW3P6NNKE4Yrlm4x
-        ZHBzra4ubsHFscUJLXlQGd4PkQ==
-X-Google-Smtp-Source: AA0mqf5ppTTyM6N0bPOAfBX//eKXVRPakyRimeYdkY/8NocUbAvjnOSiYLmQOcD2W7tmhBu2XO410g==
-X-Received: by 2002:a05:6402:702:b0:46f:68d0:76 with SMTP id w2-20020a056402070200b0046f68d00076mr10093614edx.34.1670863020790;
-        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
-Received: from prec5560.. ([2001:bf7:830:a7a8:ff97:7d8d:1f2e:ffaa])
-        by smtp.gmail.com with ESMTPSA id m15-20020a50930f000000b00463597d2c25sm4051979eda.74.2022.12.12.08.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 08:37:00 -0800 (PST)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        Grant Likely <grant.likely@linaro.org>
-Cc:     Robert Foss <robert.foss@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-actions@lists.infradead.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, chrome-platform@lists.linux.dev,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-input@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-serial@vger.kernel.org, Purism Kernel Team <kernel@puri.sm>,
-        linux-staging@lists.linux.dev, alsa-devel@alsa-project.org,
-        linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, patches@opensource.cirrus.com,
-        linux-mtd@lists.infradead.org, linux-renesas-soc@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-pwm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-fbdev@vger.kernel.org
-Subject: Re: (subset) [PATCH 000/606] i2c: Complete conversion to i2c_probe_new
-Date:   Mon, 12 Dec 2022 17:36:51 +0100
-Message-Id: <167086288411.3041259.17824406556561546642.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221118224540.619276-1-uwe@kleine-koenig.org>
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+        with ESMTP id S233111AbiLLWFH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 12 Dec 2022 17:05:07 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E58F03F
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Dec 2022 14:05:07 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p4qv2-0001wy-Dp; Mon, 12 Dec 2022 23:05:04 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p4quz-0046ga-93; Mon, 12 Dec 2022 23:05:02 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p4quy-004bNr-Te; Mon, 12 Dec 2022 23:05:00 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: msc313: Drop empty platform remove function
+Date:   Mon, 12 Dec 2022 23:04:57 +0100
+Message-Id: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1059; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=iecFf5RFUYVm4/OJhbZGIbX9w5dmNggX6EcztGY0M8Y=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjl6WFnoQnz1e3arD6/MATbrvc1qaE1AArlrNjXV/K S0fMGbWJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY5elhQAKCRDB/BR4rcrsCakrB/ 9cCL2lODAiKKbZjnj9grw4IH6ra/bFR8HaPXZoIkePTULNM8AYZi/gie2p2fIxz8SjtPYQfyCBDTFO LX+siIM76F7/FYf/XEnV9utmUCrZMD4rxhxZzQmsyjo7moupCCxTWglTQ+N7x77flOC9F+y8olDAS8 X6QOvy6psndpk0wVWrJlMifC1C2SIti/IhrcKR7H+b5xZWAk4iG6Prq+7SSDCJSIpm1cklzb4edUnd 1Nys/CvSBZBalKsj8xTHau5TFi1X6dV20kap6eDCbH/EBj5uIdB0Ke6pjqMQ4uHy97mr1tTF3vhd1e knYSk/5v91jypttgIDtBQcHJI0vAhV
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 18 Nov 2022 23:35:34 +0100, Uwe Kleine-König wrote:
-> since commit b8a1a4cd5a98 ("i2c: Provide a temporary .probe_new()
-> call-back type") from 2016 there is a "temporary" alternative probe
-> callback for i2c drivers.
-> 
-> This series completes all drivers to this new callback (unless I missed
-> something). It's based on current next/master.
-> A part of the patches depend on commit 662233731d66 ("i2c: core:
-> Introduce i2c_client_get_device_id helper function"), there is a branch that
-> you can pull into your tree to get it:
-> 
-> [...]
+A remove callback just returning 0 is equivalent to no remove callback
+at all. So drop the useless function.
 
-Applied, thanks!
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-msc313.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Repo: https://cgit.freedesktop.org/drm/drm-misc/
+diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+index 52d7b8d99170..b0773e5652fa 100644
+--- a/drivers/gpio/gpio-msc313.c
++++ b/drivers/gpio/gpio-msc313.c
+@@ -655,11 +655,6 @@ static int msc313_gpio_probe(struct platform_device *pdev)
+ 	return devm_gpiochip_add_data(dev, gpiochip, gpio);
+ }
+ 
+-static int msc313_gpio_remove(struct platform_device *pdev)
+-{
+-	return 0;
+-}
+-
+ static const struct of_device_id msc313_gpio_of_match[] = {
+ #ifdef CONFIG_MACH_INFINITY
+ 	{
+@@ -710,6 +705,5 @@ static struct platform_driver msc313_gpio_driver = {
+ 		.pm = &msc313_gpio_ops,
+ 	},
+ 	.probe = msc313_gpio_probe,
+-	.remove = msc313_gpio_remove,
+ };
+ builtin_platform_driver(msc313_gpio_driver);
 
-
-[014/606] drm/bridge: adv7511: Convert to i2c's .probe_new()
-          commit: 1c546894ff82f8b7c070998c03f9b15a3499f326
-[028/606] drm/bridge: parade-ps8622: Convert to i2c's .probe_new()
-          commit: d6b522e9bbb0cca1aeae4ef6188800534794836f
-[035/606] drm/bridge: ti-sn65dsi83: Convert to i2c's .probe_new()
-          commit: 0f6548807fa77e87bbc37964c6b1ed9ba6e1155d
-
-
-
-rob
+base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
+-- 
+2.38.1
 
