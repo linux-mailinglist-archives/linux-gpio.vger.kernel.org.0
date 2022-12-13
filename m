@@ -2,90 +2,75 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DCFD64BE39
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 22:09:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA96E64BEE8
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 22:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235771AbiLMVJY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Dec 2022 16:09:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58184 "EHLO
+        id S237698AbiLMV4D (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Dec 2022 16:56:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235382AbiLMVJW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 16:09:22 -0500
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 522D91139
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 13:09:22 -0800 (PST)
-Received: by mail-vs1-xe31.google.com with SMTP id t5so15959443vsh.8
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 13:09:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tnFbRblvIAohtXsS7HtysL40uwtBJKnVhVEm0LDo430=;
-        b=dQWkUQxFj3P4omRlo7FZ86ewcpHN7+hUf6yRLTiBKl68oUlZCERjUMbzraBwjOUQxc
-         Q4WUyopqarJTZAEbZMxLL9Jcx9WNGUOdxTt3WmGNu3srsxh5TpgLzn8WgxCCyy8vG37C
-         WhbqICC+7p95glWwhF9knsew44gEzDXsUGWGA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tnFbRblvIAohtXsS7HtysL40uwtBJKnVhVEm0LDo430=;
-        b=Q71xr87dkuje74joi+X9Xz2MkKT9gmHXtu04E2LlDd3ipwOctOQthESpsdIP4LtZ9L
-         bbIgEJCS4EKidMn7bXxICP/RXyNx5NoQ4z0EW7l8TraTxUPE2wUPMDjDfFnjuy/1yQpd
-         ZgrQvFa3Tgb5jVN3x/hP6gratIdD4+HqRLK/wNAGNsTsA1RhbkaEy1JLM5pooTpQwaN7
-         LyDn0GNN/yEpw24QU2Wj7V0l3yVAUchjQZm9CSQ7FS2VD2pFIbvn6/XwtUfARpmPDWyM
-         pOXInoMRQ9pyDBmIbBzxNiYXzvZfAPp81N9ATcZgWjq5GrANmZeYJiYJH8CXk8QqVe7X
-         rrEQ==
-X-Gm-Message-State: ANoB5pkKBdlb0F26SWTSxHE+Yu0l2QT+8vmOc76Y+6FXQhLf+ZeJQB9F
-        VZ9d/ynun+uGVp1rJhbt94EFuvY5zqF7Dxtf
-X-Google-Smtp-Source: AA0mqf7O5yMhT14QmPeX/8GgwdSfPWU6+raM6VsNaL6Pz1ppLuX6un2wKpEMsl0oiMq+hQvse+XpfA==
-X-Received: by 2002:a05:6102:f82:b0:3b3:57dc:9cb1 with SMTP id e2-20020a0561020f8200b003b357dc9cb1mr10085181vsv.4.1670965761146;
-        Tue, 13 Dec 2022 13:09:21 -0800 (PST)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
-        by smtp.gmail.com with ESMTPSA id i8-20020a05620a404800b006feea093006sm8667725qko.124.2022.12.13.13.09.19
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Dec 2022 13:09:20 -0800 (PST)
-Received: by mail-qt1-f173.google.com with SMTP id c7so940377qtw.8
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 13:09:19 -0800 (PST)
-X-Received: by 2002:a05:622a:1745:b0:3a6:8b84:47ce with SMTP id
- l5-20020a05622a174500b003a68b8447cemr33504512qtk.678.1670965759633; Tue, 13
- Dec 2022 13:09:19 -0800 (PST)
-MIME-Version: 1.0
-References: <CACRpkdYZDXH=_Mgv0u+B8btLjFcCSTboWFXH4u1h9V=WqLEJQA@mail.gmail.com>
-In-Reply-To: <CACRpkdYZDXH=_Mgv0u+B8btLjFcCSTboWFXH4u1h9V=WqLEJQA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 13 Dec 2022 13:09:03 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wiK9DDH-sE7V1t_QF89nc=uEMt9mhL=LFR1a3R2AK=_ng@mail.gmail.com>
-Message-ID: <CAHk-=wiK9DDH-sE7V1t_QF89nc=uEMt9mhL=LFR1a3R2AK=_ng@mail.gmail.com>
+        with ESMTP id S237637AbiLMVzd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 16:55:33 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54EE6240AA;
+        Tue, 13 Dec 2022 13:53:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E6CCB6173C;
+        Tue, 13 Dec 2022 21:53:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5958CC433D2;
+        Tue, 13 Dec 2022 21:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670968430;
+        bh=3EZpdAcrpEONbKnYiqKd0M11qNZHnvz65bQfZk1OmGk=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=Estgi/n4XP8788EwUivaB+uc7kJbLQCOxuDt658zAaMqgWwmdnYQbkkXO77NTdjlU
+         YM41Zk1XhGDDL2hJPXfbJXv9ZLa5Ljwke6N8L5A8k45uey5fy5jk9b3b8Cxk6cJ6gX
+         X6Q2lwEScFXA/YZBMx8RUBGAMM6sFkDf9dB9pqWTSBjYrdDcoXOZhkvy1IvgYXObjO
+         pOeVztimI5TlS4aMisIvHXJvVXKitHgYfzYAlEG9k4WJvVNHfyDad80Du9vM9HojNJ
+         cYGXfwfpEwM3ARXH1PJmXdVn2J6xxQPjIe8nskzvk48DVNX/6Rjdj8f3f1WyuNxkwp
+         H7LOZQjpxAdqA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 483C2C41612;
+        Tue, 13 Dec 2022 21:53:50 +0000 (UTC)
 Subject: Re: [GIT PULL] pin control bulk changes for v6.2
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYZDXH=_Mgv0u+B8btLjFcCSTboWFXH4u1h9V=WqLEJQA@mail.gmail.com>
+References: <CACRpkdYZDXH=_Mgv0u+B8btLjFcCSTboWFXH4u1h9V=WqLEJQA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYZDXH=_Mgv0u+B8btLjFcCSTboWFXH4u1h9V=WqLEJQA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.2-1
+X-PR-Tracked-Commit-Id: 83e1bcaf8cef26edaaf2a6098ef760f563683483
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 361c89a0da59c04b1d3d33568965fe426b0f18de
+Message-Id: <167096843029.13204.5110849272287950115.pr-tracker-bot@kernel.org>
+Date:   Tue, 13 Dec 2022 21:53:50 +0000
 To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 5:16 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> What has however conflicted in linux-next is pinctrl and the SoC tree, see:
-> https://lore.kernel.org/linux-next/20221206121336.474457bb@canb.auug.org.au/
-> this was caused by a merge path misunderstanding, so now it becomes
-> your problem, congratulations.
+The pull request you sent on Mon, 12 Dec 2022 14:16:35 +0100:
 
-Heh. That's the spirit! It's the season of giving, after all.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.2-1
 
-> However as you can see the resolution is fairly trivial and available in linux-next.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/361c89a0da59c04b1d3d33568965fe426b0f18de
 
-Yeah, not a problem, this was a very normal conflict.
+Thank you!
 
-                  Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
