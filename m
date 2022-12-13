@@ -2,134 +2,161 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AEA264B295
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 10:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DAE264B428
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 12:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiLMJp6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Dec 2022 04:45:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37396 "EHLO
+        id S234909AbiLML01 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Dec 2022 06:26:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234568AbiLMJp5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 04:45:57 -0500
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B86616588
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 01:45:56 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-3b48b139b46so184032537b3.12
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 01:45:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=iPtLftr9mLTiDAptPz9mvrZVG8hTqgqEvX9Avo9sl1g=;
-        b=hKzXso9eZlsyOVFQUJDMuaKvlCYfZTlVdb6U8r74Fs35C7eVjSGT3Vkb/R5Mfy1xkU
-         P/CF6pRg0fmWckEmcLfH8V5KvD8T9TojXNwpF63EKIicT5yAu+kYbbjx5rKWDemGf4VF
-         UxSG6NeaM1rHYnlaN+4K9Mea/3hEf3+Uhd++yPx5AJfRwxGDngXAfpyX3lF47CjJuVa3
-         p+VoyxfRz0LALyDmpZruXOj+MD28bDJnDJPPny3greWOjMnMGdMDE36d4ZVrDwEQoBdp
-         Y46WZSZXo4KSrwnBBUFZ80g7pTpy4HSE4SMlSXz2jshf4Ilr2QoUHiX6xwUed84OZuVg
-         BDtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iPtLftr9mLTiDAptPz9mvrZVG8hTqgqEvX9Avo9sl1g=;
-        b=UffDF+SSpH18tRRvustLgnIucKNWbsQf1QCZBm+e1fNkOaxGCsIf754n8n4mMYimOH
-         y55kNYv3eSCX7eruZwCeZZpBSSPK2iZsEqrs4T520JSU2rmrBKeGkEiFjbr5qW5mIYM3
-         T1SNsjHWIJz6sGGj8B/kuJ5mbeRQbHm7lBaH78iujM3UKZixEGAEIogBRiOifdck5V94
-         bTOP47FcJz2wMXDnzJSgfGSTe/NwMMzgDQ3FOzMoI+RAHkOcpawBN1jaOaUTqbJLg+DM
-         cCXqvsNV5APw2zarTqk3kRYBYaUg2C1KQnzqTiwkdCdoy+PRbn2NrBDSRkqUGHZnQLid
-         7AbA==
-X-Gm-Message-State: ANoB5pmeM3VGsoowDbTI5ODIH/KcRIQkRCOoU6gIKQTqPZU5LDVil6lj
-        iM8Ij6aUQapkQMEhNxStG6h8D+tlm7xvtg0JyzfYxQ==
-X-Google-Smtp-Source: AA0mqf5KB4LYFTpAQUpghbjTaGUJ19gRvoZw0sTgHBYe53MAcw9jcGLIhvF3gdN62YzKc6H5k3qDSar0IR2TxwYnNPo=
-X-Received: by 2002:a81:5d8:0:b0:3f5:b69c:387 with SMTP id 207-20020a8105d8000000b003f5b69c0387mr12925219ywf.359.1670924755634;
- Tue, 13 Dec 2022 01:45:55 -0800 (PST)
-MIME-Version: 1.0
-References: <20221121123803.3786-1-zhuyinbo@loongson.cn> <20221121123803.3786-2-zhuyinbo@loongson.cn>
- <CACRpkda1adiNwbTZHdAyHKny3r5FFMP_XXVGbo1vnCdw9U1gNg@mail.gmail.com>
- <8a7abd77-9540-efa8-6f67-908530e85399@loongson.cn> <CACRpkdb=wdydOYCcrpjLSyvfVO--_ezXsFQ46qwfVCiiTd5fNw@mail.gmail.com>
- <b78f02f4-4329-602e-ca8d-adbe911c2a54@loongson.cn>
-In-Reply-To: <b78f02f4-4329-602e-ca8d-adbe911c2a54@loongson.cn>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 13 Dec 2022 10:45:43 +0100
-Message-ID: <CACRpkdbrY2hV=JM3NJVdFyJbpXARKEhGMVpwrN9U=cP6LzyPQA@mail.gmail.com>
-Subject: Re: [PATCH v5 2/3] gpio: loongson: add gpio driver support
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        with ESMTP id S234874AbiLMLZy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 06:25:54 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338441B78B;
+        Tue, 13 Dec 2022 03:25:19 -0800 (PST)
+Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id A7FC74A7;
+        Tue, 13 Dec 2022 12:25:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1670930716;
+        bh=Sgvpl3nh6q9qheL5iuGlANUL6ZF9LyW9S2MfR32UuGE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nE94/Wiam1Cj7iupbOnouKXUUpl3ndxoefRwc3uSkV3Fgvuq1vRNmZ9wvo8Ow/Rkv
+         Adp6xe6E3UWfdJ+1RKZ3z1iQ5u0c6NQUkEZzG97q+WMN7QpxSQDhaN+4pLKFN3ZWYX
+         y3GaA3LG8ewm45ggJbNCUMGmuNR6Zu8YiaxzecV4=
+Date:   Tue, 13 Dec 2022 13:25:14 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Bibo Mao <maobibo@loongson.cn>,
-        Yanteng Si <siyanteng@loongson.cn>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        Arnaud Patard <apatard@mandriva.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Hongchen Zhang <zhanghongchen@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>
+Subject: Re: [RFC PATCH 0/3] gpiolib: ramp-up delay support
+Message-ID: <Y5hhGlITgIM9M01N@pendragon.ideasonboard.com>
+References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
+ <Y5chUvK+SLMpm9XY@pendragon.ideasonboard.com>
+ <2506013.ElGaqSPkdT@steina-w>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2506013.ElGaqSPkdT@steina-w>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 9:34 AM Yinbo Zhu <zhuyinbo@loongson.cn> wrote:
+Hi Alexander,
 
-> > Don't do that because the GPIO maintainers love the
-> > dynamic base and hate hardcoded bases. Set the base to -1
-> > If you wonder why, read drivers/gpio/TODO.
->
-> Hi Linus,
->
-> I recenly verfied other peripheral on upstream, some peripheral driver
-> need use gpio number,
+On Tue, Dec 13, 2022 at 08:49:06AM +0100, Alexander Stein wrote:
+> Am Montag, 12. Dezember 2022, 13:40:50 CET schrieb Laurent Pinchart:
+> > On Mon, Dec 12, 2022 at 11:35:22AM +0100, Alexander Stein wrote:
+> > > Hi all,
+> > > 
+> > > this series is an RFC for a general approach to solve the issue at [1].
+> > > While
+> >
+> > I'm impressed by how fast you came up with a solution :-)
+> > 
+> > > a device specific property works as well, a more generic approach is
+> > > preferred. In short: When enabling a GPIO the actual ramp-up time might
+> > > be (much) bigger than what software usually assume, in my case >100ms.
+> > > Adding a delay to each driver is cumbersome.
+> > > Instead the (optional) ramp-up delay is added to each gpio_desc. The
+> > > delays can be specified per gpio-controller, similar to
+> > > 'gpio-line-names'. Actually the parsing code is almost a 1:1 copy of
+> > > devprop_gpiochip_set_names().
+> >
+> > While I like consistency, I wonder if it wouldn't be better in this case
+> > to use a list of <gpio-number delay> cells in gpio-ramp-up-delays-us. In
+> > typical use cases, very few GPIOs will need a delay, and a GPIO
+> > controller could support a very large number of GPIOs, which would make
+> > your current proposal cumbersome.
+> 
+> That's a good idea. I would even go a step further to specify both ramp-up and 
+> ramp-down in one cell, e.g. <gpio-number ramp-up ramp-down>. This way a second 
+> property is not needed.
+> 
+> > > Due to
+> > > (temporary) memory allocation, I opted for a separate function, there is
+> > > code duplication, but handling both properties in a single function
+> > > seemed too tedious, let alone the to be added ramp-down delays.
+> > > 
+> > > This feature could also be added as a callback in gpio_chip, but the
+> > > callbacks have to be added to each driver then. I would prefer a single
+> > > one-fits-all implementation and another indirection in the GPIO call
+> > > chain.
+> > 
+> > Agreed.
+> > 
+> > > Laurent suggest to add a GPIO delay node in DT. IMHO this increased the DT
+> > > complexity unnecessarily. But comments are welcome.
+> > 
+> > It's an alternative approach that could be considered if this one is
+> > rejected, but I have a preference for your solution.
+> > 
+> > > The following 3 patches are a proof-of-concept on my platform, consisting
+> > > of: Patch 1 is the proposed bindings and straight forward.
+> > > Patch 2 is the current implementation
+> > > Patch 3 is an actual usage example for specifying the delays
+> > > 
+> > > TODO:
+> > > 1. Adding ramp-down delays (Just the inverse copy of ramp-up delay)
+> > > 2. Should these delays take active low flags into account?
+> > 
+> > How so ?
+> 
+> Given the name ramp-up (& ramp-down) I would assume they affect the voltage 
+> low -> high change (resp. high -> low), not just gpiod_set_value(..., 1).
 
-What do you mean by upstream? If it is your own derivate kernel
-(what we call *downstream) then it should be fixed, not
-accommodated for.
+Good point. They should indeed.
 
-If it is the mainline (Torvalds) kernel you are looking at legacy code
-(such as boardfiles) which should be fixed or deleted. Beware that
-the kernel contains much old code and bad examples which should
-not be followed.
+> > > 3. How to deal with setting multiple GPIOs at once?
+> > > 
+> > > I skipped 1. for now, because this is just a copy with ramp-up being
+> > > replaced with ramp-down.
+> > > 
+> > > I'm not that well versed in gpiolib code, so I'm not sure if I got all
+> > > placed where GPIOs are set. So patch 2 might be incomplete.
+> > > 
+> > > For now I skipped setting multiple GPIOs at once completely, so to get some
+> > > feedback on this approach. A possible solution is to check for the bigest
+> > > delay in the set and use that for all afterwards. But I'm not sure about
+> > > the overhead in this case.
+> > 
+> > I assume you're talking about the gpiod_set_array_value() API. That
+> > sounds OK as an initial implementation, a caller of that function needs
+> > to be prepared for the GPIOs being set in a random order due to hardware
+> > delays, so it shouldn't break the API contract. I would however state
+> > this explicitly in the function documentation.
+> 
+> Okay, that seems sensible. Will do it.
+> 
+> > > I hope there is some feedback. While thinking about this issue appears to
+> > > be more widespread than I expected.
+> > > 
+> > > Best regards,
+> > > Alexander
+> > > 
+> > > [1] https://lore.kernel.org/all/20221209083339.3780776-1-alexander.stein@ew.tq-group.com/
+> > >
+> > > Alexander Stein (3):
+> > >   dt-bindings: gpio: Add optional ramp-up delay property
+> > >   gpiolib: Add support for optional ramp-up delays
+> > >   arm64: dts: mba8mx: Add GPIO ramp-up delays
+> > >  
+> > >  .../devicetree/bindings/gpio/gpio.txt         | 22 +++++
+> > >  arch/arm64/boot/dts/freescale/mba8mx.dtsi     |  5 ++
+> > >  drivers/gpio/gpiolib.c                        | 80 +++++++++++++++++++
+> > >  drivers/gpio/gpiolib.h                        |  3 +
+> > >  4 files changed, 110 insertions(+)
 
-> but if use dynamic base that gpio number will be
-> meaningless.  in additon I notice that many gpio driver don't use
-> dynamic base, although bgpio_int was called.
+-- 
+Regards,
 
-Two wrongs does not make one right.
-It is always possible to find bad examples in the kernel, because we
-maintain lots of legacy code.
-When in doubt, do what the maintainers say.
-This maintainer says this: use a dynamic base.
-
-> so I think the gpio number should be keep consistent with datasheet for
-> some platform that need use gpio number.
-
-So someone wrote a datasheet for a derivative, home-cooked kernel
-that they had not bothered to synchronize with the community and
-now the community should accommodate this mistake?
-
-Sorry that is not how we work.
-
-That datasheet is probably recommending old and bad practices, such
-as using global GPIO numbers in drivers or using GPIO sysfs. The
-GPIO maintainers do not approve of such stuff.
-
-What about fixing the datasheet to say:
-- We use dynamic GPIO number allocation
-- Assign GPIOs to devices in the device tree with only HW GPIO number
-  references = <&gpio HW_NUM GPIO_ACTIVE_HIGH>; etc
-- For userspace access use libgpiod and /dev/gpiochipN, do not
-  enable the legacy GPIO sysfs.
-
-Yours,
-Linus Walleij
+Laurent Pinchart
