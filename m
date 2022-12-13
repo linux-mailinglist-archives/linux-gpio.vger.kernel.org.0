@@ -2,127 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 098AC64B8EF
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 16:50:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BCF8F64BBD5
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 19:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236341AbiLMPuO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Dec 2022 10:50:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42762 "EHLO
+        id S235744AbiLMSVl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Dec 2022 13:21:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236340AbiLMPtk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 10:49:40 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA4518E26;
-        Tue, 13 Dec 2022 07:47:47 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 074E57C5;
-        Tue, 13 Dec 2022 16:47:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1670946465;
-        bh=Hh7Byyc+wRRVtOFshuzLhuZNKJvSEOwdnUKnfVvnjB0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u0OiRnu3WJJ/IltBW8gS5CMc7FK5BlQC0ywXce53gd7DqgV+WeoVEHJE049BmDrEu
-         aMppFcDIHU+bLYeONVl0ZPLi8DY+mQxbJp/Pvj5OPJD7U/hrx2nKRmqihn09a3oK4N
-         L2kHEopEGW9vwp+r9pihOyCmvqK1UDYk6HFcs8jE=
-Date:   Tue, 13 Dec 2022 17:47:41 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>
-Subject: Re: [RFC PATCH 0/3] gpiolib: ramp-up delay support
-Message-ID: <Y5ienUu9qHFmR2Yv@pendragon.ideasonboard.com>
-References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
- <CAL_JsqLeqpMuRkvpT2-x5q+8e4bHf4oLDML2QqCOgRMAg8=CsA@mail.gmail.com>
+        with ESMTP id S236393AbiLMSVk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 13:21:40 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42019F01B
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 10:21:39 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p59uL-0006DU-FB; Tue, 13 Dec 2022 19:21:37 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p59uJ-004Iub-GR; Tue, 13 Dec 2022 19:21:36 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1p59uJ-004q3A-GG; Tue, 13 Dec 2022 19:21:35 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH] pinctrl: da850-pupd: Drop empty platform remove function
+Date:   Tue, 13 Dec 2022 19:21:25 +0100
+Message-Id: <20221213182125.929303-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqLeqpMuRkvpT2-x5q+8e4bHf4oLDML2QqCOgRMAg8=CsA@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1087; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=7ZbcOHSDtAaePxcO4XihErn6wq+BEiFanZ383QJB9YU=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjmMKhMfW0U5ysR+trE3A/9GEDDSqu4jnnOhsV6uu4 m2zd/wGJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY5jCoQAKCRDB/BR4rcrsCdWDCA CKz6HSTlGwVM03EEASmykwMWxTrdkMiiy/j+q1/WlI0I69rqiGGXmHmhbYCh6vUN2E6eVbBsPphLBx zN9JBa/t3Q1xWz4501A7Hbk7DGrT/AjSSMOrqUL4SgM62B7S142ElrVx/SmaPwpktnuhVOenZKUizd AbA6Ke6V0qv+9/993H8At7ZQbCUG0jS51/LdIQ9dLpPqWbtWQf8HrHPa/ztR3CT0nV3OjkiXdhBvJN FxQd8Mtt0vYibVp4FFxOzHqlgcytmk+stTAdz/Wrl/i4HoSB3AnU0b5SdGEcQpwH+zFmpE/oMsafqt 6V0TssTqldTO+uHGgU9sOAtXXP4JPy
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+A remove callback just returning 0 is equivalent to no remove callback
+at all. So drop the useless function.
 
-On Tue, Dec 13, 2022 at 08:20:57AM -0600, Rob Herring wrote:
-> On Mon, Dec 12, 2022 at 4:35 AM Alexander Stein wrote:
-> >
-> > Hi all,
-> >
-> > this series is an RFC for a general approach to solve the issue at [1]. While
-> > a device specific property works as well, a more generic approach is preferred.
-> > In short: When enabling a GPIO the actual ramp-up time might be (much) bigger
-> > than what software usually assume, in my case >100ms. Adding a delay to each
-> > driver is cumbersome.
-> 
-> At least for DT, I think this belongs (if at all) in the consumers,
-> rather than a producer property. The options there are
-> 'foo-gpios-ramp-us' for 'foo-gpios' or add some delay bits to GPIO
-> flags.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/pinctrl/pinctrl-da850-pupd.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-My main requirement is to handle these properties in a central place,
-without having to patch individual drivers, so this would work for me.
+diff --git a/drivers/pinctrl/pinctrl-da850-pupd.c b/drivers/pinctrl/pinctrl-da850-pupd.c
+index 5a0a1f20c843..5eb248663e17 100644
+--- a/drivers/pinctrl/pinctrl-da850-pupd.c
++++ b/drivers/pinctrl/pinctrl-da850-pupd.c
+@@ -173,11 +173,6 @@ static int da850_pupd_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-static int da850_pupd_remove(struct platform_device *pdev)
+-{
+-	return 0;
+-}
+-
+ static const struct of_device_id da850_pupd_of_match[] = {
+ 	{ .compatible = "ti,da850-pupd" },
+ 	{ }
+@@ -190,7 +185,6 @@ static struct platform_driver da850_pupd_driver = {
+ 		.of_match_table	= da850_pupd_of_match,
+ 	},
+ 	.probe	= da850_pupd_probe,
+-	.remove	= da850_pupd_remove,
+ };
+ module_platform_driver(da850_pupd_driver);
+ 
 
-> We already have some of the former for various 'generic' power
-> sequencing related delays. Of course, there's no real pattern to them
-> as they all get added as we go without much foresight. In this case
-> even, there are 4 possible delays: pre and post ramp up and down.
-> 
-> > Instead the (optional) ramp-up delay is added to each gpio_desc. The delays can
-> > be specified per gpio-controller, similar to 'gpio-line-names'. Actually the
-> > parsing code is almost a 1:1 copy of devprop_gpiochip_set_names(). Due to
-> > (temporary) memory allocation, I opted for a separate function, there is code
-> > duplication, but handling both properties in a single function seemed too
-> > tedious, let alone the to be added ramp-down delays.
-> >
-> > This feature could also be added as a callback in gpio_chip, but the callbacks
-> > have to be added to each driver then. I would prefer a single one-fits-all
-> > implementation and another indirection in the GPIO call chain.
-> >
-> > Laurent suggest to add a GPIO delay node in DT. IMHO this increased the DT
-> > complexity unnecessarily. But comments are welcome.
-> >
-> > The following 3 patches are a proof-of-concept on my platform, consisting of:
-> > Patch 1 is the proposed bindings and straight forward.
-> > Patch 2 is the current implementation
-> > Patch 3 is an actual usage example for specifying the delays
-> >
-> > TODO:
-> > 1. Adding ramp-down delays (Just the inverse copy of ramp-up delay)
-> > 2. Should these delays take active low flags into account?
-> > 3. How to deal with setting multiple GPIOs at once?
-> >
-> > I skipped 1. for now, because this is just a copy with ramp-up being replaced
-> > with ramp-down.
-> >
-> > I'm not that well versed in gpiolib code, so I'm not sure if I got all placed
-> > where GPIOs are set. So patch 2 might be incomplete.
-> >
-> > For now I skipped setting multiple GPIOs at once completely, so to get some
-> > feedback on this approach. A possible solution is to check for the bigest delay
-> > in the set and use that for all afterwards. But I'm not sure about the overhead
-> > in this case.
-> >
-> > I hope there is some feedback. While thinking about this issue appears to be
-> > more widespread than I expected.
-> 
-> Many/most GPIO controllers can read the actual state of an output
-> (IIRC, i.MX ctrlr can). Perhaps that capability could be used to delay
-> until the state of the signal matches the set state. And you'd
-> probably want to measure how long that took and then add some more
-> time based on it. This of course gets into the electricals of at what
-> levels a low or high state will register. If you can't read the state,
-> then you would be stuck with some maximum timeout.
-
+base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
 -- 
-Regards,
+2.38.1
 
-Laurent Pinchart
