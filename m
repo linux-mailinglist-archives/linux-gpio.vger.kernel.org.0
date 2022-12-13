@@ -2,90 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 369D864BBDE
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 19:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A85D64BD0A
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Dec 2022 20:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236508AbiLMSXd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 13 Dec 2022 13:23:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
+        id S236783AbiLMTRc (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 13 Dec 2022 14:17:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236503AbiLMSXc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 13:23:32 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28DCEE2C
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 10:23:31 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p59w9-0006IP-ES; Tue, 13 Dec 2022 19:23:29 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p59w6-004Iv2-Qh; Tue, 13 Dec 2022 19:23:27 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1p59w6-004q3e-RF; Tue, 13 Dec 2022 19:23:26 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH] pinctrl: thunderbay: Drop empty platform remove function
-Date:   Tue, 13 Dec 2022 19:23:22 +0100
-Message-Id: <20221213182322.962345-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.38.1
+        with ESMTP id S236753AbiLMTRS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 13 Dec 2022 14:17:18 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E67E120A8
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 11:17:17 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id ay42so2567086uab.6
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Dec 2022 11:17:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zOy4uF5mwrb4slUczsFCBnv0U6Uuy59EM0w8h3JKl7w=;
+        b=PWVcbnT1Fo2545SxX5cvzCRRWewws1UobRpt0HqiVvdhMiM3J1KCdE9/BJW9e+ixmy
+         b1Wv2yHdcWUzJgrIy79FFFXPUn25QOBI1oskpDCnKK3nPVJmg9IjW54H61PuAjTwGE4c
+         c93GHV4eNo846j86A1kRMi6YpO5UIUv4pwzDr0eYbW1u6wJ5+Lf+v7j/A/v3h69UNDJN
+         d0frHeKtg5pn03JJT+RQgTTGrvIiOpiaVQHuGjxppAJXU1vSHwPKggtHC5LuqGwCa1Ia
+         9QtqKZE+pbI8aYJyS+QIjBJ2JW87POvM7XI9N/KQX5Rf8PXjroulFPdlFc3d02usQR6i
+         ltkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zOy4uF5mwrb4slUczsFCBnv0U6Uuy59EM0w8h3JKl7w=;
+        b=C7WuBDgWOYcWm8anfTpCLt8bplTPg1MYAn0MuYbfnSXflFaBKKUIAtJtvAPoUlT0JR
+         py4vqyyCnCTHmZbAX9BRkO1vBToA1XkjBklYyBk7j69pDdJGAUofo93B8tkJfbzuXhDb
+         uKHbW7aBByHnXJt5vRj3HB5xp5L64sFuNBLraH4mxUMiWQNaq3GPgW87ThRIXpq5fPxW
+         CWCzpsL9KuHhEQXo1H7dIl2ggh5KfJEubMaGV4+ZhE2yCyU5sQhKAXd5bllyD36qeRn4
+         gqQDPbArNhWfhnFM0EZUzo0FEKJuewTA3sHsWEI7yFAaucNbE8uC8NeGAJISaAsBkpVp
+         qc/A==
+X-Gm-Message-State: ANoB5pmvhhV7pGPukzjok8C+fXL5QZsFxu3yhAsJPE0DDseFeuNfZDZv
+        C0KgZTYE+WDzFyTcAuRda1XhqM2gK7xuScbV4QE=
+X-Google-Smtp-Source: AA0mqf5zHOuLS4E7TjXhlSP5BSABzy47t1rvE32DNvbrbVuicDgeuO16tfmK5HfJNUfznaGUS8V1MoQar7LLRBJjdv8=
+X-Received: by 2002:a05:6130:a8:b0:419:aad1:6d31 with SMTP id
+ x40-20020a05613000a800b00419aad16d31mr14886157uaf.99.1670959036369; Tue, 13
+ Dec 2022 11:17:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1142; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=Z7NtAGUPRLnR8BMm+xu1IHpCprR7tqyJZPS+YtVLgKY=; b=owEBbQGS/pANAwAKAcH8FHityuwJAcsmYgBjmMMXsqzxr7NTHW9GVsYJ7I4aZARGdk+xJztCHppw d4VuwduJATMEAAEKAB0WIQR+cioWkBis/z50pAvB/BR4rcrsCQUCY5jDFwAKCRDB/BR4rcrsCYqdCA CAydzVPLyDLzSXJGF/XbpPdWDXu0ESi2AU7XyOlCfFQehTASFnpc6otGySvipEO+UyYJ6YP22N+gVm sA1B+2KvulhSLZGwBz5dkfonmdcXuUtelvyOd+cymQL2pO8ElGS6fTpJzc9sVqVBSbu16M7zdprT/8 /DB8s4wr9rxxk43k5A/B1i9awqtQalcCHoSwB7DghHDqU1j8NqsPef7aUMf4MLpVqTKCt0XK/49/sP YGdMv989Xv3m/BPOK4MPN6JKXIVvdRjmczLQ9RfAXDijBLSw89v9ipKlKeXeoDEleQ/Bw/5Pjnw1Ra U+Eu09eibc3AZJtLN3nElCjnnu5UwI
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
+From:   Romain Perier <romain.perier@gmail.com>
+Date:   Tue, 13 Dec 2022 20:17:05 +0100
+Message-ID: <CABgxDoL9PqviUPZ0177ay=WK1A9eQK=AtZxuwF82C_FtLB-DDw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: msc313: Drop empty platform remove function
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Daniel Palmer <daniel@thingy.jp>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-A remove callback just returning 0 is equivalent to no remove callback
-at all. So drop the useless function.
+Hi,
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/pinctrl/pinctrl-thunderbay.c | 7 -------
- 1 file changed, 7 deletions(-)
+Le lun. 12 d=C3=A9c. 2022 =C3=A0 23:05, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> a =C3=A9crit :
+>
+> A remove callback just returning 0 is equivalent to no remove callback
+> at all. So drop the useless function.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-diff --git a/drivers/pinctrl/pinctrl-thunderbay.c b/drivers/pinctrl/pinctrl-thunderbay.c
-index 9328b17485cf..1acf2ab1a3db 100644
---- a/drivers/pinctrl/pinctrl-thunderbay.c
-+++ b/drivers/pinctrl/pinctrl-thunderbay.c
-@@ -1274,19 +1274,12 @@ static int thunderbay_pinctrl_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int thunderbay_pinctrl_remove(struct platform_device *pdev)
--{
--	/* thunderbay_pinctrl_remove function to clear the assigned memory */
--	return 0;
--}
--
- static struct platform_driver thunderbay_pinctrl_driver = {
- 	.driver = {
- 		.name = "thunderbay-pinctrl",
- 		.of_match_table = thunderbay_pinctrl_match,
- 	},
- 	.probe = thunderbay_pinctrl_probe,
--	.remove = thunderbay_pinctrl_remove,
- };
- 
- builtin_platform_driver(thunderbay_pinctrl_driver);
+Good catch,
 
-base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
--- 
-2.38.1
+Reviewed-by: Romain Perier <romain.perier@gmail.com>
 
+
+Regards,
