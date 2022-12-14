@@ -2,142 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7633664D192
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Dec 2022 22:03:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C830764D301
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 00:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229480AbiLNVDa (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Dec 2022 16:03:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51084 "EHLO
+        id S229689AbiLNXJE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Dec 2022 18:09:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiLNVD3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Dec 2022 16:03:29 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3598E2C12B
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Dec 2022 13:03:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671051808; x=1702587808;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=DW1PrX6AYggd58gDhhcVAeYDJrh3Z6j1su6Mzdj8+F0=;
-  b=OQEzRt9xwJwsnRwT8VZCFwOaUVJcWaHvVVDcrE5/dcy+yZRBPHOMp9/c
-   cuESlW4JJctozkJeLaiaQPQRVaQLxiaNULIvFHF5/mCMGT73vMw90dlwg
-   RjdwtBJtJmC24kjvK6eu8oGoqotl65ZMeSg1d5AFMSDdvhMbN5qXTqwSK
-   hCZh+1TX43Vw/0WSjGtrgelsQeJcRa5s7ECsrvzv0JBMQzEKK55WbLvNM
-   0SdRtPLJqVoOibCNXFziRWsmizquIAmVQwMRGLV5kI2lUHCRrTnn2MBV5
-   aOW4Re73iE6KATgBzZq1hO7tPXIk2h1As7mZ9Gqslic5BRuJvn9SapGcy
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="298187347"
-X-IronPort-AV: E=Sophos;i="5.96,245,1665471600"; 
-   d="scan'208";a="298187347"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2022 13:03:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10561"; a="651257241"
-X-IronPort-AV: E=Sophos;i="5.96,245,1665471600"; 
-   d="scan'208";a="651257241"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 14 Dec 2022 13:03:26 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1p5YuU-0005nb-0t;
-        Wed, 14 Dec 2022 21:03:26 +0000
-Date:   Thu, 15 Dec 2022 05:02:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 11e47bbd700f31bd1ee9f8863381bc9e741c0e97
-Message-ID: <639a39fb.NyFyjIoOPcK+oyvc%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229551AbiLNXJD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Dec 2022 18:09:03 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC5F442C6
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Dec 2022 15:09:02 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id js9so8602496pjb.2
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Dec 2022 15:09:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ehVNxRAk8vtcQmEsS2DeBEXBsGDUIlgGFYWQTXu6Hk=;
+        b=XGNT1V8bB+E+b7ARt7dy88tch1s1aCC7J585miYX8QJAQHTQDryfRyy/yUbZe84R3Z
+         QJ7OhpwNdCrA01EPKWFvknWSPw+t9xl6+DApoaVCcW9P6hnZtW89BYPZAJ42P547x/26
+         meb60w9D91tfFRNBLiL1qGf8wirGUo1fIfqMeHLIpjqP9c1zUtguR4FFW4p6uewrkK86
+         xKAydwss7Ktfjm8lJXjr8VmFLpKBGTgpQ5ZyG54z3vn2vPZMkDHePBP9fauHDYHKsmcP
+         HmzlCquXfd7JZcmZ5jRnUHrATM998CH2pypijXpvXMtUOZSQ9JXbvaIr0ZWopAfdXi6o
+         tkpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ehVNxRAk8vtcQmEsS2DeBEXBsGDUIlgGFYWQTXu6Hk=;
+        b=NxPtyXZvlbn/DrCDR6p9Bm+acUXVesT/3pT5zHM08XNg/sukYjsG8TKyVJLciaZ/BG
+         dcmMACthSfE8qsh0lDLhMnHwoA0egUDuundCLHrnXV9kzks+h1vXzO0pcdmyiFvCv+Oq
+         pHnpi4aj0Bak8x4NCP8OiYLO1fJb2gG5/fD11DEiM3WTmUkbBlfd3bnWDCVhuoEiLONW
+         +IUUdNzsyVS5c89ctuKOErFLiOKTHdz1xAJ3unBRjrjRkKb+ur8F2lLyiebcCu6xCXBo
+         9mqQYz3pXfukdNacq3Wb4g7hrm+Xr+2CXKbvIn1TQQm5OasaSi9p7C/WVHqwzdxU5hOl
+         zfdw==
+X-Gm-Message-State: ANoB5pmwC0iMD1ubNHQ6hFOcgwPT34U+JZ280zy2hlJIIrsf1FkQB7D1
+        r1fILW5EV8kVLvtM7prTEo7ZErvYRd/AYepFd03Hwg==
+X-Google-Smtp-Source: AA0mqf4F3DDjCXcDZNjOHDv7HOXv55ZrwJY8PAYxDaDIKWp/7EopgFHllqtnyYZqC/Y9dH5TVaBIAEWv4YV5P1wITi4=
+X-Received: by 2002:a17:902:eac5:b0:189:f06e:fd93 with SMTP id
+ p5-20020a170902eac500b00189f06efd93mr11179976pld.37.1671059341322; Wed, 14
+ Dec 2022 15:09:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20221128054820.1771-1-clin@suse.com> <20221128054820.1771-3-clin@suse.com>
+ <CAOMZO5D0wJcfbFsvUN3K17S5F4zT2Yf8yQB+wMKQPzuMBitrpA@mail.gmail.com>
+ <CACRpkdaKYFbXRcV1WgDEiYPEwzNAZq-AqAHpWd1rJyW-h369dw@mail.gmail.com>
+ <Y5K726npjKAO4sIq@linux-8mug> <CACRpkdbyfp3FwUfS7aDCLmsyM-3Xc1GfyX7_jFcuF1dhf+knQA@mail.gmail.com>
+In-Reply-To: <CACRpkdbyfp3FwUfS7aDCLmsyM-3Xc1GfyX7_jFcuF1dhf+knQA@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 14 Dec 2022 15:08:25 -0800
+Message-ID: <CAGETcx8V0xop2E11oL3CcaOe4E7w61-suHXU4A-V7AdhRxrUQA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: add NXP S32 SoC family support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Chester Lin <clin@suse.com>, Fabio Estevam <festevam@gmail.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>, s32@nxp.com,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Radu Pirea <radu-nicolae.pirea@nxp.com>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Matthias Brugger <mbrugger@suse.com>,
+        Matthew Nunez <matthew.nunez@nxp.com>,
+        Phu Luu An <phu.luuan@nxp.com>,
+        Stefan-Gabriel Mirea <stefan-gabriel.mirea@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 11e47bbd700f31bd1ee9f8863381bc9e741c0e97  gpio: sim: set a limit on the number of GPIOs
+On Fri, Dec 9, 2022 at 3:26 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Dec 9, 2022 at 5:39 AM Chester Lin <clin@suse.com> wrote:
+> >
+> > Hi Linus and Fabio,
+> >
+> > Thanks for your time to review this patch!
+> >
+> > On Thu, Dec 08, 2022 at 10:37:36PM +0100, Linus Walleij wrote:
+> > > On Thu, Dec 8, 2022 at 12:04 AM Fabio Estevam <festevam@gmail.com> wrote:
+> > >
+> > > > In other imx8m pinctrl drivers we pass:
+> > > (...)
+> > > > > +module_platform_driver(s32g_pinctrl_driver);
+> > > >
+> > > > And we also register it in arch_initcall() level.
+> > >
+> > > Do you really need that though? This driver certainly does not.
+> > >
+> > > I was under the impression that recent changes to the probe-order
+> > > logic has made most explicit arch_ etc initcall orderings surplus.
+> > >
+> >
+> > Could bool/tristate options in the Kconfig be the key point?
+> >
+> > Based on current design I prefer to build the s32g2 pinctrl driver as built-in
+> > rather than a loadable module. IIUC, when the driver is not built as module
+> > then the initcall ordering should still matter.
+>
+> It is true that if you compile something into a module then all initicalls
+> are the same: they are called when the module is loaded.
+>
+> But the remaining initcalls used to be assigned to core, arch, subsystem
+> etc in order for resources (such as clocks, regulators or pins) to be
+> available before the drivers that need them get probed.
+>
+> However there was first deferred probe to partially solve the problem
+> and recently a large and refined series that use the dependencies in
+> the device tree to resolve probe order.
+>
+> Saravana Kannan has been working tirelessly at this, issueing
+> git log --oneline --author="Saravana Kannan"
+> you will see the scope of this work.
+>
 
-elapsed time: 723m
+Thanks Linus.
 
-configs tested: 61
-configs skipped: 2
+For a system using DT, fw_devlink's goal is to make module load
+ordering or driver registration ordering irrelevant to proper
+functioning of the kernel/drivers. It should automatically figure out
+the dependencies and have the devices probe in the right order. It's
+already true for at least 80% of the cases for a system using DT.
+There are some known issues I'm either working on or have on my To do
+list. So, if you see a case where fw_devlink is not handling it
+correctly, please let me know.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-gcc tested configs:
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                           rhel-8.3-bpf
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                        randconfig-a002
-x86_64                        randconfig-a004
-x86_64                        randconfig-a006
-arc                                 defconfig
-s390                             allmodconfig
-x86_64                        randconfig-a011
-alpha                               defconfig
-arc                  randconfig-r043-20221213
-m68k                             allyesconfig
-x86_64                          rhel-8.3-rust
-powerpc                           allnoconfig
-x86_64                        randconfig-a015
-x86_64                    rhel-8.3-kselftests
-arm                  randconfig-r046-20221213
-x86_64                          rhel-8.3-func
-m68k                             allmodconfig
-arc                              allyesconfig
-x86_64                        randconfig-a013
-ia64                             allmodconfig
-s390                                defconfig
-alpha                            allyesconfig
-s390                             allyesconfig
-i386                                defconfig
-arm                                 defconfig
-i386                          randconfig-a001
-mips                             allyesconfig
-i386                          randconfig-a003
-x86_64                               rhel-8.3
-powerpc                          allmodconfig
-sh                               allmodconfig
-i386                          randconfig-a014
-i386                          randconfig-a005
-x86_64                              defconfig
-i386                          randconfig-a012
-i386                          randconfig-a016
-arm                              allyesconfig
-arm64                            allyesconfig
-i386                             allyesconfig
-x86_64                           allyesconfig
-
-clang tested configs:
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20221213
-x86_64                        randconfig-a012
-hexagon              randconfig-r045-20221213
-x86_64                        randconfig-a014
-riscv                randconfig-r042-20221213
-s390                 randconfig-r044-20221213
-x86_64                        randconfig-a016
-i386                          randconfig-a002
-i386                          randconfig-a013
-i386                          randconfig-a004
-i386                          randconfig-a011
-i386                          randconfig-a006
-i386                          randconfig-a015
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+-Saravana
