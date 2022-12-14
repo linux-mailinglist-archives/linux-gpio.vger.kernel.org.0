@@ -2,61 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65F7664C587
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Dec 2022 10:07:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C6264C65F
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Dec 2022 10:54:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237374AbiLNJHu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 14 Dec 2022 04:07:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32770 "EHLO
+        id S237989AbiLNJyU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 14 Dec 2022 04:54:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237870AbiLNJHm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Dec 2022 04:07:42 -0500
-Received: from mail.lokoho.com (mail.lokoho.com [217.61.105.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79CFBF4
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Dec 2022 01:07:41 -0800 (PST)
-Received: by mail.lokoho.com (Postfix, from userid 1001)
-        id 0802D86889; Wed, 14 Dec 2022 09:06:14 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
-        t=1671008860; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
-        h=Date:From:To:Subject:From;
-        b=NdgVbRjG8i7hWvSOG1EZ1rQnjaTfZHaVAILENnlB/9UNF6+sTICZCg7fjvMoMVYLq
-         HshCD19dwYdVyJUAzTar/kDNWc24gp+8zzjMmsXgJKoUVELg5tlfNNj0DyXPPJ/56U
-         a3it3fvIclc0KfyxYqg32l1DZ8UoVtBYO3y32t0DHpXW06C3nwWbQWeT5v6RDbXASl
-         wFKK9smh/pnT28XPEErxexV80yIarxhXnao1YYnwvpqUSevWmcCcjCNpTKEJtCmglL
-         TY3l2sSRWOyUzr2iu8arbm3ztzjZ+fca7kkybvamLzQUHAJQpkBbUjViNhwPvHO/+p
-         voRL55BuyN6cg==
-Received: by mail.lokoho.com for <linux-gpio@vger.kernel.org>; Wed, 14 Dec 2022 09:05:06 GMT
-Message-ID: <20221214074502-0.1.2t.9r93.0.gkegzoxw9r@lokoho.com>
-Date:   Wed, 14 Dec 2022 09:05:06 GMT
-From:   "Adam Charachuta" <adam.charachuta@lokoho.com>
-To:     <linux-gpio@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.lokoho.com
+        with ESMTP id S238052AbiLNJx7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 14 Dec 2022 04:53:59 -0500
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B409A2181A;
+        Wed, 14 Dec 2022 01:53:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1671011630; x=1702547630;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uzrv+WiOez6VMoWeTrEv81RdOKyzlUHm5xaTwhW1dxU=;
+  b=pKXCVJvkimNJ4n+eNmlCsXi+V5qpdTg+HR1UjQei7JO4kjXuyaqtU0xS
+   5k2Ijj6iYjd/rlLqv3SL+oHPc+2dW9uNMSpJmaCilTqmxAulGP2fIYBjN
+   YD3RAx2iJKGHSEDjXPgrt9XFZ5nOuJIT/A0S7h8ttYUXBgW7jDBzFB+tF
+   zPUL2t9RWml7BR4aNohi2DtQyOVz9uL2a25/QPc4m/uRmZclzD1aZCUpH
+   b9Zx2xFUpX58DZmIUfrborRX9gej2s1KCEpKYmj+HCwxtTCAG/NXRPFsH
+   wWXsKvm8BTM2bBWPa0ZLIO6Tgwz9AGEq6qwecn8DeOuOE/yJxiXDbJIEL
+   A==;
+X-IronPort-AV: E=Sophos;i="5.96,244,1665439200"; 
+   d="scan'208";a="27943173"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 14 Dec 2022 10:53:47 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Wed, 14 Dec 2022 10:53:48 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Wed, 14 Dec 2022 10:53:48 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1671011628; x=1702547628;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uzrv+WiOez6VMoWeTrEv81RdOKyzlUHm5xaTwhW1dxU=;
+  b=Dl6lmSZs9PrN3nWQlNi1ePNDfFNy3Ql7UvkcbmFjACcyoMlleQRSjHlc
+   v+qFp9lbJhdhUrMrpI9GZS34lJykHr3YafDhheKqhaDi9ogqWp3bS/Mtj
+   yP1VREi2jN2m53Bh6eFrtbbDKPPh7hPcdYQ0sFMAkKSiPb+mQd9EejXfM
+   DJ2KttlZH0SnaNfQ3WCQo7em/9t6QV/UFM3znLaqoJ6PFxd9kcz6lNQem
+   lZ4KsiDQNgda5VcIu0zpY4GiQKDtHeMsJ8kHJOHsPsloPTtmtQS0Vkja/
+   XduIH5fYGsoPS/kHwZ6dKbzhJUKfRuwyD7zcjp5sTI7hXj4TvjwYT7Bez
+   w==;
+X-IronPort-AV: E=Sophos;i="5.96,244,1665439200"; 
+   d="scan'208";a="27943172"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 14 Dec 2022 10:53:47 +0100
+Received: from steina-w.tq-net.de (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id AC2A3280071;
+        Wed, 14 Dec 2022 10:53:47 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [RFC PATCH v2 0/3] gpio: Add gpio-delay support
+Date:   Wed, 14 Dec 2022 10:53:39 +0100
+Message-Id: <20221214095342.937303-1-alexander.stein@ew.tq-group.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hello everyone,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+thanks for the feedback I've received. This is the reworked RFC for
+adressing a platform specific ramp-up/ramp-down delay on GPIO outputs.
+Now the delays are neither specified as gpio-controller nor
+consumer-specific properties.
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+v2 is a different approach than v1 in that it adds a new driver which will
+simply forward setting the GPIO output of specified GPIOs in OF node.
+The ramp-up/ramp-down delay can now be actually defined on consumer side,
+see Patch 1 or 3 for examples.
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+Thanks a lot to the existing gpio-latch driver where I could learn/copy
+from a lot for creating this driver!
 
+Patch 1 is the new binding. I welcome improvements for the description,
+if needed.
 
-Pozdrawiam
-Adam Charachuta
+Patch 2 is the new driver. I'm open for a better name, if the current one
+is too ambiguous.
+
+Patch 3 is what I am actually using for testing. It is actually based
+on a not-yet-commited patch, but the diff should be enough for
+demonstration.
+
+Alexander Stein (3):
+  dt-bindings: gpio: Add gpio-delay binding document
+  gpio: Add gpio delay driver
+  [DNI] arm64: dts: mba8mx: Use gpio-delay for LVDS bridge
+
+ .../devicetree/bindings/gpio/gpio-delay.yaml  |  75 ++++++++
+ arch/arm64/boot/dts/freescale/mba8mx.dtsi     |  14 +-
+ drivers/gpio/Kconfig                          |   8 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-delay.c                     | 164 ++++++++++++++++++
+ 5 files changed, 261 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-delay.yaml
+ create mode 100644 drivers/gpio/gpio-delay.c
+
+-- 
+2.34.1
+
