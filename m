@@ -2,86 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2548164DF28
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 18:01:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 425C364DF82
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 18:17:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230115AbiLORBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 12:01:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51944 "EHLO
+        id S229872AbiLORRH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 12:17:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230024AbiLORBL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 12:01:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C18B1A3B4;
-        Thu, 15 Dec 2022 09:01:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12B6D61E50;
-        Thu, 15 Dec 2022 17:01:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B9FC433EF;
-        Thu, 15 Dec 2022 17:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671123668;
-        bh=RRg69Zv0fSJqhIaCebQ4VqYqr3NypZRiXKo9W0an9KU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aMexPlRE2sEHLa6io+/F+BvdjIGtwzxUXvrY9wAijgDUtCV1c7oeEy6dWpRanyWps
-         QkC1mFu6kXlyI8b7ybHgoHccyCBAN+oqCWUMqfPem6gNnGdTNYGgmTYPZyMq0h6BHi
-         Pjdx4Fjspp38KAz2bmHDX4VlUwzEg0wL2KwbQ6f3lkyDsBhvDYShsjIoR00o8Jft4t
-         DbrEe60YqtI38eoVmlcWcTc51O4F4pMeOfLmsEm6REdSIWMsMKq1Z71K2wuuH3XBP7
-         aSRbIskKkoRe74faCw1fv57PC0mBu6B5Tb4uJGCnlidrjmhxfITVFc4pBKTn5TcxC0
-         Mhst/3spDXDAQ==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Miaoqian Lin <linmq006@gmail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        with ESMTP id S230517AbiLORQ7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 12:16:59 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F8BC3F06E;
+        Thu, 15 Dec 2022 09:16:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671124619; x=1702660619;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=s6+XIX9pR62q2iNq/HedN7zwBf3caBBDvsIWPeGYZ9A=;
+  b=IlJn04N70VgsDnAqsEo218gMrzBSRG66MrSXgcB1GiX6iR7zQiAynx2b
+   p7DYlXnwbctherM//am9s25ak8pJZITPeyHrhTtJu9qc1+q50UcuGcutj
+   SWOkPzUnsClaWP+GibC25LPmUHTFSYWCpTZcCz0MZNHkmCsPhp5xghPVO
+   g6w4MMd83/7uGRgYP+QSyNEBdsDZdSXGsvC+uTdSLy31nFJJHHz7fsq2A
+   sbUOZ6J80xQ0FuHbZX6Qn2PPvGPK5XQaLB8kXCtOzy/f3yJXkje96WU4h
+   FdL4gX7PkTNrUscBjXhskmL37BeXCiLU2g/C4X60wJfyvMs4v+qLzFvhp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="298412532"
+X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
+   d="scan'208";a="298412532"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2022 09:16:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10562"; a="599648546"
+X-IronPort-AV: E=Sophos;i="5.96,248,1665471600"; 
+   d="scan'208";a="599648546"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 15 Dec 2022 09:16:56 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p5rqo-00ARel-1T;
+        Thu, 15 Dec 2022 19:16:54 +0200
+Date:   Thu, 15 Dec 2022 19:16:54 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Miaoqian Lin <linmq006@gmail.com>,
         Marc Zyngier <maz@kernel.org>,
         Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: nomadik: include linux/seq_file.h
-Date:   Thu, 15 Dec 2022 18:00:57 +0100
-Message-Id: <20221215170103.2349282-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.35.1
+Subject: Re: [PATCH] pinctrl: nomadik: include linux/seq_file.h
+Message-ID: <Y5tWhi9s5fGDMfxW@smile.fi.intel.com>
+References: <20221215170103.2349282-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221215170103.2349282-1-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Thu, Dec 15, 2022 at 06:00:57PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> In some randconfig builds, the missing #include causes a
+> build failure:
+> 
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c: In function 'nmk_gpio_irq_print_chip':
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1084:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
+>  1084 |         seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
+>       |         ^~~~~~~~~~
+>       |         bstr_printf
 
-In some randconfig builds, the missing #include causes a
-build failure:
+Hmm... Strange that I have not noticed this from CIs.
+Nevertheless, I have a patch that adds more missing
+headers to this driver. I have planned to send it
+after v6.2-rc1.
 
-drivers/pinctrl/nomadik/pinctrl-nomadik.c: In function 'nmk_gpio_irq_print_chip':
-drivers/pinctrl/nomadik/pinctrl-nomadik.c:1084:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
- 1084 |         seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
-      |         ^~~~~~~~~~
-      |         bstr_printf
+I'm fine if this goes first. Up to Linus.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index f7d02513d8cc..1d8e36c2785d 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -17,6 +17,7 @@
- #include <linux/gpio/driver.h>
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/of_device.h>
- #include <linux/of_address.h>
 -- 
-2.35.1
+With Best Regards,
+Andy Shevchenko
+
 
