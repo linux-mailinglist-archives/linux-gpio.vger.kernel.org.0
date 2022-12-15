@@ -2,166 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 966FE64D903
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 10:51:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DECC64D9D8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 11:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbiLOJve (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 04:51:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46282 "EHLO
+        id S230038AbiLOK5S (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 05:57:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbiLOJvL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 04:51:11 -0500
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1002193DB
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:50:21 -0800 (PST)
-Received: by mail-lf1-x12e.google.com with SMTP id 1so14835027lfz.4
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:50:21 -0800 (PST)
+        with ESMTP id S230032AbiLOK5M (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 05:57:12 -0500
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A0B2E690
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 02:57:09 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-3b5d9050e48so36161967b3.2
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 02:57:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GHzqsSvslMQj7aaAMRNWFcMOjD6mUD/ZMpwlfykKSKw=;
-        b=S56nXRJWIWIcfqQKWlqA8nNkrOjKgfGHlcgVASmDbpQZVtcDnlMnvG8vKQaBf9JyjM
-         8jtl6WE5nUl0ZtaLbuD4akaR4A/0rX2fobzqo/B6zvBikwXFrf6NfHNJB8AeZrHEOiyg
-         IE1IaMqQOw0FZAm0Vk/ij9U1IotgPWL1711eAdEl9xGzU0ejIyN0kViYtz5u8IYXEJnH
-         Um18b6K2cZowduD3f1s5g4yIUDVXnlHFk/o8HkkuvThEfoqjFXUFMGaPC7OIMw4NEi0O
-         xLyoJapEQfjX5PyUqZrMHu4x+XlqbyUgkFBnUo7P0iUPLWaT5LXa+81uUAZKEO8zidWT
-         IsHg==
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t8xgawo/jT/WZB/xT4ixkGLWrHF5TMWAcVs3g9/8wqM=;
+        b=jlsR4CANeGOPhodCJDcVVzLcZmuoOrfnfctYMh8Ey/rJNSAAAw+PSh+sbPCy00CMUK
+         +EcuJxF3cRH9/eOVyCUHRUyj7IBe9uSb3OB/+No52R/Ugx8fhZWwicEcQzCnuu262q9G
+         KsTr/mfM40zKo98uKSl0eqRXA7ZqRu0iMDTVZVbfEyrelxLZiofP2TkXZ56AhNuPXbyA
+         GHRHkVqXZX7RkLHY8+rvBhfAHfXiwrhjBPD5VKO3P6kifO0dhT8+Dvk5xuGvyYfNAskB
+         h3kX/j0TSSJUd4VL4z2raZbGbRQTUCOaam6tcG2LE425F+r3YceUrdFTUNsPKWFq279x
+         jqpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GHzqsSvslMQj7aaAMRNWFcMOjD6mUD/ZMpwlfykKSKw=;
-        b=JtUeeuAbmn5gCxLabmfIkW+0GJi83E+LpD/q7SuUU4vlnMMZ/03nqzViB+3RGsJHdE
-         AL4h5ZVh+JeZSaxJJhPR0MPK/USx/sgFFc+ICYDkdht0pr+nKrsT4nM0JcyHwJbMj35V
-         DD3cEORZ79hDhDCM2aWu8z2GcK2D6tcKYkwAui4IBNE+ISh9EDpxJsKGp0+rj545aaqA
-         Vh7amG0uJ9lIxX40X+ER18XUUnS1YaKBg/vC86JJifGnt5MsKSKEBw6MRUv3tY0dP6JH
-         K2LsqZW8B5aa583uQX62fU1mAWtWB2KxJ/pj36FU/TPU/qnp2B58aFZe3jAAPfjEvdAh
-         Asjg==
-X-Gm-Message-State: ANoB5pkkTHHy8JfoJ6rFfQiCCYrrR9rrInkui+hNPFlJowtXon9ToJd8
-        xhMQCQProZ80EEfNYov5Nkhrjg==
-X-Google-Smtp-Source: AA0mqf5xGIT7lIRMsBLXsAkmeEH1QBzeR1ZB+qbINWxUEPgNpjUVrG2f0n4VK4CoW4/cA+f3IOsSZA==
-X-Received: by 2002:ac2:4bcb:0:b0:4a4:68b9:66bc with SMTP id o11-20020ac24bcb000000b004a468b966bcmr7260898lfq.7.1671097820112;
-        Thu, 15 Dec 2022 01:50:20 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id v1-20020ac258e1000000b004946b549a19sm1115937lfo.45.2022.12.15.01.50.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Dec 2022 01:50:19 -0800 (PST)
-Message-ID: <0161902f-1a0c-0be2-2141-3c14d6e6fe54@linaro.org>
-Date:   Thu, 15 Dec 2022 10:50:18 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t8xgawo/jT/WZB/xT4ixkGLWrHF5TMWAcVs3g9/8wqM=;
+        b=u6l91PglbzC1MJmhQnT+iY1CjcktyUGx8MSM+xaCW6y4hBcgMEFo88CO3a21dahHoA
+         NqQtlW/aZG7cKToVijKtJJ6lJ5VuMOi8Nk/4oKbFM6ptxwQ0AJHOKTXq61h3MCeqUtID
+         HtaofUwzK9M8gBmtT6vGhH/MSHURf7hCLJwCZ9+2mzwJzeP4cl9af6gbm84Gkc4p9FOe
+         zxQdB+imZJ/lpwmcayX1PjPVEsGs8k4+bkliAZmXsAX99KioeTyxxAKmtrMDzh2Ch5IL
+         c2JdFOdNj0hyJ9AF1EqRfUHhexx/Eb+TGhLLL6Xqv3crQz2ZW5lz4BU7mICI3A4V84H+
+         68xg==
+X-Gm-Message-State: ANoB5pnv7YgtI5rxJJth0mXLRYxkAmMNw64E3OiummJG40gqEZn2xGOI
+        OWDK6v8daoJoaPIxrDUfu2WseRbJEJgKExj5pgODKg==
+X-Google-Smtp-Source: AA0mqf5WA/yjmATtBLSYZL0zvHYGqaiWB2l82pIOL8Qz2xIElIRNP7vVCdcT5pILwpKUYt0VTR2oXUVbwfaHew1gcFc=
+X-Received: by 2002:a81:b54b:0:b0:391:f64b:e3bb with SMTP id
+ c11-20020a81b54b000000b00391f64be3bbmr26240950ywk.49.1671101829025; Thu, 15
+ Dec 2022 02:57:09 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 2/5] dt-bindings: power: reset: Add RZ/V2M PWC Power OFF
- bindings
-Content-Language: en-US
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
+ <20221212103525.231298-2-alexander.stein@ew.tq-group.com> <CACRpkdYioW1GROHFxA1vuAEiXqHh6fAu5CXNLcTvW_w3mWjSPw@mail.gmail.com>
+ <Y5hl1Sb8csSkbrDh@pendragon.ideasonboard.com>
+In-Reply-To: <Y5hl1Sb8csSkbrDh@pendragon.ideasonboard.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 15 Dec 2022 11:56:57 +0100
+Message-ID: <CACRpkdZ2G=HUTBMpXJrXeSh3kYgQQc8p8zaJZPL71HWA9362ZA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio: Add optional ramp-up delay property
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-References: <20221213224310.543243-1-fabrizio.castro.jz@renesas.com>
- <20221213224310.543243-3-fabrizio.castro.jz@renesas.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221213224310.543243-3-fabrizio.castro.jz@renesas.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/12/2022 23:43, Fabrizio Castro wrote:
-> Add dt-bindings document for the RZ/V2M PWC Power OFF driver.
+Hi Laurent,
 
-Drop driver.
+thanks for the detailed brief!
 
-Subject: drop second, redundant "bindings".
+On Tue, Dec 13, 2022 at 12:45 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
 
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> ---
->  .../reset/renesas,rzv2m-pwc-poweroff.yaml     | 48 +++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/renesas,rzv2m-pwc-poweroff.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/power/reset/renesas,rzv2m-pwc-poweroff.yaml b/Documentation/devicetree/bindings/power/reset/renesas,rzv2m-pwc-poweroff.yaml
-> new file mode 100644
-> index 000000000000..12456e3e93e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/reset/renesas,rzv2m-pwc-poweroff.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/power/reset/renesas,rzv2m-pwc-poweroff.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas RZ/V2M External Power Sequence Controller (PWC) Power OFF
-> +
-> +description: |+
-> +  The PWC IP found in the RZ/V2M family of chips comes with the below
-> +  capabilities
-> +    - external power supply on/off sequence generation
-> +    - on/off signal generation for the LPDDR4 core power supply (LPVDD)
-> +    - key input signals processing
-> +    - general-purpose output pins
-> +  This node uses syscon to map the registers relevant to Power OFF (the
-> +  register map is retrieved from the parent dt-node), and the node should be
-> +  represented as a sub node of a "syscon", "simple-mfd" node.
-> +
-> +maintainers:
-> +  - Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - renesas,r9a09g011-pwc-poweroff # RZ/V2M
-> +          - renesas,r9a09g055-pwc-poweroff # RZ/V2MA
-> +      - const: renesas,rzv2m-pwc-poweroff
-> +
-> +  regmap:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description: |
-> +      Phandle to the register map node.
+> The circuit we're looking at is
+>
+>   +----------+           +-----------+
+>   | SoC      |           |    VCC    |
+>   |          |           |     |     |
+>   |          |           |     _     |
+>   |          |           |    | | R  |
+>   |          |           |    |_|    |
+>   |          |           |     |     |
+>   |      [IOx|-----+-----|EN]--+     |
+>   |          |     |     |           |
+>   |          |     |     | SN65DSI83 |
+>   +----------+    --- C  +-----------+
+>                   ---
+>                    |
+>                    -
+>                   GND
+>
+> The IOx pin is an open-drain output, the board has a 470nF capacitor to
+> ground, and the SN65DSI83 has an internal pull-up off 200k=CE=A9. This gi=
+ves
+> an RC time constant of 94ms, far from being negligible.
+>
+> The delay is caused by the combination of the open-drain nature of the
+> output (an intrinsic property of the GPIO controller), the pull-up
+> resistor (an intrinsic property of the SN65DSI83) and the capacitor on
+> the line (a property of the board). DT is notoriously bad at modelling
+> this kind of setup.
 
-This also has to go.
+Yeah :/
 
-> +
-> +required:
-> +  - compatible
-> +  - regmap
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    poweroff {
-> +            compatible = "renesas,r9a09g011-pwc-poweroff",
+It's not like we don't model discrete electronics, we do that a lot,
+but as you say, it is really hard to know where to draw the line
+in cases like this.
 
-Use 4 spaces for example indentation.
+> The alternative I proposed, adding a "GPIO delay" DT node to model this,
+> would also offer a centralized solution to the problem, but with
+> additional complexity both at probe time and runtime.
 
-> +                         "renesas,rzv2m-pwc-poweroff";
-> +            regmap = <&regmapnode>;
-> +    };
+I have a slight preference for this, as it will be very explicit in the
+device tree and we can just put all the code inside its own file and
+depend on GPIO_OF so other HW description systems do not
+need to include it.
 
-Best regards,
-Krzysztof
+At the same time it feels a bit overengineered, so maybe just adding
+this delay as in the patch with some strings attached like comments
+and docs is yet the best. It feels like we need some more input to
+reach consensus.
 
+> The regulator delays model the intrinsic delays when enabling or
+> disabling a regulator, and they should stay. They address a different
+> problem.
+
+OK right. But someone not knowing exactly what they are doing
+will end up abusing the delay property on the delay line
+also for this delay. The risk of that is lesser with a separate
+delay box.
+
+Yours,
+Linus Walleij
