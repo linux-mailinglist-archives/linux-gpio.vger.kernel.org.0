@@ -2,45 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 285F464DEC5
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 17:38:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F008064DEDB
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 17:43:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230022AbiLOQie (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 11:38:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34930 "EHLO
+        id S230202AbiLOQnL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 11:43:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbiLOQic (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 11:38:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A41941B794;
-        Thu, 15 Dec 2022 08:38:31 -0800 (PST)
+        with ESMTP id S230221AbiLOQnI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 11:43:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B7631EF4;
+        Thu, 15 Dec 2022 08:43:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60E0DB81BA1;
-        Thu, 15 Dec 2022 16:38:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51DD5C433EF;
-        Thu, 15 Dec 2022 16:38:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2A5A61E3B;
+        Thu, 15 Dec 2022 16:43:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3B1C433D2;
+        Thu, 15 Dec 2022 16:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671122309;
-        bh=LtPCFB4V5acknIfWU3F4wsNAnbz+KIAtyg0mtXMQWrM=;
+        s=k20201202; t=1671122587;
+        bh=EJbzFTzdiVnx0DkBjvBmxcdCKoZgTncI1xo0FQ9Ph00=;
         h=From:To:Cc:Subject:Date:From;
-        b=i27Oha7ARR2shAbNBwOWm9Gvo6ud+O5kgC1Nt8Al88aXIaNkEciVfu4FIvMcC2f+S
-         fIAGhucXXYmAHTR6uJpBTrbTLQxn+qTdB+GboCfhjioRLJVlxw5ZU8qiHU4PB9bC8B
-         xLmz67VRT6YtM/ydtdjY1B4gK6zLHj/2VQzvtGCv5WHsv2w2DSxAvtVsklSfoRbKI5
-         gVdIuiHV91k9kjHv/WMUZ40p/62kLJeEZBk7GR8SkXJZ3gHUwGpnaH9iKJ76PeO8zb
-         yD9AVHlg+Bvp2kCXy/D3Ez6/TWyCoMcJaJyyPM6taMfThURBwh1kyesXv6GkJt5Nwg
-         kUcXf9fCJPXyg==
+        b=cVDq0W3vD9FvmjOGUWuYhrlG6cSOWaJu5/TlD2iP/9YBDHp+8h2gd4gsUpLFD4qgc
+         We3FbLRJ2UrJZ52IjLRssK93sSYVDvx1l5nwjYBX+ibedXTjkqUnZIJqgO7zPhCgS3
+         hGaRWq9LgLIqYMq48RikZhlEumapRzeOWqMqJR/QFJqP+IMnDtgi5DWgD3ughZ56au
+         jSBo2C3rXVTuXYb38ZxP0CZ63rm0SZVV9qoeu9JGbpDIH9r3yR0cfjxL55U339wx1l
+         CHtUg34/cUXb3uv1FkfGkXzkvZc0fiyl7hrh1V+ijLgAssP9kmrS2FnafwV/G5yDui
+         nj6RkTUPGfO3w==
 From:   Arnd Bergmann <arnd@kernel.org>
-To:     Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>
+To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        William Dean <williamsukatube@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Slark Xiao <slark_xiao@163.com>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: sp7021: fix unused function warning
-Date:   Thu, 15 Dec 2022 17:38:10 +0100
-Message-Id: <20221215163822.542622-1-arnd@kernel.org>
+Subject: [PATCH] pinctrl: at91: convert to NOIRQ_SYSTEM_SLEEP_PM_OPS
+Date:   Thu, 15 Dec 2022 17:42:54 +0100
+Message-Id: <20221215164301.934805-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -55,53 +59,34 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-sppctl_gpio_inv_get is only used from the debugfs code inside
-of an #ifdef, so we get a warning without that:
+With the old SET_NOIRQ_SYSTEM_SLEEP_PM_OPS, some configs result in a
+build warning:
 
-drivers/pinctrl/sunplus/sppctl.c:393:12: error: 'sppctl_gpio_inv_get' defined but not used [-Werror=unused-function]
-  393 | static int sppctl_gpio_inv_get(struct gpio_chip *chip, unsigned int offset)
-      |            ^~~~~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-at91.c:1668:12: error: 'at91_gpio_resume' defined but not used [-Werror=unused-function]
+ 1668 | static int at91_gpio_resume(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~
+drivers/pinctrl/pinctrl-at91.c:1650:12: error: 'at91_gpio_suspend' defined but not used [-Werror=unused-function]
+ 1650 | static int at91_gpio_suspend(struct device *dev)
+      |            ^~~~~~~~~~~~~~~~~
 
-Replace the #ifdef with an IS_ENABLED() check that avoids the warning.
-
-Fixes: aa74c44be19c ("pinctrl: Add driver for Sunplus SP7021")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/pinctrl/sunplus/sppctl.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ drivers/pinctrl/pinctrl-at91.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sunplus/sppctl.c b/drivers/pinctrl/sunplus/sppctl.c
-index 2b3335ab56c6..25101293268f 100644
---- a/drivers/pinctrl/sunplus/sppctl.c
-+++ b/drivers/pinctrl/sunplus/sppctl.c
-@@ -499,7 +499,6 @@ static int sppctl_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- 	return 0;
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 1e1813d7c550..cf2423855a80 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1923,7 +1923,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
  }
  
--#ifdef CONFIG_DEBUG_FS
- static void sppctl_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- {
- 	const char *label;
-@@ -521,7 +520,6 @@ static void sppctl_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 		seq_puts(s, "\n");
- 	}
- }
--#endif
+ static const struct dev_pm_ops at91_gpio_pm_ops = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(at91_gpio_suspend, at91_gpio_resume)
++	NOIRQ_SYSTEM_SLEEP_PM_OPS(at91_gpio_suspend, at91_gpio_resume)
+ };
  
- static int sppctl_gpio_new(struct platform_device *pdev, struct sppctl_pdata *pctl)
- {
-@@ -550,9 +548,8 @@ static int sppctl_gpio_new(struct platform_device *pdev, struct sppctl_pdata *pc
- 	gchip->get              = sppctl_gpio_get;
- 	gchip->set              = sppctl_gpio_set;
- 	gchip->set_config       = sppctl_gpio_set_config;
--#ifdef CONFIG_DEBUG_FS
--	gchip->dbg_show         = sppctl_gpio_dbg_show;
--#endif
-+	gchip->dbg_show         = IS_ENABLED(CONFIG_DEBUG_FS) ?
-+				  sppctl_gpio_dbg_show : NULL;
- 	gchip->base             = -1;
- 	gchip->ngpio            = sppctl_gpio_list_sz;
- 	gchip->names            = sppctl_gpio_list_s;
+ static struct platform_driver at91_gpio_driver = {
 -- 
 2.35.1
 
