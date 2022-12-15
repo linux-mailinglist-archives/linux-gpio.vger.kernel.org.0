@@ -2,127 +2,307 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D90364D897
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 10:30:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A61D464D8FE
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 10:50:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229927AbiLOJaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 04:30:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35620 "EHLO
+        id S230270AbiLOJuG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 04:50:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbiLOJaV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 04:30:21 -0500
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A592446665;
-        Thu, 15 Dec 2022 01:30:18 -0800 (PST)
-Received: by mail-ej1-x635.google.com with SMTP id bj12so50784979ejb.13;
-        Thu, 15 Dec 2022 01:30:18 -0800 (PST)
+        with ESMTP id S230232AbiLOJtY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 04:49:24 -0500
+Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9D62E9C5
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:49:21 -0800 (PST)
+Received: by mail-lf1-x132.google.com with SMTP id p8so14770180lfu.11
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:49:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QgD/IhEryTzLI7fgwREjgsiNZnMhiP+O1KnPg96xGtU=;
-        b=BgCDQ/OHqHTPrhxas7wzRIuA6tFpxWfaC4H4YmVy/ZbAZnCAbSjLiwzbCUOLwzZmUJ
-         IGhvwlYuZgThpR9zR3gUV4gjbzB7/3SWBWNgH4oz3R+Ede8egmLu4r6yDKAvTNyrreLz
-         Ia7442M3FClbdBvIIDteq2EQsduzET6IOmvDJvtWAnzLOffUJJc+qBnC0V1t8pE7JIeI
-         JocZ9FtoSDxMXgQqPbgwXjnb0CEDM91MKlQj1UOdhYrAnsGeXAxF+zInZEprXGl5X4OV
-         VXo3m92pCUDpGC6I9fW7OgM+yqwgKULmqyzK3vyTNJ/RHePhLfEXTZ3E5w4ufunyylCR
-         vekA==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yY96EIpEYo2WvzK5TLn9sy1o8NsGtoNUVSSOvpliiac=;
+        b=NWjRT0VljK2M8aptatHJ8aLxWUf4BSSb7gtfVo4p2OixaPp17M2vyQAVBEqOHOemj3
+         N+AQEz6MpApP9/2/ceTUgN4RLCN+vrmm4+TXtkQEROSrVdQeLaxneWEmj2uy+/1jfTTE
+         gjZ7DblQriWzYDQ3xeB/XCaArVES8ccpi+XpnAWUszGdvlk5IQOc2zLal/XTd4nNbcx+
+         FvScg3QKnn1vADCaOBHKqwIsMueohg++CwoN1eyFwqrOIGkFl16qj0ZrFk8BRpY33ZHX
+         h77sAQY21iUugI02FlpmSXECFYCLsv3mvPUAJhSCZlIMox7uW/2360vTxa31ytPcM06a
+         ANHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QgD/IhEryTzLI7fgwREjgsiNZnMhiP+O1KnPg96xGtU=;
-        b=n4DONNL/sLefmGBLd1c5NbUZsD6l0WlQ/ZpCViIpLme/xkgwMbXHziROjQPPD93eyR
-         DA4DdN5SWK8sy2BnQgIP2D8UCUNUCoTp8TIBUiGIvhBUg78V/xyZYnM0JaG7DYv0/D7T
-         xi0RzXCkWhiqcjGSmaDdV7AxT47+2+rou5c32nL4sfeRY6dZz7nEeMlzM3T6awpK8YQe
-         Aardf2tFSYevYRqoQvNbb7QEhcL10v6nALRlSkgEhnToLdPD3mp8KyKWUj1yMMqr/NaD
-         sEUm1uWKPE2DmiGb5U9R+Ib20LNBBcK9oOlmnOdyRFM3O29iwuJI6sSft8Zcaf5k/xyC
-         K4fg==
-X-Gm-Message-State: ANoB5pnsEnBHD9v0FLqwO9W+65Pvj0EPxjvsWG5ZA34VTg81GJzZ1yiV
-        NWnjPgwEEokZqURcKC996Cs=
-X-Google-Smtp-Source: AA0mqf7VephO2wPiq66MWYE5WIf/bbAOFq2wAt45qgFs4lIAV/YzGeJ3uSSllU+WnM7K8ccJdtJ2UA==
-X-Received: by 2002:a17:907:9208:b0:7c0:d605:fe42 with SMTP id ka8-20020a170907920800b007c0d605fe42mr17670532ejb.18.1671096617080;
-        Thu, 15 Dec 2022 01:30:17 -0800 (PST)
-Received: from felia.fritz.box (ipbcc1d920.dynamic.kabel-deutschland.de. [188.193.217.32])
-        by smtp.gmail.com with ESMTPSA id ko12-20020a170907986c00b00781be3e7badsm6859873ejc.53.2022.12.15.01.30.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Dec 2022 01:30:16 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Dong Aisheng <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] pinctrl: mxs: avoid defines prefixed with CONFIG
-Date:   Thu, 15 Dec 2022 10:21:28 +0100
-Message-Id: <20221215092128.3954-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yY96EIpEYo2WvzK5TLn9sy1o8NsGtoNUVSSOvpliiac=;
+        b=AMHKyTZLu202RDUzONni8QyLJSlxPyZ/puklv5iRr3S0gMoGsNIQlpYplti6e3YRVm
+         enaZZw7ngkakuBEePj8ofOqaNfR9bcMZrLaOASF5JlDBm3IDxxbvXRybgKa4CDAJpIq+
+         eictKIQOlD35+LsxbrRPtqWpacrPlQUUB8z6wiTuQM6i4ox044FBweZ3MdM00XmA2xO1
+         FdYC3swoiqTOAJXzirjRLvUP0YZjERoMe14/Y9mHd03SorsqGGhNv4LQ9INebxLrbvBK
+         bCZxMc9U73vTYt2z6FIR3HlzVX6ie4ScHUsTyOMOB1/58qTlhs/pH2anMrGu0g6ZdBB/
+         yUHA==
+X-Gm-Message-State: ANoB5plk4RF0ok29qu12/SW/TEIHQLTe3dfGmOdX5Eyf8SbbVYrvegPR
+        GBLdtxE8LNo6fo21kNV9Rho9RA==
+X-Google-Smtp-Source: AA0mqf7zAnoMebFACZks9GUm6dwE1ZHAdzdmTbCibv2fl5cvIUrtTdpngz8fSmPdZ5KR7LlEFDr/jQ==
+X-Received: by 2002:ac2:44d8:0:b0:4a4:68b8:9c2e with SMTP id d24-20020ac244d8000000b004a468b89c2emr7468340lfm.22.1671097759677;
+        Thu, 15 Dec 2022 01:49:19 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id s12-20020a056512202c00b00494935ddb88sm1114271lfs.240.2022.12.15.01.49.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 15 Dec 2022 01:49:19 -0800 (PST)
+Message-ID: <8199105f-4c67-1af3-65fe-a5c8ddababca@linaro.org>
+Date:   Thu, 15 Dec 2022 10:49:17 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH 1/5] dt-bindings: gpio: Add RZ/V2M PWC GPIO driver
+ bindings
+Content-Language: en-US
+To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lee Jones <lee@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+References: <20221213224310.543243-1-fabrizio.castro.jz@renesas.com>
+ <20221213224310.543243-2-fabrizio.castro.jz@renesas.com>
+ <20221214161057.GA1140718-robh@kernel.org>
+ <TYWPR01MB87759AE2651E96276F6CAE94C2E09@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <TYWPR01MB87759AE2651E96276F6CAE94C2E09@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Defines prefixed with "CONFIG" should be limited to proper Kconfig options,
-that are introduced in a Kconfig file.
+On 14/12/2022 19:26, Fabrizio Castro wrote:
+> Hi Rob,
+> 
+> Thanks for your feedback!
+> 
+>> From: Rob Herring <robh@kernel.org>
+>> Sent: 14 December 2022 16:11
+>> To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+>> Subject: Re: [PATCH 1/5] dt-bindings: gpio: Add RZ/V2M PWC GPIO driver
+>> bindings
+>>
+>> On Tue, Dec 13, 2022 at 10:43:06PM +0000, Fabrizio Castro wrote:
+>>> Add dt-bindings document for the RZ/V2M PWC GPIO driver.
+>>
+>> Bindings are for h/w blocks/devices, not a specific driver.
+> 
+> Apologies, I will reword the changelog in v2.
+> 
+>>
+>>>
+>>> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+>>> ---
+>>>  .../bindings/gpio/renesas,rzv2m-pwc-gpio.yaml | 62 +++++++++++++++++++
+>>>  1 file changed, 62 insertions(+)
+>>>  create mode 100644
+>> Documentation/devicetree/bindings/gpio/renesas,rzv2m-pwc-gpio.yaml
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rzv2m-pwc-
+>> gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rzv2m-pwc-
+>> gpio.yaml
+>>> new file mode 100644
+>>> index 000000000000..ecc034d53259
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/gpio/renesas,rzv2m-pwc-gpio.yaml
+>>> @@ -0,0 +1,62 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id:
+>> https://jpn01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetre
+>> e.org%2Fschemas%2Fgpio%2Frenesas%2Crzv2m-pwc-
+>> gpio.yaml%23&amp;data=05%7C01%7Cfabrizio.castro.jz%40renesas.com%7C603623c
+>> 766f4421b85bd08daddedcb8c%7C53d82571da1947e49cb4625a166a4a2a%7C0%7C0%7C638
+>> 066310628408926%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMz
+>> IiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=o46ncDZK8YK5HYJ
+>> ZYDXuq3yfEA34vnaxEsIDBlcroc0%3D&amp;reserved=0
+>>> +$schema:
+>> https://jpn01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fdevicetre
+>> e.org%2Fmeta-
+>> schemas%2Fcore.yaml%23&amp;data=05%7C01%7Cfabrizio.castro.jz%40renesas.com
+>> %7C603623c766f4421b85bd08daddedcb8c%7C53d82571da1947e49cb4625a166a4a2a%7C0
+>> %7C0%7C638066310628408926%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQ
+>> IjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=VoWvV
+>> pW782DVH2zdTKIesyzqm6sjiFyacbl833%2BjRis%3D&amp;reserved=0
+>>> +
+>>> +title: Renesas RZ/V2M External Power Sequence Controller (PWC) GPIO
+>>> +
+>>> +description: |+
+>>> +  The PWC IP found in the RZ/V2M family of chips comes with General-
+>> Purpose
+>>> +  Output pins, alongside the below functions
+>>> +    - external power supply on/off sequence generation
+>>> +    - on/off signal generation for the LPDDR4 core power supply (LPVDD)
+>>> +    - key input signals processing
+>>> +  This node uses syscon to map the register used to control the GPIOs
+>>> +  (the register map is retrieved from the parent dt-node), and the node
+>> should
+>>> +  be represented as a sub node of a "syscon", "simple-mfd" node.
+>>> +
+>>> +maintainers:
+>>> +  - Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    items:
+>>> +      - enum:
+>>> +          - renesas,r9a09g011-pwc-gpio # RZ/V2M
+>>> +          - renesas,r9a09g055-pwc-gpio # RZ/V2MA
+>>> +      - const: renesas,rzv2m-pwc-gpio
+>>> +
+>>> +  offset:
+>>
+>> Too generic of a name. We want any given property name (globally) to
+>> have 1 type. With the below comment, this should be replaced with 'reg'
+>> instead if you have child nodes.
+> 
+> My understanding is that syscon subnodes normally use this name for exactly
+> the same purpose, for example:
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/power/reset/syscon-poweroff.yaml#L27
+> https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/power/reset/syscon-reboot.yaml#L30
+> 
+> What am I missing?
 
-Here, expressions to convert pin configurations to booleans for pull-up,
-voltage and mA are macro definitions that begin with "CONFIG".
+These are generic drivers, so they need offset as they do not match any
+specific programming model. You are not making a generic device. Address
+offsets are not suitable in most cases for DTS. There are of course
+exceptions so you can present reasons why this one is exception.
+> 
+>>
+>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>>> +    description: |
+>>> +      Offset in the register map for controlling the GPIOs (in bytes).
+>>> +
+>>> +  regmap:
+>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>> +    description: Phandle to the register map node.
+>>
+>> Looks like GPIO is a sub-function of some other block. Define the
+>> binding for that entire block.
+> 
+> That's defined in patch 3 from this series.
+> I have sent it as patch 3 because that document references:
+> * /schemas/gpio/renesas,rzv2m-pwc-gpio.yaml
+> * /schemas/power/reset/renesas,rzv2m-pwc-poweroff.yaml
+> Which are defined in this patch and in patch 2 in the series.
+> 
+> Do you want me to move patch 3 to patch 1 in v2?
 
-To avoid defines prefixed with "CONFIG", rename these defines to begin with
-"PIN_CONFIG" instead.
+We do not want regmap, but proper definition of entire hardware.
 
-No functional change.
+> 
+>> GPIO can be either either a function of
+>> that node (just add GPIO provider properties) or you can have GPIO child
+>> nodes. Depends on what the entire block looks like to decide. Do you
+>> have multiple instances of the GPIO block would be one reason to have
+>> child nodes.
+> 
+> From a pure HW point of view, this GPIO block is contained inside the PWC block
+> (as PWC is basically a MFD device), and it only deals with 2 General-Purpose
+> Output pins, both controlled by 1 (and the same) register, therefore the GPIO
+> block is only 1 child.
+> 
+> If possible, I would like to keep the functionality offered by the sub-blocks of
+> PWC contained in separated drivers and DT nodes (either non-child nodes or child
+> nodes).
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
- drivers/pinctrl/freescale/pinctrl-mxs.c | 6 +++---
- drivers/pinctrl/freescale/pinctrl-mxs.h | 6 +++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Driver do not matter for bindings. We talk about regmap field which - as
+you explained above - is not needed.
 
-diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
-index 9f78c9b29ddd..cf3f4d2e0c16 100644
---- a/drivers/pinctrl/freescale/pinctrl-mxs.c
-+++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
-@@ -269,9 +269,9 @@ static int mxs_pinconf_group_set(struct pinctrl_dev *pctldev,
- 	for (n = 0; n < num_configs; n++) {
- 		config = configs[n];
- 
--		ma = CONFIG_TO_MA(config);
--		vol = CONFIG_TO_VOL(config);
--		pull = CONFIG_TO_PULL(config);
-+		ma = PIN_CONFIG_TO_MA(config);
-+		vol = PIN_CONFIG_TO_VOL(config);
-+		pull = PIN_CONFIG_TO_PULL(config);
- 
- 		for (i = 0; i < g->npins; i++) {
- 			bank = PINID_TO_BANK(g->pins[i]);
-diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.h b/drivers/pinctrl/freescale/pinctrl-mxs.h
-index ab9f834b03e6..5b26511d56aa 100644
---- a/drivers/pinctrl/freescale/pinctrl-mxs.h
-+++ b/drivers/pinctrl/freescale/pinctrl-mxs.h
-@@ -44,9 +44,9 @@
- #define VOL_SHIFT		3
- #define MA_PRESENT		(1 << 2)
- #define MA_SHIFT		0
--#define CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
--#define CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
--#define CONFIG_TO_MA(c)		((c) >> MA_SHIFT & 0x3)
-+#define PIN_CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
-+#define PIN_CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
-+#define PIN_CONFIG_TO_MA(c)	((c) >> MA_SHIFT & 0x3)
- 
- struct mxs_function {
- 	const char *name;
--- 
-2.17.1
+
+> 
+> My understanding is that simple-mfd will automatically probe the children of the
+> simple-mfd node, and also hierarchically it makes sense to me to have the DT nodes
+> of the PWC sub-blocks as children of the "syscon", "simple-mfd" node. I have found
+> other instances of this same architecture in the kernel already (plenty from NXP/Freescale),
+> for example:
+
+I don't understand. You do not have here simple-mfd and it still does
+not explain Rob's comment and regmap.
+
+> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8mm.dtsi#L585
+> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8mn.dtsi#L586
+> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8mp.dtsi#L451
+> https://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/freescale/imx8mq.dtsi#L616
+> https://github.com/torvalds/linux/blob/master/arch/mips/boot/dts/mti/sead3.dts#L93
+> etc...
+> 
+> Something like the below could also work, but I don't think it would represent the
+> HW accurately:
+> pwc: pwc@a3700000 {
+> 	compatible = "renesas,r9a09g011-pwc", "renesas,rzv2m-pwc",
+> 		     "syscon", "simple-mfd";
+> 	reg = <0 0xa3700000 0 0x800>;
+> };
+> 
+> pwc-gpio {
+> 	compatible = "renesas,r9a09g011-pwc-gpio",
+> 		     "renesas,rzv2m-pwc-gpio";
+> 	regmap = <&pwc>;
+> 	gpio-controller;
+> 	#gpio-cells = <2>;
+> };
+> 
+> pwc-poweroff {
+> 	compatible = "renesas,r9a09g011-pwc-poweroff",
+> 		     "renesas,rzv2m-pwc-poweroff";
+> 	regmap = <&pwc>;
+> };
+> 
+> 
+> I think the below describes things better:
+> pwc: pwc@a3700000 {
+> 	compatible = "renesas,r9a09g011-pwc", "renesas,rzv2m-pwc",
+> 		     "syscon", "simple-mfd";
+> 	reg = <0 0xa3700000 0 0x800>;
+> 
+> 	gpio {
+> 		compatible = "renesas,r9a09g011-pwc-gpio",
+> 			     "renesas,rzv2m-pwc-gpio";
+> 		regmap = <&pwc>;
+
+You speak about two different things. So again - drop regmap. You do not
+need it.
+
+> 		offset = <0x80>;
+> 		gpio-controller;
+> 		#gpio-cells = <2>;
+> 	};
+> 
+> 	poweroff {
+> 		compatible = "renesas,r9a09g011-pwc-poweroff",
+> 			     "renesas,rzv2m-pwc-poweroff";
+> 		regmap = <&pwc>;
+
+Drop regmap.
+
+> 	};
+> };
+> 
+
+Best regards,
+Krzysztof
 
