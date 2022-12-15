@@ -2,192 +2,127 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3881C64D852
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 10:12:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D90364D897
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 10:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbiLOJMM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 04:12:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53498 "EHLO
+        id S229927AbiLOJaX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 04:30:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229914AbiLOJMA (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 04:12:00 -0500
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BC2F4B9A1
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:11:50 -0800 (PST)
-Received: by mail-lf1-x136.google.com with SMTP id b3so14677850lfv.2
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 01:11:50 -0800 (PST)
+        with ESMTP id S229911AbiLOJaV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 04:30:21 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A592446665;
+        Thu, 15 Dec 2022 01:30:18 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id bj12so50784979ejb.13;
+        Thu, 15 Dec 2022 01:30:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bmdAanfz/VP8hVI+pvXvUMPxx98Oy0JHDJIXTuPRBKM=;
-        b=FMb4qhYzCEhjm+w8BD1qR1gQoxNOcTynbj1GoaKthWEJayVLT/xTWQjWo7I34tbyvJ
-         82ZOD7/eFMUeo1NZoIMFYNx6GdNpmuH/KhdX7UU3OiaFzxuqdyfcx2TXtT2hAyjsRBqS
-         pOov4bHFEdcZxgUMmHy8IiqLKf9rS+oZQizq9MpQaJy7rbuv5cvqD1a3Eq3bV2RsFX/w
-         brW5d8kFHfwjkVQLoxSM8G6S6r093vgXpnvUdt9HQIO7T6/9DYE0YflRohsI2nazGSg5
-         YgyJ2jeuG1S8l5bGKV6J0p0kOQ2miwHX7fw7TLFedFsNLLnBG3lMH1maB9hNAMTf27r8
-         82Ow==
+        d=gmail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QgD/IhEryTzLI7fgwREjgsiNZnMhiP+O1KnPg96xGtU=;
+        b=BgCDQ/OHqHTPrhxas7wzRIuA6tFpxWfaC4H4YmVy/ZbAZnCAbSjLiwzbCUOLwzZmUJ
+         IGhvwlYuZgThpR9zR3gUV4gjbzB7/3SWBWNgH4oz3R+Ede8egmLu4r6yDKAvTNyrreLz
+         Ia7442M3FClbdBvIIDteq2EQsduzET6IOmvDJvtWAnzLOffUJJc+qBnC0V1t8pE7JIeI
+         JocZ9FtoSDxMXgQqPbgwXjnb0CEDM91MKlQj1UOdhYrAnsGeXAxF+zInZEprXGl5X4OV
+         VXo3m92pCUDpGC6I9fW7OgM+yqwgKULmqyzK3vyTNJ/RHePhLfEXTZ3E5w4ufunyylCR
+         vekA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bmdAanfz/VP8hVI+pvXvUMPxx98Oy0JHDJIXTuPRBKM=;
-        b=ha3AtrniWBzvl0iyUHMnazwJtRJOIF0lSbDWZweyBlIzTclBofGeClzpyZoLSaru0E
-         6imkvQPeaLTKae5JBmlSH3tnZpaHHfD3fmMVW7IOZBa1ieFkFe6mApGo3CEWoYzgsGDX
-         kcCp1zugYC/Omq5UMv2dTk9jWStw+hHK6+3ZULY7C6NE2y95GCSi6lRqe0U8MDI0GOrk
-         GY+Q8hDjv6GB9zqYelkYBf3PvT6zKaeHPnXNMpFbQ2wh6QW7EtmxGXfWwaoS+wouuEas
-         kd2uA1Mdc7W9RWADtYVKMHhW2u4683Gpm/ifPo24+iUh4FK6w/oygwEcm2ydJhPzoHp/
-         kCDA==
-X-Gm-Message-State: ANoB5pkI+0t/FIInfzO8X7aEMBWs/uNP4u9skbm/fxkhIzmtnMnqPemT
-        t+598TraR1OIbTKZ/C5zvNX9V1zqiiv0dfvm
-X-Google-Smtp-Source: AA0mqf7nEkEV4/tCj1TBlPApxAfYX5q1f0BDFX1yY2eEWeGW/++VjsHo366CKQ1bD+xUI4ccIM0nWg==
-X-Received: by 2002:a05:6512:b24:b0:4b6:f027:2af8 with SMTP id w36-20020a0565120b2400b004b6f0272af8mr4688139lfu.66.1671095508751;
-        Thu, 15 Dec 2022 01:11:48 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id 13-20020a05651c128d00b0027e3d929fc8sm156942ljc.118.2022.12.15.01.11.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Dec 2022 01:11:48 -0800 (PST)
-Message-ID: <d38655cb-d387-5bbd-c430-52a0b04ae3cc@linaro.org>
-Date:   Thu, 15 Dec 2022 10:11:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [RFC PATCH v2 1/3] dt-bindings: gpio: Add gpio-delay binding
- document
-Content-Language: en-US
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QgD/IhEryTzLI7fgwREjgsiNZnMhiP+O1KnPg96xGtU=;
+        b=n4DONNL/sLefmGBLd1c5NbUZsD6l0WlQ/ZpCViIpLme/xkgwMbXHziROjQPPD93eyR
+         DA4DdN5SWK8sy2BnQgIP2D8UCUNUCoTp8TIBUiGIvhBUg78V/xyZYnM0JaG7DYv0/D7T
+         xi0RzXCkWhiqcjGSmaDdV7AxT47+2+rou5c32nL4sfeRY6dZz7nEeMlzM3T6awpK8YQe
+         Aardf2tFSYevYRqoQvNbb7QEhcL10v6nALRlSkgEhnToLdPD3mp8KyKWUj1yMMqr/NaD
+         sEUm1uWKPE2DmiGb5U9R+Ib20LNBBcK9oOlmnOdyRFM3O29iwuJI6sSft8Zcaf5k/xyC
+         K4fg==
+X-Gm-Message-State: ANoB5pnsEnBHD9v0FLqwO9W+65Pvj0EPxjvsWG5ZA34VTg81GJzZ1yiV
+        NWnjPgwEEokZqURcKC996Cs=
+X-Google-Smtp-Source: AA0mqf7VephO2wPiq66MWYE5WIf/bbAOFq2wAt45qgFs4lIAV/YzGeJ3uSSllU+WnM7K8ccJdtJ2UA==
+X-Received: by 2002:a17:907:9208:b0:7c0:d605:fe42 with SMTP id ka8-20020a170907920800b007c0d605fe42mr17670532ejb.18.1671096617080;
+        Thu, 15 Dec 2022 01:30:17 -0800 (PST)
+Received: from felia.fritz.box (ipbcc1d920.dynamic.kabel-deutschland.de. [188.193.217.32])
+        by smtp.gmail.com with ESMTPSA id ko12-20020a170907986c00b00781be3e7badsm6859873ejc.53.2022.12.15.01.30.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Dec 2022 01:30:16 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20221214095342.937303-1-alexander.stein@ew.tq-group.com>
- <20221214095342.937303-2-alexander.stein@ew.tq-group.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221214095342.937303-2-alexander.stein@ew.tq-group.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] pinctrl: mxs: avoid defines prefixed with CONFIG
+Date:   Thu, 15 Dec 2022 10:21:28 +0100
+Message-Id: <20221215092128.3954-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 14/12/2022 10:53, Alexander Stein wrote:
-> This adds bindings for a GPIO enable/disable delay driver.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-delay.yaml  | 75 +++++++++++++++++++
->  1 file changed, 75 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-delay.yaml b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> new file mode 100644
-> index 000000000000..20871356e9b5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-delay.yaml
-> @@ -0,0 +1,75 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-delay.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: GPIO delay controller
-> +
-> +maintainers:
-> +  - Alexander Stein <linux@ew.tq-group.com>
-> +
-> +description: |
-> +  This binding describes an electrical setup where setting an GPIO output
-> +  is delayed by some external setup, e.g. RC curcuit.
-> +
-> +  +----------+                    +-----------+
-> +  |          |             VCC_B  |           |
-> +  |          |              |     |           |
-> +  |          | VCC_A        _     |           |
-> +  |  GPIO    |             | | R  |  Consumer |
-> +  |controller|        ___  |_|    |           |
-> +  |          |       |   |  |     |           |
-> +  |      [IOx|-------|   |--+-----|-----+     |
-> +  |          |       |___|  |     |   input   |
-> +  |          |              |     |           |
-> +  +----------+             --- C  +-----------+
-> +                           ---
-> +                            |
-> +                            -
-> +                           GND
-> +
-> +  If the input on the consumer is controlled by an open-drain signal
+Defines prefixed with "CONFIG" should be limited to proper Kconfig options,
+that are introduced in a Kconfig file.
 
-If IOx is open-drain, what is the VCC_A on the diagram? I think it
-wasn't present in original Laurent's diagram.
+Here, expressions to convert pin configurations to booleans for pull-up,
+voltage and mA are macro definitions that begin with "CONFIG".
 
-> +  attached to an RC curcuit the ramp-up delay is not under control
-> +  of the GPIO controller.
-> +
-> +properties:
-> +  compatible:
-> +    const: gpio-delay
-> +
-> +  "#gpio-cells":
-> +    description: |
-> +      Specifies the pin, ramp-up and ramp-down delays. The
-> +      delays are specified in microseconds.
-> +    const: 3
-> +
-> +  input-gpios:
-> +    description: Array of GPIOs which output signal change is delayed
+To avoid defines prefixed with "CONFIG", rename these defines to begin with
+"PIN_CONFIG" instead.
 
-maxItems: 32 or some other reasonable value
+No functional change.
 
-> +
-> +  gpio-controller: true
-> +
-> +  gpio-line-names: true
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+ drivers/pinctrl/freescale/pinctrl-mxs.c | 6 +++---
+ drivers/pinctrl/freescale/pinctrl-mxs.h | 6 +++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-and then the same maxItems.
-
-> +
-> +required:
-> +  - compatible
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +  - input-gpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    enable_delay: enable-delay {
-> +        compatible = "gpio-delay";
-
-I am not sure whether the naming is the most accurate - it represents
-desired behavior (so the delay in rising signal), not actual hardware
-(RC filter), but maybe that's a bit more generic.
-
-Anyway look fine for me.
-
-> +        #gpio-cells = <3>;
-> +        gpio-controller;
-> +        input-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>,
-> +                      <&gpio3 1 GPIO_ACTIVE_HIGH>;
-> +    };
-> +
-> +    consumer {
-> +        enable-gpios = <&enable_delay 0 130000 30000>;
-> +    };
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.c b/drivers/pinctrl/freescale/pinctrl-mxs.c
+index 9f78c9b29ddd..cf3f4d2e0c16 100644
+--- a/drivers/pinctrl/freescale/pinctrl-mxs.c
++++ b/drivers/pinctrl/freescale/pinctrl-mxs.c
+@@ -269,9 +269,9 @@ static int mxs_pinconf_group_set(struct pinctrl_dev *pctldev,
+ 	for (n = 0; n < num_configs; n++) {
+ 		config = configs[n];
+ 
+-		ma = CONFIG_TO_MA(config);
+-		vol = CONFIG_TO_VOL(config);
+-		pull = CONFIG_TO_PULL(config);
++		ma = PIN_CONFIG_TO_MA(config);
++		vol = PIN_CONFIG_TO_VOL(config);
++		pull = PIN_CONFIG_TO_PULL(config);
+ 
+ 		for (i = 0; i < g->npins; i++) {
+ 			bank = PINID_TO_BANK(g->pins[i]);
+diff --git a/drivers/pinctrl/freescale/pinctrl-mxs.h b/drivers/pinctrl/freescale/pinctrl-mxs.h
+index ab9f834b03e6..5b26511d56aa 100644
+--- a/drivers/pinctrl/freescale/pinctrl-mxs.h
++++ b/drivers/pinctrl/freescale/pinctrl-mxs.h
+@@ -44,9 +44,9 @@
+ #define VOL_SHIFT		3
+ #define MA_PRESENT		(1 << 2)
+ #define MA_SHIFT		0
+-#define CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
+-#define CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
+-#define CONFIG_TO_MA(c)		((c) >> MA_SHIFT & 0x3)
++#define PIN_CONFIG_TO_PULL(c)	((c) >> PULL_SHIFT & 0x1)
++#define PIN_CONFIG_TO_VOL(c)	((c) >> VOL_SHIFT & 0x1)
++#define PIN_CONFIG_TO_MA(c)	((c) >> MA_SHIFT & 0x3)
+ 
+ struct mxs_function {
+ 	const char *name;
+-- 
+2.17.1
 
