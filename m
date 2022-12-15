@@ -2,49 +2,46 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F008064DEDB
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 17:43:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2548164DF28
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 18:01:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbiLOQnL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 11:43:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38668 "EHLO
+        id S230115AbiLORBN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 12:01:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbiLOQnI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 11:43:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B7631EF4;
-        Thu, 15 Dec 2022 08:43:08 -0800 (PST)
+        with ESMTP id S230024AbiLORBL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 12:01:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C18B1A3B4;
+        Thu, 15 Dec 2022 09:01:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2A5A61E3B;
-        Thu, 15 Dec 2022 16:43:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3B1C433D2;
-        Thu, 15 Dec 2022 16:43:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 12B6D61E50;
+        Thu, 15 Dec 2022 17:01:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73B9FC433EF;
+        Thu, 15 Dec 2022 17:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671122587;
-        bh=EJbzFTzdiVnx0DkBjvBmxcdCKoZgTncI1xo0FQ9Ph00=;
+        s=k20201202; t=1671123668;
+        bh=RRg69Zv0fSJqhIaCebQ4VqYqr3NypZRiXKo9W0an9KU=;
         h=From:To:Cc:Subject:Date:From;
-        b=cVDq0W3vD9FvmjOGUWuYhrlG6cSOWaJu5/TlD2iP/9YBDHp+8h2gd4gsUpLFD4qgc
-         We3FbLRJ2UrJZ52IjLRssK93sSYVDvx1l5nwjYBX+ibedXTjkqUnZIJqgO7zPhCgS3
-         hGaRWq9LgLIqYMq48RikZhlEumapRzeOWqMqJR/QFJqP+IMnDtgi5DWgD3ughZ56au
-         jSBo2C3rXVTuXYb38ZxP0CZ63rm0SZVV9qoeu9JGbpDIH9r3yR0cfjxL55U339wx1l
-         CHtUg34/cUXb3uv1FkfGkXzkvZc0fiyl7hrh1V+ijLgAssP9kmrS2FnafwV/G5yDui
-         nj6RkTUPGfO3w==
+        b=aMexPlRE2sEHLa6io+/F+BvdjIGtwzxUXvrY9wAijgDUtCV1c7oeEy6dWpRanyWps
+         QkC1mFu6kXlyI8b7ybHgoHccyCBAN+oqCWUMqfPem6gNnGdTNYGgmTYPZyMq0h6BHi
+         Pjdx4Fjspp38KAz2bmHDX4VlUwzEg0wL2KwbQ6f3lkyDsBhvDYShsjIoR00o8Jft4t
+         DbrEe60YqtI38eoVmlcWcTc51O4F4pMeOfLmsEm6REdSIWMsMKq1Z71K2wuuH3XBP7
+         aSRbIskKkoRe74faCw1fv57PC0mBu6B5Tb4uJGCnlidrjmhxfITVFc4pBKTn5TcxC0
+         Mhst/3spDXDAQ==
 From:   Arnd Bergmann <arnd@kernel.org>
-To:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Miaoqian Lin <linmq006@gmail.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Slark Xiao <slark_xiao@163.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: at91: convert to NOIRQ_SYSTEM_SLEEP_PM_OPS
-Date:   Thu, 15 Dec 2022 17:42:54 +0100
-Message-Id: <20221215164301.934805-1-arnd@kernel.org>
+Subject: [PATCH] pinctrl: nomadik: include linux/seq_file.h
+Date:   Thu, 15 Dec 2022 18:00:57 +0100
+Message-Id: <20221215170103.2349282-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -59,34 +56,32 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-With the old SET_NOIRQ_SYSTEM_SLEEP_PM_OPS, some configs result in a
-build warning:
+In some randconfig builds, the missing #include causes a
+build failure:
 
-drivers/pinctrl/pinctrl-at91.c:1668:12: error: 'at91_gpio_resume' defined but not used [-Werror=unused-function]
- 1668 | static int at91_gpio_resume(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~
-drivers/pinctrl/pinctrl-at91.c:1650:12: error: 'at91_gpio_suspend' defined but not used [-Werror=unused-function]
- 1650 | static int at91_gpio_suspend(struct device *dev)
-      |            ^~~~~~~~~~~~~~~~~
+drivers/pinctrl/nomadik/pinctrl-nomadik.c: In function 'nmk_gpio_irq_print_chip':
+drivers/pinctrl/nomadik/pinctrl-nomadik.c:1084:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
+ 1084 |         seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
+      |         ^~~~~~~~~~
+      |         bstr_printf
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/pinctrl/pinctrl-at91.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
-index 1e1813d7c550..cf2423855a80 100644
---- a/drivers/pinctrl/pinctrl-at91.c
-+++ b/drivers/pinctrl/pinctrl-at91.c
-@@ -1923,7 +1923,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
- }
- 
- static const struct dev_pm_ops at91_gpio_pm_ops = {
--	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(at91_gpio_suspend, at91_gpio_resume)
-+	NOIRQ_SYSTEM_SLEEP_PM_OPS(at91_gpio_suspend, at91_gpio_resume)
- };
- 
- static struct platform_driver at91_gpio_driver = {
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index f7d02513d8cc..1d8e36c2785d 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -17,6 +17,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
++#include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/of_device.h>
+ #include <linux/of_address.h>
 -- 
 2.35.1
 
