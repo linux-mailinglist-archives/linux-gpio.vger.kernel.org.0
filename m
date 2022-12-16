@@ -2,116 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E04764E3DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Dec 2022 23:44:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6762264E6AC
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Dec 2022 05:26:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbiLOWof (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 15 Dec 2022 17:44:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37324 "EHLO
+        id S229737AbiLPE0V (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 15 Dec 2022 23:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiLOWoe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 17:44:34 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 110CD58BF2;
-        Thu, 15 Dec 2022 14:44:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 85B3A61F7E;
-        Thu, 15 Dec 2022 22:44:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4482C433F1;
-        Thu, 15 Dec 2022 22:44:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671144271;
-        bh=IKQVicmZa+NzOsuQkbhrI43xXaW9dkSeiyKFaMHEXGU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=reu6ORIBDjmj+NaI2VPlphQ1C3rw7uE6UQ/3umykfULW4+zOdFR8bn1G6XU5aKn7c
-         LyCEP9epwFzPVmAQYdfwzks20mJwP7dAmpzUnrAWp+rKThPR3JbP9695dnfmRy9UKA
-         aO9Pa/ADt6HFFkO15QWdACXUKKfUttM8ocuvc8CTzHrvQP+igjNDFBMD5tUfyVZpkj
-         IHGVy+mGkDJunHP5bACHs9e+2//Xor9wehDzJ5qxyygOTLrG7gfElURDyjpOtvw1le
-         kjET3Uo9l+Dt0iNsGoETi2xGccaSY4jl4ZouSmS6paYnDBplbt+iyrHdEeRS5kecOb
-         x3xlEQLTrjkmg==
-Received: by mail-vs1-f51.google.com with SMTP id f189so674944vsc.11;
-        Thu, 15 Dec 2022 14:44:31 -0800 (PST)
-X-Gm-Message-State: ANoB5pmzp2z/QMVVUvEkqcf6jlPVd6tg3jh/GcG5ozDCpwTREx1BoF7R
-        Tunn0QQFud6YDOHT8Yd6zWfe3Wg9KsJWf2eC3A==
-X-Google-Smtp-Source: AA0mqf7Xah6bJe8jpBmSQL7qsXrIKt2VijdrpF+vYJKrUW0CAcsDtzGS/id29S+KLpaBByrGk09scmFt9JwIS9GyenI=
-X-Received: by 2002:a67:c40e:0:b0:3b1:4b76:5b44 with SMTP id
- c14-20020a67c40e000000b003b14b765b44mr11475861vsk.53.1671144270853; Thu, 15
- Dec 2022 14:44:30 -0800 (PST)
+        with ESMTP id S229726AbiLPE0T (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 15 Dec 2022 23:26:19 -0500
+X-Greylist: delayed 521 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Dec 2022 20:26:17 PST
+Received: from out-77.mta0.migadu.com (out-77.mta0.migadu.com [IPv6:2001:41d0:1004:224b::4d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDA7E6036C
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Dec 2022 20:26:17 -0800 (PST)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1671164255;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UGBLh9DAaCubl0iR5/VhBqErDCfa1wpAZno7Lj8I1vQ=;
+        b=i9itX9UC8z+pZqiL6AKDm0ZaIFmVLa+2t+R4rq697k8wYExxyWN5L2L6vXMBoP7zveIs/d
+        q8bQb5KgAFzo0BsF1oPKsKgVYGZ/Tjnk7q12M6zHUPZEPW57kJQbuq9dASKDwUWps556jc
+        woucGuahZfg5d6Z0UNvNTYYltqGyFWY=
+From:   Cixi Geng <cixi.geng@linux.dev>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+        gengcixi@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: sprd: Make irq_chip immutable
+Date:   Fri, 16 Dec 2022 12:17:08 +0800
+Message-Id: <20221216041708.32768-1-cixi.geng@linux.dev>
 MIME-Version: 1.0
-References: <20221214095342.937303-1-alexander.stein@ew.tq-group.com>
- <CACRpkdbPy0krGYDdR4-Ga7tE=Wd6d2_KQ50b94VUvV=Zv=iBvA@mail.gmail.com>
- <CAL_JsqJ0xY5e6mZB_smTCNm0HfsPTF64d0YgikmRx8FPzjxKCw@mail.gmail.com> <Y5uRBPsa4YCsAbj2@pendragon.ideasonboard.com>
-In-Reply-To: <Y5uRBPsa4YCsAbj2@pendragon.ideasonboard.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 15 Dec 2022 16:44:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLjA5AKJuNCDwBVsAoBmxBdcqf_LBHBwF9ObckUEr=epw@mail.gmail.com>
-Message-ID: <CAL_JsqLjA5AKJuNCDwBVsAoBmxBdcqf_LBHBwF9ObckUEr=epw@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 0/3] gpio: Add gpio-delay support
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 3:26 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> On Thu, Dec 15, 2022 at 12:21:33PM -0600, Rob Herring wrote:
-> > On Thu, Dec 15, 2022 at 7:16 AM Linus Walleij wrote:
-> > > On Wed, Dec 14, 2022 at 10:53 AM Alexander Stein wrote:
-> > >
-> > > > thanks for the feedback I've received. This is the reworked RFC for
-> > > > adressing a platform specific ramp-up/ramp-down delay on GPIO outputs.
-> > > > Now the delays are neither specified as gpio-controller nor
-> > > > consumer-specific properties.
-> > > >
-> > > > v2 is a different approach than v1 in that it adds a new driver which will
-> > > > simply forward setting the GPIO output of specified GPIOs in OF node.
-> > > > The ramp-up/ramp-down delay can now be actually defined on consumer side,
-> > > > see Patch 1 or 3 for examples.
-> > >
-> > > I really like this approach, it looks better than I imagined.
-> >
-> > It seems over-engineered to me. So far no comments on my 3 suggestions either...
->
-> I like the idea of handling this on the consumer's side, possibly with
-> standard foo-gpios-ramp-{up,down}-delay-us (name to be bikeshedded)
-> properties as you mentioned in the review of v1.
->
-> > One is to just use some GPIO flag bits. Say 4-bits of GPIO flags
-> > encoded as power of 2 ramp delay. We have to pick the units. For
-> > example, 100us*2^N, which gives you 200us-3.2s of delay.
->
-> This could probably work too.
->
-> > Anything less is short enough to just hard code in a driver.
->
-> In which driver though ? The whole point is that we should avoid
-> handling this in particular drivers.
+From: Cixi Geng <cixi.geng1@unisoc.com>
 
-Okay, make the range 100us-1.63s and the minimum delay is 100us. Or
-50us-819ms? What's a small enough minimum that no one will care about
-the extra delay?
+Kernel warns about mutable irq_chips:
 
-One thing we don't want is DT authors putting a device's delay needs
-in here. Then we'll get coupling to the OS implementation or double
-delays. Something like this should be clear:
+    "not an immutable chip, please consider fixing!"
 
-#define GPIO_THIS_IS_ONLY_THE_SIGNAL_RC_RAMP_TIME_100us
+Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
+new helper functions, and call the appropriate gpiolib functions.
 
-;)
+Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+---
+ drivers/gpio/gpio-eic-sprd.c      |  4 ++--
+ drivers/gpio/gpio-pmic-eic-sprd.c |  4 ++--
+ drivers/gpio/gpio-sprd.c          | 11 +++++++++--
+ 3 files changed, 13 insertions(+), 6 deletions(-)
 
-Rob
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index 8d722e026e9c..07b9099f2a6d 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -631,10 +631,10 @@ static int sprd_eic_probe(struct platform_device *pdev)
+ 	sprd_eic->intc.irq_mask = sprd_eic_irq_mask;
+ 	sprd_eic->intc.irq_unmask = sprd_eic_irq_unmask;
+ 	sprd_eic->intc.irq_set_type = sprd_eic_irq_set_type;
+-	sprd_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
++	sprd_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE;
+ 
+ 	irq = &sprd_eic->chip.irq;
+-	irq->chip = &sprd_eic->intc;
++	gpio_irq_chip_set_chip(irq, &sprd_eic->intc);
+ 	irq->handler = handle_bad_irq;
+ 	irq->default_type = IRQ_TYPE_NONE;
+ 	irq->parent_handler = sprd_eic_irq_handler;
+diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
+index e518490c4b68..d96604ea10e7 100644
+--- a/drivers/gpio/gpio-pmic-eic-sprd.c
++++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+@@ -344,10 +344,10 @@ static int sprd_pmic_eic_probe(struct platform_device *pdev)
+ 	pmic_eic->intc.irq_set_type = sprd_pmic_eic_irq_set_type;
+ 	pmic_eic->intc.irq_bus_lock = sprd_pmic_eic_bus_lock;
+ 	pmic_eic->intc.irq_bus_sync_unlock = sprd_pmic_eic_bus_sync_unlock;
+-	pmic_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
++	pmic_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE;
+ 
+ 	irq = &pmic_eic->chip.irq;
+-	irq->chip = &pmic_eic->intc;
++	gpio_irq_chip_set_chip(irq, &pmic_eic->intc);
+ 	irq->threaded = true;
+ 
+ 	ret = devm_gpiochip_add_data(&pdev->dev, &pmic_eic->chip, pmic_eic);
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index 9bff63990eee..8398f9707ec0 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -64,6 +64,11 @@ static void sprd_gpio_update(struct gpio_chip *chip, unsigned int offset,
+ 
+ 	writel_relaxed(tmp, base + reg);
+ 	spin_unlock_irqrestore(&sprd_gpio->lock, flags);
++
++	if (reg == SPRD_GPIO_IE && val == 1)
++		gpiochip_enable_irq(chip, offset);
++	else if (reg == SPRD_GPIO_IE && val == 0)
++		gpiochip_disable_irq(chip, offset);
+ }
+ 
+ static int sprd_gpio_read(struct gpio_chip *chip, unsigned int offset, u16 reg)
+@@ -205,13 +210,15 @@ static void sprd_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(ic, desc);
+ }
+ 
+-static struct irq_chip sprd_gpio_irqchip = {
++static const struct irq_chip sprd_gpio_irqchip = {
+ 	.name = "sprd-gpio",
+ 	.irq_ack = sprd_gpio_irq_ack,
+ 	.irq_mask = sprd_gpio_irq_mask,
+ 	.irq_unmask = sprd_gpio_irq_unmask,
+ 	.irq_set_type = sprd_gpio_irq_set_type,
+ 	.flags = IRQCHIP_SKIP_SET_WAKE,
++	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
++	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
+ static int sprd_gpio_probe(struct platform_device *pdev)
+@@ -245,7 +252,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+ 	sprd_gpio->chip.direction_output = sprd_gpio_direction_output;
+ 
+ 	irq = &sprd_gpio->chip.irq;
+-	irq->chip = &sprd_gpio_irqchip;
++	gpio_irq_chip_set_chip(irq, &sprd_gpio_irqchip);
+ 	irq->handler = handle_bad_irq;
+ 	irq->default_type = IRQ_TYPE_NONE;
+ 	irq->parent_handler = sprd_gpio_irq_handler;
+-- 
+2.34.1
+
