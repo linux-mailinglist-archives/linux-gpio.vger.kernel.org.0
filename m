@@ -2,66 +2,66 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C61CD64EEBD
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Dec 2022 17:14:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8A4464EEC4
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Dec 2022 17:16:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232147AbiLPQO0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Dec 2022 11:14:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48590 "EHLO
+        id S231825AbiLPQQG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Dec 2022 11:16:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231757AbiLPQNv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Dec 2022 11:13:51 -0500
+        with ESMTP id S231774AbiLPQQF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Dec 2022 11:16:05 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981E1F6F
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Dec 2022 08:13:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A3362D9
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Dec 2022 08:15:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671207179;
+        s=mimecast20190719; t=1671207320;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wURGvGbeXFElQK+1JoCJWdzCOYSxxIx6OSpE5tUptwQ=;
-        b=hy+PGfvhcn+aIJDQHtIiaykQ33Q415T5nMj74OlErM9zF2xprkVRkRJLUWyEtpMjv9vBDW
-        oMa/UbeLlsAOe6CJQyHCMumqW7s4LXZMZZ973fbMSB7rwjNWlDaF5TWth9qdM2p7gqv2QL
-        AuNzQOPcTsC9tUw7v56AWvuLSRFFi/E=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5V0gWTiQyHM7Bkjc6mb6/qdGnHbUKRPQL2E0IfTa8tU=;
+        b=iOBPW/WzLKez34k0FBEUmZLle1oPm7USDcnQpH0XhQUUdjHwGXrYzuwBKYSk1AMe5GSALc
+        5oJFcW9nw+7QAhPOb6NyX08himcb8mRe5M1Dvhcuj3IwqbK5fnbNQCdOMEiM9gapv8iuej
+        CWtSoO2oceaZKu5+LjhqPVxxZkxgzeg=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-568-alU738osOvmoT7CbHDtfgA-1; Fri, 16 Dec 2022 11:12:58 -0500
-X-MC-Unique: alU738osOvmoT7CbHDtfgA-1
-Received: by mail-ed1-f72.google.com with SMTP id g14-20020a056402090e00b0046790cd9082so2214408edz.21
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Dec 2022 08:12:58 -0800 (PST)
+ us-mta-10-BrMpfKJ8OpmTUb_UlbatYA-1; Fri, 16 Dec 2022 11:15:17 -0500
+X-MC-Unique: BrMpfKJ8OpmTUb_UlbatYA-1
+Received: by mail-ed1-f69.google.com with SMTP id y10-20020a056402358a00b0046fc5125069so2206656edc.23
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Dec 2022 08:15:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wURGvGbeXFElQK+1JoCJWdzCOYSxxIx6OSpE5tUptwQ=;
-        b=FK/97FVV84nNC3/+qT8pTm4+x3zbykkV79Qh5xXxc37DcfKJqr+PaeQYcsdiHmbib6
-         HPSLDqbjkacRUeoTwtJRT1aIqcQPrSIsUjtOhvPiFfSIypBoqc8nGjroh2ryKnEgIvOn
-         kwCipTU6FrEm9zN1PenYxYNhOWU42b/3/I2lxs+t6XkhwY2pmBOYN6g1AF9iK4er3UR+
-         PtK3ghjJKsHXmTT5Eh+xbyegplL34edl4uN9gsfd9Az5ZVNe0yjogVgrRsYciUwC0lOT
-         aBx8ED8bzIrGUM14maqdm/44z6yAvoGUiGFiVNRSF1k6t413rxR46sONf84DyBj5L8VP
-         aHIA==
-X-Gm-Message-State: ANoB5pmsCt+Owl/UDHA/YajFcY43bQQ3oDC+kePuoP2d3ksv0ZVbDgis
-        5XjOZTDqa1ZYGHI+yRzbXmw8NhxgKnHcIx39TggApqZ1aSVEWPaDohxz8bHLdArWLGxuUjeEZSD
-        sNYPz+tzIpEZHVM4Lf3qWDg==
-X-Received: by 2002:a17:907:d092:b0:7c1:766e:e09 with SMTP id vc18-20020a170907d09200b007c1766e0e09mr17459140ejc.29.1671207177122;
-        Fri, 16 Dec 2022 08:12:57 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf50iqeefJRduXX2rwzez9VdVVpN5fpmMgPeScO7DIs4zfQlUWkH2nwxx+hx/Hf6EtQCQOtCxw==
-X-Received: by 2002:a17:907:d092:b0:7c1:766e:e09 with SMTP id vc18-20020a170907d09200b007c1766e0e09mr17459133ejc.29.1671207177009;
-        Fri, 16 Dec 2022 08:12:57 -0800 (PST)
+        bh=5V0gWTiQyHM7Bkjc6mb6/qdGnHbUKRPQL2E0IfTa8tU=;
+        b=1kpsrKEIkCUk73cmaPoyX1nWmBv7Zcz9zNp05d1FS4kOcbL0HSVRfgn+y7FgLpoLaQ
+         Rw80XvmjB3gOMwTDpPvAU/LYdzAknkDuJOHBlrvTSIsMELt2wgt7SBRUNNzfYA0u6rSt
+         PtCbEvuWKZPLkSlVC8sdJ99Twn0JXPuwRjnMgh6M4DvDWXlgnoh5S3QNmvRMzL5osUUv
+         z9pIIsVGBpFVS8LB6EDWzrGEiVG33rjmUfq4q3FN+7Vu1WDEL4eqyPuGKVwgPhUuSI+R
+         43EANhZa7bmSt1g/PCnkMrypDP9n1/t4w1el/26pnAtdbVNWpDU/6EsNOq7WucVxhhlV
+         j00A==
+X-Gm-Message-State: ANoB5pn5lupOLBYGQJ4G/jfmdqSj7a3Qv6Q4q0Zv/XObX+sH22IdBAYQ
+        W5C127ubEdP+fpNHOpnDNjRfUT7MfMmAo+rd9KON8+aI014nVFOJruOAHWB6zsOBnBwhpCGaLqj
+        ZFGBhB9bqp6RkckUSYDVi1w==
+X-Received: by 2002:a17:906:57c6:b0:7c1:7226:c936 with SMTP id u6-20020a17090657c600b007c17226c936mr16584425ejr.64.1671207316583;
+        Fri, 16 Dec 2022 08:15:16 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf43QQciG3j7+a7kDftvMmjITlOaHkoDe7H9MPuKyYsxjIIjCTSbfwSvJKdA6PtrKPcQpkkZoA==
+X-Received: by 2002:a17:906:57c6:b0:7c1:7226:c936 with SMTP id u6-20020a17090657c600b007c17226c936mr16584410ejr.64.1671207316430;
+        Fri, 16 Dec 2022 08:15:16 -0800 (PST)
 Received: from ?IPV6:2001:1c00:2a07:3a01:67e5:daf9:cec0:df6? (2001-1c00-2a07-3a01-67e5-daf9-cec0-0df6.cable.dynamic.v6.ziggo.nl. [2001:1c00:2a07:3a01:67e5:daf9:cec0:df6])
-        by smtp.gmail.com with ESMTPSA id co18-20020a0564020c1200b004611c230bd0sm1034983edb.37.2022.12.16.08.12.55
+        by smtp.gmail.com with ESMTPSA id fr33-20020a170906892100b007c09da0d773sm1002074ejc.100.2022.12.16.08.15.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Dec 2022 08:12:56 -0800 (PST)
-Message-ID: <ad2a8bb6-9acf-d3ca-b48f-5f12d45a16eb@redhat.com>
-Date:   Fri, 16 Dec 2022 17:12:55 +0100
+        Fri, 16 Dec 2022 08:15:15 -0800 (PST)
+Message-ID: <233166c0-eb2d-8b41-68f3-d9613218fc16@redhat.com>
+Date:   Fri, 16 Dec 2022 17:15:14 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [PATCH v3 06/11] v4l: subdev: Make the v4l2-subdev core code
- enable/disable the privacy LED if present
+Subject: Re: [PATCH v3 07/11] platform/x86: int3472/discrete: Refactor GPIO to
+ sensor mapping
 Content-Language: en-US
 To:     Andy Shevchenko <andy@kernel.org>
 Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -77,10 +77,10 @@ Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
         linux-media@vger.kernel.org
 References: <20221216113013.126881-1-hdegoede@redhat.com>
- <20221216113013.126881-7-hdegoede@redhat.com>
- <Y5x6iHdMj6Dx0Buf@smile.fi.intel.com>
+ <20221216113013.126881-8-hdegoede@redhat.com>
+ <Y5x5XmIa9nsi8raY@smile.fi.intel.com>
 From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <Y5x6iHdMj6Dx0Buf@smile.fi.intel.com>
+In-Reply-To: <Y5x5XmIa9nsi8raY@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -95,43 +95,31 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 Hi,
 
-On 12/16/22 15:02, Andy Shevchenko wrote:
-> On Fri, Dec 16, 2022 at 12:30:08PM +0100, Hans de Goede wrote:
->> Extend the call_s_stream() wrapper to enable/disable sensor privacy LEDs
->> for sensors with a privacy LED, rather then having to duplicate this code
->> in all the sensor drivers.
+On 12/16/22 14:57, Andy Shevchenko wrote:
+> On Fri, Dec 16, 2022 at 12:30:09PM +0100, Hans de Goede wrote:
+>> Add a helper function to map the type returned by the _DSM
+>> method to a function name + the default polarity for that function.
+>>
+>> And fold the INT3472_GPIO_TYPE_RESET and INT3472_GPIO_TYPE_POWERDOWN
+>> cases into a single generic case.
+>>
+>> This is a preparation patch for further GPIO mapping changes.
 > 
 > ...
 > 
->> +static void call_s_stream_update_pled(struct v4l2_subdev *sd, int enable)
->> +{
->> +	if (!sd->dev)
->> +		return;
->> +
->> +	/* Try to get privacy-led once, at first s_stream() */
->> +	if (!sd->privacy_led)
->> +		sd->privacy_led = led_get(sd->dev, "privacy-led");
+>> +static void int3472_get_func_and_polarity(u8 type, const char **func, u32 *polarity)
 > 
->> +
+> I find a bit strange not making this a function that returns func:
 > 
-> Redundant blank line?
+> static const char *int3472_get_func_and_polarity(u8 type, u32 *polarity)
 
-I find this more readable with the blank line between the 2 ifs.
-> 
->> +	if (IS_ERR(sd->privacy_led))
->> +		return;
-> 
-> I'm not sure I have got the logic right. Let's assume we call it with
-> _led == NULL. Then in case of error, we feel it with the error pointer.
-> If we call again, we check for NULL, and return error pointer.
-> 
-> So, we won't try the second time. Is it by design? Or should it be
+Why make it return func and not polarity ?
 
-It is by design, there even is a comment which says so:
+Since there are 2 values to return it makes sense to be
+consistent and return both by reference.
 
-/* Try to get privacy-led once, at first s_stream() */
-
-
+Also this sort of comments really get into the territory
+of bikeshedding which is not helpful IMHO.
 
 Regards,
 
@@ -139,18 +127,40 @@ Hans
 
 
 
+
 > 
-> 	struct ... *led;
+>> +{
+>> +	switch (type) {
+>> +	case INT3472_GPIO_TYPE_RESET:
+>> +		*func = "reset";
+>> +		*polarity = GPIO_ACTIVE_LOW;
 > 
-> 	if (!privacy_led) {
-> 		led = ...
-> 		if (IS_ERR())
-> 			return;
-> 		privacy_led = led;
-> 	}
+> 		return "reset";
 > 
-> ?
+> etc.
 > 
+>> +		break;
+>> +	case INT3472_GPIO_TYPE_POWERDOWN:
+>> +		*func = "powerdown";
+>> +		*polarity = GPIO_ACTIVE_LOW;
+>> +		break;
+>> +	case INT3472_GPIO_TYPE_CLK_ENABLE:
+>> +		*func = "clk-enable";
+>> +		*polarity = GPIO_ACTIVE_HIGH;
+>> +		break;
+>> +	case INT3472_GPIO_TYPE_PRIVACY_LED:
+>> +		*func = "privacy-led";
+>> +		*polarity = GPIO_ACTIVE_HIGH;
+>> +		break;
+>> +	case INT3472_GPIO_TYPE_POWER_ENABLE:
+>> +		*func = "power-enable";
+>> +		*polarity = GPIO_ACTIVE_HIGH;
+>> +		break;
+>> +	default:
+>> +		*func = "unknown";
+>> +		*polarity = GPIO_ACTIVE_HIGH;
+>> +		break;
+>> +	}
 >> +}
 > 
 
