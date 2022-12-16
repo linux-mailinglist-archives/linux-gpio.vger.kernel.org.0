@@ -2,104 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56BF564F040
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Dec 2022 18:20:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C9F964F37C
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Dec 2022 22:51:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231567AbiLPRUL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 16 Dec 2022 12:20:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38766 "EHLO
+        id S229469AbiLPVva (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 16 Dec 2022 16:51:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231765AbiLPRUJ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Dec 2022 12:20:09 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 701126F4B7;
-        Fri, 16 Dec 2022 09:20:08 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="320899548"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="320899548"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 09:20:07 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10563"; a="649897867"
-X-IronPort-AV: E=Sophos;i="5.96,249,1665471600"; 
-   d="scan'208";a="649897867"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 16 Dec 2022 09:20:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andy@kernel.org>)
-        id 1p6ENM-00AwrZ-1n;
-        Fri, 16 Dec 2022 19:20:00 +0200
-Date:   Fri, 16 Dec 2022 19:20:00 +0200
-From:   Andy Shevchenko <andy@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v3 11/11] platform/x86: int3472/discrete: Get the
- polarity from the _DSM entry
-Message-ID: <Y5yowBsDmgTX1nYO@smile.fi.intel.com>
-References: <20221216113013.126881-1-hdegoede@redhat.com>
- <20221216113013.126881-12-hdegoede@redhat.com>
- <Y5yHPvXG/4pWivEG@smile.fi.intel.com>
- <ce764e02-0832-9b2b-c787-0e1c73748fe0@redhat.com>
+        with ESMTP id S229488AbiLPVv3 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 16 Dec 2022 16:51:29 -0500
+Received: from phobos.denx.de (phobos.denx.de [IPv6:2a01:238:438b:c500:173d:9f52:ddab:ee01])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816F55EDED
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Dec 2022 13:51:25 -0800 (PST)
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: marex@denx.de)
+        by phobos.denx.de (Postfix) with ESMTPSA id D3BA184F72;
+        Fri, 16 Dec 2022 22:51:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+        s=phobos-20191101; t=1671227484;
+        bh=TaufkRPCCj2JqxUzJ9D2saPzAqmTIvwTgeI/62dy3Ig=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=pjL+RnWNfH9v1XdPxbtyzVWxDlzw78R+p2kLeKotuNvJUw4y9LFmK6IUOkpT1nmpC
+         jjIgvA/jvIFfCgN5CoN2Sbnt7F6C6kRgmlgz2PpMAn++xNYgpQxjNOFD+aGMMLd8wC
+         7rMzz/tj7MYyFh6TbsCqDPCI+R5b52hh7SYaFoE/s9jdhYKIy0BghixhXiwu0p6imK
+         rgelgt9LYq7TJ5xplAgPNQCjyvfcoTDS3kSzGJsX+PhRUclb8HRYeSFRsBknefWlIb
+         nje/Boxe5Oowksy438O9MlkIW5sQO7i22Hv7FFvOyTQlSjSu9Ua6PII5VBLw1mFEhx
+         twNx52Nh/JG2g==
+Message-ID: <24df1fa1-c24e-a07b-f7bc-dbf9f059549d@denx.de>
+Date:   Fri, 16 Dec 2022 22:51:23 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ce764e02-0832-9b2b-c787-0e1c73748fe0@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH v6 2/2] gpio: mxc: Always set GPIOs used as interrupt
+ source to INPUT mode
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Loic Poulain <loic.poulain@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+References: <20221013215946.216184-1-marex@denx.de>
+ <20221013215946.216184-2-marex@denx.de>
+ <CACRpkdZwZCDA-pvneLYyMvxqeZkSoM3CFRHEkpOLoiWpPvXOxQ@mail.gmail.com>
+From:   Marek Vasut <marex@denx.de>
+In-Reply-To: <CACRpkdZwZCDA-pvneLYyMvxqeZkSoM3CFRHEkpOLoiWpPvXOxQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
+X-Virus-Status: Clean
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 05:42:08PM +0100, Hans de Goede wrote:
-> On 12/16/22 15:57, Andy Shevchenko wrote:
-> > On Fri, Dec 16, 2022 at 12:30:13PM +0100, Hans de Goede wrote:
-
-...
-
-> >> +	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
-> > 
-> >> +	active_value = obj->integer.value >> 24;
-> >> +	if (!active_value)
-> > 
-> > Not sure why you need a temporary variable for this. Just use
-> > GENMASK()/GENMASK_ULL()?
-> > 
-> > 	if (obj->integer.value & GENMASK(31, 24));
-> > 
-> > In this case you even don't need to repeat bit numbers in the comment.
+On 10/17/22 12:24, Linus Walleij wrote:
+> On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
 > 
-> These bits contain the value to which the pin should be set when the
-> sensor is active (on), the active_value helper variable IMHO makes this
-> a lot more clear then directly checking the mask.
+>> Always configure GPIO pins which are used as interrupt source as INPUTs.
+>> In case the default pin configuration is OUTPUT, or the prior stage does
+>> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
+>> INPUT and no interrupts are received.
+>>
+>> Always configure the interrupt source GPIO pin as input to fix the above case.
+>>
+>> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Mask makes much more clear to understand what bits you are really use without
-looking at the type of a temporary variable. (IIUC the value is u64.)
+Can you please just pick these two patches up ?
 
-Maybe
-
-	active_value = (obj->integer.value & GENMASK(31, 24)) >> 24;
-
-But yes, this is on the edge of bikeshedding.
-
-> >> +		polarity ^= GPIO_ACTIVE_LOW;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thank you
