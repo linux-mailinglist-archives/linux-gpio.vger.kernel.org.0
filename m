@@ -2,78 +2,73 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15BFF65046B
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Dec 2022 19:57:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6CD265057E
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Dec 2022 00:20:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbiLRS5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Dec 2022 13:57:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41768 "EHLO
+        id S229507AbiLRXUb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Dec 2022 18:20:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbiLRS5q (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Dec 2022 13:57:46 -0500
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296E58FCC
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 10:57:44 -0800 (PST)
-Received: by mail-lf1-x12c.google.com with SMTP id bp15so10766016lfb.13
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 10:57:44 -0800 (PST)
+        with ESMTP id S230216AbiLRXU2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Dec 2022 18:20:28 -0500
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB246552
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 15:20:26 -0800 (PST)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1433ef3b61fso9686976fac.10
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 15:20:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+wJaB6Ex81QFBi9bFVy4oOTpzpMwPB5fD6rd3Cemj3A=;
-        b=dDKc6zP5EpXqq5JKYIjuOt6gAPvOxuwXqxuAydNjBOYtyKTTp1QkN8RI6PHA6en+0C
-         0oXipdbyXTNOqZaSFk/8WSXEIEAYsXpZ59cjx43JlrZSEeKY/SJrGXuTv18nXrz/gK7P
-         cNM6e48tsZqYCHUStin1M1jb5qFyLXOjdj9u008D/w3RAZYULCE/8YAtc8T3eI5XRJjE
-         4W1KWvL80oXtXoqpWE9oF50ZVqLiSvHNvMs9oU5SvfgZC5VOA2Tj2lAZD7by8PM5bMyV
-         SFGJTVc/rS7q3uYWR66Iz0GQcxxcM8lmYQuWsU2kBpEhXWQjPEw2KPKsIqi4bNUj0Cm8
-         2zjA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wbAsaTImJVgmrVm658lQUrdfZSlK0Ns3idroAe7BrvU=;
+        b=R+JYsSCD9k6WuKbYbMKI2oxfB77KlY0RbiSomelCRtsIaQcwmGgmqDq8puiimaOOJd
+         8lAFXHeEzUsYRDzASFYYQgk92+ANIviDpXGJE57dT8BGie6QzBZIE1h+rFXaZyHxtQDo
+         GXD6bdFTgusGWkA9ef5fxr7eUvitjFY5pTk9MTvLjgPMEP3I0Wis4SH5Kq+Eo6BI/sM1
+         QE6nwBZ1c7Lu3cCpsky8/hyWJE9cMnzgSx70CcAj4V9QxLjnNEiH9kGzv6sLTynxo9ml
+         x3pcSHVXENohzrkkLaPpIlfxKjm3SSOM6nvFEd6d4FTedgHYa91PhNcWy2yU8oNHvrHx
+         /OHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+wJaB6Ex81QFBi9bFVy4oOTpzpMwPB5fD6rd3Cemj3A=;
-        b=di0pabR5yXwi35WO6TUL6GZCOFdeAmeK3Pux+ZEpiPxW/vq0vNbJrujJw3fvU6O5pW
-         wepHP0gBqDLcSqrnNlArBNhE/FGvwrLL+8++2qUH/OiWr67tn7NI4U0lXPEL8yqPRSQl
-         sYdMRrzg/qfB0u4r1UkCDxLLEuywZeQ3SWxlkKYga5KqtMNDNENtL5TXfhDltkbOeRcB
-         Lvb+T9sN5t7aYWntz3kZsTakH9JKG8jswRUGaglxl5FqMDb01QLT2GtOhEwrWC1Dm1Hm
-         DSFhzLPGICPLk94fzTS7JgP92iUk/sa+98Ar2oXJIl/1r7+xJbNUAFVg19SVE+QRG/1D
-         kqAA==
-X-Gm-Message-State: ANoB5pmxSrf9LN0LEWAvPHzu3NaV5UjyQiF7FKKHcSglw6P55k4tmhOq
-        fX7AHDug+aJ4sqykqoRQHDqrvA==
-X-Google-Smtp-Source: AA0mqf7MFhWfbsVgo0WuZoGvDN+xSMA+fz2YO0RP/VMcD9ChTcKCvQ1Bh2BqeCMDY5W4v8gttTkgRg==
-X-Received: by 2002:a19:6405:0:b0:4b5:b268:dbc8 with SMTP id y5-20020a196405000000b004b5b268dbc8mr9446079lfb.45.1671389862539;
-        Sun, 18 Dec 2022 10:57:42 -0800 (PST)
-Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
-        by smtp.gmail.com with ESMTPSA id a10-20020a056512200a00b004b515f9d117sm878787lfb.271.2022.12.18.10.57.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 18 Dec 2022 10:57:42 -0800 (PST)
-Message-ID: <4e35dc75-10d8-3412-6570-a9927aed6ab6@linaro.org>
-Date:   Sun, 18 Dec 2022 19:57:40 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wbAsaTImJVgmrVm658lQUrdfZSlK0Ns3idroAe7BrvU=;
+        b=LnPKAqbN/PMTpm/eH56qFtA691WruROA9OvzJVdS2voPAU+x7yQgKvhu7zF+FmSiNH
+         9w1SJOX+kTLNQLcjk67aVqBIuCNPpyLHw4Byws0bYDx+Y1rPwNg8Cbae8dK+1SXrG6iz
+         Jma+7NJLMoqXNaPjXn/Dg1DuMV8/1546ot4VR8nCrz9IhcqgbByM61xq/yjwRfF+0n7D
+         xquPVDfeIzbRJFC7qx4j6IHD+JnbjmOfj/9LMArgrDhH7WydfRiTp0EUH3+TiUHLeeP+
+         JkEZuoiYpr8XuG/s/Yr2ktb/LCFqMQrmJuH7ISzRtiqIqwjcMSN7rRn45OiOeir4iw8M
+         R+vg==
+X-Gm-Message-State: AFqh2kr6EcLolr5nzfeHMsoW0Etvd0M8gzUQnGuRDnjGS21zM8Zrb3Rj
+        NPWObqQscFBut21LKqUjJ75I73tSm7HRVWV23M81cA==
+X-Google-Smtp-Source: AMrXdXtwOt8c7JBdmZzDOZAuTLq2KaUwZMFGracg7VgJqYzrRgSHx9x4f6NnRV5TJCc1e6dNNS0FrYAatPDL/+sBF9A=
+X-Received: by 2002:a05:6870:b96:b0:14b:c9ab:66e9 with SMTP id
+ lg22-20020a0568700b9600b0014bc9ab66e9mr925663oab.42.1671405626013; Sun, 18
+ Dec 2022 15:20:26 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
- QRU1000 pinctrl
-Content-Language: en-US
-To:     Melody Olvera <quic_molvera@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20221216230852.21691-1-quic_molvera@quicinc.com>
- <20221216230852.21691-2-quic_molvera@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20221216230852.21691-2-quic_molvera@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+References: <20221216113013.126881-1-hdegoede@redhat.com> <20221216113013.126881-6-hdegoede@redhat.com>
+In-Reply-To: <20221216113013.126881-6-hdegoede@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 19 Dec 2022 00:20:11 +0100
+Message-ID: <CACRpkdZKcVE5jJuG4D0CqzM=W6UtuVZwxcTr-hMaiuqVOWZx5Q@mail.gmail.com>
+Subject: Re: [PATCH v3 05/11] leds: led-class: Add generic [devm_]led_get()
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Yao Hao <yao.hao@intel.com>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -82,16 +77,33 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 17/12/2022 00:08, Melody Olvera wrote:
-> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
-> 
-> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
-> ---
->  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
+On Fri, Dec 16, 2022 at 12:30 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
+> Add a generic [devm_]led_get() method which can be used on both devicetree
+> and non devicetree platforms to get a LED classdev associated with
+> a specific function on a specific device, e.g. the privacy LED associated
+> with a specific camera sensor.
+>
+> Note unlike of_led_get() this takes a string describing the function
+> rather then an index. This is done because e.g. camera sensors might
+> have a privacy LED, or a flash LED, or both and using an index
+> approach leaves it unclear what the function of index 0 is if there is
+> only 1 LED. The existing of support is extended to also support
+> getting a LED by function-name using the standard devicetree pattern
+> of adding a -names string array to map names to the indexes.
+>
+> For non devicetree platforms a lookup-table mechanism is added to
+> allow the platform code to map specific LED class_dev-s to specific
+> device,function combinations this way.
+>
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I see you need to iron out some details but the concept is
+clean cut and this is exactly what we want to do.
 
-Best regards,
-Krzysztof
+I think it was Bjorn Andersson who pointed out to me years
+and years ago "why can't we do that, like any other
+resource?" and here it is.
 
+Yours,
+Linus Walleij
