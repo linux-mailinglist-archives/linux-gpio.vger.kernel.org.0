@@ -2,234 +2,96 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88A8A64FEE5
-	for <lists+linux-gpio@lfdr.de>; Sun, 18 Dec 2022 13:44:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15BFF65046B
+	for <lists+linux-gpio@lfdr.de>; Sun, 18 Dec 2022 19:57:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230400AbiLRMo3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 18 Dec 2022 07:44:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33332 "EHLO
+        id S230008AbiLRS5s (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 18 Dec 2022 13:57:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiLRMo2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Dec 2022 07:44:28 -0500
-Received: from out-138.mta0.migadu.com (out-138.mta0.migadu.com [IPv6:2001:41d0:1004:224b::8a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD91C0F
-        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 04:44:26 -0800 (PST)
-Message-ID: <83c2ef58243f12f5e3fa36fb7a4e2d74faf28990.camel@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1671367461;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vw9cJnccZBgvAQIi+XuStsPuQH4rQLQ9Ak8DoTFHcDw=;
-        b=EKU08Hezk6JNk37SUP/8qJRdEzVPoqCuEL6dwfr/pXFFX50+ZfFhWMCjtcrRYCPzwGljiB
-        x5zopbwaxlTcrO9CJcTqVqyQcSyTN6a5ykl+LM6Wnhm4bME2zlJPsYHAlLpJV/Z+plhOlz
-        H2fmumHS0/BmI1Pyr5dLlviBbgDUPwY=
-Subject: Re: [PATCH] gpio: sprd: Make irq_chip immutable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cixi Geng <cixi.geng@linux.dev>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
-        zhang.lyra@gmail.com, gengcixi@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 18 Dec 2022 20:44:11 +0800
-In-Reply-To: <97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com>
-References: <20221216041708.32768-1-cixi.geng@linux.dev>
-         <97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230152AbiLRS5q (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 18 Dec 2022 13:57:46 -0500
+Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296E58FCC
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 10:57:44 -0800 (PST)
+Received: by mail-lf1-x12c.google.com with SMTP id bp15so10766016lfb.13
+        for <linux-gpio@vger.kernel.org>; Sun, 18 Dec 2022 10:57:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+wJaB6Ex81QFBi9bFVy4oOTpzpMwPB5fD6rd3Cemj3A=;
+        b=dDKc6zP5EpXqq5JKYIjuOt6gAPvOxuwXqxuAydNjBOYtyKTTp1QkN8RI6PHA6en+0C
+         0oXipdbyXTNOqZaSFk/8WSXEIEAYsXpZ59cjx43JlrZSEeKY/SJrGXuTv18nXrz/gK7P
+         cNM6e48tsZqYCHUStin1M1jb5qFyLXOjdj9u008D/w3RAZYULCE/8YAtc8T3eI5XRJjE
+         4W1KWvL80oXtXoqpWE9oF50ZVqLiSvHNvMs9oU5SvfgZC5VOA2Tj2lAZD7by8PM5bMyV
+         SFGJTVc/rS7q3uYWR66Iz0GQcxxcM8lmYQuWsU2kBpEhXWQjPEw2KPKsIqi4bNUj0Cm8
+         2zjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+wJaB6Ex81QFBi9bFVy4oOTpzpMwPB5fD6rd3Cemj3A=;
+        b=di0pabR5yXwi35WO6TUL6GZCOFdeAmeK3Pux+ZEpiPxW/vq0vNbJrujJw3fvU6O5pW
+         wepHP0gBqDLcSqrnNlArBNhE/FGvwrLL+8++2qUH/OiWr67tn7NI4U0lXPEL8yqPRSQl
+         sYdMRrzg/qfB0u4r1UkCDxLLEuywZeQ3SWxlkKYga5KqtMNDNENtL5TXfhDltkbOeRcB
+         Lvb+T9sN5t7aYWntz3kZsTakH9JKG8jswRUGaglxl5FqMDb01QLT2GtOhEwrWC1Dm1Hm
+         DSFhzLPGICPLk94fzTS7JgP92iUk/sa+98Ar2oXJIl/1r7+xJbNUAFVg19SVE+QRG/1D
+         kqAA==
+X-Gm-Message-State: ANoB5pmxSrf9LN0LEWAvPHzu3NaV5UjyQiF7FKKHcSglw6P55k4tmhOq
+        fX7AHDug+aJ4sqykqoRQHDqrvA==
+X-Google-Smtp-Source: AA0mqf7MFhWfbsVgo0WuZoGvDN+xSMA+fz2YO0RP/VMcD9ChTcKCvQ1Bh2BqeCMDY5W4v8gttTkgRg==
+X-Received: by 2002:a19:6405:0:b0:4b5:b268:dbc8 with SMTP id y5-20020a196405000000b004b5b268dbc8mr9446079lfb.45.1671389862539;
+        Sun, 18 Dec 2022 10:57:42 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id a10-20020a056512200a00b004b515f9d117sm878787lfb.271.2022.12.18.10.57.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 18 Dec 2022 10:57:42 -0800 (PST)
+Message-ID: <4e35dc75-10d8-3412-6570-a9927aed6ab6@linaro.org>
+Date:   Sun, 18 Dec 2022 19:57:40 +0100
 MIME-Version: 1.0
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v5 1/2] dt-bindings: pinctrl: qcom: Add QDU1000 and
+ QRU1000 pinctrl
+Content-Language: en-US
+To:     Melody Olvera <quic_molvera@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20221216230852.21691-1-quic_molvera@quicinc.com>
+ <20221216230852.21691-2-quic_molvera@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221216230852.21691-2-quic_molvera@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 2022-12-16 at 14:50 +0800, Baolin Wang wrote:
-> >=20
-> >=20
-> > On 12/16/2022 12:17 PM, Cixi Geng wrote:
-> > > > From: Cixi Geng <cixi.geng1@unisoc.com>
-> > > >=20
-> > > > Kernel warns about mutable irq_chips:
-> > > >=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0 "not an immutable chip, please consider fi=
-xing!"
-> > > >=20
-> > > > Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE,
-> > > > add > > the
-> > > > new helper functions, and call the appropriate gpiolib
-> > > > functions.
-> >=20
-> > Please split them into 3 patches and each patch converts one
-> > driver,=20
-> > which is easy to review.
-Thanks for reviewing, I will modify the comments in the next version
-> >=20
-> > > >=20
-> > > > Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
-> > > > ---
-> > > > =C2=A0 drivers/gpio/gpio-eic-sprd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 4 ++--
-> > > > =C2=A0 drivers/gpio/gpio-pmic-eic-sprd.c |=C2=A0 4 ++--
-> > > > =C2=A0 drivers/gpio/gpio-sprd.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0 | 11 +++++++++--
-> > > > =C2=A0 3 files changed, 13 insertions(+), 6 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/gpio/gpio-eic-sprd.c > >
-> > > > b/drivers/gpio/gpio-eic-sprd.c
-> > > > index 8d722e026e9c..07b9099f2a6d 100644
-> > > > --- a/drivers/gpio/gpio-eic-sprd.c
-> > > > +++ b/drivers/gpio/gpio-eic-sprd.c
-> > > > @@ -631,10 +631,10 @@ static int sprd_eic_probe(struct > >
-> > > > platform_device *pdev)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_eic->intc.irq_=
-mask =3D sprd_eic_irq_mask;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_eic->intc.irq_=
-unmask =3D sprd_eic_irq_unmask;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_eic->intc.irq_=
-set_type =3D sprd_eic_irq_set_type;
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_eic->intc.flags =3D=
- IRQCHIP_SKIP_SET_WAKE;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_eic->intc.flags =3D=
- IRQCHIP_SKIP_SET_WAKE | > >
-> > > > IRQCHIP_IMMUTABLE;
-> > > > =C2=A0=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq =3D &sprd_eic->=
-chip.irq;
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->chip =3D &sprd_eic-=
->intc;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpio_irq_chip_set_chip(i=
-rq, &sprd_eic->intc);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->handler =3D ha=
-ndle_bad_irq;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->default_type =
-=3D IRQ_TYPE_NONE;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->parent_handler=
- =3D sprd_eic_irq_handler;
-> > > > diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c > >
-> > > > b/drivers/gpio/gpio-pmic-eic-sprd.c
-> > > > index e518490c4b68..d96604ea10e7 100644
-> > > > --- a/drivers/gpio/gpio-pmic-eic-sprd.c
-> > > > +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-> > > > @@ -344,10 +344,10 @@ static int sprd_pmic_eic_probe(struct > >
-> > > > platform_device *pdev)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmic_eic->intc.irq_=
-set_type =3D
-> > > > sprd_pmic_eic_irq_set_type;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmic_eic->intc.irq_=
-bus_lock =3D sprd_pmic_eic_bus_lock;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmic_eic->intc.irq_=
-bus_sync_unlock =3D > >
-> > > > sprd_pmic_eic_bus_sync_unlock;
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmic_eic->intc.flags =3D=
- IRQCHIP_SKIP_SET_WAKE;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmic_eic->intc.flags =3D=
- IRQCHIP_SKIP_SET_WAKE | > >
-> > > > IRQCHIP_IMMUTABLE;
-> >=20
-> > Why not add GPIOCHIP_IRQ_RESOURCE_HELPERS for above 2 drivers?
-> > Seems > we=20
-> > can remove the irq_chip from pmic_eic structure, instead we can >
-> > define=20
-> > it statically with adding GPIOCHIP_IRQ_RESOURCE_HELPERS like other
-> > > patch=20
-> > [1] did?
-> >=20
-> > [1] >
-> > https://lore.kernel.org/all/20220419141846.598305-6-maz@kernel.org/
-> >=20
-> > > > =C2=A0=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq =3D &pmic_eic->=
-chip.irq;
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->chip =3D &pmic_eic-=
->intc;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpio_irq_chip_set_chip(i=
-rq, &pmic_eic->intc);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->threaded =3D t=
-rue;
-> > > > =C2=A0=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D devm_gpioch=
-ip_add_data(&pdev->dev, &pmic_eic-
-> > > > >chip, > > pmic_eic);
-> > > > diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-
-> > > > sprd.c
-> > > > index 9bff63990eee..8398f9707ec0 100644
-> > > > --- a/drivers/gpio/gpio-sprd.c
-> > > > +++ b/drivers/gpio/gpio-sprd.c
-> > > > @@ -64,6 +64,11 @@ static void sprd_gpio_update(struct
-> > > > gpio_chip > > *chip, unsigned int offset,
-> > > > =C2=A0=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0writel_relaxed(tmp,=
- base + reg);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0spin_unlock_irqrest=
-ore(&sprd_gpio->lock, flags);
-> > > > +
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (reg =3D=3D SPRD_GPIO=
-_IE && val =3D=3D 1)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0gpiochip_enable_irq(chip, offset);
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0else if (reg =3D=3D SPRD=
-_GPIO_IE && val =3D=3D 0)
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0gpiochip_disable_irq(chip, offset);
-> >=20
-> > Looks incorrect to me, IIUC you should move=20
-> > gpiochip_enable_irq/gpiochip_disable_irq() into
-> > sprd_gpio_irq_mask() > and=20
-> > sprd_gpio_irq_unmask().
-> >=20
-> > > > =C2=A0 }
-> > > > =C2=A0=20
-> > > > =C2=A0 static int sprd_gpio_read(struct gpio_chip *chip, unsigned
-> > > > int > > offset, u16 reg)
-> > > > @@ -205,13 +210,15 @@ static void sprd_gpio_irq_handler(struct
-> > > > > > irq_desc *desc)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0chained_irq_exit(ic=
-, desc);
-> > > > =C2=A0 }
-> > > > =C2=A0=20
-> > > > -static struct irq_chip sprd_gpio_irqchip =3D {
-> > > > +static const struct irq_chip sprd_gpio_irqchip =3D {
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "sprd-gpi=
-o",
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.irq_ack =3D sprd_g=
-pio_irq_ack,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.irq_mask =3D sprd_=
-gpio_irq_mask,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.irq_unmask =3D spr=
-d_gpio_irq_unmask,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.irq_set_type =3D s=
-prd_gpio_irq_set_type,
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.flags =3D IRQCHIP_=
-SKIP_SET_WAKE,
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.flags =3D IRQCHIP_SKIP_=
-SET_WAKE | IRQCHIP_IMMUTABLE,
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0GPIOCHIP_IRQ_RESOURCE_HE=
-LPERS,
-> > > > =C2=A0 };
-> > > > =C2=A0=20
-> > > > =C2=A0 static int sprd_gpio_probe(struct platform_device *pdev)
-> > > > @@ -245,7 +252,7 @@ static int sprd_gpio_probe(struct > >
-> > > > platform_device *pdev)
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sprd_gpio->chip.dir=
-ection_output =3D > >
-> > > > sprd_gpio_direction_output;
-> > > > =C2=A0=20
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq =3D &sprd_gpio-=
->chip.irq;
-> > > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->chip =3D &sprd_gpio=
-_irqchip;
-> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0gpio_irq_chip_set_chip(i=
-rq, &sprd_gpio_irqchip);
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->handler =3D ha=
-ndle_bad_irq;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->default_type =
-=3D IRQ_TYPE_NONE;
-> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0irq->parent_handler=
- =3D sprd_gpio_irq_handler;
+On 17/12/2022 00:08, Melody Olvera wrote:
+> Add device tree bindings for QDU1000 and QRU1000 TLMM devices.
+> 
+> Signed-off-by: Melody Olvera <quic_molvera@quicinc.com>
+> ---
+>  .../bindings/pinctrl/qcom,qdu1000-tlmm.yaml   | 134 ++++++++++++++++++
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
