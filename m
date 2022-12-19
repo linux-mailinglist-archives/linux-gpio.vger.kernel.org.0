@@ -2,121 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9792650BB0
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Dec 2022 13:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A390B650BB3
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Dec 2022 13:33:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbiLSMdB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Dec 2022 07:33:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44802 "EHLO
+        id S232140AbiLSMdD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Dec 2022 07:33:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232068AbiLSMch (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Dec 2022 07:32:37 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21F13F02D;
-        Mon, 19 Dec 2022 04:31:48 -0800 (PST)
+        with ESMTP id S231531AbiLSMck (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Dec 2022 07:32:40 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D273F58A;
+        Mon, 19 Dec 2022 04:32:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671453108; x=1702989108;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=W5/mAD3rb44U/Snba0SWl2h8OeAaalRUzRmh9CqBDBc=;
-  b=V+cL6F4BN9X/vXRo61SJYHkF4LjvI+RHMmROXTRJ0sN5/3G22DIS2FcJ
-   BeKvrzmeZwiJ3LdJho7PTsjHHg2TvwWW8vpRvnh2mSn5j+pM9ZnJdwfL+
-   /dSNN7TBIywzFnlMZWkzi3Vf0gimFF7GK0hJNW4/aNQf7XgsVkF3065l+
-   xdBgHTNrdQ+vbmBWl8zihEkuxXlKln0Qhpje27lV8OyMMDCiAjRXs10Rb
-   nRYtcTvsHevPpilTBLLKp1ORNkv5CIuGiAImM77QLcR1PC7PnRKI8LKHs
-   VEaIVRR5hXgMgjkplV3Qec4DRNes39HzrSELHwKylDiEdhvIrlKL7yCj/
+  t=1671453125; x=1702989125;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=3ata/4PTa5Uu7NYxPIvrTUdKVybjbAKys8AJYQMscqA=;
+  b=nz0fUSjJLf2oEpJJu4afuwa4VbuNqrKl69iJA9t1GwIsPQmGDSwGyZFd
+   pu+YQunbn+HxfUsqo3RfplIwtCCaUe0AtmajGAPVMnxzfXM/4KzYWd3SU
+   uN77E1EqMw/PS3GHEtC6NcvU5miaEezCZKmCWWLo92A6u2XajtRgjly72
+   Z90pbRjPzC8pQ0owdt4uA8ktKqa2oM6UdmkakZH4rrgfsX50xOrelj6+8
+   eDxiL8lSJzS5sYEyCfAsE+/ztR0eCGzmDV9GG8xeu7Ljv/aNyEsF/tv88
+   yT0y4OP1gm8/0qVhBlZpk0L3GAF7EJS/JR9k30+W6YBh0wYrrKD84lSFO
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="320509094"
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="299670701"
 X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="320509094"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 04:31:46 -0800
+   d="scan'208";a="299670701"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 04:32:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="774913749"
+X-IronPort-AV: E=McAfee;i="6500,9779,10565"; a="896027958"
 X-IronPort-AV: E=Sophos;i="5.96,255,1665471600"; 
-   d="scan'208";a="774913749"
+   d="scan'208";a="896027958"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 19 Dec 2022 04:31:44 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 19 Dec 2022 04:32:03 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 017FF1C3; Mon, 19 Dec 2022 14:32:13 +0200 (EET)
+        id CB268F7; Mon, 19 Dec 2022 14:32:33 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 4/4] pinctrl: intel: Add ~4k bias support
-Date:   Mon, 19 Dec 2022 14:32:08 +0200
-Message-Id: <20221219123208.5505-4-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: intel: Use same order of bit fields for PADCFG2
+Date:   Mon, 19 Dec 2022 14:32:29 +0200
+Message-Id: <20221219123229.5564-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221219123208.5505-1-andriy.shevchenko@linux.intel.com>
-References: <20221219123208.5505-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-All versions that have 20k and 5k resistance, i.e. all that
-the driver supports, may support ~4k when the above mentioned
-are connected in parallel. Add such a support.
+PADCFG0 and PADCFG1 are ordered from MSB to LSB, do the same
+for PADCFG2 bit fields.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/pinctrl/intel/pinctrl-intel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 8ecb7ca7fbac..5e21b0a96efe 100644
+index 5e21b0a96efe..9d2791a81ffa 100644
 --- a/drivers/pinctrl/intel/pinctrl-intel.c
 +++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -577,6 +577,9 @@ static int intel_config_get_pull(struct intel_pinctrl *pctrl, unsigned int pin,
- 		case PADCFG1_TERM_1K:
- 			*arg = 1000;
- 			break;
-+		case PADCFG1_TERM_4K:
-+			*arg = 4000;
-+			break;
- 		case PADCFG1_TERM_5K:
- 			*arg = 5000;
- 			break;
-@@ -602,6 +605,9 @@ static int intel_config_get_pull(struct intel_pinctrl *pctrl, unsigned int pin,
- 				return -EINVAL;
- 			*arg = 1000;
- 			break;
-+		case PADCFG1_TERM_4K:
-+			*arg = 4000;
-+			break;
- 		case PADCFG1_TERM_5K:
- 			*arg = 5000;
- 			break;
-@@ -709,6 +715,9 @@ static int intel_config_set_pull(struct intel_pinctrl *pctrl, unsigned int pin,
- 		case 5000:
- 			value |= PADCFG1_TERM_5K << PADCFG1_TERM_SHIFT;
- 			break;
-+		case 4000:
-+			value |= PADCFG1_TERM_4K << PADCFG1_TERM_SHIFT;
-+			break;
- 		case 1000:
- 			value |= PADCFG1_TERM_1K << PADCFG1_TERM_SHIFT;
- 			break;
-@@ -731,6 +740,9 @@ static int intel_config_set_pull(struct intel_pinctrl *pctrl, unsigned int pin,
- 		case 5000:
- 			value |= PADCFG1_TERM_5K << PADCFG1_TERM_SHIFT;
- 			break;
-+		case 4000:
-+			value |= PADCFG1_TERM_4K << PADCFG1_TERM_SHIFT;
-+			break;
- 		case 1000:
- 			if (!(community->features & PINCTRL_FEATURE_1K_PD)) {
- 				ret = -EINVAL;
+@@ -88,9 +88,9 @@
+ #define PADCFG1_TERM_800		(BIT(2) | BIT(1) | BIT(0))
+ 
+ #define PADCFG2				0x008
+-#define PADCFG2_DEBEN			BIT(0)
+ #define PADCFG2_DEBOUNCE_SHIFT		1
+ #define PADCFG2_DEBOUNCE_MASK		GENMASK(4, 1)
++#define PADCFG2_DEBEN			BIT(0)
+ 
+ #define DEBOUNCE_PERIOD_NSEC		31250
+ 
 -- 
 2.35.1
 
