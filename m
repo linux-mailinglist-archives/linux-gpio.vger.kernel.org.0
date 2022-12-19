@@ -2,155 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2EF7651350
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Dec 2022 20:33:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAE6965169E
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 00:06:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbiLSTc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 19 Dec 2022 14:32:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
+        id S233248AbiLSXGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 19 Dec 2022 18:06:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231531AbiLSTc5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Dec 2022 14:32:57 -0500
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3F5312ABC;
-        Mon, 19 Dec 2022 11:32:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1671478377; x=1703014377;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=XMs52eEwrpr6t8/OSw+Ha1zLO68AAU5IDolZMANPZLg=;
-  b=rlBmxt9ksRLT4sO5l1DifhKTLRf4y9JZEtnCcNxSPt1Gso6VPOw/7e9J
-   uV6MPmMTIjWflUq5ttOm4ExFc3fOHyvCvj5MSxfUqvu+qAMJ2iiqVDkDv
-   j6xahN3Ijr9t1IwbGtF73cSqAZOjOXlprv91hL8AMKQ4R4AvvqiM1rM6F
-   0=;
-X-IronPort-AV: E=Sophos;i="5.96,257,1665446400"; 
-   d="scan'208";a="275020458"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-3ef535ca.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2022 19:32:54 +0000
-Received: from EX13D21EUA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-m6i4x-3ef535ca.us-west-2.amazon.com (Postfix) with ESMTPS id 49DFB60A0E;
-        Mon, 19 Dec 2022 19:32:51 +0000 (UTC)
-Received: from EX19D019EUA002.ant.amazon.com (10.252.50.84) by
- EX13D21EUA001.ant.amazon.com (10.43.165.41) with Microsoft SMTP Server (TLS)
- id 15.0.1497.42; Mon, 19 Dec 2022 19:32:50 +0000
-Received: from dev-dsk-hhhawa-1b-84e0d7ff.eu-west-1.amazon.com (10.43.160.83)
- by EX19D019EUA002.ant.amazon.com (10.252.50.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.20; Mon, 19 Dec 2022 19:32:45 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <wsa@kernel.org>, <linus.walleij@linaro.org>,
-        <andriy.shevchenko@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <farbere@amazon.com>, <itamark@amazon.com>, <hhhawa@amazon.com>
-Subject: [PATCH v3 1/1] i2c: Set pinctrl recovery info to device pinctrl
-Date:   Mon, 19 Dec 2022 19:32:28 +0000
-Message-ID: <20221219193228.35078-1-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.38.1
+        with ESMTP id S233148AbiLSXEi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 19 Dec 2022 18:04:38 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A26D17068;
+        Mon, 19 Dec 2022 15:01:29 -0800 (PST)
+Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id ABF178A4;
+        Tue, 20 Dec 2022 00:01:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1671490887;
+        bh=Avpyi39igdnb4TOZX9U00SKRVc/33vt28tC5r6iQrp4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mMJP3kUXuhzuG+//CC6jSG2NcVcb0nZtY4Cr13hYsP2LA7tTYrm/UMACmXWoN/dWU
+         0+pNuFU+LwKpqPRqP3lPP89/MBqtan1Kp0w9xR+P3cDbT51I7Sxw0qAsNGS4Maj9XI
+         59CB+LetKKEGqPubNCjUfl+t0oG/rknuAvoPiTP0=
+Date:   Tue, 20 Dec 2022 01:01:23 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio: Add optional ramp-up delay
+ property
+Message-ID: <Y6DtQ7PXPZ809P4C@pendragon.ideasonboard.com>
+References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
+ <20221212103525.231298-2-alexander.stein@ew.tq-group.com>
+ <CACRpkdYioW1GROHFxA1vuAEiXqHh6fAu5CXNLcTvW_w3mWjSPw@mail.gmail.com>
+ <Y5hl1Sb8csSkbrDh@pendragon.ideasonboard.com>
+ <CACRpkdZ2G=HUTBMpXJrXeSh3kYgQQc8p8zaJZPL71HWA9362ZA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.83]
-X-ClientProxiedBy: EX13D28UWC003.ant.amazon.com (10.43.162.48) To
- EX19D019EUA002.ant.amazon.com (10.252.50.84)
-X-Spam-Status: No, score=-11.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CACRpkdZ2G=HUTBMpXJrXeSh3kYgQQc8p8zaJZPL71HWA9362ZA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently the i2c subsystem rely on the controller device tree to
-initialize the pinctrl recovery information, part of the drivers does
-not set this field (rinfo->pinctrl), for example i2c designware driver.
+On Thu, Dec 15, 2022 at 11:56:57AM +0100, Linus Walleij wrote:
+> Hi Laurent,
+> 
+> thanks for the detailed brief!
+> 
+> On Tue, Dec 13, 2022 at 12:45 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> 
+> > The circuit we're looking at is
+> >
+> >   +----------+           +-----------+
+> >   | SoC      |           |    VCC    |
+> >   |          |           |     |     |
+> >   |          |           |     _     |
+> >   |          |           |    | | R  |
+> >   |          |           |    |_|    |
+> >   |          |           |     |     |
+> >   |      [IOx|-----+-----|EN]--+     |
+> >   |          |     |     |           |
+> >   |          |     |     | SN65DSI83 |
+> >   +----------+    --- C  +-----------+
+> >                   ---
+> >                    |
+> >                    -
+> >                   GND
+> >
+> > The IOx pin is an open-drain output, the board has a 470nF capacitor to
+> > ground, and the SN65DSI83 has an internal pull-up off 200kΩ. This gives
+> > an RC time constant of 94ms, far from being negligible.
+> >
+> > The delay is caused by the combination of the open-drain nature of the
+> > output (an intrinsic property of the GPIO controller), the pull-up
+> > resistor (an intrinsic property of the SN65DSI83) and the capacitor on
+> > the line (a property of the board). DT is notoriously bad at modelling
+> > this kind of setup.
+> 
+> Yeah :/
+> 
+> It's not like we don't model discrete electronics, we do that a lot,
+> but as you say, it is really hard to know where to draw the line
+> in cases like this.
+> 
+> > The alternative I proposed, adding a "GPIO delay" DT node to model this,
+> > would also offer a centralized solution to the problem, but with
+> > additional complexity both at probe time and runtime.
+> 
+> I have a slight preference for this, as it will be very explicit in the
+> device tree and we can just put all the code inside its own file and
+> depend on GPIO_OF so other HW description systems do not
+> need to include it.
+> 
+> At the same time it feels a bit overengineered, so maybe just adding
+> this delay as in the patch with some strings attached like comments
+> and docs is yet the best. It feels like we need some more input to
+> reach consensus.
+> 
+> > The regulator delays model the intrinsic delays when enabling or
+> > disabling a regulator, and they should stay. They address a different
+> > problem.
+> 
+> OK right. But someone not knowing exactly what they are doing
+> will end up abusing the delay property on the delay line
+> also for this delay. The risk of that is lesser with a separate
+> delay box.
 
-The pins information is saved part of the device structure before probe
-and it's done on pinctrl_bind_pins().
+That may be true, but I think we can also try to catch abuses in
+reviews. I would be a bit sad if we made life more difficult (and less
+efficient at runtime too) for legitimate users just because we are
+worried about abuses.
 
-Make the i2c init recovery to get the device pins if it's not
-initialized by the driver from the device pins.
+Another thing I've been thinking about is that we may not always want to
+wait for the GPIO delay. Some consumers may not care when the GPIO line
+reaches the desired state as long as it eventually does, or maybe they
+need to perform multiple operations (such as enabling/disabling
+regulators and/or clocks) and only need a synchronization point for a
+group of operations. All that would be pretty hard to handle, and maybe
+it's a problem we'll look at only when needed (and hopefully never).
 
-Added new API to get the device pinctrl.
-
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
-
-Change Log v2->v3:
-- Add API to get the device pinctrl
-- Make the i2c init recovery to get the device pins
-
-Change Log v1->v2:
-- set the rinfo->pinctrl to dev->pins->p instead calling
-  devm_pinctrl_get()
----
- drivers/i2c/i2c-core-base.c     |  7 ++++++-
- include/linux/pinctrl/devinfo.h | 11 +++++++++++
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 7539b0740351..17eecdcf1cb2 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -34,6 +34,7 @@
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/devinfo.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm_wakeirq.h>
-@@ -282,7 +283,11 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
- {
- 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
- 	struct device *dev = &adap->dev;
--	struct pinctrl *p = bri->pinctrl;
-+	struct pinctrl *p;
-+
-+	if (!bri->pinctrl)
-+		bri->pinctrl = dev_pinctrl(dev->parent);
-+	p = bri->pinctrl;
- 
- 	/*
- 	 * we can't change states without pinctrl, so remove the states if
-diff --git a/include/linux/pinctrl/devinfo.h b/include/linux/pinctrl/devinfo.h
-index a48ff69acddd..5c00ee115528 100644
---- a/include/linux/pinctrl/devinfo.h
-+++ b/include/linux/pinctrl/devinfo.h
-@@ -17,6 +17,7 @@
- #ifdef CONFIG_PINCTRL
- 
- /* The device core acts as a consumer toward pinctrl */
-+#include <linux/device.h>
- #include <linux/pinctrl/consumer.h>
- 
- /**
-@@ -40,6 +41,11 @@ struct dev_pin_info {
- extern int pinctrl_bind_pins(struct device *dev);
- extern int pinctrl_init_done(struct device *dev);
- 
-+static inline struct pinctrl *dev_pinctrl(struct device *dev)
-+{
-+	return dev->pins && dev->pins->p ? dev->pins->p : NULL;
-+}
-+
- #else
- 
- struct device;
-@@ -56,5 +62,10 @@ static inline int pinctrl_init_done(struct device *dev)
- 	return 0;
- }
- 
-+static inline struct pinctrl *get_device_pinctrl(struct device *dev)
-+{
-+	return NULL;
-+}
-+
- #endif /* CONFIG_PINCTRL */
- #endif /* PINCTRL_DEVINFO_H */
 -- 
-2.38.1
+Regards,
 
+Laurent Pinchart
