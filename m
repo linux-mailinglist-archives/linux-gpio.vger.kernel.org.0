@@ -2,98 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4148B6526DE
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 20:18:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D539F652713
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 20:34:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbiLTTSn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Dec 2022 14:18:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52374 "EHLO
+        id S233411AbiLTTdb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Dec 2022 14:33:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbiLTTSm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 14:18:42 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA181B796;
-        Tue, 20 Dec 2022 11:18:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1671563921; x=1703099921;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XLtecIj63O+kDbo1NYrvOFaDdZbwFbJUOPsY6/FAEzc=;
-  b=j+kmq+GjB9/qz42cZp4TJ4Lz2ALhFAQBtm01NwvUMcbmRMk8d2UKPjCj
-   ST9jB2pWmqa8FuppN0S/V7x7z2BUGfQDQThBkHefTK1h48jI61Exnx5ue
-   Lip6g1Djv0IL0mDq+Vle7UOGu/vzNvzSzB0JboxOTqo+SQPpXHoq3H4A8
-   Y4C7l7PvwpiTM4ZBOzQi7QpgCJvUJ0hFylh6dVuuaWAS1edWBZtPjRRtU
-   gu8XbbDaRs5+IlqxPyXxoboQEDMXAaNogamRKrTWRg21aj6re+tyWLIFY
-   jjUBQlZDX5iglMtFvEtd5FOjdbKV/kGH9TWhx3zEUdjnkD2DlVQO+ZGKw
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="307376770"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="307376770"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 11:18:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="681768471"
-X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
-   d="scan'208";a="681768471"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 20 Dec 2022 11:18:36 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1p7i8J-00D9GA-09;
-        Tue, 20 Dec 2022 21:18:35 +0200
-Date:   Tue, 20 Dec 2022 21:18:34 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     wsa@kernel.org, linus.walleij@linaro.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, farbere@amazon.com, itamark@amazon.com
+        with ESMTP id S234001AbiLTTcy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 14:32:54 -0500
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4665C2AE2;
+        Tue, 20 Dec 2022 11:32:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1671564742; x=1703100742;
+  h=message-id:date:mime-version:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=XLm7cNL3POipI7HaTToaL7zsWVQbDAv5oCT+Dy2vuxc=;
+  b=I3Ewi1c0gz+jy+rBpp3Xx0WEsMJhiRz6cifpWjzsVvS7W+/GmTBkAONF
+   ZYP4Or3PFyEAoF0mnoxoIcN3DtbDV25JfMgELJ0T8dXM1gXx3uY4sMgN2
+   3jaxeHODu7IZ8vzA7L8L9EgQCUj8coD0h2oHbKIF+p6mZCjuC61udxmRV
+   g=;
+X-IronPort-AV: E=Sophos;i="5.96,259,1665446400"; 
+   d="scan'208";a="275441227"
 Subject: Re: [PATCH v3 1/1] i2c: Set pinctrl recovery info to device pinctrl
-Message-ID: <Y6IKit5XMcSLBgpO@smile.fi.intel.com>
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-189d700f.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 19:32:18 +0000
+Received: from EX13MTAUWA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-pdx-2b-m6i4x-189d700f.us-west-2.amazon.com (Postfix) with ESMTPS id 93BFF41713;
+        Tue, 20 Dec 2022 19:32:16 +0000 (UTC)
+Received: from EX19D021UWA004.ant.amazon.com (10.13.139.67) by
+ EX13MTAUWA002.ant.amazon.com (10.43.160.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Tue, 20 Dec 2022 19:32:16 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX19D021UWA004.ant.amazon.com (10.13.139.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.20; Tue, 20 Dec 2022 19:32:16 +0000
+Received: from [192.168.1.158] (10.1.213.27) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1497.42 via Frontend
+ Transport; Tue, 20 Dec 2022 19:32:12 +0000
+Message-ID: <a82ba757-3b9c-d54b-76bf-ceef84239295@amazon.com>
+Date:   Tue, 20 Dec 2022 21:32:11 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <wsa@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <farbere@amazon.com>,
+        <itamark@amazon.com>
 References: <20221219193228.35078-1-hhhawa@amazon.com>
  <Y6GUKf5TCumM1Swy@smile.fi.intel.com>
  <4344f575-65f5-2fde-e2d5-3dd5a18d13cb@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4344f575-65f5-2fde-e2d5-3dd5a18d13cb@amazon.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+ <Y6IKit5XMcSLBgpO@smile.fi.intel.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+In-Reply-To: <Y6IKit5XMcSLBgpO@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-13.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 07:07:51PM +0200, Hawa, Hanna wrote:
-> On 12/20/2022 12:53 PM, Andy Shevchenko wrote:
-
-...
 
 
-> > > +static inline struct pinctrl *dev_pinctrl(struct device *dev)
-> > > +{
-> > > +     return dev->pins && dev->pins->p ? dev->pins->p : NULL;
-> > 
-> > GCC supports Elvis, you can use it to simplify the above.
+On 12/20/2022 9:18 PM, Andy Shevchenko wrote:
+>> How you suggest to simplify this?
+> Using Elvis operator, which is ?:.
+
+Are you refer to use 'return dev->pins && dev->pins->p ?: NULL;' ?
+Can't use Elvis operator in this way, because it will return the result 
+of 'dev->pins && dev->pins->p' and not the value of 'dev->pins->p'
+
 > 
-> How you suggest to simplify this?
+>> I can use 'return dev->pins ? dev->pins->p ?: dev->pins->p : NULL;'
+> Have you even try to compile this?
+Yup, the code compiled, but i think the first suggestion is more readable.
 
-Using Elvis operator, which is ?:.
-
-> I can use 'return dev->pins ? dev->pins->p ?: dev->pins->p : NULL;'
-
-Have you even try to compile this?
-
-> > > +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+> 
 
