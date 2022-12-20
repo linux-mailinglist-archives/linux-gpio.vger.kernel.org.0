@@ -2,159 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 665E8651CC3
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 10:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E146A651CFC
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 10:17:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233308AbiLTJCY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Dec 2022 04:02:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
+        id S233243AbiLTJRq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Dec 2022 04:17:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233296AbiLTJCX (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 04:02:23 -0500
-Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2050.outbound.protection.outlook.com [40.107.247.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 805141705F;
-        Tue, 20 Dec 2022 01:02:22 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bCygyiyXbiCOyWR9POS3cMdg9APnkMr8AZvlhut2ouHh1hB4M6OebmxLrTP30bPvHGgdiEHpPM/axR/VlDwr1XHlisT+jefDXQAChzZ7uKQuasAqEQY9+tFKB4Wo5/TakXtiUW4/zPTiNEqKDGayRFbs1ZNn8Zq62INz2MkHeXJRzrgCPP6oXHx2KASQ7gzzmvomQirk76qrt8jX/NNC6tZ/e+4HC63Y8is3m9GNmsMy+RCbWNJKXfMdi43exZ5qvCV5p16GpwGp8p7TqNEUmUpmgMqYrQUpKOPieJH/9e7YRcMy2a9mUyS2bJKkDgtVi3uVzskxv0rSFk+dJUVUnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lqcvnb0BZvZ2HwzyQoLGjNQjfnL6akT6JQSNWdf5ZWY=;
- b=JLiJZjYPupku1HLnCZEsAMBDl+6CL2W0CbvXn94BqAqNlVwdmsgh2plym3btEg412ewO18cEk449j7juOC01iPYrnzC5raYHQFJbWpt6nqzyDWcE4Odp3tEr+MWo1Z+1S1yIDefLPzkpxnOKZBYDgGmg0+bfYa6DL8vuf0UHCTjP4TVjWEezxDroWuI1gG8t6hhxoVJ7ARivcYUjaepRT8z5Zjsunr/wPBG0zLEqi2tRmFg9IM+DpJidm4Lhwm8NwkXNKp7DWjftJXAP1gUGj8edyaN0eud+5mSajwgEJn9KJF3w8stMqhBzSCH+Sai1Py6CXw5oAJTD5F3RwgyekQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lqcvnb0BZvZ2HwzyQoLGjNQjfnL6akT6JQSNWdf5ZWY=;
- b=gJg4ea7o0etHO3BzCF3tXN065ZQMHrJoUlVOMYL5mSqARFVJEMr8a5Xty0krpgVHYObcEMm9p+RYCkkSAYdR94NqnZUy95cjhQ20z+rZx5VCDKZqFQhmYeFH0KA1LJe4dPRvSLwPNV+xLFYt8tDtRWBeE294fMC69Ju/ASSN0DI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DB7PR04MB4010.eurprd04.prod.outlook.com (2603:10a6:5:21::30) by
- PA4PR04MB9221.eurprd04.prod.outlook.com (2603:10a6:102:2a0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5924.16; Tue, 20 Dec
- 2022 09:02:20 +0000
-Received: from DB7PR04MB4010.eurprd04.prod.outlook.com
- ([fe80::7479:76ef:8e5:da0b]) by DB7PR04MB4010.eurprd04.prod.outlook.com
- ([fe80::7479:76ef:8e5:da0b%6]) with mapi id 15.20.5924.016; Tue, 20 Dec 2022
- 09:02:20 +0000
-From:   haibo.chen@nxp.com
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     stefan@agner.ch, linux-gpio@vger.kernel.org, linux-imx@nxp.com,
-        haibo.chen@nxp.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] gpio: vf610: Support building gpio-vf610 driver as module
-Date:   Tue, 20 Dec 2022 17:02:48 +0800
-Message-Id: <20221220090248.1134214-2-haibo.chen@nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221220090248.1134214-1-haibo.chen@nxp.com>
-References: <20221220090248.1134214-1-haibo.chen@nxp.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0026.apcprd01.prod.exchangelabs.com
- (2603:1096:4:192::16) To DB7PR04MB4010.eurprd04.prod.outlook.com
- (2603:10a6:5:21::30)
+        with ESMTP id S229690AbiLTJRp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 04:17:45 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 153CFD2E8
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Dec 2022 01:17:43 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id y4so11777144ljc.9
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Dec 2022 01:17:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6CL5QHDsVNUqtE1nBU6KnqlHOjJa9J2udvJ/9BQ8Ko4=;
+        b=vxylSCwgufUBNh5C5D5AzeHxKwxnPnODiDbd+PFAjdnEaMxlIBX1G0Ud81oQBvI8v4
+         e6iqFmYJvxaQfuxakkg+Jdkvb9whblz9KeD7VXdsmmDjmzTYK4VdZStYte63ImV2lHgD
+         kgTrXujd5QhO59Wf8W2imuh3Ni/BNvpIoZWMUlN+9GSknfNwDPlncsWjHUaqsi3nOBtV
+         rtykaS2lww9m+Lb1xdMj6ZDq20DjjfZynPCovQKGZ16sCUtX9T43jkiNUVdoWSrMXM5h
+         zCk7NgTA92B2mBE4TWPAZSy97mHFNzGPFmMTcTsxsyofHMVJ24F1RoQI4MsPN+NpIAHt
+         4MeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6CL5QHDsVNUqtE1nBU6KnqlHOjJa9J2udvJ/9BQ8Ko4=;
+        b=JCPBJf/WrVYXaJ+nEyFy/RL2iYIWhHFADD9j8947kHN2PMj99/DoMRzAoYDjaV/onN
+         C4oevTqC+JcaMJliNc0LWVZ+KH5DqydoNFKrXUOmMymxhHfF3VdhHqLrXaKcfOroiVPQ
+         q58/dW/Wjst1TFCYRYIKE8EUwL4vI4gakg4QGajPBUZTOn1AOeW411gW1ct445aPj0iW
+         jj4PrTr6fn+apMHZcaMZe1Txxjn5EF/wGKs3pxB1wFbjEeClkkEncwNFhyn1yNKd5ftu
+         tL6etCD2+m/50Aa2JU3m9HHVeTwW5HHzVjEJ9JcF1xx6dSEdXcHZ/n0qolZolWdkcw9v
+         KqsA==
+X-Gm-Message-State: ANoB5pnW1FXE9Io1lCnPdAtOBp4DDfdZLUtxSB+iSEWL+fGABtstZZDX
+        GD9XwTDMWy8D4oiYAg5IDsyOig==
+X-Google-Smtp-Source: AA0mqf7WpVLQiIkvywOUoLBZXvhayxItpRlmXB+WVDPBHfSjR+aL/fmtZkpaHqm3Ywz3C17TTlXU0g==
+X-Received: by 2002:a2e:b165:0:b0:279:f0da:6684 with SMTP id a5-20020a2eb165000000b00279f0da6684mr11595636ljm.18.1671527862280;
+        Tue, 20 Dec 2022 01:17:42 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id v10-20020a05651203aa00b004b50b4f63b7sm1375429lfp.170.2022.12.20.01.17.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Dec 2022 01:17:41 -0800 (PST)
+Message-ID: <39efdb85-f881-12ab-e258-61175f209b4c@linaro.org>
+Date:   Tue, 20 Dec 2022 10:17:40 +0100
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4010:EE_|PA4PR04MB9221:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0061266-6709-41ea-4fa8-08dae268e6d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Rvbbv7hnwclpHqGQkQNnGv29HholMVKGViftu0bj8EG7R9hG8moI5RoSXLO03dFFvTrqYVRm7c9V1CBgGTw3FtqV5qG1896WIdXsKqapVzDX+Lo3J2ASQyH86nejtO5zE4/wGZu/O9U4TcYChRdUZ3P8ayJs6ThEMr7V7VA1DSCBbyWdaqRO4PciJuE8UV8nZkiKos63y8GgO9XeLfqNPIaSy+DlE5rJB0QVLchEpqVLLDBiutUGVlU+5UIV0OSS0QDA1PFz9RRU4OSjw4c1a3zDbqY/rj5kY7QuncPunnDxxe0AK+lRGFPBGmbxC54sWYGQxWJECSTas+HmUX/6cYQxG5V/wTEn2cgw3xzRJswK8oZC9vwmZL9AEkxfFm79kpiVbxSNjXqjHWOZ4XUiqaL+m+Hi0YefHEt8zxt243XUJG8AW+9OnyA02Djq9xdThtasSXrayO7qd8AFSrRo20ROqIKItPvlz8om8xL/1S9ESrm0AmNhEkPz7itnnUVliEV51aiGlz/uzazvMadkFm82+vQh3cKPjT/96ZzPr/8KoJO7q1JzmQ8glOw11UVcbYPdlnXyNznPfoHNJNfE2j9O02AS9SDeOEcRzto59fTEqdoDpnIiMyDCa3R/H2bi2IcmNu3MaRk/qEcCkMhDicqBpja8h/UnZSu5AQVq497di0bELnrcqgs2lT5WDMrM7NVMn3LdBMUtaRLooJuR8Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4010.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(376002)(396003)(366004)(136003)(451199015)(38350700002)(38100700002)(36756003)(86362001)(9686003)(316002)(6512007)(478600001)(6486002)(6666004)(6506007)(26005)(186003)(2906002)(41300700001)(83380400001)(5660300002)(8676002)(8936002)(52116002)(2616005)(4326008)(1076003)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?MuAyf61V6Af9RcmLKO1BLofsYidVy0SuJjGEtlxcWbW92FlZRgUFXVvPUUJc?=
- =?us-ascii?Q?lDCBSFOdDPcoMTxxSActV5kkuKUGWRtpl/f0dsqlLIJNCXFiiUaC1+2HefWW?=
- =?us-ascii?Q?OB+OoiW34KG3qJ7ARJtbJCXR+FKcysnNzxznL1WHLHtbU4ycNWAHQYzn6Kjc?=
- =?us-ascii?Q?fbrcqHNa+mYoGQg7Nce+ckfA+q7lGG6f0wTCLXBintn7+XaYEtvQfD88KUxR?=
- =?us-ascii?Q?I75dYylkv/z8QA2PxL9w7R510/XZ0DKiVi/Zg6sff5gcQ4UKzZ11CeTAoOel?=
- =?us-ascii?Q?MXyHeP0EwBsmYxaW5D6rfUEL9VXZYXpUhxABZwobDrm2cb12VRuOTeqo4geh?=
- =?us-ascii?Q?cfY4Kmcll6+hGyagJ1JwitdK3JKTJHU+jCh62KuAf+CWc0TrqPsp4WCPqjpH?=
- =?us-ascii?Q?J/epnev0EPSNP8CXSrMp44eTTo5tcgw3/G1KasbSu7U/fPvJckGhET6Zs3eJ?=
- =?us-ascii?Q?wMReAnEEX9dLsnsx+yrAt/gM0hCG/4fMTHmeJ3s5mwNc2cQy8dumZV73DLZ4?=
- =?us-ascii?Q?F6uwEbeHFLDyHYdEEt2pboSonJJmTAqLnBRZV+mY2O8j8kL9rj4OKghduYSI?=
- =?us-ascii?Q?BdWZa/WzlRDrMqOB5X/zwPqZjsQUIc2fIdxUEnNP+xNGjfuPtnhpu/ZiO7Ok?=
- =?us-ascii?Q?Hu/OxAvHtiBxAaULlwjwCoXanbeHHn7gzET/f11wfcflzmkYGUnJh2/GLxFT?=
- =?us-ascii?Q?R/pp71IkKIL0G5fTJGa8i44TcnTxIEOnsGpGgqPhhEqZB6e/H3gSd51ENjel?=
- =?us-ascii?Q?tOR12nvKoii5BaLw8Q0LLaaq63Bf/0/qN70wTSRpTAPMQW8B5G7IUvYfdvpH?=
- =?us-ascii?Q?CKH0wFZAvoP1x2a21MKyTvC9hOk9l2SOo3hSvY12ZQaWfx6vAcwPhQyngwCd?=
- =?us-ascii?Q?KrMAeDPeH1NZ6bwNeT0BlM6o50StN6ZfPrMD/CNCpGg1Q6oXIsDDcu8T07RU?=
- =?us-ascii?Q?n2ozprjlWV/+aDWcQujmFCgqYn4421d11tLKJQ72H0xLEB3imMzhwuNjhTIr?=
- =?us-ascii?Q?fzUJEcRGUZGj+mWlrXvirWZfMS6I8kwb0fqhmVBQV9dP/Ooiuu5h0e9JuocO?=
- =?us-ascii?Q?wxHiBCsnXS60HilcYpxFecsedrESPXCNd2Y15+HvwYNE9WiqBO5FR2FwwfQm?=
- =?us-ascii?Q?gKKysXMlnG+9RMQo5/NdtHlAnjyxK0pChc0uC8+62KcSh1FoxuYIvf/tmeDX?=
- =?us-ascii?Q?XH2t0k1IngpxRro10nFs0Vwy5tUzqlumPVbBug/hoOVxA2NprWHJYaAp+j+y?=
- =?us-ascii?Q?fM4zvjM8Kjsn7IZV8CEQiLlpXAZBZjFHhcGqKpCVPnKXbXNA6p//XG/hr4Cf?=
- =?us-ascii?Q?vMN866LQk1irERRKG1Zv+MaTEeQVBKnMlrfgNyFQsTXQYp+XeeMVJxjW5Sim?=
- =?us-ascii?Q?ak7qlG2IxHtSDQAAJNAIbDdawMn4twunC5ZGqZFPobQ21bM312DSaT+GAstK?=
- =?us-ascii?Q?DaIYH/P2Sg5fqkJfUezc5HYTX2A0LraJ1aUgRVnG49bQtV+d6Ck3FUDsBMZB?=
- =?us-ascii?Q?OUNkDYwgMWUlZ71PPNOQDeD+N9V15zL+5vzfWDP4VcN9tkSSMUuZ9ODIkwDW?=
- =?us-ascii?Q?1k35Ti7pJXVQ4rIjPuG4j+J7PodvLvHedSSa9dwH?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0061266-6709-41ea-4fa8-08dae268e6d4
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4010.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Dec 2022 09:02:20.6621
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ebbJBQClKCgKWXkEqhzqTWlCkbDIDFYIG6dkUtX8516zACpUIorX973Sj2d2+s4aqHdxmk8giGzu7VERxhMIOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR04MB9221
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3 3/3] dt-bindings: gpio: add npcm7xx sgpio driver
+ bindings
+To:     Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+        KWLIU@nuvoton.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
+Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20221220080139.1803-1-JJLIU0@nuvoton.com>
+ <20221220080139.1803-4-JJLIU0@nuvoton.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221220080139.1803-4-JJLIU0@nuvoton.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Haibo Chen <haibo.chen@nxp.com>
+On 20/12/2022 09:01, Jim Liu wrote:
+> Add dt-bindings document for the NPCM7xx sgpio driver
+> 
+> Signed-off-by: Jim Liu <JJLIU0@nuvoton.com>
+> ---
+> Changes for v3:
+>    - modify description
+>    - modify in/out property name 
+> Changes for v2:
+>    - modify description
+> ---
+>  .../bindings/gpio/nuvoton,sgpio.yaml          | 83 +++++++++++++++++++
+>  1 file changed, 83 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+> new file mode 100644
+> index 000000000000..673535314cff
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/nuvoton,sgpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton SGPIO controller
+> +
+> +maintainers:
+> +  - Jim LIU <JJLIU0@nuvoton.com>
+> +
+> +description:
+> +  This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
+> +  Nuvoton NPCM7xx SGPIO module is combine serial to parallel IC (HC595)
+> +  and parallel to serial IC (HC165), and use APB3 clock to control it.
+> +  This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
+> +  NPCM7xx/NPCM8xx have two sgpio module each module can support up
+> +  to 64 output pins,and up to 64 input pin, the pin is only for gpi or gpo.
+> +  GPIO pins have sequential, First half is gpo and second half is gpi.
+> +  GPIO pins can be programmed to support the following options
+> +  - Support interrupt option for each input port and various interrupt
+> +    sensitivity option (level-high, level-low, edge-high, edge-low)
+> +  - Directly connected to APB bus and its shift clock is from APB bus clock
+> +    divided by a programmable value.
+> +  - ngpios is number of nuvoton,input-ngpios GPIO lines and nuvoton,output-ngpios GPIO lines.
+> +    nuvoton,input-ngpios GPIO lines is only for gpi.
+> +    nuvoton,output-ngpios GPIO lines is only for gpo.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nuvoton,npcm750-sgpio
+> +      - nuvoton,npcm845-sgpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  nuvoton,input-ngpios: true
+> +
+> +  nuvoton,output-ngpios: true
 
-To support Android GKI, need to build this driver as module.
-So change the config as tristate type, and add module license.
+You did not solve previous comments. Fields cannot be just "true" but
+need description, type and constraints. You need to solve previous comments.
 
-Signed-off-by: Jindong Yue <jindong.yue@nxp.com>
-Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
----
- drivers/gpio/Kconfig      | 3 ++-
- drivers/gpio/gpio-vf610.c | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+> +
+> +  bus-frequency: true
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index ec7cfd4f52b1..53c35cc0ff73 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -680,7 +680,8 @@ config GPIO_UNIPHIER
- 	  Say yes here to support UniPhier GPIOs.
- 
- config GPIO_VF610
--	def_bool y
-+	tristate "Vybrid vf610 GPIO support"
-+	default y if ARCH_MXC
- 	depends on ARCH_MXC
- 	select GPIOLIB_IRQCHIP
- 	help
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index a429176673e7..942932ce825a 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -15,6 +15,7 @@
- #include <linux/io.h>
- #include <linux/ioport.h>
- #include <linux/irq.h>
-+#include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -355,3 +356,4 @@ static struct platform_driver vf610_gpio_driver = {
- };
- 
- builtin_platform_driver(vf610_gpio_driver);
-+MODULE_LICENSE("GPL");
--- 
-2.34.1
+This is a friendly reminder during the review process.
+
+It seems my previous comments were not fully addressed. Maybe my
+feedback got lost between the quotes, maybe you just forgot to apply it.
+Please go back to the previous discussion and either implement all
+requested changes or keep discussing them.
+
+Thank you.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - interrupts
+> +  - nuvoton,input-ngpios
+> +  - nuvoton,output-ngpios
+> +  - clocks
+> +  - bus-frequency
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    gpio8: gpio@101000 {
+> +        compatible = "nuvoton,npcm750-sgpio";
+> +        reg = <0x101000 0x200>;
+> +        clocks = <&clk NPCM7XX_CLK_APB3>;
+> +        interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +        bus-frequency = <16000000>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        nuvoton,input-ngpios = <64>;
+> +        nuvoton,output-ngpios = <64>;
+> +        status = "disabled";
+
+This is a friendly reminder during the review process.
+
+It seems my previous comments were not fully addressed. Maybe my
+feedback got lost between the quotes, maybe you just forgot to apply it.
+Please go back to the previous discussion and either implement all
+requested changes or keep discussing them.
+
+Thank you.
+
+> +    };
+
+Best regards,
+Krzysztof
 
