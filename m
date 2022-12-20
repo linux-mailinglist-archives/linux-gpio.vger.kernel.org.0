@@ -2,106 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF4B652171
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 14:25:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F7EC6521BE
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 14:50:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232989AbiLTNZG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Dec 2022 08:25:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47286 "EHLO
+        id S229960AbiLTNur (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Dec 2022 08:50:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233256AbiLTNYm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 08:24:42 -0500
-Received: from out-246.mta0.migadu.com (out-246.mta0.migadu.com [IPv6:2001:41d0:1004:224b::f6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83051A393
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Dec 2022 05:24:37 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1671542676;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5jk//G82XoL09MdS2UpCztzol1TvVIpJTF0T1a5iUsA=;
-        b=VNG68UwF28BevfhLvQx2lMbX6+djqfTVhe+/Sw8paS2LAl/4PDuT/S6buJZAVPe22JXukj
-        l31oQjNSqJqNcA+y62hTxFoYIf7BUT417DX8sYYR5uBMsFvBvgz3fu2GVR/tEC8wWvPbRv
-        8gOvqXxm5RZCCGNWenwsfgemmjct0Dw=
-From:   Cixi Geng <cixi.geng@linux.dev>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 3/3] gpio: gpio-sprd: Make the irqchip immutable
-Date:   Tue, 20 Dec 2022 21:23:41 +0800
-Message-Id: <20221220132341.19383-4-cixi.geng@linux.dev>
-In-Reply-To: <20221220132341.19383-1-cixi.geng@linux.dev>
-References: <20221220132341.19383-1-cixi.geng@linux.dev>
+        with ESMTP id S233589AbiLTNuq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 08:50:46 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D85F1;
+        Tue, 20 Dec 2022 05:50:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1671544244; x=1703080244;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wjib8ns/iqIEa8ewCextKVFKt3nfpBnPjDdh5aIKA+U=;
+  b=Zn2c36J8WzedY4fbBf1a4bamPRrUtWUSHZdxHJTLV6J2U2zWv+zolpb6
+   ehm/B8Pvayf+IQJ5xFzQJPP76xkeO015olNmYPxazHj6laES7/9ORTmjy
+   W36wiqx3HK3VHZ1ZCPp8vbq0ZZUUf7MSbZYzBemONkmueMooxhbINwNlr
+   kjTFvUSwudOsmKkNBQVAIlQJdyak9MmdSJn+BU6UI5578CoB6MlyFp96Q
+   xQ08Zx0ToX9TWlvQWNnlSsyyTlkoWWgaP1QXhQKvO1HkbP3QYhFbLACtu
+   zVq5wpsvV+qrMbhK8h3X1jnjQOytBq+DXl309wwMLPr0Mp3NNJOGgEY3j
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="299957163"
+X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
+   d="scan'208";a="299957163"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 05:50:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10567"; a="714437743"
+X-IronPort-AV: E=Sophos;i="5.96,259,1665471600"; 
+   d="scan'208";a="714437743"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Dec 2022 05:50:42 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1p7d0z-00CtKF-0p;
+        Tue, 20 Dec 2022 15:50:41 +0200
+Date:   Tue, 20 Dec 2022 15:50:40 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] gpiolib: of: stop exporting of_gpio_named_count()
+Message-ID: <Y6G9sOYhThlE3dGu@smile.fi.intel.com>
+References: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
+ <20221219192016.1396950-2-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221219192016.1396950-2-dmitry.torokhov@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Cixi Geng <cixi.geng1@unisoc.com>
+On Mon, Dec 19, 2022 at 11:20:13AM -0800, Dmitry Torokhov wrote:
+> The only user of this function is gpiolib-of.c so move it there.
 
-Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
-new helper functions, and call the appropriate gpiolib functions.
+It's one liner used a single file, can we kill it completely?
 
-Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
----
- drivers/gpio/gpio-sprd.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-index 9bff63990eee..e6e48606a302 100644
---- a/drivers/gpio/gpio-sprd.c
-+++ b/drivers/gpio/gpio-sprd.c
-@@ -120,6 +120,7 @@ static void sprd_gpio_irq_mask(struct irq_data *data)
- 	u32 offset = irqd_to_hwirq(data);
- 
- 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 0);
-+	gpiochip_disable_irq(chip, offset);
- }
- 
- static void sprd_gpio_irq_ack(struct irq_data *data)
-@@ -136,6 +137,7 @@ static void sprd_gpio_irq_unmask(struct irq_data *data)
- 	u32 offset = irqd_to_hwirq(data);
- 
- 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 1);
-+	gpiochip_enable_irq(chip, offset);
- }
- 
- static int sprd_gpio_irq_set_type(struct irq_data *data,
-@@ -205,13 +207,15 @@ static void sprd_gpio_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(ic, desc);
- }
- 
--static struct irq_chip sprd_gpio_irqchip = {
-+static const struct irq_chip sprd_gpio_irqchip = {
- 	.name = "sprd-gpio",
- 	.irq_ack = sprd_gpio_irq_ack,
- 	.irq_mask = sprd_gpio_irq_mask,
- 	.irq_unmask = sprd_gpio_irq_unmask,
- 	.irq_set_type = sprd_gpio_irq_set_type,
- 	.flags = IRQCHIP_SKIP_SET_WAKE,
-+	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int sprd_gpio_probe(struct platform_device *pdev)
-@@ -245,7 +249,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
- 	sprd_gpio->chip.direction_output = sprd_gpio_direction_output;
- 
- 	irq = &sprd_gpio->chip.irq;
--	irq->chip = &sprd_gpio_irqchip;
-+	gpio_irq_chip_set_chip(irq, &sprd_gpio_irqchip);
- 	irq->handler = handle_bad_irq;
- 	irq->default_type = IRQ_TYPE_NONE;
- 	irq->parent_handler = sprd_gpio_irq_handler;
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
