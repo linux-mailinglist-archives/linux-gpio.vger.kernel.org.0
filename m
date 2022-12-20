@@ -2,101 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E73C6522D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 15:38:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CB92652522
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 18:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234107AbiLTOiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Dec 2022 09:38:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36662 "EHLO
+        id S229818AbiLTRIE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Dec 2022 12:08:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233954AbiLTOiS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 09:38:18 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D60419293
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Dec 2022 06:38:17 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id gh17so29698033ejb.6
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Dec 2022 06:38:17 -0800 (PST)
+        with ESMTP id S229720AbiLTRID (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 12:08:03 -0500
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EECE61DD;
+        Tue, 20 Dec 2022 09:08:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T9f0Ku46RA66RnD1s7kuU6MfXVLxET4cBAuDiB4K0jo=;
-        b=h/iejqaZ8fCjARIHEzeF0JYXDOwJb9HeuOd9ixvCP/gZXCSbe2xXEdT9blfLeD0rQP
-         tEc8tk3UWjYZoJvRWqu4kbspckQXh+ViCBx6eULj0ZlNO+pwc2YsYgxcVf4cUwpdqU21
-         sipTefG1aII1rTKS5YuCLUu4kUxzl4RBCrRZp2xj40yLb0KyaCPnx1snIn/t9nMCX8ZI
-         sDBu11f7EiYst/xuUWjTfo6loHhy5jjFmIhW1+kad5ITpgcGM+iSikbFBOk4s3380Bjk
-         l6ifuS7er3w6GSoux2V4U3lQFhOx1lpdYss2uxL+0EsPMr16a3SaqXEf9PxdjmRw9wzW
-         AMXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T9f0Ku46RA66RnD1s7kuU6MfXVLxET4cBAuDiB4K0jo=;
-        b=5novQ5zMmq3XchL64Wsueg3KjaQ1h7jNQv9YW9g2nL+eec0ycyETp5YR+8pz+dTPYS
-         N67lRMJQZ3mxnfvQ5tgz94lgJRson99THG85PH7J8zoSjEhRevs9EYm7NRQ02+hQyHcG
-         SJYnDX66PtXdMs4AGugjkZWJpRvpxzS90YPUjelClXqJUWelqjLri2Fwd8WZmxTgwI1U
-         e8OXLgsXd+nPqxiqBWzkyWkYF068lI+iqNXBlvyROeGUVw08BFoVXmV0NxTm5Mtdcvx9
-         ByTREkM2QPRcU9xF+DX4E3z9M5YP0FYLgj3jozylP/6nYV5oExgNTrjWViJ1TY58oy+f
-         O50w==
-X-Gm-Message-State: AFqh2kr1vLN7p/CqyutAFqrAtGEOVQUJISqmzuYu1X5A5x6kx3UnTfFQ
-        vvja0J90FxuQV8KZDV6wLWzYDysBLgJBZN2m48Q=
-X-Google-Smtp-Source: AMrXdXurkJra5fmZsTx+RyAWNZMPljDR/woAE+js5Z4nnpXeCRCzBLDBgHiT5lvr9ZfUOtZxgxd2G9hb8ffzWc67L9M=
-X-Received: by 2002:a17:906:c0d9:b0:828:7581:f01b with SMTP id
- bn25-20020a170906c0d900b008287581f01bmr713267ejb.260.1671547096063; Tue, 20
- Dec 2022 06:38:16 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1671556082; x=1703092082;
+  h=message-id:date:mime-version:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:subject;
+  bh=CJcRN8lmItUCYsoEzHAUyMmtBD/aumhVmGcaTarBcCc=;
+  b=leVA0STCj/zvqC28N3YX6eYBbW5a4rbejIcX+T/VvTsJR2ImwIsjSRUU
+   IXJ9SdynViLYzXfvTaIuaX/Ud/OziDuvUraYujWJPT5Ax/713WVFlEwxd
+   lIgkSocTZi6hgThD2RNv0QKZRBPsPtW8JwZqmkPUnm/UJ71BANoKgoPfT
+   o=;
+X-IronPort-AV: E=Sophos;i="5.96,259,1665446400"; 
+   d="scan'208";a="279159272"
+Subject: Re: [PATCH v3 1/1] i2c: Set pinctrl recovery info to device pinctrl
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-pdx-2b-m6i4x-a893d89c.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2022 17:07:58 +0000
+Received: from EX13MTAUWA002.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2b-m6i4x-a893d89c.us-west-2.amazon.com (Postfix) with ESMTPS id EC0C34163D;
+        Tue, 20 Dec 2022 17:07:56 +0000 (UTC)
+Received: from EX19D021UWA004.ant.amazon.com (10.13.139.67) by
+ EX13MTAUWA002.ant.amazon.com (10.43.160.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Tue, 20 Dec 2022 17:07:56 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX19D021UWA004.ant.amazon.com (10.13.139.67) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.20; Tue, 20 Dec 2022 17:07:56 +0000
+Received: from [192.168.1.158] (10.1.213.27) by mail-relay.amazon.com
+ (10.43.160.118) with Microsoft SMTP Server id 15.0.1497.42 via Frontend
+ Transport; Tue, 20 Dec 2022 17:07:52 +0000
+Message-ID: <4344f575-65f5-2fde-e2d5-3dd5a18d13cb@amazon.com>
+Date:   Tue, 20 Dec 2022 19:07:51 +0200
 MIME-Version: 1.0
-Received: by 2002:a05:7208:10a8:b0:5d:5c7f:d8c5 with HTTP; Tue, 20 Dec 2022
- 06:38:15 -0800 (PST)
-Reply-To: ab8111977@gmail.com
-From:   MS NADAGE LASSOU <info.kosianita@gmail.com>
-Date:   Tue, 20 Dec 2022 15:38:15 +0100
-Message-ID: <CAM0JKNf5g3CbQYhTtYjRUt-ExBnkcbYGdEGkpy+5=NhFX8gJPw@mail.gmail.com>
-Subject: REPLY FOR DETAILS.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        SUBJ_ALL_CAPS,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:62c listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4972]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [ab8111977[at]gmail.com]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [info.kosianita[at]gmail.com]
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC:     <wsa@kernel.org>, <linus.walleij@linaro.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>, <farbere@amazon.com>,
+        <itamark@amazon.com>
+References: <20221219193228.35078-1-hhhawa@amazon.com>
+ <Y6GUKf5TCumM1Swy@smile.fi.intel.com>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+In-Reply-To: <Y6GUKf5TCumM1Swy@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-13.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Greetings.
 
-I am Ms Nadage Lassou,I have important discussIon with you for your benefit=
-.
-Thanks for your time and =C2=A0Attention.
-Regards.
-Ms Nadage Lassou
+
+On 12/20/2022 12:53 PM, Andy Shevchenko wrote:
+>> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> > The same comment about changelog. Place it in the correct position.
+
+Will be fixed.
+
+> 
+>> Change Log v2->v3:
+>> - Add API to get the device pinctrl
+>> - Make the i2c init recovery to get the device pins
+>>
+>> Change Log v1->v2:
+>> - set the rinfo->pinctrl to dev->pins->p instead calling
+>>    devm_pinctrl_get()
+>> ---
+> 
+>>   include/linux/pinctrl/devinfo.h | 11 +++++++++++
+> 
+> This should be a separate patch.
+
+Sure, will move and create cover letter with the change log.
+
+> 
+> ...
+> 
+>> +static inline struct pinctrl *dev_pinctrl(struct device *dev)
+>> +{
+>> +     return dev->pins && dev->pins->p ? dev->pins->p : NULL;
+> 
+> GCC supports Elvis, you can use it to simplify the above.
+
+How you suggest to simplify this?
+I can use 'return dev->pins ? dev->pins->p ?: dev->pins->p : NULL;'
+
+> 
+>> +}
+> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
