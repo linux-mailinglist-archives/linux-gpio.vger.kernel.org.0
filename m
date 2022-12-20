@@ -2,67 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBF3765262F
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 19:27:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99420652640
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Dec 2022 19:29:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233999AbiLTS1m (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 20 Dec 2022 13:27:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58024 "EHLO
+        id S234076AbiLTS3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 20 Dec 2022 13:29:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234005AbiLTS1e (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 13:27:34 -0500
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B911DA77;
-        Tue, 20 Dec 2022 10:27:33 -0800 (PST)
-Received: by mail-pj1-x1032.google.com with SMTP id t11-20020a17090a024b00b0021932afece4so17334908pje.5;
-        Tue, 20 Dec 2022 10:27:33 -0800 (PST)
+        with ESMTP id S234126AbiLTS30 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 20 Dec 2022 13:29:26 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5315B1E3CE;
+        Tue, 20 Dec 2022 10:29:10 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id t11-20020a17090a024b00b0021932afece4so17338853pje.5;
+        Tue, 20 Dec 2022 10:29:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ue71Sm65axNrCgD942I0Cs8ltFCR+b4KhQL9sG46Wuc=;
-        b=eNPQkGHHS40PEuqaFz0jy8oj0l0rtkJQ3VMkBrT3Ms+QkeIvbjNJcHDj2vUxOtgors
-         KpLNEQlAk/GfjiCr8GjdidTJVtGPfZczIGWbmzlzTREtyiT3xe4sMfstbP1p8p5mtAle
-         rq7grfkIHkXQjsReZYeIvkGOgPnbmMQLorjDnTA339B4aH1guCtlo7hJSqzLAtag3Lq/
-         MK5mwyGfyUi8sZ/ki1iMeN7oS6ODBKET8BiGB1dFHnsBtfbQTpNrV9xgOGSdIY8RhZHH
-         5ILRPemnJMQpyebfPkL6VyUi7UW9C/AP2xKqAfJKv2qnfBotlFCTE98ojOuBs6jTGxA/
-         EFwA==
+        bh=18M+bnidS9gbp3O+Lgyd3nc6n99jiuwuByOHfklyIeY=;
+        b=jJMGzq9o67HGY4eYH55ebzeww9nPj/VgiZQTWEh3LKIy5Lwz8cRHWZ/AU1g+GnChgs
+         95U8jsf0wlPDY5nZjo+wK63g0G1+ggSuiSTvLdJ73yaggyqsRxcJe3Lici10EehClS9J
+         OGmZWPSA+FMgped0pHPpReRwR6egbFXws+uDoMDzzF4WHHgW2jb5gRb2jg+H0X+E2eHd
+         /buajIwTXzYsoCykxXF8QT0ijiZQqAPbvqIPIsRsukFhc3/Y3I4MMobqhr+24G3qqH9y
+         DqVeArmGKT0m+aCGXirlhN9XkCpSXOP0SOFlxa/dNjgtxwsweC93HeteFOyzf9wzWqIl
+         ZH7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ue71Sm65axNrCgD942I0Cs8ltFCR+b4KhQL9sG46Wuc=;
-        b=cBgPEuBCNK97EFc5Tn9VVUQg7SBHTz4WqOQdRMPm3r5mnE3wiFL78Fx9qX4xyOIVKy
-         PTyythi9fYwadbeuGrQ3pVJcheUQ2MG/EvsDtIcSIdFi3xkpMuUclSN37HdLBKvSZYvg
-         iB4B8kirO9L9FulakgVqGw6v8YEEsKnkQBed8348KYlsJfKpvTTVTPXlmYaK1GIj0kti
-         /aCvkPGQ3ince5V9pEewXNWhvbBL6jcNL+5oFlfdwBkDNb7cgysUs0AYgeqbPjmuw/ES
-         8qqFutjpl03W2k2Nv17rY5FcvvkmWO3ZsfprHHnIrKrvkDjyoSY6y0HwRHnQTuMj8tZd
-         mf9Q==
-X-Gm-Message-State: ANoB5pk/ik8IwssU99j+QQMXurTUWjKjnnK0xWNWBiCUO+zLAHdmMSjc
-        Qby+9UHWXB03H6d+/pQIkMQ=
-X-Google-Smtp-Source: AA0mqf55dfKKurRcDmvOc9m9YPf9T/PJICcdWQHgf8jKGdeqxIsmDDQNXf4PEeO16ZzckpDCS0E3uw==
-X-Received: by 2002:a05:6a20:4414:b0:af:7b32:4deb with SMTP id ce20-20020a056a20441400b000af7b324debmr42901341pzb.4.1671560852341;
-        Tue, 20 Dec 2022 10:27:32 -0800 (PST)
+        bh=18M+bnidS9gbp3O+Lgyd3nc6n99jiuwuByOHfklyIeY=;
+        b=tkq06MvBSjZQT/KTS9BHXQmkmiWdaLUUGqLqre+9Wj1SnkIbmiIdfrx5kPhFa0YWmR
+         iuid0hhIcVP1r7Hfvvk7lZGNGLD++f/98q/54QJpnoF4Orfkuo4gXAQKZfgQ7x6SurM2
+         7AxcOrPYWqyEPw5jNCWNV7TgWilQUwrFyaCZWYYrQ9AFOHd5E9C41bwwfiRiGBHTWdgV
+         N/JyV95bS/K1rxo+CYr0F4GNLWYkQvPO06lb97UwEpZHb21/4iQUGViClSFvNeia+/Gu
+         vphLVB8TmoDhcbow2t7TSoVTtXgU2sX64HuIgwkh9LBx2OfCTPi63ex6QaLG26Y37swO
+         157g==
+X-Gm-Message-State: ANoB5pkhR1D6aqBVEfrZ6VMvAYeNlo6OhJ46bOy4kmmvgijXdbMD2WgQ
+        r3aF1+oVrbALdeJLYfkSRnQ=
+X-Google-Smtp-Source: AA0mqf6Dc//fU/JVzBWR0T4cb8gfkyuykpSic50xjHo4VhUwC9Me8j5xU6hpWOHZZ6UyWT6KPht1nQ==
+X-Received: by 2002:a05:6a21:158a:b0:9d:efbe:a116 with SMTP id nr10-20020a056a21158a00b0009defbea116mr29986227pzb.38.1671560949650;
+        Tue, 20 Dec 2022 10:29:09 -0800 (PST)
 Received: from google.com ([2620:15c:9d:2:7206:404e:4820:d175])
-        by smtp.gmail.com with ESMTPSA id p8-20020a170902e74800b0018f6900a183sm9737384plf.140.2022.12.20.10.27.30
+        by smtp.gmail.com with ESMTPSA id a9-20020a170902710900b0019117164732sm6014437pll.213.2022.12.20.10.29.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Dec 2022 10:27:31 -0800 (PST)
-Date:   Tue, 20 Dec 2022 10:27:28 -0800
+        Tue, 20 Dec 2022 10:29:09 -0800 (PST)
+Date:   Tue, 20 Dec 2022 10:29:06 -0800
 From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] gpiolib: of: stop exporting of_gpio_named_count()
-Message-ID: <Y6H+kFR+vilCh8HH@google.com>
+Subject: Re: [PATCH 4/5] gpiolib: of: remove of_get_gpio[_flags]() and
+ of_get_named_gpio_flags()
+Message-ID: <Y6H+8vss7YPgOrMF@google.com>
 References: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
- <20221219192016.1396950-2-dmitry.torokhov@gmail.com>
- <Y6G9sOYhThlE3dGu@smile.fi.intel.com>
+ <20221219192016.1396950-4-dmitry.torokhov@gmail.com>
+ <Y6G/cypRVrpmjeqI@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y6G9sOYhThlE3dGu@smile.fi.intel.com>
+In-Reply-To: <Y6G/cypRVrpmjeqI@smile.fi.intel.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -73,15 +74,24 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 03:50:40PM +0200, Andy Shevchenko wrote:
-> On Mon, Dec 19, 2022 at 11:20:13AM -0800, Dmitry Torokhov wrote:
-> > The only user of this function is gpiolib-of.c so move it there.
+On Tue, Dec 20, 2022 at 03:58:11PM +0200, Andy Shevchenko wrote:
+> On Mon, Dec 19, 2022 at 11:20:15AM -0800, Dmitry Torokhov wrote:
+> > There are no more users of these APIs in the mainline kernel, remove
+> > them. This leaves of_get_named_gpio() as the only legacy OF-specific
+> > API.
 > 
-> It's one liner used a single file, can we kill it completely?
+> ...
+> 
+> > -	desc = of_get_named_gpiod_flags(np, list_name, index, flags);
+> > +	desc = of_get_named_gpiod_flags(np, propname, index, NULL);
+> 
+> I didn't get it. The commit message and the subject says there are no more
+> users of these APIs, why is it still here? How is it compiled?
 
-It is being called from a couple of places there and documents how
-exactly we are counting GPIOs, so I would prefer to leave this helper as
-is.
+gpio vs gpiod strikes again ;) We are removing
+of_get_named_gpio_flags(), but of_get_named_gpiod_flags() is a local
+helper in gpiolib-of.c and is still very much in use there and I have no
+plans removing it.
 
 Thanks.
 
