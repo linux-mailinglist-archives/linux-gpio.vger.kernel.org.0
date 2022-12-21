@@ -2,46 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D1B1652F89
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Dec 2022 11:32:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D68526530AA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Dec 2022 13:18:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234529AbiLUKcj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Dec 2022 05:32:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49272 "EHLO
+        id S229881AbiLUMSZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Dec 2022 07:18:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234579AbiLUKbR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Dec 2022 05:31:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DC4B4A5;
-        Wed, 21 Dec 2022 02:31:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 324D1B81A82;
-        Wed, 21 Dec 2022 10:31:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF24BC433D2;
-        Wed, 21 Dec 2022 10:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671618672;
-        bh=v4r7AkfGPQGBVr4AABOMBZ594Y+07pmq57+jDAMnylc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SlCp87AsAO1UzRlFdnAHzgRagW0dnNRzElhptPjFic9lQnduegEzyBljIlcDhF9qZ
-         3Gsi5GSrx72LYwuAccxL05yaMqNynG6p9O695L2cpn5A/9ntKSWch+/EXbS0i4voX4
-         EDsOim6wgisvUGB7pInWpTdOW0C4mIqVwIGtyxOTr9FwdHEtLX0gfw/0tAOqfCmpuo
-         RrFB8I6VXZ/6zKlp0vX1m2C4R/t7242UWoGBr5070FdQs0qmF4VNFyG9KizARgpkyj
-         xfGOYOO/n4BLEdUzgD7p59VIItJkq2jpfqWZtmT07voevvUwEY0sLtPqdbtk0kdmAw
-         FFshlNqej6Y8w==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1p7wNS-00E7ru-GK;
-        Wed, 21 Dec 2022 10:31:10 +0000
-Date:   Wed, 21 Dec 2022 10:31:10 +0000
-Message-ID: <86mt7haw0h.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        with ESMTP id S229647AbiLUMSZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Dec 2022 07:18:25 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7858722286;
+        Wed, 21 Dec 2022 04:18:23 -0800 (PST)
+Received: by mail-qt1-f179.google.com with SMTP id c7so13433180qtw.8;
+        Wed, 21 Dec 2022 04:18:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CueWZDdtUyE7xl2cqeIjpr9vo6iP5PtwWLtYRbw5JYc=;
+        b=5ow0joktPRyXwDSTmiB5keRAd9waHu4y4czA/Q5GeAW3KwcMujVJbfJWPsKo7CYLmF
+         cUkrtGOqoxJRzxWC+szU/oVmJRylzX3ABR0m2GdCyo92x18gEpYjiTZ2MAGrBCKmesls
+         b0+YBFjQjJRN6N6/N4mau9IrbWdrVdwFZP9cDRV+kjbo/fxfE5G9ztAEAHwae7zG5FPp
+         d59blIQYvGg4pOt5ZfRHLyeBoSwmhkagUC3GKSqsRpAEwvfX5yi/yXBYmaAwuXJV23FP
+         GFN1Hd8X7nnYKmvJ+DFQFlhLDDiBOZPSuq8q8yWu1asT72Pkf7Gvls1SP3GO77wcD8Sy
+         oVzw==
+X-Gm-Message-State: AFqh2krAXy3x+YkOfFXlbv3RIosQBD+ET5YzuT2v9SVp5doqrz1nqefG
+        PzjpOHCTYCingc9JytXUl2nnKFNnvmvfhA==
+X-Google-Smtp-Source: AMrXdXtXXuGs6+5MxY/UPCcVmhc3FoI6Xoejg30d3cl0cM7WbRMSplA6YGpX101uSNamZMQ5jhU8BA==
+X-Received: by 2002:ac8:7c92:0:b0:3a7:eb36:5cb1 with SMTP id y18-20020ac87c92000000b003a7eb365cb1mr1684055qtv.36.1671625101776;
+        Wed, 21 Dec 2022 04:18:21 -0800 (PST)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
+        by smtp.gmail.com with ESMTPSA id bc6-20020a05622a1cc600b003a820f9fb70sm9144256qtb.36.2022.12.21.04.18.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Dec 2022 04:18:21 -0800 (PST)
+Received: by mail-yb1-f180.google.com with SMTP id v126so16288605ybv.2;
+        Wed, 21 Dec 2022 04:18:20 -0800 (PST)
+X-Received: by 2002:a25:418b:0:b0:6f0:9ff5:1151 with SMTP id
+ o133-20020a25418b000000b006f09ff51151mr123793yba.543.1671625100368; Wed, 21
+ Dec 2022 04:18:20 -0800 (PST)
+MIME-Version: 1.0
+References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221221000242.340202-5-prabhakar.mahadev-lad.rj@bp.renesas.com> <86o7rxawhn.wl-maz@kernel.org>
+In-Reply-To: <86o7rxawhn.wl-maz@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 21 Dec 2022 13:18:08 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdX++dbcsxyGRqiRzgukeU4aoAi3hDV5zyfH1s11dFba-A@mail.gmail.com>
+Message-ID: <CAMuHMdX++dbcsxyGRqiRzgukeU4aoAi3hDV5zyfH1s11dFba-A@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] irqchip: irq-renesas-rzg2l: Add support for
+ RZ/G2UL SoC
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -51,163 +64,82 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v2 3/9] irqchip: irq-renesas-rzg2l: Skip mapping NMI interrupt as part of hierarchy domain
-In-Reply-To: <20221221000242.340202-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-        <20221221000242.340202-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: prabhakar.csengg@gmail.com, tglx@linutronix.de, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, geert+renesas@glider.be, magnus.damm@gmail.com, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, biju.das.jz@bp.renesas.com, prabhakar.mahadev-lad.rj@bp.renesas.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, 21 Dec 2022 00:02:36 +0000,
-Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> 
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> NMI interrupt is not an external interrupt as compared to the IRQ0-7 and
-> TINT0-31, this means we need to install the irq handler for NMI in the
-> IRQC driver and not include it as part of IRQ domain.
+On Wed, Dec 21, 2022 at 11:20 AM Marc Zyngier <maz@kernel.org> wrote:
+> On Wed, 21 Dec 2022 00:02:37 +0000,
+> Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> >
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > The IRQC block on RZ/G2UL SoC is almost identical to one found on the
+> > RZ/G2L SoC the only difference being it can support BUS_ERR_INT for
+> > which it has additional registers.
+> >
+> > This patch adds a new entry for "renesas,rzg2ul-irqc" compatible string
+> > and now that we have interrupt-names property the driver code parses the
+> > interrupts based on names and for backward compatibility we fallback to
+> > parse interrupts based on index.
+> >
+> > For now we will be using rzg2l_irqc_init() as a callback for RZ/G2UL SoC
+> > too and in future when the interrupt handler will be registered for
+> > BUS_ERR_INT we will have to implement a new callback.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+> > +/* Parse hierarchy domain interrupts ie only IRQ0-7 and TINT0-31 */
+> > +static int rzg2l_irqc_parse_hierarchy_interrupts(struct rzg2l_irqc_priv *priv,
+> > +                                              struct device_node *np)
+> > +{
+> > +     struct property *pp;
+> >       unsigned int i;
+> >       int ret;
+> >
+> > +     /*
+> > +      * first check if interrupt-names property exists if so parse them by name
+> > +      * or else parse them by index for backward compatibility.
+> > +      */
+> > +     pp = of_find_property(np, "interrupt-names", NULL);
+> > +     if (pp) {
+> > +             char *irq_name;
+> > +
+> > +             /* parse IRQ0-7 */
+> > +             for (i = 0; i < IRQC_IRQ_COUNT; i++) {
+> > +                     irq_name = kasprintf(GFP_KERNEL, "irq%d", i);
+
+%u
+
+> > +                     if (!irq_name)
+> > +                             return -ENOMEM;
+> > +
+> > +                     ret = rzg2l_irqc_parse_interrupt_by_name_to_fwspec(priv, np, irq_name, i);
 >
-> This patch skips mapping NMI interrupt as part of the IRQ domain
-> hierarchy.
+> Am I the only one that find it rather odd to construct a name from an
+> index, only to get another index back?
 
-Does it mean nobody can connect anything to it? Where is the handler
-you're mentioning for this NMI?
+The issue is that there are two number ranges ("irq%u" and "tint%u"),
+stored in a single interrupts property.
 
-> 
-> Fixes: 3fed09559cd8 ("irqchip: Add RZ/G2L IA55 Interrupt Controller driver")
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> v1 -> v2
-> * New patch
-> ---
->  drivers/irqchip/irq-renesas-rzg2l.c | 24 +++++++++++++-----------
->  1 file changed, 13 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-renesas-rzg2l.c b/drivers/irqchip/irq-renesas-rzg2l.c
-> index 25fd8ee66565..7918fe201218 100644
-> --- a/drivers/irqchip/irq-renesas-rzg2l.c
-> +++ b/drivers/irqchip/irq-renesas-rzg2l.c
-> @@ -23,7 +23,8 @@
->  #define IRQC_IRQ_COUNT			8
->  #define IRQC_TINT_START			(IRQC_IRQ_START + IRQC_IRQ_COUNT)
->  #define IRQC_TINT_COUNT			32
-> -#define IRQC_NUM_IRQ			(IRQC_TINT_START + IRQC_TINT_COUNT)
-> +					/* IRQ0-7 + TINT0-31 */
-> +#define IRQC_NUM_HIERARCHY_IRQ		(IRQC_TINT_START + IRQC_TINT_COUNT - 1)
->  
->  #define ISCR				0x10
->  #define IITSR				0x14
-> @@ -58,7 +59,8 @@
->  
->  struct rzg2l_irqc_priv {
->  	void __iomem *base;
-> -	struct irq_fwspec fwspec[IRQC_NUM_IRQ];
-> +	/* IRQ0-7 + TINT0-31 will be part of hierarchy domain */
-> +	struct irq_fwspec fwspec[IRQC_NUM_HIERARCHY_IRQ];
->  	raw_spinlock_t lock;
->  };
->  
-> @@ -99,7 +101,7 @@ static void rzg2l_irqc_eoi(struct irq_data *d)
->  	raw_spin_lock(&priv->lock);
->  	if (hw_irq >= IRQC_IRQ_START && hw_irq <= IRQC_IRQ_COUNT)
->  		rzg2l_irq_eoi(d);
-> -	else if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ)
-> +	else if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_NUM_HIERARCHY_IRQ)
->  		rzg2l_tint_eoi(d);
->  	raw_spin_unlock(&priv->lock);
->  	irq_chip_eoi_parent(d);
-> @@ -109,7 +111,7 @@ static void rzg2l_irqc_irq_disable(struct irq_data *d)
->  {
->  	unsigned int hw_irq = irqd_to_hwirq(d);
->  
-> -	if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
-> +	if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_NUM_HIERARCHY_IRQ) {
->  		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
->  		u32 offset = hw_irq - IRQC_TINT_START;
->  		u32 tssr_offset = TSSR_OFFSET(offset);
-> @@ -129,7 +131,7 @@ static void rzg2l_irqc_irq_enable(struct irq_data *d)
->  {
->  	unsigned int hw_irq = irqd_to_hwirq(d);
->  
-> -	if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ) {
-> +	if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_NUM_HIERARCHY_IRQ) {
->  		struct rzg2l_irqc_priv *priv = irq_data_to_priv(d);
->  		unsigned long tint = (uintptr_t)d->chip_data;
->  		u32 offset = hw_irq - IRQC_TINT_START;
-> @@ -228,7 +230,7 @@ static int rzg2l_irqc_set_type(struct irq_data *d, unsigned int type)
->  
->  	if (hw_irq >= IRQC_IRQ_START && hw_irq <= IRQC_IRQ_COUNT)
->  		ret = rzg2l_irq_set_type(d, type);
-> -	else if (hw_irq >= IRQC_TINT_START && hw_irq < IRQC_NUM_IRQ)
-> +	else if (hw_irq >= IRQC_TINT_START && hw_irq <= IRQC_NUM_HIERARCHY_IRQ)
+An alternative solution would be to get rid of the "interrupt-names",
+and use two separate prefixed interrupts properties instead, like is
+common for e.g. gpios: "irq-interrupts" and "tint-interrupts".
 
+Gr{oetje,eeting}s,
 
-How about you define a "tint_hwirq()" helper that checks got the
-boundaries? Same thing for the other IRQ type.
+                        Geert
 
->  		ret = rzg2l_tint_set_edge(d, type);
->  	if (ret)
->  		return ret;
-> @@ -280,7 +282,7 @@ static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
->  			return -EINVAL;
->  	}
->  
-> -	if (hwirq > (IRQC_NUM_IRQ - 1))
-> +	if (!hwirq || hwirq > IRQC_NUM_HIERARCHY_IRQ)
->  		return -EINVAL;
->  
->  	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq, &irqc_chip,
-> @@ -288,7 +290,7 @@ static int rzg2l_irqc_alloc(struct irq_domain *domain, unsigned int virq,
->  	if (ret)
->  		return ret;
->  
-> -	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &priv->fwspec[hwirq]);
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs, &priv->fwspec[hwirq - 1]);
->  }
->  
->  static const struct irq_domain_ops rzg2l_irqc_domain_ops = {
-> @@ -304,12 +306,12 @@ static int rzg2l_irqc_parse_interrupts(struct rzg2l_irqc_priv *priv,
->  	unsigned int i;
->  	int ret;
->  
-> -	for (i = 0; i < IRQC_NUM_IRQ; i++) {
-> +	for (i = 1; i <= IRQC_NUM_HIERARCHY_IRQ; i++) {
->  		ret = of_irq_parse_one(np, i, &map);
->  		if (ret)
->  			return ret;
->  		of_phandle_args_to_fwspec(np, map.args, map.args_count,
-> -					  &priv->fwspec[i]);
-> +					  &priv->fwspec[i - 1]);
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Starting the loop at 1 really is non-idiomatic, and I'd rather see
-something like this:
-
-	for (i = 0; i < IRQC_NUM_HIERARCHY_IRQ; i++) {
-		ret = of_irq_parse_one(np, i + 1, &map);
-		if (ret)
-			return ret;
-		of_phandle_args_to_fwspec(np, map.args, map.args_count,
-					  &priv->fwspec[i]);
-	}
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
