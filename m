@@ -2,64 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B88D6537D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Dec 2022 21:52:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEDDA6537EE
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Dec 2022 22:06:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234893AbiLUUw2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 21 Dec 2022 15:52:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40204 "EHLO
+        id S229844AbiLUVGx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 21 Dec 2022 16:06:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234806AbiLUUwQ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Dec 2022 15:52:16 -0500
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C646A218AF;
-        Wed, 21 Dec 2022 12:52:14 -0800 (PST)
+        with ESMTP id S229620AbiLUVGw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 21 Dec 2022 16:06:52 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005251DF3D;
+        Wed, 21 Dec 2022 13:06:50 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id kw15so423940ejc.10;
+        Wed, 21 Dec 2022 13:06:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1671655935; x=1703191935;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=QZ7rWYK2CKwOEagvxBjviYv+AnRa/cMCIpiy/dlt5s4=;
-  b=Ir/aIIQFx1pCaqN3ekH+5b/qDRdtupV6MF6usIQAzAalRiy9If+Sw4wD
-   MGDwnXf2x9+XOdbjgc0pkVB8RUruwEmZoqciCVZOajGZI9HEj/u5PZ+mw
-   FVi8NE+j7mR1XC/en3DF/j7rPpHjwUf2uRB6UXy+0sXzQDEvk6vjtf9pZ
-   k=;
-X-IronPort-AV: E=Sophos;i="5.96,263,1665446400"; 
-   d="scan'208";a="281548083"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2022 20:52:14 +0000
-Received: from EX13D42EUA004.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2c-m6i4x-dc7c3f8b.us-west-2.amazon.com (Postfix) with ESMTPS id 90592A1238;
-        Wed, 21 Dec 2022 20:52:12 +0000 (UTC)
-Received: from EX19D019EUA002.ant.amazon.com (10.252.50.84) by
- EX13D42EUA004.ant.amazon.com (10.43.165.34) with Microsoft SMTP Server (TLS)
- id 15.0.1497.42; Wed, 21 Dec 2022 20:52:10 +0000
-Received: from dev-dsk-hhhawa-1b-84e0d7ff.eu-west-1.amazon.com (10.43.162.134)
- by EX19D019EUA002.ant.amazon.com (10.252.50.84) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.2.1118.20; Wed, 21 Dec 2022 20:52:06 +0000
-From:   Hanna Hawa <hhhawa@amazon.com>
-To:     <wsa@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
-        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
-        <farbere@amazon.com>, <itamark@amazon.com>, <hhhawa@amazon.com>
-Subject: [PATCH v4 2/2] i2c: Set i2c pinctrl recovery info from it's device pinctrl
-Date:   Wed, 21 Dec 2022 20:51:16 +0000
-Message-ID: <20221221205116.73941-3-hhhawa@amazon.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221221205116.73941-1-hhhawa@amazon.com>
-References: <20221221205116.73941-1-hhhawa@amazon.com>
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8KKbAaGdCU2qz8tzZ8Eajc31tmbLI+yoxmAyVIDyiEo=;
+        b=iEeW+jFlWQHNAOcpKOv++bgVCIpOYDCgaQtQvCOgtQrueHtHQlgYTMP9SQ35W4ncHu
+         Vd5cSfuNee2U7EpalJeQxIK8ZzZz6s/ptl2RJSfrsqayYMfdai7cAWJj+23E+v+yJXlZ
+         qcHAnhy4G3QKSQ7Sj+R6rIA66qjvJLm6S/NxhT8J3dOe6tVJhqdjrPcyskkCpEWMzI+8
+         bM3pXZAtVi9XHCF+NkKW5FPDlYqYjYHweBXS9U8BXZYNBXa6TSlLiSnzx88OoQ20WnVI
+         CcIChN/xYLF0Xv2k3xdsMYgeUrlqLY8Jpx/ge5vOAZNnUpLq/poU/dyT8AyjfAu6oH0E
+         A3IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8KKbAaGdCU2qz8tzZ8Eajc31tmbLI+yoxmAyVIDyiEo=;
+        b=1WAUgoCE4Bu4xo19yYmtbFh4XhG+lv3OVuoDc80OYpZFRfhLN/I/pIXViBOguMcwe7
+         k6fXfQ1jLiXRa3ikPxbcSiC6/WlFRXe8xg5pVwwDnEpHVj99qhLUiJ20l20cgjc8RsPL
+         J0kxicMrUbchfoykl9glv0+G0drMX16u0KZqfBxBrirKldtyJpuRLeKHBPb/S6BGtrMV
+         T1x02u2kiL/8xvW2GRwKmb6Jxh/EDGlYQNHaADhXE08CP0xFrhKzlf7Mc0ECV1s8jJ81
+         z86Nto6d4we4ntqXCXg9GFARCk0PNVke9SKu5+p5oGpq1eUNDGlPgl9AdQX8rmkU8u8W
+         w4cQ==
+X-Gm-Message-State: AFqh2kqXFH3aJjv/SbZesWfMfL3DlVJFCpcraB2PSwnW1MkEnjjPGYS3
+        +3cmFUIJaan+HI6N9DGhCzRuQ0AfUT0xHeY9sw1QRI2zqqiOLg==
+X-Google-Smtp-Source: AMrXdXt3LFry2Pk44xOSwKCaBzl8/kUOHa7kVd6BTzeZ86BdZIVFyr3z2ToxY+RCjIfE7f9tLrzWliU8SEHHrmX8QZM=
+X-Received: by 2002:a17:906:3398:b0:7c0:efb6:8744 with SMTP id
+ v24-20020a170906339800b007c0efb68744mr329585eja.267.1671656809542; Wed, 21
+ Dec 2022 13:06:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.43.162.134]
-X-ClientProxiedBy: EX13D28UWC004.ant.amazon.com (10.43.162.24) To
- EX19D019EUA002.ant.amazon.com (10.252.50.84)
-X-Spam-Status: No, score=-11.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL autolearn=ham
+References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221221000242.340202-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdXmKYV7CwuD=ZNgaOTc+LxP9OvEJ8gcW_iS5NamTxEE+w@mail.gmail.com>
+In-Reply-To: <CAMuHMdXmKYV7CwuD=ZNgaOTc+LxP9OvEJ8gcW_iS5NamTxEE+w@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Wed, 21 Dec 2022 21:06:22 +0000
+Message-ID: <CA+V-a8tqvY+Nj391j+zJO21Q=47pyFR1SkDLH-hmJephcorY3g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: interrupt-controller:
+ renesas,rzg2l-irqc: Document RZ/G2UL SoC
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,45 +77,87 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Currently the i2c subsystem rely on the controller device tree to
-initialize the pinctrl recovery information, part of the drivers does
-not set this field (rinfo->pinctrl), for example i2c designware driver.
+Hi Geert,
 
-The pins information is saved part of the device structure before probe
-and it's done on pinctrl_bind_pins().
+Thank you for the review.
 
-Make the i2c init recovery to get the device pins if it's not
-initialized by the driver from the device pins.
+On Wed, Dec 21, 2022 at 12:37 PM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> Hi Prabhakar,
+>
+> On Wed, Dec 21, 2022 at 1:03 AM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > Document RZ/G2UL (R9A07G043U) IRQC bindings. The IRQC block on RZ/G2UL SoC
+> > is almost identical to one found on the RZ/G2L SoC the only difference
+> > being it can support BUS_ERR_INT for which it has additional registers.
+> > Hence new generic compatible string "renesas,rzg2ul-irqc" is added for
+> > RZ/G2UL SoC.
+> >
+> > Now that we have additional interrupt for RZ/G2UL and RZ/Five SoC
+> > interrupt-names property is added so that we can parse them based on
+> > names.
+> >
+> > While at it updated the example node to four spaces and added
+> > interrupt-names property.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1- > v2
+> > * Dropped RB tags
+> > * Added generic compatible string for rzg2ul
+> > * Added interrupt-names
+> > * Added checks for RZ/G2UL to make sure interrupts are 42 and interrupt-names
+> > * Updated example node with interrupt-names
+> > * Used 4 spaces for example node
+>
+> Thanks for the update!
+>
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
+> > @@ -19,16 +19,19 @@ description: |
+> >      - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
+> >        stand-up edge detection interrupts)
+> >
+> > -allOf:
+> > -  - $ref: /schemas/interrupt-controller.yaml#
+> > -
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
+> > -          - renesas,r9a07g054-irqc    # RZ/V2L
+> > -      - const: renesas,rzg2l-irqc
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
+> > +              - renesas,r9a07g054-irqc    # RZ/V2L
+> > +          - const: renesas,rzg2l-irqc
+> > +
+> > +      - items:
+> > +          - enum:
+> > +              - renesas,r9a07g043u-irqc   # RZ/G2UL
+> > +          - const: renesas,rzg2ul-irqc
+>
+> I'm not sure it's worth splitting into RZ/G2L and RZ/G2UL alike
+> variants, and adding the "renesas,rzg2ul-irqc" family-specific
+> compatible value.  You can easily handle the difference by the presence
+> (or absence) of the "bus-err" interrupt source.
+>
+Yes, the only reason to add "renesas,rzg2ul-irqc" is to differentiate
+RZ/Five later. I have not worked out on how this driver will work in
+case of RZ/Five yet with PLIC (as we sifive plic driver as a chained
+handler and then we have the RISC-V intc driver). If you insist I can
+drop it for now and then later when we add RZ/FIve we could add a
+check for compat string maybe?
 
-Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
----
- drivers/i2c/i2c-core-base.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> I understand there "renesas,r9a07g043f-irqc" will be added later to
+> support RZ/Five?
+>
+Yes.
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 7539b0740351..8c5f76c43dc8 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -34,6 +34,7 @@
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/devinfo.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
- #include <linux/pm_wakeirq.h>
-@@ -282,7 +283,10 @@ static void i2c_gpio_init_pinctrl_recovery(struct i2c_adapter *adap)
- {
- 	struct i2c_bus_recovery_info *bri = adap->bus_recovery_info;
- 	struct device *dev = &adap->dev;
--	struct pinctrl *p = bri->pinctrl;
-+	struct pinctrl *p;
-+
-+	bri->pinctrl = bri->pinctrl ?: dev_pinctrl(dev->parent);
-+	p = bri->pinctrl;
- 
- 	/*
- 	 * we can't change states without pinctrl, so remove the states if
--- 
-2.38.1
-
+Cheers,
+Prabhakar
