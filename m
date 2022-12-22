@@ -2,95 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F279654762
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 21:40:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E110A654776
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 21:46:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235759AbiLVUk0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Dec 2022 15:40:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54372 "EHLO
+        id S230273AbiLVUqM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Dec 2022 15:46:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235227AbiLVUj5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 15:39:57 -0500
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EDF024977;
-        Thu, 22 Dec 2022 12:39:34 -0800 (PST)
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-1322d768ba7so3828031fac.5;
-        Thu, 22 Dec 2022 12:39:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vpT8R1Rv+Nm5XIJthL+2JjEda6upkRaZYMhbehQvjd8=;
-        b=CZ46ljM1ZFaE0Dk6EFsq0LucUk3sYTbkAKu562F+EkqLG6XAqKUeywq2dR2hUH6QCt
-         Gi1V66oNHfhKJJ5qJi8Dcb+GVBB0yWIVu+wKTg1e3Ew0Yo+hr1bfdDVI0/wnIJMidQ3S
-         px40RHlDdgCUyVc9uI/q1ZtoFVTlKMdQ4s1DEgdXerK+eHDhyPNHgT06220/1UOXD/Cz
-         u3JEg3zutRR/qSVc39uHJJD86eb76upEXry//lCbesU5wc/s6nVjgzIFjl6zlCiCNaY2
-         fJ5ams87cSxKkok70WCn4FfCuew4Dgyn/toUrH6dqVf3t1yz4etmFRqZt1J/6AS0REDn
-         6lpg==
-X-Gm-Message-State: AFqh2kqHE7uElL3YMhij393vIrbOHu2v9qd0eQA8SXZ0VxYY1dQo/1X2
-        lI5Gtnzd4PgIS7Ilcq82hw==
-X-Google-Smtp-Source: AMrXdXuxMOhZ9CB4M20W0IRTPaF1HVPtXYoHPVef1+Ha2t5/a0xpc0Vt0pNC5vAIaFdy1xWar3bFNw==
-X-Received: by 2002:a05:6870:815:b0:143:be53:bc15 with SMTP id fw21-20020a056870081500b00143be53bc15mr3452785oab.17.1671741573613;
-        Thu, 22 Dec 2022 12:39:33 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id r42-20020a05687108aa00b0013669485016sm708870oaq.37.2022.12.22.12.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 12:39:33 -0800 (PST)
-Received: (nullmailer pid 2080731 invoked by uid 1000);
-        Thu, 22 Dec 2022 20:39:32 -0000
-Date:   Thu, 22 Dec 2022 14:39:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
+        with ESMTP id S229743AbiLVUqL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 15:46:11 -0500
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A75164E4;
+        Thu, 22 Dec 2022 12:46:10 -0800 (PST)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 2BMKjqCK129515;
+        Thu, 22 Dec 2022 14:45:52 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1671741952;
+        bh=t0CVlGayMw5HcUXgmGTym4TtlkZXIl8bMzE8UidCg5k=;
+        h=From:To:CC:Subject:Date;
+        b=HWlECEZuZQdcMs1QjhMsKnx5gryDNYkfRok6Z0h2QfGaMVfqFjQ7GYgsNEtkGOrJa
+         Au2fc/lhRX6Ce3o9q0d/0js9WfxDG6S+FioHJBTQSobLkvFrtklQbJ435kORBhVTG5
+         wzLRpuvGTTiaSGt83bFbgqs8YDn2HWvNPurTmD6Y=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 2BMKjqqM120296
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 22 Dec 2022 14:45:52 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 22
+ Dec 2022 14:45:51 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 22 Dec 2022 14:45:51 -0600
+Received: from LT5CD112GSQZ.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 2BMKjk7M004121;
+        Thu, 22 Dec 2022 14:45:47 -0600
+From:   Apurva Nandan <a-nandan@ti.com>
+To:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: qcom,sm8450-lpass-lpi: add
- input-enable and bias-bus-hold
-Message-ID: <167174157218.2080693.3036143873208701568.robh@kernel.org>
-References: <20221222161420.172824-1-krzysztof.kozlowski@linaro.org>
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Apurva Nandan <a-nandan@ti.com>, Hari Nagalla <hnagalla@ti.com>
+Subject: [PATCH v4 0/4] Add initial support for J784S4 SoC
+Date:   Fri, 23 Dec 2022 02:15:41 +0530
+Message-ID: <20221222204545.45281-1-a-nandan@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221222161420.172824-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+The J784S4 SoC belongs to the K3 Multicore SoC architecture
+platform, providing advanced system integration in automotive,
+ADAS and industrial applications requiring AI at the network edge.
+This SoC extends the K3 Jacinto 7 family of SoCs with focus on
+raising performance and integration while providing interfaces,
+memory architecture and compute performance for multi-sensor, high
+concurrency applications.
 
-On Thu, 22 Dec 2022 17:14:20 +0100, Krzysztof Kozlowski wrote:
-> Allow bias-bus-hold and input-enable properties (already used in SM8450):
-> 
->   sm8450-qrd.dtb: pinctrl@3440000: dmic02-default-state: 'oneOf' conditional failed, one must be fixed:
->     'pins' is a required property
->     'function' is a required property
->     'clk-pins', 'data-pins' do not match any of the regexes: 'pinctrl-[0-9]+'
->     'input-enable' does not match any of the regexes: 'pinctrl-[0-9]+'
-> 
-> Compact the properties which are just set to true for readability.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 1. Add input-enable.
-> ---
->  .../bindings/pinctrl/qcom,sm8450-lpass-lpi-pinctrl.yaml     | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
+Some highlights of this SoC are:
+* Up to 8 Cortex-A72s, four clusters of lockstep capable dual Cortex-R5F MCUs,
+  4 C7x floating point vector DSPs with Matrix Multiply Accelerator(MMA) for
+  deep learning and CNN.
+* 3D GPU: Automotive grade IMG BXS-4-64
+* Vision Processing Accelerator (VPAC) with image signal processor and Depth
+  and Motion Processing Accelerator (DMPAC)
+* Three CSI2.0 4L RX plus two CSI2.0 4L TX, two DSI Tx, one eDP/DP and one
+  DPI interface.
+* Integrated gigabit ethernet switch, up to 8 ports (TDA4VH), two ports
+  support 10Gb USXGMII; Two 4 lane PCIe-GEN3 controllers, USB3.0 Dual-role
+  device subsystems, Up to 20 MCANs, among other peripherals.
 
-Acked-by: Rob Herring <robh@kernel.org>
+See J784S4 Technical Reference Manual (SPRUJ52 - JUNE 2022)
+for further details: http://www.ti.com/lit/zip/spruj52
+
+bootlog: https://rentry.co/gbefx/raw
+
+Changes in v4:
+- Removed ti,sci-dev-id from main_navss and mcu_navss, also changed their
+  compatibles to "simple-bus"
+- Removed status = "disabled" from phy_gmii_sel and cpts@3d000
+- Removed empty chosen {} from k3-j784s4.dtsi
+
+Changes in v3:
+- Enabled hwspinlock, main_ringacc, main_udmap, cpts, and mcu_navss in
+  the dtsi
+- Removed alignment in secure_ddr optee
+- Changed the assigned clock parent in main and mcu cpts to main pll0, hsdiv6
+  from pll3, hsdiv1
+- Removed few signed-off by
+- Formatting fixes at some places
+- Corrected link to EVM board schmatics in the commit
+
+Changes in v2:
+- Disabled all the IPs that are not mandatory for booting up the SoC by
+  default in the dtsi, and thus this gives a minimal SoC boot devicetree.
+- Moved no-1-8-v property from the k3-j784s4-evm.dts file to
+  k3-j784s4-main.dtsi file.
+- Naming changes (hwlock, regulator) and commit description changes.
+- Added device specific compatible for j721e system controller.
+- Dropped bootargs completely.
+
+Apurva Nandan (4):
+  dt-bindings: arm: ti: Add bindings for J784s4 SoC
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions for J784s4
+  arm64: dts: ti: Add initial support for J784S4 SoC
+  arm64: dts: ti: Add support for J784S4 EVM board
+
+ .../devicetree/bindings/arm/ti/k3.yaml        |    6 +
+ arch/arm64/boot/dts/ti/Makefile               |    2 +
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  196 ++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 1007 +++++++++++++++++
+ .../boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi     |  311 +++++
+ arch/arm64/boot/dts/ti/k3-j784s4.dtsi         |  284 +++++
+ include/dt-bindings/pinctrl/k3.h              |    3 +
+ 7 files changed, 1809 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4.dtsi
+
+-- 
+2.34.1
+
