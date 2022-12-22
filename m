@@ -2,170 +2,210 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AE5E653CDE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 09:19:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83949653F03
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 12:28:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiLVITd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Dec 2022 03:19:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52794 "EHLO
+        id S235474AbiLVL2h (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Dec 2022 06:28:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235033AbiLVITb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 03:19:31 -0500
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511BE101C6;
-        Thu, 22 Dec 2022 00:19:30 -0800 (PST)
-Received: by mail-qv1-f45.google.com with SMTP id h10so818867qvq.7;
-        Thu, 22 Dec 2022 00:19:30 -0800 (PST)
+        with ESMTP id S230014AbiLVL2g (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 06:28:36 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C78127163
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Dec 2022 03:28:35 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id b3so2315217lfv.2
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Dec 2022 03:28:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K5HqGkBqBzfZDqaAUotpMPHwjpp4zNjbUWE9MppZ23U=;
+        b=JKYz9vhC6veCEOBUC5Klk4pvaJYmo/yasJsTQXQkAwGmBhbRDCpI8ZY+Vjv3di4OiX
+         IkIJT24z9jxADAxhJOpfKTcth1YxrQJn5KOY1BWyXhBoYAyeKee2CuQxK9iLiEP+eGp0
+         6zvxwjipsTTmSt5LBhm7oPiP5d43zxYdDKzxUYG/nSofwendCncbqCUhjpUB91NNjf4K
+         3UEpP788W2k50ns4PzPDxiu8xQF5NFvuySFOlHR9zyQNe8QZBIjRt4yIQ60RtAJzJved
+         6KZth3Pgoxf1BG3nLvKiZxF+VjdCbsfJDGyrPaChMuT0bwSPoJVPKboQt0E55frP4gru
+         ldVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RMmfHUYc7ijR6hdADXh8O3NMov5DfuOpW26VTuf213g=;
-        b=G7iufXoW54xSvthzqr+3y3wgxQbr3lDveMvCoduyIVYcn9b4Cg4I+TcNr+PMkWZh/s
-         m/aN098BMsm3UPZa33963FuAn2pztHalco1dWE7HhMCovhWWVOB3C8CHRkBHilWvU1z8
-         1Ni/0sE+CAANhKEeaQ0ibfIu+zSENR1etWSBbZtMy2kUAwM0pvelJ3wfjJOIBPvvxQTt
-         voht23L3YzX8y3R5V9TnoRSVAY/I5YhEoG0n/bAvMnKOleEM78xK22BrxMCD8mAi40vp
-         LRXFaX4f9Ko5JMqBO/p6KlJOTzc4j3ENgU3T/pM3l98rbvS+AavRmRhiby8rZCn5/Yyq
-         hCaQ==
-X-Gm-Message-State: AFqh2koCYHTEV04NyuCd7G5tQI8YZDUWMJ6jeJOycNE5bK1xttg00AB5
-        CC+pYUne3xSl4F3RC4HsEJjMf0o2hGIU0Q==
-X-Google-Smtp-Source: AMrXdXuMuHw41LNCyCvcauLAmzjXyf9yRJ0wH8piUqai+QC5g7ax5FjCLtVhWqCGQWtPwqbEdg8W6g==
-X-Received: by 2002:a0c:fc48:0:b0:4e1:bb55:1d8d with SMTP id w8-20020a0cfc48000000b004e1bb551d8dmr6718811qvp.44.1671697169176;
-        Thu, 22 Dec 2022 00:19:29 -0800 (PST)
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com. [209.85.128.178])
-        by smtp.gmail.com with ESMTPSA id s5-20020a05620a254500b006f9f714cb6asm12296746qko.50.2022.12.22.00.19.28
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K5HqGkBqBzfZDqaAUotpMPHwjpp4zNjbUWE9MppZ23U=;
+        b=ZT7TMx+cldVpKiJBKr5oRaT7Dkd7ptpx63HaL49K2PEOI5nsxSGKM/hB2VJ71PgnLO
+         RrtSMJcYkAk+LVz4La0PoT4kCvL6/BphuwCLljmG8/LSmDg/XuGhd23jxpUEOuIymLo5
+         6XHGQgkrYjIw1DeF0XYsO8WeDjhkgkeO5Or2Pm00mP4pfWVunZl8iTh0IOn53nTaHh3A
+         SiasG2/0C9Zi613zhXzj4DPIwaq2+M2J29zLfGIP2DKRPfiRmwvY+yFX30fzybKyjhXt
+         sVrRZeojd4Rn/BofF6W93wwF/TV1fFJQf67rY6pEPel3RYQvA+PpLD65j3AbREcA+GKN
+         60nQ==
+X-Gm-Message-State: AFqh2krUsTp4c24Za8dUXEAtXmqD+61unzkwn8DvFzleC9PY8ZrRuFr8
+        TRRjhktd9185hqZPATvLnAtDBg==
+X-Google-Smtp-Source: AMrXdXvfkgKKBgus/9ew+CKIdUk8kg+3nsMPazKfH/x8M2NFqKqOkCh/SNIgCpwt+hd/0taBYSb1dA==
+X-Received: by 2002:a05:6512:3d94:b0:4a4:68b8:f4f4 with SMTP id k20-20020a0565123d9400b004a468b8f4f4mr1970535lfv.58.1671708513405;
+        Thu, 22 Dec 2022 03:28:33 -0800 (PST)
+Received: from [192.168.0.20] (088156142067.dynamic-2-waw-k-3-2-0.vectranet.pl. [88.156.142.67])
+        by smtp.gmail.com with ESMTPSA id j10-20020a056512028a00b00499b1873d6dsm37956lfp.269.2022.12.22.03.28.32
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Dec 2022 00:19:28 -0800 (PST)
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-45ef306bd74so18287057b3.2;
-        Thu, 22 Dec 2022 00:19:28 -0800 (PST)
-X-Received: by 2002:a0d:ca4d:0:b0:38e:e541:d8ca with SMTP id
- m74-20020a0dca4d000000b0038ee541d8camr307319ywd.283.1671697168114; Thu, 22
- Dec 2022 00:19:28 -0800 (PST)
+        Thu, 22 Dec 2022 03:28:32 -0800 (PST)
+Message-ID: <17dc933d-e46c-ddfa-b185-5c24fa7dddb6@linaro.org>
+Date:   Thu, 22 Dec 2022 12:28:31 +0100
 MIME-Version: 1.0
-References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20221221000242.340202-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXmKYV7CwuD=ZNgaOTc+LxP9OvEJ8gcW_iS5NamTxEE+w@mail.gmail.com> <CA+V-a8tqvY+Nj391j+zJO21Q=47pyFR1SkDLH-hmJephcorY3g@mail.gmail.com>
-In-Reply-To: <CA+V-a8tqvY+Nj391j+zJO21Q=47pyFR1SkDLH-hmJephcorY3g@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 22 Dec 2022 09:19:14 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXDbfadxJsrEvQMwQKvxtBxQRA_Bx4+FY90N9v_XVirOA@mail.gmail.com>
-Message-ID: <CAMuHMdXDbfadxJsrEvQMwQKvxtBxQRA_Bx4+FY90N9v_XVirOA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: interrupt-controller:
- renesas,rzg2l-irqc: Document RZ/G2UL SoC
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: add schema for NXP S32 SoCs
+Content-Language: en-US
+To:     Chester Lin <clin@suse.com>, Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     s32@nxp.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Matthias Brugger <mbrugger@suse.com>
+References: <20221221073232.21888-1-clin@suse.com>
+ <20221221073232.21888-2-clin@suse.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221221073232.21888-2-clin@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+On 21/12/2022 08:32, Chester Lin wrote:
+> Add DT schema for the pinctrl driver of NXP S32 SoC family.
+> 
+> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>
+> Signed-off-by: Chester Lin <clin@suse.com>
+> ---
+> 
+> Changes in v3:
+> - Remove the minItems from reg because there's no optional item for s32g2.
+> - List supported properties of pinmux-node and pincfg-node and add more
+>   descriptions.
+> - Adjust the location of "required:".
+> - Fix descriptions and wordings.
+> - Rename the yaml file to nxp,s32g2-siul2-pinctrl.yaml.
+> 
+> Changes in v2:
+> - Remove the "nxp,pins" property since it has been moved into the driver.
+> - Add descriptions for reg entries.
+> - Refine the compatible name from "nxp,s32g-..." to "nxp,s32g2-...".
+> - Fix schema issues and revise the example.
+> - Fix the copyright format suggested by NXP.
+> 
+>  .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      | 129 ++++++++++++++++++
+>  1 file changed, 129 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..1554ce14214a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
+> @@ -0,0 +1,129 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +# Copyright 2022 NXP
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/nxp,s32g2-siul2-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: NXP S32G2 pin controller
+> +
+> +maintainers:
+> +  - Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>
+> +  - Chester Lin <clin@suse.com>
+> +
+> +description: |
+> +  S32G2 pinmux is implemented in SIUL2 (System Integration Unit Lite2),
+> +  whose memory map is split into two regions:
+> +    SIUL2_0 @ 0x4009c000
+> +    SIUL2_1 @ 0x44010000
+> +
+> +  Every SIUL2 region has multiple register types, and here only MSCR and
+> +  IMCR registers need to be revealed for kernel to configure pinmux.
+> +
+> +  Please note that some register indexes are reserved in S32G2, such as
+> +  MSCR102-MSCR111, MSCR123-MSCR143, IMCR84-IMCR118 and IMCR398-IMCR429.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nxp,s32g2-siul2-pinctrl
+> +
+> +  reg:
+> +    description: |
+> +      A list of MSCR/IMCR register regions to be reserved.
+> +      - MSCR (Multiplexed Signal Configuration Register)
+> +        An MSCR register can configure the associated pin as either a GPIO pin
+> +        or a function output pin depends on the selected signal source.
+> +      - IMCR (Input Multiplexed Signal Configuration Register)
+> +        An IMCR register can configure the associated pin as function input
+> +        pin depends on the selected signal source.
+> +    items:
+> +      - description: MSCR registers group 0 in SIUL2_0
+> +      - description: MSCR registers group 1 in SIUL2_1
+> +      - description: MSCR registers group 2 in SIUL2_1
+> +      - description: IMCR registers group 0 in SIUL2_0
+> +      - description: IMCR registers group 1 in SIUL2_1
+> +      - description: IMCR registers group 2 in SIUL2_1
+> +
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    patternProperties:
+> +      '-grp[0-9]$':
+> +        type: object
+> +        allOf:
+> +          - $ref: pinmux-node.yaml#
+> +          - $ref: pincfg-node.yaml#
+> +        description: |
+> +          Pinctrl node's client devices specify pin muxes using subnodes,
+> +          which in turn use the standard properties below.
+> +
+> +        properties:
+> +          bias-disable: true
+> +          bias-high-impedance: true
+> +          bias-pull-up: true
+> +          bias-pull-down: true
+> +          drive-open-drain: true
+> +          input-enable: true
+> +          output-enable: true
+> +
+> +          pinmux:
+> +            description: |
+> +               An integer array for representing pinmux configurations of
+> +               a device. Each integer consists of a PIN_ID and a 4-bit
+> +               selected signal source(SSS) as IOMUX setting, which is
+> +               calculated as: pinmux = (PIN_ID << 4 | SSS)
+> +
+> +          slew-rate:
+> +            description: |
+> +              0: 208MHz
+> +              1-3: Reserved
+> +              4: 166MHz
+> +              5: 150MHz
+> +              6: 133MHz
+> +              7: 83MHz
+> +            enum: [0, 4, 5, 6, 7]
 
-On Wed, Dec 21, 2022 at 10:06 PM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Wed, Dec 21, 2022 at 12:37 PM Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
-> > On Wed, Dec 21, 2022 at 1:03 AM Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > >
-> > > Document RZ/G2UL (R9A07G043U) IRQC bindings. The IRQC block on RZ/G2UL SoC
-> > > is almost identical to one found on the RZ/G2L SoC the only difference
-> > > being it can support BUS_ERR_INT for which it has additional registers.
-> > > Hence new generic compatible string "renesas,rzg2ul-irqc" is added for
-> > > RZ/G2UL SoC.
-> > >
-> > > Now that we have additional interrupt for RZ/G2UL and RZ/Five SoC
-> > > interrupt-names property is added so that we can parse them based on
-> > > names.
-> > >
-> > > While at it updated the example node to four spaces and added
-> > > interrupt-names property.
-> > >
-> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > ---
-> > > v1- > v2
-> > > * Dropped RB tags
-> > > * Added generic compatible string for rzg2ul
-> > > * Added interrupt-names
-> > > * Added checks for RZ/G2UL to make sure interrupts are 42 and interrupt-names
-> > > * Updated example node with interrupt-names
-> > > * Used 4 spaces for example node
-> >
-> > Thanks for the update!
-> >
-> > > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> > > @@ -19,16 +19,19 @@ description: |
-> > >      - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
-> > >        stand-up edge detection interrupts)
-> > >
-> > > -allOf:
-> > > -  - $ref: /schemas/interrupt-controller.yaml#
-> > > -
-> > >  properties:
-> > >    compatible:
-> > > -    items:
-> > > -      - enum:
-> > > -          - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
-> > > -          - renesas,r9a07g054-irqc    # RZ/V2L
-> > > -      - const: renesas,rzg2l-irqc
-> > > +    oneOf:
-> > > +      - items:
-> > > +          - enum:
-> > > +              - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
-> > > +              - renesas,r9a07g054-irqc    # RZ/V2L
-> > > +          - const: renesas,rzg2l-irqc
-> > > +
-> > > +      - items:
-> > > +          - enum:
-> > > +              - renesas,r9a07g043u-irqc   # RZ/G2UL
-> > > +          - const: renesas,rzg2ul-irqc
-> >
-> > I'm not sure it's worth splitting into RZ/G2L and RZ/G2UL alike
-> > variants, and adding the "renesas,rzg2ul-irqc" family-specific
-> > compatible value.  You can easily handle the difference by the presence
-> > (or absence) of the "bus-err" interrupt source.
-> >
-> Yes, the only reason to add "renesas,rzg2ul-irqc" is to differentiate
-> RZ/Five later. I have not worked out on how this driver will work in
-> case of RZ/Five yet with PLIC (as we sifive plic driver as a chained
-> handler and then we have the RISC-V intc driver). If you insist I can
-> drop it for now and then later when we add RZ/FIve we could add a
-> check for compat string maybe?
+You have known values, then use them. This is much more readable in DTS.
 
-Given you already use "renesas,r9a07g043u-irqc" (note the "u") here,
-you will have "renesas,r9a07g043f-irqc" to handle the (minor)
-differences.
 
-> > I understand there "renesas,r9a07g043f-irqc" will be added later to
-> > support RZ/Five?
-> >
-> Yes.
+Best regards,
+Krzysztof
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
