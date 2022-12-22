@@ -2,63 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 042D265409E
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 13:02:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B5CD654155
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Dec 2022 13:52:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235549AbiLVMCW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 22 Dec 2022 07:02:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
+        id S235435AbiLVMwE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 22 Dec 2022 07:52:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235664AbiLVMB1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 07:01:27 -0500
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BC02B26C;
-        Thu, 22 Dec 2022 03:54:07 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id a1so2585356edf.5;
-        Thu, 22 Dec 2022 03:54:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZUc9ftQEfhd/MV6cYGaYztTCR+BYKCTunlj8uFzmn+4=;
-        b=i93t2b/Htglle9vUzVQKJQ7VAo/2qMpxF89GS76QCzCoUyAUdZMEz1b1Aa+PFTUuop
-         b1saCaoF31Ralebjc1qZPgfTtQi/hFc55f5xDvPlBgDvfTh/gQIWNRySpcUhg+LXmC8I
-         5V+1cBSppUMktXDusJmnQcbEbLoa+TpYIz2vWqI+p8f5CodZr0+6hsha76TA2zeLvm08
-         zMWQAlrQ0E0xMDlXIJsGztoTRPDH+2pWoGdhHCJx50vqao+HcvR3ClJVZ7aSwsWSqK7r
-         RCDyk72raqqWUZidbHuIIFfm4Q5xPNthfq2e3fCzlsgQYXcfHNgk6DlzHhEHhOv/ffMS
-         jvrw==
+        with ESMTP id S235361AbiLVMwB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 22 Dec 2022 07:52:01 -0500
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A66552528D;
+        Thu, 22 Dec 2022 04:51:55 -0800 (PST)
+Received: by mail-qv1-f45.google.com with SMTP id d13so1177621qvj.8;
+        Thu, 22 Dec 2022 04:51:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZUc9ftQEfhd/MV6cYGaYztTCR+BYKCTunlj8uFzmn+4=;
-        b=ZlmH/6MG57gBV41uCoYFeksMuj7D04VlQ30lbf7jGTxvBmGrkMWo4TWoEjIILgKW0G
-         xYWtOG69WtFdJjupxYetCPHs5seK1HkZqMbaiPB4BAxgwW+x0ZFWZNIRCbZCycEWgCTL
-         UuY3kCcqrvlYsttb0fG1OLXHRXfWcJPhQKqHZDMM6O4luW/bPMAj8kSm9WD3XPaM8gID
-         guBg3X0vtMg7gGw0teOxVqrRNzOVfzXikscF1rYCn42a+WqU4qBzjmXgqxgdWRanKzp3
-         /bcFja9KSoV1CBOKBt1a9iTXFolEwrikb5p7m/Yog6n0HrofALIzIhKnU/Qcy9xnFSqz
-         PtGw==
-X-Gm-Message-State: AFqh2kp6KOO5iLYZbcgAnkUIYh+m8fWYaGFjzupD0CTq0M3hPAuMR5M3
-        Nsdib36vKfGy1vT8XgCI2exTGyo0XsrPo5TpGSk=
-X-Google-Smtp-Source: AMrXdXts0LR79dHOd6WwBj5aSIMsk5SRX5i2AP+zNxuECLbTY24XvwP3oGjtrdUQX9zHVFa8JV2WtWA2w6J+yeSCkXU=
-X-Received: by 2002:a05:6402:22a8:b0:468:cae8:f5a6 with SMTP id
- cx8-20020a05640222a800b00468cae8f5a6mr645677edb.263.1671710046207; Thu, 22
- Dec 2022 03:54:06 -0800 (PST)
+        bh=GllrCyZoKpUhPvjdNIUyYRbhBs5yv+S16f965UWIIIk=;
+        b=mJP8AwvM71nB0RMmI86l7K/8iUfGLRV2iRIOA3ODoaTpCW+8S6480mMUuIgXsQZy6V
+         znnMctiYBtlaOpi2SyI8loTayrv6zvXuzDhtYFxbMDRk9nJQekhhjjFJrV4NbMB2ijv7
+         aYvcHqYpoHSlfWNPe08c48dPmielh1AqwXrjLxbxemSpK6SB7RtaJUePuQ+8Y0bqRR4j
+         hG+Ldbwhlapg9YP7b77PyhcgVE/h0Enmr9bvGFQYqRMyP5ul4MIrRDYMcvpHXFhbPC30
+         Y9hwxWXi+bDrStOaQrSsljsbno8LfQ9ypDa2pkq2RvI25yiDFdzDx6jyFEB4tILf/lA0
+         papQ==
+X-Gm-Message-State: AFqh2kqKwuOKO2fZwo9cx+TZ4y/MWcpA2sDl/3Dfle5FfEqr4us9NiqA
+        kIbAXs6yc37iWi7slJHktU7fFh8qIg9PpA==
+X-Google-Smtp-Source: AMrXdXvHXFs6oSpnb3ysFIMAPBvFS/GtzyuWqQVcOIfsUylQG5Dz3sAsna6RFJVO/WiGOdYu0NMpvw==
+X-Received: by 2002:a0c:ea22:0:b0:4bb:615d:4c4c with SMTP id t2-20020a0cea22000000b004bb615d4c4cmr7642560qvp.49.1671713514590;
+        Thu, 22 Dec 2022 04:51:54 -0800 (PST)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id r17-20020ae9d611000000b00704c62638f4sm8597qkk.89.2022.12.22.04.51.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Dec 2022 04:51:54 -0800 (PST)
+Received: by mail-yb1-f181.google.com with SMTP id e141so1840398ybh.3;
+        Thu, 22 Dec 2022 04:51:53 -0800 (PST)
+X-Received: by 2002:a25:d243:0:b0:702:90b4:2e24 with SMTP id
+ j64-20020a25d243000000b0070290b42e24mr398540ybg.365.1671713513672; Thu, 22
+ Dec 2022 04:51:53 -0800 (PST)
 MIME-Version: 1.0
 References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20221221000242.340202-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <CAMuHMdXmKYV7CwuD=ZNgaOTc+LxP9OvEJ8gcW_iS5NamTxEE+w@mail.gmail.com>
- <CA+V-a8tqvY+Nj391j+zJO21Q=47pyFR1SkDLH-hmJephcorY3g@mail.gmail.com> <CAMuHMdXDbfadxJsrEvQMwQKvxtBxQRA_Bx4+FY90N9v_XVirOA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXDbfadxJsrEvQMwQKvxtBxQRA_Bx4+FY90N9v_XVirOA@mail.gmail.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 22 Dec 2022 11:53:40 +0000
-Message-ID: <CA+V-a8vmxDMTVJuxo9=6451_Y3e1+7SUu9R38LBsQyuzXch5_g@mail.gmail.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: interrupt-controller:
- renesas,rzg2l-irqc: Document RZ/G2UL SoC
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
+ <20221221000242.340202-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <86o7rxawhn.wl-maz@kernel.org> <CAMuHMdX++dbcsxyGRqiRzgukeU4aoAi3hDV5zyfH1s11dFba-A@mail.gmail.com>
+ <CA+V-a8uRTPhQqtkQqUVtW=HE02YaW0oi=Os__OgtUgQVwWq+Mw@mail.gmail.com>
+In-Reply-To: <CA+V-a8uRTPhQqtkQqUVtW=HE02YaW0oi=Os__OgtUgQVwWq+Mw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 22 Dec 2022 13:51:41 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV0wKGk+EvTfCZJu0z_HYy7YaLLNya4z6=coASsbnkVBQ@mail.gmail.com>
+Message-ID: <CAMuHMdV0wKGk+EvTfCZJu0z_HYy7YaLLNya4z6=coASsbnkVBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] irqchip: irq-renesas-rzg2l: Add support for
+ RZ/G2UL SoC
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -69,100 +67,100 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Biju Das <biju.das.jz@bp.renesas.com>,
         Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Geert,
+Hi Prabhakar,
 
-On Thu, Dec 22, 2022 at 8:19 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Wed, Dec 21, 2022 at 10:06 PM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Dec 21, 2022 at 12:37 PM Geert Uytterhoeven
-> > <geert@linux-m68k.org> wrote:
-> > > On Wed, Dec 21, 2022 at 1:03 AM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+On Thu, Dec 22, 2022 at 12:50 PM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Wed, Dec 21, 2022 at 12:18 PM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Wed, Dec 21, 2022 at 11:20 AM Marc Zyngier <maz@kernel.org> wrote:
+> > > On Wed, 21 Dec 2022 00:02:37 +0000,
+> > > Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> > > >
 > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > > > >
-> > > > Document RZ/G2UL (R9A07G043U) IRQC bindings. The IRQC block on RZ/G2UL SoC
-> > > > is almost identical to one found on the RZ/G2L SoC the only difference
-> > > > being it can support BUS_ERR_INT for which it has additional registers.
-> > > > Hence new generic compatible string "renesas,rzg2ul-irqc" is added for
-> > > > RZ/G2UL SoC.
+> > > > The IRQC block on RZ/G2UL SoC is almost identical to one found on the
+> > > > RZ/G2L SoC the only difference being it can support BUS_ERR_INT for
+> > > > which it has additional registers.
 > > > >
-> > > > Now that we have additional interrupt for RZ/G2UL and RZ/Five SoC
-> > > > interrupt-names property is added so that we can parse them based on
-> > > > names.
+> > > > This patch adds a new entry for "renesas,rzg2ul-irqc" compatible string
+> > > > and now that we have interrupt-names property the driver code parses the
+> > > > interrupts based on names and for backward compatibility we fallback to
+> > > > parse interrupts based on index.
 > > > >
-> > > > While at it updated the example node to four spaces and added
-> > > > interrupt-names property.
+> > > > For now we will be using rzg2l_irqc_init() as a callback for RZ/G2UL SoC
+> > > > too and in future when the interrupt handler will be registered for
+> > > > BUS_ERR_INT we will have to implement a new callback.
 > > > >
 > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > > v1- > v2
-> > > > * Dropped RB tags
-> > > > * Added generic compatible string for rzg2ul
-> > > > * Added interrupt-names
-> > > > * Added checks for RZ/G2UL to make sure interrupts are 42 and interrupt-names
-> > > > * Updated example node with interrupt-names
-> > > > * Used 4 spaces for example node
-> > >
-> > > Thanks for the update!
-> > >
-> > > > --- a/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,rzg2l-irqc.yaml
-> > > > @@ -19,16 +19,19 @@ description: |
-> > > >      - NMI edge select (NMI is not treated as NMI exception and supports fall edge and
-> > > >        stand-up edge detection interrupts)
+> >
+> > > > +/* Parse hierarchy domain interrupts ie only IRQ0-7 and TINT0-31 */
+> > > > +static int rzg2l_irqc_parse_hierarchy_interrupts(struct rzg2l_irqc_priv *priv,
+> > > > +                                              struct device_node *np)
+> > > > +{
+> > > > +     struct property *pp;
+> > > >       unsigned int i;
+> > > >       int ret;
 > > > >
-> > > > -allOf:
-> > > > -  - $ref: /schemas/interrupt-controller.yaml#
-> > > > -
-> > > >  properties:
-> > > >    compatible:
-> > > > -    items:
-> > > > -      - enum:
-> > > > -          - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
-> > > > -          - renesas,r9a07g054-irqc    # RZ/V2L
-> > > > -      - const: renesas,rzg2l-irqc
-> > > > +    oneOf:
-> > > > +      - items:
-> > > > +          - enum:
-> > > > +              - renesas,r9a07g044-irqc    # RZ/G2{L,LC}
-> > > > +              - renesas,r9a07g054-irqc    # RZ/V2L
-> > > > +          - const: renesas,rzg2l-irqc
+> > > > +     /*
+> > > > +      * first check if interrupt-names property exists if so parse them by name
+> > > > +      * or else parse them by index for backward compatibility.
+> > > > +      */
+> > > > +     pp = of_find_property(np, "interrupt-names", NULL);
+> > > > +     if (pp) {
+> > > > +             char *irq_name;
 > > > > +
-> > > > +      - items:
-> > > > +          - enum:
-> > > > +              - renesas,r9a07g043u-irqc   # RZ/G2UL
-> > > > +          - const: renesas,rzg2ul-irqc
-> > >
-> > > I'm not sure it's worth splitting into RZ/G2L and RZ/G2UL alike
-> > > variants, and adding the "renesas,rzg2ul-irqc" family-specific
-> > > compatible value.  You can easily handle the difference by the presence
-> > > (or absence) of the "bus-err" interrupt source.
-> > >
-> > Yes, the only reason to add "renesas,rzg2ul-irqc" is to differentiate
-> > RZ/Five later. I have not worked out on how this driver will work in
-> > case of RZ/Five yet with PLIC (as we sifive plic driver as a chained
-> > handler and then we have the RISC-V intc driver). If you insist I can
-> > drop it for now and then later when we add RZ/FIve we could add a
-> > check for compat string maybe?
+> > > > +             /* parse IRQ0-7 */
+> > > > +             for (i = 0; i < IRQC_IRQ_COUNT; i++) {
+> > > > +                     irq_name = kasprintf(GFP_KERNEL, "irq%d", i);
+> >
+> > %u
+> >
+> Ok.
 >
-> Given you already use "renesas,r9a07g043u-irqc" (note the "u") here,
-> you will have "renesas,r9a07g043f-irqc" to handle the (minor)
-> differences.
->
-Ok, so I'll revert back to the previous version of the patch and still
-add the interrupt names.
+> > > > +                     if (!irq_name)
+> > > > +                             return -ENOMEM;
+> > > > +
+> > > > +                     ret = rzg2l_irqc_parse_interrupt_by_name_to_fwspec(priv, np, irq_name, i);
+> > >
+> > > Am I the only one that find it rather odd to construct a name from an
+> > > index, only to get another index back?
+> >
+> > The issue is that there are two number ranges ("irq%u" and "tint%u"),
+> > stored in a single interrupts property.
+> >
+> > An alternative solution would be to get rid of the "interrupt-names",
+> > and use two separate prefixed interrupts properties instead, like is
+> > common for e.g. gpios: "irq-interrupts" and "tint-interrupts".
+> >
+> Maybe I will read all the interrupts based on index only for all the
+> SoCs and we still add interrupt-names in dt bindings with the
+> dt_binding check we can make sure all the interrupts for each SoC
+> exist in the DT and the driver still reads them based on index. Does
+> that sound good?
 
-Cheers,
-Prabhakar
+Sure, sounds fine.
+
+You can postpone parsing interrupt-names in the driver (until a new
+SoC arrives that uses a different number of IRQ or TINT interrupts).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
