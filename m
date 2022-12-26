@@ -2,93 +2,90 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C047D6556F4
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Dec 2022 02:29:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD157656574
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Dec 2022 23:37:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233404AbiLXB3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 23 Dec 2022 20:29:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
+        id S232395AbiLZWhY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 26 Dec 2022 17:37:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232881AbiLXB3n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 23 Dec 2022 20:29:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE3A1705E;
-        Fri, 23 Dec 2022 17:29:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7957A61FAB;
-        Sat, 24 Dec 2022 01:29:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14F0DC433F2;
-        Sat, 24 Dec 2022 01:29:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671845381;
-        bh=IAks9GWBJ69lvrtruKdzo2aohCxAvyK28p6EhgBP8Bg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqA2zXbEgawhIZf8GbOzC+ikB7a8RswVGiUKtfAxUMTnOEkNUrLSIIUKvJtko33th
-         af9pyNbKKJBtpX5YWEkWjYwfQJepYJ9utoJ5XGEMtBZdvZX+OztiU6qwUprOhlIPkJ
-         LZDpNOV4XqepzHDrN/1L54X6VJIOfRY/fYTt/zTR2OpwfbWPOeUGSirWGomLyGE5f3
-         8j2cgOe8RctH51LP0I+6bXCfKdOna9GLx+Oklm7gGI71tsPx/LAaponOdmPecSqFg9
-         S7EBAVhkOLWUtlcdzybTXgOrnOZe6hLVIHVr3AVaqQZQT8wmg/R1D3VxD9IbL8BM0w
-         voIfKw9vaSgIA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Sasha Levin <sashal@kernel.org>, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 07/26] gpiolib: of: add a quirk for legacy names in MOXA ART RTC
-Date:   Fri, 23 Dec 2022 20:29:11 -0500
-Message-Id: <20221224012930.392358-7-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221224012930.392358-1-sashal@kernel.org>
-References: <20221224012930.392358-1-sashal@kernel.org>
+        with ESMTP id S232420AbiLZWgV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Dec 2022 17:36:21 -0500
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8985F54;
+        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
+Received: by mail-oi1-f180.google.com with SMTP id o66so11150390oia.6;
+        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AGjdttmcgkKOVEh+yLpPFWCyfTxrmdMALVwDhA4tbxk=;
+        b=q5YWFPJBfhAQiVNLSyXpu/t+RYP99z/WDuUvLrW0ONbEnFyQ4oxYONr6fXQsxonr35
+         ZlR9om3xxCVYQuDLTeqeWUNADtfLXsYabe6yg+0vMfc6GxGqRoxgP6qR3Ohl5wbP6yp0
+         EpjEIZrbKFL0xQitX4OM8ayOV/ClWDSy0V6tvANslNfEUgiN7uI0p6xGyu700z+QN4iR
+         8Fi1tWZ/O5PvImDXeZykJja2bnXwFLp5gnMirOZY5V1UVd3si59k0IWQAP5dhQn9jhUL
+         3KrM8/NBNxQDDxxwiVnyHSaaEk5k6nPj7xF+9ejW5kwSKvIB0eCkmH4m/YSZqCRPN6nl
+         FY6w==
+X-Gm-Message-State: AFqh2koGYfyJZP1YO4PX+peAJSI1T4Cs5P2yZNQcR6Ygd5X8F7Vks9Jo
+        SY8rGd0V35Zb2GJ6sEC5eQ==
+X-Google-Smtp-Source: AMrXdXsMw29uTavPyGsPxjWjy3/8ibqE9mMs5+r+xOX45/xNrSglsye61N2mME7UKlhGFVpLdDQUfA==
+X-Received: by 2002:aca:1b0a:0:b0:35e:6f1d:eda9 with SMTP id b10-20020aca1b0a000000b0035e6f1deda9mr13253583oib.53.1672094174044;
+        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
+Received: from robh_at_kernel.org ([2605:ef80:80e8:2792:eb0e:539f:f657:547b])
+        by smtp.gmail.com with ESMTPSA id bk10-20020a0568081a0a00b0035c422bb303sm5264522oib.19.2022.12.26.14.36.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 Dec 2022 14:36:13 -0800 (PST)
+Received: (nullmailer pid 42527 invoked by uid 1000);
+        Mon, 26 Dec 2022 18:53:03 -0000
+Date:   Mon, 26 Dec 2022 12:53:03 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc:     aisheng.dong@nxp.com, ping.bai@nxp.com, linus.walleij@linaro.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+        linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
+        shawnguo@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        linux-i2c@vger.kernel.org, festevam@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: imx8m: Integrate duplicated i.MX
+ 8M schemas
+Message-ID: <167208078314.42480.9171070887547759021.robh@kernel.org>
+References: <20221223030708.91459-1-peng.fan@oss.nxp.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221223030708.91459-1-peng.fan@oss.nxp.com>
+X-Spam-Status: No, score=0.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-[ Upstream commit eaf1a29665cda1c767cac0d523828892bd77a842 ]
+On Fri, 23 Dec 2022 11:07:08 +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The i.MX8MM/N/P/Q IOMUXC schemas are basically the same, it does not to
+> have four schemas for almost the same binding.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  ...mm-pinctrl.yaml => fsl,imx8m-pinctrl.yaml} | 16 ++--
+>  .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml  | 84 -------------------
+>  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml  | 84 -------------------
+>  .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml  | 84 -------------------
+>  4 files changed, 10 insertions(+), 258 deletions(-)
+>  rename Documentation/devicetree/bindings/pinctrl/{fsl,imx8mm-pinctrl.yaml => fsl,imx8m-pinctrl.yaml} (82%)
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
+> 
 
-The driver is using non-standard "gpio-rtc-data", "gpio-rtc-sclk", and
-"gpio-rtc-reset" names for properties describing its gpios. In
-preparation to converting to the standard naming ("rtc-*-gpios") and
-switching the driver to gpiod API add a quirk to gpiolib to keep
-compatibility with existing DTSes.
-
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpiolib-of.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index ffdbac2eeaa6..d22498c72a67 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -390,6 +390,11 @@ static struct gpio_desc *of_find_gpio_rename(struct device_node *np,
- #if IS_ENABLED(CONFIG_MFD_ARIZONA)
- 		{ "wlf,reset",	NULL,		NULL },
- #endif
-+#if IS_ENABLED(CONFIG_RTC_DRV_MOXART)
-+		{ "rtc-data",	"gpio-rtc-data",	"moxa,moxart-rtc" },
-+		{ "rtc-sclk",	"gpio-rtc-sclk",	"moxa,moxart-rtc" },
-+		{ "rtc-reset",	"gpio-rtc-reset",	"moxa,moxart-rtc" },
-+#endif
- #if IS_ENABLED(CONFIG_NFC_MRVL_I2C)
- 		{ "reset",	"reset-n-io",	"marvell,nfc-i2c" },
- #endif
--- 
-2.35.1
-
+Acked-by: Rob Herring <robh@kernel.org>
