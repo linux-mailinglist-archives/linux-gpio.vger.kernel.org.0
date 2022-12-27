@@ -2,121 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74445656B21
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Dec 2022 14:02:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0867C656BD8
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Dec 2022 15:32:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229883AbiL0NC0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Dec 2022 08:02:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
+        id S231510AbiL0Ocp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Dec 2022 09:32:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbiL0NCZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Dec 2022 08:02:25 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE96A283;
-        Tue, 27 Dec 2022 05:02:24 -0800 (PST)
-Received: by mail-qt1-f182.google.com with SMTP id g7so10374551qts.1;
-        Tue, 27 Dec 2022 05:02:24 -0800 (PST)
+        with ESMTP id S230147AbiL0Oco (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Dec 2022 09:32:44 -0500
+Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4F2B24
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:43 -0800 (PST)
+Received: by mail-oi1-x230.google.com with SMTP id s186so12546951oia.5
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8yl7tSpZqM1nYkQndNf9Bgez3en4RCjlOQ/FXT9ZblI=;
+        b=Td2EhVNfRYDN5avfBp19l0818QxqaHnIjUxwlYgRPNqchGwNWj8Di+Z0JHRVin4Gn2
+         FQ6DGrfCHBW1aiBX4yVlANWNjq3BlGwSQj9WpDM/RqriiSdhli6PltH+bceccwuP9RTX
+         Pxpj3jdoW7UeDi+MlGUmYntxk0r2+5iJ6P8by1l48aDY+ROeml/cOhSQ2xOujxknYQqJ
+         GKSQ+e5c2WdBTOIBBCUzI7neWn0Rdkhzf80o3cmOrrBSWcahOlFDl/FmxDuXiTWefqZv
+         DC13U+Zj0yXXTHLEej4KiNyWcGnbDCH8jXqBUK6jib2xWcGRFYDH5e2pukj1SCIRKy86
+         g7mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=As9R9cHjsoEUKawysSraV8MPqyGDXYZgkaD+AH1/+1g=;
-        b=l49dLBge3idM2ouN9VPuHDojZ7mnjTaCIaSq5vzSyPgFa+FWvz+ifCzlHX1zugpEmW
-         RUohrHwOnZ1pJApJvnnw7/wKklzw0Jw+AfxsrfJ1fr2Y2ZraLZbX/exPVFRvsxD2l671
-         2GvvmKUIcgiHtqjO5YjZ53x0E/iASjgg/LO9M7SBdF6Oh/SqAdmRnjsc03U0bxAGciIq
-         5Co9nzT/xNYCd99sZ65AAc+xT7GH1JQ1kgCp9gH+XMy2IVvM2L7a4v/cQJOxnWPxCkZp
-         8PpntSL/ePcmSs8Hn3VzXVXM3RvoYUdVqROVYQ4emZTh/eh/p6cYaN5AdGqXlaQ9jWWH
-         K/kA==
-X-Gm-Message-State: AFqh2kp8gaVBjLkzRNLNsnzeuWdJT7BTiNZHFEOtKrsz/0bQY8whRQiI
-        +G+iYHqV8GHCoK++a21/17d5rfg/z/TAMw==
-X-Google-Smtp-Source: AMrXdXubLtB1i6Xwjh9JlRo9jTjPcM8Eo4ecC5/xq1c03/ls2er3wIl54ipWrkrww9qua7FG71jGqw==
-X-Received: by 2002:ac8:7285:0:b0:3a7:f599:d7f2 with SMTP id v5-20020ac87285000000b003a7f599d7f2mr28808053qto.51.1672146143578;
-        Tue, 27 Dec 2022 05:02:23 -0800 (PST)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id bn9-20020a05622a1dc900b003a7e38055c9sm8185956qtb.63.2022.12.27.05.02.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Dec 2022 05:02:23 -0800 (PST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-43ea87d0797so183207617b3.5;
-        Tue, 27 Dec 2022 05:02:22 -0800 (PST)
-X-Received: by 2002:a05:690c:c02:b0:370:202b:f085 with SMTP id
- cl2-20020a05690c0c0200b00370202bf085mr1630998ywb.502.1672146142353; Tue, 27
- Dec 2022 05:02:22 -0800 (PST)
+        bh=8yl7tSpZqM1nYkQndNf9Bgez3en4RCjlOQ/FXT9ZblI=;
+        b=uqhF3gj+HrbyxadYevNBZK1PvQCT3GmoMdhu7ocgfkLF+K/CpwVqxxEQ1zmhq9r1vK
+         p/kGGTtVzoFB3o7k+oyS6u9/vtvAluIJFnJEcrcemWU1yeFV0Um2k8IUfx/4el9XEpnJ
+         XVJuIUzcaMBIS3bP0hxgPwRZ13Sz4JXTAt+YdSNeL0n3VnlBlRvdiJUqOzvo37LAK81m
+         gzSBFAfYDqdxqSZrS159Q0zCO6czFXBb6qbWEarOcKqrXvxd2UYAFENXa6zgPw5nybq3
+         lgvLUBmkLhmNaFU2DSAlcKnSVlQ82/nrU5EK9Ofvnv7sk5sB89t8H53XdAmbpmuXVQZC
+         pU8Q==
+X-Gm-Message-State: AFqh2kq4VApWPye6d9dcmV/FnERq09dbqQTuTGApNk4kLjYWstDZpXG3
+        JYUTeVvIS8fsb4SAL3sewk5RkYqMLU6WNs+5
+X-Google-Smtp-Source: AMrXdXuLS6lw2WdzYz0hXeBX2fcQVL+F40CW+M25v3jmdFgTUjRzTVL+PWpy/Txk/JEqTz5UAm+/EA==
+X-Received: by 2002:a05:6808:1492:b0:35e:910d:10e6 with SMTP id e18-20020a056808149200b0035e910d10e6mr11908461oiw.9.1672151562694;
+        Tue, 27 Dec 2022 06:32:42 -0800 (PST)
+Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
+        by smtp.gmail.com with ESMTPSA id q205-20020acac0d6000000b0035bce2a39c7sm5864969oif.21.2022.12.27.06.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Dec 2022 06:32:42 -0800 (PST)
+From:   William Breathitt Gray <william.gray@linaro.org>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl
+Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, michael@walle.cc,
+        William Breathitt Gray <william.gray@linaro.org>
+Subject: [PATCH v5 0/8] Migrate i8255 GPIO drivers to regmap API
+Date:   Tue, 27 Dec 2022 09:09:38 -0500
+Message-Id: <cover.1672149007.git.william.gray@linaro.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20221221000242.340202-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20221221000242.340202-10-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 27 Dec 2022 14:02:05 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV1UAF0Pgk6omcLz6-kHLD6xnMFDN-UJ2ge_bhoD7rAcw@mail.gmail.com>
-Message-ID: <CAMuHMdV1UAF0Pgk6omcLz6-kHLD6xnMFDN-UJ2ge_bhoD7rAcw@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] arm64: dts: renesas: rzg2ul-smarc-som: Add PHY
- interrupt support for ETH{0/1}
-To:     Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Prabhakar,
+Changes in v5:
+ - Add REGMAP_MMIO Kconfig selection for GPIO_104_DIO_48E,
+   GPIO_104_IDI_48, and GPIO_GPIO_MM
+ - Replace magic number 0x3 with GENMASK(1, 0) to make intent clear in
+   the dio48e_handle_mask_sync() function
+ - Write (instead of read) to clear interrupts on unmask; although the
+   datasheet lists the respective register as read/write, all other
+   references state that this should be a write operation to clear
 
-On Wed, Dec 21, 2022 at 1:04 AM Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> The PHY interrupt (INT_N) pin is connected to IRQ2 and IRQ7 for ETH0 and
-> ETH1 respectively.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+The regmap API supports IO port accessors so we can take advantage of
+regmap abstractions rather than handling access to the device registers
+directly in the driver. The 104-dio-48e and gpio-mm modules depend on
+the i8255 library and are thus updated accordingly.
 
-Thanks for your patch!
+The 104-IDI-48 is hardwired as an input-only device. Because the i8255
+control registers are not exposed on the 104-IDI-48, the i8255 library
+doesn't provide much benefit here. In this case it's simpler to utilize
+the gpio_regmap API directly, so this patch series does such and removes
+the i8255 library dependency from the 104-idi-48 module.
 
-> --- a/arch/arm64/boot/dts/renesas/rzg2ul-smarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg2ul-smarc-som.dtsi
-> @@ -6,6 +6,7 @@
->   */
->
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/interrupt-controller/irqc-rzg2l.h>
->  #include <dt-bindings/pinctrl/rzg2l-pinctrl.h>
->
->  / {
-> @@ -77,6 +78,8 @@ phy0: ethernet-phy@7 {
->                 compatible = "ethernet-phy-id0022.1640",
->                              "ethernet-phy-ieee802.3-c22";
->                 reg = <7>;
-> +               interrupt-parent = <&irqc>;
+The first patch in this series adjusts gpio_regmap to always set
+gpio_chip get_direction. This patch is mostly independent of the rest of
+the patches in the series and can be picked up separately if desired.
+I'm including it here because it allows the input-only 104-idi-48 driver
+to continue reporting offset directions after migrating to gpio_regmap.
 
-Note that arch/riscv/boot/dts/renesas/r9a07g043f.dtsi does not have
-the irqc node yet, so I cannot take this as-is.
+By leveraging the gpio_regmap API, the i8255 library is reduced to
+simply a devm_i8255_regmap_register() function, a configuration
+structure struct i8255_regmap_config, and a helper macro
+i8255_volatile_regmap_range() provided to simplify volatile PPI register
+hinting for the regmap.
 
-> +               interrupts = <RZG2L_IRQ2 IRQ_TYPE_LEVEL_LOW>;
->                 rxc-skew-psec = <2400>;
->                 txc-skew-psec = <2400>;
->                 rxdv-skew-psec = <0>;
+The regmap_irq API is leveraged by the 104-idi-48 and 104-dio-48e
+modules to support their IRQ functionality. Do their respective regmap
+configurations need use_hwlock set to true in this case, or is adequate
+locking already handled by the regmap_irq API?
 
-Gr{oetje,eeting}s,
+William Breathitt Gray (8):
+  gpio: regmap: Always set gpio_chip get_direction
+  gpio: 104-dio-48e: Migrate to the regmap-irq API
+  gpio: 104-idi-48: Migrate to the regmap-irq API
+  gpio: 104-idi-48: Migrate to gpio-regmap API
+  gpio: i8255: Migrate to gpio-regmap API
+  gpio: 104-dio-48e: Migrate to regmap API
+  gpio: gpio-mm: Migrate to regmap API
+  gpio: i8255: Remove unused legacy interface
 
-                        Geert
+ drivers/gpio/Kconfig            |   8 +-
+ drivers/gpio/gpio-104-dio-48e.c | 398 +++++++++++---------------------
+ drivers/gpio/gpio-104-idi-48.c  | 336 +++++++++------------------
+ drivers/gpio/gpio-gpio-mm.c     | 154 +++---------
+ drivers/gpio/gpio-i8255.c       | 320 +++++++------------------
+ drivers/gpio/gpio-i8255.h       |  54 ++---
+ drivers/gpio/gpio-regmap.c      |   7 +-
+ 7 files changed, 390 insertions(+), 887 deletions(-)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+-- 
+2.38.1
+
