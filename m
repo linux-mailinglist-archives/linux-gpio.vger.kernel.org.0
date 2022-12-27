@@ -2,90 +2,184 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD157656574
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Dec 2022 23:37:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53B69656972
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Dec 2022 11:25:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232395AbiLZWhY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 26 Dec 2022 17:37:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
+        id S229550AbiL0KY7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Dec 2022 05:24:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232420AbiLZWgV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 26 Dec 2022 17:36:21 -0500
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB8985F54;
-        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
-Received: by mail-oi1-f180.google.com with SMTP id o66so11150390oia.6;
-        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AGjdttmcgkKOVEh+yLpPFWCyfTxrmdMALVwDhA4tbxk=;
-        b=q5YWFPJBfhAQiVNLSyXpu/t+RYP99z/WDuUvLrW0ONbEnFyQ4oxYONr6fXQsxonr35
-         ZlR9om3xxCVYQuDLTeqeWUNADtfLXsYabe6yg+0vMfc6GxGqRoxgP6qR3Ohl5wbP6yp0
-         EpjEIZrbKFL0xQitX4OM8ayOV/ClWDSy0V6tvANslNfEUgiN7uI0p6xGyu700z+QN4iR
-         8Fi1tWZ/O5PvImDXeZykJja2bnXwFLp5gnMirOZY5V1UVd3si59k0IWQAP5dhQn9jhUL
-         3KrM8/NBNxQDDxxwiVnyHSaaEk5k6nPj7xF+9ejW5kwSKvIB0eCkmH4m/YSZqCRPN6nl
-         FY6w==
-X-Gm-Message-State: AFqh2koGYfyJZP1YO4PX+peAJSI1T4Cs5P2yZNQcR6Ygd5X8F7Vks9Jo
-        SY8rGd0V35Zb2GJ6sEC5eQ==
-X-Google-Smtp-Source: AMrXdXsMw29uTavPyGsPxjWjy3/8ibqE9mMs5+r+xOX45/xNrSglsye61N2mME7UKlhGFVpLdDQUfA==
-X-Received: by 2002:aca:1b0a:0:b0:35e:6f1d:eda9 with SMTP id b10-20020aca1b0a000000b0035e6f1deda9mr13253583oib.53.1672094174044;
-        Mon, 26 Dec 2022 14:36:14 -0800 (PST)
-Received: from robh_at_kernel.org ([2605:ef80:80e8:2792:eb0e:539f:f657:547b])
-        by smtp.gmail.com with ESMTPSA id bk10-20020a0568081a0a00b0035c422bb303sm5264522oib.19.2022.12.26.14.36.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Dec 2022 14:36:13 -0800 (PST)
-Received: (nullmailer pid 42527 invoked by uid 1000);
-        Mon, 26 Dec 2022 18:53:03 -0000
-Date:   Mon, 26 Dec 2022 12:53:03 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc:     aisheng.dong@nxp.com, ping.bai@nxp.com, linus.walleij@linaro.org,
-        linux-imx@nxp.com, s.hauer@pengutronix.de,
-        devicetree@vger.kernel.org, robh+dt@kernel.org,
-        kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        shawnguo@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        linux-i2c@vger.kernel.org, festevam@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: imx8m: Integrate duplicated i.MX
- 8M schemas
-Message-ID: <167208078314.42480.9171070887547759021.robh@kernel.org>
-References: <20221223030708.91459-1-peng.fan@oss.nxp.com>
+        with ESMTP id S229824AbiL0KY2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Dec 2022 05:24:28 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EA01A198
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 02:24:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672136663; x=1703672663;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WXxspvfFurjWgZ9FGrUHpwYzzEFIPplmUQp+AWmkt3Y=;
+  b=UYC3pEWbbW/CIUALS3OqrlzgbfWyaxbi6jV0mLKdqUu4Yu0qQI4xk3ir
+   1AWs0Cirb87PKOKXzSHi5pbl/zmlx2JQARab6VgKPCxo0vTHxjnaPOJ+3
+   Q0bnfuD+tk8hH25cJqBoS2+4yp7s9xBrH4W0JFsLWDDQPGEV5DOMqRL14
+   U1sbQUpbEfYwWz/luTUqg1Dgp61Vu5j8bq0Qxh4E+CQuRPodxWwPrHV6M
+   Ct93Q2+UH0RXHayVdzUcSpB+Vl5SNVipZ4FAN5ffbWjYtVxvVtFVhuSZJ
+   9DJNKD4DGzA/H1b/VDxHF8Mu5P4/pGbTbUMkc0yXlgVdvUQb6DhJxDfHN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10572"; a="300367481"
+X-IronPort-AV: E=Sophos;i="5.96,278,1665471600"; 
+   d="scan'208";a="300367481"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2022 02:24:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10572"; a="653001061"
+X-IronPort-AV: E=Sophos;i="5.96,278,1665471600"; 
+   d="scan'208";a="653001061"
+Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 27 Dec 2022 02:24:21 -0800
+Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pA788-000Eyf-2t;
+        Tue, 27 Dec 2022 10:24:20 +0000
+Date:   Tue, 27 Dec 2022 18:23:21 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:davinci/for-next] BUILD SUCCESS
+ 84bde55c050b2ca6b1a71ba8bc322a7813ea475d
+Message-ID: <63aac799.VdWpZyg3dBDoFZoR%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221223030708.91459-1-peng.fan@oss.nxp.com>
-X-Spam-Status: No, score=0.2 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git davinci/for-next
+branch HEAD: 84bde55c050b2ca6b1a71ba8bc322a7813ea475d  ARM: davinci: fix repeated words in comments
 
-On Fri, 23 Dec 2022 11:07:08 +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> The i.MX8MM/N/P/Q IOMUXC schemas are basically the same, it does not to
-> have four schemas for almost the same binding.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  ...mm-pinctrl.yaml => fsl,imx8m-pinctrl.yaml} | 16 ++--
->  .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml  | 84 -------------------
->  .../bindings/pinctrl/fsl,imx8mp-pinctrl.yaml  | 84 -------------------
->  .../bindings/pinctrl/fsl,imx8mq-pinctrl.yaml  | 84 -------------------
->  4 files changed, 10 insertions(+), 258 deletions(-)
->  rename Documentation/devicetree/bindings/pinctrl/{fsl,imx8mm-pinctrl.yaml => fsl,imx8m-pinctrl.yaml} (82%)
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mp-pinctrl.yaml
->  delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mq-pinctrl.yaml
-> 
+elapsed time: 724m
 
-Acked-by: Rob Herring <robh@kernel.org>
+configs tested: 103
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+x86_64                            allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+i386                 randconfig-a012-20221226
+x86_64                           rhel-8.3-bpf
+x86_64                              defconfig
+i386                 randconfig-a011-20221226
+x86_64               randconfig-a014-20221226
+x86_64                           rhel-8.3-syz
+i386                 randconfig-a013-20221226
+x86_64                         rhel-8.3-kunit
+x86_64               randconfig-a013-20221226
+i386                 randconfig-a014-20221226
+ia64                             allmodconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                           rhel-8.3-kvm
+i386                 randconfig-a016-20221226
+x86_64                          rhel-8.3-func
+arc                                 defconfig
+i386                 randconfig-a015-20221226
+sh                               allmodconfig
+alpha                               defconfig
+s390                                defconfig
+x86_64               randconfig-a011-20221226
+s390                             allmodconfig
+s390                             allyesconfig
+mips                     decstation_defconfig
+x86_64               randconfig-a012-20221226
+x86_64                               rhel-8.3
+x86_64               randconfig-a015-20221226
+x86_64               randconfig-a016-20221226
+powerpc                          allmodconfig
+mips                  maltasmvp_eva_defconfig
+m68k                             allmodconfig
+arm                                 defconfig
+alpha                            allyesconfig
+m68k                             allyesconfig
+arm64                            allyesconfig
+arc                              allyesconfig
+arm                              allyesconfig
+arm                  randconfig-r046-20221225
+arc                  randconfig-r043-20221225
+arc                  randconfig-r043-20221227
+arm                  randconfig-r046-20221227
+i386                                defconfig
+arc                  randconfig-r043-20221226
+riscv                randconfig-r042-20221226
+x86_64                           allyesconfig
+s390                 randconfig-r044-20221226
+arm                          exynos_defconfig
+arm                       omap2plus_defconfig
+arm                             rpc_defconfig
+sh                  sh7785lcr_32bit_defconfig
+powerpc                mpc7448_hpc2_defconfig
+arm                           stm32_defconfig
+arm                        spear6xx_defconfig
+s390                       zfcpdump_defconfig
+i386                             allyesconfig
+sh                ecovec24-romimage_defconfig
+arm                         lpc18xx_defconfig
+m68k                                defconfig
+powerpc                     tqm8541_defconfig
+ia64                        generic_defconfig
+powerpc                 mpc837x_mds_defconfig
+i386                          randconfig-c001
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+i386                 randconfig-a004-20221226
+i386                 randconfig-a001-20221226
+i386                 randconfig-a003-20221226
+i386                 randconfig-a002-20221226
+i386                 randconfig-a006-20221226
+i386                 randconfig-a005-20221226
+s390                             alldefconfig
+x86_64               randconfig-a002-20221226
+mips                      maltaaprp_defconfig
+x86_64               randconfig-a003-20221226
+x86_64               randconfig-a001-20221226
+x86_64               randconfig-a004-20221226
+x86_64               randconfig-a005-20221226
+hexagon              randconfig-r045-20221225
+hexagon              randconfig-r041-20221225
+x86_64               randconfig-a006-20221226
+hexagon              randconfig-r041-20221227
+hexagon              randconfig-r041-20221226
+arm                  randconfig-r046-20221226
+s390                 randconfig-r044-20221225
+hexagon              randconfig-r045-20221226
+riscv                randconfig-r042-20221225
+hexagon              randconfig-r045-20221227
+hexagon                          alldefconfig
+riscv                randconfig-r042-20221227
+s390                 randconfig-r044-20221227
+mips                        qi_lb60_defconfig
+powerpc                     pseries_defconfig
+x86_64                        randconfig-k001
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
