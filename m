@@ -2,61 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0867C656BD8
+	by mail.lfdr.de (Postfix) with ESMTP id 80441656BD9
 	for <lists+linux-gpio@lfdr.de>; Tue, 27 Dec 2022 15:32:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231510AbiL0Ocp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 27 Dec 2022 09:32:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46114 "EHLO
+        id S231575AbiL0Ocq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 27 Dec 2022 09:32:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbiL0Oco (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Dec 2022 09:32:44 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A4F2B24
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:43 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id s186so12546951oia.5
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:43 -0800 (PST)
+        with ESMTP id S230326AbiL0Ocp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 27 Dec 2022 09:32:45 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F626566
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:44 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id c133so12579529oif.1
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Dec 2022 06:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yl7tSpZqM1nYkQndNf9Bgez3en4RCjlOQ/FXT9ZblI=;
-        b=Td2EhVNfRYDN5avfBp19l0818QxqaHnIjUxwlYgRPNqchGwNWj8Di+Z0JHRVin4Gn2
-         FQ6DGrfCHBW1aiBX4yVlANWNjq3BlGwSQj9WpDM/RqriiSdhli6PltH+bceccwuP9RTX
-         Pxpj3jdoW7UeDi+MlGUmYntxk0r2+5iJ6P8by1l48aDY+ROeml/cOhSQ2xOujxknYQqJ
-         GKSQ+e5c2WdBTOIBBCUzI7neWn0Rdkhzf80o3cmOrrBSWcahOlFDl/FmxDuXiTWefqZv
-         DC13U+Zj0yXXTHLEej4KiNyWcGnbDCH8jXqBUK6jib2xWcGRFYDH5e2pukj1SCIRKy86
-         g7mA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ri0mZ2K/fUhEx8zLPRzENIukosBulaHGjs8vpkuOJm0=;
+        b=FzsUiFWzBJpv2JmeTGUVSttBRVVcokZ01iBLWstsIaKIarGbhHdLV1eWQTjALe9WsZ
+         ao99I0x39hdNKMhO08W1vKYeFDpvjnhPElDfw8mktYJIfFN+B1Why6P6g6nTaIKyFBEN
+         7x9EqwL+4A1mx/5F4BA5GcVi8QRvM+Bssn8Is/7xT6qBlMrdrEaa9WGXG3ElndaiuRpk
+         4/efYE43oJKDvOdnwvL5Y668pA4OGaH3q7gJsmAHMekeWzIUZnnfkB0/YTiu2KROtTB/
+         UPT0Z7n/FlLaAkHL2AaczxJycL5lFcy4VneFbp409c45Sq0vJ8K3ILSY3XQq/ijgqwWS
+         jaww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8yl7tSpZqM1nYkQndNf9Bgez3en4RCjlOQ/FXT9ZblI=;
-        b=uqhF3gj+HrbyxadYevNBZK1PvQCT3GmoMdhu7ocgfkLF+K/CpwVqxxEQ1zmhq9r1vK
-         p/kGGTtVzoFB3o7k+oyS6u9/vtvAluIJFnJEcrcemWU1yeFV0Um2k8IUfx/4el9XEpnJ
-         XVJuIUzcaMBIS3bP0hxgPwRZ13Sz4JXTAt+YdSNeL0n3VnlBlRvdiJUqOzvo37LAK81m
-         gzSBFAfYDqdxqSZrS159Q0zCO6czFXBb6qbWEarOcKqrXvxd2UYAFENXa6zgPw5nybq3
-         lgvLUBmkLhmNaFU2DSAlcKnSVlQ82/nrU5EK9Ofvnv7sk5sB89t8H53XdAmbpmuXVQZC
-         pU8Q==
-X-Gm-Message-State: AFqh2kq4VApWPye6d9dcmV/FnERq09dbqQTuTGApNk4kLjYWstDZpXG3
-        JYUTeVvIS8fsb4SAL3sewk5RkYqMLU6WNs+5
-X-Google-Smtp-Source: AMrXdXuLS6lw2WdzYz0hXeBX2fcQVL+F40CW+M25v3jmdFgTUjRzTVL+PWpy/Txk/JEqTz5UAm+/EA==
-X-Received: by 2002:a05:6808:1492:b0:35e:910d:10e6 with SMTP id e18-20020a056808149200b0035e910d10e6mr11908461oiw.9.1672151562694;
-        Tue, 27 Dec 2022 06:32:42 -0800 (PST)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ri0mZ2K/fUhEx8zLPRzENIukosBulaHGjs8vpkuOJm0=;
+        b=S+EOt93k3d4/I5wERgxBdydsP1ryO170v/zZcQtCTHIaJH3vb5+EwSZGUqDhwjEU0G
+         wy7+MFk0vWK8by/tWPpUT3tbcEAQAAPUTNUXpqFb04wH4mv6A1O6186jThxCfp/DqQs4
+         jk8LWuks6G+NMWuB+UqC5MMjkpm6aFh95VTtwkawiR1EICG7OWwfh/WFPSp3oIhWIfil
+         EX2O0gSm2ObPgrKNwOutxn9LJFpWjsElsHLg3bf1VGZ8ERc+dEbBOKpSOT4qSUzpgtB3
+         l12Gd1u5uxMLONFvoQoJ9gp0YRb2z1vkwBwzq4NCqfbOh0a7i5Yk1AZO2Zb0BL7cgTT2
+         1mVg==
+X-Gm-Message-State: AFqh2krMNX+m091WrXNADP58tRuG2Ri8i0GgiHiCTs96EqciiWzRjB8S
+        T+ZlAIPAQzc0lxFQl1Myql9UgA==
+X-Google-Smtp-Source: AMrXdXsfa8XvWG+xNY9yQw9yxMAS5xYahVfrADa6LKlUY/J9RXyRtrdeXRtLB/UnWVQmd+WtgQcbLQ==
+X-Received: by 2002:a54:4081:0:b0:35a:d72:5505 with SMTP id i1-20020a544081000000b0035a0d725505mr17025178oii.12.1672151563943;
+        Tue, 27 Dec 2022 06:32:43 -0800 (PST)
 Received: from fedora.attlocal.net (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id q205-20020acac0d6000000b0035bce2a39c7sm5864969oif.21.2022.12.27.06.32.41
+        by smtp.gmail.com with ESMTPSA id q205-20020acac0d6000000b0035bce2a39c7sm5864969oif.21.2022.12.27.06.32.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Dec 2022 06:32:42 -0800 (PST)
+        Tue, 27 Dec 2022 06:32:43 -0800 (PST)
 From:   William Breathitt Gray <william.gray@linaro.org>
 To:     linus.walleij@linaro.org, brgl@bgdev.pl
 Cc:     andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org, michael@walle.cc,
         William Breathitt Gray <william.gray@linaro.org>
-Subject: [PATCH v5 0/8] Migrate i8255 GPIO drivers to regmap API
-Date:   Tue, 27 Dec 2022 09:09:38 -0500
-Message-Id: <cover.1672149007.git.william.gray@linaro.org>
+Subject: [PATCH v5 1/8] gpio: regmap: Always set gpio_chip get_direction
+Date:   Tue, 27 Dec 2022 09:09:39 -0500
+Message-Id: <a3181025b434fc0148d74bf37f2a16569c85ed1c.1672149007.git.william.gray@linaro.org>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <cover.1672149007.git.william.gray@linaro.org>
+References: <cover.1672149007.git.william.gray@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -68,64 +71,45 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Changes in v5:
- - Add REGMAP_MMIO Kconfig selection for GPIO_104_DIO_48E,
-   GPIO_104_IDI_48, and GPIO_GPIO_MM
- - Replace magic number 0x3 with GENMASK(1, 0) to make intent clear in
-   the dio48e_handle_mask_sync() function
- - Write (instead of read) to clear interrupts on unmask; although the
-   datasheet lists the respective register as read/write, all other
-   references state that this should be a write operation to clear
+If you only have reg_dat_base set, then it is input-only; if you only
+have reg_set_base set, then it is output-only. Thus, we can always set
+gpio_chip get_direction to gpio_regmap_get_direction and return
+GPIO_LINE_DIRECTION_IN/GPIO_LINE_DIRECTION_OUT given the respective
+register base addresses configuration.
 
-The regmap API supports IO port accessors so we can take advantage of
-regmap abstractions rather than handling access to the device registers
-directly in the driver. The 104-dio-48e and gpio-mm modules depend on
-the i8255 library and are thus updated accordingly.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Michael Walle <michael@walle.cc>
+Signed-off-by: William Breathitt Gray <william.gray@linaro.org>
+---
+ drivers/gpio/gpio-regmap.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-The 104-IDI-48 is hardwired as an input-only device. Because the i8255
-control registers are not exposed on the 104-IDI-48, the i8255 library
-doesn't provide much benefit here. In this case it's simpler to utilize
-the gpio_regmap API directly, so this patch series does such and removes
-the i8255 library dependency from the 104-idi-48 module.
-
-The first patch in this series adjusts gpio_regmap to always set
-gpio_chip get_direction. This patch is mostly independent of the rest of
-the patches in the series and can be picked up separately if desired.
-I'm including it here because it allows the input-only 104-idi-48 driver
-to continue reporting offset directions after migrating to gpio_regmap.
-
-By leveraging the gpio_regmap API, the i8255 library is reduced to
-simply a devm_i8255_regmap_register() function, a configuration
-structure struct i8255_regmap_config, and a helper macro
-i8255_volatile_regmap_range() provided to simplify volatile PPI register
-hinting for the regmap.
-
-The regmap_irq API is leveraged by the 104-idi-48 and 104-dio-48e
-modules to support their IRQ functionality. Do their respective regmap
-configurations need use_hwlock set to true in this case, or is adequate
-locking already handled by the regmap_irq API?
-
-William Breathitt Gray (8):
-  gpio: regmap: Always set gpio_chip get_direction
-  gpio: 104-dio-48e: Migrate to the regmap-irq API
-  gpio: 104-idi-48: Migrate to the regmap-irq API
-  gpio: 104-idi-48: Migrate to gpio-regmap API
-  gpio: i8255: Migrate to gpio-regmap API
-  gpio: 104-dio-48e: Migrate to regmap API
-  gpio: gpio-mm: Migrate to regmap API
-  gpio: i8255: Remove unused legacy interface
-
- drivers/gpio/Kconfig            |   8 +-
- drivers/gpio/gpio-104-dio-48e.c | 398 +++++++++++---------------------
- drivers/gpio/gpio-104-idi-48.c  | 336 +++++++++------------------
- drivers/gpio/gpio-gpio-mm.c     | 154 +++---------
- drivers/gpio/gpio-i8255.c       | 320 +++++++------------------
- drivers/gpio/gpio-i8255.h       |  54 ++---
- drivers/gpio/gpio-regmap.c      |   7 +-
- 7 files changed, 390 insertions(+), 887 deletions(-)
-
-
-base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
+index 6383136cbe59..f907c9c19fce 100644
+--- a/drivers/gpio/gpio-regmap.c
++++ b/drivers/gpio/gpio-regmap.c
+@@ -111,6 +111,11 @@ static int gpio_regmap_get_direction(struct gpio_chip *chip,
+ 	unsigned int base, val, reg, mask;
+ 	int invert, ret;
+ 
++	if (gpio->reg_dat_base && !gpio->reg_set_base)
++		return GPIO_LINE_DIRECTION_IN;
++	if (gpio->reg_set_base && !gpio->reg_dat_base)
++		return GPIO_LINE_DIRECTION_OUT;
++
+ 	if (gpio->reg_dir_out_base) {
+ 		base = gpio_regmap_addr(gpio->reg_dir_out_base);
+ 		invert = 0;
+@@ -265,8 +270,8 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	else if (gpio->reg_set_base)
+ 		chip->set = gpio_regmap_set;
+ 
++	chip->get_direction = gpio_regmap_get_direction;
+ 	if (gpio->reg_dir_in_base || gpio->reg_dir_out_base) {
+-		chip->get_direction = gpio_regmap_get_direction;
+ 		chip->direction_input = gpio_regmap_direction_input;
+ 		chip->direction_output = gpio_regmap_direction_output;
+ 	}
 -- 
 2.38.1
 
