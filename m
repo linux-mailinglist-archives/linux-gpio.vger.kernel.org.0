@@ -2,109 +2,104 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D4F2657673
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Dec 2022 13:32:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 296786579E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Dec 2022 16:05:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbiL1Mcv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 07:32:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49492 "EHLO
+        id S233541AbiL1PFw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 10:05:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232830AbiL1MZL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 07:25:11 -0500
-Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CD72BA;
-        Wed, 28 Dec 2022 04:25:10 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1672230309;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BTPJCC4TTwP84BBs21zNnyfu2sa/UTInRsPtE+n30Ws=;
-        b=V1S7bplS+y8D9cCLAQGLJABikiXryBsHamNvolWehSPkVGmzskHzmK0d9V/KdWty0+tj/N
-        XS6PWb4TbHD/7k8mFgTf5Yk0sY29fIP8dheLnyntQ8dUSYTF7H4VMwwU5ehVQfGQRwS8Z8
-        6SMai/It+C3fIamoNts88ANxY8FYot8=
-From:   Cixi Geng <cixi.geng@linux.dev>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cixi.geng1@unisoc.com
-Subject: [PATCH V3 3/3] gpio: gpio-sprd: Make the irqchip immutable
-Date:   Wed, 28 Dec 2022 20:24:42 +0800
-Message-Id: <20221228122442.392504-4-cixi.geng@linux.dev>
-In-Reply-To: <20221228122442.392504-1-cixi.geng@linux.dev>
-References: <20221228122442.392504-1-cixi.geng@linux.dev>
+        with ESMTP id S233537AbiL1PFv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 10:05:51 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E4EB6E;
+        Wed, 28 Dec 2022 07:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672239950; x=1703775950;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=vvsN9dHdNYsPS46Qk1pInWKgjG6g6OQU3qkb21QbfXY=;
+  b=U1mFe/xbK5GqFu9scFw/BgGdjACIY4VirkhFJ+aOupbtr8rDMyKDLig2
+   fJZsel+KtIyztSFUc4dd7/p9PN2PPlcKDs61LdGswWtsNAq2kOiVMC64u
+   Tt9aTYsHXKlCDRJdOXD8zhLxgl619gW4onTr/TocywH9g1JqUsoZwPDMR
+   pesCCZ5Xf+mROozAM3EyRXxHqF9bVsRU/7D/vnW5rWBRtEAGLA+6cpJND
+   k1AKEGzoKYj/8j8i1hjv7x5lrnAZ7cSlee7YQQ46z1n6D2mzQYLn0o87t
+   RiN8/epbctd2Wgr9WONARx6+QSh7dGAVb2Bu1zxC8PtWiQbwceCd9abhg
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="320966573"
+X-IronPort-AV: E=Sophos;i="5.96,281,1665471600"; 
+   d="scan'208";a="320966573"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2022 07:05:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10574"; a="827417335"
+X-IronPort-AV: E=Sophos;i="5.96,281,1665471600"; 
+   d="scan'208";a="827417335"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP; 28 Dec 2022 07:05:46 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pAY00-000g9r-31;
+        Wed, 28 Dec 2022 17:05:44 +0200
+Date:   Wed, 28 Dec 2022 17:05:44 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     wsa@kernel.org, linus.walleij@linaro.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, farbere@amazon.com, itamark@amazon.com
+Subject: Re: [PATCH v4 1/2] pinctrl: Add an API to get the pinctrl pins if
+ initialized
+Message-ID: <Y6xbSEVr8JgVNHjh@smile.fi.intel.com>
+References: <20221221205116.73941-1-hhhawa@amazon.com>
+ <20221221205116.73941-2-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221221205116.73941-2-hhhawa@amazon.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Cixi Geng <cixi.geng1@unisoc.com>
+On Wed, Dec 21, 2022 at 08:51:15PM +0000, Hanna Hawa wrote:
+> Add an API to get the pinctrl pins if it was initialized before driver
+> probed. This API will be used in I2C core to get the device pinctrl
+> information for recovery state change.
 
-Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
-new helper functions, and call the appropriate gpiolib functions.
+...
 
-Reported-by: kernel test robot <lkp@intel.com>
-Reported-by: Julia Lawall <julia.lawall@lip6.fr>
-Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
----
- drivers/gpio/gpio-sprd.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+>  /* The device core acts as a consumer toward pinctrl */
 
-diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
-index 9bff63990eee..072b4e653216 100644
---- a/drivers/gpio/gpio-sprd.c
-+++ b/drivers/gpio/gpio-sprd.c
-@@ -120,6 +120,7 @@ static void sprd_gpio_irq_mask(struct irq_data *data)
- 	u32 offset = irqd_to_hwirq(data);
- 
- 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 0);
-+	gpiochip_disable_irq(chip, offset);
- }
- 
- static void sprd_gpio_irq_ack(struct irq_data *data)
-@@ -136,6 +137,7 @@ static void sprd_gpio_irq_unmask(struct irq_data *data)
- 	u32 offset = irqd_to_hwirq(data);
- 
- 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 1);
-+	gpiochip_enable_irq(chip, offset);
- }
- 
- static int sprd_gpio_irq_set_type(struct irq_data *data,
-@@ -205,13 +207,14 @@ static void sprd_gpio_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(ic, desc);
- }
- 
--static struct irq_chip sprd_gpio_irqchip = {
-+static const struct irq_chip sprd_gpio_irqchip = {
- 	.name = "sprd-gpio",
- 	.irq_ack = sprd_gpio_irq_ack,
- 	.irq_mask = sprd_gpio_irq_mask,
- 	.irq_unmask = sprd_gpio_irq_unmask,
- 	.irq_set_type = sprd_gpio_irq_set_type,
--	.flags = IRQCHIP_SKIP_SET_WAKE,
-+	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
-+	GPIOCHIP_IRQ_RESOURCE_HELPERS,
- };
- 
- static int sprd_gpio_probe(struct platform_device *pdev)
-@@ -245,7 +248,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
- 	sprd_gpio->chip.direction_output = sprd_gpio_direction_output;
- 
- 	irq = &sprd_gpio->chip.irq;
--	irq->chip = &sprd_gpio_irqchip;
-+	gpio_irq_chip_set_chip(irq, &sprd_gpio_irqchip);
- 	irq->handler = handle_bad_irq;
- 	irq->default_type = IRQ_TYPE_NONE;
- 	irq->parent_handler = sprd_gpio_irq_handler;
+> +#include <linux/device.h>
+
+It's slightly misplaced. The comment above is for the below inclusion.
+
+>  #include <linux/pinctrl/consumer.h>
+
+Can we make it
+
+----8<----
+#include <linux/device.h>
+
+/* The device core acts as a consumer toward pinctrl */
+#include <linux/pinctrl/consumer.h>
+----8<----
+
+?
+
+With this addressed,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
