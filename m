@@ -2,134 +2,77 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E233865748C
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Dec 2022 10:20:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD7AA65766F
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Dec 2022 13:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232680AbiL1JUi (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 04:20:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34800 "EHLO
+        id S230398AbiL1Mct (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 07:32:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232676AbiL1JUe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 04:20:34 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D91DF02;
-        Wed, 28 Dec 2022 01:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672219233; x=1703755233;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=GY6NY1HpIaYGhu1PBgNFe1uObbv63oyykWwXwJ1FhnY=;
-  b=Hz0q7EuUnWgePoRMMiBY22ePeAiDf0Lz47X5Ke93N35tdgxsdKHUH05h
-   SGmpBe4ZRrS8pxr+DFRBUFjLJ3M7pY9dGHnS5PESNcWkDqaPARkN1a4/W
-   sBVSnr2imEVFd4jI1lBrici1rPgMT3k+2/IhDWttBQEOh9DLoBpF5OnO2
-   eTKFvdgtfuFF2AjBYg+4jkabKDFaP2yWXfn1BZWagjtiYfzdOFrxWGjCf
-   olEBPoKVd23VEN+t86ycUncojwB6Qs17X1Ynwmn48IBLBl5uyVmUWtQeu
-   Rp5MbE+1BSkADXXQ1mdTx+7H8kqNB4IFEvpdkBlc/B37DnhPBPO0S91y5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10573"; a="301202856"
-X-IronPort-AV: E=Sophos;i="5.96,280,1665471600"; 
-   d="scan'208";a="301202856"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2022 01:20:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10573"; a="603285114"
-X-IronPort-AV: E=Sophos;i="5.96,280,1665471600"; 
-   d="scan'208";a="603285114"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 28 Dec 2022 01:20:31 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 735381CA; Wed, 28 Dec 2022 11:21:02 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v4 3/3] gpiolib: sort header inclusion alphabetically
-Date:   Wed, 28 Dec 2022 11:20:45 +0200
-Message-Id: <20221228092045.80425-4-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
-References: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S232542AbiL1MZC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 07:25:02 -0500
+Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3BB42BA;
+        Wed, 28 Dec 2022 04:25:00 -0800 (PST)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1672230298;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=TMV4Qv2vawvIPldNlgCxLwC6ooI0ZTG3WDHvdQQQ+So=;
+        b=eWtODONXkCdzYOiH9EFWtX5QkId0udUHns9htOGytFKvpZjydl+FDR/QIr+WRKwGZqx1lt
+        eFTU6cYt72pKUGbu/xwNraGUsP1ZjhZRe7TATXNu+bTQTMujzrL5MYrMBWzlNhbctAhvum
+        wUFotRJlONem/dDVjh95TYV0XiIIOis=
+From:   Cixi Geng <cixi.geng@linux.dev>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cixi.geng1@unisoc.com
+Subject: [PATCH V3 0/3] Make the irqchip immutable
+Date:   Wed, 28 Dec 2022 20:24:39 +0800
+Message-Id: <20221228122442.392504-1-cixi.geng@linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Sort header inclusion alphabetically.
+From: Cixi Geng <cixi.geng1@unisoc.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+Kernel warns about mutable irq_chips:
+    "not an immutable chip, please consider fixing!"
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e72c539fbec5..ace11a89d24a 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1,34 +1,35 @@
- // SPDX-License-Identifier: GPL-2.0
- 
-+#include <linux/acpi.h>
- #include <linux/bitmap.h>
--#include <linux/kernel.h>
--#include <linux/module.h>
--#include <linux/interrupt.h>
--#include <linux/irq.h>
--#include <linux/spinlock.h>
--#include <linux/list.h>
-+#include <linux/compat.h>
-+#include <linux/debugfs.h>
- #include <linux/device.h>
- #include <linux/err.h>
--#include <linux/debugfs.h>
--#include <linux/seq_file.h>
-+#include <linux/file.h>
-+#include <linux/fs.h>
- #include <linux/gpio.h>
--#include <linux/idr.h>
--#include <linux/slab.h>
--#include <linux/acpi.h>
- #include <linux/gpio/driver.h>
- #include <linux/gpio/machine.h>
-+#include <linux/idr.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
- #include <linux/pinctrl/consumer.h>
--#include <linux/fs.h>
--#include <linux/compat.h>
--#include <linux/file.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+
- #include <uapi/linux/gpio.h>
- 
--#include "gpiolib.h"
--#include "gpiolib-of.h"
- #include "gpiolib-acpi.h"
--#include "gpiolib-swnode.h"
- #include "gpiolib-cdev.h"
-+#include "gpiolib-of.h"
-+#include "gpiolib-swnode.h"
- #include "gpiolib-sysfs.h"
-+#include "gpiolib.h"
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/gpio.h>
+Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
+new helper functions, and call the appropriate gpiolib functions.
+
+v2 changes:
+split the patch by each driver. and other comment by baolin in[1]
+
+v3 changes:
+fix cocci warnings test by lkp[2].
+
+[1]:https://lore.kernel.org/all/97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com/
+[2]:https://lore.kernel.org/all/202212240406.9Nm190P8-lkp@intel.com/
+
+Cixi Geng (3):
+  gpio: eic-sprd: Make the irqchip immutable
+  gpio: gpio-pmic-eic-sprd: Make the irqchip immutable
+  gpio: gpio-sprd: Make the irqchip immutable
+
+ drivers/gpio/gpio-eic-sprd.c      | 23 ++++++++++++++---------
+ drivers/gpio/gpio-pmic-eic-sprd.c | 29 ++++++++++++++++++-----------
+ drivers/gpio/gpio-sprd.c          |  9 ++++++---
+ 3 files changed, 38 insertions(+), 23 deletions(-)
+
+
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 -- 
-2.35.1
+2.34.1
 
