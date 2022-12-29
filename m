@@ -2,84 +2,126 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8ED17658873
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:44:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 918A76588BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 03:52:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232678AbiL2BoT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 20:44:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38622 "EHLO
+        id S230254AbiL2CwU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 21:52:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232636AbiL2BoS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:44:18 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D7913E32
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:44:17 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id r130so16183127oih.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:44:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=zvdOLhpklxGCmWEN9Iaf07R7XE10xtjvHpit1Qusal0=;
-        b=mE5xqhhcOPU4N2vFU8nNavqToI162YB0dt48dLnGlaOPeGoEyGB/EbCARDvlzu0+Dx
-         sPfK3ybkaQqvCO4wqzoQ/Wdk6sfC8/Pg6ESGqd80YGqe+mXvrMx7CFmhA8cxlT9F5GD0
-         PQKZEXSTTXyd+IcNbHxvhFH7TvDBuRrsV7mJ7bO9yIxQlltS1m4a2MT/ftceR+JLgmHO
-         y8uXgnSpuq5czS93dSnYfSCX7Xlo0NyXcQXR7Hclm44dwhjLCLv6uJXFQu2Blh//Vz5B
-         m61QljdLacTab1BGAZnxxuvgSUyJp7BDdPiz+CQgilZEAgC/qHTtEXkLfXhMIa/vXRca
-         saaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zvdOLhpklxGCmWEN9Iaf07R7XE10xtjvHpit1Qusal0=;
-        b=CKXXx16BUXWfUXt9KeB2Ean14G9t/h8WKcMHW3ix0THAnalth9loh/o/AgZNXtwrK1
-         idbhRZbo4rhMWuctQhCzIXpulzjv+7Mw9SLTcoxSDBbFEAfmM5POaqgy+4mFgby0a2PK
-         sB/I0KA3/dY2ESz5soUt8v1gwqFGuSS3/9rfEAFfo/aebZC3HGEWgbP4Tj0pOJ7BBwWW
-         C0htL9rqyAnEPuf3AQD2bnblKSOBBd0xKLPC5VVvXwKW9WW38Lg5W5CS2oyqRXC9MLU/
-         1bTiA645n9dlQqwiVGViQ61xDqSo24lzVDzcr/QMMIVqO/7aw6uBrUkv18dAFMv4ClME
-         W2Mg==
-X-Gm-Message-State: AFqh2kppomXe/vZ9kP6cYW1G53ANPSda9Lg8L2Lw4olUJG1MOx2dOJ1w
-        1iWBR1/DrkMakD9ggn+Ok1R1MoJTMlB5sQl2y8+OGg==
-X-Google-Smtp-Source: AMrXdXsMq5fa8H3sJx0sGFLHNUhzXE+kHXhnSuKTKJ3iHPQSwoYzkQHu8BRrKD5yF23pDFoKMOnVXhXMuOoWVA54ZuQ=
-X-Received: by 2002:a05:6808:152b:b0:359:c6de:916a with SMTP id
- u43-20020a056808152b00b00359c6de916amr1846176oiw.42.1672278257186; Wed, 28
- Dec 2022 17:44:17 -0800 (PST)
+        with ESMTP id S230078AbiL2CwT (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 21:52:19 -0500
+Received: from out30-44.freemail.mail.aliyun.com (out30-44.freemail.mail.aliyun.com [115.124.30.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B20BB9;
+        Wed, 28 Dec 2022 18:52:17 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R431e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0VYJZ.O-_1672282334;
+Received: from 30.236.46.126(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VYJZ.O-_1672282334)
+          by smtp.aliyun-inc.com;
+          Thu, 29 Dec 2022 10:52:15 +0800
+Message-ID: <c8c5472f-68ca-0b53-e8ba-56f296fb2624@linux.alibaba.com>
+Date:   Thu, 29 Dec 2022 10:52:33 +0800
 MIME-Version: 1.0
-References: <20221220090248.1134214-1-haibo.chen@nxp.com> <20221220090248.1134214-2-haibo.chen@nxp.com>
-In-Reply-To: <20221220090248.1134214-2-haibo.chen@nxp.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Dec 2022 02:46:10 +0100
-Message-ID: <CACRpkdaPQODoiG+ARAiT-6X2u6n7_aCO7Ywj4z=76A65iUhTpA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpio: vf610: Support building gpio-vf610 driver as module
-To:     haibo.chen@nxp.com
-Cc:     brgl@bgdev.pl, stefan@agner.ch, linux-gpio@vger.kernel.org,
-        linux-imx@nxp.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH V3 1/3] gpio: eic-sprd: Make the irqchip immutable
+To:     Cixi Geng <cixi.geng@linux.dev>, linus.walleij@linaro.org,
+        brgl@bgdev.pl, orsonzhai@gmail.com, zhang.lyra@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cixi.geng1@unisoc.com
+References: <20221228122442.392504-1-cixi.geng@linux.dev>
+ <20221228122442.392504-2-cixi.geng@linux.dev>
+From:   Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20221228122442.392504-2-cixi.geng@linux.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-11.0 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Dec 20, 2022 at 10:02 AM <haibo.chen@nxp.com> wrote:
 
-> From: Haibo Chen <haibo.chen@nxp.com>
->
-> To support Android GKI, need to build this driver as module.
-> So change the config as tristate type, and add module license.
->
-> Signed-off-by: Jindong Yue <jindong.yue@nxp.com>
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-OK...
+On 12/28/2022 8:24 PM, Cixi Geng wrote:
+> From: Cixi Geng <cixi.geng1@unisoc.com>
+> 
+> Remove the irq_chip from pmic_eic structure,
+> use the various calls by defining the statically
+> irq_chip structure.
+> 
+> Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+> ---
+>   drivers/gpio/gpio-eic-sprd.c | 23 ++++++++++++++---------
+>   1 file changed, 14 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 8d722e026e9c..86563c0604e8 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -91,7 +91,6 @@ enum sprd_eic_type {
+>   
+>   struct sprd_eic {
+>   	struct gpio_chip chip;
+> -	struct irq_chip intc;
+>   	void __iomem *base[SPRD_EIC_MAX_BANK];
+>   	enum sprd_eic_type type;
+>   	spinlock_t lock;
+> @@ -255,6 +254,8 @@ static void sprd_eic_irq_mask(struct irq_data *data)
+>   	default:
+>   		dev_err(chip->parent, "Unsupported EIC type.\n");
+>   	}
+> +
+> +	gpiochip_disable_irq(chip, offset);
+>   }
+>   
+>   static void sprd_eic_irq_unmask(struct irq_data *data)
+> @@ -263,6 +264,8 @@ static void sprd_eic_irq_unmask(struct irq_data *data)
+>   	struct sprd_eic *sprd_eic = gpiochip_get_data(chip);
+>   	u32 offset = irqd_to_hwirq(data);
+>   
+> +	gpiochip_enable_irq(chip, offset);
+> +
+>   	switch (sprd_eic->type) {
+>   	case SPRD_EIC_DEBOUNCE:
+>   		sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IE, 1);
+> @@ -564,6 +567,15 @@ static void sprd_eic_irq_handler(struct irq_desc *desc)
+>   	chained_irq_exit(ic, desc);
+>   }
+>   
+> +static const struct irq_chip sprd_eic_irq = {
+> +	.name		= "sprd-eic-gpio",
 
->  builtin_platform_driver(vf610_gpio_driver);
+Should be "sprd-eic". Otherwise looks good to me.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 
-Then you want something like module_platform_driver() here.
-
-Yours,
-Linus Walleij
+> +	.irq_ack	= sprd_eic_irq_ack,
+> +	.irq_mask	= sprd_eic_irq_mask,
+> +	.irq_unmask	= sprd_eic_irq_unmask,
+> +	.irq_set_type	= sprd_eic_irq_set_type,
+> +	.flags		= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
+> +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+> +};
+>   static int sprd_eic_probe(struct platform_device *pdev)
+>   {
+>   	const struct sprd_eic_variant_data *pdata;
+> @@ -626,15 +638,8 @@ static int sprd_eic_probe(struct platform_device *pdev)
+>   		break;
+>   	}
+>   
+> -	sprd_eic->intc.name = dev_name(&pdev->dev);
+> -	sprd_eic->intc.irq_ack = sprd_eic_irq_ack;
+> -	sprd_eic->intc.irq_mask = sprd_eic_irq_mask;
+> -	sprd_eic->intc.irq_unmask = sprd_eic_irq_unmask;
+> -	sprd_eic->intc.irq_set_type = sprd_eic_irq_set_type;
+> -	sprd_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
+> -
+>   	irq = &sprd_eic->chip.irq;
+> -	irq->chip = &sprd_eic->intc;
+> +	gpio_irq_chip_set_chip(irq, &sprd_eic_irq);
+>   	irq->handler = handle_bad_irq;
+>   	irq->default_type = IRQ_TYPE_NONE;
+>   	irq->parent_handler = sprd_eic_irq_handler;
