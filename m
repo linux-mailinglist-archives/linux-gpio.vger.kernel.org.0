@@ -2,95 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AD8E658825
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 01:40:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DEFE658842
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:09:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbiL2Akx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 19:40:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52976 "EHLO
+        id S230078AbiL2BJX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 20:09:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232345AbiL2Akv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 19:40:51 -0500
-Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83B2EE3B
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 16:40:48 -0800 (PST)
-Received: by mail-ot1-x32e.google.com with SMTP id k7-20020a056830168700b0067832816190so10743694otr.1
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 16:40:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=f2p2shVUpdpBRcPbig+xzUB8/WfGytn/tvXqnk/G7/Y=;
-        b=Gzjw0D8iyAbTjlB/MOb4J4YmMSW1zdzpRQCifiwhKhsZ7e8lkDYZvuuDw9+alRwI9j
-         3becoCce9AZU4D3fLWu5VgjqdWZmwVbd16kzYohhpmZHS64shJslyqIbB4nhVjZ0BvJd
-         Z4W7VaKotC5HqA/8wU3fn8lx7vi9Ox2i0PP+M1J7GM9ZuO3VCpP7hQrRndAfHkWkOpX+
-         GqnNNrnymEPDCRoO6MXXEEoMbfXd5hdAdox8Pdi/2sMyzkBeHL9F5HM5PoULI+bK7L4z
-         xMvOqu25W0oUvfDLAg7fCGEqRnesaAEkZgN7/t8t2Vlu6z6gNhM4BhIjvS3lWghb//4p
-         Mj0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f2p2shVUpdpBRcPbig+xzUB8/WfGytn/tvXqnk/G7/Y=;
-        b=EKCK4gSCNmF6M2JnbieA7l7RnpLooYIeYgHdhC7Xhgh/GinbjtK4Mu2Sd7I5MdGEWO
-         Y0PlsILovrUGQby3/6L4wnSyHafo6jBa4x6nU/yNcaP+TUAdjQjp3h5Yb6f34Y4YFKmw
-         3j4ZcXP6YTpNRER9Ak4GZusO34Tci5bVX45hvdPl8xqDmGms/mAJUXqureFxk82SA6Ws
-         bY6PpJGdPtvxgiAniP4bWJWw5BN4JTJFkzBJZGwT+qKvfsBx6y6xcP0ASSKZEOFWtOvf
-         kMZLSKgBBheNww/3pj+xtVlIz3sup6XCh4Aa96iUtQl5YgEf2btyq4edvEPG9nYRpNLm
-         gX8w==
-X-Gm-Message-State: AFqh2kq2pXDHU5T94W99+pgOPkiMGdvKuzyr/YMQ84qS7yZMbGePkoaY
-        T1aTQw5kjTcn2VY+7iUE0lptqE1eoFdqipiArjLcFg==
-X-Google-Smtp-Source: AMrXdXss1Jmt661r3O2VlGaPW9mKv9FIuBxyzoUhU0tjN3DiJULKXqqoxPvNSGzhCM/K9neAcF+2BHIkcgzsyvCr2mg=
-X-Received: by 2002:a05:6830:3499:b0:66c:61c8:ceeb with SMTP id
- c25-20020a056830349900b0066c61c8ceebmr1793244otu.12.1672274448080; Wed, 28
- Dec 2022 16:40:48 -0800 (PST)
+        with ESMTP id S231512AbiL2BJV (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:09:21 -0500
+X-Greylist: delayed 1069 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 28 Dec 2022 17:09:19 PST
+Received: from mx08lb.world4you.com (mx08lb.world4you.com [81.19.149.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC5113E10
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:09:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=faschingbauer.co.at; s=dkim11; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XK7fEfzmRS3x5wLkV3lMT4c3zLP/dbQn7JlYjP1WEoM=; b=NxL9GVxUJRI8j8QSWzgoMO1nD2
+        M/RFrLeox4KIMaIA6bW00N3CdLiNKsG7S9NaHpy1brHV2skfK3inPZk7mDpTuGG1HvczH7jU7Av1w
+        HeC+EZtSkCHccrVCf5+OCb07AFLgi/C5u0dUuSCchEF85R2zTjqEby19KdjhmRos0+8E=;
+Received: from [89.144.193.89] (helo=fedora..)
+        by mx08lb.world4you.com with esmtpa (Exim 4.94.2)
+        (envelope-from <jf@faschingbauer.co.at>)
+        id 1pAh8o-0005iW-NS; Thu, 29 Dec 2022 01:51:26 +0100
+From:   Joerg Faschingbauer <jf@faschingbauer.co.at>
+To:     linux-gpio@vger.kernel.org
+Cc:     Joerg Faschingbauer <jf@faschingbauer.co.at>
+Subject: [PATCH] bindings: python: fix out-of-source build
+Date:   Thu, 29 Dec 2022 01:50:27 +0100
+Message-Id: <20221229005027.505261-1-jf@faschingbauer.co.at>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com> <20221221210917.458537-4-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20221221210917.458537-4-fabrizio.castro.jz@renesas.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Dec 2022 01:40:36 +0100
-Message-ID: <CACRpkdZBz_+MeJjP5-vjNGbqyrCBTj+f=gm87o4sgiMqRwndVQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] gpio: Add support for the Renesas RZ/V2M PWC GPIOs
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-AV-Do-Run: Yes
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 21, 2022 at 10:09 PM Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
+Makefile.am delegates the build of the python extension to its
+setup.py file, which references the extension .c files relative to the
+source dir. This makes it impossible to build in a directory that is
+different from the source directory (for example, for PC and ARM but
+from the same source).
 
-> The RZ/V2M SoC contains an External Power Sequence Controller
-> (PWC) module. The PWC module provides an external power supply
-> on/off sequence, on/off signal for the LPDDR4 core power supply,
-> General-Purpose Outputs, and key input signals.
->
-> Add a driver for controlling the General-Purpose Outputs.
->
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+* Modify Makefile.am to pass automake's $(srcdir) into setup.py via
+  GPIOD_SRCDIR environment variable.
+* Modify setup.py to pick up .c files relative from that directory.
 
-This is a nice driver.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Joerg Faschingbauer <jf@faschingbauer.co.at>
+---
+ bindings/python/Makefile.am |  6 ++++--
+ bindings/python/setup.py    | 23 ++++++++++++++---------
+ 2 files changed, 18 insertions(+), 11 deletions(-)
 
-Yours,
-Linus Walleij
+diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
+index 3212a8f..6c2f99b 100644
+--- a/bindings/python/Makefile.am
++++ b/bindings/python/Makefile.am
+@@ -12,13 +12,15 @@ endif
+ all-local:
+ 	GPIOD_VERSION_STRING=$(VERSION_STR) \
+ 	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
+-	$(PYTHON) setup.py build_ext --inplace \
++	GPIOD_SRCDIR=$(srcdir) \
++	$(PYTHON) $(srcdir)/setup.py build_ext --inplace \
+ 		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
+ 		--library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
+ 
+ install-exec-local:
+ 	GPIOD_WITH_TESTS= \
+-	$(PYTHON) setup.py install --prefix=$(prefix)
++	GPIOD_SRCDIR=$(srcdir) \
++	$(PYTHON) $(srcdir)/setup.py install --prefix=$(prefix)
+ 
+ SUBDIRS = gpiod
+ 
+diff --git a/bindings/python/setup.py b/bindings/python/setup.py
+index a951069..3ab01e1 100644
+--- a/bindings/python/setup.py
++++ b/bindings/python/setup.py
+@@ -2,17 +2,22 @@
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
+ from os import environ
++import os.path
+ from setuptools import setup, Extension, find_packages
+ 
++srcdir = environ.get('GPIOD_SRCDIR', '.')
++def src(path):
++    return os.path.join(srcdir, path)
++
+ gpiod_ext = Extension(
+     "gpiod._ext",
+     sources=[
+-        "gpiod/ext/chip.c",
+-        "gpiod/ext/common.c",
+-        "gpiod/ext/line-config.c",
+-        "gpiod/ext/line-settings.c",
+-        "gpiod/ext/module.c",
+-        "gpiod/ext/request.c",
++        src("gpiod/ext/chip.c"),
++        src("gpiod/ext/common.c"),
++        src("gpiod/ext/line-config.c"),
++        src("gpiod/ext/line-settings.c"),
++        src("gpiod/ext/module.c"),
++        src("gpiod/ext/request.c"),
+     ],
+     define_macros=[("_GNU_SOURCE", "1")],
+     libraries=["gpiod"],
+@@ -21,7 +26,7 @@ gpiod_ext = Extension(
+ 
+ gpiosim_ext = Extension(
+     "tests.gpiosim._ext",
+-    sources=["tests/gpiosim/ext.c"],
++    sources=[src("tests/gpiosim/ext.c")],
+     define_macros=[("_GNU_SOURCE", "1")],
+     libraries=["gpiosim"],
+     extra_compile_args=["-Wall", "-Wextra"],
+@@ -29,7 +34,7 @@ gpiosim_ext = Extension(
+ 
+ procname_ext = Extension(
+     "tests.procname._ext",
+-    sources=["tests/procname/ext.c"],
++    sources=[src("tests/procname/ext.c")],
+     define_macros=[("_GNU_SOURCE", "1")],
+     extra_compile_args=["-Wall", "-Wextra"],
+ )
+@@ -39,7 +44,7 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
+     extensions.append(gpiosim_ext)
+     extensions.append(procname_ext)
+ 
+-with open("gpiod/version.py", "r") as fd:
++with open(src("gpiod/version.py"), "r") as fd:
+     exec(fd.read())
+ 
+ setup(
+-- 
+2.37.3
+
