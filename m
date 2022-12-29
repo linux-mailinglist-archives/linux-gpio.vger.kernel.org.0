@@ -2,64 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9E63658861
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:35:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80B6165886B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:41:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232002AbiL2Bfh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 20:35:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
+        id S232555AbiL2Blp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 20:41:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230467AbiL2Bfg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:35:36 -0500
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D8C911A17
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:35:35 -0800 (PST)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-14ffd3c5b15so8827062fac.3
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:35:35 -0800 (PST)
+        with ESMTP id S231327AbiL2Blo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:41:44 -0500
+Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45234112D
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:41:41 -0800 (PST)
+Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-14fb7fdb977so13722290fac.12
+        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:41:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GSGVEBKAIlZ/VnnDwbHEfeqaFj6W4dYVfJZG8J1vDEo=;
-        b=gsovTz3yzb1pKKs0dp289XjkaJot2Z40OSbWPF2alhZHXfW++J5gfpK/oO9oqRSEwq
-         gy+ZHb0kLlJeq3lwip/JbZW51xKV6WHIqFcRMLCTJBLOWg0AcMH8pua1smaY5X/auMKw
-         4tda35LCLWxbv6U7m2HJY7+Y142RGe7W3bdRbqpTdmoLIWMORkj3hATr7Z1DZpWqeijc
-         7rgK/OJue/1jwA2047Xf4/YXLAFey+WkMLdWqO/slCMnjQehHux8uTbKNkSCEkVOJpYE
-         /MVLjWkYYfJqMNmZ+Wp/c7DDMtmi42RoH0brk40ndz37MzngbuKkeytx/ybor/xqWFcz
-         absQ==
+        bh=5EkBJQD/c68RJVZGXy0HKcVQWj7dlCTAB7HBSkm2xT8=;
+        b=VJnM6/MLfCtzy4OB3sFx1Fm7iBipjbNMb2bH5oEcXDaiIJPjND9L+3WJIgG/vFFhdI
+         qBuLikVKrZnlHITAQvDh4N3bTmwMcAzQqMSNxpU8NHjF47ldKXk+zimbXI02FFiSUND0
+         1+mpRYOhDCWk7W+yndOYj7lJkMeDBUUUPHTw30/zGwHL2GnNTsyScpTJDdPrtW7PCzX3
+         GjaShPwnLDygudFk2DbOz3dCPIq0QR9XvNdauuAaFZ7fn5iaWdcM/JZk8OHcsfzXUWlu
+         lPRdYCvK3/3MzT+ppjlbYRQ4iIdzfQ1GsoAevaR8JN+alytdO7ZXeSHcjJWh5xdaanAw
+         8nJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=GSGVEBKAIlZ/VnnDwbHEfeqaFj6W4dYVfJZG8J1vDEo=;
-        b=Sq57D6UhtTYuaJNPbJPlg2tDay//t6DKTttV3CXdOorW/MDFMdrE6bIxtluq1XD3DV
-         6/SwlkQK/puzYyVsiSyJDL0Alyk+y0hlrIDUP1aWLw1ZgyHI5z4bCbPtNTNGPhdnkE9h
-         O8Gtcm0HayCKic2NvQpFHQWXsbSe4humqLpAO/6myzBh8mALt8JgBGrqhclhFtS9j9QD
-         gGBphO8y8kGzp6UPr2fJ0h3dz5w2bqhJ2348rYnqq4x1yUXOOEtSUO83uPwf2h4u0EF7
-         rwk7ifeEmzfPL8ZuofLt7OrWqQiucBc4JtB3QzcwpuBmQd+LOBFDwKVcM95yZPMDMmtq
-         yCIg==
-X-Gm-Message-State: AFqh2krWBq6RdTYOjcxvFAc3zXlI0xtsstljIhtcVgCV57p56djCipg6
-        poYc6ReOT5umXb16Kbq1d0JM4aGK+sxO6TMftaNTVg==
-X-Google-Smtp-Source: AMrXdXvMwXPYtYQv54THgA1W7w60L7MLGAdEz2x/u+WyEhE+Cwj1ntLWJ1S9Qxazr8++Wnd8vJezQiZLoOp7G5hQ4Uw=
-X-Received: by 2002:a05:6870:6c0b:b0:13b:96fc:18c1 with SMTP id
- na11-20020a0568706c0b00b0013b96fc18c1mr1778248oab.291.1672277733910; Wed, 28
- Dec 2022 17:35:33 -0800 (PST)
+        bh=5EkBJQD/c68RJVZGXy0HKcVQWj7dlCTAB7HBSkm2xT8=;
+        b=c1p6fYl704/z/GMNlvW4xzagDpgmt+7/0GivG/CmY6knJODfFnsiCd68qan58lA1iW
+         tq7obax0rxe7PiXi0YKnsCkYzBt+FNb4Ve6CJ36F/9JZxutGJXVTtplWoGHzBdMzdZxW
+         W3Y+3gTOGl5Nu/ls4QVmYP+LVtSWVCDo8ALTBGluJiQomRknrVs/sr0tT7YZZJbcLr5b
+         oU+bpHk0Kk+dU9aueqFFvqIGFq9dtcwESYf8OGpXlKSanefxvUhdiPQvizQA+DaTMxQd
+         CMazBLsveSXRL+A0q2Wyam1iFVlqBWxgJqSk41lFnn8eNYHuFmgg82bPC28QDzsBknfS
+         qQ+A==
+X-Gm-Message-State: AFqh2ko5J2WwARokNKOXfsH/WHc6haseercfPdHJgILWz+l1qr6wF29A
+        8IUw0Y7rJLXaFD237GkPeYpBgSEvuLVWusXL+oeQlA==
+X-Google-Smtp-Source: AMrXdXuwaw7kd2b2t7tpaXaGkV5+98Jws9Pf+vV4ef7pixGviYj7YGU4fswLGw0TrQJnzv3W0zkI3SVwb8V1GdFKOkk=
+X-Received: by 2002:a05:6870:fd89:b0:14f:ede2:db25 with SMTP id
+ ma9-20020a056870fd8900b0014fede2db25mr909119oab.42.1672278100651; Wed, 28 Dec
+ 2022 17:41:40 -0800 (PST)
 MIME-Version: 1.0
-References: <20221216230852.21691-1-quic_molvera@quicinc.com>
-In-Reply-To: <20221216230852.21691-1-quic_molvera@quicinc.com>
+References: <20221220090248.1134214-1-haibo.chen@nxp.com>
+In-Reply-To: <20221220090248.1134214-1-haibo.chen@nxp.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Dec 2022 02:37:28 +0100
-Message-ID: <CACRpkdbbFetp0rmOx3k4kaQvFZJWNQGeW+VC_ry3pRcEiDSOfg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Add pinctrl support for QDU1000/QRU1000 SoCs
-To:     Melody Olvera <quic_molvera@quicinc.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 29 Dec 2022 02:43:34 +0100
+Message-ID: <CACRpkdbmcyO+QMbvAVC7Wm+u3btcAebiGQySSb7jG9J8gYNOnA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: vf610: connect GPIO label to dev name
+To:     haibo.chen@nxp.com
+Cc:     brgl@bgdev.pl, stefan@agner.ch, linux-gpio@vger.kernel.org,
+        linux-imx@nxp.com, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
@@ -71,12 +66,18 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 17, 2022 at 12:09 AM Melody Olvera <quic_molvera@quicinc.com> wrote:
+On Tue, Dec 20, 2022 at 10:02 AM <haibo.chen@nxp.com> wrote:
 
-> This patchset adds pinctrl support for the Qualcomm QDU1000 and QRU1000
-> SoCs.
+> From: Haibo Chen <haibo.chen@nxp.com>
+>
+> Current GPIO label is fixed, so can't distinguish different GPIO
+> controllers through labels. Use dev name instead.
+>
+> Fixes: 7f2691a19627 ("gpio: vf610: add gpiolib/IRQ chip driver for Vybrid")
+> Signed-off-by: Clark Wang <xiaoning.wang@nxp.com>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-Patches applied!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
