@@ -2,37 +2,37 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02BF5658E22
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 15:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51BA1658E25
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 15:57:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233613AbiL2O4j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        id S233626AbiL2O4j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
         Thu, 29 Dec 2022 09:56:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57120 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233626AbiL2O4X (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 09:56:23 -0500
-Received: from out-248.mta0.migadu.com (out-248.mta0.migadu.com [IPv6:2001:41d0:1004:224b::f8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 180DBE5D
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 06:56:22 -0800 (PST)
+        with ESMTP id S233631AbiL2O41 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 09:56:27 -0500
+Received: from out-138.mta0.migadu.com (out-138.mta0.migadu.com [IPv6:2001:41d0:1004:224b::8a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F7EE5D
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 06:56:26 -0800 (PST)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1672325780;
+        t=1672325785;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HRDh64TLuc7fg9bN8jkkUfHhB4fjnXAc5g4yon1RY9I=;
-        b=c/O6pZ12Pp2xeL+X3o3eRF0Lp8KmCvyCXOBQ9HzizVI8JXM7ZJuqVWO4w9a6a9GU2tbxhY
-        MYGAWKatEkGNzB+W4TRglJcvXutojTPCK/JCqc2ekpKToFOhI2Aheqvlp0TnUHxhGIUKcu
-        PlyFQrORhO5/iv4ZQAdT8Af0bk/rngU=
+        bh=wKq23fd2tagxUJYxSe4CjUfUhiZ2piEHNrOisW0nTDw=;
+        b=VAwTmy0RfChNaVfUShJd35d9/wdjhAqhrEwniqobgXL+OM5ZO96xSMMI5174F5xZwHNTC6
+        tUzNqs8fJ68vLuTEus6ZCumzl9G0/laFcMKfLY7w9LZncrF9bfO5n/NyqTLXDGK1XgmWZd
+        4buvbt6TTwdUKYGeWRAB+5ced8C8xbo=
 From:   Cixi Geng <cixi.geng@linux.dev>
 To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
         baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
 Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         cixi.geng1@unisoc.com
-Subject: [PATCH V4 2/3] gpio: gpio-pmic-eic-sprd: Make the irqchip immutable
-Date:   Thu, 29 Dec 2022 22:55:44 +0800
-Message-Id: <20221229145545.14055-3-cixi.geng@linux.dev>
+Subject: [PATCH V4 3/3] gpio: gpio-sprd: Make the irqchip immutable
+Date:   Thu, 29 Dec 2022 22:55:45 +0800
+Message-Id: <20221229145545.14055-4-cixi.geng@linux.dev>
 In-Reply-To: <20221229145545.14055-1-cixi.geng@linux.dev>
 References: <20221229145545.14055-1-cixi.geng@linux.dev>
 MIME-Version: 1.0
@@ -49,94 +49,63 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Cixi Geng <cixi.geng1@unisoc.com>
 
-Remove the irq_chip from pmic_eic structure,
-use the various calls by defining the statically
-irq_chip structure.
+Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
+new helper functions, and call the appropriate gpiolib functions.
 
 Signed-off-by: Cixi Geng <cixi.geng1@unisoc.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@lip6.fr>
 Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- drivers/gpio/gpio-pmic-eic-sprd.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ drivers/gpio/gpio-sprd.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-index e518490c4b68..c3e4d90f6b18 100644
---- a/drivers/gpio/gpio-pmic-eic-sprd.c
-+++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-@@ -47,7 +47,6 @@ enum {
- /**
-  * struct sprd_pmic_eic - PMIC EIC controller
-  * @chip: the gpio_chip structure.
-- * @intc: the irq_chip structure.
-  * @map:  the regmap from the parent device.
-  * @offset: the EIC controller's offset address of the PMIC.
-  * @reg: the array to cache the EIC registers.
-@@ -56,7 +55,6 @@ enum {
-  */
- struct sprd_pmic_eic {
- 	struct gpio_chip chip;
--	struct irq_chip intc;
- 	struct regmap *map;
- 	u32 offset;
- 	u8 reg[CACHE_NR_REGS];
-@@ -151,15 +149,21 @@ static void sprd_pmic_eic_irq_mask(struct irq_data *data)
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
- 	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
+diff --git a/drivers/gpio/gpio-sprd.c b/drivers/gpio/gpio-sprd.c
+index 9bff63990eee..072b4e653216 100644
+--- a/drivers/gpio/gpio-sprd.c
++++ b/drivers/gpio/gpio-sprd.c
+@@ -120,6 +120,7 @@ static void sprd_gpio_irq_mask(struct irq_data *data)
+ 	u32 offset = irqd_to_hwirq(data);
  
- 	pmic_eic->reg[REG_IE] = 0;
- 	pmic_eic->reg[REG_TRIG] = 0;
-+
+ 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 0);
 +	gpiochip_disable_irq(chip, offset);
  }
  
- static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
- 	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
-+
-+	gpiochip_enable_irq(chip, offset);
+ static void sprd_gpio_irq_ack(struct irq_data *data)
+@@ -136,6 +137,7 @@ static void sprd_gpio_irq_unmask(struct irq_data *data)
+ 	u32 offset = irqd_to_hwirq(data);
  
- 	pmic_eic->reg[REG_IE] = 1;
- 	pmic_eic->reg[REG_TRIG] = 1;
-@@ -292,6 +296,17 @@ static irqreturn_t sprd_pmic_eic_irq_handler(int irq, void *data)
- 	return IRQ_HANDLED;
+ 	sprd_gpio_update(chip, offset, SPRD_GPIO_IE, 1);
++	gpiochip_enable_irq(chip, offset);
  }
  
-+static const struct irq_chip pmic_eic_irq_chip = {
-+	.name			= "sprd-pmic-eic",
-+	.irq_mask		= sprd_pmic_eic_irq_mask,
-+	.irq_unmask		= sprd_pmic_eic_irq_unmask,
-+	.irq_set_type		= sprd_pmic_eic_irq_set_type,
-+	.irq_bus_lock		= sprd_pmic_eic_bus_lock,
-+	.irq_bus_sync_unlock	= sprd_pmic_eic_bus_sync_unlock,
-+	.flags			= IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
+ static int sprd_gpio_irq_set_type(struct irq_data *data,
+@@ -205,13 +207,14 @@ static void sprd_gpio_irq_handler(struct irq_desc *desc)
+ 	chained_irq_exit(ic, desc);
+ }
+ 
+-static struct irq_chip sprd_gpio_irqchip = {
++static const struct irq_chip sprd_gpio_irqchip = {
+ 	.name = "sprd-gpio",
+ 	.irq_ack = sprd_gpio_irq_ack,
+ 	.irq_mask = sprd_gpio_irq_mask,
+ 	.irq_unmask = sprd_gpio_irq_unmask,
+ 	.irq_set_type = sprd_gpio_irq_set_type,
+-	.flags = IRQCHIP_SKIP_SET_WAKE,
++	.flags = IRQCHIP_SKIP_SET_WAKE | IRQCHIP_IMMUTABLE,
 +	GPIOCHIP_IRQ_RESOURCE_HELPERS,
-+};
-+
- static int sprd_pmic_eic_probe(struct platform_device *pdev)
- {
- 	struct gpio_irq_chip *irq;
-@@ -338,16 +353,8 @@ static int sprd_pmic_eic_probe(struct platform_device *pdev)
- 	pmic_eic->chip.set = sprd_pmic_eic_set;
- 	pmic_eic->chip.get = sprd_pmic_eic_get;
+ };
  
--	pmic_eic->intc.name = dev_name(&pdev->dev);
--	pmic_eic->intc.irq_mask = sprd_pmic_eic_irq_mask;
--	pmic_eic->intc.irq_unmask = sprd_pmic_eic_irq_unmask;
--	pmic_eic->intc.irq_set_type = sprd_pmic_eic_irq_set_type;
--	pmic_eic->intc.irq_bus_lock = sprd_pmic_eic_bus_lock;
--	pmic_eic->intc.irq_bus_sync_unlock = sprd_pmic_eic_bus_sync_unlock;
--	pmic_eic->intc.flags = IRQCHIP_SKIP_SET_WAKE;
--
- 	irq = &pmic_eic->chip.irq;
--	irq->chip = &pmic_eic->intc;
-+	gpio_irq_chip_set_chip(irq, &pmic_eic_irq_chip);
- 	irq->threaded = true;
+ static int sprd_gpio_probe(struct platform_device *pdev)
+@@ -245,7 +248,7 @@ static int sprd_gpio_probe(struct platform_device *pdev)
+ 	sprd_gpio->chip.direction_output = sprd_gpio_direction_output;
  
- 	ret = devm_gpiochip_add_data(&pdev->dev, &pmic_eic->chip, pmic_eic);
+ 	irq = &sprd_gpio->chip.irq;
+-	irq->chip = &sprd_gpio_irqchip;
++	gpio_irq_chip_set_chip(irq, &sprd_gpio_irqchip);
+ 	irq->handler = handle_bad_irq;
+ 	irq->default_type = IRQ_TYPE_NONE;
+ 	irq->parent_handler = sprd_gpio_irq_handler;
 -- 
 2.34.1
 
