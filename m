@@ -2,112 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D4B9658F37
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 17:46:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A726965920C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 22:15:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233853AbiL2QqV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Dec 2022 11:46:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35686 "EHLO
+        id S233924AbiL2VPr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Dec 2022 16:15:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233860AbiL2Qp5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 11:45:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E526F1582F
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 08:45:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672332308;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uE1P5Bdwlwa4H9qvumuO6cO/f01N5gt3QNmApvjrJ90=;
-        b=YbmARvYcZ31nJz+p4QCUJ8v1izr6RtFdmFDwef0tT8CSmn85lQhfEjmrtasAqsmF4pTiGh
-        FuipnZDjb5brOaIrIToBq8OO1IHeFK3b8JYce7O18jhxp3FhS9dJ5Luqojnhy6jZYQr75H
-        yH5YrwUQMinQIq3vBcjzObyxBhECOAQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-612-5iRBfx7aM--DWanDil9SkA-1; Thu, 29 Dec 2022 11:45:04 -0500
-X-MC-Unique: 5iRBfx7aM--DWanDil9SkA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0E9C4185A794;
-        Thu, 29 Dec 2022 16:45:04 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.192.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7FEAE4010D42;
-        Thu, 29 Dec 2022 16:45:02 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy@kernel.org>,
-        "regressions @ lists . linux . dev" <regressions@lists.linux.dev>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: [PATCH 6.2 regression fix] gpiolib: Fix using uninitialized lookup-flags on ACPI platforms
-Date:   Thu, 29 Dec 2022 17:45:01 +0100
-Message-Id: <20221229164501.76044-1-hdegoede@redhat.com>
+        with ESMTP id S231352AbiL2VPr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 16:15:47 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8194B380
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 13:15:45 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id r130so18110545oih.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 13:15:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fP9vW+f4HJx2PMQOsthzDPalvVom8q67NEFiBnQA94Y=;
+        b=sHcj50okRU6B4RqAXfb6NJ+nmRgPRo/rlHkaapygujJhm1hEjkTFWgRfejemKXgTbN
+         BIqAT2liXTV+lmID/h1yAu9xeRvogJ3ToeQCkStzggAYdta6pHdiigYmDhoS1Ku9Rwxb
+         kkgiHxE/b9ZtPeOrX3CnSkvqlTXj5i2C4x8o84yZQM92dQMuyEqJqnfYXBF51kN3dMjQ
+         4bJ9eNncYoz/n0Z3/OVYXzrRbBj1SzyKcoVpQaRy/lPbF32N+L6cbrn+UEw/hDjljuGD
+         aJ2mPsiKFPw6kC0ZUophFVuftwPj7J/isUk8/MzyQouffzPw/BiFE1El5WU5EtysTzcg
+         z49A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fP9vW+f4HJx2PMQOsthzDPalvVom8q67NEFiBnQA94Y=;
+        b=X78yW4ZFdbpHrFEKK+oZYvj70w6Y78us9R1kR+j9fdbtYxRR8iWkBJr1LE5kfjre/4
+         Mu3+LeQy3MgnFc5UWQPLJVjkOb87FSPNUS20q7ZQ0iORudx5TBRaSL/WTW957FJUmDPz
+         XFk6e9Mfogk2nrgKjSFrf3v+wacnigPRaqLyCWcXjgPlolhsinYB+lyeJghEi8uMygAx
+         a45acM981U3s9e+4AYBWhbzDYvTjGaKc2GN4WE2k4nfv1wAsjsGRPtR6bOczuqbKmQSV
+         vhZFgtMLNdU7AJ91kKHcxJgldzNS5RaERNvB+/rE/HdasQj1Dt6ZYpR3NJS2hcx7TEjl
+         v7Qw==
+X-Gm-Message-State: AFqh2kq62VKYx+uG5qpYcT/Gc/XAEUdEUnDKAQz1D4Wi3jefi2n/XKXD
+        tokwJDN5DC36CQiwZH1/KdrL8d6AWGPHRJctUvT9FYgmF7EW8t5S
+X-Google-Smtp-Source: AMrXdXvN6Orftn3hmgTYONNYA8qEr00HxkF5nIDdY0voe6NhcGplTvdTO4P6MhjOsMrSDZf5MiLAE+bleRvSudQXAPY=
+X-Received: by 2002:aca:3dd7:0:b0:35b:8358:aed4 with SMTP id
+ k206-20020aca3dd7000000b0035b8358aed4mr1553371oia.291.1672348544838; Thu, 29
+ Dec 2022 13:15:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <20221219124240.62781-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221219124240.62781-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 29 Dec 2022 22:17:37 +0100
+Message-ID: <CACRpkdbDevAJSjEKHdi+kovzuhuxJ2cbyUYNb9w8qimYMa__Jw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] pinctrl: Introduce struct pinfunction and
+ PINCTRL_PINFUNCTION() macro
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Commit 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups") refactors
-fwnode_get_named_gpiod() and gpiod_get_index() into a unified
-gpiod_find_and_request() helper.
+On Mon, Dec 19, 2022 at 1:42 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-The old functions both initialized their local lookupflags variable to
-GPIO_LOOKUP_FLAGS_DEFAULT, but the new code leaves it uninitialized.
+> There are many pin control drivers define their own data type for
+> pin function representation which is the same or embed the same data
+> as newly introduced one. Provide the data type and convenient macro
+> for all pin control drivers.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-This is a problem for at least ACPI platforms, where acpi_find_gpio()
-only does a bunch of *lookupflags |= GPIO_* statements and thus relies
-on the variable being initialized.
+Very nice and helpful!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The variable not being initialized leads to:
-
-1. Potentially the wrong flags getting used
-2. The check for conflicting lookup flags in gpiod_configure_flags():
-   "multiple pull-up, pull-down or pull-disable enabled, invalid config"
-   sometimes triggering, making the GPIO unavailable
-
-Restore the initialization of lookupflags to GPIO_LOOKUP_FLAGS_DEFAULT
-to fix this.
-
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Note I'm not working and not reading work email until Monday January 9th.
-I hit this while doing some hobby stuff and I decided to send this out
-right away to avoid others potentially wasting time debugging this, but
-I will not see any replies until Monday January 9th.
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 5a66d9616d7c..939c776b9488 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3905,8 +3905,8 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 						const char *label,
- 						bool platform_lookup_allowed)
- {
-+	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 	struct gpio_desc *desc = ERR_PTR(-ENOENT);
--	unsigned long lookupflags;
- 	int ret;
- 
- 	if (!IS_ERR_OR_NULL(fwnode))
--- 
-2.38.1
-
+Yours,
+Linus Walleij
