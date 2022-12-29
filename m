@@ -2,86 +2,83 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5484965884E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:18:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C2D5F658857
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 02:25:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232508AbiL2BST (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 28 Dec 2022 20:18:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60290 "EHLO
+        id S229716AbiL2BZA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 28 Dec 2022 20:25:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbiL2BSR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:18:17 -0500
-Received: from mail-oa1-x33.google.com (mail-oa1-x33.google.com [IPv6:2001:4860:4864:20::33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B8513F54
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:18:17 -0800 (PST)
-Received: by mail-oa1-x33.google.com with SMTP id 586e51a60fabf-1433ef3b61fso20279110fac.10
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Dec 2022 17:18:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=tF88S2Hv4sGeYM0IJIhlaIGexQCWBfknOiRvMdfr8IQ=;
-        b=ErJOFlw0/sxpSqS5/yP6KnCa/ipcN5aykXU3V/tUmwx5KFRj7Xlc7+PimX2rk3AbZa
-         nvYV82wqQgN42DHllbPXiPLydrZBhAGJbHPYlN/GDgX071J4I1uSqGJNGVH1OMrk9Q8U
-         QXKbdbVAlD5AAMieHpAKJ/nNtyI2+v0KsAuP9nfC8J9+im7sN0imPVgdSNBME2Tz4K0J
-         wSMT2j2IbN23iejfo9O/2LzVuGOP0IgR5rBVmJ68DHvY0keaqzIs93EPyfd72GHTJ551
-         7pp2p15x7RPeugYnimzuygdWdQHb07QT8ymXvlg++xza77108AVviR7rfT0s/g8h53pq
-         2GFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tF88S2Hv4sGeYM0IJIhlaIGexQCWBfknOiRvMdfr8IQ=;
-        b=j+3RMUDjHFAdf9i2gwuXPANRgXRbDB/IAdnInUX1UJpBJ0IjG3fr+NN1MA7eXeWSJS
-         BeGv2YiWP8MgTGVQfphvPfRQJ/8sPQ36g+RpX/jiNetbGpin4h7cV2LDJRmVFPnGBGiu
-         OyNM1ultC6MOabOULXHho9qoudars0GdwAK8VlX5ZgxBc4DWlBJHqeSzYFCpNS3ETZZP
-         pPvrknJJbhQKfUbtIvUKyadYmJmTtje0rv/1eviB/4PE23SGddAQRqvqI98pF8N5UW08
-         4rXuFmpArv4ru7tcZnGtgds/LwIckBA265QK50kFhaUT3roj04amyaMPyKoA2UZ73Hw5
-         7QvA==
-X-Gm-Message-State: AFqh2kp+Dbaf33nEYfcfdD5glxyl/GVouYQ1GFbiA6K+4Yn5xRqR77MR
-        RrlIPZqVMk0doF3zVY9pCahoChD3RiHpj9ZZTJtv4w==
-X-Google-Smtp-Source: AMrXdXsVwziQundR1fwbIB4yBVcJ+hmaEtqLmbyZ5bauQjKbV7xMCLbbZvo+Th31AipBIbAj3PSQkJCNE/ow1xf8mmw=
-X-Received: by 2002:a05:6870:fd89:b0:14f:ede2:db25 with SMTP id
- ma9-20020a056870fd8900b0014fede2db25mr904396oab.42.1672276696527; Wed, 28 Dec
- 2022 17:18:16 -0800 (PST)
+        with ESMTP id S230078AbiL2BY5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 28 Dec 2022 20:24:57 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15F7213F80;
+        Wed, 28 Dec 2022 17:24:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=N9E7L6Ho6kWI1xmI1za5Zz5R3ypJix8rKxwEiL8bYhE=; b=J5IShLVSPeHxk+qV8WlMFSooAJ
+        lefuoIbCCCcCqZPrOKlHoWAuzQK9GHlg5SitDrLB2RT8DbL39r0hdNe7dBISsG7jBNZhbGasEygUg
+        Ww+0TGrPE9nZhe4B2p4huUTyZgGSrRIZHZ8aTiaXWzFTyHqPJAy7LJ4aV/t+WrmLqFmfFOPRFxFq7
+        K/8q/8p6xypYZcsKDlKSAbKh6u4RTKYda0j2QP2v4PgF0gUWLHS0eWIXhM07BX2JOGM2UEKAjD+X7
+        30JVeW1nPtSYCU3MxQvJ8K/37N2lN2i1IYQMKxGfxMQN5A1d/Zmb1QfM0OVreocQ7kysimDGPyT7A
+        5aI8Dyiw==;
+Received: from [2601:1c2:d80:3110::a2e7] (helo=casper.infradead.org)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pAhfJ-009YGt-AW; Thu, 29 Dec 2022 01:25:01 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] pinctrl: nomadik: fix build when DEBUG_FS is not set
+Date:   Wed, 28 Dec 2022 17:24:45 -0800
+Message-Id: <20221229012445.16169-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-References: <20221215213206.56666-1-biju.das.jz@bp.renesas.com> <20221215213206.56666-2-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20221215213206.56666-2-biju.das.jz@bp.renesas.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Dec 2022 02:20:10 +0100
-Message-ID: <CACRpkdbBua9-0o+vK1mWeQV9pr=1DE100AE7cdymEyhZQY39QA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] dt-bindings: pinctrl: renesas: Add RZ/G2L POEG binding
-To:     Biju Das <biju.das.jz@bp.renesas.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 10:32 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+Fix build when DEBUG_FS is not set/enabled by moving the #include
+directive.
 
-> Add device tree bindings for the RZ/G2L Port Output Enable for GPT (POEG).
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+../drivers/pinctrl/nomadik/pinctrl-nomadik.c: In function 'nmk_gpio_irq_print_chip':
+../drivers/pinctrl/nomadik/pinctrl-nomadik.c:1084:9: error: implicit declaration of function 'seq_printf'; did you mean 'bstr_printf'? [-Werror=implicit-function-declaration]
+ 1084 |         seq_printf(p, "nmk%u-%u-%u", nmk_chip->bank,
 
-Patch applied!
+Fixes: e5530adc17a7 ("pinctrl: Clean up headers")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+diff -- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -17,6 +17,7 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/spinlock.h>
+ #include <linux/interrupt.h>
++#include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/of_device.h>
+ #include <linux/of_address.h>
+@@ -907,8 +908,6 @@ static int nmk_gpio_get_mode(struct nmk_
+ 	return (afunc ? NMK_GPIO_ALT_A : 0) | (bfunc ? NMK_GPIO_ALT_B : 0);
+ }
+ 
+-#include <linux/seq_file.h>
+-
+ static void nmk_gpio_dbg_show_one(struct seq_file *s,
+ 	struct pinctrl_dev *pctldev, struct gpio_chip *chip,
+ 	unsigned offset, unsigned gpio)
