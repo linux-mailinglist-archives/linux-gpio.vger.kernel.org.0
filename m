@@ -2,159 +2,82 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C8EF658E10
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 15:51:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44849658E21
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 15:56:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233537AbiL2Ovt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Dec 2022 09:51:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54372 "EHLO
+        id S230423AbiL2O4i (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 29 Dec 2022 09:56:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233619AbiL2Ov0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 09:51:26 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0857913F79
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 06:51:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672325474; x=1703861474;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=oiTuIkUoMk33KrT2xqmClpoebWcbt9U5KHiPipbiMG0=;
-  b=MzIwXOjQrImYlDJN5tq92Oj7xc6q6dtdAzJpx3xHmbmToM1Kh1JsewIE
-   N/LnixZvvWWZmvcS+JMWQE989QRFPWrlgX6EygdT9eRLAEsd0oaj1aNWZ
-   zcIyI/tgyb7IYQaaUzkAgawqmoCI0rkQ4KBbHfWnGiWL8hVXT1exex+tY
-   yV15+m0L8eiSssru/3UiqqDgJEkFt6aqiV5FtRzGd/xvqnIqmjN6O/Xwh
-   dKEE8fGGbu1CopGYIW5mXU7ddcCehsQI3CssG7Kdh5rqTXpsQwCErDjG0
-   yLRgwIiLnIIDs1gSkr+QBtkT6epTN2evVfhHIJu1kBjREglQIcbTBLIy9
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10575"; a="323037626"
-X-IronPort-AV: E=Sophos;i="5.96,284,1665471600"; 
-   d="scan'208";a="323037626"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Dec 2022 06:51:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10575"; a="716936591"
-X-IronPort-AV: E=Sophos;i="5.96,284,1665471600"; 
-   d="scan'208";a="716936591"
-Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 29 Dec 2022 06:51:11 -0800
-Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pAuFT-000GkT-0F;
-        Thu, 29 Dec 2022 14:51:11 +0000
-Date:   Thu, 29 Dec 2022 22:50:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 51a8f99718573b543197871a652b338c454806cd
-Message-ID: <63ada932.xDvhnRd7EvtLOQ/g%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S233598AbiL2O4R (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 09:56:17 -0500
+Received: from out-136.mta0.migadu.com (out-136.mta0.migadu.com [IPv6:2001:41d0:1004:224b::88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BECE5D
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 06:56:15 -0800 (PST)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1672325771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=bLYw8OpQUwlsZ3K6VZBKjvnvbyH21lb8PABr6jPPy3M=;
+        b=A2hSB6FIyTOMx28XeYgGgla6Dba07pxyFDx2kue17026UbQ0iHegnJXkQG0f+3LEVBrsBN
+        zUFYW55gUpIjFLCIjVZdHj6jKjXWbVfrBgfvEsAB6sdBkVvs++EasCvZcgBFtcnRgSsb84
+        r3Dq6xZ2TOUDnA9wVujkgLabLPfTjng=
+From:   Cixi Geng <cixi.geng@linux.dev>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cixi.geng1@unisoc.com
+Subject: [PATCH V4 0/3] Make the irqchip immutable
+Date:   Thu, 29 Dec 2022 22:55:42 +0800
+Message-Id: <20221229145545.14055-1-cixi.geng@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 51a8f99718573b543197871a652b338c454806cd  pinctrl: qcom: Add QDU1000/QRU1000 pinctrl driver
+From: Cixi Geng <cixi.geng1@unisoc.com>
 
-elapsed time: 726m
+Kernel warns about mutable irq_chips:
+    "not an immutable chip, please consider fixing!"
 
-configs tested: 78
-configs skipped: 2
+Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
+new helper functions, and call the appropriate gpiolib functions.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+v2 changes:
+Split the patch by each driver. and other comment by baolin in[1]
 
-gcc tested configs:
-powerpc                           allnoconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-arm                                 defconfig
-s390                             allyesconfig
-x86_64                              defconfig
-i386                                defconfig
-arm64                            allyesconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arm                              allyesconfig
-x86_64               randconfig-a012-20221226
-x86_64               randconfig-a014-20221226
-sh                               allmodconfig
-x86_64                           rhel-8.3-bpf
-x86_64               randconfig-a013-20221226
-x86_64                               rhel-8.3
-x86_64               randconfig-a011-20221226
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64               randconfig-a015-20221226
-x86_64                           rhel-8.3-kvm
-x86_64               randconfig-a016-20221226
-x86_64                           allyesconfig
-arc                  randconfig-r043-20221227
-arm                  randconfig-r046-20221227
-arc                  randconfig-r043-20221226
-riscv                randconfig-r042-20221226
-s390                 randconfig-r044-20221226
-i386                             allyesconfig
-mips                             allyesconfig
-i386                 randconfig-a011-20221226
-i386                 randconfig-a013-20221226
-x86_64                            allnoconfig
-i386                 randconfig-a014-20221226
-i386                 randconfig-a012-20221226
-i386                 randconfig-a015-20221226
-i386                 randconfig-a016-20221226
-powerpc                          allmodconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-alpha                            allyesconfig
-i386                             alldefconfig
-powerpc                         wii_defconfig
-arm                        keystone_defconfig
-sh                          rsk7201_defconfig
-sh                     sh7710voipgw_defconfig
-m68k                        m5307c3_defconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-arm                             pxa_defconfig
-m68k                        m5407c3_defconfig
-sh                        dreamcast_defconfig
-nios2                         3c120_defconfig
-i386                          randconfig-c001
+v3 changes:
+Fix cocci warnings test by lkp[2].
 
-clang tested configs:
-x86_64                          rhel-8.3-rust
-x86_64               randconfig-a002-20221226
-x86_64               randconfig-a003-20221226
-x86_64               randconfig-a001-20221226
-x86_64               randconfig-a004-20221226
-x86_64               randconfig-a005-20221226
-x86_64               randconfig-a006-20221226
-hexagon              randconfig-r041-20221227
-hexagon              randconfig-r041-20221226
-arm                  randconfig-r046-20221226
-hexagon              randconfig-r045-20221226
-hexagon              randconfig-r045-20221227
-riscv                randconfig-r042-20221227
-s390                 randconfig-r044-20221227
-i386                 randconfig-a003-20221226
-i386                 randconfig-a001-20221226
-i386                 randconfig-a005-20221226
-i386                 randconfig-a004-20221226
-i386                 randconfig-a006-20221226
-i386                 randconfig-a002-20221226
+v4 changes:
+Change the irq name.
+Keep the same coding style by using offset for irqd_to_hwirq(data)
+Add Reviewed-by tag.
 
+[1]:https://lore.kernel.org/all/97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com/
+[2]:https://lore.kernel.org/all/202212240406.9Nm190P8-lkp@intel.com/
+
+Cixi Geng (3):
+  gpio: eic-sprd: Make the irqchip immutable
+  gpio: gpio-pmic-eic-sprd: Make the irqchip immutable
+  gpio: gpio-sprd: Make the irqchip immutable
+
+ drivers/gpio/gpio-eic-sprd.c      | 23 ++++++++++++++---------
+ drivers/gpio/gpio-pmic-eic-sprd.c | 29 ++++++++++++++++++-----------
+ drivers/gpio/gpio-sprd.c          |  9 ++++++---
+ 3 files changed, 38 insertions(+), 23 deletions(-)
+
+
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.34.1
+
