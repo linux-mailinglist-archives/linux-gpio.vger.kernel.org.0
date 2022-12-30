@@ -2,83 +2,167 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3516C659219
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Dec 2022 22:18:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC4EF65970D
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 11:01:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233908AbiL2VSJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 29 Dec 2022 16:18:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39906 "EHLO
+        id S230351AbiL3KAy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 05:00:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234192AbiL2VSI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 29 Dec 2022 16:18:08 -0500
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE3971707D
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 13:18:06 -0800 (PST)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-14fb7fdb977so16313933fac.12
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Dec 2022 13:18:06 -0800 (PST)
+        with ESMTP id S229876AbiL3KAw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 05:00:52 -0500
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D4CDF2F
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:00:50 -0800 (PST)
+Received: by mail-wr1-x42f.google.com with SMTP id t15so10640998wro.9
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:00:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9yqVYEa9jfT8rZxdmwDJ16lWw8u7Fjyu7VG9cRVsNc=;
-        b=RZcGavD4H9jKVLXRLM+Xvq22NMIWxSz4LitutteismHacBOThyHdAW0tPZUFwG821H
-         SwewA9bGwujXXzxEVUyYbtR3UkojsEGDCfbILfQz9sp/M8TnYgac8i48VzEyGs4Vrblg
-         uCoP2cBj+f5bWE0V91RoQiu8M1qm26w98Nc/nn4nk56E09ZlYnskBwwZaEepOEkEQAQi
-         rzHzo6bNZngjGHAomGB620PHxyjIJqYjcHbF1+SwuvArkU5V8B4SeFy3G589IWf15r5F
-         jg71XS322LYcFTYrRLKrTtHY6p5l19tAP3+lvyQk9JCkvU3A/Odi8G45O+SsUhm45Yma
-         LkiA==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D6o1paQzy9GWzi2tghC+WkZL5u6Vq2O4stEYuPegkxw=;
+        b=lAyo7sO45YEXmQBUVpVBxrB6MiwtbORw7OAbBxtheo2O4rVX1oCoG5lr1uk0ptuqaj
+         tWY251QxZpySK6X5h88l5L3Lf/JWdcZ2dXd6qx5qixunNtALezN6lJXeurQMzuzoGIGN
+         vjr8ieYQnCneuEhafduMhPuGOAqCasPgCDzxkJR/Gfk4stRvJ/NCPF9BhQMWI6f9z8cr
+         DivOhgZoGaENTQIWvChk1QPN3Au8irJXMdA8QgrdepiU9UKURsu2n2bjqIkzDRsTn7Ul
+         ZxAQnsijgMbblM1+ChRu5d+wUjExAQaKskLoRmz9Y1OMwTtxP6xQvpgZ6sjSebT0146t
+         Hstw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=W9yqVYEa9jfT8rZxdmwDJ16lWw8u7Fjyu7VG9cRVsNc=;
-        b=QS+y85WH9j9oVSEHaI2+jo+ZQOq1BpJmW2TUZWHQPgQOtcGkm6sDj8u7B4L4Mvvf/c
-         RQkEzjanFOjB6CS1hEpdhx2g719EfFsutX5s5oyx2usnn/y18FmoTFBxdIgSXnKeMO5k
-         LFhsb4aJOWXhqZAoE0SMFOSaXIXoMQmYPOX7wOPb9mS+BxsUH2uc7vBj9aEv402SU6S0
-         eBECHkYc6WWrLln5YVAig0LDFMnXCN7oJ1MuI+X81UzaaSEYPx3GgyQ/XgT+C62YhyWX
-         vcwFb6ENnTijPcjMLW8RJYOZsat6PV/fWq6ap+Yzv6QCU+icRMohI/Z3XaYXn0UH/PaZ
-         u+ww==
-X-Gm-Message-State: AFqh2kotIfM62JUwo3b+s1LkD43olQWnCEpZEL+Wkl08LMssG5COUpiK
-        TJXnvPjd89by2b2+i8+w/RUNs+SQFeLwpbILYdRFdA==
-X-Google-Smtp-Source: AMrXdXs2+KVckCpTFkqtWqvAIbKrP1CjjOsmSSFa1DI/PAC2SI5aHJWnvw/siEpRzJmUysu2avBzlpwp6Kt7A2EFJF8=
-X-Received: by 2002:a05:6870:fd89:b0:14f:ede2:db25 with SMTP id
- ma9-20020a056870fd8900b0014fede2db25mr1118761oab.42.1672348686201; Thu, 29
- Dec 2022 13:18:06 -0800 (PST)
+        bh=D6o1paQzy9GWzi2tghC+WkZL5u6Vq2O4stEYuPegkxw=;
+        b=m6QYV1FFlgfIwu/8hWlS37+eJQBdMVniOmaW55j69/HL4BK5opHOSp7IySd9i1wndU
+         0KpOkLtppoboQI6mJHRafzX4VFP4pVk3fIRptgv0iUsUQtfbITpzUaGZ7BvdmpX0DDnu
+         HFGD8mHvEE7Ap8B51CnrUhRXLUndCiOE7PdkkoSNIfjCU4P1HGEY5sMo05JM8hRC8zK1
+         C+S3sk0Mlb+Gj15xSrhpEvqe4+yyU5AvQZ7x7hpIBKYqjMlATjesceGwHK7JI0NiuuTv
+         N2FtrePXO9zljtEjp0bmsr7uAF/RAaKQl/X0p4LVRpoL/dRJKwUIxJPlQ6i2/5XZWB6i
+         jnqQ==
+X-Gm-Message-State: AFqh2koA4rw9vONXBfJDHFydjpRQYUki49sdEPVQ/QFYAl2KJRXLLnGC
+        X0lOeFrC7vJCUnzmKQdHBtVOAw==
+X-Google-Smtp-Source: AMrXdXs2Z58huvYm32CoidjMuwBJkFk/Vzp2tesqu8HOgnByOAra1TI3FJufgZciUUOtse9UpIZm9w==
+X-Received: by 2002:adf:e383:0:b0:267:b8df:932b with SMTP id e3-20020adfe383000000b00267b8df932bmr25103279wrm.23.1672394448857;
+        Fri, 30 Dec 2022 02:00:48 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:2f6:88f8:7ade:eb1b])
+        by smtp.gmail.com with ESMTPSA id e10-20020a5d594a000000b0028663fc8f4csm7309419wri.30.2022.12.30.02.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Dec 2022 02:00:48 -0800 (PST)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] gpio: pca9570: rename platform_data to chip_data
+Date:   Fri, 30 Dec 2022 11:00:44 +0100
+Message-Id: <20221230100044.23000-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-References: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 29 Dec 2022 22:20:00 +0100
-Message-ID: <CACRpkdZfjn8fu8iToqYut0Czr97Nv4+DMbzZ42rYKQUiRSXReQ@mail.gmail.com>
-Subject: Re: [rft, PATCH v4 0/3] gpiolib: eventual of_node retirement
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Thierry Reding <treding@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Dec 28, 2022 at 10:20 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> Now that all GPIO library users are converted to use fwnode,
-> Drop redundant field from struct gpio_chip and accompanying
-> code.
+By convention platform_data refers to structures passed to drivers by
+code that registers devices. When talking about model-specific data
+structures associated with OF compatibles, we usually call them chip_data.
 
-This is great stuff.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+In order to avoid confusion rename all mentions of platform_data to
+chip_data.
 
-Yours,
-Linus Walleij
+Fixes: fbb19fe17eae ("gpio: pca9570: add slg7xl45106 support")
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpio-pca9570.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+index 6c07a8811a7a..6a5a8e593ed5 100644
+--- a/drivers/gpio/gpio-pca9570.c
++++ b/drivers/gpio/gpio-pca9570.c
+@@ -18,11 +18,11 @@
+ #define SLG7XL45106_GPO_REG	0xDB
+ 
+ /**
+- * struct pca9570_platform_data - GPIO platformdata
++ * struct pca9570_chip_data - GPIO platformdata
+  * @ngpio: no of gpios
+  * @command: Command to be sent
+  */
+-struct pca9570_platform_data {
++struct pca9570_chip_data {
+ 	u16 ngpio;
+ 	u32 command;
+ };
+@@ -36,7 +36,7 @@ struct pca9570_platform_data {
+  */
+ struct pca9570 {
+ 	struct gpio_chip chip;
+-	const struct pca9570_platform_data *p_data;
++	const struct pca9570_chip_data *chip_data;
+ 	struct mutex lock;
+ 	u8 out;
+ };
+@@ -46,8 +46,8 @@ static int pca9570_read(struct pca9570 *gpio, u8 *value)
+ 	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+ 	int ret;
+ 
+-	if (gpio->p_data->command != 0)
+-		ret = i2c_smbus_read_byte_data(client, gpio->p_data->command);
++	if (gpio->chip_data->command != 0)
++		ret = i2c_smbus_read_byte_data(client, gpio->chip_data->command);
+ 	else
+ 		ret = i2c_smbus_read_byte(client);
+ 
+@@ -62,8 +62,8 @@ static int pca9570_write(struct pca9570 *gpio, u8 value)
+ {
+ 	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+ 
+-	if (gpio->p_data->command != 0)
+-		return i2c_smbus_write_byte_data(client, gpio->p_data->command, value);
++	if (gpio->chip_data->command != 0)
++		return i2c_smbus_write_byte_data(client, gpio->chip_data->command, value);
+ 
+ 	return i2c_smbus_write_byte(client, value);
+ }
+@@ -127,8 +127,8 @@ static int pca9570_probe(struct i2c_client *client)
+ 	gpio->chip.get = pca9570_get;
+ 	gpio->chip.set = pca9570_set;
+ 	gpio->chip.base = -1;
+-	gpio->p_data = device_get_match_data(&client->dev);
+-	gpio->chip.ngpio = gpio->p_data->ngpio;
++	gpio->chip_data = device_get_match_data(&client->dev);
++	gpio->chip.ngpio = gpio->chip_data->ngpio;
+ 	gpio->chip.can_sleep = true;
+ 
+ 	mutex_init(&gpio->lock);
+@@ -141,15 +141,15 @@ static int pca9570_probe(struct i2c_client *client)
+ 	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+ }
+ 
+-static const struct pca9570_platform_data pca9570_gpio = {
++static const struct pca9570_chip_data pca9570_gpio = {
+ 	.ngpio = 4,
+ };
+ 
+-static const struct pca9570_platform_data pca9571_gpio = {
++static const struct pca9570_chip_data pca9571_gpio = {
+ 	.ngpio = 8,
+ };
+ 
+-static const struct pca9570_platform_data slg7xl45106_gpio = {
++static const struct pca9570_chip_data slg7xl45106_gpio = {
+ 	.ngpio = 8,
+ 	.command = SLG7XL45106_GPO_REG,
+ };
+-- 
+2.37.2
+
