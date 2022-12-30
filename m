@@ -2,60 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 259D6659A3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 16:56:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B7F8659A40
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 16:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235193AbiL3Pz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 10:55:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32872 "EHLO
+        id S230016AbiL3P74 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 10:59:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235181AbiL3Pz5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 10:55:57 -0500
-Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF0C8FFA
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:55:55 -0800 (PST)
-Received: by mail-vk1-xa31.google.com with SMTP id i84so3367761vke.7
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:55:55 -0800 (PST)
+        with ESMTP id S235333AbiL3P7y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 10:59:54 -0500
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9920219C36
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:59:51 -0800 (PST)
+Received: by mail-vs1-xe2b.google.com with SMTP id i188so21651912vsi.8
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:59:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=o7zb+TjyOCJ5Qv3IrJ07U93Hor1hao+xRRIpVMTYJ34=;
-        b=sXRZXJyjtqPl1pLLhxIM2Bprko/93NJCyv2iToSKUrcfMjnYapW/R8FMjoDC4muljW
-         PcmInvjhlsB/i6PAMqPcVxgyPvhFNCSaCXxCcdCiYVGeYlLN/rtnWbIsqfw3ixJNphs8
-         o2E5ImzHY/f1xcxvc68UV541Z+4AUZqfxfWMap9wy+j+Bz6j/0U5K7wyo+Bpr3RmCdx0
-         OR2NQP/XJ5+EO0NmEEblkiYGbFJYWj2tRmrMjVZRuXb58TDQE4gyd4mkPPdOOpJboEUa
-         3b9cjZRogQLLKfvJlxf3CE+RQeRdVZGgqxNjt2uwRYZ97rz3ULcu000PiWT3oQfYGGZs
-         1zNQ==
+        bh=hD//RF4blNAzKMQHle6kDDLz8WA64xw1Lyfp9+dzdpI=;
+        b=rJVz6Q9TZfsUfZEMrNibT7dNKb+3pE4AwoNbfkrU6skAfCw8eMzXouc3vSqaVb+vZP
+         7QtFxrOEbIq3E8bzOgt+roB+bQOdA/rbez92xxmaHTfn2Al21EuQwUwCh8wBxu+CKrG0
+         8iojxr2oHhIjOF6wxn+A7rWaWSypnHB7/sLb452tHljRbGO36zX6B9ak7ogdPS4ypO8G
+         vqYTLMo5fgEisBiFZ0JqmWcfUzHijeqf8JnqQ2gXclomQ/FEjpCvC9IsLGOK//kPehwe
+         go7BiiPpHuBrXJwOY7klNC1e2qbGY71IxOF3t8IO2TwJRof6IeFEb4xNtbfXSMofe65E
+         vMXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=o7zb+TjyOCJ5Qv3IrJ07U93Hor1hao+xRRIpVMTYJ34=;
-        b=rvFMzI4sIWsdMeD+jIP32MnvBUaxFZbSc8P0Vc9okeyAtqEWXyUdopIoMXRJcnyXtP
-         8KlbkdF7V+KCPO49yMF+5bErYnZtI/gMLhrGzsNOtiP0JNRs42T2eilIaqaq00JmCdKI
-         XE9q3vUhbhSM5GR0KNUPByXquqa2hfwHRTN1ZMG7N572Muapi2rhWt+HF0ykybWHx/Fm
-         zW5Vq7M9othUqzJmDNt5zRByuxWGotksbU2MVJRu0MviIggAECN0wWk3pKE23odg4QjF
-         I/TmmpOKUduZb5ehGFsaiMY6BZV+Y9HFjPbQpcaDEAmhb/qVhk7pUFhKozmGuB+q0S6Z
-         x/2A==
-X-Gm-Message-State: AFqh2kqsuff0uWTcpJzuHZCKLgz5v0VsxOyNcT0W7CMyqVOrpf1uWvlh
-        s9GCBebw0xW227LSLc9mFQneA/S1bMqK2J2SgJkd3A==
-X-Google-Smtp-Source: AMrXdXuykR6UjtrhR8E0rPTCaSKn77+wJWJFDWSlNmnqsysrri8SrWgpPgnvpWQ+tLAKGdS12NC0U2QDLuurNt7NZrc=
-X-Received: by 2002:ac5:c382:0:b0:3bd:e0b8:e350 with SMTP id
- s2-20020ac5c382000000b003bde0b8e350mr3545220vkk.25.1672415755006; Fri, 30 Dec
- 2022 07:55:55 -0800 (PST)
+        bh=hD//RF4blNAzKMQHle6kDDLz8WA64xw1Lyfp9+dzdpI=;
+        b=4T2sE+oppCJSmHFUGnOrhWJ+E7qBixxkPjd0bQlWlMIl/At1uY4+2RRMvImI/VZfBN
+         p+1g7ajaFuzxepyl6lbjjH4NbF6v0DmWj6jHdqfX5Ec/PmItjLCVqS0gx7Kgye5EzKnA
+         CPAOByOyhoEYpuHyQit6AT28aPG+om8BpGspFae4GF8uSy9xq1hDW18JYExULxmQEVoQ
+         IaOgPpo3i6ihmEagql7hQniON+VowCCoxhrnkVOdsPyQpS2wLXXzsdyXv0LWYqKsITWH
+         AsxBIsTGJR+KikOCoXUjQSGwxidGNJESu5LdY6ber8kl1Q8hxCSED20X8sQBI3HrmYSA
+         plpA==
+X-Gm-Message-State: AFqh2kowfoZq7utUHJ5f563qNPMpTTrwzbM+J22wsZm6+zN3Erpifsnc
+        qhT0nWkonOEGTPO9ugNjHK0xihOQ+bCqkRBeWYXFx8hkyf8tGA==
+X-Google-Smtp-Source: AMrXdXtfilpeqY0j9oUYEitFCGn7fOM3TRS2YPIKHdV/PTt+Mmuvb+rbJtq53UdKYAoFFdMIG5aVcCeDfKlCCAguVHo=
+X-Received: by 2002:a67:df8c:0:b0:3c5:1ac1:bf38 with SMTP id
+ x12-20020a67df8c000000b003c51ac1bf38mr3071643vsk.78.1672415990740; Fri, 30
+ Dec 2022 07:59:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
-In-Reply-To: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
+References: <20221229145545.14055-1-cixi.geng@linux.dev>
+In-Reply-To: <20221229145545.14055-1-cixi.geng@linux.dev>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 30 Dec 2022 16:55:44 +0100
-Message-ID: <CAMRc=Mdp39GpD8XJO4U5rJiU7t-C6jeNs37sp_JyKEaGf6y6rA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] gpiolib: of: remove of_gpio_count()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+Date:   Fri, 30 Dec 2022 16:59:40 +0100
+Message-ID: <CAMRc=MeCCT09umHQ+T6Z6OXMedBh3UXzmQ=1PCyo1zEMr34TCw@mail.gmail.com>
+Subject: Re: [PATCH V4 0/3] Make the irqchip immutable
+To:     Cixi Geng <cixi.geng@linux.dev>
+Cc:     linus.walleij@linaro.org, orsonzhai@gmail.com,
+        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+        cixi.geng1@unisoc.com
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -66,47 +67,46 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 19, 2022 at 8:20 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
+On Thu, Dec 29, 2022 at 3:56 PM Cixi Geng <cixi.geng@linux.dev> wrote:
 >
-> There are no more users of of_gpio_count() in the mainline kernel,
-> remove it.
+> From: Cixi Geng <cixi.geng1@unisoc.com>
 >
-> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> ---
+> Kernel warns about mutable irq_chips:
+>     "not an immutable chip, please consider fixing!"
 >
-> After 6.2-rc1 there should be no more users of the APIs mentioned in
-> this series.
+> Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
+> new helper functions, and call the appropriate gpiolib functions.
 >
->  include/linux/of_gpio.h | 11 -----------
->  1 file changed, 11 deletions(-)
+> v2 changes:
+> Split the patch by each driver. and other comment by baolin in[1]
 >
-> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> index 6db627257a7b..39f16a960565 100644
-> --- a/include/linux/of_gpio.h
-> +++ b/include/linux/of_gpio.h
-> @@ -105,17 +105,6 @@ static inline int of_gpio_named_count(const struct device_node *np,
->         return of_count_phandle_with_args(np, propname, "#gpio-cells");
->  }
+> v3 changes:
+> Fix cocci warnings test by lkp[2].
 >
-> -/**
-> - * of_gpio_count() - Count GPIOs for a device
-> - * @np:                device node to count GPIOs for
-> - *
-> - * Same as of_gpio_named_count, but hard coded to use the 'gpios' property
-> - */
-> -static inline int of_gpio_count(const struct device_node *np)
-> -{
-> -       return of_gpio_named_count(np, "gpios");
-> -}
-> -
->  static inline int of_get_gpio_flags(const struct device_node *np, int index,
->                       enum of_gpio_flags *flags)
->  {
+> v4 changes:
+> Change the irq name.
+> Keep the same coding style by using offset for irqd_to_hwirq(data)
+> Add Reviewed-by tag.
+>
+> [1]:https://lore.kernel.org/all/97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com/
+> [2]:https://lore.kernel.org/all/202212240406.9Nm190P8-lkp@intel.com/
+>
+> Cixi Geng (3):
+>   gpio: eic-sprd: Make the irqchip immutable
+>   gpio: gpio-pmic-eic-sprd: Make the irqchip immutable
+>   gpio: gpio-sprd: Make the irqchip immutable
+>
+>  drivers/gpio/gpio-eic-sprd.c      | 23 ++++++++++++++---------
+>  drivers/gpio/gpio-pmic-eic-sprd.c | 29 ++++++++++++++++++-----------
+>  drivers/gpio/gpio-sprd.c          |  9 ++++++---
+>  3 files changed, 38 insertions(+), 23 deletions(-)
+>
+>
+> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 > --
-> 2.39.0.314.g84b9a713c41-goog
+> 2.34.1
 >
 
-I applied the entire series, thanks a lot for doing that!
+Series queued for fixes, thanks!
 
 Bart
