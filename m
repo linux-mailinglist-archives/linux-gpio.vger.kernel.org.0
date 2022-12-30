@@ -2,117 +2,174 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C581659770
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 11:47:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D2B96597E1
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 12:53:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230087AbiL3Kq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 05:46:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
+        id S234350AbiL3LxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 06:53:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbiL3Kq4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 05:46:56 -0500
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992171A069
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:46:54 -0800 (PST)
-Received: by mail-vs1-xe35.google.com with SMTP id m129so15094203vsc.11
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:46:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uUYOOZ8LBLwFtX+7EAzxDq6pVogaDhHX3H7JwAK0omo=;
-        b=rePMrUbzSxd+LrNEreI3Srr5ZOS+dZ163dMWxcm6nXj+QFgy0xw5f6XsS3QrP+BDGB
-         lGyaCx3i3YYrFF/im19OG5k6oD6HrX1w0n0Smb5h4Q0/qEkhyuhCG/yOxAHZWLkjvkTq
-         u6u7cbcoaI+nsabgTCvcgO8hn04Vx644360gs0Vln8055xBy/+HLx59mldD5WpplHm2d
-         ngI3J4/urs1GKD2yXZzvRHBQu4vxvWCD4G9JoHW/JHicqAiV8+EIUxSegHzKEvWWGqE0
-         XSG+fzMDPAcwqMnqxgkDyHNmt33m3/J/CzSYBV/dbmskEtRkQ6X/hq4VbAxT1kZ2vyKZ
-         5Blw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uUYOOZ8LBLwFtX+7EAzxDq6pVogaDhHX3H7JwAK0omo=;
-        b=ilgLlKF1ibrpTBYdbiqnKZI1qCLCcqnlupwRMLLRMtMyyi68Oq0Mi/USnEM/E+2Kdw
-         SsvEkX0yAJaikD/4vgJIrI+o1sehc0CusjvJkdL3OuWfT/wem0Cz+4uCeYRIOLTbooZT
-         oXwQwKqgfi1rFL8Gfx3YtwjxbgK409O47+n0j4QwnB0OG8qOu/ROHh8lwTJgLTXVF0en
-         8o2MEOJWHSmVqUvSDP03v30GnZpolyViqClRX2Vdw5br+cHzd0pKoFnDdoTmjLrC7mFS
-         iuLT0HkYgQDhevsx2+GQDHxal24sGSzGqBtsA+Twmv8pm6bmSNTBGK2E+6gOSQQPktwy
-         BTKA==
-X-Gm-Message-State: AFqh2kpFG/FIv6nQe5+iFlMyR7KGE//JSXa2cMqrHLTyZT90dZCsovQN
-        moj+SP82fpNYShatTkUNgOqvrpfRCnNBgVHZwhyPlg==
-X-Google-Smtp-Source: AMrXdXsqoDOW+wG+9TepdlFGvE4UXo8vgs37MjARmdX+yAgu+H3RiNfeloDdzXO9w1SYtuuOvw7SojnhlmXHggIrFzY=
-X-Received: by 2002:a67:f642:0:b0:3c4:ec4b:b943 with SMTP id
- u2-20020a67f642000000b003c4ec4bb943mr3151994vso.17.1672397213774; Fri, 30 Dec
- 2022 02:46:53 -0800 (PST)
+        with ESMTP id S229759AbiL3LxG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 06:53:06 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61F362F9;
+        Fri, 30 Dec 2022 03:53:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672401185; x=1703937185;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xFRGjKd+RqAloX3G8veQkP7IPncRlLL6epv3hx3s6KE=;
+  b=FspDke4xPMWBJUOsslBF8j7eMyyDg8MMU8dIR09VbvsdD33era63I4PD
+   7LhHDufNQUiqcCRBARGHWEUO550q4DAYLLyI6t1u1YXE3Ya8WTLuNwbqS
+   jI6SODxti5KH6vfL8UjPj1ZvxrPMT9Z9C9zdDnEM8/yLNdgDl50uuRG89
+   oTyy6cYNDX2cx/0Z6Ry2f6BoDCxKEkZ0MjHPrRnu7SgBiQi1DehSN/7Eu
+   DS5nYnQKlJqwVjUe7GhfCMmgUMN092wQgOkvLrE58laY4dt52Y2eab7Ui
+   6GF8v082ggH7hD5lFuNuFdOXAqIt4fLcLSheV52mRKj7AU0txpKYjQfP0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10575"; a="319915435"
+X-IronPort-AV: E=Sophos;i="5.96,287,1665471600"; 
+   d="scan'208";a="319915435"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Dec 2022 03:53:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10575"; a="742562817"
+X-IronPort-AV: E=Sophos;i="5.96,287,1665471600"; 
+   d="scan'208";a="742562817"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Dec 2022 03:53:03 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pBDwc-001e2A-0a;
+        Fri, 30 Dec 2022 13:53:02 +0200
+Date:   Fri, 30 Dec 2022 13:53:01 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: pca9570: rename platform_data to chip_data
+Message-ID: <Y67RHbdFJBw/9KAU@smile.fi.intel.com>
+References: <20221230100044.23000-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
-In-Reply-To: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 30 Dec 2022 11:46:42 +0100
-Message-ID: <CAMRc=McOG5ozAPayO1o8nknEqLo3HMYX8kRhGmMoOWYFxDiuKg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: msc313: Drop empty platform remove function
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Daniel Palmer <daniel@thingy.jp>,
-        Romain Perier <romain.perier@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221230100044.23000-1-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 11:05 PM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> A remove callback just returning 0 is equivalent to no remove callback
-> at all. So drop the useless function.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+On Fri, Dec 30, 2022 at 11:00:44AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> By convention platform_data refers to structures passed to drivers by
+> code that registers devices. When talking about model-specific data
+> structures associated with OF compatibles, we usually call them chip_data.
+> 
+> In order to avoid confusion rename all mentions of platform_data to
+> chip_data.
+
+Fine by me,
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+
+> Fixes: fbb19fe17eae ("gpio: pca9570: add slg7xl45106 support")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/gpio/gpio-msc313.c | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
-> index 52d7b8d99170..b0773e5652fa 100644
-> --- a/drivers/gpio/gpio-msc313.c
-> +++ b/drivers/gpio/gpio-msc313.c
-> @@ -655,11 +655,6 @@ static int msc313_gpio_probe(struct platform_device =
-*pdev)
->         return devm_gpiochip_add_data(dev, gpiochip, gpio);
->  }
->
-> -static int msc313_gpio_remove(struct platform_device *pdev)
-> -{
-> -       return 0;
-> -}
-> -
->  static const struct of_device_id msc313_gpio_of_match[] =3D {
->  #ifdef CONFIG_MACH_INFINITY
->         {
-> @@ -710,6 +705,5 @@ static struct platform_driver msc313_gpio_driver =3D =
-{
->                 .pm =3D &msc313_gpio_ops,
->         },
->         .probe =3D msc313_gpio_probe,
-> -       .remove =3D msc313_gpio_remove,
+>  drivers/gpio/gpio-pca9570.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+> index 6c07a8811a7a..6a5a8e593ed5 100644
+> --- a/drivers/gpio/gpio-pca9570.c
+> +++ b/drivers/gpio/gpio-pca9570.c
+> @@ -18,11 +18,11 @@
+>  #define SLG7XL45106_GPO_REG	0xDB
+>  
+>  /**
+> - * struct pca9570_platform_data - GPIO platformdata
+> + * struct pca9570_chip_data - GPIO platformdata
+>   * @ngpio: no of gpios
+>   * @command: Command to be sent
+>   */
+> -struct pca9570_platform_data {
+> +struct pca9570_chip_data {
+>  	u16 ngpio;
+>  	u32 command;
 >  };
->  builtin_platform_driver(msc313_gpio_driver);
->
-> base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
-> --
-> 2.38.1
->
+> @@ -36,7 +36,7 @@ struct pca9570_platform_data {
+>   */
+>  struct pca9570 {
+>  	struct gpio_chip chip;
+> -	const struct pca9570_platform_data *p_data;
+> +	const struct pca9570_chip_data *chip_data;
+>  	struct mutex lock;
+>  	u8 out;
+>  };
+> @@ -46,8 +46,8 @@ static int pca9570_read(struct pca9570 *gpio, u8 *value)
+>  	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+>  	int ret;
+>  
+> -	if (gpio->p_data->command != 0)
+> -		ret = i2c_smbus_read_byte_data(client, gpio->p_data->command);
+> +	if (gpio->chip_data->command != 0)
+> +		ret = i2c_smbus_read_byte_data(client, gpio->chip_data->command);
+>  	else
+>  		ret = i2c_smbus_read_byte(client);
+>  
+> @@ -62,8 +62,8 @@ static int pca9570_write(struct pca9570 *gpio, u8 value)
+>  {
+>  	struct i2c_client *client = to_i2c_client(gpio->chip.parent);
+>  
+> -	if (gpio->p_data->command != 0)
+> -		return i2c_smbus_write_byte_data(client, gpio->p_data->command, value);
+> +	if (gpio->chip_data->command != 0)
+> +		return i2c_smbus_write_byte_data(client, gpio->chip_data->command, value);
+>  
+>  	return i2c_smbus_write_byte(client, value);
+>  }
+> @@ -127,8 +127,8 @@ static int pca9570_probe(struct i2c_client *client)
+>  	gpio->chip.get = pca9570_get;
+>  	gpio->chip.set = pca9570_set;
+>  	gpio->chip.base = -1;
+> -	gpio->p_data = device_get_match_data(&client->dev);
+> -	gpio->chip.ngpio = gpio->p_data->ngpio;
+> +	gpio->chip_data = device_get_match_data(&client->dev);
+> +	gpio->chip.ngpio = gpio->chip_data->ngpio;
+>  	gpio->chip.can_sleep = true;
+>  
+>  	mutex_init(&gpio->lock);
+> @@ -141,15 +141,15 @@ static int pca9570_probe(struct i2c_client *client)
+>  	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+>  }
+>  
+> -static const struct pca9570_platform_data pca9570_gpio = {
+> +static const struct pca9570_chip_data pca9570_gpio = {
+>  	.ngpio = 4,
+>  };
+>  
+> -static const struct pca9570_platform_data pca9571_gpio = {
+> +static const struct pca9570_chip_data pca9571_gpio = {
+>  	.ngpio = 8,
+>  };
+>  
+> -static const struct pca9570_platform_data slg7xl45106_gpio = {
+> +static const struct pca9570_chip_data slg7xl45106_gpio = {
+>  	.ngpio = 8,
+>  	.command = SLG7XL45106_GPO_REG,
+>  };
+> -- 
+> 2.37.2
+> 
 
-Applied, thanks!
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bartosz
+
