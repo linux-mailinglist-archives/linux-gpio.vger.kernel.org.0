@@ -2,40 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44DAB659721
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 11:11:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C581659770
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 11:47:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233830AbiL3KLv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 05:11:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49696 "EHLO
+        id S230087AbiL3Kq5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 05:46:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbiL3KLt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 05:11:49 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1518101D6;
-        Fri, 30 Dec 2022 02:11:47 -0800 (PST)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pBCMc-0003A1-Im; Fri, 30 Dec 2022 11:11:46 +0100
-Message-ID: <702e11a8-f38b-8f99-8d8a-6342e90fddd7@leemhuis.info>
-Date:   Fri, 30 Dec 2022 11:11:44 +0100
+        with ESMTP id S229924AbiL3Kq4 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 05:46:56 -0500
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992171A069
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:46:54 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id m129so15094203vsc.11
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 02:46:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uUYOOZ8LBLwFtX+7EAzxDq6pVogaDhHX3H7JwAK0omo=;
+        b=rePMrUbzSxd+LrNEreI3Srr5ZOS+dZ163dMWxcm6nXj+QFgy0xw5f6XsS3QrP+BDGB
+         lGyaCx3i3YYrFF/im19OG5k6oD6HrX1w0n0Smb5h4Q0/qEkhyuhCG/yOxAHZWLkjvkTq
+         u6u7cbcoaI+nsabgTCvcgO8hn04Vx644360gs0Vln8055xBy/+HLx59mldD5WpplHm2d
+         ngI3J4/urs1GKD2yXZzvRHBQu4vxvWCD4G9JoHW/JHicqAiV8+EIUxSegHzKEvWWGqE0
+         XSG+fzMDPAcwqMnqxgkDyHNmt33m3/J/CzSYBV/dbmskEtRkQ6X/hq4VbAxT1kZ2vyKZ
+         5Blw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uUYOOZ8LBLwFtX+7EAzxDq6pVogaDhHX3H7JwAK0omo=;
+        b=ilgLlKF1ibrpTBYdbiqnKZI1qCLCcqnlupwRMLLRMtMyyi68Oq0Mi/USnEM/E+2Kdw
+         SsvEkX0yAJaikD/4vgJIrI+o1sehc0CusjvJkdL3OuWfT/wem0Cz+4uCeYRIOLTbooZT
+         oXwQwKqgfi1rFL8Gfx3YtwjxbgK409O47+n0j4QwnB0OG8qOu/ROHh8lwTJgLTXVF0en
+         8o2MEOJWHSmVqUvSDP03v30GnZpolyViqClRX2Vdw5br+cHzd0pKoFnDdoTmjLrC7mFS
+         iuLT0HkYgQDhevsx2+GQDHxal24sGSzGqBtsA+Twmv8pm6bmSNTBGK2E+6gOSQQPktwy
+         BTKA==
+X-Gm-Message-State: AFqh2kpFG/FIv6nQe5+iFlMyR7KGE//JSXa2cMqrHLTyZT90dZCsovQN
+        moj+SP82fpNYShatTkUNgOqvrpfRCnNBgVHZwhyPlg==
+X-Google-Smtp-Source: AMrXdXsqoDOW+wG+9TepdlFGvE4UXo8vgs37MjARmdX+yAgu+H3RiNfeloDdzXO9w1SYtuuOvw7SojnhlmXHggIrFzY=
+X-Received: by 2002:a67:f642:0:b0:3c4:ec4b:b943 with SMTP id
+ u2-20020a67f642000000b003c4ec4bb943mr3151994vso.17.1672397213774; Fri, 30 Dec
+ 2022 02:46:53 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 6.2 regression fix] gpiolib: Fix using uninitialized
- lookup-flags on ACPI platforms #forregzbot
-Content-Language: en-US, de-DE
-To:     "regressions @ lists . linux . dev" <regressions@lists.linux.dev>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20221229164501.76044-1-hdegoede@redhat.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221229164501.76044-1-hdegoede@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672395108;95780a6b;
-X-HE-SMSGID: 1pBCMc-0003A1-Im
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
+In-Reply-To: <20221212220457.3777685-1-u.kleine-koenig@pengutronix.de>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 30 Dec 2022 11:46:42 +0100
+Message-ID: <CAMRc=McOG5ozAPayO1o8nknEqLo3HMYX8kRhGmMoOWYFxDiuKg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: msc313: Drop empty platform remove function
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Daniel Palmer <daniel@thingy.jp>,
+        Romain Perier <romain.perier@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -43,54 +71,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
-
-On 29.12.22 17:45, Hans de Goede wrote:
-> Commit 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups") refactors
-> fwnode_get_named_gpiod() and gpiod_get_index() into a unified
-> gpiod_find_and_request() helper.
-> 
-> The old functions both initialized their local lookupflags variable to
-> GPIO_LOOKUP_FLAGS_DEFAULT, but the new code leaves it uninitialized.
-> 
-> This is a problem for at least ACPI platforms, where acpi_find_gpio()
-> only does a bunch of *lookupflags |= GPIO_* statements and thus relies
-> on the variable being initialized.
-> 
-> The variable not being initialized leads to:
-> 
-> 1. Potentially the wrong flags getting used
-> 2. The check for conflicting lookup flags in gpiod_configure_flags():
->    "multiple pull-up, pull-down or pull-disable enabled, invalid config"
->    sometimes triggering, making the GPIO unavailable
-> 
-> Restore the initialization of lookupflags to GPIO_LOOKUP_FLAGS_DEFAULT
-> to fix this.
-> 
-> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+On Mon, Dec 12, 2022 at 11:05 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> A remove callback just returning 0 is equivalent to no remove callback
+> at all. So drop the useless function.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 > ---
-> Note I'm not working and not reading work email until Monday January 9th.
-> I hit this while doing some hobby stuff and I decided to send this out
-> right away to avoid others potentially wasting time debugging this, but
-> I will not see any replies until Monday January 9th.
+>  drivers/gpio/gpio-msc313.c | 6 ------
+>  1 file changed, 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-msc313.c b/drivers/gpio/gpio-msc313.c
+> index 52d7b8d99170..b0773e5652fa 100644
+> --- a/drivers/gpio/gpio-msc313.c
+> +++ b/drivers/gpio/gpio-msc313.c
+> @@ -655,11 +655,6 @@ static int msc313_gpio_probe(struct platform_device =
+*pdev)
+>         return devm_gpiochip_add_data(dev, gpiochip, gpio);
+>  }
+>
+> -static int msc313_gpio_remove(struct platform_device *pdev)
+> -{
+> -       return 0;
+> -}
+> -
+>  static const struct of_device_id msc313_gpio_of_match[] =3D {
+>  #ifdef CONFIG_MACH_INFINITY
+>         {
+> @@ -710,6 +705,5 @@ static struct platform_driver msc313_gpio_driver =3D =
+{
+>                 .pm =3D &msc313_gpio_ops,
+>         },
+>         .probe =3D msc313_gpio_probe,
+> -       .remove =3D msc313_gpio_remove,
+>  };
+>  builtin_platform_driver(msc313_gpio_driver);
+>
+> base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
+> --
+> 2.38.1
+>
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+Applied, thanks!
 
-#regzbot ^introduced 8eb1f71e7acc
-#regzbot title gpiolib: potentially the wrong flags getting used
-#regzbot fix: gpiolib: Fix using uninitialized lookup-flags on ACPI
-platforms
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Bartosz
