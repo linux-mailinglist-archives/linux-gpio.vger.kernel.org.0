@@ -2,87 +2,111 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CFCF659A34
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 16:51:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 259D6659A3C
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 16:56:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiL3Pvp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 10:51:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59446 "EHLO
+        id S235193AbiL3Pz6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 10:55:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbiL3Pvo (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 10:51:44 -0500
-Received: from mail-oi1-x234.google.com (mail-oi1-x234.google.com [IPv6:2607:f8b0:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF6AC764
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:51:44 -0800 (PST)
-Received: by mail-oi1-x234.google.com with SMTP id i127so19712115oif.8
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:51:44 -0800 (PST)
+        with ESMTP id S235181AbiL3Pz5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 10:55:57 -0500
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF0C8FFA
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:55:55 -0800 (PST)
+Received: by mail-vk1-xa31.google.com with SMTP id i84so3367761vke.7
+        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:55:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=F656lMOposhMckkjCGjS5NjDE/VCVOvwvNVXUf+PeSw=;
-        b=q9KhtncsHTQ9Ify6p0bGyTOm2n64gX0fIkSM54PoOaYAVYiU41+fYETKwn4vLgdfwC
-         J4O9RXBDf6c3GiI1i9h0spItlYOh27mEv5S/DNZ+LgqIHKIUkEH/vSAJ3xS+CmSsayvw
-         RxiJwj2cVg37rOYT0V55dMWnN5t5ttPqZ+pfvwss2ef/N9AOx99AZ6c9Tee3gtK9pKyv
-         VUDviHy7ddITLAOWwEjABNcMzv//CFbTdAy50K2UCHGrcwYZ/B/jhxUaSu3Fyit03Sky
-         pJ4z8wve+t/f60ws5M3PDyZiZNBYagSdTFnoQfUZCmwjhSo4Wbm8IsTtfMe/JPaFCQLC
-         ITZQ==
+        bh=o7zb+TjyOCJ5Qv3IrJ07U93Hor1hao+xRRIpVMTYJ34=;
+        b=sXRZXJyjtqPl1pLLhxIM2Bprko/93NJCyv2iToSKUrcfMjnYapW/R8FMjoDC4muljW
+         PcmInvjhlsB/i6PAMqPcVxgyPvhFNCSaCXxCcdCiYVGeYlLN/rtnWbIsqfw3ixJNphs8
+         o2E5ImzHY/f1xcxvc68UV541Z+4AUZqfxfWMap9wy+j+Bz6j/0U5K7wyo+Bpr3RmCdx0
+         OR2NQP/XJ5+EO0NmEEblkiYGbFJYWj2tRmrMjVZRuXb58TDQE4gyd4mkPPdOOpJboEUa
+         3b9cjZRogQLLKfvJlxf3CE+RQeRdVZGgqxNjt2uwRYZ97rz3ULcu000PiWT3oQfYGGZs
+         1zNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=F656lMOposhMckkjCGjS5NjDE/VCVOvwvNVXUf+PeSw=;
-        b=UPrj7CbmkcApa/m79AD7xRvBMJh3Ce99PP7SvGVji3cwHwrtx4b3Wj+EpJLUDI4a15
-         ImKYMVJl1ngyD+P2831buRaM9GyLdcIHOZkaU22y9ybIOA0gmh4Gsg4Gnx15+o8HE/u+
-         F5VHAkJ2GAaIRwV669Z4z5ValBt7yHJ/uzwW+TZj5dKeRKbelrIxdxIlQ0XHgc+KMiwK
-         +ufpfvE5v9EpNL61W358WZkgv4usJty5N60H27dnT6fpIHug8E+RvuVdCvm+xQP8RBcY
-         MpduptJJWMRXZdrDXadu61wyxmkOdf9FQfUPdTVmva2nyFabhVskHiSijn+dYiTLq9la
-         dbkg==
-X-Gm-Message-State: AFqh2kpqnaVKdSaOjPLGy4Sg0WagDG8QqAZjyhso+LKElh0IOQkqbzwo
-        wWFBvAofdUCjQGz9GeRMSzYqv9Bafa2CNioOGpHxMw==
-X-Google-Smtp-Source: AMrXdXuTY0+jFO1zHE2LSUiACUdxijn3DzB10hNf9rWgHZj3JVyKEaiK0B9P4P3EbIovcXxqRBz6EtbYJ67WUdY6TI8=
-X-Received: by 2002:aca:3dd7:0:b0:35b:8358:aed4 with SMTP id
- k206-20020aca3dd7000000b0035b8358aed4mr1698246oia.291.1672415503475; Fri, 30
- Dec 2022 07:51:43 -0800 (PST)
+        bh=o7zb+TjyOCJ5Qv3IrJ07U93Hor1hao+xRRIpVMTYJ34=;
+        b=rvFMzI4sIWsdMeD+jIP32MnvBUaxFZbSc8P0Vc9okeyAtqEWXyUdopIoMXRJcnyXtP
+         8KlbkdF7V+KCPO49yMF+5bErYnZtI/gMLhrGzsNOtiP0JNRs42T2eilIaqaq00JmCdKI
+         XE9q3vUhbhSM5GR0KNUPByXquqa2hfwHRTN1ZMG7N572Muapi2rhWt+HF0ykybWHx/Fm
+         zW5Vq7M9othUqzJmDNt5zRByuxWGotksbU2MVJRu0MviIggAECN0wWk3pKE23odg4QjF
+         I/TmmpOKUduZb5ehGFsaiMY6BZV+Y9HFjPbQpcaDEAmhb/qVhk7pUFhKozmGuB+q0S6Z
+         x/2A==
+X-Gm-Message-State: AFqh2kqsuff0uWTcpJzuHZCKLgz5v0VsxOyNcT0W7CMyqVOrpf1uWvlh
+        s9GCBebw0xW227LSLc9mFQneA/S1bMqK2J2SgJkd3A==
+X-Google-Smtp-Source: AMrXdXuykR6UjtrhR8E0rPTCaSKn77+wJWJFDWSlNmnqsysrri8SrWgpPgnvpWQ+tLAKGdS12NC0U2QDLuurNt7NZrc=
+X-Received: by 2002:ac5:c382:0:b0:3bd:e0b8:e350 with SMTP id
+ s2-20020ac5c382000000b003bde0b8e350mr3545220vkk.25.1672415755006; Fri, 30 Dec
+ 2022 07:55:55 -0800 (PST)
 MIME-Version: 1.0
-References: <20221230100044.23000-1-brgl@bgdev.pl>
-In-Reply-To: <20221230100044.23000-1-brgl@bgdev.pl>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 30 Dec 2022 16:51:31 +0100
-Message-ID: <CACRpkdY72tihcurkf98pupYWiHOj0nCbX4uAp93KdG4xoscZ1Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: pca9570: rename platform_data to chip_data
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+References: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
+In-Reply-To: <20221219192016.1396950-1-dmitry.torokhov@gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 30 Dec 2022 16:55:44 +0100
+Message-ID: <CAMRc=Mdp39GpD8XJO4U5rJiU7t-C6jeNs37sp_JyKEaGf6y6rA@mail.gmail.com>
+Subject: Re: [PATCH 1/5] gpiolib: of: remove of_gpio_count()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Dec 30, 2022 at 11:00 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Dec 19, 2022 at 8:20 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
 >
-> By convention platform_data refers to structures passed to drivers by
-> code that registers devices. When talking about model-specific data
-> structures associated with OF compatibles, we usually call them chip_data.
+> There are no more users of of_gpio_count() in the mainline kernel,
+> remove it.
 >
-> In order to avoid confusion rename all mentions of platform_data to
-> chip_data.
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
 >
-> Fixes: fbb19fe17eae ("gpio: pca9570: add slg7xl45106 support")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> After 6.2-rc1 there should be no more users of the APIs mentioned in
+> this series.
+>
+>  include/linux/of_gpio.h | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
+> index 6db627257a7b..39f16a960565 100644
+> --- a/include/linux/of_gpio.h
+> +++ b/include/linux/of_gpio.h
+> @@ -105,17 +105,6 @@ static inline int of_gpio_named_count(const struct device_node *np,
+>         return of_count_phandle_with_args(np, propname, "#gpio-cells");
+>  }
+>
+> -/**
+> - * of_gpio_count() - Count GPIOs for a device
+> - * @np:                device node to count GPIOs for
+> - *
+> - * Same as of_gpio_named_count, but hard coded to use the 'gpios' property
+> - */
+> -static inline int of_gpio_count(const struct device_node *np)
+> -{
+> -       return of_gpio_named_count(np, "gpios");
+> -}
+> -
+>  static inline int of_get_gpio_flags(const struct device_node *np, int index,
+>                       enum of_gpio_flags *flags)
+>  {
+> --
+> 2.39.0.314.g84b9a713c41-goog
+>
 
-Yes this is more to the point.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I applied the entire series, thanks a lot for doing that!
 
-Yours,
-Linus Walleij
+Bart
