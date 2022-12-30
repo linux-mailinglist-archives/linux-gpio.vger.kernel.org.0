@@ -2,111 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7F8659A40
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 16:59:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CF5659B78
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 19:43:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbiL3P74 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 10:59:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33734 "EHLO
+        id S235271AbiL3SnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 13:43:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235333AbiL3P7y (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 10:59:54 -0500
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9920219C36
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:59:51 -0800 (PST)
-Received: by mail-vs1-xe2b.google.com with SMTP id i188so21651912vsi.8
-        for <linux-gpio@vger.kernel.org>; Fri, 30 Dec 2022 07:59:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=hD//RF4blNAzKMQHle6kDDLz8WA64xw1Lyfp9+dzdpI=;
-        b=rJVz6Q9TZfsUfZEMrNibT7dNKb+3pE4AwoNbfkrU6skAfCw8eMzXouc3vSqaVb+vZP
-         7QtFxrOEbIq3E8bzOgt+roB+bQOdA/rbez92xxmaHTfn2Al21EuQwUwCh8wBxu+CKrG0
-         8iojxr2oHhIjOF6wxn+A7rWaWSypnHB7/sLb452tHljRbGO36zX6B9ak7ogdPS4ypO8G
-         vqYTLMo5fgEisBiFZ0JqmWcfUzHijeqf8JnqQ2gXclomQ/FEjpCvC9IsLGOK//kPehwe
-         go7BiiPpHuBrXJwOY7klNC1e2qbGY71IxOF3t8IO2TwJRof6IeFEb4xNtbfXSMofe65E
-         vMXA==
+        with ESMTP id S231210AbiL3SnR (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 13:43:17 -0500
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4ED193D5;
+        Fri, 30 Dec 2022 10:43:17 -0800 (PST)
+Received: by mail-io1-f46.google.com with SMTP id g20so11518317iob.2;
+        Fri, 30 Dec 2022 10:43:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hD//RF4blNAzKMQHle6kDDLz8WA64xw1Lyfp9+dzdpI=;
-        b=4T2sE+oppCJSmHFUGnOrhWJ+E7qBixxkPjd0bQlWlMIl/At1uY4+2RRMvImI/VZfBN
-         p+1g7ajaFuzxepyl6lbjjH4NbF6v0DmWj6jHdqfX5Ec/PmItjLCVqS0gx7Kgye5EzKnA
-         CPAOByOyhoEYpuHyQit6AT28aPG+om8BpGspFae4GF8uSy9xq1hDW18JYExULxmQEVoQ
-         IaOgPpo3i6ihmEagql7hQniON+VowCCoxhrnkVOdsPyQpS2wLXXzsdyXv0LWYqKsITWH
-         AsxBIsTGJR+KikOCoXUjQSGwxidGNJESu5LdY6ber8kl1Q8hxCSED20X8sQBI3HrmYSA
-         plpA==
-X-Gm-Message-State: AFqh2kowfoZq7utUHJ5f563qNPMpTTrwzbM+J22wsZm6+zN3Erpifsnc
-        qhT0nWkonOEGTPO9ugNjHK0xihOQ+bCqkRBeWYXFx8hkyf8tGA==
-X-Google-Smtp-Source: AMrXdXtfilpeqY0j9oUYEitFCGn7fOM3TRS2YPIKHdV/PTt+Mmuvb+rbJtq53UdKYAoFFdMIG5aVcCeDfKlCCAguVHo=
-X-Received: by 2002:a67:df8c:0:b0:3c5:1ac1:bf38 with SMTP id
- x12-20020a67df8c000000b003c51ac1bf38mr3071643vsk.78.1672415990740; Fri, 30
- Dec 2022 07:59:50 -0800 (PST)
+        bh=Bo9uiJL+jQwXg/fmSBNdw4FLuv03OF+8Leb88B6BpXY=;
+        b=acNNmHz0N5oMexsM6/3PY1qYtj12Nah/kOlT/408nzaSdoqwyIY5c1gMJFwoM/d206
+         N8vsnNstAOS1fDGrEbdbq7KQUZGNpKyI5HTWyAP370/CfhDAR/a7mEFaKO6/mhbif0wk
+         C8qA5xRoGwhiViJmP6q0MsYnt8MOUaEBK3pooXQmfHn2UAZxYM2vUDspNegpTWor234t
+         gr/riKz7LYpcMyzm19nPoHZ0VT9/KHYOPxgFdmPXVt8itkZt6xGK8WyATrMqH4ivx4QX
+         Y7tNhwZ6lsfkmfgu1EJtkBTYLmAHhoYIAAKTRNyB9knSLTQdCeTBe7q+P9YHd5Meiv3+
+         clPA==
+X-Gm-Message-State: AFqh2koIQbWLxrQBdc4Q28qqoWQi2rJLmII7Sqh+VBi19x3+gvYeCDvQ
+        Dfg7EeLRvwxISpVdRzB7A7j8ixr5alog1s0Qals=
+X-Google-Smtp-Source: AMrXdXu+0JX+rmTGKCCKC+77wZZQDyTntId0U1blt/eLvzfrlcs2+9ogm4oG7QM3z1IOBVEZsePiVwyzUWuTJJ6tmB4=
+X-Received: by 2002:a05:6638:8d:b0:38a:3357:8a4 with SMTP id
+ v13-20020a056638008d00b0038a335708a4mr2599316jao.53.1672425796354; Fri, 30
+ Dec 2022 10:43:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20221229145545.14055-1-cixi.geng@linux.dev>
-In-Reply-To: <20221229145545.14055-1-cixi.geng@linux.dev>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 30 Dec 2022 16:59:40 +0100
-Message-ID: <CAMRc=MeCCT09umHQ+T6Z6OXMedBh3UXzmQ=1PCyo1zEMr34TCw@mail.gmail.com>
-Subject: Re: [PATCH V4 0/3] Make the irqchip immutable
-To:     Cixi Geng <cixi.geng@linux.dev>
-Cc:     linus.walleij@linaro.org, orsonzhai@gmail.com,
-        baolin.wang@linux.alibaba.com, zhang.lyra@gmail.com,
+References: <20221229125957.45923-1-andriy.shevchenko@linux.intel.com> <20221229125957.45923-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221229125957.45923-2-andriy.shevchenko@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 30 Dec 2022 19:43:04 +0100
+Message-ID: <CAJZ5v0j3Dv5DJh4oN+i2qXi=zU8PhGeMsUY2v-mZU5tKJWmsxg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] pm: Introduce DEFINE_NOIRQ_DEV_PM_OPS() helper
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Paul Cercueil <paul@crapouillou.net>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        cixi.geng1@unisoc.com
+        linux-pm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 3:56 PM Cixi Geng <cixi.geng@linux.dev> wrote:
+On Thu, Dec 29, 2022 at 1:59 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> From: Cixi Geng <cixi.geng1@unisoc.com>
+> There are a few drivers and might be more in the future that
+> open code the functionality of proposed DEFINE_NOIRQ_DEV_PM_OPS()
+> helper. From now on they may switch to the new helper and save
+> a few lines of code.
 >
-> Kernel warns about mutable irq_chips:
->     "not an immutable chip, please consider fixing!"
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/pm.h | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> Make the struct irq_chip const, flag it as IRQCHIP_IMMUTABLE, add the
-> new helper functions, and call the appropriate gpiolib functions.
+> diff --git a/include/linux/pm.h b/include/linux/pm.h
+> index 93cd34f00822..eba96822b1d9 100644
+> --- a/include/linux/pm.h
+> +++ b/include/linux/pm.h
+> @@ -444,6 +444,11 @@ const struct dev_pm_ops __maybe_unused name = { \
+>         SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
+>  }
 >
-> v2 changes:
-> Split the patch by each driver. and other comment by baolin in[1]
+> +#define DEFINE_NOIRQ_DEV_PM_OPS(name, suspend_fn, resume_fn) \
+> +const struct dev_pm_ops name = { \
+> +       NOIRQ_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+> +}
+
+There is NOIRQ_SYSTEM_SLEEP_PM_OPS(), so why is the above needed in addition?
+
+> +
+>  #define pm_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM), (_ptr))
+>  #define pm_sleep_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM_SLEEP), (_ptr))
 >
-> v3 changes:
-> Fix cocci warnings test by lkp[2].
->
-> v4 changes:
-> Change the irq name.
-> Keep the same coding style by using offset for irqd_to_hwirq(data)
-> Add Reviewed-by tag.
->
-> [1]:https://lore.kernel.org/all/97e244d4-6b5c-31c9-7329-b8deef615645@linux.alibaba.com/
-> [2]:https://lore.kernel.org/all/202212240406.9Nm190P8-lkp@intel.com/
->
-> Cixi Geng (3):
->   gpio: eic-sprd: Make the irqchip immutable
->   gpio: gpio-pmic-eic-sprd: Make the irqchip immutable
->   gpio: gpio-sprd: Make the irqchip immutable
->
->  drivers/gpio/gpio-eic-sprd.c      | 23 ++++++++++++++---------
->  drivers/gpio/gpio-pmic-eic-sprd.c | 29 ++++++++++++++++++-----------
->  drivers/gpio/gpio-sprd.c          |  9 ++++++---
->  3 files changed, 38 insertions(+), 23 deletions(-)
->
->
-> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
 > --
-> 2.34.1
->
-
-Series queued for fixes, thanks!
-
-Bart
