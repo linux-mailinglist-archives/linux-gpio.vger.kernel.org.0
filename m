@@ -2,95 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61CF5659B78
-	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 19:43:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C842659B9D
+	for <lists+linux-gpio@lfdr.de>; Fri, 30 Dec 2022 20:23:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235271AbiL3SnS (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 30 Dec 2022 13:43:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59708 "EHLO
+        id S229464AbiL3TXy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 30 Dec 2022 14:23:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231210AbiL3SnR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 13:43:17 -0500
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A4ED193D5;
-        Fri, 30 Dec 2022 10:43:17 -0800 (PST)
-Received: by mail-io1-f46.google.com with SMTP id g20so11518317iob.2;
-        Fri, 30 Dec 2022 10:43:17 -0800 (PST)
+        with ESMTP id S231443AbiL3TXx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 30 Dec 2022 14:23:53 -0500
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D82791C109;
+        Fri, 30 Dec 2022 11:23:52 -0800 (PST)
+Received: by mail-qk1-x72e.google.com with SMTP id pe2so10737978qkn.1;
+        Fri, 30 Dec 2022 11:23:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=D84WOL4GXwiTJJrpeQ62xovhe59CcQCnUedXOg/LW00=;
+        b=EuHJC6PQvaT3bny/WLU7UySyxKy95WJVrh6K52HROLylITYzIzx8pU2j83UreqPVEc
+         PqDU7/HtRPUwJDIfShHAI30gshq21vjYX8Ya4wYqfv29tAtZrHnWIoc+6ySZCllxu5Px
+         BuCJHLe/JkpcjSkgVJ5e4qYjRZjsuavGN+oFEyYa5BCL5RjUJdCG+j2ZMZMapUQjuTef
+         x3h73DVJucewKBWWkKey5PHchnWCX10wy3YUL4YpA1E2v+3D0ElkSFl/6rO5JX9pAX7d
+         AmPx+cgpvQEifQ0yph+liQ0/LxcX9GXjMgQlP8u5dCcivLlWgL/Kb3cNTmhzTt2sMzyA
+         BQ/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Bo9uiJL+jQwXg/fmSBNdw4FLuv03OF+8Leb88B6BpXY=;
-        b=acNNmHz0N5oMexsM6/3PY1qYtj12Nah/kOlT/408nzaSdoqwyIY5c1gMJFwoM/d206
-         N8vsnNstAOS1fDGrEbdbq7KQUZGNpKyI5HTWyAP370/CfhDAR/a7mEFaKO6/mhbif0wk
-         C8qA5xRoGwhiViJmP6q0MsYnt8MOUaEBK3pooXQmfHn2UAZxYM2vUDspNegpTWor234t
-         gr/riKz7LYpcMyzm19nPoHZ0VT9/KHYOPxgFdmPXVt8itkZt6xGK8WyATrMqH4ivx4QX
-         Y7tNhwZ6lsfkmfgu1EJtkBTYLmAHhoYIAAKTRNyB9knSLTQdCeTBe7q+P9YHd5Meiv3+
-         clPA==
-X-Gm-Message-State: AFqh2koIQbWLxrQBdc4Q28qqoWQi2rJLmII7Sqh+VBi19x3+gvYeCDvQ
-        Dfg7EeLRvwxISpVdRzB7A7j8ixr5alog1s0Qals=
-X-Google-Smtp-Source: AMrXdXu+0JX+rmTGKCCKC+77wZZQDyTntId0U1blt/eLvzfrlcs2+9ogm4oG7QM3z1IOBVEZsePiVwyzUWuTJJ6tmB4=
-X-Received: by 2002:a05:6638:8d:b0:38a:3357:8a4 with SMTP id
- v13-20020a056638008d00b0038a335708a4mr2599316jao.53.1672425796354; Fri, 30
- Dec 2022 10:43:16 -0800 (PST)
+        bh=D84WOL4GXwiTJJrpeQ62xovhe59CcQCnUedXOg/LW00=;
+        b=iOcamezx6w+qDAsFoAsG0JsaudwINpRu0M3LVRZfd8mPif1eOqUtJC4516QsyCkYBs
+         sY3NNFAVCLns98tJeU4fYByIuq93hnp0Ie4BetYXUd7BV2+X+5bUMkB1Up+SIYLMsgBg
+         zkx7DRJ8HyHZjGXSuzWbV0js+FPuMYsM509yjAvvHW+MclD0K7x47E+XXONmsesgGKrB
+         e/9+OmyDDpGz3T8/BQg2CjR/gAvXfc7a3AmljOmgIl9S6nnqqRyR6seUzCvImsmJn/r0
+         sHqmTfmjtiiqITZrv+JgK1m8fh84oL4ZEjklKsJtPLeDmwjTZdscp572v9EbV/YKxmpk
+         1R7w==
+X-Gm-Message-State: AFqh2kqVirx77ry0MPMXOx//FcRYfh7x3nTnrcB07wSQbHy/IyyK3jok
+        oxeyUATsLNELRQFnOc3PzFZiI757tmM0xkSIyUA=
+X-Google-Smtp-Source: AMrXdXsFvWJtbCWpXfh/Kc6BBBK6TYIxePUMGUDDiNyUVAnHli5E78muOTSd4Ltgq1cgxiR/M2U9BV1e5ti0TJ9NNjE=
+X-Received: by 2002:a37:a96:0:b0:6ff:3ebb:500 with SMTP id 144-20020a370a96000000b006ff3ebb0500mr1836335qkk.320.1672428231949;
+ Fri, 30 Dec 2022 11:23:51 -0800 (PST)
 MIME-Version: 1.0
-References: <20221229125957.45923-1-andriy.shevchenko@linux.intel.com> <20221229125957.45923-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20221229125957.45923-2-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 30 Dec 2022 19:43:04 +0100
-Message-ID: <CAJZ5v0j3Dv5DJh4oN+i2qXi=zU8PhGeMsUY2v-mZU5tKJWmsxg@mail.gmail.com>
+References: <20221229125957.45923-1-andriy.shevchenko@linux.intel.com>
+ <20221229125957.45923-2-andriy.shevchenko@linux.intel.com> <CAJZ5v0j3Dv5DJh4oN+i2qXi=zU8PhGeMsUY2v-mZU5tKJWmsxg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0j3Dv5DJh4oN+i2qXi=zU8PhGeMsUY2v-mZU5tKJWmsxg@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 30 Dec 2022 21:23:15 +0200
+Message-ID: <CAHp75Vdca1bMJeJwrOK5fOp8+TnJYwus3z6PyYyvhg+LDgyufg@mail.gmail.com>
 Subject: Re: [PATCH v1 1/3] pm: Introduce DEFINE_NOIRQ_DEV_PM_OPS() helper
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Paul Cercueil <paul@crapouillou.net>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 1:59 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> There are a few drivers and might be more in the future that
-> open code the functionality of proposed DEFINE_NOIRQ_DEV_PM_OPS()
-> helper. From now on they may switch to the new helper and save
-> a few lines of code.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  include/linux/pm.h | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/include/linux/pm.h b/include/linux/pm.h
-> index 93cd34f00822..eba96822b1d9 100644
-> --- a/include/linux/pm.h
-> +++ b/include/linux/pm.h
-> @@ -444,6 +444,11 @@ const struct dev_pm_ops __maybe_unused name = { \
->         SET_RUNTIME_PM_OPS(suspend_fn, resume_fn, idle_fn) \
->  }
->
-> +#define DEFINE_NOIRQ_DEV_PM_OPS(name, suspend_fn, resume_fn) \
-> +const struct dev_pm_ops name = { \
-> +       NOIRQ_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
-> +}
+On Fri, Dec 30, 2022 at 8:43 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> On Thu, Dec 29, 2022 at 1:59 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > There are a few drivers and might be more in the future that
+> > open code the functionality of proposed DEFINE_NOIRQ_DEV_PM_OPS()
+> > helper. From now on they may switch to the new helper and save
+> > a few lines of code.
 
-There is NOIRQ_SYSTEM_SLEEP_PM_OPS(), so why is the above needed in addition?
+...
 
-> +
->  #define pm_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM), (_ptr))
->  #define pm_sleep_ptr(_ptr) PTR_IF(IS_ENABLED(CONFIG_PM_SLEEP), (_ptr))
+> > +#define DEFINE_NOIRQ_DEV_PM_OPS(name, suspend_fn, resume_fn) \
+> > +const struct dev_pm_ops name = { \
+> > +       NOIRQ_SYSTEM_SLEEP_PM_OPS(suspend_fn, resume_fn) \
+> > +}
 >
-> --
+> There is NOIRQ_SYSTEM_SLEEP_PM_OPS(), so why is the above needed in addition?
+
+It defines the constant object of struct dev_pm_ops type with this
+included and as the commit message says, allows to save a few lines of
+code in each of the drivers that uses NOIRQ_SYSTEM_SLEEP_PM_OPS()
+currently. The examples on how to convert are provided in the patches
+2 and 3.
+
+-- 
+With Best Regards,
+Andy Shevchenko
