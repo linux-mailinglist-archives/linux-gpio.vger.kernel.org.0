@@ -2,109 +2,141 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 34BBC65A6D6
-	for <lists+linux-gpio@lfdr.de>; Sat, 31 Dec 2022 21:21:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92C1E65ABDF
+	for <lists+linux-gpio@lfdr.de>; Sun,  1 Jan 2023 23:01:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235842AbiLaUVg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 31 Dec 2022 15:21:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        id S230407AbjAAWB4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 1 Jan 2023 17:01:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232038AbiLaUVf (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 31 Dec 2022 15:21:35 -0500
-X-Greylist: delayed 421 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 31 Dec 2022 12:21:34 PST
-Received: from relay04.th.seeweb.it (relay04.th.seeweb.it [IPv6:2001:4b7a:2000:18::165])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EA4E60EE
-        for <linux-gpio@vger.kernel.org>; Sat, 31 Dec 2022 12:21:34 -0800 (PST)
-Received: from SoMainline.org (94-211-6-86.cable.dynamic.v4.ziggo.nl [94.211.6.86])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by m-r1.th.seeweb.it (Postfix) with ESMTPSA id E35671F71E;
-        Sat, 31 Dec 2022 21:14:29 +0100 (CET)
-Date:   Sat, 31 Dec 2022 21:14:27 +0100
-From:   Marijn Suijten <marijn.suijten@somainline.org>
-To:     Adam Skladowski <a39.skl@gmail.com>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: qcom: pinctrl-msm8976: Correct function names
- for wcss pins
-Message-ID: <20221231201427.4zvubd4cqkaphayd@SoMainline.org>
-Mail-Followup-To: Marijn Suijten <marijn.suijten@somainline.org>,
-        Adam Skladowski <a39.skl@gmail.com> phone-devel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20221231164250.74550-1-a39.skl@gmail.com>
+        with ESMTP id S229904AbjAAWBy (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 1 Jan 2023 17:01:54 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4BB11F
+        for <linux-gpio@vger.kernel.org>; Sun,  1 Jan 2023 14:01:52 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id jo4so62981110ejb.7
+        for <linux-gpio@vger.kernel.org>; Sun, 01 Jan 2023 14:01:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9nAEQgskD1p+skSduuar8ryWV0VfVRmc/5BdM22AEHM=;
+        b=QHZknpCyz6goEZvOFtEpnRgZs7Bjhg4tCY45czBLsETy73xMfeLOZ4svEmlqO04aQd
+         P2Gg9WJzpPVmELWtFMIsV6H+ZWqHwl5d3zrBhQsWycE0LTzR60IahcIDIqWPLGl9WrV6
+         5yavHHY96RmAlStBCsNXggvH6hougx5I0KWCDSUEUafetM5qMopZBuyhqq0JdXn5mfJO
+         rdpJyq9YsOkEBEza1HdCMpLSx6xgQrvM19dtEnT68fvtBhfZYdrdwi2yIU4LuLJ0sV4B
+         cdayUYAR5IAu+KDUGY0ktUjOEOluvrgWGYb2GfoUzZi2QM3/txkf9fj2x2RR07rg4u/T
+         qCiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9nAEQgskD1p+skSduuar8ryWV0VfVRmc/5BdM22AEHM=;
+        b=c2ZD04ewiA3DAIMwFwAq4wHNpL4avp47fiZ0K35P/LBPQNgQRiO6JKJhO+KBPq/xt7
+         iiixZMCIWAou7Pqgp275hQLnbn/ecTTa44W5VYl0mid9eVLaEqAlXaFBN4Nha5bNp8GX
+         UhpTeITC/LDgz6wgNlckkxNeyujuacKSnH0peV+pMlLS/gX8ILITITySTwSWcshcCyqV
+         vFTWw04pOHt+CH/LuzVbp7Bkruu4WtQMOG80Oagq9dEwhtDJ8dyyyjxM9MYQINTKvhhT
+         +j3qVAN20NBOa5hh0V9e0VH9XU8bmScYvdLZ/ooyJiJYosTlXhrdDgHOxkih0QEAsOEN
+         PzPQ==
+X-Gm-Message-State: AFqh2ko+mk+XXAfxI7UKMjWv/aohWPhlcOW0r/NrcX+6yOprwXsF6z7X
+        dsmC8tW1omx12ptXUR2S5hTpSA==
+X-Google-Smtp-Source: AMrXdXvEfhtw8CmHeGkLwdMMPysWFJzv5uV+nc1KGgWUinvLxJebmQBqV1yB7wAGo/jHBa6kwrZbdA==
+X-Received: by 2002:a17:906:6807:b0:7c0:9805:4060 with SMTP id k7-20020a170906680700b007c098054060mr44649306ejr.38.1672610511451;
+        Sun, 01 Jan 2023 14:01:51 -0800 (PST)
+Received: from predatorhelios.fritz.box (dynamic-2a01-0c23-7c55-d800-0fbe-25d2-487e-ae5c.c23.pool.telefonica.de. [2a01:c23:7c55:d800:fbe:25d2:487e:ae5c])
+        by smtp.gmail.com with ESMTPSA id d12-20020a170906304c00b007c17b3a4163sm12486807ejd.15.2023.01.01.14.01.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jan 2023 14:01:51 -0800 (PST)
+From:   =?UTF-8?q?Bernhard=20Rosenkr=C3=A4nzer?= <bero@baylibre.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        tglx@linutronix.de, maz@kernel.org, lee@kernel.org,
+        linus.walleij@linaro.org, matthias.bgg@gmail.com,
+        chunfeng.yun@mediatek.com, gregkh@linuxfoundation.org,
+        angelogioacchino.delregno@collabora.com,
+        allen-kh.cheng@mediatek.com, nfraprado@collabora.com,
+        sean.wang@mediatek.com, zhiyong.tao@mediatek.com
+Subject: [PATCH v7 0/7] Add minimal MT8365 and MT8365-EVK support
+Date:   Sun,  1 Jan 2023 23:01:42 +0100
+Message-Id: <20230101220149.3035048-1-bero@baylibre.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221231164250.74550-1-a39.skl@gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 2022-12-31 17:42:50, Adam Skladowski wrote:
-> Adjust names of function for wcss pins, also fix third gpio in bt group.
+This adds minimal support for the MediaTek 8365 SOC and the EVK reference
+board, allowing the board to boot to initramfs with serial port I/O.
 
-Agreed, the wcss_wlan[210]_groups arrays and functions are unused prior
-to this patch nor are pins 40/41/42 part of wcss_wlan_groups (which only
-contains 43 and 44).  Same for the BT fix, the pingroup for pin 48 is
-clearly wcss_bt and there's none for pin 88.
+v7:
+  - Update GIC information in mt8365.dtsi (thanks to Marc Zyngier for
+    pointing out the problem)
+  - Adjust the timer to match the updated GIC information
 
-You could have made that more clear in the commit message though (and
-I'm not even sure if pinctrl allows the pins to be used when the groups
-are misaligned like this, at least there's a fixes: tag), but for the
-change itself:
+v6:
+  - Add systimer in mt8365.dtsi
+  - Add I/D caches and L2 cache details in mt8365.dtsi
+  - Move bl31_secmon_reserved from mt8365.dtsi to mt8365-evk.dts
+  - Fix inconsistent indentation in mt8365-pinctrl example
+  - Further mt8365.dtsi cleanups
+  - Submit to additional maintainers spotted by get_maintainer.pl
 
-Reviewed-by: Marijn Suijten <marijn.suijten@somainline.org>
+v5:
+  - Reorder top-level entries in mediatek,mt8365-pinctrl.yaml to match
+    example-schema
+  - Use consistent quotes
 
-> Fixes: bcd11493f0ab ("pinctrl: qcom: Add a pinctrl driver for MSM8976 and 8956")
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm8976.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm8976.c b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-> index ec43edf9b660..e11d84584719 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm8976.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm8976.c
-> @@ -733,7 +733,7 @@ static const char * const codec_int2_groups[] = {
->  	"gpio74",
->  };
->  static const char * const wcss_bt_groups[] = {
-> -	"gpio39", "gpio47", "gpio88",
-> +	"gpio39", "gpio47", "gpio48",
->  };
->  static const char * const sdc3_groups[] = {
->  	"gpio39", "gpio40", "gpio41",
-> @@ -958,9 +958,9 @@ static const struct msm_pingroup msm8976_groups[] = {
->  	PINGROUP(37, NA, NA, NA, qdss_tracedata_b, NA, NA, NA, NA, NA),
->  	PINGROUP(38, NA, NA, NA, NA, NA, NA, NA, qdss_tracedata_b, NA),
->  	PINGROUP(39, wcss_bt, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> -	PINGROUP(40, wcss_wlan, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> -	PINGROUP(41, wcss_wlan, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> -	PINGROUP(42, wcss_wlan, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> +	PINGROUP(40, wcss_wlan2, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> +	PINGROUP(41, wcss_wlan1, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
-> +	PINGROUP(42, wcss_wlan0, sdc3, NA, qdss_tracedata_a, NA, NA, NA, NA, NA),
->  	PINGROUP(43, wcss_wlan, sdc3, NA, NA, qdss_tracedata_a, NA, NA, NA, NA),
->  	PINGROUP(44, wcss_wlan, sdc3, NA, NA, NA, NA, NA, NA, NA),
->  	PINGROUP(45, wcss_fm, NA, qdss_tracectl_a, NA, NA, NA, NA, NA, NA),
-> -- 
-> 2.25.1
-> 
+v4:
+  - Remove pins-are-numbered references that have been holding things up
+    now that the patches removing it from dt-bindings have landed in linux-next
+
+v3:
+  - Remove a number of components that are not yet supported (they will
+    come back alongside the corresponding drivers)
+  - Address issues found by dt_binding_check (mostly fixing pinctrl
+    bindings)
+  - Address issues pointed out in comments
+  - Reorder patches
+
+v2:
+  - Add missing dt-bindings documentation
+  - Small cleanups addressing issues in v1 pointed out by Krzysztof Kozlowski
+
+
+Bernhard Rosenkränzer (4):
+  dt-bindings: arm64: dts: mediatek: Add mt8365-evk board
+  dt-bindings: irq: mtk, sysirq: add support for mt8365
+  dt-bindings: mfd: syscon: Add mt8365-syscfg
+  dt-bindings: pinctrl: add bindings for Mediatek MT8365 SoC
+
+Fabien Parent (3):
+  dt-bindings: usb: mediatek,mtu3: add MT8365 SoC bindings
+  dt-bindings: usb: mediatek,mtk-xhci: add MT8365 SoC bindings
+  arm64: dts: mediatek: Initial mt8365-evk support
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   4 +
+ .../interrupt-controller/mediatek,sysirq.txt  |   1 +
+ .../devicetree/bindings/mfd/syscon.yaml       |   1 +
+ .../pinctrl/mediatek,mt8365-pinctrl.yaml      | 197 +++++++++
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |   1 +
+ .../bindings/usb/mediatek,mtu3.yaml           |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+ arch/arm64/boot/dts/mediatek/mt8365-evk.dts   | 169 ++++++++
+ arch/arm64/boot/dts/mediatek/mt8365.dtsi      | 378 ++++++++++++++++++
+ 9 files changed, 753 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8365.dtsi
+
+-- 
+2.39.0
+
