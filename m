@@ -2,152 +2,148 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B50865BFEF
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 13:35:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 397A865C04B
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 13:52:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237415AbjACMfC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 07:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
+        id S233783AbjACMw2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 07:52:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230337AbjACMfB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 07:35:01 -0500
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696D4FD38;
-        Tue,  3 Jan 2023 04:34:59 -0800 (PST)
-Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 894A2108;
-        Tue,  3 Jan 2023 13:34:56 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1672749296;
-        bh=wepXydtjzK/muuQNNIk6gR37qVRHqiHnsbuxffbt3Fs=;
+        with ESMTP id S237732AbjACMwX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 07:52:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD3BCFC;
+        Tue,  3 Jan 2023 04:52:22 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 500D5B80E12;
+        Tue,  3 Jan 2023 12:52:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1488EC433D2;
+        Tue,  3 Jan 2023 12:52:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672750339;
+        bh=Wa6TU/u66JGcOO2l7KQC5SQzR8MRkoV+DozPJjJgvFc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RDUyM+QIxqu/rRF500zbd/WlaWsvPAoPVdHrG86tqouRqt0rHKpCfXDcxi+OiAiu3
-         3+QHB5mfzshagcMV1OUzTKMR5z+EbE4l0MYP+Qe2f0grBFqP/IjPXxdqvly8qCuaha
-         zCXhmsYV5H2U0YLdVtsItSdPVTz4FH2AzBY49+Dw=
-Date:   Tue, 3 Jan 2023 14:34:52 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        b=ZVWeXS8n9PHu8ZQP/yg3TdI1mkaBooz1jyzb/4734yf52pbUuAVqX5Rn3B08TxHWj
+         kevH5vWcWONZc/vmhRS/xaZWV6EdttNGfgZj5dtmb2cVscXVQ1bLWbrV1A5W+zwHFV
+         ksHh1iYvkF2stlaqHfcAg5kyC4zHvgwX+DW/GV73LFN8gjxhDwoWgrsoWuWJDlCKWM
+         WjruZfe3XbujcvJbZ6ZCorgUxUMxFdvsasxEt0RHXSLDDE7XXOrX1qFYvJzuMM972g
+         tWA6SVkz6FiIsRpTaJnTE7HY4CPlgBWfEventIbOxDzYpFuOLnSGqcQi4h4YmtAluJ
+         JQBzHFZ8CV27w==
+Date:   Tue, 3 Jan 2023 12:52:12 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio: Add optional ramp-up delay
- property
-Message-ID: <Y7Qg7DzyJkdFGsyz@pendragon.ideasonboard.com>
-References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
- <CACRpkdZ2G=HUTBMpXJrXeSh3kYgQQc8p8zaJZPL71HWA9362ZA@mail.gmail.com>
- <Y6DtQ7PXPZ809P4C@pendragon.ideasonboard.com>
- <2798796.Y6S9NjorxK@steina-w>
+        Sebastian Reichel <sre@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
+Message-ID: <Y7Qk/EgOI9mkJIjn@google.com>
+References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com>
+ <20221221210917.458537-3-fabrizio.castro.jz@renesas.com>
+ <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
+ <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2798796.Y6S9NjorxK@steina-w>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 03, 2023 at 12:56:38PM +0100, Alexander Stein wrote:
-> Am Dienstag, 20. Dezember 2022, 00:01:23 CET schrieb Laurent Pinchart:
-> > On Thu, Dec 15, 2022 at 11:56:57AM +0100, Linus Walleij wrote:
-> > > On Tue, Dec 13, 2022 at 12:45 PM Laurent Pinchart wrote:
-> > > > The circuit we're looking at is
-> > > > 
-> > > >   +----------+           +-----------+
-> > > >   | SoC      |           |    VCC    |
-> > > >   |          |           |     _     |
-> > > >   |          |           |    | | R  |
-> > > >   |          |           |    |_|    |
-> > > >   |          |           |     |     |
-> > > >   |      [IOx|-----+-----|EN]--+     |
-> > > >   |          |     |     | SN65DSI83 |
-> > > >   +----------+    --- C  +-----------+
-> > > >                   ---
-> > > >                    -
-> > > >                   GND
-> > > > 
-> > > > The IOx pin is an open-drain output, the board has a 470nF capacitor to
-> > > > ground, and the SN65DSI83 has an internal pull-up off 200kΩ. This gives
-> > > > an RC time constant of 94ms, far from being negligible.
-> > > > 
-> > > > The delay is caused by the combination of the open-drain nature of the
-> > > > output (an intrinsic property of the GPIO controller), the pull-up
-> > > > resistor (an intrinsic property of the SN65DSI83) and the capacitor on
-> > > > the line (a property of the board). DT is notoriously bad at modelling
-> > > > this kind of setup.
-> > > 
-> > > Yeah :/
-> > > 
-> > > It's not like we don't model discrete electronics, we do that a lot,
-> > > but as you say, it is really hard to know where to draw the line
-> > > in cases like this.
-> > > 
-> > > > The alternative I proposed, adding a "GPIO delay" DT node to model this,
-> > > > would also offer a centralized solution to the problem, but with
-> > > > additional complexity both at probe time and runtime.
-> > > 
-> > > I have a slight preference for this, as it will be very explicit in the
-> > > device tree and we can just put all the code inside its own file and
-> > > depend on GPIO_OF so other HW description systems do not
-> > > need to include it.
-> > > 
-> > > At the same time it feels a bit overengineered, so maybe just adding
-> > > this delay as in the patch with some strings attached like comments
-> > > and docs is yet the best. It feels like we need some more input to
-> > > reach consensus.
-> > > 
-> > > > The regulator delays model the intrinsic delays when enabling or
-> > > > disabling a regulator, and they should stay. They address a different
-> > > > problem.
-> > > 
-> > > OK right. But someone not knowing exactly what they are doing
-> > > will end up abusing the delay property on the delay line
-> > > also for this delay. The risk of that is lesser with a separate
-> > > delay box.
+On Tue, 03 Jan 2023, Fabrizio Castro wrote:
+
+> Hi Geert,
+> 
+> Thanks for your feedback!
+> 
+> > -----Original Message-----
+> > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Sent: 03 January 2023 08:37
+> > To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > Cc: Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski
+> > <brgl@bgdev.pl>; Rob Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
+> > <krzysztof.kozlowski+dt@linaro.org>; Sebastian Reichel <sre@kernel.org>;
+> > Geert Uytterhoeven <geert+renesas@glider.be>; Lee Jones <lee@kernel.org>;
+> > linux-gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-pm@vger.kernel.org; Chris Paterson
+> > <Chris.Paterson2@renesas.com>; Biju Das <biju.das@bp.renesas.com>; linux-
+> > renesas-soc@vger.kernel.org; Laurent Pinchart
+> > <laurent.pinchart@ideasonboard.com>; Jacopo Mondi <jacopo@jmondi.org>
+> > Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
 > > 
-> > That may be true, but I think we can also try to catch abuses in
-> > reviews. I would be a bit sad if we made life more difficult (and less
-> > efficient at runtime too) for legitimate users just because we are
-> > worried about abuses.
+> > Hi Fabrizio,
+> > 
+> > On Wed, Dec 21, 2022 at 10:09 PM Fabrizio Castro
+> > <fabrizio.castro.jz@renesas.com> wrote:
+> > > The External Power Sequence Controller (PWC) IP (found in the
+> > > RZ/V2M SoC) is a controller for external power supplies (regulators
+> > > and power switches), and it supports the following features: it
+> > > generates a power on/off sequence for external power supplies,
+> > > it generates an on/off sequence for the LPDDR4 core power supply
+> > > (LPVDD), it comes with General-Purpose Outputs, and it processes
+> > > key input signals.
+> > 
+> > Thanks for your patch!
+> > 
+> > > The PWC is basically a Multi-Function Device (MFD), its software
+> > > support comes with a core driver, and specialized drivers for
+> > > its specific features.
+> > 
+> > I have to admit I'm not such a big fan of MFD.  In this driver,
+> > you are not even sharing resources in the MFD cells, just the mapped
+> > register base.  So I think you can easily save +100 LoC and reduce
+> > maintenance synchronization overhead across subsystems by just having
+> > a single non-MFD driver instead.
+> > 
+> > Did you pick MFD because the PWC poweroff feature depends on board
+> > wiring, and thus is optional?
 > 
-> What is a legitimate user for you? Given the example in v2 of this series it's 
-> clear that this feature is an opt-in, both for the DT node as well as for 
-> specifying a delay.
-> Another benefit of using a dedicated driver: It also automatically handles 
-> things like setting multiple GPIOs at once.
+> I am not a big fan of MFD, either.
 
-Your use case is totally legitimate I think. An illegitimate case would
-be someone modelling the internal enable delay of a regulator controlled
-by a GPIO as a GPIO delay instead of using the regulator enable delay DT
-property defined by the regulators bindings.
+Interesting.
 
-> > Another thing I've been thinking about is that we may not always want to
-> > wait for the GPIO delay. Some consumers may not care when the GPIO line
-> > reaches the desired state as long as it eventually does, or maybe they
-> > need to perform multiple operations (such as enabling/disabling
-> > regulators and/or clocks) and only need a synchronization point for a
-> > group of operations. All that would be pretty hard to handle, and maybe
-> > it's a problem we'll look at only when needed (and hopefully never).
+Could you both elaborate further please?
+
+> I picked MFD because we were not 100% sure of what the IP could do
+> when we started working on it.
+> I have received more information regarding the IP now (which I don't
+> have the liberty to discuss), I am still not 100% sure that's all
+> of it, but basically its support may require expansion later on.
 > 
-> If you don't care about rising time, do not use gpio-delay for that GPIO, or 
-> just don't specify a ramp-up delay in the gpio-cells, aka setting to 0.
-> The more complex synchronisation example you mentioned probably needs a 
-> similar dedicated driver for grouping those resources.
+> I liked the solution based on syscon and simple-mfd for several reasons,
+> but having dropped syscon and simple-mfd due to issues with the dt-bindings
+> I have moved on with a core driver to instantiate the required SW support.
+> We could of course move to a unified driver if that makes more sense?
+> If we were to move to unified driver, under which directory would you
+> suggest we put it?
 
-You're right that in cases where there is a single consumer, and the
-consumer is well known, and the fact that it doesn't care about rising
-time is an intrinsic property of that consumer, then DT should simply
-not specify any delay. For more complex cases, I'd say it's likely
-overkill to try and design a solution now without real use cases.
+If you do not have any resources to share, you can simply register each
+of the devices via Device Tree.  I do not see a valid reason to force a
+parent / child relationship for your use-case.
+
+Many people attempt to use MFD as a dumping ground / workaround for a
+bunch of reasons.  Some valid, others not so much.
 
 -- 
-Regards,
-
-Laurent Pinchart
+Lee Jones [李琼斯]
