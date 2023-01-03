@@ -2,122 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBA8065BC4F
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 09:37:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F5CA65BC65
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 09:43:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237081AbjACIhG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 03:37:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
+        id S237070AbjACInQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 03:43:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231255AbjACIhE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 03:37:04 -0500
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27BDDB1;
-        Tue,  3 Jan 2023 00:37:03 -0800 (PST)
-Received: by mail-qt1-f176.google.com with SMTP id bp44so21441981qtb.0;
-        Tue, 03 Jan 2023 00:37:03 -0800 (PST)
+        with ESMTP id S236854AbjACInP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 03:43:15 -0500
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240872C2;
+        Tue,  3 Jan 2023 00:43:14 -0800 (PST)
+Received: by mail-qt1-f182.google.com with SMTP id h21so24042590qta.12;
+        Tue, 03 Jan 2023 00:43:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=IWeWb1u/JuV5suDY2SKD5PHzHvJTULCOtib+YqqeP4w=;
-        b=6pPcU23hufQ0FbTfWOEFYYMq7ukQcGJKYZkP3PeuF9RsynMxSiqewcraIOC1ClXCph
-         +d1hikONp8vHGpIscUSdpLMJUNhXQhZDH3CmrucGOlUnVgIbBZYW16m16vPEGSeilL1+
-         oYwFKWHxAUeOV3Z8JsPzdhKDgW0EIrfdhf51CoP/KJXXuNIteug1+xSpdger1fn/vWYi
-         KMVeOhyManSxNkcZpUZYuLl5m2Or5qlCbfM4qTvyjp8QQajUgkOsZgr4oCLjz0RkxAgZ
-         m7pDoTRj0pbMAC3NSkWwJgCRy6xu2u5H4b9Wez6ywrj8UUvaCs3/nwNnBURsMMobCgTJ
-         vdCw==
-X-Gm-Message-State: AFqh2kqgLb7YmSPZwsoaOz8izhK2lV5PrXwRFT7EiyBiBaDCwFJr7y8w
-        Bu5yxf16A/mN9xM1HW1mnc9S03jV2/zoCg==
-X-Google-Smtp-Source: AMrXdXtbGNYMhz5ktOx4uqOZ2ZZLBZXcDFAhoE/101XXHKJ6Ss6r/3Hy8DKiDiL5Cwy0PB9H6l+8kQ==
-X-Received: by 2002:a05:622a:5c89:b0:3ab:71c2:62d3 with SMTP id ge9-20020a05622a5c8900b003ab71c262d3mr55968748qtb.55.1672735022859;
-        Tue, 03 Jan 2023 00:37:02 -0800 (PST)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id z6-20020a05622a124600b003a606428a59sm18683968qtx.91.2023.01.03.00.37.01
+        bh=jFTADltuEOcFi+js1tUqPDxEjy9GD4qbBgNy0+3Wats=;
+        b=bs6lKAVWh6fdi09IfJ645mEe4jM0Xf3fqTPtAxQ6CVb1JdwSUXnCdK+h4RdNG9G3Ah
+         SW82OYatCsXxih2lNwffunkEcKyfkxOL+eO1Rkfv8vObxvBjNAl7JY5x3eblKM/WURRi
+         Uz08BbGh9a9UYDfjbceaqj5VADrEbZml51kTqwvezJTPPm9kXOs+bFGEBRXfbtx/UKto
+         yzrgGMm3H6FwssBvIwX/GNmUkDgu65f6eTz4wJ95GYgpp2XyVIlYqXSd8KLg7aqk0I6j
+         Vigw02ZRbHwg/iIaNHLBZgHjjZvjJcTA+afarH1i7dzzHxnN469J/dHoeRTK7AVoDqgR
+         CuXQ==
+X-Gm-Message-State: AFqh2krZTgcau1NDPOYk7Ikulg8up9bXT9YSotnf5sHf88VEKYzY929/
+        yBZ756/44DJXA6BhE/9dbBguDZeHqe7sIQ==
+X-Google-Smtp-Source: AMrXdXt8R1T15eRZITV0dvUpNmG7jcHx5j58YgNlhu9Bhqgz0bShhO9BYwZOKNWRw+688j8NGygUFg==
+X-Received: by 2002:ac8:748f:0:b0:3a5:2704:d4bd with SMTP id v15-20020ac8748f000000b003a52704d4bdmr65211632qtq.16.1672735392802;
+        Tue, 03 Jan 2023 00:43:12 -0800 (PST)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id m26-20020ac8445a000000b0039cb59f00fcsm18660598qtn.30.2023.01.03.00.43.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 00:37:02 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-476e643d1d5so311084297b3.1;
-        Tue, 03 Jan 2023 00:37:01 -0800 (PST)
-X-Received: by 2002:a05:690c:c02:b0:48d:1334:6e38 with SMTP id
- cl2-20020a05690c0c0200b0048d13346e38mr2327636ywb.316.1672735021431; Tue, 03
- Jan 2023 00:37:01 -0800 (PST)
+        Tue, 03 Jan 2023 00:43:12 -0800 (PST)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-482363a1232so272884277b3.3;
+        Tue, 03 Jan 2023 00:43:11 -0800 (PST)
+X-Received: by 2002:a81:7309:0:b0:475:f3f5:c6c with SMTP id
+ o9-20020a817309000000b00475f3f50c6cmr4442904ywc.358.1672735391658; Tue, 03
+ Jan 2023 00:43:11 -0800 (PST)
 MIME-Version: 1.0
-References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com> <20221221210917.458537-3-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20221221210917.458537-3-fabrizio.castro.jz@renesas.com>
+References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221221000242.340202-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <170665b6-161a-6dd0-6ceb-199277c0ce2f@linaro.org>
+In-Reply-To: <170665b6-161a-6dd0-6ceb-199277c0ce2f@linaro.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Jan 2023 09:36:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
-Message-ID: <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
-To:     fabrizio.castro.jz@renesas.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
+Date:   Tue, 3 Jan 2023 09:43:00 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
+Message-ID: <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/9] dt-bindings: interrupt-controller: irqc-rzg2l:
+ Drop RZG2L_NMI macro
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Fabrizio,
+On Thu, Dec 29, 2022 at 9:46 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+> On 21/12/2022 01:02, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > NMI interrupt is not an external interrupt as compared to IRQ0-7 and
+> > TINT0-31 on RZ/G2L SoC, so there is no need for RZG2L_NMI macro.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> > v1 -> v2
+>
+>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On Wed, Dec 21, 2022 at 10:09 PM Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> The External Power Sequence Controller (PWC) IP (found in the
-> RZ/V2M SoC) is a controller for external power supplies (regulators
-> and power switches), and it supports the following features: it
-> generates a power on/off sequence for external power supplies,
-> it generates an on/off sequence for the LPDDR4 core power supply
-> (LPVDD), it comes with General-Purpose Outputs, and it processes
-> key input signals.
-
-Thanks for your patch!
-
-> The PWC is basically a Multi-Function Device (MFD), its software
-> support comes with a core driver, and specialized drivers for
-> its specific features.
-
-I have to admit I'm not such a big fan of MFD.  In this driver,
-you are not even sharing resources in the MFD cells, just the mapped
-register base.  So I think you can easily save +100 LoC and reduce
-maintenance synchronization overhead across subsystems by just having
-a single non-MFD driver instead.
-
-Did you pick MFD because the PWC poweroff feature depends on board
-wiring, and thus is optional?
-
-Are there any other MFD cells planned (e.g. regulators) to be added
-later? The public datasheet does not list the actual registers of the
-block, only a high-level overview with (rather detailed) behavioral
-information.
-
-Thanks!
-
-> --- /dev/null
-> +++ b/drivers/mfd/rzv2m-pwc.h
-
-> +struct rzv2m_pwc_priv {
-> +       void __iomem *base;
-> +};
-> +
-> +#endif /* __LINUX_RZV2M_PWC_H__ */
+Given
+https://lore.kernel.org/all/CA+V-a8vb-PfzMWX=ndF8nsyYVbkfYBkAQZ-UoS9zpQPndL871Q@mail.gmail.com
+I think this patch is planned to be dropped, too?
 
 Gr{oetje,eeting}s,
 
