@@ -2,139 +2,152 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83E7565BFA5
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 13:10:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B50865BFEF
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 13:35:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231250AbjACMKm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 07:10:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54638 "EHLO
+        id S237415AbjACMfC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 07:35:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237127AbjACMKl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 07:10:41 -0500
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA51E022;
-        Tue,  3 Jan 2023 04:10:40 -0800 (PST)
-Received: by mail-vk1-f173.google.com with SMTP id i84so8298964vke.7;
-        Tue, 03 Jan 2023 04:10:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RfaW83NGJ0rvdUnRHgSi4+IHmvqlUCSBL7ZpSjvyOw0=;
-        b=TZ3l9LHllzPPbmgla+AAsrhXvrAE9cZJnsqF7CK1KEWM9yU3nu48CWpudivVfMax9N
-         NbYNR9IqimHMkKpUezHH+Jx2z19328h0rkXl2UuTlKJQ16ZY5PdnIhBm/mWAYiEt5iW9
-         CkguWQrnSSx0YPguAKYA2ubWFPCFvCInEVbbCIR9hv5Or1kLsZlMG9UrlzxvYqBjY+E6
-         srM9+6uJKsXvbO7w7HQSwtnwotaOuM52c7uho7KPyS3KihIQLIivDjajxMqBshVjBB+1
-         P0L33aoGFGdqj9TXwUrlTr1Tp1zYn5aBpOz4RA+Ud9Yvox1TcQl87OXCLaezaDsBIuyg
-         5ACw==
-X-Gm-Message-State: AFqh2kqKrxvAgi8+nNFYWQspl6b2T7wWSYLuqL0oKTEtZeH9QRjsH3rL
-        CT1QVbGTgFrMAVlwwq8/PnW5d0/5+Rzb6g==
-X-Google-Smtp-Source: AMrXdXuWjyK2YkuczdB40iHdoO3izZreJyAW4zE3GZ+HJ4WwPPYwf39VJXhGLDLscsYOD1hS623X8Q==
-X-Received: by 2002:a1f:18cc:0:b0:3d5:6f50:3fc7 with SMTP id 195-20020a1f18cc000000b003d56f503fc7mr11859066vky.2.1672747839020;
-        Tue, 03 Jan 2023 04:10:39 -0800 (PST)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id y1-20020a37f601000000b006fa2b1c3c1esm21753222qkj.58.2023.01.03.04.10.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 04:10:38 -0800 (PST)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-4a0d6cb12c5so104363427b3.7;
-        Tue, 03 Jan 2023 04:10:37 -0800 (PST)
-X-Received: by 2002:a05:690c:c02:b0:48d:1334:6e38 with SMTP id
- cl2-20020a05690c0c0200b0048d13346e38mr2403543ywb.316.1672747837138; Tue, 03
- Jan 2023 04:10:37 -0800 (PST)
-MIME-Version: 1.0
-References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com>
- <20221221210917.458537-3-fabrizio.castro.jz@renesas.com> <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
- <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Jan 2023 13:10:25 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdU=Kwi80akxRUFUYz4QKQBkSog2xb4tw=DjJApAr-n5Lw@mail.gmail.com>
-Message-ID: <CAMuHMdU=Kwi80akxRUFUYz4QKQBkSog2xb4tw=DjJApAr-n5Lw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+        with ESMTP id S230337AbjACMfB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 07:35:01 -0500
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 696D4FD38;
+        Tue,  3 Jan 2023 04:34:59 -0800 (PST)
+Received: from pendragon.ideasonboard.com (213-243-189-158.bb.dnainternet.fi [213.243.189.158])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 894A2108;
+        Tue,  3 Jan 2023 13:34:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1672749296;
+        bh=wepXydtjzK/muuQNNIk6gR37qVRHqiHnsbuxffbt3Fs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RDUyM+QIxqu/rRF500zbd/WlaWsvPAoPVdHrG86tqouRqt0rHKpCfXDcxi+OiAiu3
+         3+QHB5mfzshagcMV1OUzTKMR5z+EbE4l0MYP+Qe2f0grBFqP/IjPXxdqvly8qCuaha
+         zCXhmsYV5H2U0YLdVtsItSdPVTz4FH2AzBY49+Dw=
+Date:   Tue, 3 Jan 2023 14:34:52 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lee Jones <lee@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 1/3] dt-bindings: gpio: Add optional ramp-up delay
+ property
+Message-ID: <Y7Qg7DzyJkdFGsyz@pendragon.ideasonboard.com>
+References: <20221212103525.231298-1-alexander.stein@ew.tq-group.com>
+ <CACRpkdZ2G=HUTBMpXJrXeSh3kYgQQc8p8zaJZPL71HWA9362ZA@mail.gmail.com>
+ <Y6DtQ7PXPZ809P4C@pendragon.ideasonboard.com>
+ <2798796.Y6S9NjorxK@steina-w>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2798796.Y6S9NjorxK@steina-w>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Fabrizio,
+On Tue, Jan 03, 2023 at 12:56:38PM +0100, Alexander Stein wrote:
+> Am Dienstag, 20. Dezember 2022, 00:01:23 CET schrieb Laurent Pinchart:
+> > On Thu, Dec 15, 2022 at 11:56:57AM +0100, Linus Walleij wrote:
+> > > On Tue, Dec 13, 2022 at 12:45 PM Laurent Pinchart wrote:
+> > > > The circuit we're looking at is
+> > > > 
+> > > >   +----------+           +-----------+
+> > > >   | SoC      |           |    VCC    |
+> > > >   |          |           |     _     |
+> > > >   |          |           |    | | R  |
+> > > >   |          |           |    |_|    |
+> > > >   |          |           |     |     |
+> > > >   |      [IOx|-----+-----|EN]--+     |
+> > > >   |          |     |     | SN65DSI83 |
+> > > >   +----------+    --- C  +-----------+
+> > > >                   ---
+> > > >                    -
+> > > >                   GND
+> > > > 
+> > > > The IOx pin is an open-drain output, the board has a 470nF capacitor to
+> > > > ground, and the SN65DSI83 has an internal pull-up off 200kΩ. This gives
+> > > > an RC time constant of 94ms, far from being negligible.
+> > > > 
+> > > > The delay is caused by the combination of the open-drain nature of the
+> > > > output (an intrinsic property of the GPIO controller), the pull-up
+> > > > resistor (an intrinsic property of the SN65DSI83) and the capacitor on
+> > > > the line (a property of the board). DT is notoriously bad at modelling
+> > > > this kind of setup.
+> > > 
+> > > Yeah :/
+> > > 
+> > > It's not like we don't model discrete electronics, we do that a lot,
+> > > but as you say, it is really hard to know where to draw the line
+> > > in cases like this.
+> > > 
+> > > > The alternative I proposed, adding a "GPIO delay" DT node to model this,
+> > > > would also offer a centralized solution to the problem, but with
+> > > > additional complexity both at probe time and runtime.
+> > > 
+> > > I have a slight preference for this, as it will be very explicit in the
+> > > device tree and we can just put all the code inside its own file and
+> > > depend on GPIO_OF so other HW description systems do not
+> > > need to include it.
+> > > 
+> > > At the same time it feels a bit overengineered, so maybe just adding
+> > > this delay as in the patch with some strings attached like comments
+> > > and docs is yet the best. It feels like we need some more input to
+> > > reach consensus.
+> > > 
+> > > > The regulator delays model the intrinsic delays when enabling or
+> > > > disabling a regulator, and they should stay. They address a different
+> > > > problem.
+> > > 
+> > > OK right. But someone not knowing exactly what they are doing
+> > > will end up abusing the delay property on the delay line
+> > > also for this delay. The risk of that is lesser with a separate
+> > > delay box.
+> > 
+> > That may be true, but I think we can also try to catch abuses in
+> > reviews. I would be a bit sad if we made life more difficult (and less
+> > efficient at runtime too) for legitimate users just because we are
+> > worried about abuses.
+> 
+> What is a legitimate user for you? Given the example in v2 of this series it's 
+> clear that this feature is an opt-in, both for the DT node as well as for 
+> specifying a delay.
+> Another benefit of using a dedicated driver: It also automatically handles 
+> things like setting multiple GPIOs at once.
 
-On Tue, Jan 3, 2023 at 1:05 PM Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > On Wed, Dec 21, 2022 at 10:09 PM Fabrizio Castro
-> > <fabrizio.castro.jz@renesas.com> wrote:
-> > > The External Power Sequence Controller (PWC) IP (found in the
-> > > RZ/V2M SoC) is a controller for external power supplies (regulators
-> > > and power switches), and it supports the following features: it
-> > > generates a power on/off sequence for external power supplies,
-> > > it generates an on/off sequence for the LPDDR4 core power supply
-> > > (LPVDD), it comes with General-Purpose Outputs, and it processes
-> > > key input signals.
-> >
-> > Thanks for your patch!
-> >
-> > > The PWC is basically a Multi-Function Device (MFD), its software
-> > > support comes with a core driver, and specialized drivers for
-> > > its specific features.
-> >
-> > I have to admit I'm not such a big fan of MFD.  In this driver,
-> > you are not even sharing resources in the MFD cells, just the mapped
-> > register base.  So I think you can easily save +100 LoC and reduce
-> > maintenance synchronization overhead across subsystems by just having
-> > a single non-MFD driver instead.
-> >
-> > Did you pick MFD because the PWC poweroff feature depends on board
-> > wiring, and thus is optional?
->
-> I am not a big fan of MFD, either.
-> I picked MFD because we were not 100% sure of what the IP could do
-> when we started working on it.
-> I have received more information regarding the IP now (which I don't
-> have the liberty to discuss), I am still not 100% sure that's all
-> of it, but basically its support may require expansion later on.
->
-> I liked the solution based on syscon and simple-mfd for several reasons,
-> but having dropped syscon and simple-mfd due to issues with the dt-bindings
-> I have moved on with a core driver to instantiate the required SW support.
-> We could of course move to a unified driver if that makes more sense?
-> If we were to move to unified driver, under which directory would you
-> suggest we put it?
+Your use case is totally legitimate I think. An illegitimate case would
+be someone modelling the internal enable delay of a regulator controlled
+by a GPIO as a GPIO delay instead of using the regulator enable delay DT
+property defined by the regulators bindings.
 
-As the GPIO part is larger than the poweroff part, I would put it under
-drivers/gpio/.  Although drivers/soc/renesas/ could be an option, too.
+> > Another thing I've been thinking about is that we may not always want to
+> > wait for the GPIO delay. Some consumers may not care when the GPIO line
+> > reaches the desired state as long as it eventually does, or maybe they
+> > need to perform multiple operations (such as enabling/disabling
+> > regulators and/or clocks) and only need a synchronization point for a
+> > group of operations. All that would be pretty hard to handle, and maybe
+> > it's a problem we'll look at only when needed (and hopefully never).
+> 
+> If you don't care about rising time, do not use gpio-delay for that GPIO, or 
+> just don't specify a ramp-up delay in the gpio-cells, aka setting to 0.
+> The more complex synchronisation example you mentioned probably needs a 
+> similar dedicated driver for grouping those resources.
 
-Gr{oetje,eeting}s,
+You're right that in cases where there is a single consumer, and the
+consumer is well known, and the fact that it doesn't care about rising
+time is an intrinsic property of that consumer, then DT should simply
+not specify any delay. For more complex cases, I'd say it's likely
+overkill to try and design a solution now without real use cases.
 
-                        Geert
+-- 
+Regards,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
