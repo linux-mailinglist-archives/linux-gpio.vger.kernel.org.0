@@ -2,98 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F5CA65BC65
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 09:43:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0D265BCA6
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 10:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237070AbjACInQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 03:43:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56998 "EHLO
+        id S233088AbjACJCB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 04:02:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236854AbjACInP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 03:43:15 -0500
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240872C2;
-        Tue,  3 Jan 2023 00:43:14 -0800 (PST)
-Received: by mail-qt1-f182.google.com with SMTP id h21so24042590qta.12;
-        Tue, 03 Jan 2023 00:43:14 -0800 (PST)
+        with ESMTP id S237120AbjACJB7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 04:01:59 -0500
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF60C63F9;
+        Tue,  3 Jan 2023 01:01:58 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-4a263c4ddbaso90149077b3.0;
+        Tue, 03 Jan 2023 01:01:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jFTADltuEOcFi+js1tUqPDxEjy9GD4qbBgNy0+3Wats=;
-        b=bs6lKAVWh6fdi09IfJ645mEe4jM0Xf3fqTPtAxQ6CVb1JdwSUXnCdK+h4RdNG9G3Ah
-         SW82OYatCsXxih2lNwffunkEcKyfkxOL+eO1Rkfv8vObxvBjNAl7JY5x3eblKM/WURRi
-         Uz08BbGh9a9UYDfjbceaqj5VADrEbZml51kTqwvezJTPPm9kXOs+bFGEBRXfbtx/UKto
-         yzrgGMm3H6FwssBvIwX/GNmUkDgu65f6eTz4wJ95GYgpp2XyVIlYqXSd8KLg7aqk0I6j
-         Vigw02ZRbHwg/iIaNHLBZgHjjZvjJcTA+afarH1i7dzzHxnN469J/dHoeRTK7AVoDqgR
-         CuXQ==
-X-Gm-Message-State: AFqh2krZTgcau1NDPOYk7Ikulg8up9bXT9YSotnf5sHf88VEKYzY929/
-        yBZ756/44DJXA6BhE/9dbBguDZeHqe7sIQ==
-X-Google-Smtp-Source: AMrXdXt8R1T15eRZITV0dvUpNmG7jcHx5j58YgNlhu9Bhqgz0bShhO9BYwZOKNWRw+688j8NGygUFg==
-X-Received: by 2002:ac8:748f:0:b0:3a5:2704:d4bd with SMTP id v15-20020ac8748f000000b003a52704d4bdmr65211632qtq.16.1672735392802;
-        Tue, 03 Jan 2023 00:43:12 -0800 (PST)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id m26-20020ac8445a000000b0039cb59f00fcsm18660598qtn.30.2023.01.03.00.43.11
+        bh=Y5URYrqeQS8qtruXH5AsYpmalrkXEUl+UgZRcXAkcEE=;
+        b=vyAMAnt8gRki9CI1ARcv8zLOeGnyjbpXI9uoOlB4N5gpDdfi3HQMf3M8vtfC6ec9xp
+         JXU1D7VjR1qntVcS2z4RcAz7VrgBcKouca1smd6/7kpAUcX216nWF++ZT/AP9H43+nQf
+         Dsp3sqvfJHwuGF3oYghA2xEtGWm4+T0s+MGqXr6i/RTi0fVrQOqjH+Z3+UU7lxtifU3o
+         1HLvkSNYXcm5VYSX8dzNMA2ch5GtprEFZiGAoyeBsYlhWwDsjhXOOpulRDql+8cl8Qey
+         4TFOCbdqUYqFkVVW7OpysQ+aJWS6Sh6fi03vytku+gYCKQpcLlCcslic//62oNRuhpDr
+         ORMA==
+X-Gm-Message-State: AFqh2kqIvEQJ4zkhJ+vOPI2qzWQCYLk3/6dyAjVL+H5aQG5VmPpJ0PuT
+        Z8p6SwYxPFUzVkJQwwExQfhLEwjLX2OAxA==
+X-Google-Smtp-Source: AMrXdXsDK5p3WZY5e4n2SgPxle006DIZNmmRSNaUcdPVtdkBLwtZRzVCw8iqAildmM8relcnd4xj0w==
+X-Received: by 2002:a81:5706:0:b0:485:470f:c39c with SMTP id l6-20020a815706000000b00485470fc39cmr20383600ywb.37.1672736517562;
+        Tue, 03 Jan 2023 01:01:57 -0800 (PST)
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com. [209.85.219.175])
+        by smtp.gmail.com with ESMTPSA id u16-20020a05620a0c5000b006e07228ed53sm21772827qki.18.2023.01.03.01.01.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 00:43:12 -0800 (PST)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-482363a1232so272884277b3.3;
-        Tue, 03 Jan 2023 00:43:11 -0800 (PST)
-X-Received: by 2002:a81:7309:0:b0:475:f3f5:c6c with SMTP id
- o9-20020a817309000000b00475f3f50c6cmr4442904ywc.358.1672735391658; Tue, 03
- Jan 2023 00:43:11 -0800 (PST)
+        Tue, 03 Jan 2023 01:01:57 -0800 (PST)
+Received: by mail-yb1-f175.google.com with SMTP id n78so32336127yba.12;
+        Tue, 03 Jan 2023 01:01:57 -0800 (PST)
+X-Received: by 2002:a25:ab49:0:b0:6de:6183:c5c3 with SMTP id
+ u67-20020a25ab49000000b006de6183c5c3mr4872308ybi.89.1672736516822; Tue, 03
+ Jan 2023 01:01:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20221221000242.340202-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <170665b6-161a-6dd0-6ceb-199277c0ce2f@linaro.org>
-In-Reply-To: <170665b6-161a-6dd0-6ceb-199277c0ce2f@linaro.org>
+References: <20221215213206.56666-1-biju.das.jz@bp.renesas.com> <CACRpkdZCEvpLAWvH7pCLH7KwbDMzz0EN+4HbxVGfFPi_C1b8+g@mail.gmail.com>
+In-Reply-To: <CACRpkdZCEvpLAWvH7pCLH7KwbDMzz0EN+4HbxVGfFPi_C1b8+g@mail.gmail.com>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Jan 2023 09:43:00 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
-Message-ID: <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/9] dt-bindings: interrupt-controller: irqc-rzg2l:
- Drop RZG2L_NMI macro
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Prabhakar <prabhakar.csengg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
+Date:   Tue, 3 Jan 2023 10:01:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU1J46KSzqqCQc-1ZrgvfWh8J2aa6NzRTK_A_ZJs+zRVQ@mail.gmail.com>
+Message-ID: <CAMuHMdU1J46KSzqqCQc-1ZrgvfWh8J2aa6NzRTK_A_ZJs+zRVQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Add RZ/G2L POEG support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Drew Fustini <dfustini@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Biju Das <biju.das.jz@bp.renesas.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
         FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 9:46 AM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-> On 21/12/2022 01:02, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > NMI interrupt is not an external interrupt as compared to IRQ0-7 and
-> > TINT0-31 on RZ/G2L SoC, so there is no need for RZG2L_NMI macro.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> > v1 -> v2
->
->
-> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Hi Linus,
 
-Given
-https://lore.kernel.org/all/CA+V-a8vb-PfzMWX=ndF8nsyYVbkfYBkAQZ-UoS9zpQPndL871Q@mail.gmail.com
-I think this patch is planned to be dropped, too?
+On Thu, Dec 29, 2022 at 2:17 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Dec 15, 2022 at 10:32 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
+> > This patch series add support for controlling output disable function using sysfs.
+>
+> What's wrong with using the debugfs approach Drew implemented in
+> commit 6199f6becc869d30ca9394ca0f7a484bf9d598eb
+> "pinctrl: pinmux: Add pinmux-select debugfs file"
+> ?
+
+I think the main difference is that debugfs is meant for debugging
+and development features, while this feature is to be configured on
+production systems.  There's just no existing API for it.
+
+> Something driver specific seems like a bit of a hack, does it not?
+>
+> If this should go into sysfs we should probably create something
+> generic, such as a list of stuff to be exported as sysfs switches.
+>
+> It generally also looks really dangerous, which is another reason
+> for keeping it in debugfs. It's the big hammer to hurt yourself with,
+> more or less.
+
+Yes, generic would be nice.  Anyone familiar with other hardware
+that could make use of this?
 
 Gr{oetje,eeting}s,
 
