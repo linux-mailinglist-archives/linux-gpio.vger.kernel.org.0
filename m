@@ -2,120 +2,107 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CECB965BCB5
-	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 10:04:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7D1F65BE3B
+	for <lists+linux-gpio@lfdr.de>; Tue,  3 Jan 2023 11:36:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232838AbjACJD6 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 04:03:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36820 "EHLO
+        id S237324AbjACKel (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 05:34:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbjACJD4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 04:03:56 -0500
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9679763F9;
-        Tue,  3 Jan 2023 01:03:55 -0800 (PST)
-Received: by mail-vs1-f42.google.com with SMTP id x65so17597241vsb.13;
-        Tue, 03 Jan 2023 01:03:55 -0800 (PST)
+        with ESMTP id S237238AbjACKeU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 05:34:20 -0500
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691963A3;
+        Tue,  3 Jan 2023 02:34:19 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-482363a1232so275902617b3.3;
+        Tue, 03 Jan 2023 02:34:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t19P5UcE/4UM/S5+JXHqpyjxdneSdlsyt/VQt2DY6Ks=;
+        b=kQ/nO1vj6eMp0O4pkHcByioEj5/lTYxW2bAauM1KB6IJb986v/qFlVQW5ttLGJaECs
+         cK9sBcbmKqtegswKo8ULP9ImNTSbqMszxwrXUe2NOqDbFTBrjitbcuxzxYCeO6eYURg7
+         TtsHbHL087ADMze9QggOw/u6rrINuTpCUlyAjDgksmNVDi2XPx7wPk1JBZa8UUeXkmdF
+         rIJCXeIl6UadhI2ev98B2XuN6HtuVUlTPxUNhEZ2nIpKPg9B7SLxa2HVVwSwiQee4SNr
+         J37i97dwcOBOP14sRS6pzkuhdXIRKxS5DHqe2A0/aHRcvJDV3UvDGyNrPWjdvyjYRbJL
+         5q6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=z/2eYMVYxzIFBJG3qq6AbikGMDNEgdPMpXyBMJ78i1s=;
-        b=pUdQSg9mo6+9bbFM+n4+xqhrgYc81R2Gt6dfnXbTdInDmHpVfVZwpJkliOeTEIrEP1
-         XJK6NDa+N87GGnCHY+HxE8jjaLOl/WdfU55rD3R7Zu4YRe1Fl+XRMdjebGkKffjQZo71
-         RKJWMgmsHfeDC1i5g3PnHOJ0UhyYwt93SZGgTN0m7d1wYfN86yTO9zuRr4m84Tp+Ze2V
-         60D5HT9z2lCWliT/g6kV067scbD2fUh9elS2GqX4tEs9sjJCEKH539Jcef7Vm7MDGldU
-         kldts0FnBXpx8edX9E0Vh2tzFZALA/ZqwHdnOZG56zfOkjzPRA9AI+d1fuLdC6W+w+L9
-         +uUQ==
-X-Gm-Message-State: AFqh2kqXZ5X6lVC65blrE3NGCiT6RmOoUupT38rPcdi2M9zkEue4FgDX
-        Vuh5ORt5EFgcGesLrqwV/HpWht7XeP7OGA==
-X-Google-Smtp-Source: AMrXdXsdAfyqflP3+cl22ZLezBJ6cV4tPhizdC4f+QCflCS6WsOuddvNXtCDMGn9ltGcZvpooLzSiQ==
-X-Received: by 2002:a05:6102:116a:b0:3c6:fca5:b8f7 with SMTP id k10-20020a056102116a00b003c6fca5b8f7mr12083979vsg.7.1672736634441;
-        Tue, 03 Jan 2023 01:03:54 -0800 (PST)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id bl33-20020a05620a1aa100b006f474e6a715sm21688310qkb.131.2023.01.03.01.03.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Jan 2023 01:03:54 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-4a2f8ad29d5so87004697b3.8;
-        Tue, 03 Jan 2023 01:03:53 -0800 (PST)
-X-Received: by 2002:a05:690c:d8c:b0:4a2:63c5:6c59 with SMTP id
- da12-20020a05690c0d8c00b004a263c56c59mr776343ywb.384.1672736633549; Tue, 03
- Jan 2023 01:03:53 -0800 (PST)
+        bh=t19P5UcE/4UM/S5+JXHqpyjxdneSdlsyt/VQt2DY6Ks=;
+        b=XbYZIf2Zyr76v0IpVGBdxJmg73zor9CYJNDD1X6wBTAsj4EafpEIVAEO5AVBWSgRCk
+         4hI0OT8mCoVSKCGwrFdzR36NSIO9hToDgJcyrt5uePpfSwevGH5v2BZsb5ZPvoax2NOy
+         p012VweUFJ2pcKnwN3ci5gb37gR5TGhh/N+nm+CWlcTL+bx9tEgfsTdWixem4SkD/fed
+         mXNj59EtUQ8M3AFn6YwFpLNZOheAKUbjrS2blmNWLCT+FxxhpTWabNYkOt5dhiZ7jGEK
+         tPbida0mMzpY+Kmynyck1tMrfKHvkOG+imtx7xZiIFBlrsEeDwHgodUnpdcTiJTIQrnB
+         zsBQ==
+X-Gm-Message-State: AFqh2kp+NDj53DwbWXlYJwxU6RccYWQv+c9qZk+JT97dL7Vz51tlthkD
+        2LCYM69vPqOOx9veEyQYe3ymabrxng48r+yV500=
+X-Google-Smtp-Source: AMrXdXu2Bdi9N02+3VSRATUKReRZKvtq/GJY0qI5z0wZN/Sm4iqFZ8LhA6JAdHyuQ90ML7KraQFrsu4ezT4dC+J31SQ=
+X-Received: by 2002:a05:690c:f86:b0:4ab:352b:6461 with SMTP id
+ df6-20020a05690c0f8600b004ab352b6461mr405001ywb.309.1672742058278; Tue, 03
+ Jan 2023 02:34:18 -0800 (PST)
 MIME-Version: 1.0
-References: <20221215213206.56666-1-biju.das.jz@bp.renesas.com>
- <CACRpkdZCEvpLAWvH7pCLH7KwbDMzz0EN+4HbxVGfFPi_C1b8+g@mail.gmail.com> <CAMuHMdU1J46KSzqqCQc-1ZrgvfWh8J2aa6NzRTK_A_ZJs+zRVQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdU1J46KSzqqCQc-1ZrgvfWh8J2aa6NzRTK_A_ZJs+zRVQ@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 3 Jan 2023 10:03:42 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVr3U5ABj0Ajz+=iRO6YbR5Ogip718KT9AWnWXeuFR9sA@mail.gmail.com>
-Message-ID: <CAMuHMdVr3U5ABj0Ajz+=iRO6YbR5Ogip718KT9AWnWXeuFR9sA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Add RZ/G2L POEG support
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
-        Drew Fustini <dfustini@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+References: <20221221000242.340202-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20221221000242.340202-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <170665b6-161a-6dd0-6ceb-199277c0ce2f@linaro.org> <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
+In-Reply-To: <CAMuHMdV0D8kh3xhKpWOUjTa9MzC3jEDJ5evKAJD6hV1w+pMBZw@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 3 Jan 2023 10:33:51 +0000
+Message-ID: <CA+V-a8sewZTzj6GQt0pHifdNik0v3mmrUYU2W5z_gMztqb78aA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/9] dt-bindings: interrupt-controller: irqc-rzg2l:
+ Drop RZG2L_NMI macro
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+Hi Geert,
 
-On Tue, Jan 3, 2023 at 10:01 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Dec 29, 2022 at 2:17 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> > On Thu, Dec 15, 2022 at 10:32 PM Biju Das <biju.das.jz@bp.renesas.com> wrote:
-> > > This patch series add support for controlling output disable function using sysfs.
-> >
-> > What's wrong with using the debugfs approach Drew implemented in
-> > commit 6199f6becc869d30ca9394ca0f7a484bf9d598eb
-> > "pinctrl: pinmux: Add pinmux-select debugfs file"
-> > ?
+On Tue, Jan 3, 2023 at 8:43 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> I think the main difference is that debugfs is meant for debugging
-> and development features, while this feature is to be configured on
-> production systems.  There's just no existing API for it.
->
-> > Something driver specific seems like a bit of a hack, does it not?
+> On Thu, Dec 29, 2022 at 9:46 AM Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+> > On 21/12/2022 01:02, Prabhakar wrote:
+> > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > >
+> > > NMI interrupt is not an external interrupt as compared to IRQ0-7 and
+> > > TINT0-31 on RZ/G2L SoC, so there is no need for RZG2L_NMI macro.
+> > >
+> > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > ---
+> > > v1 -> v2
 > >
-> > If this should go into sysfs we should probably create something
-> > generic, such as a list of stuff to be exported as sysfs switches.
 > >
-> > It generally also looks really dangerous, which is another reason
-> > for keeping it in debugfs. It's the big hammer to hurt yourself with,
-> > more or less.
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >
-> Yes, generic would be nice.  Anyone familiar with other hardware
-> that could make use of this?
+> Given
+> https://lore.kernel.org/all/CA+V-a8vb-PfzMWX=ndF8nsyYVbkfYBkAQZ-UoS9zpQPndL871Q@mail.gmail.com
+> I think this patch is planned to be dropped, too?
+>
+Yes that's correct (and I have dropped in the v3).
 
-That's also the reason why I have been rather hesitant in accepting
-this driver and bindings (I just saw you applied the bindings): I wanted
-to hear your input first ;-)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers,
+Prabhakar
