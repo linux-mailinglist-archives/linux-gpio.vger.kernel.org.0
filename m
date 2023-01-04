@@ -2,138 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9579B65CB54
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 02:21:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2765265CB90
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 02:37:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237861AbjADBVD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 20:21:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
+        id S229534AbjADBhl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 20:37:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238678AbjADBUt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 20:20:49 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA6B229
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Jan 2023 17:20:47 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id g7so26210493qts.1
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Jan 2023 17:20:47 -0800 (PST)
+        with ESMTP id S239013AbjADBh2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 20:37:28 -0500
+Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AD11789D
+        for <linux-gpio@vger.kernel.org>; Tue,  3 Jan 2023 17:37:26 -0800 (PST)
+Received: by mail-yb1-xb36.google.com with SMTP id e141so35091093ybh.3
+        for <linux-gpio@vger.kernel.org>; Tue, 03 Jan 2023 17:37:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4ZfwpwN0OpFR2AcviVVfw3uKPQlm3wDrsxTvCNoIiU=;
-        b=eNqBU+nSbZmeeMhPw/pJMoHsX3Yv7M0u5UD7MlXm+dt+zSTr+/JkZfBqZ4Njy94IUl
-         4MGDm4vhDN5lTbaQIULRTot7cYnugXp0aC+E8oPZHBXRgEQ+E68ayHzKMkym50uU+vS3
-         1/Ci4+jEbDNpTKXsam0jbl/+ggyla7DElScVDjqvrz9cje8qddJw+TI5ZXON5cpetcql
-         B/HHLxe/mst/h6NeIIRWnLzrvlp1o4ogYUYjgoTIN1tmHEdVnK7MCWbrhvzyu+WA8SW5
-         9e3GcaxrESZvek24RUypCuwU6NW3y/ehuHlNo25+/Uaw7RBgvB6NEO/fk6qIT2sJDV29
-         vPzA==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+6CzOy0CAP0ecsYxKWZ90I9ape91rJYpbkSwqevcg8=;
+        b=N6YHgWrsP9L3QB2IT95p8DJprk2mLCA7HuiNeqDr97A9qDEymEKWo73KguQM93wTCX
+         2aOuVlAO4ZIUXQWHyGZ5p5WvA3im/McxYtWRPbSSZKO5oYbc0YwP8ct3wTHzpHsnO7lc
+         TXskQkYzp++vcFX+bGEwOz4jpBN6Yjn7r5IgvqxGBzCPFdP9k41pzncXQaAFgUyGKOW+
+         uuDlMkI64pFkP7PjcoLnLgooVTUg/NI3X+JZH67mwu88hbgYntocLMgH2RKyN9B9F4KM
+         9MuMjJE/xCDGEx8rmNL2iOazXVc3c9rR+Jo+jkODdVsExDRUUSTU6zRlJCFv4kI0o8w6
+         X/gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=K4ZfwpwN0OpFR2AcviVVfw3uKPQlm3wDrsxTvCNoIiU=;
-        b=OsukxGvoM6WzWb/cO+4nbWdGjpRFxhsHMSDRsMgdPwvQVNMdajupBGIzBPsbRgSkgb
-         DiyfScdwBf91t5REuCJ0arNDfsqCDKmyfAX0vvYPdpR5KNUbLYzS5Yvl+QXOJfyBTAJa
-         B9dTvLLJLZl8zneapvZNVVgkicq6t4LwgPpPdgaFLjMjnVtqRVTTCpqYHg68vuOiHute
-         Ekcw2JBFP3ZvxJxo4UXvNHLwPmBbCd9d+EM1QKBDEucC9sN+Ri3l+AQ0CU9yIoL5lHQb
-         I+SKuYMNmHEztt7IZgqzj1rArzlnCQA5Cfs7OlKHBVFUYv8xM/H230H3NLXdSgkMCXB+
-         RKjg==
-X-Gm-Message-State: AFqh2kpsMkT8leCfJeaLiW26StBE0LuAu+rAy2B9JkntXOtHiRueYP7J
-        mjghaw+sh3qB4xfkawID+FAJMCiEJZ0rPg==
-X-Google-Smtp-Source: AMrXdXss6F4vremCWb2VUCxI63SyAR/gfH6UMATGjRLbTX9voWhyYJq6eCZBrvBCSLHZaIZZvMUSCQ==
-X-Received: by 2002:ac8:4cc8:0:b0:3a8:e528:dab5 with SMTP id l8-20020ac84cc8000000b003a8e528dab5mr53015198qtv.0.1672795246346;
-        Tue, 03 Jan 2023 17:20:46 -0800 (PST)
-Received: from bat.kanata.rendec.net (cpe00fc8d79db03-cm00fc8d79db00.cpe.net.fido.ca. [72.137.118.218])
-        by smtp.gmail.com with ESMTPSA id h4-20020ac846c4000000b003a7fc70d59csm19698353qto.41.2023.01.03.17.20.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Jan 2023 17:20:45 -0800 (PST)
-From:   Radu Rendec <radu.rendec@gmail.com>
-To:     linux-gpio@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH] gpio: pcf857x: Implement get_multiple/set_multiple methods
-Date:   Tue,  3 Jan 2023 20:20:13 -0500
-Message-Id: <20230104012013.831820-1-radu.rendec@gmail.com>
-X-Mailer: git-send-email 2.39.0
+        bh=o+6CzOy0CAP0ecsYxKWZ90I9ape91rJYpbkSwqevcg8=;
+        b=VU5WqCzhQRHuuseK/6vej7HD6aKP6tK0W4CgAB9Y+EUEAtkVDglh+7w0JLzeIExaMS
+         Qp+NtBg4gq+qkoVD5h+U6RdDOVFeljcXZ3hkJyr/PIVW74eOX9zqmhfuNz7hq0AEnQ+e
+         7dLSP+lpqplWe5q+MYdYVdzBx+adqkJExS4MLOn4osOPHkUWfSuKwGM1Uut3KtEaDWsf
+         gIQZCBY+S8CU0e1kvwJG70Or6rxA9SQ0ZEt7+kjo90mTCZQGXcX4th10vIrNyGwC17q/
+         FKEpOuQ8j3rLJ8ixDq77U4TDGhx37o3S6Ra/xZ+C8irpcR6VAjlD08IMBIkp/5hli+Su
+         ARYA==
+X-Gm-Message-State: AFqh2kqdw0EZLA7lj5EvlVgN9aOyL+zC98VR9wEXA0uFV+lSeUOTbJNT
+        WTB+Tty/CYCtnwFCNalt7IWaWQkWjUdJviumIHNHvA==
+X-Google-Smtp-Source: AMrXdXv3VLQSwRtgRUrr1lfCnGaSVr+RhK0rBcgaiEy8h0FqNpr8BCTTGDyCU8D3j/XK5+BHD2k5/vUuaJCsESsZyUU=
+X-Received: by 2002:a25:6d02:0:b0:6f9:d605:92d1 with SMTP id
+ i2-20020a256d02000000b006f9d60592d1mr4726402ybc.341.1672796245815; Tue, 03
+ Jan 2023 17:37:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221229100746.35047-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20221229100746.35047-1-andriy.shevchenko@linux.intel.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 4 Jan 2023 02:37:14 +0100
+Message-ID: <CACRpkdZGx+Sdsx_=cuQMsLJZMWixVf7QFPzEfkTrJLEUOfg1zQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] pinctrl: nomadik: Add missing header(s)
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-This change allows the GPIO core to read/change multiple pins in a
-single driver call and subsequent I2C transfer. It helps a lot with
-PCF857x devices, since their I2C protocol always reads/changes all
-existing pins anyway. Therefore, when the GPIO client code does a bulk
-operation on multiple pins, the driver makes a single I2C transfer.
+On Thu, Dec 29, 2022 at 11:07 AM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-Signed-off-by: Radu Rendec <radu.rendec@gmail.com>
----
- drivers/gpio/gpio-pcf857x.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+> Do not imply that some of the generic headers may be always included.
+> Instead, include explicitly what we are direct user of.
+>
+> While at it, sort headers alphabetically.
+>
+> Fixes: e5530adc17a7 ("pinctrl: Clean up headers")
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Reported-by: Arnd Bergmann <arnd@arndb.de>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>
+> v2: removed double inclusion (Randy)
 
-diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index cec2f2c78255..8a8ffeaa8b22 100644
---- a/drivers/gpio/gpio-pcf857x.c
-+++ b/drivers/gpio/gpio-pcf857x.c
-@@ -141,6 +141,21 @@ static int pcf857x_get(struct gpio_chip *chip, unsigned offset)
- 	return (value < 0) ? value : !!(value & (1 << offset));
- }
- 
-+static int pcf857x_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				unsigned long *bits)
-+{
-+	struct pcf857x	*gpio = gpiochip_get_data(chip);
-+	int		value = gpio->read(gpio->client);
-+
-+	if (value < 0)
-+		return value;
-+
-+	*bits &= ~*mask;
-+	*bits |= value & *mask;
-+
-+	return 0;
-+}
-+
- static int pcf857x_output(struct gpio_chip *chip, unsigned offset, int value)
- {
- 	struct pcf857x	*gpio = gpiochip_get_data(chip);
-@@ -163,6 +178,18 @@ static void pcf857x_set(struct gpio_chip *chip, unsigned offset, int value)
- 	pcf857x_output(chip, offset, value);
- }
- 
-+static void pcf857x_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits)
-+{
-+	struct pcf857x *gpio = gpiochip_get_data(chip);
-+
-+	mutex_lock(&gpio->lock);
-+	gpio->out &= ~*mask;
-+	gpio->out |= *bits & *mask;
-+	gpio->write(gpio->client, gpio->out);
-+	mutex_unlock(&gpio->lock);
-+}
-+
- /*-------------------------------------------------------------------------*/
- 
- static irqreturn_t pcf857x_irq(int irq, void *data)
-@@ -275,7 +302,9 @@ static int pcf857x_probe(struct i2c_client *client)
- 	gpio->chip.parent		= &client->dev;
- 	gpio->chip.owner		= THIS_MODULE;
- 	gpio->chip.get			= pcf857x_get;
-+	gpio->chip.get_multiple		= pcf857x_get_multiple;
- 	gpio->chip.set			= pcf857x_set;
-+	gpio->chip.set_multiple		= pcf857x_set_multiple;
- 	gpio->chip.direction_input	= pcf857x_input;
- 	gpio->chip.direction_output	= pcf857x_output;
- 	gpio->chip.ngpio		= id->driver_data;
--- 
-2.39.0
+Patch applied for fixes!
 
+Yours,
+Linus Walleij
