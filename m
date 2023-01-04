@@ -2,85 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D7D1F65CA74
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 00:39:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A1F565CB05
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 01:42:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238157AbjACXjr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 3 Jan 2023 18:39:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
+        id S238359AbjADAmX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 3 Jan 2023 19:42:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238308AbjACXjm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 18:39:42 -0500
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AA5165BB
-        for <linux-gpio@vger.kernel.org>; Tue,  3 Jan 2023 15:39:34 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-46d4840b51fso397799677b3.12
-        for <linux-gpio@vger.kernel.org>; Tue, 03 Jan 2023 15:39:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KJI36WUyX3/lg5q+41u1VLOHfo9VaH4c9Ww4np9pMVE=;
-        b=C0Mv/9IL2kuCPPdWA8msop6QpZ3EpuOLH1kfR1zVpw/f4AUbyJBD+6G/iANVtk22ds
-         hu5duuhrQjxm+1Kp4nKH6+kqp9XMhdkuQv3ErYIW7UH7XgBdnhBAn/M9ORQcscUmKxsQ
-         YKQl+Y2WcFCcO/NKx0eYOqQf3MKFdo1QloKx5psY6iMcrO+/NTuvhAHB2hpKlW55yHXD
-         ABIkQWJYkDINemtlyOBeLXVmwbXTOByw6YXnv1VfjGrBnOKwaFyEDMunh+tiQj/hgoat
-         k9t1e0q1Cg4EIWuUG6Vuqs9jd9SCiXm/BoDYSI12xTkYfSTIxWWueNsZ1JVWJX5WEnWJ
-         p9JA==
+        with ESMTP id S238544AbjADAmW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 3 Jan 2023 19:42:22 -0500
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B621649C;
+        Tue,  3 Jan 2023 16:42:22 -0800 (PST)
+Received: by mail-il1-f180.google.com with SMTP id a9so6560815ilk.6;
+        Tue, 03 Jan 2023 16:42:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KJI36WUyX3/lg5q+41u1VLOHfo9VaH4c9Ww4np9pMVE=;
-        b=fX6MGyKEbwR3GoqFyYxoOIESBh9Px4mvN6NBOKdmLJqiq2e8Vy8KctYtOlk6gZPR3Y
-         kqxxegtrbyaTwchsRoc6dpQ1U6StUHZ13cKBGTW1Nn+UnjPo9iIQ0Oikqog0NvnvXHnf
-         mho6ZJr6Q4AQw8kgYmBpD4/wFsg3J2SfMc94vA3vN10NSALtclxxrG4FRd94eYo5LblP
-         i8qG8eplv9/1xKLtIfq8Ynw2ZfX3aV32/6CAa+lhzmTtTwJgkduL3LvnuUEohEc1emW8
-         mMsyX0EheKF9UdTUgJh/tuHIEVth+0+qRLJfPHUwgaYFWKGFpRfFovCN2ffbTDHJNIK3
-         TT8Q==
-X-Gm-Message-State: AFqh2koRjeHhOC4grpCF7h6/j5D4Ah5QTQT+XAun7Si92bfYb+J1ePhF
-        14D5n1z3YOz/v7Dr8izRccq845jmUQEEqRiAju5oHw==
-X-Google-Smtp-Source: AMrXdXvx+mmANx48xLrOqbQThKhH6zIY5rRl2OxAt8bBN55Sv7hiEKHnG69rb1VP2Uv9FiN2mXvWkniEDvOJav50QZw=
-X-Received: by 2002:a81:5c85:0:b0:461:49a3:db6a with SMTP id
- q127-20020a815c85000000b0046149a3db6amr3875030ywb.185.1672789174162; Tue, 03
- Jan 2023 15:39:34 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=w1g83OSSu3QiXhYjCljnUwd0VoQP0/wjekUDGXp9bdc=;
+        b=kcPY1GjnMCgJHcjAVUc8XCLC/POEGDi8UxdT7U/phTfy/W1pOezdDCrTd+DaG0VYKk
+         ejTOqZFeUPpJc+S2WmcKKoLDG/bRkHp2jlUDieP1s+3BDFJPQMeHfXKwlYT/3iIy44fb
+         PTZa3GXpODETujsn49Oyn8oFexZbBUUaqLGLzFd+KK9jlUFeqNXksdZhlEr0rzg5yloq
+         lt7zx4ozEhQkp6NteJvq2rXdW7UfAZUR4i5bFqLBw79a95MPcD+WV6KwUGLx2SyAN4gl
+         uiOGPNSH0txtxZ6Ku2+kvYMvyNm1iREGGgyZvL69bYVStnAIA1ZopEcTG/MrxRjLIy/7
+         eMRg==
+X-Gm-Message-State: AFqh2krC1YDoZHjnPOqviA+qhf0XEtJ8DXjeWdgHDlTxb2tJMYEDoLig
+        UZpaz4y4aTLyxm1xDu/XZQ==
+X-Google-Smtp-Source: AMrXdXtZ8Iv27+U5gKIsitbqCFmpUAbFTYPdwn7uiMEnoIOVq08xkv0z+iOw4CeBcmytx3bNaZlN2g==
+X-Received: by 2002:a05:6e02:1524:b0:305:e1f9:89b with SMTP id i4-20020a056e02152400b00305e1f9089bmr38587379ilu.24.1672792941242;
+        Tue, 03 Jan 2023 16:42:21 -0800 (PST)
+Received: from robh_at_kernel.org ([64.188.179.248])
+        by smtp.gmail.com with ESMTPSA id i4-20020a056638050400b0038a5b8d79basm10584873jar.106.2023.01.03.16.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Jan 2023 16:42:20 -0800 (PST)
+Received: (nullmailer pid 161533 invoked by uid 1000);
+        Wed, 04 Jan 2023 00:42:19 -0000
+Date:   Tue, 3 Jan 2023 18:42:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Bjorn Andersson <andersson@kernel.org>,
+        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,sm8450-tlmm: correct
+ gpio-line-names size
+Message-ID: <167279293841.161448.17344555773044379937.robh@kernel.org>
+References: <20221223132226.81340-1-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
-References: <20230102210850.25320-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230102210850.25320-1-andriy.shevchenko@linux.intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 4 Jan 2023 00:39:22 +0100
-Message-ID: <CACRpkdYw+J2cPfMrRtUC1KNLyWn__8Q3uk5j=WP_JN-Hm2AALg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: Remove unused and obsoleted gpio_export_link()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-arch@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>, Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221223132226.81340-1-krzysztof.kozlowski@linaro.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 2, 2023 at 10:08 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
 
-> gpio_export_link() is legacy and unused API, remove it for good.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, 23 Dec 2022 14:22:26 +0100, Krzysztof Kozlowski wrote:
+> The SM8450 has GPIOs from 0 to 209, so 210 in total:
+> 
+>   sm8450-sony-xperia-nagara-pdx223.dtb: pinctrl@f100000: gpio-line-names:
+>     ['NC', 'NC', 'NC', 'NC', 'WLC_I2C_SDA', 'WLC_I2C_SCL', ...
+>      'APPS_I2C_0_SDA', 'APPS_I2C_0_SCL', 'CCI_I2C3_SDA', 'CCI_I2C3_SCL'] is too long
+> 
+> Fixes: 9779ed30f92c ("dt-bindings: pinctrl: qcom,sm8450-pinctrl: add gpio-line-names")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm8450-tlmm.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Good riddance.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Acked-by: Rob Herring <robh@kernel.org>
