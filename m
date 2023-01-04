@@ -2,154 +2,177 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1C4665D4B3
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 14:52:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D879F65D5C4
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 15:34:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239116AbjADNwP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Jan 2023 08:52:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51828 "EHLO
+        id S231782AbjADOef (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Jan 2023 09:34:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235169AbjADNv5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 08:51:57 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A3517061
-        for <linux-gpio@vger.kernel.org>; Wed,  4 Jan 2023 05:51:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672840316; x=1704376316;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qocJkUD/ciYuzavfAeipNQN4K5+/cCoQcxWouObKcts=;
-  b=ebceTWBzC6LPc0AYSCCTlzceiirOjHtssTM61bSCVM5iB5BO8D/JP4dl
-   EKzkBl+Zp6xL9fXfGqr3cJeH6cmytbdF5FiuGV3BXC7MdcMx8nWxnkrt/
-   Mi8BkRg6oQgVJg2VUNC/v2MwIBJwvPpZYgLsnnT3QJgAtjnlqEX5QN0nR
-   2f5GnyFTx9D6/qWdkKTjA69rVHNlxoBe3t4/ZT41Jw1ARpOg725GIjv9Z
-   uhGp+yPPlav7f6KM2NCkzOR2e/l/qQbZwMwXOVGGvhIa9blkJ2xvtFXoE
-   /G1sBHuVIKB4AmqklwLsguo7C+AW/6Fu43ubyNRM/4iThD6F0+RrvV3x5
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="323172576"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="323172576"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 05:51:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10580"; a="762676077"
-X-IronPort-AV: E=Sophos;i="5.96,300,1665471600"; 
-   d="scan'208";a="762676077"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Jan 2023 05:51:53 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pD4BM-0000PP-2O;
-        Wed, 04 Jan 2023 13:51:52 +0000
-Date:   Wed, 04 Jan 2023 21:51:32 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 14277fa3ac144dc71390b7057bdffbc3889e7f03
-Message-ID: <63b58464.pxlB5inWee+gwIcm%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S239580AbjADOec (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 09:34:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 142FF373A6;
+        Wed,  4 Jan 2023 06:34:31 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C83C4B81674;
+        Wed,  4 Jan 2023 14:34:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E62C433D2;
+        Wed,  4 Jan 2023 14:34:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672842868;
+        bh=gRkCSnXk5MjxVH+vyivnl3Fj49JHVY24sOY1WJh8QEg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=k5MykoyoJXROrSbBrVfL6RN/UKCq7OIH2LH9suxKq1RhPopZd0KV9VzH9OZArvVAi
+         OjeULj7tH4EBtWom9/n4D8+Bq67oYBDRuS79zCMcnKeV3uohIyY7Yg9vF3LtdZ5ijX
+         OME+yvl/61fF7eMF7/j3La0XQbhVDW/PFfRXTx0EWs3N9hO6BZC25sGAKUkzS9+gGU
+         nCNXqaSlXkppnNS1gAnozooIQ0Ex1pEkn2m96QOmGFIJL8fF8o3QxsObi4Rpb0wi7O
+         4gL8y75HZVvL7qRenCVdHz77J3/DFblD9V+fjJ41jwtSpdkfZBGYUEV6pAlarxz3bP
+         hgZjXGlhHRxJA==
+Date:   Wed, 4 Jan 2023 14:34:21 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
+Message-ID: <Y7WObZFfsCJuMdLW@google.com>
+References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com>
+ <20221221210917.458537-3-fabrizio.castro.jz@renesas.com>
+ <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
+ <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+ <Y7Qk/EgOI9mkJIjn@google.com>
+ <TYWPR01MB87753C261831519F4D6788E5C2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <TYWPR01MB87753C261831519F4D6788E5C2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 14277fa3ac144dc71390b7057bdffbc3889e7f03  Merge branch 'devel' into for-next
+On Tue, 03 Jan 2023, Fabrizio Castro wrote:
 
-elapsed time: 726m
+> Hi Lees,
+> 
+> Thanks for your feedback!
+> 
+> > From: Lee Jones <lee@kernel.org>
+> > Sent: 03 January 2023 12:52
+> > Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
+> > 
+> > On Tue, 03 Jan 2023, Fabrizio Castro wrote:
+> > 
+> > > Hi Geert,
+> > >
+> > > Thanks for your feedback!
+> > >
+> > > > -----Original Message-----
+> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
+> > > > Sent: 03 January 2023 08:37
+> > > > To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Cc: Linus Walleij <linus.walleij@linaro.org>; Bartosz Golaszewski
+> > > > <brgl@bgdev.pl>; Rob Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
+> > > > <krzysztof.kozlowski+dt@linaro.org>; Sebastian Reichel
+> > <sre@kernel.org>;
+> > > > Geert Uytterhoeven <geert+renesas@glider.be>; Lee Jones
+> > <lee@kernel.org>;
+> > > > linux-gpio@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> > > > kernel@vger.kernel.org; linux-pm@vger.kernel.org; Chris Paterson
+> > > > <Chris.Paterson2@renesas.com>; Biju Das <biju.das@bp.renesas.com>;
+> > linux-
+> > > > renesas-soc@vger.kernel.org; Laurent Pinchart
+> > > > <laurent.pinchart@ideasonboard.com>; Jacopo Mondi <jacopo@jmondi.org>
+> > > > Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
 
-configs tested: 72
-configs skipped: 2
+Could you please tell your mailer to remove mail headers from the body
+please.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > > > > The External Power Sequence Controller (PWC) IP (found in the
+> > > > > RZ/V2M SoC) is a controller for external power supplies (regulators
+> > > > > and power switches), and it supports the following features: it
+> > > > > generates a power on/off sequence for external power supplies,
+> > > > > it generates an on/off sequence for the LPDDR4 core power supply
+> > > > > (LPVDD), it comes with General-Purpose Outputs, and it processes
+> > > > > key input signals.
+> > > >
+> > > > Thanks for your patch!
+> > > >
+> > > > > The PWC is basically a Multi-Function Device (MFD), its software
+> > > > > support comes with a core driver, and specialized drivers for
+> > > > > its specific features.
+> > > >
+> > > > I have to admit I'm not such a big fan of MFD.  In this driver,
+> > > > you are not even sharing resources in the MFD cells, just the mapped
+> > > > register base.  So I think you can easily save +100 LoC and reduce
+> > > > maintenance synchronization overhead across subsystems by just having
+> > > > a single non-MFD driver instead.
+> > > >
+> > > > Did you pick MFD because the PWC poweroff feature depends on board
+> > > > wiring, and thus is optional?
+> > >
+> > > I am not a big fan of MFD, either.
+> > 
+> > Interesting.
+> > 
+> > Could you both elaborate further please?
+> 
+> I have nothing against MFD
 
-gcc tested configs:
-x86_64                            allnoconfig
-powerpc                           allnoconfig
-sh                               allmodconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-mips                             allyesconfig
-s390                                defconfig
-um                             i386_defconfig
-i386                 randconfig-a004-20230102
-i386                 randconfig-a003-20230102
-i386                 randconfig-a002-20230102
-s390                             allyesconfig
-i386                 randconfig-a001-20230102
-um                           x86_64_defconfig
-x86_64                              defconfig
-i386                 randconfig-a006-20230102
-i386                 randconfig-a005-20230102
-powerpc                          allmodconfig
-arm                                 defconfig
-ia64                             allmodconfig
-x86_64                               rhel-8.3
-x86_64                           rhel-8.3-bpf
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           allyesconfig
-i386                                defconfig
-alpha                            allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arm64                            allyesconfig
-arc                              allyesconfig
-x86_64                    rhel-8.3-kselftests
-x86_64                          rhel-8.3-func
-arm                              allyesconfig
-x86_64                        randconfig-a004
-x86_64                        randconfig-a002
-x86_64                        randconfig-a006
-riscv                randconfig-r042-20230101
-s390                 randconfig-r044-20230101
-arc                  randconfig-r043-20230102
-i386                             allyesconfig
-arm                  randconfig-r046-20230102
-arc                  randconfig-r043-20230101
-powerpc                     redwood_defconfig
-powerpc                 mpc8540_ads_defconfig
-arm                        shmobile_defconfig
-powerpc                    klondike_defconfig
+Okay, just checking.  I'll withdraw my next command then. :)
 
-clang tested configs:
-i386                 randconfig-a012-20230102
-i386                 randconfig-a011-20230102
-i386                 randconfig-a014-20230102
-i386                 randconfig-a013-20230102
-i386                 randconfig-a015-20230102
-i386                 randconfig-a016-20230102
-x86_64               randconfig-a011-20230102
-x86_64               randconfig-a014-20230102
-x86_64               randconfig-a012-20230102
-x86_64               randconfig-a013-20230102
-x86_64               randconfig-a015-20230102
-x86_64               randconfig-a016-20230102
-x86_64                          rhel-8.3-rust
-x86_64                        randconfig-a001
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-hexagon              randconfig-r041-20230102
-s390                 randconfig-r044-20230102
-hexagon              randconfig-r045-20230101
-hexagon              randconfig-r045-20230102
-arm                  randconfig-r046-20230101
-riscv                randconfig-r042-20230102
-hexagon              randconfig-r041-20230101
+$ rm -rf drivers/mfd
+
+> > If you do not have any resources to share, you can simply register each
+> > of the devices via Device Tree.  I do not see a valid reason to force a
+> > parent / child relationship for your use-case.
+> 
+> There would probably be overlapping on the same memory region, which would
+> lead to ioremapping the same region multiple times, which is something
+> I would prefer to avoid if possible.
+
+Okay, so you *do* have shared resources.
+
+In which case, why is simple-mfd not working for you?
+
+> > Many people attempt to use MFD as a dumping ground / workaround for a
+> > bunch of reasons.  Some valid, others not so much.
+> 
+> As it turns out, it looks like I don't have valid reasons to use MFD,
+> therefore I'll switch to a single, non MFD, driver.
+> 
+> Thank you for taking the time to look into this though! Really
+> appreciated.
+
+Although it is considered okay to have a multi-purpose driver in any one
+of the subsystems, it's sometimes nicer to split the various
+functionality to be looked after (maintained) by their respective
+subject matter experts.  You have to do what's right in any given
+situation.
+
+Ultimately it's a call you need to make with the maintainer(s).
 
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Lee Jones [李琼斯]
