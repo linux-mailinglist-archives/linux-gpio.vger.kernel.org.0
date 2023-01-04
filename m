@@ -2,81 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F9DA65CF2F
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 10:09:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1444965D136
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 12:11:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238971AbjADJJF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Jan 2023 04:09:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34398 "EHLO
+        id S234419AbjADLLD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Jan 2023 06:11:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238962AbjADJI4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 04:08:56 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3157B1B;
-        Wed,  4 Jan 2023 01:08:55 -0800 (PST)
+        with ESMTP id S230423AbjADLLB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 06:11:01 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62671275D;
+        Wed,  4 Jan 2023 03:11:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672823335; x=1704359335;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=3mQDFqK56sHAmt7h6/PT2gUmDW4yEy/kTINyMDMkyjQ=;
-  b=Er+2MlmESHFMjso/DHjBFJmBXpW5gfjTcCctXzRKOruv2dF/AU6FQrYk
-   Y6R0vH6YIKL9iOhMt+TSAnUGP6TN+4bpYkCs0q2OzcDSwFSoQyo+3OZhT
-   z+q2iuuVBH3bxk3/HEI648jECI/vFlr8b39awX9+rFKbO1oKdzUdktVH5
-   DLQdKtEhpFLJzE9nbkve/xSFwsEe5Ik6kdPp/A5bfPQ6z62gfg4zKWdMq
-   P9uyHmrmXxpCbtNAi5ref6hDuNgMDkbqhV0A6oooX8V7AWpAKXfS+YCxJ
-   5MddJuk8szJ1dP0h+MFe+ii4ckxZkj/v+q58Qb6A27YWh7n2KPI+BTxqD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="320598673"
+  t=1672830660; x=1704366660;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EF5y8cJBIgIZwE1pcFSYf3Xzp/7I0nWn/GnCSDBV3U4=;
+  b=e1d92xNfO6eMGFam68o1YrPq+P321iADTnQ9KGFJg5kxMgw6yKzSNhAx
+   jei6vYPqd+jxkrVAYwk18BO2ATIpFb+KJRrXSh1VNQ+IRMD5gFXXfKQW1
+   IHTSeAk9Eql63Ol7IT28IzQbRSZEIBLgstefUC7e8RNCLVodGpjlncI1b
+   TreIJ+MkHtkrgJNiSl2ZsUYv1FtSYj7rVwqEqapi33sgGJxAciyjXoOBd
+   0SOnCxEpG/mN9u1wPQeTE7/RwexNIo6bb4Y6V6SX9dyhdmJatvmm46EsX
+   wEkmVxjeWq+1xDzMGlyhC6cszv2obFEqc/dW5oYCMiKphd4FkbDB69/6e
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="319619321"
 X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="320598673"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 01:08:55 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="655122391"
+   d="scan'208";a="319619321"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 03:11:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="762640159"
 X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="655122391"
-Received: from mkabdel-mobl.ger.corp.intel.com (HELO localhost) ([10.252.25.63])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 01:08:47 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-arch@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v1 1/1] gpio: Remove unused and obsoleted
- gpio_export_link()
-In-Reply-To: <20230102210850.25320-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20230102210850.25320-1-andriy.shevchenko@linux.intel.com>
-Date:   Wed, 04 Jan 2023 11:08:45 +0200
-Message-ID: <871qoazmxu.fsf@intel.com>
+   d="scan'208";a="762640159"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Jan 2023 03:10:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1pD1fc-004HFz-0O;
+        Wed, 04 Jan 2023 13:10:56 +0200
+Date:   Wed, 4 Jan 2023 13:10:55 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        William Dean <williamsukatube@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: sp7021: fix unused function warning
+Message-ID: <Y7Vev23G+E2+bgjp@smile.fi.intel.com>
+References: <20221215163822.542622-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221215163822.542622-1-arnd@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, 02 Jan 2023, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> gpio_export_link() is legacy and unused API, remove it for good.
+On Thu, Dec 15, 2022 at 05:38:10PM +0100, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> sppctl_gpio_inv_get is only used from the debugfs code inside
+> of an #ifdef, so we get a warning without that:
+> 
+> drivers/pinctrl/sunplus/sppctl.c:393:12: error: 'sppctl_gpio_inv_get' defined but not used [-Werror=unused-function]
+>   393 | static int sppctl_gpio_inv_get(struct gpio_chip *chip, unsigned int offset)
+>       |            ^~~~~~~~~~~~~~~~~~~
+> 
+> Replace the #ifdef with an IS_ENABLED() check that avoids the warning.
 
-This seemed vaguely familiar, and true enough, adding that was my 5th
-ever commit to the kernel. :)
-
-BR,
-Jani.
-
+I;m wondering why we can't use PTR_IF() here and in similar cases...
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+With Best Regards,
+Andy Shevchenko
+
+
