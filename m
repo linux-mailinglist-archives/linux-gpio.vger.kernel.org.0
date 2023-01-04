@@ -2,88 +2,70 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1444965D136
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 12:11:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C53DE65D340
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 13:54:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234419AbjADLLD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Jan 2023 06:11:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
+        id S234536AbjADMyr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Jan 2023 07:54:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230423AbjADLLB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 06:11:01 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62671275D;
-        Wed,  4 Jan 2023 03:11:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672830660; x=1704366660;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EF5y8cJBIgIZwE1pcFSYf3Xzp/7I0nWn/GnCSDBV3U4=;
-  b=e1d92xNfO6eMGFam68o1YrPq+P321iADTnQ9KGFJg5kxMgw6yKzSNhAx
-   jei6vYPqd+jxkrVAYwk18BO2ATIpFb+KJRrXSh1VNQ+IRMD5gFXXfKQW1
-   IHTSeAk9Eql63Ol7IT28IzQbRSZEIBLgstefUC7e8RNCLVodGpjlncI1b
-   TreIJ+MkHtkrgJNiSl2ZsUYv1FtSYj7rVwqEqapi33sgGJxAciyjXoOBd
-   0SOnCxEpG/mN9u1wPQeTE7/RwexNIo6bb4Y6V6SX9dyhdmJatvmm46EsX
-   wEkmVxjeWq+1xDzMGlyhC6cszv2obFEqc/dW5oYCMiKphd4FkbDB69/6e
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="319619321"
-X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="319619321"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 03:11:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="762640159"
-X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="762640159"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Jan 2023 03:10:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1pD1fc-004HFz-0O;
-        Wed, 04 Jan 2023 13:10:56 +0200
-Date:   Wed, 4 Jan 2023 13:10:55 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Dvorkin Dmitry <dvorkin@tibbo.com>, Wells Lu <wellslutw@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        William Dean <williamsukatube@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: sp7021: fix unused function warning
-Message-ID: <Y7Vev23G+E2+bgjp@smile.fi.intel.com>
-References: <20221215163822.542622-1-arnd@kernel.org>
+        with ESMTP id S234735AbjADMyn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 07:54:43 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABFB7E0C7
+        for <linux-gpio@vger.kernel.org>; Wed,  4 Jan 2023 04:54:42 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id i83so17954879ioa.11
+        for <linux-gpio@vger.kernel.org>; Wed, 04 Jan 2023 04:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
+        b=WgtPiGBL7pKpeGAONT7jyOZBlPA87PF+BcZ0At3DRbjh8r4a90VkFTuegmf7v5I05U
+         8O8yRsMlEC8d3azBuhTVnh5a19IMri1yaM5CNo7nGSQjhbPmAzApkJwS9Ixgc01L8XVA
+         9+oXPryfLJjc92HnUP6sxIyah9VARXZTMfFxXMcqBFJ6snOmablGghR0F2+Y0sgoHgie
+         QmoiaDCXomaXijXUVGiYmzsfSWGfWMMdh1Ev9V0gp78bfPbYO2S9uBzuU4GRDkm7vJO6
+         RsJ5hkLkj5KAchsYozNwRuUxQUGpmscZ9Mbjv/HN5G//qfUumyrbxcj+0dSg+lcPq80U
+         5Wuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
+        b=BrWA/V3mkt+t9YBQzAGRWw5IQGj/HbTnb7dcn3wKHY8sgLHWft/0vFc5+YEWcQPYl5
+         g90i7quSQTGdFClg7fT/iZNpAljZXQYvhCJtbZWtT0saDGhpxgExuCQVVFaxTPNhrpIm
+         ofofqlEBeG7r17/cdaXbKdJwIa0jtltWqqU4YF+HsBwzqXKzLtj9hF2liuPGupxb7ozC
+         0wwBDTf4MoIw41ZE2+Td/DGDr5oBr1LgV4HM82XFUfxd/8Oz4aqWzDQX7UxRNwkaxKYG
+         yl6gXA+l3twlJ3gD1Gk8lcKCzifKK26PV+KIlg+akQ9GeBBDsP0rpilwmaEY18MmSbY/
+         j67A==
+X-Gm-Message-State: AFqh2kpO169ZKLu9GgY2CUtOydnSpA8SMQ/4ADo3jlxE/TPQKHbn5+2g
+        kzxnTBZquBK8+pXR2zjDxPhjtSCArK4qjcS1O1vaW53B2v4=
+X-Google-Smtp-Source: AMrXdXulKMdRBV/p4kXNikXMHFtLk5IOIYLDRJA7lpoRUfUF8+2cEqH8pHXLi4qSeE4J34Id+Th3n/mMQjaZgJWZFyc=
+X-Received: by 2002:a05:620a:8502:b0:704:ad9e:ad7 with SMTP id
+ pe2-20020a05620a850200b00704ad9e0ad7mr1970941qkn.574.1672836871311; Wed, 04
+ Jan 2023 04:54:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221215163822.542622-1-arnd@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
+ 04:54:30 -0800 (PST)
+Reply-To: Gregdenzell9@gmail.com
+From:   Greg Denzell <mzsophie@gmail.com>
+Date:   Wed, 4 Jan 2023 12:54:30 +0000
+Message-ID: <CAEoj5=a-iCsZoe4s4S8=o2P=8nfbDVvG8sm_YZ9wpP37ZOqYKA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 05:38:10PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> sppctl_gpio_inv_get is only used from the debugfs code inside
-> of an #ifdef, so we get a warning without that:
-> 
-> drivers/pinctrl/sunplus/sppctl.c:393:12: error: 'sppctl_gpio_inv_get' defined but not used [-Werror=unused-function]
->   393 | static int sppctl_gpio_inv_get(struct gpio_chip *chip, unsigned int offset)
->       |            ^~~~~~~~~~~~~~~~~~~
-> 
-> Replace the #ifdef with an IS_ENABLED() check that avoids the warning.
+Seasons Greetings!
 
-I;m wondering why we can't use PTR_IF() here and in similar cases...
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+This will remind you again that I have not yet received your reply to
+my last message to you.
