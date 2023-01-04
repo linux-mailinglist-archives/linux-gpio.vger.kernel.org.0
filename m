@@ -2,102 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54A3B65D7D4
-	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 17:05:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C538C65DA2D
+	for <lists+linux-gpio@lfdr.de>; Wed,  4 Jan 2023 17:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235098AbjADQFP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 4 Jan 2023 11:05:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
+        id S229582AbjADQmU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 4 Jan 2023 11:42:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234523AbjADQFO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 11:05:14 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EBFB86;
-        Wed,  4 Jan 2023 08:05:14 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CCD8AB8169E;
-        Wed,  4 Jan 2023 16:05:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7075DC433D2;
-        Wed,  4 Jan 2023 16:05:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672848311;
-        bh=JJul7yCNDp+w5GEK764w15reZx1qVqVJLDDBijdqf9s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ke5zuvTAcSaLbRCxRqI5qC7Io3RSMDqf4/U+JmnCQMI+kqBqvP9LHOCYBeuukXg80
-         oEuyZUrNUv4MQmeE1zeMJIcbqgMibYkDN2iaGTv6vUE6DUrFXTvN+nQDD2H4iSeJSq
-         f/LYWPxQgIhdncxVJxfQ9nQTEwYDIBHHRUzvWPqS2jMu/PBIv4EzEh2aa1hd4/YEm/
-         jtDBkjV9ODz1MG0oUC5YXfzKCWd6PNt3itO7u5k3VdMl5j26d7bP2omavrob9HlPxB
-         5mUfmOXTgVWWveldCMEn2Lf3aHM8ZRMeDMfQraz+obRSvega0aKgwo6nlcKAnMoO/j
-         w3Gk+WH5EMWGw==
-Date:   Wed, 4 Jan 2023 16:05:02 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        with ESMTP id S235343AbjADQlv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 4 Jan 2023 11:41:51 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C0981A071;
+        Wed,  4 Jan 2023 08:41:50 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id g25-20020a7bc4d9000000b003d97c8d4941so21283390wmk.4;
+        Wed, 04 Jan 2023 08:41:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AbzxU5euIcxEABo/okhvZ+7+gLeYJigIQ++SaV23kN8=;
+        b=Vv3SD/+KX93KfiwpGZ2JyRm5eOsHlgBrfkK9R/wKbwSmkonHYwdmMF6VYTVWObb1uf
+         TuhS4DJiP0NhWIJtzUJOAVk7/kYSOCWdHu+voz4fToJ0VSqW8eJ4/2eT6Bw637KrxzpS
+         imtDxuJ49Y1W9xidm/600C85oB92+BRHuK/JMHkYQm3hR/O4EoTyqH1C0SkPROQh875u
+         xqU1fzC+m25JIue+IpN9DY5vggwiQbL0Prs3ZyQWroeVML4ll9KFgsctTkktxIA6SUiZ
+         h0HGbUtCk3tibWlkRc5yjvxeVsnSUkTmCPWOMI7Nsb0bVcdJjsO8yqobT9286G5XS4ZY
+         N03g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AbzxU5euIcxEABo/okhvZ+7+gLeYJigIQ++SaV23kN8=;
+        b=x7L3PPmqG6aHbUjx+3yt4FN/Woa+Hx4OOxZj7ZrP/I1LBTcBPI4puPlxktYNesKHkV
+         O/umVw7qfHRdgTzx7cuP9rGO5rsKMs0Zk9K73soFCbcZskQDpv443kRnjBNeCtUBMILy
+         qRFuCNuqzlVlUelHXZ4rHttao1EIVju8vBhkpEx7NsEAp3oZCHUWl23uKGXTuaCktOMF
+         28JlmYzeFMZJBQR5HBP/4GvHfLjeyMbF4TMqKx3rr9dIX4cX4RVkCSZMsB3Kl0hmKE/W
+         1qcHe32KoMOL3kWSbrzZuXVSavu774HFWmrYbcg8SgsszarotVDrbnuoCfEwYfYDXZ8G
+         XWgQ==
+X-Gm-Message-State: AFqh2ko7xRMC1tekrLiVI2D51ydGrb2uI+lTD1bbAPEDdqKecOh/KSXQ
+        oYRlMRVJJctHOjKcr1JBXUo=
+X-Google-Smtp-Source: AMrXdXvBPs18VPwQsd5vdpo+q/HiSisve1cs2s1GpS8cGdAmMYHcGVo5cmfq3uskXw1KNnf2ultFnQ==
+X-Received: by 2002:a1c:7c0f:0:b0:3d5:816e:2fb2 with SMTP id x15-20020a1c7c0f000000b003d5816e2fb2mr36816947wmc.14.1672850508975;
+        Wed, 04 Jan 2023 08:41:48 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id d9-20020a05600c3ac900b003d973d4fb28sm40202364wms.4.2023.01.04.08.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jan 2023 08:41:48 -0800 (PST)
+Date:   Wed, 4 Jan 2023 17:41:46 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v2 2/4] mfd: Add RZ/V2M PWC core driver
-Message-ID: <Y7WjrrSvLanjNhyX@google.com>
-References: <20221221210917.458537-1-fabrizio.castro.jz@renesas.com>
- <20221221210917.458537-3-fabrizio.castro.jz@renesas.com>
- <CAMuHMdXDwEUzBpG+w_G6=CzKo=n92cdVw6v8JwOwf9o86HnOZQ@mail.gmail.com>
- <TYWPR01MB87758FB15ED12D396AE738DDC2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
- <Y7Qk/EgOI9mkJIjn@google.com>
- <TYWPR01MB87753C261831519F4D6788E5C2F49@TYWPR01MB8775.jpnprd01.prod.outlook.com>
- <Y7WObZFfsCJuMdLW@google.com>
- <TYWPR01MB877591E80CE112429DE3FC9BC2F59@TYWPR01MB8775.jpnprd01.prod.outlook.com>
+        Thierry Reding <treding@nvidia.com>
+Subject: Re: [rft, PATCH v4 0/3] gpiolib: eventual of_node retirement
+Message-ID: <Y7WsSh6RCNGIgml4@orome>
+References: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6P9QVOoCHcJjesZE"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYWPR01MB877591E80CE112429DE3FC9BC2F59@TYWPR01MB8775.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20221228092045.80425-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-> > > > If you do not have any resources to share, you can simply register
-> > each
-> > > > of the devices via Device Tree.  I do not see a valid reason to force
-> > a
-> > > > parent / child relationship for your use-case.
-> > >
-> > > There would probably be overlapping on the same memory region, which
-> > would
-> > > lead to ioremapping the same region multiple times, which is something
-> > > I would prefer to avoid if possible.
-> > 
-> > Okay, so you *do* have shared resources.
-> > 
-> > In which case, why is simple-mfd not working for you?
-> 
-> The corresponding dt-bindings got rejected, unfortunately. I had to drop
-> simple-mfd as a result of dropping the children of my simple-mfd DT node.
 
-You have to write DT bindings to be OS agnostic.
+--6P9QVOoCHcJjesZE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-They *must* match the H/W.  Little else matters.
+On Wed, Dec 28, 2022 at 11:20:42AM +0200, Andy Shevchenko wrote:
+> Now that all GPIO library users are converted to use fwnode,
+> Drop redundant field from struct gpio_chip and accompanying
+> code.
+>=20
+> Bart, I prefer this series to go as soon as possible if you
+> have no objection. Or even as v6.2 material.
+>=20
+> Thierry, can you please test it once again, so we will be sure
+> there is no breakage for OF platforms?
 
-How we interpret those in Linux is flexible however.
+Seems to be working fine on at least Jetson TX1, so:
 
--- 
-Lee Jones [李琼斯]
+Tested-by: Thierry Reding <treding@nvidia.com>
+
+--6P9QVOoCHcJjesZE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmO1rEoACgkQ3SOs138+
+s6FeRRAAkybdKFdnyI1ieZLySlXbFjVHf1PXM0FLsrllv4w6gRH4oZGhBk0AboDT
+0t24iTezsN1sRPSwzPGeqIELjtwi2c8w3/nY3ijVirRvQCFiuMjGUkh55323ayK/
+ZLb7Y6+kUniwzfmvBDw3hGdUeGWuN6x9fX+5VldL3BZ+GpZ6EZwAQaSwa0SQuY85
+QuLLP87qSn2yv8q3yxtQa6bJ0a4Mmp7m99hFdae5qET71/ryJsWrcs5MdwcHtuSX
+W3MhecG9TiAYTaWBF8W5LEeBGJdyTzyCnoBDVNAq9vJy7X1sc8pMlY4VLTXPq4hG
+qj6wDGvc1/ScCBSBZ2X0UGsg/0/VN5COXj6p2KNrj/Gs4GjJJZQe/jj+K74KUX+O
+qIncihz1YI/70Yj9ZY49HcNKlL88/6W1jcUM6FSAmINEnw6loQK4HVVRu7dvVLbh
+CTyfBGXTX/BX9DkqQ0k7OQNa24MOw+4FWC/YIbLXKintL1ZEMoNhLNR4tLZcfE3p
+BNnnRyHjvyVSGuS2cwtlsYi3EIv44VBBENt9esQs/hvXJSo4JIBcqWM+VCJtEzuU
+w6DmNesWX8l9Md2gWc95V3M42whx71mDxEAxYT9jG/ebS84GTufwQCtBIOgAL7Eu
+aMvHzizlzyU38+UkfI+R6h6mOl8Oclejl2hQTDwOIpaMPSDDvDc=
+=v/wN
+-----END PGP SIGNATURE-----
+
+--6P9QVOoCHcJjesZE--
