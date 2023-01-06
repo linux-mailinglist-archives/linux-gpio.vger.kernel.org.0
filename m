@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B7C56603E6
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Jan 2023 17:06:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0369E6603E8
+	for <lists+linux-gpio@lfdr.de>; Fri,  6 Jan 2023 17:06:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbjAFQGA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Jan 2023 11:06:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35546 "EHLO
+        id S229547AbjAFQGX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Jan 2023 11:06:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234213AbjAFQFs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Jan 2023 11:05:48 -0500
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D12380ADD
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Jan 2023 08:05:36 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id g7so2462038qts.1
-        for <linux-gpio@vger.kernel.org>; Fri, 06 Jan 2023 08:05:36 -0800 (PST)
+        with ESMTP id S235030AbjAFQGL (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Jan 2023 11:06:11 -0500
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B11A13E8D
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Jan 2023 08:05:53 -0800 (PST)
+Received: by mail-qt1-x82c.google.com with SMTP id c11so2303330qtn.11
+        for <linux-gpio@vger.kernel.org>; Fri, 06 Jan 2023 08:05:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DBzZIniUiDrAbKUBOEl7Fu05saOkQZfmXP6dGp7yl+c=;
-        b=l0Fj4XX/BTtj86WqzVx/ekh0var0EdLZOobnaKeT0jVvYj/uTLezvWhqYdMHYQojFG
-         p/xS7xwgLJuKyA83SxJqsOvpETVLESCzdmGHhu+DfC5PuORqeTbwoRy61hiMjxEprQwk
-         TOFE2pYy9NLVlmbdWF5ZDmPNr8HExvowU1axm1GpHb3qev1VGtYW/MuyPpE9/ucmpJrn
-         IslmcRMA788A3HAFbyGGf8M2TYSUiLi4qyr66tNL25jWQmMtAQSpu+vhG1nR4nNaCctE
-         RhusjIQHDOm6RKJcN6QmN6E1TAxl6SUa8zdPrav1YpsxvDoDMpCrdiyaQhCsIjwxq/y2
-         5WGA==
+        bh=Wl7oPQkbuaJw+zIbpo6ndUFcganXRRTYDTirwFtTRlU=;
+        b=XPnB0btjjd5T4NSo1vRo7n4dpsKtPVyzPg3VfdsPGPsgp+PGzZGO3FUqVtkjM6D9li
+         kEhy89efwSqKl1QoGEwWJYZK7MTHpOzzjXjXRep1HewvZMc8tfEKhcNgAFQGz9JpEU1Y
+         GL3KT2XkvGM0C2fsKJjf7aFS/KInCxoH2oBvbZvkTbgQpVCzKuSLCQSiDQcMGQ9wd/dp
+         /PRqeovjRp4ct8JTvzYaejvXimrLkEDKIXjLdI2h5/bLd6NM3mM5/LnMWhReLL/IxJCY
+         bUNzCeF+JGaa40MLElpT3GQ/9MKxN98A4SVyXPq6+1BFk9GvWQlFurqYCQ8hRgzd8b/s
+         oYuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DBzZIniUiDrAbKUBOEl7Fu05saOkQZfmXP6dGp7yl+c=;
-        b=uw1YEaFOvc0kLdYH6N4ch+nc7UweSxItKScFBEDyhanDBowUUWGYXcKbOIm2lsr44p
-         VFV8+bYzDn12WHkrt1IUd0clSwvtgcaPXp5eXVsF5j53bHRpgjeoo5Tcr5/BlCiNhtAn
-         kfWx/FMY7WTjWHjUxM63OQ00SWBBuyRHNDAt3nu1wtbEl1HxXGUhGQ6sDT0DhOlckglE
-         wbrL8E4qeg7YJ7mcujPuRg6YW8m8SZcUyK7rnVPhAJlceegCwVsmYnRi+vUBnJYy0iLs
-         50yXqsgdXIIfCDnu7QmPE9GR+b8rZ1x6Qv6D2plld830+WJmuF2p4s36QGa9tNyLkCbN
-         8SEA==
-X-Gm-Message-State: AFqh2krHqhyHCmJGPYnqp6ZUSJza6eZO3/qobn298jxqewmwh0tG8E7A
-        OIMi3kF1bUKzXT1BnG3m6FI4J5JXzXW/mQ==
-X-Google-Smtp-Source: AMrXdXs8MdfTBQBWBdUP6AHWCvmRI/ZbCBkyrol/eSIYKI2ziAiaxqYNzjJdbo2fF9OBRFQYiKNzZw==
-X-Received: by 2002:ac8:534c:0:b0:3a9:8183:6a04 with SMTP id d12-20020ac8534c000000b003a981836a04mr88018719qto.54.1673021135048;
-        Fri, 06 Jan 2023 08:05:35 -0800 (PST)
+        bh=Wl7oPQkbuaJw+zIbpo6ndUFcganXRRTYDTirwFtTRlU=;
+        b=dsid89HTqKAb7WL5v8nZnuR73KxC4Hb9HX63g6Fl4QPA5fRNJ2PG02ItrhgdwLIPf1
+         5CbqqZfZPDSnbx68LTMp086ZTm4KMM+B2DoZBBtZ9MzNAvmWwjx9pXQeEVgMA51eYS3P
+         0QJnhVcp+XJ1SxX30wH1DyeLn0jsZUC8XqK4X2R2ir9jvS0IAT+x3p1n5rza98lS+WTD
+         RttjWKGQPxI0s3q9WXTWRLT2JVBZg3GPFf8JKOQxl5CP3utfneJwoRC5Fhk2e4LirsXB
+         EA5w6fNj1febmkRWwM+JOLQQ0gyo0fE66LQPv0Z9NxWHx5LfyJ1ZryuOMQxpQ5HmeAwa
+         6GWw==
+X-Gm-Message-State: AFqh2krdEbeIeSIxuGo8N/hepRJxnpFIiu956z70LfUBa+6ktH3kWq2a
+        OqTk9ffu8RA2euSkItJ/9JjMuu7WforTfg==
+X-Google-Smtp-Source: AMrXdXuafFQYWOldN4THlCqBulCkaTdVQKHTZVetUAr4Xvhvadqhr64mTdGHzqPwkeil2B15wKNdNg==
+X-Received: by 2002:a05:622a:1f09:b0:3a7:eb01:5dde with SMTP id ca9-20020a05622a1f0900b003a7eb015ddemr66623573qtb.14.1673021152156;
+        Fri, 06 Jan 2023 08:05:52 -0800 (PST)
 Received: from bat.kanata.rendec.net (cpe00fc8d79db03-cm00fc8d79db00.cpe.net.fido.ca. [72.137.118.218])
-        by smtp.gmail.com with ESMTPSA id s13-20020ac85ecd000000b003a69de747c9sm680063qtx.19.2023.01.06.08.05.34
+        by smtp.gmail.com with ESMTPSA id s13-20020ac85ecd000000b003a69de747c9sm680063qtx.19.2023.01.06.08.05.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 08:05:34 -0800 (PST)
+        Fri, 06 Jan 2023 08:05:51 -0800 (PST)
 From:   Radu Rendec <radu.rendec@gmail.com>
 To:     linux-gpio@vger.kernel.org
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 1/3] gpio: pcf857x: Replace 'unsigned' with 'unsigned int'
-Date:   Fri,  6 Jan 2023 11:04:17 -0500
-Message-Id: <20230106160419.1020733-2-radu.rendec@gmail.com>
+Subject: [PATCH v2 2/3] gpio: pcf857x: Fix indentation of variable declarations
+Date:   Fri,  6 Jan 2023 11:04:18 -0500
+Message-Id: <20230106160419.1020733-3-radu.rendec@gmail.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230106160419.1020733-1-radu.rendec@gmail.com>
 References: <20230106160419.1020733-1-radu.rendec@gmail.com>
@@ -71,93 +71,89 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Cosmetic change only to improve the coding style. No functional change,
-since 'unsigned' and 'unsigned int' are identical as far as the compiler
-is concerned.
+No functional changes. This is a whitespace change only.
 
 Signed-off-by: Radu Rendec <radu.rendec@gmail.com>
 ---
- drivers/gpio/gpio-pcf857x.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/gpio/gpio-pcf857x.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
-index cec2f2c78255..14656d4f3a3d 100644
+index 14656d4f3a3d..1026973bc998 100644
 --- a/drivers/gpio/gpio-pcf857x.c
 +++ b/drivers/gpio/gpio-pcf857x.c
-@@ -73,11 +73,11 @@ struct pcf857x {
- 	struct gpio_chip	chip;
- 	struct i2c_client	*client;
- 	struct mutex		lock;		/* protect 'out' */
--	unsigned		out;		/* software latch */
--	unsigned		status;		/* current status */
--	unsigned		irq_enabled;	/* enabled irqs */
-+	unsigned int		out;		/* software latch */
-+	unsigned int		status;		/* current status */
-+	unsigned int		irq_enabled;	/* enabled irqs */
+@@ -121,8 +121,8 @@ static int i2c_read_le16(struct i2c_client *client)
  
--	int (*write)(struct i2c_client *client, unsigned data);
-+	int (*write)(struct i2c_client *client, unsigned int data);
- 	int (*read)(struct i2c_client *client);
- };
- 
-@@ -85,7 +85,7 @@ struct pcf857x {
- 
- /* Talk to 8-bit I/O expander */
- 
--static int i2c_write_le8(struct i2c_client *client, unsigned data)
-+static int i2c_write_le8(struct i2c_client *client, unsigned int data)
+ static int pcf857x_input(struct gpio_chip *chip, unsigned int offset)
  {
- 	return i2c_smbus_write_byte(client, data);
- }
-@@ -97,7 +97,7 @@ static int i2c_read_le8(struct i2c_client *client)
- 
- /* Talk to 16-bit I/O expander */
- 
--static int i2c_write_le16(struct i2c_client *client, unsigned word)
-+static int i2c_write_le16(struct i2c_client *client, unsigned int word)
- {
- 	u8 buf[2] = { word & 0xff, word >> 8, };
- 	int status;
-@@ -119,7 +119,7 @@ static int i2c_read_le16(struct i2c_client *client)
- 
- /*-------------------------------------------------------------------------*/
- 
--static int pcf857x_input(struct gpio_chip *chip, unsigned offset)
-+static int pcf857x_input(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct pcf857x	*gpio = gpiochip_get_data(chip);
- 	int		status;
-@@ -132,7 +132,7 @@ static int pcf857x_input(struct gpio_chip *chip, unsigned offset)
- 	return status;
- }
- 
--static int pcf857x_get(struct gpio_chip *chip, unsigned offset)
-+static int pcf857x_get(struct gpio_chip *chip, unsigned int offset)
- {
- 	struct pcf857x	*gpio = gpiochip_get_data(chip);
- 	int		value;
-@@ -141,10 +141,10 @@ static int pcf857x_get(struct gpio_chip *chip, unsigned offset)
- 	return (value < 0) ? value : !!(value & (1 << offset));
- }
- 
--static int pcf857x_output(struct gpio_chip *chip, unsigned offset, int value)
-+static int pcf857x_output(struct gpio_chip *chip, unsigned int offset, int value)
- {
- 	struct pcf857x	*gpio = gpiochip_get_data(chip);
--	unsigned	bit = 1 << offset;
-+	unsigned int	bit = 1 << offset;
- 	int		status;
+-	struct pcf857x	*gpio = gpiochip_get_data(chip);
+-	int		status;
++	struct pcf857x *gpio = gpiochip_get_data(chip);
++	int status;
  
  	mutex_lock(&gpio->lock);
-@@ -158,7 +158,7 @@ static int pcf857x_output(struct gpio_chip *chip, unsigned offset, int value)
- 	return status;
- }
+ 	gpio->out |= (1 << offset);
+@@ -134,8 +134,8 @@ static int pcf857x_input(struct gpio_chip *chip, unsigned int offset)
  
--static void pcf857x_set(struct gpio_chip *chip, unsigned offset, int value)
-+static void pcf857x_set(struct gpio_chip *chip, unsigned int offset, int value)
+ static int pcf857x_get(struct gpio_chip *chip, unsigned int offset)
  {
- 	pcf857x_output(chip, offset, value);
- }
+-	struct pcf857x	*gpio = gpiochip_get_data(chip);
+-	int		value;
++	struct pcf857x *gpio = gpiochip_get_data(chip);
++	int value;
+ 
+ 	value = gpio->read(gpio->client);
+ 	return (value < 0) ? value : !!(value & (1 << offset));
+@@ -143,9 +143,9 @@ static int pcf857x_get(struct gpio_chip *chip, unsigned int offset)
+ 
+ static int pcf857x_output(struct gpio_chip *chip, unsigned int offset, int value)
+ {
+-	struct pcf857x	*gpio = gpiochip_get_data(chip);
+-	unsigned int	bit = 1 << offset;
+-	int		status;
++	struct pcf857x *gpio = gpiochip_get_data(chip);
++	unsigned int bit = 1 << offset;
++	int status;
+ 
+ 	mutex_lock(&gpio->lock);
+ 	if (value)
+@@ -167,7 +167,7 @@ static void pcf857x_set(struct gpio_chip *chip, unsigned int offset, int value)
+ 
+ static irqreturn_t pcf857x_irq(int irq, void *data)
+ {
+-	struct pcf857x  *gpio = data;
++	struct pcf857x *gpio = data;
+ 	unsigned long change, i, status;
+ 
+ 	status = gpio->read(gpio->client);
+@@ -250,11 +250,11 @@ static const struct irq_chip pcf857x_irq_chip = {
+ static int pcf857x_probe(struct i2c_client *client)
+ {
+ 	const struct i2c_device_id *id = i2c_client_get_device_id(client);
+-	struct pcf857x_platform_data	*pdata = dev_get_platdata(&client->dev);
+-	struct device_node		*np = client->dev.of_node;
+-	struct pcf857x			*gpio;
+-	unsigned int			n_latch = 0;
+-	int				status;
++	struct pcf857x_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct device_node *np = client->dev.of_node;
++	struct pcf857x *gpio;
++	unsigned int n_latch = 0;
++	int status;
+ 
+ 	if (IS_ENABLED(CONFIG_OF) && np)
+ 		of_property_read_u32(np, "lines-initial-states", &n_latch);
+@@ -401,8 +401,8 @@ static int pcf857x_probe(struct i2c_client *client)
+ 
+ static void pcf857x_remove(struct i2c_client *client)
+ {
+-	struct pcf857x_platform_data	*pdata = dev_get_platdata(&client->dev);
+-	struct pcf857x			*gpio = i2c_get_clientdata(client);
++	struct pcf857x_platform_data *pdata = dev_get_platdata(&client->dev);
++	struct pcf857x *gpio = i2c_get_clientdata(client);
+ 
+ 	if (pdata && pdata->teardown)
+ 		pdata->teardown(client, gpio->chip.base, gpio->chip.ngpio,
 -- 
 2.39.0
 
