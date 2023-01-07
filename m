@@ -2,128 +2,208 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DA6C6605F6
-	for <lists+linux-gpio@lfdr.de>; Fri,  6 Jan 2023 18:51:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A778660B7E
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Jan 2023 02:28:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbjAFRvo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Jan 2023 12:51:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42932 "EHLO
+        id S229552AbjAGB2W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 6 Jan 2023 20:28:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbjAFRv3 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Jan 2023 12:51:29 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28AD77CDE3
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Jan 2023 09:51:28 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pDqsH-0000aD-EI; Fri, 06 Jan 2023 18:51:25 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pDqsG-004Fsr-MI; Fri, 06 Jan 2023 18:51:24 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pDqsF-00Aign-VW; Fri, 06 Jan 2023 18:51:23 +0100
-Date:   Fri, 6 Jan 2023 18:51:23 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Angel Iglesias <ang.iglesiasg@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Grant Likely <grant.likely@linaro.org>,
-        Wolfram Sang <wsa@kernel.org>, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH 510/606] pinctrl: mcp23s08: Convert to i2c's .probe_new()
-Message-ID: <20230106175123.2ihrbbxyjmnkau2t@pengutronix.de>
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221118224540.619276-511-uwe@kleine-koenig.org>
+        with ESMTP id S229863AbjAGB2V (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Jan 2023 20:28:21 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E32A848D6
+        for <linux-gpio@vger.kernel.org>; Fri,  6 Jan 2023 17:28:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673054900; x=1704590900;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vXdx5lHxGnZc6xFhmIRwAWOjJM3e0FVLNUxe6EubqPQ=;
+  b=MqXsQ6BfVT113vgKvQlTT3wUgMQdXm80Jkmcq4pjeWBHYwH89/6C8Lrv
+   fD8cVW1/A6Vn/QR6xRyVxq9fjYyuFSQ0Y/VQUJn4xgjYIL1OnBAAd1Skn
+   quNHZ85TBIuim8hy0Cl/KDT63csFCVaqsNhf3z0/7VdNGpox7XL0AcW+S
+   FC+nMDiD9X3f1GrQB+HZt8FdK98hmLTtlANk6McjT1sJhee/6aKTdkEla
+   Nm9TNcfJNz5VDtj6bW6UfRPsSl7l7bziqdlonP/8Hkr4OCppsYrhzIOo1
+   9+K2iBES3tvDLEwkuAqf0fQ6aA/nUR94DWd3IhP+PGoxLm2YqNozlN1W8
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="384902819"
+X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
+   d="scan'208";a="384902819"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 17:28:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="656112480"
+X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
+   d="scan'208";a="656112480"
+Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
+  by orsmga002.jf.intel.com with ESMTP; 06 Jan 2023 17:28:18 -0800
+Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pDy0P-00044U-20;
+        Sat, 07 Jan 2023 01:28:17 +0000
+Date:   Sat, 07 Jan 2023 09:28:04 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ f9beb1b2a13907fca8c9180b7c7aa505e0ba2ef8
+Message-ID: <63b8caa4.DQnhOK4Kwxc9fD3F%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wmecrkbj35jjufrj"
-Content-Disposition: inline
-In-Reply-To: <20221118224540.619276-511-uwe@kleine-koenig.org>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: f9beb1b2a13907fca8c9180b7c7aa505e0ba2ef8  gpio: regmap: use new regmap_might_sleep()
 
---wmecrkbj35jjufrj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 727m
 
-Hello Linus,
+configs tested: 126
+configs skipped: 3
 
-On Fri, Nov 18, 2022 at 11:44:04PM +0100, Uwe Kleine-K=F6nig wrote:
-> From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->=20
-> .probe_new() doesn't get the i2c_device_id * parameter, so determine
-> that explicitly in the probe function.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->  drivers/pinctrl/pinctrl-mcp23s08_i2c.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-mcp23s08_i2c.c b/drivers/pinctrl/pin=
-ctrl-mcp23s08_i2c.c
-> index e0b001c8c08c..b635c5737e0c 100644
-> --- a/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-> +++ b/drivers/pinctrl/pinctrl-mcp23s08_i2c.c
-> @@ -8,8 +8,9 @@
-> =20
->  #include "pinctrl-mcp23s08.h"
-> =20
-> -static int mcp230xx_probe(struct i2c_client *client, const struct i2c_de=
-vice_id *id)
-> +static int mcp230xx_probe(struct i2c_client *client)
->  {
-> +	const struct i2c_device_id *id =3D i2c_client_get_device_id(client);
->  	struct device *dev =3D &client->dev;
->  	unsigned int type =3D id->driver_data;
->  	struct mcp23s08 *mcp;
-> @@ -100,7 +101,7 @@ static struct i2c_driver mcp230xx_driver =3D {
->  		.name	=3D "mcp230xx",
->  		.of_match_table =3D mcp23s08_i2c_of_match,
->  	},
-> -	.probe		=3D mcp230xx_probe,
-> +	.probe_new	=3D mcp230xx_probe,
->  	.id_table	=3D mcp230xx_id,
->  };
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-To eventually get all drivers converted to probe_new it would be great
-if you picked this patch and #511 for pinctrl.
+gcc tested configs:
+x86_64                            allnoconfig
+powerpc                           allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                                defconfig
+s390                             allmodconfig
+x86_64                              defconfig
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+x86_64                        randconfig-a015
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+ia64                             allmodconfig
+alpha                            allyesconfig
+s390                             allyesconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+sh                               allmodconfig
+i386                          randconfig-a016
+arm                                 defconfig
+mips                             allyesconfig
+arc                  randconfig-r043-20230106
+x86_64                        randconfig-a004
+i386                                defconfig
+x86_64                    rhel-8.3-kselftests
+i386                          randconfig-a001
+x86_64                        randconfig-a002
+i386                          randconfig-a003
+x86_64                          rhel-8.3-func
+arm64                            allyesconfig
+arm                  randconfig-r046-20230106
+x86_64                        randconfig-a006
+arm                              allyesconfig
+x86_64                           rhel-8.3-bpf
+i386                          randconfig-a005
+x86_64                           rhel-8.3-syz
+powerpc                          allmodconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+sh                ecovec24-romimage_defconfig
+sh                        dreamcast_defconfig
+sh                           se7619_defconfig
+mips                            gpr_defconfig
+i386                             allyesconfig
+sh                                  defconfig
+x86_64                           alldefconfig
+mips                         rt305x_defconfig
+sh                         apsh4a3a_defconfig
+sh                          sdk7786_defconfig
+arc                    vdk_hs38_smp_defconfig
+sparc                            alldefconfig
+arc                      axs103_smp_defconfig
+arm                            lart_defconfig
+arm                        cerfcube_defconfig
+mips                         db1xxx_defconfig
+powerpc                      ppc6xx_defconfig
+mips                         cobalt_defconfig
+sparc64                             defconfig
+powerpc                       ppc64_defconfig
+sh                            titan_defconfig
+ia64                             alldefconfig
+powerpc                     mpc83xx_defconfig
+powerpc                      ppc40x_defconfig
+arc                              alldefconfig
+mips                           ci20_defconfig
+m68k                        mvme147_defconfig
+i386                          randconfig-c001
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+riscv                               defconfig
+sh                           sh2007_defconfig
+riscv                            allyesconfig
+arc                     nsimosci_hs_defconfig
+ia64                        generic_defconfig
+nios2                            allyesconfig
+powerpc                   currituck_defconfig
+powerpc                      pasemi_defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+arm                           imxrt_defconfig
+riscv             nommu_k210_sdcard_defconfig
+arm                          gemini_defconfig
+powerpc                 linkstation_defconfig
 
-Best regards
-Uwe
+clang tested configs:
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+x86_64                          rhel-8.3-rust
+hexagon              randconfig-r041-20230106
+s390                 randconfig-r044-20230106
+riscv                randconfig-r042-20230106
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+hexagon              randconfig-r045-20230106
+x86_64                        randconfig-a003
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+powerpc                   bluestone_defconfig
+mips                       rbtx49xx_defconfig
+arm                              alldefconfig
+hexagon                             defconfig
+arm                       cns3420vb_defconfig
+powerpc                 xes_mpc85xx_defconfig
+powerpc                          g5_defconfig
+arm                          ixp4xx_defconfig
+x86_64                        randconfig-k001
+arm                          moxart_defconfig
+arm                        neponset_defconfig
+x86_64                           allyesconfig
+hexagon              randconfig-r041-20230107
+hexagon              randconfig-r045-20230107
+arm                  randconfig-r046-20230107
+arm                       aspeed_g4_defconfig
+powerpc                     mpc5200_defconfig
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---wmecrkbj35jjufrj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmO4X5kACgkQwfwUeK3K
-7An6YwgAjJeLIC3Pq7WHcfhjpocsJ51Futnbluao72r7OZLtVE7cX+odoNDz99hV
-kwDaQOqw798nPTt8IWMRhUWhYbYw8EYciXc4rFXzNnq2Nc+XI6IqJVv4z7eVMgsf
-N29O5lsblxU7slWAGucUJpOASdo8ghVuy/w5EAYNoFRfRFN/yQXw8QELswZGSyMp
-B9CKuNK3xlNwquKuJ1C8fx9UFF+sNS5B51UN3w8A0GQculSp1t8W6ClbcgKZBdSO
-WU7kHfBjFM6B/OgNhJY54tnogcY+IW6gytshAFswIvBxb3v7cTACRAufOJ7GOmxX
-rs7SP2nmOgNdEfr5eMgamvsDLNJf5g==
-=CZ0v
------END PGP SIGNATURE-----
-
---wmecrkbj35jjufrj--
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
