@@ -2,208 +2,133 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A778660B7E
-	for <lists+linux-gpio@lfdr.de>; Sat,  7 Jan 2023 02:28:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 975A9660F8D
+	for <lists+linux-gpio@lfdr.de>; Sat,  7 Jan 2023 15:43:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229552AbjAGB2W (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 6 Jan 2023 20:28:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42210 "EHLO
+        id S229475AbjAGOn1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 7 Jan 2023 09:43:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbjAGB2V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 6 Jan 2023 20:28:21 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E32A848D6
-        for <linux-gpio@vger.kernel.org>; Fri,  6 Jan 2023 17:28:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673054900; x=1704590900;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=vXdx5lHxGnZc6xFhmIRwAWOjJM3e0FVLNUxe6EubqPQ=;
-  b=MqXsQ6BfVT113vgKvQlTT3wUgMQdXm80Jkmcq4pjeWBHYwH89/6C8Lrv
-   fD8cVW1/A6Vn/QR6xRyVxq9fjYyuFSQ0Y/VQUJn4xgjYIL1OnBAAd1Skn
-   quNHZ85TBIuim8hy0Cl/KDT63csFCVaqsNhf3z0/7VdNGpox7XL0AcW+S
-   FC+nMDiD9X3f1GrQB+HZt8FdK98hmLTtlANk6McjT1sJhee/6aKTdkEla
-   Nm9TNcfJNz5VDtj6bW6UfRPsSl7l7bziqdlonP/8Hkr4OCppsYrhzIOo1
-   9+K2iBES3tvDLEwkuAqf0fQ6aA/nUR94DWd3IhP+PGoxLm2YqNozlN1W8
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="384902819"
-X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
-   d="scan'208";a="384902819"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 17:28:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="656112480"
-X-IronPort-AV: E=Sophos;i="5.96,307,1665471600"; 
-   d="scan'208";a="656112480"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jan 2023 17:28:18 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pDy0P-00044U-20;
-        Sat, 07 Jan 2023 01:28:17 +0000
-Date:   Sat, 07 Jan 2023 09:28:04 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- f9beb1b2a13907fca8c9180b7c7aa505e0ba2ef8
-Message-ID: <63b8caa4.DQnhOK4Kwxc9fD3F%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S231422AbjAGOn0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 7 Jan 2023 09:43:26 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2E5A58FAB;
+        Sat,  7 Jan 2023 06:43:24 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id z8-20020a05600c220800b003d33b0bda11so5081662wml.0;
+        Sat, 07 Jan 2023 06:43:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i3d+gOAD88oLabVtrIfzPXu7o2OZ8RNw65o7EHr8oIk=;
+        b=PBWCnhEA0udMeH0tYHbUBalF84o9wZ5bM+etdc+3pGDNTYq5mI+4ECgwElxr7EHe4S
+         cSY4QWGUJwJRUE/vuoEq9NEFfUqp6bIIu5bvwbPiOl+GCoDq6zuM7VQy1bRIiCzeqpSF
+         1szcdZgeInDIZMHVAYx3TQQv5vzcunM7SUjDbRc3SPPk2rAuYi4Dan0TXRPhcQYMac3Z
+         z9dNnfVqRhxYal6wXMGjGokXlGDHWYFcv6bLlH+BFVGASL91bEfeuF7zVaUUQ/wcfAwV
+         wAAi2nuCQCTpUqWJFDr9Uhz4pyX4UU63xUuzZlDhaPV2Uu2jTTnV4ZUJGtD0ANVwIif+
+         7Gaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i3d+gOAD88oLabVtrIfzPXu7o2OZ8RNw65o7EHr8oIk=;
+        b=ZuSKoezdMZ7bEgejKlKZvkAV8oKP80lErPLEcj5HniKNnq9GnvXrdDScU/HVI3RINH
+         dliXBc0F/qI7dpsIEB6vyoIucnDtUBHKU1+ILcn/HVPi+xWPjglPrjsgeDyVaxRtDX9M
+         lX802nme6Thf/2IYiHQi4gQ6PQ6q/g4ln/hZE9IBzdbCDcqcACbO/2ER6CV3syvN5bDI
+         GpxQ+XGY0Rmrns9Uhdk8xD9bSPb2noRADI+yWF2it2mEiGh3LmxDWjthXAF1931bonfH
+         l4OqaE4C+TQNmv/pHy+IyY4+q4irUHg3ZSrCy1vmWyrB2DAd5lvwH3CvuWoB/8MA+/+r
+         Cykg==
+X-Gm-Message-State: AFqh2kq4go7exAzAJK5lzYIiZR+Aor4LqDrIPlBPrwjeeQ448aui7lz8
+        O7MxcLIMjE2tm534ageI+Xg=
+X-Google-Smtp-Source: AMrXdXtjuk2eHtVbZ1/GbAcJYWTE31oco3Z7HMqTj3sRkYbZPzE34OyKpSR6LybAX/MszgSNQ7h53Q==
+X-Received: by 2002:a1c:7410:0:b0:3cf:8957:806e with SMTP id p16-20020a1c7410000000b003cf8957806emr42935386wmc.5.1673102603226;
+        Sat, 07 Jan 2023 06:43:23 -0800 (PST)
+Received: from mars.. ([2a02:168:6806:0:40f6:41b6:8914:e80b])
+        by smtp.gmail.com with ESMTPSA id h19-20020a05600c351300b003d9a86a13bfsm6056106wmq.28.2023.01.07.06.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jan 2023 06:43:22 -0800 (PST)
+From:   Klaus Kudielka <klaus.kudielka@gmail.com>
+To:     "Andrew Lunn" <andrew@lunn.ch>,
+        "Gregory Clement" <gregory.clement@bootlin.com>,
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Klaus Kudielka <klaus.kudielka@gmail.com>
+Subject: [PATCH v2 1/2] Revert "ARM: dts: armada-38x: Fix compatible string for gpios"
+Date:   Sat,  7 Jan 2023 15:41:48 +0100
+Message-Id: <20230107144149.5743-1-klaus.kudielka@gmail.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: f9beb1b2a13907fca8c9180b7c7aa505e0ba2ef8  gpio: regmap: use new regmap_might_sleep()
+This reverts commit c4de4667f15d04ef5920bacf41e514ec7d1ef03d, which causes
+a regression on Turris Omnia (Armada 385): GPIO interrupts cease to work,
+ending up in the DSA switch being non-functional.
 
-elapsed time: 727m
+The blamed commit is incorrect in the first place:
+If compatible = "marvell,armadaxp-gpio", the second (address, size) pair
+of the reg property must to point to the per-CPU interrupt registers
+<0x18800 0x30> / <0x18840 0x30>, and not to the blink enable registers
+<0x181c0 0x08> / <0x181c8 0x08>.
 
-configs tested: 126
-configs skipped: 3
+But even fixing that leaves the GPIO interrupts broken on the Omnia.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Furthermore:
+Commit 5f79c651e81e explains very well, why the gpio-mvebu driver does not
+work reliably with per-CPU interrupts.
+Commit 988c8c0cd04d deprecates compatible = marvell,armadaxp-gpio for this
+reason.
 
-gcc tested configs:
-x86_64                            allnoconfig
-powerpc                           allnoconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-arc                                 defconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allmodconfig
-x86_64                              defconfig
-x86_64                        randconfig-a013
-x86_64                        randconfig-a011
-x86_64                        randconfig-a015
-x86_64                               rhel-8.3
-x86_64                           allyesconfig
-ia64                             allmodconfig
-alpha                            allyesconfig
-s390                             allyesconfig
-m68k                             allyesconfig
-m68k                             allmodconfig
-arc                              allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-sh                               allmodconfig
-i386                          randconfig-a016
-arm                                 defconfig
-mips                             allyesconfig
-arc                  randconfig-r043-20230106
-x86_64                        randconfig-a004
-i386                                defconfig
-x86_64                    rhel-8.3-kselftests
-i386                          randconfig-a001
-x86_64                        randconfig-a002
-i386                          randconfig-a003
-x86_64                          rhel-8.3-func
-arm64                            allyesconfig
-arm                  randconfig-r046-20230106
-x86_64                        randconfig-a006
-arm                              allyesconfig
-x86_64                           rhel-8.3-bpf
-i386                          randconfig-a005
-x86_64                           rhel-8.3-syz
-powerpc                          allmodconfig
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-sh                ecovec24-romimage_defconfig
-sh                        dreamcast_defconfig
-sh                           se7619_defconfig
-mips                            gpr_defconfig
-i386                             allyesconfig
-sh                                  defconfig
-x86_64                           alldefconfig
-mips                         rt305x_defconfig
-sh                         apsh4a3a_defconfig
-sh                          sdk7786_defconfig
-arc                    vdk_hs38_smp_defconfig
-sparc                            alldefconfig
-arc                      axs103_smp_defconfig
-arm                            lart_defconfig
-arm                        cerfcube_defconfig
-mips                         db1xxx_defconfig
-powerpc                      ppc6xx_defconfig
-mips                         cobalt_defconfig
-sparc64                             defconfig
-powerpc                       ppc64_defconfig
-sh                            titan_defconfig
-ia64                             alldefconfig
-powerpc                     mpc83xx_defconfig
-powerpc                      ppc40x_defconfig
-arc                              alldefconfig
-mips                           ci20_defconfig
-m68k                        mvme147_defconfig
-i386                          randconfig-c001
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-riscv                               defconfig
-sh                           sh2007_defconfig
-riscv                            allyesconfig
-arc                     nsimosci_hs_defconfig
-ia64                        generic_defconfig
-nios2                            allyesconfig
-powerpc                   currituck_defconfig
-powerpc                      pasemi_defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                    nommu_k210_defconfig
-riscv                             allnoconfig
-i386                   debian-10.3-kselftests
-i386                              debian-10.3
-arm                           imxrt_defconfig
-riscv             nommu_k210_sdcard_defconfig
-arm                          gemini_defconfig
-powerpc                 linkstation_defconfig
+Fixes: c4de4667f15d ("ARM: dts: armada-38x: Fix compatible string for gpios")
+Reported-by: Klaus Kudielka <klaus.kudielka@gmail.com>
+Link: https://lore.kernel.org/r/f24474e70c1a4e9692bd596ef6d97ceda9511245.camel@gmail.com/
 
-clang tested configs:
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-x86_64                        randconfig-a016
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-x86_64                          rhel-8.3-rust
-hexagon              randconfig-r041-20230106
-s390                 randconfig-r044-20230106
-riscv                randconfig-r042-20230106
-x86_64                        randconfig-a005
-x86_64                        randconfig-a001
-hexagon              randconfig-r045-20230106
-x86_64                        randconfig-a003
-i386                          randconfig-a002
-i386                          randconfig-a006
-i386                          randconfig-a004
-powerpc                   bluestone_defconfig
-mips                       rbtx49xx_defconfig
-arm                              alldefconfig
-hexagon                             defconfig
-arm                       cns3420vb_defconfig
-powerpc                 xes_mpc85xx_defconfig
-powerpc                          g5_defconfig
-arm                          ixp4xx_defconfig
-x86_64                        randconfig-k001
-arm                          moxart_defconfig
-arm                        neponset_defconfig
-x86_64                           allyesconfig
-hexagon              randconfig-r041-20230107
-hexagon              randconfig-r045-20230107
-arm                  randconfig-r046-20230107
-arm                       aspeed_g4_defconfig
-powerpc                     mpc5200_defconfig
+Signed-off-by: Klaus Kudielka <klaus.kudielka@gmail.com>
+---
+v1->v2: Be more explicit about the regression, and about the reg property.
 
+ arch/arm/boot/dts/armada-38x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 12933eff41..446861b6b1 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -304,7 +304,7 @@ spdif_pins: spdif-pins {
+ 			};
+ 
+ 			gpio0: gpio@18100 {
+-				compatible = "marvell,armadaxp-gpio",
++				compatible = "marvell,armada-370-gpio",
+ 					     "marvell,orion-gpio";
+ 				reg = <0x18100 0x40>, <0x181c0 0x08>;
+ 				reg-names = "gpio", "pwm";
+@@ -323,7 +323,7 @@ gpio0: gpio@18100 {
+ 			};
+ 
+ 			gpio1: gpio@18140 {
+-				compatible = "marvell,armadaxp-gpio",
++				compatible = "marvell,armada-370-gpio",
+ 					     "marvell,orion-gpio";
+ 				reg = <0x18140 0x40>, <0x181c8 0x08>;
+ 				reg-names = "gpio", "pwm";
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.39.0
+
