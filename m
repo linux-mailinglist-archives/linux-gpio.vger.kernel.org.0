@@ -2,71 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 321D3661924
-	for <lists+linux-gpio@lfdr.de>; Sun,  8 Jan 2023 21:13:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7F8366193D
+	for <lists+linux-gpio@lfdr.de>; Sun,  8 Jan 2023 21:23:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjAHUNh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sun, 8 Jan 2023 15:13:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
+        id S233319AbjAHUXm (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sun, 8 Jan 2023 15:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbjAHUN0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Jan 2023 15:13:26 -0500
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8B9C67;
-        Sun,  8 Jan 2023 12:13:25 -0800 (PST)
-Received: by mail-il1-f171.google.com with SMTP id u8so3975155ilg.0;
-        Sun, 08 Jan 2023 12:13:25 -0800 (PST)
+        with ESMTP id S230396AbjAHUXl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sun, 8 Jan 2023 15:23:41 -0500
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDDA6F599;
+        Sun,  8 Jan 2023 12:23:40 -0800 (PST)
+Received: by mail-il1-f175.google.com with SMTP id y2so3960246ily.5;
+        Sun, 08 Jan 2023 12:23:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7ekCum+mkWklgiFQqDiLnxNkjMJuXkERlOwwi6tiZmE=;
-        b=Ai1HNblA3ChOPsel3Zl3FRw2jGxaGBYOVKlx9YUBJFKt5Q/f9tY4iCCSD0CQbDKY/S
-         lYisBKoMefVYOfieh3I+/IYQ72tnFgPMKF+DoGuhTZepB+fj+YtaMzeMrB/IlpsDAFLN
-         D9RcDLnOXRMUunFfz6vrJAbUJ31mONBLRhG65FBMeDi5gsJqS8NJ+M8IhgxdNMd+MmgO
-         MxETJZBJaYc5DQWdPHYhq98GEJsHTLo+xJw+Fh2MjOV6GykcK3JOBCX+LTZSMMW2mnkc
-         ZQeLCcudFjwjsd0HqCbRJtH0IBEw1B41AJ507trLbouWMVcVNqei8uuPcy7180PemA5J
-         FYFw==
-X-Gm-Message-State: AFqh2krMpCKwFa930vXpb5RWm2vSwpTPPFnP6ZEjUV+HSkz1MxJK8Bak
-        E+sjVwKSThfmPZGiEiJBcA==
-X-Google-Smtp-Source: AMrXdXswrCacsXxRQuZMa8mL08hl/Jp+IGjRRL0QTYlwrxB+aANNp8aJEwSO4wN9jNSOt3O346Cpyw==
-X-Received: by 2002:a92:c528:0:b0:30b:e320:a6f9 with SMTP id m8-20020a92c528000000b0030be320a6f9mr55921532ili.14.1673208804682;
-        Sun, 08 Jan 2023 12:13:24 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/RUYZ6zFkymzHQkSJ67aW6tJEdK11q0qpSv8WytCTvE=;
+        b=1+DIm0EDZ7953/t/OClFj1NTixlaqp7OyS4EMfFYAFazfSNvahsuO6hBF7C5zZIP/V
+         RDiQvi/0e8KT1xG0WAx5fRfTHxhJQ1+fqcHQ3sbbNknTHLBjS6zCpi5bfzfI60tkUEVg
+         lhoaWxYVv7XLvVL+my5xdJSG+3r75k0bq2W79BgwWMoc+EqA6EfQQiKFlplvsPUomV1I
+         tSKFG+KFID5VP5h5HTHxPua+hBSmL3/55n0q+8N6BsvF12fnqkTk3IiRr/vVJbbkqsFS
+         y8L6Ocif/PPPbAMpj46a1RkEJtgemB24dhlzJBZXcnJJAtgZVNVfXARSBFw4BxxnULyu
+         ruFw==
+X-Gm-Message-State: AFqh2kr8UN8mAdxgA+bIO6NCL/Y2lRiwNgxk2WO3QC3GdWvHYyTg+FFq
+        ySEgepcZLBHuv7pWHJc/tQ==
+X-Google-Smtp-Source: AMrXdXsDj5T9y4ilX42yDZ+W2rfpkG4YmtliGaBA5E5UOPjsdh2yQ433Lfn0/CFTQnMUY18w2rW4Pg==
+X-Received: by 2002:a92:dc8d:0:b0:30c:4c54:87f4 with SMTP id c13-20020a92dc8d000000b0030c4c5487f4mr16995592iln.3.1673209420129;
+        Sun, 08 Jan 2023 12:23:40 -0800 (PST)
 Received: from robh_at_kernel.org ([2605:ef80:8069:516a:f2b0:691e:4315:7c0f])
-        by smtp.gmail.com with ESMTPSA id j2-20020a026302000000b0038a48cfededsm2197991jac.15.2023.01.08.12.13.21
+        by smtp.gmail.com with ESMTPSA id t9-20020a92cc49000000b0030bb7c67efcsm2198954ilq.16.2023.01.08.12.23.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jan 2023 12:13:24 -0800 (PST)
-Received: (nullmailer pid 218636 invoked by uid 1000);
-        Sun, 08 Jan 2023 20:13:20 -0000
-Date:   Sun, 8 Jan 2023 14:13:20 -0600
+        Sun, 08 Jan 2023 12:23:39 -0800 (PST)
+Received: (nullmailer pid 229453 invoked by uid 1000);
+        Sun, 08 Jan 2023 20:23:30 -0000
+Date:   Sun, 8 Jan 2023 14:23:30 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        devicetree@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Richard Acayan <mailingradian@gmail.com>,
-        Andy Gross <agross@kernel.org>, linux-gpio@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Iskren Chernev <me@iskren.info>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Martin Botka <martin.botka@somainline.org>,
-        linux-arm-msm@vger.kernel.org,
-        krishna Lanka <quic_vamslank@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 7/9] dt-bindings: pinctrl: qcom: allow nine interrupts on
- SM6350
-Message-ID: <167320880013.218579.14734007153028250420.robh@kernel.org>
-References: <20221230135645.56401-1-krzysztof.kozlowski@linaro.org>
- <20221230135645.56401-7-krzysztof.kozlowski@linaro.org>
+To:     Bernhard =?iso-8859-1?Q?Rosenkr=E4nzer?= <bero@baylibre.com>
+Cc:     linux-usb@vger.kernel.org, linux-gpio@vger.kernel.org,
+        krzysztof.kozlowski+dt@linaro.org,
+        linux-mediatek@lists.infradead.org, sean.wang@mediatek.com,
+        chunfeng.yun@mediatek.com, zhiyong.tao@mediatek.com,
+        linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
+        lee@kernel.org, gregkh@linuxfoundation.org,
+        linus.walleij@linaro.org, devicetree@vger.kernel.org,
+        angelogioacchino.delregno@collabora.com, maz@kernel.org,
+        linux-kernel@vger.kernel.org, nfraprado@collabora.com,
+        matthias.bgg@gmail.com, allen-kh.cheng@mediatek.com,
+        robh+dt@kernel.org
+Subject: Re: [PATCH v7 4/7] dt-bindings: pinctrl: add bindings for Mediatek
+ MT8365 SoC
+Message-ID: <167320940963.229372.8143524067884633693.robh@kernel.org>
+References: <20230101220149.3035048-1-bero@baylibre.com>
+ <20230101220149.3035048-5-bero@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20221230135645.56401-7-krzysztof.kozlowski@linaro.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230101220149.3035048-5-bero@baylibre.com>
 X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
         FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -78,48 +74,14 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On Fri, 30 Dec 2022 14:56:43 +0100, Krzysztof Kozlowski wrote:
-> Almost all Qualcomm SoC Top Level Mode Multiplexers come with only
-> summary interrupt.  SM6350 is different because downstream and upstream
-> DTS have nine of the interrupts.  Allow such variation.
+On Sun, 01 Jan 2023 23:01:46 +0100, Bernhard Rosenkränzer wrote:
+> Add devicetree bindings for Mediatek MT8365 pinctrl driver.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
 > ---
->  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,ipq8074-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,mdm9607-tlmm.yaml      |  4 +++-
->  .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8226-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8660-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8909-tlmm.yaml      |  4 +++-
->  .../bindings/pinctrl/qcom,msm8916-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8953-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8960-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8974-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8976-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8994-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8996-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,msm8998-pinctrl.yaml   |  4 +++-
->  .../bindings/pinctrl/qcom,qcm2290-tlmm.yaml      |  4 +++-
->  .../bindings/pinctrl/qcom,qcs404-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sc7180-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sc8180x-tlmm.yaml      |  4 +++-
->  .../bindings/pinctrl/qcom,sc8280xp-tlmm.yaml     |  4 +++-
->  .../bindings/pinctrl/qcom,sdm630-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sdm670-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml     |  4 +++-
->  .../bindings/pinctrl/qcom,sdx65-tlmm.yaml        |  4 +++-
->  .../bindings/pinctrl/qcom,sm6115-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,sm6125-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,sm6350-tlmm.yaml       | 16 ++++++++++++++--
->  .../bindings/pinctrl/qcom,sm6375-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,sm8150-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml    |  4 +++-
->  .../bindings/pinctrl/qcom,sm8350-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,sm8450-tlmm.yaml       |  4 +++-
->  .../bindings/pinctrl/qcom,tlmm-common.yaml       |  5 +++--
->  34 files changed, 113 insertions(+), 36 deletions(-)
+>  .../pinctrl/mediatek,mt8365-pinctrl.yaml      | 197 ++++++++++++++++++
+>  1 file changed, 197 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt8365-pinctrl.yaml
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
