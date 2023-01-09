@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BACFE66325A
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 22:11:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB99666326F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 22:12:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237964AbjAIVLQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 16:11:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48884 "EHLO
+        id S237834AbjAIVMK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 16:12:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237857AbjAIVK5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 16:10:57 -0500
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0E82395F0
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 13:03:30 -0800 (PST)
-Received: by mail-lf1-x12a.google.com with SMTP id bp15so14991090lfb.13
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 13:03:30 -0800 (PST)
+        with ESMTP id S237856AbjAIVLl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 16:11:41 -0500
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA9C47653
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 13:06:16 -0800 (PST)
+Received: by mail-lf1-x12f.google.com with SMTP id d30so10116128lfv.8
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 13:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xvbOJwJCDvAVe4Ypk6TWCIgsg3158YUlrEMw2YNb0Mo=;
-        b=J/52Y5D40ZyVHCKzboYRyiaw0gGNjlAz3UGYLftraJb/Js04jRHSkbpc11vqBhJkLY
-         b4C0zTCHweLcchOlRsBh01CsYClhxIQQzkMmjDMw1QHCZfbvnFZxkESOW8oiOCsnxXKq
-         rWyTPeRhQQX+x+oVnsUSxI/KruU4N+uvaJf5THOLNLhRhuvnjCg79IKXFF66GrW/0Wc+
-         mmsUswGH67RNx2OuO0F2OcmuUJXHOBSE0VO6gW3PGZloL7zlZOwmZCKZHr0na50oGjIN
-         IsCJX2Zb0bSyKP31k9pPVMwhC0uIEfTDb3T6litAsRybOc4ILP9d+PWWJi4g/A6+tGUH
-         HgXw==
+        bh=ATq9lfwFr3RZyhEmOv68Lea4iswGw4nEYd9xucpaSYI=;
+        b=ZnHdLMPbbgf9UrAg9c/LZOWyW3VZt31oKL8x4C6RX9hvUmc4knhTljAbwJiRv/46jh
+         udIB4KWy1VZo7xUMsjusVkPPts5uuRggRun1Qp7LPTkaJ9JXUr/Pimi7Hqp97vBJgTOA
+         yH+HCn9sSJ3IZwpUjLOlXdm/zkU4vG6Y7+WpaMcSVHu4v6HMlkbxX8Jl8mb+oCWUa1WI
+         VPP8CPXaOUWe9zU7vZ5abd1NYUIzuw+Q67fJbLk4UbBkqgq4K6QdIASOk9RXxRjbJKh4
+         cZvcm26xYwAhfEczyf84Muh2jfibMQgKFN40g4Jrm+2Lg73Hg3a1YFbP5kaEZlu2E7Dg
+         LYiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvbOJwJCDvAVe4Ypk6TWCIgsg3158YUlrEMw2YNb0Mo=;
-        b=Ur6ipHT+ADwEsVUBxPBflEZpE6OKulrn0hU/K6Vu5DxyKmKd9qXKtaJAHndbWGcZAA
-         +mgAD0OJXgUM1SXCdZChrjN2SHo5fKuRvpwSeFF5x7YHEHM07dYu6w6YSfgHPozI1Es6
-         kaTvugS0gg+cFJ0BcsYCA/bet+JBIV6QTa45TCU+O3xHghwGhJCb63Iy2EfBz8BUKdoV
-         D7ECCNXvKwoba/vve3mA+0LgKhiFweWaGGxAPEx8rkL3fDi8Bpm5ebasGs5Kog10I3SC
-         E2aIY8GdIAsocCZJDVF5FLNeOwqpoN09PGlOYHT5sGNpsRTNI7nBzvizxt4UHFBFy9N+
-         vyOA==
-X-Gm-Message-State: AFqh2kqX5hHsMIt4e1rCJwIQ6Nxuf9y6mLdoqd2oj5r/gEQlQnSMo1nO
-        fH/wQyjXN+JnFQo0RvX7JselEA==
-X-Google-Smtp-Source: AMrXdXsbI5uSFJDymeTgphPOV5Fli5DX46O6F/LKDz4NKUeOQVAI8vZ1Os79nbfg1VaDx1h2TGA5vQ==
-X-Received: by 2002:a05:6512:6d4:b0:4cb:1e1:f380 with SMTP id u20-20020a05651206d400b004cb01e1f380mr17575366lff.40.1673298209192;
-        Mon, 09 Jan 2023 13:03:29 -0800 (PST)
+        bh=ATq9lfwFr3RZyhEmOv68Lea4iswGw4nEYd9xucpaSYI=;
+        b=DhUhe0k8KIQN/cNBYCXU4SjTw+LIJQujamFZ086dLnnJt7wXCKsOF9xqnp/tKwV+yZ
+         39MdkCgOT0oxKCiWOqEf488RRX2KeDJ0gYzNTCqzxS9B6WVxtGkU6ZdnHNgYxxQ8u/5s
+         VTjkP+696/6oRZNElwXIrVG3Mr33T7Tpde1tZ1SKYbaMB0ePK+uPPDvlCsMaedD3O6UG
+         oieJ1n/nXPpU+1TU4T0oFyQX7OCG+NTJ2AKSCHzxwzfpyYzDJqblENriHjvC2l7dCZK3
+         hGyF+34eGKiIBuzPdeVLUPn/xBSDWZL4P+iGYbu3bj2swLQr/21su4K8MKCxOEsv7YPY
+         WyvQ==
+X-Gm-Message-State: AFqh2kqasegQvUCOp96sawJY0rNTplaZqPbEZ03znBYg/MEjV86CWU8J
+        u4P09Z2ZM0rX11ZP2CvyTyJf9A==
+X-Google-Smtp-Source: AMrXdXtMlPauAhWufnKfAA9Z0/kuM8Pxw6F0q+IwmA1VbDLnvpRiG1kH2m6PlPKVn/aIBM8cKwFg9Q==
+X-Received: by 2002:ac2:5191:0:b0:4cb:20b3:e7f6 with SMTP id u17-20020ac25191000000b004cb20b3e7f6mr10698809lfi.19.1673298375321;
+        Mon, 09 Jan 2023 13:06:15 -0800 (PST)
 Received: from ?IPV6:2001:14ba:a085:4d00::8a5? (dzccz6yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a085:4d00::8a5])
-        by smtp.gmail.com with ESMTPSA id u6-20020a05651220c600b004cc865fdfdfsm383653lfr.89.2023.01.09.13.03.28
+        by smtp.gmail.com with ESMTPSA id c19-20020a056512325300b004cb3d77a936sm1780286lfr.46.2023.01.09.13.06.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 13:03:28 -0800 (PST)
-Message-ID: <a185b4e3-011c-c7f2-d18b-5c7486b121eb@linaro.org>
-Date:   Mon, 9 Jan 2023 23:03:28 +0200
+        Mon, 09 Jan 2023 13:06:14 -0800 (PST)
+Message-ID: <843eed4b-552a-a529-83ed-b813c1346c5f@linaro.org>
+Date:   Mon, 9 Jan 2023 23:06:13 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 00/18] arm64: qcom: add support for sa8775p-ride
+Subject: Re: [PATCH 02/18] clk: qcom: add the GCC driver for sa8775p
 Content-Language: en-GB
 To:     Konrad Dybcio <konrad.dybcio@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -79,66 +79,45 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux.dev, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org,
+        netdev@vger.kernel.org, Shazad Hussain <quic_shazhuss@quicinc.com>,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
- <bca87233-ae9d-00f8-07d3-07afef2cb92c@linaro.org>
- <59835841-654a-0ef2-6c79-1ba62ff00928@linaro.org>
+ <20230109174511.1740856-3-brgl@bgdev.pl>
+ <bbd21894-234e-542e-80ec-8f2bb11e268e@linaro.org>
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-In-Reply-To: <59835841-654a-0ef2-6c79-1ba62ff00928@linaro.org>
+In-Reply-To: <bbd21894-234e-542e-80ec-8f2bb11e268e@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/01/2023 22:59, Konrad Dybcio wrote:
+On 09/01/2023 19:58, Konrad Dybcio wrote:
 > 
 > 
-> On 9.01.2023 21:13, Dmitry Baryshkov wrote:
->> On 09/01/2023 19:44, Bartosz Golaszewski wrote:
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> This adds basic support for the Qualcomm sa8775p platform and its reference
->>> board: sa8775p-ride. The dtsi contains basic SoC description required for
->>> a simple boot-to-shell. The dts enables boot-to-shell with UART on the
->>> sa8775p-ride board. There are three new drivers required to boot the board:
->>> pinctrl, interconnect and GCC clock. Other patches contain various tweaks
->>> to existing code. More support is coming up.
->>>
->>> Bartosz Golaszewski (15):
->>>     dt-bindings: clock: sa8775p: add bindings for Qualcomm gcc-sa8775p
->>>     arm64: defconfig: enable the clock driver for Qualcomm SA8775P
->>>       platforms
->>>     dt-bindings: clock: qcom-rpmhcc: document the clock for sa8775p
->>>     clk: qcom: rpmh: add clocks for sa8775p
->>>     dt-bindings: interconnect: qcom: document the interconnects for
->>>       sa8775p
->>>     arm64: defconfig: enable the interconnect driver for Qualcomm SA8775P
->>>     dt-bindings: pinctrl: sa8775p: add bindings for qcom,sa8775p-tlmm
->>>     arm64: defconfig: enable the pinctrl driver for Qualcomm SA8775P
->>>       platforms
->>>     dt-bindings: mailbox: qcom-ipcc: document the sa8775p platform
->>>     dt-bindings: power: qcom,rpmpd: document sa8775p
->>>     soc: qcom: rmphpd: add power domains for sa8775p
->>>     dt-bindings: arm-smmu: document the smmu on Qualcomm SA8775P
->>>     iommu: arm-smmu: qcom: add support for sa8775p
->>>     dt-bindings: arm: qcom: document the sa8775p reference board
->>>     arm64: dts: qcom: add initial support for qcom sa8775p-ride
->>>
->>> Shazad Hussain (2):
->>>     clk: qcom: add the GCC driver for sa8775p
+> On 9.01.2023 18:44, Bartosz Golaszewski wrote:
+>> From: Shazad Hussain <quic_shazhuss@quicinc.com>
 >>
->> This patch didn't make it to the list. Please check if you can fix or split it somehow?
-> It's a known issue with lists clipping messages that are too long.
-> I'll forward it to you.
+>> Add support for the Global Clock Controller found in the QTI SA8775P
+>> platforms.
+>>
+>> Signed-off-by: Shazad Hussain <quic_shazhuss@quicinc.com>
+>> [Bartosz: made the driver ready for upstream]
+>> Co-developed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> ---
+> [...]
+>
 
-Thank you!
+As the driver didn't get to the list, I'll comment OOB.
+
+Please use clk_regmap_phy_mux_ops where applicable (PCIe PIPE clocks).
 
 -- 
 With best wishes
