@@ -2,103 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C07B16629B1
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 16:19:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D746662BA0
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 17:50:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229801AbjAIPSQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 10:18:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
+        id S230192AbjAIQul (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 11:50:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237066AbjAIPRs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 10:17:48 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A6851403C
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 07:17:03 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id l26so6512718wme.5
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 07:17:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PqgORacgkMDX01Q5NGqFzrod0OlQV05LXx05OG7/R8=;
-        b=sb5IJ/abZfkZqQuTH1bGGSF8GF1xPt1b4eT+3XTA1i+HoCZBJ1yYEVs98SWKk6ytM0
-         B6QEjLlmppj6MY2WeAoSmA1N289RS3BJ62L2PfXf6khhLfFC5+DxvFEp0DHZxjMA5D2E
-         XT+DmUzPDr9k+ISyMAIldOCybXDT3nLkx476KWq4tByFbSeG3qc9nOzs4ZyTANLj+kgh
-         hqLnDy855NR6z/mfxnZ4tw7gxX2BpmUbVbge+ulCzlyvFpKyVJzkQWf4BHtwzDhIbiEE
-         FfWHDsz1i1IxT5Ri11jguy7E70C0a6HKtBfwrCoYQIeayOC2mMVeti0Dl4yjWB0gDAML
-         crBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+PqgORacgkMDX01Q5NGqFzrod0OlQV05LXx05OG7/R8=;
-        b=CX2fLX+L0WLmdb3PGsUJB7vNlok8bRCQ4njOS1qUbhwwJHClufHz6Rwngy232CSvEB
-         3xOC/8MrVHzgRuw5woylkJ4fMcTystmcODlnQwMuZA1wUJR8qnSCPu9CrEbqLDoiN7l0
-         GgrztmhT0wCW0leUQwbWE+Z69KEN1UAd5nld4tsQyZyUJV606FyulTQk85Rz/jmo332D
-         48m/lgVYGurnenDvd/c4K/vY91S8RyzHcva2FWyrcVu1ypmQTjLOutHMiK7/DXhfBkkG
-         iZOZtken2uw2iXijHs7szxDO3pa6+GCJHB+L8efaYW9hhUoymfDSvYaXRG5zsyAns5KB
-         sxXw==
-X-Gm-Message-State: AFqh2kqDXFcK0IweZH4r1P4qaABAthUhkztOF+okSVK7bfPXbSerhdJ6
-        l35Cj5zB4U5Ez0zmPi8P7jHU+3onrpwJhOji
-X-Google-Smtp-Source: AMrXdXutZdV1Q+q4tKTuHkHXJoGdv5KeBWCpgkPiZr1wIwhHSlQ2cfgYT6VUJUZRhXCbmDEpmm9I2Q==
-X-Received: by 2002:a05:600c:3d0e:b0:3d1:ee97:980 with SMTP id bh14-20020a05600c3d0e00b003d1ee970980mr57192263wmb.7.1673277422112;
-        Mon, 09 Jan 2023 07:17:02 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:a010:fe57:993c:4842? ([2a01:e0a:982:cbb0:a010:fe57:993c:4842])
-        by smtp.gmail.com with ESMTPSA id g14-20020a05600c310e00b003cf5ec79bf9sm12796176wmo.40.2023.01.09.07.17.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 07:17:01 -0800 (PST)
-Message-ID: <129c1b6d-288f-d463-8c08-7c7f7e832cf0@linaro.org>
-Date:   Mon, 9 Jan 2023 16:16:59 +0100
+        with ESMTP id S236497AbjAIQuJ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 11:50:09 -0500
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E8139F94;
+        Mon,  9 Jan 2023 08:48:21 -0800 (PST)
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 309CcS0M004755;
+        Mon, 9 Jan 2023 17:48:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=selector1;
+ bh=HpjiDxO7BGUdjKg/xPiZJGtQIB3/nFTNQ+hhSfVtEHI=;
+ b=Xf4ggyfezBBZz5tGahk6Ry/CmwDoWSua995vphfp4I9FRscTEcEZHSkdHTmccbFDrIzV
+ DDyZSCiHKpn4xfm+mx4d2r1/Qi/ua0KrbDy8B1amN3LNzgO7loZIVblEShE3zgyKo7Dz
+ vfUQ6goV7a+AO8V+I975A6bwr5U7e9T2deAA3lGxv8yAr8CTVVP5BiWpVKQwvmp8IW+N
+ ml/aKP7TOmyGNBewcSJWtRNs5GfuenWVhRAWYX2wjAXRMm6rjUFNKQqjaElFBlvDkTMI
+ +2R+ybQn/aBQQiW0l2aKclXIEwQRN0yDNar9XzAFfIWKG8uB7iHt+4Jaz+bFtsblW3Ab Bw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3my0y6ugtg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Jan 2023 17:48:13 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 05F9010002A;
+        Mon,  9 Jan 2023 17:48:12 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E8399226FD2;
+        Mon,  9 Jan 2023 17:48:12 +0100 (CET)
+Received: from [10.201.21.93] (10.201.21.93) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.13; Mon, 9 Jan
+ 2023 17:48:12 +0100
+Message-ID: <6219844a-47d9-5edd-ff9f-6e5df0602d0c@foss.st.com>
+Date:   Mon, 9 Jan 2023 17:48:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 0/3] qcom: add support for SPMI PMICs found on SM8550
- platforms
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v4 3/3] ARM: dts: stm32: Remove the pins-are-numbered
+ property
 Content-Language: en-US
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20221114-narmstrong-sm8550-upstream-spmi-v2-0-b839bf2d558a@linaro.org>
- <CACRpkdby3KTakQXnmkSYsu3HreSYx9zhP0nWKQU3KOtmunA3Ew@mail.gmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <CACRpkdby3KTakQXnmkSYsu3HreSYx9zhP0nWKQU3KOtmunA3Ew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+To:     =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
+        <devicetree@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <mcoquelin.stm32@gmail.com>, <krzysztof.kozlowski@linaro.org>,
+        <matthias.bgg@gmail.com>,
+        <angelogioacchino.delregno@collabora.com>, <khilman@baylibre.com>,
+        <linux-gpio@vger.kernel.org>
+References: <20221205135158.1842465-1-bero@baylibre.com>
+ <20221205135158.1842465-4-bero@baylibre.com>
+From:   Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20221205135158.1842465-4-bero@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.21.93]
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2023-01-09_10,2023-01-09_01,2022-06-22_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/01/2023 15:18, Linus Walleij wrote:
-> On Fri, Nov 18, 2022 at 9:24 AM Neil Armstrong
-> <neil.armstrong@linaro.org> wrote:
-> 
->>        dt-bindings: pinctrl: qcom,pmic-gpio: document pm8550, pm8550b, pm8550ve, pm8550vs, pmk8550 & pmr735d
->>        pinctrl: qcom: spmi-gpio: add support for pm8550 & pmr735d gpio control
-> 
-> These two patches applied to the pinctrl tree!
+Hi Bernhard
 
-Thanks !
-
+On 12/5/22 14:51, Bernhard Rosenkränzer wrote:
+> Remove the pins-are-numbered property from STM32 DeviceTrees
 > 
-> Yours,
-> Linus Walleij
+> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
+> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Applied on stm32-next.
+
+Cheers
+Alex
 
