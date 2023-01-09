@@ -2,81 +2,85 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A60EA662830
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 15:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F07FC662845
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 15:19:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229496AbjAIOOt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 09:14:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48176 "EHLO
+        id S229601AbjAIOSt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 09:18:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjAIOOp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 09:14:45 -0500
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D595D11C37
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 06:14:44 -0800 (PST)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-4c9b9185d18so43216657b3.10
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 06:14:44 -0800 (PST)
+        with ESMTP id S229484AbjAIOSr (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 09:18:47 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B76164B8
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 06:18:46 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-482363a1232so114523437b3.3
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 06:18:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5bobKMsIRznoOvXz7SWvkB6xJnFk6PiGIGY3G6MS2o=;
-        b=HOzC/Pq5ulIIhA/KnqPJQFum3MX1CVNtRK6oFn+qIyK8JqJgTT715WipABxQaFbEIF
-         1JRnwSZ1iTMbopEbnyJarYGppK+0WlOe+lRVtcbvzLLP4OKuQzanGeosfsnAQ2rzBvme
-         ifEHdi6brOwOevGA90SB3nzXbWGUx8iijhMoAS5uCrdXdpWSO2WRFkn/a4EjmL1UFdzI
-         LGF8EngxkFLPNipXCCuv4RLuwe082RQHDDIpuow4i/Ek7CL4z6nc5wmLxgt2tYhZJWk5
-         Z6ZJ886e1bKQG28ifP4evROVVFlQbCMbPOPfo9XM3Xo8A6eY+zCa2e42XKO9JBTFrbp/
-         bc+w==
+        bh=Cq/zsLtOxvUpilNzkZm53DLhGTnecoKgp9xef0ifk6A=;
+        b=f9g2fxJH+nlBKifMDoOpaEo7JhFa/zmFsblORNMzG4fLvnfWT3f7UxnpMetzjcZyLC
+         BgcA0Ls+UbYBs22fjAlMfiRFO1uPXD2A9mKDT0LJSCFZUschkEcSMBgLS/HwHLWUaJ3b
+         pWqHIFreVg1K/e4HKk7/uIdHLyyCTiLBhf4ppbqD99jOKMyIvhJsqBGixFVsRWQS5kbn
+         6apuvNj2k3gFa8VZnoMY68HHJ8gfBnToJ9uvGmbNv2yLEMJWUmlijOAC4jJ8U6qV621t
+         TWoJMWFec6Q4C0ewIVHu5hVlnT1xq9Y4YCpOV3HOIKKvccRCyxX/hyTXct2vIhlFQCD/
+         Ol7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=P5bobKMsIRznoOvXz7SWvkB6xJnFk6PiGIGY3G6MS2o=;
-        b=n7kbyHreAZo5sx7XeReAdWk9oGQZx2Xvc/vtGNCb2fHIMa/UtAsdVaBKYd6xXzwNhG
-         vXxPKgtb7RxNQZz9HObX2R1LL1ElELFjE8yFO4CI4O8/4v11JQSyDnYJgtan1dnNswmR
-         gN8/kmYTxB+FZpcXjyEQZ48RlzpNA2CU56IexmybIRY57JABrqx3f4UM+jnYQLJmhdgY
-         pfCUKrq1YrnpNSNeZwUu0LB6fvoVcHLopTRq1nQiND9tPgcaeAAbwbpX13X8r6eC6tgi
-         5htNDaXl4dB9JWDMDyCmyRWtfA79ChqhqLb+SuvFZMpu8RgeCyHxzpFLRkAuLCX3qLtX
-         CmMw==
-X-Gm-Message-State: AFqh2kp1zY3AqlC4KUb+l62HkI4hmundcj1DI9Pa8XDYYY26zPrTYL6w
-        PZT+qLJBDPetdHf3WQEbx+aAivqKe6jINt3+w9wIWA==
-X-Google-Smtp-Source: AMrXdXscmRBkBgsHrMgvS+GuQDNO+z0Lx7t3uA7rUCKOfuuDv3g/cNEA/iPtCL706VwjeVKzC2ZoKaSu/RKf8cwNQKM=
+        bh=Cq/zsLtOxvUpilNzkZm53DLhGTnecoKgp9xef0ifk6A=;
+        b=lfM0V5G061uVduI9ZkEcm1UGacZTyKPxOdi33WFIWsAz3OUDNdNSqn5wBWg6cn3Pt3
+         C3+w5nZAmsj4yCS+evTazrT0fSzZHlqfMPfdXt8Hqxrk86pSdRwEFVtyk1Z2+sP+6ZZv
+         ySFFD6eNvdfjcZRF/bI/dF7Rvo/npRvXKxhd4ZvwsH59O4QCc4gGzbqYLkm9RslujS7e
+         zHreSi1L8zUVAiKUh6qSi/Uv3duoFSsQg7yQUcGKWKS36+mAFF9EsQJYunWpxJRUhfgK
+         SH3oc4x6cCAI9XRDQ5n4tidWBE8NWLYu3pplKcrIW2lK6gcpXKPRWsH1EK49HB+P2h4f
+         0lsA==
+X-Gm-Message-State: AFqh2kqnx8yIjgVXfv6qdVLKwhUuOrExqIK7t8bnox9k0Sz4z8wZAc6r
+        ny0M+kuPKKgcoE2Yy4u4Oj71T98NrwjumvaF/Wv4Uw==
+X-Google-Smtp-Source: AMrXdXvZALTukqFMVUU9iMepmp1dDXQlhGDNQL65hRRRgn4hLCn5jfD+jwcXYqtGNKvKuKxbo6DIiBsmemMNl/Ctxx4=
 X-Received: by 2002:a81:484c:0:b0:36a:de9d:825e with SMTP id
- v73-20020a81484c000000b0036ade9d825emr1508199ywa.477.1673273684076; Mon, 09
- Jan 2023 06:14:44 -0800 (PST)
+ v73-20020a81484c000000b0036ade9d825emr1509416ywa.477.1673273925453; Mon, 09
+ Jan 2023 06:18:45 -0800 (PST)
 MIME-Version: 1.0
-References: <20230102112845.3982407-1-linmq006@gmail.com>
-In-Reply-To: <20230102112845.3982407-1-linmq006@gmail.com>
+References: <20221114-narmstrong-sm8550-upstream-spmi-v2-0-b839bf2d558a@linaro.org>
+In-Reply-To: <20221114-narmstrong-sm8550-upstream-spmi-v2-0-b839bf2d558a@linaro.org>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Jan 2023 15:14:32 +0100
-Message-ID: <CACRpkdb41r2JiEoC2o5+QXVtLVH5OBHzHD=npDj-omS9NTwzmA@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rockchip: Fix refcount leak in rockchip_pinctrl_parse_groups
-To:     Miaoqian Lin <linmq006@gmail.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Date:   Mon, 9 Jan 2023 15:18:34 +0100
+Message-ID: <CACRpkdby3KTakQXnmkSYsu3HreSYx9zhP0nWKQU3KOtmunA3Ew@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] qcom: add support for SPMI PMICs found on SM8550 platforms
+To:     Neil Armstrong <neil.armstrong@linaro.org>
+Cc:     Bjorn Andersson <andersson@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Rob Herring <robh+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,SUSPICIOUS_RECIPS autolearn=no
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 2, 2023 at 12:28 PM Miaoqian Lin <linmq006@gmail.com> wrote:
+On Fri, Nov 18, 2022 at 9:24 AM Neil Armstrong
+<neil.armstrong@linaro.org> wrote:
 
-> of_find_node_by_phandle() returns a node pointer with refcount incremented,
-> We should use of_node_put() on it when not needed anymore.
-> Add missing of_node_put() to avoid refcount leak.
->
-> Fixes: d3e5116119bd ("pinctrl: add pinctrl driver for Rockchip SoCs")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+>       dt-bindings: pinctrl: qcom,pmic-gpio: document pm8550, pm8550b, pm8550ve, pm8550vs, pmk8550 & pmr735d
+>       pinctrl: qcom: spmi-gpio: add support for pm8550 & pmr735d gpio control
 
-Patch applied!
+These two patches applied to the pinctrl tree!
 
 Yours,
 Linus Walleij
