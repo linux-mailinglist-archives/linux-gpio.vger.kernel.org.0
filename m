@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A17D662D1E
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 18:46:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A183B662D26
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 18:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237423AbjAIRqL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 12:46:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34914 "EHLO
+        id S237007AbjAIRqM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 12:46:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237007AbjAIRpm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 12:45:42 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41B583591B
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 09:45:38 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id co23so9014300wrb.4
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 09:45:38 -0800 (PST)
+        with ESMTP id S237335AbjAIRpn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 12:45:43 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93B5936322
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 09:45:40 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id bk16so8987785wrb.11
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 09:45:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NKOIr4cEj4c+hw/JZsvoHyIaYMugNurg6Goja8+q9K8=;
-        b=2HZhYwMN1DpxpbW0ButVMB7Q9XSXXHV6dN9DhyVWbRwv+ljG6jK06IKMsgjAJt85hu
-         BqDOnRhrQ7W5gdvcJ3U2R7E0vfq55Rz2wkc+o2W3PQzU/MgzhkjIBORQUEKUPxM5nj2t
-         3pBtyrBorMWxebOGFjzX6fTI1FwM/7OlU/Qkj1XJ5FD6UWKP+JMrkkUeySKVZvb0yHQs
-         2Ozw5rA0f2akEt3D0AA/q8+289GEkXi53BX2xTtchVJ7djHCYuAMOks65BEyrISkh5Qk
-         w8A+lU9FfbG+rhkfzwNqn9Tg6gRWShn8TqHKRmWxlNh3lz2sMpqCNvTukLvCKJIDmseO
-         8y5Q==
+        bh=LM0HPgTNMyAJ8phPgkV2DF0qr0bcaChewWJHXJigj8w=;
+        b=JZCgYUZa1yXcC8C6hPysGrbxaI7VhoW9Bpz3P7TdYuK685mdEW0J2n20NBJ3M3AEOP
+         4WbaLFjQWulc/fe+rP/n3cXwdpQdGWbChJdkKyxE0spyR7HgLs4Eu6AAa5O93M9esS8R
+         Zgu9182pxHD/W2VyFyDzcH7H0y63yatPmd3rleyHRryhViMjtnIeq2Ji7sWnsgkLTr8p
+         8QLhd49ESHxblQXNg4pe4IRKbPo29D4oaJMyLVfYgRMzImBcdOIqWKP7EOZJu0zlLpXN
+         kG5KfVYcx2sI0iEFEY8C0cJeNQgupzun1nmS35fZVsAd704zaWDxdQzfLS+Q7mXSWSZw
+         6fWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NKOIr4cEj4c+hw/JZsvoHyIaYMugNurg6Goja8+q9K8=;
-        b=Upe7ONgS48ef2VyLWZKSdVIpdB6hc6k/uOwUIypePSH8fzxH1xNbVFDsfeiDuUan2U
-         zdarsh5e9SN4zbMl5H6ox5CaziPbNkIkcBP2r1EZj1gTUYQd4miohLJJIM11Yw3bqrNU
-         fF9WIZa0GLqROJu8E7BblvRH8qzxJRNB41i4eiLgujrCeHiJJ3qIu2xza9IU+7F/HkEZ
-         wtIMCRXIojs3LF2ySDUP0X52vUweCL2CS4AFku5aqSWlFF8x+/wTqMQcaeS4TikNhGrB
-         bvPFQT9PL6X/C/dnbhCiP6Ann7CeWUw5C4s5Sur++bHfzRm2zoxHHwGsW5MVItcN147r
-         l8KA==
-X-Gm-Message-State: AFqh2kqZuQOCijkKGxW4VYOYLHODPbQkHKd95uke+2Ts5bo0aF+O7NpO
-        i2QrfjwfkqclnO7ZjrYVooXY4w==
-X-Google-Smtp-Source: AMrXdXsHrU5A1cVD96VWtZCmclwxzYTJLg6sI+sNVXacEHJeVBd6Bl6fQTsn7vfRS3HxNB55hX5tZw==
-X-Received: by 2002:a5d:5910:0:b0:27c:7c2a:f700 with SMTP id v16-20020a5d5910000000b0027c7c2af700mr28716841wrd.8.1673286337817;
-        Mon, 09 Jan 2023 09:45:37 -0800 (PST)
+        bh=LM0HPgTNMyAJ8phPgkV2DF0qr0bcaChewWJHXJigj8w=;
+        b=Q3vM6GC0rR33W/S4uszcA5JmbbBffBi/AiNnxLHu8sPJGBOu5t3DMBpH/hqfO62avd
+         hTOFwI7X4efVtZ9IzkSNXb0gh8Sfi02UDIr66Kgo1OoFZUd3ySpoQuW71SECw31M0c3M
+         Zv2FUxJ7CrRoUoyiGAPtYncU2N/O6Rcct+Wzm7fi4v39OS/4UUDc1t6z/RIHzjK0IQa6
+         FQRx8xFvPtls5Xj0eKpMBHek32+QImQR+UEIItAFWSchNlIWS3Ol2XuKcUp1OUahZFMy
+         9B04jmmojtzf0+8zu4TwcDcytoK8WozAASoUpXhMvWE4MvsCh0IgVWw/eMmcM77bxRYL
+         dW9A==
+X-Gm-Message-State: AFqh2ko1lNywDkzsxdvwpAlhfj0KC453HlY9IJdXPuL8euWlONXEk3g1
+        hZTw0R+z1xiFXLT3uAvlwlJRf7EBKaUvzTfz
+X-Google-Smtp-Source: AMrXdXvnNLr9rsquZ8+pOyWMbio+w1kxYWRci3GrXhKJp07+eCoFJEEDqvGDPQE9gP3PVEnhH09w+Q==
+X-Received: by 2002:adf:e883:0:b0:2bb:6c50:a559 with SMTP id d3-20020adfe883000000b002bb6c50a559mr7241120wrm.38.1673286339135;
+        Mon, 09 Jan 2023 09:45:39 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:c88:901e:c74c:8e80])
-        by smtp.gmail.com with ESMTPSA id m1-20020a5d6241000000b002bbdaf21744sm6142902wrv.113.2023.01.09.09.45.36
+        by smtp.gmail.com with ESMTPSA id m1-20020a5d6241000000b002bbdaf21744sm6142902wrv.113.2023.01.09.09.45.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 09:45:37 -0800 (PST)
+        Mon, 09 Jan 2023 09:45:38 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -74,17 +74,17 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         iommu@lists.linux.dev, linux-gpio@vger.kernel.org,
         netdev@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 04/18] dt-bindings: clock: qcom-rpmhcc: document the clock for sa8775p
-Date:   Mon,  9 Jan 2023 18:44:57 +0100
-Message-Id: <20230109174511.1740856-5-brgl@bgdev.pl>
+Subject: [PATCH 05/18] clk: qcom: rpmh: add clocks for sa8775p
+Date:   Mon,  9 Jan 2023 18:44:58 +0100
+Message-Id: <20230109174511.1740856-6-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230109174511.1740856-1-brgl@bgdev.pl>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -93,25 +93,48 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add a new compatible for SA8775P platforms.
+Extend the driver with a description of clocks for sa8775p platforms.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/clk/qcom/clk-rpmh.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-index cf25ba0419e2..ffc89489d14d 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-@@ -18,6 +18,7 @@ properties:
-   compatible:
-     enum:
-       - qcom,qdu1000-rpmh-clk
-+      - qcom,sa8775p-rpmh-clk
-       - qcom,sc7180-rpmh-clk
-       - qcom,sc7280-rpmh-clk
-       - qcom,sc8180x-rpmh-clk
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index 586a810c682c..d5f7ec2edbbe 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -396,6 +396,22 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
+ 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
+ };
+ 
++static struct clk_hw *sa8775p_rpmh_clocks[] = {
++	[RPMH_CXO_CLK]		= &clk_rpmh_bi_tcxo_div2.hw,
++	[RPMH_CXO_CLK_A]	= &clk_rpmh_bi_tcxo_div2_ao.hw,
++	[RPMH_LN_BB_CLK1]	= &clk_rpmh_ln_bb_clk1_a2.hw,
++	[RPMH_LN_BB_CLK2]	= &clk_rpmh_ln_bb_clk2_a2.hw,
++	[RPMH_LN_BB_CLK2_A]	= &clk_rpmh_ln_bb_clk2_a4_ao.hw,
++	[RPMH_IPA_CLK]		= &clk_rpmh_ipa.hw,
++	[RPMH_PKA_CLK]		= &clk_rpmh_pka.hw,
++	[RPMH_HWKM_CLK]		= &clk_rpmh_hwkm.hw,
++};
++
++static const struct clk_rpmh_desc clk_rpmh_sa8775p = {
++	.clks = sa8775p_rpmh_clocks,
++	.num_clks = ARRAY_SIZE(sa8775p_rpmh_clocks),
++};
++
+ static struct clk_hw *sdm670_rpmh_clocks[] = {
+ 	[RPMH_CXO_CLK]		= &clk_rpmh_bi_tcxo_div2.hw,
+ 	[RPMH_CXO_CLK_A]	= &clk_rpmh_bi_tcxo_div2_ao.hw,
+@@ -730,6 +746,7 @@ static int clk_rpmh_probe(struct platform_device *pdev)
+ 
+ static const struct of_device_id clk_rpmh_match_table[] = {
+ 	{ .compatible = "qcom,qdu1000-rpmh-clk", .data = &clk_rpmh_qdu1000},
++	{ .compatible = "qcom,sa8775p-rpmh-clk", .data = &clk_rpmh_sa8775p},
+ 	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
+ 	{ .compatible = "qcom,sc8180x-rpmh-clk", .data = &clk_rpmh_sc8180x},
+ 	{ .compatible = "qcom,sc8280xp-rpmh-clk", .data = &clk_rpmh_sc8280xp},
 -- 
 2.37.2
 
