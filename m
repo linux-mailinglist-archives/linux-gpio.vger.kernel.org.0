@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DC02662D7A
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 18:49:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9C99662D69
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 18:48:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237478AbjAIRrw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 12:47:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        id S237393AbjAIRr4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 12:47:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237407AbjAIRqH (ORCPT
+        with ESMTP id S237417AbjAIRqH (ORCPT
         <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 12:46:07 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF4141009
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 09:45:48 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id m7so8998080wrn.10
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 09:45:48 -0800 (PST)
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F85441025
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 09:45:50 -0800 (PST)
+Received: by mail-wr1-x431.google.com with SMTP id bs20so9013004wrb.3
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 09:45:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xUidst8virGDECkk/j16ylo+nI+51AixKCT0eQSx0pI=;
-        b=GnPG6KwhM6OOi7LUB18Fzuec1a59qPgMpstWFH/IKGLfgrnTRux5QOG1oRZFE+yNF1
-         yOZAvWsAUF0SabZUjBmR2XtcVE/8UeNdcvxw+LV2EgDrW7HcwkcnBdhXiMR3/UsrSr2x
-         hTyQIewyfaWw4HuhZqs5Ajf3HnvA6aRa4/xkk0n7/qrNnpEXLiSqvusroWDq6ZDBdiA2
-         rbuXNqQkmhyZoVFOU13rJr7f0yTplHUpTskyOpgjilIU1gQqZB3tjgm+DTGRh+7b9RHh
-         CVMYA9EF36+u+Lq5Mo+VdDQw5sacwovFLgR2z01ePQfnRAaDHLidX5VdOscQNVD/wdw3
-         vjHw==
+        bh=3xAI9+hoDQl0gIh7l8xjgLBDEEAheVpkPOXXZU5K65s=;
+        b=vYbo+RN3IGIu1L68Mz0sVQN55VEVH1gBBcL3Vu4WzbeG/l2jIlQavDLsZ/CToOaRS/
+         LJHBGqpoUrr/dUM7bcSuB+J5slqte28SpJxPDWLaSrmIPTWlJ2VOU3Dw36JFCZotwIsA
+         hGV0TYF8bxY3Uv8s5ICuE8q8E5JNuQq/9OFBn9vDxP0eTt6t9YU1xTFhq6WvGZzb9RQJ
+         uTnGj8D/vweiySCvPNmghB6zAAhRYGoeLGLNyb7cLgDLi7FwtyV0FQvbaemqXvJtHPSB
+         fjrCJo95Eb3A9AVv1aUd5hYfNi4Zz4L+h4GSLOUiyB0wzDRMRlwmLyreYx0PSlVL6Hqa
+         8xwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xUidst8virGDECkk/j16ylo+nI+51AixKCT0eQSx0pI=;
-        b=1bZEgl//noHcud5w/sjPCU0B51yny24zAvchvxbmbpO03n9NFy3a6z6F5SfB6l7deZ
-         1e2VkyQPWjiCuUaCOqv9IWBopZag5LQ23P18+r1l0gFrKyi5uTu+G+/XvN7lbkr0QAIw
-         hm6ByVhGsM6lZHUZsGx/5Umxl9gk/IXhbInwud/cwpajrn/ay0bOI/qurtMur9Xi4Yxu
-         UWnCyauQzxdXh/FUpgDaFMoN/kbexh0kRebY7QJh7SAaMPJszxe4jA5YKSwNsBiINa1g
-         VV7qLdQgJXGfpkECVjmz3NySMhOy4rL1tQsLP6hWo2l/DoIJx0BN5F7pxz9RDzxKluA4
-         R2mw==
-X-Gm-Message-State: AFqh2krSc3LEJbOXQCeJrLLhmNIbel32V5ULTJsDrZ3LjGe+KXoCjmIu
-        jJkVe9y1QtI+RKJJEVEJT6CJyw==
-X-Google-Smtp-Source: AMrXdXuZVvsi9T2GHcxP/4sFzZaUXCsznZqfPA6rgrEmOhFtAfD4kokT4JEI+HOFMQdx8tryKTsUFw==
-X-Received: by 2002:adf:cc8f:0:b0:242:14bb:439d with SMTP id p15-20020adfcc8f000000b0024214bb439dmr42498449wrj.43.1673286348459;
-        Mon, 09 Jan 2023 09:45:48 -0800 (PST)
+        bh=3xAI9+hoDQl0gIh7l8xjgLBDEEAheVpkPOXXZU5K65s=;
+        b=2n68lMoC4tpK8j4LtA+EXFZIwam+73lRlAMkFoCOTTJe8t44Yw5k/ikL4pl65euRI2
+         INDaOVhJ1fAEojHe9DDB3aJh+b83vehQbyWqStEJ0l38bVmnkxjMQ1Ym98sw/Cp/oPLp
+         jsR0fGuyVZq5t9SQzPUl2QddbIW/NOIVKzdsf25yj53RfZEVK63mh1nCSP1xZZjEkKG/
+         iJdSlunpySQWqF5iAcSd4ZWRvINlJTDtVDgV5ULpp1UFYlNrTJ2r1I4gPrULLx2kYmkz
+         JPeJasrtxeK1Ck7l2x1Lyzc/fQFnX5XX2oNzfckCLlYFpfVK6YcdJ9dFp9axpZlf8FL7
+         mj/g==
+X-Gm-Message-State: AFqh2kphaWcXRS3y96OF4aYL4HW+GyrDRJ9EG68s2Tc5wobqWB0CdF80
+        5DKpvIMgocexG9hYCHO5zgzD/w==
+X-Google-Smtp-Source: AMrXdXuywrgYvo8ydXRYPt5rGyvaKqhiKQwnIcogX2OYu/GqhT0DVMV+fYyJIw6l0/lBt3+fmqdVQQ==
+X-Received: by 2002:a05:6000:228:b0:2bb:e8f2:5d2e with SMTP id l8-20020a056000022800b002bbe8f25d2emr3679182wrz.51.1673286349720;
+        Mon, 09 Jan 2023 09:45:49 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:c88:901e:c74c:8e80])
-        by smtp.gmail.com with ESMTPSA id m1-20020a5d6241000000b002bbdaf21744sm6142902wrv.113.2023.01.09.09.45.47
+        by smtp.gmail.com with ESMTPSA id m1-20020a5d6241000000b002bbdaf21744sm6142902wrv.113.2023.01.09.09.45.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Jan 2023 09:45:48 -0800 (PST)
+        Mon, 09 Jan 2023 09:45:49 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -74,9 +74,9 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         iommu@lists.linux.dev, linux-gpio@vger.kernel.org,
         netdev@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 12/18] dt-bindings: mailbox: qcom-ipcc: document the sa8775p platform
-Date:   Mon,  9 Jan 2023 18:45:05 +0100
-Message-Id: <20230109174511.1740856-13-brgl@bgdev.pl>
+Subject: [PATCH 13/18] dt-bindings: power: qcom,rpmpd: document sa8775p
+Date:   Mon,  9 Jan 2023 18:45:06 +0100
+Message-Id: <20230109174511.1740856-14-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230109174511.1740856-1-brgl@bgdev.pl>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
@@ -93,25 +93,57 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add a compatible for the ipcc on sa8775p platforms.
+Add a compatible for sa8775p platforms and relevant defines to the include
+file.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/power/qcom,rpmpd.yaml |  1 +
+ include/dt-bindings/power/qcom-rpmpd.h        | 19 +++++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-index f5c73437fef4..de56640cecca 100644
---- a/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-+++ b/Documentation/devicetree/bindings/mailbox/qcom-ipcc.yaml
-@@ -24,6 +24,7 @@ properties:
-   compatible:
-     items:
-       - enum:
-+          - qcom,sa8775p-ipcc
-           - qcom,sc7280-ipcc
-           - qcom,sc8280xp-ipcc
-           - qcom,sm6350-ipcc
+diff --git a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+index 633d49884019..1778d9851510 100644
+--- a/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
++++ b/Documentation/devicetree/bindings/power/qcom,rpmpd.yaml
+@@ -30,6 +30,7 @@ properties:
+       - qcom,qcs404-rpmpd
+       - qcom,qdu1000-rpmhpd
+       - qcom,sa8540p-rpmhpd
++      - qcom,sa8775p-rpmhpd
+       - qcom,sdm660-rpmpd
+       - qcom,sc7180-rpmhpd
+       - qcom,sc7280-rpmhpd
+diff --git a/include/dt-bindings/power/qcom-rpmpd.h b/include/dt-bindings/power/qcom-rpmpd.h
+index 1e19e258a74d..3117bf7d5ebf 100644
+--- a/include/dt-bindings/power/qcom-rpmpd.h
++++ b/include/dt-bindings/power/qcom-rpmpd.h
+@@ -4,6 +4,25 @@
+ #ifndef _DT_BINDINGS_POWER_QCOM_RPMPD_H
+ #define _DT_BINDINGS_POWER_QCOM_RPMPD_H
+ 
++/* SA8775P Power Domain Indexes */
++#define SA8775P_CX	0
++#define SA8775P_CX_AO	1
++#define SA8775P_DDR	2
++#define SA8775P_EBI	3
++#define SA8775P_GFX	4
++#define SA8775P_LCX	5
++#define SA8775P_LMX	6
++#define SA8775P_MMCX	7
++#define SA8775P_MMCX_AO	8
++#define SA8775P_MSS	9
++#define SA8775P_MX	10
++#define SA8775P_MX_AO	11
++#define SA8775P_MXC	12
++#define SA8775P_MXC_AO	13
++#define SA8775P_NSP0	14
++#define SA8775P_NSP1	15
++#define SA8775P_XO	16
++
+ /* SDM670 Power Domain Indexes */
+ #define SDM670_MX	0
+ #define SDM670_MX_AO	1
 -- 
 2.37.2
 
