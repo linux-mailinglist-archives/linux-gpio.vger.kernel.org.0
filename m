@@ -2,84 +2,109 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EDDB166276B
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 14:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A3D166276D
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 14:42:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236276AbjAINmE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 08:42:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53334 "EHLO
+        id S236470AbjAINmF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 08:42:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237205AbjAINlY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 08:41:24 -0500
-Received: from mail-yw1-x112c.google.com (mail-yw1-x112c.google.com [IPv6:2607:f8b0:4864:20::112c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A84213FB3
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 05:41:07 -0800 (PST)
-Received: by mail-yw1-x112c.google.com with SMTP id 00721157ae682-4c186ff0506so112998557b3.6
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 05:41:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wb+6yb9R61KlmNa9GN1pcRJN6n/iQC03fh18uG53PKA=;
-        b=swT77g+So+NgP7caEaJ6O9ceSvAdYk+grZZiOdQV8nih+XkgHPW7A1TWMvnMwHbSNC
-         XqAtNGmfyio1WtOyZIRvGcgGb2eBRASgE9G+7Pw2dyezmZQmG4dfWaSr6fUhcs0/KT5v
-         +JV7tPij9h4iR3nAu8cOH/6K3NPmKzzsiLM4Z7CcEOYIhm0wRBeKCHnRA44v2/GbdF4b
-         7bSlU7Az9OQa5+N6lSzPP7L8iN7RhBvi08OPLMxBU6QZyQJ6/l7gUx2Snjw2EG9jAv4M
-         sgFVwN2VeGNFDSGNLoNjdxOFJt07YngBnF4zOEI0++UbrxFkpN/QsO6MEzGwRuxoKLlB
-         emuw==
+        with ESMTP id S237241AbjAINlj (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 08:41:39 -0500
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690171DDE6;
+        Mon,  9 Jan 2023 05:41:38 -0800 (PST)
+Received: by mail-vs1-f48.google.com with SMTP id k4so8597353vsc.4;
+        Mon, 09 Jan 2023 05:41:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=wb+6yb9R61KlmNa9GN1pcRJN6n/iQC03fh18uG53PKA=;
-        b=Fm32MjbcfwXQY7jYATu/sCgbL+cWRMG7WFz+OxKDDI0Is/mfa11iCJg9ESXBrojQyw
-         v2ihLARPI3U95gAoxvKdZJc6OfwYOxSZGlG8cf7XNmzEbFZufnY3B7hTY9Eh6ODHIxQC
-         Nzjz1aa6OK0KRdmihkbJmH2uVngdijqcvduMNy+wdBaXMHZ7thJXkn720llcumowTWah
-         /sWoUWfJuEXk/4MI9Rod/sWMsxBL2a+G+mNcN5UF3O1z5rSAhcKYQWM9oApLH0ASF8yL
-         rdv494ckXO07MTo30v3JldhpjTRdBOksWmlpWoZPof0u3QGZLODxqXLVgv8q47vJ2hk2
-         MIeQ==
-X-Gm-Message-State: AFqh2krStcFkumHjqejbxLBwgBnynZohz1eRB5wl+ODp4WIgt9TpqCsH
-        dVh9kjbzu+13K6NKk4+MpCpYz6QNPsz4G820K+pZFw==
-X-Google-Smtp-Source: AMrXdXuJafcJBxWgNG3iDYwIGn5e2BoBODHe1CP6aoQRnVBj1JCScwi0X3vdopUmL/zUqBF2EfnzZsWU+EzxIPXPaS8=
-X-Received: by 2002:a81:484c:0:b0:36a:de9d:825e with SMTP id
- v73-20020a81484c000000b0036ade9d825emr1495965ywa.477.1673271666804; Mon, 09
- Jan 2023 05:41:06 -0800 (PST)
+        bh=B5nhHHKpWEgOb/xnXFhKmRiEf9h0MjhVKNoNPAqZUkc=;
+        b=3jg6qb2lwGXCCWUJYF8qepHZnV+Zu1U4uKchJxhZM07FxqkZUK9Hz2jiXVLnndza7D
+         0xxfCgAlCsn6Sl6NY+wdOK8GpA+AaNjhk8gY+zz966uqqydrDDluI3HiAyXd/txJXAaZ
+         0eOlFjrrkf3FghtdZu8gLDIbs7jXKiPYezDXlXVGMCUy5WHJlt2RVYKq0DYe7cK7exQ1
+         huliUpQkEXJmGzoQFkMFnr7YzZmHtgzuR1783awX7XwZPFZCowJywvUcB7LPXQ3hEIvY
+         pletcKtd+PF5oAq/ATawezFy3IzoXVcRvV9naKaiA1BVVNiIrXeNirtOJdzlLbVQpBrO
+         QqFg==
+X-Gm-Message-State: AFqh2kqG9/M0vGqF1c/dBwNffKYXhFBq70an+boriR6b9fQ1dHemlBJd
+        BrgOiSK0mVe5MVL+rDbhzftIwPZJI28XzA==
+X-Google-Smtp-Source: AMrXdXu0tXYzxJAJp1rKG3H+b1pgDvkfujfSMfSAenX0zsmaJTTeBqx51FhC5fMf2zWQBmLowgUTWA==
+X-Received: by 2002:a67:dd0f:0:b0:3ce:f7c5:1a01 with SMTP id y15-20020a67dd0f000000b003cef7c51a01mr3491083vsj.22.1673271697025;
+        Mon, 09 Jan 2023 05:41:37 -0800 (PST)
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com. [209.85.128.175])
+        by smtp.gmail.com with ESMTPSA id b5-20020a05620a04e500b006ee8874f5fasm5295758qkh.53.2023.01.09.05.41.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Jan 2023 05:41:36 -0800 (PST)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-4c15c4fc8ccso113024447b3.4;
+        Mon, 09 Jan 2023 05:41:36 -0800 (PST)
+X-Received: by 2002:a05:690c:d8c:b0:4a2:63c5:6c59 with SMTP id
+ da12-20020a05690c0d8c00b004a263c56c59mr2960035ywb.384.1673271696145; Mon, 09
+ Jan 2023 05:41:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20221231164250.74550-1-a39.skl@gmail.com>
-In-Reply-To: <20221231164250.74550-1-a39.skl@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 9 Jan 2023 14:40:55 +0100
-Message-ID: <CACRpkdZoU8AXbQ7QDfuf6yUTZFPDE-L6ZLRB8jE-KP4YqbHpXw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: qcom: pinctrl-msm8976: Correct function names
- for wcss pins
-To:     Adam Skladowski <a39.skl@gmail.com>
-Cc:     phone-devel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <20221215213206.56666-1-biju.das.jz@bp.renesas.com>
+ <CACRpkdZCEvpLAWvH7pCLH7KwbDMzz0EN+4HbxVGfFPi_C1b8+g@mail.gmail.com>
+ <CAMuHMdU1J46KSzqqCQc-1ZrgvfWh8J2aa6NzRTK_A_ZJs+zRVQ@mail.gmail.com> <CACRpkdaL2J7F2sVjVcTtFTfK1exZ3Rmjhc_dYxuo2DfhYq_8gw@mail.gmail.com>
+In-Reply-To: <CACRpkdaL2J7F2sVjVcTtFTfK1exZ3Rmjhc_dYxuo2DfhYq_8gw@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 9 Jan 2023 14:41:24 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUeazkEXWh+R9iy3TLc16b=OX9rOzAoB1=X=K4wOo9pRA@mail.gmail.com>
+Message-ID: <CAMuHMdUeazkEXWh+R9iy3TLc16b=OX9rOzAoB1=X=K4wOo9pRA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Add RZ/G2L POEG support
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Biju Das <biju.das.jz@bp.renesas.com>,
+        Drew Fustini <dfustini@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Dec 31, 2022 at 5:43 PM Adam Skladowski <a39.skl@gmail.com> wrote:
+Hi Linus,
 
-> Adjust names of function for wcss pins, also fix third gpio in bt group.
+On Mon, Jan 9, 2023 at 2:16 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Jan 3, 2023 at 10:01 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > If this should go into sysfs we should probably create something
+> > > generic, such as a list of stuff to be exported as sysfs switches.
+> > >
+> > > It generally also looks really dangerous, which is another reason
+> > > for keeping it in debugfs. It's the big hammer to hurt yourself with,
+> > > more or less.
+> >
+> > Yes, generic would be nice.  Anyone familiar with other hardware
+> > that could make use of this?
 >
-> Fixes: bcd11493f0ab ("pinctrl: qcom: Add a pinctrl driver for MSM8976 and 8956")
-> Signed-off-by: Adam Skladowski <a39.skl@gmail.com>
+> Drew was using this for Beagle Bone IIRC, Drew?
 
-Patch applied!
+Yes, that's what I remember, too.  And I tested it on Koelsch.
 
-Yours,
-Linus Walleij
+But again, that's for debugging purposes.  For non-debugging
+operation, we need something different.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
