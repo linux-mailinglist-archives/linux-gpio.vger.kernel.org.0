@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93EB5662ECA
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:23:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AD7662EDA
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:24:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjAISXj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 13:23:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43796 "EHLO
+        id S235188AbjAISYM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 13:24:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237539AbjAISXE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:23:04 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 690A36560
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:22:09 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id w1so9112380wrt.8
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:22:09 -0800 (PST)
+        with ESMTP id S231497AbjAISXk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:23:40 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B72F768CB6
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:22:46 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id g10so6933648wmo.1
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:22:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jvYugD5smOlPeb8yw4a3uYKIpMLS5cDQVS3icNcFMKA=;
-        b=Z6PyaEpVm6gQZPhyOA+umXIzP1gj2ivonb832kvaPK2LHBAyLgqzEzWs+trmEE0Jln
-         khMmlms5Uv6PhL4q8PhFwsygO3DHLGc4l5gyw4ZBVAMxJaFNOTa/D+37v6hQEgNUi6HJ
-         MwrpiJXqxUpvHZ/jLL+pwFgBfNyRIeOFG6BE2kS+7uUlUG3H6z1r5xzHXB+rv1s49c7Z
-         /cxqXGU2xlMj3qBcL9i+f7FQf/GhDu4ibCR+/YuG/aUITAgdMLmIeG9x8sQ8tEVru5a6
-         NNDcVLsWYktntSaFMN0HlSbfAEBeUesEeaNrLaNMlba8+UyRhbCP48f1qqKf5QYGnay+
-         VoIQ==
+        bh=4I9a2u/ZrGLHIwScZmGllc87eUh/OufbbnBg0RjayAc=;
+        b=imulFjmKfL16MFAUV/KLR82FSiH6U2btmRS0B4dqItTP+kGzdlQa19UyW9DQ/O7H+7
+         bTYgi3Biswev63WU+wSWP/jPv20/RZft55i6fdJ2QR3u9CQlPWZMFV70FzX6Y84wL+oa
+         4pa2OAQ8DNzMnEngg25Y8Ynn4T3Y1q5Gms+1p5wPrh7mGliSwI24rNyePuKIlsAdhemA
+         F7Oz5Q5LlbBY3DScIe/p2dLqbT/T/6y7v5xVG2nu/CbfGN1FeUsZLBOmQZE+cWhc22Qa
+         dOVy9RdsDRYTZAPi1AB7BSmo3HQlYkf+X1nXE3Jorm1AI+uxxKB65DB3jvQrJTk3dLif
+         axaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvYugD5smOlPeb8yw4a3uYKIpMLS5cDQVS3icNcFMKA=;
-        b=ssE3KrTVe4IswR/6ExiHtJSH+Iqkioj/oDPVRFQNf+rplKxI/BE54ciKVAgSdmlhwu
-         nlfzaSLLeLPR19c1YILYdXz0h74cRpajRQeuJXxq5Bhe7WJcQZjLI/G7b+iooazyFMTc
-         XnHB4DHVt1EAc5rJHpu+u2ROh46V6nuATvG32ZZr5XT4bVIeF96GlD8kAUKO0eRLhD/9
-         eKuRCcEeQr4dDhJh17venY6CnjXJpRb94xKnv1GbiAVURtEnmYn7JEazFsKvbE5Ln3h+
-         s+ae046KyL3SaGCJ4qziNAHY+MEUX8Thm3EswSGiK6sbh3rmr3o0aBOmTRIvvsy1UvDJ
-         zXkg==
-X-Gm-Message-State: AFqh2koJg7xs/6kwXDGN6F/kJEn+42ee1pwe2nninvgTtg/yhRptqmfQ
-        rdlXCZWjSsCVOtppux5N5jJlrQ==
-X-Google-Smtp-Source: AMrXdXvjfzGBA2k+30sjPaP84E+50hgotZRZMLKqmz8cAfThUKaz2IKhBGPXhX7+mGfJd+LOudPNGg==
-X-Received: by 2002:a5d:5544:0:b0:26d:2af7:420 with SMTP id g4-20020a5d5544000000b0026d2af70420mr40676769wrw.33.1673288528036;
-        Mon, 09 Jan 2023 10:22:08 -0800 (PST)
+        bh=4I9a2u/ZrGLHIwScZmGllc87eUh/OufbbnBg0RjayAc=;
+        b=nOEXCr679bMi0k+hR/crLruVLpqDKhvjPiNiLsMb7b51n4Jhb+D83wcoUcxkwi1vnb
+         1e1KuEMmaNyKvE9a8xfAWqFdwdgaSfWVYylGPIt9evKjSJyUrac/Ug1fh9j4gXnDCNuw
+         nFV9yFE6bUNArb76/13gOwm/wge8Jlbspwz0b2sgATRLfYAh0L1k8jJJGFklKGMXTiIz
+         8VH23qt7ltllBg87izJMG8GAsTSK9PQ+WXkKF9bNHpXgYo6xfNzK9rf4bkQBfyckxcDm
+         Owyvz1UIhXD8z2Ahc/7u0YGBvwixHL3QP5uvqy+yH0Qs7Cjh6xRuz32cv+6IseJT40Y7
+         AhUw==
+X-Gm-Message-State: AFqh2kroF87ScgQE/UNmC6EqZ0YdoO912/0EKUdi4AnXjvH2A4ksskCZ
+        Za44kIG1i2fjb4lrlqUBLnsdmg==
+X-Google-Smtp-Source: AMrXdXvzOQzmnUHWBiYlOCVrua6gXZN+THvm33Jb9HAxI6MjBJD6kMOIRY3fa1ON2R158EliBRBjGw==
+X-Received: by 2002:a05:600c:c07:b0:3d9:73fe:96f8 with SMTP id fm7-20020a05600c0c0700b003d973fe96f8mr40571156wmb.32.1673288565332;
+        Mon, 09 Jan 2023 10:22:45 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id o15-20020a5d62cf000000b002bbedd60a9asm3589168wrv.77.2023.01.09.10.22.05
+        by smtp.gmail.com with ESMTPSA id n9-20020a05600c4f8900b003d96b8e9bcasm18555195wmq.32.2023.01.09.10.22.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 10:22:07 -0800 (PST)
-Message-ID: <e96fcaee-488f-53ff-5fb2-0cea411677b9@linaro.org>
-Date:   Mon, 9 Jan 2023 19:22:04 +0100
+        Mon, 09 Jan 2023 10:22:44 -0800 (PST)
+Message-ID: <61b2de99-060c-d37e-60ce-4524ced84033@linaro.org>
+Date:   Mon, 9 Jan 2023 19:22:41 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 07/18] interconnect: qcom: add a driver for sa8775p
+Subject: Re: [PATCH 12/18] dt-bindings: mailbox: qcom-ipcc: document the
+ sa8775p platform
 Content-Language: en-US
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Gross <agross@kernel.org>,
@@ -79,18 +80,17 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         iommu@lists.linux.dev, linux-gpio@vger.kernel.org,
-        netdev@vger.kernel.org, Shazad Hussain <quic_shazhuss@quicinc.com>,
+        netdev@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
- <20230109174511.1740856-8-brgl@bgdev.pl>
+ <20230109174511.1740856-13-brgl@bgdev.pl>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230109174511.1740856-8-brgl@bgdev.pl>
+In-Reply-To: <20230109174511.1740856-13-brgl@bgdev.pl>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -98,47 +98,13 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 09/01/2023 18:45, Bartosz Golaszewski wrote:
-> From: Shazad Hussain <quic_shazhuss@quicinc.com>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Introduce QTI SA8775P-specific interconnect driver.
+> Add a compatible for the ipcc on sa8775p platforms.
 > 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> +
-> +static struct qcom_icc_desc sa8775p_pcie_anoc = {
-> +	.nodes = pcie_anoc_nodes,
-> +	.num_nodes = ARRAY_SIZE(pcie_anoc_nodes),
-> +	.bcms = pcie_anoc_bcms,
-> +	.num_bcms = ARRAY_SIZE(pcie_anoc_bcms),
-> +};
-> +
-> +static struct qcom_icc_bcm *system_noc_bcms[] = {
-> +	&bcm_sn0,
-> +	&bcm_sn1,
-> +	&bcm_sn3,
-> +	&bcm_sn4,
-> +	&bcm_sn9,
-> +};
-> +
-> +static struct qcom_icc_node *system_noc_nodes[] = {
-> +	[MASTER_GIC_AHB] = &qhm_gic,
-> +	[MASTER_A1NOC_SNOC] = &qnm_aggre1_noc,
-> +	[MASTER_A2NOC_SNOC] = &qnm_aggre2_noc,
-> +	[MASTER_LPASS_ANOC] = &qnm_lpass_noc,
-> +	[MASTER_SNOC_CFG] = &qnm_snoc_cfg,
-> +	[MASTER_PIMEM] = &qxm_pimem,
-> +	[MASTER_GIC] = &xm_gic,
-> +	[SLAVE_SNOC_GEM_NOC_GC] = &qns_gemnoc_gc,
-> +	[SLAVE_SNOC_GEM_NOC_SF] = &qns_gemnoc_sf,
-> +	[SLAVE_SERVICE_SNOC] = &srvc_snoc,
-> +};
-> +
-> +static struct qcom_icc_desc sa8775p_system_noc = {
-
-This and several others are const, which means you started entire work
-on some old code. It's quite a waste of your effort as now you have to
-get all the patches we did for cleanups. Much better to start off from a
-newest file. If you based work on downstream code, then this definitely
-needs many fixes...
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
