@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E6B7662F45
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:35:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0E97662F13
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:30:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237387AbjAISet (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 13:34:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45834 "EHLO
+        id S234827AbjAISaI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 13:30:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237654AbjAIS2N (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:28:13 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B29777E0
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:24:55 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id ay40so6936475wmb.2
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:24:55 -0800 (PST)
+        with ESMTP id S237770AbjAIS3a (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:29:30 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F1E840C19
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:26:14 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so9816898wmb.2
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:26:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GR/8pvxe2f4pohEZXkyoXtetxOTq5sWV3atP5vyJM74=;
-        b=a++QxVPD+vd0RqUAy+qbLCg3roHmEcf9/SFtidz6KaTCo5uuI/J9PRtxvoVfcZDFFv
-         fgdbWTJ7M8LPdEXTuc9FTs749FXA/+NXPXBi92JrHjzigG0yoxl41hRVfG2hRV1uU65F
-         NnYtLPkTcRW+IAJr19OZSJquVpxrSRTj0LzcS5BuWk/lr6/ywimKTzGI1rfZnjqad3qu
-         p/NLmUQjgdLSiJJ5Aed4uBZ9ns5kXuBKlQ2sYYbSso7F4obFnaJJRMou90y/qpjrvadl
-         HN360Mw9/TKTP+QPFQA8nEBcc8IYOBTTEyuFJQL172kuQv6hy2tJaQ65bOVL8GkMChLP
-         E8wQ==
+        bh=34xoWv9ZRaBvWx1Ukqb34kE7Vi5rXidYbq8azSquKUM=;
+        b=yMpIDlUHX3k8RTsFFou3FoMEoLzlTKpxrfNQlV/yrqZsOASlElbveKx2EKtsYTa5kt
+         UP1NgB1TjuuIdrgM+qIq6RjHNHcICS2/5b4CQcFLmjltRlDQGRemi9qYe3MU8U5PM/LZ
+         sF4/uRX8vwz3eD0b0GXq5ZOkL6YonAErnLS7XokjvW9QrjkXHWgi1ZdYORY6v478ReY7
+         YEBgDCep1tzjEdWcezmOlim53cVMd3yFRC2AZ3+mDt2iSoyEKLGf3yTspR4o6x8jflB0
+         dNHHyngRE2CmidQKtvOGTybVs0ypyk0tEsyRTDq30VgpNbxC2W51zptdpTf4ddVfHb4/
+         XNmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GR/8pvxe2f4pohEZXkyoXtetxOTq5sWV3atP5vyJM74=;
-        b=wAQq/oiahQICWhpSJNSx1JXgR0t9Eb4wFKfIoYFQl1J/ScQq6WtTqlAxiN+S62Y4BB
-         awbZCmC1D1fY/D4c+Yx/JGHFkFe8IsbCX8wYyNIK05zdtDu6B9Q+66fVJgeltvJz0yMr
-         WUxuAUI8liY6kGiRa0mOwN2VFY6KaBNkSEGdecbIJwuu4fw67bL/zvr+xrKsmKruMWWj
-         nNTx4B02ikHofu3/2pSnYd6QpePk709z/YBnfsK+JS6ZuBakLAP/tkCidnl3VZew6NZK
-         Bb1R/cXYNGYGP3IdNGAotcr43HW+/lvqKOY+Sc6GWrtwTnlzy0Us3oRYx0Nu5BX3iPmy
-         XQIA==
-X-Gm-Message-State: AFqh2kpNgpgXvEcHqjWp6/FF+BrnexivkmuHSEFyiAW0MIt+Eru6UXOC
-        iGrv48jcQv3ykIJeUdTGZbgpjw==
-X-Google-Smtp-Source: AMrXdXuJCY8YyrI9RTQ0ufjgVapPWyphfUr254moXi6Kk5eoylipwpcFE2FpxXiWaZIJ9yZ2VeNS8Q==
-X-Received: by 2002:a05:600c:2318:b0:3c6:e63e:23e9 with SMTP id 24-20020a05600c231800b003c6e63e23e9mr49980736wmo.24.1673288694404;
-        Mon, 09 Jan 2023 10:24:54 -0800 (PST)
+        bh=34xoWv9ZRaBvWx1Ukqb34kE7Vi5rXidYbq8azSquKUM=;
+        b=0o5voFDg0G1iSL0rxF+SPPXQ072UOnlLUJZ+azETmCZsIaJi9JVgy+SRTdW4xet91b
+         wg84GnM11IU0iWCa6qrHnd68Q2HBwMFjx7Ed9YgoHb7ojKHHqVCHa5eH31A+fipau/KD
+         /5DdkaFOXbPUQA5yMbcimjQ1S1cSSK2m4o3SLvnHHQ4s4TiwzGSkalSlXh+lJZybw7I+
+         Z2bkL+U1Pm4XA78rhWnTuGv6ymaJmdkhRqeqMlpK4yHoQ+jKCAxFN+9HHdH1SRyzoctG
+         4wX2SDbOw0tweJqSIqJ5vTcn5K8DgL1lC6/PRyjZRWNZorFsphW4MU14r0WsHCAJE8EM
+         p29w==
+X-Gm-Message-State: AFqh2krZvVijJ288qltm365Rb9xIUeV21YYufnMX5ZSEbfbsl70oNPsF
+        X8Ce6ctxD/vNnRHyLE+96C+szQ==
+X-Google-Smtp-Source: AMrXdXskjGH2VdSEumH2gFdf5DIfnsEbLq2aONWSNFs8KOjUrGAT3E3icDeZXe8W48sTqhNPO/bfyw==
+X-Received: by 2002:a7b:c3c1:0:b0:3c7:1359:783b with SMTP id t1-20020a7bc3c1000000b003c71359783bmr47028901wmj.1.1673288773021;
+        Mon, 09 Jan 2023 10:26:13 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id u16-20020a05600c00d000b003cf4eac8e80sm14642238wmm.23.2023.01.09.10.24.52
+        by smtp.gmail.com with ESMTPSA id g14-20020a05600c4ece00b003d9ea176d54sm9545165wmq.27.2023.01.09.10.26.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 10:24:53 -0800 (PST)
-Message-ID: <95282b7b-c02c-ff1c-e306-89a7be2d7d1c@linaro.org>
-Date:   Mon, 9 Jan 2023 19:24:51 +0100
+        Mon, 09 Jan 2023 10:26:12 -0800 (PST)
+Message-ID: <94744e36-e4d2-fe19-fc2b-cf801db247ca@linaro.org>
+Date:   Mon, 9 Jan 2023 19:26:10 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 15/18] dt-bindings: arm-smmu: document the smmu on
- Qualcomm SA8775P
+Subject: Re: [PATCH 17/18] dt-bindings: arm: qcom: document the sa8775p
+ reference board
 Content-Language: en-US
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Gross <agross@kernel.org>,
@@ -83,9 +83,9 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         netdev@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
- <20230109174511.1740856-16-brgl@bgdev.pl>
+ <20230109174511.1740856-18-brgl@bgdev.pl>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230109174511.1740856-16-brgl@bgdev.pl>
+In-Reply-To: <20230109174511.1740856-18-brgl@bgdev.pl>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -101,16 +101,24 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 09/01/2023 18:45, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Document the qcom,smmu-500 SMMU on SA8775P platforms.
+> Add a new compatible for the sa8775p-ride board.
 > 
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/qcom.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+> index 27063a045bd0..7490eb0c3e3c 100644
+> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
+> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
+> @@ -751,6 +751,11 @@ properties:
+>            - const: qcom,qcs404-evb
+>            - const: qcom,qcs404
 
-This and SM8550 ARM SMMU should be rebased on top of:
-https://lore.kernel.org/all/20221222092355.74586-1-krzysztof.kozlowski@linaro.org/
-and include relevant change as well.
+You miss the update of SoC in this file (beginning).
+
+>  
 
 Best regards,
 Krzysztof
