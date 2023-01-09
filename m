@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4D4662F28
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:34:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16D72662F4F
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 19:37:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235171AbjAISdY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 13:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50844 "EHLO
+        id S237571AbjAIShZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 13:37:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237587AbjAIScl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:32:41 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB68D80613
-        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:29:11 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id y25so14346991lfa.9
-        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:29:11 -0800 (PST)
+        with ESMTP id S237756AbjAISgl (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 13:36:41 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4185E0BD
+        for <linux-gpio@vger.kernel.org>; Mon,  9 Jan 2023 10:34:58 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id k26-20020a05600c1c9a00b003d972646a7dso9818319wms.5
+        for <linux-gpio@vger.kernel.org>; Mon, 09 Jan 2023 10:34:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MBMY71JqTCMVeHJCrW+kSJMT6gkuCN5dDAKb5bDQ8RE=;
-        b=mkCaWchKkV8G4cwHAXdaVwa23aahy/PT1yCLOtV87GHxjd4l+K5h9+fLj4aEdw4f6O
-         RxHWQ7pbhhVLkU28aBWRaf5iO5BIYd3TZYQCyJ4uAsFtTMDVYL4KHFeBhN9CVQ2ysi45
-         kPGqUix7QUgfhXaaC9sM1fakxVYe5mjBAqs0fV2RIgJygyElCIiMUerWt+FpRDtzckID
-         Q30tvJgkORDEatb1I3/8DcFeVNyHawbsmIZgmhTY68iYAVFzbi/sJ/aVbxYYynW+Ojp1
-         2nDp/Hhjx/0hW9RJKLgD64x5iRx5GiFsVTaxwgMPx68+746e5cPUr2n2wI92ZS5uYmUO
-         CYeQ==
+        bh=nut8pVk5fOGNWWeY/9WgxAZr+sZ34pqrVl56mvsfpZA=;
+        b=nYsZ97f02CBDlnmJODzWxykWn8vTMdHAvyLa0D2n5Ehc4GU/spL6TEDkZtI06dmy+B
+         NeFA5H4zKJst502j1PDxrGS3Qjhxiv39OonbFXIfbnwEHqalujq/5BWVUyv1GsQ6FzXp
+         3e+Tzo2myIkVe73v6I/gKXnMINWVNh/nyLwGJKcY50psW08Nk3vgBMFRYqCkymdzhfXc
+         CqwCnW3mo2dTzHRH5PxJsQ2JAGWhxwr89GKSrFhUbRW9xNMOFI1uLvwuhLJC24ecx3R/
+         UCbch1vXS+qfMK/iDNrEzu8q4WLN1sx6bVty4CFQqzGkSFJhf6Ee5zvGDysa7GAkSfl5
+         d1Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MBMY71JqTCMVeHJCrW+kSJMT6gkuCN5dDAKb5bDQ8RE=;
-        b=IWAHG3Y95teSRbvVm1fAxD2G9e3BABdhvTQ1QEz0WGhDH6lDRg+LWpx+XXrAxnSnDe
-         UMEBnJPRoON9yB7SsCIf3VY4uGyjfzjVq97RleJ9maz4VrrbZLRJsJv7SeJZmM4fsvSE
-         EvM6/XyKR7+dS+EFJUh88re3WjdBti5I5tBouu9dk1o6/PYndXka84lztXBwlZxhDFMp
-         0FZm8BHS+nPLtY2+NhaPmp3SK5plbG14fNvyXpJT04gfH7O5i1gBpJmXAkIWg/mpzkxp
-         rk0XA063hXmrAJWYVvJn17VPpF36KMhpLhjfqxVm+FhKx1ndSspRZj3sf/J8qSf+9uAA
-         G+KA==
-X-Gm-Message-State: AFqh2kpVPP7hnkQF3q5JlVMOljfdW9JE/0GzPACJtvPxiXBriTdR6pFs
-        L0M4b2b1PxWCDdiGI8wUILJtNg==
-X-Google-Smtp-Source: AMrXdXs4IWsx5csza9tgq284WrOh5GpAxmz5irZa70nyVbe1J0RDprOs4rlK/H/UuQhq1/kPr6iNyg==
-X-Received: by 2002:a19:f008:0:b0:4b5:785b:1caf with SMTP id p8-20020a19f008000000b004b5785b1cafmr19670191lfc.36.1673288950131;
-        Mon, 09 Jan 2023 10:29:10 -0800 (PST)
-Received: from [192.168.1.101] (abxi45.neoplus.adsl.tpnet.pl. [83.9.2.45])
-        by smtp.gmail.com with ESMTPSA id c17-20020a056512325100b00499aefcf68esm1740155lfr.292.2023.01.09.10.29.06
+        bh=nut8pVk5fOGNWWeY/9WgxAZr+sZ34pqrVl56mvsfpZA=;
+        b=v827FJjNSm9yGQAzjs4pK6yiXxU5og+fYQceL8lSaHIi2NQhBUP8pPn49K1c6CKxmP
+         o2CLUylVR3OAOw1A7NvBeKrxZfaJ4mcULAI6/fyul53b0dHWeag32LmIt9Ldb8CVJ76z
+         JkenSdYdgNuC10E4uQpaRMPzJzo4ryr3rCrTWL2XjoryZZvo+gksq2nPDbXRrz2ZZ4hz
+         6cc+b1LfaK4d17xy/IgMyRIkdV+j5fybMx3vwCvbl26DH33FbsZwQYFcdvoJtqa6HuMB
+         Xjd/jgORAts566xRlvIPXv3mynaH0D7Fy3toWRl8Mqy67OD1ioQiaBfdtqhLe2nMc+CA
+         VYRQ==
+X-Gm-Message-State: AFqh2kot9aBXEEyh7n6A/f3cP8X7FK6Hrwp2i9LCZtDqD+4ToL4Z+axR
+        HpwFWnLdEjw/cZrlGnHYeDjazA==
+X-Google-Smtp-Source: AMrXdXtESr0DvS3mv9LHqJ6/ZvZrBqzczlfoQwj1k2u8TNR93LTTDdRAmMLokVs305lv8ZQyzj70Vg==
+X-Received: by 2002:a05:600c:1d16:b0:3d1:fe93:f1d3 with SMTP id l22-20020a05600c1d1600b003d1fe93f1d3mr48397591wms.36.1673289297438;
+        Mon, 09 Jan 2023 10:34:57 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id bi22-20020a05600c3d9600b003d208eb17ecsm12226845wmb.26.2023.01.09.10.34.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 10:29:08 -0800 (PST)
-Message-ID: <6f0a3f5a-186c-54ae-b43d-3aef13e91474@linaro.org>
-Date:   Mon, 9 Jan 2023 19:29:06 +0100
+        Mon, 09 Jan 2023 10:34:57 -0800 (PST)
+Message-ID: <f3a87b5b-5a9f-b19f-b16f-cd5a7394f4f0@linaro.org>
+Date:   Mon, 9 Jan 2023 19:34:53 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
@@ -60,6 +60,7 @@ Content-Language: en-US
 To:     Bartosz Golaszewski <brgl@bgdev.pl>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -83,7 +84,7 @@ Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 References: <20230109174511.1740856-1-brgl@bgdev.pl>
  <20230109174511.1740856-19-brgl@bgdev.pl>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 In-Reply-To: <20230109174511.1740856-19-brgl@bgdev.pl>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
@@ -97,9 +98,7 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-
-On 9.01.2023 18:45, Bartosz Golaszewski wrote:
+On 09/01/2023 18:45, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
 > This adds basic support for the Qualcomm sa8775p platform and the
@@ -134,8 +133,6 @@ On 9.01.2023 18:45, Bartosz Golaszewski wrote:
 > +++ b/arch/arm64/boot/dts/qcom/sa8775p-ride.dts
 > @@ -0,0 +1,39 @@
 > +// SPDX-License-Identifier: GPL-2.0-only
-BSD3?
-
 > +/*
 > + * Copyright (c) 2023, Linaro Limited
 > + */
@@ -170,17 +167,15 @@ BSD3?
 > +
 > +&tlmm {
 > +	qup_uart10_state: qup_uart10_state {
-the node names (between ':' and '{') should end in -state,
-but the label does not have to. In fact, you'll probably want
-to have a "default" and a "sleep" state with different drive-strength
-and bias properties.
+
+Does not look like you tested the DTS against bindings. Please run `make
+dtbs_check` (see Documentation/devicetree/bindings/writing-schema.rst
+for instructions).
 
 > +		pins = "gpio46", "gpio47";
 > +		function = "qup1_se3";
 > +	};
 > +};
-Missing xo rate override.
-
 > diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
 > new file mode 100644
 > index 000000000000..1a3b11628e38
@@ -188,7 +183,9 @@ Missing xo rate override.
 > +++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
 > @@ -0,0 +1,841 @@
 > +// SPDX-License-Identifier: GPL-2.0-only
-BSD3?
+
+Why GPL-2.0-only? Isn't this based on other code which is either
+dual-licensed or BSD license?
 
 > +/*
 > + * Copyright (c) 2023, Linaro Limited
@@ -211,12 +208,20 @@ BSD3?
 > +		xo_board_clk: xo-board-clk {
 > +			compatible = "fixed-clock";
 > +			#clock-cells = <0>;
+
+Your board needs clock frequency.
+
 > +		};
 > +
 > +		sleep_clk: sleep-clk {
 > +			compatible = "fixed-clock";
 > +			#clock-cells = <0>;
 > +			clock-frequency = <32764>;
+
+Usual comment: this (entire clock or at least its frequency) is usually
+not a property of a SoC, but board. Did something change here in SA8775?
+
+
 > +		};
 > +	};
 > +
@@ -233,6 +238,9 @@ BSD3?
 > +			L2_0: l2-cache {
 > +			      compatible = "cache";
 > +			      next-level-cache = <&L3_0>;
+
+Messed indentation.
+
 > +				L3_0: l3-cache {
 > +				      compatible = "cache";
 > +				};
@@ -365,19 +373,12 @@ BSD3?
 > +				};
 > +			};
 > +		};
-On other SoCs we define a single DynamIQ cluster, is it something
-we should change?
 > +	};
 > +
 > +	/* Will be updated by the bootloader. */
 > +	memory {
-The memory node should have a unit address, probably 0x80000000 in
-your case, but please doublecheck (for example by reading the value
-from /sys/firmware/)
 > +		device_type = "memory";
 > +		reg = <0 0 0 0>;
-0x0 please
-
 > +	};
 > +
 > +	reserved-memory {
@@ -386,178 +387,20 @@ from /sys/firmware/)
 > +		ranges;
 > +
 > +		sail_ss_mem: sail_ss_region@80000000 {
-No underscores in node names, use -s instead.
 
-> +			no-map;
-> +			reg = <0x0 0x80000000 0x0 0x10000000>;
-Please put reg above no-map.
+No underscores in node names.
 
-> +		};
-> +
-> +		hyp_mem: hyp_region@90000000 {
-> +			no-map;
-> +			reg = <0x0 0x90000000 0x0 0x600000>;
-> +		};
-> +
-> +		xbl_boot_mem: xbl_boot_region@90600000 {
-> +			no-map;
-> +			reg = <0x0 0x90600000 0x0 0x200000>;
-> +		};
-> +
-> +		aop_image_mem: aop_image_region@90800000 {
-> +			no-map;
-> +			reg = <0x0 0x90800000 0x0 0x60000>;
-> +		};
-> +
-> +		aop_cmd_db_mem: aop_cmd_db_region@90860000 {
-> +			compatible = "qcom,cmd-db";
-> +			no-map;
-> +			reg = <0x0 0x90860000 0x0 0x20000>;
-> +		};
-> +
-> +		uefi_log: uefi_log_region@908b0000 {
-> +			no-map;
-> +			reg = <0x0 0x908b0000 0x0 0x10000>;
-> +		};
-> +
-> +		reserved_mem: reserved_region@908f0000 {
-> +			no-map;
-> +			reg = <0x0 0x908f0000 0x0 0xf000>;
-> +		};
-> +
-> +		secdata_apss_mem: secdata_apss_region@908ff000 {
-> +			no-map;
-> +			reg = <0x0 0x908ff000 0x0 0x1000>;
-> +		};
-> +
-> +		smem_mem: smem_region@90900000 {
-> +			compatible = "qcom,smem";
-> +			reg = <0x0 0x90900000 0x0 0x200000>;
-> +			no-map;
-> +			hwlocks = <&tcsr_mutex 3>;
-> +		};
-> +
-> +		cpucp_fw_mem: cpucp_fw_region@90b00000 {
-> +			no-map;
-> +			reg = <0x0 0x90b00000 0x0 0x100000>;
-> +		};
-> +
-> +		lpass_machine_learning_mem: lpass_machine_learning_region@93b00000 {
-> +			no-map;
-> +			reg = <0x0 0x93b00000 0x0 0xf00000>;
-> +		};
-> +
-> +		adsp_rpc_remote_heap_mem: adsp_rpc_remote_heap_region@94a00000 {
-> +			no-map;
-> +			reg = <0x0 0x94a00000 0x0 0x800000>;
-> +		};
-> +
-> +		pil_camera_mem: pil_camera_region@95200000 {
-> +			no-map;
-> +			reg = <0x0 0x95200000 0x0 0x500000>;
-> +		};
-> +
-> +		pil_adsp_mem: pil_adsp_region@95c00000 {
-> +			no-map;
-> +			reg = <0x0 0x95c00000 0x0 0x1e00000>;
-> +		};
-> +
-> +		pil_gdsp0_mem: pil_gdsp0_region@97b00000 {
-> +			no-map;
-> +			reg = <0x0 0x97b00000 0x0 0x1e00000>;
-> +		};
-> +
-> +		pil_gdsp1_mem: pil_gdsp1_region@99900000 {
-> +			no-map;
-> +			reg = <0x0 0x99900000 0x0 0x1e00000>;
-> +		};
-> +
-> +		pil_cdsp0_mem: pil_cdsp0_region@9b800000 {
-> +			no-map;
-> +			reg = <0x0 0x9b800000 0x0 0x1e00000>;
-> +		};
-> +
-> +		pil_gpu_mem: pil_gpu_region@9d600000 {
-> +			no-map;
-> +			reg = <0x0 0x9d600000 0x0 0x2000>;
-> +		};
-> +
-> +		pil_cdsp1_mem: pil_cdsp1_region@9d700000 {
-> +			no-map;
-> +			reg = <0x0 0x9d700000 0x0 0x1e00000>;
-> +		};
-> +
-> +		pil_cvp_mem: pil_cvp_region@9f500000 {
-> +			no-map;
-> +			reg = <0x0 0x9f500000 0x0 0x700000>;
-> +		};
-> +
-> +		pil_video_mem: pil_video_region@9fc00000 {
-> +			no-map;
-> +			reg = <0x0 0x9fc00000 0x0 0x700000>;
-> +		};
-> +
-> +		hyptz_reserved_mem: hyptz_reserved_region@beb00000 {
-> +			no-map;
-> +			reg = <0x0 0xbeb00000 0x0 0x11500000>;
-> +		};
-> +
-> +		tz_stat_mem: tz_stat_region@d0000000 {
-> +			no-map;
-> +			reg = <0x0 0xd0000000 0x0 0x100000>;
-> +		};
-> +
-> +		tags_mem: tags_region@d0100000 {
-> +			no-map;
-> +			reg = <0x0 0xd0100000 0x0 0x1200000>;
-> +		};
-> +
-> +		qtee_mem: qtee_region@d1300000 {
-> +			no-map;
-> +			reg = <0x0 0xd1300000 0x0 0x500000>;
-> +		};
-> +
-> +		trusted_apps_mem: trusted_apps_region@d1800000 {
-> +			no-map;
-> +			reg = <0x0 0xd1800000 0x0 0x3900000>;
-> +		};
-> +
-> +		dump_mem: mem_dump_region {
-> +			compatible = "shared-dma-pool";
-> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
-> +			reusable;
-> +			size = <0 0x3000000>;
-> +		};
-> +
-> +		/* global autoconfigured region for contiguous allocations */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			alloc-ranges = <0x0 0x00000000 0x0 0xdfffffff>;
-> +			reusable;
-> +			alignment = <0x0 0x400000>;
-> +			size = <0x0 0x2000000>;
-> +			linux,cma-default;
-> +		};
-Are you sure these last two are useful?
+(...)
 
-> +	};
-> +
-> +	psci {
-Top-level nodes should be sorted alphabetically.
-
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	firmware {
-> +		scm {
-> +			compatible = "qcom,scm";
-This one should also have a SoC-specific compatible.
-
-> +		};
-> +	};
 > +
 > +	qup_opp_table_100mhz: qup-100mhz-opp-table {
+
+opp-table-....
+
+Does not look like you tested the DTS against bindings. Please run `make
+dtbs_check` (see Documentation/devicetree/bindings/writing-schema.rst
+for instructions).
+
 > +		compatible = "operating-points-v2";
 > +
 > +		opp-100000000 {
@@ -571,19 +414,10 @@ This one should also have a SoC-specific compatible.
 > +		#address-cells = <1>;
 > +		#size-cells = <1>;
 > +		ranges = <0 0 0 0xffffffff>;
-You probably want 36 or more bits of addressing here, otherwise
-SMMU translation will be playing jokes on you, cutting off some
-bits..
-
 > +
 > +		gcc: clock-controller@100000 {
 > +			compatible = "qcom,gcc-sa8775p";
-Please update the compatible after you update it in the .c driver.
-
 > +			reg = <0x100000 0xc7018>;
-The GCC size is usually something more rounded to 0x1000, can you
-doublecheck?
-
 > +			#clock-cells = <1>;
 > +			#reset-cells = <1>;
 > +			#power-domain-cells = <1>;
@@ -603,16 +437,6 @@ doublecheck?
 > +				 <0>,
 > +				 <0>;
 > +			power-domains = <&rpmhpd SA8775P_CX>;
-
-compatible
-reg
-clocks
-#clock-cells
-#reset-cells
-power-domains
-#power-domain-cells
-
-please
 > +		};
 > +
 > +		ipcc: mailbox@408000 {
@@ -625,7 +449,14 @@ please
 > +		};
 > +
 > +		aggre1_noc:interconnect-aggre1-noc {
+
+Missing space after :
+
 > +			compatible = "qcom,sa8775p-aggre1-noc";
+
+This does not match your bindings, so nothing here was tested against
+your own files which you sent.
+
 > +			#interconnect-cells = <2>;
 > +			qcom,bcm-voters = <&apps_bcm_voter>;
 > +		};
@@ -719,20 +550,10 @@ please
 > +			redistributor-stride = <0x0 0x20000>;
 > +			reg = <0x17a00000 0x10000>,     /* GICD */
 > +			      <0x17a60000 0x100000>;    /* GICR * 8 */
+
+Compatible goes first, then reg, then ranges.
+
 > +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-compatible
-reg
-interrupts
-interrupt-controller
-#interrupt-cells
-redistributor-stride
-#redistributor-regions
-
-#address-cells
-#size-cells
-ranges;
-
-please
 > +		};
 > +
 > +		apps_rsc: rsc@18200000 {
@@ -744,8 +565,6 @@ please
 > +			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
 > +			      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
 > +			      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-Wrong indentation
-
 > +			qcom,tcs-offset = <0xd00>;
 > +			qcom,drv-id = <2>;
 > +			qcom,tcs-config = <ACTIVE_TCS 2>,
@@ -753,10 +572,13 @@ Wrong indentation
 > +					  <WAKE_TCS 3>,
 > +					  <CONTROL_TCS 0>;
 > +			label = "apps_rsc";
-Is it used anywhere?
-
 > +
 > +			apps_bcm_voter: bcm_voter {
+
+Does not look like you tested the DTS against bindings. Please run `make
+dtbs_check` (see Documentation/devicetree/bindings/writing-schema.rst
+for instructions).
+
 > +				compatible = "qcom,bcm-voter";
 > +			};
 > +
@@ -765,29 +587,28 @@ Is it used anywhere?
 > +				#clock-cells = <1>;
 > +				clock-names = "xo";
 > +				clocks = <&xo_board_clk>;
-clocks
-clock-names
-#clock-cells
-please
-
 > +			};
 > +
 > +			rpmhpd: power-controller {
 > +				compatible = "qcom,sa8775p-rpmhpd";
 > +				#power-domain-cells = <1>;
 > +				operating-points-v2 = <&rpmhpd_opp_table>;
-operating-points-v2
-#power-domain-cells
-please
 > +
 > +				rpmhpd_opp_table: opp-table {
 > +					compatible = "operating-points-v2";
 > +
 > +					rpmhpd_opp_ret: opp1 {
+
+opp-0
+(so numbering from 0 and hyphen)
+
 > +						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
 > +					};
 > +
 > +					rpmhpd_opp_min_svs: opp2 {
+
+opp-1
+
 > +						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
 > +					};
 > +
@@ -827,39 +648,29 @@ please
 > +		};
 > +
 > +		arch_timer: timer {
-Unnecessary label
-
 > +			compatible = "arm,armv8-timer";
 > +			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 > +				     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 > +				     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
 > +				     <GIC_PPI 12 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-Shouldn't the last one be 10?
-
 > +			clock-frequency = <19200000>;
-Please remove this property, the 100 levels of firmware that boot before
-Linux already program this.
-
 > +		};
 > +
 > +		memtimer: timer@17c20000 {
-Unnecessary label
+
+Why this one is outside of soc node? Or are we inside soc? But then
+ARMv8 timer cannot be here... dtbs W=1 would warn you, wouldn't it?
+
 
 > +			#address-cells = <1>;
 > +			#size-cells = <1>;
 > +			ranges;
 > +			compatible = "arm,armv7-timer-mem";
+
+Weird order of properties.
+
 > +			reg = <0x17c20000 0x1000>;
 > +			clock-frequency = <19200000>;
-Ditto
-
-
-+ please sort to:
-compatible
-reg
-#addr
-#size
-ranges
 > +
 > +			frame@17c21000 {
 > +				frame-number = <0>;
@@ -867,12 +678,6 @@ ranges
 > +					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
 > +				reg = <0x17c21000 0x1000>,
 > +				      <0x17c22000 0x1000>;
-reg
-interrupts
-frame-number
-[status]
-
-please
 > +			};
 > +
 > +			frame@17c23000 {
@@ -927,9 +732,6 @@ please
 > +		tlmm: pinctrl@f000000 {
 > +			compatible = "qcom,sa8775p-pinctrl";
 > +			reg = <0xf000000 0x1000000>;
-All address fields under /soc should be padded to 8 hex digits and
-nodes should be sorted by their unit address.
-
 > +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
 > +			gpio-controller;
 > +			#gpio-cells = <2>;
@@ -939,12 +741,14 @@ nodes should be sorted by their unit address.
 > +		};
 > +
 > +		qcom-wdt@17c10000 {
+
+Node names should be generic.
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
 > +			compatible = "qcom,kpss-wdt";
 > +			reg = <0x17c10000 0x1000>;
 > +			clocks = <&sleep_clk>;
 > +			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-Please reorder interrupts and clocks.
-
 > +		};
 > +
 > +		qupv3_id_1: geniqup@ac0000 {
@@ -976,158 +780,21 @@ Please reorder interrupts and clocks.
 > +		};
 > +
 > +		apps_smmu: apps-smmu@15000000 {
+
+iommu, node names should be generic.
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+and probably also fails dtbs_check...
+
 > +			compatible = "qcom,sa8775p-smmu-500", "arm,mmu-500";
 > +			reg = <0x15000000 0x100000>, <0x15182000 0x28>;
-Only one reg is used (unless you're nvidia)...
-
 > +			reg-names = "base", "tcu-base";
-..and this becomes irrelevant.
-
 > +			#iommu-cells = <2>;
-
 > +			qcom,skip-init;
 > +			qcom,use-3-lvl-tables;
-These two don't exist upstream.
 > +			#global-interrupts = <2>;
-
 > +			#size-cells = <1>;
-> +			#address-cells = <1>;
-> +			ranges;
-There are no child nodes of SMMU, please remove.
-> +
-> +			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-Bad indentation (or my mail client is drunk again)
 
-Konrad
-> +				      <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 315 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 316 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 317 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 318 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 319 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 322 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 323 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 325 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 326 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 328 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 329 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 330 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 332 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 333 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 334 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 335 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 336 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 337 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 338 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 412 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 706 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 689 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 690 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 691 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 692 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 693 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 694 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 695 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 696 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 411 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 413 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 707 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 708 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 709 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 710 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 711 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 712 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 713 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 714 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 715 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 912 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 911 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 910 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 909 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 908 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 907 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 906 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 905 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 904 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 903 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 902 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 901 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 900 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 899 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 898 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 897 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 896 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 895 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 894 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 893 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 892 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 891 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +};
+Best regards,
+Krzysztof
+
