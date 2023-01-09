@@ -2,78 +2,88 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B70A76626F0
-	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 14:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC9C6626F8
+	for <lists+linux-gpio@lfdr.de>; Mon,  9 Jan 2023 14:26:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233481AbjAINZp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 9 Jan 2023 08:25:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41468 "EHLO
+        id S233551AbjAIN0y (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 9 Jan 2023 08:26:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231288AbjAINZp (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 08:25:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 824F6A1AA;
-        Mon,  9 Jan 2023 05:25:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 35FA7B80DDF;
-        Mon,  9 Jan 2023 13:25:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 620C9C433D2;
-        Mon,  9 Jan 2023 13:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673270740;
-        bh=WLCkoNqzrNs3kRbpwkEEPg9hY53dRJBCOL38nuzEWrI=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=RaEVJ3rKOR6PjdMowGEElmV08dW1C8qNwCK2a0kcga4idr0xVKMbFkq/TKKwvhUPo
-         viWPNRav9Sqpm8Ekl51gl+Lp87xok+C/3YziupRmUBRYhkZa8FuHLbuJXhaTVgNZIe
-         Jg8sp8EqYAm9FtZjBgkbne9a8ZQGhvdkPipgjPnj6I2gqcHO8bOcqvBPJnfPceJtaX
-         IcnouQEGDR/W5r6mfzIhqoxiUqQ+Zx6E/z96gOypN9leOPRIFSuZPXKXevUPgDdrQT
-         qIZbM/T12lKicZl7ZKp+g2Yu5sVLI6istDW3RCWty+lNIE4yz7zFRcpMAcLnUfVFVj
-         d7b/bGt6tdMbA==
-Message-ID: <58d5ed4e-d373-2f95-1c9a-b4479da4d39d@kernel.org>
-Date:   Mon, 9 Jan 2023 14:25:33 +0100
+        with ESMTP id S229992AbjAIN0x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 9 Jan 2023 08:26:53 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08637CCB;
+        Mon,  9 Jan 2023 05:26:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673270813; x=1704806813;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=bAHPKpx8104LaB0KsPUVZ4UAbNUE0Ufn60pvoDy2m2c=;
+  b=mBccV+RZdD0zR6A7bVbtDWcsqc8K/yL0tOtO+z2yOf3k9BDXmVDhPxZE
+   53lysMo0KnCYU0tnqPrKKMGd77yo01p/YVNqsPAa/VQxtH8/J2qTg6qvE
+   Et3H+yjRjaV2gDTTOlXykUxgkL7f3aqkYYkwTwV6yGgvlO3Z5ZcjcGbRu
+   QZysofnM5jm8LTpCu6d1Il07zMrBkPUzp+o8tcvUlX/vYgF5OSP/oR5xd
+   1ioFEoLB8+tE4xWk0EZEOfAJbb/RNSjbKvMEbEVP3fxazDPXm3yfgmLjf
+   uvHIl99Kud8Tjkl2BFRsWL1YcqP4TMQPk9LuaYh4MD5DMWO4iWze40411
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="310663950"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="310663950"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2023 05:26:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10584"; a="830597505"
+X-IronPort-AV: E=Sophos;i="5.96,311,1665471600"; 
+   d="scan'208";a="830597505"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 09 Jan 2023 05:26:51 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 9F1F9F4; Mon,  9 Jan 2023 15:27:24 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 1/1] pinctrl: pinmux: Drop duplicate error message in pinmux_select()
+Date:   Mon,  9 Jan 2023 15:27:19 +0200
+Message-Id: <20230109132719.86009-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [RESEND PATCH V3 0/3] Convert Unisoc GPIO bindings to yaml and
- add support for UMS512
-Content-Language: en-US
-To:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20230109072106.2176048-1-chunyan.zhang@unisoc.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-In-Reply-To: <20230109072106.2176048-1-chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 09/01/2023 08:21, Chunyan Zhang wrote:
-> V3-resend:
-> - Added Reviewed-by from Rob Herring.
-> 
-> V3:
-> - Removed a example from sprd,gpio-eic.yaml;
-> - Added '|' at the beginning of description blocks;
-> - Added Reviewed-by tags from Krzysztof Kozlowski and Linus Walleij.
+pinctrl_get_group_selector() prints an error message when group
+is not found in the list. No need to repeat this in the caller.
 
-So I wonder why you did not use CC list from scripts/get_maintainer.pl.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pinctrl/pinmux.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Please rebase your patches on some recent kernel.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/pinmux.c b/drivers/pinctrl/pinmux.c
+index 6bd7ac37a0e0..021382632608 100644
+--- a/drivers/pinctrl/pinmux.c
++++ b/drivers/pinctrl/pinmux.c
+@@ -744,10 +744,8 @@ static ssize_t pinmux_select(struct file *file, const char __user *user_buf,
+ 	}
+ 
+ 	ret = pinctrl_get_group_selector(pctldev, gname);
+-	if (ret < 0) {
+-		dev_err(pctldev->dev, "failed to get group selector for %s", gname);
++	if (ret < 0)
+ 		goto exit_free_buf;
+-	}
+ 	gsel = ret;
+ 
+ 	ret = pmxops->set_mux(pctldev, fsel, gsel);
+-- 
+2.35.1
 
