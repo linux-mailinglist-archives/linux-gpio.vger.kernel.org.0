@@ -2,80 +2,76 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC2CF665EAF
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 16:04:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0C7B666077
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 17:30:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233150AbjAKPDz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 10:03:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38648 "EHLO
+        id S232320AbjAKQaI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 11:30:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235948AbjAKPDb (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 10:03:31 -0500
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EEDE13E17
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 07:03:27 -0800 (PST)
-Received: by mail-wr1-x431.google.com with SMTP id r2so15323971wrv.7
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 07:03:27 -0800 (PST)
+        with ESMTP id S238996AbjAKQ3c (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 11:29:32 -0500
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8D31120
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 08:28:14 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so13117177wms.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 08:28:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gSjNh53fuTFX648VbV+cFXPXevheHMtqh9ORKZBfONQ=;
-        b=f/DcrDMTm8lUsMVzMA8CVkGtWSVbYy0MBnnFulQCEoaplBnKgCmmlA6eu+TPbwNyjT
-         ue/gAZSerx8XPU2+nVTkUu4idw0agYAb4x79ZlW1tVSLLQrs8vpvTilUbIZNfsZthldY
-         eIM6Y7xaOEX2hd+7rd7z/FjmilAtsdhEzhPj3dqoqR4T03uAp4/IdnduAuzzdhRytJtR
-         rwlBS9CJ6LoBv1+DwkLW+WTEE9ic9xtf933JMrcZGWamx4SaOABE2VoUuZNX0Gk/B7ga
-         lTfXcrtwgYFiEZXW3WZVDqkRXRdusDuDKL8GPPERQg1Qah4UxEs4y7uPm/BDROgI7Em+
-         Cbow==
+        bh=h7CWF9KkUKbOJvIgyBGuBX3AgumkGtq/yuQpNawXVGo=;
+        b=QG/1xRDc2gvPUcV3qYyLpo9U1+DrMtmYMCpfUHY3aBxCA/zvDPrypygAq50eRHghxJ
+         VMQZMBAirs1WNJzVVb5Z2Cr9RIBnVWz/mxGftXpw0Vl5NqIg/1370zLOgEEStiNr9L8n
+         6u97vE0rrLrlha03SYeQIX+8vZD2HXqxn2I6ogvtXhMWZ0MD3iV9VAa/QA1qSafYq10g
+         /Dv0x3t+uUCvWLa3esZKGcAoUI+MRcKPyf+GgWtlOiYECKsOOcVajufpcYZI4oa6IFCo
+         9iMsozsf8EujJzSufGogv/LJdpQ9o8xZZwozSz9oZSGHTiz2dEmesqr5B2O9Lk/fQEck
+         r8tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gSjNh53fuTFX648VbV+cFXPXevheHMtqh9ORKZBfONQ=;
-        b=lXOThwbjzT3TizwAmssKoMpVLoya60VjigAam0Eu0XS5vsDs3GD5b/tP7vb6A2ARRF
-         Ns1ErhMPm49lFe3pzvsHpdJxoic7YdN83gZS7eQTVMtq28sOlFDa1P4n7lR5cEioY+Wq
-         +EQZVZStCswh+yzDA54akIjgUVMd1i4XtUwVMDNB8g/5OlS/iEewJPC13+ILjrBeGT7A
-         HgHZ35gC2CNgyjncDCXn8h700M+tNzBvSDDwEAZRltw16/sI8JZ0Iphv2u+N9ozmNLNR
-         A31Z5OoiUpBPvU8pAB41LPSf4n5AANVMnemtgnwhi+hcqDrKjGgo8oa7FvQll3j7R/vl
-         vm5A==
-X-Gm-Message-State: AFqh2kojmpjW8tQHn09RiSLf2O2SZpMEv0gyMf8R1xogoAQIPItmMCLg
-        gWEwZosXjSga1zihh3rkBYOcLw==
-X-Google-Smtp-Source: AMrXdXtmbc+MAiHw2DNZmN5yQ7ULD99oOLR1VBGQvIju6NvR2aRocEC8S977tjFA900+RAJES1EUBQ==
-X-Received: by 2002:a5d:6b87:0:b0:2bc:371a:8a1 with SMTP id n7-20020a5d6b87000000b002bc371a08a1mr7240550wrx.22.1673449405630;
-        Wed, 11 Jan 2023 07:03:25 -0800 (PST)
+        bh=h7CWF9KkUKbOJvIgyBGuBX3AgumkGtq/yuQpNawXVGo=;
+        b=lr9UGl/SnEKy4imHCyGC4ErT0/e0KyFEtfXAAff6Anl7gx9dlRpKAKjLD6dRWMhR/+
+         FPs4WWaQ1SbDYr+zantV7U9DUfZg82c0kCSvNTqj7RcrJBVXjl2+mYYxkOb2UYpaa8MJ
+         e1v9N8MuFX0apB7D34r2I1BHqdDSsLievtbHlNk4unPa2g+matMMKtbxKPe9tim75aPe
+         pPMZed0IZF0ohoJNxX+HKbUyTiJZmXEhetwiLNnLuSExmZi40Ly8qJ63YRgIxm1BRab+
+         8D2g/GeriMNVVzo+YL/yPWRhmEJQtzBQPl7gQsFPjUtyK1m0+53OIc8OPMRTgbhkLKvf
+         St5A==
+X-Gm-Message-State: AFqh2krbMH+EWjWMepk4JhWj44g1m3oO9Q54Mr9it3yC4HWEZHQlqg1k
+        gmLUKxyVkOktEJF+G62XMIiTKg==
+X-Google-Smtp-Source: AMrXdXsJO0FKX4wDji1FsHRVmHI5Sp0+ktkb3opEqy9j/XqlcQpG//WN65wKFYu7H+P8NXUVJtGUQg==
+X-Received: by 2002:a05:600c:1e09:b0:3cf:b73f:bf8f with SMTP id ay9-20020a05600c1e0900b003cfb73fbf8fmr51982781wmb.7.1673454493504;
+        Wed, 11 Jan 2023 08:28:13 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id w5-20020a05600018c500b002420dba6447sm13885188wrq.59.2023.01.11.07.03.23
+        by smtp.gmail.com with ESMTPSA id l3-20020a05600c4f0300b003a6125562e1sm20455115wmq.46.2023.01.11.08.28.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 07:03:25 -0800 (PST)
-Message-ID: <24461c28-0939-bd37-a6bc-774dc70ed8ed@linaro.org>
-Date:   Wed, 11 Jan 2023 16:03:22 +0100
+        Wed, 11 Jan 2023 08:28:13 -0800 (PST)
+Message-ID: <c4497bde-c1e0-1efc-7a46-233495f7760b@linaro.org>
+Date:   Wed, 11 Jan 2023 17:28:11 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH 7/7] arm64: defconfig: Enable IPQ9574 SoC base configs
+Subject: Re: [PATCH 1/3] dt-bindings: sound: Add Renesas IDT821034 codec
 Content-Language: en-US
-To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-        devi priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_arajkuma@quicinc.com,
-        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
-References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
- <20230110121316.24892-8-quic_devipriy@quicinc.com>
- <a9dfc45a-dc7a-9e39-ccc4-a451ea165bdf@quicinc.com>
+To:     Herve Codina <herve.codina@bootlin.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+References: <20230111134905.248305-1-herve.codina@bootlin.com>
+ <20230111134905.248305-2-herve.codina@bootlin.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <a9dfc45a-dc7a-9e39-ccc4-a451ea165bdf@quicinc.com>
+In-Reply-To: <20230111134905.248305-2-herve.codina@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -87,31 +83,117 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/01/2023 15:48, Kathiravan Thirumoorthy wrote:
+On 11/01/2023 14:49, Herve Codina wrote:
+> The Renesas IDT821034 codec is a quad PCM codec with
+> programmable gain.
 > 
-> On 1/10/2023 5:43 PM, devi priya wrote:
->> Enables clk & pinctrl related configs
->>
->> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
->> ---
->>   arch/arm64/configs/defconfig | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
->> index 851e8f9be06d..e0ae0996d5ad 100644
->> --- a/arch/arm64/configs/defconfig
->> +++ b/arch/arm64/configs/defconfig
->> @@ -545,6 +545,7 @@ CONFIG_PINCTRL_IMX93=y
->>   CONFIG_PINCTRL_MSM=y
->>   CONFIG_PINCTRL_IPQ8074=y
->>   CONFIG_PINCTRL_IPQ6018=y
->> +CONFIG_PINCTRL_IPQ9574=y
-> Please move this after IPQ8074, to keep it in ascending order. We can 
-> move the IPQ6018 config before IPQ8074.
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  .../bindings/sound/renesas,idt821034.yaml     | 97 +++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,idt821034.yaml b/Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
+> new file mode 100644
+> index 000000000000..2c29b770e3f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
+> @@ -0,0 +1,97 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/renesas,idt821034.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas IDT821034 codec device
+> +
+> +maintainers:
+> +  - Herve Codina <herve.codina@bootlin.com>
+> +
+> +description: |
+> +  The IDT821034 codec is a four channel PCM codec with onchip filters and
+> +  programmable gain setting.
+> +
+> +  The time-slots used by the codec must be set and so, the properties
+> +  'dai-tdm-slot-num', 'dai-tdm-slot-width', 'dai-tdm-slot-tx-mask' and
+> +  'dai-tdm-slot-rx-mask' must be present in the ALSA sound card node for
+> +  sub-nodes that involve the codec. The codec uses one 8bit time-slot per
+> +  channel.
+> +  'dai-tdm-tdm-slot-with' must be set to 8.
+> +
+> +  The IDT821034 codec also supports 5 gpios (SLIC signals) per channel.
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +  - $ref: /schemas/gpio/gpio.yaml#
 
-This must match savedefconfig order, not alphabetical.
+This one is never needed. Drop.
+
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: renesas,idt821034
+> +
+> +  reg:
+> +    description:
+> +      SPI device address.
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 8192000
+> +
+> +  spi-cpha: true
+> +
+> +  '#sound-dai-cells':
+> +    const: 0
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +  - '#sound-dai-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +
+> +additionalProperties: false
+
+This should be rather unevaluatedProperties: false, so other properties
+from spi-props and dai-common will work.
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        codec: idt821034@0 {
+
+Node names should be generic, so "audio-codec"
+https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+
+> +            compatible = "renesas,idt821034";
+> +            reg = <0>;
+> +            spi-max-frequency = <8192000>;
+> +            spi-cpha;
+> +            #sound-dai-cells = <0>;
+> +            gpio-controller;
+> +            #gpio-cells = <2>;
+> +        };
+> +    };
+> +    sound {
+> +        compatible = "simple-audio-card";
+
+Drop sound{} node. Not relevant to the case here and it's the same in
+every case of audio codec... unless something here is specific. But even
+the dai-tdm properties are sound card specific.
+
 
 Best regards,
 Krzysztof
