@@ -2,55 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 95A716657F0
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 10:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B74FD6657F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 10:48:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232053AbjAKJqu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 04:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46864 "EHLO
+        id S238349AbjAKJrs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 04:47:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232762AbjAKJqY (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 04:46:24 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B561F10570
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:44:08 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id bi26-20020a05600c3d9a00b003d3404a89faso2125158wmb.1
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:44:08 -0800 (PST)
+        with ESMTP id S238429AbjAKJra (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 04:47:30 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F178DD59
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:45:34 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so12169691wms.2
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:45:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7jC2t5CGyRoxIfocwFmOfd5rDFgQ+H+2ehjtsbZOQqk=;
-        b=RrJ9mX4mOw9KyuPVYniHKoW/sXNz36COg8T59H1IkfacKj+19ZhThkn1kq4ZHgvaLA
-         VcCFqcNEB8SaBmsSdPJt3DWBPa4HSmF9+O1TnZNRtlSvbXDYPgvKwHSUHj0CqRQeLNxH
-         eSlnX/1CsUH0LtOs1Y7byM2yD9GcG5KG8McnYVLI3yHuLNPM9GWP513AFrEqdr7zhUpU
-         WdD3HOWIlEj37aKOjN+Mh+QkZcerFV5uLL4u0ybCmkNvV+asCtHoQB8XtCA2zWXBE+oJ
-         LQ4nPu+zzISJbHEVmptdAc4xLSHJGnUHSgUKwvO7jBhlzPui09FIfTqbjmlRpTe1QHg8
-         L42g==
+        bh=6wWIW61CZB/vxYsqF5McKIEUW8wQWfFLBGnoRl2r3g4=;
+        b=QguNZ3AYn9in0xBi5rvw6eS1DCNUvH+vHez+dOi+3DDRE45hk/4PDbuSn45J90c/he
+         j9k7ueMNy/fKnOW3aTx0YQ7yCOLxZrYxw2P6CfoRNM9EbcIobYhVXvmoQuxtmug6pXqo
+         VxKJCD0aS1ADMeueGAEC0rXJA9e+QVd/68mGb43OS6xg2hph7591FLUISbJsWuh7bBPw
+         f6sGF5hw76qmQjoswCmFm4MeKOfRKGwndK9neQJiIg1GATDMpou+XvO4GZJ9iU6zNBUS
+         +zSGI6qnV7CEz7JMMoqP8qDW79VPIRhm63ChyeueuIbzSqxwZJvnkoOB2FtE3D6pXVsY
+         Pcag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7jC2t5CGyRoxIfocwFmOfd5rDFgQ+H+2ehjtsbZOQqk=;
-        b=6m3Vdf9ZTocEQBe34yGQ9pMqNTrRtwYutckQsrO1pxwknMqJXqb/cfceO+bDEX2e0v
-         MIuGZiYS3+8rb1s0B8vx9d1uiSZaQfXtyN3J0qpm+OmkPUcP/DxgVtaNmubly1gMwET8
-         gThx0HWGZJHJQobr1hZ5BiEjhFezaKMtcV4+YjstZA3ZPqlPXVTsAi+BAEhtHff0FSSV
-         aciyn4DQrh8l4IbHppAW6MVsn7nzexIv+T3b3py/QOml40lQPQtB69RhxmV9nQrwQZ6v
-         y8SncHZ/KG0WbFRXzx026kYXUPrO6sgBLSemzswR4LmnTghvMfctMsjpOj/PzxtOQxx6
-         +Sgg==
-X-Gm-Message-State: AFqh2kosH3BJC1S7qretjhdZahq9gRoI1PYn4MJHiYg7LXduBgV02GHX
-        98AWa9a2zwjOzl0JlzmTzpU7Aw==
-X-Google-Smtp-Source: AMrXdXuLu14xQso0coTm25QzzqLEBK2d0wuedjP2e4RaoyF9EtChvhRRZ5uRLd/EBIJrLfyzh42CrQ==
-X-Received: by 2002:a05:600c:4e4f:b0:3cf:9d32:db67 with SMTP id e15-20020a05600c4e4f00b003cf9d32db67mr51258951wmq.3.1673430247232;
-        Wed, 11 Jan 2023 01:44:07 -0800 (PST)
+        bh=6wWIW61CZB/vxYsqF5McKIEUW8wQWfFLBGnoRl2r3g4=;
+        b=pig+KiWj+ZBKIHX8JdprkcXKW6jSe9k5WMYHCAXFAK3iYWvWFSRqnRj6CFi2Og8Xgu
+         uSXHUc8eCfQUHtp/tCe9miDT1OAcfcmyPgw4oZO25DGHKxQeDLSNxqW26lqouHoizNoi
+         07RV8Z7ouCXlB7/QASLLS7NuPQNlH4oYAz5vQM9BZbEPjo3i/kWYQEsLUEP7geaf7WpG
+         v+qZrrSIcjwH+PZnMWx8vsLiRHjBY0/+0VNZDuSQhUH0eEjhwAoFeu4vG2y8przNiN14
+         Zz+V4TkWYSHG4ieOBNtu+Qs8FcBL5n5XaseeQDPJfv7tGfYnDiGrprRpfJynyE2maNXf
+         5xUA==
+X-Gm-Message-State: AFqh2kp031ll22LSuEs4bQ4CAAYmP0M8U2PcXKBXTVQhpLe5LjitIPIY
+        CrUZZznHyOFgm97454xIgak2Kw==
+X-Google-Smtp-Source: AMrXdXs3iRR5hbQRbV2mNc++Pv4HJQCPNW9Qxhph9zZkqzpQCh6C2nt5n8RG3k3wja/pppBlAUQdrQ==
+X-Received: by 2002:a05:600c:3ca8:b0:3d9:e8b3:57fa with SMTP id bg40-20020a05600c3ca800b003d9e8b357famr10283292wmb.30.1673430333549;
+        Wed, 11 Jan 2023 01:45:33 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id r16-20020a05600c35d000b003d2157627a8sm23963706wmq.47.2023.01.11.01.44.04
+        by smtp.gmail.com with ESMTPSA id j6-20020a05600c42c600b003b492753826sm16653155wme.43.2023.01.11.01.45.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 01:44:06 -0800 (PST)
-Message-ID: <f6ef1834-b629-b76c-9cde-55af56320665@linaro.org>
-Date:   Wed, 11 Jan 2023 10:44:03 +0100
+        Wed, 11 Jan 2023 01:45:33 -0800 (PST)
+Message-ID: <e5383b73-7026-ede1-387c-5847535438eb@linaro.org>
+Date:   Wed, 11 Jan 2023 10:45:30 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
@@ -98,457 +98,21 @@ On 10/01/2023 13:13, devi priya wrote:
 > Co-developed-by: devi priya <quic_devipriy@quicinc.com>
 > Signed-off-by: devi priya <quic_devipriy@quicinc.com>
 > Signed-off-by: POOVENDHAN SELVARAJ <quic_poovendh@quicinc.com>
+
+Don't use CAPITAL CASE FOR NAMES BUT Camel Case. Although different
+languages might have different rules, but most cases when transliterated
+to English (or Latin alphabet), the name Start with capital letter. The
+same in your case.
+
 > ---
 >  arch/arm64/boot/dts/qcom/Makefile            |   1 +
 >  arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts |  69 ++++
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi        | 318 +++++++++++++++++++
->  3 files changed, 388 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
->  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-> index 3e79496292e7..872c62028a0b 100644
-> --- a/arch/arm64/boot/dts/qcom/Makefile
-> +++ b/arch/arm64/boot/dts/qcom/Makefile
-> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c1.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c2.dtb
-> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq9574-al02-c7.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-alcatel-idol347.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-asus-z00l.dtb
->  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-huawei-g7.dtb
-> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
-> new file mode 100644
-> index 000000000000..ae3c32f3e16a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
-> @@ -0,0 +1,69 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
 
-Not dual licensed? Not BSD?
+One more:
 
-> +/*
-> + * IPQ9574 AL02-C7 board device tree source
-> + *
-> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "ipq9574.dtsi"
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. IPQ9574/AP-AL02-C7";
-> +	compatible = "qcom,ipq9574-ap-al02-c7", "qcom,ipq9574";
-> +	interrupt-parent = <&intc>;
-> +
-> +	aliases {
-> +		serial0 = &blsp1_uart2;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&blsp1_uart2 {
-> +	pinctrl-0 = <&uart2_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&sdhc_1 {
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +};
-> +
-> +&tlmm {
-> +	emmc_pins: emmc-state {
-> +		emmc-clk-pins {
-> +			pins = "gpio5";
-> +			function = "sdc_clk";
-> +			drive-strength = <8>;
-> +			bias-disable;
-> +		};
-> +		emmc-cmd-pins {
-> +			pins = "gpio4";
-> +			function = "sdc_cmd";
-> +			drive-strength = <8>;
-> +			bias-pull-up;
-> +		};
-> +		emmc-data-pins {
-> +			pins = "gpio0", "gpio1", "gpio2",
-> +			     "gpio3", "gpio6", "gpio7",
-> +			     "gpio8", "gpio9";
-> +			function = "sdc_data";
-> +			drive-strength = <8>;
-> +			bias-pull-up;
-> +		};
-> +		emmc-rclk-pins {
-> +			pins = "gpio10";
-> +			function = "sdc_rclk";
-> +			drive-strength = <8>;
-> +			bias-pull-down;
-> +		};
-> +	};
-> +
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> new file mode 100644
-> index 000000000000..188d18688a77
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-> @@ -0,0 +1,318 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * IPQ9574 SoC device tree source
-> + *
-> + * Copyright (c) 2020-2021 The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2022, Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-ipq9574.h>
-> +#include <dt-bindings/reset/qcom,gcc-ipq9574.h>
-> +
-> +/ {
-> +	interrupt-parent = <&intc>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	clocks {
-> +		bias_pll_ubi_nc_clk: bias_pll_ubi_nc_clk {
-
-No undercores in node names.
-
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <353000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		pcie30_phy0_pipe_clk: pcie30_phy0_pipe_clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <250000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		pcie30_phy1_pipe_clk: pcie30_phy1_pipe_clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <250000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		pcie30_phy2_pipe_clk: pcie30_phy2_pipe_clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <250000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		pcie30_phy3_pipe_clk: pcie30_phy3_pipe_clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <250000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		usb3phy_0_cc_pipe_clk: usb3phy_0_cc_pipe_clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <125000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		sleep_clk: sleep-clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32000>;
-
-That's not a property of the SoC, but board. Either entire clock or at
-least frequency to indicate that the board is providing the clock.
-
-> +			#clock-cells = <0>;> +		};
-> +
-> +		xo_board_clk: xo-board-clk {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <24000000>;
-
-Ditto.
-
-> +			#clock-cells = <0>;
-> +		};
-> +	};
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		CPU0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x0>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		CPU1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x1>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		CPU2: cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x2>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		CPU3: cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a73";
-> +			reg = <0x3>;
-> +			enable-method = "psci";
-> +			next-level-cache = <&L2_0>;
-> +		};
-> +
-> +		L2_0: l2-cache {
-> +			compatible = "cache";
-> +			cache-level = <2>;
-> +		};
-> +	};
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		/* We expect the bootloader to fill in the size */
-> +		reg = <0x0 0x40000000 0x0 0x0>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "arm,cortex-a73-pmu";
-> +		interrupts = <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0";
-> +		method = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		tz_region: memory@4a600000 {
-> +			reg = <0x0 0x4a600000 0x0 0x400000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	soc: soc@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +		compatible = "simple-bus";
-> +
-> +		tlmm: pinctrl@1000000 {
-> +			compatible = "qcom,ipq9574-tlmm";
-> +			reg = <0x01000000 0x300000>;
-> +			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&tlmm 0 0 65>;
-> +			gpio-reserved-ranges = <59 1>;
-
-Hm, why reserved ranges are in SoC?
-
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +
-> +			uart2_pins: uart2-state {
-> +				pins = "gpio34", "gpio35";
-> +				function = "blsp2_uart";
-> +				drive-strength = <8>;
-> +				bias-disable;
-> +			};
-> +		};
-> +
-> +		gcc: clock-controller@1800000 {
-> +			compatible = "qcom,gcc-ipq9574";
-> +			reg = <0x1800000 0x80000>;
-> +			clocks = <&xo_board_clk>,
-> +				<&sleep_clk>,
-> +				<&bias_pll_ubi_nc_clk>,
-> +				<&pcie30_phy0_pipe_clk>,
-> +				<&pcie30_phy1_pipe_clk>,
-> +				<&pcie30_phy2_pipe_clk>,
-> +				<&pcie30_phy3_pipe_clk>,
-> +				<&usb3phy_0_cc_pipe_clk>;
-> +			clock-names = "xo",
-> +				"sleep_clk",
-
-Misaligned. Multiple other places probably as well.
-
-> +				"bias_pll_ubi_nc_clk",
-> +				"pcie30_phy0_pipe_clk",
-> +				"pcie30_phy1_pipe_clk",
-> +				"pcie30_phy2_pipe_clk",
-> +				"pcie30_phy3_pipe_clk",
-> +				"usb3phy_0_cc_pipe_clk";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +		};
-> +
-> +		sdhc_1: sdhci@7804000 {
-> +			compatible = "qcom,sdhci-msm-v5";
-> +			reg = <0x7804000 0x1000>, <0x7805000 0x1000>;
-> +			reg-names = "hc_mem", "cmdq_mem";
-> +
-> +			interrupts = <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> +				   <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
-
-Like here.
-
-> +			interrupt-names = "hc_irq", "pwr_irq";
-> +
-> +			clocks = <&xo_board_clk>,
-> +			       <&gcc GCC_SDCC1_AHB_CLK>,
-> +			       <&gcc GCC_SDCC1_APPS_CLK>;
-
-And here
-
-> +			clock-names = "xo", "iface", "core";
-
-Does not look like you tested the bindings. Please run `make
-dt_binding_check` (see
-Documentation/devicetree/bindings/writing-schema.rst for instructions).
-
-> +			mmc-ddr-1_8v;
-> +			mmc-hs200-1_8v;
-> +			mmc-hs400-1_8v;
-> +			mmc-hs400-enhanced-strobe;
-> +			max-frequency = <384000000>;
-> +			bus-width = <8>;
-> +			non-removable;
-> +			status = "disabled";
-> +		};
-> +
-> +		blsp1_uart2: serial@78b1000 {
-> +			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-> +			reg = <0x078b1000 0x200>;
-> +			interrupts = <GIC_SPI 306 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&gcc GCC_BLSP1_UART3_APPS_CLK>,
-> +				 <&gcc GCC_BLSP1_AHB_CLK>;
-> +			clock-names = "core", "iface";
-> +			status = "disabled";
-> +		};
-> +
-> +		intc: interrupt-controller@b000000 {
-> +			compatible = "qcom,msm-qgic2";
-> +			reg = <0x0b000000 0x1000>,  /* GICD */
-> +			      <0x0b002000 0x1000>,  /* GICC */
-> +			      <0x0b001000 0x1000>,  /* GICH */
-> +			      <0x0b004000 0x1000>;  /* GICV */
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +			ranges = <0 0x0b00c000 0x3000>;
-> +
-> +			v2m0: v2m@0 {
-> +				compatible = "arm,gic-v2m-frame";
-> +				reg = <0x0 0xffd>;
-> +				msi-controller;
-> +			};
-> +
-> +			v2m1: v2m@1 {
-> +				compatible = "arm,gic-v2m-frame";
-> +				reg = <0x1000 0xffd>;
-> +				msi-controller;
-> +			};
-> +
-> +			v2m2: v2m@2 {
-> +				compatible = "arm,gic-v2m-frame";
-> +				reg = <0x2000 0xffd>;
-> +				msi-controller;
-> +			};
-> +		};
-> +
-> +		timer@b120000 {
-> +			compatible = "arm,armv7-timer-mem";
-> +			reg = <0xb120000 0x1000>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			clock-frequency = <24000000>;
-> +
-> +			frame@b120000 {
-> +				reg = <0xb121000 0x1000>,
-> +				      <0xb122000 0x1000>;
-> +				frame-number = <0>;
-> +				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +			};
-> +
-> +			frame@b123000 {
-> +				reg = <0xb123000 0x1000>;
-> +				frame-number = <1>;
-> +				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@b124000 {
-> +				reg = <0xb124000 0x1000>;
-> +				frame-number = <2>;
-> +				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@b125000 {
-> +				reg = <0xb125000 0x1000>;
-> +				frame-number = <3>;
-> +				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@b126000 {
-> +				reg = <0xb126000 0x1000>;
-> +				frame-number = <4>;
-> +				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@b127000 {
-> +				reg = <0xb127000 0x1000>;
-> +				frame-number = <5>;
-> +				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +
-> +			frame@b128000 {
-> +				reg = <0xb128000 0x1000>;
-> +				frame-number = <6>;
-> +				interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +				status = "disabled";
-> +			};
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <24000000>;
-
-Is this allowed in recent designs?
-
-> +	};
-> +};
+Use subject prefixes matching the subsystem (which you can get for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching).
 
 Best regards,
 Krzysztof
