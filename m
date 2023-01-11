@@ -2,100 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12120666306
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 19:49:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11EBE6666F3
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 00:07:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238714AbjAKStO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 13:49:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46766 "EHLO
+        id S235523AbjAKXHb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 18:07:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238273AbjAKStH (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 13:49:07 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06A513D5CF;
-        Wed, 11 Jan 2023 10:49:06 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id cx21-20020a17090afd9500b00228f2ecc6dbso735851pjb.0;
-        Wed, 11 Jan 2023 10:49:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQpX2pCKEZB/TV6PO+DqrOS3yGt33Jv2hfgaqn9dHgM=;
-        b=SWR+b0ckKOBEn0+JPmt7wsGK9bSIVtz7DkHs3Ksf9sbr0OgSyQHzGSbKFJH2inSOPb
-         C+7+ljdPvaP3J3k7/1xHq2UH6hpMTHhoNT2csYdW3IcpWyMHehs+WCYrk7QNE0K8WVFB
-         KMnb8V18wUX86LVrScigiNM91fkYZE7wcKu1yf9nrfkgTasj27NsVD52+XldFMTxgZSP
-         yA94LtONPVmdHjlJ+1T8lsWLDd3mLwis8jkxymKQvSYz9kjfnZiafJB1ph9aBlHVoYQj
-         QitvZMZ7GQVTozUFcu/2TGVX6YdMbmGxfEtJiqtwDrKkia/nt/sAqQdnjJR0vvEtaSjY
-         wfzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mQpX2pCKEZB/TV6PO+DqrOS3yGt33Jv2hfgaqn9dHgM=;
-        b=pcvymsoWK7WdGLqBZZhKgHwcdBKRa4ENly4DcuGDTcOoAeAfqHDMBRxsNt33Mg/rck
-         nO7Wx3QE//4Lx0TIEnaBtXDMzEQSppmRaap1Pc37nnvdrxSp3PTIUwDkmXPZtPyRwECx
-         0UEOhes6VXyEKtCKUWHlhwaTv3IdnAhIGBsirNaHyybCfy1R/+YhkcFskZ8gjt+1QPfA
-         jfqrlDF/IZVUMrpfDL0U27EVqap/Pe0veu/JkjXwMewvVsrwp5XiSNf0L7TzHSxhEjho
-         P1z0cvAeMJa536nsMBVYmafbnPOziiORssFF2gr5ubE9w6+SYr5DQAyFgPpCBKIBTyfb
-         Kpjg==
-X-Gm-Message-State: AFqh2kpvwHS4zLvkBovET65+sdbohpkXfXif0N47/TjwqPyIDdZbq2L0
-        coRTDyQzfRt3tJH0pLiH46o=
-X-Google-Smtp-Source: AMrXdXuRpKQAEoQjHbdABLMNcPK8rFSgVjOVM/PXcBXcuHKH0MAO24etOCIgJKHvypcJCK46oeolcQ==
-X-Received: by 2002:a17:903:181:b0:193:3154:5c86 with SMTP id z1-20020a170903018100b0019331545c86mr16645310plg.21.1673462945217;
-        Wed, 11 Jan 2023 10:49:05 -0800 (PST)
-Received: from google.com ([2620:15c:9d:2:3f43:2598:9756:e3b])
-        by smtp.gmail.com with ESMTPSA id im22-20020a170902bb1600b00186748fe6ccsm10470216plb.214.2023.01.11.10.49.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jan 2023 10:49:04 -0800 (PST)
-Date:   Wed, 11 Jan 2023 10:49:01 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] media: em28xx: Drop abuse of gpiolib
-Message-ID: <Y78EnUP1zCLVAR5k@google.com>
-References: <20230111135801.135824-1-linus.walleij@linaro.org>
+        with ESMTP id S233101AbjAKXHa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 18:07:30 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8F8133D43
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 15:07:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673478449; x=1705014449;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=T6iLA4FmSeaJ4wErfKZ8RtL0d1PKppaOOytrvN3umwQ=;
+  b=ZjpjxOn7vUBKhrN5QQvwllREgHx7AmBdFDgyraRKT6WKE/KgsdFYJV8L
+   5DDsPdPu3IfDbYRQofgzPToy9IoSpY5MwW4edNw66T2eVrnLcLhbSh1Zn
+   5pbGkuFBgYPeiQStSdLwksTKHw8puVnBFGPnyzdw/35pxdZ8v9mtohlCD
+   6MsUZmcSmO3HBZGE4g9eLZoZhdwJcQM8MCIv4hIxTpKLqxuvDAuda6A8B
+   GE7bNL+l0fI+D2j5G049j/deUx+I9+YNmQf1HI3QgCyEdjLXlBMWFw8fP
+   D3wHMrO92MYWmmKkHHSqeEjiXX28QtzcUtvX5laEhdyKUSbHmD1BzqLM4
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="303255113"
+X-IronPort-AV: E=Sophos;i="5.96,318,1665471600"; 
+   d="scan'208";a="303255113"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jan 2023 15:07:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="607557005"
+X-IronPort-AV: E=Sophos;i="5.96,318,1665471600"; 
+   d="scan'208";a="607557005"
+Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 11 Jan 2023 15:07:23 -0800
+Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pFkBm-0009b4-1U;
+        Wed, 11 Jan 2023 23:07:22 +0000
+Date:   Thu, 12 Jan 2023 07:06:31 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ e3d4a634954c8522a6f76e36b8246a1c5d5f9852
+Message-ID: <63bf40f7.Bvk0qiYnG8iodM+M%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230111135801.135824-1-linus.walleij@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: e3d4a634954c8522a6f76e36b8246a1c5d5f9852  gpio: pcf857x: Implement get_multiple/set_multiple methods
 
-On Wed, Jan 11, 2023 at 02:58:01PM +0100, Linus Walleij wrote:
-> The driver is issueing calls to the legacy gpio API from
-> <linux/gpio.h> to pull a LNA gpio line low or high.
-> 
-> The code as it stands can not work and does not make sense
-> since the GPIO number assigned to dvb->lna_gpio is only
-> in scope in this file and never assigned any valid GPIO
-> number, the driver has no way of asking for a proper GPIO
-> and will likely ask for GPIO 0, which will likely be wrong.
-> 
-> In one execution path dvb->lna_gpio is assigned some constants
-> to the local GPIO block which is not using gpiolib, adding
-> to the confusion.
+elapsed time: 728m
 
-The dvb->lna_gpio gets reassigned in the call to
+configs tested: 83
+configs skipped: 2
 
-	dvb->fe[0] = dvb_attach(cxd2820r_attach, ...);
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-which calls cxd2820r_attach() which ends up calling cxd2820r_probe()
-which creates a gpiochip and passes back the first gpio number. It all
-seems very fragile and will break if dependencies are not linked "just
-right" and I have no idea if this all still actually works...
+gcc tested configs:
+x86_64                            allnoconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+arc                                 defconfig
+alpha                               defconfig
+ia64                             allmodconfig
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+arc                  randconfig-r043-20230110
+s390                 randconfig-r044-20230110
+s390                                defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+s390                             allmodconfig
+riscv                randconfig-r042-20230110
+x86_64                        randconfig-a006
+powerpc                           allnoconfig
+s390                             allyesconfig
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+sh                               allmodconfig
+mips                             allyesconfig
+x86_64                        randconfig-a015
+powerpc                          allmodconfig
+i386                             allyesconfig
+i386                                defconfig
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+s390                       zfcpdump_defconfig
+arm                         lubbock_defconfig
+powerpc                     redwood_defconfig
+sh                          rsk7203_defconfig
+sh                            hp6xx_defconfig
+sh                           se7724_defconfig
+arm                            lart_defconfig
+mips                     decstation_defconfig
+mips                           ci20_defconfig
+powerpc                      pcm030_defconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+i386                          randconfig-a003
+i386                          randconfig-a001
+i386                          randconfig-a005
+xtensa                         virt_defconfig
+arc                        nsim_700_defconfig
+nios2                               defconfig
+arm                          gemini_defconfig
+loongarch                 loongson3_defconfig
+mips                         rt305x_defconfig
+microblaze                      mmu_defconfig
+arm                           tegra_defconfig
+parisc                           allyesconfig
+powerpc                      pasemi_defconfig
+mips                       bmips_be_defconfig
+loongarch                           defconfig
+loongarch                         allnoconfig
+loongarch                        allmodconfig
 
-Thanks.
+clang tested configs:
+hexagon              randconfig-r041-20230110
+x86_64                        randconfig-a001
+arm                  randconfig-r046-20230110
+x86_64                        randconfig-a003
+hexagon              randconfig-r045-20230110
+x86_64                        randconfig-a005
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                        randconfig-a012
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
 
 -- 
-Dmitry
+0-DAY CI Kernel Test Service
+https://01.org/lkp
