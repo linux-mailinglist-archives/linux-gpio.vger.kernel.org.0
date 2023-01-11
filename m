@@ -2,84 +2,55 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50DBF665814
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 10:51:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EBF76665834
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 10:55:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238400AbjAKJvG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 04:51:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46642 "EHLO
+        id S238661AbjAKJzB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 04:55:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238211AbjAKJtg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 04:49:36 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF307BE3F
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:48:28 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id bn26so14476822wrb.0
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:48:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=k4e/bFIClwcTBFeT4bkg7MJYA1/OHdeu+1QtASBuUpA=;
-        b=yCNGqgnirpDTpOmA9ZMnA71FVuItnXd5NTyRIB4RcKl6FpMMbIvgPc0qrOAIGF2BEo
-         ym28MJvtaDewPgjpX0+rodvcVLZelQLUjHsfesTrdhoSMyeOxcXV403RuEoFm8u2Q4tN
-         D4YK5Jgg9UYPITFDTxS5wLSjuR/jSo+zyB752B5jukBSo9xp4n62JrjqXRGNcNgs8gf/
-         Yo0APw7M8kL/sqx+CYOJ7FpvtoS88KUDkx78WYE+vh4W/E8G38ZkrPD4AkVB7LR4oIEH
-         dA0XsZ8o0NYzgdbCtDHWKeW8jAji4eDsQgsVskL/hdAWVLw5mpMXGBhpdHhVOlnXfEqJ
-         H3eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k4e/bFIClwcTBFeT4bkg7MJYA1/OHdeu+1QtASBuUpA=;
-        b=kQXIdGYVBAEFVvgClIF/3vC/gM7w6RZFrhGu70n9a/LHe2YJ7W6V0syi3ll6rZt5fs
-         B6W2cZc/FXgGr8gNfy8AIG4qN9EOV2joQBGArTEudm+7bQ/+r+03BI8ThQYkd94z7fYu
-         88FQyL/jNNtsJKWjEFUg1BFDCKVUdlEc3G4Mhh0bIQCtaviniDxDzld4BH3hgILqyrE3
-         htMmpbIeq8lSFRvWLlKasvI8CuJURuk6Efit86iPJK/c48u1ZWLk0YK44BsSjuXk7J5Y
-         rsIq+NG977deI1ehXRzb0pibd3hT2jJ5LA7U+yfwwG5XGkP0pYyOl5ev86t/8z0UzKkB
-         8gzA==
-X-Gm-Message-State: AFqh2ko2hvi5kVNM4t8GvchH4aeeuObFPd7pfVfEA+2Yr8auY5XzibbX
-        UK72C2/5cEvMTc41nT/QkZU9EA==
-X-Google-Smtp-Source: AMrXdXuAIqa4Yx/QQNnTYGq31pq8ZDb6GToJbV+OAf2qTRr/UFfcFhrwFymZTtQABI2yg3S+/SIoLg==
-X-Received: by 2002:a5d:680a:0:b0:2bd:c690:2e66 with SMTP id w10-20020a5d680a000000b002bdc6902e66mr595170wru.5.1673430507469;
-        Wed, 11 Jan 2023 01:48:27 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id t19-20020a0560001a5300b002362f6fcaf5sm13289650wry.48.2023.01.11.01.48.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 01:48:27 -0800 (PST)
-Message-ID: <16b185ae-99a7-61d9-b5a0-f3eb157ea420@linaro.org>
-Date:   Wed, 11 Jan 2023 10:48:23 +0100
+        with ESMTP id S232027AbjAKJyN (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 04:54:13 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6589ADFD9
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 01:51:50 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFXln-0000dV-R2; Wed, 11 Jan 2023 10:51:43 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFXlm-005GmE-Vb; Wed, 11 Jan 2023 10:51:42 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pFXlm-00BvnM-As; Wed, 11 Jan 2023 10:51:42 +0100
+Date:   Wed, 11 Jan 2023 10:51:42 +0100
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
+        linux-gpio@vger.kernel.org,
+        Angel Iglesias <ang.iglesiasg@gmail.com>,
+        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
+        Grant Likely <grant.likely@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 510/606] pinctrl: mcp23s08: Convert to i2c's .probe_new()
+Message-ID: <20230111095142.2i36vjytm6wthntl@pengutronix.de>
+References: <20221118224540.619276-1-uwe@kleine-koenig.org>
+ <20221118224540.619276-511-uwe@kleine-koenig.org>
+ <CACRpkdaViC8T5qFRW+=+rGST=nr9beQJqTP7d42OoYUnhPhqig@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 6/7] arm64: dts: Add ipq9574 SoC and AL02 board support
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     devi priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
- <20230110121316.24892-7-quic_devipriy@quicinc.com>
- <f6ef1834-b629-b76c-9cde-55af56320665@linaro.org>
-In-Reply-To: <f6ef1834-b629-b76c-9cde-55af56320665@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="hvyl6ihtxdsh2466"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaViC8T5qFRW+=+rGST=nr9beQJqTP7d42OoYUnhPhqig@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -88,21 +59,57 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 11/01/2023 10:44, Krzysztof Kozlowski wrote:
-> And here
-> 
->> +			clock-names = "xo", "iface", "core";
-> 
-> Does not look like you tested the bindings. Please run `make
-> dt_binding_check` (see
-> Documentation/devicetree/bindings/writing-schema.rst for instructions).
 
-Apologies, wrong template. Correct comment:
+--hvyl6ihtxdsh2466
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Does not look like you tested the DTS against bindings. Please run `make
-dtbs_check` (see Documentation/devicetree/bindings/writing-schema.rst
-for instructions).
+Hello Linus,
 
-Best regards,
-Krzysztof
+On Tue, Jan 10, 2023 at 09:01:04AM +0100, Linus Walleij wrote:
+> On Fri, Nov 18, 2022 at 11:48 PM Uwe Kleine-K=F6nig <uwe@kleine-koenig.or=
+g> wrote:
+>=20
+> > From: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> >
+> > .probe_new() doesn't get the i2c_device_id * parameter, so determine
+> > that explicitly in the probe function.
+> >
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+>=20
+> Patch applied!
 
+Thanks. Is there a reason you picked #510 but not #511 other than having
+missed there is a 2nd pinctrl patch in my series?
+
+If it's only that
+
+	b4 am -P 511 -s -l CACRpkdaViC8T5qFRW+=3D+rGST=3Dnr9beQJqTP7d42OoYUnhPhqig=
+@mail.gmail.com
+
+is your friend.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--hvyl6ihtxdsh2466
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmO+hqsACgkQwfwUeK3K
+7AlHnwf/TbGJWR2hDoaYrpK6CTPARmRCm5WNQtzAFNu2siduND/0E9n8wiML+9nR
+J9N+0xdzITnMueybK+FiEoWjLxkV3qtqRqT17lgSfa2fRHilvOJpt5AnAy/yCYyh
++qN9cNwmykvCIz8vOfK/3UxwCYqtwByyeY9aSYk9prC2xl3LvOXTnWyGr+unijSN
+axTWsK4hrqFfdSD6EN6C3Jv5SeZObZgNinEyavYRlqRaQh5ZM5SStgjfAnMgxFbK
+WNeWVIMpuY1VHpD7/QiemKWL0HdB7c/mJsV8SLrYSKi3vtgFz8NENfYhW0BdBMa5
+UXHv12L3pB5VA/eeV/bSDfFGvs210Q==
+=uONG
+-----END PGP SIGNATURE-----
+
+--hvyl6ihtxdsh2466--
