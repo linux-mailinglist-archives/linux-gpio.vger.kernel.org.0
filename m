@@ -2,37 +2,38 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54AA66660D2
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 17:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1581366610D
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 17:56:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239217AbjAKQmC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 11:42:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45536 "EHLO
+        id S234749AbjAKQzl (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 11:55:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233974AbjAKQlg (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 11:41:36 -0500
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529A41C93C;
-        Wed, 11 Jan 2023 08:40:26 -0800 (PST)
+        with ESMTP id S239211AbjAKQzf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 11:55:35 -0500
+Received: from relay10.mail.gandi.net (relay10.mail.gandi.net [217.70.178.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC50175BF;
+        Wed, 11 Jan 2023 08:55:32 -0800 (PST)
 Received: (Authenticated sender: herve.codina@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 42BD2C000D;
-        Wed, 11 Jan 2023 16:40:23 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 4B410240012;
+        Wed, 11 Jan 2023 16:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1673455225;
+        t=1673456131;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oGdtiEMVVLmjdlMhzVMr6gYLdJzA+jzOtls9FW8855g=;
-        b=bmCljGHAKJnjYOgao3zIAnf1JX2bGWcKm8KDBBfKhvUuexUL+GP4D1cLbWCfWqKv7wnoJY
-        5APlF6VCuTJUCGVpR7tGH+2eGPGyq4eu9mJ9o5PTDo0YWGA7JajFJ1VOFU+ihFzcX6emdM
-        grTDbC3NW45Hoymvdigaao6b2rgM03skXrgY97dmZRics5n+NnJFlQmiux0UTDIVLoOiZC
-        aMvQVWGI280RbKkqUXTq2n2G8toi3MOMZKpGFloB5PtqtC+Y4kOVYbHubyedANb0F7Acc1
-        xfiucowxIj7OEwgj67voWbr2h+TKolLLxpHYdnl/M6eibt7nLpHOPH05Y3oaeg==
-Date:   Wed, 11 Jan 2023 17:40:22 +0100
+        bh=K356X//TimxDBm/vu7Ro7u6rdfLfd6xkIrNtNicpCNE=;
+        b=ByQ5wL3IeFj399NTShVg/IImGzxVLKZJd2olKqJ4si/vUBIRkaEjZt5iMoI2bVDkz5J3ii
+        wMGNKfvWFqKk7QGF9T7TDEfzlYqwVvczMd1rR/1f1EBmLXn441l2E2Hi6jOZRPCx1CZU0T
+        H9TWDN5pEhRlYU0szSNK3GJasOaTWxKresd1ApcFdFOhfHJ/8q//WhRgnw2DzOc2qwU1wq
+        +0AS+mmLWgvjsH+D3v2j596N1glvMeDygDytD1ImTKiazYlx9BO1AXtEFeHpj5hj1sLhic
+        ggo5y93r+vHVgSoJZ6wu6fIPU58pTl4NHcnQbvdiHRNW3eaMnsiDmuhSw2x+2g==
+Date:   Wed, 11 Jan 2023 17:55:27 +0100
 From:   Herve Codina <herve.codina@bootlin.com>
-To:     Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -43,160 +44,163 @@ Cc:     Liam Girdwood <lgirdwood@gmail.com>,
         linux-gpio@vger.kernel.org,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
         Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/3] ASoC: codecs: Add support for the Renesas IDT821034
- codec
-Message-ID: <20230111174022.077f6a8c@bootlin.com>
-In-Reply-To: <Y77DKSdZf27qE+xl@sirena.org.uk>
+Subject: Re: [PATCH 1/3] dt-bindings: sound: Add Renesas IDT821034 codec
+Message-ID: <20230111175527.10289d16@bootlin.com>
+In-Reply-To: <c4497bde-c1e0-1efc-7a46-233495f7760b@linaro.org>
 References: <20230111134905.248305-1-herve.codina@bootlin.com>
-        <20230111134905.248305-3-herve.codina@bootlin.com>
-        <Y77DKSdZf27qE+xl@sirena.org.uk>
+        <20230111134905.248305-2-herve.codina@bootlin.com>
+        <c4497bde-c1e0-1efc-7a46-233495f7760b@linaro.org>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Mark,
+On Wed, 11 Jan 2023 17:28:11 +0100
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
 
-On Wed, 11 Jan 2023 14:09:45 +0000
-Mark Brown <broonie@kernel.org> wrote:
+> On 11/01/2023 14:49, Herve Codina wrote:
+> > The Renesas IDT821034 codec is a quad PCM codec with
+> > programmable gain.
+> >=20
+> > Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> > ---
+> >  .../bindings/sound/renesas,idt821034.yaml     | 97 +++++++++++++++++++
+> >  1 file changed, 97 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/renesas,idt=
+821034.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/sound/renesas,idt821034.=
+yaml b/Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
+> > new file mode 100644
+> > index 000000000000..2c29b770e3f7
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/renesas,idt821034.yaml
+> > @@ -0,0 +1,97 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/sound/renesas,idt821034.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Renesas IDT821034 codec device
+> > +
+> > +maintainers:
+> > +  - Herve Codina <herve.codina@bootlin.com>
+> > +
+> > +description: |
+> > +  The IDT821034 codec is a four channel PCM codec with onchip filters =
+and
+> > +  programmable gain setting.
+> > +
+> > +  The time-slots used by the codec must be set and so, the properties
+> > +  'dai-tdm-slot-num', 'dai-tdm-slot-width', 'dai-tdm-slot-tx-mask' and
+> > +  'dai-tdm-slot-rx-mask' must be present in the ALSA sound card node f=
+or
+> > +  sub-nodes that involve the codec. The codec uses one 8bit time-slot =
+per
+> > +  channel.
+> > +  'dai-tdm-tdm-slot-with' must be set to 8.
+> > +
+> > +  The IDT821034 codec also supports 5 gpios (SLIC signals) per channel.
+> > +
+> > +allOf:
+> > +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> > +  - $ref: /schemas/gpio/gpio.yaml# =20
+>=20
+> This one is never needed. Drop.
 
-> On Wed, Jan 11, 2023 at 02:49:04PM +0100, Herve Codina wrote:
+Ok, I will drop it in v2.
+
 >=20
-> > +++ b/sound/soc/codecs/idt821034.c
-> > @@ -0,0 +1,1234 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * IDT821034 ALSA SoC driver =20
+> > +  - $ref: dai-common.yaml#
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: renesas,idt821034
+> > +
+> > +  reg:
+> > +    description:
+> > +      SPI device address.
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    maximum: 8192000
+> > +
+> > +  spi-cpha: true
+> > +
+> > +  '#sound-dai-cells':
+> > +    const: 0
+> > +
+> > +  '#gpio-cells':
+> > +    const: 2
+> > +
+> > +  gpio-controller: true
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - spi-cpha
+> > +  - '#sound-dai-cells'
+> > +  - gpio-controller
+> > +  - '#gpio-cells'
+> > +
+> > +additionalProperties: false =20
 >=20
-> Please make the entire comment a C++ one so things look more
-> intentional.
+> This should be rather unevaluatedProperties: false, so other properties
+> from spi-props and dai-common will work.
 
 Ok, I will change in v2.
 
 >=20
-> > +static int idt821034_8bit_write(struct idt821034 *idt821034, u8 val)
-> > +{
-> > +	struct spi_transfer xfer[] =3D {
-> > +		{
-> > +			.tx_buf =3D &idt821034->spi_tx_buf,
-> > +			.len =3D 1,
-> > +		}, {
-> > +			.cs_off =3D 1,
-> > +			.tx_buf =3D &idt821034->spi_tx_buf,
-> > +			.len =3D 1,
-> > +		}
-> > +	};
-> > +	int ret;
 > > +
-> > +	idt821034->spi_tx_buf =3D val;
-> > +
-> > +	dev_vdbg(&idt821034->spi->dev, "spi xfer wr 0x%x\n", val);
-> > +
-> > +	ret =3D spi_sync_transfer(idt821034->spi, xfer, 2); =20
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/gpio/gpio.h>
+> > +    spi0 {
+> > +        #address-cells =3D <1>;
+> > +        #size-cells =3D <0>;
+> > +        codec: idt821034@0 { =20
 >=20
-> Why is this open coding register I/O rather than using regmap?
+> Node names should be generic, so "audio-codec"
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-device=
+tree-basics.html#generic-names-recommendation
 >=20
-> > +	conf =3D 0x80 | idt821034->cache.codec_conf | IDT821034_CONF_CHANNEL(=
-ch); =20
+> > +            compatible =3D "renesas,idt821034";
+> > +            reg =3D <0>;
+> > +            spi-max-frequency =3D <8192000>;
+> > +            spi-cpha;
+> > +            #sound-dai-cells =3D <0>;
+> > +            gpio-controller;
+> > +            #gpio-cells =3D <2>;
+> > +        };
+> > +    };
+> > +    sound {
+> > +        compatible =3D "simple-audio-card"; =20
 >=20
-> regmap provides cache support too.
+> Drop sound{} node. Not relevant to the case here and it's the same in
+> every case of audio codec... unless something here is specific. But even
+> the dai-tdm properties are sound card specific.
+
+Indeed, I wanted to show the dai-tdm properties.
+But ok, I will drop the node.
+
 >=20
-> > +static int idt821034_reg_write_gain(struct idt821034 *idt821034,
-> > +				    unsigned int reg, unsigned int val)
-> > +{
-> > +	u16 gain_val;
-> > +	u8 gain_type;
-> > +	u8 ch;
-> > +
-> > +	ch =3D IDT821034_REGMAP_ADDR_GET_CH(reg);
-> > +	gain_type =3D IDT821034_REGMAP_ADDR_IS_DIR_OUT(reg) ?
-> > +			IDT821034_GAIN_RX : IDT821034_GAIN_TX;
-> > +	gain_val =3D (val & 0x01) ? 0 : val >> 1;
-> > +
-> > +	return idt821034_set_gain_channel(idt821034, ch, gain_type, gain_val);
-> > +} =20
 >=20
-> So if the low bit of the gain is zero we just discard the value?  This
-> really needs some comments...
+> Best regards,
+> Krzysztof
 >=20
-> > +static int idt821034_reg_write(void *context, unsigned int reg, unsign=
-ed int val)
-> > +{
-> > +	struct idt821034 *idt821034 =3D context;
-> > +
-> > +	dev_dbg(&idt821034->spi->dev, "reg_write(0x%x, 0x%x)\n", reg, val);
-> > +
-> > +	switch (IDT821034_REGMAP_ADDR_GET_TYPE(reg)) {
-> > +	case IDT821034_REGMAP_ADDR_TYPE_GBLCONF:
-> > +		return idt821034_reg_write_gblconf(idt821034, reg, val);
-> > + =20
->=20
-> Oh, so there is some regmap stuff but it's not actually a regmap and is
-> instead some virtual thing which rewrites all the values with no
-> comments or anything explaining what's going on....  this all feels very
-> confused.  I would expect the regmap usage to be such that the regmap
-> represents the physical device, any rewriting of the values or anything
-> like that should be done on top of the regmap rather than underneath it.
->=20
-> Without knowing why things are written in this way or what it's trying
-> to accomplish it's hard to comment in detail on what specifically should
-> be done.
 
-Yes, I use regmap to ease the integration of controls and use the
-already defined controls macros but the device registers do not fit
-well with regmap.
-
-The device registers are not defined as simple as address/value pairs.
-Accesses contains one or more bytes and the signification of the
-data (and bytes) depends on the first bits.
-- 0b10xxxxxx means 'Control register' with some data as xxxxxx
-  and one extra byte
-- 0b1101yyyy means 'Configuration register, slic mode' with
-  some other data as yyyy and one extra byte
-- 0b1100zzzz means 'Configuration register, gain mode' with
-  some other data as zzzz and two extra bytes
-
-The datasheet is available at
-  https://www.renesas.com/us/en/document/dst/821034-data-sheet
-
-This does not fit well for a regmap usage.
-
-So I wrote some low-level access functions to handle this
-protocol and use some kind of "virtual registers" to map
-this protocol to regmap and use them in controls.
-
-The "virtual registers" were defined to match what I need.
-
-For instance, idt821034_reg_write_gain() is the regmap
-write access for one of the gain "virtual register".
-The mapping of this virtual register is:
-   |15          1|0|
-   | Gain value  |M|
-With M for Mute flag.
-
-The gain value is not discarded as it is available in the
-regmap cache.
-For the low-level access, I write the 'Gain Value' or 0 if
-the mute flag was set.
-
-In some low level accesses, I need save some data (cache) in
-order to be able to use them later for an other access.
-For instance when a channel is powered-on, a timeslot
-need to be present in the bytes sent.
-
-Of course, I can describe all of these in details.
-Where do you want to have this information ? All at the top
-of the file ? Each part (low-level, virtual regs, ...) at
-the beginning of each part in the code ?
+Thanks for the review.
 
 Best regards,
 Herv=C3=A9
