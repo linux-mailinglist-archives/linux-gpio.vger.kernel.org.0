@@ -2,340 +2,108 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA5C26655E6
-	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 09:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A3ED66560E
+	for <lists+linux-gpio@lfdr.de>; Wed, 11 Jan 2023 09:28:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231587AbjAKIVy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 11 Jan 2023 03:21:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
+        id S229931AbjAKI2M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 11 Jan 2023 03:28:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbjAKIVu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 03:21:50 -0500
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFDB2738
-        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 00:21:48 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed10:d992:2e67:38c1:3ab7])
-        by andre.telenet-ops.be with bizsmtp
-        id 7LMm2900722nSWd01LMmeY; Wed, 11 Jan 2023 09:21:46 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1pFWMi-001YSM-JV;
-        Wed, 11 Jan 2023 09:21:46 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1pFWMk-003Bm7-Dz;
-        Wed, 11 Jan 2023 09:21:46 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] pinctrl: renesas: r8a77950: Add VIN[45] pins, groups, and functions
-Date:   Wed, 11 Jan 2023 09:21:38 +0100
-Message-Id: <92c9b3b535d27ea7fcc0aa73d298783d710c214a.1673425207.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S231997AbjAKI1s (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 11 Jan 2023 03:27:48 -0500
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A237564DB
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 00:27:47 -0800 (PST)
+Received: by mail-vk1-xa32.google.com with SMTP id l3so3760520vkk.11
+        for <linux-gpio@vger.kernel.org>; Wed, 11 Jan 2023 00:27:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sitzt3qDu3UerD4XtTRxHC+kbzZTJZUZxdebSgKMqe0=;
+        b=i8f7jG0hpzMhKbLF1oT6qJrEThMov7KHe7n4FR3k6uC1mUoqzOoXimj1BzRYlozvr1
+         WX54ek5XB/dUQjlFwC+cSLRwCdL8A2LZka+RBgVFwguNkdz70lNAAuKeoOOMlmPwsiOG
+         6ulzYWO7yqZ+UchPGzPyrsgfXx9LzdJeghLUrwEbT4bC1tLBs3FOtVMPBrPuM2jRTPRS
+         gXzDx+vdomJZDof3lXt7JnTtVIgF+WIJCwi2dbze+FI11NtXpqJPPNF+kZUrL251aB7G
+         FNJo92LrKruEf+ltzeqV1GLQOCFHiyXlOobMaIIT/yqtes0s/Wjkz7PQpn3km6+MEnMu
+         q/Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Sitzt3qDu3UerD4XtTRxHC+kbzZTJZUZxdebSgKMqe0=;
+        b=V0oxiPY+GkL2dIJ/rpqwDuulTctkWI3D2rUkgJY8urKPZz4FM8UPgWUpEITC9WJT7+
+         vY1fmJgzOXR83LE2dTuqLAgpoVo+Nvib6wSn/Nd7FmJ2GdaknoF7UabxTB4BupNzd9OR
+         6dGiS9tE5y6wJ3rVkImEevrMsJ9oASjkdLBmliskLAqzQt7C5bpImlBwg0LNNqTp7l6k
+         IPfspeIcAY6AVSYw3f/EACXLwg2/to41WprBNfR8IVuFSL/veeqaFwCSz47hYWiB+TtU
+         tkaTcOhsbULINp09jPBTW/+quJFQA0A8v7l7rYdWcCCwAuZWkK6cnHy/q1ac+OEP6CcG
+         6sWg==
+X-Gm-Message-State: AFqh2koZ7HryPrMMHhVAP+Qj0rk6i96NvSSZA+1TkRvmkl0Hgll0xmrl
+        C0TMd/kWXweWFcB9g/94IOXFewnrKQi6Nct0KCa3fg==
+X-Google-Smtp-Source: AMrXdXtHcZ3rG3XrP62JWB3S9n3i34dZkVMnLHxnoTdTXjzpge6D/tj/IwktwxqPXplNQ2vVb4IB0ihhxoDjAYLyby4=
+X-Received: by 2002:a05:6122:d18:b0:3bc:c8fa:a0b6 with SMTP id
+ az24-20020a0561220d1800b003bcc8faa0b6mr9075784vkb.10.1673425666776; Wed, 11
+ Jan 2023 00:27:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <Yhe0pCpfeCpyfPWg@orome> <20220816102725.14708-1-pshete@nvidia.com>
+ <CACRpkdbMnRNTLcCtqNjKpxWxMbAXLssnuBEuNqAfgDfj3XVfXQ@mail.gmail.com>
+ <14dbbfdf-c096-439e-41c9-71e083138560@nvidia.com> <CACRpkdaBY31f6R3TTD-5iRDdKV46tY5GK-Xvd=exwZ4HeCTYAw@mail.gmail.com>
+In-Reply-To: <CACRpkdaBY31f6R3TTD-5iRDdKV46tY5GK-Xvd=exwZ4HeCTYAw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Wed, 11 Jan 2023 09:27:35 +0100
+Message-ID: <CAMRc=MefrQsyQYK3SwPFTQBkX47fkf2mdz3Dy+o+Gc-WNwJSTw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: tegra186: add Tegra234 PMC compatible in GPIO driver
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Prathamesh Shete <pshete@nvidia.com>,
+        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+        smangipudi@nvidia.com, Manish Bhardwaj <mbhardwaj@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add pins, groups, and functions for channels 4 and 5 of the Video Input
-Module (VIN) on the Renesas R-Car H3 ES1.x (R8A77950) SoC, based on
-the version for the R-Car H3 ES2.0+ (R8A77951) SoC.
+On Tue, Jan 10, 2023 at 9:24 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Jan 9, 2023 at 9:37 PM Jon Hunter <jonathanh@nvidia.com> wrote:
+> > On 08/09/2022 14:21, Linus Walleij wrote:
+> > > On Tue, Aug 16, 2022 at 12:27 PM Prathamesh Shete <pshete@nvidia.com> wrote:
+> > >
+> > >> Using this patch we are adding PMC compatible string for
+> > >> Tegra234 in GPIO driver so the IRQ hierarchy can be set.
+> > >>
+> > >> Signed-off-by: Manish Bhardwaj <mbhardwaj@nvidia.com>
+> > >> Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+> > >
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > >
+> > > It also has Thierry's ACK from v1.
+> > >
+> > > Yours,
+> > > Linus Walleij
+> >
+> >
+> > I don't see this one in -next. Are you able to pick this up?
+> >
+> > Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> > Tested-by: Jon Hunter <jonathanh@nvidia.com>
+>
+> Bartosz is queueing GPIO patches right now, but the mail has the
+> wrong address for him.
+>
+> I put the new mail address in To, so he can pick it up.
+>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Compile-tested only.
-To be queued in renesas-pinctrl for v6.3.
----
- drivers/pinctrl/renesas/pfc-r8a77950.c | 244 +++++++++++++++++++++++++
- 1 file changed, 244 insertions(+)
+Come on, my address changed 18 months ago, re-run get_maintainers.pl
+from time to time. :)
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a77950.c b/drivers/pinctrl/renesas/pfc-r8a77950.c
-index 4c543ec3a8639393..cc66c6de045c5299 100644
---- a/drivers/pinctrl/renesas/pfc-r8a77950.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a77950.c
-@@ -3820,6 +3820,186 @@ static const unsigned int usb31_mux[] = {
- 	USB31_PWEN_MARK, USB31_OVC_MARK,
- };
- 
-+/* - VIN4 ------------------------------------------------------------------- */
-+static const unsigned int vin4_data18_a_pins[] = {
-+	RCAR_GP_PIN(0, 10), RCAR_GP_PIN(0, 11),
-+	RCAR_GP_PIN(0, 12), RCAR_GP_PIN(0, 13),
-+	RCAR_GP_PIN(0, 14), RCAR_GP_PIN(0, 15),
-+	RCAR_GP_PIN(1, 2), RCAR_GP_PIN(1, 3),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+	RCAR_GP_PIN(0, 2), RCAR_GP_PIN(0, 3),
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7),
-+};
-+static const unsigned int vin4_data18_a_mux[] = {
-+	VI4_DATA2_A_MARK, VI4_DATA3_A_MARK,
-+	VI4_DATA4_A_MARK, VI4_DATA5_A_MARK,
-+	VI4_DATA6_A_MARK, VI4_DATA7_A_MARK,
-+	VI4_DATA10_MARK, VI4_DATA11_MARK,
-+	VI4_DATA12_MARK, VI4_DATA13_MARK,
-+	VI4_DATA14_MARK, VI4_DATA15_MARK,
-+	VI4_DATA18_MARK, VI4_DATA19_MARK,
-+	VI4_DATA20_MARK, VI4_DATA21_MARK,
-+	VI4_DATA22_MARK, VI4_DATA23_MARK,
-+};
-+static const unsigned int vin4_data18_b_pins[] = {
-+	RCAR_GP_PIN(2, 2), RCAR_GP_PIN(2, 3),
-+	RCAR_GP_PIN(2, 4), RCAR_GP_PIN(2, 5),
-+	RCAR_GP_PIN(2, 6), RCAR_GP_PIN(2, 7),
-+	RCAR_GP_PIN(1, 2), RCAR_GP_PIN(1, 3),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+	RCAR_GP_PIN(0, 2), RCAR_GP_PIN(0, 3),
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7),
-+};
-+static const unsigned int vin4_data18_b_mux[] = {
-+	VI4_DATA2_B_MARK, VI4_DATA3_B_MARK,
-+	VI4_DATA4_B_MARK, VI4_DATA5_B_MARK,
-+	VI4_DATA6_B_MARK, VI4_DATA7_B_MARK,
-+	VI4_DATA10_MARK, VI4_DATA11_MARK,
-+	VI4_DATA12_MARK, VI4_DATA13_MARK,
-+	VI4_DATA14_MARK, VI4_DATA15_MARK,
-+	VI4_DATA18_MARK, VI4_DATA19_MARK,
-+	VI4_DATA20_MARK, VI4_DATA21_MARK,
-+	VI4_DATA22_MARK, VI4_DATA23_MARK,
-+};
-+static const unsigned int vin4_data_a_pins[] = {
-+	RCAR_GP_PIN(0, 8), RCAR_GP_PIN(0, 9),
-+	RCAR_GP_PIN(0, 10), RCAR_GP_PIN(0, 11),
-+	RCAR_GP_PIN(0, 12), RCAR_GP_PIN(0, 13),
-+	RCAR_GP_PIN(0, 14), RCAR_GP_PIN(0, 15),
-+	RCAR_GP_PIN(1, 0), RCAR_GP_PIN(1, 1),
-+	RCAR_GP_PIN(1, 2), RCAR_GP_PIN(1, 3),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+	RCAR_GP_PIN(0, 0), RCAR_GP_PIN(0, 1),
-+	RCAR_GP_PIN(0, 2), RCAR_GP_PIN(0, 3),
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7),
-+};
-+static const unsigned int vin4_data_a_mux[] = {
-+	VI4_DATA0_A_MARK, VI4_DATA1_A_MARK,
-+	VI4_DATA2_A_MARK, VI4_DATA3_A_MARK,
-+	VI4_DATA4_A_MARK, VI4_DATA5_A_MARK,
-+	VI4_DATA6_A_MARK, VI4_DATA7_A_MARK,
-+	VI4_DATA8_MARK,  VI4_DATA9_MARK,
-+	VI4_DATA10_MARK, VI4_DATA11_MARK,
-+	VI4_DATA12_MARK, VI4_DATA13_MARK,
-+	VI4_DATA14_MARK, VI4_DATA15_MARK,
-+	VI4_DATA16_MARK, VI4_DATA17_MARK,
-+	VI4_DATA18_MARK, VI4_DATA19_MARK,
-+	VI4_DATA20_MARK, VI4_DATA21_MARK,
-+	VI4_DATA22_MARK, VI4_DATA23_MARK,
-+};
-+static const unsigned int vin4_data_b_pins[] = {
-+	RCAR_GP_PIN(2, 0), RCAR_GP_PIN(2, 1),
-+	RCAR_GP_PIN(2, 2), RCAR_GP_PIN(2, 3),
-+	RCAR_GP_PIN(2, 4), RCAR_GP_PIN(2, 5),
-+	RCAR_GP_PIN(2, 6), RCAR_GP_PIN(2, 7),
-+	RCAR_GP_PIN(1, 0), RCAR_GP_PIN(1, 1),
-+	RCAR_GP_PIN(1, 2), RCAR_GP_PIN(1, 3),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+	RCAR_GP_PIN(0, 0), RCAR_GP_PIN(0, 1),
-+	RCAR_GP_PIN(0, 2), RCAR_GP_PIN(0, 3),
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7),
-+};
-+static const unsigned int vin4_data_b_mux[] = {
-+	VI4_DATA0_B_MARK, VI4_DATA1_B_MARK,
-+	VI4_DATA2_B_MARK, VI4_DATA3_B_MARK,
-+	VI4_DATA4_B_MARK, VI4_DATA5_B_MARK,
-+	VI4_DATA6_B_MARK, VI4_DATA7_B_MARK,
-+	VI4_DATA8_MARK,  VI4_DATA9_MARK,
-+	VI4_DATA10_MARK, VI4_DATA11_MARK,
-+	VI4_DATA12_MARK, VI4_DATA13_MARK,
-+	VI4_DATA14_MARK, VI4_DATA15_MARK,
-+	VI4_DATA16_MARK, VI4_DATA17_MARK,
-+	VI4_DATA18_MARK, VI4_DATA19_MARK,
-+	VI4_DATA20_MARK, VI4_DATA21_MARK,
-+	VI4_DATA22_MARK, VI4_DATA23_MARK,
-+};
-+static const unsigned int vin4_sync_pins[] = {
-+	/* HSYNC#, VSYNC# */
-+	RCAR_GP_PIN(1, 18), RCAR_GP_PIN(1, 17),
-+};
-+static const unsigned int vin4_sync_mux[] = {
-+	VI4_HSYNC_N_MARK, VI4_VSYNC_N_MARK,
-+};
-+static const unsigned int vin4_field_pins[] = {
-+	/* FIELD */
-+	RCAR_GP_PIN(1, 16),
-+};
-+static const unsigned int vin4_field_mux[] = {
-+	VI4_FIELD_MARK,
-+};
-+static const unsigned int vin4_clkenb_pins[] = {
-+	/* CLKENB */
-+	RCAR_GP_PIN(1, 19),
-+};
-+static const unsigned int vin4_clkenb_mux[] = {
-+	VI4_CLKENB_MARK,
-+};
-+static const unsigned int vin4_clk_pins[] = {
-+	/* CLK */
-+	RCAR_GP_PIN(1, 27),
-+};
-+static const unsigned int vin4_clk_mux[] = {
-+	VI4_CLK_MARK,
-+};
-+
-+/* - VIN5 ------------------------------------------------------------------- */
-+static const unsigned int vin5_data_pins[] = {
-+	RCAR_GP_PIN(0, 0), RCAR_GP_PIN(0, 1),
-+	RCAR_GP_PIN(0, 2), RCAR_GP_PIN(0, 3),
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+	RCAR_GP_PIN(0, 6), RCAR_GP_PIN(0, 7),
-+	RCAR_GP_PIN(1, 12), RCAR_GP_PIN(1, 13),
-+	RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 15),
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+	RCAR_GP_PIN(1, 6), RCAR_GP_PIN(1, 7),
-+};
-+static const unsigned int vin5_data_mux[] = {
-+	VI5_DATA0_MARK, VI5_DATA1_MARK,
-+	VI5_DATA2_MARK, VI5_DATA3_MARK,
-+	VI5_DATA4_MARK, VI5_DATA5_MARK,
-+	VI5_DATA6_MARK, VI5_DATA7_MARK,
-+	VI5_DATA8_MARK,  VI5_DATA9_MARK,
-+	VI5_DATA10_MARK, VI5_DATA11_MARK,
-+	VI5_DATA12_MARK, VI5_DATA13_MARK,
-+	VI5_DATA14_MARK, VI5_DATA15_MARK,
-+};
-+static const unsigned int vin5_sync_pins[] = {
-+	/* HSYNC#, VSYNC# */
-+	RCAR_GP_PIN(1, 10), RCAR_GP_PIN(1, 9),
-+};
-+static const unsigned int vin5_sync_mux[] = {
-+	VI5_HSYNC_N_MARK, VI5_VSYNC_N_MARK,
-+};
-+static const unsigned int vin5_field_pins[] = {
-+	RCAR_GP_PIN(1, 11),
-+};
-+static const unsigned int vin5_field_mux[] = {
-+	/* FIELD */
-+	VI5_FIELD_MARK,
-+};
-+static const unsigned int vin5_clkenb_pins[] = {
-+	RCAR_GP_PIN(1, 20),
-+};
-+static const unsigned int vin5_clkenb_mux[] = {
-+	/* CLKENB */
-+	VI5_CLKENB_MARK,
-+};
-+static const unsigned int vin5_clk_pins[] = {
-+	RCAR_GP_PIN(1, 21),
-+};
-+static const unsigned int vin5_clk_mux[] = {
-+	/* CLK */
-+	VI5_CLK_MARK,
-+};
-+
- static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(audio_clk_a_a),
- 	SH_PFC_PIN_GROUP(audio_clk_a_b),
-@@ -4141,6 +4321,34 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(usb2),
- 	SH_PFC_PIN_GROUP(usb30),
- 	SH_PFC_PIN_GROUP(usb31),
-+	BUS_DATA_PIN_GROUP(vin4_data, 8, _a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 10, _a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 12, _a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 16, _a),
-+	SH_PFC_PIN_GROUP(vin4_data18_a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 20, _a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 24, _a),
-+	BUS_DATA_PIN_GROUP(vin4_data, 8, _b),
-+	BUS_DATA_PIN_GROUP(vin4_data, 10, _b),
-+	BUS_DATA_PIN_GROUP(vin4_data, 12, _b),
-+	BUS_DATA_PIN_GROUP(vin4_data, 16, _b),
-+	SH_PFC_PIN_GROUP(vin4_data18_b),
-+	BUS_DATA_PIN_GROUP(vin4_data, 20, _b),
-+	BUS_DATA_PIN_GROUP(vin4_data, 24, _b),
-+	SH_PFC_PIN_GROUP_SUBSET(vin4_g8, vin4_data_a, 8, 8),
-+	SH_PFC_PIN_GROUP(vin4_sync),
-+	SH_PFC_PIN_GROUP(vin4_field),
-+	SH_PFC_PIN_GROUP(vin4_clkenb),
-+	SH_PFC_PIN_GROUP(vin4_clk),
-+	BUS_DATA_PIN_GROUP(vin5_data, 8),
-+	BUS_DATA_PIN_GROUP(vin5_data, 10),
-+	BUS_DATA_PIN_GROUP(vin5_data, 12),
-+	BUS_DATA_PIN_GROUP(vin5_data, 16),
-+	SH_PFC_PIN_GROUP_SUBSET(vin5_high8, vin5_data, 8, 8),
-+	SH_PFC_PIN_GROUP(vin5_sync),
-+	SH_PFC_PIN_GROUP(vin5_field),
-+	SH_PFC_PIN_GROUP(vin5_clkenb),
-+	SH_PFC_PIN_GROUP(vin5_clk),
- };
- 
- static const char * const audio_clk_groups[] = {
-@@ -4637,6 +4845,40 @@ static const char * const usb31_groups[] = {
- 	"usb31",
- };
- 
-+static const char * const vin4_groups[] = {
-+	"vin4_data8_a",
-+	"vin4_data10_a",
-+	"vin4_data12_a",
-+	"vin4_data16_a",
-+	"vin4_data18_a",
-+	"vin4_data20_a",
-+	"vin4_data24_a",
-+	"vin4_data8_b",
-+	"vin4_data10_b",
-+	"vin4_data12_b",
-+	"vin4_data16_b",
-+	"vin4_data18_b",
-+	"vin4_data20_b",
-+	"vin4_data24_b",
-+	"vin4_g8",
-+	"vin4_sync",
-+	"vin4_field",
-+	"vin4_clkenb",
-+	"vin4_clk",
-+};
-+
-+static const char * const vin5_groups[] = {
-+	"vin5_data8",
-+	"vin5_data10",
-+	"vin5_data12",
-+	"vin5_data16",
-+	"vin5_high8",
-+	"vin5_sync",
-+	"vin5_field",
-+	"vin5_clkenb",
-+	"vin5_clk",
-+};
-+
- static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(audio_clk),
- 	SH_PFC_FUNCTION(avb),
-@@ -4696,6 +4938,8 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(usb2),
- 	SH_PFC_FUNCTION(usb30),
- 	SH_PFC_FUNCTION(usb31),
-+	SH_PFC_FUNCTION(vin4),
-+	SH_PFC_FUNCTION(vin5),
- };
- 
- static const struct pinmux_cfg_reg pinmux_config_regs[] = {
--- 
-2.34.1
+Now applied, thanks!
 
+Bart
