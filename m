@@ -2,56 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E46F667EB2
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 20:07:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5024667EBB
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 20:09:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240259AbjALTHz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Jan 2023 14:07:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37110 "EHLO
+        id S232421AbjALTJR (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Jan 2023 14:09:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238687AbjALTGv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 14:06:51 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEE265A7;
-        Thu, 12 Jan 2023 10:48:57 -0800 (PST)
+        with ESMTP id S232727AbjALTIs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 14:08:48 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F216445;
+        Thu, 12 Jan 2023 10:50:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673549337; x=1705085337;
+  t=1673549454; x=1705085454;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=9ZqpR6hozABIVRF8f5BclL/5aXMMC3qUWYKR8P4jke0=;
-  b=dFyr17eVhAHEMTovZiRdnosj6a7QP34deyTCofi3unlkLICa6IQLA4b3
-   PdgBUT9y42CFa48prP64zhVq2HWqkHRHY6VI/lJWZUMgDradJPfTleNcg
-   ursWJau7oTsI8eIai0tLd+F0AAldtfVcnhpy09CMThTAPsn3VGZaQfwI4
-   pXX2PMy3Vwo/CUyd5SRSBnVSu/arfNdP5CgiVdcLuVzhjgRH8tWOnzDQ0
-   f9zi0HMe4e4jKQzhqFPFABMeGercZy5sCDUH8vZ2lVlkfIEVxLTMnwPjQ
-   wyqz54s/hjxZ3DXziOu6j1CJLIuwsNZhdn4YYCmgmnhSlToRt69w6NhCh
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="323853959"
+  bh=LawLnTNYcPdrqJ0ONp98furwA0CqtsHwm67K1q+IPrQ=;
+  b=GveMztBdBzfqFrbe2a323gMam9hx9KDV+jeaDERjXbfNy1egswGc9kcZ
+   NBUlLUFuLbfh6ckUUPHjKuWb3VKfiBhLfXfpqXiLlLof/1kdE7kPlSVyd
+   4aNnxtGpQUIGsV1ONqMNzXqRpvS0GRYYwasIkFjzObDmHJ0jgnT0i+UsR
+   2+HFjHe2W39OrkzbYt7i/PrvZB0HOAGkBaP25CjYkugaqtl5E2CXyfCdf
+   oPThFCEMNlTYcdCW6JPmVAWaAB5FzUYpo9ZFjsbrg/q3E9hB+bIghlW8H
+   kQlvAe3dVZQKsqbCCS9KY2OtHkVQptFi9yyrxt3ZFKErqdirlrBQZdM6G
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="321491083"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="323853959"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 10:48:57 -0800
+   d="scan'208";a="321491083"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 10:50:53 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="726429625"
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="659928630"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="726429625"
+   d="scan'208";a="659928630"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jan 2023 10:48:55 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 12 Jan 2023 10:50:51 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 012BA14B; Thu, 12 Jan 2023 20:49:28 +0200 (EET)
+        id D1CA314B; Thu, 12 Jan 2023 20:51:25 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Srinivasa Rao Mandadapu <quic_srivasam@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+To:     Wells Lu <wellslutw@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Cc:     Bjorn Andersson <andersson@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+Cc:     Dvorkin Dmitry <dvorkin@tibbo.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] pinctrl: qcom: lpass-lpi: Remove duplicate assignment of of_gpio_n_cells
-Date:   Thu, 12 Jan 2023 20:49:23 +0200
-Message-Id: <20230112184923.80442-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: sunplus: sppctl: Remove duplicate assignment of of_gpio_n_cells
+Date:   Thu, 12 Jan 2023 20:51:22 +0200
+Message-Id: <20230112185122.45216-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -69,21 +67,21 @@ not defined. No need to assign it explicitly in the driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/qcom/pinctrl-lpass-lpi.c | 1 -
+ drivers/pinctrl/sunplus/sppctl.c | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-index 3dc670faa59e..87920257bb73 100644
---- a/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-+++ b/drivers/pinctrl/qcom/pinctrl-lpass-lpi.c
-@@ -430,7 +430,6 @@ int lpi_pinctrl_probe(struct platform_device *pdev)
- 	pctrl->chip.base = -1;
- 	pctrl->chip.ngpio = data->npins;
- 	pctrl->chip.label = dev_name(dev);
--	pctrl->chip.of_gpio_n_cells = 2;
- 	pctrl->chip.can_sleep = false;
+diff --git a/drivers/pinctrl/sunplus/sppctl.c b/drivers/pinctrl/sunplus/sppctl.c
+index 9c57bccc4bda..2ed0591fb51d 100644
+--- a/drivers/pinctrl/sunplus/sppctl.c
++++ b/drivers/pinctrl/sunplus/sppctl.c
+@@ -553,7 +553,6 @@ static int sppctl_gpio_new(struct platform_device *pdev, struct sppctl_pdata *pc
+ 	gchip->base             = -1;
+ 	gchip->ngpio            = sppctl_gpio_list_sz;
+ 	gchip->names            = sppctl_gpio_list_s;
+-	gchip->of_gpio_n_cells  = 2;
  
- 	mutex_init(&pctrl->slew_access_lock);
+ 	pctl->pctl_grange.npins = gchip->ngpio;
+ 	pctl->pctl_grange.name  = gchip->label;
 -- 
 2.39.0
 
