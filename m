@@ -2,56 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CBDD667BFD
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 17:53:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B85A6667E93
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 20:04:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239813AbjALQxC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Jan 2023 11:53:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33056 "EHLO
+        id S231624AbjALTD7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Jan 2023 14:03:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241649AbjALQvB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 11:51:01 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C3263D32;
-        Thu, 12 Jan 2023 08:39:49 -0800 (PST)
+        with ESMTP id S237748AbjALTDX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 14:03:23 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CF569B19;
+        Thu, 12 Jan 2023 10:43:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673541589; x=1705077589;
+  t=1673548996; x=1705084996;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=fCnoikO59aYEJe3y7pYtBBoi1zVtcj8w0L1hqCtMZDc=;
-  b=BeCHN4R7b2LeS2zURQ9KIGTdmsdeE2vj306BKsmq3vv+EKI+k1z8Uh/+
-   04E0gdLBN6NbeQY8BCnqgOmVmyGr6MK4snIBruFz9WwuCN0EG7U8zy/mc
-   igBv2ZY1W4S95H9dSwwA+0yQNfCXZlEfdMmkhSqNc7FM+M2WfjQYPCQJZ
-   WS8Rt+K6LliP0bpHOwSrs3jeaiicqU5FN+ccR29zTaAOc3Sk+dY/2YhDX
-   eOSWIDHhTGwkYSr1G5NOzzE8QiElIYd5dQnsd7K/+GRbVzaDxoSm+7Wyh
-   5lmZOxGol/+19l56rYOPBGNwPAbxIDaQqcksl8IbQN5IcpJpQo6ndRFSD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="323814543"
+  bh=XQH5u3DL5ISx2GfFC4iQ4W+ecE1+55/FppouOEOhfe8=;
+  b=VVsrj5WMcC2BPr6ywLtnKXGPa4ohqPXLGkil3fAX56O5tjzutKLgXZQv
+   MmFacd08PX9HKKNbXG5HbYuiYlws8jbuzQh8tyKc9a0RW3mischey3T7h
+   7Nk1PRJ/LSOjAZ1s2/iTGB+89f59I+alWSpGOri4WzDJ1wjIGDHp2ftto
+   01piTyp8UF5lDxwlExHmd8wosvWF5wL1qc5P2wtfyY431t+4lMr41yk/h
+   PwKFOCGxVpCPRl+SDPCRTx6quZPvs9hkTVm6QTYH8BbsWnInHD4Hi4bMN
+   oqfEV35ZsyoSfv7QqFFYvInvSSb7/dcCX4b3jeWZCJlirwXvHGvOPgCLe
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="325844576"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="323814543"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 08:39:26 -0800
+   d="scan'208";a="325844576"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 10:43:12 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="721153141"
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="781868438"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="721153141"
+   d="scan'208";a="781868438"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 12 Jan 2023 08:39:19 -0800
+  by orsmga004.jf.intel.com with ESMTP; 12 Jan 2023 10:43:09 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9FD4CE1; Thu, 12 Jan 2023 18:39:53 +0200 (EET)
+        id 074E0130; Thu, 12 Jan 2023 20:43:42 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
-        Srinivas Neeli <srinivas.neeli@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
+To:     AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Sam Shih <sam.shih@mediatek.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v1 1/1] gpio: xilinx: Remove duplicate assignment of of_gpio_n_cells
-Date:   Thu, 12 Jan 2023 18:39:51 +0200
-Message-Id: <20230112163951.73180-1-andriy.shevchenko@linux.intel.com>
+        Chen-Yu Tsai <wenst@chromium.org>,
+        linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Sean Wang <sean.wang@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] pinctrl: mediatek: Remove duplicate assignment of of_gpio_n_cells
+Date:   Thu, 12 Jan 2023 20:43:40 +0200
+Message-Id: <20230112184340.79606-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -69,45 +71,47 @@ not defined. No need to assign it explicitly in the driver.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/gpio/gpio-xilinx.c | 11 -----------
- 1 file changed, 11 deletions(-)
+ drivers/pinctrl/mediatek/pinctrl-moore.c      | 1 -
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c | 1 -
+ drivers/pinctrl/mediatek/pinctrl-paris.c      | 1 -
+ 3 files changed, 3 deletions(-)
 
-diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-index 619a00ad71d4..bbcde91135b9 100644
---- a/drivers/gpio/gpio-xilinx.c
-+++ b/drivers/gpio/gpio-xilinx.c
-@@ -558,7 +558,6 @@ static int xgpio_probe(struct platform_device *pdev)
- 	int status = 0;
- 	struct device_node *np = pdev->dev.of_node;
- 	u32 is_dual = 0;
--	u32 cells = 2;
- 	u32 width[2];
- 	u32 state[2];
- 	u32 dir[2];
-@@ -591,15 +590,6 @@ static int xgpio_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.c b/drivers/pinctrl/mediatek/pinctrl-moore.c
+index 1ec0413959e1..007b98ce5631 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-moore.c
++++ b/drivers/pinctrl/mediatek/pinctrl-moore.c
+@@ -574,7 +574,6 @@ static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+ 	chip->set_config	= mtk_gpio_set_config;
+ 	chip->base		= -1;
+ 	chip->ngpio		= hw->soc->npins;
+-	chip->of_gpio_n_cells	= 2;
  
- 	bitmap_from_arr32(chip->dir, dir, 64);
+ 	ret = gpiochip_add_data(chip, hw);
+ 	if (ret < 0)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+index 553d16703475..665dec419e7c 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+@@ -906,7 +906,6 @@ static const struct gpio_chip mtk_gpio_chip = {
+ 	.set			= mtk_gpio_set,
+ 	.to_irq			= mtk_gpio_to_irq,
+ 	.set_config		= mtk_gpio_set_config,
+-	.of_gpio_n_cells	= 2,
+ };
  
--	/* Update cells with gpio-cells value */
--	if (of_property_read_u32(np, "#gpio-cells", &cells))
--		dev_dbg(&pdev->dev, "Missing gpio-cells property\n");
--
--	if (cells != 2) {
--		dev_err(&pdev->dev, "#gpio-cells mismatch\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Check device node and parent device node for device width
- 	 * and assume default width of 32
-@@ -630,7 +620,6 @@ static int xgpio_probe(struct platform_device *pdev)
- 	chip->gc.parent = &pdev->dev;
- 	chip->gc.direction_input = xgpio_dir_in;
- 	chip->gc.direction_output = xgpio_dir_out;
--	chip->gc.of_gpio_n_cells = cells;
- 	chip->gc.get = xgpio_get;
- 	chip->gc.set = xgpio_set;
- 	chip->gc.request = xgpio_request;
+ static int mtk_eint_suspend(struct device *device)
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 475f4172d508..17eead44b675 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -987,7 +987,6 @@ static int mtk_build_gpiochip(struct mtk_pinctrl *hw)
+ 	chip->set_config	= mtk_gpio_set_config;
+ 	chip->base		= -1;
+ 	chip->ngpio		= hw->soc->npins;
+-	chip->of_gpio_n_cells	= 2;
+ 
+ 	ret = gpiochip_add_data(chip, hw);
+ 	if (ret < 0)
 -- 
 2.39.0
 
