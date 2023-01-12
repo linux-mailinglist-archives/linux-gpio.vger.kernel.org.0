@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7490B667E94
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 20:04:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54F73667EAB
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 20:06:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232194AbjALTEA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Jan 2023 14:04:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60910 "EHLO
+        id S231946AbjALTGp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Jan 2023 14:06:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239485AbjALTDc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 14:03:32 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB37169B2B;
-        Thu, 12 Jan 2023 10:43:28 -0800 (PST)
+        with ESMTP id S233621AbjALTFn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 14:05:43 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86A45275F;
+        Thu, 12 Jan 2023 10:47:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673549008; x=1705085008;
+  t=1673549278; x=1705085278;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
   bh=7fLXc5FhVYxdThyYteHzhqZSsr0X9gRg8/NHTR49Nzk=;
-  b=hkKDlCNZs02WZ659GtHQQZkOrb9+ZD7NaoBQ9H8aLNC/wg5U0CykEHoW
-   XfAi2E8mjCEvrpkzEnaDA8dNP/Vk2JS/6n3FdNPHjInJXRvkjABz5EwAY
-   7/i70C+9zMe5D02CHg4zRRj2s0AZUUQwH3ed4taZ5NaOoAx36BYWqDnOQ
-   wRLWJBPmf8ZfmZNecVL2bUti5QKW30GOt3tssvxRc5xDq2F8aTKNkTqBN
-   hSPQAUcLdogq6+cSCnzM/t5l6JBzQAQrjiZd0FhEs8mpcrd1jijg4mbKk
-   ZZ0/nQpjxCVDMfDBUB3qjQOEP8fBc22dBOxPID0SwxGcHc4eLihi+PDWC
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="325844682"
+  b=jSGfRC3kjtIVLOndLOufaWpicZsLrgsMvXf0uRubZx2otsG15GWg5gOo
+   OYZYB/36rPAR2ewewEBEtXJRy7J7Mjm91KESvp/GaV//xE9cz5mYlC6aX
+   CV5JeGe1ychdMAnYdDJZTu/eYcRrTgdeYzQu43BYS9JUII1pu+MYZSxJU
+   6T3SNVJluAkoHkQX9Rsn7pEvb2roccwbq7VIccYopnCIbqsgf221WjmEa
+   swdL3FW3AHC832i+jYX6KGcXNJtj1n92Mx+/aIPIYXQrcZSOCuLWnl90X
+   d064nenV1AJtzYCHx926lnyryclrv4exPj9kom0YYpkORHQ/wCfdy/5Aq
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="410033741"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="325844682"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 10:43:20 -0800
+   d="scan'208";a="410033741"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 10:47:57 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="781868543"
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="831799216"
 X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="781868543"
+   d="scan'208";a="831799216"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 12 Jan 2023 10:43:18 -0800
+  by orsmga005.jf.intel.com with ESMTP; 12 Jan 2023 10:47:55 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 58F64130; Thu, 12 Jan 2023 20:43:52 +0200 (EET)
+        id B134114B; Thu, 12 Jan 2023 20:48:29 +0200 (EET)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH v1 1/1] pinctrl: digicolor: Remove duplicate assignment of of_gpio_n_cells
-Date:   Thu, 12 Jan 2023 20:43:47 +0200
-Message-Id: <20230112184347.79642-1-andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jianlong Huang <jianlong.huang@starfivetech.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH v1 1/2] pinctrl: digicolor: Remove duplicate assignment of of_gpio_n_cells
+Date:   Thu, 12 Jan 2023 20:48:22 +0200
+Message-Id: <20230112184823.80349-1-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
