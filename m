@@ -2,126 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E4726678FD
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 16:22:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A38A2667AB9
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 17:26:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234056AbjALPWd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Jan 2023 10:22:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37804 "EHLO
+        id S235956AbjALQ0O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Jan 2023 11:26:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231934AbjALPWM (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 10:22:12 -0500
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6B82D2DB;
-        Thu, 12 Jan 2023 07:14:54 -0800 (PST)
-Received: by mail-yb1-f174.google.com with SMTP id e76so18981793ybh.11;
-        Thu, 12 Jan 2023 07:14:54 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5Y6qY7Xi7w4nejlKSxi1fYejKBcc6r8h/6CzmR1L1Uk=;
-        b=cfetF7YgvWZzeA6YsIlEdpbTlNWGHzLPtMw//oNCDwfLtzh6FtXTIP6k66gocUMj2S
-         5J0x4g0XM7m6GWwuIJqzK7nUOUnJbQkXkuSlb4SaKfB/BMJY66/5uCJ+45a1dtpo2+aQ
-         GEV9bpbA8029gGqw1TouUnDLiKSx5/avqDQFPl15ln/MWva2mqVm7MXmSWLl1XkD7Bq8
-         B0zS0aOSG1yo/e860McBKbVa9jP9Ez0CuRNdgmmeOBYIj7OPPJXwfOLSoF8Em7Fy6ImO
-         bsxV8aN/zpLjDwH04YSfv1BPjPhw/H7VHWhQ7HhdLZifjJJmbgKrfYIietCl/iPny3Sd
-         dQbA==
-X-Gm-Message-State: AFqh2kpanpBn8YaF8hA6bKD9F+mWzterFr66FhWwWZS5BcYTDbV5nVeq
-        +2va56hV3AQGMYHCJlLH5oLfa/HOqo9uzA==
-X-Google-Smtp-Source: AMrXdXsWa0RSqrqbDnzDudymKVXjSLCYLCOdQSyE3q0oSko+1ZA/oq04ZzvN+XUHAix3cI40mmoKZg==
-X-Received: by 2002:a25:ce82:0:b0:6fa:392c:78a2 with SMTP id x124-20020a25ce82000000b006fa392c78a2mr69026790ybe.5.1673536493315;
-        Thu, 12 Jan 2023 07:14:53 -0800 (PST)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id c23-20020a05620a269700b006fb11eee465sm11121485qkp.64.2023.01.12.07.14.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Jan 2023 07:14:52 -0800 (PST)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-4bf16baa865so242942587b3.13;
-        Thu, 12 Jan 2023 07:14:51 -0800 (PST)
-X-Received: by 2002:a81:1a16:0:b0:46f:bd6:957d with SMTP id
- a22-20020a811a16000000b0046f0bd6957dmr1837351ywa.383.1673536491636; Thu, 12
- Jan 2023 07:14:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20230112133942.58471-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230112133942.58471-1-andriy.shevchenko@linux.intel.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 12 Jan 2023 16:14:39 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXSc-H5TKBGisthv3DH3sZmF3fV_15FuMEt=typwTWUtA@mail.gmail.com>
-Message-ID: <CAMuHMdXSc-H5TKBGisthv3DH3sZmF3fV_15FuMEt=typwTWUtA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: Remove unused and obsoleted irq_to_gpio()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-doc-tw-discuss@lists.sourceforge.net,
-        linux-m68k@lists.linux-m68k.org, linux-sh@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
+        with ESMTP id S234044AbjALQZv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 11:25:51 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8F3B479C1;
+        Thu, 12 Jan 2023 08:22:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673540551; x=1705076551;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=b1y0t5i31C9uBnIOZ8Em+IhwTn+G8oRmBT8YWgv/OBQ=;
+  b=VGnlRUe/j6FpiGPeMUuIWarb0AF44BS9cdum+DL2xX9uWYE73Pe3bXr9
+   YvogKh4yWKVyiWP1Hmb/HPCvLssTYviWyb65rNBK6QnQHLNjGWjS3dLLJ
+   349xd30ApLWBvDAGnfUDCyFCSmSxvFVgOadmvP/kTpq7k4QfCG9WtorlE
+   NZjuPPm9wWYcoVuoVLVuAl2Y9qDan1HbkBtqavc4tW3f1Z4oICiGZwc7e
+   5n4hYnvQ4WJlnCx6njFNDbQB9+X+/LdCxKDL7gYyg8HqOGGB6D6vFEu5A
+   vdFxWskMQIrEn8ZLn6T/T7LS+2J4v0/OIcH6dGN22lb8X3opr77By24vJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="388239573"
+X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
+   d="scan'208";a="388239573"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 08:22:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="688381595"
+X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
+   d="scan'208";a="688381595"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga008.jf.intel.com with ESMTP; 12 Jan 2023 08:22:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pG0LS-0088hY-0Z;
+        Thu, 12 Jan 2023 18:22:26 +0200
+Date:   Thu, 12 Jan 2023 18:22:25 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-        Yanteng Si <siyanteng@loongson.cn>,
-        Hu Haowen <src.res@email.cn>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: of: Move enum of_gpio_flags to its only
+ user
+Message-ID: <Y8AzwdCGr4VFjP5X@smile.fi.intel.com>
+References: <20230112145140.67573-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230112145140.67573-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-CC greg
+On Thu, Jan 12, 2023 at 04:51:40PM +0200, Andy Shevchenko wrote:
+> GPIO library for OF is the only user for enum of_gpio_flags.
+> Move it there.
 
-On Thu, Jan 12, 2023 at 2:39 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> irq_to_gpio() is legacy and unused API, remove it for good.
->
-> This leaves gpio_to_irq() as it's used yet in many places.
-> Nevertheless, removal of its counterpart is a good signal
-> to whoever even trying to consider using them that do not.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/driver-api/gpio/legacy.rst             |  8 --------
->  .../translations/zh_CN/driver-api/gpio/legacy.rst    |  7 -------
->  Documentation/translations/zh_TW/gpio.txt            |  7 -------
->  arch/m68k/include/asm/gpio.h                         |  7 -------
->  arch/sh/include/asm/gpio.h                           |  5 -----
->  include/linux/gpio.h                                 | 12 ------------
->  6 files changed, 46 deletions(-)
+...
 
-[...]
+> +/*
+> + * This is Linux-specific flags. By default controllers' and Linux' mapping
+> + * match, but GPIO controllers are free to translate their own flags to
+> + * Linux-specific in their .xlate callback. Though, 1:1 mapping is recommended.
+> + */
 
-> --- a/arch/m68k/include/asm/gpio.h
-> +++ b/arch/m68k/include/asm/gpio.h
-> @@ -66,13 +66,6 @@ static inline int gpio_to_irq(unsigned gpio)
->                 return __gpio_to_irq(gpio);
->  }
->
-> -static inline int irq_to_gpio(unsigned irq)
-> -{
-> -       return (irq >= MCFGPIO_IRQ_VECBASE &&
-> -               irq < (MCFGPIO_IRQ_VECBASE + MCFGPIO_IRQ_MAX)) ?
-> -               irq - MCFGPIO_IRQ_VECBASE : -ENXIO;
-> -}
-> -
->  static inline int gpio_cansleep(unsigned gpio)
->  {
->         return gpio < MCFGPIO_PIN_MAX ? 0 : __gpio_cansleep(gpio);
+Now that I re-read the comment, I think this can be postponed until we get a
+consensus that no new driver is ever should do non 1:1 mapping.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+If that consensus achieved, we may drop this enum altogether and replace it
+with the generic flags..
 
-Gr{oetje,eeting}s,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
