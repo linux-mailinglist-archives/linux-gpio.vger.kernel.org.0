@@ -2,84 +2,143 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C7486675EB
-	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 15:27:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 190A16676EE
+	for <lists+linux-gpio@lfdr.de>; Thu, 12 Jan 2023 15:38:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234001AbjALO1L (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 12 Jan 2023 09:27:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50270 "EHLO
+        id S239535AbjALOiV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 12 Jan 2023 09:38:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237003AbjALO0a (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 09:26:30 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3927855854;
-        Thu, 12 Jan 2023 06:17:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673533049; x=1705069049;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+9OeLd9jOBkiupMfGGpng53Agg/34VDvHZQiavcP+6w=;
-  b=bGHILp/OgaL47aBNWltQ80ETVAkplGkLQXaoF2Ccr/b0DTPKuV6513tZ
-   X/XU//Zoj4OV7K3VfTUbujCY5lX5fe+/bEa06/7/G3mLjZxB4/yUYEa3T
-   r+BS3HABtohrtaMSquYCVh77gULrgx42ioTDj1JaSpbW6EeDrMogs3KKf
-   6a3fOxLo5HSCqyrv1B1KO3fOi/fpl+tIivQQDpSVqZ3ZGI6Sg1HtTdGOi
-   F6ew+Z/VTWR15cIUj+lh3jR7iSBiHW/X+lXUcbEZKzXqGqRVnKrnZdHew
-   /UdhRvv84wMgXFegLQCpCJhgf9KdEueA525B2Z3f7NGaIY2M24QLuzJzc
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="321406417"
-X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="321406417"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 06:17:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="800218009"
-X-IronPort-AV: E=Sophos;i="5.97,211,1669104000"; 
-   d="scan'208";a="800218009"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 12 Jan 2023 06:17:15 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6C97714B; Thu, 12 Jan 2023 16:17:49 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: Do not mention legacy API in the code
-Date:   Thu, 12 Jan 2023 16:17:43 +0200
-Message-Id: <20230112141743.63521-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S239553AbjALOhq (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 12 Jan 2023 09:37:46 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F2E55647;
+        Thu, 12 Jan 2023 06:27:44 -0800 (PST)
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30CERU0Q099631;
+        Thu, 12 Jan 2023 08:27:30 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1673533650;
+        bh=EYsxK2V4Kdi9eGcMTwhYlqj3RE6Z3CWq9bV+uJaJPKk=;
+        h=From:To:CC:Subject:Date;
+        b=XMBrCh7KDHbvh3C/pET9KUUY1Rc/tkHLOOvmqUzn+lDquBWTfiEp4aE5HPtiqFz5X
+         5vgRlgOZ4ChsS+iiWOU4hEhWIxcvxoPNYc0+ig6jlIGIS3WLfkONKR2ETiBW/EsTY4
+         twe15lCw2dE6pP2nxzSQYLEKA4hppfWV3QQOlHzg=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30CERUjd068773
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 12 Jan 2023 08:27:30 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 12
+ Jan 2023 08:27:30 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 12 Jan 2023 08:27:30 -0600
+Received: from LT5CD112GSQZ.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30CERQZ3037713;
+        Thu, 12 Jan 2023 08:27:26 -0600
+From:   Apurva Nandan <a-nandan@ti.com>
+To:     Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <kristo@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Apurva Nandan <a-nandan@ti.com>, Hari Nagalla <hnagalla@ti.com>
+Subject: [PATCH v5 0/4] Add initial support for J784S4 SoC
+Date:   Thu, 12 Jan 2023 19:57:21 +0530
+Message-ID: <20230112142725.77785-1-a-nandan@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace mentioning of legacy API by the latest one.
+The J784S4 SoC belongs to the K3 Multicore SoC architecture
+platform, providing advanced system integration in automotive,
+ADAS and industrial applications requiring AI at the network edge.
+This SoC extends the K3 Jacinto 7 family of SoCs with focus on
+raising performance and integration while providing interfaces,
+memory architecture and compute performance for multi-sensor, high
+concurrency applications.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/gpio/driver.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Some highlights of this SoC are:
+* Up to 8 Cortex-A72s, four clusters of lockstep capable dual Cortex-R5F MCUs,
+  4 C7x floating point vector DSPs with Matrix Multiply Accelerator(MMA) for
+  deep learning and CNN.
+* 3D GPU: Automotive grade IMG BXS-4-64
+* Vision Processing Accelerator (VPAC) with image signal processor and Depth
+  and Motion Processing Accelerator (DMPAC)
+* Three CSI2.0 4L RX plus two CSI2.0 4L TX, two DSI Tx, one eDP/DP and one
+  DPI interface.
+* Integrated gigabit ethernet switch, up to 8 ports (TDA4VH), two ports
+  support 10Gb USXGMII; Two 4 lane PCIe-GEN3 controllers, USB3.0 Dual-role
+  device subsystems, Up to 20 MCANs, among other peripherals.
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 8e2e2618d40e..ddc7a14a274f 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -339,7 +339,7 @@ struct device_node;
-  * @set_multiple: assigns output values for multiple signals defined by "mask"
-  * @set_config: optional hook for all kinds of settings. Uses the same
-  *	packed config format as generic pinconf.
-- * @to_irq: optional hook supporting non-static gpio_to_irq() mappings;
-+ * @to_irq: optional hook supporting non-static gpiod_to_irq() mappings;
-  *	implementation may not sleep
-  * @dbg_show: optional routine to show contents in debugfs; default code
-  *	will be used when this is omitted, but custom code can show extra
+See J784S4 Technical Reference Manual (SPRUJ52 - JUNE 2022)
+for further details: http://www.ti.com/lit/zip/spruj52
+
+bootlog: https://rentry.co/gbefx/raw
+
+Changes in v5:
+- Converted all 0x0 to 0x00 in dtsi files
+
+Changes in v4:
+- Removed ti,sci-dev-id from main_navss and mcu_navss, also changed their
+  compatibles to "simple-bus"
+- Removed status = "disabled" from phy_gmii_sel and cpts@3d000
+- Removed empty chosen {} from k3-j784s4.dtsi
+
+Changes in v3:
+- Enabled hwspinlock, main_ringacc, main_udmap, cpts, and mcu_navss in
+  the dtsi
+- Removed alignment in secure_ddr optee
+- Changed the assigned clock parent in main and mcu cpts to main pll0, hsdiv6
+  from pll3, hsdiv1
+- Removed few signed-off by
+- Formatting fixes at some places
+- Corrected link to EVM board schmatics in the commit
+
+Changes in v2:
+- Disabled all the IPs that are not mandatory for booting up the SoC by
+  default in the dtsi, and thus this gives a minimal SoC boot devicetree.
+- Moved no-1-8-v property from the k3-j784s4-evm.dts file to
+  k3-j784s4-main.dtsi file.
+- Naming changes (hwlock, regulator) and commit description changes.
+- Added device specific compatible for j721e system controller.
+- Dropped bootargs completely.
+
+Apurva Nandan (4):
+  dt-bindings: arm: ti: Add bindings for J784s4 SoC
+  dt-bindings: pinctrl: k3: Introduce pinmux definitions for J784s4
+  arm64: dts: ti: Add initial support for J784S4 SoC
+  arm64: dts: ti: Add support for J784S4 EVM board
+
+ .../devicetree/bindings/arm/ti/k3.yaml        |    6 +
+ arch/arm64/boot/dts/ti/Makefile               |    2 +
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts      |  196 ++++
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi    | 1007 +++++++++++++++++
+ .../boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi     |  311 +++++
+ arch/arm64/boot/dts/ti/k3-j784s4.dtsi         |  284 +++++
+ include/dt-bindings/pinctrl/k3.h              |    3 +
+ 7 files changed, 1809 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j784s4.dtsi
+
 -- 
-2.39.0
+2.34.1
 
