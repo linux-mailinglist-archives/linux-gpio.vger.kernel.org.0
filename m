@@ -2,83 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FFBF66A418
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 21:29:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7DAB66A4AD
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 21:59:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbjAMU3O (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 15:29:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52916 "EHLO
+        id S229509AbjAMU7n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 15:59:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231232AbjAMU3A (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 15:29:00 -0500
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 508B8857E8;
-        Fri, 13 Jan 2023 12:28:55 -0800 (PST)
-Received: by mail-ot1-f46.google.com with SMTP id k44-20020a9d19af000000b00683e176ab01so12824489otk.13;
-        Fri, 13 Jan 2023 12:28:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T6uOIBY2QWdwRY5nTsaJOc8EMrdxEkItzpmSPcJ18uE=;
-        b=qBrD+TTeCBpv0zzPssIQd1zA3xhhilch4WYOvNcyctcKzg5HpXmKZm/X8c24QVAf2/
-         o1AqtEBK9ZCw3GH3lnEJxd2e1vwtkRMUNv1tzEOyYyzho6zI0wK6D1t3ZLtHiK97bmbh
-         TY9PiZeiuLCG83HeG8CRctUbSqfy/+3Na0SGePKiF2I3wgLv11jEv5f/XPelVgvKL1gJ
-         TqRxqdlPdrjQ5cX827Ez5rKdUJLqnhiqa7DfYKcXg2O6NMCfvEJmFjgHv47Ys2GZPPTM
-         LP9pheP9oN/+4BcGgjiGUESczz/Kyd6PfxWH84y+nLX4H5vqgyO8yuPjEmXUGMsO3z8b
-         zGlA==
-X-Gm-Message-State: AFqh2kqC4XI8u5DaJe8BGyUhe4j4mJApcBdfpf3w508JmKSThTTWNpRX
-        IuyDnTF04TTGlS1CPVpw7A==
-X-Google-Smtp-Source: AMrXdXuB9QGO3F1RomRyX28k9iRLhRC6dBkm6YnLhP+cEL6fK3sUhFJXD9Y46j08rn9gza6BJU/mRA==
-X-Received: by 2002:a05:6830:6303:b0:684:a1e5:4f with SMTP id cg3-20020a056830630300b00684a1e5004fmr8228493otb.18.1673641734566;
-        Fri, 13 Jan 2023 12:28:54 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id bt25-20020a05683039d900b0066e80774203sm11182551otb.43.2023.01.13.12.28.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 12:28:54 -0800 (PST)
-Received: (nullmailer pid 2873785 invoked by uid 1000);
-        Fri, 13 Jan 2023 20:28:53 -0000
-Date:   Fri, 13 Jan 2023 14:28:53 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        linux-gpio@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: of: Move enum of_gpio_flags to its only
- user
-Message-ID: <167364172860.2873659.6905782483557660702.robh@kernel.org>
-References: <20230112145140.67573-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S229616AbjAMU7k (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 15:59:40 -0500
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095BE39C;
+        Fri, 13 Jan 2023 12:59:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7Ycz4sOcMTZWS9UTeHxz8IEHqp/XNO5Nlvj5YrrENHU=; b=IP+O+5rrpKSQ+vlYlSEio+A812
+        +ulVgdTMpZfDLIookFWdS5A7xFa9lfAaRmw/bx3s8Rtobfba45806uZSLAFyS4gNdoiO1BJGgkner
+        ta580r+/Mh0ZdXXj9EH+g/fAzLoXv7ZA/Roe7qEftxpwKwsw2w9wIV9pK4psf/3TxC6WSyKSrmMeI
+        f4x7ZKTAj8pvbRVDawW+lZMJxDCGbIvIsOJsf8coyzwVgiz/PMTd3tm/+ij6I6JNz4Nx+gWxkYkBy
+        giozuQ7g9z/ky/noow9lU9q2dkSXyd47TWUqv7JUc1hD2pQHg8EWgI87tedcUEwU6u/UP3a1pDbcH
+        mEsBffEw==;
+Received: from p200300ccff089e001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:9e00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1pGR98-00059m-6A; Fri, 13 Jan 2023 21:59:30 +0100
+Received: from andi by aktux with local (Exim 4.94.2)
+        (envelope-from <andreas@kemnade.info>)
+        id 1pGR97-009hiS-Ae; Fri, 13 Jan 2023 21:59:29 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+        linus.walleij@linaro.org, brgl@bgdev.pl,
+        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] gpio: omap: use dynamic allocation of base
+Date:   Fri, 13 Jan 2023 21:59:22 +0100
+Message-Id: <20230113205922.2312951-1-andreas@kemnade.info>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230112145140.67573-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Score: -1.0 (-)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Static allocatin is deprecated and may cause probe mess,
+if probe order is unusual.
 
-On Thu, 12 Jan 2023 16:51:40 +0200, Andy Shevchenko wrote:
-> GPIO library for OF is the only user for enum of_gpio_flags.
-> Move it there.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib-of.c | 15 +++++++++++++++
->  include/linux/of_gpio.h   | 15 ---------------
->  2 files changed, 15 insertions(+), 15 deletions(-)
-> 
+like this example
+[    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 161..178
+[    2.561401] gpiochip_find_base: found new base at 160
+[    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
+[    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
+[...]
+[    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
+[    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
+[    2.703643] gpiochip_find_base: found new base at 178
+[    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
+[    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
+[...]
+[    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecated, use dynamic allocation.
+[    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap, cannot add chip
+[    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) failed to register, -16
+[    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register gpio chip
 
-Acked-by: Rob Herring <robh@kernel.org>
+So probing was done in an unusual order, causing mess
+and chips not getting their gpio in the end.
+
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+maybe CC stable? not sure about good fixes tag.
+
+ drivers/gpio/gpio-omap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 80ddc43fd875..f5f3d4b22452 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1020,7 +1020,7 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
+ 		if (!label)
+ 			return -ENOMEM;
+ 		bank->chip.label = label;
+-		bank->chip.base = gpio;
++		bank->chip.base = -1;
+ 	}
+ 	bank->chip.ngpio = bank->width;
+ 
+-- 
+2.30.2
+
