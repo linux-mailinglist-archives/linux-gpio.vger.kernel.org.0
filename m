@@ -2,131 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E02936698F2
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 14:44:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3134C669917
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 14:52:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233411AbjAMNop (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 08:44:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43236 "EHLO
+        id S241875AbjAMNwu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 08:52:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242083AbjAMNoI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 08:44:08 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 969821B9E7;
-        Fri, 13 Jan 2023 05:37:41 -0800 (PST)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30DBqXUF009633;
-        Fri, 13 Jan 2023 13:37:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=n2SyNKcK46gx09H9UFtDsHRC5Vbg9kR1yPB5UVVXA/Q=;
- b=dbAbzpLG/6JC8nrwYrc5qT+MnH8h3MNy3Qe0yvIHxGXLNvAc84HcnnGR52iNC/v2ZH3y
- BJXLYfql2+i8w/k4UWuvl8ioH9+txvoDnKzc9278a83h0TlbP91c24xIHs68uiIj1LbG
- j5oGgbUo83wkZSLuLS5SpjmYikcm8E//EHrhM/R76HkPpstND6vAQBpU/c79rJCw200M
- ObXX1gh6iZv3CqPrelNHFsgq9TpJiNiBFBmFuy++H3mVOLG47OpQ6H/7IsZ11AXa6Wp6
- s/Q+SW45l8oKYz64zygw8kEwcMQocTg3qThXNyJOh6TKscxftc6L0ETdp0qCo0J4H/Sd dg== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3n33h60xp5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Jan 2023 13:37:01 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30DDb0d0020109
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 13 Jan 2023 13:37:00 GMT
-Received: from [10.50.57.3] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 13 Jan
- 2023 05:36:51 -0800
-Message-ID: <36022e14-382e-3d75-9184-509202576f87@quicinc.com>
-Date:   Fri, 13 Jan 2023 19:06:48 +0530
+        with ESMTP id S241347AbjAMNwU (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 08:52:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28CB687BF;
+        Fri, 13 Jan 2023 05:49:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 69BDD61DE6;
+        Fri, 13 Jan 2023 13:49:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B432DC433F0;
+        Fri, 13 Jan 2023 13:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673617745;
+        bh=jbCnZtB+5zZ9PoSDkY6kEzzfCJcEPrRIqB+juM/kNJw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i5lTeu5xY2oN+T0eTAFbwFxN/mkGgmj3R1uqHdYoY5NLOx2Vi8JJYCGlq9H244KuV
+         KORCNCzrEsMtBrwiP+Rag2BjZ03N/T3fck1lMU5vHyuGRmRtV039ot2ypE4/v6xpC2
+         CVr+p8ehHmk5c4JTWKzlXcnRYvl+vntmdLRqPqFjB24ZgYXmJfytaAFriPeYxTRaTF
+         EzFzGcdfYKkmi6gBMRnzWCk7eMJAyxklVz4Mv2q6uc4BlH1vOZSgC3rGt6V3ZnoGEY
+         izrBtYRVXuWOyR7XdjMpXzWUj6/ZKG1wHK6m3eOLTfx0G1/W+tqgepVn8hmFTwIty9
+         8Cf1FC0lDBcnQ==
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pGKQZ-001WzG-9z;
+        Fri, 13 Jan 2023 13:49:03 +0000
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
+Date:   Fri, 13 Jan 2023 13:49:02 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     devi priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
+        marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org,
+        nfraprado@collabora.com, broonie@kernel.org, tdas@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
 Subject: Re: [PATCH 6/7] arm64: dts: Add ipq9574 SoC and AL02 board support
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <tdas@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
+In-Reply-To: <20230110121316.24892-7-quic_devipriy@quicinc.com>
 References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
  <20230110121316.24892-7-quic_devipriy@quicinc.com>
- <e5383b73-7026-ede1-387c-5847535438eb@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <e5383b73-7026-ede1-387c-5847535438eb@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <5da7ead743415dfb6d571a6b72a81b08@kernel.org>
+X-Sender: maz@kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lczEDLnIllztC0mbisexd5fhTm4U4643
-X-Proofpoint-GUID: lczEDLnIllztC0mbisexd5fhTm4U4643
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-13_06,2023-01-13_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 priorityscore=1501 phishscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 adultscore=0 bulkscore=0 spamscore=0
- mlxlogscore=708 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2301130089
-X-Spam-Status: No, score=0.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: quic_devipriy@quicinc.com, agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com, dmitry.baryshkov@linaro.org, nfraprado@collabora.com, broonie@kernel.org, tdas@codeaurora.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com, quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com, quic_anusha@quicinc.com, quic_poovendh@quicinc.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On 2023-01-10 12:13, devi priya wrote:
+> From: POOVENDHAN SELVARAJ <quic_poovendh@quicinc.com>
+> 
+> Add initial device tree support for Qualcomm IPQ9574 SoC
+> and AL02 board
+> 
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Co-developed-by: devi priya <quic_devipriy@quicinc.com>
+> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+> Signed-off-by: POOVENDHAN SELVARAJ <quic_poovendh@quicinc.com>
+> ---
+>  arch/arm64/boot/dts/qcom/Makefile            |   1 +
+>  arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts |  69 ++++
+>  arch/arm64/boot/dts/qcom/ipq9574.dtsi        | 318 +++++++++++++++++++
+>  3 files changed, 388 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+>  create mode 100644 arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/Makefile
+> b/arch/arm64/boot/dts/qcom/Makefile
+> index 3e79496292e7..872c62028a0b 100644
+> --- a/arch/arm64/boot/dts/qcom/Makefile
+> +++ b/arch/arm64/boot/dts/qcom/Makefile
+> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= ipq6018-cp01-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk01.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c1.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= ipq8074-hk10-c2.dtb
+> +dtb-$(CONFIG_ARCH_QCOM)	+= ipq9574-al02-c7.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-alcatel-idol347.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-asus-z00l.dtb
+>  dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-huawei-g7.dtb
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+> b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+> new file mode 100644
+> index 000000000000..ae3c32f3e16a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
 
+[...]
 
-On 1/11/2023 3:15 PM, Krzysztof Kozlowski wrote:
-> On 10/01/2023 13:13, devi priya wrote:
->> From: POOVENDHAN SELVARAJ <quic_poovendh@quicinc.com>
->>
->> Add initial device tree support for Qualcomm IPQ9574 SoC
->> and AL02 board
->>
->> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->> Co-developed-by: devi priya <quic_devipriy@quicinc.com>
->> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
->> Signed-off-by: POOVENDHAN SELVARAJ <quic_poovendh@quicinc.com>
-> 
-> Don't use CAPITAL CASE FOR NAMES BUT Camel Case. Although different
-> languages might have different rules, but most cases when transliterated
-> to English (or Latin alphabet), the name Start with capital letter. The
-> same in your case.
-Sure, okay
-> 
->> ---
->>   arch/arm64/boot/dts/qcom/Makefile            |   1 +
->>   arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts |  69 ++++
-> 
-> One more:
-> 
-> Use subject prefixes matching the subsystem (which you can get for
-> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
-> your patch is touching).
-> 
-> Best regards,
-> Krzysztof
-> 
-Best Regards,
-Devi Priya
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | 
+> IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 4 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+
+Interesting choice for the PPIs...
+
+> +		clock-frequency = <24000000>;
+
+Please drop this and fix the firmware. No system built within
+past 10 years should need it.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
