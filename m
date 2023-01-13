@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2313B66A568
+	by mail.lfdr.de (Postfix) with ESMTP id AAC6E66A569
 	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 22:52:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbjAMVwe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 16:52:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43798 "EHLO
+        id S230417AbjAMVwf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 16:52:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230428AbjAMVwc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 16:52:32 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35BF389BDF
+        with ESMTP id S230482AbjAMVwe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 16:52:34 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E5089BE3
         for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 13:52:31 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so14832218wma.1
+Received: by mail-wm1-x32a.google.com with SMTP id f25-20020a1c6a19000000b003da221fbf48so1975590wmc.1
         for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 13:52:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oB6udgfE8PDU+ZgHX4U7uUPgQ1WYJTiJGyqYxNBagAA=;
-        b=0TU1EhhqLNN6zb54L7MnIXu4k7oSXEYzdcK9oUQgOuG3HzY1L9nYAhiAScRVsZC+mI
-         wnTuNoZ5eLZ3BHL0hUTRRNmAUmxQZF2+4tn9ocmCaQc6WZokgYmrTK10G04/yGc+Ffwb
-         yQRksuN7CcOC7tHvgJEIYDFnOcwxHb2bvBggxgC1uwQJ5VdKCqtRAm5426ZKvaa8FD2h
-         FMVShraCRpCX+pGYyF82Er7ACFnGz6tBN/4efjnRJ5j2bibogzT6yHQHHPi9tC5Fgqep
-         t25tkErunAMTwZaRqSDVGpux5hXeV+Rp8p/HGHgcBxCexig72XgZJi+ad6+NXEXyvXmt
-         a5Eg==
+        bh=6XLMg9CuAafuTq2nWOWQf1Mzz+IC/toxbU6U7qxH2IQ=;
+        b=rG7Wt9Xv2i7ZTb0ayunyZcEDFLKjyFyRjUxtKoNHKgmN46jnHL8cvU2bRAWxhK64kX
+         nlx0cWQG/+Y6cCtDZtuAPV+im2m1YE6BFtrmr5d69D3zwfb9wK1SMBh92Q/X+dddG3wX
+         3kgfJ8vBpE4vvBDgGNMcYEzo2+KDTMOSx0v/IT8rySLUFjpMb0mQAq2/WBIQsFj9Gh2U
+         kf/GY0dkicyI8fIsk/aFPNoEhYTMI1y7sbdT1PAGDvhmhJoZd3skBHJn0HOpMjGT0sf8
+         +ZAsaRDpkdoayYObNasx/m6abM3J/a455EROS7jsIy0qXj7JldEL/goi7Xy3NrG2KjYi
+         d2dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oB6udgfE8PDU+ZgHX4U7uUPgQ1WYJTiJGyqYxNBagAA=;
-        b=t5LV/GQrVZf6uJPaDJ/fzFfkrZoFbUK7LXyPfiV3V9qFqyDveyT3eVE3ncpa8Jt2Tg
-         UytNWPyA/CfmrDINAMCFyaVWLdtUvOc0ytmsJNIh45ZpJ/+LJkHeTFaoFstDT+LSkf9o
-         Xmx6aY9qmVicfOBPayJpf6f4nZCPW/DF0cDqU7O7ekP/1UO0UT46cS/gL0/TD5IQrGpp
-         3SnLkkLhx3mOsWkJN6PwzefGbNWup3bIUjIhAceTWDNXaeTCL2stXKEJ69/zOcuIeaBM
-         Bd1VPcP/dBViJdnSSrf+Gz6c4EdDUp4mooxza8u/BfvZ/9D9Q/bo3V3MQp6I03vgIE+n
-         TmBQ==
-X-Gm-Message-State: AFqh2kpR9f8VExiumBGXIlncrtyvWnjhxLPUNicx5oQ01YSPIia3DQyb
-        pDe99cjVlTUI4Z/IsLfoKJ7DETbk0vmVLBll
-X-Google-Smtp-Source: AMrXdXvSh3hs2LrHzS09PaAFGI8imKapj9UueL9j4iKd4yfWK8i26gFJK+yHwd0aR5+lxObneSXHUA==
-X-Received: by 2002:a05:600c:5012:b0:3d3:5a4a:9103 with SMTP id n18-20020a05600c501200b003d35a4a9103mr58557642wmr.31.1673646749765;
-        Fri, 13 Jan 2023 13:52:29 -0800 (PST)
+        bh=6XLMg9CuAafuTq2nWOWQf1Mzz+IC/toxbU6U7qxH2IQ=;
+        b=o5G843L0eOsqycL2Ig4MzEyoT6OPcSy8D0u6xBSfzIT14zP7ZD491pvP+yy7hZpFnc
+         P6ZymCDJFQD/EZW51DQf5RJPyApoT0+3RaJdk7Bpt/yJPYGd+sD1cUpvRz38zQc790bQ
+         PoqwtfOJRHeMqb1truvLKX1WEhW20BjRl+imR8+7/OJLRx528e2vYklOk9i3OkdZAACx
+         1KBPY9DStYBRZULALIO5O7Q+qnffDEINCqgrlmC+M6jLsUxfYWw2UoDkwyAatOvuYE05
+         01Xi/t68mo6qLI+skjM5uPxPGvFNiTu5Zm8m3NvgtIoVU3fT3R93RR+RugPktWAqxKh3
+         rB5g==
+X-Gm-Message-State: AFqh2kp6E08HCNcscOMMNZ5YXx/r4b51llIfx568n4muJ1FnyeojuYqE
+        zl2KiUaGP6e16Myge1hrzTD7nw==
+X-Google-Smtp-Source: AMrXdXs9oith08H2bjTnEEAo96igNiPeWnnxjnLmwJFAErf97ujJm2XfT929A9LFnV8QdCqZUOVldA==
+X-Received: by 2002:a05:600c:1d10:b0:3d9:ef75:ea6e with SMTP id l16-20020a05600c1d1000b003d9ef75ea6emr916892wms.38.1673646750771;
+        Fri, 13 Jan 2023 13:52:30 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ba79:38ad:100f:e9ee])
-        by smtp.gmail.com with ESMTPSA id g12-20020a05600c310c00b003c70191f267sm33179234wmo.39.2023.01.13.13.52.28
+        by smtp.gmail.com with ESMTPSA id g12-20020a05600c310c00b003c70191f267sm33179234wmo.39.2023.01.13.13.52.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 13:52:29 -0800 (PST)
+        Fri, 13 Jan 2023 13:52:30 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ To:     Kent Gibson <warthog618@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>
 Cc:     linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH 13/16] bindings: python: provide line_config.set_output_values()
-Date:   Fri, 13 Jan 2023 22:52:07 +0100
-Message-Id: <20230113215210.616812-14-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH 14/16] bindings: rust: make request_config optional in Chip.request_lines()
+Date:   Fri, 13 Jan 2023 22:52:08 +0100
+Message-Id: <20230113215210.616812-15-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20230113215210.616812-1-brgl@bgdev.pl>
 References: <20230113215210.616812-1-brgl@bgdev.pl>
@@ -75,159 +75,149 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Add a new argument to Chip.request_lines() that allows the user to pass
-a list of output values for configured lines instead of using several
-LineSettings objects between which the only difference is the output
-value.
+Request config is not necessary to request lines. In C API we accept
+a NULL pointer, in C++ it's not necessary to assign a request_config
+to the request builder, in Python the consumer and event buffer size
+arguments are optional. Let's make rust bindings consistent and not
+require the request config to be always present. Convert the argument
+in request_lines to Option and update the rest of the code.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- bindings/python/gpiod/chip.py               |  6 ++
- bindings/python/gpiod/ext/line-config.c     | 64 +++++++++++++++++++++
- bindings/python/tests/tests_line_request.py | 14 +++++
- 3 files changed, 84 insertions(+)
+ bindings/rust/libgpiod/examples/gpio_events.rs         |  2 +-
+ .../libgpiod/examples/gpio_threaded_info_events.rs     |  2 +-
+ bindings/rust/libgpiod/examples/gpioget.rs             |  2 +-
+ bindings/rust/libgpiod/examples/gpiomon.rs             |  2 +-
+ bindings/rust/libgpiod/examples/gpioset.rs             |  2 +-
+ bindings/rust/libgpiod/src/chip.rs                     | 10 ++++++++--
+ bindings/rust/libgpiod/tests/common/config.rs          |  2 +-
+ bindings/rust/libgpiod/tests/info_event.rs             |  2 +-
+ 8 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
-index ad2eddd..4f5f9b4 100644
---- a/bindings/python/gpiod/chip.py
-+++ b/bindings/python/gpiod/chip.py
-@@ -6,10 +6,12 @@ from .chip_info import ChipInfo
- from .exception import ChipClosedError
- from .info_event import InfoEvent
- from .internal import poll_fd
-+from .line import Value
- from .line_info import LineInfo
- from .line_settings import LineSettings, _line_settings_to_ext
- from .line_request import LineRequest
- from collections import Counter
-+from collections.abc import Iterable
- from datetime import timedelta
- from errno import ENOENT
- from select import select
-@@ -221,6 +223,7 @@ class Chip:
-         config: dict[tuple[Union[int, str]], Optional[LineSettings]],
-         consumer: Optional[str] = None,
-         event_buffer_size: Optional[int] = None,
-+        output_values: Optional[Iterable[Value]] = None,
-     ) -> LineRequest:
-         """
-         Request a set of lines for exclusive usage.
-@@ -279,6 +282,9 @@ class Chip:
-                 offsets, _line_settings_to_ext(settings or LineSettings())
-             )
+diff --git a/bindings/rust/libgpiod/examples/gpio_events.rs b/bindings/rust/libgpiod/examples/gpio_events.rs
+index 04267d9..cbdf1b5 100644
+--- a/bindings/rust/libgpiod/examples/gpio_events.rs
++++ b/bindings/rust/libgpiod/examples/gpio_events.rs
+@@ -42,7 +42,7 @@ fn main() -> Result<()> {
+     let rconfig = request::Config::new()?;
  
-+        if output_values:
-+            line_cfg.set_output_values(output_values)
-+
-         req_internal = self._chip.request_lines(line_cfg, consumer, event_buffer_size)
-         request = LineRequest(req_internal)
+     let mut buffer = request::Buffer::new(1)?;
+-    let request = chip.request_lines(&rconfig, &lconfig)?;
++    let request = chip.request_lines(Some(&rconfig), &lconfig)?;
  
-diff --git a/bindings/python/gpiod/ext/line-config.c b/bindings/python/gpiod/ext/line-config.c
-index 173ca6b..0bba112 100644
---- a/bindings/python/gpiod/ext/line-config.c
-+++ b/bindings/python/gpiod/ext/line-config.c
-@@ -89,12 +89,76 @@ line_config_add_line_settings(line_config_object *self, PyObject *args)
- 	Py_RETURN_NONE;
- }
+     loop {
+         match request.wait_edge_events(None) {
+diff --git a/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs b/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
+index e17f0f0..367b2f6 100644
+--- a/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
++++ b/bindings/rust/libgpiod/examples/gpio_threaded_info_events.rs
+@@ -40,7 +40,7 @@ fn request_reconfigure_line(
+         let request = chip
+             .lock()
+             .unwrap()
+-            .request_lines(&rconfig, &lconfig)
++            .request_lines(Some(&rconfig), &lconfig)
+             .unwrap();
  
-+static PyObject *
-+line_config_set_output_values(line_config_object *self, PyObject *args)
-+{
-+	PyObject *values, *iter, *next, *val_stripped;
-+	enum gpiod_line_value *valbuf;
-+	Py_ssize_t num_values, pos;
-+	int ret;
-+
-+	values = PyTuple_GetItem(args, 0);
-+	if (!values)
-+		return NULL;
-+
-+	num_values = PyObject_Size(values);
-+	if (num_values < 0)
-+		return NULL;
-+
-+	valbuf = PyMem_Calloc(num_values, sizeof(*valbuf));
-+	if (!valbuf)
-+		return PyErr_NoMemory();
-+
-+	iter = PyObject_GetIter(values);
-+	if (!iter) {
-+		PyMem_Free(valbuf);
-+		return NULL;
-+	}
-+
-+	for (pos = 0;; pos++) {
-+		next = PyIter_Next(iter);
-+		if (!next) {
-+			Py_DECREF(iter);
-+			break;
-+		}
-+
-+		val_stripped = PyObject_GetAttrString(next, "value");
-+		Py_DECREF(next);
-+		if (!val_stripped) {
-+			PyMem_Free(valbuf);
-+			Py_DECREF(iter);
-+			return NULL;
-+		}
-+
-+		valbuf[pos] = PyLong_AsLong(val_stripped);
-+		Py_DECREF(val_stripped);
-+		if (PyErr_Occurred()) {
-+			PyMem_Free(valbuf);
-+			Py_DECREF(iter);
-+			return NULL;
-+		}
-+	}
-+
-+	ret = gpiod_line_config_set_output_values(self->cfg,
-+						  valbuf, num_values);
-+	PyMem_Free(valbuf);
-+	if (ret)
-+		return Py_gpiod_SetErrFromErrno();	
-+
-+	Py_RETURN_NONE;
-+}
-+
- static PyMethodDef line_config_methods[] = {
- 	{
- 		.ml_name = "add_line_settings",
- 		.ml_meth = (PyCFunction)line_config_add_line_settings,
- 		.ml_flags = METH_VARARGS,
- 	},
-+	{
-+		.ml_name = "set_output_values",
-+		.ml_meth = (PyCFunction)line_config_set_output_values,
-+		.ml_flags = METH_VARARGS,
-+	},
- 	{ }
- };
+         // Signal the parent to continue
+diff --git a/bindings/rust/libgpiod/examples/gpioget.rs b/bindings/rust/libgpiod/examples/gpioget.rs
+index 6e60833..74baf30 100644
+--- a/bindings/rust/libgpiod/examples/gpioget.rs
++++ b/bindings/rust/libgpiod/examples/gpioget.rs
+@@ -37,7 +37,7 @@ fn main() -> Result<()> {
+     let rconfig = request::Config::new()?;
+     rconfig.set_consumer(&args[0])?;
  
-diff --git a/bindings/python/tests/tests_line_request.py b/bindings/python/tests/tests_line_request.py
-index c0ac768..1dc2c71 100644
---- a/bindings/python/tests/tests_line_request.py
-+++ b/bindings/python/tests/tests_line_request.py
-@@ -402,6 +402,20 @@ class LineRequestConsumerString(TestCase):
-             self.assertEqual(info.consumer, "?")
+-    let request = chip.request_lines(&rconfig, &lconfig)?;
++    let request = chip.request_lines(Some(&rconfig), &lconfig)?;
+     let map = request.values()?;
  
+     println!("{:?}", map);
+diff --git a/bindings/rust/libgpiod/examples/gpiomon.rs b/bindings/rust/libgpiod/examples/gpiomon.rs
+index f17a81f..a09ddfc 100644
+--- a/bindings/rust/libgpiod/examples/gpiomon.rs
++++ b/bindings/rust/libgpiod/examples/gpiomon.rs
+@@ -41,7 +41,7 @@ fn main() -> Result<()> {
+     let rconfig = request::Config::new()?;
  
-+class LineRequestSetOutputValues(TestCase):
-+    def test_request_with_globally_set_output_values(self):
-+        sim = gpiosim.Chip(num_lines=4)
-+        with gpiod.request_lines(
-+            sim.dev_path,
-+            config={(0, 1, 2, 3): gpiod.LineSettings(direction=Direction.OUTPUT)},
-+            output_values=(Value.ACTIVE, Value.INACTIVE, Value.ACTIVE, Value.INACTIVE),
-+        ) as request:
-+            self.assertEqual(sim.get_value(0), SimVal.ACTIVE)
-+            self.assertEqual(sim.get_value(1), SimVal.INACTIVE)
-+            self.assertEqual(sim.get_value(2), SimVal.ACTIVE)
-+            self.assertEqual(sim.get_value(3), SimVal.INACTIVE)
+     let mut buffer = request::Buffer::new(1)?;
+-    let request = chip.request_lines(&rconfig, &lconfig)?;
++    let request = chip.request_lines(Some(&rconfig), &lconfig)?;
+ 
+     loop {
+         match request.wait_edge_events(None) {
+diff --git a/bindings/rust/libgpiod/examples/gpioset.rs b/bindings/rust/libgpiod/examples/gpioset.rs
+index 875a3ad..6247996 100644
+--- a/bindings/rust/libgpiod/examples/gpioset.rs
++++ b/bindings/rust/libgpiod/examples/gpioset.rs
+@@ -54,7 +54,7 @@ fn main() -> Result<()> {
+     let rconfig = request::Config::new()?;
+     rconfig.set_consumer(&args[0])?;
+ 
+-    chip.request_lines(&rconfig, &lconfig)?;
++    chip.request_lines(Some(&rconfig), &lconfig)?;
+ 
+     // Wait for keypress, let user verify line status.
+     stdin().read_exact(&mut [0u8]).unwrap();
+diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
+index 91b4c94..9c3c2b4 100644
+--- a/bindings/rust/libgpiod/src/chip.rs
++++ b/bindings/rust/libgpiod/src/chip.rs
+@@ -11,6 +11,7 @@ use std::cmp::Ordering;
+ use std::ffi::{CStr, CString};
+ use std::os::{raw::c_char, unix::prelude::AsRawFd};
+ use std::path::Path;
++use std::ptr;
+ use std::str;
+ use std::sync::Arc;
+ use std::time::Duration;
+@@ -195,13 +196,18 @@ impl Chip {
+     /// Request a set of lines for exclusive usage.
+     pub fn request_lines(
+         &self,
+-        rconfig: &request::Config,
++        rconfig: Option<&request::Config>,
+         lconfig: &line::Config,
+     ) -> Result<request::Request> {
++        let req_cfg = match rconfig {
++            Some(cfg) => cfg.config,
++            _ => ptr::null(),
++        } as *mut gpiod::gpiod_request_config;
 +
-+
- class ReconfigureRequestedLines(TestCase):
-     def setUp(self):
-         self.sim = gpiosim.Chip(num_lines=8, line_names={3: "foo", 4: "bar", 6: "baz"})
+         // SAFETY: The `gpiod_line_request` returned by libgpiod is guaranteed to live as long
+         // as the `struct Request`.
+         let request = unsafe {
+-            gpiod::gpiod_chip_request_lines(self.ichip.chip, rconfig.config, lconfig.config)
++            gpiod::gpiod_chip_request_lines(self.ichip.chip, req_cfg, lconfig.config)
+         };
+ 
+         if request.is_null() {
+diff --git a/bindings/rust/libgpiod/tests/common/config.rs b/bindings/rust/libgpiod/tests/common/config.rs
+index 842a70a..b838b66 100644
+--- a/bindings/rust/libgpiod/tests/common/config.rs
++++ b/bindings/rust/libgpiod/tests/common/config.rs
+@@ -106,7 +106,7 @@ impl TestConfig {
+     pub(crate) fn request_lines(&mut self) -> Result<()> {
+         let chip = Chip::open(&self.sim.lock().unwrap().dev_path())?;
+ 
+-        self.request = Some(chip.request_lines(&self.rconfig, &self.lconfig)?);
++        self.request = Some(chip.request_lines(Some(&self.rconfig), &self.lconfig)?);
+         self.chip = Some(chip);
+ 
+         Ok(())
+diff --git a/bindings/rust/libgpiod/tests/info_event.rs b/bindings/rust/libgpiod/tests/info_event.rs
+index bfa0058..6bf7a0f 100644
+--- a/bindings/rust/libgpiod/tests/info_event.rs
++++ b/bindings/rust/libgpiod/tests/info_event.rs
+@@ -32,7 +32,7 @@ mod info_event {
+             let request = chip
+                 .lock()
+                 .unwrap()
+-                .request_lines(&rconfig, &lconfig1)
++                .request_lines(Some(&rconfig), &lconfig1)
+                 .unwrap();
+ 
+             // Signal the parent to continue
 -- 
 2.37.2
 
