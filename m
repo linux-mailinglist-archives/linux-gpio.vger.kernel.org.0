@@ -2,100 +2,131 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5AD669A3C
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 15:32:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 091F1669AB9
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 15:41:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjAMObj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 09:31:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55656 "EHLO
+        id S229543AbjAMOlM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 09:41:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjAMOav (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 09:30:51 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F7384BCD
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 06:23:56 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id o8so10853815ilo.1
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 06:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+OF3VMKCJX/ixRNA7KETCaEsWyEBkIDVOlKWye/O0OA=;
-        b=JojvgH8XT/5W3Z19zz/xJpsK+UtUfuLOajrP2bUiE0PZHJLaHxyVoS/gdwZ4j1nINn
-         NAhLjtRw5JWhWpQP6cjr/K+IqEq6cG/swjHmgKkU8/bzhvwyjyHr6pxRihWxyvWQ7jH/
-         ycXHQba8H8CGw08mZc2lRnHbsatDyaP7XSi3luhnXRDyANgc7SfZsYR/2kBx67sDkelt
-         N009oKtaqxMaVcV5I8bJGY2a5+MgMpNdeDc6P09VU6v2oJr8B0zV2O/YER8mJLD4Mn1g
-         U9CLRknFXD87iaVRlJkboh6IHCCrAxvZm9BuL/cccG7OGvOaJ6fm9314ARdKvJNPjG9a
-         t4ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+OF3VMKCJX/ixRNA7KETCaEsWyEBkIDVOlKWye/O0OA=;
-        b=zI1m9EftRqAEhYFJSgl02fx7vy3ZTWhIuPHRq4jW3U6wBRNWErsgATgG2xzIhKgIbt
-         0BuZwCuUXuU5aDZe5hPH4cxx9Hc+MSNJSyIlgFgQz8tA/4uFfxHz2oOCH6bnyoGHonRN
-         dzfzVkfSMUJcbmCF1ZnW+c8nnnEeVk6wkqijFBbtq3gk2t2wqCBvVEjEIL+/sfDuyCdK
-         cwfVQYm8ogcrLVWMj6RJh9KAKHduPFyziqOH004MiLClPimuMqq0BLzq6iESHnsUhR1t
-         A/EwKPQKu0RCOrlYbap5Dxd6xqV6gOGvDnQw1gm5M9FirgiQRXWexsGygLwWL5bm4YSd
-         SmNQ==
-X-Gm-Message-State: AFqh2koowh7lbNsHG6D1c2jWGqNhAEkIQrqDWVZ6UOhsVgJkB5kLQRzP
-        kgu0XVc4pE9c0G7sm1jJD+TiJZNHs9EFDepE98g=
-X-Google-Smtp-Source: AMrXdXszWXnZUU3mDwuG0prmaP86rTFSkz0+fra775veb5Y7HNHpZxCjxPfSPiWnLxbY0i6yMoRbzmb1JvPTG9uROSM=
-X-Received: by 2002:a92:3601:0:b0:30e:e57f:b106 with SMTP id
- d1-20020a923601000000b0030ee57fb106mr115968ila.304.1673619835751; Fri, 13 Jan
- 2023 06:23:55 -0800 (PST)
+        with ESMTP id S230451AbjAMOkC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 09:40:02 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B09884600;
+        Fri, 13 Jan 2023 06:31:47 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30DDFKcw006951;
+        Fri, 13 Jan 2023 14:31:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=cqj0Z+ztU0pkNZ48hYFvSFMXrtOoDDHl6jjBO0OdfBk=;
+ b=IbLuye9SKHHQ49yDm3OmVNuuuHURwKIrYb24XRLGjo6dqQZvrAYI1nsv3cu198PIoTpd
+ wWBvHcz1khmXAI6+go1NiNsxPyAPfYK1Em8gR6f/I9xRy4mYJ1cBkJALXumJwGoqtAzd
+ Qsko4pYUeOApYzVCBxyTEh3TZOlCipyg5RuprirnBitqV0CD7YFA1uokhdKYAAxYFzkM
+ hmrgHJ0S/qdUpYlIzj9O39aLTqBREeGKeBrVtPzOjaYPmzkKMIQUs5I4Dd0clgOfDBTT
+ F7pmEcm/+U6nbOAt3QohxYG3KAhyVjiD4zh1Y/xVKv2H+olEgjvq+3aIjWnAnLgstFSR iw== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3n2wqw1j24-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Jan 2023 14:31:07 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30DEV6Ck009259
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Jan 2023 14:31:06 GMT
+Received: from [10.50.57.3] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 13 Jan
+ 2023 06:30:57 -0800
+Message-ID: <5081e96b-5b6c-4a5d-56fc-76a26632cd86@quicinc.com>
+Date:   Fri, 13 Jan 2023 20:00:55 +0530
 MIME-Version: 1.0
-Received: by 2002:a05:6e02:1282:b0:30d:c36b:403c with HTTP; Fri, 13 Jan 2023
- 06:23:55 -0800 (PST)
-Reply-To: hitnodeby23@yahoo.com
-From:   Hinda Itno Deby <atidigahcyril@gmail.com>
-Date:   Fri, 13 Jan 2023 06:23:55 -0800
-Message-ID: <CALHvQ-jffHwgwQxY7MVBOpZpcQX1hUnBOishkcFBMPm+SMZxqA@mail.gmail.com>
-Subject: Reply
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        UNDISC_FREEM,UNDISC_MONEY,URG_BIZ autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:12c listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5029]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [hitnodeby23[at]yahoo.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [atidigahcyril[at]gmail.com]
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.6 URG_BIZ Contains urgent matter
-        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.7 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 3/7] dt-bindings: pinctrl: qcom: Add ipq9574 pinctrl
+ bindings
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <tdas@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_poovendh@quicinc.com>
+References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
+ <20230110121316.24892-4-quic_devipriy@quicinc.com>
+ <b63600f9-82ef-83dc-1680-1df125b5d971@linaro.org>
+ <a0db608a-2c65-e831-abc2-072609fd7a5a@quicinc.com>
+ <06799086-1068-1288-b309-80c245f34ce8@linaro.org>
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <06799086-1068-1288-b309-80c245f34ce8@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: J1HYudvvvdyaSVOXzFhaeYyP3mw-zIP9
+X-Proofpoint-ORIG-GUID: J1HYudvvvdyaSVOXzFhaeYyP3mw-zIP9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-13_06,2023-01-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=794 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ suspectscore=0 impostorscore=0 clxscore=1015 phishscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301130095
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_SBL_CSS,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
--- 
-My name is Hinda Itno Deby Please I want us to discuss Urgent Business
-Proposal, if you are interested kindly reply to me so i can give you
-all the details.
 
-Thanks and God Bless You.
-Ms Hinda Itno Deby
+
+On 1/13/2023 7:46 PM, Krzysztof Kozlowski wrote:
+> On 13/01/2023 14:24, Devi Priya wrote:
+>>>> +    properties:
+>>>> +      pins:
+>>>> +        description:
+>>>> +          List of gpio pins affected by the properties specified in this
+>>>> +          subnode.
+>>>> +        items:
+>>>> +          oneOf:
+>>>> +            - pattern: "^gpio([0-9]|[1-5][0-9]|6[0-4])$"
+>>>> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
+>>>> +                      sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
+>>>> +                      qdsd_data3 ]
+>>>
+>>> These are ordered by name.
+>> The enum values seem to be ordered alphabetically.
+>> could you please help us understand the ordering?
+> 
+> q goes before s
+Oops! sorry. Will update
+> 
+>>>
+>>>> +        minItems: 1
+>>>> +        maxItems: 8
+>>>> +
+> 
+> Best regards,
+> Krzysztof
+> 
+Best Regards,
+Devi Priya
