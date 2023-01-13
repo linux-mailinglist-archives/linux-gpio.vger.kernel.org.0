@@ -2,112 +2,160 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC0A66A29A
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 20:05:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7164166A3FC
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 21:19:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjAMTFg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 14:05:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59626 "EHLO
+        id S231229AbjAMUTB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 15:19:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjAMTFe (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 14:05:34 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5580F544F5;
-        Fri, 13 Jan 2023 11:05:33 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pGPMg-003M27-Uf; Fri, 13 Jan 2023 20:05:22 +0100
-Received: from p57ae5361.dip0.t-ipconnect.de ([87.174.83.97] helo=[192.168.178.35])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pGPMg-000Hn8-Jc; Fri, 13 Jan 2023 20:05:22 +0100
-Message-ID: <fe09d811-e290-821d-ec8b-75936b6583c2@physik.fu-berlin.de>
-Date:   Fri, 13 Jan 2023 20:05:20 +0100
+        with ESMTP id S231232AbjAMUS7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 15:18:59 -0500
+X-Greylist: delayed 309 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 13 Jan 2023 12:18:50 PST
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E535C6537A;
+        Fri, 13 Jan 2023 12:18:47 -0800 (PST)
+Received: from [192.168.1.139] ([37.4.248.41]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MQ8OG-1p3HGP32MC-00M5Ne; Fri, 13 Jan 2023 21:13:25 +0100
+Message-ID: <916654ca-e70f-5663-f3a3-9b370c24aea9@i2se.com>
+Date:   Fri, 13 Jan 2023 21:13:23 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: remove arch/sh
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v2 1/2] pinctrl: bcm: bcm2835: Switch to use
+ ->add_pin_ranges()
 Content-Language: en-US
-To:     Rob Landley <rob@landley.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-References: <20230113062339.1909087-1-hch@lst.de>
- <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <CAMuHMdUcnP6a9Ch5=_CMPq-io-YWK5pshkOT2nZmP1hvNcwBAg@mail.gmail.com>
- <142532fb-5997-bdc1-0811-a80ae33f4ba4@physik.fu-berlin.de>
- <6891afb6-4190-6a52-0319-745b3f138d97@landley.net>
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-In-Reply-To: <6891afb6-4190-6a52-0319-745b3f138d97@landley.net>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+References: <20230113171051.19309-1-andriy.shevchenko@linux.intel.com>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <20230113171051.19309-1-andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.174.83.97
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:yiDXUOatf5Gel6EC+Ze8dBtbvVUfNu8pAQoeT5SLNKthxqjmm0Z
+ EB/rTIVwdV9ugtS9XV6YIm37R3ZaK3SGTp7OVGEbLeiJuJlzqmu+hCWZr/KDc6qgLNFD8Wd
+ HA0iveSHUmnlXYZF9tsnug8awNZ9mcZdGhilzSLUBtZOpNJR+hkWBo1CqHmo9fMurOH7fk7
+ 7BCDSTqCmMbH2QeN/EqOg==
+UI-OutboundReport: notjunk:1;M01:P0:AUkB9Elkla8=;4fAMlooaq1jdNCWRe32ofZjROZR
+ NsM4Qz7njl85Vy5fyaVGQMr+TOan2h2c4BgSGwkICJQOQpirFotwqwv9nMko9S8RTR2pKItot
+ 3Szwu7725Ubpdd1x2TuJSMzTKo7PFWBPy2y66o43rEtejcDqxjtqW58MSu+czoFJSWSgPJvUP
+ IavZHjlwlk5oJx82xErBHyhoriTHj0tJTgMVL6lifH/8gagHa06Xw7LsXa+GgEdme90yVf32W
+ I9SS+UqFjGx9ZDxNaP48TQTzAWeHk3cuN2vrMk/j9AYpmLYsPfassmKNM3hK6ySxzCYfhQj2P
+ 9JG2nZctSL1u6NMPZSPoVQPTQRcIVX0UpaAXl8hH94Y3o+sL9Shcf9jN4MXAEnzI0Ove/aGuX
+ YNGTewidrC3jwpDEfoI4bTnSghExQoZj8d8lFWUquSptuK0/CN96WJeF18gurDKwSbXE4i6Ee
+ GdUYd3P0nzwzDxFvWwY3kqg5tVsLhRa6XQ73oR+kvL/D/yYe0B9s5jS3MQXp4r8LtFogeVhpi
+ 4Nv9luVfa5/3zd7sshDwYTUbgiVqt+/IBLfrCF8oJ6Fi9z5ePxw7tV3CYXWvEn64b+QYa47RA
+ zoDUcfu+g5/RuQSOPfVluqdpHzSzS0sBcSm+McXN2zqcoTFWv2khhAeS4WqF0OdmOHVbR0qEx
+ FN7WxIK1VARqyOiiFZm+nDYIxSW+xpDmlfvxlbCwwQ==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob!
+Hi Andy,
 
-On 1/13/23 20:11, Rob Landley wrote:
->> I actually would be willing to do it but I'm a bit hesitant as I'm not 100%
->> sure my skills are sufficient. Maybe if someone can assist me?
-> 
-> My skills aren't sufficient and I dunno how much time I have, but I can
-> certainly assist. I test sh4 regularlyish and it's in the list of architectures
-> I ship binaries and tiny VM images for, just refreshed tuesday:
-> 
-> https://landley.net/toybox/downloads/binaries/0.8.9/
-> https://landley.net/toybox/downloads/binaries/mkroot/0.8.9/
-> 
-> (The sh2eb isn't a VM, it's a physical board I have here...)
-> 
-> There is definitely interest in this architecture. I'm aware Rich hasn't been
-> the most responsive maintainer. (I'm told he's on vacation with his family at
-> the moment, according to the text I got about this issue from the J-core
-> hardware guys in Japan.)
+Am 13.01.23 um 18:10 schrieb Andy Shevchenko:
+> Yeah, while the ->add_pin_ranges() shouldn't be used by DT drivers,
+> this one requires it to support quite old firmware descriptions that
+> do not have gpio-ranges property.
+>
+> The change allows to clean up GPIO library from OF specifics.
+> There is no functional change intended.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: fixed compilation issues (LKP), Cc'ed to the author of original code
+>
+> Btw, the commit d2b67744fd99 ("pinctrl: bcm2835: implement hook for
+> missing gpio-ranges") seems problematic in the fist place due to
+> odd of_node_put() call. I dunno how that part had been tested, or
+> how it's supposed to work, i.e. where is the counterpart of_node_get().
+> Anyway this change drops it for good.
 
-Well, maybe we can just give it a try together ...
+The countpart is in of_pinctrl_get(). I was just following the pattern 
+like in other drivers like gpio-rockchip. The original commit has been 
+tested by Florian Fainelli and me. I'm not sure if it's safe to drop it 
+completely.
 
-> The main reason we haven't converted everything to device tree is we only have
-> access to test hardware for a subset of the boards. Pruning the list of
-> supported boards and converting the rest to device tree might make sense. We can
-> always add/convert boards back later...
+Btw this is not the only platform affected by the gpio-ranges 
+compatibility issue [1].
 
-There is a patch by Yoshinori Sato which adds device tree support to SH. Maybe we
-can revive it.
+> Perhaps we can check gpio-ranges property presence inside the GPIO
+> library, so this ->add_pin_ranges() won't be called at all.
 
-Adrian
+I thought this could be very platform specific, so i implemented a hook. 
+But yes my initial hack modified gpiolib-of [2].
 
--- 
-  .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+[1] 
+- https://patchwork.kernel.org/project/linux-arm-msm/patch/20180412190138.12372-1-chunkeey@gmail.com/
 
+[2] - 
+https://lore.kernel.org/linux-arm-kernel/75266ed1-666a-138b-80f1-ae9a06b7bdf3@i2se.com/
+
+> Also I would like to understand the dance around checking for pin
+> control device. The original commit lacks of comments in the non-trivial
+> code.
+>
+>   drivers/pinctrl/bcm/pinctrl-bcm2835.c | 13 +++++++------
+>   1 file changed, 7 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> index 7857e612a100..29f278c49103 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> @@ -358,16 +358,17 @@ static int bcm2835_gpio_direction_output(struct gpio_chip *chip,
+>   	return 0;
+>   }
+>   
+> -static int bcm2835_of_gpio_ranges_fallback(struct gpio_chip *gc,
+> -					   struct device_node *np)
+> +static int bcm2835_add_pin_ranges_fallback(struct gpio_chip *gc)
+>   {
+> +	struct device_node *np = dev_of_node(gc->parent);
+>   	struct pinctrl_dev *pctldev = of_pinctrl_get(np);
+>   
+> -	of_node_put(np);
+> -
+>   	if (!pctldev)
+>   		return 0;
+>   
+> +	if (of_property_read_bool(np, "gpio-ranges"))
+> +		return 0;
+> +
+>   	gpiochip_add_pin_range(gc, pinctrl_dev_get_devname(pctldev), 0, 0,
+>   			       gc->ngpio);
+>   
+> @@ -388,7 +389,7 @@ static const struct gpio_chip bcm2835_gpio_chip = {
+>   	.base = -1,
+>   	.ngpio = BCM2835_NUM_GPIOS,
+>   	.can_sleep = false,
+> -	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
+> +	.add_pin_ranges = bcm2835_add_pin_ranges_fallback,
+>   };
+>   
+>   static const struct gpio_chip bcm2711_gpio_chip = {
+> @@ -405,7 +406,7 @@ static const struct gpio_chip bcm2711_gpio_chip = {
+>   	.base = -1,
+>   	.ngpio = BCM2711_NUM_GPIOS,
+>   	.can_sleep = false,
+> -	.of_gpio_ranges_fallback = bcm2835_of_gpio_ranges_fallback,
+> +	.add_pin_ranges = bcm2835_add_pin_ranges_fallback,
+>   };
+>   
+>   static void bcm2835_gpio_irq_handle_bank(struct bcm2835_pinctrl *pc,
