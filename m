@@ -2,103 +2,91 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7DAB66A4AD
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 21:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52F4666A504
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 22:19:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbjAMU7n (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 15:59:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42876 "EHLO
+        id S230088AbjAMVT0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 16:19:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbjAMU7k (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 15:59:40 -0500
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 095BE39C;
-        Fri, 13 Jan 2023 12:59:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7Ycz4sOcMTZWS9UTeHxz8IEHqp/XNO5Nlvj5YrrENHU=; b=IP+O+5rrpKSQ+vlYlSEio+A812
-        +ulVgdTMpZfDLIookFWdS5A7xFa9lfAaRmw/bx3s8Rtobfba45806uZSLAFyS4gNdoiO1BJGgkner
-        ta580r+/Mh0ZdXXj9EH+g/fAzLoXv7ZA/Roe7qEftxpwKwsw2w9wIV9pK4psf/3TxC6WSyKSrmMeI
-        f4x7ZKTAj8pvbRVDawW+lZMJxDCGbIvIsOJsf8coyzwVgiz/PMTd3tm/+ij6I6JNz4Nx+gWxkYkBy
-        giozuQ7g9z/ky/noow9lU9q2dkSXyd47TWUqv7JUc1hD2pQHg8EWgI87tedcUEwU6u/UP3a1pDbcH
-        mEsBffEw==;
-Received: from p200300ccff089e001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff08:9e00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1pGR98-00059m-6A; Fri, 13 Jan 2023 21:59:30 +0100
-Received: from andi by aktux with local (Exim 4.94.2)
-        (envelope-from <andreas@kemnade.info>)
-        id 1pGR97-009hiS-Ae; Fri, 13 Jan 2023 21:59:29 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
-        linus.walleij@linaro.org, brgl@bgdev.pl,
-        linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] gpio: omap: use dynamic allocation of base
-Date:   Fri, 13 Jan 2023 21:59:22 +0100
-Message-Id: <20230113205922.2312951-1-andreas@kemnade.info>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S231445AbjAMVSx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 16:18:53 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B684544EA;
+        Fri, 13 Jan 2023 13:18:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673644710; x=1705180710;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y94ANSG9Z/MBtqJPgLtw8XoBY12InfxWWGAMoz1ZkOo=;
+  b=VRBuLSYcas+BB5DgUB5tgs1rkdPGdlnIeuQE0zhVledF2QN55QxogmsW
+   Y0Uloe3mdimdvgSLOEk5XvhM4KmFywlPDO01syZ21es5XPlWXi/mS9tdt
+   Obao+DvR5iFx9PsNWRfJhF0xNZeYSbVZxt2PBXc0Mxi004hEl1VqsTmDh
+   C8BPHsumfsijkAFNKWjEgtUy6V5N+wR2wG2Ts0p+gmqYJ1w08LSmH1iZb
+   4DdzUD7v3KniVsyZioT5iKAQjcO7P2c6wth9hjxk8zULWDHDDOepIsBXx
+   L4lkdqVU0o1XA5BqNWD1hcaFhxwco3Odf0HaUocxdKmHWR/3O6r9Su/xp
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="386443262"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="386443262"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 13:18:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="766163817"
+X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
+   d="scan'208";a="766163817"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jan 2023 13:18:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pGRRP-008r4U-36;
+        Fri, 13 Jan 2023 23:18:23 +0200
+Date:   Fri, 13 Jan 2023 23:18:23 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Remove unused of_mm_gpiochip_add()
+Message-ID: <Y8HKn4gZkPqpvTAS@smile.fi.intel.com>
+References: <20230112144526.66794-1-andriy.shevchenko@linux.intel.com>
+ <20230113202826.GA2868820-robh@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: -1.0 (-)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230113202826.GA2868820-robh@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Static allocatin is deprecated and may cause probe mess,
-if probe order is unusual.
+On Fri, Jan 13, 2023 at 02:28:26PM -0600, Rob Herring wrote:
+> On Thu, Jan 12, 2023 at 04:45:26PM +0200, Andy Shevchenko wrote:
+> > of_mm_gpiochip_add() is unused API, remove it for good.
 
-like this example
-[    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 161..178
-[    2.561401] gpiochip_find_base: found new base at 160
-[    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
-[    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
-[...]
-[    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
-[    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
-[    2.703643] gpiochip_find_base: found new base at 178
-[    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
-[    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
-[...]
-[    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecated, use dynamic allocation.
-[    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap, cannot add chip
-[    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) failed to register, -16
-[    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register gpio chip
+...
 
-So probing was done in an unusual order, causing mess
-and chips not getting their gpio in the end.
+> Keep going!
+> 
+> Looks like of_get_gpio_flags, of_get_gpio, of_gpio_count,
+> of_gpio_named_count, and of_get_named_gpio_flags are all unused.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
-maybe CC stable? not sure about good fixes tag.
+Have you checked Linux Next? Everything, but of_gpio_named_count(),
+which moved to be static, is taken care of by Dmitry Torokhov patches.
 
- drivers/gpio/gpio-omap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
-index 80ddc43fd875..f5f3d4b22452 100644
---- a/drivers/gpio/gpio-omap.c
-+++ b/drivers/gpio/gpio-omap.c
-@@ -1020,7 +1020,7 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
- 		if (!label)
- 			return -ENOMEM;
- 		bank->chip.label = label;
--		bank->chip.base = gpio;
-+		bank->chip.base = -1;
- 	}
- 	bank->chip.ngpio = bank->width;
- 
 -- 
-2.30.2
+With Best Regards,
+Andy Shevchenko
+
 
