@@ -2,111 +2,125 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 365DE66A214
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 19:30:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66FAF66A27C
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 20:00:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbjAMSaU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 13:30:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41798 "EHLO
+        id S230490AbjAMTAC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 14:00:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229892AbjAMS3t (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 13:29:49 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725BF54713;
-        Fri, 13 Jan 2023 10:25:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673634353; x=1705170353;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yEyvIA73WWBK7QiaW0fyWgPeZ4RwekQQZmsZrEdJq5k=;
-  b=m+2+MGijumBrjGwsxFA8jb19vvKSMznI+Z2CluvP+9mTzXh6lHfu7vE5
-   brUogOIJl84KEDnM3iFM3++lB5AYfPygfss5Ak2s+6MznmrO/AR6lSZa6
-   vlH1EdVyXT8RV1SpBFz7pnDlVZ5tw5SRGeaFuSYC/63BpA84TCkU/AtdF
-   ipDr52XF6lIrhTa0linyNB19H3keQ1tGMe2DrE0Z2LW9qXeaiHuRPpQ36
-   FVU6IE5Jd2LxxNOQ/+6zps/U4RtI0iPPBtDpcoA8xVgx4oYtRphYc4aaQ
-   JJLrmgQy+ukbd7J4k1IH7MfSkoQjHn1FKS1I54Op7hynlRdwUlAzRN+vt
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="410303424"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="410303424"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jan 2023 10:25:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="800676179"
-X-IronPort-AV: E=Sophos;i="5.97,214,1669104000"; 
-   d="scan'208";a="800676179"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 13 Jan 2023 10:25:47 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 3D35F92; Fri, 13 Jan 2023 20:26:21 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH v2 2/2] gpio: wcd934x: Use proper headers and drop OF_GPIO dependency
-Date:   Fri, 13 Jan 2023 20:26:19 +0200
-Message-Id: <20230113182619.16800-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230113182619.16800-1-andriy.shevchenko@linux.intel.com>
-References: <20230113182619.16800-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230198AbjAMS7y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 13:59:54 -0500
+Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF5B551DC
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 10:59:50 -0800 (PST)
+Received: by mail-oo1-xc2e.google.com with SMTP id y15-20020a4aaa4f000000b004e6b4e0acc0so5782652oom.0
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 10:59:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bTIDomgS8mXkDJCvxm5Zm+LjWmMOagP4MCI8VhlfZ4M=;
+        b=PS9bts8WEYUdHc2dq03MseWIdo5SmkGasWJ1IHK/82VNd2x1nauvFpnIRKJHReewV4
+         qHgmemCtG+n4JzEug1j/TkXXGr7XuvlNF4IBzbNfnN6lagwFrOKhEymKlD3N/LDBaGvv
+         sKYDqBaLKXsSv5VTvSWrpB1Ro6mV2B1zSTvwS3WrXPPhGJgdWKpIwnEsYL1x49CphPxG
+         SL4YOgYdR5jGUY39ZZius3Ig7i4WfTYOC67k8Vh1lto4GbCgV9uKa97KEalM5EmLMGPn
+         3yGQHE93+pmLVFjd1TlIZLJrfjBmFeNgyn5vD6/2wKe8LZIYKJC7joRnrftdzonfyS0K
+         +t4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTIDomgS8mXkDJCvxm5Zm+LjWmMOagP4MCI8VhlfZ4M=;
+        b=PEHRtagl2uSG+uOdh8MET1aNCHoNqKERIo7Ei9RJMVZ6TrVP4hUnmBjSu/Hz8le212
+         RI8hACNSBWfWoH3/cQWVcxNo50yA8plOv6O80PMfSP3JWs4mfQB0aHCuC77yj591aJeI
+         xNRma6eOOY9aB1tPtY2aLn4/RUQ+qAzZunSxL7kdC0WlYyp1stkSoiSr6C3auRQYyCNH
+         lq66a+QUbAeFj1gorYKkFv0U4oC/cVz+n+xkgzSHbSZZAwoQRTSd8VzfSqvBue+pgCAD
+         pcd7zMD7adGGkFECApfE+ES9iW/2ZgkFoWn8QCe37XJbLmNsDfQ2NB7LMFsMy6iKUz4y
+         598w==
+X-Gm-Message-State: AFqh2kqDmJwJHKgZrR+rU4tpYCW80Mj4UjH6ar2DYgiziw6qfVQ4Ss6N
+        XRddueeyIA9dKDneLUxR62Sa3Q==
+X-Google-Smtp-Source: AMrXdXvaOiO0G10Az4EGLc64Vx6N+KrZr3PuLGXv0M+M3iF7lrA3WUc8R2fIq6AYtp8ZC6Mk4E9lCQ==
+X-Received: by 2002:a4a:c594:0:b0:4e7:5d43:a654 with SMTP id x20-20020a4ac594000000b004e75d43a654mr22358114oop.0.1673636389556;
+        Fri, 13 Jan 2023 10:59:49 -0800 (PST)
+Received: from [192.168.86.224] ([136.62.38.22])
+        by smtp.gmail.com with ESMTPSA id bc31-20020a056820169f00b0049f8b4b2095sm10111163oob.44.2023.01.13.10.59.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jan 2023 10:59:48 -0800 (PST)
+Message-ID: <6891afb6-4190-6a52-0319-745b3f138d97@landley.net>
+Date:   Fri, 13 Jan 2023 13:11:56 -0600
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: remove arch/sh
+Content-Language: en-US
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+ <CAMuHMdUcnP6a9Ch5=_CMPq-io-YWK5pshkOT2nZmP1hvNcwBAg@mail.gmail.com>
+ <142532fb-5997-bdc1-0811-a80ae33f4ba4@physik.fu-berlin.de>
+From:   Rob Landley <rob@landley.net>
+In-Reply-To: <142532fb-5997-bdc1-0811-a80ae33f4ba4@physik.fu-berlin.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The driver doesn't depend on the OF_GPIO to be complied. Hence
-the proper header to use is mod_devicetable.h. Replace of*.h with
-the above mentioned and drop redundant dependency.
+On 1/13/23 02:52, John Paul Adrian Glaubitz wrote:
+> Hi Geert!
+> 
+> On 1/13/23 09:26, Geert Uytterhoeven wrote:
+>> Indeed.  The main issue is not the lack of people sending patches and
+>> fixes, but those patches never being applied by the maintainers.
+>> Perhaps someone is willing to stand up to take over maintainership?
+> 
+> I actually would be willing to do it but I'm a bit hesitant as I'm not 100%
+> sure my skills are sufficient. Maybe if someone can assist me?
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: added one more missing header (LKP)
- drivers/gpio/Kconfig        | 2 +-
- drivers/gpio/gpio-wcd934x.c | 6 ++++--
- 2 files changed, 5 insertions(+), 3 deletions(-)
+My skills aren't sufficient and I dunno how much time I have, but I can
+certainly assist. I test sh4 regularlyish and it's in the list of architectures
+I ship binaries and tiny VM images for, just refreshed tuesday:
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 9995e23673dd..a2f64f880163 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -700,7 +700,7 @@ config GPIO_VX855
- 
- config GPIO_WCD934X
- 	tristate "Qualcomm Technologies Inc WCD9340/WCD9341 GPIO controller driver"
--	depends on MFD_WCD934X && OF_GPIO
-+	depends on MFD_WCD934X
- 	help
-          This driver is to support GPIO block found on the Qualcomm Technologies
- 	 Inc WCD9340/WCD9341 Audio Codec.
-diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
-index 817750e4e033..b999af6b900b 100644
---- a/drivers/gpio/gpio-wcd934x.c
-+++ b/drivers/gpio/gpio-wcd934x.c
-@@ -1,11 +1,13 @@
- // SPDX-License-Identifier: GPL-2.0
- // Copyright (c) 2019, Linaro Limited
- 
-+#include <linux/mod_devicetable.h>
- #include <linux/module.h>
--#include <linux/gpio/driver.h>
-+#include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/slab.h>
--#include <linux/of_device.h>
-+
-+#include <linux/gpio/driver.h>
- 
- #define WCD_PIN_MASK(p) BIT(p)
- #define WCD_REG_DIR_CTL_OFFSET 0x42
--- 
-2.39.0
+https://landley.net/toybox/downloads/binaries/0.8.9/
+https://landley.net/toybox/downloads/binaries/mkroot/0.8.9/
 
+(The sh2eb isn't a VM, it's a physical board I have here...)
+
+There is definitely interest in this architecture. I'm aware Rich hasn't been
+the most responsive maintainer. (I'm told he's on vacation with his family at
+the moment, according to the text I got about this issue from the J-core
+hardware guys in Japan.)
+
+The main reason we haven't converted everything to device tree is we only have
+access to test hardware for a subset of the boards. Pruning the list of
+supported boards and converting the rest to device tree might make sense. We can
+always add/convert boards back later...
+
+Rob
