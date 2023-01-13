@@ -2,59 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87C70669264
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 10:10:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC25A669357
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 10:53:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241034AbjAMJKg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 04:10:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        id S240885AbjAMJxF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 04:53:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241102AbjAMJI2 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 04:08:28 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698B895B2;
-        Fri, 13 Jan 2023 01:06:18 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 92488B820D0;
-        Fri, 13 Jan 2023 09:06:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E4C4C433D2;
-        Fri, 13 Jan 2023 09:05:55 +0000 (UTC)
-Message-ID: <649a45a5-1680-dd71-ed74-df16d4353638@xs4all.nl>
-Date:   Fri, 13 Jan 2023 10:05:54 +0100
+        with ESMTP id S232463AbjAMJwW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 04:52:22 -0500
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DF7D482BD
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 01:47:53 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id j17so32370513lfr.3
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 01:47:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mMDcJloPPpon31SXRmr+wIniR1v+TNn4h85LvZS+4mw=;
+        b=QmSeN2ExkmWtu3Oz6pMG0SU20DjUqjYhgl9Ev7DJvIgzLyC9bafTOBLL90KQtJKaiI
+         GMr02PivL8YUkpg7lAN4k/vXYo7Ytr1Lqhv6fpojldy4K5rgKvPsZQkRmcPSqC6/vySj
+         XJ6qQ2MlS6k/1KhJZkpHZ5eQTKjoh6PAUL8AUdApPdbrEpOzrl1pSg+j9Hv2RYqC/qTa
+         8S94GUbSMRAmOsMcLrajXRao533Gi4w6i6xLVISi5wzDBED1vsqWudrIsSVauqK8nXiV
+         pbMcDbV76ApUEvyEpeEhA007B2XlpryB0Shvp17R0pomdbDDYAKXhx2MDXMQr7Swaiw+
+         Aiag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mMDcJloPPpon31SXRmr+wIniR1v+TNn4h85LvZS+4mw=;
+        b=Et4kkoNc8Zh+Xdd17jsrta0boQa9Yc164rKMBaItlmPHRQds/5N2dYdAUcRq9wW82u
+         oAUTm+0EoYstYXbubJrKGPT1YZqOVSKAOvFKJDpVC9bQ1zxaYgx2gL8dl+zev5l61mTX
+         MrbBs4XpVkEqLX3tylxwUHH+HapFPkWAliY41m2s9nCN8bqqUA+oU5jLi6qCRBiXMjN3
+         fBWdjTwqo1C8IP9ogYP9B4Vl0OrW+pvoc5fzKnLyRkFWK46kT9aBHFEK+yQWSL6NKfBo
+         7h3GuHfdFmyPuh74rBJq++0de0Aiu8KxJZynTvze75Foxxmjv4jiBCu4rKc0Nu1UWNxy
+         fkig==
+X-Gm-Message-State: AFqh2krjcWrAjRen2HpCBegGLZFvMFBjzxjhZv8aTxgnUQpTIzF9qGzD
+        MW2YOocS6UlgHDOw6rNMm9hmRg==
+X-Google-Smtp-Source: AMrXdXu2RuvCI+VFyDd5Bv51Td4/kqS8TQuC829IU+u+V+qJS3ZHJ/IW5R4JElAcio9VBrqn8P2o/w==
+X-Received: by 2002:a05:6512:3601:b0:4b5:9bfa:801a with SMTP id f1-20020a056512360100b004b59bfa801amr18880493lfs.46.1673603271776;
+        Fri, 13 Jan 2023 01:47:51 -0800 (PST)
+Received: from fedora.. ([85.235.10.72])
+        by smtp.gmail.com with ESMTPSA id w29-20020a0565120b1d00b004b6e9530900sm3726712lfu.110.2023.01.13.01.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 01:47:51 -0800 (PST)
+From:   Linus Walleij <linus.walleij@linaro.org>
+To:     Dipen Patel <dipenp@nvidia.com>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] hte: tegra-194: Use proper includes
+Date:   Fri, 13 Jan 2023 10:47:47 +0100
+Message-Id: <20230113094747.247427-1-linus.walleij@linaro.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 20/22] media: remove sh_vou
-Content-Language: en-US
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-References: <20230113062339.1909087-1-hch@lst.de>
- <20230113062339.1909087-21-hch@lst.de>
- <Y8EPvllOwhODRUiP@pendragon.ideasonboard.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-In-Reply-To: <Y8EPvllOwhODRUiP@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,35 +67,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/01/2023 09:01, Laurent Pinchart wrote:
-> Hi Christoph,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Jan 13, 2023 at 07:23:37AM +0100, Christoph Hellwig wrote:
->> Now that arch/sh is removed this driver is dead code.
->>
->> Signed-off-by: Christoph Hellwig <hch@lst.de>
->> ---
->>  drivers/media/platform/renesas/Kconfig  |    9 -
->>  drivers/media/platform/renesas/Makefile |    1 -
->>  drivers/media/platform/renesas/sh_vou.c | 1375 -----------------------
-> 
-> You can also emove include/media/drv-intf/sh_vou.sh. With that, and the
-> corresponding MAINTAINERS entry dropped,
-> 
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+The test driver uses the gpiod consumer API so include the right
+<linux/gpio/consumer.h> header. This may cause a problem with
+struct of_device_id being implcitly pulled in by the legacy
+header <linux/gpio.h> so include <linux/mod_device_table.h>
+explicitly as well.
 
-And with that you can also add my Ack:
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/hte/hte-tegra194-test.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-
-Regards,
-
-	Hans
-
-> 
->>  3 files changed, 1385 deletions(-)
->>  delete mode 100644 drivers/media/platform/renesas/sh_vou.c
-> 
+diff --git a/drivers/hte/hte-tegra194-test.c b/drivers/hte/hte-tegra194-test.c
+index 5d776a185bd6..a255ec3f8e8d 100644
+--- a/drivers/hte/hte-tegra194-test.c
++++ b/drivers/hte/hte-tegra194-test.c
+@@ -6,10 +6,11 @@
+  */
+ 
+ #include <linux/err.h>
++#include <linux/mod_device_table.h>
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+ #include <linux/interrupt.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/timer.h>
+ #include <linux/platform_device.h>
+ #include <linux/workqueue.h>
+-- 
+2.34.1
 
