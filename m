@@ -2,118 +2,94 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C92D669A03
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 15:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA0DB669A16
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 15:29:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229479AbjAMOZe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 09:25:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49198 "EHLO
+        id S229453AbjAMO3x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 09:29:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjAMOWy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 09:22:54 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FA57289B
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 06:16:44 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id u9so52690160ejo.0
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 06:16:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZQ8HvKYQ47OTqDVjRH8LTpbxjkkWcoNwTcrLCx60dq8=;
-        b=qZRIbUIl0ZeWNS8pwD4Wq6APrPK9H5UmGJCnG5nIHjyQkGnVhBvrxNZBm6nLeiLunQ
-         wmgEaOV/TNIMsjFwatJbrktHTYuN5Cum1NARgT6JDAJ066Ee0Kjmia6YD9N9xOaQrgMX
-         lz+RMPWS5bwxgNdpmdUy62D8t8A1gb2a7WH8AsBc/6nz7GP9YIVWLCRXUCDNVDxJRdZF
-         H9bTZJWcZnjHgvCqCS6tpcdNBZAIAc8sNkwGTlu58hFUZZu9AnW/Z5FzqHggVK+sMULm
-         bZ1zEr0AQC1wk/erthlLGcXPIjdkA7ofu7xLnS99boY1K4UesmPy8ENkYiYSsV82+Z/e
-         LOSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZQ8HvKYQ47OTqDVjRH8LTpbxjkkWcoNwTcrLCx60dq8=;
-        b=y7iaTyBcrQeQ+cJRuXfWk17q0EOHQOW5iIPpMVle10mvlMPYVbY6Q41PwbBk71fNx0
-         ZH/DmNx/OYaWmIIUI0+stZ1jxZZA316KBMk7gfMhAWTRSk1qukaXmYKTdApLHZ/Px8jq
-         NSuITzhPO/MOnHDPoSjGo7v2ffy+J96bMfUboaH4WmnYMPNoxfD89y6pQG7ykERNbvOs
-         TuC7x8/UbpwtspIlh1G6wJYtUm2zQ2KIKZgmjtBEQp7cISJTLj10EnSojUgeSAqix0ZY
-         3Aga8RWYOlS2OVYm+mhgDn1G11W8d18l6wxQDKmRq+I2eQmDEkSuC9JU8w2LbhiWLCXN
-         6sLQ==
-X-Gm-Message-State: AFqh2kpsTs0oaF2oYFGS+eUN9Y7SDWONo1oOoA+QPPZwxZuORtVODn42
-        wvXQh0pc/drzBv1/eNu/PsrGuw==
-X-Google-Smtp-Source: AMrXdXvOy1QBDodaKkn3VZGyoZrz3NQaYK1Sz6QjfCOA2Z+4+fzPifTracuLw+LEjqRRyKd9k8L7hQ==
-X-Received: by 2002:a17:906:284a:b0:7c1:e78:1e2 with SMTP id s10-20020a170906284a00b007c10e7801e2mr86503655ejc.11.1673619398943;
-        Fri, 13 Jan 2023 06:16:38 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id d26-20020a170906305a00b0084c90164a56sm8551726ejd.29.2023.01.13.06.16.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jan 2023 06:16:38 -0800 (PST)
-Message-ID: <06799086-1068-1288-b309-80c245f34ce8@linaro.org>
-Date:   Fri, 13 Jan 2023 15:16:35 +0100
+        with ESMTP id S229779AbjAMO3D (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 09:29:03 -0500
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::223])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92D10FF;
+        Fri, 13 Jan 2023 06:19:28 -0800 (PST)
+Received: (Authenticated sender: herve.codina@bootlin.com)
+        by mail.gandi.net (Postfix) with ESMTPSA id 3A5AA60013;
+        Fri, 13 Jan 2023 14:19:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1673619566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=48ADDpQM9z/BZ40yXTCecgBCKKneMYXS0AEi6nY1rNY=;
+        b=pxDShVxpca+jED54OGgdBg2dQ/oLPtWL3k1XprzkQgOZNVmQB2J8anIbjl9TH5ndSi8EtM
+        CVDwgeA/F1Rwz2aJFbe2d0uZMU8kwHdAq/sC33IEJYKedCQX6NkyE/Xhs6hNj1eFiczDsg
+        MxGIigt6L9diQdCvI0t2FH80R9ieFCEml7Orp6TKOR/G0i2wQngnIXJH/3cpcfc6nQpN5s
+        WO84G9SQyVaYOhrqgcXTjW5qRR9J30DCDtuvGO/9n2yWGs4irpkQLh+jnRHudKr2MV6S35
+        T8m1yxS6wMWcU80yb9BPjOkelGxc9ooexqQI/4QwIZIxZRKqpr6PujFTFg8Q1Q==
+Date:   Fri, 13 Jan 2023 15:19:23 +0100
+From:   Herve Codina <herve.codina@bootlin.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/3] ASoC: codecs: Add support for the Renesas IDT821034
+ codec
+Message-ID: <20230113151923.086a0495@bootlin.com>
+In-Reply-To: <Y8FVz/Mp5xSdI34a@sirena.org.uk>
+References: <20230111134905.248305-1-herve.codina@bootlin.com>
+        <20230111134905.248305-3-herve.codina@bootlin.com>
+        <Y77DKSdZf27qE+xl@sirena.org.uk>
+        <20230111174022.077f6a8c@bootlin.com>
+        <Y774bY4icD8RuMnX@sirena.org.uk>
+        <20230113090431.7f84c93a@bootlin.com>
+        <Y8FVz/Mp5xSdI34a@sirena.org.uk>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.34; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 3/7] dt-bindings: pinctrl: qcom: Add ipq9574 pinctrl
- bindings
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
- <20230110121316.24892-4-quic_devipriy@quicinc.com>
- <b63600f9-82ef-83dc-1680-1df125b5d971@linaro.org>
- <a0db608a-2c65-e831-abc2-072609fd7a5a@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <a0db608a-2c65-e831-abc2-072609fd7a5a@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 13/01/2023 14:24, Devi Priya wrote:
->>> +    properties:
->>> +      pins:
->>> +        description:
->>> +          List of gpio pins affected by the properties specified in this
->>> +          subnode.
->>> +        items:
->>> +          oneOf:
->>> +            - pattern: "^gpio([0-9]|[1-5][0-9]|6[0-4])$"
->>> +            - enum: [ sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
->>> +                      sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
->>> +                      qdsd_data3 ]
->>
->> These are ordered by name.
-> The enum values seem to be ordered alphabetically.
-> could you please help us understand the ordering?
+Hi Mark,
 
-q goes before s
+On Fri, 13 Jan 2023 12:59:59 +0000
+Mark Brown <broonie@kernel.org> wrote:
 
->>
->>> +        minItems: 1
->>> +        maxItems: 8
->>> +
+> On Fri, Jan 13, 2023 at 09:04:31AM +0100, Herve Codina wrote:
+>=20
+> > For DAPM (struct snd_soc_dapm_widget), no kind of .put() and .get()
+> > are available. I will use some Ids for the 'reg' value and use the
+> > .write() and .read() hooks available in struct snd_soc_component_driver
+> > in order to handle these Ids and so perform the accesses. =20
+>=20
+> That's what the event hooks are for - there's plenty of widgets using
+> SND_SOC_NOPM as the register, look at those for examples.
+
+Indeed, got it.
+Thanks for pointing it.
 
 Best regards,
-Krzysztof
+Herv=C3=A9
 
+--=20
+Herv=C3=A9 Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
