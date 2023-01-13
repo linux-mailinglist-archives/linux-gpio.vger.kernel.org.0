@@ -2,53 +2,53 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13DBC6694C0
-	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 11:53:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D49A46694C5
+	for <lists+linux-gpio@lfdr.de>; Fri, 13 Jan 2023 11:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241074AbjAMKxP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 13 Jan 2023 05:53:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        id S241051AbjAMKx2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 13 Jan 2023 05:53:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241146AbjAMKwI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 05:52:08 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D441176AE3
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 02:50:43 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id qk9so51415326ejc.3
-        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 02:50:43 -0800 (PST)
+        with ESMTP id S231327AbjAMKwa (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 13 Jan 2023 05:52:30 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43FF27A382
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 02:50:47 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id vm8so51387552ejc.2
+        for <linux-gpio@vger.kernel.org>; Fri, 13 Jan 2023 02:50:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3myJhmUiWtH4lRuqHXfTN8UvF1xgmdxDNFNibkPzqEo=;
-        b=BC9MlILMDFqLAU51lB/3MZX+vYQ8+pMmfSDVPlktQN/IGNMDi6nOhvsBsAFuGdyU1s
-         nfC7Ms5Ph7h8D479deeejcBG6DqlcvEuV9XD4Lup9fMztlZaeJVgTlxTZDGDHFUBT6N2
-         4G2E/mQh1DTDilCdaJjdUGL1duCG2ayQCN+rgMyfEk15h/9dm8PFrT7AbutXDrlWk7kj
-         pmNk84lbD1FCYIUueUfz+UHxsqnewAUf9xEMNP24gaDsM6x/AJaj4Phs5H4SIqx0ZptO
-         jQnG14NR3T4Zb5zjzV/t4c1uLXYYe2yiiZcgiV9wt3UmB5tOgeIdvICq53jTFIJTCcoD
-         38JQ==
+        bh=daaBWYOrBnQYg9q+B6TyN/KTfAbz0oudZSuF4xUKLrc=;
+        b=Y18IEjARhqhfnloO7RsBe9BxtQKpLTPYmklXYOVOahBQKfhtqdslQ2UHWNDMMqZN8L
+         ec/UYQirwtVyNfee5573eY5xBQfytVQJpqjbmV2ByNkeIm+fMn6OsXCjZH/7itmSFJWI
+         XeRj1U8EVfkKQLf93K72dEWbwRWd1g0Q5H08W/SZKrLR+Cy/lkfswGbst1oiO5IoJ/C1
+         SPKOI8do6s3LBOKchp3E7mn6r5Auv+AtCoy+SAAgVT+/9XopWJg1NWhRJIMhx7+ODHAM
+         fst0oOpu/pvgpdSnqZ81dkKifcX2zmXVHm8u/xAg/GODPzCJUpla8S0GtJ33Va316WSZ
+         wVPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3myJhmUiWtH4lRuqHXfTN8UvF1xgmdxDNFNibkPzqEo=;
-        b=PGZq71xx7nlZLezBJ6k41QqsYXdAlmK2aSjdSxs1H4BBz+92qMhvDIEBfVPuxn46JP
-         R1ipZq7s1sRtokcn4rg9w2qCi4Ht5bd/f9uhCC9NKBmTmLLpY61PEPdaljTHjjqAidBI
-         PHcD/hL4c1jOCL5nhKMIiPAfaS9PfNQ2QLGmgDfkXFlyE25w/sKyNEalYHouZd8tp0+6
-         khJz8c+PKLzyTJRKMyUo9TTFxmKif5ZJdKcaLBjun/VP8o7XUc6uZYzAJQxxNxcisMUO
-         RA6cP3lF6iPBER9xxuA75bEJuNMDRx7/J6roU0MEPM8jvISIAijB4SElD+i/CYl0PUSq
-         6t0Q==
-X-Gm-Message-State: AFqh2koZs8EcCYNDXnOfkUKOU8mSB2l9hdHaJS9ZtUJDZeLdC9k2i7nE
-        1eHJJjO+FR3+QmNoqljUVsmA47nGcR5Le0Nc
-X-Google-Smtp-Source: AMrXdXuC+Ik1UNqGaX8tn7V1Fpmvu8fTO228HDTEWSJRFm2T0LYJ0k3KNCWO1pFolMux+0RzuAcdJg==
-X-Received: by 2002:a17:906:5dad:b0:7c0:dfba:54d3 with SMTP id n13-20020a1709065dad00b007c0dfba54d3mr10799998ejv.20.1673607043247;
-        Fri, 13 Jan 2023 02:50:43 -0800 (PST)
+        bh=daaBWYOrBnQYg9q+B6TyN/KTfAbz0oudZSuF4xUKLrc=;
+        b=CJ9DgY19VG8rb6vs/6O6Rp0Ze68pGXOJl6NJKS+hcF2+Mq8QN0+7ctxp5cwwjKLv2G
+         K4fEvkOKq8KeMIig0dXnDaYHW1l2tyATtUGwDtprNKrq015fXfBOgx6cgl3pammZQ8hq
+         5UVGgxgv2sC7Y1ryCO1XaUj3RVrAbwThluIB6UNpVN3vls8fI7XM3oFk6S2qHbhKpOWm
+         hTzjFhw0wd3jOAHfIsgJhq4OkPlJgNf+8tEEg3ULS+KnxkIZE3Q0cuIWUrQ93rsqUBLE
+         H46ktDPk6SmChqbGHhhZSeLaleUZWJd+fgCla/kZyIbEBc65r+YuwTudtARFhYc942D9
+         RY4Q==
+X-Gm-Message-State: AFqh2kqsY2xfU+k7u9oQ1PomUY73z9FpyWe90uLoVlwA0mMQUcS4/2yM
+        i96WjqHvzPpTZS26+2TTejappAwuYcqHFMiR
+X-Google-Smtp-Source: AMrXdXthL7IXJbIWxDM10g63/s7u5J1+6e3R1l3oE+fxB7tyKaUacaUZP6InOPWMjAKOnTgVS4AUhg==
+X-Received: by 2002:a17:907:d50e:b0:7b1:316c:38f5 with SMTP id wb14-20020a170907d50e00b007b1316c38f5mr73162178ejc.30.1673607045700;
+        Fri, 13 Jan 2023 02:50:45 -0800 (PST)
 Received: from krzk-bin.. ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id c2-20020a17090618a200b0077a8fa8ba55sm8348581ejf.210.2023.01.13.02.50.39
+        by smtp.gmail.com with ESMTPSA id c2-20020a17090618a200b0077a8fa8ba55sm8348581ejf.210.2023.01.13.02.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 02:50:42 -0800 (PST)
+        Fri, 13 Jan 2023 02:50:45 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 To:     linux-gpio@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
@@ -67,12 +67,12 @@ To:     linux-gpio@vger.kernel.org,
         Stephan Gerhold <stephan@gerhold.net>,
         Linus Walleij <linus.walleij@linaro.org>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: (subset) [PATCH 6/9] dt-bindings: pinctrl: qcom,sm8350-tlmm: correct pins pattern
-Date:   Fri, 13 Jan 2023 11:50:17 +0100
-Message-Id: <167360698783.32701.16349619919183432543.b4-ty@linaro.org>
+Subject: Re: (subset) [PATCH 7/9] dt-bindings: pinctrl: qcom: allow nine interrupts on SM6350
+Date:   Fri, 13 Jan 2023 11:50:18 +0100
+Message-Id: <167360698783.32701.4054979271222055686.b4-ty@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221230135645.56401-6-krzysztof.kozlowski@linaro.org>
-References: <20221230135645.56401-1-krzysztof.kozlowski@linaro.org> <20221230135645.56401-6-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20221230135645.56401-7-krzysztof.kozlowski@linaro.org>
+References: <20221230135645.56401-1-krzysztof.kozlowski@linaro.org> <20221230135645.56401-7-krzysztof.kozlowski@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -86,15 +86,17 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 30 Dec 2022 14:56:42 +0100, Krzysztof Kozlowski wrote:
-> SM8350 TLMM pin controller has GPIOs 0-202.
+On Fri, 30 Dec 2022 14:56:43 +0100, Krzysztof Kozlowski wrote:
+> Almost all Qualcomm SoC Top Level Mode Multiplexers come with only
+> summary interrupt.  SM6350 is different because downstream and upstream
+> DTS have nine of the interrupts.  Allow such variation.
 > 
 > 
 
 Applied, thanks!
 
-[6/9] dt-bindings: pinctrl: qcom,sm8350-tlmm: correct pins pattern
-      https://git.kernel.org/krzk/linux-dt/c/45277153d46500ce7f4a1637412f0db7c208300a
+[7/9] dt-bindings: pinctrl: qcom: allow nine interrupts on SM6350
+      https://git.kernel.org/krzk/linux-dt/c/12a18bb74f7500693bdfb6af2f99c05d2d43f9c6
 
 Best regards,
 -- 
