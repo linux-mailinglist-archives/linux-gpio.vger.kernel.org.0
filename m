@@ -2,98 +2,105 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D80466AB1E
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jan 2023 12:10:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E54B766AB20
+	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jan 2023 12:15:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjANLKM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 Jan 2023 06:10:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51096 "EHLO
+        id S229674AbjANLPD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 Jan 2023 06:15:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjANLKL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Jan 2023 06:10:11 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32483659C;
-        Sat, 14 Jan 2023 03:10:11 -0800 (PST)
+        with ESMTP id S229489AbjANLPC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Jan 2023 06:15:02 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92C19558F
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Jan 2023 03:15:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673694611; x=1705230611;
+  t=1673694901; x=1705230901;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=1D9B8ljJa6po90IaZ02YVMuX7qkhTni5DjgRb5YMNqQ=;
-  b=WAJs3Owsz0w4NEf/mdJL3acf/VV7z7dIReXyfy/VXqXDGOkvi5DBo4ov
-   muaxAhJ6X4dFDnjsZ3NyrZ90IhCsYDEOIMX8UufdRhXjAeo0MuCFmyT1u
-   Y3O4kSoFCOz7TIEXJNPpMgj9BumL2DGpJ5j3yuuKlvHenPoGqaTY9HZVh
-   GN6AVRDXsNFpRGaRhFZQ10DtRJqX/mmaGN/hz9HUcf4D2mPzzQJqJ41cm
-   j5hmAc8tmnPjagI2Ww9JAXY2hYrCrSz2kuC4uP/PVar+jwoupOXIc+QnC
-   8jsh7GcEE3Cl4dWmLm8q+SsY9zupTuiL/GWzsal0pjk8kFgtA1Jvx6f0i
+  bh=MxHnOre7fPfOdFWaa9a14yxWMjc/j7aBw0LJAW15kQk=;
+  b=YJlqzy8svinNyrf7gNIK+opcKHH6A/uVuYXmXkAk5SQx6hAHS2PFUB+1
+   bMUXWmcXLDnPh4jXnyKfMA4S/InSvB5sFn1X0mvTH9pN+c5JA430Lu0ss
+   bsUGFT2uJYnPIP/zsxCNCYWpcghGQLT1RxbhJwYRSVztlSPASP85naINm
+   U2ryqvA8n8gE5nSabn6oo4EtgbjLDw0P2hsB2cL56tC317FKsJ5Fa0H8K
+   XSLU4VENZG5V+ylZkkL2B2XVfCWtlzZlenRtl46ajh1aPwQpXT468wYNE
+   epV4lZ8/WWLDJSiLLTpgdO7764pMDwJGB/R04mfcGHf6ZcVKdFZK6r3kH
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="322883538"
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="325439003"
 X-IronPort-AV: E=Sophos;i="5.97,216,1669104000"; 
-   d="scan'208";a="322883538"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2023 03:10:10 -0800
+   d="scan'208";a="325439003"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2023 03:15:00 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="690765249"
+X-IronPort-AV: E=McAfee;i="6500,9779,10589"; a="658480217"
 X-IronPort-AV: E=Sophos;i="5.97,216,1669104000"; 
-   d="scan'208";a="690765249"
+   d="scan'208";a="658480217"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga001.jf.intel.com with ESMTP; 14 Jan 2023 03:10:06 -0800
+  by orsmga002.jf.intel.com with ESMTP; 14 Jan 2023 03:14:59 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.96)
         (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pGeQG-0097Yz-0e;
-        Sat, 14 Jan 2023 13:10:04 +0200
-Date:   Sat, 14 Jan 2023 13:10:03 +0200
+        id 1pGeUz-0097fL-1w;
+        Sat, 14 Jan 2023 13:14:57 +0200
+Date:   Sat, 14 Jan 2023 13:14:57 +0200
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>
-Subject: Re: [PATCH v3 2/4] pinctrl: bcm2835: Remove of_node_put() in
- bcm2835_of_gpio_ranges_fallback()
-Message-ID: <Y8KNi0HfqN4qksgI@smile.fi.intel.com>
-References: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
- <20230113215352.44272-3-andriy.shevchenko@linux.intel.com>
- <55a87b32-803a-ceb3-4c31-ac818fe69596@i2se.com>
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 01/16] README: update for libgpiod v2
+Message-ID: <Y8KOsSRQ2EUa+vjE@smile.fi.intel.com>
+References: <20230113215210.616812-1-brgl@bgdev.pl>
+ <20230113215210.616812-2-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <55a87b32-803a-ceb3-4c31-ac818fe69596@i2se.com>
+In-Reply-To: <20230113215210.616812-2-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Sat, Jan 14, 2023 at 12:03:07PM +0100, Stefan Wahren wrote:
-> Am 13.01.23 um 22:53 schrieb Andy Shevchenko:
-> > Remove wrong of_node_put() in bcm2835_of_gpio_ranges_fallback(),
-> > there is no counterpart of_node_get() for it.
-> > 
-> > Fixes: d2b67744fd99 ("pinctrl: bcm2835: implement hook for missing gpio-ranges")
-> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Fri, Jan 13, 2023 at 10:51:55PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> thanks for fixing. It seems that i got confused by function name and usage
-> in other driver.
+> Certain parts of the README file still refer to concepts removed from
+> libgpiod v2. Update whatever needs updating.
 
-You're welcome! Would be nice if you or somebody else have a chance to test
-the series.
+...
 
-> Reviewed-by: Stefan Wahren <stefan.wahren@i2se.com>
+>  The minimum kernel version required to run the tests can be checked in the
+>  tests/gpiod-test.c source file (it's subject to change if new features are
+> -added to the kernel). The tests work together with the gpio-mockup kernel
+> -module which must be enabled. NOTE: the module must not be built-in. A helper
+> -library - libgpiomockup - is included to enable straightforward interaction
+> -with the module.
+> +added to the kernel). The tests work together with the gpio-sim kernel which
 
-Thank you!
+Mistakenly removed word 'module' ?
+
+> +must either be built-in or available for loading using kmod. A helper
+> +library - libgpiosim - is included to enable straightforward interaction with
+> +the module.
+
+...
+
+> -Both C++ and Python bindings also include their own test-suites. Both reuse the
+> -libgpiomockup library to avoid code duplication when interacting with
+> -gpio-mockup.
+> +C++, Rust and Python bindings also include their own test-suites. Both reuse the
+
+"Both" out of three?
+
+> +libgpiosim library to avoid code duplication when interacting with gpio-sim.
 
 -- 
 With Best Regards,
