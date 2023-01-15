@@ -2,87 +2,87 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FE7166ACA6
-	for <lists+linux-gpio@lfdr.de>; Sat, 14 Jan 2023 17:36:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C78D866AEF8
+	for <lists+linux-gpio@lfdr.de>; Sun, 15 Jan 2023 01:43:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbjANQgt (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 14 Jan 2023 11:36:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
+        id S230467AbjAOAnd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 14 Jan 2023 19:43:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjANQgs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Jan 2023 11:36:48 -0500
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102CF5262;
-        Sat, 14 Jan 2023 08:36:47 -0800 (PST)
-Received: by mail-qv1-xf2a.google.com with SMTP id p96so4765861qvp.13;
-        Sat, 14 Jan 2023 08:36:47 -0800 (PST)
+        with ESMTP id S230477AbjAOAn0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 14 Jan 2023 19:43:26 -0500
+Received: from mail-oi1-x22f.google.com (mail-oi1-x22f.google.com [IPv6:2607:f8b0:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C1E6E38E
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Jan 2023 16:43:22 -0800 (PST)
+Received: by mail-oi1-x22f.google.com with SMTP id d127so20530547oif.12
+        for <linux-gpio@vger.kernel.org>; Sat, 14 Jan 2023 16:43:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=landley-net.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ShNCMdSbGR4wZSWeN9wBqnNtg3IMyZVtmlItRwcjcV0=;
-        b=TEQ817oxSVVdQlcJtfFblk1BhQ/DA5TVM9nlLLP2YryZJzNyTL2hsrHh/HSnLAmNEy
-         hV3gBpJCNUncm+AKtKjywfg5LVwtsZfzl6r39Y5cbTkedhjRVOEc+2bXFC5STSgVbj/p
-         4KQdBVC13SiTLBXAiC3nqfNrwPUglqIyhhGFAfe/D+tx0mNtRo3OpX9yEQ72Gi65T/Tg
-         BUqtTtJqtnBc7rajJZqUYVzOqBKgriz9tHOQU67gMHYPyp3SJt3pDMRdvSzShOCt+N//
-         HLJv1ZpUMbYPwBN2PKou64t8w88mRW5zVKhc7uvuh+cs9PD1uiGsfIVwbluqJji91Q0z
-         birw==
+        bh=VA+b6ERucM0SVhgS+CxkVoqDPdylXXEER7Oavou/n5c=;
+        b=AWOVJoTRCZIzDDPEVrLicc1SKpwl7KTn8Ol48utvExDUblpnjljkkxvHgz5x7ZXre+
+         8m1djuSOUoerjvNlDkOsvOoru5Slmn51JdtG4yWzqApm65GcAawUt0a4970Ve8qE/PbE
+         WIpzUe/igEignY6RXJsMefYQMCJguWlv4sRLkistNu2yHDIEgQ5le/hWruMQxtCBR8qR
+         R0Xe1ZeaqdcCUIm6QnssL2hDeKkpiOJ4cANGy/HkgZiIyg5h2uIoq1Znienu3k+LNYC0
+         mG/pqdest+Z0kWbWIAyWD+qrcbh4pkalGKoAU1Y3Z3G0iffow+5qADIIMc/6gwB/2uWn
+         mYPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ShNCMdSbGR4wZSWeN9wBqnNtg3IMyZVtmlItRwcjcV0=;
-        b=7hJHRUrI6NgY4wfJkXhOZjusX9SRSGHLX2sNg1waf0IFkZDWpdJ6PaSdrzMx2LKtzE
-         /y3er2YLDnVt3ZUGlRb62xba4skVINOAbFOBVpIVZqr/mWYj7gbFWXLLK50QTFizGkZl
-         tOClPWt7WruUw0mHqzvmrRxYXUsI9jKpWrsN1Nj8BYfOmM07YDE5z4QimTOKaNTqcz9+
-         p82RU7X/AdsYDhUfY2PFNa1zR2JzK1m7yTcqACc4tl1ERxT/B3dU0yHWZdDVmV4ZfBZy
-         VxPOytN911lrgZ6f1XGhmoGUdzN3AkWCm4Tm69vP3ICyDPEv0UEGTlEsJrtDZu1OJyHt
-         FE0Q==
-X-Gm-Message-State: AFqh2ko99CM0EKKKq/CsVKtPCuwkxsnrduOWKlSsmNZfI5mb5+dN5dB+
-        NvOKPE10D6B1YI0lzi9qyjwcYaDhYFI=
-X-Google-Smtp-Source: AMrXdXv3d/ZnYgeB5D7h9nsy5dHaeSjRSRrCBR2/uo5JVvc7SeAnJ3MfxmTAp12tl4lgbNg0lFAItw==
-X-Received: by 2002:a0c:ab03:0:b0:531:c116:33c4 with SMTP id h3-20020a0cab03000000b00531c11633c4mr60361410qvb.0.1673714206103;
-        Sat, 14 Jan 2023 08:36:46 -0800 (PST)
-Received: from [192.168.1.3] (ip72-194-116-95.oc.oc.cox.net. [72.194.116.95])
-        by smtp.gmail.com with ESMTPSA id bn34-20020a05620a2ae200b006cfc7f9eea0sm14633046qkb.122.2023.01.14.08.36.44
+        bh=VA+b6ERucM0SVhgS+CxkVoqDPdylXXEER7Oavou/n5c=;
+        b=YJufG+/EINipA/VClcCsSg10wbSYJAawSqqrTVVsIURoTuT/L5suX2JsbUG0iCRc4j
+         3NCHcSwcZDQQ6KaVtLtSiVZPCCK5Hv3vjYJ+wPdNpz9CS2TWHyiebY5zVl5F9YYq7SsA
+         LalWE3XJ7xFn9Hdh6L0wt+Gf8Kt1A/GiCvf1McK2FwXFS/kGtEXRl5yo4UYy+m0jDPwy
+         NF4taPuV0PUfHOajJgPh0hB5PComk5pJTXM6X3NnCCblDphK21tlXzHP+irznSHdqqwV
+         y/pUBODsP731I/EQ6GeI28lmFWY0elUfa5S9bMdT5+zxEnIEU9LXelvLeDzW4y5SE2Tj
+         h4Lg==
+X-Gm-Message-State: AFqh2krbwQiSe8riYJ76Nky4t+eB+KfqpfxSTW/SaLZuOhM5O51tILIQ
+        fi99vYNa8pyQLFG96d/JHEJxDg==
+X-Google-Smtp-Source: AMrXdXtmlbzCnjvw02a750r61CcJJIRVFXhgi7CC+Te697GM+nVvImU+iajKPZiIXIE5Si7tn9Lk3Q==
+X-Received: by 2002:aca:c189:0:b0:35a:6005:3dc5 with SMTP id r131-20020acac189000000b0035a60053dc5mr35396207oif.51.1673743401843;
+        Sat, 14 Jan 2023 16:43:21 -0800 (PST)
+Received: from [192.168.86.224] ([136.62.38.22])
+        by smtp.gmail.com with ESMTPSA id l10-20020a056808020a00b00360e46a1edasm10935583oie.22.2023.01.14.16.43.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 14 Jan 2023 08:36:45 -0800 (PST)
-Message-ID: <8125207f-db10-98f2-2e15-66c45642e6b7@gmail.com>
-Date:   Sat, 14 Jan 2023 08:36:42 -0800
+        Sat, 14 Jan 2023 16:43:21 -0800 (PST)
+Message-ID: <fe206345-9445-f1be-02c1-b3cc39a533ef@landley.net>
+Date:   Sat, 14 Jan 2023 18:55:31 -0600
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v3 2/4] pinctrl: bcm2835: Remove of_node_put() in
- bcm2835_of_gpio_ranges_fallback()
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH 02/22] usb: remove the dead USB_OHCI_SH option
 Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>
-References: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
- <20230113215352.44272-3-andriy.shevchenko@linux.intel.com>
- <55a87b32-803a-ceb3-4c31-ac818fe69596@i2se.com>
- <Y8KNi0HfqN4qksgI@smile.fi.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <Y8KNi0HfqN4qksgI@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <20230113062339.1909087-3-hch@lst.de> <Y8EEbCP6PRMzWP5y@kroah.com>
+From:   Rob Landley <rob@landley.net>
+In-Reply-To: <Y8EEbCP6PRMzWP5y@kroah.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -91,21 +91,44 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 
 
-On 1/14/2023 3:10 AM, Andy Shevchenko wrote:
-> On Sat, Jan 14, 2023 at 12:03:07PM +0100, Stefan Wahren wrote:
->> Am 13.01.23 um 22:53 schrieb Andy Shevchenko:
->>> Remove wrong of_node_put() in bcm2835_of_gpio_ranges_fallback(),
->>> there is no counterpart of_node_get() for it.
->>>
->>> Fixes: d2b67744fd99 ("pinctrl: bcm2835: implement hook for missing gpio-ranges")
->>> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->>
->> thanks for fixing. It seems that i got confused by function name and usage
->> in other driver.
+On 1/13/23 01:12, Greg Kroah-Hartman wrote:
+> On Fri, Jan 13, 2023 at 07:23:19AM +0100, Christoph Hellwig wrote:
+>> USB_OHCI_SH is a dummy option that never builds any code, remove it.
+>> 
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>  drivers/usb/host/Kconfig | 11 -----------
+>>  1 file changed, 11 deletions(-)
+>> 
+>> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+>> index 8d799d23c476e1..ca5f657c092cf4 100644
+>> --- a/drivers/usb/host/Kconfig
+>> +++ b/drivers/usb/host/Kconfig
+>> @@ -548,17 +548,6 @@ config USB_OHCI_HCD_SSB
+>>  
+>>  	  If unsure, say N.
+>>  
+>> -config USB_OHCI_SH
+>> -	bool "OHCI support for SuperH USB controller (DEPRECATED)"
+>> -	depends on SUPERH || COMPILE_TEST
+>> -	select USB_OHCI_HCD_PLATFORM
+>> -	help
+>> -	  This option is deprecated now and the driver was removed, use
+>> -	  USB_OHCI_HCD_PLATFORM instead.
+>> -
+>> -	  Enables support for the on-chip OHCI controller on the SuperH.
+>> -	  If you use the PCI OHCI controller, this option is not necessary.
+>> -
+>>  config USB_OHCI_EXYNOS
+>>  	tristate "OHCI support for Samsung S5P/Exynos SoC Series"
+>>  	depends on ARCH_S5PV210 || ARCH_EXYNOS || COMPILE_TEST
+>> -- 
+>> 2.39.0
+>> 
 > 
-> You're welcome! Would be nice if you or somebody else have a chance to test
-> the series.
+> Do you want all of these to go through a single tree, or can they go
+> through the different driver subsystem trees?
 
-Yes I should be able to do that in the next few days.
--- 
-Florian
+Neither please. Multiple people are objecting.
+
+Rob
