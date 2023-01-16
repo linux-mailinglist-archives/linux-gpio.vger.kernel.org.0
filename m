@@ -2,59 +2,68 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAD5666B9DA
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 10:08:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E9A366BA6C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 10:33:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232456AbjAPJIA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 04:08:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37660 "EHLO
+        id S232115AbjAPJdU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 04:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232494AbjAPJHd (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 04:07:33 -0500
-Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83EF91BE5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:05:54 -0800 (PST)
-Received: by mail-vs1-xe2b.google.com with SMTP id i185so28394647vsc.6
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:05:54 -0800 (PST)
+        with ESMTP id S232091AbjAPJdP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 04:33:15 -0500
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F7B902B
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:33:14 -0800 (PST)
+Received: by mail-vs1-xe2c.google.com with SMTP id p1so11662477vsr.5
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:33:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JqCTaUX1A+/BBCo2/5PxG3P7Os7VnYxnxIU+5ELIX/Q=;
-        b=fg00MI0Ob2qziqF88SxRah3V66hZ6TbZvxHmHjPV0RPWq8z0rK2PHZ5wHv95LPMjPl
-         FlzqpkHtLspPiU70Mf/kLejbgbycc3YTmgAN2RK7BZRIJ7/kUJ8Pz/HI6bcTW5wE1Pjk
-         tvGplfI1v0wkU4w8VUUnxl6x6sjGvOKqrSjLUG3SpbPLjm1Safeu6OAcdbqmujRcuVPJ
-         l1TDqMCugBikx07hdYCEuIcztwyj5ucVV4ENQ78I4WvBnKRes71ii/H2WxL2sCfdR33t
-         06lZfRO2JYx33yVftK6BpTXFv/aGF8sgGuOEF9E2UAuLq/31s103un/HTs5hBS+jk6QK
-         x2gA==
+        bh=URkHLwx/bN1JCfcGvgrmnXaeAySCWtdX4HCUZd2JU/k=;
+        b=VWq8qyZNimN3Yfem28J7S7yGjKE7DQXKdfBACz68oxyagAvzcR8WuSfM3wnILJXNO1
+         JTRLwb9JPqOxHfhF4CWGdf5F/Ia8Ant9wBZrEKB79Ra2rHgo2NBgCX2oMVTgrSC2hqad
+         ouGen9PyJQyh/7Wx3ejE42eXrOwDkdurkmNIUUh43OwRgqO/KS0DsutVRmG1OMG6jf3F
+         2dAxLkqiml+0coGtBVNCiWPRJsws7UouBeqQ75imKDVTTPuT1uXytJJvlh/BgAV2j8pr
+         YcGu04GrjZ5W4se6L3gPx+XydNATr9RqXRJSMIYy4+YFGef3PVSRqrVJeL7JDjqXb6+0
+         9k4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JqCTaUX1A+/BBCo2/5PxG3P7Os7VnYxnxIU+5ELIX/Q=;
-        b=abY6W2THOxbVuHY1lyM+qV1mPpogyhY+3HIkmWARxzmHwiUrVKVwIrO28h0ASrlIu5
-         8OCj7UrsSHb/KWEYwsuDPs90HHc89hn/pmaT1l4xRqEYcDGYFyimt1VC7XVAqrHO6NwW
-         YNmSdKL4t0Rxd4+0krRcO/qG/znbEma5njwEfsNlM0ur1nbAgPqzmTuXBf17qVlbBPnA
-         hKOakspS80IkpAUVtIetU48tVupnEGZIpclVndgZN+ukoiyGuf3vpBGOaj/KjdaRI3Q2
-         hfF/uQ5UI7DucwdjIQq/wlhBob/8Z4mRlfHLF9Qmz+o/WgZVPdAiFJgb8CSIDYFWAGW/
-         i0lw==
-X-Gm-Message-State: AFqh2kpNiInmQHbM96eNDhSd9qVagKY/oGOcgW1WnWN5dCL3lS/bLLEL
-        arsXBivRli9p2Ti1l3LHJSz+F505jM3v5igO5w32rbXdZCZlIg==
-X-Google-Smtp-Source: AMrXdXvayKXDpj7ksK/jrU75LF5kABCQRCIlZfZjutB4X13RTBlX+SO1kfvhNF75A2nnFDICmu7bvV1UB2Vs5qP5Opg=
-X-Received: by 2002:a67:df09:0:b0:3ce:88b3:d7da with SMTP id
- s9-20020a67df09000000b003ce88b3d7damr8038589vsk.62.1673859953634; Mon, 16 Jan
- 2023 01:05:53 -0800 (PST)
+        bh=URkHLwx/bN1JCfcGvgrmnXaeAySCWtdX4HCUZd2JU/k=;
+        b=UCMNH6kz5V1kSzOiwI90Eao+uqtcS5zcMHBU2R6Dpcxyq2QGoE2R34ZApC2BArm+gE
+         ayaxot97LxWs9X2XLR3vTlbaFm1nPPVuIWEyxgM4r91jimsYHfV/iw6f2MqKKXFEMLXk
+         jBSGFDguopTmv8Qp/Ak69GkGCLy/ve3fWDRugOKPFKdt8VRWZnZo5rPxkYDnlJ6kNBnd
+         WOECIhecu6Y+yzgmNJQtR1FD4SaBoe6+0/fzsrAnhYXSJjHqohIoSvSvxy4LVhioGASz
+         COpej1OLypGRhRvre3v/556Wkxa6RqalzlAtt81whVygL5IoFQDJA7fPVdmk65Ch6oZK
+         Bh1Q==
+X-Gm-Message-State: AFqh2krv7EX+I6N/hsfv25m7CaOr9zIwFgYzj1YCd55tgQbWaOt+PSeC
+        CvvTmlBaa/ffiv6FtGpdDEFEMWHFs5KMVztqKbqJ93J8rgY3BA==
+X-Google-Smtp-Source: AMrXdXtCswJVEULIT6svjZGgY72uO0FfucJ6kd9XEOxYEUb0IJMmb9o0kyiH3ZLYGxrxgIW2hts0ijsYrp63IQxql54=
+X-Received: by 2002:a05:6102:1141:b0:3d2:3577:2d05 with SMTP id
+ j1-20020a056102114100b003d235772d05mr829615vsg.9.1673861593487; Mon, 16 Jan
+ 2023 01:33:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20230116003606.11998-1-warthog618@gmail.com>
-In-Reply-To: <20230116003606.11998-1-warthog618@gmail.com>
+References: <20230112163825.72983-1-andriy.shevchenko@linux.intel.com> <20230112163825.72983-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230112163825.72983-2-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 10:05:43 +0100
-Message-ID: <CAMRc=MdHUV5vS5cWn+s-owEPFVCzoi8=hA0XF5V1cPPLcATx6Q@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] bindings: rust: fix documentation of
- line_request set_values
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     linux-gpio@vger.kernel.org
+Date:   Mon, 16 Jan 2023 10:33:02 +0100
+Message-ID: <CAMRc=MeoFwtvu9W8y7ZVoudYt4ufg_vOkdVd9Q=7zPEn-e4teQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] gpiolib: of: Remove no more used ->of_gpio_ranges_fallback()
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -65,41 +74,14 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 1:36 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Thu, Jan 12, 2023 at 5:38 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Replace "Get" with "Set".
+> Since the only one and last user of the ->of_gpio_ranges_fallback()
+> gone, remove the callback completely. New platforms must use the
+> gpio-ranges property.
 >
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  bindings/rust/libgpiod/src/line_request.rs | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-> index 2816cc1..35f07b3 100644
-> --- a/bindings/rust/libgpiod/src/line_request.rs
-> +++ b/bindings/rust/libgpiod/src/line_request.rs
-> @@ -106,7 +106,7 @@ impl Request {
->          }
->      }
->
-> -    /// Get values of a subset of lines associated with the request.
-> +    /// Set values of a subset of lines associated with the request.
->      pub fn set_values_subset(&self, map: ValueMap) -> Result<()> {
->          let mut offsets = Vec::new();
->          let mut values = Vec::new();
-> @@ -136,7 +136,7 @@ impl Request {
->          }
->      }
->
-> -    /// Get values of all lines associated with the request.
-> +    /// Set values of all lines associated with the request.
->      pub fn set_values(&self, values: &[Value]) -> Result<()> {
->          if values.len() != self.num_lines() {
->              return Err(Error::InvalidArguments);
-> --
-> 2.39.0
->
 
-What commit is this patch's parent? It doesn't apply on top of master.
-
-Bart
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
