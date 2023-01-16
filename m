@@ -2,103 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A645766BE3A
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:54:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 622F466BE71
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:57:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231209AbjAPMym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 07:54:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
+        id S231367AbjAPM5p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 07:57:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjAPMyR (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:54:17 -0500
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B391D22A13
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:51:59 -0800 (PST)
-Received: by mail-pl1-x630.google.com with SMTP id 20so2923753plo.3
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:51:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DrXhaiA74X5wUVRmTa3tRAccDsq5ic6vAbcv2+acbUA=;
-        b=pTA0L5z1ZWDjo57g9j63Zbon0rv9G6vJ3D08C1+XXKx4wyXjmbVIJMQ5G+MS40tMBg
-         gHTcambETc640WHnDrKMcHfMYSdmvM7kThQ3N5xjY/5ZxQeMYlGDjG/uzCKykReL0L4C
-         uORYyztfeCq2JyS0rwEsIrQMWG8e+hRXrHes1UKtvxNwqcffIHtqCy+avd3pJz0KGT9Y
-         kMov1micIRet6yxLRzkS0a7g8kly+qErTeF7b7wl9/YtYGiHfgNXx9UW00SNo2vQfoEl
-         RzbHyMdr1rl3J50LBhoA79eZfyXz5Wcn2a+TMKsYh9BFoQa8JfoDL991nFtGjftedV/G
-         xj8A==
+        with ESMTP id S231284AbjAPM4x (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:56:53 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FE120050;
+        Mon, 16 Jan 2023 04:55:42 -0800 (PST)
+Received: by mail-qt1-f169.google.com with SMTP id x5so861930qti.3;
+        Mon, 16 Jan 2023 04:55:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DrXhaiA74X5wUVRmTa3tRAccDsq5ic6vAbcv2+acbUA=;
-        b=QFiDdhxXQCImrKH8EfYz3fn2t5D9GTynh973tkW4K56hTkc7OxY1DFvQNJSoAXvaG4
-         /1NpDRMG9SAml12mxNvofFUT2WywmOD1iMHwqODrU9nExtk9rN6MTc4Dd2efcea0Zbbd
-         /jHMh/NvXbFMPLNEQURBXTt9GzhiacKZfQat7jbAInj4pBfD5Jm87zrROawnpvMu0Rw2
-         pQTD7w2fylYYUR3AymaH7SmxwdYuBfDVxuh7wMm6QNZxdqBCA4iWzkLPd6kbQ2l2WZKL
-         pdP6+Ly5nLYJjjybz9597mLm1GYmpHWjibQ6AIn55ScFWRKuCt6K+f/zPXL6jqeAhhSU
-         wwDw==
-X-Gm-Message-State: AFqh2kqOy9IIKVqaxUCEBvbhMcqrWJpi88ZoPkd4ig8TGZ0MAndXcjOc
-        lPvn5c15yVDuQJEIW9V4DLtWZWIyBLbhxg==
-X-Google-Smtp-Source: AMrXdXspNPE2x2/mHX9O2knzZmANuzg4pw/WPz64fLahoE01bZ0C67PnB3D3DwQ7gus4ErTKnqb1kw==
-X-Received: by 2002:a17:90b:190:b0:228:c8aa:b111 with SMTP id t16-20020a17090b019000b00228c8aab111mr26375355pjs.25.1673873511550;
-        Mon, 16 Jan 2023 04:51:51 -0800 (PST)
-Received: from sol.home.arpa (110-174-14-241.tpgi.com.au. [110.174.14.241])
-        by smtp.gmail.com with ESMTPSA id t10-20020a17090a3e4a00b00217090ece49sm16683644pjm.31.2023.01.16.04.51.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Jan 2023 04:51:51 -0800 (PST)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH v2] bindings: rust: fix documentation of line_request set_values
-Date:   Mon, 16 Jan 2023 20:51:44 +0800
-Message-Id: <20230116125144.36858-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.0
+        bh=CM4Jkzp/QAXkO7bnxWsfgCHfESoHq0ivf9TvlonLhmA=;
+        b=Mn12KVK09MbH3Hu1oFUpb91/fQq2Ug1Z9ttFJE3HTfHJGykZ7mG6ap34OOqGCy2lIO
+         oVVAT0MRRi/epgeph8vkPzVfrN80ql2r64zYNTJbwqb/Dp7EXWMt5vofn82JZ11+Om0+
+         xml1FBPmPR13B0I4ZG7n0BZVKu0Bwessyu6ZcyHHBACcmy5BjRfvlE5v3PGCRefzNmXF
+         iO0OhvAyuXHt/gmqthfBz7on7BbqLmpb6Uhi/QS7n1e8F6QFo/Jm4QHJNGBc+15UOJ0b
+         ukEaqxGA11VkinQIKOPTSopziQfKUhQ1q3Pko80j8xcyg+psu0YbRCXjTD3gWZnCt0ST
+         RJgQ==
+X-Gm-Message-State: AFqh2kplFSIxWBsblK5BCLSdT/t0TQd6OmQfHXeuQWqvJZ6G8yp8LsrT
+        RosIB5m7UUWTFKl6M5GwnYXYDLyJP2VpoA==
+X-Google-Smtp-Source: AMrXdXvSek5CM7kko3egK3cIPxxImuMu6Faaui9MMc86ouX0ZA93gouZby3xtrm8yUqdhdm2/f2juw==
+X-Received: by 2002:a05:622a:1c0e:b0:3b6:2c74:1453 with SMTP id bq14-20020a05622a1c0e00b003b62c741453mr8833816qtb.61.1673873741673;
+        Mon, 16 Jan 2023 04:55:41 -0800 (PST)
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
+        by smtp.gmail.com with ESMTPSA id jr49-20020a05622a803100b003ad373d04b6sm11638024qtb.59.2023.01.16.04.55.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jan 2023 04:55:41 -0800 (PST)
+Received: by mail-yb1-f182.google.com with SMTP id a9so13476351ybb.3;
+        Mon, 16 Jan 2023 04:55:40 -0800 (PST)
+X-Received: by 2002:a25:46c6:0:b0:7b8:a0b8:f7ec with SMTP id
+ t189-20020a2546c6000000b007b8a0b8f7ecmr4777221yba.36.1673873740621; Mon, 16
+ Jan 2023 04:55:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230106125816.10600-1-fabrizio.castro.jz@renesas.com> <20230106125816.10600-2-fabrizio.castro.jz@renesas.com>
+In-Reply-To: <20230106125816.10600-2-fabrizio.castro.jz@renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 16 Jan 2023 13:55:29 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVZ+wrCmRxjoV-k3zhs1tHHdLr1toBbT2ft+-pVrzMYEQ@mail.gmail.com>
+Message-ID: <CAMuHMdVZ+wrCmRxjoV-k3zhs1tHHdLr1toBbT2ft+-pVrzMYEQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: soc: renesas: Add RZ/V2M PWC
+To:     fabrizio.castro.jz@renesas.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        Biju Das <biju.das@bp.renesas.com>,
+        linux-renesas-soc@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Replace "Get" with "Set".
+On Fri, Jan 6, 2023 at 1:58 PM Fabrizio Castro
+<fabrizio.castro.jz@renesas.com> wrote:
+> The Renesas RZ/V2M External Power Sequence Controller (PWC) IP
+> is capable of:
+> * external power supply on/off sequence generation
+> * on/off signal generation for the LPDDR4 core power supply (LPVDD)
+> * key input signals processing
+> * general-purpose output pins
+>
+> Add the corresponding dt-bindings.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> v1->v2: I have dropped syscon, simple-mfd, regmap, offset, and the child nodes.
+> v2->v3: No change.
+> v3->v4: Moved file under Documentation/devicetree/bindings/soc/renesas,
+>         and changed $id accordingly.
+> v4->v5: Fixed subject line and changelog. Rob, I have kept your Reviewed-by tag
+>         assuming you are still happy, please do jump in if you think  that's not
+>         appropriate anymore.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-Changes v1 -> v2:
- - rebase on current master
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.3.
 
- bindings/rust/libgpiod/src/line_request.rs | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index c16ec9f..d9e041c 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -106,7 +106,7 @@ impl Request {
-         }
-     }
- 
--    /// Get values of a subset of lines associated with the request.
-+    /// Set values of a subset of lines associated with the request.
-     pub fn set_values_subset(&self, map: ValueMap) -> Result<()> {
-         let mut offsets = Vec::new();
-         let mut values = Vec::new();
-@@ -136,7 +136,7 @@ impl Request {
-         }
-     }
- 
--    /// Get values of all lines associated with the request.
-+    /// Set values of all lines associated with the request.
-     pub fn set_values(&self, values: &[Value]) -> Result<()> {
-         if values.len() != self.num_lines() as usize {
-             return Err(Error::InvalidArguments);
--- 
-2.39.0
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
