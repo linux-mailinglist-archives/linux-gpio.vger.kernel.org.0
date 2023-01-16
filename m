@@ -2,188 +2,150 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C35F66D102
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 22:39:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4725766D19C
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 23:15:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234606AbjAPVjk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 16:39:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39396 "EHLO
+        id S235113AbjAPWPw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 17:15:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234614AbjAPVje (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 16:39:34 -0500
-Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5FC2BED5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 13:39:33 -0800 (PST)
-Received: by mail-vs1-xe2d.google.com with SMTP id p1so13542521vsr.5
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 13:39:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=H6JynRwiy8gz7YHR9An60AFHfE2ICu98HiIak1luck0=;
-        b=MmhSajs8U01I70zHhUpP66e3TIKEO2rbWI89AQR0yP45D6//+WC6M7LMh+q8dVA5r0
-         RMVsgJtiDcEddZngL0EBU+iqL8BpuzIkRPKOex3r0gmAGb1fh3ASUWJ11WTwigQOlt5i
-         1yR06Qd3y83Q26Q9Bc/u7UgbesR2vDmEGPlLIt9+g/KPODgKLvhwXUbxYcw6NghL93Qs
-         QIhYCBLGtp9WPlJy9XD3fxGkONjNqruWHJPKze5h+DcvGAl+EqLAawOUVKzotI/ZMkna
-         36su1MHrlCdqXhxOpl0EuosU/BWaf4JnB9sAihol3jbVnebLPuBiwfse9ip70VRReKtV
-         7K0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H6JynRwiy8gz7YHR9An60AFHfE2ICu98HiIak1luck0=;
-        b=7tABMc0qEJ3FlWcpVPTQd2nuSuyAGjtUq3k+MQUUnsVOTW6q8uqRwr0AC40hssya5I
-         DcyOOc2q43U7rDq+7gaMROcIJhmAS/qgI2QyEj44U8J6ssno60sZkhEC5Uvc9spr73bD
-         BLXNmslh2wCdcZElYuwWr/aD1iX3hsAciSmRoyrkTjXcX2ONxLzrGXKpTSCUQHK3BnuL
-         IquGmpY3MkjErBf/qMlx5P4ZoMpHe+wWOTnt0Ixe4g8Z7kn+lOK0Yxq77+ZQUOTYeI4s
-         n291Cm7ccWBo1vpCFUEYRJjMEVVZzuCBjBlst9bB9yqv/zZ45ewEz/8+w/S6sEaWD59d
-         o72A==
-X-Gm-Message-State: AFqh2ko1S1jMdHA6ynIQgMpo/wYBcpWbeVDbtRIrZ/yun52Wvjw0HJel
-        0CQ6hEw8PJJl+ZE0gYgKH/wZwAiRhq0Y3Flk1hJ8uQ==
-X-Google-Smtp-Source: AMrXdXvnr6cXvMXGTmIWET1CPpqhYjXJbMZUq6uEn9XoeG+MibOT9fkxZA5NYYDv8nQsGNSZuVwfgUdmdKx9E2WX94A=
-X-Received: by 2002:a05:6102:3e08:b0:3c5:1ac1:bf38 with SMTP id
- j8-20020a0561023e0800b003c51ac1bf38mr55530vsv.78.1673905172455; Mon, 16 Jan
- 2023 13:39:32 -0800 (PST)
+        with ESMTP id S235063AbjAPWPn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 17:15:43 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B793714E97
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 14:15:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673907340; x=1705443340;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=4XP75OuBLFY9jV7KS/x7rccrvbCTkHukCMcrdPcahEk=;
+  b=GNTME4JeOpm/8XYRwopOzR6OJoshKrJHD7P5QRaGMQvLzosr40lQ5RK6
+   1C8jH5cw70mDiv74AOtln9GOJynqQuxomObMY61HvwFs2NjT34qA+v7MZ
+   cxTjgvf2+7SKj2JB7IpnhLPzbMChhFOL4SWoxvcmj+NjIV8/DAKb9xDvf
+   zz8A4otOk14m1KEAy0HlOGuPaMj0O6xSWwONqp8LbS+ZdedyMTBmfviAe
+   EtoGDQ3OgIRKnPBXwjrLntHv1nUQnjpCc22luyh0gSWmBSy3aReWLx46o
+   41rAjV+m699XcYuIooSAPgNYKcqBxo8JdJKXS+Lrc66aPE4bqWdFThj8t
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="325837181"
+X-IronPort-AV: E=Sophos;i="5.97,221,1669104000"; 
+   d="scan'208";a="325837181"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2023 14:14:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="609049932"
+X-IronPort-AV: E=Sophos;i="5.97,221,1669104000"; 
+   d="scan'208";a="609049932"
+Received: from lkp-server02.sh.intel.com (HELO f57cd993bc73) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 16 Jan 2023 14:14:11 -0800
+Received: from kbuild by f57cd993bc73 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pHXk2-0000kP-1F;
+        Mon, 16 Jan 2023 22:14:10 +0000
+Date:   Tue, 17 Jan 2023 06:13:56 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 8d0674c8888e970a6169c2f2259e2bb215314990
+Message-ID: <63c5cc24.BjBPMPkvfWniJ4vB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-References: <20230113215210.616812-1-brgl@bgdev.pl> <20230113215210.616812-5-brgl@bgdev.pl>
- <20230116055209.b6ydvderreqtqedp@vireshk-i7>
-In-Reply-To: <20230116055209.b6ydvderreqtqedp@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 22:39:21 +0100
-Message-ID: <CAMRc=Mfm9ENHh5T4MguXh9YaPYdvSwsOWXyvHYhQGS47xOZcTQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 04/16] treewide: unify gpiod_line_config/request_get_offsets()
- functions
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 6:52 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> For Rust changes, please run these as well to find any formatting
-> issues, warnings:
->
-> cargo fmt --all -- --check
-> cargo clippy --release --workspace --bins --examples --tests --benches --all-features --all-targets -- -D warnings -D clippy::undocumented_unsafe_blocks
->
-> On 13-01-23, 22:51, Bartosz Golaszewski wrote:
-> > diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-> > index 19dc187..0c8b293 100644
-> > --- a/bindings/rust/libgpiod/src/line_config.rs
-> > +++ b/bindings/rust/libgpiod/src/line_config.rs
-> > @@ -2,8 +2,8 @@
-> >  // SPDX-FileCopyrightText: 2022 Linaro Ltd.
-> >  // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > -use std::os::raw::{c_ulong, c_void};
-> > -use std::slice;
-> > +use std::os::raw::c_ulong;
-> > +use std::collections::HashMap;
-> >
-> >  use super::{
-> >      gpiod,
-> > @@ -77,51 +77,32 @@ impl Config {
-> >          }
-> >      }
-> >
-> > -    /// Get line settings for offset.
-> > -    pub fn line_settings(&self, offset: Offset) -> Result<Settings> {
-> > -        // SAFETY: `gpiod_line_config` is guaranteed to be valid here.
-> > -        let settings = unsafe { gpiod::gpiod_line_config_get_line_settings(self.config, offset) };
-> > -
-> > -        if settings.is_null() {
-> > -            return Err(Error::OperationFailed(
-> > -                OperationType::LineConfigGetSettings,
-> > -                errno::errno(),
-> > -            ));
-> > +    /// Get a mapping of offsets to line settings stored by this object.
-> > +    pub fn line_settings(&self) -> Result<HashMap<Offset, Settings>> {
->
-> Just like ValueMap, maybe we can add following in lib.rs for this:
->
-> pub type line::SettingsMap = IntMap<line::Settings>;
->
-> > +        let mut map: HashMap<Offset, Settings> = HashMap::new();
-> > +        let num_lines = unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) };
->
-> This needs a SAFETY comment. Should we check if this returned 0 ?
->
-> > +        let mut offsets = vec![0; num_lines as usize];
-> > +
-> > +        // SAFETY: gpiod_line_config is guaranteed to be valid here.
-> > +        unsafe { gpiod::gpiod_line_config_get_configured_offsets(self.config,
-> > +                                                                 offsets.as_mut_ptr(),
-> > +                                                                 num_lines) };
->
-> Can the returned value be < num_lines here ?
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 8d0674c8888e970a6169c2f2259e2bb215314990  gpio: rockchip: Do not mention legacy API in the code
 
-Ah, of course it can. Need to add a test case for that. How do I set
-the size of offsets to whatever this function returns?
+elapsed time: 726m
 
-> > +
-> > +        for offset in offsets {
-> > +            // SAFETY: `gpiod_line_config` is guaranteed to be valid here.
-> > +            let settings = unsafe { gpiod::gpiod_line_config_get_line_settings(self.config,
-> > +                                                                               offset) };
-> > +            if settings.is_null() {
-> > +                return Err(Error::OperationFailed(
-> > +                    OperationType::LineConfigGetSettings,
-> > +                    errno::errno(),
-> > +                ));
-> > +            }
-> > +
-> > +            map.insert(offset, Settings::new_with_settings(settings));
-> >          }
-> >
-> > -        Ok(Settings::new_with_settings(settings))
-> > -    }
-> > -
-> > -    /// Get configured offsets.
-> > -    pub fn offsets(&self) -> Result<Vec<Offset>> {
-> > -        let mut num: u64 = 0;
-> > -        let mut ptr: *mut Offset = std::ptr::null_mut();
-> > -
-> > -        // SAFETY: The `ptr` array returned by libgpiod is guaranteed to live as long
-> > -        // as it is not explicitly freed with `free()`.
-> > -        let ret = unsafe {
-> > -            gpiod::gpiod_line_config_get_offsets(
-> > -                self.config,
-> > -                &mut num as *mut _ as *mut _,
-> > -                &mut ptr,
-> > -            )
-> > -        };
-> > -
-> > -        if ret == -1 {
-> > -            return Err(Error::OperationFailed(
-> > -                OperationType::LineConfigGetOffsets,
-> > -                errno::errno(),
-> > -            ));
-> > -        }
-> > -
-> > -        // SAFETY: The `ptr` array returned by libgpiod is guaranteed to live as long
-> > -        // as it is not explicitly freed with `free()`.
-> > -        let offsets = unsafe { slice::from_raw_parts(ptr as *const Offset, num as usize).to_vec() };
-> > -
-> > -        // SAFETY: The `ptr` array is guaranteed to be valid here.
-> > -        unsafe { libc::free(ptr as *mut c_void) };
-> > -
-> > -        Ok(offsets)
-> > +        Ok(map)
-> >      }
-> >  }
->
-> --
-> viresh
+configs tested: 68
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+x86_64                            allnoconfig
+ia64                             allmodconfig
+arc                  randconfig-r043-20230115
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+arc                  randconfig-r043-20230116
+x86_64                    rhel-8.3-kselftests
+arm                  randconfig-r046-20230115
+x86_64                          rhel-8.3-func
+i386                 randconfig-a013-20230116
+i386                 randconfig-a012-20230116
+i386                 randconfig-a016-20230116
+i386                 randconfig-a014-20230116
+i386                 randconfig-a015-20230116
+i386                 randconfig-a011-20230116
+s390                 randconfig-r044-20230116
+riscv                randconfig-r042-20230116
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-bpf
+x86_64                         rhel-8.3-kunit
+x86_64               randconfig-a011-20230116
+x86_64               randconfig-a016-20230116
+x86_64               randconfig-a014-20230116
+x86_64               randconfig-a013-20230116
+x86_64               randconfig-a015-20230116
+x86_64               randconfig-a012-20230116
+arm64                            allyesconfig
+arm                                 defconfig
+arm                              allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+arc                                 defconfig
+alpha                               defconfig
+s390                             allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+i386                             allyesconfig
+i386                                defconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+
+clang tested configs:
+hexagon              randconfig-r041-20230116
+x86_64               randconfig-a001-20230116
+hexagon              randconfig-r045-20230115
+x86_64                          rhel-8.3-rust
+riscv                randconfig-r042-20230115
+x86_64               randconfig-a003-20230116
+x86_64               randconfig-a004-20230116
+arm                  randconfig-r046-20230116
+x86_64               randconfig-a002-20230116
+s390                 randconfig-r044-20230115
+x86_64               randconfig-a005-20230116
+hexagon              randconfig-r045-20230116
+x86_64               randconfig-a006-20230116
+hexagon              randconfig-r041-20230115
+i386                 randconfig-a002-20230116
+i386                 randconfig-a004-20230116
+i386                 randconfig-a001-20230116
+i386                 randconfig-a003-20230116
+i386                 randconfig-a005-20230116
+i386                 randconfig-a006-20230116
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
