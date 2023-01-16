@@ -2,92 +2,124 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF6A866B958
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EAA866B96A
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:54:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232382AbjAPIwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 03:52:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
+        id S232096AbjAPIyf (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 03:54:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232371AbjAPIw0 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:52:26 -0500
-Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2646044A1;
-        Mon, 16 Jan 2023 00:52:24 -0800 (PST)
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.95)
-          with esmtps (TLS1.3)
-          tls TLS_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@zedat.fu-berlin.de>)
-          id 1pHLDw-0003Fv-T9; Mon, 16 Jan 2023 09:52:12 +0100
-Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
-          by inpost2.zedat.fu-berlin.de (Exim 4.95)
-          with esmtpsa (TLS1.3)
-          tls TLS_AES_128_GCM_SHA256
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1pHLDw-000TdQ-Lf; Mon, 16 Jan 2023 09:52:12 +0100
-Message-ID: <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
-Date:   Mon, 16 Jan 2023 09:52:10 +0100
+        with ESMTP id S232051AbjAPIyd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:54:33 -0500
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C35E3AC
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:54:32 -0800 (PST)
+Received: by mail-vk1-xa31.google.com with SMTP id v81so13027339vkv.5
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:54:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=8AoNhE9nlR/QGp4z87SryZWRWBB4ufblvx66JVKBkQg=;
+        b=WpORYWNejzln9pw3GjGAWoD9UJKVYIO1dL95+WnV0IArOLSWW1Lv9QroS957BJwWCB
+         9ZPvLC2pUXLT31xp2iNJYfQ/jVYoW/6jubp5g6DwSEVrtnL0N05K4zrBOYAba/lf+npp
+         xAeK08JWiaF1b8EkZhNW/LIVpDwcyJxhQkt1TU5vH9NziFk18KnppaUeo3AkXkDMQXP1
+         I607/1jMgT0I+7zPravRCsOJ6KOlJ7GFEBvUznp5GRYPArS38zXLHmZR56e/T185eXoQ
+         GzVQ8q+kGkxqKw4u9g8hDVb4fPVKttiXIRYVlZn6UwM5pj1+jsQbzvwwkxcHLw62w6dF
+         aVXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8AoNhE9nlR/QGp4z87SryZWRWBB4ufblvx66JVKBkQg=;
+        b=DVGHbPLnxyl809tEUvWCUDgzW+v5RLziNbR79Q/NuW7rdDH45cj1VkYZW1ZOWXB07u
+         j/Ol7S9VLkfRTc6uVZv3J3pmm30v7Yx5FqA3iSd6WU35s+gT6UtXdiGXT5dG8tD6jtyM
+         py0GxmfR3JohkpyfdbMaV/A5jogEK03hmazXkCpZR1dZJdk18Byp1mUT3da00X4BUcdb
+         Zq0uB0RwbSbCrwHMlGFN2SY61x+KiIzx9FXpINQRzIhRooGjfQy/R3ilAM7aTEZndmCP
+         B27aeWC8eoogJFBeOs/E97TkQ0d13XvM9uAthe99myntg7fnoVVvHZbHEpESA/7kStZr
+         +eaw==
+X-Gm-Message-State: AFqh2krUv6QT3oziVtOzbmiCbLXgdJi1z/DRUDgWGhVAfH6Zi+K/xERz
+        3YRP1xOiU6SAlgjiKhRN9oXxYNF+BoJbds9qxY2nrutlAziyI6F8
+X-Google-Smtp-Source: AMrXdXsg/hyJNGENEoEO7DJDfE66mlBgOB9nb1h59SVSiEt1dmlwhZcn6g6wCHM06JL/qKuDITRh/U2Z1Ai7/KFnh7c=
+X-Received: by 2002:a1f:4cc4:0:b0:3dd:f5ea:63a2 with SMTP id
+ z187-20020a1f4cc4000000b003ddf5ea63a2mr1001270vka.10.1673859271898; Mon, 16
+ Jan 2023 00:54:31 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: remove arch/sh
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-References: <20230113062339.1909087-1-hch@lst.de>
- <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de>
-Content-Language: en-US
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-In-Reply-To: <20230116071306.GA15848@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Original-Sender: glaubitz@physik.fu-berlin.de
-X-Originating-IP: 87.189.148.100
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230112163951.73180-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230112163951.73180-1-andriy.shevchenko@linux.intel.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 16 Jan 2023 09:54:21 +0100
+Message-ID: <CAMRc=Mc+zSfM=eiWScuhDr9kasmhyCMHDxavoMbPd6TmGAuWdw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpio: xilinx: Remove duplicate assignment of of_gpio_n_cells
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>,
+        Srinivas Neeli <srinivas.neeli@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Christoph!
+On Thu, Jan 12, 2023 at 5:39 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> The of_gpio_n_cells default is 2 when ->of_xlate() callback is
+> not defined. No need to assign it explicitly in the driver.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpio-xilinx.c | 11 -----------
+>  1 file changed, 11 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 619a00ad71d4..bbcde91135b9 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -558,7 +558,6 @@ static int xgpio_probe(struct platform_device *pdev)
+>         int status = 0;
+>         struct device_node *np = pdev->dev.of_node;
+>         u32 is_dual = 0;
+> -       u32 cells = 2;
+>         u32 width[2];
+>         u32 state[2];
+>         u32 dir[2];
+> @@ -591,15 +590,6 @@ static int xgpio_probe(struct platform_device *pdev)
+>
+>         bitmap_from_arr32(chip->dir, dir, 64);
+>
+> -       /* Update cells with gpio-cells value */
+> -       if (of_property_read_u32(np, "#gpio-cells", &cells))
+> -               dev_dbg(&pdev->dev, "Missing gpio-cells property\n");
+> -
+> -       if (cells != 2) {
+> -               dev_err(&pdev->dev, "#gpio-cells mismatch\n");
+> -               return -EINVAL;
+> -       }
+> -
+>         /*
+>          * Check device node and parent device node for device width
+>          * and assume default width of 32
+> @@ -630,7 +620,6 @@ static int xgpio_probe(struct platform_device *pdev)
+>         chip->gc.parent = &pdev->dev;
+>         chip->gc.direction_input = xgpio_dir_in;
+>         chip->gc.direction_output = xgpio_dir_out;
+> -       chip->gc.of_gpio_n_cells = cells;
+>         chip->gc.get = xgpio_get;
+>         chip->gc.set = xgpio_set;
+>         chip->gc.request = xgpio_request;
+> --
+> 2.39.0
+>
 
-On 1/16/23 08:13, Christoph Hellwig wrote:
-> On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
->> I'm still maintaining and using this port in Debian.
->>
->> It's a bit disappointing that people keep hammering on it. It works fine for me.
-> 
-> What platforms do you (or your users) use it on?
+Applied, thanks!
 
-We have had a discussion between multiple people invested in the SuperH port and
-I have decided to volunteer as a co-maintainer of the port to support Rich Felker
-when he isn't available.
-
-Adrian
-
--- 
-  .''`.  John Paul Adrian Glaubitz
-: :' :  Debian Developer
-`. `'   Physicist
-   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
-
+Bart
