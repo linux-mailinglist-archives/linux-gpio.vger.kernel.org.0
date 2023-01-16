@@ -2,67 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05AA866B916
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:32:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAFBE66B921
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:38:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbjAPIcH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 03:32:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49884 "EHLO
+        id S232045AbjAPIiQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 03:38:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231954AbjAPIcG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:32:06 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6913F3A89
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:32:04 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id n190so24423860vsc.11
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:32:04 -0800 (PST)
+        with ESMTP id S231959AbjAPIiP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:38:15 -0500
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465C712073
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:38:14 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id k6so19411509vsk.1
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:38:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=X0l9EC5lE4//cPxZ1V1dfcHRn1ut8/Kdba9WwwFyQvg=;
-        b=Aq6mrkAUo0t8dbQTGZ0GehCvRdjw4B3yw9WBY8WZM7nkMvTSkkmwMBkT4p73qkdEo6
-         vTrSn2wYxKHooNoQMQGX8xo+1bpau6neJcsBO6V6sVhfKqKaDP14Ib4r/ppDD67x3CVM
-         v94Qoe+rJI8ejU9Q/IrjFfjiSrj6BygWAd3Oxp3CC26Om+Qd/2YUJ3X1XYompv1nUWQv
-         hYK91qW7z1IbtPQYZWw95LJzg5AeT7y4XwL8QtMtC/F/OVeiYsT3OCus12Qg1SgM5x7L
-         90gcJ1IIgQVdN9wfEVJgLlfMW0KjO35csIknGYVAnIL71fpS6+PevAkdv8sRoyns+Jpj
-         26KA==
+        bh=55ylo4QA2CaqLzL7CkyGNxJVenH2KK56GDg8IKBuTQM=;
+        b=M84BtYPXkppktUdcm4COHXtqJrKlgGrsInsukvff6NymdkuYX39pF0KhLgxzSxdpQG
+         XS3NsOndmHHtdH4S6I97/JhCeJ8Z2VEHJvb8n+/xNQ4KygKw5B7mbMThO9JdSX1xxHzd
+         IBL9oRUNOplbtd1vSFN9QBQ6STRQAskTe1jzOs3zcLMHdtn1P1ad5C/DoI0deq93s9wL
+         EivsMtOQKxC92k2AEc5WM3uef0lXUF8b/IavhtLpBZKPGdeqbY8DnxxZDXCo/dOTGwGW
+         YFhW1IcHU02PeQdUwKx7kPoWeo32BDZ9deIK7J7BfD6RorltvJFDzVKwP6A9SaKUmmVf
+         cnUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=X0l9EC5lE4//cPxZ1V1dfcHRn1ut8/Kdba9WwwFyQvg=;
-        b=cK5RG+eqB2oxQntrUiVH4o9EiaYikgsihsewgaqWXCVIslhsV6PUOpS5XK0skZmIVx
-         BwUnyi5tro2K652IjM2dkYbfs1YDgewDd4jktD0RVQgDVJ0OfTNsATYZlhHm7fJb0mVh
-         49k3hbyZB5wbiFeeNm/o/oLMMrpP0ikTteigihUGrAWzc0ycByTINbtM1G9jMjbAIehm
-         6Krv9nHTXAuQPr101dumv/NIyglfw/jZGYKszO5QIkkneCInRXHDaJtlM57gbrkg6MKa
-         xUZz0ycmboNQs/HugcD7odscUsLACWsR2+nvGTwWJjeN0r5M7i41I7E0a30Oqv8A15ZJ
-         EHAA==
-X-Gm-Message-State: AFqh2kpYXsAhx1hb5+cicrimU4JlwpGSf2+/PM/OwEzHLwvs5FPHfu36
-        z1/qHlLRybTdyij+wmeSvzIrVQJFAxZObNosYObOMuz3mPHflw==
-X-Google-Smtp-Source: AMrXdXt3RAr4qCyWLeHf7/G991br8+tCTh5HjJ9xnac7bU2QjwqnkcmvUzJpxVBlgXHzbMZEOgklcPLGl41J0FlL62s=
-X-Received: by 2002:a67:df09:0:b0:3ce:88b3:d7da with SMTP id
- s9-20020a67df09000000b003ce88b3d7damr8026359vsk.62.1673857923568; Mon, 16 Jan
- 2023 00:32:03 -0800 (PST)
+        bh=55ylo4QA2CaqLzL7CkyGNxJVenH2KK56GDg8IKBuTQM=;
+        b=kLek483WVyL8T1/2NFhJ2M1StTEs2GKn1vfzR5QRRhgmwZ39zOO67rYdNh/oP6/mmZ
+         0ZhW67ipAeCYYv7sR/3stVQcLVme7gOmRaF/jd2MvrTA2JpmteJz6Pn8xhKyHxHmVD1t
+         1dwDjd47DaXDSw8vZ0fioedYG6RupUehCSkwfyQMl8SpTJRr+qaBdl0Cpf5yguAbOp51
+         JTsdmZaqvuNIdZzCPcsDd0nJRFU+0GU/UoShLN8vYSJiXaaNBEFzAlqx7vdXJ9pfl0eD
+         5KNRRTI3PBeDQHWIC8urlaNTt1kiuiD8jTYYxtBlK3GVFsgwTUVXR+Da3qBW2A+qcb7v
+         bgCA==
+X-Gm-Message-State: AFqh2koe43aPl7lgaW11giJAmSb7CM3p6ilvIfbOKzwCmIQRHz7SaKBz
+        x7d4AW2rH7ld6NA+PjHTjw/Go02SLODhvh7LSTrvxA==
+X-Google-Smtp-Source: AMrXdXsVSfp5doi7+lR/ANoXc3k1b1awjO1u8RDetJnzyM+m53fSWwvRcTK7nrhs8zRASOtIU6ZOJ1Fo6iYKTHgNZAo=
+X-Received: by 2002:a05:6102:1141:b0:3d2:3577:2d05 with SMTP id
+ j1-20020a056102114100b003d235772d05mr811406vsg.9.1673858293353; Mon, 16 Jan
+ 2023 00:38:13 -0800 (PST)
 MIME-Version: 1.0
-References: <20221013215946.216184-1-marex@denx.de> <20221013215946.216184-2-marex@denx.de>
- <CACRpkdZwZCDA-pvneLYyMvxqeZkSoM3CFRHEkpOLoiWpPvXOxQ@mail.gmail.com>
- <24df1fa1-c24e-a07b-f7bc-dbf9f059549d@denx.de> <CACRpkdZ63r0Vo0TpQ8w4t9gzJ2uXu1ywaTWXJ3mmuT1zW+KH4g@mail.gmail.com>
- <8ddfac59-79d3-c506-e2a9-3919e84feca9@denx.de>
-In-Reply-To: <8ddfac59-79d3-c506-e2a9-3919e84feca9@denx.de>
+References: <20230113205922.2312951-1-andreas@kemnade.info>
+In-Reply-To: <20230113205922.2312951-1-andreas@kemnade.info>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 09:31:52 +0100
-Message-ID: <CAMRc=MdDJi7q9ADYYHGzW0EKV6Q00Ctxv7QBviwNUgS=fMYdAQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] gpio: mxc: Always set GPIOs used as interrupt
- source to INPUT mode
-To:     Marek Vasut <marex@denx.de>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>,
-        Marc Zyngier <maz@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Date:   Mon, 16 Jan 2023 09:38:02 +0100
+Message-ID: <CAMRc=Mf4-8AfTHLrvaF14tc2TJatxZJWnMOF-1G8HmDhPKSFAw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: omap: use dynamic allocation of base
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org,
+        linus.walleij@linaro.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -73,34 +66,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 9:16 AM Marek Vasut <marex@denx.de> wrote:
+On Fri, Jan 13, 2023 at 9:59 PM Andreas Kemnade <andreas@kemnade.info> wrote:
 >
-> On 12/19/22 00:21, Linus Walleij wrote:
-> > On Fri, Dec 16, 2022 at 10:51 PM Marek Vasut <marex@denx.de> wrote:
-> >> On 10/17/22 12:24, Linus Walleij wrote:
-> >>> On Fri, Oct 14, 2022 at 12:00 AM Marek Vasut <marex@denx.de> wrote:
-> >>>
-> >>>> Always configure GPIO pins which are used as interrupt source as INPUTs.
-> >>>> In case the default pin configuration is OUTPUT, or the prior stage does
-> >>>> configure the pins as OUTPUT, then Linux will not reconfigure the pin as
-> >>>> INPUT and no interrupts are received.
-> >>>>
-> >>>> Always configure the interrupt source GPIO pin as input to fix the above case.
-> >>>>
-> >>>> Fixes: 07bd1a6cc7cbb ("MXC arch: Add gpio support for the whole platform")
-> >>>> Signed-off-by: Marek Vasut <marex@denx.de>
-> >>>
-> >>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >>
-> >> Can you please just pick these two patches up ?
-> >
-> > Bartosz is queueing GPIO patches, I'm sure he will get to
-> > queue them soon enough.
+> Static allocatin is deprecated and may cause probe mess,
+> if probe order is unusual.
 >
-> Bartosz, any news ?
+> like this example
+> [    2.553833] twl4030_gpio twl4030-gpio: gpio (irq 145) chaining IRQs 161..178
+> [    2.561401] gpiochip_find_base: found new base at 160
+> [    2.564392] gpio gpiochip5: (twl4030): added GPIO chardev (254:5)
+> [    2.564544] gpio gpiochip5: registered GPIOs 160 to 177 on twl4030
+> [...]
+> [    2.692169] omap-gpmc 6e000000.gpmc: GPMC revision 5.0
+> [    2.697357] gpmc_mem_init: disabling cs 0 mapped at 0x0-0x1000000
+> [    2.703643] gpiochip_find_base: found new base at 178
+> [    2.704376] gpio gpiochip6: (omap-gpmc): added GPIO chardev (254:6)
+> [    2.704589] gpio gpiochip6: registered GPIOs 178 to 181 on omap-gpmc
+> [...]
+> [    2.840393] gpio gpiochip7: Static allocation of GPIO base is deprecated, use dynamic allocation.
+> [    2.849365] gpio gpiochip7: (gpio-160-191): GPIO integer space overlap, cannot add chip
+> [    2.857513] gpiochip_add_data_with_key: GPIOs 160..191 (gpio-160-191) failed to register, -16
+> [    2.866149] omap_gpio 48310000.gpio: error -EBUSY: Could not register gpio chip
+>
+> So probing was done in an unusual order, causing mess
+> and chips not getting their gpio in the end.
+>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> maybe CC stable? not sure about good fixes tag.
+>
+>  drivers/gpio/gpio-omap.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+> index 80ddc43fd875..f5f3d4b22452 100644
+> --- a/drivers/gpio/gpio-omap.c
+> +++ b/drivers/gpio/gpio-omap.c
+> @@ -1020,7 +1020,7 @@ static int omap_gpio_chip_init(struct gpio_bank *bank, struct irq_chip *irqc,
+>                 if (!label)
+>                         return -ENOMEM;
+>                 bank->chip.label = label;
+> -               bank->chip.base = gpio;
+> +               bank->chip.base = -1;
+>         }
+>         bank->chip.ngpio = bank->width;
+>
+> --
+> 2.30.2
+>
 
-I don't know why this has escaped my attention for so long. I wanted
-to apply it but it no longer applies on top of my for-next branch.
-Could you rebase and resend? Sorry for the trouble Marek.
+This could potentially break some legacy user-space programs using
+sysfs but whatever, let's apply it and see if anyone complains.
 
 Bart
