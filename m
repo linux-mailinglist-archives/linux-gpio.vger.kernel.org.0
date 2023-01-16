@@ -2,86 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54EA666B948
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:49:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF6A866B958
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 09:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232192AbjAPIt2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 03:49:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56320 "EHLO
+        id S232382AbjAPIwb (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 03:52:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232025AbjAPIt1 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:49:27 -0500
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3D1A12865
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:49:24 -0800 (PST)
-Received: by mail-vs1-xe35.google.com with SMTP id q125so16593719vsb.0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 00:49:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9sTr6MqALGJwmJjfPYPEonjgpkyKa7ykJkskKcOLsWk=;
-        b=xN0HsBRuVS5tnXRE2/5nRcc0Sjbq/htNtt4ZnV0Cx9pS959pEoOXdPsg0WaQ4BqxjX
-         Y1UravJcSm5mPjq5Tnn5qMcYlxLTNBim1QVgBSIkIeVas9qv+nyUSejky22C+1qw4gX3
-         jIDrQ6y6w785bfC9i8/i5W9z67Ikt538i76ts5jrYHwLRN3WI1WzPhf7A7uGJ1FYOMJC
-         AkucKxs+6j6Nvpj9QQp4IJ0N70ee8ZHxNU2NCK3kZ53uxwjuFPWfUItmC7aCjikR4JkV
-         Id7IRJ47YRAr9h74X51/9CZx+llgAlk7WobIEMhPEZy3udCw+o1FasqS1BPwguO3AfIX
-         VKgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9sTr6MqALGJwmJjfPYPEonjgpkyKa7ykJkskKcOLsWk=;
-        b=FDhUyf42XfdxiVtqCSZefAKgmJzQLqMhexaVJLL9V1ohHR95OYFoom8LU68yBNGzai
-         B/vFbG3EBt506fYRjXSdFsbOl8cISfN7tKzac7D5eyTghQbL0lgXN69Gw0Fg8LZOwveT
-         MKvfLsrJ/R1lP18Fdy6ME3vtxOevo/vSsdZ4i1LtapWUfQT/lVykiOPlIR9qZEJTf9Jz
-         YHD6CFUtzqZVe0ZJ2qg2hJX2b1O4CAqjcW/k3c/ei8RmonSUB3fr/zVdPw6UPvaC6F1t
-         CcBv5j9PNA7F9Z8qZG/VRoLtLOht2A9T0nYQzRIRK0qUp1t4qRLj9tBbDpzYX363toCw
-         WBMQ==
-X-Gm-Message-State: AFqh2kqt+PheARaW23k6VAM1PqDwxk3a32TvKlyhbmN/LTN9nSjuFd1s
-        lwnZ4cLM6ioq7j1cwPCYvV3i1aPOkJe1ojAs2iIrtv+EmELKDg==
-X-Google-Smtp-Source: AMrXdXslgwCOWJ6fvGdSvpkTTbdtzJDfLSm7YY/DjKDgjLWdL7Na7meybpGu/6xdHwIj4BqhSi8K9mp63rgtrP+6X00=
-X-Received: by 2002:a67:df09:0:b0:3ce:88b3:d7da with SMTP id
- s9-20020a67df09000000b003ce88b3d7damr8031952vsk.62.1673858963982; Mon, 16 Jan
- 2023 00:49:23 -0800 (PST)
+        with ESMTP id S232371AbjAPIw0 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 03:52:26 -0500
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2646044A1;
+        Mon, 16 Jan 2023 00:52:24 -0800 (PST)
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.95)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1pHLDw-0003Fv-T9; Mon, 16 Jan 2023 09:52:12 +0100
+Received: from p57bd9464.dip0.t-ipconnect.de ([87.189.148.100] helo=[192.168.178.81])
+          by inpost2.zedat.fu-berlin.de (Exim 4.95)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_128_GCM_SHA256
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1pHLDw-000TdQ-Lf; Mon, 16 Jan 2023 09:52:12 +0100
+Message-ID: <40dc1bc1-d9cd-d9be-188e-5167ebae235c@physik.fu-berlin.de>
+Date:   Mon, 16 Jan 2023 09:52:10 +0100
 MIME-Version: 1.0
-References: <20230110014943.2196046-1-chunyan.zhang@unisoc.com> <CAAfSe-uNjzZFTpwRG4h=z=+r7SEmrU0iDU+Q2Wx+X4B91FJHpQ@mail.gmail.com>
-In-Reply-To: <CAAfSe-uNjzZFTpwRG4h=z=+r7SEmrU0iDU+Q2Wx+X4B91FJHpQ@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 09:49:13 +0100
-Message-ID: <CAMRc=Mes5CpyAb-SdW9pgLaatccyPN0aSWcr6mBxPVyKMZ5fGw@mail.gmail.com>
-Subject: Re: [PATCH V4 0/3] Convert Unisoc GPIO bindings to yaml and add
- support for UMS512
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     Chunyan Zhang <chunyan.zhang@unisoc.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: remove arch/sh
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+ <20230116071306.GA15848@lst.de>
+Content-Language: en-US
+From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+In-Reply-To: <20230116071306.GA15848@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-Originating-IP: 87.189.148.100
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 3:10 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> Hi Bartosz,
->
-> Would you please pick this patchset into your tree, if there are no
-> more comments?
->
-> Thanks,
-> Chunyan
+Hello Christoph!
 
-Applied, thanks!
+On 1/16/23 08:13, Christoph Hellwig wrote:
+> On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
+>> I'm still maintaining and using this port in Debian.
+>>
+>> It's a bit disappointing that people keep hammering on it. It works fine for me.
+> 
+> What platforms do you (or your users) use it on?
 
-Bartosz
+We have had a discussion between multiple people invested in the SuperH port and
+I have decided to volunteer as a co-maintainer of the port to support Rich Felker
+when he isn't available.
+
+Adrian
+
+-- 
+  .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+   `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
+
