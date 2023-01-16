@@ -2,113 +2,137 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 622F466BE71
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:57:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0584666BE7B
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 14:00:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231367AbjAPM5p (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 07:57:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45600 "EHLO
+        id S231206AbjAPNAK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 08:00:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbjAPM4x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:56:53 -0500
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2FE120050;
-        Mon, 16 Jan 2023 04:55:42 -0800 (PST)
-Received: by mail-qt1-f169.google.com with SMTP id x5so861930qti.3;
-        Mon, 16 Jan 2023 04:55:42 -0800 (PST)
+        with ESMTP id S230267AbjAPM7j (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:59:39 -0500
+Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FAD23C42
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:57:39 -0800 (PST)
+Received: by mail-vs1-xe30.google.com with SMTP id d66so16490079vsd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:57:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=HfQlrchdaw4hB32UASu7GzqotGo/ixr0sQa4tvv5958=;
+        b=QaYWwuoqZntFCWX5/8YUDbh4rEs/jNBe4ELzoskaOqMEP62q6VdopnLDrTTAVgTve0
+         AT1UGq97oFapPH6NADUKdKPKaI4Ld+K4Vl+9jLhRRZStWRvcgiwHDPwl6DGv+e0x2l/q
+         FSv2GFBpfVn0cSFpo9oEI1zBzoTr6x08frzJeh1WVjCn+YH5cRSR7tCCID0YyGIIPGzR
+         YLL4KFSHb/mEzIOz+VOMnY6rbMCz6alHw2b0NqDWvQZs6qUHInNpB6KdAysZaPff7cqo
+         ZHjaB8Yqk6YsLMGUWtCZ1dbbR63qURPXZ/bVDF9rzmT8HqaPsk+sWh0AJqth7xFE+7l9
+         QTJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=CM4Jkzp/QAXkO7bnxWsfgCHfESoHq0ivf9TvlonLhmA=;
-        b=Mn12KVK09MbH3Hu1oFUpb91/fQq2Ug1Z9ttFJE3HTfHJGykZ7mG6ap34OOqGCy2lIO
-         oVVAT0MRRi/epgeph8vkPzVfrN80ql2r64zYNTJbwqb/Dp7EXWMt5vofn82JZ11+Om0+
-         xml1FBPmPR13B0I4ZG7n0BZVKu0Bwessyu6ZcyHHBACcmy5BjRfvlE5v3PGCRefzNmXF
-         iO0OhvAyuXHt/gmqthfBz7on7BbqLmpb6Uhi/QS7n1e8F6QFo/Jm4QHJNGBc+15UOJ0b
-         ukEaqxGA11VkinQIKOPTSopziQfKUhQ1q3Pko80j8xcyg+psu0YbRCXjTD3gWZnCt0ST
-         RJgQ==
-X-Gm-Message-State: AFqh2kplFSIxWBsblK5BCLSdT/t0TQd6OmQfHXeuQWqvJZ6G8yp8LsrT
-        RosIB5m7UUWTFKl6M5GwnYXYDLyJP2VpoA==
-X-Google-Smtp-Source: AMrXdXvSek5CM7kko3egK3cIPxxImuMu6Faaui9MMc86ouX0ZA93gouZby3xtrm8yUqdhdm2/f2juw==
-X-Received: by 2002:a05:622a:1c0e:b0:3b6:2c74:1453 with SMTP id bq14-20020a05622a1c0e00b003b62c741453mr8833816qtb.61.1673873741673;
-        Mon, 16 Jan 2023 04:55:41 -0800 (PST)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id jr49-20020a05622a803100b003ad373d04b6sm11638024qtb.59.2023.01.16.04.55.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jan 2023 04:55:41 -0800 (PST)
-Received: by mail-yb1-f182.google.com with SMTP id a9so13476351ybb.3;
-        Mon, 16 Jan 2023 04:55:40 -0800 (PST)
-X-Received: by 2002:a25:46c6:0:b0:7b8:a0b8:f7ec with SMTP id
- t189-20020a2546c6000000b007b8a0b8f7ecmr4777221yba.36.1673873740621; Mon, 16
- Jan 2023 04:55:40 -0800 (PST)
+        bh=HfQlrchdaw4hB32UASu7GzqotGo/ixr0sQa4tvv5958=;
+        b=lIsPbhm75qLa1XUinKP9E1KyqM/HQLg72VGlcRyWwkNMcWl4UvkXj3Ja3+e06A4RcL
+         S3PyoqnADmXRa52W+EVI+U8FqOWkE4latN/tVvRaC1sLiF4TZghNkfea3CiOcL+uY+Q6
+         Dgc61cSQKEz9OhY5GBlvgO7mM8h1YsIVffyC9w6dNAAv71WaTGrjxNGDrjM5ahkNX6Wk
+         myPcSR1tuO5Bfk6pNwvq/zz5hB2zBf0hg573hkIbhhPsPGdsfcmVHCLJR/dmHp2Val/v
+         48TqfzxpGGqnK3/d0XBq7caIoJ9c0xz4slqxjxscAkLWo/Bn/UIg8a6Isqa9wY0cltCF
+         LBPQ==
+X-Gm-Message-State: AFqh2kqRX1J+P3fDdbBGNyYuAnHfWNgsPzt6DtJWSWPwm+nfIiuFqaUB
+        9g9CghJMVcMAY1EybUuXvHPytDmkl6FzCpkiGAqqHQ==
+X-Google-Smtp-Source: AMrXdXsHicgRBEo8K3HMOd0g98RCA5hX/Qqu8EOVoHzEsEwBQtE4Z2M2GtFw+AHeMZXjS+8MbA+8WFJ0VwI9Ybw5eI8=
+X-Received: by 2002:a05:6102:1141:b0:3d2:3577:2d05 with SMTP id
+ j1-20020a056102114100b003d235772d05mr896966vsg.9.1673873858946; Mon, 16 Jan
+ 2023 04:57:38 -0800 (PST)
 MIME-Version: 1.0
-References: <20230106125816.10600-1-fabrizio.castro.jz@renesas.com> <20230106125816.10600-2-fabrizio.castro.jz@renesas.com>
-In-Reply-To: <20230106125816.10600-2-fabrizio.castro.jz@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 16 Jan 2023 13:55:29 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVZ+wrCmRxjoV-k3zhs1tHHdLr1toBbT2ft+-pVrzMYEQ@mail.gmail.com>
-Message-ID: <CAMuHMdVZ+wrCmRxjoV-k3zhs1tHHdLr1toBbT2ft+-pVrzMYEQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] dt-bindings: soc: renesas: Add RZ/V2M PWC
-To:     fabrizio.castro.jz@renesas.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Biju Das <biju.das@bp.renesas.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>, Rob Herring <robh@kernel.org>
+References: <20230113215210.616812-1-brgl@bgdev.pl> <20230113215210.616812-16-brgl@bgdev.pl>
+ <20230116060250.c6i6ouu2ojutubcd@vireshk-i7> <CAMRc=MdX+SbN65m2jkZqJOYKobGgi=H0jCVyqcHCPo56152fMA@mail.gmail.com>
+ <20230116094058.7m3d4pdy7llnk7my@vireshk-i7>
+In-Reply-To: <20230116094058.7m3d4pdy7llnk7my@vireshk-i7>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 16 Jan 2023 13:57:28 +0100
+Message-ID: <CAMRc=MerVcJW=yBpSGbWhk9cWENtLZE-OVx4NT=xm9fBtZgpBQ@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 15/16] bindings: rust: make mutators return &mut self
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, Jan 6, 2023 at 1:58 PM Fabrizio Castro
-<fabrizio.castro.jz@renesas.com> wrote:
-> The Renesas RZ/V2M External Power Sequence Controller (PWC) IP
-> is capable of:
-> * external power supply on/off sequence generation
-> * on/off signal generation for the LPDDR4 core power supply (LPVDD)
-> * key input signals processing
-> * general-purpose output pins
+On Mon, Jan 16, 2023 at 10:41 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> Add the corresponding dt-bindings.
+> On 16-01-23, 09:42, Bartosz Golaszewski wrote:
+> > On Mon, Jan 16, 2023 at 7:02 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 13-01-23, 22:52, Bartosz Golaszewski wrote:
+> > > > diff --git a/bindings/rust/libgpiod/tests/line_request.rs b/bindings/rust/libgpiod/tests/line_request.rs
+> > > > index c3fc37b..561f4e8 100644
+> > > > --- a/bindings/rust/libgpiod/tests/line_request.rs
+> > > > +++ b/bindings/rust/libgpiod/tests/line_request.rs
+> > > > @@ -97,13 +97,11 @@ mod line_request {
+> > > >              config.lconfig_add_settings(&offsets);
+> > > >              config.request_lines().unwrap();
+> > > >
+> > > > -            let request = config.request();
+> > > > -
+> > >
+> > > Why remove this ? And open-code it ?
+> > >
+> >
+> > Because I'm a Rust noob and couldn't figure out how to deal with the
+> > mutable/non-mutable borrow vomit that ensued when I kept the local
+> > variable. If you could improve upon this one, it would be great!
 >
-> Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+> From what I can understand, config.request() returns a mutable
+> reference and you don't need a mutable variable to keep it, since the
+> variable doesn't need to store another reference later. Just moving
+> back to original code should work here.
 >
-> v1->v2: I have dropped syscon, simple-mfd, regmap, offset, and the child nodes.
-> v2->v3: No change.
-> v3->v4: Moved file under Documentation/devicetree/bindings/soc/renesas,
->         and changed $id accordingly.
-> v4->v5: Fixed subject line and changelog. Rob, I have kept your Reviewed-by tag
->         assuming you are still happy, please do jump in if you think  that's not
->         appropriate anymore.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.3.
+Seems like I went overboard with converting all of those cases but in
+same places this still fails:
 
-Gr{oetje,eeting}s,
+error[E0502]: cannot borrow `config` as immutable because it is also
+borrowed as mutable
+   --> libgpiod/tests/line_request.rs:449:24
+    |
+441 |             let request = config.request();
+    |                           ---------------- mutable borrow occurs here
+...
+449 |             let info = config.chip().line_info(0).unwrap();
+    |                        ^^^^^^^^^^^^^ immutable borrow occurs here
+...
+456 |             request.reconfigure_lines(&lconfig).unwrap();
+    |             ----------------------------------- mutable borrow
+later used here
 
-                        Geert
+If I make config.chip() return &mut Chip then it fails like that:
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+error[E0499]: cannot borrow `config` as mutable more than once at a time
+   --> libgpiod/tests/line_request.rs:449:24
+    |
+441 |             let request = config.request();
+    |                           ---------------- first mutable borrow
+occurs here
+...
+449 |             let info = config.chip().line_info(0).unwrap();
+    |                        ^^^^^^^^^^^^^ second mutable borrow occurs here
+...
+456 |             request.reconfigure_lines(&lconfig).unwrap();
+    |             ----------------------------------- first borrow
+later used here
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Not sure how to go about this.
+
+Bart
