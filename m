@@ -2,59 +2,58 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D02DD66B9CB
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 10:05:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CFC266B9D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 10:06:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbjAPJF0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 04:05:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37478 "EHLO
+        id S232560AbjAPJGY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 04:06:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232376AbjAPJEx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 04:04:53 -0500
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0781E9D2
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:01:14 -0800 (PST)
-Received: by mail-ua1-x936.google.com with SMTP id g12so1074394uae.6
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:01:14 -0800 (PST)
+        with ESMTP id S232519AbjAPJF7 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 04:05:59 -0500
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F411C18A9C
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:03:30 -0800 (PST)
+Received: by mail-vs1-xe32.google.com with SMTP id l125so9028995vsc.2
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 01:03:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kQc0w7us/TAf4WWYBS/555b1Jab1SFMtLDV2690OauA=;
-        b=70NKHVT+/6NrgRH1DrihWhy/e2cjaLfEbQL29M8XW1ZwbvXImHQSUZrm99GQ9mlmuh
-         BqcVzk4ttQU+JBzc/mbrCQW8D0++tebQRpUJOhBGrGMYokJCtyMBPQHZ+9XD3T2cyg+Z
-         OLQ2GElvM4tCAcomDmVIYBYnof7GG+Mle/7r1W4IiUbSQdC7IfAlbIgyFqH5C2+zuXfv
-         9kDWTjLFjG8fdSSGvv7Nx0wOnpAFz075wyot4ycdWDH6MguXTlQOpRybiyuWGX3PQemN
-         TmVcOTlUQG7Oij5r5qZtAp77xJLGoxTTDIAwT3q/FjUJbtAwlVG7bZ6FHbM5xDX585TT
-         1zVA==
+        bh=32WOcoXO5ldk2Em3aPyakA0jH+HICU+rv07Xae29T34=;
+        b=UeKy7hV7fsyqRTX4F+f8YoVuVc8GCJKGrtdglTgVFNwp+8Zfjxmx1qn3D0BBla46ob
+         Gh3br7pcEbiK1SlN//rVokX6zM2cA/VAEj0XOFOfvC2gOTriSeGdFeCuKHGoQfBTHQUV
+         LCIHNsO7dnZ2++tNwHecVk7Qnn7K8MncHEfd4Lq2xh0mltR/jWtZeFT8uymZgge1o8h8
+         nibai1IafatnXYQGi4kjpLB8bTdZLRCg+g/+7ZggDFjX4zQZu80Z7XBtI4UWbJwZol1M
+         Dv5Xa4WswNdVNOsQqKuuk8qX6oje+dqCK8hg9Y8f7a4XQyo2WFYGWtINHH82S/zUDY2D
+         nCeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kQc0w7us/TAf4WWYBS/555b1Jab1SFMtLDV2690OauA=;
-        b=pxPt0VFHdaG8JCkTBRuoFSYiEi7+QPNo3CRz2ZehgYxNnIyCuMFB0XW+ifLEZSLoqV
-         9xLBNbwA5vDzd0bPA2Uz/0LyqB116Hbb9TmNsiitlRVh0RFyNf8U7T3ZTrZu4BtfAQTF
-         tXkkOLTGmA+Z12wUVEP/rmbcpCgqqMtMudJLoTDzDElytUbxrI401OKVUpGiMGvOhR9I
-         5DZVKwp5x++LEm2k9BFMpw9Gjxxt/HTEu7HlhkOKbQAz1Kc64dpLFlAYaRPINe03/L67
-         8O2ne33++CTA3B98Kb0vceGmpqBkfOBdoVvy9JG0IcyeZauWd/9n32PY//d8U1cL+r7Z
-         yFmA==
-X-Gm-Message-State: AFqh2kr1xIP/DI2ilfrkRJJ0yOsaG877WLE91Zby9Ob3IZqJci2u4rWg
-        bFZI2FlIzXsFAXWGlVzn/yza7t9b1dJVP4wNoKLVcw==
-X-Google-Smtp-Source: AMrXdXsYnbP6JMK2tSR6lKAJWigI0AO5xK40gA0uscxdSkP8glEwEdrPhr6Jix01RSyw4ZDGQg3gsnTue/ifGuZoo6o=
-X-Received: by 2002:a05:6130:425:b0:5ed:8c3e:fc23 with SMTP id
- ba37-20020a056130042500b005ed8c3efc23mr1851672uab.87.1673859673642; Mon, 16
- Jan 2023 01:01:13 -0800 (PST)
+        bh=32WOcoXO5ldk2Em3aPyakA0jH+HICU+rv07Xae29T34=;
+        b=d/FjMYGnQ+5yS7tM0sAPZsO4jjU84IgOYblJjJm1klQ5Q5wlrQBE1FrsfkPVdyrkjP
+         AvJUavEgQSQK2OEsYzISpZG21Rx0wE/50C15UdHIsOyCCY/q4/MeQbB1FIBW9bUViubq
+         OAAkq9w48zPFD2Y0vbeGT9q/fKZBRzPnwCX9HpFJPdJLk9g0cX8Qz9Nu8aUB/JAmhASp
+         C5lWR3rUUvX53UWusgj9QfxU8n4M/6ZhJ3T0s+DBL0Sp0uGy1jTrryUH02j+LTTZgY+E
+         tQQ7NKAhjTemgDrqxxmwO7RDGGExO8Lhtb4DxS3LpegXKm0eEywNPR7JCho8fjR+Jdb6
+         8d4Q==
+X-Gm-Message-State: AFqh2korAUnoTvMvXc239OcsXy2vVlkiog4E7MdDhAcXd5qnmGGjIZcr
+        tLpnc7Y6WW61MrdKlk3V4wrwS02FubuMHSXYeOHneg==
+X-Google-Smtp-Source: AMrXdXthmHPScO+QHMGTj79l65q9+ThrjSLYcDLQJ5STDs5sRva9j0NY+z+2mTr+aBOVsQ37f5IX8ldpO4CCkLZWUDE=
+X-Received: by 2002:a05:6102:83b:b0:3d1:3753:9a3c with SMTP id
+ k27-20020a056102083b00b003d137539a3cmr1433742vsb.73.1673859810089; Mon, 16
+ Jan 2023 01:03:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20230112163941.73143-1-andriy.shevchenko@linux.intel.com> <20230112163941.73143-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230112163941.73143-2-andriy.shevchenko@linux.intel.com>
+References: <20230113182619.16800-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230113182619.16800-1-andriy.shevchenko@linux.intel.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 10:01:02 +0100
-Message-ID: <CAMRc=McaLTaBv6oL-NM2ULFMLU79mJ_Zu6_2=wG=fhxotL7Y=A@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] gpio: zevio: Use proper headers and drop OF_GPIO dependency
+Date:   Mon, 16 Jan 2023 10:03:19 +0100
+Message-ID: <CAMRc=MetFa3v5fWzm0mhWGDoH1h_CfAOzktdKy+kTjp9BeefLQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: wcd934x: Remove duplicate assignment of of_gpio_n_cells
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Moses Christopher Bollavarapu <mosescb.dev@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
@@ -67,54 +66,30 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 12, 2023 at 5:39 PM Andy Shevchenko
+On Fri, Jan 13, 2023 at 7:25 PM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> The driver doesn't depend on the OF_GPIO to be compiled. Hence
-> the proper header to use is mod_devicetable.h. Replace of*.h with
-> the above mentioned and drop redundant dependency.
+> The of_gpio_n_cells default is 2 when ->of_xlate() callback is
+> not defined. No need to assign it explicitly in the driver.
 >
 > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > ---
->  drivers/gpio/Kconfig      | 2 +-
->  drivers/gpio/gpio-zevio.c | 7 ++++---
->  2 files changed, 5 insertions(+), 4 deletions(-)
+> v2: no changes
+>  drivers/gpio/gpio-wcd934x.c | 1 -
+>  1 file changed, 1 deletion(-)
 >
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 3b2078a654ce..a2f64f880163 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -751,7 +751,7 @@ config GPIO_XTENSA
+> diff --git a/drivers/gpio/gpio-wcd934x.c b/drivers/gpio/gpio-wcd934x.c
+> index 97e6caedf1f3..817750e4e033 100644
+> --- a/drivers/gpio/gpio-wcd934x.c
+> +++ b/drivers/gpio/gpio-wcd934x.c
+> @@ -98,7 +98,6 @@ static int wcd_gpio_probe(struct platform_device *pdev)
+>         chip->base = -1;
+>         chip->ngpio = WCD934X_NPINS;
+>         chip->label = dev_name(dev);
+> -       chip->of_gpio_n_cells = 2;
+>         chip->can_sleep = false;
 >
->  config GPIO_ZEVIO
->         bool "LSI ZEVIO SoC memory mapped GPIOs"
-> -       depends on ARM && OF_GPIO
-> +       depends on ARM
->         help
->           Say yes here to support the GPIO controller in LSI ZEVIO SoCs.
->
-> diff --git a/drivers/gpio/gpio-zevio.c b/drivers/gpio/gpio-zevio.c
-> index c9f4c26cae3d..61e47456c33a 100644
-> --- a/drivers/gpio/gpio-zevio.c
-> +++ b/drivers/gpio/gpio-zevio.c
-> @@ -5,13 +5,14 @@
->   * Author: Fabian Vogt <fabian@ritter-vogt.de>
->   */
->
-> -#include <linux/spinlock.h>
-> +#include <linux/bitops.h>
->  #include <linux/errno.h>
->  #include <linux/init.h>
-> -#include <linux/bitops.h>
->  #include <linux/io.h>
-> -#include <linux/of_device.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +
->  #include <linux/gpio/driver.h>
->
->  /*
+>         return devm_gpiochip_add_data(dev, chip, data);
 > --
 > 2.39.0
 >
