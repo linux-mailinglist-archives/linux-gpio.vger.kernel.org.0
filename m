@@ -2,70 +2,61 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3372E66BE02
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:41:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 921AC66BE07
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:43:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230342AbjAPMlu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 07:41:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35304 "EHLO
+        id S230369AbjAPMnj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 07:43:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbjAPMls (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:41:48 -0500
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1FD1E2A0
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:41:47 -0800 (PST)
-Received: by mail-yb1-xb36.google.com with SMTP id 188so30076246ybi.9
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:41:47 -0800 (PST)
+        with ESMTP id S230365AbjAPMni (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:43:38 -0500
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E331E29B
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:43:37 -0800 (PST)
+Received: by mail-yb1-xb34.google.com with SMTP id c124so30077720ybb.13
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 04:43:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3q3MQLN2FVf89PtdSK/SXvJTM2uY9pjB6eoFrd2d8V0=;
-        b=Nx9K/ryTCyCNNyCG0hr3uPueDPLJ9yT/j+dfRqkdEeVY0v70RE1jJmAUq8QCqmXMo5
-         tWbPesQ3lXZtsZjcMwP82+Z09qwlBdwjA78sIY1WRIjfAdIetH52yAh2F+I0biUe2nWj
-         Q3bM1qmyCMH9kf/UA9GqOCFDgYusRxMA2dbMV1/BuvHeyl99CKYizxNteIBiCz+aZobn
-         J0yTRskYKI3sfAJCDar+WywFTW6nbUT2Z3NdlHAdxkhfX1qeVFE2H4hA9Du1H/5cIhD1
-         UdvQ4EeVunOfzL+2gqiYL8s2POePCfD5xSFP4WwgM9oDyDvtJoVXwCDe5iAn2qNuvO+9
-         tIyQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bzAXwdCvDxq2ZXNmGsdcs5ULG6ySxlBGhBK+Q84iWyc=;
+        b=z429dc8HTSxSpP83/Qvm8uHIwVOjUxW+fB3mUGvLwV7TDdHjjp5oZmDcHqKCuGx3rg
+         HL/QvYIf9C2va1HJ+tXJ9BFWFytG6LZRHpd2yqYSSUqbvWzX+OaniGDqRYr4yPeJAhUb
+         NzGHYw5tDuLWgXvZntzWDQ603DCyNowwAYQV1MHA8TGybyn2CiFV2t3zDLe7GozgxwbS
+         cQl23omTkC15QGGvX29CHZvT79o24NreIe9YBmanerG3LxwnIjo8JpIeCwW8uw1BbP/J
+         oQBhWD3vNF0Cd58k01fdckG5P3DvCwx0zEVMp7tEd0Lz45k8FYZJLEtfTatwlEc+xHA/
+         C1pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3q3MQLN2FVf89PtdSK/SXvJTM2uY9pjB6eoFrd2d8V0=;
-        b=FZ5OoLRXK3FwIIi3cD/M0TwGvQiWVTpmJCsdii+1iXyGNFOpO5UsEOybLlGxLYsUFB
-         I0dt4iothb3MPGDS504TODErAsBNg849IVwRvtTPVshRbZfRnIPYVAbSCR6s5ShIGw4u
-         7WRk+7Qag1a4hmelXiRsOWP2l9wv8Z48YmpjZtxDEs7sJmxen5IOwR0wODd2akZzZ9N9
-         mCuNojP6vUCbvksTqqfk/LXq404mUuAYQOeCk2+fmiMPJKpt7GHU960HsFV1mkFJUuYY
-         KnVRkzzyjZbWjTJfiz4aynofldwuZwMUqYiTkoTF337zTeiPXIqWUGaetasBGGoSuDTh
-         zm9A==
-X-Gm-Message-State: AFqh2kryInfz8Ve12bTS/JXYkZVRHkYpX1RLd7B/yqc/ybyvo3nFjCc6
-        Dmn02N/f6iaPaqKXKLV5P+PkWHKW6TU7vF4uaG/+Ig==
-X-Google-Smtp-Source: AMrXdXvWBNr9LsH2Oq+FdwkLMqD0NN3kPT5Lh3tsKMGtsEzOMK0Y25yk/EwL58EFlCY6bz+Wsacjqd1Fa1DGPOToRVk=
-X-Received: by 2002:a5b:a90:0:b0:70b:87d5:4a73 with SMTP id
- h16-20020a5b0a90000000b0070b87d54a73mr7101911ybq.584.1673872907033; Mon, 16
- Jan 2023 04:41:47 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bzAXwdCvDxq2ZXNmGsdcs5ULG6ySxlBGhBK+Q84iWyc=;
+        b=jykbI4r7PyKVPBHrhgxYk0H4JVQ8G81nBcHOgbNgS7o+JfsxUNlL5CI/tjROb3Toxg
+         tN8zTI3MZ24GkRxYSHRbQaWEG5dqidpcTYQernBzy9F1p0uo4tZkiTL4QLciAbSHQugI
+         ljz/635G7h5GBxhVgdV+UnjIa2vP9QKjb1IlDz7PYcUIdaO7imXFyW7xa8/W/MD2V381
+         FI05p7WSOYkdqXN1sPEMyEzp5K2KCHvgHQD9laRb1U9g7rExNlnaEIBcJ6GahKWFQzH7
+         5S9yED+EfgF9nCu/pQBaQ1EIaPumH0ukP9EsOTE+RFENAQTlIVgVLXiFKSd2NSGPmWTw
+         ZKqg==
+X-Gm-Message-State: AFqh2kpWz4QfEdhJTH6iuW4kgZlgAXyGeKm1WIZ6TKBE/DNE+4ayMJsr
+        XAFznJHOeL6zfvRefpEmJ6qcpeN3rUTzUSgvVwk97A==
+X-Google-Smtp-Source: AMrXdXvAx6y1ThlA1UIN8G7jYozTcqWPm5nhqThDDSJen+uXvBbrhIA8Aeq85e+9eAZsYZA6UVZvtUEAHY1gLjQITy8=
+X-Received: by 2002:a25:c042:0:b0:7e4:fa1:b33 with SMTP id c63-20020a25c042000000b007e40fa10b33mr255611ybf.460.1673873016453;
+ Mon, 16 Jan 2023 04:43:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20221118224540.619276-1-uwe@kleine-koenig.org>
- <20221118224540.619276-511-uwe@kleine-koenig.org> <CACRpkdaViC8T5qFRW+=+rGST=nr9beQJqTP7d42OoYUnhPhqig@mail.gmail.com>
- <20230111095142.2i36vjytm6wthntl@pengutronix.de>
-In-Reply-To: <20230111095142.2i36vjytm6wthntl@pengutronix.de>
+References: <20230110172955.1258840-1-jonas@kwiboo.se>
+In-Reply-To: <20230110172955.1258840-1-jonas@kwiboo.se>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Jan 2023 13:41:35 +0100
-Message-ID: <CACRpkdaxt87XnQ=QejN+XGb+s5q35FDKZoVa0=HMaK6G9_1d1w@mail.gmail.com>
-Subject: Re: [PATCH 510/606] pinctrl: mcp23s08: Convert to i2c's .probe_new()
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>,
-        linux-kernel@vger.kernel.org, Wolfram Sang <wsa@kernel.org>,
-        linux-gpio@vger.kernel.org,
-        Angel Iglesias <ang.iglesiasg@gmail.com>,
-        linux-i2c@vger.kernel.org, kernel@pengutronix.de,
-        Grant Likely <grant.likely@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>
+Date:   Mon, 16 Jan 2023 13:43:25 +0100
+Message-ID: <CACRpkdaY7Q9WngrznF8jch8fzfu8uEbk1t30NAMd2tBdLnZXOA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: rockchip: fix reading pull type on rk3568
+To:     Jonas Karlman <jonas@kwiboo.se>
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -75,20 +66,20 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 10:52 AM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Tue, Jan 10, 2023 at 6:29 PM Jonas Karlman <jonas@kwiboo.se> wrote:
 
-> Thanks. Is there a reason you picked #510 but not #511 other than having
-> missed there is a 2nd pinctrl patch in my series?
+> When reading pinconf-pins from debugfs it fails to get the configured pull
+> type on RK3568, "unsupported pinctrl type" error messages is also reported.
 >
-> If it's only that
+> Fix this by adding support for RK3568 in rockchip_get_pull, including a
+> reverse of the pull-up value swap applied in rockchip_set_pull so that
+> pull-up is correctly reported in pinconf-pins.
+> Also update the workaround comment to reflect affected pins, GPIO0_D3-D6.
 >
->         b4 am -P 511 -s -l CACRpkdaViC8T5qFRW+=3D+rGST=3Dnr9beQJqTP7d42Oo=
-YUnhPhqig@mail.gmail.com
->
-> is your friend.
+> Fixes: c0dadc0e47a8 ("pinctrl: rockchip: add support for rk3568")
+> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
 
-My bad. I applied 511 above as well, helpful with the oneliner!
+Patch applied for fixes. Thanks for fixing this!
 
 Yours,
 Linus Walleij
