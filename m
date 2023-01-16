@@ -2,86 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9901D66BC98
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 12:15:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88BEA66BD6E
+	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 13:01:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjAPLPZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 06:15:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44908 "EHLO
+        id S230238AbjAPMBq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 07:01:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjAPLPW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 06:15:22 -0500
-Received: from muru.com (muru.com [72.249.23.125])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1ACB0B44A;
-        Mon, 16 Jan 2023 03:15:22 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2E66C8108;
-        Mon, 16 Jan 2023 11:15:21 +0000 (UTC)
-Date:   Mon, 16 Jan 2023 13:15:19 +0200
-From:   Tony Lindgren <tony@atomide.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-        Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: Update pinctrl-single to use yaml
-Message-ID: <Y8UxxwdbiHdJ7WF+@atomide.com>
-References: <20230112083152.10277-1-tony@atomide.com>
- <20230113202016.GA2833245-robh@kernel.org>
+        with ESMTP id S230281AbjAPMBF (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 07:01:05 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4641CF7D;
+        Mon, 16 Jan 2023 04:00:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673870448; x=1705406448;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=D2anxR+FvRYBPshSagDI1N1YyqBlRNyqR+Fxhg3WoYE=;
+  b=Jul23TcTyZapAHDCYj/QC6A99ISiOMhMPZudF20IDbVrIMtnANOXlN27
+   0YHWJ5ELYEN1K1vPRTHgP1YOZ1eCtN6djrW1Gy8lRoBqELZoCVOdvoFM+
+   uGkqfNZUHQok6bQD1R6IAcs8xRxKbDr7YWQxrb8L+letP5KY31SMkbHqB
+   Jy4TH1msurMBrOFdJrbTbxNGs3WMlR5h39QLrW0meqbLTC3fnoikzDJ6w
+   lnzCnFdk1ThAeFm4OC/4xZ0BrS6VqYQSQUCSXmIMMLu7JMrJx/Lr9dt8O
+   CHawTSK0AQCxsH7B60Nz+V6OYmtr+xcW0doLTZRgo2Dl/nEQCBOCMJCcT
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="312299098"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="312299098"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jan 2023 04:00:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10591"; a="904312857"
+X-IronPort-AV: E=Sophos;i="5.97,220,1669104000"; 
+   d="scan'208";a="904312857"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jan 2023 04:00:46 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pHOAP-00A3WN-1K;
+        Mon, 16 Jan 2023 14:00:45 +0200
+Date:   Mon, 16 Jan 2023 14:00:45 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] gpio: wcd934x: Use proper headers and drop
+ OF_GPIO dependency
+Message-ID: <Y8U8bZ9+dOwmDgsb@smile.fi.intel.com>
+References: <20230113182619.16800-1-andriy.shevchenko@linux.intel.com>
+ <20230113182619.16800-2-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdkgWBb5XTSMEEUQQGCO_3x1a3KK0KbvW4GmAQX1XGbxg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230113202016.GA2833245-robh@kernel.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <CAMRc=MdkgWBb5XTSMEEUQQGCO_3x1a3KK0KbvW4GmAQX1XGbxg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Mon, Jan 16, 2023 at 10:03:47AM +0100, Bartosz Golaszewski wrote:
+> On Fri, Jan 13, 2023 at 7:25 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-I ran into error "is not of type 'object'" with two dashes in the property
-name.
+...
 
-* Rob Herring <robh@kernel.org> [230113 20:20]:
-> On Thu, Jan 12, 2023 at 10:31:50AM +0200, Tony Lindgren wrote:
-> > -- #pinctrl-single,gpio-range-cells : the number of parameters after phandle in
-> > -  pinctrl-single,gpio-range property.
-> > -
-> > -	range: gpio-range {
-> > -		#pinctrl-single,gpio-range-cells = <3>;
-> > -	};
+> > +#include <linux/mod_devicetable.h>
+> >  #include <linux/module.h>
+> > -#include <linux/gpio/driver.h>
+> > +#include <linux/platform_device.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/slab.h>
+> > -#include <linux/of_device.h>
+> > +
+> > +#include <linux/gpio/driver.h>
 > 
-> You've lost describing this.
+> Any reason for having it separately here?
 
-Thanks for noticing. Adding something like below produces errors for the
-pinctrl-single,gpio-range property name:
+Yes. The idea is to emphasize the relationship between the driver and
+the subsystem it's written for.
 
-  pinctrl-single,gpio-range:
-    description: Optional list of pin base, nr pins & gpio function
-    $ref: /schemas/types.yaml#/definitions/phandle-array
-    items:
-      - items:
-          - description: phandle of a gpio-range node
-          - description: pin base
-          - description: number of pins
-          - description: gpio function
+P.S. Thanks for applying the rest of my contribution.
 
-  pinctrl-single,gpio-range = <&range 0 3 0>;
+-- 
+With Best Regards,
+Andy Shevchenko
 
-The error is:
 
-pinctrl-single.example.dtb: pinmux@4a100040: pinctrl-single,gpio-range:
-[[1, 0, 3, 0]] is not of type 'object'
-
-Changing the property name second dash to something else makes it go away.
-
-This is with dtschema 2022.12. Any ideas?
-
-Regards,
-
-Tony
