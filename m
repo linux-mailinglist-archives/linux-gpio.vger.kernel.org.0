@@ -2,66 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EAC066D1BF
-	for <lists+linux-gpio@lfdr.de>; Mon, 16 Jan 2023 23:23:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7FF66D347
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 00:40:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234550AbjAPWXW (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 16 Jan 2023 17:23:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55778 "EHLO
+        id S232671AbjAPXkI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 16 Jan 2023 18:40:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233886AbjAPWXO (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 17:23:14 -0500
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B47322018
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 14:23:13 -0800 (PST)
-Received: by mail-vs1-xe35.google.com with SMTP id 3so30425529vsq.7
-        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 14:23:13 -0800 (PST)
+        with ESMTP id S233489AbjAPXkH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 16 Jan 2023 18:40:07 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14555B760
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 15:40:06 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id u1-20020a17090a450100b0022936a63a21so8861566pjg.4
+        for <linux-gpio@vger.kernel.org>; Mon, 16 Jan 2023 15:40:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2DIrcdT7VNWMoLXDeQkSa0gYVyrYM16SewZle2fQdkg=;
-        b=0mZeFjcYPPeaQUDr1fjtr8DVN8aedUT1CFviYI6H2JB9mi8IM7zpW+RXzcTXtCreK0
-         D9ELVwtCk7fg9YQUCmvRV7cJGjt4XmipFfuGHOnDLNo/+rPM4C6FdksiXVK70q1Xwy+8
-         3xyEvCIJGYmk0LmjybDNTydFtWuQP1255MPExEc0zsumfB9fstafptSfxMuytKzKDWAJ
-         NkKHlWKPQLbnA/P+uaBL/pPOihv7RLyZmXryhX9IVO6yO/luQmZsXcR6upKrOSRtAIVa
-         yXTr8yJNfiKGT4mPWZaSH7OQgqFB22gNAFvmuGUurivTp//MRzqmuV+j8+bL59S4pRyD
-         9RLw==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ADluECR7OilPJxhfn2Q1cScJ9hHYVSTQRmzEcIN8BXo=;
+        b=bbb2R5UzdzJtL5zbSNhI7gCA9QqnQIfW6B6uLVGKJDBa9I3n/o4mrmixS0oPXwoh5+
+         RZLFVNZf8/saawlI2tlAczgGvQBak/LLq4oOfy5HGFAIqXep2X2Mdn84vnVZtNzfwssR
+         rd0VBw6SILX0fyU7TGT6lJryL0PjHPeTwoi8t2bTOQlYosGnmFKLw9OUMzHcglvkfupf
+         tGiwmmMHxbB1qqg4s8MGO5C7D7oqg+utW+/9lpvAXm73dHDqOZsu4neRH/Fcq4k1grj6
+         FDeX5fpjjUnBfHZGcdkHSztiJ6SN1mQGzwaSIn2KmfywAVDqatP1cKcwaL2r6ing3I80
+         JoZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2DIrcdT7VNWMoLXDeQkSa0gYVyrYM16SewZle2fQdkg=;
-        b=jeWQ63EnwBykM6FS6qmf3x+7txq5sGciX2Lj0lDQmJIycnV5ja6Rf/GJ3TMC0E4wM4
-         +ahAIwKxIJvLbLN7FrAi66DBaHw+GxAU9Xd7+8vdbGt5Zie/Rur3z04ip6M/ZrYE/596
-         UppUZ1FAZQhLACKpwCr7bU3/cA+oyMWSoZlM2ZEB+LNUmqj1/VDYsgwjWQqM8FiONMfV
-         UVLGdK2CoZsSUPZ6SEuSM4vkEYakip6ROOz6E7IwxBWIU6BTlwa1CNwH1JJvidhrHYtX
-         fDwSa/qhCLHToIatoSz3Gmego1BxpIWw8E3F6oGhiRiu7J6cnfdWeF91R+R+IgFrt3so
-         bDXA==
-X-Gm-Message-State: AFqh2kq+w4Y1FSySHdXJMw1IAP3tEF6oH2Sh/vAo/2XdHNeabj9zHU2p
-        VDZcgGvnSQBB/PeF7OlYFH8q9ePp2GBh710x78eEhw==
-X-Google-Smtp-Source: AMrXdXusljTiEu0XyzMVep2kg2M6b/KiTI9fW7mxS1eTfblAFBJr/g9HKCu21UfDtK21Yb6AF41ADZ4yux5pHf+BLDo=
-X-Received: by 2002:a67:fe89:0:b0:3d1:3753:9a3c with SMTP id
- b9-20020a67fe89000000b003d137539a3cmr58367vsr.73.1673907792383; Mon, 16 Jan
- 2023 14:23:12 -0800 (PST)
-MIME-Version: 1.0
-References: <20230113215210.616812-1-brgl@bgdev.pl> <20230113215210.616812-11-brgl@bgdev.pl>
- <Y8SXDmyq4kp8iRoX@sol>
-In-Reply-To: <Y8SXDmyq4kp8iRoX@sol>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 16 Jan 2023 23:23:01 +0100
-Message-ID: <CAMRc=MdXr6GuAJgyYj0fU-4xhppxTxpcH6Lu0XMUMHiC+jY5JQ@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 10/16] core: provide gpiod_line_config_set_output_values()
-To:     Kent Gibson <warthog618@gmail.com>
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ADluECR7OilPJxhfn2Q1cScJ9hHYVSTQRmzEcIN8BXo=;
+        b=I1ocpZbj4VDbKBZlj6cPDgk5KKaom8Nkql3gHth35wr+WwpdOi2PmmzIpItuzrjHA9
+         WD2aC8F8770ircRCqRoiLYeNbFyMj9Wb3eLHW8w+bSi2A8qWIHpISbrXAw1/F+1cOwa0
+         FYcSbjeWaHonOyzJ490acJR99OR3plQ8W9DmVM2dDKfgkFrzAy78hjK9vNw/dVHdNLpj
+         gKsx6tbyO1hQfeKZE9bA51oG3PSxVDnfKnGAUUXjTpkosELifMIKz4eeBVdRaIeQyn7c
+         PRleUL6ubGpxpRdisgIIBev0d1DIB9hABJmS5GiN7CFBYE+mrFZGsAn05KKoYiculFVM
+         N3wg==
+X-Gm-Message-State: AFqh2kpQyTvcTX+sQJmoSRpqJM+xNqgPTi5H/6R9fgx/5YZDNOs5VFw8
+        0Cl1P6lpd0Iqr6hXyhzUQKz+Xks1XsdMoQ==
+X-Google-Smtp-Source: AMrXdXvTqHs7B0fhHfTVakSi/TT6OSwaSNh5i3eHq9BGhBZEjzy2v72ThaAoqRMT81G9pbb6JMPdrQ==
+X-Received: by 2002:a05:6a20:7b01:b0:b6:8c0b:7146 with SMTP id s1-20020a056a207b0100b000b68c0b7146mr631737pzh.59.1673912405454;
+        Mon, 16 Jan 2023 15:40:05 -0800 (PST)
+Received: from sol (110-174-14-241.tpgi.com.au. [110.174.14.241])
+        by smtp.gmail.com with ESMTPSA id z6-20020a656646000000b00477a442d450sm16198851pgv.16.2023.01.16.15.40.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Jan 2023 15:40:05 -0800 (PST)
+Date:   Tue, 17 Jan 2023 07:39:59 +0800
+From:   Kent Gibson <warthog618@gmail.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
 Cc:     Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Subject: Re: [libgpiod][PATCH 04/16] treewide: unify
+ gpiod_line_config/request_get_offsets() functions
+Message-ID: <Y8XgT4tJeUrZbcLC@sol>
+References: <20230113215210.616812-1-brgl@bgdev.pl>
+ <20230113215210.616812-5-brgl@bgdev.pl>
+ <Y8SW/frUy16O67Kb@sol>
+ <CAMRc=MeHatoHX3O5zUuxQ12G4h4DCi7xAuiJuXe5kXveXOoRpw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeHatoHX3O5zUuxQ12G4h4DCi7xAuiJuXe5kXveXOoRpw@mail.gmail.com>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,106 +77,78 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 1:15 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Fri, Jan 13, 2023 at 10:52:04PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jan 16, 2023 at 10:37:14PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Jan 16, 2023 at 1:14 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Currently if user wants to use the same settings for a set of requested
-> > lines with the exception of the output value - they need to go through
-> > hoops by updating the line settings object and adding it one by one to
-> > the line config. Provide a helper function that allows to set a global
-> > list of output values that override the settings. For details on the
-> > interface: see documentation in this commit.
+> > On Fri, Jan 13, 2023 at 10:51:58PM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > We have two functions in the C API that allow users to retrieve a list
+> > > of offsets from objects: gpiod_line_request_get_offsets() and
+> > > gpiod_line_config_get_offsets(). Even though they serve pretty much the
+> > > same purpose, they have different signatures and one of them also
+> > > requires the user to free the memory allocated within the libgpiod
+> > > library with a non-libgpiod free() function.
+> > >
 > >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > ---
-> >  include/gpiod.h            | 27 +++++++++++++++
-> >  lib/line-config.c          | 60 +++++++++++++++++++++++++++++++---
-> >  tests/gpiod-test-helpers.h | 10 ++++++
-> >  tests/tests-line-config.c  | 67 ++++++++++++++++++++++++++++++++++++++
-> >  4 files changed, 160 insertions(+), 4 deletions(-)
+> > They differ because they operate in different circumstances.
+> > Requests are immutable, wrt lines/offsets, while configs are not.
+> > More on this below.
 > >
-> > diff --git a/include/gpiod.h b/include/gpiod.h
-> > index 8cede47..c552135 100644
-> > --- a/include/gpiod.h
-> > +++ b/include/gpiod.h
-> > @@ -785,6 +785,33 @@ struct gpiod_line_settings *
-> >  gpiod_line_config_get_line_settings(struct gpiod_line_config *config,
-> >                                   unsigned int offset);
+> > > Unify them: make them take the array in which to store offsets and the
+> > > size of this array. Make them return the number of offsets actually
+> > > stored in the array and make them impossible to fail. Change their names
+> > > to be more descriptive and in the case of line_config: add a new function
+> > > that allows users to get the number of configured offsets.
+> > >
 > >
-> > +/**
-> > + * @brief Set output values for a number of lines.
-> > + * @param config Line config object.
-> > + * @param values Buffer containing the output values.
-> > + * @param num_values Number of values in the buffer.
-> > + * @return 0 on success, -1 on error.
-> > + *
-> > + * This is a helper that allows users to set multiple (potentially different)
-> > + * output values at once while using the same line settings object. Instead of
-> > + * modifying the output value in the settings object and calling
-> > + * ::gpiod_line_config_add_line_settings multiple times, we can specify the
-> > + * settings, add them for a set of offsets and then call this function to
-> > + * set the output values.
-> > + *
->
-> A helper such as this did cross my mind when updating gpioset, but I
-> didn't consider it worth the effort then, and still don't.
->
-> So the user has to set ALL output values, or more correctly the first num_values,
-> right? i.e. it is the block form.
->
-> This helper is only helpful if the user already has ALL the values in the
-> required array format, as is the case for gpioset, else they need to build
-> the array to pass - in which case they may as well call
-> gpiod_line_config_add_line_settings() for each line.
-> So is it really that helpful?
+> > Not sure symmetry => beauty in this case.
+> >
+> > > Update the entire tree to use the new interfaces.
+> > >
+> > > For rust bindings: also unify the line config interface to return a map
+> > > of line settings like C++ bindings do instead of having a function to
+> > > get settings by offset. A map returned from a single call is easier to
+> > > iterate over with a for loop than using an integer and calling the
+> > > previous line_settings() method.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > <snip>
+> > > --- a/include/gpiod.h
+> > > +++ b/include/gpiod.h
+> > > @@ -780,19 +780,29 @@ struct gpiod_line_settings *
+> > >  gpiod_line_config_get_line_settings(struct gpiod_line_config *config,
+> > >                                   unsigned int offset);
+> > >
+> > > +/**
+> > > + * @brief Get the number of configured line offsets.
+> > > + * @param config Line config object.
+> > > + * @return Number of offsets for which line settings have been added.
+> > > + */
+> > > +size_t
+> > > +gpiod_line_config_get_num_configured_offsets(struct gpiod_line_config *config);
+> > > +
+> >               ^^^^^^         ^^^^^^^^^^
+> > Not a fan of the stuttering.
+> > What other kinds of lines are there in the config?
+> 
+> The user may not have an in-depth knowledge of the data model we use
+> and just wants to use the library. I think this name is much more
+> descriptive that way. It's not that long or repetetive, have you seen
+> udev_monitor_filter_add_match_subsystem_devtype() or
+> kmod_module_dependency_symbol_get_symbol()? :)
+> 
 
-It seems to me that building/adding a separate settings object for
-every line is quite cumbersome (I know that C is cumbersome in itself
-but still...). IMO more so than just storing values in an array. And
-in many cases the user may already know the right set of values in
-which case it boils down to `static const enum gpiod_line_value vals[]
-= { ... };`
+If the data model is unclear to the user then you just made it less
+clear as the implication from this naming is that there are OTHER types
+of offsets/lines, but there is not.
 
-This is also pretty much the equivalent of the
-gpiod_line_request_set_values() function just run at request-time.
+I don't have a problem with your counter examples.  The first does not
+stutter, and in the second the "symbol" appears to be the object, not an
+adjective.  Length is not the issue - it is clarity. :|
 
->
-> The sparse form would be more generally useful, particularly in the
-> bindings. i.e. they should accept a mapping from offsets to values rather
-> than the ordered list.  Though, again, those may be best implemented with
-> multiple calls to ::gpiod_line_config_add_line_settings rather than
-> jumping through the hoops of constructing the parameters for another helper
-> like this one.
->
+But whatever - this is verging on bikeshedding.
 
-I'd argue that this should be implemented in bindings using the new function.
-
-> > + * Values set by this function override whatever values were specified in the
-> > + * regular line settings.
-> > + *
-> > + * The order of the output values in the array corresponds with the order in
-> > + * which offsets were added by ::gpiod_line_config_add_line_settings. For
-> > + * example calling add_settings([1, 3]) and add_settings([2, 4]) and then
-> > + * calling this function with the following logicall values : [0, 1, 0, 1]
-> > + * will result in the following offset->value mapping: 1->0, 2->0, 3->1, 4->1.
-> > + */
-> > +int gpiod_line_config_set_output_values(struct gpiod_line_config *config,
-> > +                                     const enum gpiod_line_value *values,
-> > +                                     size_t num_values);
-> > +
->
-> But if you do keep it...
->
-> Use documentation from gpiod_line_request_set_values(), suitably modified,
-> to describe ordering - it is clearer and does not imply that the user has
-> to independently know the order lines were added - it is in the order
-> provided by gpiod_line_config_get_offsets().
->
-
-I'd like to have some version of that. Maybe keep what I proposed for
-C but have something more elaborate (with mappings?) for bindings? I
-need to think about it tomorrow.
-
-Bart
+Cheers,
+Kent.
