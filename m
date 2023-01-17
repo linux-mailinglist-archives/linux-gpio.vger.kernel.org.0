@@ -2,150 +2,95 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A83F66E0E1
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 15:36:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D33BF66E18D
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 16:02:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbjAQOgu (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Jan 2023 09:36:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56996 "EHLO
+        id S230179AbjAQPCV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Jan 2023 10:02:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjAQOgt (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 09:36:49 -0500
-Received: from mx14lb.world4you.com (mx14lb.world4you.com [81.19.149.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2D89125B0
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 06:36:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=faschingbauer.co.at; s=dkim11; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=tBNceCHKF8svQDW5WioOkOISxn6VpgdVJGhf5Zc20Qs=; b=j+FQwN0GS+zYNJhL9ng/kePC75
-        e8Wi94l6PeeQ1z98oYCyHg09VAUIVdEUvp8PdeOFI2sXq8cxgJTfMNugpzEREFTbmEUkJ3wnCSQw2
-        MaB5BBaA2W5vGG3CtRP3iePswrcuSYg5HbsmIus6EPG3S/sALOg0Sj0t7Uk5G2IOgaNE=;
-Received: from [213.225.9.96] (helo=fedora..)
-        by mx14lb.world4you.com with esmtpa (Exim 4.94.2)
-        (envelope-from <jf@faschingbauer.co.at>)
-        id 1pHn4v-00057Y-2L; Tue, 17 Jan 2023 15:36:45 +0100
-From:   jf@faschingbauer.co.at
-To:     bartosz.golaszewski@linaro.org
-Cc:     linux-gpio@vger.kernel.org,
-        Joerg Faschingbauer <jf@faschingbauer.co.at>
-Subject: [PATCH v2 1/1] bindings: python: fix out-of-source build
-Date:   Tue, 17 Jan 2023 15:36:39 +0100
-Message-Id: <20230117143639.217018-1-jf@faschingbauer.co.at>
-X-Mailer: git-send-email 2.38.1
+        with ESMTP id S232877AbjAQPBe (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 10:01:34 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E784340BE8;
+        Tue, 17 Jan 2023 07:00:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673967623; x=1705503623;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q6LyA84WfayfkH44QikUzLCOFY2fAi8cD3SXnEWu+mo=;
+  b=leVvwvIoLfv5yyZvNNEdcA/vV1v0j8GhnqebBNcQ3NrXgfQ/pqMH7D9N
+   jku8ipOEI8tn1WCLXfz9LLLDy88hVc7+mk4G5rG7RZ86Ak8rFtPEGsERx
+   2Q1/mnMuLj4gzQLbz2fPIVmOSnYUZz/kHj1iQqLAsv/shsz3R6NuVagG3
+   IJhZUa93RepW12AxWWk++XL8DlmeKjrUgjUlyFL9nuKUnHYCPvFgzqag6
+   l7YN0akux1or9DDG/qCF21BvBIqXLIPddvTCr2uVoporXnrpAJL56utr6
+   wuJ173QEcU/JiJ+PPkewWL29rkOHTw3gAWuZs12fz92poUHq9YlFqcQDj
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="305089292"
+X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
+   d="scan'208";a="305089292"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 07:00:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="661319869"
+X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
+   d="scan'208";a="661319869"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP; 17 Jan 2023 07:00:21 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pHnRk-00Aclr-1O;
+        Tue, 17 Jan 2023 17:00:20 +0200
+Date:   Tue, 17 Jan 2023 17:00:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: Proofreading and updating the
+ documentation accordingly
+Message-ID: <Y8a4BAotZAax9Zx4@smile.fi.intel.com>
+References: <20230116153347.15786-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdbVa3XEDzcuy7iCqx0cvj4trzPe7N0B5PswA1mQ7O+GtA@mail.gmail.com>
+ <Y8avtfifZpy89rS3@smile.fi.intel.com>
+ <CACRpkdYTFDsU7xhu812Lh1mA1Hs9kGeid+akR84ervAsaxVYkg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AV-Do-Run: Yes
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYTFDsU7xhu812Lh1mA1Hs9kGeid+akR84ervAsaxVYkg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Joerg Faschingbauer <jf@faschingbauer.co.at>
+On Tue, Jan 17, 2023 at 03:26:31PM +0100, Linus Walleij wrote:
+> On Tue, Jan 17, 2023 at 3:24 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Actually I have missed the repetition of the comment I put in v1,
+> > i.e.  that this would be good to be attached to my PR where the
+> > struct pinfunction et al. have been introduced. Can I have your
+> > Ack?
+> 
+> Sure go ahead,
 
-Makefile.am delegates the build of the python extension to its
-setup.py file, which references the extension .c files relative to the
-source dir. This makes it impossible to build in a directory that is
-different from the source directory (for example, for PC and ARM but
-from the same source).
+So, which tag to use?
 
-* Modify Makefile.am to pass automake's $(srcdir) into setup.py via
-  GPIOD_SRCDIR environment variable.
-* Modify setup.py to pick up .c files relative from that directory.
+"Acked-by: Linus Walleij <linus.walleij@linaro.org>" ?
 
-Signed-off-by: Joerg Faschingbauer <jf@faschingbauer.co.at>
----
- bindings/python/Makefile.am |  4 ++--
- bindings/python/setup.py    | 23 +++++++++++++----------
- 2 files changed, 15 insertions(+), 12 deletions(-)
+>	I can also take out the patches if you rather
+> include them with a  pull request.
 
-diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-index 3212a8f..9fb2e95 100644
---- a/bindings/python/Makefile.am
-+++ b/bindings/python/Makefile.am
-@@ -12,13 +12,13 @@ endif
- all-local:
- 	GPIOD_VERSION_STRING=$(VERSION_STR) \
- 	GPIOD_WITH_TESTS=$(BUILD_TESTS) \
--	$(PYTHON) setup.py build_ext --inplace \
-+	$(PYTHON) $(srcdir)/setup.py build_ext --inplace \
- 		--include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
- 		--library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
- 
- install-exec-local:
- 	GPIOD_WITH_TESTS= \
--	$(PYTHON) setup.py install --prefix=$(prefix)
-+	$(PYTHON) $(srcdir)/setup.py install --prefix=$(prefix)
- 
- SUBDIRS = gpiod
- 
-diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-index a951069..e748295 100644
---- a/bindings/python/setup.py
-+++ b/bindings/python/setup.py
-@@ -1,18 +1,21 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
- # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
- 
--from os import environ
-+from os import environ, path
- from setuptools import setup, Extension, find_packages
- 
-+def src(filename):
-+    return path.join(path.dirname(__file__), filename)
-+
- gpiod_ext = Extension(
-     "gpiod._ext",
-     sources=[
--        "gpiod/ext/chip.c",
--        "gpiod/ext/common.c",
--        "gpiod/ext/line-config.c",
--        "gpiod/ext/line-settings.c",
--        "gpiod/ext/module.c",
--        "gpiod/ext/request.c",
-+        src("gpiod/ext/chip.c"),
-+        src("gpiod/ext/common.c"),
-+        src("gpiod/ext/line-config.c"),
-+        src("gpiod/ext/line-settings.c"),
-+        src("gpiod/ext/module.c"),
-+        src("gpiod/ext/request.c"),
-     ],
-     define_macros=[("_GNU_SOURCE", "1")],
-     libraries=["gpiod"],
-@@ -21,7 +24,7 @@ gpiod_ext = Extension(
- 
- gpiosim_ext = Extension(
-     "tests.gpiosim._ext",
--    sources=["tests/gpiosim/ext.c"],
-+    sources=[src("tests/gpiosim/ext.c")],
-     define_macros=[("_GNU_SOURCE", "1")],
-     libraries=["gpiosim"],
-     extra_compile_args=["-Wall", "-Wextra"],
-@@ -29,7 +32,7 @@ gpiosim_ext = Extension(
- 
- procname_ext = Extension(
-     "tests.procname._ext",
--    sources=["tests/procname/ext.c"],
-+    sources=[src("tests/procname/ext.c")],
-     define_macros=[("_GNU_SOURCE", "1")],
-     extra_compile_args=["-Wall", "-Wextra"],
- )
-@@ -39,7 +42,7 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
-     extensions.append(gpiosim_ext)
-     extensions.append(procname_ext)
- 
--with open("gpiod/version.py", "r") as fd:
-+with open(src("gpiod/version.py"), "r") as fd:
-     exec(fd.read())
- 
- setup(
+It would be the best, thanks!
+
 -- 
-2.38.1
+With Best Regards,
+Andy Shevchenko
+
 
