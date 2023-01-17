@@ -2,105 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04D2666E6D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 20:18:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC71C66E777
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 21:10:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232957AbjAQTSG (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Jan 2023 14:18:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45590 "EHLO
+        id S233661AbjAQUKA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Jan 2023 15:10:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234024AbjAQTOL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 14:14:11 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A877442F2;
-        Tue, 17 Jan 2023 10:28:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673980101; x=1705516101;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+pAd4vbUUJugp6qXfBkXwcFSz+Fk8omLGMJqI616UCU=;
-  b=S4GX9rJSKokVPYzxQ7JL2ViCF82FkTTho4SvgEe9CmYXEmofaJzGpjnD
-   cLV/Irsip9vNT0wz5XuykgN+moKBmxwSUd4uKGzpHGyloqNw+BN4EuRlU
-   cLAKbOpNeQla2WRt0TDeXSbLuMaUetfXp7kbqNKFfgiUlx4Z1KY8AoUSp
-   ITUEB83H7V1cbWQb94zeMYOTUdcLQq6UlrkLyXkjbMgL3CZ27cASQU69+
-   C5ebmH6ylhPg7pFT5ygBp/OcSc7+z9oLUPY9joviqDbK1dG5/l2HwAGEG
-   GTnub3NRzmZHQxu1v9Bl+xh6G9+lW5Yny2DZXFgOUADO9CNEpCOSi6FYs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="304460270"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="304460270"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 10:28:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="783341305"
-X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="783341305"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jan 2023 10:28:18 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pHqgy-00AiwK-2C;
-        Tue, 17 Jan 2023 20:28:16 +0200
-Date:   Tue, 17 Jan 2023 20:28:16 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: Re: [PATCH v2 1/2] pinctrl: Proofreading and updating the
- documentation accordingly
-Message-ID: <Y8bowKRMI+ukC4Ah@smile.fi.intel.com>
-References: <20230116153347.15786-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbVa3XEDzcuy7iCqx0cvj4trzPe7N0B5PswA1mQ7O+GtA@mail.gmail.com>
- <Y8avtfifZpy89rS3@smile.fi.intel.com>
- <CACRpkdYTFDsU7xhu812Lh1mA1Hs9kGeid+akR84ervAsaxVYkg@mail.gmail.com>
- <Y8a4BAotZAax9Zx4@smile.fi.intel.com>
- <Y8bCBMoeNHlBG97a@smile.fi.intel.com>
- <Y8bCQ9QlhMpFdTiC@smile.fi.intel.com>
- <CACRpkdbn+UWU-dzp+MXSVB+JkpsFwENyi+5Eq+GV1zPaaaf3rA@mail.gmail.com>
+        with ESMTP id S234634AbjAQUHS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 15:07:18 -0500
+Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526A445215
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 11:01:24 -0800 (PST)
+Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-15f64f2791dso2691145fac.7
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 11:01:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=landley-net.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OgaymgAXi9Z6g6pYwBOzM02/P477EqWitgDVTE3LFbU=;
+        b=7UFMvbpKkJyjWVLlq6ctk0nXiLL3RrLgvGqk+/g8pD0wAzMEFNodkoMNXxSPAzvJye
+         T4nqVDpRCF5Pkw4fe0ROrd1BjE8DZbycDcUSRlgnihtqJaZkkqELJ7TzEZYyPHojRNxM
+         MBh6YZCgcmJgLXwboxe3bvrjmez4qHhfCRIxGuc2G0+QOOJ/eKT38XBZ7MfSSmNLVm7z
+         gDt6C3Ymsnj+eKLcMZ0dj5q2KFKnZutgcY/1C6+IgeLmT5DwAU4QsUhG6TCQdnlD6nEb
+         fYtWfawIuB6wYahQA/cq89ISwAR2GZXbrrCFpCVxRJqHc9Mn337ID3jg/QgfKjbyHIu6
+         BObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OgaymgAXi9Z6g6pYwBOzM02/P477EqWitgDVTE3LFbU=;
+        b=y/3z8IeB22qDcZp4PAzc8b9j2Ml1dJDw7nfXBi8boe9VDIzDPRcGcpD5ZuDkaWB9od
+         7I63Xy0/oXwe9NT8HtW1gl4L9y17SK0HxbR6/FajvxXZSjEr20+ZIEufeV1XuO+52fK6
+         lR1/CQXhxHR6hoShtwwk7dYye6EYf7AqQvoiXBFmAIQUb7Xa0yo6W44y4FfIvaMZWJQ1
+         ujG2dqlakNoz/+BaJVjJrwczUS6WYuATo+Xj+SsWhGCJrPPU2znnT0htmuwNDsm1MpaK
+         mg+37jQqIJvyTp4qRYG7A+LO3HVlAUR7Ff9CtZUClfT/zQIIQNbuBejecjTdDOFdhkGZ
+         zNsg==
+X-Gm-Message-State: AFqh2kp7RWcrDvAbyztRPDzNz3gn3IshSsmRFhBlEd4HlXZ9pdNvKxjh
+        YjrYsPS3qxD9pCmvqYbxVVfTZQ==
+X-Google-Smtp-Source: AMrXdXsgzCxMhqm+bb3il7EsJjEv0NbGPCzT1qf9VREFYRxVllxrk/YEzaFAyrBdtefAaDgGfnk/UQ==
+X-Received: by 2002:a05:6870:c190:b0:15e:cfca:b312 with SMTP id h16-20020a056870c19000b0015ecfcab312mr2807015oad.52.1673982083592;
+        Tue, 17 Jan 2023 11:01:23 -0800 (PST)
+Received: from [192.168.86.224] ([136.62.38.22])
+        by smtp.gmail.com with ESMTPSA id r18-20020a05687080d200b0012763819bcasm16664335oab.50.2023.01.17.11.01.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Jan 2023 11:01:22 -0800 (PST)
+Message-ID: <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
+Date:   Tue, 17 Jan 2023 13:13:38 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbn+UWU-dzp+MXSVB+JkpsFwENyi+5Eq+GV1zPaaaf3rA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: remove arch/sh
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
+        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
+        linux-sh@vger.kernel.org
+References: <20230113062339.1909087-1-hch@lst.de>
+ <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
+ <20230116071306.GA15848@lst.de>
+From:   Rob Landley <rob@landley.net>
+In-Reply-To: <20230116071306.GA15848@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 07:16:00PM +0100, Linus Walleij wrote:
-> On Tue, Jan 17, 2023 at 4:44 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Jan 17, 2023 at 05:43:00PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Jan 17, 2023 at 05:00:20PM +0200, Andy Shevchenko wrote:
-
-...
-
-> > > > So, which tag to use?
-> > > >
-> > > > "Acked-by: Linus Walleij <linus.walleij@linaro.org>" ?
+On 1/16/23 01:13, Christoph Hellwig wrote:
+> On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
+>> I'm still maintaining and using this port in Debian.
+>>
+>> It's a bit disappointing that people keep hammering on it. It works fine for me.
 > 
-> Yeah that's fine sorry for being unclear.
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> What platforms do you (or your users) use it on?
 
-Thank you!
+3 j-core boards, two sh4 boards (the sh7760 one I patched the kernel of), and an
+sh4 emulator.
 
-> > > Added this tag and pushed to my tree, thanks!
-> > >
-> > > P.S. Tell me if I should do somehow else.
-> >
-> > Note, I have slightly amended couple of lines, and if you keep the patches
-> > in your tree as well it may be a minor conflict.
-> 
-> I pulled them out now!
+I have multiple j-core systems (sh2 compatible with extensions, nommu, 3
+different kinds of boards running it here). There's an existing mmu version of
+j-core that's sh3 flavored but they want to redo it so it hasn't been publicly
+released yet, I have yet to get that to run Linux because the mmu code would
+need adapting, but the most recent customer projects were on the existing nommu
+SOC, as was last year's ASIC work via sky130.
 
--- 
-With Best Regards,
-Andy Shevchenko
+My physical sh4 boards are a Johnson Controls N40 (sh7760 chipset) and the
+little blue one is... sh4a I think? (It can run the same userspace, I haven't
+replaced that board's kernel since I got it, I think it's the type Glaubitz is
+using? It's mostly in case he had an issue I couldn't reproduce on different
+hardware, or if I spill something on my N40.)
 
+I also have a physical sh2 board on the shelf which I haven't touched in years
+(used to comparison test during j2 development, and then the j2 boards replaced it).
 
+I'm lazy and mostly test each new sh4 build under qemu -M r2d because it's
+really convenient: neither of my physical boards boot from SD card so replacing
+the kernel requires reflashing soldered in flash. (They'll net mount userspace
+but I haven't gotten either bootloader to net-boot a kernel.)
+
+I include sh4 in the my mkroot builds each toybox release, I have a ~300 line
+bash script that builds bootable toybox systems for a dozen-ish architectures,
+including building a kernel configured to run under qemu:
+
+  https://github.com/landley/toybox/blob/master/scripts/mkroot.sh
+
+And I ship the resulting bootable system images, most recent release is at:
+
+  https://landley.net/toybox/downloads/binaries/mkroot/0.8.9/
+
+As described at:
+
+  http://landley.net/toybox/faq.html#mkroot
+
+Various people in Japan have more hardware, but I haven't made it physically
+back there since 2020. (My residency card expired during the pandemic.)
+
+Rob
