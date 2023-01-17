@@ -2,89 +2,115 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D97466DE9D
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 14:18:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AEEE66DEEE
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 14:35:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237122AbjAQNSD (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Jan 2023 08:18:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54250 "EHLO
+        id S229765AbjAQNf1 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Jan 2023 08:35:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237125AbjAQNRm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 08:17:42 -0500
-Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB8C24C07
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 05:17:34 -0800 (PST)
-Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-4c131bede4bso421410897b3.5
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 05:17:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bUJBsht1LCslMFYdFKdEQEWjO6qOnqb0dKRr7V+rz1s=;
-        b=uH657sJ96vyYmomeeAy9rjbmKABv8Mt7N2OJToJoDYNjELfnltO/kVT/5ai5qdsiOR
-         Wxpi811dWS8nwDf5BgU1qNX/nDtzdjRHues5ANdJu62dibPkiY8W5qj9WZtkkvMcqhSq
-         akODpqd2dRsn+U4lq8rHmQ4y2yn76tX/TWr46xktzxmHK1CnX+a8jhCUP6uyP9f6lrSC
-         xe9r06s9KOocdu+7xaqfVLWDdSX+Ao+JtZ6SzAt4v6vw+6QhkUkuUmfIC7FPORvMWTdE
-         GeKXCbOc+VvtzoKqiLvoRA6GwEf1qIV4NOZhF+HCVZ6YGJmY3/BpaRsUvOt5YPR0mqZR
-         Nhng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bUJBsht1LCslMFYdFKdEQEWjO6qOnqb0dKRr7V+rz1s=;
-        b=LKzbbdQsXlxA3ePsh8uMgiVFVKXULPilgjjzF4OVf+9PEpjaQ1Wj8JXV0gEFRILz20
-         avZXfPCgopn8Mp/97qoXS5Gs4PxWToWYayEy4hljR4bNRfq+6Ob15x796O3ciPyfV7i1
-         QJyJveCOrQ0ypIVWI1/+Nrginqaym4dNdE3z28es1gc4rcWB4T6gt8uYyYravFtY25fj
-         8J4TMUJICAwiZCgESJej2jGFowszyDvYaFqn9koWZGcEPGNFMxwhD+QZFpmJqEE8joiS
-         aPB7S4D4KzIDfs19v5FgwGyHShpzad3wmXaGxRcftIM3AWSIwiYIgclaj9uVfBjXc/DD
-         32Mw==
-X-Gm-Message-State: AFqh2kp8xGeP7dOFSPWQ8nAwrX+P0EzhO6ByQjEIjPdO9/1vmYQmvoiH
-        lhFk41Mj7pW8tEgBSYbTRuNn9xDzZN+wMmpM+CcW4ImuKiDr6g==
-X-Google-Smtp-Source: AMrXdXvCau06WdWXAr4lq44sOWKLJC6ryOzfbmLnbjwTbwgo3Cks2NTb/dw9TZi45VpxAg/KejdNFI+rymFMe9uTbhA=
-X-Received: by 2002:a81:9b14:0:b0:4dd:ff06:1358 with SMTP id
- s20-20020a819b14000000b004ddff061358mr413851ywg.488.1673961454031; Tue, 17
- Jan 2023 05:17:34 -0800 (PST)
+        with ESMTP id S229987AbjAQNfZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 08:35:25 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6147B22DED;
+        Tue, 17 Jan 2023 05:35:23 -0800 (PST)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30HDZEQI119203;
+        Tue, 17 Jan 2023 07:35:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1673962514;
+        bh=PCKAzGvr22HjPZYlDQumTiViRb6UJ6p611b3ewbXRr4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=mX/VtdL5nIPmusGUVCao7V12RSXdR2V1SRfrP3nicb0RcmvyxSa8whnckaILK7fUx
+         bseRQb67cV7zixZHE6Ruq1bWNxnqqkQUY3ooajjZ/5vt7hVj4TljC8rw2Li+HBUhLL
+         HpSca9VtEbwpQUDD0wlSdHoapNpTH1fveI3Ffv20=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30HDZEl4004211
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Jan 2023 07:35:14 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Tue, 17
+ Jan 2023 07:35:14 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Tue, 17 Jan 2023 07:35:13 -0600
+Received: from uda0132425.dhcp.ti.com (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30HDZAZQ083680;
+        Tue, 17 Jan 2023 07:35:10 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <devicetree@vger.kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Apurva Nandan <a-nandan@ti.com>,
+        Tero Kristo <kristo@kernel.org>, Nishanth Menon <nm@ti.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Hari Nagalla <hnagalla@ti.com>
+Subject: Re: [PATCH v5 0/4] Add initial support for J784S4 SoC
+Date:   Tue, 17 Jan 2023 19:05:07 +0530
+Message-ID: <167395338059.410173.9288855113346154502.b4-ty@ti.com>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230112142725.77785-1-a-nandan@ti.com>
+References: <20230112142725.77785-1-a-nandan@ti.com>
 MIME-Version: 1.0
-References: <20230110084636.1141740-1-jonas@kwiboo.se>
-In-Reply-To: <20230110084636.1141740-1-jonas@kwiboo.se>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 17 Jan 2023 14:17:22 +0100
-Message-ID: <CACRpkdbJvTB5VeyfM7gruB3MrDMXNo3XezmcVyZGH0Vro=kVTQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: rockchip: fix mux route data for rk3568
-To:     Jonas Karlman <jonas@kwiboo.se>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Jianqun Xu <jay.xu@rock-chips.com>, linux-gpio@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 9:46 AM Jonas Karlman <jonas@kwiboo.se> wrote:
+Hi Apurva Nandan,
 
-> IO mux selection is configured in PMU_GRF_SOC_CON4 and GRF_IOFUNC_SEL0-5
-> regs on RK3568. pwm0-2 is configured in PMU_GRF reg and the rest is
-> configured in GRF_IOFUNC regs according to TRM [1].
->
-> Update mux route data to reflect this and use proper detection pin for
-> UART1 IO mux M1.
->
-> This fixes HDMITX IO mux M1 selection and makes it possible to enable
-> HDMI CEC on my Radxa ROCK 3 Model A v1.31 board.
->
-> [1] http://opensource.rock-chips.com/images/2/26/Rockchip_RK3568_TRM_Part1_V1.3-20220930P.PDF
->
-> Fixes: c0dadc0e47a8 ("pinctrl: rockchip: add support for rk3568")
-> Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
+On Thu, 12 Jan 2023 19:57:21 +0530, Apurva Nandan wrote:
+> The J784S4 SoC belongs to the K3 Multicore SoC architecture
+> platform, providing advanced system integration in automotive,
+> ADAS and industrial applications requiring AI at the network edge.
+> This SoC extends the K3 Jacinto 7 family of SoCs with focus on
+> raising performance and integration while providing interfaces,
+> memory architecture and compute performance for multi-sensor, high
+> concurrency applications.
+> 
+> [...]
 
-Patch applied for fixes!
+I have applied the following to branch ti-k3-next on [1].
+Thank you!
 
-Yours,
-Linus Walleij
+[1/4] dt-bindings: arm: ti: Add bindings for J784s4 SoC
+      commit: 5e0a1e0d265cb11fca3464bbe9511740c46f759f
+[2/4] dt-bindings: pinctrl: k3: Introduce pinmux definitions for J784s4
+      commit: a0c01bc565332cff9183bd8a17b4db94732d645d
+[3/4] arm64: dts: ti: Add initial support for J784S4 SoC
+      commit: 4664ebd8346adaa7530555a29b47392104b5ba6c
+[4/4] arm64: dts: ti: Add support for J784S4 EVM board
+      commit: e20a06aca5c9d2d68354c340f96999d8dcb7128d
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent up the chain during
+the next merge window (or sooner if it is a relevant bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
+--
+Vignesh
+
