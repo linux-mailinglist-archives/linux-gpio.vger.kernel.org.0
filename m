@@ -2,147 +2,106 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7324670A83
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 23:01:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 273EA670B68
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 23:11:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjAQWBV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Jan 2023 17:01:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42434 "EHLO
+        id S229861AbjAQWLP (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Jan 2023 17:11:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229866AbjAQV7m (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 16:59:42 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A2343C2A3;
-        Tue, 17 Jan 2023 12:26:42 -0800 (PST)
-Received: by mail-vs1-f49.google.com with SMTP id v127so29141213vsb.12;
-        Tue, 17 Jan 2023 12:26:42 -0800 (PST)
+        with ESMTP id S230227AbjAQWKY (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 17:10:24 -0500
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48C0808A9;
+        Tue, 17 Jan 2023 12:43:32 -0800 (PST)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1433ef3b61fso33291008fac.10;
+        Tue, 17 Jan 2023 12:43:32 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7rC0mNjXax5vqLz2OAo+EH0y+cJfjyIAm7sm9u5PvgQ=;
-        b=Yr9F31/7vLwBOZRKZ1DOhx7lv+07U9yCPU3kfK3htjNZou2RGjuLkdqwCn8yKk9eF3
-         GnyyMHiW3JgbPuw6+FCnbxXOm2pXbKR74ChWnRn/hHl+9by/VHS5XtgOFtV5OVc06ddw
-         LnzBWPfOsBT9fqwpqly0JUq8dnwIcMSuesyYy1KvIo27t7NfN87fYlhZwyNhgxs4TcFk
-         9BF4fB6bXw5YhS8+79SPrAO36Q1UAWE6lQ/eDxVYm9AGrYBuapnXFFs/g4Y/d3/65nEM
-         cNY+emfDCxLCn/w9cVLEEICPn6d8+Q4pdwHu1n/gCrT2Kr8MUafwGrFjLQWyaGQ2cHdv
-         bY8g==
-X-Gm-Message-State: AFqh2kqzy6dBVKRzPngOGJhrF0YAVXXu3mDkVZ//3HfOKs6E0G/PoFSo
-        ZhqezYlyMbvP27SJixa4hW2wxfnjUsABHg==
-X-Google-Smtp-Source: AMrXdXv8xG+OngFJXkL1EyBOzdj+k3Oc3D+zm5NnPdBiJa4B+CPjVzuCM17G+lAG+3CcyHApPWniCQ==
-X-Received: by 2002:a67:c116:0:b0:3b1:23bb:3087 with SMTP id d22-20020a67c116000000b003b123bb3087mr2147820vsj.26.1673987201149;
-        Tue, 17 Jan 2023 12:26:41 -0800 (PST)
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com. [209.85.219.176])
-        by smtp.gmail.com with ESMTPSA id q22-20020a05620a2a5600b0070638ad5986sm7355016qkp.85.2023.01.17.12.26.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jan 2023 12:26:40 -0800 (PST)
-Received: by mail-yb1-f176.google.com with SMTP id o75so35606650yba.2;
-        Tue, 17 Jan 2023 12:26:39 -0800 (PST)
-X-Received: by 2002:a25:9012:0:b0:7b8:a0b8:f7ec with SMTP id
- s18-20020a259012000000b007b8a0b8f7ecmr707665ybl.36.1673987199250; Tue, 17 Jan
- 2023 12:26:39 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bZGj9wZiCGLkJ0ydeVLb/l9fPBQUxrb09VH4URhu4hc=;
+        b=gpqjAiCNUQNqRn8v+9dCKgju3etSJyuCzYL+K4Sso8MMDFVGIVnwNEJ1B/LxqAarIj
+         SmBG8MXrr++Eigzx+GkltDIt/RrnRa0K+FnHclCN/AVnIzURUI+96IJMl7MPD3Whb0Ro
+         9I0plKoKYCaw/uyWD+w8ohqv88nUEtKMkvU+jOuIVWS5DvFLwj6gXDD6HvBLMnBBI0ig
+         aSHymhiyWepwIzm25B+fSBoD8t6WSmxcyF/rlWuAhe32A62l7OOFfbPqfqvF09JGkEpy
+         4E6K0j6FeMtETOT9JyVnVY0og3CwpD5qgFQ1mm49HTn/wHR+syGs3YOtN2iteKYyAhsP
+         2aJw==
+X-Gm-Message-State: AFqh2kr7WNbWVW2zF6ruS9Vt8RA1DqLQlVInabzk8qiSTtqcoqmQGAXv
+        FX/S3td6UZqLzyz8ZXV5ug==
+X-Google-Smtp-Source: AMrXdXv/JIYevjTeM1oKBF2aHkrWFOaYTPYFb+fUVpkAyIqmdqpbn2HD2jqSq7+NzdhudPanLyjvsw==
+X-Received: by 2002:a05:6870:6787:b0:15f:3bb9:3975 with SMTP id gc7-20020a056870678700b0015f3bb93975mr2556603oab.59.1673988210360;
+        Tue, 17 Jan 2023 12:43:30 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id t9-20020a056870f20900b0015f193c86d2sm5307394oao.6.2023.01.17.12.43.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Jan 2023 12:43:29 -0800 (PST)
+Received: (nullmailer pid 3673617 invoked by uid 1000);
+        Tue, 17 Jan 2023 20:43:29 -0000
+Date:   Tue, 17 Jan 2023 14:43:29 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Etienne Carriere <etienne.carriere@linaro.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+        devicetree@vger.kernel.org, Stephen Warren <swarren@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v3] dt-binding: gpio: publish binding IDs under dual
+ license
+Message-ID: <167398813319.3671721.12591580449817050495.robh@kernel.org>
+References: <20220905145555.674800-1-etienne.carriere@linaro.org>
 MIME-Version: 1.0
-References: <20230113062339.1909087-1-hch@lst.de> <11e2e0a8-eabe-2d8c-d612-9cdd4bcc3648@physik.fu-berlin.de>
- <20230116071306.GA15848@lst.de> <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
-In-Reply-To: <9325a949-8d19-435a-50bd-9ebe0a432012@landley.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Jan 2023 21:26:27 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-Message-ID: <CAMuHMdUJm5QvzH8hvqwvn9O6qSbzNOapabjw5nh9DJd0F55Zdg@mail.gmail.com>
-Subject: Re: remove arch/sh
-To:     Rob Landley <rob@landley.net>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arch@vger.kernel.org,
-        dmaengine@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-input@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
-        netdev@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, alsa-devel@alsa-project.org,
-        linux-sh@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220905145555.674800-1-etienne.carriere@linaro.org>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Rob,
+On Mon, 05 Sep 2022 16:55:55 +0200, Etienne Carriere wrote:
+> Changes gpio.h DT binding header file to be published under GPLv2 or
+> BSD-2-Clause license terms. This change allows this GPIO generic
+> bindings header file to be used in software components as bootloaders
+> and OSes that are not published under GPLv2 terms.
+> 
+> All contributors to gpio.h file in copy.
+> 
+> Cc: Stephen Warren <swarren@nvidia.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Laxman Dewangan <ldewangan@nvidia.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> Cc: Nuno Sá <nuno.sa@analog.com>
+> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> 
+> Signed-off-by: Etienne Carriere <etienne.carriere@linaro.org>
+> ---
+> Changes since v2:
+> - Fix commit log.
+> 
+> Changes since v1:
+> - Publish under BSD-2-Clause instead of BSD-3-Clause.
+> - Remove Charles Keepax from CC list.
+> 
+> ---
+>  include/dt-bindings/gpio/gpio.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-On Tue, Jan 17, 2023 at 8:01 PM Rob Landley <rob@landley.net> wrote:
-> On 1/16/23 01:13, Christoph Hellwig wrote:
-> > On Fri, Jan 13, 2023 at 09:09:52AM +0100, John Paul Adrian Glaubitz wrote:
-> >> I'm still maintaining and using this port in Debian.
-> >>
-> >> It's a bit disappointing that people keep hammering on it. It works fine for me.
-> >
-> > What platforms do you (or your users) use it on?
->
-> 3 j-core boards, two sh4 boards (the sh7760 one I patched the kernel of), and an
-> sh4 emulator.
->
-> I have multiple j-core systems (sh2 compatible with extensions, nommu, 3
-> different kinds of boards running it here). There's an existing mmu version of
-> j-core that's sh3 flavored but they want to redo it so it hasn't been publicly
-> released yet, I have yet to get that to run Linux because the mmu code would
-> need adapting, but the most recent customer projects were on the existing nommu
-> SOC, as was last year's ASIC work via sky130.
-
-J4 still vaporware?
-
-> My physical sh4 boards are a Johnson Controls N40 (sh7760 chipset) and the
-> little blue one is... sh4a I think? (It can run the same userspace, I haven't
-> replaced that board's kernel since I got it, I think it's the type Glaubitz is
-> using? It's mostly in case he had an issue I couldn't reproduce on different
-> hardware, or if I spill something on my N40.)
->
-> I also have a physical sh2 board on the shelf which I haven't touched in years
-> (used to comparison test during j2 development, and then the j2 boards replaced it).
->
-> I'm lazy and mostly test each new sh4 build under qemu -M r2d because it's
-> really convenient: neither of my physical boards boot from SD card so replacing
-> the kernel requires reflashing soldered in flash. (They'll net mount userspace
-> but I haven't gotten either bootloader to net-boot a kernel.)
-
-On my landisk (with boots from CompactFLASH), I boot the original 2.6.22
-kernel, and use kexec to boot-test each and every renesas-drivers
-release.  Note that this requires both the original 2.6.22 kernel
-and matching kexec-tools.  Apparently both upstreamed kernel and
-kexec-tools support for SH are different, and incompatible with each
-other, so you cannot kexec from a contemporary kernel.
-I tried working my way up from 2.6.22, but gave up around 2.6.29.
-Probably I should do this with r2d and qemu instead ;-)
-
-Both r2d and landisk are SH7751.
-
-Probably SH7722/'23'24 (e.g. Migo-R and Ecovec boards) are also
-worth keeping.  Most on-SoC blocks have drivers with DT support,
-as they are shared with ARM.  So the hardest part is clock and
-interrupt-controller support.
-Unfortunately I no longer have access to the (remote) Migo-R.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Applied, thanks!
