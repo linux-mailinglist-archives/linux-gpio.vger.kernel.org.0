@@ -2,193 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D05AF66D948
-	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 10:06:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A11266DA12
+	for <lists+linux-gpio@lfdr.de>; Tue, 17 Jan 2023 10:35:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236139AbjAQJGV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 17 Jan 2023 04:06:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
+        id S236697AbjAQJfe (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 17 Jan 2023 04:35:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235965AbjAQJF7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 04:05:59 -0500
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27F1C2CFDE
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 01:01:23 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id g25so3064619uaw.8
-        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 01:01:23 -0800 (PST)
+        with ESMTP id S236414AbjAQJeW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 17 Jan 2023 04:34:22 -0500
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1309F10C2
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 01:34:15 -0800 (PST)
+Received: by mail-vs1-xe2d.google.com with SMTP id n190so27700079vsc.11
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 01:34:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=EgJAU2p69hFdi2aSLM24lFxG1fJ0dKwLoujmt0WwAGo=;
-        b=GDQfsEKA5OTNfNmhNqxNKPQ+d8aqz0575cabszkUd6mjXj3ywUJqodPiqfz1t91GI0
-         JpkXz4LmQvWkdn13suj3JeZJLtJqRh00NFGdqeMXUc/82/1MUD49WKyaDJtg43f/iHBt
-         qqiy0ffR98muaxhDdw6KH20FWgDv3qwsPpbav/dTZmp1c+2yvzkUWT9ZPTV1pW3n/U2W
-         gaO9qenW1XK7TT6bHR1l4X46vTwYBWUkyC+LUA+TdTsaMMcbf5+pKfBSjd1GeRPTxACE
-         MuM7qu/2OZ7zylsNrhzlX/Ytkz5lUybq01QBFQMKVwy3F25LHJ3Xa+vjOQXOcVk+oNzr
-         FYKA==
+        bh=SPLRrX/lkmvIYyo+lXDf/6xOCiRheu67g1vboFBjt4k=;
+        b=YhkxfUPuOSnAZKIC5PVYRU0HHkKDR83Qc5FTJDrN9KEKPwOzxV6TOmJyEKXuP3SFmo
+         bv4bDO5yAfeI6dg9kjobthIQA+Xb2Y/wEvnF/1FYGW6zKncwfp2aTUtFQh6qfF9wD4HJ
+         ScJ/Y60+buCEPvbvj3GoPrZ+2EPLH7gMGvAr+vJxSodohUlrqPD1accL10ZDBkIkNMTL
+         LJXocAkHl3qfoFJvgayG0Nj0VQnxi33lUKfgQpCuEu7R+D6pmryBYN2P7s0w1tuaLXQ/
+         EiwM8kwFrTkCeFE/QPyp7t7g1AwmcYQyYDs9CbJpZD9twrGyUiV+D7cTIsoNSYRR4beY
+         rZcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EgJAU2p69hFdi2aSLM24lFxG1fJ0dKwLoujmt0WwAGo=;
-        b=s3vQE459o+2xrktybAQVxL/LFlxJ9x34UB2NonYWExecBJoGDUcmTRuaccswbArjaz
-         9xVcpMbzJ4xe3TGVZEuGsxU4vFShic3e4gvlkuuov9ajkEfQUA9KFs7SZP6RlOefkAY1
-         8TF4GSdOwVFlGxgdglvIdZJkwgV53VVg3830KeGfdlrdQhulUjYR5PtabnNnS9gH7Ydb
-         HfIurdf/mPBTFv3junv4Wq9Kg5eLzlK4bu5gbsoSCTc6HlQcUU6Djrgay/rgGZy1yhwj
-         7jvYtNCKW3hTBxz2GhAN6qiJrRph+8bsNseTUId5WtqQ3XayANAKbEOFqZ/dGq4vEB+a
-         W4NA==
-X-Gm-Message-State: AFqh2kqesXLJoWOGbn+tKtI3tnA75tG8+7JSBinKyqBgtJtZnQM2Hz2j
-        XCzfO/1tVt9VA0a/EOi8ihqlZ123fVC/0f+DxxbpFg==
-X-Google-Smtp-Source: AMrXdXtoD0tP5zLfm4qLr6BfWlLzhj40auF+wioh8ZLZcmCpFkdSiwgamZja0fARXPeYOxIen1iC/lQ4kW5F3novvXQ=
-X-Received: by 2002:ab0:6c54:0:b0:424:e8b8:7bcb with SMTP id
- q20-20020ab06c54000000b00424e8b87bcbmr236478uas.123.1673946082208; Tue, 17
- Jan 2023 01:01:22 -0800 (PST)
+        bh=SPLRrX/lkmvIYyo+lXDf/6xOCiRheu67g1vboFBjt4k=;
+        b=Eu9NmgVQ2kcJV8z/i3IBxk/oX+MEfK5gfO0D1dEvz3pexNxJXEmUap0w4OfZr514M4
+         ZKysRHh3z3HMjic6KlI87VieWC1J+IK6fvcWaZozxfPmBs/4iY5C+7m6d3Q/gA9tCGwb
+         OT2HfKNbq+BSwecLLF5jWEwvld5xPc862D764/K1UMyJwV4wztjt6OhDOMJa/HULynSJ
+         2Vj8OLEnuxwIMhjznSp0rz5YQSlPz/q4xTsMYr//IBTl1+uP5xrJY5NORLGGz/rUBdiv
+         WPG3nfL4O1xc9OlY5TytUpqRsmq8LBzphIaQ725guVrGdJ3m80ETX+nCOmD6gpo559Hn
+         DYIg==
+X-Gm-Message-State: AFqh2kpJ6bWx8aJzn0hoTY/ET20oip5r8iKWUOMW296iUT31/NgWkyt9
+        mnYLozzlgC1lYtzcQPR4dqmexYsEHySKyVQh80A1Cg==
+X-Google-Smtp-Source: AMrXdXvlHFwkzfAYKYwIbSsieM9kY7tjHuD7qtMLpv7l0zYKKl31RjNnNEMqRXrKipi4xZlGIr9pc0F0JnPy/n2vWvQ=
+X-Received: by 2002:a05:6102:3e08:b0:3c5:1ac1:bf38 with SMTP id
+ j8-20020a0561023e0800b003c51ac1bf38mr309928vsv.78.1673948054194; Tue, 17 Jan
+ 2023 01:34:14 -0800 (PST)
 MIME-Version: 1.0
-References: <20230116181439.171563-1-jf@faschingbauer.co.at> <CACMJSevv8wi+VR-+BqQdL5uGoMCEnegJ0ZiDJmdXMk59Z-jFMQ@mail.gmail.com>
-In-Reply-To: <CACMJSevv8wi+VR-+BqQdL5uGoMCEnegJ0ZiDJmdXMk59Z-jFMQ@mail.gmail.com>
+References: <20230116140811.27201-1-pierluigi.p@variscite.com>
+ <2403894.jE0xQCEvom@steina-w> <AM6PR08MB4376F0179AA62C60AA30280BFFC69@AM6PR08MB4376.eurprd08.prod.outlook.com>
+In-Reply-To: <AM6PR08MB4376F0179AA62C60AA30280BFFC69@AM6PR08MB4376.eurprd08.prod.outlook.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 17 Jan 2023 10:01:11 +0100
-Message-ID: <CAMRc=McUFEoz3wHoX1VwPZMiTLpdSL5Rz7m6nFO=mp9LB0_XNA@mail.gmail.com>
-Subject: Re: [PATCH] bindings: python: fix out-of-source build
-To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc:     jf@faschingbauer.co.at, linux-gpio@vger.kernel.org
+Date:   Tue, 17 Jan 2023 10:34:03 +0100
+Message-ID: <CAMRc=MdfueZQts=ur-+hVBATWs-oO_jowbbi=mqX6Bp-zhkUVQ@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: fix linker errors when GPIOLIB is disabled
+To:     Pierluigi Passaro <pierluigi.p@variscite.com>
+Cc:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eran Matityahu <eran.m@variscite.com>,
+        Nate Drude <Nate.D@variscite.com>,
+        Francesco Ferraro <francesco.f@variscite.com>,
+        "pierluigi.passaro@gmail.com" <pierluigi.passaro@gmail.com>,
+        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 10:07 PM Bartosz Golaszewski
-<bartosz.golaszewski@linaro.org> wrote:
+On Tue, Jan 17, 2023 at 8:44 AM Pierluigi Passaro
+<pierluigi.p@variscite.com> wrote:
 >
-> On Mon, 16 Jan 2023 at 19:15, <jf@faschingbauer.co.at> wrote:
+> On Tue, Jan 17, 2023 at 7:23 AM Alexander Stein <alexander.stein@ew.tq-group.com> wrote:
+> > Hi,
 > >
-> > From: Joerg Faschingbauer <jf@faschingbauer.co.at>
+> > Am Montag, 16. Januar 2023, 15:08:11 CET schrieb Pierluigi Passaro:
+> > > Both the functions gpiochip_request_own_desc and
+> > > gpiochip_free_own_desc are exported from
+> > >     drivers/gpio/gpiolib.c
+> > > but this file is compiled only when CONFIG_GPIOLIB is enabled.
+> > > Move the protototypes under "#ifdef CONFIG_GPIOLIB" and provide
+> > > reasonable definitions in the "#else" branch.
+> > >
+> > > Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > ---
+> > >  include/linux/gpio/driver.h | 20 ++++++++++++++++++--
+> > >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> > > index 44783fc16125..ed77c6fc0beb 100644
+> > > --- a/include/linux/gpio/driver.h
+> > > +++ b/include/linux/gpio/driver.h
+> > > @@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)
+> > >
+> > >  #endif /* CONFIG_PINCTRL */
+> > >
+> > > +#ifdef CONFIG_GPIOLIB
+> > > +
+> > >  struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+> > >                                           unsigned int hwnum,
+> > >                                           const char *label,
+> > > @@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct
+> > > gpio_chip *gc, enum gpiod_flags dflags);
+> > >  void gpiochip_free_own_desc(struct gpio_desc *desc);
+> > >
+> > > -#ifdef CONFIG_GPIOLIB
+> > > -
+> > >  /* lock/unlock as IRQ */
+> > >  int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
+> > >  void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
+> > > @@ -776,6 +776,22 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc
+> > > *desc);
+> > >
+> > >  #else /* CONFIG_GPIOLIB */
+> > >
+> > > +static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip
+> > > *gc, +                                            unsigned int hwnum,
+> > > +                                         const char *label,
+> > > +                                         enum gpio_lookup_flags
+> > lflags,
+> > > +                                         enum gpiod_flags dflags)
+> > > +{
+> > > +     /* GPIO can never have been requested */
+> > > +     WARN_ON(1);
 > >
-> > Makefile.am delegates the build of the python extension to its
-> > setup.py file, which references the extension .c files relative to the
-> > source dir. This makes it impossible to build in a directory that is
-> > different from the source directory (for example, for PC and ARM but
-> > from the same source).
+> > This will raise the warning on each invocation. How about using
+> > WARN_ON_ONCE(1), or even WARN_ONCE("Kernel compiled without CONFIG_GPIOLIB
+> > support")?
 > >
->
-> Thanks for sparing me the surprise of finding that out when writing
-> the bitbake recipe. Great catch!
->
-> A couple nits below:
->
-> > * Modify Makefile.am to pass automake's $(srcdir) into setup.py via
-> >   GPIOD_SRCDIR environment variable.
-> > * Modify setup.py to pick up .c files relative from that directory.
->
-> Can you leave your Sign-off here?
->
-> > ---
-> >  bindings/python/Makefile.am |  6 ++++--
-> >  bindings/python/setup.py    | 23 ++++++++++++++---------
-> >  2 files changed, 18 insertions(+), 11 deletions(-)
+> No problem on my side, but this would create a misalignment with all other
+> GPIOLIB "dummy" calls.
+> Personally I would prefer WARN_ONCE("Kernel compiled without CONFIG_GPIOLIB
+> support").
+> Please confirm your preferences and I'll provide a patch v2.
+> Thanks
 > >
-> > diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-> > index 3212a8f..6c2f99b 100644
-> > --- a/bindings/python/Makefile.am
-> > +++ b/bindings/python/Makefile.am
-> > @@ -12,13 +12,15 @@ endif
-> >  all-local:
-> >         GPIOD_VERSION_STRING=$(VERSION_STR) \
-> >         GPIOD_WITH_TESTS=$(BUILD_TESTS) \
-> > -       $(PYTHON) setup.py build_ext --inplace \
-> > +       GPIOD_SRCDIR=$(srcdir) \
-> > +       $(PYTHON) $(srcdir)/setup.py build_ext --inplace \
-> >                 --include-dirs=$(top_srcdir)/include/:$(top_srcdir)/tests/gpiosim/ \
-> >                 --library-dirs=$(top_builddir)/lib/.libs/:$(top_srcdir)/tests/gpiosim/.libs/
+> > > +     return ERR_PTR(-ENODEV);
+> > > +}
+> > > +
+> > > +static inline void gpiochip_free_own_desc(struct gpio_desc *desc)
+> > > +{
+> > > +     WARN_ON(1);
 > >
-> >  install-exec-local:
-> >         GPIOD_WITH_TESTS= \
-> > -       $(PYTHON) setup.py install --prefix=$(prefix)
-> > +       GPIOD_SRCDIR=$(srcdir) \
-> > +       $(PYTHON) $(srcdir)/setup.py install --prefix=$(prefix)
+> > Same as above.
 > >
-> >  SUBDIRS = gpiod
+> > Best regards,
+> > Alexander
 > >
-> > diff --git a/bindings/python/setup.py b/bindings/python/setup.py
-> > index a951069..3ab01e1 100644
-> > --- a/bindings/python/setup.py
-> > +++ b/bindings/python/setup.py
-> > @@ -2,17 +2,22 @@
-> >  # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
-> >
-> >  from os import environ
-> > +import os.path
->
-> Maybe `from os import environ, path`?
->
-> >  from setuptools import setup, Extension, find_packages
-> >
-> > +srcdir = environ.get('GPIOD_SRCDIR', '.')
-> > +def src(path):
-> > +    return os.path.join(srcdir, path)
-> > +
-> >  gpiod_ext = Extension(
-> >      "gpiod._ext",
-> >      sources=[
-> > -        "gpiod/ext/chip.c",
-> > -        "gpiod/ext/common.c",
-> > -        "gpiod/ext/line-config.c",
-> > -        "gpiod/ext/line-settings.c",
-> > -        "gpiod/ext/module.c",
-> > -        "gpiod/ext/request.c",
-> > +        src("gpiod/ext/chip.c"),
-> > +        src("gpiod/ext/common.c"),
-> > +        src("gpiod/ext/line-config.c"),
-> > +        src("gpiod/ext/line-settings.c"),
-> > +        src("gpiod/ext/module.c"),
-> > +        src("gpiod/ext/request.c"),
-> >      ],
-> >      define_macros=[("_GNU_SOURCE", "1")],
-> >      libraries=["gpiod"],
-> > @@ -21,7 +26,7 @@ gpiod_ext = Extension(
-> >
-> >  gpiosim_ext = Extension(
-> >      "tests.gpiosim._ext",
-> > -    sources=["tests/gpiosim/ext.c"],
-> > +    sources=[src("tests/gpiosim/ext.c")],
-> >      define_macros=[("_GNU_SOURCE", "1")],
-> >      libraries=["gpiosim"],
-> >      extra_compile_args=["-Wall", "-Wextra"],
-> > @@ -29,7 +34,7 @@ gpiosim_ext = Extension(
-> >
-> >  procname_ext = Extension(
-> >      "tests.procname._ext",
-> > -    sources=["tests/procname/ext.c"],
-> > +    sources=[src("tests/procname/ext.c")],
-> >      define_macros=[("_GNU_SOURCE", "1")],
-> >      extra_compile_args=["-Wall", "-Wextra"],
-> >  )
-> > @@ -39,7 +44,7 @@ if "GPIOD_WITH_TESTS" in environ and environ["GPIOD_WITH_TESTS"] == "1":
-> >      extensions.append(gpiosim_ext)
-> >      extensions.append(procname_ext)
-> >
-> > -with open("gpiod/version.py", "r") as fd:
-> > +with open(src("gpiod/version.py"), "r") as fd:
-> >      exec(fd.read())
-> >
-> >  setup(
-> > --
-> > 2.38.1
-> >
->
-> Looks good otherwise!
->
-> Bart
+> > > +}
+> > > +
+> > >  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+> > > {
+> > >       /* GPIO can never have been requested */
 
-Now when I'm thinking about it: why not simply use the __file__
-variable, run it through dirname() and derive the right directory like
-that?
+If someone calls these functions without GPIOLIB enabled then they
+deserve lots of warnings to remind them to fix their config. :)
+
+Let's keep it like in other places.
 
 Bart
