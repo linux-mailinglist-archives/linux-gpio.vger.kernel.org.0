@@ -2,126 +2,92 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A47167215E
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 16:35:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 060846723FC
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 17:48:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjARPfQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Jan 2023 10:35:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        id S229705AbjARQsy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Jan 2023 11:48:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbjARPfP (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 10:35:15 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A82E11E87
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 07:35:12 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id e3so25115962wru.13
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 07:35:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LoHH2nj7NXm/nL0+Tx9tLOdfs2jN6SHgUks6Yuk9t9Q=;
-        b=gQ1Qcz5Xj2Q5vrDeF87Lwa/WHWtCPfHaFRIZ4IvKdaND+T7rTVeimD9FZoFTBRFZCo
-         l3AS0Te1y404bmoKZqWKu3m2bqQyehETXIBXez0WwVhWCtdrFHNYSAhaBid7ZF+FLGsz
-         LAhhU9y8Gymvdxu6JcW1lo0Qc34H41ASSKQEymQDN+c3n3nDxius4uoeqLRv6p1Re9nE
-         5Jr73WnpXPXYoWRMClcKXu+JrrE1+G6Mz74ffawad/WaR77pOPy12TBCVdugGKfK4pU2
-         RdAI1eyU6TFjaQ+MrRa6r4SwGEzlqeD04i1IE7SvtgEPU6DYaGL8pJKwKKNZJV7umSQH
-         pDqQ==
+        with ESMTP id S229685AbjARQsk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 11:48:40 -0500
+Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC089303F9;
+        Wed, 18 Jan 2023 08:48:37 -0800 (PST)
+Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-15f64f2791dso5783524fac.7;
+        Wed, 18 Jan 2023 08:48:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LoHH2nj7NXm/nL0+Tx9tLOdfs2jN6SHgUks6Yuk9t9Q=;
-        b=rgGy9WC193slBdZ/g+7swYwLqtDehAG7A/lQTTIdqcWXCeoSEKGNxCdBAPncsqj0cg
-         KLDjdwe8Nn59a9y5nA2i4H+dioDUgLNNgdv/r25dVShoonl3L34WtTbRzcGeVo4we7ZY
-         Zw4sHjFNHrC3j7ViCSKJT5I5bprozFGSTy7ipyRkg12B4I3iiWihZSqj8P8B7HoaXF3F
-         +8IS2U337Pn+f4WDUW+bSbx+CRVmk+BiIS0pFZgmYd5ZMrxL9dZnIZ5nvseM9BcOMOwD
-         U1eo7nBDh5a7oPJ2zKvhI9IVlKAvklhftDNJX3V4K6spKD2UIfhGUsc0I5XJLp3IsRKE
-         xBrw==
-X-Gm-Message-State: AFqh2krRKxWAP0CYNQ3EEwXfkt9hz+nBota8XG/3Mqgz9/KwO5hIUiCO
-        DRqgVyxyNeomPfXs0x8A7uNDSg==
-X-Google-Smtp-Source: AMrXdXs66UXpqSe4xSmFeXLloUSAe1sRQSuZ068jrjBRmIzvXouEACawSgZsSQgK8yYKPRgL8jbGwg==
-X-Received: by 2002:adf:e703:0:b0:2bd:d948:3c3e with SMTP id c3-20020adfe703000000b002bdd9483c3emr6597146wrm.19.1674056110682;
-        Wed, 18 Jan 2023 07:35:10 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id s2-20020adff802000000b00241bd7a7165sm31586447wrp.82.2023.01.18.07.35.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 07:35:10 -0800 (PST)
-Message-ID: <ced7741a-3bd4-3be5-ab9f-ae388373d38a@linaro.org>
-Date:   Wed, 18 Jan 2023 16:35:08 +0100
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hxaC/+vj0+0cmZsvPmWAUPTa0igCb7E0vBb71/KtRnM=;
+        b=LK/ZJ/9TwSnXclLORbG1KImadD5WQutaOqYLdyv612o9daaFIql0N+GYvMubo9TVDT
+         78Cs+qqYHEm3HNUmKL6iNeOjDnV5xSjfoVnHfCITcoFyXkaxPzoPrtgEUWBUrS4id8NK
+         Uaca3M+4mlRHTmPor4IcWnEMz3U/nS+Mn2VSOAbhb2AixhbqJKduI9/fiWUqFKBtPHh4
+         YSL6DwM4FwsgUGc8KUHtWbaXfJVCds5hPSUoeLro3sxt+2H4Dpv9r/FMFKREwkpWyPJx
+         6Mky9OyQzlY5bDA8hohYBiKycALZLIZNb4iYLDbDno+aiSXFwUa3ZL0yGToZ32FGRGY4
+         wHww==
+X-Gm-Message-State: AFqh2kozCKh2EUFIcAoRBC0Zt+xvOhWjYJcjOvraSA61St58rGMLjJXU
+        S+0lSOkyvpyiyCPCPbeMAA==
+X-Google-Smtp-Source: AMrXdXspzsuKKi9p1SkaPBh1bqyhnNkFKbA/1xoHvQifmJAODs5ghXonjK8iX+dUNoevRqaM1aT+Ag==
+X-Received: by 2002:a05:6871:430e:b0:155:37ac:d907 with SMTP id lu14-20020a056871430e00b0015537acd907mr3681620oab.18.1674060517072;
+        Wed, 18 Jan 2023 08:48:37 -0800 (PST)
+Received: from robh_at_kernel.org ([4.31.143.193])
+        by smtp.gmail.com with ESMTPSA id q187-20020a4a4bc4000000b004a3c359fdaesm16818498ooa.30.2023.01.18.08.48.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jan 2023 08:48:36 -0800 (PST)
+Received: (nullmailer pid 147773 invoked by uid 1000);
+        Wed, 18 Jan 2023 16:48:35 -0000
+Date:   Wed, 18 Jan 2023 10:48:35 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chester Lin <clin@suse.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrei Stefanescu <andrei.stefanescu@nxp.com>,
+        Larisa Grigore <larisa.grigore@nxp.com>,
+        Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>,
+        linux-gpio@vger.kernel.org,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Matthias Brugger <mbrugger@suse.com>,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        s32@nxp.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 1/3] dt-bindings: pinctrl: add schema for NXP S32 SoCs
+Message-ID: <167406051498.147713.15394591575288533598.robh@kernel.org>
+References: <20230118094728.3814-1-clin@suse.com>
+ <20230118094728.3814-2-clin@suse.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH v1 2/4] gpio: gpio-rockchip: add compatible string per SoC
-Content-Language: en-US
-To:     Johan Jonker <jbx6244@gmail.com>, linus.walleij@linaro.org,
-        brgl@bgdev.pl
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kever.yang@rock-chips.com, sjg@chromium.org,
-        philipp.tomsich@vrull.eu
-References: <08de3f4b-e33f-95c8-3297-814ea107272a@gmail.com>
- <1510c02c-f640-9924-e42e-fa34e28a580f@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1510c02c-f640-9924-e42e-fa34e28a580f@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230118094728.3814-2-clin@suse.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 18/01/2023 13:14, Johan Jonker wrote:
-> Currently all Rockchip gpio nodes have the same compatible.
-> Replace all the compatibles in gpio nodes to be able to
-> give them a consistent ID independent from probe order or alias.
+
+On Wed, 18 Jan 2023 17:47:26 +0800, Chester Lin wrote:
+> Add DT schema for the pinctrl driver of NXP S32 SoC family.
 > 
-> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+> Signed-off-by: Larisa Grigore <larisa.grigore@nxp.com>
+> Signed-off-by: Ghennadi Procopciuc <Ghennadi.Procopciuc@oss.nxp.com>
+> Signed-off-by: Chester Lin <clin@suse.com>
 > ---
 > 
-> For now only add new compatibles.
-> No changes to rockchip_gpio_probe() function yet.
-> ---
->  drivers/gpio/gpio-rockchip.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> Changes in v4:
+> - Change the representation of available slew-rate DT values from register
+>   values to real frequencies.
 > 
-> diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
-> index e5de15a2a..493207de1 100644
-> --- a/drivers/gpio/gpio-rockchip.c
-> +++ b/drivers/gpio/gpio-rockchip.c
-> @@ -790,7 +790,22 @@ static int rockchip_gpio_remove(struct platform_device *pdev)
+>  .../pinctrl/nxp,s32g2-siul2-pinctrl.yaml      | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml
 > 
->  static const struct of_device_id rockchip_gpio_match[] = {
->  	{ .compatible = "rockchip,gpio-bank", },
-> +	{ .compatible = "rockchip,px30-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3036-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3066a-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3128-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3188-gpio-bank", },
->  	{ .compatible = "rockchip,rk3188-gpio-bank0" },
-> +	{ .compatible = "rockchip,rk3228-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3288-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3328-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3308-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3368-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3399-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3568-gpio-bank", },
-> +	{ .compatible = "rockchip,rk3588-gpio-bank", },
-> +	{ .compatible = "rockchip,rv1108-gpio-bank", },
-> +	{ .compatible = "rockchip,rv1126-gpio-bank", },
 
-No, this list is useless. Entire patch should be dropped. Just use fallback.
-
-
-Best regards,
-Krzysztof
-
+Reviewed-by: Rob Herring <robh@kernel.org>
