@@ -2,61 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48CF2671C94
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 13:52:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A3DE671C97
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 13:52:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230305AbjARMwK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Jan 2023 07:52:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51560 "EHLO
+        id S231169AbjARMwM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Jan 2023 07:52:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230367AbjARMvu (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 07:51:50 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77CC64E50C;
-        Wed, 18 Jan 2023 04:13:27 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id mp20so36146978ejc.7;
-        Wed, 18 Jan 2023 04:13:27 -0800 (PST)
+        with ESMTP id S230403AbjARMvw (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 07:51:52 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF3E532534;
+        Wed, 18 Jan 2023 04:14:50 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id qx13so24376541ejb.13;
+        Wed, 18 Jan 2023 04:14:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zSiUjqeIhXTuZdT6eBiGLcbiQdlWY4D946T8IZEq1tM=;
-        b=dKanFbSavWhQ2T04eS+23uXizOzrzix2u0Cn/8NyzbdwfmUOqEwbG0Mvvs/5qQAZYw
-         E9SMCML7RNO6mwGoYvIku1ZYootIDWCeVdQy4IOV9nnp5z9QMjUlEcQnoSIKsIEx4BuJ
-         ANNkfnb3q0U5o5qoR2AxxjfX55b1fjCrbA/clrv/NzXcYQ1K6icZHfFK3HCaDyb2Mzbl
-         W4iwTVmvr1HjtdQwfFXUlIwRHQJI+A58LMkUrbvyzCXpWKppAklGEwHAp0xqR1jcZ+pZ
-         OJGYYZxgSkoRYiN5wwame4F5h8Vyoad7PzXPCsFNSiUysNL3v82BgUkf8PgkyPZ+MqE8
-         5OpA==
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Wtk2BXPwNgByM5zuDKe4rCk59dgrkS/p4SHrhV34oT4=;
+        b=dRbLYQYxGRZ9Qu14o1s800Vn/SHB+wdv54SmGe1yNc6KvREEPnXhkbtebRRmvk1H01
+         sLNE3xiLyhr1qi4t3owWDec2qXeSfbaFyLSyKiuXv1066wfMg6cY4OrdgbJXX0+g/2QO
+         V5G1W6BMQCdAL6+T6kdEyaXFs684e6roz1FX3O8VnY4iSiJMeX13W3Y39q4jnmyz7vj8
+         g6frVN9d3Vzb7E/IQP6PM8gLuc9emKDFQg9dqix6PiXtyyMvarllngsiKid65dWz6mh3
+         qhmXv/vtUUkcYMs0Dm0nOEhjb4pDkuu3XykFnZvryWJIsycHJixvjhNROFo6jws7q00Y
+         mRag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:content-language:cc:to:subject:from
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zSiUjqeIhXTuZdT6eBiGLcbiQdlWY4D946T8IZEq1tM=;
-        b=Wt82lhEoccIh4J4Tam9mIeJrwnBuhWghOLr1xb/8Asu7wJc00yveUtjis8WM1jY6AJ
-         hOUOuewTZc0/sE5RBH0+1d2ZnR7UYFWcctwPK5/IRbFKkm3Tj/AuQj/HWKdlJjwyaaj5
-         grZYOR6CMZbetteq+C49kizbpmlXFsXhwrhXgeUgNweA1BHALU3msdpRLo/sj1AROsj5
-         emS70NVUOppdgc+m3k9MwyN/jXkFp93ysQYd/bOk950uyQ5zy116KrfEcANi4OAO/JFh
-         uCClHZi3wBJVPV82bb/35UV8UJMKjkws1c2dnF432ABt1gjyy3NW7W7n950OOAwB4d40
-         4tew==
-X-Gm-Message-State: AFqh2kqAPmtd1AhQS2uVhVM2xX5dSELTAdQed2BXvoXJhyu6frJQ3d4A
-        gVP6kdSwwNJF+PJe4aFp3os=
-X-Google-Smtp-Source: AMrXdXuJB5h75c09Lnc02md4iwcnhiUM2jh4kDT+SpXEP089W+YmPnXFzPBoQG85j5oV/lLrbE//Iw==
-X-Received: by 2002:a17:907:86a5:b0:870:d4f3:61b3 with SMTP id qa37-20020a17090786a500b00870d4f361b3mr8604731ejc.12.1674044005883;
-        Wed, 18 Jan 2023 04:13:25 -0800 (PST)
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wtk2BXPwNgByM5zuDKe4rCk59dgrkS/p4SHrhV34oT4=;
+        b=2r1TT3UZX86Wv/koj5JYQONClex6Zj5tTPpnir/355UQYSSCJr+4nbTRgBnBqJbDde
+         WbfOLWGNuvKmHNF1kLByIBXjxHXhIPsK5E1mX+MHQhAVVS+IS0JoXy8+XceGDqEnusDb
+         7QtVkDfXThkdzWcxEm3VAHL5n9eGnZiP9Z8NMPn37leNblLxm47vH6eYyKaZB/rk/EkY
+         TQfgV+9Sj6P2XKnClaqpZZeq5EfW7OyQ5CabCW53uLXM9WKg21CAQs1xXqX+9A/KD5vn
+         5kJvGYOCA1z5Y2/xSEAIynknU0zMexdSuYcVmIsrXSvCKcbO34n13EfxnOWV6r9zEBNe
+         Bs/Q==
+X-Gm-Message-State: AFqh2kpfye49WpInKIz09lbfFi5GFeINNF+t+LULEciPGhiSMcOt6X4K
+        01VJVeuZyUJTjqZo4c7Cpto=
+X-Google-Smtp-Source: AMrXdXu3ryT88FGN3wUf7V2cIxHrNWhBqBVLCkTTIVRybrZmip9rTMuXztjMFNnmW2eoyyhhuHQ3xA==
+X-Received: by 2002:a17:906:dc44:b0:86d:abca:3f55 with SMTP id yz4-20020a170906dc4400b0086dabca3f55mr14748187ejb.15.1674044089413;
+        Wed, 18 Jan 2023 04:14:49 -0800 (PST)
 Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id r24-20020aa7da18000000b004704658abebsm14187212eds.54.2023.01.18.04.13.24
+        by smtp.gmail.com with ESMTPSA id 17-20020a170906059100b007c16f120aacsm14448690ejn.121.2023.01.18.04.14.48
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 04:13:25 -0800 (PST)
-Message-ID: <08de3f4b-e33f-95c8-3297-814ea107272a@gmail.com>
-Date:   Wed, 18 Jan 2023 13:13:23 +0100
+        Wed, 18 Jan 2023 04:14:48 -0800 (PST)
+Message-ID: <1510c02c-f640-9924-e42e-fa34e28a580f@gmail.com>
+Date:   Wed, 18 Jan 2023 13:14:47 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
 From:   Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v1 1/4] dt-bindings: gpio: rockchip,gpio-bank: add compatible
- string per SoC
+Subject: [PATCH v1 2/4] gpio: gpio-rockchip: add compatible string per SoC
 To:     linus.walleij@linaro.org, brgl@bgdev.pl
 Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         heiko@sntech.de, linux-gpio@vger.kernel.org,
@@ -64,7 +63,9 @@ Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         kever.yang@rock-chips.com, sjg@chromium.org,
         philipp.tomsich@vrull.eu
+References: <08de3f4b-e33f-95c8-3297-814ea107272a@gmail.com>
 Content-Language: en-US
+In-Reply-To: <08de3f4b-e33f-95c8-3297-814ea107272a@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,36 +84,40 @@ give them a consistent ID independent from probe order or alias.
 
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- .../bindings/gpio/rockchip,gpio-bank.yaml         | 15 +++++++++++++++
+
+For now only add new compatibles.
+No changes to rockchip_gpio_probe() function yet.
+---
+ drivers/gpio/gpio-rockchip.c | 15 +++++++++++++++
  1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-index affd823c8..72fdfcc65 100644
---- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-+++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-@@ -13,7 +13,22 @@ properties:
-   compatible:
-     enum:
-       - rockchip,gpio-bank
-+      - rockchip,px30-gpio-bank
-+      - rockchip,rk3036-gpio-bank
-+      - rockchip,rk3066a-gpio-bank
-+      - rockchip,rk3128-gpio-bank
-+      - rockchip,rk3188-gpio-bank
-       - rockchip,rk3188-gpio-bank0
-+      - rockchip,rk3228-gpio-bank
-+      - rockchip,rk3288-gpio-bank
-+      - rockchip,rk3328-gpio-bank
-+      - rockchip,rk3308-gpio-bank
-+      - rockchip,rk3368-gpio-bank
-+      - rockchip,rk3399-gpio-bank
-+      - rockchip,rk3568-gpio-bank
-+      - rockchip,rk3588-gpio-bank
-+      - rockchip,rv1108-gpio-bank
-+      - rockchip,rv1126-gpio-bank
+diff --git a/drivers/gpio/gpio-rockchip.c b/drivers/gpio/gpio-rockchip.c
+index e5de15a2a..493207de1 100644
+--- a/drivers/gpio/gpio-rockchip.c
++++ b/drivers/gpio/gpio-rockchip.c
+@@ -790,7 +790,22 @@ static int rockchip_gpio_remove(struct platform_device *pdev)
 
-   reg:
-     maxItems: 1
+ static const struct of_device_id rockchip_gpio_match[] = {
+ 	{ .compatible = "rockchip,gpio-bank", },
++	{ .compatible = "rockchip,px30-gpio-bank", },
++	{ .compatible = "rockchip,rk3036-gpio-bank", },
++	{ .compatible = "rockchip,rk3066a-gpio-bank", },
++	{ .compatible = "rockchip,rk3128-gpio-bank", },
++	{ .compatible = "rockchip,rk3188-gpio-bank", },
+ 	{ .compatible = "rockchip,rk3188-gpio-bank0" },
++	{ .compatible = "rockchip,rk3228-gpio-bank", },
++	{ .compatible = "rockchip,rk3288-gpio-bank", },
++	{ .compatible = "rockchip,rk3328-gpio-bank", },
++	{ .compatible = "rockchip,rk3308-gpio-bank", },
++	{ .compatible = "rockchip,rk3368-gpio-bank", },
++	{ .compatible = "rockchip,rk3399-gpio-bank", },
++	{ .compatible = "rockchip,rk3568-gpio-bank", },
++	{ .compatible = "rockchip,rk3588-gpio-bank", },
++	{ .compatible = "rockchip,rv1108-gpio-bank", },
++	{ .compatible = "rockchip,rv1126-gpio-bank", },
+ 	{ },
+ };
+
 --
 2.20.1
 
