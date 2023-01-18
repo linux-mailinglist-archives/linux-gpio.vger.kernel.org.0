@@ -2,66 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 483D2671FA7
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 15:33:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A694F671FB3
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 15:35:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231169AbjAROdh (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Jan 2023 09:33:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
+        id S231226AbjAROfV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Jan 2023 09:35:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230169AbjAROdT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 09:33:19 -0500
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC5A512F29
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:22:02 -0800 (PST)
-Received: by mail-vk1-xa2c.google.com with SMTP id b81so16457546vkf.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:22:02 -0800 (PST)
+        with ESMTP id S231426AbjAROe5 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 09:34:57 -0500
+Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 094F21E1F5
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:24:16 -0800 (PST)
+Received: by mail-vs1-xe2e.google.com with SMTP id k6so26947931vsk.1
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:24:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PreMjGjZsF7lqhLbxV3OStzpsSafhCzhHjI8R0DjNkM=;
-        b=v3rwYmnDD3cCLb4ZrOWkFTw+CBFHk9zfZUwlVu15qeNhhgM+i37Tx0dnfjC84/f95p
-         A+8yPCnVIKgufF5mW+p1URRGcP6txjBEyCNcs87aoJ/DyxKx4eJ8zOixI4d1o64jK1FR
-         XisbvryIzII5BWWe8wm4HUNODaYJL1SLl9c/t4LDVtu8RDIfpInMPlF6uP/z5Vck84Wx
-         ela+DkGvwqN2MrHai9QjGvNypZTm3/eMK+Dzr3sdYYAgka4/NMbfJTbK/WeC3VBg2Jr9
-         Z2IWJpnh3kEt9N0DRswCPmHxl17DR+U4oVgTq8NrLgqAwcm0wmgeFtuP0LaWzIFzHS7M
-         ej/w==
+        bh=WzJ2AllVpCQjdDeFrpPYqEG5GyPx2XaaVjsya9b6Kng=;
+        b=UKh/IBSJeoV3qpYibYlpgVMcNDXtbZ1ff8t2MOLEkig51Nt8AZ5i8VDUXqwPmnPfSK
+         F7JVwIsb9/NOV7WmwCOOuf5sB9a7v7GIM4sjD6PKJ5OlSys2UnvZIAX3fZbtepjou2GE
+         KcFm9q0YRHso4ID/U4icP3SxyD66DF/xukld5G0dksGo52qRw211zoJxE/SgzkiYz620
+         XuuYXbg+YjRb6yxJNo0ib0el4QmivpoAxiNKmz/N9L19yIITzCubeZta947yz/jt7aCv
+         RbD+IDsOwyfqtQEyIcfVgW1p5oDzZArDMYIcMIHEXx+M422/5PhMVN4zEOcuR1Qu0QDs
+         z3PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PreMjGjZsF7lqhLbxV3OStzpsSafhCzhHjI8R0DjNkM=;
-        b=IilpRW+wFNSUapwdFpXMtSjysocFqi9J0120ucehgL846NsH2Y2TrqSZq6E3QxqhA+
-         B+cG0ePWjxc8Dc60HsIvjkYL7Y0yLiobY2m58R9RHCxywcacf3+lSYKs9eNnGv4yN4Ib
-         esebY5QLv6JVVkbnVQ1B9oBggpqdAIf8IRHjjEK9GgsYEuSyf6GYVa1UaBrXizylaCDf
-         n8fcl+y8eNJJYNLxHN/bzlmMuyp0ViVat8Nlo44eFg10B1AM4I3yu8/SK0wLem/dnns5
-         W/jCoH+lMtcs4OcfhlpAI6c3j6mvOC6KUO0NpHD83feXfnYupeJUnwqd0yG7tnttqXXx
-         hFbg==
-X-Gm-Message-State: AFqh2kpJGoEUfBmFbshCQI7xV9WcaAhg3Z9Kak5ZSdKXKaUOpWXnhBLe
-        hWcaOiEEZchisr0XYZA6GmEL4BzMqWc6t3itRPFGoA==
-X-Google-Smtp-Source: AMrXdXuKjBdbHYRlIePfa3qvBKsJAzAwpG3MeDFWDARe8ewUWeS4KyCpdruXxdyakIFQjNyQKIjPz2hSeG7alzhMHcA=
-X-Received: by 2002:a1f:3283:0:b0:3dd:f7cf:e67e with SMTP id
- y125-20020a1f3283000000b003ddf7cfe67emr876393vky.33.1674051721920; Wed, 18
- Jan 2023 06:22:01 -0800 (PST)
+        bh=WzJ2AllVpCQjdDeFrpPYqEG5GyPx2XaaVjsya9b6Kng=;
+        b=qvkerRPiQrz4ZWEQZa4sqTvw3TRYrxn9MK4xHoGeXPng+yv8RZhdwIFAdaJCMiGdL8
+         8XN+6CdJbcI9kTq7KExFMJ6FofOs0ite5K18+cND4/FyLUn+OidJxuaG8Qkh1UeRSALB
+         6USlRl78xYNC6eQ+6M69h2wDz+BjE9/BEwhH+I1XzJIJFwQ2BvAre6nkeG5u1N2wXGxS
+         dGP1GdU6bf+ublTLbtDlNNfXDQhxG+ZA8tvdvMWMTzwBJzV81Lv3i5l4aOYxNK2oQCuy
+         hV2VZkYatL8/Z5rbUfA5iYerAws6SDumit7+Uj4t5qmNFR8ZQdSekEiMRIVk1jeZcYOW
+         9uyQ==
+X-Gm-Message-State: AFqh2kpQJnbnl/bVOEGHInDzYW2Xt8ZrksAR5bTPXYS2kQgPFC7nU4JJ
+        011AXJO/ekUW9cH4TYG8UZDE5IBJ2ywQo/H+nxz5rA==
+X-Google-Smtp-Source: AMrXdXvgYTvLsjNs4tUuBX8leoMQnU2TvgnW9eQQ2dNCxICVgeX6DtwOvqvwMwuz8wX2yiu+mNZptOQIozghBc39rE4=
+X-Received: by 2002:a67:f282:0:b0:3ce:88b3:d7da with SMTP id
+ m2-20020a67f282000000b003ce88b3d7damr959458vsk.62.1674051855145; Wed, 18 Jan
+ 2023 06:24:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20230116140811.27201-1-pierluigi.p@variscite.com>
- <CAMRc=MfeQ_92Vb6inv-1_h=kc1d2as6LLPqJHHtbNk1pK1xRuA@mail.gmail.com> <AM6PR08MB437640AB4B959DD356162F2BFFC69@AM6PR08MB4376.eurprd08.prod.outlook.com>
-In-Reply-To: <AM6PR08MB437640AB4B959DD356162F2BFFC69@AM6PR08MB4376.eurprd08.prod.outlook.com>
+References: <20230117100845.16708-1-nikita.shubin@maquefel.me>
+In-Reply-To: <20230117100845.16708-1-nikita.shubin@maquefel.me>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 18 Jan 2023 15:21:51 +0100
-Message-ID: <CAMRc=MfN5o32AminWbjHVh_OBy-uAOJZyvb-1zhn7zs6EVyhMw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix linker errors when GPIOLIB is disabled
-To:     Pierluigi Passaro <pierluigi.p@variscite.com>
-Cc:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eran Matityahu <eran.m@variscite.com>,
-        Nate Drude <Nate.D@variscite.com>,
-        Francesco Ferraro <francesco.f@variscite.com>,
-        "pierluigi.passaro@gmail.com" <pierluigi.passaro@gmail.com>,
-        kernel test robot <lkp@intel.com>
+Date:   Wed, 18 Jan 2023 15:24:04 +0100
+Message-ID: <CAMRc=MfFThu6nEokpTJ0F+694a_UsdcacEXUF2NFH7tzOjz_nQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: ep93xx: convert driver to DT
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -72,33 +70,51 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 11:17 AM Pierluigi Passaro
-<pierluigi.p@variscite.com> wrote:
+On Tue, Jan 17, 2023 at 11:08 AM Nikita Shubin
+<nikita.shubin@maquefel.me> wrote:
 >
-> On Tue, Jan 17, 2023 at 10:36 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > On Mon, Jan 16, 2023 at 3:08 PM Pierluigi Passaro
-> > <pierluigi.p@variscite.com> wrote:
-> > >
-> > > Both the functions gpiochip_request_own_desc and
-> > > gpiochip_free_own_desc are exported from
-> > >     drivers/gpio/gpiolib.c
-> > > but this file is compiled only when CONFIG_GPIOLIB is enabled.
-> > > Move the protototypes under "#ifdef CONFIG_GPIOLIB" and provide
-> > > reasonable definitions in the "#else" branch.
-> > >
-> > > Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > Please add a Fixes tag.
-> >
-> I beg your pardon for the question: how can I "add a Fixes tag" ?
-> Can you point me to any reference documentation / instructions ?
-> Thanks
-> >
+> This converts ep93xx SOC gpio into device tree driver:
+> - dropped banks and legacy defines
+> - split AB IRQ and make it shared
+>
+> We are relying on IRQ number information A, B ports have single shared
+> IRQ, while F port have dedicated IRQ for each line.
+>
+> Also we had to split single ep93xx platform_device into multiple, one
+> for each port, without this we can't do a full working transition from
+> legacy platform code into device tree capable:
+>
+> - all GPIO_LOOKUP were change to match new chip namings
+> - add lookup table for leds
+>
+> Fixes: 482c27273f52 ("ARM: ep93xx: renumber interrupts")
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> rfc->v0
+> Linus Walleij:
+> - dropped chip-labels
+> - rebase on the top of your leds patch:
+> https://lore.kernel.org/linux-arm-kernel/20230111132210.134478-1-linus.walleij@linaro.org/T/
+> - i am converting to immutable after this patch, otherwise it will
+>   require a fix wich is very similiar to this patch
+>
+> Hope changes are not that significant so i can still apply Rb tag.
+> ---
+>  arch/arm/mach-ep93xx/core.c          | 129 +++++++++-
+>  arch/arm/mach-ep93xx/edb93xx.c       |   2 +-
+>  arch/arm/mach-ep93xx/simone.c        |   4 +-
+>  arch/arm/mach-ep93xx/ts72xx.c        |   4 +-
+>  arch/arm/mach-ep93xx/vision_ep9307.c |  10 +-
+>  drivers/gpio/gpio-ep93xx.c           | 350 +++++++++++----------------
+>  6 files changed, 265 insertions(+), 234 deletions(-)
+>
 
-Look at the output of `git blame` on the file in question and see who
-added the changes that introduced the problem. Then, before your
-Sign-off in the git message add: Fixes: <12 chars of the commit hash>
-("<commit subject>"). See Existing commits with fixes for reference.
+This has a Fixes tag but it's a rather big commit. I hope this is not
+meant to be backported to stable branches? Doesn't look like stable
+material to me.
+
+Could you change the order of the patches so that we can send the
+immutable irqchip conversion for stable?
 
 Bart
