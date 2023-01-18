@@ -2,110 +2,175 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC7EB671440
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 07:33:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C99D67150B
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 08:30:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbjARGdH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Jan 2023 01:33:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59982 "EHLO
+        id S229579AbjARHa3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Jan 2023 02:30:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230017AbjARGbB (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 01:31:01 -0500
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F32540BD4;
-        Tue, 17 Jan 2023 22:21:27 -0800 (PST)
-X-UUID: 533ae28496f811ed945fc101203acc17-20230118
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=73BY3Vgbw3t6Q3sPe77rJeiSjxD1qMfAnvy9gFdOjsY=;
-        b=ClTuv/67iyuxVqUGKl6AMYFiUx2wc+vnmSnpIZRv2TLiaf84rzk6WEu8xGPmQSRsw18UJ+sf8lgAUUIfVsWTrXLHyZY2AaqqflsWZyNpipL3MggFZBI7DWGz7Y1AheQxnzjpSiemn4iVjuwIYlv1lLT57KROh7i1y3sjfWgMHU4=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.18,REQID:1eba8fb2-4d0f-4893-aaa4-deb28695839a,IP:0,U
-        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-        :release,TS:95
-X-CID-INFO: VERSION:1.1.18,REQID:1eba8fb2-4d0f-4893-aaa4-deb28695839a,IP:0,URL
-        :0,TC:0,Content:0,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Spam_GS981B3D,ACTION
-        :quarantine,TS:95
-X-CID-META: VersionHash:3ca2d6b,CLOUDID:fbd3958c-8530-4eff-9f77-222cf6e2895b,B
-        ulkID:2301181421229LQD9Z6J,BulkQuantity:0,Recheck:0,SF:38|28|17|19|48,TC:n
-        il,Content:0,EDM:-3,IP:nil,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
-        I:0,OSA:0
-X-CID-BVR: 0
-X-UUID: 533ae28496f811ed945fc101203acc17-20230118
-Received: from mtkmbs13n1.mediatek.inc [(172.21.101.193)] by mailgw02.mediatek.com
-        (envelope-from <guodong.liu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 259250046; Wed, 18 Jan 2023 14:21:21 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.792.15; Wed, 18 Jan 2023 14:21:20 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.792.15 via Frontend Transport; Wed, 18 Jan 2023 14:21:19 +0800
-From:   Guodong Liu <Guodong.Liu@mediatek.com>
-To:     Sean Wang <sean.wang@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Light Hsieh <light.hsieh@mediatek.com>,
-        Rob Herring <robh@kernel.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Zhiyong Tao <zhiyong.tao@mediatek.com>,
-        Guodong Liu <Guodong.Liu@mediatek.com>
-Subject: [PATCH] pinctrl: mediatek: Fix the drive register definition of some Pins
-Date:   Wed, 18 Jan 2023 14:21:16 +0800
-Message-ID: <20230118062116.26315-1-Guodong.Liu@mediatek.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230186AbjARH0P (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 02:26:15 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A0B2875BE
+        for <linux-gpio@vger.kernel.org>; Tue, 17 Jan 2023 22:44:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674024281; x=1705560281;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=BTUhRgVXGXYq3ghvqIaDzlRZAFDZRIkq18KEGunpYeM=;
+  b=S6iC1i+Q5BP0ST7gUpzhbiFSYO1NlYD3/r5odW8XXOpln3808wuWA81I
+   P5q9ZD5K3W9pdV8c1ODLSrceflkkeLnScexyO+/QF3eumuSwZY/GV+12h
+   W+nsodyqd0vDI3IEbRvfN1whKd1nQRhU6JetNv6ba9t0zf8SdikiO4TGG
+   IinEWkFq85CEcaEi+l46XduECOErxxfiSPz+0VCxn099NXNLaPqwgAyzq
+   30kKYpHQ+IYEmfmoyGVzE21cdp3ZjRpTSIZiCgiV8+iSO5ywGeyssDGbZ
+   3g82IplwyhJz+pNG0SnhOYr4luS4XL6bgDdrHR4umlCpsFOkfu/bwhhNn
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="323601064"
+X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
+   d="scan'208";a="323601064"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 22:44:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="904945978"
+X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
+   d="scan'208";a="904945978"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jan 2023 22:44:34 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pI2BV-00004Y-29;
+        Wed, 18 Jan 2023 06:44:33 +0000
+Date:   Wed, 18 Jan 2023 14:44:14 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ 900a37df9d98e6868be71cdaf24f42b4d2b2d0a7
+Message-ID: <63c7953e.TL+9CpJeXNGsgd0W%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK:  N
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The drive adjustment register definition of gpio13 and gpio81 is wrong:
-"the start address for the range" of gpio18 is corrected to 0x000,
-"the start bit for the first register within the range" of gpio81 is
-corrected to 24.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: 900a37df9d98e6868be71cdaf24f42b4d2b2d0a7  Merge branch 'devel' into for-next
 
-Fixes: 6cf5e9ef362a ("pinctrl: add pinctrl driver on mt8195")
-Signed-off-by: Guodong Liu <Guodong.Liu@mediatek.com>
----
- drivers/pinctrl/mediatek/pinctrl-mt8195.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+elapsed time: 726m
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8195.c b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-index 563693d3d4c2..c21ca33b2d59 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt8195.c
-@@ -659,7 +659,7 @@ static const struct mtk_pin_field_calc mt8195_pin_drv_range[] = {
- 	PIN_FIELD_BASE(10, 10, 4, 0x010, 0x10, 9, 3),
- 	PIN_FIELD_BASE(11, 11, 4, 0x000, 0x10, 24, 3),
- 	PIN_FIELD_BASE(12, 12, 4, 0x010, 0x10, 12, 3),
--	PIN_FIELD_BASE(13, 13, 4, 0x010, 0x10, 27, 3),
-+	PIN_FIELD_BASE(13, 13, 4, 0x000, 0x10, 27, 3),
- 	PIN_FIELD_BASE(14, 14, 4, 0x010, 0x10, 15, 3),
- 	PIN_FIELD_BASE(15, 15, 4, 0x010, 0x10, 0, 3),
- 	PIN_FIELD_BASE(16, 16, 4, 0x010, 0x10, 18, 3),
-@@ -708,7 +708,7 @@ static const struct mtk_pin_field_calc mt8195_pin_drv_range[] = {
- 	PIN_FIELD_BASE(78, 78, 3, 0x000, 0x10, 15, 3),
- 	PIN_FIELD_BASE(79, 79, 3, 0x000, 0x10, 18, 3),
- 	PIN_FIELD_BASE(80, 80, 3, 0x000, 0x10, 21, 3),
--	PIN_FIELD_BASE(81, 81, 3, 0x000, 0x10, 28, 3),
-+	PIN_FIELD_BASE(81, 81, 3, 0x000, 0x10, 24, 3),
- 	PIN_FIELD_BASE(82, 82, 3, 0x000, 0x10, 27, 3),
- 	PIN_FIELD_BASE(83, 83, 3, 0x010, 0x10, 0, 3),
- 	PIN_FIELD_BASE(84, 84, 3, 0x010, 0x10, 3, 3),
+configs tested: 94
+configs skipped: 3
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+sh                               allmodconfig
+mips                             allyesconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+ia64                             allmodconfig
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+s390                             allyesconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+i386                 randconfig-a014-20230116
+powerpc                          allmodconfig
+m68k                             allyesconfig
+i386                 randconfig-a013-20230116
+m68k                             allmodconfig
+i386                 randconfig-a012-20230116
+arc                              allyesconfig
+i386                 randconfig-a011-20230116
+alpha                            allyesconfig
+x86_64                            allnoconfig
+i386                 randconfig-a015-20230116
+i386                 randconfig-a016-20230116
+x86_64               randconfig-a011-20230116
+x86_64               randconfig-a013-20230116
+x86_64               randconfig-a012-20230116
+x86_64               randconfig-a014-20230116
+x86_64               randconfig-a015-20230116
+x86_64               randconfig-a016-20230116
+x86_64                              defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+i386                                defconfig
+x86_64                               rhel-8.3
+arm                                 defconfig
+x86_64                           allyesconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+i386                             allyesconfig
+i386                          randconfig-c001
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                randconfig-r042-20230116
+arm                  randconfig-r046-20230117
+s390                 randconfig-r044-20230116
+arc                  randconfig-r043-20230117
+arc                  randconfig-r043-20230116
+arm                  randconfig-r046-20230115
+arc                  randconfig-r043-20230115
+m68k                          hp300_defconfig
+arm                            lart_defconfig
+i386                 randconfig-c001-20230116
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+powerpc                      bamboo_defconfig
+arm                           imxrt_defconfig
+powerpc                      makalu_defconfig
+arm                        cerfcube_defconfig
+ia64                        generic_defconfig
+sh                 kfr2r09-romimage_defconfig
+openrisc                         alldefconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+x86_64                        randconfig-k001
+x86_64               randconfig-a003-20230116
+x86_64               randconfig-a004-20230116
+x86_64               randconfig-a006-20230116
+x86_64               randconfig-a005-20230116
+x86_64               randconfig-a001-20230116
+x86_64               randconfig-a002-20230116
+i386                 randconfig-a002-20230116
+i386                 randconfig-a004-20230116
+i386                 randconfig-a001-20230116
+i386                 randconfig-a003-20230116
+i386                 randconfig-a005-20230116
+i386                 randconfig-a006-20230116
+powerpc                      acadia_defconfig
+arm                        magician_defconfig
+riscv                             allnoconfig
+arm                          sp7021_defconfig
+powerpc                     ppa8548_defconfig
+powerpc                     tqm8560_defconfig
+arm                  colibri_pxa270_defconfig
+arm                         hackkit_defconfig
+mips                          malta_defconfig
+mips                        qi_lb60_defconfig
+arm                           sama7_defconfig
+riscv                          rv32_defconfig
+powerpc                    mvme5100_defconfig
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
