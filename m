@@ -2,119 +2,130 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A694F671FB3
-	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 15:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D7B8671FC2
+	for <lists+linux-gpio@lfdr.de>; Wed, 18 Jan 2023 15:37:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231226AbjAROfV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 18 Jan 2023 09:35:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
+        id S231419AbjAROh4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 18 Jan 2023 09:37:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231426AbjAROe5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 09:34:57 -0500
-Received: from mail-vs1-xe2e.google.com (mail-vs1-xe2e.google.com [IPv6:2607:f8b0:4864:20::e2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 094F21E1F5
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:24:16 -0800 (PST)
-Received: by mail-vs1-xe2e.google.com with SMTP id k6so26947931vsk.1
-        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:24:15 -0800 (PST)
+        with ESMTP id S231321AbjAROhk (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 18 Jan 2023 09:37:40 -0500
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6086759762
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:26:49 -0800 (PST)
+Received: by mail-vs1-xe34.google.com with SMTP id t10so25284589vsr.3
+        for <linux-gpio@vger.kernel.org>; Wed, 18 Jan 2023 06:26:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WzJ2AllVpCQjdDeFrpPYqEG5GyPx2XaaVjsya9b6Kng=;
-        b=UKh/IBSJeoV3qpYibYlpgVMcNDXtbZ1ff8t2MOLEkig51Nt8AZ5i8VDUXqwPmnPfSK
-         F7JVwIsb9/NOV7WmwCOOuf5sB9a7v7GIM4sjD6PKJ5OlSys2UnvZIAX3fZbtepjou2GE
-         KcFm9q0YRHso4ID/U4icP3SxyD66DF/xukld5G0dksGo52qRw211zoJxE/SgzkiYz620
-         XuuYXbg+YjRb6yxJNo0ib0el4QmivpoAxiNKmz/N9L19yIITzCubeZta947yz/jt7aCv
-         RbD+IDsOwyfqtQEyIcfVgW1p5oDzZArDMYIcMIHEXx+M422/5PhMVN4zEOcuR1Qu0QDs
-         z3PA==
+        bh=Lqqi0GQK72eWatBF5iXQ8orjIM5rhkb0842NAyd7NO4=;
+        b=HCBXy9lEZdNqqZezNdXa5R1YwPrZy6tl5PP5t2eD/lvD+coeSVqtK6+ajYbBSS+4Ao
+         71bd8ZGQY3psoI7VIVI9KNgBY2BRrVK8LM9JfJTNIG5p3sBU2JkH73GrbepCIyxHzHw2
+         QHdHn42XFKBUiRZcwnZZG7IfnMcpduia2QxBo7DU8tKMkzIe7hjJu/oWGeiG5aIizkBq
+         r5KPbUse5duP1eD0ewKlV1SkkikWE5NilH4EtI1VTNJn1fMBFEcBT+A7WNt3kh3Qiqin
+         xCpBt9jj6naEztaF+kEh8RvBliq3GG/rYrxlNGDqZi/w4NXlbzKvjj5IgqhD3yIvdF4/
+         6OJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WzJ2AllVpCQjdDeFrpPYqEG5GyPx2XaaVjsya9b6Kng=;
-        b=qvkerRPiQrz4ZWEQZa4sqTvw3TRYrxn9MK4xHoGeXPng+yv8RZhdwIFAdaJCMiGdL8
-         8XN+6CdJbcI9kTq7KExFMJ6FofOs0ite5K18+cND4/FyLUn+OidJxuaG8Qkh1UeRSALB
-         6USlRl78xYNC6eQ+6M69h2wDz+BjE9/BEwhH+I1XzJIJFwQ2BvAre6nkeG5u1N2wXGxS
-         dGP1GdU6bf+ublTLbtDlNNfXDQhxG+ZA8tvdvMWMTzwBJzV81Lv3i5l4aOYxNK2oQCuy
-         hV2VZkYatL8/Z5rbUfA5iYerAws6SDumit7+Uj4t5qmNFR8ZQdSekEiMRIVk1jeZcYOW
-         9uyQ==
-X-Gm-Message-State: AFqh2kpQJnbnl/bVOEGHInDzYW2Xt8ZrksAR5bTPXYS2kQgPFC7nU4JJ
-        011AXJO/ekUW9cH4TYG8UZDE5IBJ2ywQo/H+nxz5rA==
-X-Google-Smtp-Source: AMrXdXvgYTvLsjNs4tUuBX8leoMQnU2TvgnW9eQQ2dNCxICVgeX6DtwOvqvwMwuz8wX2yiu+mNZptOQIozghBc39rE4=
-X-Received: by 2002:a67:f282:0:b0:3ce:88b3:d7da with SMTP id
- m2-20020a67f282000000b003ce88b3d7damr959458vsk.62.1674051855145; Wed, 18 Jan
- 2023 06:24:15 -0800 (PST)
+        bh=Lqqi0GQK72eWatBF5iXQ8orjIM5rhkb0842NAyd7NO4=;
+        b=4XX2QJZI1Pzeq1ts/3Nn5SD1vrEEhE6xYvtzyw8MIQDJLSfuJj4yKNhfez3zB6+Rlm
+         /iQAUKQlSWVaT/mTS4b1/q0DEyPuHG5Fg+k2fN2i06ca8ejSMZBA5qunQc+bbPJxLI7I
+         ZmnjAS/fDFKSI61vE/jgGHBJVsO9sWonfl9bBp0/TDxxiVt+iUPCpp3U0TkCOPL5S5sX
+         V8Lx7IBk6kh+P1uNK/yTPR9ASoUyTtSf4ByTIHfciXEWyAaQ3ZyW3MeM5QUqRDAVX7jN
+         g+wlZg4Mb+CMbu1WsEYEwKnFYDbZJtAfoGEpOV7cNjVs7LIs+6PULT1lMHkD1ZKTAW9T
+         9J5Q==
+X-Gm-Message-State: AFqh2kq1HmnABUkhSbej5ITeiMsiJmvCxd3J9oEQPI8ubYjIb3CwMr2u
+        DeErhBe1PO/U9cXmWf5wfLqjtw4KNkhlu++ATN2kZw==
+X-Google-Smtp-Source: AMrXdXvqsnUIUZ4tgMYk35KxtchmNg5II+5n7fzSAq5kmnbRxWa8736Kzje9pVpcxADmzMR8BCAAR/gytLy14cjL4CU=
+X-Received: by 2002:a67:c387:0:b0:3d2:3577:2d05 with SMTP id
+ s7-20020a67c387000000b003d235772d05mr892021vsj.9.1674052008373; Wed, 18 Jan
+ 2023 06:26:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20230117100845.16708-1-nikita.shubin@maquefel.me>
-In-Reply-To: <20230117100845.16708-1-nikita.shubin@maquefel.me>
+References: <20230116193702.31356-1-mario.limonciello@amd.com> <20230116193702.31356-3-mario.limonciello@amd.com>
+In-Reply-To: <20230116193702.31356-3-mario.limonciello@amd.com>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 18 Jan 2023 15:24:04 +0100
-Message-ID: <CAMRc=MfFThu6nEokpTJ0F+694a_UsdcacEXUF2NFH7tzOjz_nQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] gpio: ep93xx: convert driver to DT
-To:     Nikita Shubin <nikita.shubin@maquefel.me>
-Cc:     linux-gpio@vger.kernel.org,
+Date:   Wed, 18 Jan 2023 15:26:37 +0100
+Message-ID: <CAMRc=MenxV6Nt3cyLPvPJXVDe6T1s2zeQ_ZszW8rrVwJbW0pXQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: acpi: Add a ignore wakeup quirk for Clevo NL5xRU
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Lukasz Majewski <lukma@denx.de>, Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        regressions@lists.linux.dev,
+        Werner Sembach <wse@tuxedocomputers.com>,
+        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 11:08 AM Nikita Shubin
-<nikita.shubin@maquefel.me> wrote:
+On Mon, Jan 16, 2023 at 8:37 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
 >
-> This converts ep93xx SOC gpio into device tree driver:
-> - dropped banks and legacy defines
-> - split AB IRQ and make it shared
+> commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> changed the policy such that I2C touchpads may be able to wake up the
+> system by default if the system is configured as such.
 >
-> We are relying on IRQ number information A, B ports have single shared
-> IRQ, while F port have dedicated IRQ for each line.
+> However on Clevo NL5xRU there is a mistake in the ACPI tables that the
+> TP_ATTN# signal connected to GPIO 9 is configured as ActiveLow and level
+> triggered but connected to a pull up. As soon as the system suspends the
+> touchpad loses power and then the system wakes up.
 >
-> Also we had to split single ep93xx platform_device into multiple, one
-> for each port, without this we can't do a full working transition from
-> legacy platform code into device tree capable:
+> To avoid this problem, introduce a quirk for this model that will prevent
+> the wakeup capability for being set for GPIO 9.
 >
-> - all GPIO_LOOKUP were change to match new chip namings
-> - add lookup table for leds
->
-> Fixes: 482c27273f52 ("ARM: ep93xx: renumber interrupts")
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Fixes: 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+> Reported-by: Werner Sembach <wse@tuxedocomputers.com>
+> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627
+> Co-developed-by: Werner Sembach <wse@tuxedocomputers.com>
+> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
-> rfc->v0
-> Linus Walleij:
-> - dropped chip-labels
-> - rebase on the top of your leds patch:
-> https://lore.kernel.org/linux-arm-kernel/20230111132210.134478-1-linus.walleij@linaro.org/T/
-> - i am converting to immutable after this patch, otherwise it will
->   require a fix wich is very similiar to this patch
+>  drivers/gpio/gpiolib-acpi.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 >
-> Hope changes are not that significant so i can still apply Rb tag.
-> ---
->  arch/arm/mach-ep93xx/core.c          | 129 +++++++++-
->  arch/arm/mach-ep93xx/edb93xx.c       |   2 +-
->  arch/arm/mach-ep93xx/simone.c        |   4 +-
->  arch/arm/mach-ep93xx/ts72xx.c        |   4 +-
->  arch/arm/mach-ep93xx/vision_ep9307.c |  10 +-
->  drivers/gpio/gpio-ep93xx.c           | 350 +++++++++++----------------
->  6 files changed, 265 insertions(+), 234 deletions(-)
+> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+> index 4287555a12408..9ef0f5641b521 100644
+> --- a/drivers/gpio/gpiolib-acpi.c
+> +++ b/drivers/gpio/gpiolib-acpi.c
+> @@ -1623,6 +1623,19 @@ static const struct dmi_system_id gpiolib_acpi_quirks[] __initconst = {
+>                         .ignore_interrupt = "AMDI0030:00@18",
+>                 },
+>         },
+> +       {
+> +               /*
+> +                * Spurious wakeups from TP_ATTN# pin
+> +                * Found in BIOS 1.7.8
+> +                * https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1720627
+> +                */
+> +               .matches = {
+> +                       DMI_MATCH(DMI_BOARD_NAME, "NL5xRU"),
+> +               },
+> +               .driver_data = &(struct acpi_gpiolib_dmi_quirk) {
+> +                       .ignore_wake = "ELAN0415:00@9",
+> +               },
+> +       },
+>         {} /* Terminating entry */
+>  };
+>
+> --
+> 2.34.1
 >
 
-This has a Fixes tag but it's a rather big commit. I hope this is not
-meant to be backported to stable branches? Doesn't look like stable
-material to me.
-
-Could you change the order of the patches so that we can send the
-immutable irqchip conversion for stable?
+Queued for fixes, thanks!
 
 Bart
