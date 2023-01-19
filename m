@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC00D673A10
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:26:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ECF9673A36
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:30:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229916AbjASN0E (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 08:26:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36198 "EHLO
+        id S231148AbjASNaL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 08:30:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbjASN0D (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:26:03 -0500
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC34783;
-        Thu, 19 Jan 2023 05:26:01 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id x5so1515363qti.3;
-        Thu, 19 Jan 2023 05:26:01 -0800 (PST)
+        with ESMTP id S229593AbjASN34 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:29:56 -0500
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A86978AB4;
+        Thu, 19 Jan 2023 05:29:53 -0800 (PST)
+Received: by mail-qt1-x82f.google.com with SMTP id o5so1487298qtr.11;
+        Thu, 19 Jan 2023 05:29:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T1WGlGeyNetZjTRTiM/7cfE6svyPDuUmGFWeG5I+voM=;
-        b=DXTNNqGq+xf65vWikEFWE5XImXIPuoNGUDShzGQ43dteYnqoiUfKaojVpk9u0htNjK
-         D2RpJDyWOefeSCUXMZVk+Jrel/whIwcr86pL1Z/7vNix3qyxzedZaku8IM31cW1pl8dX
-         RjfLH6H+evjf6HgQPlf0wFibB2q5nZj55GHXwKDyXVGXY7/vf9V896sEIyeNvrTzw5qP
-         nbJaegukLbI7GK1gbEn/REo1Zw99fc54mu/GFsc529SWJteuhSs9cVIhEiU4kQcI0qEH
-         p8OoVvIk14J5KLtxo2Uhk3Jy8hzZaq4BXcRRT6dgk+AuMhnQoCZwfcA04luWWDUkGKDf
-         LDqQ==
+        bh=IJsnKAW5czYReP1l0WHmpg7CvVnsgZTaszvE4xXva0o=;
+        b=GzIGfo1W1z4JeN1oXmrDXGTVCiyQoUIvf10yo8QiLpVcGOaWbx6EHMEAo3XPZLWBYZ
+         H4tK2wc79RvNcEgX2FGDF0eBTpu//ph8InoDGnY7OaJb46MJFGoshLGXDw+9EPJ91JxM
+         04GyMT6bzY/C/xrliHh63hw466fTG+d187sA4AMejOBcCJmVQHvOfL8Y76NR52gMSjSy
+         k9S9U9UXVZpPCE6dSr8vQyZX6Fjosy+zueiYNf2xnAyk72toIFAqY9zVn/CiImx1OLfS
+         BsnPO94tC8hfCDvrOBU9kZ3VhkR3Xr/hZy4zKNRrvOy+frHEGW+s3MtItJHQjRa1L3B+
+         t9Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=T1WGlGeyNetZjTRTiM/7cfE6svyPDuUmGFWeG5I+voM=;
-        b=Y5CnG1oi0a91b5NEpzyR9/9pN/BNUtRNmpQWujtwdJjOpSWN2xAr+WFjU4CjCbFD4Q
-         76xik0G/wGDHz0P+bAK7dknQcJ+zXKm5MYOKAUXu5Rp6y6KxATiDlrkda2huIo41waOo
-         kwISbCHEpdTXClmRT5Dl6smAKqev5rsR0UZmrfiJTGew1ScGv8eOR/lt6w82fbt5Mh2A
-         evVBIpNIN3cs3pgfy71OjW/jkA4QY7aDce6p4s2U9g7ZYVRHWKsja7o8mlShHYnhMN/g
-         CRC+D9I/8uaOqXfynYfMWtJAJ4sYF1i1/1eBwhQvvlI0M5RSZIXAEf+aJd73Cv1Heu5n
-         hftg==
-X-Gm-Message-State: AFqh2kpGQWItprU5KqplOtlUmzPuYxAwst686uPPqehz3Ken6B5OV3zd
-        xArgdgGj9hZXI6rqNxkHUp2V6TWjC15VfwKP0g8=
-X-Google-Smtp-Source: AMrXdXs1KFZ1YZRV38FYpYSPnTld1k63n4bEYDq75Gs6nrKyMXW/1qtmjEFh3hDwbV7AqsDju0NV3xLcSyGsYvcUtys=
-X-Received: by 2002:a05:622a:4209:b0:3b1:328c:ff11 with SMTP id
- cp9-20020a05622a420900b003b1328cff11mr288833qtb.195.1674134760944; Thu, 19
- Jan 2023 05:26:00 -0800 (PST)
+        bh=IJsnKAW5czYReP1l0WHmpg7CvVnsgZTaszvE4xXva0o=;
+        b=kTW+78uyL3RYQeU08Q/nk/pkouH4NFjmLqZaI4bh95n3gkyowAOB5ZDD+XYBJO3/WP
+         yzhKUZmF76JBNyyXlLva4wgf7ipPcjFN8jeP559WpI44usETpgQ7sWcYkFt7D17IEYot
+         10beI2GvvfUSY1V0Q3q5i8O1s/m+dF76ebuwtfPp/B1bkZUC4Dnn1O5aPlV6CPIkpmWs
+         o0xw4Y5jo7yiiXyz6nHSww2evlZKZnxF+qtuo4a+88MPGPVpkZEwoqhH6QJ+XZ1F9AWZ
+         dG+JZeG5QvPjmHy61m5TKhKtBcmDyMhV57x8k2xc/VdR6fQhRTlwrDQZlw5BulUn+OEL
+         yZcg==
+X-Gm-Message-State: AFqh2kphp08Ime5QcnzfaJ62SKWIbuo+FsER/faFQH+F1Zn3ZwfnIloh
+        OIL3JT/RXQujAua3D0BAxEJ8BWbw5HK51NIerzQ=
+X-Google-Smtp-Source: AMrXdXtvPQG47Hfb/jLGp2xpZ7OB4WNLf6RHL4we4AOYzU7NSAW0pYdm+4/bohdWJ8uURRqoBAPYhDLt+Jkmk3n8BoY=
+X-Received: by 2002:a05:622a:4115:b0:3b0:736:9de with SMTP id
+ cc21-20020a05622a411500b003b0073609demr570217qtb.61.1674134992445; Thu, 19
+ Jan 2023 05:29:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-4-hdegoede@redhat.com>
-In-Reply-To: <20230119130053.111344-4-hdegoede@redhat.com>
+References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-6-hdegoede@redhat.com>
+In-Reply-To: <20230119130053.111344-6-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Jan 2023 15:25:25 +0200
-Message-ID: <CAHp75VeoemmSeYjhv5h2Z929X7dAu5yRH333+xPTffv59PAnPQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/11] leds: led-class: Add __devm_led_get() helper
+Date:   Thu, 19 Jan 2023 15:29:16 +0200
+Message-ID: <CAHp75VdO+mBZXeMpexqQNCN0eTBa6a9O=pJz-rgTLSmtNNu4BA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/11] [RFC] leds: led-class: Add devicetree support to led_get()
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -79,76 +79,104 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Jan 19, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> Add a __devm_led_get() helper which registers a passed in led_classdev
-> with devm for unregistration.
+> Turn of_led_get() into a more generic __of_led_get() helper function,
+> which can lookup LEDs in devicetree by either name or index.
 >
-> This is a preparation patch for adding a generic (non devicetree specific)
-> devm_led_get() function.
+> And use this new helper to add devicetree support to the generic
+> (non devicetree specific) [devm_]led_get() function.
+>
+> This uses the standard devicetree pattern of adding a -names string array
+> to map names to the indexes for an array of resources.
+>
+> Note the new led-names property for LED consumers is not added
+> to the devicetree documentation because there seems to be no
+> documentation for the leds property itself to extend it with this.
+> It seems that how LED consumers should be described is not documented
+> at all ATM.
+>
+> This patch is marked as RFC because of both the missing devicetree
+> documentation and because there are no devicetree users of
+> the generic [devm_]led_get() function for now.
 
-It's just a move of the existing code...
+FWIW,
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-...but I would expect that someone converts this to use
-devm_add_action_or_reset().
+
+Yeah, it's a pity we have no documentation for the LED properties...
 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/leds/led-class.c | 29 +++++++++++++++++------------
->  1 file changed, 17 insertions(+), 12 deletions(-)
+>  drivers/leds/led-class.c | 37 ++++++++++++++++++++++++++++---------
+>  1 file changed, 28 insertions(+), 9 deletions(-)
 >
 > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 743d97b082dc..4904d140a560 100644
+> index 6dff57c41e96..22f658c750d1 100644
 > --- a/drivers/leds/led-class.c
 > +++ b/drivers/leds/led-class.c
-> @@ -274,6 +274,22 @@ static void devm_led_release(struct device *dev, void *res)
->         led_put(*p);
+> @@ -234,19 +234,18 @@ static struct led_classdev *led_module_get(struct device *led_dev)
+>         return led_cdev;
 >  }
 >
-> +static struct led_classdev *__devm_led_get(struct device *dev, struct led_classdev *led)
-> +{
-> +       struct led_classdev **dr;
+> -/**
+> - * of_led_get() - request a LED device via the LED framework
+> - * @np: device node to get the LED device from
+> - * @index: the index of the LED
+> - *
+> - * Returns the LED device parsed from the phandle specified in the "leds"
+> - * property of a device tree node or a negative error-code on failure.
+> - */
+> -struct led_classdev *of_led_get(struct device_node *np, int index)
+> +static struct led_classdev *__of_led_get(struct device_node *np, int index,
+> +                                        const char *name)
+>  {
+>         struct device *led_dev;
+>         struct device_node *led_node;
+>
+> +       /*
+> +        * For named LEDs, first look up the name in the "led-names" property.
+> +        * If it cannot be found, then of_parse_phandle() will propagate the error.
+> +        */
+> +       if (name)
+> +               index = of_property_match_string(np, "led-names", name);
+>         led_node = of_parse_phandle(np, "leds", index);
+>         if (!led_node)
+>                 return ERR_PTR(-ENOENT);
+> @@ -256,6 +255,19 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+>
+>         return led_module_get(led_dev);
+>  }
 > +
-> +       dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *), GFP_KERNEL);
-> +       if (!dr) {
-> +               led_put(led);
-> +               return ERR_PTR(-ENOMEM);
+> +/**
+> + * of_led_get() - request a LED device via the LED framework
+> + * @np: device node to get the LED device from
+> + * @index: the index of the LED
+> + *
+> + * Returns the LED device parsed from the phandle specified in the "leds"
+> + * property of a device tree node or a negative error-code on failure.
+> + */
+> +struct led_classdev *of_led_get(struct device_node *np, int index)
+> +{
+> +       return __of_led_get(np, index, NULL);
+> +}
+>  EXPORT_SYMBOL_GPL(of_led_get);
+>
+>  /**
+> @@ -329,9 +341,16 @@ EXPORT_SYMBOL_GPL(devm_of_led_get);
+>  struct led_classdev *led_get(struct device *dev, char *function)
+>  {
+>         struct led_lookup_data *lookup;
+> +       struct led_classdev *led_cdev;
+>         const char *led_name = NULL;
+>         struct device *led_dev;
+>
+> +       if (dev->of_node) {
+> +               led_cdev = __of_led_get(dev->of_node, -1, function);
+> +               if (!IS_ERR(led_cdev) || PTR_ERR(led_cdev) != -ENOENT)
+> +                       return led_cdev;
 > +       }
 > +
-> +       *dr = led;
-> +       devres_add(dev, dr);
-> +
-> +       return led;
-> +}
-> +
->  /**
->   * devm_of_led_get - Resource-managed request of a LED device
->   * @dev:       LED consumer
-> @@ -289,7 +305,6 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
->                                                   int index)
->  {
->         struct led_classdev *led;
-> -       struct led_classdev **dr;
->
->         if (!dev)
->                 return ERR_PTR(-EINVAL);
-> @@ -298,17 +313,7 @@ struct led_classdev *__must_check devm_of_led_get(struct device *dev,
->         if (IS_ERR(led))
->                 return led;
->
-> -       dr = devres_alloc(devm_led_release, sizeof(struct led_classdev *),
-> -                         GFP_KERNEL);
-> -       if (!dr) {
-> -               led_put(led);
-> -               return ERR_PTR(-ENOMEM);
-> -       }
-> -
-> -       *dr = led;
-> -       devres_add(dev, dr);
-> -
-> -       return led;
-> +       return __devm_led_get(dev, led);
->  }
->  EXPORT_SYMBOL_GPL(devm_of_led_get);
->
+>         mutex_lock(&leds_lookup_lock);
+>         list_for_each_entry(lookup, &leds_lookup_list, list) {
+>                 if (!strcmp(lookup->consumer_dev_name, dev_name(dev)) &&
 > --
 > 2.39.0
 >
