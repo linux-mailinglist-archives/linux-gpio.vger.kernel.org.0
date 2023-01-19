@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5401F6739DE
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:22:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA6CC673A01
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:23:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjASNWA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 08:22:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57096 "EHLO
+        id S230061AbjASNXB (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 08:23:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229968AbjASNVv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:21:51 -0500
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBF183;
-        Thu, 19 Jan 2023 05:21:49 -0800 (PST)
-Received: by mail-qt1-x834.google.com with SMTP id x7so1459254qtv.13;
-        Thu, 19 Jan 2023 05:21:49 -0800 (PST)
+        with ESMTP id S230496AbjASNW6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:22:58 -0500
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B6483;
+        Thu, 19 Jan 2023 05:22:57 -0800 (PST)
+Received: by mail-qk1-x72d.google.com with SMTP id i28so1143857qkl.6;
+        Thu, 19 Jan 2023 05:22:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=I2YXU2FJo+t/nPqAWwtxUT6+gPscBXDImBHIMu0OQoE=;
-        b=mZ1wsengVANkOpLmveEJz/cZ/OeeZqyyGrfyOojZoGAMu1KFEhdcSfXX91CJxKUUN3
-         9RKbeafQCjnksI1Hq5+YqajMUTthJJIcGvZfCxF7Nx77igqbWTMMfvYap/Og1VTHgMT7
-         NXxmqgd/MapFLBWzM7mRoSAT450SCn3/ZgC8rHN5NUDf3cN0z2eOmpmfdN6lQ1te/C5I
-         CTnnlLtGUa8GqW1VDTtd2uf+1jLC/E2iHMtgspbwDc4A9YxPg0nqvKVjbM+5MmtGvDOe
-         ApTeEer/LKLao15XbWpQKYw1gmB6+QO5kZqQHYWIZW8uCTOGcYqZPMghbSvLD9aiNWQw
-         flpA==
+        bh=zcoTD5PovkPmANlTTS5Qwy054d3hEYvEjKQjgv7cQyE=;
+        b=cjZQi7839ux3elJyARINBaqQL1O/K9GLO2JAtNK9aE7iZhCDMvtgPMzqvbzlVxTU1O
+         1PubOgDz4F2H9UX6a/g0dz03U79dlvm5ormAhAp0cFmChA4I3+Tx048IbhBFKeHzaXsL
+         1kkwgK/ltvWePXFFoF9Hgp5hhDevv73loZfRKbpGAwxSC/qvkZL1pHUSgm38LV+3BYFK
+         tjokvPJGQoD8B/djiZK9V3bGB7QgSRFKuw+TxhLPbm0BQbjUqSV21Fuvz1y0lL/MNL81
+         k9xpyicj67Nll6VijVIcPBTV2JuPE/ZA1nII2ejxQbkOFdg3HiqUx4WGO0VWN9dWnBRj
+         Q/Fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=I2YXU2FJo+t/nPqAWwtxUT6+gPscBXDImBHIMu0OQoE=;
-        b=sgqv+tdO9xINtatnbMOt3n9f8ILuhlFwbjVUouhqG5ndS+sUF0InlpOIyH5WcquCiT
-         IrL55hYS/VrUsYF9f+hC31DOsq66/BJ9iiCaOixrZoxRsq73xirkpt2wVHP4G+7zNZ2R
-         JXjfl6mX6rGQjWfhcZGE0rLYC5u0xNyg/9xfbUJaVlmLi+EDpVqLZXjku0sUjohayAmk
-         Ou2UULkB3gEiLizq6ux3sO35qEsBqG0k4cGu81WxOSPpPHjVVtlnamlfzmEEfgBuOSfh
-         oz3eCHuSQOMJtcbme+PlmjjjhFD9xbtOEcmOcgLoPoKAl9k1y8oWI31Sfo/EEqxf0CP1
-         0IAg==
-X-Gm-Message-State: AFqh2kqICXE6uP2AwMYyGnLTe96OJpl9dnGRCriEoyRju1/qRgJc5m66
-        3ONWgHVvjM/HW5yGJxnQEiwHZ/cu0tXD1Fr8J4M=
-X-Google-Smtp-Source: AMrXdXt0K5GhdCCtT122Dc/CITFbyoRnhv2Lafu/DlF77tVGiHkxbuQDut8cAmeznttld4vXHOVNpmvTniAz1BscjIE=
-X-Received: by 2002:a05:622a:4115:b0:3b0:736:9de with SMTP id
- cc21-20020a05622a411500b003b0073609demr568846qtb.61.1674134508725; Thu, 19
- Jan 2023 05:21:48 -0800 (PST)
+        bh=zcoTD5PovkPmANlTTS5Qwy054d3hEYvEjKQjgv7cQyE=;
+        b=q0DahdkWNlJhJ34FM6a6ZAKY5kKcDUdtx0EZW8jWX0nWzMRPlxQzOlNbhxkY79HMoY
+         xsKbodETQjL3CflmIKrWyj3D6MUeDCaPHDOmCq0UDHpBJ+DhRjEMIJeBoedlPyD351jb
+         eXuf9L1DywjNhsWVVb1erW/4XfefWenme0FqjYkqk3sErMbO0JpcNQ0HccFxWRPtns9a
+         MvwMfySm9E0LIBS8r0XTrJcKVOANaLhhyXuPuneFuf1ULvHj8xMrbEXiHTh7wAmu/nXV
+         wSXi53OxYwEO2VmnkliH1jFN0iNvuu5U91gfsJYzgE4G/b1MM1T5cR51jYYErny5201j
+         eCzQ==
+X-Gm-Message-State: AFqh2krgmiHw5rZBmCbXNFGQ5zuYcpH3/7AKbdSwyzvxRae4fAQmpmjw
+        CJSo/UjLCJhmdfFrz6HJdXdf6HR5soTaFWbcJ3k=
+X-Google-Smtp-Source: AMrXdXtXo/2kr7KcnvjVXhPwFpQ6aN3MS8XwRO2m4qvTK+6XUV7ngWRfTWLNGe344BUiLS9B28ccG8G/FtRlDkX60Xs=
+X-Received: by 2002:a05:620a:36f4:b0:702:34dc:25a8 with SMTP id
+ cz52-20020a05620a36f400b0070234dc25a8mr506965qkb.748.1674134576651; Thu, 19
+ Jan 2023 05:22:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-2-hdegoede@redhat.com>
-In-Reply-To: <20230119130053.111344-2-hdegoede@redhat.com>
+References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-3-hdegoede@redhat.com>
+In-Reply-To: <20230119130053.111344-3-hdegoede@redhat.com>
 From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 19 Jan 2023 15:21:12 +0200
-Message-ID: <CAHp75Ve1WtkyvLDHmrmJT8erqZn2B1m0ak=PSiy5cWWF-11HKg@mail.gmail.com>
-Subject: Re: [PATCH v4 01/11] leds: led-class: Add missing put_device() to led_put()
+Date:   Thu, 19 Jan 2023 15:22:20 +0200
+Message-ID: <CAHp75Vd0gS6EPD5WBnL_dEpTmoALTXYm7rGtk4UAU8xZJeHFfQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/11] leds: led-class: Add led_module_get() helper
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -79,48 +79,76 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Jan 19, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> led_put() is used to "undo" a successful of_led_get() call,
-> of_led_get() uses class_find_device_by_of_node() which returns
-> a reference to the device which must be free-ed with put_device()
-> when the caller is done with it.
+> Split out part of of_led_get() into a generic led_module_get() helper
+> function.
 >
-> Add a put_device() call to led_put() to free the reference returned
-> by class_find_device_by_of_node().
->
-> And also add a put_device() in the error-exit case of try_module_get()
-> failing.
+> This is a preparation patch for adding a generic (non devicetree specific)
+> led_get() function.
 
-This sounds to me like a bugfix. Why not the Fixes tag?
 Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 > ---
->  drivers/leds/led-class.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Changes in v4:
+> - Rename helper from __led_get() to led_module_get()
+> ---
+>  drivers/leds/led-class.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 >
 > diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
-> index 6a8ea94834fa..7391d2cf1370 100644
+> index 7391d2cf1370..743d97b082dc 100644
 > --- a/drivers/leds/led-class.c
 > +++ b/drivers/leds/led-class.c
-> @@ -241,8 +241,10 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+> @@ -215,6 +215,23 @@ static int led_resume(struct device *dev)
 >
->         led_cdev = dev_get_drvdata(led_dev);
+>  static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
 >
-> -       if (!try_module_get(led_cdev->dev->parent->driver->owner))
+> +static struct led_classdev *led_module_get(struct device *led_dev)
+> +{
+> +       struct led_classdev *led_cdev;
+> +
+> +       if (!led_dev)
+> +               return ERR_PTR(-EPROBE_DEFER);
+> +
+> +       led_cdev = dev_get_drvdata(led_dev);
+> +
 > +       if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
 > +               put_device(led_cdev->dev);
->                 return ERR_PTR(-ENODEV);
+> +               return ERR_PTR(-ENODEV);
 > +       }
->
->         return led_cdev;
->  }
-> @@ -255,6 +257,7 @@ EXPORT_SYMBOL_GPL(of_led_get);
->  void led_put(struct led_classdev *led_cdev)
+> +
+> +       return led_cdev;
+> +}
+> +
+>  /**
+>   * of_led_get() - request a LED device via the LED framework
+>   * @np: device node to get the LED device from
+> @@ -226,7 +243,6 @@ static SIMPLE_DEV_PM_OPS(leds_class_dev_pm_ops, led_suspend, led_resume);
+>  struct led_classdev *of_led_get(struct device_node *np, int index)
 >  {
->         module_put(led_cdev->dev->parent->driver->owner);
-> +       put_device(led_cdev->dev);
+>         struct device *led_dev;
+> -       struct led_classdev *led_cdev;
+>         struct device_node *led_node;
+>
+>         led_node = of_parse_phandle(np, "leds", index);
+> @@ -236,17 +252,7 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+>         led_dev = class_find_device_by_of_node(leds_class, led_node);
+>         of_node_put(led_node);
+>
+> -       if (!led_dev)
+> -               return ERR_PTR(-EPROBE_DEFER);
+> -
+> -       led_cdev = dev_get_drvdata(led_dev);
+> -
+> -       if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
+> -               put_device(led_cdev->dev);
+> -               return ERR_PTR(-ENODEV);
+> -       }
+> -
+> -       return led_cdev;
+> +       return led_module_get(led_dev);
 >  }
->  EXPORT_SYMBOL_GPL(led_put);
+>  EXPORT_SYMBOL_GPL(of_led_get);
 >
 > --
 > 2.39.0
