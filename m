@@ -2,77 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1775673B04
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 15:02:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6654D673B40
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 15:06:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230282AbjASOCr (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 09:02:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
+        id S231519AbjASOGq (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 09:06:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231328AbjASOCl (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 09:02:41 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B147ED6C;
-        Thu, 19 Jan 2023 06:02:08 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id kt14so5933217ejc.3;
-        Thu, 19 Jan 2023 06:02:08 -0800 (PST)
+        with ESMTP id S231346AbjASOGH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 09:06:07 -0500
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 257FD7ED4D;
+        Thu, 19 Jan 2023 06:05:25 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id z9so1596286qtv.5;
+        Thu, 19 Jan 2023 06:05:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5kHbDEn6Sxe+uk86dDydXegy6EfeykEDiCkIcsYDge4=;
-        b=BBgdG2kq5VvTXe5sXyyRylMRItJBtYHf/OTyz3R9Eg/Wb5SOhXw9tqQaWJgER6yrhT
-         HQCHP86oaoCNQPdEsMsSNstp7ZT8ygSCx7THCOnVgsIx9cg49UmS6iH+oOt1QOMMwbk3
-         d24kfbm7r37Lq30YXJm6bZzzkOyveDJRreCMnlCAQX+lJutiyDaUV3IYtxh40e/SMT/5
-         j42rqCIfckKosyf+gYJeTdifCs4bSCyEb7b3g9AkbTiswiQvyFNUrh9ibOSi4W2/jt0M
-         7At2wEHxGwwk3mOIl2crUOpzon1VyUWoFvpWhqcr4CbfHwC3nubzb4Tj1akiwTdCad3m
-         L+jw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ft7thjbRH4LJ4g7+2BJEIJ9urL8mlxCTfapdcA4PqOw=;
+        b=HyN2Alg0QrsNjLNYPsCofmAJLoKDcGujNS5jA9XNFa368CIhjpDmx5yU+7YVKsTkeO
+         sxR+g9sRZ9sW2TBq1IGxcRHAw8lAklG/uUD9Ihb5LIWyNe130ZvJy8KKT+i8UHFm8DAg
+         HkSbdaFxhxSN2/AAAMtDl9ry9D8nNgmn+7q+uQHlBWL1fUOjwf+5j9G/MM7tmnNvN1s2
+         hrjeqiqUC/T04jz7Uffvqdi5ODIqyey8LgPTtrYNzVreUfBkjmeFkXhSknfEXY20C6d0
+         0qO2myc1jCpfZffpLK13Avo/hoDL0sBe6RgvoYA6LvEA9SY3YNo6yXNzmSrSJGYsFLHX
+         1cyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5kHbDEn6Sxe+uk86dDydXegy6EfeykEDiCkIcsYDge4=;
-        b=0ZErx7RlpkypN3EQZbmy/EHLIAY+PtP2XPVyPCxOs71EJPnoI6TUw8BqFMl4aQeQV0
-         MZKZLWRVPD6bjhk2jZ40zx6KxTfVpgbdI2DSs7Il15recbfsI78Zy4YiA5qxJ2Thf97T
-         SvGOgL/jYWAS2NU6huMvRJz0R+5lsnSIAfrqaZB6nzRCcY6gBNizKVAXPNRtvqT4cKEW
-         nW8e+VOxtZkAAq4wQ6gGK6uEP2LXOUxQG/jsRl9MgCTsOhBuDH9Ept4RnqlhZAQf2g3t
-         9iR13tV5ANzbtDRTEX33ZIEfCPqBdtrNduXxLrFHoxc6WxuCfEWgFTLbzAOoWMpzWl2b
-         LA1g==
-X-Gm-Message-State: AFqh2krYrPCQMeacyhhH/iGFT7PFSCyaCD1chB/EelHjgS7heMktcY6f
-        rAQlmOXFoiwC1PUkgUaB7OI=
-X-Google-Smtp-Source: AMrXdXvkf9BGaYt7OUJJWW3+FUYSgrinvN+X6OZp4IrfSfz8ARnEosaoym+MVxI1FkLLdbfeOTBIgw==
-X-Received: by 2002:a17:907:c606:b0:870:d9a:9ebb with SMTP id ud6-20020a170907c60600b008700d9a9ebbmr7594811ejc.38.1674136926957;
-        Thu, 19 Jan 2023 06:02:06 -0800 (PST)
-Received: from [192.168.2.1] (81-204-249-205.fixed.kpn.net. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id la17-20020a170907781100b0084d3f3f9984sm14614436ejc.114.2023.01.19.06.02.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jan 2023 06:02:06 -0800 (PST)
-Message-ID: <bf2f27cf-b0bc-a867-9f2f-c161f72a46c8@gmail.com>
-Date:   Thu, 19 Jan 2023 15:02:05 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ft7thjbRH4LJ4g7+2BJEIJ9urL8mlxCTfapdcA4PqOw=;
+        b=28L7jkL74pP8S0JL60birJVgdFVj2x8Y562VraUW88CqKn9QOCORfZUak4RiYJn4QA
+         p9GgY53ClyYugrCAEjM7zVKfebSDZ6bb2P/+ezz0jQmBi/lQKr8DOsv+IqDokjjXOqbG
+         lIS+8xKKMrB3gzPZmbM7fqvD35LXDrA0PIJDo03Tcg+Pf2r1kvz7swqWUGlayHIqiCUB
+         khGC+IHm7b5uT0W5qC8rar+wIjHOR1Yf8SK2A0HKn82tQehaLXuvd0YGj8RtZQ5VTM/q
+         jTToD4MYIuv5faTLEGPGN+S6J6J9oQ5Pkb8VF8u5HjiZ7uJN2yr4ilHMq0sM36HRCs7F
+         gHEQ==
+X-Gm-Message-State: AFqh2koETem6UaSta7i07a5OQ08w4BiHoeGQo/ZQ4XM6rXD2yLnq9STM
+        JiZpi9PZwygTIoopfRrv7lETpCDtb59riE86R9VrvzpKVOAjRw==
+X-Google-Smtp-Source: AMrXdXtpdkaiJY+9UQssHRSKf8fV67Umulvs+fCQ/+/WV37TboW6oXmuyl49po/RcLfB4bPlBhIwo2sdLJTkXqdAV3U=
+X-Received: by 2002:a05:622a:5c8c:b0:3b6:30c5:6d26 with SMTP id
+ ge12-20020a05622a5c8c00b003b630c56d26mr529704qtb.429.1674137124390; Thu, 19
+ Jan 2023 06:05:24 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-From:   Johan Jonker <jbx6244@gmail.com>
-Subject: [RFC PATCH v1 3/3] arm64: dts: rockchip: add gpio-ranges property to
- gpio nodes
-To:     linus.walleij@linaro.org, brgl@bgdev.pl
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        heiko@sntech.de, linux-gpio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kever.yang@rock-chips.com, sjg@chromium.org,
-        philipp.tomsich@vrull.eu, john@metanate.com,
-        quentin.schulz@theobroma-systems.com
-References: <91a339b3-f233-d7f6-54d8-061b1cd6a6ba@gmail.com>
-Content-Language: en-US
-In-Reply-To: <91a339b3-f233-d7f6-54d8-061b1cd6a6ba@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-5-hdegoede@redhat.com>
+In-Reply-To: <20230119130053.111344-5-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Jan 2023 16:04:48 +0200
+Message-ID: <CAHp75VcCEJVx71H9MqNqPP+KAMDzgpx5v1P9h_h375ejeMa2+g@mail.gmail.com>
+Subject: Re: [PATCH v4 04/11] leds: led-class: Add generic [devm_]led_get()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,263 +77,61 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Add a gpio-ranges property to Rockchip gpio nodes to be
-independent from aliases and probe order for our bank id.
+On Thu, Jan 19, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Add a generic [devm_]led_get() method which can be used on both devicetree
+> and non devicetree platforms to get a LED classdev associated with
+> a specific function on a specific device, e.g. the privacy LED associated
+> with a specific camera sensor.
+>
+> Note unlike of_led_get() this takes a string describing the function
+> rather then an index. This is done because e.g. camera sensors might
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
+than
 
-Number of pins per bank not checked with datasheet.
-Use default 32 for now.
----
- arch/arm64/boot/dts/rockchip/px30.dtsi   | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3308.dtsi | 5 +++++
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3368.dtsi | 4 ++++
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 5 +++++
- arch/arm64/boot/dts/rockchip/rk356x.dtsi | 5 +++++
- 6 files changed, 27 insertions(+)
+> have a privacy LED, or a flash LED, or both and using an index
+> approach leaves it unclear what the function of index 0 is if there is
+> only 1 LED.
+>
+> This uses a lookup-table mechanism for non devicetree platforms.
+> This allows the platform code to map specific LED class_dev-s to a specific
+> device,function combinations this way.
+>
+> For devicetree platforms getting the LED by function-name could be made
+> to work using the standard devicetree pattern of adding a -names string
+> array to map names to the indexes.
 
-diff --git a/arch/arm64/boot/dts/rockchip/px30.dtsi b/arch/arm64/boot/dts/rockchip/px30.dtsi
-index 4f6959eb5..9fcc0d0f3 100644
---- a/arch/arm64/boot/dts/rockchip/px30.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/px30.dtsi
-@@ -1387,6 +1387,7 @@
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&pmucru PCLK_GPIO0_PMU>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <2>;
+...
 
- 			interrupt-controller;
-@@ -1399,6 +1400,7 @@
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO1>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <2>;
+> +/*
+> + * This is used to tell led_get() device which led_classdev to return for
+> + * a specific consumer device-name, function pair on non devicetree platforms.
+> + * Note all strings must be set.
+> + */
+> +struct led_lookup_data {
+> +       struct list_head list;
+> +       const char *led_name;
+> +       const char *consumer_dev_name;
+> +       const char *consumer_function;
+> +};
 
- 			interrupt-controller;
-@@ -1411,6 +1413,7 @@
- 			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <2>;
+I'm wondering if it would be better to have something like
 
- 			interrupt-controller;
-@@ -1423,6 +1426,7 @@
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO3>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <2>;
+struct led_function_map {
+       const char *name;
+       const char *function;
+};
 
- 			interrupt-controller;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3308.dtsi b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-index dd228a256..38976f413 100644
---- a/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3308.dtsi
-@@ -798,6 +798,7 @@
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO0>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -809,6 +810,7 @@
- 			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO1>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -820,6 +822,7 @@
- 			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -831,6 +834,7 @@
- 			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO3>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -842,6 +846,7 @@
- 			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO4>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 128 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index 6d7a7bf72..7ba695728 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -1051,6 +1051,7 @@
- 			clocks = <&cru PCLK_GPIO0>;
+struct led_lookup_data {
+       struct list_head list;
+       const char *dev_name;
+       const struct led_function_map map[];
+};
 
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <2>;
+as you may have more than one LED per the device and it would be a
+more compressed list in this case. I'm basically referring to the GPIO
+lookup table.
 
- 			interrupt-controller;
-@@ -1064,6 +1065,7 @@
- 			clocks = <&cru PCLK_GPIO1>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <2>;
-
- 			interrupt-controller;
-@@ -1077,6 +1079,7 @@
- 			clocks = <&cru PCLK_GPIO2>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <2>;
-
- 			interrupt-controller;
-@@ -1090,6 +1093,7 @@
- 			clocks = <&cru PCLK_GPIO3>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <2>;
-
- 			interrupt-controller;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-index a4c5aaf1f..5a008ed18 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
-@@ -984,6 +984,7 @@
- 			interrupts = <GIC_SPI 0x51 IRQ_TYPE_LEVEL_HIGH>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -997,6 +998,7 @@
- 			interrupts = <GIC_SPI 0x52 IRQ_TYPE_LEVEL_HIGH>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -1010,6 +1012,7 @@
- 			interrupts = <GIC_SPI 0x53 IRQ_TYPE_LEVEL_HIGH>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -1023,6 +1026,7 @@
- 			interrupts = <GIC_SPI 0x54 IRQ_TYPE_LEVEL_HIGH>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 1881b4b71..7eb96fcc6 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -2091,6 +2091,7 @@
- 			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -2104,6 +2105,7 @@
- 			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -2117,6 +2119,7 @@
- 			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -2130,6 +2133,7 @@
- 			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-@@ -2143,6 +2147,7 @@
- 			interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>;
-
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 128 32>;
- 			#gpio-cells = <0x2>;
-
- 			interrupt-controller;
-diff --git a/arch/arm64/boot/dts/rockchip/rk356x.dtsi b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-index eed0059a6..870b4d9c6 100644
---- a/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk356x.dtsi
-@@ -1808,6 +1808,7 @@
- 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&pmucru PCLK_GPIO0>, <&pmucru DBCLK_GPIO0>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -1819,6 +1820,7 @@
- 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO1>, <&cru DBCLK_GPIO1>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -1830,6 +1832,7 @@
- 			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO2>, <&cru DBCLK_GPIO2>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -1841,6 +1844,7 @@
- 			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO3>, <&cru DBCLK_GPIO3>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-@@ -1852,6 +1856,7 @@
- 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cru PCLK_GPIO4>, <&cru DBCLK_GPIO4>;
- 			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 128 32>;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
---
-2.20.1
-
+-- 
+With Best Regards,
+Andy Shevchenko
