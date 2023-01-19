@@ -2,64 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93D95673FF6
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 18:29:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A6C567402F
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 18:41:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230054AbjASR3C (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 12:29:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38704 "EHLO
+        id S229852AbjASRli (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 12:41:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230050AbjASR27 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 12:28:59 -0500
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A13EE7E4A6;
-        Thu, 19 Jan 2023 09:28:48 -0800 (PST)
-Received: from [192.168.1.139] ([37.4.248.41]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mzyi6-1oXrRJ0Xt0-00x5OC; Thu, 19 Jan 2023 18:28:31 +0100
-Message-ID: <b16c0134-b8a6-573c-4ad9-c4620fc98d5c@i2se.com>
-Date:   Thu, 19 Jan 2023 18:28:27 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 0/4] gpiolib: get rid of exessive
- ->of_gpio_ranges_fallback()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+        with ESMTP id S230252AbjASRl1 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 12:41:27 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3454CE52;
+        Thu, 19 Jan 2023 09:41:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674150080; x=1705686080;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TxXDwRveZtxucvUYmAPZ/GPhSHbN8IenrbMpJ2+g3fI=;
+  b=O9/bzeomdYHsNPTFqOZHviOEHDj5bwSV89x+gK+WR2l27EA23gPa3RgN
+   VvZ48QRUKGtFO3ZCpwjWPORz0nLBYSah2kjNnwKGJAybEtFPU1ARZWHPQ
+   IS6HDHnlcFRU5NtvBkd++i+x4OZ+rLRLWcnKrpphpghXKmEuNS5O7Qvwd
+   fjVmmTRLDRjlDwZs/bjLy1Oxh2GE70D1s6YhltuRXt+yIkRt+CxGxVYuG
+   WRIJNT8xB1H2/j1752Qnqe/ZFvXf80zA6J3e4pcEaW4YXMlHS58a2pYEx
+   OKNV3qcpfraNdF5In8BJSNWbNq9/CshZ91BIt2N4WdpRSb52Hrk4lbC+5
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="326638866"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="326638866"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 09:41:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="610146349"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="610146349"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP; 19 Jan 2023 09:41:14 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pIYuW-00BnBe-1i;
+        Thu, 19 Jan 2023 19:41:12 +0200
+Date:   Thu, 19 Jan 2023 19:41:12 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Stefan Wahren <stefan.wahren@i2se.com>
+Cc:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
         Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Ray Jui <rjui@broadcom.com>,
         Scott Branden <sbranden@broadcom.com>,
         Broadcom internal kernel review list 
         <bcm-kernel-feedback-list@broadcom.com>
+Subject: Re: [PATCH v3 0/4] gpiolib: get rid of exessive
+ ->of_gpio_ranges_fallback()
+Message-ID: <Y8mAuFCI2vHqNKvw@smile.fi.intel.com>
 References: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Z/9yRM+iSc0SiMv8AvZINVzfAQcaGFv+QRJ7oGfjFC54VAuylI3
- SZ+qYsKsxV8vBPVklmO4e1rMYuo9nzLtQhBbfcyPxiTGNNLskPL/KZ+0SYCJPYzgZxt7m4k
- AmbL8bbXoSuf6KFDx1NtrDeLJHRh2jrGqXh0fDqkD4yTdwFkrjWH/vFMvLT/3Mq0qrAtSor
- ARoRFfmTZoHfPqrRp5NIQ==
-UI-OutboundReport: notjunk:1;M01:P0:YJCObP7Zmsg=;+MbDRnIRKM8+p3rT3vi2DFL1Bgf
- 0wt5aJSJ1ijrbN4WRR/lMzwLoMM+st/vv34oy7RQz9lPj3xZboy1H5uVuSthsvFP8xl5IlwyV
- DjbATypWLO8mb2Nbu7A1icqezGH0Dcyl1RMQ/Vmf6ESOn3Nz0tN8LqIA0jRhoi+b3AqxscjXm
- pm6dDJzUyQAllVZH6x3DgiJ8Xqqq32Fnv1kmw9kJmvegs7McGvsmUGdxScU48dtKKsS/feFwk
- 3W9GD5pCdArZq8R5+DMKV4l4Bsv0GQm0tBpQXT3LJfAYqZk4utKpw5l/yqTsxP24uTQiQ2VYX
- VU/e/n07+RHZ8cswk2xo9d/0K0mReEjkSf0YTFBUc7zunD8KripOQ1/D354LNSjQKNuu9AKvv
- PSLO4aHXTEr6gDDxHwjmO6oplpNMyN3eNtKKAAJYdGnDSF8bCsownj0qSBAIt5cwUwXky9tR1
- fUeculjxGrCiqkxCwTBTQXH/LCAkqWXP03wChJrXUZGI/JYEmy+7RWNXokV70DwHbK9cQrCty
- xe/57X/C9/qISYHBghaddqf/Td5MB+vnwYmVeeRpOIyjOUBuk1eXYE89MPtCxQC+pjN4eW8Se
- Km3LnbdjDAhbbGBBYcxYsqK8qLaUwhXU+r7AGuezaKbtwuRAzPw2bkHo7xdDaYkaj6Hj++/Wm
- 2K8eJBKK45VvLdxKnN29b7x3xgJWEMx7xOFUYAgusQ==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+ <b16c0134-b8a6-573c-4ad9-c4620fc98d5c@i2se.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b16c0134-b8a6-573c-4ad9-c4620fc98d5c@i2se.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,34 +77,23 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi Andy,
+On Thu, Jan 19, 2023 at 06:28:27PM +0100, Stefan Wahren wrote:
+> Hi Andy,
+> 
+> Am 13.01.23 um 22:53 schrieb Andy Shevchenko:
+> > The ->of_gpio_ranges_fallback() repeats the idea that lies behind
+> > ->add_pin_ranges(), while the latter covers more cases that the former
+> > hook. Drop the former one for good.
+> 
+> i successful tested booting of this series with multi_v7_defconfig on
+> Raspberry Pi 4 (with and without gpio-ranges in DTB):
+> 
+> Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Am 13.01.23 um 22:53 schrieb Andy Shevchenko:
-> The ->of_gpio_ranges_fallback() repeats the idea that lies behind
-> ->add_pin_ranges(), while the latter covers more cases that the former
-> hook. Drop the former one for good.
+Thank you!
 
-i successful tested booting of this series with multi_v7_defconfig on 
-Raspberry Pi 4 (with and without gpio-ranges in DTB):
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
 
->
-> Changelog v3:
-> - moved check of the property presense to GPIO library
-> - split out the refcount fix in a separate patch
-> - added cover letter
->
-> Andy Shevchenko (4):
->    gpiolib: Check "gpio-ranges" before calling ->add_pin_ranges()
->    pinctrl: bcm2835: Remove of_node_put() in
->      bcm2835_of_gpio_ranges_fallback()
->    pinctrl: bcm2835: Switch to use ->add_pin_ranges()
->    Revert "gpiolib: of: Introduce hook for missing gpio-ranges"
->
->   drivers/gpio/gpiolib-of.c             |  5 -----
->   drivers/gpio/gpiolib.c                |  8 ++++++++
->   drivers/pinctrl/bcm/pinctrl-bcm2835.c | 10 ++++------
->   include/linux/gpio/driver.h           | 12 ------------
->   4 files changed, 12 insertions(+), 23 deletions(-)
->
