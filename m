@@ -2,67 +2,74 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAEFC67395C
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:04:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5401F6739DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 14:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjASNEM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 08:04:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43068 "EHLO
+        id S229593AbjASNWA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 08:22:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbjASNDZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:03:25 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73DC717AD
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 05:01:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674133318;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kEV63ing633hRx+u7oI30wIVks8+J7FOW33mOov+xeI=;
-        b=RmDi2Jw/qS2u96LLPq1bq7AFpUOqprvTyKpV1HsmMaZxceWKks5AfCAoQ/POLx0elL9uVI
-        n3ZfPyMfo6nibgE5DUzB/6WvBoJMp/328U+pO6OEFcoomq7eryg97rIznBAVjjeL6vOVzj
-        LCbXahJoRdM6i9sn9O23gahF7ucI+gY=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-631-KCL1uzYHMXu5M2PmYbSgSw-1; Thu, 19 Jan 2023 08:01:55 -0500
-X-MC-Unique: KCL1uzYHMXu5M2PmYbSgSw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A00D23C18351;
-        Thu, 19 Jan 2023 13:01:54 +0000 (UTC)
-Received: from localhost.localdomain (unknown [10.39.194.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 74F581401C34;
-        Thu, 19 Jan 2023 13:01:51 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
+        with ESMTP id S229968AbjASNVv (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 08:21:51 -0500
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBF183;
+        Thu, 19 Jan 2023 05:21:49 -0800 (PST)
+Received: by mail-qt1-x834.google.com with SMTP id x7so1459254qtv.13;
+        Thu, 19 Jan 2023 05:21:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=I2YXU2FJo+t/nPqAWwtxUT6+gPscBXDImBHIMu0OQoE=;
+        b=mZ1wsengVANkOpLmveEJz/cZ/OeeZqyyGrfyOojZoGAMu1KFEhdcSfXX91CJxKUUN3
+         9RKbeafQCjnksI1Hq5+YqajMUTthJJIcGvZfCxF7Nx77igqbWTMMfvYap/Og1VTHgMT7
+         NXxmqgd/MapFLBWzM7mRoSAT450SCn3/ZgC8rHN5NUDf3cN0z2eOmpmfdN6lQ1te/C5I
+         CTnnlLtGUa8GqW1VDTtd2uf+1jLC/E2iHMtgspbwDc4A9YxPg0nqvKVjbM+5MmtGvDOe
+         ApTeEer/LKLao15XbWpQKYw1gmB6+QO5kZqQHYWIZW8uCTOGcYqZPMghbSvLD9aiNWQw
+         flpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I2YXU2FJo+t/nPqAWwtxUT6+gPscBXDImBHIMu0OQoE=;
+        b=sgqv+tdO9xINtatnbMOt3n9f8ILuhlFwbjVUouhqG5ndS+sUF0InlpOIyH5WcquCiT
+         IrL55hYS/VrUsYF9f+hC31DOsq66/BJ9iiCaOixrZoxRsq73xirkpt2wVHP4G+7zNZ2R
+         JXjfl6mX6rGQjWfhcZGE0rLYC5u0xNyg/9xfbUJaVlmLi+EDpVqLZXjku0sUjohayAmk
+         Ou2UULkB3gEiLizq6ux3sO35qEsBqG0k4cGu81WxOSPpPHjVVtlnamlfzmEEfgBuOSfh
+         oz3eCHuSQOMJtcbme+PlmjjjhFD9xbtOEcmOcgLoPoKAl9k1y8oWI31Sfo/EEqxf0CP1
+         0IAg==
+X-Gm-Message-State: AFqh2kqICXE6uP2AwMYyGnLTe96OJpl9dnGRCriEoyRju1/qRgJc5m66
+        3ONWgHVvjM/HW5yGJxnQEiwHZ/cu0tXD1Fr8J4M=
+X-Google-Smtp-Source: AMrXdXt0K5GhdCCtT122Dc/CITFbyoRnhv2Lafu/DlF77tVGiHkxbuQDut8cAmeznttld4vXHOVNpmvTniAz1BscjIE=
+X-Received: by 2002:a05:622a:4115:b0:3b0:736:9de with SMTP id
+ cc21-20020a05622a411500b003b0073609demr568846qtb.61.1674134508725; Thu, 19
+ Jan 2023 05:21:48 -0800 (PST)
+MIME-Version: 1.0
+References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-2-hdegoede@redhat.com>
+In-Reply-To: <20230119130053.111344-2-hdegoede@redhat.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Thu, 19 Jan 2023 15:21:12 +0200
+Message-ID: <CAHp75Ve1WtkyvLDHmrmJT8erqZn2B1m0ak=PSiy5cWWF-11HKg@mail.gmail.com>
+Subject: Re: [PATCH v4 01/11] leds: led-class: Add missing put_device() to led_put()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
         Lee Jones <lee@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
         Daniel Scally <djrscally@gmail.com>,
         Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
         linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
         Mark Pearson <markpearson@lenovo.com>,
         Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
         linux-media@vger.kernel.org
-Subject: [PATCH v4 11/11] platform/x86: int3472/discrete: Get the polarity from the _DSM entry
-Date:   Thu, 19 Jan 2023 14:00:53 +0100
-Message-Id: <20230119130053.111344-12-hdegoede@redhat.com>
-In-Reply-To: <20230119130053.111344-1-hdegoede@redhat.com>
-References: <20230119130053.111344-1-hdegoede@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,112 +77,56 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-According to:
-https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
+On Thu, Jan 19, 2023 at 3:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> led_put() is used to "undo" a successful of_led_get() call,
+> of_led_get() uses class_find_device_by_of_node() which returns
+> a reference to the device which must be free-ed with put_device()
+> when the caller is done with it.
+>
+> Add a put_device() call to led_put() to free the reference returned
+> by class_find_device_by_of_node().
+>
+> And also add a put_device() in the error-exit case of try_module_get()
+> failing.
 
-Bits 31-24 of the _DSM pin entry integer value codes the active-value,
-that is the actual physical signal (0 or 1) which needs to be output on
-the pin to turn the sensor chip on (to make it active).
+This sounds to me like a bugfix. Why not the Fixes tag?
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
-pin needs to be 0 to take the chip out of reset. IOW in this case the reset
-signal is active-high rather then the default active-low.
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+>  drivers/leds/led-class.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+> index 6a8ea94834fa..7391d2cf1370 100644
+> --- a/drivers/leds/led-class.c
+> +++ b/drivers/leds/led-class.c
+> @@ -241,8 +241,10 @@ struct led_classdev *of_led_get(struct device_node *np, int index)
+>
+>         led_cdev = dev_get_drvdata(led_dev);
+>
+> -       if (!try_module_get(led_cdev->dev->parent->driver->owner))
+> +       if (!try_module_get(led_cdev->dev->parent->driver->owner)) {
+> +               put_device(led_cdev->dev);
+>                 return ERR_PTR(-ENODEV);
+> +       }
+>
+>         return led_cdev;
+>  }
+> @@ -255,6 +257,7 @@ EXPORT_SYMBOL_GPL(of_led_get);
+>  void led_put(struct led_classdev *led_cdev)
+>  {
+>         module_put(led_cdev->dev->parent->driver->owner);
+> +       put_device(led_cdev->dev);
+>  }
+>  EXPORT_SYMBOL_GPL(led_put);
+>
+> --
+> 2.39.0
+>
 
-And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
-pin needs to be 0 to enable the clk. So in this case the clk-en signal
-is active-low rather then the default active-high.
 
-IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
-is inverted.
-
-Add a check for this and also propagate this new polarity to the clock
-registration.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../platform/x86/intel/int3472/clk_and_regulator.c  |  5 ++++-
- drivers/platform/x86/intel/int3472/common.h         |  2 +-
- drivers/platform/x86/intel/int3472/discrete.c       | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 626e5e86f4e0..1086c3d83494 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -87,7 +87,7 @@ static const struct clk_ops skl_int3472_clock_ops = {
- };
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio)
-+			       struct acpi_resource_gpio *agpio, u32 polarity)
- {
- 	char *path = agpio->resource_source.string_ptr;
- 	struct clk_init_data init = {
-@@ -105,6 +105,9 @@ int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
- 		return dev_err_probe(int3472->dev, PTR_ERR(int3472->clock.ena_gpio),
- 				     "getting clk-enable GPIO\n");
- 
-+	if (polarity == GPIO_ACTIVE_LOW)
-+		gpiod_toggle_active_low(int3472->clock.ena_gpio);
-+
- 	/* Ensure the pin is in output mode and non-active state */
- 	gpiod_direction_output(int3472->clock.ena_gpio, 0);
- 
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 0d4fa7d00b5f..61688e450ce5 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -122,7 +122,7 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
- 					 const char **name_ret);
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio);
-+			       struct acpi_resource_gpio *agpio, u32 polarity);
- void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index b7752c2b798d..96963e30ab6c 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -220,11 +220,11 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	struct int3472_discrete_device *int3472 = data;
- 	struct acpi_resource_gpio *agpio;
- 	union acpi_object *obj;
-+	u8 active_value, type;
- 	const char *err_msg;
- 	const char *func;
- 	u32 polarity;
- 	int ret;
--	u8 type;
- 
- 	if (!acpi_gpio_get_io_resource(ares, &agpio))
- 		return 1;
-@@ -248,6 +248,15 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	int3472_get_func_and_polarity(type, &func, &polarity);
- 
-+	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
-+	active_value = obj->integer.value >> 24;
-+	if (!active_value)
-+		polarity ^= GPIO_ACTIVE_LOW;
-+
-+	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
-+		agpio->resource_source.string_ptr, agpio->pin_table[0],
-+		(polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
-+
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 	case INT3472_GPIO_TYPE_POWERDOWN:
-@@ -257,7 +266,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
--		ret = skl_int3472_register_clock(int3472, agpio);
-+		ret = skl_int3472_register_clock(int3472, agpio, polarity);
- 		if (ret)
- 			err_msg = "Failed to register clock\n";
- 
 -- 
-2.39.0
-
+With Best Regards,
+Andy Shevchenko
