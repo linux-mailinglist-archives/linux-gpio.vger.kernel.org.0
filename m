@@ -2,104 +2,116 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC2D9674240
-	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 20:08:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6474674311
+	for <lists+linux-gpio@lfdr.de>; Thu, 19 Jan 2023 20:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbjASTIK (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 19 Jan 2023 14:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        id S230050AbjASTsX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 19 Jan 2023 14:48:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbjASTHL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 14:07:11 -0500
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 183DA966FD;
-        Thu, 19 Jan 2023 11:06:19 -0800 (PST)
-Received: by mail-pj1-x1036.google.com with SMTP id a9-20020a17090a740900b0022a0e51fb17so135813pjg.3;
-        Thu, 19 Jan 2023 11:06:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Xpxp7XO5sHsJ3lfzTlYxihhbIWhrIJucAXxN9hxl+dg=;
-        b=FREbxc9Qy3HiT086pEfzb3u7yMxdQQY6pmDTfhdTpr3nAcl+UV5k/sLGoOyF+m+zcd
-         la7GHQ9xZzBpLAPDtbarVXD10pdoeeaHqaEAEfksd2h2nhxaWRDxZW5aO3apUt3tRlsH
-         jsYYJkRjqpFI2FjAW4C8VUlDqHIUYmHRnZmGqMTk9E+a2N8IbHf943QI7Y/mMkKh7kia
-         qPauKgmYrXeLl5yXewYjwMcBMpS3HrtKu2qLs2YM4YUs2uAcdRdgkHc/lWgt7pntuPSj
-         x7lPqyiSXpasmSrhz8WjRNh6hmTYKrYBhX0PCZD7W5+eUWB/Xw4g5WMpMrsPGuOwVotr
-         cpiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xpxp7XO5sHsJ3lfzTlYxihhbIWhrIJucAXxN9hxl+dg=;
-        b=EIqPccG/aQ+GFfd+D4ebNBSQv7stBBx7+W5MTouHuLLO6kQYehbosjsE7BaAgoWYSw
-         4xHEQ1X7YVKFy2HEejJdjKRpzJNubgoQQjL+KqmKxMBKpeW7hjgbyxN1zrQbTZLX8NmS
-         3lAkbZCYQUiT/pcuXozyQScm5XeA12t3eC9Q63HA+i+DBpkeIXEkXs+nwLGt1Pmc9ZEv
-         QJtZeLLOaBEfscSwHnU9w3NL3W4EbksPbRFfZNHUwEf5x7rStGma+Rh+XILXsrEt+fbd
-         iXICm+DiFeLBps1778mMeVymWmARghr66aSYwvbz2KmDDD2Ec93ImAkht15C0cqDj0Ts
-         iFug==
-X-Gm-Message-State: AFqh2krxA6MIjfKDOS6UzADyaI4fk711ybVNf2YBkcOtNl7FxfnQB+a/
-        x5ig9nt9DEgpt2kUTzhV/BA=
-X-Google-Smtp-Source: AMrXdXvnQ3a0kXh2UwRDjq1SPGKPM5tMn2rlGLjHsP24ziyycXfEdP2gXJT7cg+xD4J9MmhtVCzCmA==
-X-Received: by 2002:a17:902:cad3:b0:194:7abf:742b with SMTP id y19-20020a170902cad300b001947abf742bmr10801145pld.47.1674155176064;
-        Thu, 19 Jan 2023 11:06:16 -0800 (PST)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id u12-20020a17090341cc00b001888cadf8f6sm6794374ple.49.2023.01.19.11.06.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jan 2023 11:06:15 -0800 (PST)
-Message-ID: <4d26bc29-5c85-1f30-388b-539bc6a3f09a@gmail.com>
-Date:   Thu, 19 Jan 2023 11:06:02 -0800
+        with ESMTP id S229907AbjASTsP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 19 Jan 2023 14:48:15 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBBDD7C840;
+        Thu, 19 Jan 2023 11:48:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674157694; x=1705693694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dS5R5RFwuXsctlyU0HLNUqHNVCCKgAon71otDngEy3g=;
+  b=gKxNFdzOVwJr1vVAnf3/SarsY1X/y4gNEnLvWV6qASn/TzruVA4D0elu
+   IpojRCkdaK6fzJfRUTMHR61ZwOswk1oqbgQ0FkCxSfX/QIoqDp3FBAteQ
+   nfwqcfza77mpeZ4q8wZGsfuG8tZHWbHSjZiG2ngwf7VRdRYWvBz2sQzkS
+   zP9mzUVSpVCFwwR1ZcYlGWWs/Dvtl+PlZ0G2BizvtNxjf+9VNDPxkx4yN
+   ee04Od/ymbzM3hTQGCyln5G0dm7hK0jkAhgj1wuHTW4AhEcK3bqfFGwdO
+   i1MDhoV0lXEMp16lskSfBu3TQbN+IqWA91N93ueJ6Wtj8C6X1aMjDBCG+
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="324087799"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="324087799"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 11:48:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="989110128"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="989110128"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Jan 2023 11:48:10 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pIatN-0001ni-14;
+        Thu, 19 Jan 2023 19:48:09 +0000
+Date:   Fri, 20 Jan 2023 03:47:23 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-media@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>
+Subject: Re: [PATCH v4 06/11] media: v4l2-core: Built async and fwnode code
+ into videodev.ko
+Message-ID: <202301200320.AbLvd1xh-lkp@intel.com>
+References: <20230119130053.111344-7-hdegoede@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v3 0/4] gpiolib: get rid of exessive
- ->of_gpio_ranges_fallback()
-Content-Language: en-US
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>
-References: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230113215352.44272-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119130053.111344-7-hdegoede@redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 1/13/23 13:53, Andy Shevchenko wrote:
-> The ->of_gpio_ranges_fallback() repeats the idea that lies behind
-> ->add_pin_ranges(), while the latter covers more cases that the former
-> hook. Drop the former one for good.
-> 
-> Changelog v3:
-> - moved check of the property presense to GPIO library
-> - split out the refcount fix in a separate patch
-> - added cover letter
+Hi Hans,
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+I love your patch! Yet something to improve:
 
-Thanks!
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.2-rc4]
+[cannot apply to media-tree/master pavel-leds/for-next next-20230119]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Hans-de-Goede/leds-led-class-Add-missing-put_device-to-led_put/20230119-210441
+patch link:    https://lore.kernel.org/r/20230119130053.111344-7-hdegoede%40redhat.com
+patch subject: [PATCH v4 06/11] media: v4l2-core: Built async and fwnode code into videodev.ko
+config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20230120/202301200320.AbLvd1xh-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/adfeffb48aad34dd2148e22caaf13d67cd92c285
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Hans-de-Goede/leds-led-class-Add-missing-put_device-to-led_put/20230119-210441
+        git checkout adfeffb48aad34dd2148e22caaf13d67cd92c285
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   ld: vmlinux.o: in function `videodev_init':
+>> v4l2-dev.c:(.init.text+0x4c7c5): undefined reference to `v4l2_async_debugfs_init'
+   ld: vmlinux.o: in function `videodev_exit':
+>> v4l2-dev.c:(.exit.text+0x1f95): undefined reference to `v4l2_async_debugfs_exit'
+
 -- 
-Florian
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
