@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C4DA674F25
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 09:09:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 330CB674FD3
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 09:53:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230375AbjATIJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 03:09:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
+        id S229447AbjATIw7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 03:52:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230373AbjATIJW (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 03:09:22 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4191A8534B;
-        Fri, 20 Jan 2023 00:09:21 -0800 (PST)
+        with ESMTP id S229608AbjATIw6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 03:52:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C9A3F290;
+        Fri, 20 Jan 2023 00:52:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F1432B82079;
-        Fri, 20 Jan 2023 08:09:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1FCC4339C;
-        Fri, 20 Jan 2023 08:09:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D2D261DD9;
+        Fri, 20 Jan 2023 08:52:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AE1AC433EF;
+        Fri, 20 Jan 2023 08:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674202158;
-        bh=KH0OHgFWAlMLEWamKLwkcAUS3Cf3miV/YcqK/yvTjt0=;
+        s=k20201202; t=1674204775;
+        bh=pF8eNbsbCUeLrwf17GZGAEG7iLgKy0Hf8Yaml2DZ5io=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TGC3seA27YcuIqW7l7QdWoRSC4YaMRFpcDPOJ0rcjTLGHU2iugFpiRiF3cL4brEhf
-         DGHxbmWdhDikvRvIIjRCjMZ7UiJYPuPHHtKVCD+HaLhhNJAw30tVZSnqtYvSW2rcMg
-         MwcsZMvihl/0whuinRk9DqdHXpdGT4w1cmP+Dq3FV/1ibuqVgSx5Fgu7JIzPYhL/cO
-         eG/KljOSBWVIjGixI2gV68V8sCMsluDvmbvPzlQMu4X/ruZ1RBNdOIEqIxZzEUK5Hb
-         SJczFH90f2TKkOh8Eyq/R0ciISYUiTz504OSZAIJZPF3o/ytXD1H02r5j/Ki5dNebq
-         Kb6S7tm63BK0w==
-Date:   Fri, 20 Jan 2023 08:09:11 +0000
-From:   Lee Jones <lee@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH v4 04/11] leds: led-class: Add generic [devm_]led_get()
-Message-ID: <Y8pMJ1XRprFABBFs@google.com>
-References: <20230119130053.111344-1-hdegoede@redhat.com>
- <20230119130053.111344-5-hdegoede@redhat.com>
- <CACRpkdYuHmAwYR24xEz01ub1_mMhqYN65WuoLHCS=094b6AM2w@mail.gmail.com>
+        b=s7kE+dQvqASEqAsrZFKUpB2dr5eN58tfyJlxiWzG4ni9oOYmtuIbMuWMwtJTEinWc
+         6CtafCXFNeS+uP8cjHGKtqasX/oVLAxEoCzqWGUFmNmmU/HloJ38OqIwwduEZsX6vz
+         ACYSTwKK1atxPWAR6KI8sRLO6l5WTcJZcnhQH0sXCeLdxvtAbKxNvqU9vuIhAnlDQS
+         jf5sdHxhkK2dzlqwTTTCHEC+BsS9CmoCzo44ZZ5BplFVLnpGjPBr0IwXhiP8jJNL/W
+         lUgC3/ixOG70bsApLo+bMG7/rGBHoBDkfgy/cQw+AgEAhCxGmZQXQs5PyOYKDAqc07
+         t5vq2EjKcU+qA==
+Date:   Fri, 20 Jan 2023 09:52:52 +0100
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, farbere@amazon.com, itamark@amazon.com
+Subject: Re: [PATCH v5 1/2] pinctrl: Add an API to get the pinctrl pins if
+ initialized
+Message-ID: <Y8pWZDH5zvYbJYCw@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Hanna Hawa <hhhawa@amazon.com>, andriy.shevchenko@linux.intel.com,
+        linus.walleij@linaro.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        dwmw@amazon.co.uk, benh@amazon.com, ronenk@amazon.com,
+        talel@amazon.com, jonnyc@amazon.com, hanochu@amazon.com,
+        farbere@amazon.com, itamark@amazon.com
+References: <20221228164813.67964-1-hhhawa@amazon.com>
+ <20221228164813.67964-2-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="aeP0Kk5FbIutfRbm"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdYuHmAwYR24xEz01ub1_mMhqYN65WuoLHCS=094b6AM2w@mail.gmail.com>
+In-Reply-To: <20221228164813.67964-2-hhhawa@amazon.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -65,40 +65,41 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 20 Jan 2023, Linus Walleij wrote:
 
-> On Thu, Jan 19, 2023 at 2:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> 
-> > Add a generic [devm_]led_get() method which can be used on both devicetree
-> > and non devicetree platforms to get a LED classdev associated with
-> > a specific function on a specific device, e.g. the privacy LED associated
-> > with a specific camera sensor.
-> >
-> > Note unlike of_led_get() this takes a string describing the function
-> > rather then an index. This is done because e.g. camera sensors might
-> > have a privacy LED, or a flash LED, or both and using an index
-> > approach leaves it unclear what the function of index 0 is if there is
-> > only 1 LED.
-> >
-> > This uses a lookup-table mechanism for non devicetree platforms.
-> > This allows the platform code to map specific LED class_dev-s to a specific
-> > device,function combinations this way.
-> >
-> > For devicetree platforms getting the LED by function-name could be made
-> > to work using the standard devicetree pattern of adding a -names string
-> > array to map names to the indexes.
-> >
-> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> > ---
-> > Changes in v4:
-> > - Split out support for led_get() devicetree name-based lookup support
-> >   into a separate RFC patch as there currently are no user for this
-> > - Use kstrdup_const() / kfree_const() for the led_name
-> 
-> This is how I would implement it so:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+--aeP0Kk5FbIutfRbm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Linus, this is all really helpful.
+On Wed, Dec 28, 2022 at 04:48:12PM +0000, Hanna Hawa wrote:
+> Add an API to get the pinctrl pins if it was initialized before driver
+> probed. This API will be used in I2C core to get the device pinctrl
+> information for recovery state change.
+>=20
+> Signed-off-by: Hanna Hawa <hhhawa@amazon.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
--- 
-Lee Jones [李琼斯]
+Applied to for-next, thanks!
+
+
+--aeP0Kk5FbIutfRbm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmPKVmQACgkQFA3kzBSg
+KbatEQ//Q33yje2jGseaoCmxNlQ4L9ZDY/yzBGml4DO8HkaTb3TrBpa1C7DJ4lZ7
+0vm8kdsvLq5ubR8pkRMO0hItw3ijhn2/47scPDlhdtHfweyb84aHC5R/82PM+Ms5
+47OY5qryHS2SWp0p9EbwQNmF8x8GmRz3dAPkKjgp+XWG9aZxnWdyIlckVhcNqJiu
+uZEMkxBQV+3yav6BP05lchV+hXqLQASBbK25N5xkEfF0RWN15o3nEknTBfusAwgr
+9QVI9E2+WGM6Q2lK2uTXhCU3Mv9qO/+JKk+e3FngQbg8BY3m8zLH8ENczcVO4L0y
+kr/Hkq3t0L0Vr53G6OrSxmylU+Q3ZTaBg2jL60I4PMgR3w4TwK+dQ04kyf0h5TnA
+ciKwtPd6dclz4RzvZMKB1e2qS2ZbBoI8a88fR7q0R2PLEsBrrMR69OFzuKaETx+A
+BSxfN1wgNY2QhoIWNs+WcNJ58b6EEIfbUiIHLRqLKr3AmtsvWHiPa80hckGjWZXB
+Eqh4Rfs7ES+Ea1ClYLoAiqAyqm221x/pAVK6wSFBxQu0gRilcmbgafmxxjRKJdpo
+hJ0e7Hi1trq7QrAEpqnIJBTg93lMWRRb5VGsUyy8C2iNj5qT5gR+3r+L0JTQknvZ
+lvbxQcMstd7MPAtqHVOGkr5iLXJY4me+Rh1kzO32Hc/62SFvwDY=
+=Xcpp
+-----END PGP SIGNATURE-----
+
+--aeP0Kk5FbIutfRbm--
