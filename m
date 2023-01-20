@@ -2,80 +2,64 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9DAC6752DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 11:57:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 51966675393
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 12:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjATK5j (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 05:57:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59354 "EHLO
+        id S229831AbjATLqQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 06:46:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjATK5j (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 05:57:39 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34C55926F;
-        Fri, 20 Jan 2023 02:57:33 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id f25-20020a1c6a19000000b003da221fbf48so3368358wmc.1;
-        Fri, 20 Jan 2023 02:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S4Ii5e3QdaHgpxzco45qunbaAsydDjGix7Dw3cejJFE=;
-        b=OYGLgKKAs+7hc4uUd1Uf2kfWjTFqH2Zb5Xbi1J1UsILPq94D8oG4U7cfSr/S52avoX
-         oBylfZWRcfYClOXugMVosVjLw+t/o5g7T3xXx0LDP9NQnfiqH3fB4fX5c+OxNwZaOsSN
-         MkuJULfjLA+z2ZYHeSfQFjsk3TBfuMW06NJPhyAtGFSQY57hfrlu3vRdchgTH050dsHz
-         sh7Y2c21IEXtQdP0JhzcQR7WX6f5eSsIv4J939SutiLKmUCKFRPCPmPfjqk6Jm0L0IcG
-         7GvsAn6TUCf5p4EgoXedkeylOvPko6kngHSXu6Agfo37TVUqQy9dJQBz4TZaK/ZOSJYU
-         nqsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S4Ii5e3QdaHgpxzco45qunbaAsydDjGix7Dw3cejJFE=;
-        b=GP0Je2MDpcB7Lq3XVUftcc9KE1uuQ6ANHQbvljmcuiFllTl7DTtRsNsvlcqAQSkeok
-         ueZfgH3YPRb63qAHpMknD1e4Cx98l2okceAw72YSV4qUjWPKKrwzdOCKoQRHV+D65bfr
-         e3NSA4FKfoFrZZoUxZy8jp9xHp6Nkq14JJo42qVxHzdIH6RjekYklJTsQs5x8edVFt1E
-         G0+/58UkZVX7xLauwO3YB2E9AaEfviY/RkNLBhB4C7uM7+34dfkp8ErL6SkzzElIx3mW
-         B2WoLff8U75mmEWJesoBGS/fLhSAwzhZqXvXGhRptpmcYtmpG2kdKa4UYG06x5S1dNuI
-         V+iw==
-X-Gm-Message-State: AFqh2ko8XX6XC8XzgxgIo293ce9m8FK4kcaOJJY2Mf/7bMxVvKa+bySf
-        GBybDIifMAJTEkn+nYF5SbU=
-X-Google-Smtp-Source: AMrXdXsZQTWcELo0E+WRaY2YZ2jzNC5vg23Fh18wO4KIPz84swiOfZhhsA8iMB2Y/TyA96Pbq+Uv8A==
-X-Received: by 2002:a05:600c:2292:b0:3d3:50b9:b1a1 with SMTP id 18-20020a05600c229200b003d350b9b1a1mr22130930wmf.1.1674212251959;
-        Fri, 20 Jan 2023 02:57:31 -0800 (PST)
-Received: from [192.168.2.177] ([207.188.167.132])
-        by smtp.gmail.com with ESMTPSA id j8-20020a05600c190800b003d9aa76dc6asm2703107wmq.0.2023.01.20.02.57.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Jan 2023 02:57:31 -0800 (PST)
-Message-ID: <18e6d30d-15ee-3d88-e9d3-f8dad6034760@gmail.com>
-Date:   Fri, 20 Jan 2023 11:57:29 +0100
+        with ESMTP id S229518AbjATLqP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 06:46:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4628D95178
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 03:45:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674215133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+xBTgrMv6S8fIj4ApiuQ/EJHLwe2ANp/pmA1QNvT0+4=;
+        b=DRhuzuXPtblQTNgw7PLU7RoLK1N8vHdK+k6Q2ppRD2ec8VLjDKh99LpIbkyI5oPbHaj8Mf
+        XTfB2Le/PGxoPaUkrtQCP5kxw+vvExdkMSXhM8p6PfPYmekg8EM0x7CL9tLSuvbD1V5WU9
+        dLKn8eB2VmFQJXPW8VdhtYIvvI9peGQ=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-436-seib045dNIKrzp_1vQdwcA-1; Fri, 20 Jan 2023 06:45:28 -0500
+X-MC-Unique: seib045dNIKrzp_1vQdwcA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 756773806108;
+        Fri, 20 Jan 2023 11:45:27 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.195.101])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2CB6140EBF6;
+        Fri, 20 Jan 2023 11:45:24 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Lee Jones <lee@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v5 00/11] leds: lookup-table support + int3472/media privacy LED support
+Date:   Fri, 20 Jan 2023 12:45:13 +0100
+Message-Id: <20230120114524.408368-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Content-Language: en-US
-To:     =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        tglx@linutronix.de, maz@kernel.org, lee@kernel.org,
-        linus.walleij@linaro.org, chunfeng.yun@mediatek.com,
-        gregkh@linuxfoundation.org,
-        angelogioacchino.delregno@collabora.com,
-        allen-kh.cheng@mediatek.com, nfraprado@collabora.com,
-        sean.wang@mediatek.com, zhiyong.tao@mediatek.com
-References: <20230101220149.3035048-1-bero@baylibre.com>
- <20230101220149.3035048-8-bero@baylibre.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 7/7] arm64: dts: mediatek: Initial mt8365-evk support
-In-Reply-To: <20230101220149.3035048-8-bero@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,214 +67,109 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi All,
 
+Here is version 5 of my series to adjust the INT3472 code's handling of
+the privacy LED on x86 laptops with MIPI camera(s) so that it will also
+work on devices which have a privacy-LED GPIO but not a clk-enable GPIO
+(so that we cannot just tie the LED state to the clk-enable state).
 
-On 01/01/2023 23:01, Bernhard Rosenkränzer wrote:
-> From: Fabien Parent <fparent@baylibre.com>
-> 
-> This adds minimal support for the Mediatek 8365 SOC and the EVK reference
-> board, allowing the board to boot to initramfs with serial port I/O.
-> 
-> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> [bero@baylibre.com: Removed parts depending on drivers that aren't upstream yet, cleanups, add CPU cache layout, add systimer, fix GIC]
-> Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-> ---
->   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 169 +++++++++
->   arch/arm64/boot/dts/mediatek/mt8365.dtsi    | 378 ++++++++++++++++++++
->   3 files changed, 548 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt8365-evk.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt8365.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index 813e735c5b96d..d78523c5a7dd6 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -47,4 +47,5 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-tomato-r2.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-cherry-tomato-r3.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-demo.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8195-evb.dtb
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8365-evk.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8516-pumpkin.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-> new file mode 100644
-> index 0000000000000..275ea3a0e7085
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
-[...]
-> +		apdma: dma-controller@11000280 {
-> +			compatible = "mediatek,mt8365-uart-dma", "mediatek,mt6577-uart-dma";
-> +			reg = <0 0x11000280 0 0x80>,
-> +			      <0 0x11000300 0 0x80>,
-> +			      <0 0x11000380 0 0x80>,
-> +			      <0 0x11000400 0 0x80>,
-> +			      <0 0x11000580 0 0x80>,
-> +			      <0 0x11000600 0 0x80>;
-> +			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_LOW>,
-> +				     <GIC_SPI 46 IRQ_TYPE_LEVEL_LOW>,
-> +				     <GIC_SPI 47 IRQ_TYPE_LEVEL_LOW>,
-> +				     <GIC_SPI 48 IRQ_TYPE_LEVEL_LOW>,
-> +				     <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>,
-> +				     <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
-> +			dma-requests = <6>;
-> +			clocks = <&infracfg CLK_IFR_AP_DMA>;
-> +			clock-names = "apdma";
-> +			#dma-cells = <1>;
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt8365-uart", "mediatek,mt6577-uart";
+Changes in v5:
+- Rename lookup-table names to match those from the gpio and reset lookups:
+  s/led_name/provider/
+  s/consumer_dev_name/dev_id/
+  s/consumer_function/con_id/
+- Add static inline wrappers for the v4l2_async debugfs init/exit funcs,
+  to fix build errors when CONFIG_V4L2_ASYNC is not enabled
 
-Unfortunately we are missing this compatible in the binding description.
+Changes in v4:
+- Rename new __led_get() helper to led_module_get()
+- Drop of/devicetree support from "led-class: Add generic [devm_]led_get()"
+- Add RFC patch to re-add of/devicetree support to show that the new
+  led_get() can easily be extended with dt support when the need for this
+  arises (proof-of-concept dt code, not intended for merging)
+- New patch to built async and fwnode code into videodev.ko,
+  to avoid issues with some of the new LED code getting builtin vs
+  other parts possibly being in a module
+- Move the led_get() call to v4l2_async_register_subdev_sensor()
+- Move the led_disable_sysfs() call to be done at led_get() time
+- Address some other minor review comments
 
-> +			reg = <0 0x11002000 0 0x1000>;
-> +			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_IFR_UART0>;
-> +			clock-names = "baud", "bus";
-> +			dmas = <&apdma 0>, <&apdma 1>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt8365-uart", "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x1000>;
-> +			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_IFR_UART1>;
-> +			clock-names = "baud", "bus";
-> +			dmas = <&apdma 2>, <&apdma 3>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt8365-uart", "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x1000>;
-> +			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&clk26m>, <&infracfg CLK_IFR_UART2>;
-> +			clock-names = "baud", "bus";
-> +			dmas = <&apdma 4>, <&apdma 5>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
-> +
-> +		pwm: pwm@11006000 {
-> +			compatible = "mediatek,mt8365-pwm";
-> +			reg = <0 0x11006000 0 0x1000>;
-> +			#pwm-cells = <2>;
-> +			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&infracfg CLK_IFR_PWM_HCLK>,
-> +				 <&infracfg CLK_IFR_PWM>,
-> +				 <&infracfg CLK_IFR_PWM1>,
-> +				 <&infracfg CLK_IFR_PWM2>,
-> +				 <&infracfg CLK_IFR_PWM3>;
-> +			clock-names = "top", "main", "pwm1", "pwm2", "pwm3";
-> +		};
-> +
-> +		spi: spi@1100a000 {
-> +			compatible = "mediatek,mt8365-spi", "mediatek,mt7622-spi";
-> +			reg = <0 0x1100a000 0 0x100>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&topckgen CLK_TOP_UNIVPLL2_D4>,
-> +				 <&topckgen CLK_TOP_SPI_SEL>,
-> +				 <&infracfg CLK_IFR_SPI0>;
-> +			clock-names = "parent-clk", "sel-clk", "spi-clk";
-> +			status = "disabled";
-> +		};
-> +
-> +		ssusb: usb@11201000 {
-> +			compatible = "mediatek,mt8365-mtu3", "mediatek,mtu3";
+Changes in v3:
+- Due to popular request by multiple people this new version now models
+  the privacy LED as a LED class device. This requires being able to
+  "tie" the LED class device to a specific camera sensor (some devices
+  have multiple sensors + privacy-LEDs).
 
-Same here.
+Patches 1-5 are LED subsystem patches for this. 1 is a bug fix, 2-4 add
+the new [devm_]led_get() functions. Patch 5 is the RFC patch adding dt
+support to led_get() and is not intended for merging.
 
-> +			reg = <0 0x11201000 0 0x2e00>, <0 0x11203e00 0 0x0100>;
-> +			reg-names = "mac", "ippc";
-> +			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_LOW>;
-> +			phys = <&u2port0 PHY_TYPE_USB2>,
-> +			       <&u2port1 PHY_TYPE_USB2>;
-> +			clocks = <&topckgen CLK_TOP_SSUSB_TOP_CK_EN>,
-> +				 <&infracfg CLK_IFR_SSUSB_REF>,
-> +				 <&infracfg CLK_IFR_SSUSB_SYS>,
-> +				 <&infracfg CLK_IFR_ICUSB>;
-> +			clock-names = "sys_ck", "ref_ck", "mcu_ck", "dma_ck";
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			ranges;
-> +			status = "disabled";
-> +
-> +			usb_host: usb@11200000 {
-> +				compatible = "mediatek,mt8365-xhci", "mediatek,mtk-xhci";
+Patch 6 + 7 add generic privacy-LED support to the v4l2-core/v4l2-subdev.c
+code automatically enabling the privacy-LED when s_stream(subdev, 1)
+is called. So that we don't need to add privacy-LED code to all the
+camera sensor drivers separately (as requested by Sakari).
 
-Same here.
+Patches 8-11 are patches to the platform specific INT3472 code to register
+privacy-LED class devices + lookup table entries for privacy-LEDs described
+in the special INT3472 ACPI nodes found on x86 devices with MIPI cameras.
 
-> +				reg = <0 0x11200000 0 0x1000>;
-> +				reg-names = "mac";
-> +				interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>;
-> +				clocks = <&topckgen CLK_TOP_SSUSB_TOP_CK_EN>,
-> +					 <&infracfg CLK_IFR_SSUSB_REF>,
-> +					 <&infracfg CLK_IFR_SSUSB_SYS>,
-> +					 <&infracfg CLK_IFR_ICUSB>,
-> +					 <&infracfg CLK_IFR_SSUSB_XHCI>;
-> +				clock-names = "sys_ck", "ref_ck", "mcu_ck",
-> +					      "dma_ck", "xhci_ck";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		u3phy: phy@11cc0000 {
-> +			compatible = "mediatek,mt8365-tphy", "mediatek,generic-tphy-v2";
-> +			#address-cells = <2>;
-> +			#size-cells = <2>;
-> +			#phy-cells = <1>;
-> +			ranges;
-> +
-> +			u2port0: usb-phy@11cc0000 {
-> +				reg = <0 0x11cc0000 0 0x400>;
-> +				clocks = <&topckgen CLK_TOP_SSUSB_PHY_CK_EN>,
-> +					 <&topckgen CLK_TOP_USB20_48M_EN>;
-> +				clock-names = "ref", "da_ref";
-> +				#phy-cells = <1>;
-> +			};
-> +
-> +			u2port1: usb-phy@11cc1000 {
-> +				reg = <0 0x11cc1000 0 0x400>;
-> +				clocks = <&topckgen CLK_TOP_SSUSB_PHY_CK_EN>,
-> +					 <&topckgen CLK_TOP_USB20_48M_EN>;
-> +				clock-names = "ref", "da_ref";
-> +				#phy-cells = <1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-> +
-> +	system_clk: dummy13m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <13000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	systimer: timer@10017000 {
-> +		compatible = "mediatek,mt6795-systimer";
+Assuming at least the LED maintainers are happy with the approach suggested
+here, the first step to merging this would be to merge patches 1-4 and then
+provide an immutable branch with those to merge for the other subsystems
+since the other changes depend on these.
 
-Why don't we use a compatible like
-"mediatek,mt8365-systimer", "mediatek,mt6795-systimer";
+If you are one of the folks who requested the new LED lookup table +
+led_get() approach I would appreciate a Reviewed-by or Acked-by for
+patches 1-4.
 
-We would need to add this to the binding description as well.
+This series has been tested on:
 
-I leave it up to you, but I'd advise to start with a minimal working DT which 
-includes only the bindings that are already merged. Then we can take the new 
-devices like mtu3, xhci, spidev or i2c later once they are ready.
+- Lenovo ThinkPad X1 Yoga gen 7, IPU6, front: ov2740 with privacy LED
+- Dell Latitude 9420, IPU 6, front: ov01a1s with privacy LED
+- Mirosoft Surface Go, IPU3, front: ov5693 with privacy LED
+                              back: ov8865 with privacy LED (pled not yet supported)
 
 Regards,
-Matthias
+
+Hans
+
+
+Hans de Goede (11):
+  leds: led-class: Add missing put_device() to led_put()
+  leds: led-class: Add led_module_get() helper
+  leds: led-class: Add __devm_led_get() helper
+  leds: led-class: Add generic [devm_]led_get()
+  [RFC] leds: led-class: Add devicetree support to led_get()
+  media: v4l2-core: Built async and fwnode code into videodev.ko
+  media: v4l2-core: Make the v4l2-core code enable/disable the privacy
+    LED if present
+  platform/x86: int3472/discrete: Refactor GPIO to sensor mapping
+  platform/x86: int3472/discrete: Create a LED class device for the
+    privacy LED
+  platform/x86: int3472/discrete: Move GPIO request to
+    skl_int3472_register_clock()
+  platform/x86: int3472/discrete: Get the polarity from the _DSM entry
+
+ drivers/leds/led-class.c                      | 173 +++++++++++++++---
+ drivers/media/v4l2-core/Kconfig               |   4 +-
+ drivers/media/v4l2-core/Makefile              |   4 +-
+ drivers/media/v4l2-core/v4l2-async.c          |  17 +-
+ drivers/media/v4l2-core/v4l2-dev-priv.h       |  19 ++
+ drivers/media/v4l2-core/v4l2-dev.c            |   8 +
+ drivers/media/v4l2-core/v4l2-fwnode.c         |  21 ++-
+ drivers/media/v4l2-core/v4l2-subdev.c         |  18 ++
+ drivers/platform/x86/intel/int3472/Makefile   |   2 +-
+ .../x86/intel/int3472/clk_and_regulator.c     |  34 +++-
+ drivers/platform/x86/intel/int3472/common.h   |  18 +-
+ drivers/platform/x86/intel/int3472/discrete.c | 100 +++++-----
+ drivers/platform/x86/intel/int3472/led.c      |  74 ++++++++
+ include/linux/leds.h                          |  21 +++
+ include/media/v4l2-subdev.h                   |   3 +
+ 15 files changed, 399 insertions(+), 117 deletions(-)
+ create mode 100644 drivers/media/v4l2-core/v4l2-dev-priv.h
+ create mode 100644 drivers/platform/x86/intel/int3472/led.c
+
+-- 
+2.39.0
+
