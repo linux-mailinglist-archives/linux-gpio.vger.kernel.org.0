@@ -2,73 +2,51 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 372F6674E25
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 08:29:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 287D1674EB2
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 08:53:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjATH3M (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 02:29:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
+        id S229724AbjATHxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 02:53:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229582AbjATH3L (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 02:29:11 -0500
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7559D3CE33
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:29:10 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-4ff07dae50dso15518547b3.2
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:29:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ltSsSC+JZto0JrpK+1L3ljWItyAcHL59PJv9eZdjARQ=;
-        b=r9lSpPFJUyFqK+rZATbzTPgn5Yc8YtOBMW4KLkAzpjSWswkhXZJpjiWsjjeiVcQpFM
-         V5KPEYhcAontmo+zEDpfxk8O0uA1/LSD8vLZK57M+rTOwADpxS/Mgs3hCVcijhTrvaKe
-         7sxv0cyUNErGDCyGUbJyiofUwVVWWyWKKd9cxsQh5+fUGPA8kNKR5iAOmv4JUJIIqols
-         SP8gDHlTHUycodsVMHASSwo9JMWYEhdXxzDnVIXUMhZU+sQyS0kuc11Xrhi4nvO4yOc/
-         8YIX35m82A7bfDpHsYJms/tVQvEdHDIoNPhk48p5+vbLuA5Zt7TugdJCHqh2pN1mIzVf
-         NfTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ltSsSC+JZto0JrpK+1L3ljWItyAcHL59PJv9eZdjARQ=;
-        b=VW45jFmyunxtsmcEfd30N8qTwZoTBLCUwKYwDu7LY3oK4uQmU+DEUdMPhWcrhipzmZ
-         RNiKl47igmcl9tcLcD4zJ/vgjIjSUj1mO1Bpm+rnRUS8FKqhiIRte50/3NUfFNKboXzG
-         XfOdrq9At2Y/WQT0/qCF+dHHbST4CEs1eeyfzM512baNlVGCIrlnRVI4hKRZ92a4DfVh
-         fCkSp09eEkZaS/2G/GUgzWjK1q3NLj0kwFF8KYtnECUU5C2/1KK8lbfCJOpzWTD+yKah
-         txQ9BfOGXxOpmvihrXKDone4wNbwFRynJgVGuV0ZBqCXZyXBKjqN5w0k+M4B0iP63y0I
-         iRhA==
-X-Gm-Message-State: AFqh2kq6Z4qsHfEpR64nWZ46NYsDCiA8cboproXtX7y8/76g7uuDvJSq
-        JkMNVt99OMtCXFhRizivfodZC8ZHx/XUFeqCcc1RMA==
-X-Google-Smtp-Source: AMrXdXv61KRxB3MJe8D+CgvL02tEZ8sNctXqSNuBpAF0a2GrjwbkOe3n1BQQ52Glni04fOfiOrZusfZYB82ps5yhXbA=
-X-Received: by 2002:a81:6842:0:b0:4ff:e4bc:b56f with SMTP id
- d63-20020a816842000000b004ffe4bcb56fmr115853ywc.488.1674199749676; Thu, 19
- Jan 2023 23:29:09 -0800 (PST)
+        with ESMTP id S229550AbjATHxm (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 02:53:42 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992805D7E4
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:53:41 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDS-0005yP-Uz; Fri, 20 Jan 2023 08:53:38 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDR-007K62-HQ; Fri, 20 Jan 2023 08:53:37 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1pImDQ-00EKwo-Nj; Fri, 20 Jan 2023 08:53:36 +0100
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: [PATCH] gpio: mvebu: Use IS_REACHABLE instead of IS_ENABLED for CONFIG_PWM
+Date:   Fri, 20 Jan 2023 08:53:33 +0100
+Message-Id: <20230120075333.142223-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-References: <20230119130053.111344-1-hdegoede@redhat.com>
-In-Reply-To: <20230119130053.111344-1-hdegoede@redhat.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 20 Jan 2023 08:28:58 +0100
-Message-ID: <CACRpkdbXRtJOGOvtzChay4_FKdztLvN1GScCTYXiVWAVWvbDGQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/11] leds: lookup-table support + int3472/media
- privacy LED support
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1481; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=USu3DUBJDrfJf+3pujPCoB/v8LwNdQJnO9NlK868guA=; b=owGbwMvMwMV48I9IxdpTbzgZT6slMSSf8qi0O7dsq//nJ3mZP8+Grmy2V/1vpfvEw4q9lmPhVPtn ziEHOxmNWRgYuRhkxRRZ6oq0xCZIrPlvV7KEG2YQKxPIFAYuTgGYSME29v9195ynNavq5oWoBT1fMq MhqM/9yVMpJ8bVjXxmYTt77Xm1BYzVGfMTBVY3BbZZ5GjE3PRY2DJXQjnyWHuEYLeYZXvcwjlrkp/e kPsgm/jo+NPU3auKXHxLQ/ZfLTTaPq1wcfTk5fURv1oF39k8mWzVHibpNuWmb96JHYlcb+pUFjKl31 xwMfrwUZUL3Ak7qgs0YoPEFywwtPrTMm1LwyoVDwmBV4z29aLMKfeFMv4VcTaedg4Ot3OZ0Vh6KejJ rjiLC3cYeedtvak6oTG4Yda36LeeTn77oz6bnVpzUur3LM9vEiZmAcan3ef2cHfI+2kvCGUKm31C7d 0WmU8ZllWiQcumiAXqz9yccqAKAA==
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,22 +55,49 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 2:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+To check if a certain function (here e.g. pwmchip_add()) can be called
+IS_REACHABLE is the better check. The relevant difference to IS_ENABLED
+is that IS_REACHABLE evaluates to 0 if the current code is builtin but the
+checked symbol is =m and so must not be used.
 
-> Here is my version 4 of my series to adjust the INT3472 code's handling of
-> the privacy LED on x86 laptops with MIPI camera(s) so that it will also
-> work on devices which have a privacy-LED GPIO but not a clk-enable GPIO
-> (so that we cannot just tie the LED state to the clk-enable state).
->
-> Changes in v4:
+Today there is no practical impact as CONFIG_PWM is a bool.
 
-I think this is good for merge, I reviewed the LED stuff that I understand,
-but for the rest in drivers/media FWIW:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-as well.
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/gpio/gpio-mvebu.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I really like how this developed to solve a real old outstanding hole
-in the implementation.
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index 91a4232ee58c..a68f682aec01 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -1002,7 +1002,7 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
+ 		BUG();
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_PWM))
++	if (IS_REACHABLE(CONFIG_PWM))
+ 		mvebu_pwm_suspend(mvchip);
+ 
+ 	return 0;
+@@ -1054,7 +1054,7 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
+ 		BUG();
+ 	}
+ 
+-	if (IS_ENABLED(CONFIG_PWM))
++	if (IS_REACHABLE(CONFIG_PWM))
+ 		mvebu_pwm_resume(mvchip);
+ 
+ 	return 0;
+@@ -1228,7 +1228,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+ 	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
+ 
+ 	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+-	if (IS_ENABLED(CONFIG_PWM)) {
++	if (IS_REACHABLE(CONFIG_PWM)) {
+ 		err = mvebu_pwm_probe(pdev, mvchip, id);
+ 		if (err)
+ 			return err;
+-- 
+2.39.0
 
-Yours,
-Linus Walleij
