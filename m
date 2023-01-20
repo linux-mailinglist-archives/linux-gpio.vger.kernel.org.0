@@ -2,102 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 287D1674EB2
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 08:53:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C4DA674F25
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 09:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbjATHxn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 02:53:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
+        id S230375AbjATIJZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 03:09:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjATHxm (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 02:53:42 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 992805D7E4
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:53:41 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pImDS-0005yP-Uz; Fri, 20 Jan 2023 08:53:38 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pImDR-007K62-HQ; Fri, 20 Jan 2023 08:53:37 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pImDQ-00EKwo-Nj; Fri, 20 Jan 2023 08:53:36 +0100
-From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH] gpio: mvebu: Use IS_REACHABLE instead of IS_ENABLED for CONFIG_PWM
-Date:   Fri, 20 Jan 2023 08:53:33 +0100
-Message-Id: <20230120075333.142223-1-u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S230373AbjATIJW (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 03:09:22 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4191A8534B;
+        Fri, 20 Jan 2023 00:09:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F1432B82079;
+        Fri, 20 Jan 2023 08:09:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E1FCC4339C;
+        Fri, 20 Jan 2023 08:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674202158;
+        bh=KH0OHgFWAlMLEWamKLwkcAUS3Cf3miV/YcqK/yvTjt0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TGC3seA27YcuIqW7l7QdWoRSC4YaMRFpcDPOJ0rcjTLGHU2iugFpiRiF3cL4brEhf
+         DGHxbmWdhDikvRvIIjRCjMZ7UiJYPuPHHtKVCD+HaLhhNJAw30tVZSnqtYvSW2rcMg
+         MwcsZMvihl/0whuinRk9DqdHXpdGT4w1cmP+Dq3FV/1ibuqVgSx5Fgu7JIzPYhL/cO
+         eG/KljOSBWVIjGixI2gV68V8sCMsluDvmbvPzlQMu4X/ruZ1RBNdOIEqIxZzEUK5Hb
+         SJczFH90f2TKkOh8Eyq/R0ciISYUiTz504OSZAIJZPF3o/ytXD1H02r5j/Ki5dNebq
+         Kb6S7tm63BK0w==
+Date:   Fri, 20 Jan 2023 08:09:11 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Mark Gross <markgross@kernel.org>,
+        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+        Daniel Scally <djrscally@gmail.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
+        Mark Pearson <markpearson@lenovo.com>,
+        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] leds: led-class: Add generic [devm_]led_get()
+Message-ID: <Y8pMJ1XRprFABBFs@google.com>
+References: <20230119130053.111344-1-hdegoede@redhat.com>
+ <20230119130053.111344-5-hdegoede@redhat.com>
+ <CACRpkdYuHmAwYR24xEz01ub1_mMhqYN65WuoLHCS=094b6AM2w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1481; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=USu3DUBJDrfJf+3pujPCoB/v8LwNdQJnO9NlK868guA=; b=owGbwMvMwMV48I9IxdpTbzgZT6slMSSf8qi0O7dsq//nJ3mZP8+Grmy2V/1vpfvEw4q9lmPhVPtn ziEHOxmNWRgYuRhkxRRZ6oq0xCZIrPlvV7KEG2YQKxPIFAYuTgGYSME29v9195ynNavq5oWoBT1fMq MhqM/9yVMpJ8bVjXxmYTt77Xm1BYzVGfMTBVY3BbZZ5GjE3PRY2DJXQjnyWHuEYLeYZXvcwjlrkp/e kPsgm/jo+NPU3auKXHxLQ/ZfLTTaPq1wcfTk5fURv1oF39k8mWzVHibpNuWmb96JHYlcb+pUFjKl31 xwMfrwUZUL3Ak7qgs0YoPEFywwtPrTMm1LwyoVDwmBV4z29aLMKfeFMv4VcTaedg4Ot3OZ0Vh6KejJ rjiLC3cYeedtvak6oTG4Yda36LeeTn77oz6bnVpzUur3LM9vEiZmAcan3ef2cHfI+2kvCGUKm31C7d 0WmU8ZllWiQcumiAXqz9yccqAKAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <CACRpkdYuHmAwYR24xEz01ub1_mMhqYN65WuoLHCS=094b6AM2w@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-To check if a certain function (here e.g. pwmchip_add()) can be called
-IS_REACHABLE is the better check. The relevant difference to IS_ENABLED
-is that IS_REACHABLE evaluates to 0 if the current code is builtin but the
-checked symbol is =m and so must not be used.
+On Fri, 20 Jan 2023, Linus Walleij wrote:
 
-Today there is no practical impact as CONFIG_PWM is a bool.
+> On Thu, Jan 19, 2023 at 2:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> > Add a generic [devm_]led_get() method which can be used on both devicetree
+> > and non devicetree platforms to get a LED classdev associated with
+> > a specific function on a specific device, e.g. the privacy LED associated
+> > with a specific camera sensor.
+> >
+> > Note unlike of_led_get() this takes a string describing the function
+> > rather then an index. This is done because e.g. camera sensors might
+> > have a privacy LED, or a flash LED, or both and using an index
+> > approach leaves it unclear what the function of index 0 is if there is
+> > only 1 LED.
+> >
+> > This uses a lookup-table mechanism for non devicetree platforms.
+> > This allows the platform code to map specific LED class_dev-s to a specific
+> > device,function combinations this way.
+> >
+> > For devicetree platforms getting the LED by function-name could be made
+> > to work using the standard devicetree pattern of adding a -names string
+> > array to map names to the indexes.
+> >
+> > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> > ---
+> > Changes in v4:
+> > - Split out support for led_get() devicetree name-based lookup support
+> >   into a separate RFC patch as there currently are no user for this
+> > - Use kstrdup_const() / kfree_const() for the led_name
+> 
+> This is how I would implement it so:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-mvebu.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Thanks Linus, this is all really helpful.
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 91a4232ee58c..a68f682aec01 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -1002,7 +1002,7 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
- 		BUG();
- 	}
- 
--	if (IS_ENABLED(CONFIG_PWM))
-+	if (IS_REACHABLE(CONFIG_PWM))
- 		mvebu_pwm_suspend(mvchip);
- 
- 	return 0;
-@@ -1054,7 +1054,7 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
- 		BUG();
- 	}
- 
--	if (IS_ENABLED(CONFIG_PWM))
-+	if (IS_REACHABLE(CONFIG_PWM))
- 		mvebu_pwm_resume(mvchip);
- 
- 	return 0;
-@@ -1228,7 +1228,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	devm_gpiochip_add_data(&pdev->dev, &mvchip->chip, mvchip);
- 
- 	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
--	if (IS_ENABLED(CONFIG_PWM)) {
-+	if (IS_REACHABLE(CONFIG_PWM)) {
- 		err = mvebu_pwm_probe(pdev, mvchip, id);
- 		if (err)
- 			return err;
 -- 
-2.39.0
-
+Lee Jones [李琼斯]
