@@ -2,96 +2,142 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE310675BD2
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 18:43:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 110D1675BE9
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 18:46:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230341AbjATRnA (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 12:43:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59912 "EHLO
+        id S230120AbjATRqp (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 12:46:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjATRm7 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 12:42:59 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD9A564BA
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 09:42:56 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id y1so1009337wru.2
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 09:42:56 -0800 (PST)
+        with ESMTP id S229921AbjATRqo (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 12:46:44 -0500
+Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F08660C8C
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 09:46:42 -0800 (PST)
+Received: by mail-wm1-x334.google.com with SMTP id d4-20020a05600c3ac400b003db1de2aef0so4277926wms.2
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 09:46:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fXxDJVILWzNGImHcYBDjtkkRHu4msoDg+jCitV9yT+g=;
-        b=ViIz/gLjXv5KxCzh3B0pbF/nHKt7BTJ6LohH6UVyBXYeQal8UNNVucUdAAur8ll60X
-         0BNwWdkRdi69bdw5PCXnI5ghV1aGedv8NK6lDDPp8k8IENPJf+URcx8IOe/6FPpz5M7C
-         02FOgf92NWeCFYQygmk4z8PHRzBNAcvgZ+LFvMY9n/AGt1Jdh76J55zh0nVNNSl7vsrU
-         LizEGfUQIeOSWyMDV9n9uVX41GSt7LWRZ5Wiy1QJ6580y4EaGPTsxT1tfMNkRT53JSDx
-         kp4nirAev8aQXfEBXJvwX9zF4V2hu02cmVk56O+ONEniuOGOhn1hnHoHshOxnaeyRwep
-         QHsA==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fBcm1ksuIfBBKtt3kd68+qKTCAhQjKc2GeFln1kH0Fs=;
+        b=uC97fJdEdReXs/6LQ44/N5YU6UhfpImjScLii/d7y/l6lqpcp1OFIzEa2B+vBbUTwz
+         radFrAbksW3Tc6IDchGvfZtC5eqLMf4X7xWOEOGtEUHK8tTpdirX1LPzmIl9uASzMq5P
+         fgjPGm+IVLsTsp6eicWw7s7C5tFus1+UaU4y7zKHDkPvpqeYZWHBog2dd8GhzUbhKuly
+         8W+ybcOHur7xhYxUKD8kw9zNAg176VR4pIoPC1Ro0KAhra8+J7qs6AB4Ig4o8Kt62EhI
+         EhL/ITiMuzG9c97Ab0EPQHj9JXIUUNbHgXeH9Aw0KQQxmI8Uo5aGjLLEWEOztoASCxhd
+         n2SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fXxDJVILWzNGImHcYBDjtkkRHu4msoDg+jCitV9yT+g=;
-        b=fG+cG5Me0Y1mr+reGp+f6ONG4Sz1sWFiCRbnntbOsQBDnQ6uS1r6TT1rVs7QjM2cI1
-         Ud3i7Eh0TwAuHtruutJzIqzsM5acdcki8wkmYnX5KZImHf6T8AYB9kGW4uw2qSXrZ9hj
-         Lmfipx12MV1inHr4uaADDapVrboofZzTVgMQ0XaHNGuyQ8H+y7flcJRJjpD6TwTsiFgK
-         bZSyx4RtvWkz6zs7g0Q6vlQxcCZJ8QcGZHX+7+9tmsAZiOjiheqU+8il0J23gzq+ZCml
-         6aaf8SyihZ4PCk94nYNHyuvX0SiRgaHx8VgvBFaFfmyx5E4weeAiaS+YpiMx26Ik4RnQ
-         oVSw==
-X-Gm-Message-State: AFqh2kpcjkLPIYW29kqKoeHUGnzyK0yKM7n8n36RByzO0QwZdbgWaYeX
-        UyC6EyJ8Kv4O6D9CaUeCcHMrAA==
-X-Google-Smtp-Source: AMrXdXtzzNIF7XraOrNH0+hup8VYPt+S3b7S2atV+7nc+9oxpWKJ/VtBCFZu027CC4YZ9Rtw4iQPXg==
-X-Received: by 2002:a5d:6b50:0:b0:2bc:7fdd:9245 with SMTP id x16-20020a5d6b50000000b002bc7fdd9245mr12870266wrw.5.1674236574785;
-        Fri, 20 Jan 2023 09:42:54 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fBcm1ksuIfBBKtt3kd68+qKTCAhQjKc2GeFln1kH0Fs=;
+        b=PJY3yqXcaf5nLlqQOwBH3AAp+lJ9SrLjaXw+RMsU3NtPSflJwTZ4WeMzSk0qQnEuTz
+         R00worPE+3UEDWu9P3on7IwCd1Gd9CyWX1g+WuIQsYbZBYhIYpNZtJmrog+sWFvFsfx7
+         r02W1KKxKOMf6NBh50MoMyj9vwUVfsqHqBwWDTeusJIV5PbNMhCZt5EZeH487z4lOSD0
+         DxjGfuSutz/Mal5ELzEqArt87N2XuET8cwqlCAq8wLSocJ8VUktn25TRPPMZD59dxI2+
+         Oc9bSVBpMI9t2KSvtjPtwsoy9TQmgLEL0ah39RSnS9WmJWZEgCRXZrm5YDQp5sj7gWYC
+         DjOw==
+X-Gm-Message-State: AFqh2kqMRGOU/kx/EIjw01lAB2LcnXhK4cwVmotphJNzL68X4Jm9K0nu
+        nKLZJFUu5V4N/ZmiEs7r/4VTyBWhUpRFvdQO
+X-Google-Smtp-Source: AMrXdXuePYcSfXcIeuXvqcdDTQP+BLAqWpMAXhPRzj8IjU39ZcetyMdIOSrGWxAcetf1ZRHKnD2uVQ==
+X-Received: by 2002:a05:600c:3296:b0:3cf:82b9:2fe6 with SMTP id t22-20020a05600c329600b003cf82b92fe6mr15865983wmp.8.1674236801199;
+        Fri, 20 Jan 2023 09:46:41 -0800 (PST)
 Received: from krzk-bin.. ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id w8-20020adf8bc8000000b002bdc39849d1sm24589861wra.44.2023.01.20.09.42.51
+        by smtp.gmail.com with ESMTPSA id hg8-20020a05600c538800b003d974076f13sm2879682wmb.3.2023.01.20.09.46.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 20 Jan 2023 09:42:54 -0800 (PST)
+        Fri, 20 Jan 2023 09:46:40 -0800 (PST)
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To:     Linus Walleij <linus.walleij@linaro.org>,
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$"
-Date:   Fri, 20 Jan 2023 18:42:47 +0100
-Message-Id: <167423655094.352486.17564121663586668814.b4-ty@linaro.org>
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] pinctrl: dt-bindings: qcom: bindings for v6.3
+Date:   Fri, 20 Jan 2023 18:46:31 +0100
+Message-Id: <20230120174631.353345-1-krzysztof.kozlowski@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230120165103.1278852-1-robh@kernel.org>
-References: <20230120165103.1278852-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Fri, 20 Jan 2023 10:51:03 -0600, Rob Herring wrote:
-> Just 'mpp' is a bit ambiguous for a pattern as it allows any prefix or
-> suffix. Change the node name pattern to "-pins$" to align with other
-> Qualcomm pinctrl bindings.
-> 
-> 
+The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
 
-Or instead of review let me grab it for Linus:
+  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
 
-Applied, thanks!
+are available in the Git repository at:
 
-[1/1] dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$"
-      https://git.kernel.org/krzk/linux-dt/c/5682f23bd3daf8d66f0a4c0fa0e5645b324e7014
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux-dt.git tags/qcom-pinctrl-6.3
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+for you to fetch changes up to 5b8c304c94d79f44aea8ee273ce70ca380804156:
+
+  dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$" (2023-01-20 18:43:06 +0100)
+
+----------------------------------------------------------------
+Qualcomm pinctrl Devicetree bindings changes for v6.3
+
+Set of cleanups and fixes for Qualcomm pin controller bindings, to match
+existing DTS and correct the schema.
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (8):
+      dt-bindings: pinctrl: qcom,sdm845-pinctrl: add GPIO hogs
+      dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: correct pins pattern
+      dt-bindings: pinctrl: qcom,sc8280xp-lpass-lpi: add input-enable and bias-bus-hold
+      dt-bindings: pinctrl: qcom,sm6350-tlmm: add gpio-line-names
+      dt-bindings: pinctrl: qcom,sm8350-tlmm: add gpio-line-names
+      dt-bindings: pinctrl: qcom,sm6350-tlmm: correct pins pattern
+      dt-bindings: pinctrl: qcom,sm8350-tlmm: correct pins pattern
+      dt-bindings: pinctrl: qcom: allow nine interrupts on SM6350
+
+Rob Herring (1):
+      dt-bindings: pinctrl: qcom,pmic-mpp: Rename "mpp" child node names to "-pins$"
+
+ .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,ipq8074-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,mdm9607-tlmm.yaml        |  4 +++-
+ .../bindings/pinctrl/qcom,mdm9615-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8226-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8660-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8909-tlmm.yaml        |  4 +++-
+ .../bindings/pinctrl/qcom,msm8916-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8953-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8960-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8974-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8976-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8994-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8996-pinctrl.yaml     |  4 +++-
+ .../bindings/pinctrl/qcom,msm8998-pinctrl.yaml     |  4 +++-
+ .../devicetree/bindings/pinctrl/qcom,pmic-mpp.yaml |  4 ++--
+ .../bindings/pinctrl/qcom,qcm2290-tlmm.yaml        |  4 +++-
+ .../bindings/pinctrl/qcom,qcs404-pinctrl.yaml      |  4 +++-
+ .../bindings/pinctrl/qcom,sc7180-pinctrl.yaml      |  4 +++-
+ .../bindings/pinctrl/qcom,sc8180x-tlmm.yaml        |  4 +++-
+ .../pinctrl/qcom,sc8280xp-lpass-lpi-pinctrl.yaml   |  8 +++----
+ .../bindings/pinctrl/qcom,sc8280xp-tlmm.yaml       |  4 +++-
+ .../bindings/pinctrl/qcom,sdm630-pinctrl.yaml      |  4 +++-
+ .../bindings/pinctrl/qcom,sdm670-tlmm.yaml         |  4 +++-
+ .../bindings/pinctrl/qcom,sdm845-pinctrl.yaml      | 15 +++++++++++-
+ .../bindings/pinctrl/qcom,sdx55-pinctrl.yaml       |  4 +++-
+ .../bindings/pinctrl/qcom,sdx65-tlmm.yaml          |  4 +++-
+ .../bindings/pinctrl/qcom,sm6115-tlmm.yaml         |  4 +++-
+ .../bindings/pinctrl/qcom,sm6125-tlmm.yaml         |  4 +++-
+ .../bindings/pinctrl/qcom,sm6350-tlmm.yaml         | 27 ++++++++++++++++++----
+ .../bindings/pinctrl/qcom,sm6375-tlmm.yaml         |  4 +++-
+ .../bindings/pinctrl/qcom,sm8150-pinctrl.yaml      |  4 +++-
+ .../bindings/pinctrl/qcom,sm8250-pinctrl.yaml      |  4 +++-
+ .../bindings/pinctrl/qcom,sm8350-tlmm.yaml         | 15 +++++++++---
+ .../bindings/pinctrl/qcom,sm8450-tlmm.yaml         |  4 +++-
+ .../bindings/pinctrl/qcom,tlmm-common.yaml         |  5 ++--
+ 36 files changed, 147 insertions(+), 47 deletions(-)
