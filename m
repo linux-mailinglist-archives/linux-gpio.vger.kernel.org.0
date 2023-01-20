@@ -2,180 +2,110 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7973D6753C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 12:48:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0E767543B
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 13:12:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjATLsH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 06:48:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        id S230036AbjATMMv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 07:12:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230060AbjATLsG (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 06:48:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D70BBC8B3
-        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 03:46:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674215180;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kEV63ing633hRx+u7oI30wIVks8+J7FOW33mOov+xeI=;
-        b=FIC91lMqQ86TNWh8YhJCcFlGMePtfj9rR9GbdYB4WuuipgreaHi8uiVlDR4ACTG4VCrXnw
-        +dQTkHSzp9fOJMEkQ12/u2UlZa4gva7jOrj+Pk/kFMatu4Psv+5tmhuGfmQra2/KQ5EKqT
-        n7vA+4DPgUqwoESfUDu41L7pQioHISE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-616-gJBgeTxrOQqB1DuMFG4LFQ-1; Fri, 20 Jan 2023 06:46:15 -0500
-X-MC-Unique: gJBgeTxrOQqB1DuMFG4LFQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S230099AbjATMMs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 07:12:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF990EC6C;
+        Fri, 20 Jan 2023 04:12:47 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 84801101A521;
-        Fri, 20 Jan 2023 11:46:14 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.195.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE8A8140EBF6;
-        Fri, 20 Jan 2023 11:46:11 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Mark Gross <markgross@kernel.org>,
-        Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        Lee Jones <lee@kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 86C8B61DEA;
+        Fri, 20 Jan 2023 12:12:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 983BCC433EF;
+        Fri, 20 Jan 2023 12:12:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674216767;
+        bh=bYTCpxpMUaj0u9NVrjzlxJiwlSH7GhZL8wVTYhvi1kk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qoXeMA5IEcu8/YWtvxIdMEIAJOVuAuu0rHb3KldXH7yvXPpMMaipN0ptWsqquCLLr
+         YGpaGwaJkGMl75bP9I0beehAiUZEgbK9RI6zxQnT/xueeKtx7wNbYnc7tRY3496dYc
+         c7czRz4IT1hCuVGnsxUyTrnrmJVVs+18GGWLVZCDpG59qSXolyCdAP7YIdSHSqBx5/
+         UeexsOh/Fq6NppIEkNK24lneWzF3Dfby1XsJyRYL5Kc5TusGA0mDLgghVpG+WQ7bXN
+         oCeL6JDyMeZF8q0zsiEz1X5i+sAE6drGy8w+fNtsWsAEf2i1BNlmEkHRL5MzczBuKk
+         V8FBgyAgoqqsw==
+Date:   Fri, 20 Jan 2023 12:12:44 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Herve Codina <herve.codina@bootlin.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <djrscally@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        platform-driver-x86@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Kate Hsuan <hpa@redhat.com>,
-        Mark Pearson <markpearson@lenovo.com>,
-        Andy Yeh <andy.yeh@intel.com>, Hao Yao <hao.yao@intel.com>,
-        linux-media@vger.kernel.org
-Subject: [PATCH v5 11/11] platform/x86: int3472/discrete: Get the polarity from the _DSM entry
-Date:   Fri, 20 Jan 2023 12:45:24 +0100
-Message-Id: <20230120114524.408368-12-hdegoede@redhat.com>
-In-Reply-To: <20230120114524.408368-1-hdegoede@redhat.com>
-References: <20230120114524.408368-1-hdegoede@redhat.com>
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 2/3] ASoC: codecs: Add support for the Renesas
+ IDT821034 codec
+Message-ID: <Y8qFPBEYJ1gH/Ycv@sirena.org.uk>
+References: <20230120095036.514639-1-herve.codina@bootlin.com>
+ <20230120095036.514639-3-herve.codina@bootlin.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wlRMvD60qIyTikCQ"
+Content-Disposition: inline
+In-Reply-To: <20230120095036.514639-3-herve.codina@bootlin.com>
+X-Cookie: Serving suggestion.
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-According to:
-https://github.com/intel/ipu6-drivers/blob/master/patch/int3472-support-independent-clock-and-LED-gpios-5.17%2B.patch
 
-Bits 31-24 of the _DSM pin entry integer value codes the active-value,
-that is the actual physical signal (0 or 1) which needs to be output on
-the pin to turn the sensor chip on (to make it active).
+--wlRMvD60qIyTikCQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So if bits 31-24 are 0 for a reset pin, then the actual value of the reset
-pin needs to be 0 to take the chip out of reset. IOW in this case the reset
-signal is active-high rather then the default active-low.
+On Fri, Jan 20, 2023 at 10:50:35AM +0100, Herve Codina wrote:
 
-And if bits 31-24 are 0 for a clk-en pin then the actual value of the clk
-pin needs to be 0 to enable the clk. So in this case the clk-en signal
-is active-low rather then the default active-high.
+> +static int idt821034_kctrl_gain_put(struct snd_kcontrol *kcontrol,
+> +				    struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct soc_mixer_control *mc = (struct soc_mixer_control *)kcontrol->private_value;
+> +	struct snd_soc_component *component = snd_soc_kcontrol_component(kcontrol);
+> +	struct idt821034 *idt821034 = snd_soc_component_get_drvdata(component);
+> +	struct idt821034_amp *amp;
 
-IOW if bits 31-24 are 0 for a pin, then the default polarity of the pin
-is inverted.
+> +
+> +	amp->gain = val;
+> +	ret = 0;
+> +end:
+> +	mutex_unlock(&idt821034->mutex);
+> +	return ret;
 
-Add a check for this and also propagate this new polarity to the clock
-registration.
+_put() methods should return 1 if the value changed to generate
+events - if you use the mixer-test selftest it'll spot this and
+other issues for you.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- .../platform/x86/intel/int3472/clk_and_regulator.c  |  5 ++++-
- drivers/platform/x86/intel/int3472/common.h         |  2 +-
- drivers/platform/x86/intel/int3472/discrete.c       | 13 +++++++++++--
- 3 files changed, 16 insertions(+), 4 deletions(-)
+Otherwise this looks fine.
 
-diff --git a/drivers/platform/x86/intel/int3472/clk_and_regulator.c b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-index 626e5e86f4e0..1086c3d83494 100644
---- a/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-+++ b/drivers/platform/x86/intel/int3472/clk_and_regulator.c
-@@ -87,7 +87,7 @@ static const struct clk_ops skl_int3472_clock_ops = {
- };
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio)
-+			       struct acpi_resource_gpio *agpio, u32 polarity)
- {
- 	char *path = agpio->resource_source.string_ptr;
- 	struct clk_init_data init = {
-@@ -105,6 +105,9 @@ int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
- 		return dev_err_probe(int3472->dev, PTR_ERR(int3472->clock.ena_gpio),
- 				     "getting clk-enable GPIO\n");
- 
-+	if (polarity == GPIO_ACTIVE_LOW)
-+		gpiod_toggle_active_low(int3472->clock.ena_gpio);
-+
- 	/* Ensure the pin is in output mode and non-active state */
- 	gpiod_direction_output(int3472->clock.ena_gpio, 0);
- 
-diff --git a/drivers/platform/x86/intel/int3472/common.h b/drivers/platform/x86/intel/int3472/common.h
-index 0d4fa7d00b5f..61688e450ce5 100644
---- a/drivers/platform/x86/intel/int3472/common.h
-+++ b/drivers/platform/x86/intel/int3472/common.h
-@@ -122,7 +122,7 @@ int skl_int3472_get_sensor_adev_and_name(struct device *dev,
- 					 const char **name_ret);
- 
- int skl_int3472_register_clock(struct int3472_discrete_device *int3472,
--			       struct acpi_resource_gpio *agpio);
-+			       struct acpi_resource_gpio *agpio, u32 polarity);
- void skl_int3472_unregister_clock(struct int3472_discrete_device *int3472);
- 
- int skl_int3472_register_regulator(struct int3472_discrete_device *int3472,
-diff --git a/drivers/platform/x86/intel/int3472/discrete.c b/drivers/platform/x86/intel/int3472/discrete.c
-index b7752c2b798d..96963e30ab6c 100644
---- a/drivers/platform/x86/intel/int3472/discrete.c
-+++ b/drivers/platform/x86/intel/int3472/discrete.c
-@@ -220,11 +220,11 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 	struct int3472_discrete_device *int3472 = data;
- 	struct acpi_resource_gpio *agpio;
- 	union acpi_object *obj;
-+	u8 active_value, type;
- 	const char *err_msg;
- 	const char *func;
- 	u32 polarity;
- 	int ret;
--	u8 type;
- 
- 	if (!acpi_gpio_get_io_resource(ares, &agpio))
- 		return 1;
-@@ -248,6 +248,15 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 	int3472_get_func_and_polarity(type, &func, &polarity);
- 
-+	/* If bits 31-24 of the _DSM entry are all 0 then the signal is inverted */
-+	active_value = obj->integer.value >> 24;
-+	if (!active_value)
-+		polarity ^= GPIO_ACTIVE_LOW;
-+
-+	dev_dbg(int3472->dev, "%s %s pin %d active-%s\n", func,
-+		agpio->resource_source.string_ptr, agpio->pin_table[0],
-+		(polarity == GPIO_ACTIVE_HIGH) ? "high" : "low");
-+
- 	switch (type) {
- 	case INT3472_GPIO_TYPE_RESET:
- 	case INT3472_GPIO_TYPE_POWERDOWN:
-@@ -257,7 +266,7 @@ static int skl_int3472_handle_gpio_resources(struct acpi_resource *ares,
- 
- 		break;
- 	case INT3472_GPIO_TYPE_CLK_ENABLE:
--		ret = skl_int3472_register_clock(int3472, agpio);
-+		ret = skl_int3472_register_clock(int3472, agpio, polarity);
- 		if (ret)
- 			err_msg = "Failed to register clock\n";
- 
--- 
-2.39.0
+--wlRMvD60qIyTikCQ
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmPKhTsACgkQJNaLcl1U
+h9AQ4Af8De8E5PJEpMZ8aXgoqJ5oNtOF6fOh2uOEQ0Sl+8/7usPM9y8GqpAlyIxy
+09ITOezWYsh9XvhCuHefFVr/Tr7KVbz34OoXwo1XNmzmkWXcezr6PrS1VAb1DaGT
+qdOP6wEG+ei0PqHg6CX+oaRLnsqSVi1ojAbbN9GHAqNDRlXAzJfal0hIZuCUw9cp
+JA9r1B+7/G83PP5UWFXYOydws1OqGg9fsny9D1FfEt1uuVWu/uXfGMAYCg0XeqOD
+0y0yD4PaCUsv4g6Qp+eevMbsTHERfGb2YzjsZf73kE2YacIY4wATPBrt8SnFSYew
+hVXpJFtOdhIyKL+8p1tHnJ0AtZDDYw==
+=nMiM
+-----END PGP SIGNATURE-----
+
+--wlRMvD60qIyTikCQ--
