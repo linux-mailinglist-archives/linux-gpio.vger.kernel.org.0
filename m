@@ -2,56 +2,56 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03DD9674DFB
-	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 08:24:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D8BF674E06
+	for <lists+linux-gpio@lfdr.de>; Fri, 20 Jan 2023 08:25:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230070AbjATHY0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 02:24:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33324 "EHLO
+        id S230074AbjATHZg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 02:25:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjATHYU (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 02:24:20 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21AA879E90
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:24:13 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-4c131bede4bso60779897b3.5
-        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:24:13 -0800 (PST)
+        with ESMTP id S229695AbjATHZf (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 02:25:35 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5526D79E8F
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:25:32 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id a9so5666016ybb.3
+        for <linux-gpio@vger.kernel.org>; Thu, 19 Jan 2023 23:25:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BP/4oQSI0HWid8DUM0fDqxmgNWE8Na1enwT1UmU4jpE=;
-        b=KaCoM3liBHtwu146zO8uavA381ipgXY0uzjXg2XKksGT9rDaaRMtWEqD9O/jzIzdak
-         gmG5Sqw1pDAApYwpr4zXD8RWY0v0WYH3OxSqAdgk9COf+6V8ubA5sPVcdr2BOHqHY1Dn
-         +fnzpj6LexK+W95gY7fbzQ6LApp2M9ik5TOCCesw29+KH090rqXL+LOo8w9gQlGZAEH3
-         ws6pQlaA+HtT2K3M8Ndekfa1c0QBdOR59zIjP0D0XPI+kh6WSiy+sXaK3wXcnILDBx1q
-         DYZ0jUPHw1CMBZepOtKxjnaJehkch6wDqyrVXGV0Ty0tkcuONQY9n3iYBdsyxy+n29g4
-         5IGQ==
+        bh=xNyfWsqJp2T2+UrQIXuPGZpKaI5FcQb+oxkGo+mFm4w=;
+        b=Hhd9Ipoz1U1mLubpfjYuIMuUuT0SS7UIbB848A6KxJRyrH5M+w6kaiT1zHKCCH4LSB
+         ORKjRsWtfcIvpn2vvq1mRPINhEnQp95STVwWsJ323v8EeOVmJGV0IWNDpMfs9ua+/uz9
+         KBO7pj3dVdkozUbiq5d+2bgqRlSXWCv0+YUnFRT9aw+R/94FHbFStp8w1abK1jbgbqVT
+         BBPASTggslk6ZhaQiO7KSr5iUb9TZM0JwmgKxdfLcvblRPWidW7RXcLOEZq7G0jfwYb5
+         fphpYVx9Ca1IxFKwqlwqyRtjqWqM6Llx8Oejw0egLjWzxE9OsgM4HbTI6pLj3l3E8Czm
+         RdEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BP/4oQSI0HWid8DUM0fDqxmgNWE8Na1enwT1UmU4jpE=;
-        b=0hY/ItyhrZEIosG4dle6/7dGv29Jsq2bEtNJJooMdGxomIHeMVaAGMPrljcP7XLuUm
-         Wx6HcW3Q9Hg2N08qQh0RWSqgR5kiC2ZxnK/l+JeM+CnuhniLE4BP3vMWriznOofodYTD
-         yfLTMuu2U9OrxvMrwqC/8OzqMIzUFCruwzj39ngokqOEO38kFocE/9M8s8hF/Y2xncMy
-         456qQ5tbb5JImCBzv1EyU5uuC7sMBrK4Pc6w2Uyumb2TKPEAY2EoG6Ordzw7eScV6Oe9
-         IMTYJOBU63W9ki6ofdcxzjycfLDwx93Fq6MRk+5/I+QH1hdrIKlyBH6oApMs36zTheQQ
-         XANQ==
-X-Gm-Message-State: AFqh2krRiZK17cbyfeItAkejyR0hbmJP7jZdELAEc1c5vrdQAZjzfBbs
-        wmuBXeabWpGacCjewfRnDpf8SEaln/kuCvwlZ3uLow==
-X-Google-Smtp-Source: AMrXdXv3cETX80ZlfudJZ3usdoOGqhqv3yEQwywQWIrjTcZDjAwcTdk1BPanKEUmsmWr2/66G8WQSvOsvDXra05ExDY=
-X-Received: by 2002:a81:4e54:0:b0:4e1:a40a:af7a with SMTP id
- c81-20020a814e54000000b004e1a40aaf7amr1803574ywb.273.1674199452692; Thu, 19
- Jan 2023 23:24:12 -0800 (PST)
+        bh=xNyfWsqJp2T2+UrQIXuPGZpKaI5FcQb+oxkGo+mFm4w=;
+        b=01ZLT29dY7e22JekxZyaWuB6NdzI5tgZC0m6eQ6rgXiKDyuwxPFnlJDOGITEBvN4AJ
+         dUp3SMF4lFOOtwgXfDkpWCE/XsSe0zVCUzubN2fptk9MFTBcjfmYrvQePfZLwycQo/68
+         aa6xZTNqrLaSusalgT82fLQ/ZY+L1H5DeyY3ZU5DdYerklyjwVHdIxDf1A6GAJWZS3Is
+         Zyn8i0W3dHmo9KBdcqdDHffOQuXXJ36zrCy+8QLEBOC0YcSrjp08MeAPfERbJmKPixKc
+         mCmssvdS46d1lRnGsfE3Oq63j37Eg9OhFLo6ggMAo+42r/XKx2dTZM0GDaDvYvAyG7kf
+         XKkw==
+X-Gm-Message-State: AFqh2koDt7HSJera/6/qA4+jLxOQYGgPE7jHbrsk6a6ThxmTV/B5aEld
+        KRHaZN0hI+mPqbZ69uBFfmK1btr2zRx57NuyA08eaw==
+X-Google-Smtp-Source: AMrXdXux6mEufn1tuMXOtYF/YjTIhpmzoCrS5IMGsTbPDgS1suvvZZubHD32doOoxyb+3DRWJoIlv7FHX3zF53qB6YE=
+X-Received: by 2002:a25:9d88:0:b0:7c0:acd2:6300 with SMTP id
+ v8-20020a259d88000000b007c0acd26300mr1377520ybp.520.1674199531539; Thu, 19
+ Jan 2023 23:25:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-3-hdegoede@redhat.com>
-In-Reply-To: <20230119130053.111344-3-hdegoede@redhat.com>
+References: <20230119130053.111344-1-hdegoede@redhat.com> <20230119130053.111344-4-hdegoede@redhat.com>
+In-Reply-To: <20230119130053.111344-4-hdegoede@redhat.com>
 From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 20 Jan 2023 08:24:01 +0100
-Message-ID: <CACRpkdYCEnjjDmukA4qzgjyxuR=BHuqVKKAe-uTHcMPoQy37ug@mail.gmail.com>
-Subject: Re: [PATCH v4 02/11] leds: led-class: Add led_module_get() helper
+Date:   Fri, 20 Jan 2023 08:25:20 +0100
+Message-ID: <CACRpkdZ7VY4mLOZ-yVQogWthWB9E8vjjme8UggHNxfohA4Uanw@mail.gmail.com>
+Subject: Re: [PATCH v4 03/11] leds: led-class: Add __devm_led_get() helper
 To:     Hans de Goede <hdegoede@redhat.com>
 Cc:     Mark Gross <markgross@kernel.org>,
         Andy Shevchenko <andy@kernel.org>, Pavel Machek <pavel@ucw.cz>,
@@ -78,17 +78,17 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 
 On Thu, Jan 19, 2023 at 2:01 PM Hans de Goede <hdegoede@redhat.com> wrote:
 
-> Split out part of of_led_get() into a generic led_module_get() helper
-> function.
+> Add a __devm_led_get() helper which registers a passed in led_classdev
+> with devm for unregistration.
 >
 > This is a preparation patch for adding a generic (non devicetree specific)
-> led_get() function.
+> devm_led_get() function.
 >
 > Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Changes in v4:
-> - Rename helper from __led_get() to led_module_get()
 
+I'm not a fan of __inner_functions because they are easy to
+confuse with the namespace for __compiler_directives
+but no big deal so:
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
