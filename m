@@ -2,49 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 835B9676635
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 13:32:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B831E676693
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 14:48:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjAUMcn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 Jan 2023 07:32:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
+        id S229622AbjAUNsE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Jan 2023 08:48:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjAUMcn (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Jan 2023 07:32:43 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D1E9B;
-        Sat, 21 Jan 2023 04:32:40 -0800 (PST)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pJD2t-0004b6-4q; Sat, 21 Jan 2023 13:32:31 +0100
-Message-ID: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-Date:   Sat, 21 Jan 2023 13:32:30 +0100
+        with ESMTP id S229604AbjAUNsD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Jan 2023 08:48:03 -0500
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2081.outbound.protection.outlook.com [40.107.102.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF86193C6;
+        Sat, 21 Jan 2023 05:48:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BaJeJRwNDwvIzz0Z+PzlybffhrfYCbks2Y2tWz8JFAVSFsJTvFiqupm5KLQuGyJaLOvroO1w12zGAf1F3yMVvZM735sYJwBpEbd5uWOGYVgOc8KoUX0MvVp0KiHpMWDTR7Nf/EjVVmLike2ijNYNxqh2hHy+ymTNkadfZ6S/IUjrgME39UyvM++bC52bFd4hjTuzq/5cWYYIvbsoHwTF2PAKDZFF1JaMcZx23Y7NGLmQv8BDAdwlGaa5OdBawvytg9WzF566o4joh598RgKgxlqtLfy0sYbgP1ta6Gsyt0HzEQhPwBEJ0mPBW4buHqe9mOWY9dVQtA3NuykwmhArdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=lVjrdQ95Nyzp9uvrw3fHnYuJLUT+gMUZ0Rs8346Vf+c=;
+ b=HHrrFQiEUdx2R7rm8ITUTPagZ5a16j1onZgPDWRLiaQ85dGKnaxCpqxkXLNzzwweJz/ZDrCGLniqZkEvUABUaHc4jtjuAAtsTsF0We9FyhNZCqXLVuM80tluEpiRJmocu9T7jToDoxW4QyYTf2M59uGnHhVDlIOci37vW2uRellStVji9EO9qzcJYyG0QX+OiQEfJCOqKM6R6g/5lyE3d6pCN5cCpxHGsbz1t4G9cY5odmafVIXlVZf+8CADFrUnu8BNc7+EqS+s/AGJDO099FVLqsSFu3tkp0fgn2GmjXJJRvjhovNINW/URZ0+61LE4LY/NY6+AlR5WvAClN8vzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lVjrdQ95Nyzp9uvrw3fHnYuJLUT+gMUZ0Rs8346Vf+c=;
+ b=jVIVsar2lRRxJtb0zxk2F18Y3LG0sdsbadtxhr24PYDYOPc4l1MR6WC7U6sTE1ArmiKiwOHep4SYRQUQWXQ9T1qs69p8VgclPRPO/VdwWHffCTkp6iijwXYtvPrzw9eyb+vxtnsd6DAcURdJrWUHt4X7R9THghbiSz+5LVYE9w8=
+Received: from MW4PR03CA0314.namprd03.prod.outlook.com (2603:10b6:303:dd::19)
+ by IA1PR12MB7733.namprd12.prod.outlook.com (2603:10b6:208:423::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.26; Sat, 21 Jan
+ 2023 13:48:00 +0000
+Received: from CO1NAM11FT088.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:dd:cafe::1f) by MW4PR03CA0314.outlook.office365.com
+ (2603:10b6:303:dd::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.28 via Frontend
+ Transport; Sat, 21 Jan 2023 13:47:59 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ CO1NAM11FT088.mail.protection.outlook.com (10.13.175.131) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6023.16 via Frontend Transport; Sat, 21 Jan 2023 13:47:59 +0000
+Received: from AUS-LX-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Sat, 21 Jan
+ 2023 07:47:58 -0600
+From:   Mario Limonciello <mario.limonciello@amd.com>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Wolfram Sang" <wsa@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-gpio@vger.kernel.org>, <linux-acpi@vger.kernel.org>
+CC:     Mario Limonciello <mario.limonciello@amd.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] Fix some more fallout from GPIOs from _CRS
+Date:   Sat, 21 Jan 2023 07:48:09 -0600
+Message-ID: <20230121134812.16637-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
-Content-Language: en-US, de-DE
-To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Billy Tsai <billy_tsai@aspeedtech.com>,
-        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
- <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
- <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
- <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
-From:   "Linux kernel regression tracking (#adding)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674304360;5a657a65;
-X-HE-SMSGID: 1pJD2t-0004b6-4q
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB03.amd.com
+ (10.181.40.144)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT088:EE_|IA1PR12MB7733:EE_
+X-MS-Office365-Filtering-Correlation-Id: c177ab20-9461-4370-1857-08dafbb61bc1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xVmIYuSmOw9GR6XCKqReMtdei36OKs0tO0VyIE34H34R0HBk0Sx3zTfU3m7guVaxygFJL/9nffNEo7lfbUBbVQkBAcsv8IUXbr5DlNhxIRyeeBpLnv8B8LJJZWoko9TiH8slbpmEAutd6LGJ0+Faq2hqcbfMeMeq9cKQwn/YyZjOiti62lOajcDnvYvP4iWm/l9w2M9NyXryabznJV5fn/9DFiLbamnT4oq+IkjTN5mG/qKjFgE4aNo24san8jlV0h+STZFpthdS96RnUV1DrP7Op9i4+ODxRyRgmqmydUC633Z8Ujma8eE7r0gw/aaBdMUhZuOJpxykvRUdQbq6SgvCqgDkFQukbXnCkAAQYTX1yPiLiO7FlxTXSSC46ox3/HMWcFaG5AWYkx9MCMpyKFH/D7q5AbjVWdboVJazPlKT+RiPTEL/ktTePPNQi5DyoUpO8Vq+U7qSOKaDg3LdgGJosbNCQN8ibywtNlXRb7spqfdr+hRuIMAeY4S0RRlE217+swG7WOnSau0KDovpPVh6FW0KbuoyuNRgELLXwbx/F1mMyWbu2wnH/abcra1OU/HbIXMg/kNpM6FLySJ5r4CEAKrtypiCZ8dlnYEqVuG3dIwBjvXMOYeYoWU3dBzMZhmAGcD7V6sE1teIx0EhDOq+sT/lGBCkpAF086t0VHbSN9uBKYDKkqVxiSd4GA+S0vcPBgllB+FKT2hIy+MPstlRTJ+yjTnMckFP3KP26F0=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(39860400002)(136003)(346002)(396003)(451199015)(36840700001)(46966006)(40470700004)(336012)(316002)(8676002)(70206006)(47076005)(426003)(40460700003)(4326008)(2616005)(1076003)(70586007)(110136005)(36756003)(54906003)(356005)(36860700001)(44832011)(86362001)(81166007)(41300700001)(82740400003)(2906002)(82310400005)(478600001)(7416002)(83380400001)(5660300002)(40480700001)(8936002)(7696005)(26005)(16526019)(186003)(6666004)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2023 13:47:59.3199
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c177ab20-9461-4370-1857-08dafbb61bc1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT088.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7733
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,90 +103,34 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+Raul's series that let GPIOs be enabled based on ACPI tables
+caused some fallout on systems that don't support s2idle.
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+When systems were suspended they either immediately woke up
+or never (appeared) to enter suspend.
 
-On 19.01.23 02:54, Joel Stanley wrote:
-> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
->> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
->>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->>>
->>>> When the driver want to disable the signal of the function, it doesn't
->>>> need to query the state of the mux function's signal on a pin. The
->>>> condition below will miss the disable of the signal:
-> 
->>> I can't see the verdict for this patch? Will there be a new
->>> version, or are we in the middle of a discussion?
->>> I'd really like Andrew's ACK on the result before merging.
->>
->> Apologies, it's been a bit of A Week :)
->>
->> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
-> 
-> As foreseen by Andrew, this caused a regression. On the Romulus
-> machine the device tree contains a gpio hog for GPIO S7. With the
-> patch applied:
-> 
-> [    0.384796] aspeed-g5-pinctrl 1e6e2080.pinctrl: request pin 151
-> (AA20) for 1e780000.gpio:943
-> [    0.385009] Muxing pin 151 for GPIO
-> [    0.385081] Disabling signal VPOB9 for VPO
-> [    0.402291] aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to acquire
-> regmap for IP block 1
-> [    0.402521] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() failed for pin 151
-> 
-> The code path is aspeed-gpio -> pinmux-g5 -> regmap -> clk, and the
-> of_clock code returns an error as it doesn't have a valid struct
-> clk_hw pointer. The regmap call happens because pinmux wants to check
-> the GFX node (IP block 1) to query bits there.
-> 
-> For reference, reverting the patch gives us this trace:
-> 
-> [    0.393160] Muxing pin 151 for GPIO
-> [    0.393267] Disabling signal VPOB9 for VPO
-> [    0.393383] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.393552] Disabling signal VPOB9 for VPOOFF1
-> [    0.393681] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.393835] Disabling signal VPOB9 for VPOOFF2
-> [    0.393965] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.394097] Enabling signal GPIOS7 for GPIOS7
-> [    0.394217] Muxed pin 151 as GPIOS7
-> [    0.394411] gpio-943 (seq_cont): hogged as output/low
-> 
-> This can be reproduced in qemu without userspace:
-> 
-> qemu-system-arm -M romulus-bmc -nographic -kernel arch/arm/boot/zImage
-> -dtb arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb -no-reboot
-> 
-> Billy, do you have any suggestions?
+This affected at least 2 System76 systems (pang10/pang11) as
+well as two Lenovo laptops (X13 G2a/T14 G2a).
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Initially the solution was developed as a quirk for these
+4 systems, but then it was discovered the systems are ONLY
+affected when set to S3 instead of s2idle in BIOS setup.
 
-#regzbot ^introduced cf517fef601b
-#regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
-acquire regmap for IP block 1
-#regzbot ignore-activity
+To fix the regression, don't set wake capable for those GPIOs
+unless the system claims to support low power idle in the FADT.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+This effectively restores the behavior from before
+commit 1796f808e4bb ("HID: i2c-hid: acpi: Stop setting wakeup_capable")
+but only when utilized with S3.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+Mario Limonciello (2):
+  pinctrl: amd: Fix debug output for debounce time
+  gpiolib-acpi: Don't set GPIOs for wakeup in S3 mode
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+ drivers/gpio/gpiolib-acpi.c   | 3 ++-
+ drivers/pinctrl/pinctrl-amd.c | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+-- 
+2.34.1
+
