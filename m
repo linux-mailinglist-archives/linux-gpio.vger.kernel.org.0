@@ -2,75 +2,213 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A6AB6762B1
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 02:25:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B6156762B6
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 02:36:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbjAUBZd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 20:25:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37084 "EHLO
+        id S229597AbjAUBgo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 20:36:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjAUBZc (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 20:25:32 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D62871BE7;
-        Fri, 20 Jan 2023 17:25:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C012BCE2A78;
-        Sat, 21 Jan 2023 01:25:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EA3BCC433EF;
-        Sat, 21 Jan 2023 01:25:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674264328;
-        bh=clcYPdsUdP6UY/KQ53aZmE9amzJVnjF5RBX7TlKS7OA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=N5hORPfEYE++sRC2B9g78P5yqQWuIBFZnjJls5HM2W2QbVz+RqrNLEJQFfq4rcXMQ
-         F6yOurHUQnf4d5cfh2/lqRQZYNqo9FNgQ8qwWsKCsgJFRkvTukoXpTsvPACRSHmvN8
-         8YaI2dLFvSnG5Z8kysgbi7albswBEeAZHvM9C2FiICsulNd8Jl45zLnE7SP5BnVP/6
-         usI1jekzU2II/IvSS7iSEeMc9RngjkVJTejzj8ggFAprzyL6eriZpUAqi9j9Nlrke5
-         d5Uog+D0EoKgYj9aKk+rn8Rchwv6R6Srx/9cLYj7HmHwSLcf58pRqQNFSZZXc0uwZg
-         DqMcjaT8v0eOw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D4713E54D2B;
-        Sat, 21 Jan 2023 01:25:27 +0000 (UTC)
-Subject: Re: [GIT PULL] gpio: fixes for v6.2-rc5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230120223441.114683-1-brgl@bgdev.pl>
-References: <20230120223441.114683-1-brgl@bgdev.pl>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230120223441.114683-1-brgl@bgdev.pl>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.2-rc5
-X-PR-Tracked-Commit-Id: 4cb786180dfb5258ff3111181b5e4ecb1d4a297b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f883675bf6522b52cd75dc3de791680375961769
-Message-Id: <167426432786.9448.15702424431145630776.pr-tracker-bot@kernel.org>
-Date:   Sat, 21 Jan 2023 01:25:27 +0000
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229535AbjAUBgn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 20:36:43 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B8047DF9A
+        for <linux-gpio@vger.kernel.org>; Fri, 20 Jan 2023 17:36:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674265002; x=1705801002;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=OXroPvBjYwqLxBV7wQ+phgQ0jA1pJCwaqeiZnYDWMxU=;
+  b=OmMMP4cVULsRpPTlPmg++NwtsxYN8YQ0dZtruvXAwMiIyyTGIRtqeh2h
+   OLSDHPKfdsOQ78BfLPYxgM++EAEX17Wf2kTz7yAPLuhcfH1wkzpNhfsHT
+   3dNLxvYs9a79wjnSieMrWHF3ekfhqsXu/n5qod7JUa7m6v2KChKFI8dOU
+   qBiEBCKnnzg9RjVmTGxKHVuuy7scyHDaWGA0vwJOKc3UrjAPxXprTgx7o
+   6UzSKg5mluMbNZyHE8Y1jaBju3Fos/yVEF5WEKdqxbYqlbchkX85roA0y
+   lyC5rzjMFxlaLZGGdEOK1id9qyF7vOZzNLR0MrCh+2g8ZiEJuszfvDkHV
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="388104667"
+X-IronPort-AV: E=Sophos;i="5.97,233,1669104000"; 
+   d="scan'208";a="388104667"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 17:36:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="691264400"
+X-IronPort-AV: E=Sophos;i="5.97,233,1669104000"; 
+   d="scan'208";a="691264400"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 20 Jan 2023 17:36:39 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pJ2oA-0003Dz-0f;
+        Sat, 21 Jan 2023 01:36:38 +0000
+Date:   Sat, 21 Jan 2023 09:35:54 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc:     linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD REGRESSION
+ e464c96eae336dd2f81a1926c30523f061469f64
+Message-ID: <63cb417a.5FoFU8+tk9fRk6G8%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The pull request you sent on Fri, 20 Jan 2023 23:34:41 +0100:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: e464c96eae336dd2f81a1926c30523f061469f64  gpio: Get rid of gpio_to_chip()
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.2-rc5
+Error/Warning reports:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f883675bf6522b52cd75dc3de791680375961769
+https://lore.kernel.org/oe-kbuild-all/202301210447.JPSHmqrO-lkp@intel.com
 
-Thank you!
+Error/Warning: (recently discovered and may have been fixed)
+
+drivers/gpio/gpio-zevio.c:174:33: error: incomplete definition of type 'struct platform_device'
+drivers/gpio/gpio-zevio.c:178:2: error: call to undeclared function 'platform_set_drvdata'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/gpio/gpio-zevio.c:184:19: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
+drivers/gpio/gpio-zevio.c:184:21: error: call to undeclared function 'devm_platform_ioremap_resource'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/gpio/gpio-zevio.c:211:31: error: variable has incomplete type 'struct platform_driver'
+drivers/gpio/gpio-zevio.c:219:1: error: type specifier missing, defaults to 'int'; ISO C99 and later do not support implicit int [-Wimplicit-int]
+drivers/gpio/gpio-zevio.c:219:25: error: a parameter list without types is only allowed in a function definition
+
+Error/Warning ids grouped by kconfigs:
+
+clang_recent_errors
+|-- arm-randconfig-c002-20230120
+|   |-- drivers-gpio-gpio-zevio.c:error:a-parameter-list-without-types-is-only-allowed-in-a-function-definition
+|   |-- drivers-gpio-gpio-zevio.c:error:call-to-undeclared-function-devm_platform_ioremap_resource-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|   |-- drivers-gpio-gpio-zevio.c:error:call-to-undeclared-function-platform_set_drvdata-ISO-C99-and-later-do-not-support-implicit-function-declarations
+|   |-- drivers-gpio-gpio-zevio.c:error:incompatible-integer-to-pointer-conversion-assigning-to-void-from-int
+|   |-- drivers-gpio-gpio-zevio.c:error:incomplete-definition-of-type-struct-platform_device
+|   |-- drivers-gpio-gpio-zevio.c:error:type-specifier-missing-defaults-to-int-ISO-C99-and-later-do-not-support-implicit-int
+|   `-- drivers-gpio-gpio-zevio.c:error:variable-has-incomplete-type-struct-platform_driver
+`-- arm-randconfig-r034-20230119
+    |-- drivers-gpio-gpio-zevio.c:error:a-parameter-list-without-types-is-only-allowed-in-a-function-definition
+    |-- drivers-gpio-gpio-zevio.c:error:call-to-undeclared-function-devm_platform_ioremap_resource-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-gpio-gpio-zevio.c:error:call-to-undeclared-function-platform_set_drvdata-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-gpio-gpio-zevio.c:error:incompatible-integer-to-pointer-conversion-assigning-to-void-from-int
+    |-- drivers-gpio-gpio-zevio.c:error:incomplete-definition-of-type-struct-platform_device
+    |-- drivers-gpio-gpio-zevio.c:error:type-specifier-missing-defaults-to-int-ISO-C99-and-later-do-not-support-implicit-int
+    `-- drivers-gpio-gpio-zevio.c:error:variable-has-incomplete-type-struct-platform_driver
+
+elapsed time: 728m
+
+configs tested: 100
+configs skipped: 2
+
+gcc tested configs:
+x86_64                            allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+powerpc                           allnoconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+arm                  randconfig-r046-20230119
+arc                  randconfig-r043-20230119
+s390                             allyesconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                           allyesconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+sh                               allmodconfig
+i386                          randconfig-a005
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+mips                             allyesconfig
+x86_64                        randconfig-a013
+powerpc                          allmodconfig
+m68k                             allyesconfig
+x86_64                        randconfig-a011
+m68k                             allmodconfig
+x86_64                        randconfig-a006
+arc                              allyesconfig
+x86_64                           rhel-8.3-syz
+alpha                            allyesconfig
+x86_64                         rhel-8.3-kunit
+x86_64                        randconfig-a015
+x86_64                           rhel-8.3-kvm
+ia64                             allmodconfig
+x86_64                           rhel-8.3-bpf
+i386                                defconfig
+arm                                 defconfig
+arm                              allyesconfig
+arm64                            allyesconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                             allyesconfig
+sh                           se7724_defconfig
+powerpc                      ppc6xx_defconfig
+loongarch                        alldefconfig
+sh                   sh7770_generic_defconfig
+nios2                               defconfig
+powerpc                   currituck_defconfig
+i386                          randconfig-a016
+sparc                       sparc32_defconfig
+arm                           stm32_defconfig
+arm64                            alldefconfig
+arm                          exynos_defconfig
+sh                        sh7757lcr_defconfig
+m68k                        m5407c3_defconfig
+arc                              alldefconfig
+powerpc                       eiger_defconfig
+sh                             espt_defconfig
+i386                          randconfig-c001
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+arm                            hisi_defconfig
+arm                      footbridge_defconfig
+mips                           ci20_defconfig
+nios2                            allyesconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+
+clang tested configs:
+hexagon              randconfig-r045-20230119
+hexagon              randconfig-r041-20230119
+x86_64                          rhel-8.3-rust
+s390                 randconfig-r044-20230119
+riscv                randconfig-r042-20230119
+i386                          randconfig-a002
+i386                          randconfig-a004
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a005
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+mips                       lemote2f_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                     ksi8560_defconfig
+i386                          randconfig-a015
+powerpc                     tqm8540_defconfig
+powerpc                    ge_imp3a_defconfig
+arm                       spear13xx_defconfig
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+0-DAY CI Kernel Test Service
+https://01.org/lkp
