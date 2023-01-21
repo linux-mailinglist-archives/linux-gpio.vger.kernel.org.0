@@ -2,92 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B278F6765F0
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 12:18:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 835B9676635
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 13:32:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjAULSM (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Sat, 21 Jan 2023 06:18:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43898 "EHLO
+        id S229544AbjAUMcn (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Sat, 21 Jan 2023 07:32:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjAULSK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Jan 2023 06:18:10 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2B54BB8A;
-        Sat, 21 Jan 2023 03:18:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674299885; x=1705835885;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9kwPT8kksIgBqxpcCWvfEkT1fuXwQ6iPUQQcqQPVcAQ=;
-  b=jXbDlv094PytF8cKa0OKjxQK727kv2ZxYP9MzpikB/SrH1nozZCfabIu
-   OHlR6VopNXXINtywy7+0DRJ92FbC/v9kUeQFoFDJ+5FB53OYo3l+PcCrs
-   4uKjIBeU+xB4Ls/v70DK7aj/oYbyXkLQzXCUVgQGb66fD+LPiHzhgRwd3
-   itvYTmrgiRoOKj3RSe3nOlIkM9O+aXevfm1h95POrgeKgpNjQhQGUjeAU
-   2gHUhVMFgCyH+nlWnkS6JFiozUA9vjjfqb+2yyOlbjt1eKAYFQJpp5g1l
-   1w42XvIsCD59w7isZV/gRs9SrYdzFqJvmkOoiVsg9CGrM27sfjh2d8Pao
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="325814372"
-X-IronPort-AV: E=Sophos;i="5.97,235,1669104000"; 
-   d="scan'208";a="325814372"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2023 03:18:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="803369301"
-X-IronPort-AV: E=Sophos;i="5.97,235,1669104000"; 
-   d="scan'208";a="803369301"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Jan 2023 03:18:01 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2EBE8368; Sat, 21 Jan 2023 13:18:36 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Moses Christopher Bollavarapu <mosescb.dev@gmail.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH v1 1/1] gpio: zevio: Add missing header
-Date:   Sat, 21 Jan 2023 13:18:35 +0200
-Message-Id: <20230121111835.35245-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S229450AbjAUMcn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Sat, 21 Jan 2023 07:32:43 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D1E9B;
+        Sat, 21 Jan 2023 04:32:40 -0800 (PST)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pJD2t-0004b6-4q; Sat, 21 Jan 2023 13:32:31 +0100
+Message-ID: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
+Date:   Sat, 21 Jan 2023 13:32:30 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
+Content-Language: en-US, de-DE
+To:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Billy Tsai <billy_tsai@aspeedtech.com>,
+        linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
+ <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
+ <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
+ <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+From:   "Linux kernel regression tracking (#adding)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674304360;5a657a65;
+X-HE-SMSGID: 1pJD2t-0004b6-4q
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The commit 899f6a9c4364 ("gpio: zevio: Use proper headers and drop
-OF_GPIO dependency") missed one header this driver depends on. Add it.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-Fixes: 899f6a9c4364 ("gpio: zevio: Use proper headers and drop OF_GPIO dependency")
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Seems I somehow messed up with the series. Here is the missing part.
-Feel free apply it separately or fold into the original patch.
+On 19.01.23 02:54, Joel Stanley wrote:
+> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
+>> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
+>>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>>>
+>>>> When the driver want to disable the signal of the function, it doesn't
+>>>> need to query the state of the mux function's signal on a pin. The
+>>>> condition below will miss the disable of the signal:
+> 
+>>> I can't see the verdict for this patch? Will there be a new
+>>> version, or are we in the middle of a discussion?
+>>> I'd really like Andrew's ACK on the result before merging.
+>>
+>> Apologies, it's been a bit of A Week :)
+>>
+>> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
+> 
+> As foreseen by Andrew, this caused a regression. On the Romulus
+> machine the device tree contains a gpio hog for GPIO S7. With the
+> patch applied:
+> 
+> [    0.384796] aspeed-g5-pinctrl 1e6e2080.pinctrl: request pin 151
+> (AA20) for 1e780000.gpio:943
+> [    0.385009] Muxing pin 151 for GPIO
+> [    0.385081] Disabling signal VPOB9 for VPO
+> [    0.402291] aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to acquire
+> regmap for IP block 1
+> [    0.402521] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() failed for pin 151
+> 
+> The code path is aspeed-gpio -> pinmux-g5 -> regmap -> clk, and the
+> of_clock code returns an error as it doesn't have a valid struct
+> clk_hw pointer. The regmap call happens because pinmux wants to check
+> the GFX node (IP block 1) to query bits there.
+> 
+> For reference, reverting the patch gives us this trace:
+> 
+> [    0.393160] Muxing pin 151 for GPIO
+> [    0.393267] Disabling signal VPOB9 for VPO
+> [    0.393383] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.393552] Disabling signal VPOB9 for VPOOFF1
+> [    0.393681] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.393835] Disabling signal VPOB9 for VPOOFF2
+> [    0.393965] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.394097] Enabling signal GPIOS7 for GPIOS7
+> [    0.394217] Muxed pin 151 as GPIOS7
+> [    0.394411] gpio-943 (seq_cont): hogged as output/low
+> 
+> This can be reproduced in qemu without userspace:
+> 
+> qemu-system-arm -M romulus-bmc -nographic -kernel arch/arm/boot/zImage
+> -dtb arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb -no-reboot
+> 
+> Billy, do you have any suggestions?
 
- drivers/gpio/gpio-zevio.c | 1 +
- 1 file changed, 1 insertion(+)
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-diff --git a/drivers/gpio/gpio-zevio.c b/drivers/gpio/gpio-zevio.c
-index 778ae82413e4..0223c69b9d7b 100644
---- a/drivers/gpio/gpio-zevio.c
-+++ b/drivers/gpio/gpio-zevio.c
-@@ -10,6 +10,7 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- 
--- 
-2.39.0
+#regzbot ^introduced cf517fef601b
+#regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
+acquire regmap for IP block 1
+#regzbot ignore-activity
 
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
