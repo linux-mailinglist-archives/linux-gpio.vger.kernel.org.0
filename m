@@ -2,177 +2,162 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED165676255
-	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 01:25:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14DB5676268
+	for <lists+linux-gpio@lfdr.de>; Sat, 21 Jan 2023 01:30:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbjAUAZU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Fri, 20 Jan 2023 19:25:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35904 "EHLO
+        id S229699AbjAUAaz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Fri, 20 Jan 2023 19:30:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjAUAZI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 19:25:08 -0500
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on0604.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0d::604])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F7A4CD21A;
-        Fri, 20 Jan 2023 16:24:36 -0800 (PST)
+        with ESMTP id S229694AbjAUAay (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Fri, 20 Jan 2023 19:30:54 -0500
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2088.outbound.protection.outlook.com [40.107.13.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F541420C;
+        Fri, 20 Jan 2023 16:30:23 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VxlMy/083Xgm/prwXe4wnz8dy8YEKXoZyW6g1MgISwhYjFFZIaK9q4mVYs6gN6UN98JRoYZ1fTlvZGK4WOt3UmONizZjIviX2M7CnySVG0YccwYhJfTuohxJeTvMJP274wgcBg/TbXOpI9FLTebWkphvhkl7ckXeCGOHr64DHTc9mev2wbI4KiHpSpKk+DaSd9iuzDjd/AeVZdUCisiDDVcEUSu+GrcW4pEBQ8byH9DvK1h5i8gQ6z0C4py3woW1LDyNr0CWe4c3cQJv0u8n6cFfqw2K9iR/TI0+EGWJPG+LBBQqAg4AIkPcFMHiQeiAqTl7jRlw6KvoIvHO4D/XMA==
+ b=aMaPeHn3aiTcPWz87zq/+mRo43UDsjSI97rya43BicXqSU9aYU1EpxJbHr6FMHbHHJUTXPyuVHpNVbnRbyFZSN0TDwTRzRZTLSWjeXOs4mDd+TbyGsjAG4yx7ullQ0HxHJg3/YCGyH/nwvvfbvgos90YgnmDgmWVixl7NnKQSb/Sv0nNC4ZusugVWkWH3j1TrZwdZYkDPW71vitjDnMQ24LhUDChZP0x46yESCe33jlEIdNDhdnszp1hv5iRDgtYPA4iXDs3ZQRfDQjyHWPbLFgNB8TIWyBEVmJwAT0Gq33ToCTLd52PcFYHc1ZDg6ucnMEdlrzUsd2izHCWgxHxwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=z9HnMLFIZIVhWyN2uhimVdZjXCnxiQ/IQyK+u530PP8=;
- b=C4NNqnlShjESXyrLOu2FNc4Pj7Ku66zeqHJCMgvQL77yNVVD3wxodEEitldsCXZ1t/dlrEojaw21y64+xNmL73ojjPP2XkvSLzii3vh/HbFGQVYtqL3gtPbKhU6jDkz6BjKA8aHVCBSubFwxmFAJo8j/40VlF8u/usRD9CCh+6nH0HAAhAvwPiyIQZbBCXUYQ3FO1M2yg8Dl5hKL5ABpzr0Ki6agM4TyohXUcs/CFxom9elovh/SpyegxVvlWewGN/FFZsdkxEfyVUoPw7OMQemsSORg2ZU2uNlAq+qRg9/FzBHViqmN1qbvv9CGGCtzjaZouUKbZG50QBsUjN0Yxg==
+ bh=gLJsI2qztjOPtvG3i8jT8a7lKhYJPz213YuhXcFNtKc=;
+ b=I7QGYIvbJWVwGY0TA2V/rzjXbhqbQt6qxQAOgOiWTMdFw5SHhPLYNYvhTQvBqXS3d4pMCugWP3eR5zvUxYJhRdUSZovuoimUIyvRcfvdY2keBYoWIHCuR5QI4fxNClw+UThbNc5UEHjZwdpzoLql/m5Obd0bC+1LGmoIOIZWNYkvKM7hcEXrTARyTUQ5TI90hFYEIjK7Ougg8/dRHBjlWH6op++XycQ3zsGkSDaruCH160slgus9h/XF2s4qU1BXjMHBx0M93Q7X01+GUFYOJDm76I29MfJU9JjPydIn/b3TSVyu4CwSm9KeDt5mn1ibhFV8/ilKmKqB/E8kZjOgbw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=variscite.com; dmarc=pass action=none
  header.from=variscite.com; dkim=pass header.d=variscite.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=variscite.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z9HnMLFIZIVhWyN2uhimVdZjXCnxiQ/IQyK+u530PP8=;
- b=ZnZydHe2CkYDkPEFH/cj1I7ZEBYPFO0o8PXf3tUh0COcg2MUl9ZaaJZWeJtjIyDBQc/joh+6w2BOCnxQrNSVG6Sck7J8zmWsmeBWc7k0YyPj4izJ5EJclLZag0Y+G4zQJbMYb1z87NLRqiPVGjl+NPm/DTpuneGR3yzUgdSbRPLw3O1GjbtHLNYMMF7mbXSf6L+Cgt9m6oIoz8ZQ+PsAniS7zG9wq1VoZjJaumvZfETD1cbdjSIxmTw5BpKeHdAwaU2i1za9/JM1P06cQmD9OgkPA9v0qZbxhtJPtrnsK9xZRvA6yX5ZP/YSKkAGk1Xg1BDD29hNkwX9w3vW+4njMg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=variscite.com;
+ bh=gLJsI2qztjOPtvG3i8jT8a7lKhYJPz213YuhXcFNtKc=;
+ b=Uc7r/uSCZ4KClDl/WK5YWUSmwcP9yTUWmTdlrgwNp3nKRUFmdcncokqDmKM4E8vdxXGJLaRxzGW9lpx5dH9uY6LXmEXMJL5DeHQWT4OCaPE2D1wpAwkdHyX2InSdtte5BBWjpGq1PNoYnW68F+GpmONWj+YPTlazFL+UE4r8blK41ISCcyD7yAuuxakGGVZadrTmIv5Bmo8kYm/FxDVsyFfaPPGS3xfbMoROi/X/kqS1Z9C7ZvppiH7F2bfAz+ns1n+AFrzSDKkr2hLxd3s845OkUG54FI9Oew+eWe5RJBlT/yUPtWLEo5SJoZC//jt0+WklcdrwafyK8nkNHZhnQA==
 Received: from AM6PR08MB4376.eurprd08.prod.outlook.com (2603:10a6:20b:bb::21)
- by DU0PR08MB8114.eurprd08.prod.outlook.com (2603:10a6:10:3ea::19) with
+ by DBBPR08MB6169.eurprd08.prod.outlook.com (2603:10a6:10:205::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.23; Sat, 21 Jan
- 2023 00:19:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.28; Sat, 21 Jan
+ 2023 00:29:46 +0000
 Received: from AM6PR08MB4376.eurprd08.prod.outlook.com
  ([fe80::4e5b:51c8:1237:1fee]) by AM6PR08MB4376.eurprd08.prod.outlook.com
  ([fe80::4e5b:51c8:1237:1fee%5]) with mapi id 15.20.6002.027; Sat, 21 Jan 2023
- 00:19:02 +0000
+ 00:29:46 +0000
 From:   Pierluigi Passaro <pierluigi.p@variscite.com>
-To:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        yamada.masahiro@socionext.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     eran.m@variscite.com, nate.d@variscite.com,
-        francesco.f@variscite.com, pierluigi.p@variscite.com,
-        pierluigi.passaro@gmail.com, kernel test robot <lkp@intel.com>
-Subject: [PATCH v2] gpiolib: fix linker errors when GPIOLIB is disabled
-Date:   Sat, 21 Jan 2023 01:18:45 +0100
-Message-Id: <20230121001845.32592-1-pierluigi.p@variscite.com>
-X-Mailer: git-send-email 2.37.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0104.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:23::19) To AM6PR08MB4376.eurprd08.prod.outlook.com
- (2603:10a6:20b:bb::21)
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Eran Matityahu <eran.m@variscite.com>,
+        Nate Drude <Nate.D@variscite.com>,
+        Francesco Ferraro <francesco.f@variscite.com>,
+        "pierluigi.passaro@gmail.com" <pierluigi.passaro@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] gpiolib: fix linker errors when GPIOLIB is disabled
+Thread-Topic: [PATCH] gpiolib: fix linker errors when GPIOLIB is disabled
+Thread-Index: AQHZKbP8HePARHu89kiREi8q9tdvPK6iWtyAgAALPlOAAdbngIADzjYK
+Date:   Sat, 21 Jan 2023 00:29:45 +0000
+Message-ID: <AM6PR08MB43766A842F8B9252E3BC6345FFCA9@AM6PR08MB4376.eurprd08.prod.outlook.com>
+References: <20230116140811.27201-1-pierluigi.p@variscite.com>
+ <CAMRc=MfeQ_92Vb6inv-1_h=kc1d2as6LLPqJHHtbNk1pK1xRuA@mail.gmail.com>
+ <AM6PR08MB437640AB4B959DD356162F2BFFC69@AM6PR08MB4376.eurprd08.prod.outlook.com>
+ <CAMRc=MfN5o32AminWbjHVh_OBy-uAOJZyvb-1zhn7zs6EVyhMw@mail.gmail.com>
+In-Reply-To: <CAMRc=MfN5o32AminWbjHVh_OBy-uAOJZyvb-1zhn7zs6EVyhMw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=variscite.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM6PR08MB4376:EE_|DBBPR08MB6169:EE_
+x-ms-office365-filtering-correlation-id: 28bd1ca0-ddae-4ccc-3fdc-08dafb469909
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Of2L8sJD+HW+gkJHju7A9ZeP0zPlSC0SKf2efndz47sFf5B/31u52A89T3e+53agJDyco0kaW/8bT1X5rP2Ykfl8eK0qV0hCSj6wyaQXzSwbC3x5Q3+E4ed3LZSnUiSYk3kVc/9GsHBWaVphCHrKr/ynStU2Z6Zc5PyE2h4G5doQZkoIT4HfKuUVt5FG98FZ/SBlCLjJTn6MTD+VHO9zO+Jrl93x84u68QTQAcFJDgbn640dhJjYJwYhXEHSwIfQZLo3GTNPNT96Ip8e0zjG8RI0Oz167wJHQEYNyUyqVLr4QDhcNa7KeWi1bfD2mHADKGmu29H3iNVG+KrPn+HfpxqgKiIzDx3ZfrfgKdmSgdAXVsuLZaeCL4yQ6bV3F0VnZk3QxBzj+lkkVrsi9TROqTkWG8yaEbGsm8nnkKArOGcXbn7Lyquy67/zcLbhMihsmlhscGl+lKhvCJ6cV2UtXtHuC/RwMLrbZ56kvcHwCgzqAJ2YW7kazffgNr+qfpV/F2RgXbIN+Q0qv4mfV1FV44Mpjpu/MFkdOO4rNfNzxAzZf4GlXAH2MWunZE0ZaIeA8IK2u2gJawgLQik4bE+kPvRh+lIHmNFdnRh8oPssCSoQMAheFBqJBkSilBpyDKF4dFERkKGJ2Ixhx1GRZ2N4K5/mPgn6MwAppdSbj/ooPK/x8XnERM+Ht0rbhNewolksuMNQLOSceY5EgCa4bkYOeA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4376.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(366004)(346002)(396003)(376002)(39840400004)(451199015)(478600001)(33656002)(66946007)(76116006)(91956017)(122000001)(38100700002)(66556008)(66476007)(66446008)(55016003)(2906002)(71200400001)(7696005)(6506007)(54906003)(38070700005)(316002)(64756008)(8676002)(6916009)(4326008)(41300700001)(83380400001)(26005)(53546011)(5660300002)(52536014)(186003)(86362001)(9686003)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?eFynr4kwLYoCouWYCt/nzV0ILfK7cqBXSQlTORwsS0TRffpcdQZYphYbiu?=
+ =?iso-8859-1?Q?17wBfKg0uQjaqmloPJGwRgaKHS3GMjDe9UZoK0BVmMs1h7HjiikptZjtAS?=
+ =?iso-8859-1?Q?fgmEQ5/XIctuaJBCZDkgJ6NFjlD5cdbPCnBWLJ7dl8fThfVvRy1Xxy1k1e?=
+ =?iso-8859-1?Q?qQoV0I9oKmI7vkrKW0AcFwy2rLM5YDqVTkDnEN3pOticM3KTH8ynL5osF8?=
+ =?iso-8859-1?Q?ZhHQO88mF518tFN7l4bdKt3M5PpjsjihML+j+WMYv4sMRhfJuSdb8A7i7L?=
+ =?iso-8859-1?Q?y2fODIw1ioTHjkImR8ZQPqCKUv6s2Fjn0JDJdbtF/3556XjwLXiBOCbR8T?=
+ =?iso-8859-1?Q?KfHscP41vRepcZXkrs11abuxB6mGv6THAk0AN7tQn4fETpvqk+jxR+xXLF?=
+ =?iso-8859-1?Q?ypQyfJ//U4NPvDn5mLNfXPxWtm2LbODYq6UPFBZREqUOncdnUW4LcIV6wF?=
+ =?iso-8859-1?Q?/WL8WxQvTnBsJYNQBlysECFC9gXVB+8f9giUnHOenhnlaJtBoKctc2N+ev?=
+ =?iso-8859-1?Q?xTSPO2hwOMnyTVIEmjWPtOmQ7WumVMpOLEbe8j0CmnD7se3cTzNr6TdS+6?=
+ =?iso-8859-1?Q?Rbl4mUo+1yAu6iq6gaQtst0KmvpSIgqBfFRYsNjj9we/n1ffpw5Sci71U6?=
+ =?iso-8859-1?Q?3/GRid70DUJKulXaAoIDnRNbTCBOy/fmsPqVm8qnz1V5+yqT9hoMq9C3Mz?=
+ =?iso-8859-1?Q?AmF0pLb05/juQYc10evQs38VUEHjk97yiDsqddWmKgfTqXvkAgkZ122hrR?=
+ =?iso-8859-1?Q?/hbbH0H83yv7Uey8dDzAP5nXb+hYEFcC9fkterFEpBrAFMlw9OI0NS1+Zz?=
+ =?iso-8859-1?Q?zLrPNm7PXIxzYyWIi+MTG0NQdPZUKsj/k48y1GRIS1iWldvF4oc/R8abzO?=
+ =?iso-8859-1?Q?/MocvRjCJxofzD+aFoxNyEbnaHgcPKucpJL4rIdhnR+hFgOzwUFYAEy5da?=
+ =?iso-8859-1?Q?tuiG290tWIRZNTD9H0Mp0ZLi8O+7loh8bbnSsSlO5yFPhlSPTK117HAb/e?=
+ =?iso-8859-1?Q?AcD5OX3jKu1oqyxvvuBIpY/uKWSfiI85C134YEX97O2bMinebq/0ZULxf1?=
+ =?iso-8859-1?Q?bsJ0MDnv9bzPlBMTVqMLfbzeRSim/YblgbZuTXX8mw2x0kSzwh/WJZAliM?=
+ =?iso-8859-1?Q?BDqONzKG5fa0SynFpeUBjpNfbdkpCdnw7f8PJUB+Ec8ULvaj+WlqwcdHiI?=
+ =?iso-8859-1?Q?E0Pr+DMd7L3LNHB2xlDZSL7RFtTzYbD1WqMoXNcx7ajzPaVVUlTPvldMMp?=
+ =?iso-8859-1?Q?rErtI1sDNaTl48gH0ah4I1SZby4ZfC6113LyPPPeRauGfJH37BNiBdHFYT?=
+ =?iso-8859-1?Q?/kvbbQe81C2y8P58wsuRwQEWp6k9K7B1WMLqvsdAqRHIx8HjgLYNZ7a1ql?=
+ =?iso-8859-1?Q?Wresd4kHXOjqtFwHUPDinJ/B447zX/fvcTGzEcn/9/Ts5abGt9iAOni+J3?=
+ =?iso-8859-1?Q?R57p4aO7+1SLaUEU8yhyBWSxKRicsEZwaeAbOBC2G1CVBCB7BJi+1fBoPi?=
+ =?iso-8859-1?Q?I+JV7pRsi4bt8C1avptVS2jfxAdKK5TD9ibSO8E0n8X2c50kgXu56piWJw?=
+ =?iso-8859-1?Q?trTqU4niffbfwzgCH3DKaSPNIxBsXDK/pYvMTBXwJN4uDXtdOB17+EzfK+?=
+ =?iso-8859-1?Q?UoVt1kkqdpvA8aRbUGR9OgexLu03h5CbDs?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4376:EE_|DU0PR08MB8114:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0d1e7fb4-bc16-40f4-3cbf-08dafb4518ee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: mBOVcE4rWfavI4Cy4/L6KxAoUnIyGPyOOHAHi8wbv0yBBZGfJ7DTRIDXLLexKBYEvTkjwcxDoT4WaxdfJU1knyOxraGUwekazKVV7sTMU3319+VDZOf6fvvijIzS8cIED0058RQxcS5tfzy947ZSpAKXd84toVyoYG5dx5Cjlikf+m7kOG5RxXaxrZIAoTppJ/jAhIw0GHp2Bs4rJ/dYAbSF1EpPn2dzWCT5wKCVMBXZPhP900i0NFdFuHRBFNXPDE9gh2KfWN8/AWzI3fIyU0+55VO3konsH6b5QSbxJNLVjuyNmYTkKyVrDdqwSkDRx+eXQ3UEOJj6eDn7IPtl3HKb2mMFUo6T3tzFtR7/fwrrJuwIPohjBKHeSlAYb/Jx9QWdI89DOu8A06eiirXrzC5ng8CYz8LFLLA4FhwZZO4Ha7U1WQ3o8MC1vZTL/w01+TVjdwAhkiOVlOPaUfm8DJPdvN/8w4EQPn6SVeQvUpcO1qn4gBXmwgc3I+IhC7IDcR+mADl1kId+HSvWQofO0ovPR/B55FUc1gT1LovkG88tXq8bV5OSfISt5swYpy62Sl9xDU9uLRTAswcd9vjQ/vFhyaR6mk7ZCDJ+wv6Mocm1pxjPBtd6Tzzq+7g6LX++BQHrQ1qXfHjIDwnr3LFk3uLqP4T2UtlVD827o/6tmTxf5kf0WtG9DSP7fsQFFIJSKUBYP9GVn+PZHGYChR2Smg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4376.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(346002)(136003)(366004)(396003)(39840400004)(451199015)(5660300002)(83380400001)(38100700002)(66556008)(86362001)(4326008)(8936002)(8676002)(66476007)(2906002)(478600001)(186003)(6506007)(52116002)(26005)(1076003)(6512007)(2616005)(316002)(6486002)(38350700002)(41300700001)(6666004)(66946007)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Q6Rg2SUs7yI58DXb26AusJYH6UxVELylCfzC8qDGDiQ+J7r7xN/HOKgLcfb9?=
- =?us-ascii?Q?c1euPPuWkrEk8d7Pf/qK07W70LTGbttwpcSNYFjeTP99fQ2iZjztueXxpUnW?=
- =?us-ascii?Q?sbMAFK3S7Pkol/tJYtlq36N6o6Zo24GXKWDVh+q8tLa2YGctmtaLWwIltG6Q?=
- =?us-ascii?Q?mPTl7/F+FhjQBdiV04gQrGG8qXK3tOIv40rqyrEJPKV5mrpUJFThgRfflM2f?=
- =?us-ascii?Q?aW5XVrNafjI+lXkYv0thfREcM3+FhBaKa0sNb1gXCQkgETRdJIEqKp0aY8Wh?=
- =?us-ascii?Q?XKr2DvXTIl+JwfJ+Pd1jmjnfayF6nGXjufFjvecyFBpwBeOAtEcfQ1MJHyt0?=
- =?us-ascii?Q?wkGYwCTKjwCWAka5JO2ku44k7tANpg0T7cCxL5l90onLWUHEVDZnWjCQVq3O?=
- =?us-ascii?Q?/bjTlYGUqinO1xtowcTvAeshSwGAb28Tg6LATcOVPZWVjoH3EqDLgxBM8757?=
- =?us-ascii?Q?TzMKy5MglTVOhEsLqpALQDxW98amIoaVGsiOd4BOOp9TRwEv3FiaYF5D6Fug?=
- =?us-ascii?Q?W9npF+PaghJd7oTPE7QuULdcMtm9QyL4Nb3rUuRHD1TcXzMdMbXDyx7yNek+?=
- =?us-ascii?Q?GOy+zdFhakvRqqABTdtc/DoBGMFfeHRg2PPm23onb3ZD1IQ7u5oo+h2Gih5/?=
- =?us-ascii?Q?/dPoEoY0e1AWbDNd2BxIlvT1PZTRvz7RjaCMV5Hu0dFEzVdvcCj4tScpttDT?=
- =?us-ascii?Q?afiGpydRsDP9liG4aQrDdhGsmNASM+LI2S/5NZVSIteTpye8uiszOhyaB+RW?=
- =?us-ascii?Q?vTpgWvxIOl8uFzFdGt/BBo7IdQWFHI/fSkcIWo7Mz1enAKzWnQXwcbzUQecp?=
- =?us-ascii?Q?b4qTCK7iV52+TeRjWmUqVGzdp7Bz/JHW8BPN6BEynF7PpQsK5muaWL1Q2D6d?=
- =?us-ascii?Q?rCYOsOch0qX7+a/JUVmo5QalPUeinLc0uIC4Hw3DeGT/dwV4VysfBA6ml3KQ?=
- =?us-ascii?Q?xVWl+nGRAs7Z6QQA9+RhGB3uhC0iAumd1v3gGW5WJmIoV4ep59ONC2st+3ir?=
- =?us-ascii?Q?8QZrSgj8w94MDxpozNipalRtCYuyBWBiWjiWBdQ9TW7NXbgpCo0096beMy38?=
- =?us-ascii?Q?Hh4yVjwjdV1OmS7uAuRGhQv6uK41XsT2edYLhptxmTXaULlfmoih5W1wCzc2?=
- =?us-ascii?Q?fl8BrsmcwOzRSXI6JULmvOdF5JEAjkMCkVEP+Aml6uB82+5NrEmWs83sjS1C?=
- =?us-ascii?Q?N59uQzhWxwq08suD5ouCtqzGLX4IletxDHODsWptadVjCDzDBKSVE6WXHhLK?=
- =?us-ascii?Q?h6KYxzVnmmaF1KmyQZYZIBFblC4L6/RXiuflxH5vOml2geRq3vMMXw34Mnvg?=
- =?us-ascii?Q?e8khubU4CeQEPygV7vmmYe/vf0qsjR77+mdSerdINcdO/ZjKNn6d3hBT1zT+?=
- =?us-ascii?Q?2+Lu/kXzrYWt1N3wW+mhFUpFDypcFhRxN9RA+56mv8hOAgu0BjcrjVto3doz?=
- =?us-ascii?Q?LOWewVCfTRzSTOsBNGG05jhY0chvCYwn5e2d1yzZqtiwRbnrQTTdqrJaji6E?=
- =?us-ascii?Q?B2EPlHm4dS6OICaUOTBlVArg/bG+CiYhFEcRyFCOYMkHAuatzKXDQqchrEYW?=
- =?us-ascii?Q?qiVcKpR2eCv1UMR9Vmr6JIomfyv/LT0SaghZ1bTisqw/lsbwi97LuGOFsMFB?=
- =?us-ascii?Q?9w=3D=3D?=
 X-OriginatorOrg: variscite.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d1e7fb4-bc16-40f4-3cbf-08dafb4518ee
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4376.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2023 00:19:01.9677
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4376.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28bd1ca0-ddae-4ccc-3fdc-08dafb469909
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jan 2023 00:29:45.9524
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 399ae6ac-38f4-4ef0-94a8-440b0ad581de
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BhgVEJZB7dDzfWpHfOvYFUe8B69+JfDgKBeXp3lGw7FetFg5nDMJfZf5FTwYtemjZ9uJnJEUjZeAG+q++CUJ/vx9ECxeKIfGDcErGuqMwcQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8114
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 399ae6ac-38f4-4ef0-94a8-440b0ad581de
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qhCsFcCGQEbBclSPKvlaO18oPH2Ewnqd0fSMpNEEWXufXeDPHORlmTZEdOeSiZySsLFUPVVxJ74WVpI4UXNd/y/xhOXZlT3zW5wlEMf7cgM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6169
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Both the functions gpiochip_request_own_desc and
-gpiochip_free_own_desc are exported from
-    drivers/gpio/gpiolib.c
-but this file is compiled only when CONFIG_GPIOLIB is enabled.
-Move the protototypes under "#ifdef CONFIG_GPIOLIB" and provide
-reasonable definitions in the "#else" branch.
-
-Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
-Reported-by: kernel test robot <lkp@intel.com>
----
- include/linux/gpio/driver.h | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 44783fc16125..ed77c6fc0beb 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)
- 
- #endif /* CONFIG_PINCTRL */
- 
-+#ifdef CONFIG_GPIOLIB
-+
- struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    unsigned int hwnum,
- 					    const char *label,
-@@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
- 					    enum gpiod_flags dflags);
- void gpiochip_free_own_desc(struct gpio_desc *desc);
- 
--#ifdef CONFIG_GPIOLIB
--
- /* lock/unlock as IRQ */
- int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
- void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
-@@ -776,6 +776,22 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
- 
- #else /* CONFIG_GPIOLIB */
- 
-+static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-+					    unsigned int hwnum,
-+					    const char *label,
-+					    enum gpio_lookup_flags lflags,
-+					    enum gpiod_flags dflags)
-+{
-+	/* GPIO can never have been requested */
-+	WARN_ON(1);
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline void gpiochip_free_own_desc(struct gpio_desc *desc)
-+{
-+	WARN_ON(1);
-+}
-+
- static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
- {
- 	/* GPIO can never have been requested */
--- 
-2.37.2
-
+On Wed, Jan 18, 2023 at 3:22 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:=
+=0A=
+> On Tue, Jan 17, 2023 at 11:17 AM Pierluigi Passaro=0A=
+> <pierluigi.p@variscite.com> wrote:=0A=
+> >=0A=
+> > On Tue, Jan 17, 2023 at 10:36 AM Bartosz Golaszewski <brgl@bgdev.pl> wr=
+ote:=0A=
+> > > On Mon, Jan 16, 2023 at 3:08 PM Pierluigi Passaro=0A=
+> > > <pierluigi.p@variscite.com> wrote:=0A=
+> > > >=0A=
+> > > > Both the functions gpiochip_request_own_desc and=0A=
+> > > > gpiochip_free_own_desc are exported from=0A=
+> > > >     drivers/gpio/gpiolib.c=0A=
+> > > > but this file is compiled only when CONFIG_GPIOLIB is enabled.=0A=
+> > > > Move the protototypes under "#ifdef CONFIG_GPIOLIB" and provide=0A=
+> > > > reasonable definitions in the "#else" branch.=0A=
+> > > >=0A=
+> > > > Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>=0A=
+> > > > Reported-by: kernel test robot <lkp@intel.com>=0A=
+> > >=0A=
+> > > Please add a Fixes tag.=0A=
+> > >=0A=
+> > I beg your pardon for the question: how can I "add a Fixes tag" ?=0A=
+> > Can you point me to any reference documentation / instructions ?=0A=
+> > Thanks=0A=
+> > >=0A=
+>=0A=
+> Look at the output of `git blame` on the file in question and see who=0A=
+> added the changes that introduced the problem. Then, before your=0A=
+> Sign-off in the git message add: Fixes: <12 chars of the commit hash>=0A=
+> ("<commit subject>"). See Existing commits with fixes for reference.=0A=
+>=0A=
+> Bart=0A=
+>=0A=
+Thanks for the guidelines: I've just sent patch v2 with Fixes tag.=
