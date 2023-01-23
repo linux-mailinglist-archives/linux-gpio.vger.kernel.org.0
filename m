@@ -2,125 +2,216 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2217C678356
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 18:35:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7020678387
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 18:47:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbjAWRfY (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 12:35:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38292 "EHLO
+        id S231716AbjAWRrE (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 12:47:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232072AbjAWRfI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 12:35:08 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D191728F;
-        Mon, 23 Jan 2023 09:34:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674495272; x=1706031272;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fvPh3dJY06YUKjJ7aZ8eKgwxiGrcXa9T/9Jejm0c1FY=;
-  b=Ae+EuqPfHjQhkxGuApcqKshS/Zj1DFOuBDFwD0bycpzkPbyTwQG0EbQI
-   IpWbIVyPt1xliOWuJqxIvgfrKHYpUfr9POpSPUHU9u430JrIUMIwKm+2x
-   4J2/6Fu9daE1KeeAaHZ1Gvk9p6NooHhE6tFYjPMTHw4KIpPkeAqVKRqdw
-   sOD2shVVNB4TUDWVWDOiQ2VJQ+LKT30D/igLfZy4FicaqOBCHstUZZldY
-   S19Y8HKYrR1X4aUcEpDj7yD82nFjMeoEcch+KK1SJ1KcrO/csHNqfCxQk
-   DAm/my4R25feeIkuqHYieh/bcE8ALIV+2FwypAIOkSUASS2ksRwSQtjig
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="323792869"
-X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="323792869"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 09:33:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="655089009"
-X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="655089009"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jan 2023 09:33:29 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pK0hD-00DqwP-10;
-        Mon, 23 Jan 2023 19:33:27 +0200
-Date:   Mon, 23 Jan 2023 19:33:27 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     Raul Rangel <rrangel@chromium.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Wolfram Sang <wsa@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Nathan Smythe <ncsmythe@scruboak.org>,
+        with ESMTP id S229791AbjAWRrD (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 12:47:03 -0500
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2048.outbound.protection.outlook.com [40.107.249.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 065CA2F786;
+        Mon, 23 Jan 2023 09:47:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fGhTD3TPCyDRQv26S1BSmfe/+pZ9w6GB+XYr+e82sYegK75nCwdEwfE3l7Xi2UZzes9vvefWPDKQFFz3RMyHbDOPcvPg5KnI1G34y2Emselaoaop0nJR+FcmC/ULu/PLwpMKpIAMHhTOElUuKl2IjThWn4L8V/IJ0P4qmbg3t041YGPaQL6Z6PSdUiIl5m2q2J6shiHLqGXyxbUTKx/NQC82o5ysf08WbXI5Bv5o/CxOYDHbMbT76BnA4xFRak8G7xu1cOGxxd+b+e+U9VM39pQFueA+rnkWNrNAOtUX/p//Y/7bWv6l3i8/xQUseT9j7R36LV9lWwirgU2q9lTpfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=swxwK8URI9TBENWOWdCABfxS2cNTcXDyuj1xF3YlAHs=;
+ b=iacLRmDBbjm8Mrf/LHVvYuqcJX0XaiKeoxgHNsJ8qg6sLen7TX5QDhyXU0BAYiOwB2PONeKMRbqWbBUy04DHGqcJMu51VkbLhfaeFC6xgAVA84KDxcT2yf9CHxcBh187Nb4jHDr/byXoCC0USBoFqCAb35Y1smZH53k4qw4tOJo8WdC7SkPoyuC4S7bV338w0fOTbqPR1z/JKHp1jQcJszOnGZIgZnCliyEGSTxaKELfSc3SMrfuKjPYKcmGxXs9SVSsavsBevrW2xIrl4jABwQwQMHPzttQJKvooBnMlwyt7sK/0EU4SgPTtjou8SVplH5pEIjTcZp5G+i9NWILtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=variscite.com; dmarc=pass action=none
+ header.from=variscite.com; dkim=pass header.d=variscite.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=variscite.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=swxwK8URI9TBENWOWdCABfxS2cNTcXDyuj1xF3YlAHs=;
+ b=Mv7ZYCOLy9128MEr8a2/ZrZkkMV3SoP6FYaxvs5xMFpXQ5OJ1zWXxK9mCLOeRvlhtbDulx4Z6RlcQ5dh80U6R0LuDBu6sX763pIoKYW3UwVZBxjPdbINNdW/cTrobk11lduxXI3L/HszX4MDb23e8h81y8Dxd3scHi5kykh/0fA7te+C+5n5q8GW/WDuiEXi4Yq06HdnP376zPTFrceCEFGioG/shYF//+j75/HyLRJ3SDm8mqSzLkPgJh4MXjgTm3M/C5pnMeFUOB3rZXg0sYhzmZiNn+l8vkUNkAXASAJSZfUQzWHHU7/lwUzcoLwwuX2fv8liCAwbC0lTPaCA/A==
+Received: from AM6PR08MB4376.eurprd08.prod.outlook.com (2603:10a6:20b:bb::21)
+ by AS8PR08MB6229.eurprd08.prod.outlook.com (2603:10a6:20b:295::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Mon, 23 Jan
+ 2023 17:46:58 +0000
+Received: from AM6PR08MB4376.eurprd08.prod.outlook.com
+ ([fe80::4e5b:51c8:1237:1fee]) by AM6PR08MB4376.eurprd08.prod.outlook.com
+ ([fe80::4e5b:51c8:1237:1fee%5]) with mapi id 15.20.6002.033; Mon, 23 Jan 2023
+ 17:46:58 +0000
+From:   Pierluigi Passaro <pierluigi.p@variscite.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
         "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Hasemeyer <markhas@chromium.org>
-Subject: Re: [PATCH 2/2] gpiolib-acpi: Don't set GPIOs for wakeup in S3 mode
-Message-ID: <Y87E50x6cjTi2eDV@smile.fi.intel.com>
-References: <20230121134812.16637-1-mario.limonciello@amd.com>
- <20230121134812.16637-3-mario.limonciello@amd.com>
- <CAMRc=Meeiix1BuPi81Ad08yePvd7U5S-AVNwU+vYUHv2VcDiEQ@mail.gmail.com>
- <CAHQZ30Dgs=ScuQ2MkNkuHyZNC1wwaBDkMhcvh9dt3oAppTKBbw@mail.gmail.com>
- <MN0PR12MB61017872AB3769624CE2A49CE2C89@MN0PR12MB6101.namprd12.prod.outlook.com>
+        Eran Matityahu <eran.m@variscite.com>,
+        Nate Drude <Nate.D@variscite.com>,
+        Francesco Ferraro <francesco.f@variscite.com>,
+        "pierluigi.passaro@gmail.com" <pierluigi.passaro@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] gpiolib: fix linker errors when GPIOLIB is disabled
+Thread-Topic: [PATCH v2] gpiolib: fix linker errors when GPIOLIB is disabled
+Thread-Index: AQHZLS32afpvhqCZBUeCSggL2+QCU66sH2AAgAAOrgo=
+Date:   Mon, 23 Jan 2023 17:46:58 +0000
+Message-ID: <AM6PR08MB4376DF77E02FDB5F1E904BA8FFC89@AM6PR08MB4376.eurprd08.prod.outlook.com>
+References: <20230121001845.32592-1-pierluigi.p@variscite.com>
+ <CAMRc=MfXDeV7gus97Ba4FeuaP4sKtF87DrV4gCbiBR+rGFY6XA@mail.gmail.com>
+In-Reply-To: <CAMRc=MfXDeV7gus97Ba4FeuaP4sKtF87DrV4gCbiBR+rGFY6XA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=variscite.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: AM6PR08MB4376:EE_|AS8PR08MB6229:EE_
+x-ms-office365-filtering-correlation-id: f7e4aa7a-2934-4183-fa3b-08dafd69d366
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: mgrIQRI5T734+0Hxk/ZS+beh/Td2C0YxSfo7DPxJoZCfhKkquuxGJjdbcbjpCC6VdofVXA6n/O3hX/O3146YRVcdv/QRR+fjvsQ3EzrKZR90AAa5/AcOzRhnJTsc592tt84O7OWxPcCxlSySVGNi+2TzVGZvzUAfjEZDeBsn2cdicI3utHqy22Gh5oG6SLCdhLoxpkVSg4DIlD/mYwpxTKZHX1vaknEuhVI0rxKJ3Ozkoroc0DFsFc7l1EwjCZICvQBY340DqkQ7G5le3fyC2IiFtxNZCumlK+m75/kDomap57/yUjXK1Q7tJEwiecHo/y71xM8VgapNiQ1N5xda/ZoEG+qh9gqt8hqYXoRh/03g5Ssz/lP/W7xZsx066zN5308sIFyR8yIf1wj434Zsy9tSymXj2gF/EZFtLGNSvdqE9NnVAYkGSce+zTCix/k3SgXY5AX2Eofko00SN4D0yw3xoeQlpBmMBFwyBxzDLGYeZWqk7MU0iV4XTlfBClI3LYNEjPjW/NtFZfgYp8n0QsfS242HqEvfd6OoZPwuqCfuRG+s+FZgPb0IqAqI7MoJr3XkPkMeFGZACA2lOQS0yb0R/cX6KjCcOzGSUYJu/f1pKqYY9NSJ91OH4oW94B7RQFCe/YW2ldhppFlAWzNKuuJpNXcG2rstdYcV9v36rmOEQ2zwidUQJriz6K8Ozcaero2/MRP7/WGVyATMxPEGZA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4376.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(136003)(396003)(39840400004)(346002)(376002)(451199015)(91956017)(4326008)(8676002)(54906003)(6916009)(316002)(64756008)(66446008)(66556008)(66476007)(66946007)(2906002)(53546011)(41300700001)(8936002)(6506007)(5660300002)(83380400001)(55016003)(7696005)(33656002)(71200400001)(76116006)(9686003)(26005)(186003)(52536014)(122000001)(38070700005)(86362001)(38100700002)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?tO+vqXhHfqNfOckoblRBuFTy1HLereZJmoVb6xiW4MLZwtadq7+0s55Nu+?=
+ =?iso-8859-1?Q?yqzbWrSxQN8Qiukx5F/2h4vn7MJ3+auLcvQs0EtTqnHeSgEoT9HOHYoSgL?=
+ =?iso-8859-1?Q?cjs2060QqcjwyOta9wsyrAcDnS1WxrIRQNiB/xiA/NYh8yGVhbyYfm2oRP?=
+ =?iso-8859-1?Q?hlYow8Q4DPFrTA8pwYyTrv/F1HB38pr7etTq88LlWMFjoHyzhfVzkAvbiw?=
+ =?iso-8859-1?Q?sHne2gSIqjaK3ZljPAN0gsbKNpn885dxaePh94w5U42ja/26E6Ed3Xddlu?=
+ =?iso-8859-1?Q?lvPaO5nSMWXwewg3H60ggYZVR+OGxwB1GcvSMT5vCZ5izFdyP7BtdMbnAK?=
+ =?iso-8859-1?Q?nfo2PblDqUKaIwSaFUgjNWLelBZu7gEO3ZFmP8nyjO5nh14q5IH8MIwQv3?=
+ =?iso-8859-1?Q?pr3eQHzTYGM4LTCc77p49PSADOUiEe+nR/AHKQ+AsmYe6WlWNGpGVAewsL?=
+ =?iso-8859-1?Q?wja6PXiZAZ4N93su/xbFzQBNEK2nrij17+kARrOD6ozKOcI37de5dOuFQf?=
+ =?iso-8859-1?Q?yntbhFSrOhmnCX1e7k2tijUMnX5zsOZ/SyD/O5fPLgeRl3Da35eCp7WLBD?=
+ =?iso-8859-1?Q?pJmi1wIJ9vcypMLXfKzGJ4QY5rVSmFXGv1OhA3MUQndoHiKgHly14h/YeF?=
+ =?iso-8859-1?Q?PpAK7fhiILXnHO/F9A0hjF18flNPjTrAKHrmYmgyw8yEpK7hD8LQ3E/U3g?=
+ =?iso-8859-1?Q?YI7Qj6+hPD9FZobpXTu0oOofUfUlGX3bkZPJaFx84gAv1TXKAgv+jMB97X?=
+ =?iso-8859-1?Q?NbRT8bgPOt59/MXdBu4mx3gCGdyf3iGUO7g8xflltI1I34YAwlSHJSZfXe?=
+ =?iso-8859-1?Q?eOF8gyAOkOTZimLwte9OAFVe7TXzYjP218i/0MJ88VrHWBnKCG/1E3eY1G?=
+ =?iso-8859-1?Q?4tvwJLVAKCV4WWi492x2mfmo3BpF3zuyGjlqYe0YI8pBM6V6YyTEhuTAl0?=
+ =?iso-8859-1?Q?EtuVvJVCNwW8ezb6JxlDgDgWnsnFBkVjcejJXvpoAC+Hvn2DrmNkaEkv+b?=
+ =?iso-8859-1?Q?MIUY3PMpEgtSO7zBt5Bosx0IGqZaIemvbFrqzIx4iDnPzQvbzQUQ9gX8Xe?=
+ =?iso-8859-1?Q?rdk4YN0aUbe2covg53rrDHk4H3fdX517285lcxqrMZmTHzlludQNj1zdIe?=
+ =?iso-8859-1?Q?vZLS4T86PWIMWo7M8CZYUZhqXqLC64f3dLUtigV77hggNC/FHUE9YQNpA9?=
+ =?iso-8859-1?Q?W5uBdd551rG8w/qeLebncOi7lZ5hbajPBgS0zi7cvD0x8LyvxiI6WX/lMN?=
+ =?iso-8859-1?Q?WLIB47+5QeL/dR66OIINP9KT2OGDunHMieJ/XL62dDgfvkWc1QCPSGz1ff?=
+ =?iso-8859-1?Q?kG2jPxUz2D5tqIADkhUXMQcOOCZ/4+husMbQYgPQ0VlWHTbPc5yXY80Gzd?=
+ =?iso-8859-1?Q?kWIE3mlQn13elDc8vegrnKR0rXX51NzMxDqUXPazilpG1BuhfoVn7ZM5u2?=
+ =?iso-8859-1?Q?0N8azqUbbiBWzmZoWXxa7C0skBDFemH0NNUCOvijhDYyOC+k5g7S+K3J4r?=
+ =?iso-8859-1?Q?DULC3RbdThAwzczjhsVUQmfGHrmA1akAdW341oYB7+ahmgoHQ4HENz3QhT?=
+ =?iso-8859-1?Q?3NzboihLyNPQdGzi41+25rgPXzcQAAJNQrgelco9n/VoZMqc+ymaJ5x5Cf?=
+ =?iso-8859-1?Q?nvswjmuKUwdi/mThj3ozPiqXWIGU88kJUS?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MN0PR12MB61017872AB3769624CE2A49CE2C89@MN0PR12MB6101.namprd12.prod.outlook.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: variscite.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4376.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7e4aa7a-2934-4183-fa3b-08dafd69d366
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2023 17:46:58.6168
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 399ae6ac-38f4-4ef0-94a8-440b0ad581de
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: RuT+g/N2R5Yq6e8IBy4gAs8FERMICc5PsxCo8NGAju+8jEfX/CvjMO3QOU7Cjy3eol0vRqttTeGiJVnKXbnvrYHqlA1CH7CWPcKYG0KmiXY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6229
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 04:06:59PM +0000, Limonciello, Mario wrote:
-> > From: Raul Rangel <rrangel@chromium.org>
-> > Sent: Monday, January 23, 2023 09:55
-> > On Mon, Jan 23, 2023 at 8:03 AM Bartosz Golaszewski <brgl@bgdev.pl>
-> > wrote:
-> > > On Sat, Jan 21, 2023 at 2:48 PM Mario Limonciello
-> > > <mario.limonciello@amd.com> wrote:
-
-...
-
-> > > > +                       /* avoid suspend issues with GPIOs when systems are using
-> > S3 */
-> > > > +                       if (wake_capable && acpi_gbl_FADT.flags &
-> > ACPI_FADT_LOW_POWER_S0)
-> > > >                                 *wake_capable = info.wake_capable;
-> > > >
-> > > >                         return irq;
-
-...
-
-> > We still need to figure out a proper fix for this. If you read my post
-> > here: https://gitlab.freedesktop.org/drm/amd/-/issues/2357#note_1732372
-> > I think we misinterpreted what the SharedAndWake bit is used for. To
-> > me it sounds like it's only valid for HW Reduced ACPI platforms, and
-> > S0ix. My changes made it so we call `dev_pm_set_wake_irq` when the
-> > Wake bit is set. Does anyone have any additional context on the Wake
-> > bit? I think we either need to make `dev_pm_set_wake_irq` (or a
-> > variant) only enable the wake on S0i3, or we can teach the ACPI
-> > subsystem to manage arming the IRQ's wake bit. Kind of like we already
-> > manage the GPE events for the device.
-> 
-> There is an FADT flag for HW reduced (ACPI_FADT_HW_REDUCED).  So
-> maybe something on top of my change to look at that too?
-> 
-> IE:
-> if (wake_capable && (acpi_gbl_FADT.flags & (ACPI_FADT_LOW_POWER_S0 | ACPI_FADT_HW_REDUCED)
-
-I'm not sure why we are talking about HW reduced case?
-In HP reduced case IIRC the GPE are absent as a class.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Mon, Jan 23, 2023 at 4:10 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:=
+=0A=
+> On Sat, Jan 21, 2023 at 1:19 AM Pierluigi Passaro=0A=
+> <pierluigi.p@variscite.com> wrote:=0A=
+> >=0A=
+> > Both the functions gpiochip_request_own_desc and=0A=
+> > gpiochip_free_own_desc are exported from=0A=
+> > =A0 =A0 drivers/gpio/gpiolib.c=0A=
+> > but this file is compiled only when CONFIG_GPIOLIB is enabled.=0A=
+> > Move the protototypes under "#ifdef CONFIG_GPIOLIB" and provide=0A=
+> > reasonable definitions in the "#else" branch.=0A=
+> >=0A=
+> > Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declara=
+tions")=0A=
+> > Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>=0A=
+> > Reported-by: kernel test robot <lkp@intel.com>=0A=
+> > ---=0A=
+>=0A=
+> Applied, thanks. In the future please list changes between patch=0A=
+> versions when submitting new iterations.=0A=
+>=0A=
+> Bart=0A=
+>=0A=
+Thanks for the remark.=0A=
+>=0A=
+> > =A0include/linux/gpio/driver.h | 20 ++++++++++++++++++--=0A=
+> > =A01 file changed, 18 insertions(+), 2 deletions(-)=0A=
+> >=0A=
+> > diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h=
+=0A=
+> > index 44783fc16125..ed77c6fc0beb 100644=0A=
+> > --- a/include/linux/gpio/driver.h=0A=
+> > +++ b/include/linux/gpio/driver.h=0A=
+> > @@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)=0A=
+> >=0A=
+> > =A0#endif /* CONFIG_PINCTRL */=0A=
+> >=0A=
+> > +#ifdef CONFIG_GPIOLIB=0A=
+> > +=0A=
+> > =A0struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 unsigned int hwnum,=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 const char *label,=0A=
+> > @@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct =
+gpio_chip *gc,=0A=
+> > =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 =A0 =A0 =A0 enum gpiod_flags dflags);=0A=
+> > =A0void gpiochip_free_own_desc(struct gpio_desc *desc);=0A=
+> >=0A=
+> > -#ifdef CONFIG_GPIOLIB=0A=
+> > -=0A=
+> > =A0/* lock/unlock as IRQ */=0A=
+> > =A0int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);=
+=0A=
+> > =A0void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offse=
+t);=0A=
+> > @@ -776,6 +776,22 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_=
+desc *desc);=0A=
+> >=0A=
+> > =A0#else /* CONFIG_GPIOLIB */=0A=
+> >=0A=
+> > +static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_=
+chip *gc,=0A=
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 unsigned int hwnum,=0A=
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 const char *label,=0A=
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 enum gpio_lookup_flags lflags,=0A=
+> > + =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0 enum gpiod_flags dflags)=0A=
+> > +{=0A=
+> > + =A0 =A0 =A0 /* GPIO can never have been requested */=0A=
+> > + =A0 =A0 =A0 WARN_ON(1);=0A=
+> > + =A0 =A0 =A0 return ERR_PTR(-ENODEV);=0A=
+> > +}=0A=
+> > +=0A=
+> > +static inline void gpiochip_free_own_desc(struct gpio_desc *desc)=0A=
+> > +{=0A=
+> > + =A0 =A0 =A0 WARN_ON(1);=0A=
+> > +}=0A=
+> > +=0A=
+> > =A0static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc=
+ *desc)=0A=
+> > =A0{=0A=
+> > =A0 =A0 =A0 =A0 /* GPIO can never have been requested */=0A=
+> > --=0A=
+> > 2.37.2=0A=
+> >=
