@@ -2,53 +2,54 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77EDF678721
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 21:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B02106788EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 21:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbjAWUEx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 15:04:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38090 "EHLO
+        id S232593AbjAWU6u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 15:58:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232984AbjAWUEk (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 15:04:40 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA5B872B1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 12:04:34 -0800 (PST)
+        with ESMTP id S232677AbjAWU6n (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 15:58:43 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559E63866F
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 12:58:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674504274; x=1706040274;
+  t=1674507494; x=1706043494;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=bcS4fnIwfmjh7YQV73pqL/LT0kcUTZwDaq/D4F/4kOw=;
-  b=oH8IrnjdB7XGvSbSoHBevCPBjI+KS8+alUt59fg5JLlVXv6CR+8FqHGG
-   7fQC9ovwatPkNTyB+q79LQB9q/NokAmRKFULUUBgFZcTMM8kxM8QhsSz4
-   pFpsuD/nh7bVlG/jlFBQ0BMkLZoFosjOdedFDwsurQ/xg57hxtslGllrS
-   MfR2EI7tZXiHbj+s2azW9IqF8u26V/Bj2Ab5gc1yoD/ZXQ5JpbwZEeV1x
-   vp2iRP1mAF5qtV0gqZ42u7EcdEZ1ynvrPiRI75eHjAIhQly+4zBxh3NnD
-   hQguXm7xktiyiFayAioVID+/s34pN7LhQZvH6JSl+Ka45v/3rpCA8TO8B
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="353405671"
+  bh=B5Bpc+znc62sNJYhec5oWCnTZ3NsyrqmKocP7D05VJU=;
+  b=F15UWjsGAEgyiF8qkrbQmVGSDG+dhMd2Pl973Mp70LygH8w2RjFmk43y
+   DAQ3lrK471O1vXnf2Ms1PKh8IMMlDsOv5itmMafPRZElDagJkDSsc0NUt
+   Y+VUIbztFX15rc/7zCK/IPq5d+Q3okAbD94dGFJJXIUlgBngPdTqYSdw3
+   CjnuVxH97TnIP4DTIEx4xOmufgKs61Y6Hb42u9Ljh//os7uIKeIiJ7gb4
+   g35S+7tTdXn1MN347jK+h5aOqOCtWYc10eT5xmXtssfsNpC6aw0A9Uqdp
+   zKt0y6nGjmVjiiBMBlsMAnw/9dVQqLoCVbT/ZPCtK0LyCe4LmWY/bO9HJ
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="314044917"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="353405671"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 12:03:22 -0800
+   d="scan'208";a="314044917"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 12:55:24 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="750566759"
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="655164071"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="750566759"
+   d="scan'208";a="655164071"
 Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Jan 2023 12:03:21 -0800
+  by orsmga007.jf.intel.com with ESMTP; 23 Jan 2023 12:55:22 -0800
 Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pK32G-0005rU-0u;
-        Mon, 23 Jan 2023 20:03:20 +0000
-Date:   Tue, 24 Jan 2023 04:03:11 +0800
+        id 1pK3qb-0005tC-2I;
+        Mon, 23 Jan 2023 20:55:21 +0000
+Date:   Tue, 24 Jan 2023 04:54:39 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Pierluigi Passaro <pierluigi.p@variscite.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-gpio@vger.kernel.org,
         Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [brgl:gpio/for-current 2/2] include/linux/gpio/driver.h:782:68:
- error: parameter 4 ('lflags') has incomplete type
-Message-ID: <202301240409.tZdm0o0a-lkp@intel.com>
+Subject: [brgl:gpio/for-current 2/2] include/linux/gpio/driver.h:782:33:
+ error: variable has incomplete type 'enum gpio_lookup_flags'
+Message-ID: <202301240439.wYz6uU0k-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -65,52 +66,167 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
 head:   de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
 commit: de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f [2/2] gpiolib: fix linker errors when GPIOLIB is disabled
-config: x86_64-defconfig (https://download.01.org/0day-ci/archive/20230124/202301240409.tZdm0o0a-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+config: i386-randconfig-a014-20230123 (https://download.01.org/0day-ci/archive/20230124/202301240439.wYz6uU0k-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
 reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
         # https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?id=de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
         git remote add brgl https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
         git fetch --no-tags brgl gpio/for-current
         git checkout de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 olddefconfig
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
 All errors (new ones prefixed by >>):
 
-   In file included from include/linux/of_gpio.h:14,
-                    from drivers/net/phy/mdio_bus.c:27:
->> include/linux/gpio/driver.h:782:68: error: parameter 4 ('lflags') has incomplete type
-     782 |                                             enum gpio_lookup_flags lflags,
-         |                                             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
->> include/linux/gpio/driver.h:779:33: error: function declaration isn't a prototype [-Werror=strict-prototypes]
-     779 | static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+   In file included from arch/x86/kernel/early-quirks.c:17:
+   In file included from include/linux/bcma/bcma.h:9:
+   In file included from include/linux/bcma/bcma_driver_chipcommon.h:7:
+>> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
+                                               enum gpio_lookup_flags lflags,
+                                                                      ^
+   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
+   enum gpio_lookup_flags;
+        ^
+>> include/linux/gpio/driver.h:783:27: error: variable has incomplete type 'enum gpiod_flags'
+                                               enum gpiod_flags dflags)
+                                                                ^
+   include/linux/gpio/driver.h:23:6: note: forward declaration of 'enum gpiod_flags'
+   enum gpiod_flags;
+        ^
+   2 errors generated.
 --
-   In file included from include/linux/ssb/ssb.h:10,
-                    from include/linux/ssb/ssb_driver_gige.h:5,
-                    from drivers/net/ethernet/broadcom/tg3.c:54:
->> include/linux/gpio/driver.h:782:68: error: parameter 4 ('lflags') has incomplete type
-     782 |                                             enum gpio_lookup_flags lflags,
-         |                                             ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
->> include/linux/gpio/driver.h:783:62: error: parameter 5 ('dflags') has incomplete type
-     783 |                                             enum gpiod_flags dflags)
-         |                                             ~~~~~~~~~~~~~~~~~^~~~~~
->> include/linux/gpio/driver.h:779:33: error: function declaration isn't a prototype [-Werror=strict-prototypes]
-     779 | static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-         |                                 ^~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+   In file included from drivers/regulator/max8997-regulator.c:13:
+   In file included from include/linux/of_gpio.h:14:
+>> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
+                                               enum gpio_lookup_flags lflags,
+                                                                      ^
+   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
+   enum gpio_lookup_flags;
+        ^
+>> include/linux/gpio/driver.h:783:27: error: variable has incomplete type 'enum gpiod_flags'
+                                               enum gpiod_flags dflags)
+                                                                ^
+   include/linux/gpio/driver.h:23:6: note: forward declaration of 'enum gpiod_flags'
+   enum gpiod_flags;
+        ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:97:11: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
+                   return (set->sig[3] | set->sig[2] |
+                           ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:97:25: warning: array index 2 is past the end of the array (which contains 2 elements) [-Warray-bounds]
+                   return (set->sig[3] | set->sig[2] |
+                                         ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:113:11: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
+                   return  (set1->sig[3] == set2->sig[3]) &&
+                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:113:27: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
+                   return  (set1->sig[3] == set2->sig[3]) &&
+                                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:5: warning: array index 2 is past the end of the array (which contains 2 elements) [-Warray-bounds]
+                           (set1->sig[2] == set2->sig[2]) &&
+                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from drivers/regulator/max8997-regulator.c:17:
+   In file included from include/linux/regulator/driver.h:18:
+   In file included from include/linux/regulator/consumer.h:35:
+   In file included from include/linux/suspend.h:5:
+   In file included from include/linux/swap.h:9:
+   In file included from include/linux/memcontrol.h:13:
+   In file included from include/linux/cgroup.h:17:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+--
+   In file included from drivers/mtd/nand/raw/nand_base.c:45:
+   In file included from include/linux/of_gpio.h:14:
+>> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
+                                               enum gpio_lookup_flags lflags,
+                                                                      ^
+   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
+   enum gpio_lookup_flags;
+        ^
+   1 error generated.
 
 
 vim +782 include/linux/gpio/driver.h
 
    778	
- > 779	static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+   779	static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
    780						    unsigned int hwnum,
    781						    const char *label,
  > 782						    enum gpio_lookup_flags lflags,
