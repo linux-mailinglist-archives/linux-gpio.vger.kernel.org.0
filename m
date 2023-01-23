@@ -2,60 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3056C67854C
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 19:52:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22A31678554
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 19:53:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232167AbjAWSwy (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 13:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        id S232249AbjAWSxI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 13:53:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231758AbjAWSwv (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 13:52:51 -0500
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07A1A975A
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 10:52:46 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id g10so9815116wmo.1
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 10:52:46 -0800 (PST)
+        with ESMTP id S232016AbjAWSxC (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 13:53:02 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7BE31E35
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 10:53:00 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id fl11-20020a05600c0b8b00b003daf72fc844so11327852wmb.0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 10:53:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=h2cQoEb75EczKKjAWZYjz35p/GfaCp/uIVzj7rfHuXk=;
-        b=XpG4yI3/+KzK/651AVNtQXF87SFqCv1BdZOVTWxCyvnrqmLbAjPrgKR+g9KZCHxmwP
-         5hA3Rex9rTzQcVLyxyhmT/r5+97QWNHcMbdAO6vNUNyGCiSKApgKASAYT8+2qhBWhPw/
-         hFytiZqMYyzkz+zUTebHScKj0hOoa8p9eNVsDrNu0V708RlYF6nHdX3s92uaTAn+gI9b
-         hiniRGrVYil/QLPWoXnuIsP72DwIecqwbDFcaIhgFq3k3Trohb6m9T9HBotVrrYCfSeX
-         cTfDt8omtqQIlRJI08xFo4saKDNIZy/IEX27ZG/HrObQePeqLgmNpuukPZmI9VdAzOKM
-         mIpQ==
+        bh=lr5MPaX+CPbj+uvLPSPuq0twot1PyuqJGLrkh8HJM0I=;
+        b=xBqRe6fEn+YI8ZmpAsJ+mDYVaEfFQmDshTw9/SjuAUTRT+O5TmYv12ERKaxeqsO8PQ
+         gkAmIjYGjk9UFYHwzHx7cJScZbISnCINuUppUbX9dpx+bWL6KNfbSxDtge00SKu7P0Mf
+         38xeqLn7nAaBGxSitBCxrhN/DiaA1WJW4yPi1DkmgG0gCtlShBuxLdiYIpWvv4mtHkci
+         6Enmd8efhtrU/63NgFCq8OKyzjasErOyl5Zw2GT/Kz4I9vW6rgmUJpsePZH45GfDTEbv
+         1FYjz1zOtaqMEK6BUz1AaFaiMvgs33Q039xxvOZEDI9gMmpwlnwcko6t3xwtbAit6zT+
+         4TFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h2cQoEb75EczKKjAWZYjz35p/GfaCp/uIVzj7rfHuXk=;
-        b=NgoUeBwYeKB0/UXZGFjepf5HLI3s77GRAvxBtSVsqDzrpZNCH/5iTdD1vohJU33qPF
-         tP56lwrLkctZxHGK2+IER/J4irRXvUlFxyUIYaDEPnIoi+M2706TnFBqD+coPBgqo2GE
-         8+pG4HRzCvPTLDbaezwSA+R1y7HPlV5Th4WSYrLi+ceQ+4XISAdqCWu/QyGO8Siyl9G5
-         KUEJtLE2vs6u7hAfNuPfaO5VraNr8zhyruUeWh5cMi24r13aqw+tz7S3V2EmZ1Sswa6g
-         /Xd7f5g7IngSghgCt7NK4GeGFUvRvJFIwOC6OA69Z4BtlTQ/dNrzy2TK3i+G/2eNIQDz
-         Osfw==
-X-Gm-Message-State: AFqh2kqzE+8M4AcrRy9nYu7oMnBI72CDsuBvXARkqiU8RFnE/3bmbfIa
-        wfF7t6q+FFpK/iV2+xmsWhapDA==
-X-Google-Smtp-Source: AMrXdXsjZJWtWk61ODR4rKw5oKMzXA5JdwT6IU1QwVh5Rfk+vxs//732Udxrc+zaRJ/w1+a/X2T5ow==
-X-Received: by 2002:a05:600c:4d81:b0:3d0:6c60:b4d1 with SMTP id v1-20020a05600c4d8100b003d06c60b4d1mr26206864wmp.6.1674499965361;
-        Mon, 23 Jan 2023 10:52:45 -0800 (PST)
+        bh=lr5MPaX+CPbj+uvLPSPuq0twot1PyuqJGLrkh8HJM0I=;
+        b=kCtLNssIHfeHko0ynypgecIzPlIbWZgux2GDpIOI3CgfuUvt/qU4mpO9JSaeAmcRoK
+         Rf4GjwUtnXD3JtPy2Hr+BLsVDx7kZa3ql5FCFcEhd11LIeWCnwAsq/Bt2fxE6XvVlkhX
+         S+ETGz1uNbIdYl0gfJULXY6OxoV2GByHjsH7Iv8o3WLGQEZKKikXD+Y5ZkBi3/WP8J33
+         aZdr5GK91VNhKvqLIFW/Q3ChIWES1v0mRKiRet0T8NRuRu+o2hL8oDakg+o+lTPS8jTS
+         nJ8a/0Xvd5kPB2VGBXkNqGX5e/rwt7cJKahjOzOQcQQehrWrGBimHlpqAgBDGSGc7UIO
+         G2xQ==
+X-Gm-Message-State: AFqh2kpBsRT7j5t2T1/ZsH7EZms5BibyBygn3ZyiLZYtGJ0rRxWTGbUn
+        cn1JSPGRZlWDvALFMg2Gz3WdVQ==
+X-Google-Smtp-Source: AMrXdXuHygLwV0w4vccurHokoLTMYfXYMC3RwpOQYEmkkxITUtYbU06E92YaCyZXbM0xv/VucMgR4g==
+X-Received: by 2002:a05:600c:1e1f:b0:3db:2063:425d with SMTP id ay31-20020a05600c1e1f00b003db2063425dmr17101085wmb.2.1674499979190;
+        Mon, 23 Jan 2023 10:52:59 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id p1-20020a1c7401000000b003b3307fb98fsm11165968wmc.24.2023.01.23.10.52.43
+        by smtp.gmail.com with ESMTPSA id c7-20020a05600c0a4700b003d1e1f421bfsm12568074wmq.10.2023.01.23.10.52.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 10:52:44 -0800 (PST)
-Message-ID: <b3f563e3-6ecf-75b8-0978-d00358bb8ac2@linaro.org>
-Date:   Mon, 23 Jan 2023 19:52:42 +0100
+        Mon, 23 Jan 2023 10:52:58 -0800 (PST)
+Message-ID: <e75e5e1b-e7aa-e62d-1f12-f1543b6dbc25@linaro.org>
+Date:   Mon, 23 Jan 2023 19:52:56 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-Subject: Re: [PATCH v8 7/9] dt-bindings: timer: mediatek,mtk-timer: add MT8365
- SoC bindings
+Subject: Re: [PATCH v8 8/9] dt-bindings: serial: mediatek,uart: add MT8365 SoC
+ bindings
 Content-Language: en-US
 To:     =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
         linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
@@ -71,9 +71,9 @@ To:     =?UTF-8?Q?Bernhard_Rosenkr=c3=a4nzer?= <bero@baylibre.com>,
         andrew@lunn.ch, gtk3@inbox.ru, sean.wang@mediatek.com,
         zhiyong.tao@mediatek.com
 References: <20230123163833.1007181-1-bero@baylibre.com>
- <20230123163833.1007181-8-bero@baylibre.com>
+ <20230123163833.1007181-9-bero@baylibre.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230123163833.1007181-8-bero@baylibre.com>
+In-Reply-To: <20230123163833.1007181-9-bero@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -87,11 +87,14 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 23/01/2023 17:38, Bernhard Rosenkränzer wrote:
-> Add binding description for mediatek,mt8365-systimer
+> Add binding description for mediatek,mt8365-uart
+
+Subject: drop second/last, redundant "bindings". The "dt-bindings"
+prefix is already stating that these are bindings.
+
 > 
 > Signed-off-by: Bernhard Rosenkränzer <bero@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt 
 
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
