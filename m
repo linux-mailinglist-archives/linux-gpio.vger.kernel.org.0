@@ -2,78 +2,72 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1386A677628
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 09:13:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B39E67763F
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 09:24:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231649AbjAWINs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 03:13:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
+        id S230150AbjAWIYs (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 03:24:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231287AbjAWINr (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 03:13:47 -0500
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC9D17CE3
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:13:44 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id y1so5465350wru.2
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:13:44 -0800 (PST)
+        with ESMTP id S230122AbjAWIYs (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 03:24:48 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BA15196A0
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:24:47 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id d10so8361237pgm.13
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:24:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=SBM3bwQWzykO2B1JQ+ipvskwHKEQ4WdxVib/Qyi51ug=;
-        b=AT9Iq0xSCEqZpmKDW/Ox7GmeyX5AuNSRJunHvXTae3PtaTzXAaVeLJiUNCqlOyzZPw
-         33iOZHMkSml012eGVJ/IICOryeb3/C3pOsn3g1PIhUPamMcb4uBeWg9efJVUXjxl+bFp
-         0zW+bAj0q6l1Gj2h+11m2yuUu0cuj22N/4GRjtmdTOPLeMUNixJ7BsuSeM7+xQ1PijzC
-         GLqz/JxaSPW1s+RVlRp0DnWuxcQ3xeON8gI1oYo374UIcxoaNTFJ1q2hEzgNcEZzaFEi
-         564qfpA2fPIkm25jO5xQ6Obq7Kvks5lEJy0N0yf7xANOgqqn2qRJM07bm+JBKp265V+M
-         HqTQ==
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bn3yUjF9c0jKG/gSmvhhgiJqpHdO7QBFwGnsSULH1+k=;
+        b=ixucxIV5Tz1fEVTaxg7GDqOgnEDxu0oY/Z+4GNbF0hZ6W//CqDc2EhABy6AWheZDAX
+         7PKsC+IE0wlO+ossafzPfD8q6Cw+/+Ek0zvN30jfRa2s3hTdUGptViMHRmsaKPP7/aFo
+         pcMYEjfk/RogautO+Hw3Yas+h7Ko9aGgO/UkCZHeEaiLVYs2vbxSWB1rQaK/GuY4NVx6
+         dQ2aLH5MrBsHtTs9JngnvIKfn1TzxbH9npmAbFyP0lsQrC4MllDL9EN3CtTANy0vewXC
+         5kzVx4U6DQN9xvMR0sQ0RjMzMoSgfdK56O4xZeW5PC90UvhWdXYFuVQ5Ms+K50gsrCL0
+         yUtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SBM3bwQWzykO2B1JQ+ipvskwHKEQ4WdxVib/Qyi51ug=;
-        b=Ul/Aty2YH/vJ8EfAsw3ecIhQN4OinqRNnuW+WidFi862XwlnOSmqPK9cSHMSecIyQ4
-         Yy9CWgsL6ptACpD664eMD8BEZYrSxAdOcCUfWhJiZOIcYrupJqoPSbHahNkIPEq8LeDC
-         ZRoB49Yk6glLr6DWzOiZAL86ehCH995hm4WsmWPjgCMuHGCV5V0Sws+FuBkriZCLdtTK
-         k89qnz8zL70Wl2HZRYxXEXdCuOE4iqPwBsHEn9glDsqeHt1JXZ1SpCR9OmpBVeuAMDZb
-         2FYfroPUr15mz8fhlxI4vPeL4jsG4sZglI6uBFrpVm+FS7IOn8aDHoJS9ySuxv9RNwuL
-         c1dw==
-X-Gm-Message-State: AFqh2kpS+i0d69ezk7yxLYDYUvkxO51JPIHD9wd2VStew4orksl4f3iS
-        93RtDNqx1Nr1cPkd9yuW7Ej4dA==
-X-Google-Smtp-Source: AMrXdXvEE2+iNOHYDBXMmjnnlnEeh6QweQ/hJDMmk245CtGSpc/zmfvz+73u+L3+2RYwpIRt3IDSbQ==
-X-Received: by 2002:adf:fa08:0:b0:2bc:aa57:7f35 with SMTP id m8-20020adffa08000000b002bcaa577f35mr20792170wrr.52.1674461623286;
-        Mon, 23 Jan 2023 00:13:43 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id b9-20020adff909000000b002be5401ef5fsm7588216wrr.39.2023.01.23.00.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 00:13:42 -0800 (PST)
-Message-ID: <c317762c-4471-36c1-24fc-0982eee9192d@linaro.org>
-Date:   Mon, 23 Jan 2023 09:13:41 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH 13/15] dt-bindings: pinctrl: add support for Ambarella
-Content-Language: en-US
-To:     Li Chen <lchen@ambarella.com>, Li Chen <me@linux.beauty>,
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bn3yUjF9c0jKG/gSmvhhgiJqpHdO7QBFwGnsSULH1+k=;
+        b=GUSS2YJ/ESc7vzMYwut5LDmVlBPFC8ZGqz8l51VjSh6i1TY5qY0lHDTkZfbCJQA91l
+         I8MQIW/0IXH2R9uEVd6Xw5oN6L8Rdt5vepToPqAxAFsGbqtpjlMvf275VWi2q/4tOYEu
+         y/E7OkILxgiC2DXbQYcG8s9VLdXkUIEBqSJGfpK8xUhOz1f1TJDfgzLk2A/P35Ku++KZ
+         j+yv3nNUKWmedSMgNmFS/3DqL09NJc+A2NIaAufaRGoEFIWmumg6LzG4NGbh8AP6yFtm
+         EPpcTyJD1BT3zyvrC9PV+/rFcv/L/67yjVT+BuJ+7SoTLp8fReLeT6C1X/MqFjnlPjSX
+         J/2w==
+X-Gm-Message-State: AFqh2krRCurnrEeJQJmc7ssfAuw5KuY2tQ1+mkjHtNue/4JIfP5SymHR
+        Xd9kQOFs2Jlecx7aYxVXABIfhA==
+X-Google-Smtp-Source: AMrXdXtgB+5337s5SodVAR+LoDHMXmPeQxHatQ5mXMeEdCSW6yYeBWb0VLNQUcSLPekK6bCQVxdzOw==
+X-Received: by 2002:a05:6a00:181f:b0:58b:d244:b525 with SMTP id y31-20020a056a00181f00b0058bd244b525mr35990138pfa.17.1674462286272;
+        Mon, 23 Jan 2023 00:24:46 -0800 (PST)
+Received: from localhost ([122.172.83.155])
+        by smtp.gmail.com with ESMTPSA id k19-20020aa79733000000b0058d90bc57basm15940787pfg.90.2023.01.23.00.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 00:24:45 -0800 (PST)
+Date:   Mon, 23 Jan 2023 13:54:43 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Kent Gibson <warthog618@gmail.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     "moderated list:ARM/Ambarella SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20230123073305.149940-1-lchen@ambarella.com>
- <20230123073305.149940-14-lchen@ambarella.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230123073305.149940-14-lchen@ambarella.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 04/16] treewide: unify
+ gpiod_line_config/request_get_offsets() functions
+Message-ID: <20230123082443.xoexegmii3bnco6t@vireshk-i7>
+References: <20230113215210.616812-1-brgl@bgdev.pl>
+ <20230113215210.616812-5-brgl@bgdev.pl>
+ <20230116055209.b6ydvderreqtqedp@vireshk-i7>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230116055209.b6ydvderreqtqedp@vireshk-i7>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,59 +75,27 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 23/01/2023 08:32, Li Chen wrote:
-> Add a Ambarella compatible.
+Hi Bartosz,
+
+I gave few comments here, and it looks like you missed them ?
+
+On 16-01-23, 11:22, Viresh Kumar wrote:
+> For Rust changes, please run these as well to find any formatting
+> issues, warnings:
 > 
-> Signed-off-by: Li Chen <lchen@ambarella.com>
-> Change-Id: I8bcab3b763bdc7e400a04cc46589f0f694028a66
-> ---
->  .../bindings/pinctrl/ambarella,pinctrl.yaml   | 160 ++++++++++++++++++
->  MAINTAINERS                                   |   1 +
->  2 files changed, 161 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/ambarella,pinctrl.yaml
+> cargo fmt --all -- --check
+> cargo clippy --release --workspace --bins --examples --tests --benches --all-features --all-targets -- -D warnings -D clippy::undocumented_unsafe_blocks
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/ambarella,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/ambarella,pinctrl.yaml
-> new file mode 100644
-> index 000000000000..51f5a9cc4714
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/ambarella,pinctrl.yaml
-> @@ -0,0 +1,160 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/ambarella,pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Ambarella PIN controller
-> +
-> +maintainers:
-> +  - Li Chen <lchen@ambarella.org>
-> +
-> +description: |
-> +  The pins controlled by Ambarella SoC chip are organized in banks, each bank
-> +  has 32 pins.  Each pin has at least 2 multiplexing functions, and generally,
-> +  the first function is GPIO.
-> +
-> +  The PINCTRL node acts as a container for an arbitrary number of subnodes. And
-> +  these subnodes will fall into two categories.
-> +
-> +  One is for GPIO, please see the "GPIO node" section for detail, and another one
-> +  is to set up a group of pins for a function, both pin configurations and mux
-> +  selection, and it's called group node in the binding document.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: ambarella,pinctrl
-> +
-> +  reg:
-> +    minItems: 4
-> +    maxItems: 4
-> +
-
-Same problems as with other patches. You need to fix all of my previous
-comments.
-
-Best regards,
-Krzysztof
-
+> On 13-01-23, 22:51, Bartosz Golaszewski wrote:
+ 
+> Just like ValueMap, maybe we can add following in lib.rs for this:
+> 
+> pub type line::SettingsMap = IntMap<line::Settings>;
+> 
+> > +        let mut map: HashMap<Offset, Settings> = HashMap::new();
+> > +        let num_lines = unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) };
+> 
+> This needs a SAFETY comment. Should we check if this returned 0 ?
+> 
+-- 
+viresh
