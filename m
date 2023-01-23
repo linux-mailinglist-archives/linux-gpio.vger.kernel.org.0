@@ -2,242 +2,136 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B02106788EE
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 21:58:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 387A5678972
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 22:22:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232593AbjAWU6u (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 15:58:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59236 "EHLO
+        id S232375AbjAWVW3 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 16:22:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232677AbjAWU6n (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 15:58:43 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559E63866F
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 12:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674507494; x=1706043494;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=B5Bpc+znc62sNJYhec5oWCnTZ3NsyrqmKocP7D05VJU=;
-  b=F15UWjsGAEgyiF8qkrbQmVGSDG+dhMd2Pl973Mp70LygH8w2RjFmk43y
-   DAQ3lrK471O1vXnf2Ms1PKh8IMMlDsOv5itmMafPRZElDagJkDSsc0NUt
-   Y+VUIbztFX15rc/7zCK/IPq5d+Q3okAbD94dGFJJXIUlgBngPdTqYSdw3
-   CjnuVxH97TnIP4DTIEx4xOmufgKs61Y6Hb42u9Ljh//os7uIKeIiJ7gb4
-   g35S+7tTdXn1MN347jK+h5aOqOCtWYc10eT5xmXtssfsNpC6aw0A9Uqdp
-   zKt0y6nGjmVjiiBMBlsMAnw/9dVQqLoCVbT/ZPCtK0LyCe4LmWY/bO9HJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="314044917"
-X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="314044917"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 12:55:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="655164071"
-X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="655164071"
-Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 23 Jan 2023 12:55:22 -0800
-Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pK3qb-0005tC-2I;
-        Mon, 23 Jan 2023 20:55:21 +0000
-Date:   Tue, 24 Jan 2023 04:54:39 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Pierluigi Passaro <pierluigi.p@variscite.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [brgl:gpio/for-current 2/2] include/linux/gpio/driver.h:782:33:
- error: variable has incomplete type 'enum gpio_lookup_flags'
-Message-ID: <202301240439.wYz6uU0k-lkp@intel.com>
+        with ESMTP id S232107AbjAWVW2 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 16:22:28 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE563526C;
+        Mon, 23 Jan 2023 13:22:26 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id y19so16230732edc.2;
+        Mon, 23 Jan 2023 13:22:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O/m9fxwpEbZpN8X/D6lwA+MFLaC8U37ezUMxtxmuH1s=;
+        b=nHYnC2veAbsrTjlHDQZR0BhSSYSQHFBMBLaA06XtKf/JcBy5o8Qo7rR09XYFpWbUEQ
+         zUOF/c0nEFw/jpxdxY0TfQt3XGGuupq5k+GM3BFNMVNokLyG6Kk1IjtfDSXvHP48ZG13
+         jdOgZSqvN3oJXcHwsBtb9UDARHudBrRRed8l6Isn9nuA4nQuuylTDdPnfDcXiZqSEILN
+         gWO7GzisBtbyiAwsbduiUw3652oAUhn8vy/MxZKL9AZXx0cbkrVRsYgm9na9wU7vZ5Fs
+         WThJGOxnqxCx06877AWz0wv5I7DlCBeQVyGjt7IoWTH2E3KUbvDlkObUuIZjI+xI/qTV
+         YVpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=O/m9fxwpEbZpN8X/D6lwA+MFLaC8U37ezUMxtxmuH1s=;
+        b=hGifrAa0OWc5cLMtG4cxl1MC5lqEOWp8v4/khIuELyK4FonZ43BF2GXdiqNB4gtRSG
+         +FXnhTwaNCYiyUBo950QENaOhQAWGkTWgB1s+gr36YtZDH7luGRd40pUtxleeMV2Wmjl
+         OhLQaB5iDylddhPRkxVTN2tDWwGXAmp/STdpDkv2dctb+aDkJ1Bh6fIlluFRMXBhD9Kl
+         uBAgd4yP0yW2k1GjqM5dCrNChtGUHWuxtJP9TYlakAUo/M04i/3xxTAAnE+vEQAQkyj/
+         SI5M5nVQMnJ/qitwsk85wctLhnjaiV+YCraVU6GCpzwwaga/sj6T3CVdlWZKHC9wJpa8
+         AQcg==
+X-Gm-Message-State: AFqh2koOwsoXdHVXDaqP3ajgMXIalNtkWuUorPC8T7stvi31+wR+ezSD
+        EBysxTeF67wBXEPvAmxvMyk=
+X-Google-Smtp-Source: AMrXdXsecJ0Lmw0T6hteu5NgTW5sF1ad5h25d+1oE8fDr0Fwmliz4MOIjn5MfXF/7fkBbotfYHdm0g==
+X-Received: by 2002:a05:6402:5296:b0:49c:3cf4:d9ed with SMTP id en22-20020a056402529600b0049c3cf4d9edmr30260243edb.23.1674508945276;
+        Mon, 23 Jan 2023 13:22:25 -0800 (PST)
+Received: from ?IPV6:2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7? (dynamic-2a01-0c23-bc5b-9400-dc4c-6fb7-47b2-beb7.c23.pool.telefonica.de. [2a01:c23:bc5b:9400:dc4c:6fb7:47b2:beb7])
+        by smtp.googlemail.com with ESMTPSA id cm28-20020a0564020c9c00b0049e9fe9abcasm213409edb.44.2023.01.23.13.22.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jan 2023 13:22:24 -0800 (PST)
+Message-ID: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Date:   Mon, 23 Jan 2023 22:22:15 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Content-Language: en-US
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust some
+ dtbs's
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
-head:   de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
-commit: de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f [2/2] gpiolib: fix linker errors when GPIOLIB is disabled
-config: i386-randconfig-a014-20230123 (https://download.01.org/0day-ci/archive/20230124/202301240439.wYz6uU0k-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git/commit/?id=de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
-        git remote add brgl https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-        git fetch --no-tags brgl gpio/for-current
-        git checkout de5f701724ac1078deaf19ca2aa8dbf4bcd4b04f
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+At first adjust some existing dtbs's so that they pass dtbs_check
+after switching bindings to yaml.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
+Then switch further Amlogic Meson bindings to yaml.
+Tested with make targets dt_binding_check and dtbs_check.
 
-All errors (new ones prefixed by >>):
+Heiner Kallweit (8):
+  arm64: dts: meson-gx: Remove invalid pwm compatible
+  arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
+  arm64: dts: meson-gx: Set only one compatible string for mmc
+  arm64: dts: amlogic: Remove invalid compatible string
+    amlogic,meson-gpio-intc
+  dt-bindings: rtc: Add Amlogic Meson vrtc controller binding
+  dt-bindings: pwm: Add Amlogic Meson PWM binding
+  dt-bindings: interrupt-controller: Add Amlogic Meson GPIO interrupt
+    controller binding
+  dt-bindings: pinctrl: Add Amlogic Meson pinctrl binding
 
-   In file included from arch/x86/kernel/early-quirks.c:17:
-   In file included from include/linux/bcma/bcma.h:9:
-   In file included from include/linux/bcma/bcma_driver_chipcommon.h:7:
->> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
-                                               enum gpio_lookup_flags lflags,
-                                                                      ^
-   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
-   enum gpio_lookup_flags;
-        ^
->> include/linux/gpio/driver.h:783:27: error: variable has incomplete type 'enum gpiod_flags'
-                                               enum gpiod_flags dflags)
-                                                                ^
-   include/linux/gpio/driver.h:23:6: note: forward declaration of 'enum gpiod_flags'
-   enum gpiod_flags;
-        ^
-   2 errors generated.
---
-   In file included from drivers/regulator/max8997-regulator.c:13:
-   In file included from include/linux/of_gpio.h:14:
->> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
-                                               enum gpio_lookup_flags lflags,
-                                                                      ^
-   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
-   enum gpio_lookup_flags;
-        ^
->> include/linux/gpio/driver.h:783:27: error: variable has incomplete type 'enum gpiod_flags'
-                                               enum gpiod_flags dflags)
-                                                                ^
-   include/linux/gpio/driver.h:23:6: note: forward declaration of 'enum gpiod_flags'
-   enum gpiod_flags;
-        ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:97:11: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
-                   return (set->sig[3] | set->sig[2] |
-                           ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:97:25: warning: array index 2 is past the end of the array (which contains 2 elements) [-Warray-bounds]
-                   return (set->sig[3] | set->sig[2] |
-                                         ^        ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:113:11: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
-                   return  (set1->sig[3] == set2->sig[3]) &&
-                            ^         ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:113:27: warning: array index 3 is past the end of the array (which contains 2 elements) [-Warray-bounds]
-                   return  (set1->sig[3] == set2->sig[3]) &&
-                                            ^         ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
-   In file included from include/linux/sched/signal.h:6:
-   include/linux/signal.h:114:5: warning: array index 2 is past the end of the array (which contains 2 elements) [-Warray-bounds]
-                           (set1->sig[2] == set2->sig[2]) &&
-                            ^         ~
-   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
-           unsigned long sig[_NSIG_WORDS];
-           ^
-   In file included from drivers/regulator/max8997-regulator.c:17:
-   In file included from include/linux/regulator/driver.h:18:
-   In file included from include/linux/regulator/consumer.h:35:
-   In file included from include/linux/suspend.h:5:
-   In file included from include/linux/swap.h:9:
-   In file included from include/linux/memcontrol.h:13:
-   In file included from include/linux/cgroup.h:17:
-   In file included from include/linux/fs.h:33:
-   In file included from include/linux/percpu-rwsem.h:7:
-   In file included from include/linux/rcuwait.h:6:
---
-   In file included from drivers/mtd/nand/raw/nand_base.c:45:
-   In file included from include/linux/of_gpio.h:14:
->> include/linux/gpio/driver.h:782:33: error: variable has incomplete type 'enum gpio_lookup_flags'
-                                               enum gpio_lookup_flags lflags,
-                                                                      ^
-   include/linux/gpio/driver.h:24:6: note: forward declaration of 'enum gpio_lookup_flags'
-   enum gpio_lookup_flags;
-        ^
-   1 error generated.
-
-
-vim +782 include/linux/gpio/driver.h
-
-   778	
-   779	static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-   780						    unsigned int hwnum,
-   781						    const char *label,
- > 782						    enum gpio_lookup_flags lflags,
- > 783						    enum gpiod_flags dflags)
-   784	{
-   785		/* GPIO can never have been requested */
-   786		WARN_ON(1);
-   787		return ERR_PTR(-ENODEV);
-   788	}
-   789	
+ .../amlogic,meson-gpio-intc.txt               |  38 ------
+ .../amlogic,meson-gpio-intc.yaml              |  72 +++++++++++
+ .../pinctrl/amlogic,meson-pinctrl.yaml        | 121 ++++++++++++++++++
+ .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  61 +++++++++
+ .../devicetree/bindings/pwm/pwm-meson.txt     |  29 -----
+ .../bindings/rtc/amlogic,meson-vrtc.yaml      |  50 ++++++++
+ .../bindings/rtc/rtc-meson-vrtc.txt           |  22 ----
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   5 +-
+ .../boot/dts/amlogic/meson-g12-common.dtsi    |   7 +-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  15 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |   3 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |   3 +-
+ arch/arm64/boot/dts/amlogic/meson-s4.dtsi     |   3 +-
+ arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |   3 +-
+ 15 files changed, 320 insertions(+), 206 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
+ delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.1
+
