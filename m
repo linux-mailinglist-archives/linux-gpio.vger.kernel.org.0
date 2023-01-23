@@ -2,65 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6D0E677FDF
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 16:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 202FF678045
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 16:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231654AbjAWPfH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 10:35:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
+        id S232602AbjAWPpv (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 10:45:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232749AbjAWPfE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 10:35:04 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48484113D8
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 07:35:01 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so10911787wmb.2
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 07:35:01 -0800 (PST)
+        with ESMTP id S232873AbjAWPpu (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 10:45:50 -0500
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00953E386
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 07:45:49 -0800 (PST)
+Received: by mail-vs1-xe2b.google.com with SMTP id d66so13295546vsd.9
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 07:45:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mKTLA9yZUYmtA1fFs9KbUCsxjXb0OfR5kp40yiR+evw=;
-        b=emQzCbpFDOP5iUhisUlnuLqaqBSoKy+5CO9zXoB2GqeAe7NjPACeAr8JJmuum2EDrE
-         H0zIkZBz2Mq11in+mL6zFj5jAy5yPvfVz2vXCxIx3hZFt/79iGm18aTb4Suy/+nhbxTE
-         bMbAUMRMaENwfyt6OD71xQq6zlrwVPVT2oj5fqP8bJnbElrh5W2CbBuRauHmAaWgZAh2
-         Yjh8oRdbXvZELSQlXo1i5aGDqa+vKy4GhLNR0m1dY6F06v/51ISs03REi3MUioLu1C2m
-         Dd54GTf255FdqEGD4YMYoHmAg+GGgxRdhAEa4Dt4LZa6/eM3NwB8Yy61emvTybQJ6i7x
-         fA8A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=9vMPCyKcy4NrBdUPtNr0oa3rxm1OSD9ZPJA/Iqf7nzY=;
+        b=yafLnDWRQVVxn6v5UpQbPK5wZXzbyJNWxw1qbIJF/fA7PF+X6soFkpUVLECocRX1Oo
+         6VEqAZbN/V/+dx3Kf21wug2Irh52MqFjqyyXCotE2jBbu+s2T8yTufYpn0ccldBX05Zp
+         2wzp8SpWyLgwfHAN7vf0phVPcnwN2luD6/BXi2Pz9SuRgmCnJsi2/VZxDszGnbRnP9Cz
+         +sXRMPnsiR3xdsqPjidyDS4VwpAeC09Ktw1HK6+fLGeig94AO2TK2FBhPysF65LPi8Ok
+         byjl2T6AgKxiN5SurXAcNmwkkjZ9vhf2h1HzXkLiSQI2VH0+zpL3aynZ5oGBVU+JSfNm
+         K7Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mKTLA9yZUYmtA1fFs9KbUCsxjXb0OfR5kp40yiR+evw=;
-        b=kjM4pgUQnUxFJfPqS2RpsTRzq+7CiBplk6y5kWUbiPOCGGxWxudYOYQSHx5CvtrKVh
-         bqVt2UoaqJBNgGmiR8FZ1ur6eGFh21LsnLudvYw6aXnzK8crYsTuX8pc+hzavLXA48xc
-         7vAnvIxu8HbONS6Dl2ef54V2DDDcZS9q67v4eBYaAhrCP4+t/egEbXvLRLPsnpjA++o+
-         xjD2oV2Rf+qJHGDpRxnydFQ37pZpyL9cR3FlEynhZJV8PV54MYqk5d0ChczCtbXoFtr0
-         L53wbxFfkXKVDX69VbMZotrNfKbKeseQY20bwbCSJSYhjrO8jXdWDNMpmFv+C9hy9O7f
-         oCwQ==
-X-Gm-Message-State: AFqh2kqXPZygsq2M68swq8svwBaQyfmINVqwyHJvrZSJMcuVYkkpx+13
-        l3rS5p+MiHj2aOTTjaHzCwMwKQ==
-X-Google-Smtp-Source: AMrXdXtpzGj49cbTEK3W0JJFFmpv2pt0Er6J464splHtBMA/aUHI+KuVR72dJil/izn0/rnZ9WVs/Q==
-X-Received: by 2002:a7b:cbcb:0:b0:3db:2ad:e330 with SMTP id n11-20020a7bcbcb000000b003db02ade330mr24214691wmi.5.1674488099555;
-        Mon, 23 Jan 2023 07:34:59 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:30ed:611a:2bcc:ca68])
-        by smtp.gmail.com with ESMTPSA id i22-20020a05600c355600b003a84375d0d1sm11663397wmq.44.2023.01.23.07.34.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 07:34:58 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH v3] treewide: unify gpiod_line_config/request_get_offsets() functions
-Date:   Mon, 23 Jan 2023 16:34:56 +0100
-Message-Id: <20230123153456.402675-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        bh=9vMPCyKcy4NrBdUPtNr0oa3rxm1OSD9ZPJA/Iqf7nzY=;
+        b=atlGgfRg1L9KXJVWdcn26Dkl/l+SBuXqf6AucPOz7Q469lR6B2VeKGWCT7+MyYabZa
+         b4u9cQIXdZB96SDQ0+L7kYA0F731IX3zWLQzA15HD0h1NoT6RC4Qdba2kocQYuKy1avR
+         w020FRdD1c9UqwDbL2GobDlh0c4bS2+5iSVFPsp5ma3A4HxxBNZo3aQF2y5Oj3d5c2bB
+         eUqTkKxnh+gX8RGwKr9bT1tOoAKIBT9aJ4YuEXoEMxP+tReuNeVCP9Xh2Bn67zyL1zG4
+         i1UmPRY9Sw1fFJwSUmNTlZWixYhcJbpm8Ru75/l+qITgB/7Qz2CywfTgIrO2VSYUf7W0
+         dEZg==
+X-Gm-Message-State: AFqh2koBbkQKpd4BLbHEEbWybtS9iy3x8s0kzKydcl9XYexkfQhDoNgL
+        Tk5mnlZ79xIq88EZKBdK1CBbJma+xqQ5CdT6+CIrjA==
+X-Google-Smtp-Source: AMrXdXsyF0W9cBV0sfjDUY9xGupl2wPp31Bet6QW96bQUOo9cTVUw51t7US2agfIq6OBxEm/DHgAB5jlRt8F8xchLbg=
+X-Received: by 2002:a67:f282:0:b0:3ce:88b3:d7da with SMTP id
+ m2-20020a67f282000000b003ce88b3d7damr3348962vsk.62.1674488749105; Mon, 23 Jan
+ 2023 07:45:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CACRpkdb6yMqTkrJOg+K46RZ1478-gbxh6=tw4bzWmd--5nj_Bw@mail.gmail.com>
+In-Reply-To: <CACRpkdb6yMqTkrJOg+K46RZ1478-gbxh6=tw4bzWmd--5nj_Bw@mail.gmail.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 23 Jan 2023 16:45:38 +0100
+Message-ID: <CAMRc=MfszzKi8a8-UTFbi49_=mbas7_HvguV-0+aJn6NDM0FgQ@mail.gmail.com>
+Subject: Re: gpio: making <linux/gpio.h> consumer-only
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -70,768 +64,32 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jan 23, 2023 at 1:45 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Bartosz,
+>
+> please have a look at this branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/log/?h=gpiochip-no-driver-h
+>
+> Last week this built successfully for the first time, I've been fixing
+> stuff on this branch for several years (yeah ... grit).
+>
+> The remaining few patches are mostly due to maintainers not
+> paying much attention.
+>
+> I was thinking to just ask you to pull it in if I don't get any more
+> replies to the patches in a few days.
+>
+> It's a neat thing to get rid of <linux/gpio/driver.h> from <linux/gpio.h>
+> so I don't wanna wait for v6.4 if I don't have to.
+>
+> What do you think?
+>
 
-We have two functions in the C API that allow users to retrieve a list
-of offsets from objects: gpiod_line_request_get_offsets() and
-gpiod_line_config_get_offsets(). Even though they serve pretty much the
-same purpose, they have different signatures and one of them also
-requires the user to free the memory allocated within the libgpiod
-library with a non-libgpiod free() function.
+I assume you had sent and resent those patches and they're just being
+ignored? If there's history to prove that on the list, then sure, just
+send a PR!
 
-Unify them: make them take the array in which to store offsets and the
-size of this array. Make them return the number of offsets actually
-stored in the array and make them impossible to fail. Change their names
-to be more descriptive and in the case of line_config: add a new function
-that allows users to get the number of configured offsets.
+Thanks for doing this.
 
-Update the entire tree to use the new interfaces.
-
-For rust bindings: also unify the line config interface to return a map
-of line settings like C++ bindings do instead of having a function to
-get settings by offset. A map returned from a single call is easier to
-iterate over with a for loop than using an integer and calling the
-previous line_settings() method.
-
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-v2 -> v3:
-- use a custom type for the offset -> Settings mapping (defined as an
-  IntMap<line::Settings>)
-- add missing '// SAFETY' comments
-- apply cargo fmt
-
- bindings/cxx/line-config.cpp                | 18 ++---
- bindings/cxx/line-request.cpp               |  6 +-
- bindings/python/gpiod/ext/request.c         |  8 +--
- bindings/rust/libgpiod/src/lib.rs           |  3 +
- bindings/rust/libgpiod/src/line_config.rs   | 74 ++++++++------------
- bindings/rust/libgpiod/src/line_request.rs  |  8 ++-
- bindings/rust/libgpiod/tests/line_config.rs | 24 ++-----
- configure.ac                                |  1 +
- include/gpiod.h                             | 62 +++++++++++------
- lib/line-config.c                           | 39 +++++------
- lib/line-request.c                          | 23 ++++---
- tests/tests-line-config.c                   | 76 +++++++++++++++------
- tests/tests-line-request.c                  | 49 +++++++++++--
- 13 files changed, 231 insertions(+), 160 deletions(-)
-
-diff --git a/bindings/cxx/line-config.cpp b/bindings/cxx/line-config.cpp
-index f7f1bfa..3ec99f0 100644
---- a/bindings/cxx/line-config.cpp
-+++ b/bindings/cxx/line-config.cpp
-@@ -102,31 +102,27 @@ GPIOD_CXX_API line_config& line_config::add_line_settings(const line::offsets& o
- 
- GPIOD_CXX_API ::std::map<line::offset, line_settings> line_config::get_line_settings() const
- {
-+	::std::size_t num_offsets = ::gpiod_line_config_get_num_configured_offsets(
-+								this->_m_priv->config.get());
- 	::std::map<line::offset, line_settings> settings_map;
--	::std::size_t num_offsets;
--	unsigned int *offsets_ptr;
--	int ret;
--
--	ret = ::gpiod_line_config_get_offsets(this->_m_priv->config.get(),
--					      &num_offsets, &offsets_ptr);
--	if (ret)
--		throw_from_errno("unable to retrieve line offsets");
-+	::std::vector<unsigned int> offsets(num_offsets);
- 
- 	if (num_offsets == 0)
- 		return settings_map;
- 
--	::std::unique_ptr<unsigned int, malloc_deleter> offsets(offsets_ptr);
-+	::gpiod_line_config_get_configured_offsets(this->_m_priv->config.get(),
-+					offsets.data(), num_offsets);
- 
- 	for (size_t i = 0; i < num_offsets; i++) {
- 		line_settings settings;
- 
- 		settings._m_priv->settings.reset(::gpiod_line_config_get_line_settings(
- 							this->_m_priv->config.get(),
--							offsets.get()[i]));
-+							offsets[i]));
- 		if (!settings._m_priv->settings)
- 			throw_from_errno("unable to retrieve line settings");
- 
--		settings_map[offsets.get()[i]] = ::std::move(settings);
-+		settings_map[offsets[i]] = ::std::move(settings);
- 	}
- 
- 	return settings_map;
-diff --git a/bindings/cxx/line-request.cpp b/bindings/cxx/line-request.cpp
-index b52ceaf..b0723c3 100644
---- a/bindings/cxx/line-request.cpp
-+++ b/bindings/cxx/line-request.cpp
-@@ -18,7 +18,7 @@ void line_request::impl::throw_if_released() const
- void line_request::impl::set_request_ptr(line_request_ptr& ptr)
- {
- 	this->request = ::std::move(ptr);
--	this->offset_buf.resize(::gpiod_line_request_get_num_lines(this->request.get()));
-+	this->offset_buf.resize(::gpiod_line_request_get_num_requested_lines(this->request.get()));
- }
- 
- void line_request::impl::fill_offset_buf(const line::offsets& offsets)
-@@ -67,7 +67,7 @@ GPIOD_CXX_API ::std::size_t line_request::num_lines() const
- {
- 	this->_m_priv->throw_if_released();
- 
--	return ::gpiod_line_request_get_num_lines(this->_m_priv->request.get());
-+	return ::gpiod_line_request_get_num_requested_lines(this->_m_priv->request.get());
- }
- 
- GPIOD_CXX_API line::offsets line_request::offsets() const
-@@ -78,7 +78,7 @@ GPIOD_CXX_API line::offsets line_request::offsets() const
- 	::std::vector<unsigned int> buf(num_lines);
- 	line::offsets offsets(num_lines);
- 
--	::gpiod_line_request_get_offsets(this->_m_priv->request.get(), buf.data());
-+	::gpiod_line_request_get_requested_offsets(this->_m_priv->request.get(), buf.data(), buf.size());
- 
- 	for (unsigned int i = 0; i < num_lines; i++)
- 		offsets[i] = buf[i];
-diff --git a/bindings/python/gpiod/ext/request.c b/bindings/python/gpiod/ext/request.c
-index d3e1448..a32ff8f 100644
---- a/bindings/python/gpiod/ext/request.c
-+++ b/bindings/python/gpiod/ext/request.c
-@@ -41,7 +41,7 @@ static PyObject *
- request_num_lines(request_object *self, void *Py_UNUSED(ignored))
- {
- 	return PyLong_FromUnsignedLong(
--			gpiod_line_request_get_num_lines(self->request));
-+			gpiod_line_request_get_num_requested_lines(self->request));
- }
- 
- static PyObject *request_offsets(request_object *self, void *Py_UNUSED(ignored))
-@@ -51,13 +51,13 @@ static PyObject *request_offsets(request_object *self, void *Py_UNUSED(ignored))
- 	size_t num_lines, i;
- 	int ret;
- 
--	num_lines = gpiod_line_request_get_num_lines(self->request);
-+	num_lines = gpiod_line_request_get_num_requested_lines(self->request);
- 
- 	offsets = PyMem_Calloc(num_lines, sizeof(unsigned int));
- 	if (!offsets)
- 		return PyErr_NoMemory();
- 
--	gpiod_line_request_get_offsets(self->request, offsets);
-+	gpiod_line_request_get_requested_offsets(self->request, offsets, num_lines);
- 
- 	lines = PyList_New(num_lines);
- 	if (!lines) {
-@@ -365,7 +365,7 @@ PyObject *Py_gpiod_MakeRequestObject(struct gpiod_line_request *request,
- 	unsigned int *offsets;
- 	size_t num_lines;
- 
--	num_lines = gpiod_line_request_get_num_lines(request);
-+	num_lines = gpiod_line_request_get_num_requested_lines(request);
- 
- 	req_obj = PyObject_New(request_object, &request_type);
- 	if (!req_obj)
-diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
-index a5d018c..ebf70b0 100644
---- a/bindings/rust/libgpiod/src/lib.rs
-+++ b/bindings/rust/libgpiod/src/lib.rs
-@@ -178,6 +178,9 @@ pub mod line {
-     /// Maps offset to Value.
-     pub type ValueMap = IntMap<Value>;
- 
-+    /// Maps offsets to Settings
-+    pub type SettingsMap = IntMap<Settings>;
-+
-     impl Value {
-         pub fn new(val: gpiod::gpiod_line_value) -> Result<Self> {
-             Ok(match val {
-diff --git a/bindings/rust/libgpiod/src/line_config.rs b/bindings/rust/libgpiod/src/line_config.rs
-index 19dc187..eec2e81 100644
---- a/bindings/rust/libgpiod/src/line_config.rs
-+++ b/bindings/rust/libgpiod/src/line_config.rs
-@@ -2,12 +2,11 @@
- // SPDX-FileCopyrightText: 2022 Linaro Ltd.
- // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
- 
--use std::os::raw::{c_ulong, c_void};
--use std::slice;
-+use std::os::raw::c_ulong;
- 
- use super::{
-     gpiod,
--    line::{Offset, Settings},
-+    line::{Offset, Settings, SettingsMap},
-     Error, OperationType, Result,
- };
- 
-@@ -77,51 +76,34 @@ impl Config {
-         }
-     }
- 
--    /// Get line settings for offset.
--    pub fn line_settings(&self, offset: Offset) -> Result<Settings> {
--        // SAFETY: `gpiod_line_config` is guaranteed to be valid here.
--        let settings = unsafe { gpiod::gpiod_line_config_get_line_settings(self.config, offset) };
--
--        if settings.is_null() {
--            return Err(Error::OperationFailed(
--                OperationType::LineConfigGetSettings,
--                errno::errno(),
--            ));
-+    /// Get a mapping of offsets to line settings stored by this object.
-+    pub fn line_settings(&self) -> Result<SettingsMap> {
-+        let mut map = SettingsMap::new();
-+        // SAFETY: gpiod_line_config is guaranteed to be valid here
-+        let num_lines = unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) };
-+        let mut offsets = vec![0; num_lines as usize];
-+
-+        // SAFETY: gpiod_line_config is guaranteed to be valid here.
-+        let num_stored = unsafe { gpiod::gpiod_line_config_get_configured_offsets(
-+                                                                self.config,
-+                                                                offsets.as_mut_ptr(),
-+                                                                num_lines) };
-+
-+        for offset in &offsets[0..num_stored as usize] {
-+            // SAFETY: `gpiod_line_config` is guaranteed to be valid here.
-+            let settings = unsafe { gpiod::gpiod_line_config_get_line_settings(self.config,
-+                                                                               *offset) };
-+            if settings.is_null() {
-+                return Err(Error::OperationFailed(
-+                    OperationType::LineConfigGetSettings,
-+                    errno::errno(),
-+                ));
-+            }
-+
-+            map.insert(*offset as u64, Settings::new_with_settings(settings));
-         }
- 
--        Ok(Settings::new_with_settings(settings))
--    }
--
--    /// Get configured offsets.
--    pub fn offsets(&self) -> Result<Vec<Offset>> {
--        let mut num: u64 = 0;
--        let mut ptr: *mut Offset = std::ptr::null_mut();
--
--        // SAFETY: The `ptr` array returned by libgpiod is guaranteed to live as long
--        // as it is not explicitly freed with `free()`.
--        let ret = unsafe {
--            gpiod::gpiod_line_config_get_offsets(
--                self.config,
--                &mut num as *mut _ as *mut _,
--                &mut ptr,
--            )
--        };
--
--        if ret == -1 {
--            return Err(Error::OperationFailed(
--                OperationType::LineConfigGetOffsets,
--                errno::errno(),
--            ));
--        }
--
--        // SAFETY: The `ptr` array returned by libgpiod is guaranteed to live as long
--        // as it is not explicitly freed with `free()`.
--        let offsets = unsafe { slice::from_raw_parts(ptr as *const Offset, num as usize).to_vec() };
--
--        // SAFETY: The `ptr` array is guaranteed to be valid here.
--        unsafe { libc::free(ptr as *mut c_void) };
--
--        Ok(offsets)
-+        Ok(map)
-     }
- }
- 
-diff --git a/bindings/rust/libgpiod/src/line_request.rs b/bindings/rust/libgpiod/src/line_request.rs
-index d9e041c..7915924 100644
---- a/bindings/rust/libgpiod/src/line_request.rs
-+++ b/bindings/rust/libgpiod/src/line_request.rs
-@@ -28,7 +28,7 @@ impl Request {
-     /// Get the number of lines in the request.
-     pub fn num_lines(&self) -> usize {
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_request_get_num_lines(self.request) as usize }
-+        unsafe { gpiod::gpiod_line_request_get_num_requested_lines(self.request) as usize }
-     }
- 
-     /// Get the offsets of lines in the request.
-@@ -36,7 +36,11 @@ impl Request {
-         let mut offsets = vec![0; self.num_lines() as usize];
- 
-         // SAFETY: `gpiod_line_request` is guaranteed to be valid here.
--        unsafe { gpiod::gpiod_line_request_get_offsets(self.request, offsets.as_mut_ptr()) };
-+        let num_offsets = unsafe { gpiod::gpiod_line_request_get_requested_offsets(
-+                                                                self.request,
-+                                                                offsets.as_mut_ptr(),
-+                                                                self.num_lines() as u64) };
-+        offsets.shrink_to(num_offsets as usize);
-         offsets
-     }
- 
-diff --git a/bindings/rust/libgpiod/tests/line_config.rs b/bindings/rust/libgpiod/tests/line_config.rs
-index bebf106..0375842 100644
---- a/bindings/rust/libgpiod/tests/line_config.rs
-+++ b/bindings/rust/libgpiod/tests/line_config.rs
-@@ -37,8 +37,10 @@ mod line_config {
-         lconfig.add_line_settings(&[0, 1, 2], lsettings1).unwrap();
-         lconfig.add_line_settings(&[4, 5], lsettings2).unwrap();
- 
-+        let settings_map = lconfig.line_settings().unwrap();
-+
-         // Retrieve settings
--        let lsettings = lconfig.line_settings(1).unwrap();
-+        let lsettings = settings_map.get(1).unwrap();
-         assert_eq!(
-             lsettings.prop(SettingKind::Direction).unwrap(),
-             SettingVal::Direction(Direction::Input)
-@@ -56,7 +58,7 @@ mod line_config {
-             SettingVal::Drive(Drive::PushPull)
-         );
- 
--        let lsettings = lconfig.line_settings(5).unwrap();
-+        let lsettings = settings_map.get(5).unwrap();
-         assert_eq!(
-             lsettings.prop(SettingKind::Direction).unwrap(),
-             SettingVal::Direction(Direction::Output)
-@@ -74,22 +76,4 @@ mod line_config {
-             SettingVal::OutputValue(Value::Active)
-         );
-     }
--
--    #[test]
--    fn offsets() {
--        let mut lsettings1 = line::Settings::new().unwrap();
--        lsettings1.set_direction(Direction::Input).unwrap();
--
--        let mut lsettings2 = line::Settings::new().unwrap();
--        lsettings2.set_event_clock(EventClock::Realtime).unwrap();
--
--        // Add settings for multiple lines
--        let lconfig = line::Config::new().unwrap();
--        lconfig.add_line_settings(&[0, 1, 2], lsettings1).unwrap();
--        lconfig.add_line_settings(&[4, 5], lsettings2).unwrap();
--
--        // Verify offsets
--        let offsets = lconfig.offsets().unwrap();
--        assert_eq!(offsets, [0, 1, 2, 4, 5]);
--    }
- }
-diff --git a/configure.ac b/configure.ac
-index 4a91723..c5fb7c7 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -88,6 +88,7 @@ AC_CHECK_HEADERS([dirent.h], [], [HEADER_NOT_FOUND_LIB([dirent.h])])
- AC_CHECK_HEADERS([poll.h], [], [HEADER_NOT_FOUND_LIB([poll.h])])
- AC_CHECK_HEADERS([sys/sysmacros.h], [], [HEADER_NOT_FOUND_LIB([sys/sysmacros.h])])
- AC_CHECK_HEADERS([sys/ioctl.h], [], [HEADER_NOT_FOUND_LIB([sys/ioctl.h])])
-+AC_CHECK_HEADERS([sys/param.h], [], [HEADER_NOT_FOUND_LIB([sys/param.h])])
- AC_CHECK_HEADERS([sys/stat.h], [], [HEADER_NOT_FOUND_LIB([sys/stat.h])])
- AC_CHECK_HEADERS([sys/types.h], [], [HEADER_NOT_FOUND_LIB([sys/types.h])])
- AC_CHECK_HEADERS([linux/const.h], [], [HEADER_NOT_FOUND_LIB([linux/const.h])])
-diff --git a/include/gpiod.h b/include/gpiod.h
-index ff3618d..fea2076 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -785,19 +785,29 @@ struct gpiod_line_settings *
- gpiod_line_config_get_line_settings(struct gpiod_line_config *config,
- 				    unsigned int offset);
- 
-+/**
-+ * @brief Get the number of configured line offsets.
-+ * @param config Line config object.
-+ * @return Number of offsets for which line settings have been added.
-+ */
-+size_t
-+gpiod_line_config_get_num_configured_offsets(struct gpiod_line_config *config);
-+
- /**
-  * @brief Get configured offsets.
-  * @param config Line config object.
-- * @param num_offsets Pointer to a variable in which the number of line offsets
-- *                    will be stored.
-- * @param offsets Pointer to a pointer which will be set to point to an array
-- *                containing the configured offsets. The array will be allocated
-- *                using malloc() and must be freed using free().
-- * @return 0 on success, -1 on failure.
-+ * @param offsets Array to store offsets.
-+ * @param max_offsets Number of offsets that can be stored in the offsets array.
-+ * @return Number of offsets stored in the offsets array.
-+ *
-+ * If max_offsets is lower than the number of lines actually requested (this
-+ * value can be retrieved using ::gpiod_line_config_get_num_configured_offsets),
-+ * then only up to max_lines offsets will be stored in offsets.
-  */
--int gpiod_line_config_get_offsets(struct gpiod_line_config *config,
--				  size_t *num_offsets,
--				  unsigned int **offsets);
-+size_t
-+gpiod_line_config_get_configured_offsets(struct gpiod_line_config *config,
-+					 unsigned int *offsets,
-+					 size_t max_offsets);
- 
- /**
-  * @}
-@@ -885,16 +895,24 @@ void gpiod_line_request_release(struct gpiod_line_request *request);
-  * @param request Line request object.
-  * @return Number of requested lines.
-  */
--size_t gpiod_line_request_get_num_lines(struct gpiod_line_request *request);
-+size_t
-+gpiod_line_request_get_num_requested_lines(struct gpiod_line_request *request);
- 
- /**
-  * @brief Get the offsets of the lines in the request.
-  * @param request Line request object.
-- * @param offsets Array to store offsets. Must be sized to hold the number of
-- *		  lines returned by ::gpiod_line_request_get_num_lines.
-+ * @param offsets Array to store offsets.
-+ * @param max_offsets Number of offsets that can be stored in the offsets array.
-+ * @return Number of offsets stored in the offsets array.
-+ *
-+ * If max_offsets is lower than the number of lines actually requested (this
-+ * value can be retrieved using ::gpiod_line_request_get_num_requested_lines),
-+ * then only up to max_lines offsets will be stored in offsets.
-  */
--void gpiod_line_request_get_offsets(struct gpiod_line_request *request,
--				    unsigned int *offsets);
-+size_t
-+gpiod_line_request_get_requested_offsets(struct gpiod_line_request *request,
-+					 unsigned int *offsets,
-+					 size_t max_offsets);
- 
- /**
-  * @brief Get the value of a single requested line.
-@@ -926,11 +944,11 @@ int gpiod_line_request_get_values_subset(struct gpiod_line_request *request,
-  * @brief Get the values of all requested lines.
-  * @param request GPIO line request.
-  * @param values Array in which the values will be stored. Must be sized to
-- *		 hold the number of lines returned by
-- *		 ::gpiod_line_request_get_num_lines.
-+ *		 hold the number of lines filled by
-+ *		 ::gpiod_line_request_get_num_requested_lines.
-  *		 Each value is associated with the line identified by the
-- *		 corresponding entry in the offset array returned by
-- *		 ::gpiod_line_request_get_offsets.
-+ *		 corresponding entry in the offset array filled by
-+ *		 ::gpiod_line_request_get_requested_offsets.
-  * @return 0 on success, -1 on failure.
-  */
- int gpiod_line_request_get_values(struct gpiod_line_request *request,
-@@ -967,11 +985,11 @@ int gpiod_line_request_set_values_subset(struct gpiod_line_request *request,
-  * @brief Set the values of all lines associated with a request.
-  * @param request GPIO line request.
-  * @param values Array containing the values to set. Must be sized to
-- *		 contain the number of lines returned by
-- *		 ::gpiod_line_request_get_num_lines.
-+ *		 contain the number of lines filled by
-+ *		 ::gpiod_line_request_get_num_requested_lines.
-  *		 Each value is associated with the line identified by the
-- *		 corresponding entry in the offset array returned by
-- *		 ::gpiod_line_request_get_offsets.
-+ *		 corresponding entry in the offset array filled by
-+ *		 ::gpiod_line_request_get_requested_offsets.
-  */
- int gpiod_line_request_set_values(struct gpiod_line_request *request,
- 				  const enum gpiod_line_value *values);
-diff --git a/lib/line-config.c b/lib/line-config.c
-index bc10059..877e7ef 100644
---- a/lib/line-config.c
-+++ b/lib/line-config.c
-@@ -6,6 +6,7 @@
- #include <gpiod.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <sys/param.h>
- 
- #include "internal.h"
- 
-@@ -152,36 +153,32 @@ gpiod_line_config_get_line_settings(struct gpiod_line_config *config,
- 	return NULL;
- }
- 
--GPIOD_API int gpiod_line_config_get_offsets(struct gpiod_line_config *config,
--					    size_t *num_offsets,
--					    unsigned int **offsets)
-+GPIOD_API size_t
-+gpiod_line_config_get_num_configured_offsets(struct gpiod_line_config *config)
- {
--	unsigned int *offs;
--	size_t i;
--
- 	assert(config);
- 
--	if (!num_offsets || !offsets) {
--		errno = EINVAL;
--		return -1;
--	}
-+	return config->num_configs;
-+}
- 
--	*num_offsets = config->num_configs;
--	*offsets = NULL;
-+GPIOD_API size_t
-+gpiod_line_config_get_configured_offsets(struct gpiod_line_config *config,
-+					 unsigned int *offsets,
-+					 size_t max_offsets)
-+{
-+	size_t num_offsets, i;
- 
--	if (!config->num_configs)
--		return 0;
-+	assert(config);
- 
--	offs = calloc(config->num_configs, sizeof(unsigned int));
--	if (!offs)
--		return -1;
-+	if (!offsets || !max_offsets || !config->num_configs)
-+		return 0;
- 
--	for (i = 0; i < config->num_configs; i++)
--		offs[i] = config->line_configs[i].offset;
-+	num_offsets = MIN(config->num_configs, max_offsets);
- 
--	*offsets = offs;
-+	for (i = 0; i < num_offsets; i++)
-+		offsets[i] = config->line_configs[i].offset;
- 
--	return 0;
-+	return num_offsets;
- }
- 
- static void set_offsets(struct gpiod_line_config *config,
-diff --git a/lib/line-request.c b/lib/line-request.c
-index c9ad337..e536355 100644
---- a/lib/line-request.c
-+++ b/lib/line-request.c
-@@ -7,6 +7,7 @@
- #include <stdlib.h>
- #include <string.h>
- #include <sys/ioctl.h>
-+#include <sys/param.h>
- #include <unistd.h>
- 
- #include "internal.h"
-@@ -45,24 +46,30 @@ GPIOD_API void gpiod_line_request_release(struct gpiod_line_request *request)
- }
- 
- GPIOD_API size_t
--gpiod_line_request_get_num_lines(struct gpiod_line_request *request)
-+gpiod_line_request_get_num_requested_lines(struct gpiod_line_request *request)
- {
- 	assert(request);
- 
- 	return request->num_lines;
- }
- 
--GPIOD_API void
--gpiod_line_request_get_offsets(struct gpiod_line_request *request,
--			       unsigned int *offsets)
-+GPIOD_API size_t
-+gpiod_line_request_get_requested_offsets(struct gpiod_line_request *request,
-+					 unsigned int *offsets,
-+					 size_t max_offsets)
- {
-+	size_t num_offsets;
-+
- 	assert(request);
- 
--	if (!offsets)
--		return;
-+	if (!offsets || !max_offsets)
-+		return 0;
-+
-+	num_offsets = MIN(request->num_lines, max_offsets);
-+
-+	memcpy(offsets, request->offsets, sizeof(*offsets) * num_offsets);
- 
--	memcpy(offsets, request->offsets,
--	       sizeof(*offsets) * request->num_lines);
-+	return num_offsets;
- }
- 
- GPIOD_API enum gpiod_line_value
-diff --git a/tests/tests-line-config.c b/tests/tests-line-config.c
-index 2305810..a1a587d 100644
---- a/tests/tests-line-config.c
-+++ b/tests/tests-line-config.c
-@@ -185,10 +185,8 @@ GPIOD_TEST_CASE(get_offsets)
- {
- 	g_autoptr(struct_gpiod_line_settings) settings = NULL;
- 	g_autoptr(struct_gpiod_line_config) config = NULL;
--	g_autofree guint *config_offs = NULL;
--	guint offsets[8];
-+	guint offsets[8], offsets_in[4];
- 	size_t num_offsets;
--	gint ret;
- 
- 	settings = gpiod_test_create_line_settings_or_fail();
- 	config = gpiod_test_create_line_config_or_fail();
-@@ -206,39 +204,79 @@ GPIOD_TEST_CASE(get_offsets)
- 	gpiod_test_line_config_add_line_settings_or_fail(config, offsets, 2,
- 							 settings);
- 
--	ret = gpiod_line_config_get_offsets(config, &num_offsets, &config_offs);
--	g_assert_cmpint(ret, ==, 0);
-+	num_offsets = gpiod_line_config_get_configured_offsets(config,
-+							       offsets_in, 4);
- 	g_assert_cmpuint(num_offsets, ==, 4);
--	g_assert_cmpuint(config_offs[0], ==, 2);
--	g_assert_cmpuint(config_offs[1], ==, 4);
--	g_assert_cmpuint(config_offs[2], ==, 6);
--	g_assert_cmpuint(config_offs[3], ==, 7);
-+	g_assert_cmpuint(offsets_in[0], ==, 2);
-+	g_assert_cmpuint(offsets_in[1], ==, 4);
-+	g_assert_cmpuint(offsets_in[2], ==, 6);
-+	g_assert_cmpuint(offsets_in[3], ==, 7);
- }
- 
- GPIOD_TEST_CASE(get_0_offsets)
- {
- 	g_autoptr(struct_gpiod_line_config) config = NULL;
--	g_autofree guint *offsets = NULL;
- 	size_t num_offsets;
--	gint ret;
-+	guint offsets[3];
- 
- 	config = gpiod_test_create_line_config_or_fail();
- 
--	ret = gpiod_line_config_get_offsets(config, &num_offsets, &offsets);
--	g_assert_cmpint(ret, ==, 0);
-+	num_offsets = gpiod_line_config_get_configured_offsets(config,
-+							       offsets, 0);
- 	g_assert_cmpuint(num_offsets, ==, 0);
--	g_assert_null(offsets);
- }
- 
- GPIOD_TEST_CASE(get_null_offsets)
- {
- 	g_autoptr(struct_gpiod_line_config) config = NULL;
--	g_autofree guint *offsets = NULL;
--	gint ret;
-+	size_t num_offsets;
- 
- 	config = gpiod_test_create_line_config_or_fail();
- 
--	ret = gpiod_line_config_get_offsets(config, NULL, &offsets);
--	g_assert_cmpint(ret, ==, -1);
--	gpiod_test_expect_errno(EINVAL);
-+	num_offsets = gpiod_line_config_get_configured_offsets(config,
-+							       NULL, 10);
-+	g_assert_cmpuint(num_offsets, ==, 0);
-+}
-+
-+GPIOD_TEST_CASE(get_less_offsets_than_configured)
-+{
-+	static const guint offsets[] = { 0, 1, 2, 3 };
-+
-+	g_autoptr(struct_gpiod_line_config) config = NULL;
-+	size_t num_retrieved;
-+	guint retrieved[3];
-+
-+	config = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_test_line_config_add_line_settings_or_fail(config, offsets, 4,
-+							 NULL);
-+
-+	num_retrieved = gpiod_line_config_get_configured_offsets(config,
-+								 retrieved, 3);
-+	g_assert_cmpuint(num_retrieved, ==, 3);
-+	g_assert_cmpuint(retrieved[0], ==, 0);
-+	g_assert_cmpuint(retrieved[1], ==, 1);
-+	g_assert_cmpuint(retrieved[2], ==, 2);
-+}
-+
-+GPIOD_TEST_CASE(get_more_offsets_than_configured)
-+{
-+	static const guint offsets[] = { 0, 1, 2, 3 };
-+
-+	g_autoptr(struct_gpiod_line_config) config = NULL;
-+	size_t num_retrieved;
-+	guint retrieved[8];
-+
-+	config = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_test_line_config_add_line_settings_or_fail(config, offsets, 4,
-+							 NULL);
-+
-+	num_retrieved = gpiod_line_config_get_configured_offsets(config,
-+								 retrieved, 8);
-+	g_assert_cmpuint(num_retrieved, ==, 4);
-+	g_assert_cmpuint(retrieved[0], ==, 0);
-+	g_assert_cmpuint(retrieved[1], ==, 1);
-+	g_assert_cmpuint(retrieved[2], ==, 2);
-+	g_assert_cmpuint(retrieved[3], ==, 3);
- }
-diff --git a/tests/tests-line-request.c b/tests/tests-line-request.c
-index 2c2af01..49e9791 100644
---- a/tests/tests-line-request.c
-+++ b/tests/tests-line-request.c
-@@ -45,9 +45,10 @@ GPIOD_TEST_CASE(request_fails_with_duplicate_offsets)
- 
- 	request = gpiod_chip_request_lines(chip, NULL, line_cfg);
- 	g_assert_nonnull(request);
--	num_requested_offsets = gpiod_line_request_get_num_lines(request);
-+	num_requested_offsets =
-+			gpiod_line_request_get_num_requested_lines(request);
- 	g_assert_cmpuint(num_requested_offsets, ==, 3);
--	gpiod_line_request_get_offsets(request, requested_offsets);
-+	gpiod_line_request_get_requested_offsets(request, requested_offsets, 4);
- 	g_assert_cmpuint(requested_offsets[0], ==, 0);
- 	g_assert_cmpuint(requested_offsets[1], ==, 2);
- 	g_assert_cmpuint(requested_offsets[2], ==, 3);
-@@ -401,9 +402,10 @@ GPIOD_TEST_CASE(num_lines_and_offsets)
- 
- 	request = gpiod_test_request_lines_or_fail(chip, NULL, line_cfg);
- 
--	g_assert_cmpuint(gpiod_line_request_get_num_lines(request), ==, 8);
-+	g_assert_cmpuint(gpiod_line_request_get_num_requested_lines(request),
-+			 ==, 8);
- 	gpiod_test_return_if_failed();
--	gpiod_line_request_get_offsets(request, read_back);
-+	gpiod_line_request_get_requested_offsets(request, read_back, 8);
- 	for (i = 0; i < 8; i++)
- 		g_assert_cmpuint(read_back[i], ==, offsets[i]);
- }
-@@ -578,3 +580,42 @@ GPIOD_TEST_CASE(request_with_bias_set_to_pull_up)
- 	g_assert_cmpint(g_gpiosim_chip_get_value(sim, 3), ==,
- 			GPIOD_LINE_VALUE_ACTIVE);
- }
-+
-+GPIOD_TEST_CASE(get_requested_offsets_less_and_more)
-+{
-+	static const guint offsets[] = { 0, 1, 2, 3 };
-+
-+	g_autoptr(GPIOSimChip) sim = g_gpiosim_chip_new("num-lines", 8, NULL);
-+	g_autoptr(struct_gpiod_chip) chip = NULL;
-+	g_autoptr(struct_gpiod_line_config) line_cfg = NULL;
-+	g_autoptr(struct_gpiod_line_request) request = NULL;
-+	size_t num_retrieved;
-+	guint retrieved[6];
-+
-+	chip = gpiod_test_open_chip_or_fail(g_gpiosim_chip_get_dev_path(sim));
-+	line_cfg = gpiod_test_create_line_config_or_fail();
-+
-+	gpiod_test_line_config_add_line_settings_or_fail(line_cfg, offsets, 4,
-+							 NULL);
-+
-+	request = gpiod_test_request_lines_or_fail(chip, NULL, line_cfg);
-+
-+	num_retrieved = gpiod_line_request_get_requested_offsets(request,
-+								 retrieved, 3);
-+
-+	g_assert_cmpuint(num_retrieved, ==, 3);
-+	g_assert_cmpuint(retrieved[0], ==, 0);
-+	g_assert_cmpuint(retrieved[1], ==, 1);
-+	g_assert_cmpuint(retrieved[2], ==, 2);
-+
-+	memset(retrieved, 0, sizeof(retrieved));
-+
-+	num_retrieved = gpiod_line_request_get_requested_offsets(request,
-+								 retrieved, 6);
-+
-+	g_assert_cmpuint(num_retrieved, ==, 4);
-+	g_assert_cmpuint(retrieved[0], ==, 0);
-+	g_assert_cmpuint(retrieved[1], ==, 1);
-+	g_assert_cmpuint(retrieved[2], ==, 2);
-+	g_assert_cmpuint(retrieved[3], ==, 3);
-+}
--- 
-2.37.2
-
+Bartosz
