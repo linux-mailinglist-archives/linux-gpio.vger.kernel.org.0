@@ -2,103 +2,67 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A0E0677652
-	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 09:31:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E146776AA
+	for <lists+linux-gpio@lfdr.de>; Mon, 23 Jan 2023 09:47:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231659AbjAWIbw (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 03:31:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
+        id S230040AbjAWIr0 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 03:47:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231663AbjAWIbs (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 03:31:48 -0500
-Received: from mail-ua1-x930.google.com (mail-ua1-x930.google.com [IPv6:2607:f8b0:4864:20::930])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E4E1DBB7
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:31:43 -0800 (PST)
-Received: by mail-ua1-x930.google.com with SMTP id b18so2679877uan.11
-        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:31:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GfkSbRQ/gYxloxycPwl7gTixyfkrvddl3OpyLvd4/oI=;
-        b=Na3ODXLEpaKhTv2xy4UVn3vABqCzMfhIwoA+kXOSEPAoH8fFfwOcIY8TW+VbgrX0A3
-         zGsVnAPaKPOcimckIXR7Wj9jZ53D2HyaHyV987iq0/FISaMVcEk+0gBaI0tuhHKQvcse
-         CPgjegZf9XsAcXvl5MIXreeM8SwSQybjfugohzNjD/Finds1/4ZOkYQdnSN1E/0I1QIV
-         7LYHi3svqIoF7zeR/jtnp9JgePF/Hp7r/V9lDp+GE8XgmP9Dl5ZTyxiMgR1AoU3Vwu2Y
-         5ejg+EV8p1N/xL+FbVpw13oWqyzlWJ5FPZ9S9y/RJCOxnhgROXiXM8B8kdJE0TKDu8ao
-         INGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GfkSbRQ/gYxloxycPwl7gTixyfkrvddl3OpyLvd4/oI=;
-        b=x7HwC7GztD3EW86+LDKmme9PM8IX3Kw2IyL+U59s4ZIViN2DX9GfxfPyOK5UNhsS7M
-         voLEek3beOedeieJFeVHuOf7u9QBbb4PJbrTBrUxc6QlMwzX8JetV1bqTlqOs/rhV90x
-         fnoVJDcemKEkMpMK0jvbgXl1gfJO1yUHTHnw6qQLVA12zqOgMLuaxicWPdwicTchBep/
-         Dqgyqvu/GvlL9kMDTfD27k3M89ITBZM5RSR6L8EnW9yHVPggaywEy1aO92s+KNc8HnA9
-         Dq4eUMUk+ybiOHYdKGBBNxa+iJNWXrn62x01j1ec3+KTGehqAm/pSGgIE2OWjEgARkxD
-         RsnQ==
-X-Gm-Message-State: AFqh2koHqfNbR8UHi79A68onbCeIFGRVLd6JC17twJWPpTKXz82URO+p
-        bklmyf2tUnje/9O82+MafTRBtW9XRqm7oa1/WM+Mm/L4sGMX6w==
-X-Google-Smtp-Source: AMrXdXsWm+5/TdfgyTNg/BRZI19wddbI7PY7aety1cSuz/qjh3Q3NZMMQd+p32ffkXR0mqGH1hGeEq8RitkoPT58wzY=
-X-Received: by 2002:ab0:7341:0:b0:536:2116:fbeb with SMTP id
- k1-20020ab07341000000b005362116fbebmr2380263uap.56.1674462702288; Mon, 23 Jan
- 2023 00:31:42 -0800 (PST)
+        with ESMTP id S230122AbjAWIrZ (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 03:47:25 -0500
+X-Greylist: delayed 481 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 Jan 2023 00:47:25 PST
+Received: from mail.tryweryn.pl (mail.tryweryn.pl [5.196.29.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1773A1CF69
+        for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 00:47:25 -0800 (PST)
+Received: by mail.tryweryn.pl (Postfix, from userid 1002)
+        id 8F9A1A21C0; Mon, 23 Jan 2023 08:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tryweryn.pl; s=mail;
+        t=1674463163; bh=Bo+/jg3TCpOeS79PpZREuOWEeqJV//jojylD9dSrSik=;
+        h=Date:From:To:Subject:From;
+        b=LlVOD61rqIM6BnKgTAZ1WdJy7Fx9B20CnMBdHGKcSCeIqs6JeR7XqqWbJPEI7Hyok
+         sy5gxckaz+02fAb/jYtMGQu6XasbqzGVPcXx/2dTYpyEAM6/bPHll3ZtHMKRwDqCrz
+         iqLZQvzCmXbn8Mt+492Kx+XU+MsdUocAGQaQPN9QIZGVrEPTDiN2vDIViTCkX1ZsD+
+         +gZg8ag7Qk56/ah+e3T/xNLgZi+uOjxtbBczJ7nOOKzrGJcQIfocRlADSVp6yIAujW
+         sMhSP0kU+PYhmr7KiIckoO3PpEeg0V7ogJJoqBoQnelkDf1QK3zFDmDXqiBboiuDB/
+         Ro+iWtZ/ayW0A==
+Received: by mail.tryweryn.pl for <linux-gpio@vger.kernel.org>; Mon, 23 Jan 2023 08:37:38 GMT
+Message-ID: <20230123081829-0.1.7p.2rw7z.0.0l267az3rd@tryweryn.pl>
+Date:   Mon, 23 Jan 2023 08:37:38 GMT
+From:   "Karol Michun" <karol.michun@tryweryn.pl>
+To:     <linux-gpio@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.tryweryn.pl
 MIME-Version: 1.0
-References: <20230113215210.616812-1-brgl@bgdev.pl> <20230113215210.616812-5-brgl@bgdev.pl>
- <20230116055209.b6ydvderreqtqedp@vireshk-i7> <20230123082443.xoexegmii3bnco6t@vireshk-i7>
-In-Reply-To: <20230123082443.xoexegmii3bnco6t@vireshk-i7>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Mon, 23 Jan 2023 09:31:31 +0100
-Message-ID: <CAMRc=McOPhd8qZ6WhpN421SAob4qsP1+qxDTcUA1zn1X2y=imA@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH 04/16] treewide: unify gpiod_line_config/request_get_offsets()
- functions
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 9:24 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> Hi Bartosz,
->
-> I gave few comments here, and it looks like you missed them ?
->
-> On 16-01-23, 11:22, Viresh Kumar wrote:
-> > For Rust changes, please run these as well to find any formatting
-> > issues, warnings:
-> >
-> > cargo fmt --all -- --check
-> > cargo clippy --release --workspace --bins --examples --tests --benches --all-features --all-targets -- -D warnings -D clippy::undocumented_unsafe_blocks
-> >
-> > On 13-01-23, 22:51, Bartosz Golaszewski wrote:
->
-> > Just like ValueMap, maybe we can add following in lib.rs for this:
-> >
-> > pub type line::SettingsMap = IntMap<line::Settings>;
-> >
-> > > +        let mut map: HashMap<Offset, Settings> = HashMap::new();
-> > > +        let num_lines = unsafe { gpiod::gpiod_line_config_get_num_configured_offsets(self.config) };
-> >
-> > This needs a SAFETY comment. Should we check if this returned 0 ?
-> >
-> --
-> viresh
+Dzie=C5=84 dobry!
 
-It seems like I did... :(
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-I will resend this patch separately for less noise after addressing them.
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
 
-Bart
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
+
+
+Pozdrawiam
+Karol Michun
