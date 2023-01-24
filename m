@@ -2,105 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55855679A8B
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 14:51:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46823679AE3
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 15:00:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234715AbjAXNvO (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 08:51:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
+        id S234263AbjAXOAd (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 09:00:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234722AbjAXNu5 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 08:50:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F289F49037;
-        Tue, 24 Jan 2023 05:48:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D8DF7B81109;
-        Tue, 24 Jan 2023 13:42:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAEAC4339B;
-        Tue, 24 Jan 2023 13:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674567754;
-        bh=ELbqlGDDb+UQ0WFgO9/o22krNJoEoYaraEgDXwcPN1c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDKSI0A4Gwg6oarSYGytl8RWH7bt36R1HE/j592bsiN639cAbSKnJyDiLcc4Xv8m0
-         MTj959sBiGadl0J/aHDlA+3BnQEkY4iFQmUlWFcnAZpdfFJ7JS7TLbct9FRXSV3kbn
-         uDp4zBSZHEcNYxMf4oSDvFk3FM2Bjhzo+EDFUz47OkIYPNfFG3nasGbYf9e9w1Ftou
-         eEN/Ykol4g+JNQOduxiohcmrck6X6PLD2xIQvrLholm6uPYyxFLP9/TJFxANQi/1AL
-         y10Vx43zag3+E/Kp5iWSS820o/bf2BCRN/VuU4g/1ru4t2I4EQAip9s104PnVytbtm
-         HGLHmXWwVtnfA==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
-        Raul Rangel <rrangel@chromium.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-        Sasha Levin <sashal@kernel.org>,
-        mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-        brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 24/35] gpiolib: acpi: Allow ignoring wake capability on pins that aren't in _AEI
-Date:   Tue, 24 Jan 2023 08:41:20 -0500
-Message-Id: <20230124134131.637036-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230124134131.637036-1-sashal@kernel.org>
-References: <20230124134131.637036-1-sashal@kernel.org>
+        with ESMTP id S234227AbjAXOAd (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 09:00:33 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63F4A47406;
+        Tue, 24 Jan 2023 06:00:07 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30ODb4Q0018482;
+        Tue, 24 Jan 2023 13:50:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=okwaZtbgxul5id2YN34B2TCErKO9XRGGDQBgGxukluA=;
+ b=FxpYp+zsg8XoVKGCNG8Sjdprtv9i/pAB4vOYVfGw35gHIkV2FYDBr3q8idT/dMZOlLgC
+ hMVRMeks3uTOxKJSbt0Mx8/152L6PXWjLQjXraMe6M2Ajz8Q0cBcX9/CVGIriXgmD4+w
+ kAcSWOU9WrapbjJnrqooN2X1JBHZoImQqH4rqwCFHMRVDKvJiHZGZIWUAHNAepn72pwX
+ YxIGPd15pGzxzypTNTtB4so4HIuVj96L7AgXz7dS2azge7hscX5zGZ6KGQ+aHTkfx9HC
+ Koq8nEIrTOghv90q4x2qZ0Vx1AXWGztkSKvDLRtXJ+rkEn7YxkLrlx/9PqI+sFV94SxV 2g== 
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nag3081eg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Jan 2023 13:50:33 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30ODoWxt002797
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Jan 2023 13:50:32 GMT
+Received: from [10.216.24.6] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 24 Jan
+ 2023 05:50:23 -0800
+Message-ID: <7bf1444d-7f57-0ddd-2466-95d396cc92e0@quicinc.com>
+Date:   Tue, 24 Jan 2023 19:20:20 +0530
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 2/7] clk: qcom: Add Global Clock Controller driver for
+ IPQ9574
+Content-Language: en-US
+To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
+        <andersson@kernel.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>,
+        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <tdas@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_poovendh@quicinc.com>
+References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
+ <20230110121316.24892-3-quic_devipriy@quicinc.com>
+ <de346d71-1fe7-e357-d220-d4468e4bb933@linaro.org>
+ <afd2e5c8-fa5a-ac1f-4ede-4ab1f91c0d0d@quicinc.com>
+ <9bdf757d-1fa0-106f-eb77-7f2a8593213f@linaro.org>
+ <2852fc37-284f-6534-f163-45b37b153db1@quicinc.com>
+ <d73f0eec-6e02-e72f-79d7-2c56245f7651@linaro.org>
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <d73f0eec-6e02-e72f-79d7-2c56245f7651@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: fD48_vaBH9SERyEJvzTi-0AfnXR5fudz
+X-Proofpoint-GUID: fD48_vaBH9SERyEJvzTi-0AfnXR5fudz
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-23_12,2023-01-24_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301240125
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 0e3b175f079247f0d40d2ab695999c309d3a7498 ]
 
-Using the `ignore_wake` quirk or module parameter doesn't work for any pin
-that has been specified in the _CRS instead of _AEI.
-
-Extend the `acpi_gpio_irq_is_wake` check to cover both places.
-
-Suggested-by: Raul Rangel <rrangel@chromium.org>
-Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1722335
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpio/gpiolib-acpi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index a7d2358736fe..27f234637a15 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -361,7 +361,7 @@ static bool acpi_gpio_in_ignore_list(const char *ignore_list, const char *contro
- }
- 
- static bool acpi_gpio_irq_is_wake(struct device *parent,
--				  struct acpi_resource_gpio *agpio)
-+				  const struct acpi_resource_gpio *agpio)
- {
- 	unsigned int pin = agpio->pin_table[0];
- 
-@@ -754,7 +754,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 		lookup->info.pin_config = agpio->pin_config;
- 		lookup->info.debounce = agpio->debounce_timeout;
- 		lookup->info.gpioint = gpioint;
--		lookup->info.wake_capable = agpio->wake_capable == ACPI_WAKE_CAPABLE;
-+		lookup->info.wake_capable = acpi_gpio_irq_is_wake(&lookup->info.adev->dev, agpio);
- 
- 		/*
- 		 * Polarity and triggering are only specified for GpioInt
--- 
-2.39.0
-
+On 1/24/2023 3:23 PM, Konrad Dybcio wrote:
+> 
+> 
+> On 24.01.2023 08:27, Devi Priya wrote:
+>>
+>>
+>> On 1/13/2023 7:39 PM, Konrad Dybcio wrote:
+>>>
+>>>
+>>> On 13.01.2023 14:21, Devi Priya wrote:
+>>>>
+>>>>
+>>>> On 1/10/2023 6:07 PM, Konrad Dybcio wrote:
+>>>>>
+>>>>>
+>>>>> On 10.01.2023 13:13, devi priya wrote:
+>>>>>> Add Global Clock Controller (GCC) driver for ipq9574 based devices
+>>>>>>
+>>>>>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+>>>>>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+>>>>>> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+>>>>>> ---
+>>> [...]
+>>>
+>>>>>> +static struct clk_branch gcc_blsp1_qup6_i2c_apps_clk = {
+>>>>>> +    .halt_reg = 0x07024,
+>>>>>> +    .clkr = {
+>>>>>> +        .enable_reg = 0x07024,
+>>>>>> +        .enable_mask = BIT(0),
+>>>>>> +        .hw.init = &(struct clk_init_data) {
+>>>>>> +            .name = "gcc_blsp1_qup6_i2c_apps_clk",
+>>>>>> +            .parent_hws = (const struct clk_hw *[]) {
+>>>>>> +                    &blsp1_qup6_i2c_apps_clk_src.clkr.hw },
+>>>>>> +            .num_parents = 1,
+>>>>>> +            .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
+>>>>> Sounds very much like a hack..
+>>>> Got it, will remove the clock entry as it is not being used in linux
+>>> I'm not sure removing it is the best option, somebody might have a
+>>> funky board where they use this particular QUP for I2C for whatever
+>>> reason and then the clock would have to be re-added..
+>> Sure, Understood
+>> This clock is used by the RPM component to communicate with PMIC and we
+>> would add the critical flag here
+> Okay, so this SoC is intended to ship with some RPM PMICs and
+> *always* with an I2C companion that's required for some basic
+> functionality, correct?
+> 
+> Otherwise, if it's just for wifi/multimedia/etc (like PM8008ij
+> on some newer devices), you should not make it critical and
+> simply rely on Linux keeping it alive like so:
+> 
+> consumer takes a regulator
+> the regulator does not go to sleep because it's consumed
+> the PMIC is active because a regulator on it is being used
+> the I2C bus is active because its child PMIC is used
+> the I2C clocks are alive because there's an active user
+> 
+Yes correct, the SoC would always have an I2C companion
+> Konrad
+>>
+>>> Thanks for addressing all of the review comments so thoroughly!
+>>>
+>>> Konrad
+>>
+>> Best Regards,
+>> Devi Priya
