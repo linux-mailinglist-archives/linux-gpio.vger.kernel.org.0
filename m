@@ -2,142 +2,140 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AEC746791E8
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 08:28:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88FCE6792EE
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 09:22:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231287AbjAXH2H (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 02:28:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53656 "EHLO
+        id S231660AbjAXIWT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 03:22:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbjAXH2H (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 02:28:07 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1175E974C;
-        Mon, 23 Jan 2023 23:28:05 -0800 (PST)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30O7OPln026293;
-        Tue, 24 Jan 2023 07:27:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=KwQ/PtpYUTz+cVdN4b3hZ/Dm5u2vC7+yvEKnwB3nkAA=;
- b=PS6PoZCpSi3B5YUgjUt0VCH2FSsVBbgrEXJLdKMOUew2dgGxjzZae6oGyOg9dsEu9scL
- o/sCPGpSyUYi1dZa5fZhaOEpZxCMj6MNk6pLI0zMQb/iAtcI1pHIduLb/hsOIpMq+149
- +FYBevsmSikxwHlz/qK54206eVkZdDWMAOtwDW70ug+4560bkpXDllnUpEZd7FkJVMaM
- V7xpr4LRpN2DLDBPgSI1dt3pd96cmlk2urXZ+Dym2xvZzT5e0DxouZ5jsoazhCQGv8oP
- 5DzUwm1TAqN41MA4pVHIRyBCPm6qlIaeyp5e+BG0ylMkGO2zpVqITQX0JHqvRnXaRsEG Gw== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3n89dncfdg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Jan 2023 07:27:18 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30O7RGuG011025
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Jan 2023 07:27:16 GMT
-Received: from [10.216.24.6] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 23 Jan
- 2023 23:27:07 -0800
-Message-ID: <2852fc37-284f-6534-f163-45b37b153db1@quicinc.com>
-Date:   Tue, 24 Jan 2023 12:57:04 +0530
+        with ESMTP id S232166AbjAXIWS (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 03:22:18 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC6B8A5A
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:22:16 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id f19-20020a1c6a13000000b003db0ef4dedcso12231179wmc.4
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:22:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U9DqS2Jn9nJYNaDy07cme/7hQmGWWsUBjAPPDyYRsn4=;
+        b=Vu2rxQhfqYQNgFFNRdKmRY6baqaJ+wwVQzel9USbomB3kstntshg/9LBTQZpk5SPY6
+         SDRy0WiL0IpizDWYRT0N2/2Tw1JeWu/YXwMwC8sok/CA/IeuO7BG+6Zol4XtzttTWx5z
+         mzP2+6XybKArW3kdhnDz3yYcoa2rZvGJnIZUjiWplWf7HLXCmww+AKipfQ3vWJ1GPsA6
+         pt1qrFpjgHqM4VdD8nFt9XdEk7RrYhBC50UqZqkKZ2H0LhH/uCQlm93ENJmEOu/mssSM
+         5TsN/fO5/a8Cdc1QexvNUVnfKWlsJCNoGvlpEnxP2OCHrRpWWJ0FL2TGptMEVapD16Cd
+         fvAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U9DqS2Jn9nJYNaDy07cme/7hQmGWWsUBjAPPDyYRsn4=;
+        b=68Tys7T4dQF7VDYhv9zIUihpGVsFQTodkSfTOjURhdJnua5VGEULZoiqTSZX+Fb8lr
+         Ajm4m70WN9u4mTRNxNhmqYf6D0Wap1BSJGXckzKMHRvLLZ97f7sZRK0SRg0OLVjmbqk9
+         go0AfqaP5xCswpNpZXPO7CI04Rx6bM4Zjpx5XR7Bow/YeYaEXsje5eEASl+HMl4Gde5h
+         b3Vb2KhwRyeq24v5Bl1o6T0K3AHu29Ez7Qq62hnD/Nn3JX4EQ8th3q0J15lyrqX+m5vR
+         d/VvmxtXZed0NQh8+/JbL3EqTD2J6hyA81Bmp0Q6plK9X/dpyP0A1azIVrS1bJCUPEie
+         fOMw==
+X-Gm-Message-State: AO0yUKWIlhWlPnx42OLN0m/67a9KdT5jMQjYSCBEG70Un1G9qUIw3YvU
+        TFw5q34Y9QI4uGdy4IaYYCJ2cJo5s14RcTcpMtg=
+X-Google-Smtp-Source: AK7set9kgsgyREqDkDA4wXQveg9l8CTz4di8q5DI2C+/Ud24R0ZH9g/nee+rfw3tBwzBqjJdZL6CoA==
+X-Received: by 2002:a05:600c:4fcb:b0:3dc:1687:9b9a with SMTP id o11-20020a05600c4fcb00b003dc16879b9amr460697wmq.37.1674548535007;
+        Tue, 24 Jan 2023 00:22:15 -0800 (PST)
+Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:52eb:f6ff:feb3:451a])
+        by smtp.gmail.com with ESMTPSA id h13-20020a05600c2cad00b003cfa622a18asm13870207wmc.3.2023.01.24.00.22.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jan 2023 00:22:14 -0800 (PST)
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+In-Reply-To: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+Subject: Re: (subset) [PATCH 0/8] soc: amlogic: switch bindings to yaml and
+ adjust some dtbs's
+Message-Id: <167454853388.2972173.6260080234043719240.b4-ty@linaro.org>
+Date:   Tue, 24 Jan 2023 09:22:13 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 2/7] clk: qcom: Add Global Clock Controller driver for
- IPQ9574
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <linus.walleij@linaro.org>,
-        <catalin.marinas@arm.com>, <will@kernel.org>,
-        <p.zabel@pengutronix.de>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <tdas@codeaurora.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
-        <quic_poovendh@quicinc.com>
-References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
- <20230110121316.24892-3-quic_devipriy@quicinc.com>
- <de346d71-1fe7-e357-d220-d4468e4bb933@linaro.org>
- <afd2e5c8-fa5a-ac1f-4ede-4ab1f91c0d0d@quicinc.com>
- <9bdf757d-1fa0-106f-eb77-7f2a8593213f@linaro.org>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <9bdf757d-1fa0-106f-eb77-7f2a8593213f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: STEphrwkEN8UcQaS1cFm2yXVFfi5Dkf-
-X-Proofpoint-ORIG-GUID: STEphrwkEN8UcQaS1cFm2yXVFfi5Dkf-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-23_12,2023-01-23_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
- lowpriorityscore=0 spamscore=0 phishscore=0 mlxscore=0 bulkscore=0
- malwarescore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301240068
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Hi,
 
-
-On 1/13/2023 7:39 PM, Konrad Dybcio wrote:
+On Mon, 23 Jan 2023 22:22:15 +0100, Heiner Kallweit wrote:
+> At first adjust some existing dtbs's so that they pass dtbs_check
+> after switching bindings to yaml.
 > 
+> Then switch further Amlogic Meson bindings to yaml.
+> Tested with make targets dt_binding_check and dtbs_check.
 > 
-> On 13.01.2023 14:21, Devi Priya wrote:
->>
->>
->> On 1/10/2023 6:07 PM, Konrad Dybcio wrote:
->>>
->>>
->>> On 10.01.2023 13:13, devi priya wrote:
->>>> Add Global Clock Controller (GCC) driver for ipq9574 based devices
->>>>
->>>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->>>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->>>> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
->>>> ---
+> Heiner Kallweit (8):
+>   arm64: dts: meson-gx: Remove invalid pwm compatible
+>   arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
+>   arm64: dts: meson-gx: Set only one compatible string for mmc
+>   arm64: dts: amlogic: Remove invalid compatible string
+>     amlogic,meson-gpio-intc
+>   dt-bindings: rtc: Add Amlogic Meson vrtc controller binding
+>   dt-bindings: pwm: Add Amlogic Meson PWM binding
+>   dt-bindings: interrupt-controller: Add Amlogic Meson GPIO interrupt
+>     controller binding
+>   dt-bindings: pinctrl: Add Amlogic Meson pinctrl binding
+> 
 > [...]
-> 
->>>> +static struct clk_branch gcc_blsp1_qup6_i2c_apps_clk = {
->>>> +    .halt_reg = 0x07024,
->>>> +    .clkr = {
->>>> +        .enable_reg = 0x07024,
->>>> +        .enable_mask = BIT(0),
->>>> +        .hw.init = &(struct clk_init_data) {
->>>> +            .name = "gcc_blsp1_qup6_i2c_apps_clk",
->>>> +            .parent_hws = (const struct clk_hw *[]) {
->>>> +                    &blsp1_qup6_i2c_apps_clk_src.clkr.hw },
->>>> +            .num_parents = 1,
->>>> +            .flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
->>> Sounds very much like a hack..
->> Got it, will remove the clock entry as it is not being used in linux
-> I'm not sure removing it is the best option, somebody might have a
-> funky board where they use this particular QUP for I2C for whatever
-> reason and then the clock would have to be re-added..
-Sure, Understood
-This clock is used by the RPM component to communicate with PMIC and we
-would add the critical flag here
 
-> Thanks for addressing all of the review comments so thoroughly!
-> 
-> Konrad
+Thanks, Applied to https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git (v6.3/arm64-dt)
 
-Best Regards,
-Devi Priya
+[2/8] arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
+      https://git.kernel.org/amlogic/c/1be13a5091bf71627aa1a3d35360b039510f42f3
+
+These changes has been applied on the intermediate git tree [1].
+
+The v6.3/arm64-dt branch will then be sent via a formal Pull Request to the Linux SoC maintainers
+for inclusion in their intermediate git branches in order to be sent to Linus during
+the next merge window, or sooner if it's a set of fixes.
+
+In the cases of fixes, those will be merged in the current release candidate
+kernel and as soon they appear on the Linux master branch they will be
+backported to the previous Stable and Long-Stable kernels [2].
+
+The intermediate git branches are merged daily in the linux-next tree [3],
+people are encouraged testing these pre-release kernels and report issues on the
+relevant mailing-lists.
+
+If problems are discovered on those changes, please submit a signed-off-by revert
+patch followed by a corrective changeset.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/amlogic/linux.git
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+-- 
+Neil
+
