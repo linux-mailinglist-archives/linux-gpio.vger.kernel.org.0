@@ -2,103 +2,100 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CC70679F05
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 17:42:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E3D667A037
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 18:31:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbjAXQl7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 11:41:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47346 "EHLO
+        id S234410AbjAXRby (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 12:31:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234485AbjAXQly (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 11:41:54 -0500
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E44CB74B
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 08:41:29 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id h16so14450005wrz.12
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 08:41:29 -0800 (PST)
+        with ESMTP id S234770AbjAXRbp (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 12:31:45 -0500
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9114ED0D
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 09:31:41 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-4a2f8ad29d5so228413267b3.8
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 09:31:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mIZBXBrBO9juAB0MxFq1YgXdsI3c3YiizmncWQ1CgkE=;
-        b=KC2v6dLyeY39cT+zOxPU3WV5hKE/TLYvDE+j9iIGbzz4FGQn0BghiXbHKMOcGltQO+
-         FtJLrxB0cJlYfHL3fbRpfeHzwMzHh/4P218f7Vo8uxWyapKUu7iaUvfqfuw+sqpncLpB
-         y0djvGw7FfbfZ9OBpEu8iJJJekmXDoQ4dUhlDXK+xfcaQ1sD6gO2g95USepr9ajlxTVt
-         RHwi9kd4ONQ2IGcBlEwNfOC5k3mTzhSyLtzssPumVBFq4qNmci5fmELYdfqV57LL5GQj
-         BCVVEMa9Kdy9RtbHh3KHPyrJphtBX+8s99+bx4XwjurmaPvh5BeVwRnBFyHkvPwbZYvd
-         nWfg==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QAWZNKWNBnz2nm7fG3oJ2Ondshli1quuAhafNezlm2I=;
+        b=vmOWgr9rkUwzXlseFVsT2j864QAGrD36dNV6+hb9Z7hRLYJ8B5WeRZdEpjer9y7ZXe
+         y3QrwhGV4pSrb3uagpnMn9m7/R87CzSOQh1IMiI/Ze8ueXecFpmJdcSaN8I9jtsmCAcN
+         xFYH9X4OMx83uCjY9yqRshrNksPwFYRMa4Rny8507wYI6TRGrzwtgTMuGK5om09FRo3V
+         6GUQgPGuq8fDJDIGNIxBaQExAtH7HCjVd4U5z+9I7stqOeHP6HY3Rrp7zHrkLvvLyufq
+         4YKtIX9+fDcRiCAKfOkz6LlWFxlJr9Mq0SgSh5ihV8KN0m2O18EeAPFxR8riEi+Popz0
+         7gyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mIZBXBrBO9juAB0MxFq1YgXdsI3c3YiizmncWQ1CgkE=;
-        b=54yClEVGSlkdCiRWJDdef+w8dPlw8YZQP7bLvTmCJzriTwRJV5BHxY87V5b2/fvCqo
-         zW884DKoQBYN6gtSYJk0YVmWb4flbxGcOdktGdZLbgKGOjzkvCY/hMtvTl6rxJKhYds/
-         WKdmkU5pEbWOEUaOrmSzrye24EWmgVbLvxE067xt5/4mHl+xNjVYwo5LH7QRhEp2ZLPg
-         8he+52YAOLgDwS2hHX5w36dy1iDxeSSXZBbxpNYctWHjdbL0UU1c8bpZz72pTxapczFk
-         Bh/Z5LCZZEEk+ztHN/HAwTSxzVySBfqvxCwPUub6siJZ3huwBE8IXrhcM18viW0OuIwq
-         J0QQ==
-X-Gm-Message-State: AFqh2kqy9fJX9JBdymv5bwn+XhZzkdflpdtc9ydWG+nLbxyrp3bFvH0l
-        P6dm9JpQt9QqmboUGE+yuJrZZg==
-X-Google-Smtp-Source: AMrXdXtEsvjC2rwF9qrTPVlIoxQJGp0oGlu2bKLIpQfmsvxxwaKs89+AfMV+QLNuK/OnbnuiJucyLQ==
-X-Received: by 2002:a5d:4dcb:0:b0:2bd:c1de:a33f with SMTP id f11-20020a5d4dcb000000b002bdc1dea33fmr19487990wru.19.1674578487749;
-        Tue, 24 Jan 2023 08:41:27 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:9c80:c796:921b:31df])
-        by smtp.gmail.com with ESMTPSA id y4-20020adfd084000000b0028e55b44a99sm2212951wrh.17.2023.01.24.08.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jan 2023 08:41:27 -0800 (PST)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Kent Gibson <warthog618@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod v1.6.x][PATCH] build: don't expect automake to set $PYTHON
-Date:   Tue, 24 Jan 2023 17:41:26 +0100
-Message-Id: <20230124164126.291374-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.37.2
+        bh=QAWZNKWNBnz2nm7fG3oJ2Ondshli1quuAhafNezlm2I=;
+        b=rfgC4hJY2EL2++IqGfZmkldTTNXFcmoCvkR8T+Xf9WfF1N+sFQbEgrS+QBLg/YqPBH
+         xDleOtY0vsZHDN5ejb5fICZhzun39wKG1/2PXVyiU4wPnjTf7JVYCbyqtihSaz8YPCZ2
+         xjxq+UjY1QU+TqlePr3Mwf9VQbVRr50SbR8JGVP+1Zu/GqykB28lSRV0u9/kHL7zvctS
+         2UQnIMWZcePB0XYGN8Ty8fFBoAT4Kv/KjZxjtaU72X/EZfdjEe9h+fq4bsMv2ZjlJXF3
+         TaJbxNlji+y5nR/8ZAib1Xv2b7dOVfgdUVjXBKag5I18rbIrTv9b158GhQpUgmvxfB/p
+         GRtA==
+X-Gm-Message-State: AFqh2koLWPYLTaiW7cZl4OdCq0t3QgAyHkXcFBAK6aVk57HiRgbDA6lK
+        fZ0HLd2yKP9ungCHAXIQqXoiL6rUXIun96i/FeoGAA==
+X-Google-Smtp-Source: AMrXdXsZAyRHAzMydmJt0v6Zl159VWuKM4IasufLzc1VlCjkIdzuHw0AHwiN22tOlj83E3v3X9dDNJNrvuw/U/DjuBY=
+X-Received: by 2002:a81:6d8d:0:b0:490:89c3:21b0 with SMTP id
+ i135-20020a816d8d000000b0049089c321b0mr3916907ywc.132.1674581500991; Tue, 24
+ Jan 2023 09:31:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230124141541.8290-1-quic_devipriy@quicinc.com> <20230124141541.8290-8-quic_devipriy@quicinc.com>
+In-Reply-To: <20230124141541.8290-8-quic_devipriy@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 24 Jan 2023 19:11:00 +0200
+Message-ID: <CAA8EJpoHqpo=QWHwO=LEbT-Mk4gr7F1X4ecL0Y+kbG8Ow6cGiQ@mail.gmail.com>
+Subject: Re: [PATCH V1 7/8] arm64: dts: qcom: Add ipq9574 SoC and AL02 board support
+To:     devi priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org,
+        p.zabel@pengutronix.de, shawnguo@kernel.org, arnd@arndb.de,
+        marcel.ziswiler@toradex.com, nfraprado@collabora.com,
+        broonie@kernel.org, tdas@codeaurora.org, bhupesh.sharma@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, quic_srichara@quicinc.com,
+        quic_gokulsri@quicinc.com, quic_sjaganat@quicinc.com,
+        quic_kathirav@quicinc.com, quic_arajkuma@quicinc.com,
+        quic_anusha@quicinc.com, quic_poovendh@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, 24 Jan 2023 at 16:17, devi priya <quic_devipriy@quicinc.com> wrote:
+>
+> From: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
+>
+> Add initial device tree support for Qualcomm IPQ9574 SoC
+> and AL02 board
+>
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Co-developed-by: devi priya <quic_devipriy@quicinc.com>
+> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
+> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
 
-It seems that the implementation of AM_PATH_PYTHON() changed in automake
-recently and no longer sets $PYTHON variable which breaks the build on
-some systems.
 
-We know we use python3 so use python3-config explicitly.
+I suspect that the order of sign-offs is incorrect here. Your sign-off
+should be the last one, as you are the person sending the patch.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- configure.ac | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 3149384..0460810 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -204,9 +204,9 @@ then
- 		AC_MSG_ERROR([python3-config not found - needed for python bindings])
- 	fi
- 	AS_IF([test -z "$PYTHON_CPPFLAGS"],
--		[AC_SUBST(PYTHON_CPPFLAGS, [`$PYTHON-config --includes`])])
-+		[AC_SUBST(PYTHON_CPPFLAGS, [`python3-config --includes`])])
- 	AS_IF([test -z "$PYTHON_LIBS"],
--		[AC_SUBST(PYTHON_LIBS, [`$PYTHON-config --libs`])])
-+		[AC_SUBST(PYTHON_LIBS, [`python3-config --libs`])])
- fi
- 
- AC_CHECK_PROG([has_doxygen], [doxygen], [true], [false])
 -- 
-2.37.2
-
+With best wishes
+Dmitry
