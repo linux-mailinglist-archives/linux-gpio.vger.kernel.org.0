@@ -2,164 +2,132 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A9C679407
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 10:21:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C398D679479
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 10:47:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232517AbjAXJV2 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 04:21:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        id S233220AbjAXJrH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 04:47:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233574AbjAXJVK (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 04:21:10 -0500
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB83640BEF;
-        Tue, 24 Jan 2023 01:20:47 -0800 (PST)
-Received: by mail-ed1-x529.google.com with SMTP id y19so17582365edc.2;
-        Tue, 24 Jan 2023 01:20:47 -0800 (PST)
+        with ESMTP id S231666AbjAXJrG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 04:47:06 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F61C4EE7
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 01:47:03 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id vw16so37402033ejc.12
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 01:47:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qkyt3V/sGweMqPRz5YiwT95Clx97EReN+Djf9uI4HAw=;
-        b=CKS18NNmVewXIFwgT4uvAQ+zfKsoibcxbtwGO6YuqZocKNY43OyK9PYdP2W+JL/xxk
-         wtNWFUW5u3OqrBJUrSVCREMTgw2FzydUKc4onoIgf4Q07dp6q/lAC1NzgdortFOGYY16
-         aDsIbBOBTPUDRLOA5J0v6CHBXwiZHMz/QehV2KnPiEnysy7HSpw0G0Q3wlI4SBxWmNk6
-         XVxqGcFOur1LtFCChRTTFBi2HJismqk640xhKSDxtukTradXSC1RUA4acA2C0fhDOpPk
-         Peca/5Fnlfr2oOxOVPD6OfS9Oaa/rv/w3nbm1ItEMe0Fsm95bSvwz8pp4sqPR8R6eAxH
-         iZqw==
+        bh=o3C7ldfBLXi3hXV4pFxelnt9/f5/V65vBB6BlKhSBWo=;
+        b=vLssLMT4y6tEvIBNnOhKtr/5zWkvVXyRJP+9aaSDN6O2U6fs/2iq2yUgCPeRB+9tI6
+         STLILc0aeIUuUz7z+vvieHWuoSdOFuMRo2Zsow6OxemIZVz07/anY4vhscPyCtprpR/z
+         P7xKxvMwSAFWEyYVzBE7LQxhu6tYCwHFP+YnV7diYDLT3sRDOihIQcoM7BiivXNCEhMB
+         FF7P1hNjuDfI0Q0F2jDATqcspHylbaArM8NlI806wR9FXqmzsUpm0KiXwWrnzGvPzagG
+         AqmnlG2Cad0DwURv3hFJyp3WmyKb6mjhI+NSG8eVaWTBgFFoC7wRUTVQsg3zJSXsuGMe
+         PiTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qkyt3V/sGweMqPRz5YiwT95Clx97EReN+Djf9uI4HAw=;
-        b=NXjyIrUQ536Y0iJwklv/6auJqFB+5JNHNqxVBeGJCC70Gn6K3YRZW28m+pO88CilD2
-         aPLeVR3BCKNVIVzl1HAWI5fobRrOHjUUAgLT2+mCLGnXCmp2atKX3FdZuurYiUx1TiZj
-         pzY2BL/3gAd34O5uA+nP/yURLmOUhfOOIkCtg/coliPZDEcY21Ctv2d/jwm10GVFkJJx
-         bXDWBDcu9SvfkU6ph4lOPHhQp0KAtcDHjVVJbaxp2M43ZOg/zzmYxaP4v8s0eGOt+eZw
-         cx3IMZPjEFcQlLjCd8fuYI4+noJ9fFEVuNXgYLY97P9+jCJjP1xoCGnANG0Ma1f+g9Jd
-         k5nA==
-X-Gm-Message-State: AFqh2kp53trRTQApVTn6W5yE24hawzNt2HUKq4snADG9nJWi+DRBx+Wk
-        JsDW8teA+2Sz8rz0KUcnr9U=
-X-Google-Smtp-Source: AMrXdXtRWxW1mAbiUmC4SLcOOmddV2ys9A8B0EHmTeVmBqDkSv7OFCZ0WGK0Gn+dVGSenvg/hDCV5Q==
-X-Received: by 2002:a05:6402:3220:b0:49e:1d59:794f with SMTP id g32-20020a056402322000b0049e1d59794fmr35522994eda.22.1674552042732;
-        Tue, 24 Jan 2023 01:20:42 -0800 (PST)
-Received: from ?IPV6:2a01:c23:c139:7c00:ccbf:89a4:c6b8:c0f5? (dynamic-2a01-0c23-c139-7c00-ccbf-89a4-c6b8-c0f5.c23.pool.telefonica.de. [2a01:c23:c139:7c00:ccbf:89a4:c6b8:c0f5])
-        by smtp.googlemail.com with ESMTPSA id b8-20020aa7c908000000b00482e0c55e2bsm396134edt.93.2023.01.24.01.20.41
+        bh=o3C7ldfBLXi3hXV4pFxelnt9/f5/V65vBB6BlKhSBWo=;
+        b=G/Umec+eUV4qAdAdfeU/6GrcMx1e5g5dxWyEYpTOMsEvXnT9/8irxE8EilGiApp5Qg
+         a/qOeA3lUYHLoiKUDsZfY9v3hic54xSfbil8vvbBKBm//Ck8Xk3VEAOWjz7JOlekcKyH
+         VdpbvqUm94M0vAF/sD8mZvydjEHsvSq1JjzJVqiTFngQJWFPduD3+6Ztqn5epElmkixS
+         QuMeGo/3+AkYDPSmBDXZJ7EXrjDOM+wBn0jpL+NI7UZwuLZh9FG3XbFLyJkMUYiiVT94
+         6VxPA8OkI1Fl8JX5XGAmeDg98aTo/J4tVhF3haolcEg52qGLR8js/UQeKiK2XvWOG8Qz
+         alcg==
+X-Gm-Message-State: AFqh2kpYdAKFXs/BcM4FLQ9l76iS+hCilIXE/s8afQ3v286qzlDSIM3R
+        tB6lSTx5od7tdV7pJEW7iI5MDw==
+X-Google-Smtp-Source: AMrXdXvhjbo2HrIxrdYnwU06J+8+ObBkI8rZsJ/LqpLKOO0lnDbsUQqvpp/dJKYckxFL/7ABOmr1YQ==
+X-Received: by 2002:a17:906:9f1f:b0:871:d59d:4f54 with SMTP id fy31-20020a1709069f1f00b00871d59d4f54mr29773166ejc.27.1674553621588;
+        Tue, 24 Jan 2023 01:47:01 -0800 (PST)
+Received: from [192.168.1.101] (abyl109.neoplus.adsl.tpnet.pl. [83.9.31.109])
+        by smtp.gmail.com with ESMTPSA id w1-20020a170906480100b0080c433a9eeesm637395ejq.182.2023.01.24.01.46.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 01:20:42 -0800 (PST)
-Message-ID: <2aaa347b-da29-67e8-56e9-959de708e426@gmail.com>
-Date:   Tue, 24 Jan 2023 10:20:40 +0100
+        Tue, 24 Jan 2023 01:47:01 -0800 (PST)
+Message-ID: <675ed9f7-da31-6206-5089-1db22025ef4b@linaro.org>
+Date:   Tue, 24 Jan 2023 10:46:57 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 0/8] soc: amlogic: switch bindings to yaml and adjust some
- dtbs's
-To:     Neil Armstrong <neil.armstrong@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
- <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH 6/7] arm64: dts: Add ipq9574 SoC and AL02 board support
+To:     Devi Priya <quic_devipriy@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        agross@kernel.org, andersson@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+        sboyd@kernel.org, linus.walleij@linaro.org,
+        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
+        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
+        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
+        broonie@kernel.org, tdas@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_poovendh@quicinc.com
+References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
+ <20230110121316.24892-7-quic_devipriy@quicinc.com>
+ <f6ef1834-b629-b76c-9cde-55af56320665@linaro.org>
+ <7f157b73-f856-04d2-1b39-e1f8861d0439@quicinc.com>
+ <84aa79c3-b793-0d0e-d6a5-035aff5a17b4@linaro.org>
+ <278a2e6e-69e0-81b0-f476-571edea950ff@quicinc.com>
 Content-Language: en-US
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-In-Reply-To: <0e48405a-d4e7-92a8-339f-4be2f4ec1378@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <278a2e6e-69e0-81b0-f476-571edea950ff@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24.01.2023 08:16, Neil Armstrong wrote:
-> Hi Heiner,
-> 
-> Le 23/01/2023 à 22:22, Heiner Kallweit a écrit :
->> At first adjust some existing dtbs's so that they pass dtbs_check
->> after switching bindings to yaml.
-> 
-> Thanks for this patchset, but please drop patches 1, 3 & 4, and take
-> in account the existing compatible usage in your new bindings like
-> I did in my conversion patchset.
-> 
-> While we did remove some bad compatibles we introduced a few years ago,
-> now the GXBB, GXL & GXM are now stable a aew LTS releases now and
-> a few other projects uses them as-is (U-Boot, BSDs, ...) so changing
-> the compatibles isn't an option anymore... and we can't know which
-> one they use and how the implementation behaves we must document
-> the existing usage without breaking any potential users (including linux).
-> 
-I wasn't aware of this. Thanks for the hint.
-So I'll rework the schemas to cover current usage of compatible strings.
 
-> Thanks,
-> Neil
-> 
-Heiner
-> 
-> 
->>
->> Then switch further Amlogic Meson bindings to yaml.
->> Tested with make targets dt_binding_check and dtbs_check.
->>
->> Heiner Kallweit (8):
->>    arm64: dts: meson-gx: Remove invalid pwm compatible
->>    arm64: dts: amlogic: Fix non-compliant SD/SDIO node names
->>    arm64: dts: meson-gx: Set only one compatible string for mmc
->>    arm64: dts: amlogic: Remove invalid compatible string
->>      amlogic,meson-gpio-intc
->>    dt-bindings: rtc: Add Amlogic Meson vrtc controller binding
->>    dt-bindings: pwm: Add Amlogic Meson PWM binding
->>    dt-bindings: interrupt-controller: Add Amlogic Meson GPIO interrupt
->>      controller binding
->>    dt-bindings: pinctrl: Add Amlogic Meson pinctrl binding
->>
->>   .../amlogic,meson-gpio-intc.txt               |  38 ------
->>   .../amlogic,meson-gpio-intc.yaml              |  72 +++++++++++
->>   .../pinctrl/amlogic,meson-pinctrl.yaml        | 121 ++++++++++++++++++
->>   .../bindings/pinctrl/meson,pinctrl.txt        |  94 --------------
->>   .../devicetree/bindings/pwm/pwm-amlogic.yaml  |  61 +++++++++
->>   .../devicetree/bindings/pwm/pwm-meson.txt     |  29 -----
->>   .../bindings/rtc/amlogic,meson-vrtc.yaml      |  50 ++++++++
->>   .../bindings/rtc/rtc-meson-vrtc.txt           |  22 ----
->>   arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   5 +-
->>   .../boot/dts/amlogic/meson-g12-common.dtsi    |   7 +-
->>   arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |  15 +--
->>   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi   |   3 +-
->>   arch/arm64/boot/dts/amlogic/meson-gxl.dtsi    |   3 +-
->>   arch/arm64/boot/dts/amlogic/meson-s4.dtsi     |   3 +-
->>   arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |   3 +-
->>   15 files changed, 320 insertions(+), 206 deletions(-)
->>   delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
->>   create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/amlogic,meson-pinctrl.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
->>   create mode 100644 Documentation/devicetree/bindings/pwm/pwm-amlogic.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-meson.txt
->>   create mode 100644 Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
->>   delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
->>
-> 
-> 
 
+On 24.01.2023 08:19, Devi Priya wrote:
+> 
+> 
+> On 1/13/2023 7:50 PM, Krzysztof Kozlowski wrote:
+>> On 13/01/2023 14:29, Devi Priya wrote:
+>>>>> +
+>>>>> +    soc: soc@0 {
+>>>>> +        #address-cells = <1>;
+>>>>> +        #size-cells = <1>;
+>>>>> +        ranges = <0 0 0 0xffffffff>;
+>>>>> +        compatible = "simple-bus";
+>>>>> +
+>>>>> +        tlmm: pinctrl@1000000 {
+>>>>> +            compatible = "qcom,ipq9574-tlmm";
+>>>>> +            reg = <0x01000000 0x300000>;
+>>>>> +            interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +            gpio-controller;
+>>>>> +            #gpio-cells = <2>;
+>>>>> +            gpio-ranges = <&tlmm 0 0 65>;
+>>>>> +            gpio-reserved-ranges = <59 1>;
+>>>>
+>>>> Hm, why reserved ranges are in SoC?
+>>> As the gpio is forbidden on all ipq9574 boards, we have added it in SoC
+>>
+>> Why it is forbidden on all boards? I guess it depends on the firmware
+>> and this can differ, can't it?
+>>
+> This GPIO is protected and used by the TZ firmware and is forbidden on all the boards & firmware
+If it's protected on *all* boards and *all* firmwares (for any
+good reason that you probably have internally), perhaps it
+would be better to describe it in the .c driver.. wdyt?
+
+Konrad
+>> Best regards,
+>> Krzysztof
+>>
+> Regards,
+> Devi Priya
