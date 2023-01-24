@@ -2,52 +2,52 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBDE36792FE
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 09:24:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C88016792FD
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 09:23:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231749AbjAXIYZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 03:24:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48448 "EHLO
+        id S231921AbjAXIX4 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 03:23:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjAXIYZ (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 03:24:25 -0500
-Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6520BB
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:24:23 -0800 (PST)
-Received: by mail-pl1-x62d.google.com with SMTP id k13so14078028plg.0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:24:23 -0800 (PST)
+        with ESMTP id S229753AbjAXIXz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 03:23:55 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71533BB
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:23:53 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id 20so10671337pfu.13
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:23:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=K7gLXq4ZFSqafs80Sd3lKjhLu4IsjizEIRLtplmdEu8=;
-        b=DyaGK6aEgVhUnauB3u70U/RPhXVViT8cJJuewveqL6g0ykbQqzgslkzXBR+MgI8JW6
-         mWy961hyNTCIUy0UiydUSW4jn0E0m8hs/dZwmJOZTAhYmViF1WqYHca1Ouuk77MtteiL
-         cwsZ5K4AWN3IgvqoCt+CkB63ApaeotVGCso21WqtR6Xrz86lbvoep6pnKgjO9pint5e1
-         vPf8edHXIBRaDIUqhK5i8cIrOEGcSh3mTjwbfiWGrKblwx1oSe55rRYuQ1TLGwG7hS5j
-         3J2zAon9pdBeUCpvjCVpDhbFH4kShbGlDqenSWa0McezJqjQDO6aKqW/yhe8c0WEe+DF
-         KBfQ==
+        bh=+1xjl3by9JCjuXLrMDuKC6Y2q8tmisS9acrc57d1oV0=;
+        b=yU1R8shEexpkn4T+LpLZjrKYfyCc3SMj1diP45IvplHuzZxBMW3FN6DVRqeKrtNmeB
+         k9UH7y5uLlNTq1zqkdn2pIW7TQAoTEwVET8Ioaj8UwYh0gZz61q+HJixyNmbj8ss9zbY
+         Whrsx5shZJvWHlhlXpfrQF1/rWIqTumHTg00OIJNjntILDcBfWuBwZ6+0oyry6AIS/Qm
+         SAjpVKsN07ii83IK7hgYaXN/sAMQ1MQPYMxkg64QUPz5BZVJdikB9uOBxP/xu02/Sr6u
+         5G8hB43Sp1YWKs9m6eXeg3RnXeXte5+i+mZofH5YSwsVVnKMTOqEKzPD+6lCSHakAlQf
+         gg1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=K7gLXq4ZFSqafs80Sd3lKjhLu4IsjizEIRLtplmdEu8=;
-        b=1EgNvI5Z5LU3eMJINDDsWiPCGVM8Cec0g30L+aIF/f9IcZM0tpu9EktTZRedSpdkrD
-         D7eNrwA5nC2eyVIWNYDjWcIQrvVoCG+m+eOXqml07YnQ6WYrWAGOIMowO+jkf98OrNJd
-         /rSAVr3Fru0VKdYxYAk3tIqPva56ZtIkfQwEIvXJfao1+agLZrImE26OgwhvK/8Y8w7T
-         6DhwMyTU+xZhWp++0uWIMNxXg9cwMD8B6Zhp8bVciQuon7l7vpVN2PdgR458BNk8lLz5
-         F3V/QTaTkAp/5QBm9WiAYfK5UKAGaquTvsA1vPXwjyy7mqq561fou3akqTv0uOhnGvh9
-         j1kQ==
-X-Gm-Message-State: AFqh2kpdWM5ZV9X3tQ1MUEsFSdzWL0GE1Jp5Pt9r4WJI9p887eulj+4h
-        FAmC8FrxW9BYFGEHeR6UmiDmYlvcMJDyYuYT
-X-Google-Smtp-Source: AMrXdXv2UDb41hZdiqq/MCgxNuFgHX1qzCtxX6WV3yXo8SDPIE0Y3cga+F3b4eXyO5u0TE7uX5siDQ==
-X-Received: by 2002:a17:902:a717:b0:194:78e2:f272 with SMTP id w23-20020a170902a71700b0019478e2f272mr27564660plq.53.1674548663442;
-        Tue, 24 Jan 2023 00:24:23 -0800 (PST)
+        bh=+1xjl3by9JCjuXLrMDuKC6Y2q8tmisS9acrc57d1oV0=;
+        b=i7meKo7VY+oKrllPhIVw172U/VWLRks2NmZHQDGFbNXbpqw+nznH9stnIJDZVyGTCh
+         loLGCQDY576dglT7VR8WOmQvYzFO29WeoKg1UyjarGpxzRylVqnqkBgRNl9HtY8fGQqw
+         i9drMoXFJzoA9c7NWItjbNeIlpm0xd5mn46kMVvBFKndGnMPWJLwFA2ve6qBzYqk1CvG
+         sINnaOZy8+VEMW9ffkVRBJSMytWBDgV1rayxl9ABoCaFcLftSyWg9uRCMkFoPvrbIqJK
+         N69n6zrNuQ2pPyDEPeNtRJPt3ZyoMVg8edILdW+dcr2x/VjMz/44HybbUAqLPQuPS6q2
+         1k6w==
+X-Gm-Message-State: AFqh2kqZksVQ23o5+My+Nym/laS++CdxyGTsdas0acUL8h3ByM3oM9MI
+        GdAatyfRiXdOAdtNNkD73xjbHQ==
+X-Google-Smtp-Source: AMrXdXuaLqLrbDJlq5MaBHxh6QbpMus95eoKKNv2ZeRrYA98BP7J1Z9VxwnhJ1qW3Gws6R/sDkTVlg==
+X-Received: by 2002:aa7:9557:0:b0:58a:66a8:edf5 with SMTP id w23-20020aa79557000000b0058a66a8edf5mr30112190pfq.3.1674548632901;
+        Tue, 24 Jan 2023 00:23:52 -0800 (PST)
 Received: from localhost ([122.172.83.155])
-        by smtp.gmail.com with ESMTPSA id be1-20020a170902aa0100b0019608291564sm1044086plb.134.2023.01.24.00.24.22
+        by smtp.gmail.com with ESMTPSA id x26-20020a62fb1a000000b005892ea4f092sm976709pfm.95.2023.01.24.00.23.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jan 2023 00:24:22 -0800 (PST)
+        Tue, 24 Jan 2023 00:23:52 -0800 (PST)
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Linus Walleij <linus.walleij@linaro.org>,
         Bartosz Golaszewski <brgl@bgdev.pl>,
@@ -56,9 +56,9 @@ Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
         Vincent Guittot <vincent.guittot@linaro.org>,
         linux-gpio@vger.kernel.org,
         =?UTF-8?q?Alex=20Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: [PATCH] rust: Allow reusing locally installed gpio library
-Date:   Tue, 24 Jan 2023 13:53:43 +0530
-Message-Id: <3d03ede97ce0717e3f69de8fd4175407a3aa3a0e.1674548651.git.viresh.kumar@linaro.org>
+Subject: [PATCH] rust: Align formatting to what's suggested by 'cargo fmt'
+Date:   Tue, 24 Jan 2023 13:53:46 +0530
+Message-Id: <9ecb05d3e4518c8ace2747274da5521a0abdcde3.1674548551.git.viresh.kumar@linaro.org>
 X-Mailer: git-send-email 2.31.1.272.g89b43f80a514
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,31 +71,101 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-The rust crates builds fine when built with the 'make' command, as
-static linking works fine. But when referenced from a remote rust crate,
-it gives following error:
-
-error: could not find native static library `gpiod`, perhaps an -L flag is missing?
-
-This happens since we only support 'static' LIB-KIND currently. Remove
-the same to allow others to work too.
+Align code to follow what 'cargo fmt' suggests.
 
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- bindings/rust/libgpiod-sys/build.rs | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ bindings/rust/gpiosim-sys/src/lib.rs | 13 +++++++------
+ bindings/rust/libgpiod/src/chip.rs   |  5 ++---
+ bindings/rust/libgpiod/src/lib.rs    |  8 ++++----
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/bindings/rust/libgpiod-sys/build.rs b/bindings/rust/libgpiod-sys/build.rs
-index 274069eb9e9d..e3ed04afa141 100644
---- a/bindings/rust/libgpiod-sys/build.rs
-+++ b/bindings/rust/libgpiod-sys/build.rs
-@@ -37,5 +37,5 @@ fn main() {
-     generate_bindings();
+diff --git a/bindings/rust/gpiosim-sys/src/lib.rs b/bindings/rust/gpiosim-sys/src/lib.rs
+index c3f5b3fb9fd4..e3630442e24b 100644
+--- a/bindings/rust/gpiosim-sys/src/lib.rs
++++ b/bindings/rust/gpiosim-sys/src/lib.rs
+@@ -2,7 +2,7 @@
+ // SPDX-FileCopyrightText: 2022 Linaro Ltd.
+ // SPDX-FileCopyrightTest: 2022 Viresh Kumar <viresh.kumar@linaro.org>
  
-     println!("cargo:rustc-link-search=./../../lib/.libs/");
--    println!("cargo:rustc-link-lib=static=gpiod");
-+    println!("cargo:rustc-link-lib=gpiod");
- }
+-use libgpiod::{Error, Result, OperationType};
++use libgpiod::{Error, OperationType, Result};
+ 
+ #[allow(non_camel_case_types, non_upper_case_globals)]
+ #[cfg_attr(test, allow(deref_nullptr, non_snake_case))]
+@@ -16,14 +16,14 @@ mod sim;
+ pub use sim::*;
+ 
+ use crate::{
+-    gpiosim_value_GPIOSIM_VALUE_INACTIVE as GPIOSIM_VALUE_INACTIVE,
+-    gpiosim_value_GPIOSIM_VALUE_ACTIVE as GPIOSIM_VALUE_ACTIVE,
+-    gpiosim_value_GPIOSIM_VALUE_ERROR as GPIOSIM_VALUE_ERROR,
+     gpiosim_direction_GPIOSIM_DIRECTION_INPUT as GPIOSIM_DIRECTION_INPUT,
+     gpiosim_direction_GPIOSIM_DIRECTION_OUTPUT_HIGH as GPIOSIM_DIRECTION_OUTPUT_HIGH,
+     gpiosim_direction_GPIOSIM_DIRECTION_OUTPUT_LOW as GPIOSIM_DIRECTION_OUTPUT_LOW,
+-    gpiosim_pull_GPIOSIM_PULL_UP as GPIOSIM_PULL_UP,
+     gpiosim_pull_GPIOSIM_PULL_DOWN as GPIOSIM_PULL_DOWN,
++    gpiosim_pull_GPIOSIM_PULL_UP as GPIOSIM_PULL_UP,
++    gpiosim_value_GPIOSIM_VALUE_ACTIVE as GPIOSIM_VALUE_ACTIVE,
++    gpiosim_value_GPIOSIM_VALUE_ERROR as GPIOSIM_VALUE_ERROR,
++    gpiosim_value_GPIOSIM_VALUE_INACTIVE as GPIOSIM_VALUE_INACTIVE,
+ };
+ 
+ /// Value settings.
+@@ -42,7 +42,8 @@ impl Value {
+             GPIOSIM_VALUE_ACTIVE => Value::Active,
+             GPIOSIM_VALUE_ERROR => {
+                 return Err(Error::OperationFailed(
+-                    OperationType::SimBankGetVal, errno::errno()
++                    OperationType::SimBankGetVal,
++                    errno::errno(),
+                 ))
+             }
+             _ => return Err(Error::InvalidEnumValue("Value", val as i32)),
+diff --git a/bindings/rust/libgpiod/src/chip.rs b/bindings/rust/libgpiod/src/chip.rs
+index 9c3c2b414170..f4554a116946 100644
+--- a/bindings/rust/libgpiod/src/chip.rs
++++ b/bindings/rust/libgpiod/src/chip.rs
+@@ -206,9 +206,8 @@ impl Chip {
+ 
+         // SAFETY: The `gpiod_line_request` returned by libgpiod is guaranteed to live as long
+         // as the `struct Request`.
+-        let request = unsafe {
+-            gpiod::gpiod_chip_request_lines(self.ichip.chip, req_cfg, lconfig.config)
+-        };
++        let request =
++            unsafe { gpiod::gpiod_chip_request_lines(self.ichip.chip, req_cfg, lconfig.config) };
+ 
+         if request.is_null() {
+             return Err(Error::OperationFailed(
+diff --git a/bindings/rust/libgpiod/src/lib.rs b/bindings/rust/libgpiod/src/lib.rs
+index a5d018cab73e..4abfcf2ba405 100644
+--- a/bindings/rust/libgpiod/src/lib.rs
++++ b/bindings/rust/libgpiod/src/lib.rs
+@@ -35,6 +35,9 @@ use gpiod::{
+     gpiod_line_bias_GPIOD_LINE_BIAS_PULL_DOWN as GPIOD_LINE_BIAS_PULL_DOWN,
+     gpiod_line_bias_GPIOD_LINE_BIAS_PULL_UP as GPIOD_LINE_BIAS_PULL_UP,
+     gpiod_line_bias_GPIOD_LINE_BIAS_UNKNOWN as GPIOD_LINE_BIAS_UNKNOWN,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_HTE as GPIOD_LINE_CLOCK_HTE,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_MONOTONIC as GPIOD_LINE_CLOCK_MONOTONIC,
++    gpiod_line_clock_GPIOD_LINE_CLOCK_REALTIME as GPIOD_LINE_CLOCK_REALTIME,
+     gpiod_line_direction_GPIOD_LINE_DIRECTION_AS_IS as GPIOD_LINE_DIRECTION_AS_IS,
+     gpiod_line_direction_GPIOD_LINE_DIRECTION_INPUT as GPIOD_LINE_DIRECTION_INPUT,
+     gpiod_line_direction_GPIOD_LINE_DIRECTION_OUTPUT as GPIOD_LINE_DIRECTION_OUTPUT,
+@@ -45,12 +48,9 @@ use gpiod::{
+     gpiod_line_edge_GPIOD_LINE_EDGE_FALLING as GPIOD_LINE_EDGE_FALLING,
+     gpiod_line_edge_GPIOD_LINE_EDGE_NONE as GPIOD_LINE_EDGE_NONE,
+     gpiod_line_edge_GPIOD_LINE_EDGE_RISING as GPIOD_LINE_EDGE_RISING,
+-    gpiod_line_clock_GPIOD_LINE_CLOCK_HTE as GPIOD_LINE_CLOCK_HTE,
+-    gpiod_line_clock_GPIOD_LINE_CLOCK_MONOTONIC as GPIOD_LINE_CLOCK_MONOTONIC,
+-    gpiod_line_clock_GPIOD_LINE_CLOCK_REALTIME as GPIOD_LINE_CLOCK_REALTIME,
+     gpiod_line_value_GPIOD_LINE_VALUE_ACTIVE as GPIOD_LINE_VALUE_ACTIVE,
+-    gpiod_line_value_GPIOD_LINE_VALUE_INACTIVE as GPIOD_LINE_VALUE_INACTIVE,
+     gpiod_line_value_GPIOD_LINE_VALUE_ERROR as GPIOD_LINE_VALUE_ERROR,
++    gpiod_line_value_GPIOD_LINE_VALUE_INACTIVE as GPIOD_LINE_VALUE_INACTIVE,
+ };
+ 
+ /// Operation types, used with OperationFailed() Error.
 -- 
 2.31.1.272.g89b43f80a514
 
