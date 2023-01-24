@@ -2,79 +2,113 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29502678D4B
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 02:23:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 509A0678D6F
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 02:31:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbjAXBXz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Mon, 23 Jan 2023 20:23:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51046 "EHLO
+        id S230149AbjAXBbx (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Mon, 23 Jan 2023 20:31:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjAXBXy (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 20:23:54 -0500
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06E60305E2;
-        Mon, 23 Jan 2023 17:23:22 -0800 (PST)
-Received: by mail-oo1-f48.google.com with SMTP id j10-20020a4aa64a000000b004f9b746ee29so2433261oom.0;
-        Mon, 23 Jan 2023 17:23:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2cQMAwwRREiwr/oZxVGOyaxb8i+wrIpEeXOLH8JzHGE=;
-        b=zzNhWldsZMzxwDgcjg98oROoYjVrD/BUJrBZ4PSIFBS7/JMtEZ1Eu6zva2d+0LLr/n
-         zlcjcOaltmmw1WN7vnj8+1UYpqYffhpAvl/uxe3s5/71OpdaIgwh1aoU5FEnrtZ+5ymb
-         7p0dgQ24Gpr33NELtJ5St48Yj/94GahipdgvqE+fPVuXC600e8hG4fj5ygrzr5aj4Rjn
-         EyfQ7aT/lEXUPnBp5HC2HiAH/lxYml4x7jBIenHrkCLJHTxHpSNJuo2u5ABTSXt5F6mI
-         3thKUSagvC4auyCt0IhoWBJ3NsGrh6p8U6btFrcJMA62BApHe25qjJlGjBKTdoSMg58g
-         YM3w==
-X-Gm-Message-State: AFqh2koOrMsONkKErIY4sr70GvrGnPbE57Ir+PtkYsjKne3B0iakKodv
-        8JxTHzKTGnJwWMTRHUHfRA==
-X-Google-Smtp-Source: AMrXdXujZwMm6fXYSgOameyhHf0Aq2138aPsqvYqCTkEXLOXKLmaxvKaplYwPXK4MO3oQ+4UfNXC9g==
-X-Received: by 2002:a4a:8c68:0:b0:4a3:aa96:23c7 with SMTP id v37-20020a4a8c68000000b004a3aa9623c7mr11797638ooj.6.1674523365895;
-        Mon, 23 Jan 2023 17:22:45 -0800 (PST)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id z14-20020a4a984e000000b004fca8a11c61sm277950ooi.3.2023.01.23.17.22.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 17:22:45 -0800 (PST)
-Received: (nullmailer pid 3121723 invoked by uid 1000);
-        Tue, 24 Jan 2023 01:22:42 -0000
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S230062AbjAXBbx (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Mon, 23 Jan 2023 20:31:53 -0500
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2089.outbound.protection.outlook.com [40.107.20.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C1512869;
+        Mon, 23 Jan 2023 17:31:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Bp/DgEWbz0aHTtbDKlVsHs0/CAcRhbamUDYS9wJyRYT9O8D8qb/Rv0KgWWeVsX2vapmeinoXDgIfpjWlBwievVbAKMqxKAapE24mMgEARm8aLgSucNWNcx1yGqFIxBnNcm86FH36TEsqLKqyePSbhdA1/NpLgjNnGILUK1AUGB1riiJX843fOd5CIf0kKS+qypOXASHGhXn4SaEE/Fvnzk/Xw1dhx+TWWBhdGZKuX5OqdxjrC1Oh5HpdD2BIn/ANdYf6nztY5bFGrfRq6bSiJN0hoY04VkMgSKbOHTm01eqBsDnZpR5mjR9LT6oQltQsBgZlG4r2LtOyefLVKXK0yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7MlceOkI8fkh9/CohHhlzr2+DLmbKxPmJlm/isw+Mtk=;
+ b=CxEEHBh977tfMdSPqwj5CEZLE+yWbAsvEhQ3nhEivKD/38rlO217LdulTXfrRn4blkcZ/Q3odAMgfZwYAGidxmhU6I8IGKWUzpzwFCnl3fTtIMOll7wEIuUf703G158wbQZBU0kQIlBgmyigmPYRaAnyAzoMpcajhEX0SnO7GCdHwi4bETZ7YGsXvjeYL6v0RsTpczxrbJxjibQKfCwhJe56vTa2wCiBEd31i8bOA5HW87mGoE/3IHNHNngIO3bbyoL9ifs2J0TRTCG01JlJrpCe+2AsUYqxq/igiCIG3g1/scshKq0hyj6z7d5e34NTe4IlM/tjsb2WkPcMH+g+vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=variscite.com; dmarc=pass action=none
+ header.from=variscite.com; dkim=pass header.d=variscite.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=variscite.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7MlceOkI8fkh9/CohHhlzr2+DLmbKxPmJlm/isw+Mtk=;
+ b=nXHVwsea3eEqpqeCqAgyGXkffEXph1reb0fGPlnUjLthZRuYGIxV7hdeOoygp4M9dNUQVTQ05cYY59X9mTAozm6gdzCG02ClazF+e0lIjHMHAsr+niFGtiW00ZeZUf4+Fll+krsHUSCXubYb0zLMpkubB/kFys/sOberxmOSPCaXcrjoMrRgov9nghtnCBbyL+2FghRn6sdOHT+LagZQVB2nxUGmNf2neWDGM1ipQIQcsYB0WshyYQIFDivyIp9iFNr7aI46QA/3JrmkSEaCLQhwDjDyyCP0YZI+gAFuBNwM2EoRZPyBk0mOO3Ggc7E3jCnHkKQUKsYMEJfkyOvVyw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=variscite.com;
+Received: from AM6PR08MB4376.eurprd08.prod.outlook.com (2603:10a6:20b:bb::21)
+ by PAVPR08MB9484.eurprd08.prod.outlook.com (2603:10a6:102:315::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Tue, 24 Jan
+ 2023 01:31:47 +0000
+Received: from AM6PR08MB4376.eurprd08.prod.outlook.com
+ ([fe80::4e5b:51c8:1237:1fee]) by AM6PR08MB4376.eurprd08.prod.outlook.com
+ ([fe80::4e5b:51c8:1237:1fee%5]) with mapi id 15.20.6002.033; Tue, 24 Jan 2023
+ 01:31:47 +0000
+From:   Pierluigi Passaro <pierluigi.p@variscite.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl,
+        yamada.masahiro@socionext.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sfr@canb.auug.org.au
+Cc:     eran.m@variscite.com, nate.d@variscite.com,
+        francesco.f@variscite.com, pierluigi.passaro@gmail.com,
+        Pierluigi Passaro <pierluigi.p@variscite.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v3] gpiolib: fix linker errors when GPIOLIB is disabled
+Date:   Tue, 24 Jan 2023 02:31:38 +0100
+Message-Id: <20230124013138.358595-1-pierluigi.p@variscite.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZRAP278CA0009.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:10::19) To AM6PR08MB4376.eurprd08.prod.outlook.com
+ (2603:10a6:20b:bb::21)
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-rtc@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        =?utf-8?q?=2C?= "devicetree@vger.kernel.org" 
-        <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Uwe =?utf-8?q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Marc Zyngier <maz@kernel.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-In-Reply-To: <06289641-18b1-320d-6162-7ae176452f31@gmail.com>
-References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
- <06289641-18b1-320d-6162-7ae176452f31@gmail.com>
-Message-Id: <167452325371.3118653.16373677195744392136.robh@kernel.org>
-Subject: Re: [PATCH 7/8] dt-bindings: interrupt-controller: Add Amlogic Meson
- GPIO interrupt controller binding
-Date:   Mon, 23 Jan 2023 19:22:42 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4376:EE_|PAVPR08MB9484:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04e2e45f-6dc7-42a4-4f94-08dafdaac240
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XigILwP/NYPgFoh+zvI/J2VCxlWm7u6acwozFvbgrbM+KawSdb6mMUrk+LHOEOskN+WkAt/Q6cWvL0EVKy8InZZ/lAuKo5bwR7iSr5wbpVzE3QtDCU/OvhMPY9mM8b9dHZwk3q+z0ylLzgxROkvZzG6ZpTN3TQVw3xRAsWmAdHnhBAXjDpQkD4mROjwDRdqjQ6XwC2jzeOuPZcFVhEDvLaKPWVceuv1I3/BKKAL0kQUsNrvygAJdNvwlqTDWcLQPNVLM5PjT8ekJqJe/zPwcXx+71iOz9BziUGCBnnx5VB+7M7qEaZ+xPAbhBYSCxh94NA304eq14ZZVT4W+s5bAUPLrlypu6xYRNgxH+J9Vjj/9pTMi1DMzlqeMLyla/vhtij8eQKWnTuv4VaGnr12r71LAjPExfUvGxpTDUcJtrbhZ9sro20c7nOfVujOtx9iDozOIPN+5hHupK0FYshrB1RWHhQ8mQNXdLXQgh+dCnanFL/FmBx3ZE7iTLC9WoyuKd1VDmC3l6F5mm+dmJniDasVXUa+LSga6idYZuQF2GBIS5Hz1ZfkjofHIGJ9XSo5nwhlblULUnsxSPrj24gNBxKlmDxVdVKx6ZNoQpQieTFL7aGfvI41WOkp6T7H2H0IHhsWT9/UqUn5HwIeKOZlbiXLkgz+l+w7Bm8+dR9CIBcULyAQKGyAPMTg5sNlWcYPj1h1JKaJf37b8xzJthAjWaw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4376.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39850400004)(136003)(376002)(366004)(396003)(451199015)(478600001)(52116002)(6486002)(36756003)(6506007)(1076003)(83380400001)(6666004)(2616005)(26005)(54906003)(186003)(6512007)(316002)(66476007)(66946007)(66556008)(41300700001)(8936002)(2906002)(5660300002)(4326008)(8676002)(38100700002)(86362001)(38350700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?VUjUtihWry8W+oL4zHCCjOy4dhGWWQo6sHWTpqfSXcV/i2jNwFBL5h+32ecs?=
+ =?us-ascii?Q?aFlo2N3NG2sOc5PUyoECS1Se66lB3v54PutXCaVc7AjKuxIWGkfMX4Nx/UYQ?=
+ =?us-ascii?Q?h7aSya1r90ajoDDN+2q3uhADx5YvRPkJ0zaNfw0wz2UxAN09s8kZkziZ572p?=
+ =?us-ascii?Q?39M2dTvUOSiC8GBI1FiJzg3RA3tuiep7XJqlFO27ZlkgZOdEA5NSnDljn7oo?=
+ =?us-ascii?Q?3aIWsEzdrBGOWgHNsbY0ijLDt2DebcRHvf3/ibo9hI/M002iyMS0C+7sxNV4?=
+ =?us-ascii?Q?YYJeiJA5S5U0FtRLndmdIksDlCFdyHXxcq00W9cZwEHn97F35jIHBagbL3Nw?=
+ =?us-ascii?Q?Lg+ktjmlNGoWYCQD75Y0rY4n0ZFEglEl4CFn/HtiQQ8OAiUDU9reEeA8s7gY?=
+ =?us-ascii?Q?3Yx18ASGErdjZpvyQbwVjdRmbH8a0398oVqO9ERkZIjZDUjsbmydMvj/YQC7?=
+ =?us-ascii?Q?3NxbOrgscWOWibh3qisZKRAz7CAauA92dBVcc05+kofu+/Kg84GojMk+RNiq?=
+ =?us-ascii?Q?FY0egVYxclfgkkwElZHeFE+n+acwC1LFaNC0vFgijEAO6yKgcZll/kTWJKFj?=
+ =?us-ascii?Q?h3uZzRiUKxeyJW3vX2p0HS2KcpbbIMj/3mp6osWLGzvms7gjJDWNBpBT42Nd?=
+ =?us-ascii?Q?x/mTWviXILwr/MBRIU7uR3lE831HiWneD96gGgN1ML+jdkJVgHLFdS9cYygR?=
+ =?us-ascii?Q?w9e2VdpQJXsSGJi/LfqtEjPE5oUgtb3yrzHHPOtKVqN3v53t13QOIMFjR1+l?=
+ =?us-ascii?Q?jePqM3qisVf2SkpHyVf60Kfe89qHylWSQtCK/jJiHBVsOtzXOWj//duzNLUN?=
+ =?us-ascii?Q?hC00okK4+vJRFul6o8OBzeRUDXwFbTMadadyp2T2DcvE9FFN97A2kGZvfHoh?=
+ =?us-ascii?Q?b8I6IdAmQ78CPZcZgVMvM8qL6/yk7CaH77z277fX4JslK9bstOiaV1xaVSjG?=
+ =?us-ascii?Q?twDBQUqpH4YBg7ERG8Hy666pa0bv6+PeQvWggZu9nzT80k1hGc1XbstVq0oW?=
+ =?us-ascii?Q?l32jslmU0R/5ckJIjrA+gOUXPYtWqvJ4YJVyO8JQaVErr4iUGlobdWykug7W?=
+ =?us-ascii?Q?7B3z9pAVY84AsFXsxVaVcnhBmyoCPoP3+4g60cKdUuMVKsidn2zsPcil3xW6?=
+ =?us-ascii?Q?TCYL6Mwm7/EXARCi3Gv90LmxZtLYMvlJNFIa3UVzGRuR1N8DSuUP1Yj/4Ruw?=
+ =?us-ascii?Q?v0T9h+ZwBn3jXl7oSs37VIXeN28naKrx//XLwoDW0F2oUVQhmYHVS2m1vW3Y?=
+ =?us-ascii?Q?b3pTGZ1KGLWW+wps0pnv9r78N3zC3dxr++hRYugIPPIOiEzUw9ezynH9LHjI?=
+ =?us-ascii?Q?CIuccExj/T6Rh8qX/yg3sFOBVMIrR3NPcpp8jE0vBFAOhE/Pz/9GP4CzCZYh?=
+ =?us-ascii?Q?AA69pOR8pPltYWKhWEZScsjDL4PHznqicMTGR6QdNA9hBla1Xk8gaHJ3YAwY?=
+ =?us-ascii?Q?An+AafmyyaFbbjRsmkNDW6Km3qjon4E3i4j69coDnknVBfQ4xuFSDIgCwqZm?=
+ =?us-ascii?Q?kyl7qamA2f2SEYiqnI+1zXFAOCmfppiAT43oI+gGnKSKYh2A5ObcwmApvf3L?=
+ =?us-ascii?Q?AodSGwq+1p2A1blyRgup4FCWZMWufykaeBz8hvp9A8Co+eaHS4HRsHDgqMUU?=
+ =?us-ascii?Q?og=3D=3D?=
+X-OriginatorOrg: variscite.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04e2e45f-6dc7-42a4-4f94-08dafdaac240
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR08MB4376.eurprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 01:31:47.3327
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 399ae6ac-38f4-4ef0-94a8-440b0ad581de
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jK54Iuu0a5Xua9nP3IpVqiSn9JMNbDJ5YXv2Ok3+xeY4eQIy3N5ApAPkv6ytCgbw37EQUZukg9ZFnQef+8b3f4z6/xetW9BSpFfxBM+ik04=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB9484
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,161 +116,73 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+Both the functions gpiochip_request_own_desc and
+gpiochip_free_own_desc are exported from
+    drivers/gpio/gpiolib.c
+but this file is compiled only when CONFIG_GPIOLIB is enabled.
+Move the prototypes under "#ifdef CONFIG_GPIOLIB" and provide
+reasonable definitions and includes in the "#else" branch.
 
-On Mon, 23 Jan 2023 22:30:08 +0100, Heiner Kallweit wrote:
-> Add Amlogic Meson GPIO interrupt controller binding.
-> Tested with make targets dt_binding_check and dtbs_check.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
->  .../amlogic,meson-gpio-intc.txt               | 38 ----------
->  .../amlogic,meson-gpio-intc.yaml              | 72 +++++++++++++++++++
->  2 files changed, 72 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
-> 
+Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
+Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
+Reported-by: kernel test robot <lkp@intel.com>
+---
+Changes in v2:
+- add Fixes tag
+Changes in v3:
+- add includes to fix builds against x86_64-defconfig
 
-Running 'make dtbs_check' with the schema in this patch gives the
-following warnings. Consider if they are expected or the schema is
-incorrect. These may not be new warnings.
+ include/linux/gpio/driver.h | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-Note that it is not yet a requirement to have 0 warnings for dtbs_check.
-This will change in the future.
-
-Full log is available here: https://patchwork.ozlabs.org/project/devicetree-bindings/patch/06289641-18b1-320d-6162-7ae176452f31@gmail.com
-
-
-interrupt-controller@4080: compatible: ['amlogic,meson-s4-gpio-intc', 'amlogic,meson-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-s4-s805x2-aq222.dtb
-
-interrupt-controller@9880: compatible:0: 'amlogic,meson-gpio-intc' is not one of ['amlogic,meson8-gpio-intc', 'amlogic,meson8b-gpio-intc', 'amlogic,meson-gxbb-gpio-intc', 'amlogic,meson-gxl-gpio-intc', 'amlogic,meson-axg-gpio-intc', 'amlogic,meson-g12a-gpio-intc', 'amlogic,meson-sm1-gpio-intc', 'amlogic,meson-a1-gpio-intc', 'amlogic,meson-s4-gpio-intc', 'amlogic,meson-sc2-gpio-intc']
-	arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-libretech-pc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-mecool-kii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-vero4k-plus.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-jethome-jethub-j80.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc-v2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-gt1-ultimate.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-mecool-kiii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-minix-neo-u9h.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-q200.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-q201.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-s912-libretech-pc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dtb
-	arch/arm/boot/dts/meson8b-ec100.dtb
-	arch/arm/boot/dts/meson8b-mxq.dtb
-	arch/arm/boot/dts/meson8b-odroidc1.dtb
-
-interrupt-controller@9880: compatible: ['amlogic,meson8-gpio-intc', 'amlogic,meson-gpio-intc'] is too long
-	arch/arm/boot/dts/meson8m2-mxiii-plus.dtb
-	arch/arm/boot/dts/meson8-minix-neo-x8.dtb
-
-interrupt-controller@9880: compatible: ['amlogic,meson-gpio-intc', 'amlogic,meson8b-gpio-intc'] is too long
-	arch/arm/boot/dts/meson8b-ec100.dtb
-	arch/arm/boot/dts/meson8b-mxq.dtb
-	arch/arm/boot/dts/meson8b-odroidc1.dtb
-
-interrupt-controller@9880: compatible: ['amlogic,meson-gpio-intc', 'amlogic,meson-gxbb-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-gxbb-kii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dtb
-
-interrupt-controller@9880: compatible: ['amlogic,meson-gpio-intc', 'amlogic,meson-gxl-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-gxl-s805x-libretech-ac.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s805x-p241.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-libretech-pc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-mecool-kii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-phicomm-n1.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-sml5442tw.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905d-vero4k-plus.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-jethome-jethub-j80.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-p281.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905w-tx3-mini.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc-v2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-gt1-ultimate.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-mecool-kiii-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-minix-neo-u9h.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-q200.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-q201.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-s912-libretech-pc.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-vega-s96.dtb
-	arch/arm64/boot/dts/amlogic/meson-gxm-wetek-core2.dtb
-
-interrupt-controller@f080: compatible: ['amlogic,meson-axg-gpio-intc', 'amlogic,meson-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-axg-jethome-jethub-j100.dtb
-	arch/arm64/boot/dts/amlogic/meson-axg-jethome-jethub-j110-rev-2.dtb
-	arch/arm64/boot/dts/amlogic/meson-axg-jethome-jethub-j110-rev-3.dtb
-	arch/arm64/boot/dts/amlogic/meson-axg-s400.dtb
-
-interrupt-controller@f080: compatible: ['amlogic,meson-g12a-gpio-intc', 'amlogic,meson-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-g12a-radxa-zero.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12a-sei510.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12a-u200.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-a311d-khadas-vim3.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-gsking-x.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-gtking-pro.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-odroid-go-ultra.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2-plus.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-s922x-khadas-vim3.dtb
-	arch/arm64/boot/dts/amlogic/meson-g12b-ugoos-am6.dtb
-
-interrupt-controller@f080: compatible: ['amlogic,meson-sm1-gpio-intc', 'amlogic,meson-gpio-intc'] is too long
-	arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-a95xf3-air-gbit.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-bananapi-m5.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-h96-max.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-khadas-vim3l.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-odroid-c4.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-odroid-hc4.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-sei610.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-x96-air.dtb
-	arch/arm64/boot/dts/amlogic/meson-sm1-x96-air-gbit.dtb
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 44783fc16125..e00eaba724dc 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)
+ 
+ #endif /* CONFIG_PINCTRL */
+ 
++#ifdef CONFIG_GPIOLIB
++
+ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+ 					    unsigned int hwnum,
+ 					    const char *label,
+@@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+ 					    enum gpiod_flags dflags);
+ void gpiochip_free_own_desc(struct gpio_desc *desc);
+ 
+-#ifdef CONFIG_GPIOLIB
+-
+ /* lock/unlock as IRQ */
+ int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
+ void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
+@@ -776,6 +776,25 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+ 
+ #else /* CONFIG_GPIOLIB */
+ 
++#include <linux/gpio/machine.h>
++#include <linux/gpio/consumer.h>
++
++static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
++					    unsigned int hwnum,
++					    const char *label,
++					    enum gpio_lookup_flags lflags,
++					    enum gpiod_flags dflags)
++{
++	/* GPIO can never have been requested */
++	WARN_ON(1);
++	return ERR_PTR(-ENODEV);
++}
++
++static inline void gpiochip_free_own_desc(struct gpio_desc *desc)
++{
++	WARN_ON(1);
++}
++
+ static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+ {
+ 	/* GPIO can never have been requested */
+-- 
+2.34.1
 
