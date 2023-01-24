@@ -2,110 +2,157 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6089167933A
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 09:36:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABF79679384
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 09:55:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbjAXIgU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 03:36:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55548 "EHLO
+        id S233257AbjAXIzI (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 03:55:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232064AbjAXIgT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 03:36:19 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B41659A
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:36:17 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id j17so10844403wms.0
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:36:17 -0800 (PST)
+        with ESMTP id S229838AbjAXIzH (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 03:55:07 -0500
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EFCF3D086
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:55:06 -0800 (PST)
+Received: by mail-vs1-xe2b.google.com with SMTP id v127so15704247vsb.12
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 00:55:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+DHAHqm5mVrdyz4PxCFvnliRLiDdHHafIf1mzcKDvns=;
-        b=mVnjvE2s1a9WXq6NVhTnCnlMlrcB0t4g8HtTagw/livwWU9M2TNbPPAnFGNu7wMV5w
-         p7S41sleaY9OAnp5hcsFq33lpXA2LD55vjPjZR8imXG0WHcvn8yXnSDhaX+oUr/YqGCc
-         Ous99brkpsYno9LrL7bkm6bfbm5ee+RtEFKsHSbZzJr+FSgFwVHJKapEAvaxhfzs5mE/
-         w5PsuVQf0wZygT6HoGiXtGz2JPzq7W4zalPINmXOKYL3QTa0YTyFtdsxYTexIBQ6DoGK
-         VNkP2P5Jh4volMp3GhhTsBly5JuF5kWGY9CW/fw30y6jwSWIyjKiEyWeht1Vl8iM1wxI
-         V1sQ==
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MAttpzueGAYsfaY0baImq0QHsztmrAcw7EcUju76EJQ=;
+        b=fcSq88q+gQ5eVNKYLGRZEx6kB2ONx1zmeU1qez4U7QDuktWoB7lmK8aFdS8VEwL2sF
+         PqRyzTb/krZQ/E6MNFy/FA1lmeSZrGz9OuE3hfzJnVAn5gjLStKs5nKjLskBjGNgEX+a
+         YvZ9MCVRO7PQuFmEglWWmEmb+hxORUDq8tRkSeNdPH7F0BjUkaWHn6Jawxyx4gAJLIP0
+         Ij2tlUSvYSzLMYiAISia27aJ0WyL94BUUrKb4PGOCcgfpDLtEspYmMKG1qAGRPPptmcI
+         M97E6qQyMzqvnQ6Akhx5OuCGoLUCrExeCDmy7oGGhoaRbd8eJYxVyW0aIOi57DvFv1Cc
+         PvWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+DHAHqm5mVrdyz4PxCFvnliRLiDdHHafIf1mzcKDvns=;
-        b=ToIu4eWiaocLidCBfxtLTdp4eUMrQTVKRN3GTG44janIlsjRom3/YV2HuaUv4+7QFT
-         nusLm+dV1Fa095GJPQaHLGgjmi8STf8Sosbn7PT5ZI2GEWKH5OY1U96SvLeeweE0iNCw
-         jutuOalnJZMReSYDr/U1plJHKW3cBPjDLlg5Ok4fMtAW546Ny+y9OEHkpsDwNG5J2cKH
-         tSWG6xeI7uCHZUDHGs3dsNrDUAbXw5Mn/mhOCC1wdC4xRHlY7bCDHBZB7KZmzZhuBpC9
-         HekfM0Mo9pbiz1H4U1GP2ro4julsSlBgysiQkkhNhKeGPskvZd7FfQUmcMfFVGq5gQ8z
-         3LDw==
-X-Gm-Message-State: AFqh2kq40sL9kHketiJ6Tl5DbkcWwvWqlsBzVk3gnPbfXLSlHvBilMQD
-        sTu4slIWyE8mmzSQDTwgHdYcTw==
-X-Google-Smtp-Source: AMrXdXvqFer9U2gpvrkA9katgZ3v+FI8mwsJhUFMGM29c0UiNV1/dLmZ0rvPr3GsXvG9rXnwONePew==
-X-Received: by 2002:a05:600c:310e:b0:3db:fc3:6de4 with SMTP id g14-20020a05600c310e00b003db0fc36de4mr23498044wmo.35.1674549375874;
-        Tue, 24 Jan 2023 00:36:15 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id n15-20020a5d4c4f000000b002bfad438811sm658147wrt.74.2023.01.24.00.36.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 00:36:14 -0800 (PST)
-Message-ID: <3fdf9e1d-456a-c538-89b6-82b299aabd48@linaro.org>
-Date:   Tue, 24 Jan 2023 09:36:11 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MAttpzueGAYsfaY0baImq0QHsztmrAcw7EcUju76EJQ=;
+        b=4tnwRXMLGUoDcF9lZWNrHQ5+ab/AkXYUH4jb9l2orZkOoxhENvX4zh0fRKBZlnB9Ho
+         jTezLuuHps9UTUcmLqKJVnWvcxp08CIJbZs1FMpb6qlcxuGU8qwD9z41ysP73p7g4q9A
+         LCxPFNYhUNMBDEdvbRc3A3w6XwVrRxSf+5ZfFV1M33rGvolnFE0sK8iB81/ulg4luBgC
+         NvJlWcWUDY/w1nankD+JK0CtrEgAHPSHgzagBcm9fezzw1ayQ3CskjsxFp5wVCmhfIId
+         Z5NwVGQCA0O95llLPHmJ9XK41dlFcbLfCLwMU+iRpIG6u+38bo2qc4H+3yWbFlRlpZJO
+         /P5A==
+X-Gm-Message-State: AFqh2kpN4qh11xIfRJmwCUj6dr+EobgxZEZ3mMJrU04UYJ8s0/iGwngo
+        HY0eqG0UUC4wOW6TU2MtKProWkj9s+tcCgiwjLRbRZHU4J7jAIqg
+X-Google-Smtp-Source: AMrXdXuUoP42kHvOc0dUiqLBSTR/RBqOZsA4WwAH+/UWLlRHw2aHIpQhFqNrjzSKRhS4tuFWBcImWJSY29BLSdLdnhI=
+X-Received: by 2002:a67:f2da:0:b0:3d3:d90c:5ef2 with SMTP id
+ a26-20020a67f2da000000b003d3d90c5ef2mr4449498vsn.17.1674550505097; Tue, 24
+ Jan 2023 00:55:05 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH 6/7] arm64: dts: Add ipq9574 SoC and AL02 board support
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
-        sboyd@kernel.org, linus.walleij@linaro.org,
-        catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de,
-        shawnguo@kernel.org, arnd@arndb.de, marcel.ziswiler@toradex.com,
-        dmitry.baryshkov@linaro.org, nfraprado@collabora.com,
-        broonie@kernel.org, tdas@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_poovendh@quicinc.com
-References: <20230110121316.24892-1-quic_devipriy@quicinc.com>
- <20230110121316.24892-7-quic_devipriy@quicinc.com>
- <f6ef1834-b629-b76c-9cde-55af56320665@linaro.org>
- <7f157b73-f856-04d2-1b39-e1f8861d0439@quicinc.com>
- <84aa79c3-b793-0d0e-d6a5-035aff5a17b4@linaro.org>
- <278a2e6e-69e0-81b0-f476-571edea950ff@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <278a2e6e-69e0-81b0-f476-571edea950ff@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20230124013138.358595-1-pierluigi.p@variscite.com>
+In-Reply-To: <20230124013138.358595-1-pierluigi.p@variscite.com>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 24 Jan 2023 09:54:54 +0100
+Message-ID: <CAMRc=Mcf+PA-uhT+3Sq5AxHUMb-K_ogw=kBtGV6-wK00PtXGkw@mail.gmail.com>
+Subject: Re: [PATCH v3] gpiolib: fix linker errors when GPIOLIB is disabled
+To:     Pierluigi Passaro <pierluigi.p@variscite.com>
+Cc:     linus.walleij@linaro.org, yamada.masahiro@socionext.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sfr@canb.auug.org.au, eran.m@variscite.com, nate.d@variscite.com,
+        francesco.f@variscite.com, pierluigi.passaro@gmail.com,
+        kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On 24/01/2023 08:19, Devi Priya wrote:
->>>>> +			gpio-ranges = <&tlmm 0 0 65>;
->>>>> +			gpio-reserved-ranges = <59 1>;
->>>>
->>>> Hm, why reserved ranges are in SoC?
->>> As the gpio is forbidden on all ipq9574 boards, we have added it in SoC
->>
->> Why it is forbidden on all boards? I guess it depends on the firmware
->> and this can differ, can't it?
->>
-> This GPIO is protected and used by the TZ firmware and is forbidden on 
-> all the boards & firmware
+On Tue, Jan 24, 2023 at 2:31 AM Pierluigi Passaro
+<pierluigi.p@variscite.com> wrote:
+>
+> Both the functions gpiochip_request_own_desc and
+> gpiochip_free_own_desc are exported from
+>     drivers/gpio/gpiolib.c
+> but this file is compiled only when CONFIG_GPIOLIB is enabled.
+> Move the prototypes under "#ifdef CONFIG_GPIOLIB" and provide
+> reasonable definitions and includes in the "#else" branch.
+>
+> Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
+> Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> ---
+> Changes in v2:
+> - add Fixes tag
+> Changes in v3:
+> - add includes to fix builds against x86_64-defconfig
+>
 
-OK
+Hey Pierluigi!
 
-Best regards,
-Krzysztof
+Thanks for the quick fix. When this happens - a bug report after a
+patch was applied - please generally submit a fix based on what's
+already in next, not another version. This time, I'll back it out of
+next because I have some comments on this, so please do send a v4.
 
+>  include/linux/gpio/driver.h | 23 +++++++++++++++++++++--
+>  1 file changed, 21 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+> index 44783fc16125..e00eaba724dc 100644
+> --- a/include/linux/gpio/driver.h
+> +++ b/include/linux/gpio/driver.h
+> @@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)
+>
+>  #endif /* CONFIG_PINCTRL */
+>
+> +#ifdef CONFIG_GPIOLIB
+> +
+>  struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+>                                             unsigned int hwnum,
+>                                             const char *label,
+> @@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+>                                             enum gpiod_flags dflags);
+>  void gpiochip_free_own_desc(struct gpio_desc *desc);
+>
+> -#ifdef CONFIG_GPIOLIB
+> -
+>  /* lock/unlock as IRQ */
+>  int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
+>  void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
+> @@ -776,6 +776,25 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
+>
+>  #else /* CONFIG_GPIOLIB */
+>
+> +#include <linux/gpio/machine.h>
+> +#include <linux/gpio/consumer.h>
+
+Please move those headers to the top and arrange them alphabetically
+with the rest of the <linux/ headers. Since you're now including
+those, remove any forward declarations of the types in question.
+
+Bart
+
+> +
+> +static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
+> +                                           unsigned int hwnum,
+> +                                           const char *label,
+> +                                           enum gpio_lookup_flags lflags,
+> +                                           enum gpiod_flags dflags)
+> +{
+> +       /* GPIO can never have been requested */
+> +       WARN_ON(1);
+> +       return ERR_PTR(-ENODEV);
+> +}
+> +
+> +static inline void gpiochip_free_own_desc(struct gpio_desc *desc)
+> +{
+> +       WARN_ON(1);
+> +}
+> +
+>  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
+>  {
+>         /* GPIO can never have been requested */
+> --
+> 2.34.1
+>
