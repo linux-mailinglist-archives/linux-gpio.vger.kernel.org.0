@@ -2,59 +2,60 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56A9E679BEB
-	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 15:33:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3B37679CF2
+	for <lists+linux-gpio@lfdr.de>; Tue, 24 Jan 2023 16:08:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234952AbjAXOc7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Tue, 24 Jan 2023 09:32:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
+        id S233655AbjAXPIg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Tue, 24 Jan 2023 10:08:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234950AbjAXOc4 (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 09:32:56 -0500
+        with ESMTP id S234328AbjAXPIg (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Tue, 24 Jan 2023 10:08:36 -0500
 Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 527A12737
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 06:32:44 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id q8so11570675wmo.5
-        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 06:32:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C686A3C2F
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 07:08:33 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id g10so11688774wmo.1
+        for <linux-gpio@vger.kernel.org>; Tue, 24 Jan 2023 07:08:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XDiS1iCUboVrRCsKlm7Fzmy1FXXwzKYsp25Aj0Yy6MQ=;
-        b=vPtvZdOa87UVy/r+4SHu0OZoqhQC1mbPBb1lk1SIuBgnt2zuSIjtzfW4NGIBVD0H84
-         6v8OACkHlDBy+yHF76OayE3+j6SqJAwx+1qYg3fVlGn5zZw1ANGhqs6J8n4Bs2maVU6a
-         dihaM2KSVX0WTV5KVTEC0B6r/29kp/MISeR0nu9kJSL4oqKNr5oAVeZchM/7wiGLTcqX
-         ZcgkldwnH3eNvfXnqndagRUz5izEsxyOZVEDiaHGAcCdSKXfOAdahbU9acfaitLVdEVB
-         UcWJqZu3gIHfSC7nzXPs/kjTfySZtzfSIBJ3VL1mJHkDB4GHL70a7jdKxbNq0C5OtcnU
-         ObJQ==
+        bh=IpD93/8saSG6FVl0mrJA18o+SgZIDhyy6bHZSPa5ZVc=;
+        b=ywrKQyy0bnPygWmgskVktLWTsk0nGFr9JL24yTYTjBfxOfOGMM1oqYqwqQNUjhy7hx
+         9mOOQLl6uVy45xAg2DZJsnZerovFXi8dr1ECqtVZ8704hvKFzipMrxJHEA2HGgFY0gBE
+         a2DHIi6oipZ+37umeiA3xie74yPLiJRaqu+ScVmPMRCyGcao4I8/rcxaCGzU4E0skQfs
+         07U/0ppGeh+z07ehD2R40KuFP1C94NkUCm2lXy0JFPKG2CKFt9yUhnF4sU2y6rVzwzdk
+         pVkzKUqhYKlzafk1bpx90WuSlksrz2l7yPxVeC/4K1NnvVv494wOyuxmh8X7i/oUr9uM
+         RnSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XDiS1iCUboVrRCsKlm7Fzmy1FXXwzKYsp25Aj0Yy6MQ=;
-        b=V965Sl8kfpEP62VBJu8Zm+6ap+iFnFff9ugHDAtpbXf/Ifvxh2/Sqh6j7Eilt3phqw
-         Js7QKET+e7mY9+8ep9PJcI8Ervk8tKWiY7Sly+XT14SJWy7okjvU9UgAqc+OEe+mGpEM
-         93Ja8bduw3+MmWg1mXwbZEuhYVNQ3/6BH+n4O78uzff1WuzNjdU/SwUJXU2TvnaUGo7w
-         Bs/sUvg0JaG2lH07WEgajw7RQJ0J3WMmk5iJ5m0SKtYawV/IL59deiahV8lzT9Lg0vy1
-         dIGrsq8WsJgote1eXaLh3m8DryIdr79MTC7UmlmbNsENiMbSc3dDx4AMoEfR3US2ceeE
-         y1yg==
-X-Gm-Message-State: AFqh2krBpNChQCzzae6o7/wPY2Vz1Q3k91+riZbQ0tv4z0YITK5m9RfE
-        g0vAfgn9ITumN+ijuo+ajtMF6g==
-X-Google-Smtp-Source: AMrXdXsctwTFCtiWVY6Ey4pL/EArJw4xmGNT7B2kGRBsUfNDt8LEAZCPcupBoBqTG2mCKoR9qHLQAg==
-X-Received: by 2002:a1c:4b09:0:b0:3db:f0a:8726 with SMTP id y9-20020a1c4b09000000b003db0f0a8726mr25144788wma.28.1674570762789;
-        Tue, 24 Jan 2023 06:32:42 -0800 (PST)
+        bh=IpD93/8saSG6FVl0mrJA18o+SgZIDhyy6bHZSPa5ZVc=;
+        b=pHR1+tFiv8lCPytD+rgf3cjP4lfAYrVud7pdA1VlsG1+7A+i8qWPZIPNZMjqQunQBm
+         ywH5yiWjSvyr4mptUbJrDD31vHunY8DRataVWgepFYEt4CfaX0/EuV467xgjWJoQxViV
+         PZLQ7THPZ/BQJ0kcNAUb1disqg+cAc6QIOU7EsQ6slTPw3/1TCd9lgARWtcYC1qPMjVE
+         8DySy7JhZVRLi4QucLjZHr9AMULu+lKMh6nrTc3HcBb3vKffANBYVibxeAWQwpLNc0Ys
+         iWN/pXBmbFYyoHPerz3FuSN1pYDl0mjmidQEKi07hc3PGWPIEWNYLxIvQw9A0c3jxB1u
+         Z+Rw==
+X-Gm-Message-State: AFqh2koZGPd+O5NawwZaTnHgWTSjY8KDjPbCIm1FqeyoXHF1zd93zR4R
+        n+cUDOXjkhZKN9J0HmWMqspS4w==
+X-Google-Smtp-Source: AMrXdXuR9Rz59Cyw6wMqS/D+Ij0Tq/psvx455YdozuOm1SlY4s9AJQfWEJNBvL1Gg5GRPaH+L7RJDQ==
+X-Received: by 2002:a7b:c5cb:0:b0:3da:fac4:7da3 with SMTP id n11-20020a7bc5cb000000b003dafac47da3mr28143582wmk.36.1674572912292;
+        Tue, 24 Jan 2023 07:08:32 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id o6-20020a05600c378600b003d9fba3c7a4sm13542158wmr.16.2023.01.24.06.32.39
+        by smtp.gmail.com with ESMTPSA id l18-20020a1c7912000000b003db00747fdesm13625469wme.15.2023.01.24.07.08.29
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 06:32:42 -0800 (PST)
-Message-ID: <5331527f-a96c-1c1b-dcf5-8f7e5957814d@linaro.org>
-Date:   Tue, 24 Jan 2023 15:32:37 +0100
+        Tue, 24 Jan 2023 07:08:31 -0800 (PST)
+Message-ID: <0b2737b2-ae24-2c2d-f258-5c374d8f04f5@linaro.org>
+Date:   Tue, 24 Jan 2023 16:08:28 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-Subject: Re: [PATCH V1 0/8] Add minimal boot support for IPQ9574
+Subject: Re: [PATCH V1 3/8] dt-bindings: pinctrl: qcom: Document IPQ9574
+ pinctrl driver
 Content-Language: en-US
 To:     devi priya <quic_devipriy@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org,
@@ -73,8 +74,9 @@ Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
         quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
         quic_poovendh@quicinc.com
 References: <20230124141541.8290-1-quic_devipriy@quicinc.com>
+ <20230124141541.8290-4-quic_devipriy@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230124141541.8290-1-quic_devipriy@quicinc.com>
+In-Reply-To: <20230124141541.8290-4-quic_devipriy@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -88,18 +90,18 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 On 24/01/2023 15:15, devi priya wrote:
-> The IPQ9574 is Qualcomm's 802.11ax SoC for Routers,
-> Gateways and Access Points.
+> Document the pinctrl driver for IPQ9574
 > 
-> This series adds minimal board boot support for ipq9574-al02-c7 board
-> 
-> [V1]
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: devi priya <quic_devipriy@quicinc.com>
 
-You already sent a v1. This should be v2.
+Did anything changed here?
 
-> 	Fixed all the review comments
+b4 diff fails on this patch, there is no detailed changelog.
 
-That's not specific enough.
+Subject looks not fixed - why "driver" appeared there? Bindings do not
+document driver.
 
 Best regards,
 Krzysztof
