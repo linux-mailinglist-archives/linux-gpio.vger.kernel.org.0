@@ -2,59 +2,59 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2392867B0E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 12:16:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6A9067B0F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 12:17:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235332AbjAYLQg (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 06:16:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38882 "EHLO
+        id S235436AbjAYLRj (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 06:17:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235734AbjAYLQF (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 06:16:05 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A6854203
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:15:35 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id o17-20020a05600c511100b003db021ef437so1019900wms.4
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:15:35 -0800 (PST)
+        with ESMTP id S235449AbjAYLQh (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 06:16:37 -0500
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5DD19020
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:16:35 -0800 (PST)
+Received: by mail-wr1-x42e.google.com with SMTP id z5so16677263wrt.6
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:16:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=23T5umlyYrF2FXJKgoziFOlNP0+IthzQVNGQv+io51A=;
-        b=rQsxU9jPLGjmWEn2AD84v4VOtWkiI46td/tPRm0LTjWOQs0erdrmzV2ywQYApRBbDT
-         NrRDuebeWV/CwiHGND+GHyTb/omHYCLbnYha7oKWBNzWVhVIYsvHR6IMsv7HCTGZ0ll7
-         fq6spB+7KjlCaOMPDjDqpmcEStwTEn93zRPirEnX10KBK7wDeDz9BUgpiZki6z2jqfjk
-         5DWdcgWtUug9bRwX73wADFrcrPB+KGkm2JKAkgH9E3H17UeGOwy7W6XGMS41bdWSicHR
-         w9+OvNX9TYLnrM55JZRzV4G3qQ1eWMnyOH27Z3m/vJcs88yKBAcHQI7aABu7Vl7t1FbX
-         ZT/Q==
+        bh=gzIr5Ui2xxlGUTuLwtXHU99c+601cMT3SV6+fGprx24=;
+        b=mXzsGMYjP0rIypFgqcTSLrKy57pCvIv1f+quLoShAdqk8WQ4Wf+T2ToYEoQSbstfYL
+         cHRFrI4y2uAx1z6hBVBOT318g39YnvVdPD+YWp7nIAGic5uaqbhwg1z/f64Iem8B6Dnf
+         1NYxgLHt663JHz/yvvhf4w6tx8PfK9CIBEvvFQ5gPOMmYGYHkjKKigP7zal9itZSlIBC
+         CpVigE3MCIoSHLJSWA1KOjflnRRvhduJpoQ4U9jUlAgvEe+6RZVPjbf+tGDCjcO79X10
+         6+StulNRrYn8ZuWHNw2D/9nfRSAcQbsnY5OA67vwXIhfqUSW2GCtCS4bSaouirR/Iwiq
+         t03g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=23T5umlyYrF2FXJKgoziFOlNP0+IthzQVNGQv+io51A=;
-        b=IBBjLcF75fyygeYa62akrVzt5dBdF8eMd0Xdj3zlpUDrpeT8/7d157g/DvCbxBqaMy
-         LOo1LP1Bxmis88ohLv7Wcvh8rtL6ESe9/sITkJs83As4+shdizD3u1ApoLCHxdtm/MvF
-         Wq+Pm6NBIgBjYMOzGkyMohKvO7sY9PE6ufgmnbwcAoXadGzfljWDbjCNe05jDgUdw3gY
-         FQ3dYfjp7nTMa236z3nNckguB6bq9z1ZCyq4x1dNeMnW5Kr2stAQhTdPkzjsCtkIPIG9
-         iQ4/PNs/v0xbLYEdYd5TbKpFq357jA+MRSE6PZ+t41CIqjXg87PY9COGxaG1EoXQKMJA
-         K7Lw==
-X-Gm-Message-State: AFqh2kosYO2goM5Zr1XdoIxzOJ+OfjBey2tki5P6CsCDxj8NFZl1MJLR
-        032zPTupiju6OAH4OG6EgaN6yQ==
-X-Google-Smtp-Source: AMrXdXvSRVletsh6wJOHdlxoGQpjDgPFrXMbiEwm16X2303lJd+K56UCWAdxcb1t9MZ+WfhAqpA9xA==
-X-Received: by 2002:a1c:4b09:0:b0:3db:f0a:8726 with SMTP id y9-20020a1c4b09000000b003db0f0a8726mr28419900wma.28.1674645333828;
-        Wed, 25 Jan 2023 03:15:33 -0800 (PST)
+        bh=gzIr5Ui2xxlGUTuLwtXHU99c+601cMT3SV6+fGprx24=;
+        b=gZJmSozkVqtHHj0/lVNCBPWRHrxFaGd7Iwnch8xi3nQwROuMRnEKgE+scUpw3w7iO5
+         zY+FMLvUspATdEddehOVEBu7RQda4UmLzOjQXZx1SlpmAarnkbEIY3CR7i5hE2bpNunw
+         +Sppvtk4gd/fRWy51Bfwn8nnqOZfIjTV9ApPfBB5ClBR1z/MnaADc/w2SP9T5tTWgMar
+         wOzoSa6PnjbZpYVUrwk2uPpptB+sfCUGuYkfRuU3n096h1W627UJ8BCVzx/WvInL4Mhc
+         lGOiauSvaTmSj5n34jsEPFhAErJf9ZPzRo/wneb14YThkDjOGNfezmTjgbUeZi1FZc6s
+         +xDQ==
+X-Gm-Message-State: AO0yUKXVlb74NuVSnWghgpPrVi+h6enXuvuaK4KIqljiJgWVR7keYbGL
+        MSq01Sw4yYqdY1X/JRi+vGGiTQ==
+X-Google-Smtp-Source: AK7set/zgz1Cw2yR0HRV+XEaWTbyLMisfRos2R7bflijnfy7OtQxq8bhvpAm8gr89yQDKjuuEYYf/A==
+X-Received: by 2002:a5d:4a48:0:b0:2bf:ae17:bf58 with SMTP id v8-20020a5d4a48000000b002bfae17bf58mr5588289wrs.37.1674645394352;
+        Wed, 25 Jan 2023 03:16:34 -0800 (PST)
 Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id v6-20020a05600c444600b003db09692364sm1714854wmn.11.2023.01.25.03.15.31
+        by smtp.gmail.com with ESMTPSA id d6-20020a5d6dc6000000b002423edd7e50sm4093623wrz.32.2023.01.25.03.16.31
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jan 2023 03:15:33 -0800 (PST)
-Message-ID: <2c04c2f8-801e-37d3-f705-7a5953265a9d@linaro.org>
-Date:   Wed, 25 Jan 2023 12:15:30 +0100
+        Wed, 25 Jan 2023 03:16:34 -0800 (PST)
+Message-ID: <455eb061-ed59-2783-b8d6-7276e7103d3f@linaro.org>
+Date:   Wed, 25 Jan 2023 12:16:31 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-Subject: Re: [PATCH 06/10] dt-bindings: qcom: add ipq5332 boards
+Subject: Re: [PATCH 07/10] dt-bindings: firmware: document IPQ5332 SCM
 Content-Language: en-US
 To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
         agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
@@ -69,9 +69,9 @@ To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
         linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20230125104520.89684-1-quic_kathirav@quicinc.com>
- <20230125104520.89684-7-quic_kathirav@quicinc.com>
+ <20230125104520.89684-8-quic_kathirav@quicinc.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230125104520.89684-7-quic_kathirav@quicinc.com>
+In-Reply-To: <20230125104520.89684-8-quic_kathirav@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -87,32 +87,16 @@ X-Mailing-List: linux-gpio@vger.kernel.org
 On 25/01/2023 11:45, Kathiravan Thirumoorthy wrote:
 > From: Kathiravan T <quic_kathirav@quicinc.com>
 > 
-> Document the new ipq5332 SoC/board device tree bindings
+> Document the compatible for IPQ5332 SCM.
+
+Subject:
+dt-bindings: firmware: qcom,scm:
+
 > 
 > Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
 > ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index 27063a045bd0..a3568c7d3cc9 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -30,6 +30,7 @@ description: |
->          apq8084
->          apq8096
->          ipq4018
-> +        ipq5332
->          ipq6018
->          ipq8074
->          mdm9615
-> @@ -82,6 +83,7 @@ description: |
->          hk10-c2
->          idp
->          liquid
-> +        mi01.2
 
-Is "01.2" board version or name of board?
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 
 Best regards,
