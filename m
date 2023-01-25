@@ -2,156 +2,158 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8BA167BA00
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 19:59:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F73267BA92
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 20:19:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235356AbjAYS7I (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 13:59:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49940 "EHLO
+        id S235046AbjAYTT5 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 14:19:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235373AbjAYS7I (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 13:59:08 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A286C156;
-        Wed, 25 Jan 2023 10:59:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674673146; x=1706209146;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=i/dG9BPNtmvD1DBHyErBH0kW0J5xRIeSnjq4ULQtyhk=;
-  b=cimyNrmgHuhL3/0EGsFG56Dbul/yUouinFPK3w4BcERAN7qAjLXl/IZJ
-   fEmXRUR6ncCz3fu+D5NpOT+4qXkxLThYyQSPetc+eEThvK09pRfVLLBie
-   T31dfuYg4DKkpED5O8GIsAwDk8zuIrgcUqi9xFYQmorCN5m5DEJJs1nJo
-   5FktAYwg4lJtMmdha9ribLiUx3s3ycs7IPlUASsRa4oPy6WlpRS46voXK
-   1AwKbik4OrbS5N+aRxLbuqUvNLQ1pLX5NByH0I+wYBktAR2Wf4UTfPv80
-   /uLjZ5UQCcCN3KQ9qXOc6F5k9E1aFnInWvgqeNJ7Gytjq0pFf6Y7O9bvv
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="324346664"
-X-IronPort-AV: E=Sophos;i="5.97,246,1669104000"; 
-   d="scan'208";a="324346664"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2023 10:59:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10601"; a="662588896"
-X-IronPort-AV: E=Sophos;i="5.97,246,1669104000"; 
-   d="scan'208";a="662588896"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP; 25 Jan 2023 10:59:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pKkz6-00F2PQ-2N;
-        Wed, 25 Jan 2023 20:59:00 +0200
-Date:   Wed, 25 Jan 2023 20:59:00 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Pierluigi Passaro <pierluigi.p@variscite.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl,
-        yamada.masahiro@socionext.com, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-        eran.m@variscite.com, nate.d@variscite.com,
-        francesco.f@variscite.com, pierluigi.passaro@gmail.com,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v3] gpiolib: fix linker errors when GPIOLIB is disabled
-Message-ID: <Y9F79GvU1a+CjmLr@smile.fi.intel.com>
-References: <20230124013138.358595-1-pierluigi.p@variscite.com>
+        with ESMTP id S229505AbjAYTTz (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 14:19:55 -0500
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11350A3;
+        Wed, 25 Jan 2023 11:19:54 -0800 (PST)
+Received: by mail-oi1-f178.google.com with SMTP id p133so17138334oig.8;
+        Wed, 25 Jan 2023 11:19:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kZPukRskp99fuNYff+LVNhQ3Vv98k10meP7w/WAUKYk=;
+        b=rKgE+xMahGMtGctPEs6DfqNq48OYso37kBOx2RWuzz3CDs+16be3I37hcxKj985HVU
+         ioJM92aRgYMW4MRpAD7vXpuXyg9/bVrT1QntQeDf4NouWyJw22sf8uQJudoS9/cPaYi9
+         uRyMiLSlBqHvvPRv5urKuovoDZ8fTTvTkpd8LYfUvfyiOfeCvFgxGJ5ftnPcMLQmGWCT
+         qIGl+klW4eHXmKH+/Odj5wYZAbZuXYISpJBZr2t25xXWkqZDjYkDgfNwuN/LcFiFmvL7
+         TTPPM6rJw/b9C4me1QC5LtEkEdcskgvhaRxHSi98CwctGZ8Ywx8e0DNPO+Ow4XCPJM5X
+         5dKQ==
+X-Gm-Message-State: AFqh2kpSxwYZXJPWgNtjGsyjVMAf2Ss1EjnhxKxl9onxBBdam7yq+9OT
+        tk+ZQ8gCMysVEN5dwuekcA==
+X-Google-Smtp-Source: AMrXdXtpJYBDSpjXNA/NvxappnChwgDMyiCEA6bnsdY2ZTgPxvxKeIkDuuPfOUoF+C3D8F3u31zVsw==
+X-Received: by 2002:a05:6808:14c2:b0:36e:a91d:b7ed with SMTP id f2-20020a05680814c200b0036ea91db7edmr15804498oiw.9.1674674393254;
+        Wed, 25 Jan 2023 11:19:53 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id x133-20020acae08b000000b003458d346a60sm2619464oig.25.2023.01.25.11.19.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 11:19:52 -0800 (PST)
+Received: (nullmailer pid 2713556 invoked by uid 1000);
+        Wed, 25 Jan 2023 19:19:51 -0000
+Date:   Wed, 25 Jan 2023 13:19:51 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH 5/8] dt-bindings: rtc: Add Amlogic Meson vrtc controller
+ binding
+Message-ID: <20230125191951.GA2709957-robh@kernel.org>
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+ <440a7cad-d48f-8975-4dfd-265b235bf629@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230124013138.358595-1-pierluigi.p@variscite.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <440a7cad-d48f-8975-4dfd-265b235bf629@gmail.com>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 02:31:38AM +0100, Pierluigi Passaro wrote:
-> Both the functions gpiochip_request_own_desc and
-> gpiochip_free_own_desc are exported from
->     drivers/gpio/gpiolib.c
-> but this file is compiled only when CONFIG_GPIOLIB is enabled.
-> Move the prototypes under "#ifdef CONFIG_GPIOLIB" and provide
-> reasonable definitions and includes in the "#else" branch.
+On Mon, Jan 23, 2023 at 10:28:49PM +0100, Heiner Kallweit wrote:
+> Add Amlogic Meson vrtc controller binding.
 
-So far as a quick fix I can agree on the change with a caveat that inclusion
-hell should be untangled in the future.
+You are not adding, you are converting.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Tested with make targets dt_binding_check and dtbs_check.
 
-P.S. The root cause of this problem is that some drivers without being GPIO chips
-abuse this API. Better fix can be to go through each of such drivers and add ugly
-ifdeffery with a FIXME comment that this shouldn't be actually used to begin with.
+That's assumed...
 
-> Fixes: 9091373ab7ea ("gpio: remove less important #ifdef around declarations")
-> Signed-off-by: Pierluigi Passaro <pierluigi.p@variscite.com>
-> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 > ---
-> Changes in v2:
-> - add Fixes tag
-> Changes in v3:
-> - add includes to fix builds against x86_64-defconfig
+>  .../bindings/rtc/amlogic,meson-vrtc.yaml      | 50 +++++++++++++++++++
+>  .../bindings/rtc/rtc-meson-vrtc.txt           | 22 --------
+>  2 files changed, 50 insertions(+), 22 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/rtc-meson-vrtc.txt
 > 
->  include/linux/gpio/driver.h | 23 +++++++++++++++++++++--
->  1 file changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 44783fc16125..e00eaba724dc 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -758,6 +758,8 @@ gpiochip_remove_pin_ranges(struct gpio_chip *gc)
->  
->  #endif /* CONFIG_PINCTRL */
->  
-> +#ifdef CONFIG_GPIOLIB
+> diff --git a/Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml b/Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
+> new file mode 100644
+> index 000000000..26a70b3ce
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rtc/amlogic,meson-vrtc.yaml
+> @@ -0,0 +1,50 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rtc/amlogic,meson-vrtc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
->  struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
->  					    unsigned int hwnum,
->  					    const char *label,
-> @@ -765,8 +767,6 @@ struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
->  					    enum gpiod_flags dflags);
->  void gpiochip_free_own_desc(struct gpio_desc *desc);
->  
-> -#ifdef CONFIG_GPIOLIB
-> -
->  /* lock/unlock as IRQ */
->  int gpiochip_lock_as_irq(struct gpio_chip *gc, unsigned int offset);
->  void gpiochip_unlock_as_irq(struct gpio_chip *gc, unsigned int offset);
-> @@ -776,6 +776,25 @@ struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc);
->  
->  #else /* CONFIG_GPIOLIB */
->  
-> +#include <linux/gpio/machine.h>
-> +#include <linux/gpio/consumer.h>
+> +title: Amlogic Virtual RTC (VRTC)
 > +
-> +static inline struct gpio_desc *gpiochip_request_own_desc(struct gpio_chip *gc,
-> +					    unsigned int hwnum,
-> +					    const char *label,
-> +					    enum gpio_lookup_flags lflags,
-> +					    enum gpiod_flags dflags)
-> +{
-> +	/* GPIO can never have been requested */
-> +	WARN_ON(1);
-> +	return ERR_PTR(-ENODEV);
-> +}
+> +maintainers:
+> +  - Neil Armstrong <neil.armstrong@linaro.org>
 > +
-> +static inline void gpiochip_free_own_desc(struct gpio_desc *desc)
-> +{
-> +	WARN_ON(1);
-> +}
+> +description: |
+> +  This is a Linux interface to an RTC managed by firmware, hence it's
+> +  virtual from a Linux perspective.  The interface is 1 register where
+> +  an alarm time (in seconds) is to be written.
+> +  The alarm register is a simple scratch register shared between the
+> +  application processors (AP) and the secure co-processor (SCP.)  When
+> +  the AP suspends, the SCP will use the value of this register to
+> +  program an always-on timer before going sleep. When the timer expires,
+> +  the SCP will wake up and will then wake the AP.
 > +
->  static inline struct gpio_chip *gpiod_to_chip(const struct gpio_desc *desc)
->  {
->  	/* GPIO can never have been requested */
-> -- 
-> 2.34.1
-> 
-> 
+> +allOf:
+> +  - $ref: rtc.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - amlogic,meson-vrtc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    bus@ff800000 {
+> +      reg = <0x0 0xff800000 0x0 0x100000>;
+> +      #address-cells = <2>;
+> +      #size-cells = <2>;
+> +
+> +      rtc@a8 {
+> +        compatible = "amlogic,meson-vrtc";
+> +        reg = <0x0 0x000a8 0x0 0x4>;
 
--- 
-With Best Regards,
-Andy Shevchenko
+Just use 1 address/size cell here and then you don't need the bus node 
+(which has an error in it (no ranges)).
 
-
+Rob
