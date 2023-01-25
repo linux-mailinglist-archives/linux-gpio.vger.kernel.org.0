@@ -2,110 +2,147 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2645067BD6C
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 21:54:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28D8B67BE89
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 22:28:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236602AbjAYUym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 15:54:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
+        id S236904AbjAYV2c (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 16:28:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjAYUym (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 15:54:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431854A237;
-        Wed, 25 Jan 2023 12:54:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBBAD615AD;
-        Wed, 25 Jan 2023 20:54:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B378C433EF;
-        Wed, 25 Jan 2023 20:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674680080;
-        bh=jLzNKjyc09opMzRxjkf1IrKwt5abM/dWPoSM+2ilEkk=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=X/uDu3O5qXsiTWl6cqsmS+r3tM9PmmYl/gFX19wihE3gUQssRRRgZbXD/YR3Wiuqk
-         IDIOALPim0r8rA8sD99J+rL7RbcPKZHAqIShXKxxm20xyRARghupyDkZFnTF07p1Gg
-         x7JmCz7CT4EIbHToFXV/QEnk9aW3XzDnctemrD8C8d8lnlSF1y1AqY+DD2bTM9EgjZ
-         rLyHtU7lgSfEPSlueZesJyGbxtnJb3D59IZqPaa13fq5yleqo56ZMgQQGZL92OPVOb
-         PcN24IDwrkFTwLT+82hERv8tlcCyzyaPZzORg8i4LHKihykE/jVpLlPgqmGxZ0UHeE
-         1KCji5hDKRu5Q==
-Message-ID: <9cf8a94f7ec4d8912bcf507631991999.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S236789AbjAYV2O (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 16:28:14 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 846D762D27
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 13:26:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674682003;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=sOoHsm7MS2bdA393wRj32TqJ4i4jAbnYJ0SnvWhXtHw=;
+        b=K6qYgMotXzCME9RbypNzgKrdr2U4aZ72eVpplR95r6yZEGukNbqnOpUPXDF3lL3xAFIoK4
+        iQzSVqx4HclanFluvq42Q8KVO6VCzVQii6gR8vQTqJoZdk2j/v0I/v7GwX6DxF+a3Aw4Dk
+        GjwQCSIHdcIC1OajrlgjgAmJyfRI4Bc=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-115-L54uaz7OPX-0xgY9BTqyog-1; Wed, 25 Jan 2023 16:26:41 -0500
+X-MC-Unique: L54uaz7OPX-0xgY9BTqyog-1
+Received: by mail-qt1-f197.google.com with SMTP id q26-20020ac8735a000000b003b63165d87cso8248685qtp.11
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 13:26:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sOoHsm7MS2bdA393wRj32TqJ4i4jAbnYJ0SnvWhXtHw=;
+        b=TW4NcPNGJl5dh8GVoGJjOssM21Bqhbis0waoZxQkjGGaDh/nVn+n+L5oPtoF0ltyfj
+         2j54aUJhtzRgi/zsu4U7pIeipDgmhXJ3V3joOniKUfqiavIjjQfCZkj6MYg40W8GHFX3
+         +xMfd2azFaC4qrOHHWNplKapN5EaRxT9gEAtFyHA2DFfG235+X7EXN+1E9Qo7Vjk0hIz
+         Ib0m2N7XEDZW7LJPsVsv74MJK4L0EwYMk4zsuhlWQDtGV9asd7LhwYJiHH0jsWyxwf3Z
+         kITyLcWYsED2yvu3GEV/4o6OBei1gnbY4GHiN7hVJs4RHC7b8AiVUlcNq1AegJy4q8Ps
+         aybQ==
+X-Gm-Message-State: AFqh2ko1X2bpO4X3A/B13KaEJTvLtsGFE7C6SWVdQJgwQeyt81A5uw8E
+        mB5nEb4nCNiKxexMmo1qOgxky221pTQOAUnPYTlALx/LDT4yTjGdbbhqW3XcUWFVaWxDyxXCjNa
+        JsMuMcNWGi2+U5BHpnH2j7A==
+X-Received: by 2002:a0c:aa07:0:b0:531:9e7a:6778 with SMTP id d7-20020a0caa07000000b005319e7a6778mr72020819qvb.1.1674682001460;
+        Wed, 25 Jan 2023 13:26:41 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXuJA9ZbWt2pH5x/49GeXNlvIod0ok2NhUl785oS3p0fPE6WFT7R+8daehKb2LTqGaIqJAbHpA==
+X-Received: by 2002:a0c:aa07:0:b0:531:9e7a:6778 with SMTP id d7-20020a0caa07000000b005319e7a6778mr72020792qvb.1.1674682001182;
+        Wed, 25 Jan 2023 13:26:41 -0800 (PST)
+Received: from localhost.localdomain.com (024-205-208-113.res.spectrum.com. [24.205.208.113])
+        by smtp.gmail.com with ESMTPSA id z17-20020ae9c111000000b00706284b74b5sm4173350qki.52.2023.01.25.13.26.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jan 2023 13:26:40 -0800 (PST)
+From:   Tom Rix <trix@redhat.com>
+To:     linus.walleij@linaro.org, brgl@bgdev.pl, thierry.reding@gmail.com,
+        jonathanh@nvidia.com
+Cc:     linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Tom Rix <trix@redhat.com>
+Subject: [PATCH] gpio: tegra186: remove unneeded loop in tegra186_gpio_init_route_mapping()
+Date:   Wed, 25 Jan 2023 13:26:31 -0800
+Message-Id: <20230125212631.749094-1-trix@redhat.com>
+X-Mailer: git-send-email 2.26.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230125104520.89684-6-quic_kathirav@quicinc.com>
-References: <20230125104520.89684-1-quic_kathirav@quicinc.com> <20230125104520.89684-6-quic_kathirav@quicinc.com>
-Subject: Re: [PATCH 05/10] clk: qcom: add Global Clock controller (GCC) driver for IPQ5332 SoC
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Kathiravan T <quic_kathirav@quicinc.com>
-To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
-        agross@kernel.org, andersson@kernel.org, arnd@arndb.de,
-        bhupesh.sharma@linaro.org, broonie@kernel.org,
-        catalin.marinas@arm.com, devicetree@vger.kernel.org,
-        dmitry.baryshkov@linaro.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mmc@vger.kernel.org, marcel.ziswiler@toradex.com,
-        mturquette@baylibre.com, nfraprado@collabora.com,
-        quic_gurus@quicinc.com, robh+dt@kernel.org, robimarko@gmail.com,
-        shawnguo@kernel.org, ulf.hansson@linaro.org, will@kernel.org
-Date:   Wed, 25 Jan 2023 12:54:37 -0800
-User-Agent: alot/0.10
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Kathiravan Thirumoorthy (2023-01-25 02:45:15)
-> diff --git a/drivers/clk/qcom/gcc-ipq5332.c b/drivers/clk/qcom/gcc-ipq533=
-2.c
-> new file mode 100644
-> index 000000000000..8351096a4d32
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-ipq5332.c
-> @@ -0,0 +1,3954 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights r=
-eserved.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-[...]
-> +
-> +static const struct freq_tbl ftbl_gcc_pcnoc_bfdcd_clk_src[] =3D {
-> +       F(24000000, P_XO, 1, 0, 0),
-> +       F(50000000, P_GPLL0_OUT_MAIN, 16, 0, 0),
-> +       F(100000000, P_GPLL0_OUT_MAIN, 8, 0, 0),
-> +       { }
-> +};
-> +
-> +static struct clk_rcg2 gcc_pcnoc_bfdcd_clk_src =3D {
-> +       .cmd_rcgr =3D 0x31004,
-> +       .mnd_width =3D 0,
-> +       .hid_width =3D 5,
-> +       .parent_map =3D gcc_parent_map_0,
-> +       .freq_tbl =3D ftbl_gcc_pcnoc_bfdcd_clk_src,
-> +       .clkr.hw.init =3D &(const struct clk_init_data){
-> +               .name =3D "gcc_pcnoc_bfdcd_clk_src",
-> +               .parent_data =3D gcc_parent_data_0,
-> +               .num_parents =3D ARRAY_SIZE(gcc_parent_data_0),
-> +               .ops =3D &clk_rcg2_ops,
-> +               .flags =3D CLK_IS_CRITICAL,
+Reviewing the j loop over num_irqs_per_bank, in the code previous
+to the fixes: commit, every j was used. now only when j == 0.
+If only j == 0 is used, there is no need for the loop.
 
-Why not just turn these clks on in probe and never register them with
-the framework? That saves some memory for clks that there is no desire
-to control from linux. This is an RCG, so in theory the frequency can
-change, but does it really? Usually bus clks are controlled by the
-interconnect driver.
+Fixes: 210386804745 ("gpio: tegra186: Support multiple interrupts per bank")
+Signed-off-by: Tom Rix <trix@redhat.com>
+---
+ drivers/gpio/gpio-tegra186.c | 40 ++++++++++++++++--------------------
+ 1 file changed, 18 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
+index 9941f35af823..14c872b6ad05 100644
+--- a/drivers/gpio/gpio-tegra186.c
++++ b/drivers/gpio/gpio-tegra186.c
+@@ -677,7 +677,7 @@ static const struct of_device_id tegra186_pmc_of_match[] = {
+ static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
+ {
+ 	struct device *dev = gpio->gpio.parent;
+-	unsigned int i, j;
++	unsigned int i;
+ 	u32 value;
+ 
+ 	for (i = 0; i < gpio->soc->num_ports; i++) {
+@@ -699,27 +699,23 @@ static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
+ 			 * On Tegra194 and later, each pin can be routed to one or more
+ 			 * interrupts.
+ 			 */
+-			for (j = 0; j < gpio->num_irqs_per_bank; j++) {
+-				dev_dbg(dev, "programming default interrupt routing for port %s\n",
+-					port->name);
+-
+-				offset = TEGRA186_GPIO_INT_ROUTE_MAPPING(p, j);
+-
+-				/*
+-				 * By default we only want to route GPIO pins to IRQ 0. This works
+-				 * only under the assumption that we're running as the host kernel
+-				 * and hence all GPIO pins are owned by Linux.
+-				 *
+-				 * For cases where Linux is the guest OS, the hypervisor will have
+-				 * to configure the interrupt routing and pass only the valid
+-				 * interrupts via device tree.
+-				 */
+-				if (j == 0) {
+-					value = readl(base + offset);
+-					value = BIT(port->pins) - 1;
+-					writel(value, base + offset);
+-				}
+-			}
++			dev_dbg(dev, "programming default interrupt routing for port %s\n",
++				port->name);
++
++			offset = TEGRA186_GPIO_INT_ROUTE_MAPPING(p, 0);
++
++			/*
++			 * By default we only want to route GPIO pins to IRQ 0. This works
++			 * only under the assumption that we're running as the host kernel
++			 * and hence all GPIO pins are owned by Linux.
++			 *
++			 * For cases where Linux is the guest OS, the hypervisor will have
++			 * to configure the interrupt routing and pass only the valid
++			 * interrupts via device tree.
++			 */
++			value = readl(base + offset);
++			value = BIT(port->pins) - 1;
++			writel(value, base + offset);
+ 		}
+ 	}
+ }
+-- 
+2.26.3
+
