@@ -2,94 +2,89 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FF8467ACAA
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 09:45:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 56FCB67AD38
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 10:04:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235281AbjAYIpN (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 03:45:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49386 "EHLO
+        id S233829AbjAYJDX (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 04:03:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235483AbjAYIou (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 03:44:50 -0500
-X-Greylist: delayed 417 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Jan 2023 00:40:17 PST
-Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [IPv6:2a02:6b8:c02:900:1:45:d181:d500])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9329E53565;
-        Wed, 25 Jan 2023 00:40:16 -0800 (PST)
-Received: from sas8-92ddc00f49ef.qloud-c.yandex.net (sas8-92ddc00f49ef.qloud-c.yandex.net [IPv6:2a02:6b8:c1b:2988:0:640:92dd:c00f])
-        by forward500b.mail.yandex.net (Yandex) with ESMTP id D8C285F39A;
-        Wed, 25 Jan 2023 11:33:16 +0300 (MSK)
-Received: by sas8-92ddc00f49ef.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id CXKlpM8YBeA1-MrFzk96U;
-        Wed, 25 Jan 2023 11:33:16 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1674635596;
-        bh=Iu7kC5v6n5QYhMcI1r9TLZt9aPN3xDWmxLQey5H8/Sc=;
-        h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-        b=fBIvUJjSADfV0T9Xa3qtwCwY5pN92MQzDF2KhoQm8bB4GVPvcjCQdTPhlN5+qiUUr
-         S++rIecuSu/WVFVwrkjTh15i/Y2pHGTsqHUIpPbGT0cUPmio7Pgj1DtNrR4hGdHn+d
-         XfzmtzALnXKiv0CZBuhU/yIjEr71jRACDBQIBqOs=
-Authentication-Results: sas8-92ddc00f49ef.qloud-c.yandex.net; dkim=pass header.i=@maquefel.me
-Date:   Wed, 25 Jan 2023 11:33:11 +0300
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     "Arnd Bergmann" <arnd@arndb.de>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Hartley Sweeten" <hsweeten@visionengravers.com>,
-        "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
-        "Russell King" <linux@armlinux.org.uk>,
-        "Lukasz Majewski" <lukma@denx.de>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpio: ep93xx: convert driver to DT
-Message-ID: <20230125113311.2aff259d@redslave.neermore.group>
-In-Reply-To: <a699e52a-db19-4374-a4bc-a3948ecc43ef@app.fastmail.com>
-References: <20230117100845.16708-1-nikita.shubin@maquefel.me>
-        <a699e52a-db19-4374-a4bc-a3948ecc43ef@app.fastmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; x86_64-pc-linux-gnu)
+        with ESMTP id S235030AbjAYJDP (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 04:03:15 -0500
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0937645229;
+        Wed, 25 Jan 2023 01:03:08 -0800 (PST)
+Received: by mail-il1-x135.google.com with SMTP id g15so836698ild.3;
+        Wed, 25 Jan 2023 01:03:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=23O3377BiRv60iyqj8AYTr/Gqz5BiVCca8OcTaruWfI=;
+        b=dswDnYOnYLJkiIvUf5tQQ4OA9mTnaRdMQIIs9XfS93TpiwUCVP3YMEejlt5RnqYYRE
+         4yM5O0jEwyuDkJUx4Mw4lQ1qWIzq2UECZib0Qs2dn/MQQSfmQReqz1OJ8vgw/joTvB6o
+         oxpADsDr19n1kG8616sf3f1HSQjEWJdA8dMjEP4bsMh2xWTWdtWGt6d6EbgNxPnNXMqF
+         1AupQQT+C8/jlp+2XpVFMLn+CWik0OYs5C9AxKV5kp9NV1rWCIriplHFmbw02xVYLzp9
+         LWqEc1JA2+/OAjiwLekeUKWItvb0AWOJ5nzNY3XWJcpkR0SAhbWGorbn77FbPzxukDiV
+         td8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=23O3377BiRv60iyqj8AYTr/Gqz5BiVCca8OcTaruWfI=;
+        b=awOBOUFf2lBz09dwx8bagTAaYgn6VAooqq7UBkE5o7G+v4IQcoHvx7SLYk4YGN9H+2
+         iVF3J/YMBFXnqTVyDArFm8J7OUgaANyEARmL2H+qJky0axixhw5NTyjk6dy33IBBAJY+
+         qAbYprgnwbupe7hUdN2tLPMt3bm8W1D+E1kAxHkksPlwI7UbfK5O8C5GuuRyFA1cY87K
+         3HrHi12zR9hkYEhSOW/c+Zho9nyhoWU+KGIN1Vw3aM4P2k/SgPwxmfh+TOwwlBGh4INb
+         aM6eVF5KXeLyyUq9HruB4tNzCScipzsrzZNA+soxjl/kESveD9D4mxqofGvGMJbLLCXH
+         GXrQ==
+X-Gm-Message-State: AFqh2kqb+1SFkgxSR96+n6f65wtLiSIvf8o/B1Tq6qgdEjIjM0NmNgb7
+        EBQvO9Iw3zC/hO0Z3Bf/duc5VfXx/7GgxPcR
+X-Google-Smtp-Source: AMrXdXuyKpg6E4oQwOgjQZjd5dGDmjHiEtp5ZwORNbr/uUIp1Lzv24yhIkwnn4V/tjT3t6T6Zw0ycg==
+X-Received: by 2002:a05:6e02:1a6c:b0:30f:40fc:7a2b with SMTP id w12-20020a056e021a6c00b0030f40fc7a2bmr21864229ilv.32.1674637387371;
+        Wed, 25 Jan 2023 01:03:07 -0800 (PST)
+Received: from [172.25.56.57] ([212.22.67.162])
+        by smtp.gmail.com with ESMTPSA id c2-20020a02a602000000b003a4894d46e0sm1446405jam.176.2023.01.25.01.03.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jan 2023 01:03:06 -0800 (PST)
+Message-ID: <959cce55-29f5-9470-afcb-ebfe73654b6f@gmail.com>
+Date:   Wed, 25 Jan 2023 12:03:03 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH] pinctrl: single: fix potential NULL dereference
+Content-Language: en-US
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lvc-project@linuxtesting.org, Tony Lindgren <tony@atomide.com>
+References: <20221118104332.943-1-korotkov.maxim.s@gmail.com>
+ <Y3eAIb7x6de9Bigy@atomide.com>
+From:   Maxim Korotkov <korotkov.maxim.s@gmail.com>
+In-Reply-To: <Y3eAIb7x6de9Bigy@atomide.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hello Arnd!
+Dear Linus,
+Will this patch be applied or rejected?
+best regards, Max
 
-On Tue, 17 Jan 2023 11:15:20 +0100
-"Arnd Bergmann" <arnd@arndb.de> wrote:
-
-> On Tue, Jan 17, 2023, at 11:08, Nikita Shubin wrote:
+On 18.11.2022 15:52, Tony Lindgren wrote:
+> * Maxim Korotkov <korotkov.maxim.s@gmail.com> [221118 10:33]:
+>> Added checking of pointer "function" in pcs_set_mux().
+>> pinmux_generic_get_function() can return NULL and the pointer
+>> "function" was dereferenced without checking against NULL.
 > 
-> > 
-> > +#ifdef CONFIG_OF
-> > +static const struct of_device_id ep93xx_gpio_match[] = {
-> > +	{ .compatible = "cirrus,ep93xx-gpio" },
-> > +	{ /* end of table */ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ep93xx_gpio_match);
-> > +#endif
-> > +
-> >  static struct platform_driver ep93xx_gpio_driver = {
-> >  	.driver		= {
-> >  		.name	= "gpio-ep93xx",
-> > +		.of_match_table = ep93xx_gpio_match,
-> >  	},
-> >  	.probe		= ep93xx_gpio_probe,  
-> 
-> The #ifdef here is wrong and will cause a build failure because
-> of the unconditional reference to the variable.
-> 
-> Just remove the #ifdef/#endif.
-
-Sorry about that - i remember that i should drop it everywhere, which
-did for all but ep93xx-gpio, i am dropping match currently, as it will
-produce a warning without dt-bindings documentation, it will be
-introduced together with the rest of series.
-
-> 
->     Arnd
-
+> Reviewed-by: Tony Lindgren <tony@atomide.com>
