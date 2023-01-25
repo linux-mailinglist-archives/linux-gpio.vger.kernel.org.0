@@ -2,42 +2,42 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10F8167BCA3
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 21:35:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2645067BD6C
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 21:54:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236071AbjAYUfT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 15:35:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35128 "EHLO
+        id S236602AbjAYUym (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 15:54:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230064AbjAYUfT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 15:35:19 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9412A3F298;
-        Wed, 25 Jan 2023 12:35:18 -0800 (PST)
+        with ESMTP id S229453AbjAYUym (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 15:54:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431854A237;
+        Wed, 25 Jan 2023 12:54:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 44733B819C1;
-        Wed, 25 Jan 2023 20:35:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60F8C433D2;
-        Wed, 25 Jan 2023 20:35:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CBBAD615AD;
+        Wed, 25 Jan 2023 20:54:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B378C433EF;
+        Wed, 25 Jan 2023 20:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674678916;
-        bh=8U2DugR9MKz12cxFiXKOhg5icyU2FP2WpZ+gq9wbYaA=;
+        s=k20201202; t=1674680080;
+        bh=jLzNKjyc09opMzRxjkf1IrKwt5abM/dWPoSM+2ilEkk=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=OQH3KGpP8uLcJIeQ6j+iZSMcfDEhvOegromXyLnN+AYR9+IMAXXnDLLYyW79LSYHz
-         2LR6a8xl8Uevg21g23XOMaa49u8at72bYs8Ox2L+TnH9fdpNeDNoXlA4DTdkVtLvye
-         sBBMlZgYqlMyzN6uxjbrxhJe7Fl+iU3fflfNPruzh1cDGtGhWD8CkcLR7dw6hGXryU
-         nMzvM1wPSWXePgfrknMw/fksQapG+m4oLaFpWsVkb4MRqVfq3RavNAR8ImiPPZyug+
-         Yp1pS3KFJ8Va2/ouZ06qV/ZmUcZkObTgYruNotw+DibQTcDxRGTpk+sq6Yt3h71Os7
-         ifLkpMloV5Y/g==
-Message-ID: <e9277836f6797a1b2aaca2300190da9a.sboyd@kernel.org>
+        b=X/uDu3O5qXsiTWl6cqsmS+r3tM9PmmYl/gFX19wihE3gUQssRRRgZbXD/YR3Wiuqk
+         IDIOALPim0r8rA8sD99J+rL7RbcPKZHAqIShXKxxm20xyRARghupyDkZFnTF07p1Gg
+         x7JmCz7CT4EIbHToFXV/QEnk9aW3XzDnctemrD8C8d8lnlSF1y1AqY+DD2bTM9EgjZ
+         rLyHtU7lgSfEPSlueZesJyGbxtnJb3D59IZqPaa13fq5yleqo56ZMgQQGZL92OPVOb
+         PcN24IDwrkFTwLT+82hERv8tlcCyzyaPZzORg8i4LHKihykE/jVpLlPgqmGxZ0UHeE
+         1KCji5hDKRu5Q==
+Message-ID: <9cf8a94f7ec4d8912bcf507631991999.sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230125104520.89684-4-quic_kathirav@quicinc.com>
-References: <20230125104520.89684-1-quic_kathirav@quicinc.com> <20230125104520.89684-4-quic_kathirav@quicinc.com>
-Subject: Re: [PATCH 03/10] clk: qcom: Add STROMER PLUS PLL type for IPQ5332
+In-Reply-To: <20230125104520.89684-6-quic_kathirav@quicinc.com>
+References: <20230125104520.89684-1-quic_kathirav@quicinc.com> <20230125104520.89684-6-quic_kathirav@quicinc.com>
+Subject: Re: [PATCH 05/10] clk: qcom: add Global Clock controller (GCC) driver for IPQ5332 SoC
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     Kathiravan T <quic_kathirav@quicinc.com>
 To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
@@ -53,7 +53,7 @@ To:     Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>,
         mturquette@baylibre.com, nfraprado@collabora.com,
         quic_gurus@quicinc.com, robh+dt@kernel.org, robimarko@gmail.com,
         shawnguo@kernel.org, ulf.hansson@linaro.org, will@kernel.org
-Date:   Wed, 25 Jan 2023 12:35:13 -0800
+Date:   Wed, 25 Jan 2023 12:54:37 -0800
 User-Agent: alot/0.10
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
@@ -64,17 +64,48 @@ Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Quoting Kathiravan Thirumoorthy (2023-01-25 02:45:13)
-> From: Kathiravan T <quic_kathirav@quicinc.com>
->=20
-> Add the support for stromer plus pll, which is found on the IPQ5332
-> SoCs. Programming sequence is same as the stromer pll, so we can re-use
-> the same.
->=20
-> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
-> ---
+Quoting Kathiravan Thirumoorthy (2023-01-25 02:45:15)
+> diff --git a/drivers/clk/qcom/gcc-ipq5332.c b/drivers/clk/qcom/gcc-ipq533=
+2.c
+> new file mode 100644
+> index 000000000000..8351096a4d32
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gcc-ipq5332.c
+> @@ -0,0 +1,3954 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2022-2023 Qualcomm Innovation Center, Inc. All rights r=
+eserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/regmap.h>
+[...]
+> +
+> +static const struct freq_tbl ftbl_gcc_pcnoc_bfdcd_clk_src[] =3D {
+> +       F(24000000, P_XO, 1, 0, 0),
+> +       F(50000000, P_GPLL0_OUT_MAIN, 16, 0, 0),
+> +       F(100000000, P_GPLL0_OUT_MAIN, 8, 0, 0),
+> +       { }
+> +};
+> +
+> +static struct clk_rcg2 gcc_pcnoc_bfdcd_clk_src =3D {
+> +       .cmd_rcgr =3D 0x31004,
+> +       .mnd_width =3D 0,
+> +       .hid_width =3D 5,
+> +       .parent_map =3D gcc_parent_map_0,
+> +       .freq_tbl =3D ftbl_gcc_pcnoc_bfdcd_clk_src,
+> +       .clkr.hw.init =3D &(const struct clk_init_data){
+> +               .name =3D "gcc_pcnoc_bfdcd_clk_src",
+> +               .parent_data =3D gcc_parent_data_0,
+> +               .num_parents =3D ARRAY_SIZE(gcc_parent_data_0),
+> +               .ops =3D &clk_rcg2_ops,
+> +               .flags =3D CLK_IS_CRITICAL,
 
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-
-I'm amazed that we need so many different register layouts for PLLs. Was
-it really never standardized? So sad.
+Why not just turn these clks on in probe and never register them with
+the framework? That saves some memory for clks that there is no desire
+to control from linux. This is an RCG, so in theory the frequency can
+change, but does it really? Usually bus clks are controlled by the
+interconnect driver.
