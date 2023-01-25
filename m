@@ -2,129 +2,164 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44AD167B537
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 15:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED7267B570
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 16:09:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235426AbjAYO5J (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 09:57:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        id S235787AbjAYPJH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 10:09:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235947AbjAYO5G (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 09:57:06 -0500
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB7A577D5
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 06:56:35 -0800 (PST)
-Received: by mail-qv1-xf2b.google.com with SMTP id i12so14246370qvs.2
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 06:56:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KYg/H/ZHscvBETqJos9WhmRLOH/rw6E59czFMVPdDE4=;
-        b=Rw/xlAgmkZXHbks/rMEoRofoiqcpd9qdnACSAt5Yu2CpgR4lS4eRVS8WfvGPsA1Nn3
-         4QwD/KA3mY+zNjGTM0GSiaFtbFyOj0HUZ22VH533e1jJSBxy3OiMdqUkSbvfSPi6BTWs
-         Mepb7h7UmeKLp8Sj/9cT7BNdkt3zr4MBRZEPFzt/ni7XYd9eO4vjFm265CVIpO2jshwu
-         Uah3QYB45s6yHVwiqXo4oa/yxpzxzRSx1vA3uFs7ka03scEY6qOJ24oQ1dfxuPzp3yEq
-         q3tzSL/dOpTYS8QCStjk6vmFfFciD90inWaLVJrXNRTWPwNJoJb00Ov6dBspFMSAdEls
-         Hz4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KYg/H/ZHscvBETqJos9WhmRLOH/rw6E59czFMVPdDE4=;
-        b=eDlSp6ZuzrooXazTTIan2i6KmI+dLZai32rEtBx/I+pGW6APJ4Eq6w/Wf8I74l7N7Y
-         j4+qOXbs+bvWBsC2E+LhpjnmtSQve/CtJYmQF09MCxRlJ+OCdYkcSLq7WJMRO9lMndis
-         UGcdnverDxSClh8pNXKFl50Er0wIC0VGzGJDPLQb9AndDQlhO4suZZWiSqchrDYUo1j8
-         fUOW/qdWPz7S+B4dxFsh2u5+qZeI3gLgSrIy+OQWToYv2pvv3igQkCcOF7/St28mUlmr
-         7J8iDykIehwxhBQXKzPNXbFwRHe8QlmbBkyKJQ64q4tVnBIyL44OsABDnz30IcR0bgQf
-         55RA==
-X-Gm-Message-State: AFqh2kojDed65wfLErSExzcx4fU5p2+l0kLbxCGlDqrLM6I+UX0ksUs2
-        LdM55zIeNhn4ELGTFlMVoDZZBrRmykgfakZEiBNXkcG4Z2Y=
-X-Google-Smtp-Source: AMrXdXsdR4yormpVYHXo4mYkd8odxX3Cew8mUFqNkU1B1YSSQp/2gXKTVOaa80+vag7OjktIGVdjsEH/K99z5JLW8c0=
-X-Received: by 2002:a05:6214:418e:b0:532:2c82:95ac with SMTP id
- ld14-20020a056214418e00b005322c8295acmr1998462qvb.97.1674658591826; Wed, 25
- Jan 2023 06:56:31 -0800 (PST)
+        with ESMTP id S234279AbjAYPJG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 10:09:06 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74CAB1BE0;
+        Wed, 25 Jan 2023 07:09:05 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0EF9761547;
+        Wed, 25 Jan 2023 15:09:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FC81C433EF;
+        Wed, 25 Jan 2023 15:08:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674659344;
+        bh=v+B+KDBEA50AHtVt9lQ1BTuMYwoPUgbIgH8/Amio1lE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hSoessefOv16Xt7Qbj98AdgmJicOcikMVtEdI8hVuvfe5IRYVPezihO/irb3buQZt
+         3ZFdNvsViDwPHeE3Jm/XuN6iGzIm1ESIZsv0lbDa1vk4s6rEEf6cKYM+bN/iuQe9VW
+         P/Svjep8k+fSgfN9zyFG7lQqfCHheo29BxDr+K+4T3lE67taLSodJ3E7d4EG4RrRqe
+         73RJMrkg3YqzKBZH4GY2t14YGyMJND9cOXmrIKdYBcHjYwCgCzhERtbbPGPR5fu5EG
+         NLAP3xoucfO28ZdQF16a1/t4V81l7sTg4luWlxs+aH+wX1wDHuET+t7+76hhEK6te3
+         8HtxOatriltJw==
+Date:   Wed, 25 Jan 2023 15:08:54 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: Add missing
+ (unevaluated|additional)Properties on child node schemas
+Message-ID: <Y9FGBqFKMxL3XraK@google.com>
+References: <20230124230228.372305-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20230125110547.18093-1-hdegoede@redhat.com> <20230125110547.18093-2-hdegoede@redhat.com>
- <CAHp75Vd22k70oiQ4ygmYrGiC_cdb6NrqtHzV+q2j=Yu3VXj00g@mail.gmail.com>
- <07a830ec-4cb9-8a02-dfc0-a3b52cc79290@redhat.com> <CAHp75VdL0PMKUCm=4TpE96A5eO8a+GA2Lg-76JYL+EKVt6JOwA@mail.gmail.com>
- <201635a8-5af8-7f8a-69cd-666cd3ed8e02@redhat.com>
-In-Reply-To: <201635a8-5af8-7f8a-69cd-666cd3ed8e02@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Jan 2023 16:55:55 +0200
-Message-ID: <CAHp75Vem+Jytu=10nxxFuOpOf5jPCboUg5q1CVpiRjU8G1ZRCw@mail.gmail.com>
-Subject: Re: [PATCH v2 resend 1/2] gpio: tps68470: Fix tps68470_gpio_get()
- reading from the wrong register
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Daniel Scally <dan.scally@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Kate Hsuan <hpa@redhat.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230124230228.372305-1-robh@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 1:40 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> On 1/25/23 12:34, Andy Shevchenko wrote:
-> > On Wed, Jan 25, 2023 at 1:32 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >> On 1/25/23 12:23, Andy Shevchenko wrote:
-> >>> On Wed, Jan 25, 2023 at 1:05 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >>>>
-> >>>> For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
-> >>>> so that the actual value of the pin is read, rather than the value the pin
-> >>>> would output when put in output mode.
-> >>>
-> >>> It really depends. I think it's a wrong perception and brings nothing
-> >>> to software. If we output, we know what we program, so reading back
-> >>> returns us what we _assume_ should be on the pin under normal
-> >>> circumstances. The difference is OD/OS/OE/OC cases where we output>>> only one possible value.
-> >>>
-> >>>> Fixes: 275b13a65547 ("gpio: Add support for TPS68470 GPIOs")
-> >>>
-> >>> Is it really fixing anything? Can we have more?
-> >>>
-> >>> P.S. Before doing this, I would have a clarification in the
-> >>> documentation. Sorry that I have had no time to respond to my series
-> >>> regarding that. But it seems we have a strong disagreement in the
-> >>> area.
-> >>
-> >> I know disagree on some of the semantics of gpiod_get_value() but 99.9%
-> >> of the consumers of gpiod_get_value() are going to deal with pins
-> >> which are either in input mode, or in some non push-pull (e.g.
-> >> open-collector for i2c) mode. And in those cases reading GPDI
-> >> os the right thing to do.
-> >>
-> >> Calling gpiod_get_value() when the pin is in push-pull mode really
-> >> does not make much sense, so there will be very little if any users
-> >> of that. And this patch fixes the 99.9% other (potential) users
-> >> while not breaking the push-pull case since even then reading GPDI
-> >> should still return the right value.
-> >
-> > Some hardware may not even allow what you are doing here.
-> > For example when input and output direction is the same bit in the
-> > register. Another case when the input buffer is simply disabled by the
-> > driver for a reason (power consumption, etc).
->
-> But we are not talking some hw here, we are talking about this
-> specific driver, which has separate registers for setting
-> the output and reading the pin value.
->
-> The current behavior of this driver is *totally* broken wrt
-> gpiod_get_value() and this fix actually makes it work!
+On Tue, 24 Jan 2023, Rob Herring wrote:
 
-I don't see how you can make it work for GPO pins. get() method should
-work for them too. Probably I'm missing this part. At least the choice
-of the registers has to rely on direction, correct?
+> Just as unevaluatedProperties or additionalProperties are required at
+> the top level of schemas, they should (and will) also be required for
+> child node schemas. That ensures only documented properties are
+> present.
+> 
+> Add unevaluatedProperties or additionalProperties as appropriate, and
+> then add any missing properties flagged by the addition.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+> To: David Airlie <airlied@gmail.com>
+> To: Daniel Vetter <daniel@ffwll.ch>
+> To: Bartosz Golaszewski <brgl@bgdev.pl>
+> To: Jean Delvare <jdelvare@suse.com>
+> To: Guenter Roeck <linux@roeck-us.net>
+> To: Thomas Gleixner <tglx@linutronix.de>
+> To: Marc Zyngier <maz@kernel.org>
+> To: Jassi Brar <jassisinghbrar@gmail.com>
+> To: Mauro Carvalho Chehab <mchehab@kernel.org>
+> To: Lee Jones <lee@kernel.org>
+> To: Ulf Hansson <ulf.hansson@linaro.org>
+> To: Richard Weinberger <richard@nod.at>
+> To: Vignesh Raghavendra <vigneshr@ti.com>
+> To: Sebastian Reichel <sre@kernel.org>
+> To: Mark Brown <broonie@kernel.org>
+> To: "Rafael J. Wysocki" <rafael@kernel.org>
+> To: Daniel Lezcano <daniel.lezcano@linaro.org>
+> To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-gpio@vger.kernel.org
+> Cc: linux-hwmon@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> Cc: openbmc@lists.ozlabs.org
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-mtd@lists.infradead.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: alsa-devel@alsa-project.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: linux-usb@vger.kernel.org
+> ---
+>  .../devicetree/bindings/arm/arm,vexpress-juno.yaml     |  1 +
+>  .../bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml |  5 +++--
+>  .../bindings/arm/tegra/nvidia,tegra20-pmc.yaml         |  4 ++++
+>  .../bindings/bus/allwinner,sun50i-a64-de2.yaml         |  1 +
+>  .../bindings/bus/allwinner,sun8i-a23-rsb.yaml          |  1 +
+>  .../bus/intel,ixp4xx-expansion-bus-controller.yaml     |  6 ++++++
+>  Documentation/devicetree/bindings/bus/palmbus.yaml     |  1 +
+>  .../devicetree/bindings/display/msm/qcom,mdss.yaml     |  5 +++++
+>  Documentation/devicetree/bindings/example-schema.yaml  |  2 ++
+>  .../devicetree/bindings/gpio/x-powers,axp209-gpio.yaml |  1 +
+>  .../devicetree/bindings/hwmon/adi,ltc2992.yaml         |  1 +
+>  .../bindings/interrupt-controller/arm,gic-v3.yaml      |  2 ++
+>  .../bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml      |  1 +
+>  .../devicetree/bindings/media/i2c/maxim,max9286.yaml   |  7 +++++++
+>  .../bindings/memory-controllers/arm,pl35x-smc.yaml     |  1 +
+>  .../bindings/memory-controllers/exynos-srom.yaml       |  1 +
+>  .../memory-controllers/nvidia,tegra124-emc.yaml        |  1 +
+>  .../bindings/memory-controllers/st,stm32-fmc2-ebi.yaml |  1 +
+>  .../devicetree/bindings/mfd/mediatek,mt6370.yaml       |  2 ++
+>  .../devicetree/bindings/mmc/aspeed,sdhci.yaml          |  1 +
+>  Documentation/devicetree/bindings/mtd/mtd.yaml         |  1 +
+>  .../devicetree/bindings/power/supply/ti,lp8727.yaml    |  1 +
+>  .../devicetree/bindings/soc/imx/fsl,imx93-src.yaml     |  3 ++-
+>  .../bindings/soc/microchip/atmel,at91rm9200-tcb.yaml   |  1 +
+>  Documentation/devicetree/bindings/soc/ti/ti,pruss.yaml |  1 +
+>  .../devicetree/bindings/sound/marvell,mmp-sspa.yaml    |  1 +
+>  .../devicetree/bindings/sound/qcom,wcd934x.yaml        |  1 +
+>  .../devicetree/bindings/sound/samsung,odroid.yaml      |  2 ++
+>  .../devicetree/bindings/soundwire/qcom,soundwire.yaml  |  1 +
+>  .../bindings/spi/allwinner,sun4i-a10-spi.yaml          |  1 +
+>  .../bindings/spi/allwinner,sun6i-a31-spi.yaml          |  1 +
+>  .../devicetree/bindings/spi/spi-controller.yaml        |  1 +
+>  .../sram/allwinner,sun4i-a10-system-control.yaml       | 10 +++++-----
+>  Documentation/devicetree/bindings/sram/qcom,ocmem.yaml |  1 +
+>  .../devicetree/bindings/thermal/thermal-zones.yaml     |  1 +
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.yaml   |  1 +
+>  36 files changed, 65 insertions(+), 8 deletions(-)
+
+Acked-by: Lee Jones <lee@kernel.org>
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Lee Jones [李琼斯]
