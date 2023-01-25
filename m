@@ -2,100 +2,102 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F9767B2A0
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 13:34:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B31D67B2B1
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 13:43:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235480AbjAYMeU (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 07:34:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
+        id S235522AbjAYMnH (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 07:43:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235467AbjAYMeT (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 07:34:19 -0500
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB7553CE13
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 04:34:15 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id d66so19580893vsd.9
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 04:34:15 -0800 (PST)
+        with ESMTP id S234848AbjAYMnG (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 07:43:06 -0500
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E06B125A3
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 04:43:05 -0800 (PST)
+Received: by mail-vs1-xe32.google.com with SMTP id k6so19670646vsk.1
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 04:43:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5bOrXcdjtCozj+PW8Ndhj/SYcZhP25blVMwvnkfoTOY=;
-        b=Z1j9usIG64hqCal/ZfNqN3n8PzTozFH56ZJtWMWJ5sVE3hWpa7UgZ/u8C1ks2fsUZT
-         pv3azAyB5dq1VkUmZgrPTW/tH7uubeAXDVu21li7i/t/26j2/CTRYXHPJsyxyagurtbD
-         uj7/Tlz9mfhCiDrsJ2/bb7SjssvuAiE/Si7+mcqnMU0WqHy7kCDyDWADZX+DjDmL9kBg
-         XxBkq0NeOYcGBmeEYPuTwPb2/2Icu/jVSkHzBUL6HsYjhzIZ2WlNfRqeX2FVn35ikUgu
-         IvedEmTHf5pEEgpACGqA3nRLJDjoYM4I5C15NC5ZoI8kBzCJAiiRHfLby0AgtdBDvsSy
-         EqbA==
+        bh=y9MlLzfNrrNROBs/lmqVUqpRhex8MV2e9oSUqiRXNtw=;
+        b=dIU76gvQDKTrVJUilk0mp2w7ONp2FVbZt0p5Lc1YXRHFE36+PMZU0t77kyUhKv6vLL
+         ECN89B5JxxvfcYGbSOthbdRo5XIYQ8hy6p3yYLv0AJsdY0MrcwBV3N9bq3OhRH+UMeu4
+         SGDCQraEXBMsRTJBHIkt354g4GIIbcgYwRJX3p+S3sdNSTI7r5mWLWGjmCZ4YiDtKJW+
+         e6V/8pHdW3T0R7hpRGje/TqV5qFMZ+nwRpYhdXTxl6Ev6+oYEi4rz233Bd4M040CZkV3
+         kb1KH0+rXMSGTRmrHkxlHVqvjH4FYUtZ7umjV3Dq0N5qA6el+Gn9WgYcUQVw/PX9b8rW
+         R67w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5bOrXcdjtCozj+PW8Ndhj/SYcZhP25blVMwvnkfoTOY=;
-        b=nxjcYoqbJu76ZmL2Se4eN6C9qp+DGl1S+JLWQQrc3crwj2Ii9jJ+pQe64gNmuwvNmx
-         jxsjaCtCPVLCYp4zGsar/Rwnn+K1JzgZPTgPoXTY4tZCvGtsEu2OjFPv2JnnJ7ai5Squ
-         f1igG0Emkw1/B7WIMULoAPQV2D2Th4yMzG47B0h8hYj2Z2H2g6xCtK880EMmDaK1b6YU
-         gGUoh7fv3SOXlyYuamlxPk8lcU6fHf2oVMZmaq2cAvMZxcVWIcZAOsPvL7DQDjSmreWb
-         Hkm+r9rd1e6Jc56Eg1J8BX5UybWhH2DV7K6utKWshg5RoIQXri5K4mk5iRZOgGIofLX5
-         befw==
-X-Gm-Message-State: AFqh2kok8gzrIxFhI9eY4QR0rCWjzI9mO0PYScVmzCtJoGxvQNFoY5Nc
-        lL1WRDfAlcGS9OOAjNIytrPILRkSp/yOOoFuSVLVAkFhPBOEug==
-X-Google-Smtp-Source: AMrXdXsg/wvDshSZaVh/V6EaB/fpyxc5d4i8CsP7oKTMXUJUdVja3WxMv8+O9CSxgmtY1s5cSxtzr4b3x2T6UVAhhvg=
-X-Received: by 2002:a67:f2da:0:b0:3d3:d90c:5ef2 with SMTP id
- a26-20020a67f2da000000b003d3d90c5ef2mr5181117vsn.17.1674650053542; Wed, 25
- Jan 2023 04:34:13 -0800 (PST)
+        bh=y9MlLzfNrrNROBs/lmqVUqpRhex8MV2e9oSUqiRXNtw=;
+        b=TFxrssdHbsLldnXCVQbg/3LmyB+lb2qXCXYWM1LhCK06llnKUT4i5h8Ni/VDzymc5E
+         ymW97Myzehj2048oEF6PLAhZtPwr+MBaarS1JDX9SaPkiibFZyp/a6ZKTOPkGFvVYsRG
+         n6jxG8NV/qxOTfQ6E49VJpxcXo8nMMPdElOaMQ8Qp7/F4Mc+EBGGPUdpvKW24uGzWxJE
+         xUWlVLuUnM9xHPRnpXfaS53N6eTZPh0VbHhruL504tzbViEAtCRYd9gmXrwLuF5L29g3
+         jQwR9hNs9l/fZv0W49tzE8VJcb3EPXeRxSySt2ajNP/LAEjFnxW9IlRqN6BFMgb/euRK
+         aAzg==
+X-Gm-Message-State: AO0yUKVx4mODjCsAH+k6T4bWsh8Dq2uZT6gsFmyyo2G2S2PPUFv/CHXq
+        zR+K2So5jXnV02Lw16MbPbUsVIP2jxTGo5ylVzA9gw==
+X-Google-Smtp-Source: AK7set+l8LFXjDVC/jgEj23injH7PuO3CV8lR6zv3xkqv3AnjMFZNbA1etZcwdXtKMQP2RAkHfAbJsTjLyip3l4Wt34=
+X-Received: by 2002:a67:e902:0:b0:3e8:4ce6:e27c with SMTP id
+ c2-20020a67e902000000b003e84ce6e27cmr233236vso.73.1674650584378; Wed, 25 Jan
+ 2023 04:43:04 -0800 (PST)
 MIME-Version: 1.0
-References: <Y8/3OlSVCK/0wQRj@kili>
-In-Reply-To: <Y8/3OlSVCK/0wQRj@kili>
+References: <20230117100845.16708-1-nikita.shubin@maquefel.me>
+ <20230125083026.5399-1-nikita.shubin@maquefel.me> <20230125083026.5399-2-nikita.shubin@maquefel.me>
+In-Reply-To: <20230125083026.5399-2-nikita.shubin@maquefel.me>
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 25 Jan 2023 13:34:02 +0100
-Message-ID: <CAMRc=MfpFwwsL3ZuXmBTAEYH9qgMWQqzsxLYcQOqvfM+F7nAwg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: mxc: Unlock on error path in mxc_flip_edge()
-To:     Dan Carpenter <error27@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Marek Vasut <marex@denx.de>, Marc Zyngier <maz@kernel.org>,
-        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Wed, 25 Jan 2023 13:42:36 +0100
+Message-ID: <CAMRc=MciLG-FDSuq5SwaRnuJH0x2R+SQ28JxNu6wBrSZu8S=dQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] gpio: ep93xx: Fix port F hwirq numbers in handler
+To:     Nikita Shubin <nikita.shubin@maquefel.me>
+Cc:     linux-gpio@vger.kernel.org,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Lukasz Majewski <lukma@denx.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 4:20 PM Dan Carpenter <error27@gmail.com> wrote:
+On Wed, Jan 25, 2023 at 9:30 AM Nikita Shubin <nikita.shubin@maquefel.me> wrote:
 >
-> We recently added locking to this function but one error path was
-> over looked.  Drop the lock before returning.
+> Fix wrong translation of irq numbers in port F handler, as ep93xx hwirqs
+> increased by 1, we should simply decrease them by 1 in translation.
 >
-> Fixes: e5464277625c ("gpio: mxc: Protect GPIO irqchip RMW with bgpio spinlock")
-> Signed-off-by: Dan Carpenter <error27@gmail.com>
+> Fixes: 482c27273f52 ("ARM: ep93xx: renumber interrupts")
+> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
 > ---
->  drivers/gpio/gpio-mxc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/gpio/gpio-ep93xx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpio-mxc.c b/drivers/gpio/gpio-mxc.c
-> index 6f673b2f2a1b..9d0cec4b82a3 100644
-> --- a/drivers/gpio/gpio-mxc.c
-> +++ b/drivers/gpio/gpio-mxc.c
-> @@ -249,10 +249,11 @@ static void mxc_flip_edge(struct mxc_gpio_port *port, u32 gpio)
->         } else {
->                 pr_err("mxc: invalid configuration for GPIO %d: %x\n",
->                        gpio, edge);
-> -               return;
-> +               goto unlock;
->         }
->         writel(val | (edge << (bit << 1)), reg);
+> diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
+> index 2e1779709113..7edcdc575080 100644
+> --- a/drivers/gpio/gpio-ep93xx.c
+> +++ b/drivers/gpio/gpio-ep93xx.c
+> @@ -148,7 +148,7 @@ static void ep93xx_gpio_f_irq_handler(struct irq_desc *desc)
+>          */
+>         struct irq_chip *irqchip = irq_desc_get_chip(desc);
+>         unsigned int irq = irq_desc_get_irq(desc);
+> -       int port_f_idx = ((irq + 1) & 7) ^ 4; /* {19..22,47..50} -> {0..7} */
+> +       int port_f_idx = (irq & 7) ^ 4; /* {20..23,48..51} -> {0..7} */
+>         int gpio_irq = EP93XX_GPIO_F_IRQ_BASE + port_f_idx;
 >
-> +unlock:
->         raw_spin_unlock_irqrestore(&port->gc.bgpio_lock, flags);
->  }
->
+>         chained_irq_enter(irqchip, desc);
 > --
-> 2.35.1
+> 2.37.4
 >
 
 Queued for fixes, thanks!
