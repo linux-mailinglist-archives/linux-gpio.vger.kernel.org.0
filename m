@@ -2,125 +2,98 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FADB67B2E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 14:02:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5971E67B2EB
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 14:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235360AbjAYNCT (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 08:02:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44632 "EHLO
+        id S229571AbjAYNDZ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 08:03:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235281AbjAYNCS (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 08:02:18 -0500
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C1B46D41
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 05:02:11 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id bp15so28746195lfb.13
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 05:02:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WUlWEcztX7LC+YPVdX7zQ3TiSCzemn77YbP9UmZzYSE=;
-        b=ZWujWps5xV+1Wp9WkpTktZV8uw9uUYoO8g5XV6hX5GoFex0wS6QvPRwAG/2X2m1TpC
-         AnHeNzLJDDtn53tWfoYWTefbTDjXDAE0nyphHivQZvoRdrxbqpV+7GwZiiMjSczRHu8S
-         2+wR907XANDw+tY9iJAZ7kQb7uGdBtK+VXYG5abfl8fMtfvdNrdyGPXGOMxIoU9QKeVu
-         4IlTBODyMAWFOY81r6JOyh5Fa315CiPWT2rXXbjFQEfpJSeF4VXVDJglh9UTsnUwh9su
-         TYGOZhQhykmGOSX5lbdOvzn5eD1DRAR9mumAOcV1QbWLinLDbhcnO/qlNyd2Axsp+wEi
-         p/4A==
+        with ESMTP id S234613AbjAYNDX (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 08:03:23 -0500
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5FA32517;
+        Wed, 25 Jan 2023 05:03:22 -0800 (PST)
+Received: by mail-oi1-f172.google.com with SMTP id s66so16149634oib.7;
+        Wed, 25 Jan 2023 05:03:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WUlWEcztX7LC+YPVdX7zQ3TiSCzemn77YbP9UmZzYSE=;
-        b=MvTLAd0QqtkRROc2spgIL2M84DOor/Qprxp5nHcf0FaYNmI+j7SXJKUVW6TpaT2YVX
-         Iq52rR5713EAUwsxH08dwjHZOgIkQNRSZq3kMRTh/lWoRcxqXhFIkDxyw+vNO9EVBCqF
-         0DSuqu31w/dJetOsqrWQ8Zn0X4ParaEa/IKiyG2+nJ52HZgisiOBy6vX5oUGVscUL3O+
-         bgpbMmIS1cr5OM+eix6dhzLx0sweUsLeNQroX827F5GxPntswOc3MPra3ALfd0/2pF9C
-         xRHCVtBRyF58ziv5V1vrvIih2PQL5hOf7Eue/Z7AVsWJlFk0u3ZDLkjWNrBsPgfMhsUf
-         +Mow==
-X-Gm-Message-State: AFqh2kpEPuucSDHckpUjtqojgXYyWcsVpoHjz7jXgEU64rQ8QjChijCU
-        p7mbXEzvxQ+6lX9qZg1vNkAgijMmhwV6H+lfIf/Xtw==
-X-Google-Smtp-Source: AMrXdXua3Xzk3n+mAS+SHWDmCwyiaUE3a82cF5mU8PKvzbJFSacMHuyCjbHJ/PWxjesRw9CjRh1dmLPf3Blx2uP0BXc=
-X-Received: by 2002:a05:6512:3984:b0:4ca:faca:5b59 with SMTP id
- j4-20020a056512398400b004cafaca5b59mr2768406lfu.615.1674651728174; Wed, 25
- Jan 2023 05:02:08 -0800 (PST)
+        bh=2IsTVqB/pcPCh7jFJPHGPuaVWAVoNerPG3I9d0JHPnA=;
+        b=m01hYGWVW2kp1jbQlXzvLFodqjunuo+iSk/2MfS0grzI+g/0ppQjBQv8dlj8m1Uqig
+         8TilW5ASnjTDBq4fzZglRBhqZHYtDKm/FsxSFLcJeOHbuDk54jHS+DI6SI7aBDcAysLt
+         ADzqlgSP5cAJpyzQHW+39kHoYJWnUyrWjV0LB27SJY931KUk8T0YSI9ynxQzdlBM4/6D
+         OTS0hGF0F4GXqT6b88aWK4SJB71I2QzLbnRlTIKXHzRL0Wcw5Fg4h4cZUFIEFfmA8QX+
+         Pen1Mt/yl12MgJLcTxn+0mH4C2bcWZHtFybYmdgvv1d59BB+KnQbz0ahZs3YRwbK424P
+         QbvA==
+X-Gm-Message-State: AFqh2krIj3J5dSpin1QsxsrAEq5QCMNqYnQLlCAyhC++nyqGkc/tK9qi
+        YRsQWlmlC3wOrj84n/vzm87G76dDFGpqtQ==
+X-Google-Smtp-Source: AMrXdXua2J87aMbWaDqi6lg/OySCUUJw0Je5bvO/eaErvs39xZbjLj3PsbGZkrR5L0mUAkX7R3u+iw==
+X-Received: by 2002:aca:d17:0:b0:365:ce9c:edb6 with SMTP id 23-20020aca0d17000000b00365ce9cedb6mr14169059oin.30.1674651801032;
+        Wed, 25 Jan 2023 05:03:21 -0800 (PST)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id d10-20020a05620a166a00b00706b299d014sm3332243qko.132.2023.01.25.05.03.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jan 2023 05:03:20 -0800 (PST)
+Received: by mail-yb1-f177.google.com with SMTP id d132so1340502ybb.5;
+        Wed, 25 Jan 2023 05:03:20 -0800 (PST)
+X-Received: by 2002:a25:d505:0:b0:7bf:d201:60cb with SMTP id
+ r5-20020a25d505000000b007bfd20160cbmr2613641ybe.365.1674651799865; Wed, 25
+ Jan 2023 05:03:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20230124230048.371144-1-robh@kernel.org>
-In-Reply-To: <20230124230048.371144-1-robh@kernel.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Wed, 25 Jan 2023 14:01:55 +0100
-Message-ID: <CAMRc=MfdDv5teeQx802Qi3otwfXtZ1jAX_bzvH4DQMvdas9YtQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add missing (unevaluated|additional)Properties
- on child node schemas
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
+References: <20230102221815.273719-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20230102221815.273719-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20230102221815.273719-7-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 25 Jan 2023 14:03:08 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXaUE2xyP-t1fh2d1d4AVJ0Jm+-6rf3YMEx2n+MxjLRpg@mail.gmail.com>
+Message-ID: <CAMuHMdXaUE2xyP-t1fh2d1d4AVJ0Jm+-6rf3YMEx2n+MxjLRpg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] arm64: dts: renesas: rzg2ul-smarc-som: Add PHY
+ interrupt support for ETH{0/1}
+To:     Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Marc Zyngier <maz@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Biju Das <biju.das.jz@bp.renesas.com>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 12:00 AM Rob Herring <robh@kernel.org> wrote:
+On Mon, Jan 2, 2023 at 11:19 PM Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> Just as unevaluatedProperties or additionalProperties are required at
-> the top level of schemas, they should (and will) also be required for
-> child node schemas. That ensures only documented properties are
-> present.
+> The PHY interrupt (INT_N) pin is connected to IRQ2 and IRQ7 for ETH0 and
+> ETH1 respectively.
 >
-> Add unevaluatedProperties or additionalProperties as appropriate, and
-> then add any missing properties flagged by the addition.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
+> v2 -> v3
+> * No change
 
-[...]
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-devel for v6.3.
 
->  .../devicetree/bindings/gpio/x-powers,axp209-gpio.yaml |  1 +
+Gr{oetje,eeting}s,
 
-[...]
+                        Geert
 
-> diff --git a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-> index 7f26f6b1eea1..31906c253940 100644
-> --- a/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/x-powers,axp209-gpio.yaml
-> @@ -35,6 +35,7 @@ properties:
->  patternProperties:
->    "^.*-pins?$":
->      $ref: /schemas/pinctrl/pinmux-node.yaml#
-> +    additionalProperties: false
->
->      properties:
->        pins:
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-[...]
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
