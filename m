@@ -2,166 +2,122 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0768067B705
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 17:39:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFED867B724
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 17:46:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235263AbjAYQjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 11:39:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
+        id S229778AbjAYQqk (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 11:46:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235045AbjAYQjI (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 11:39:08 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D5D61A5;
-        Wed, 25 Jan 2023 08:39:07 -0800 (PST)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PEtdYr004745;
-        Wed, 25 Jan 2023 16:38:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=0ChATrYgcfVnq2ClzhGONhr89tnKCzl70FzK8Pg20BM=;
- b=e0/79e0jA8L10hDoEVKfMt8gkwQhGNNSw/Ye/tuim4XbbMJ/9Ggl4/Q308n2ckwTDq8q
- PSMBpBJ+2hTtm4vtYMUnHj6aXgKpL+H9rhohozT0FocDYnsI8UdSJil1IdNZHAGkQDHO
- n/06XcjiLQx3W2zyR0uLzeKORS2GzyhXQGurEe9bqk7pnz1S0MMhzxVgO6bpzSLsBTEi
- 3wV6wFHydqr2f1T5b12bb+5wV5bxXbV/fxRl3Hh/fSFXJ9OeTDfe/K6iP5wH/lyAmTCB
- r5QDMTKKomX9rb9AQtr8J/NQanJjanI2sZkbaPdMyTuewLgtRTu1FX2fm55ba8JSqe3v /A== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3najkha952-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 16:38:52 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30PGcpVQ002212
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 16:38:51 GMT
-Received: from [10.50.40.254] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 25 Jan
- 2023 08:38:42 -0800
-Message-ID: <d9b3390a-f207-4c5c-8613-0566c2435f6c@quicinc.com>
-Date:   Wed, 25 Jan 2023 22:08:39 +0530
+        with ESMTP id S235589AbjAYQqi (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 11:46:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8114159564;
+        Wed, 25 Jan 2023 08:46:36 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 287156155C;
+        Wed, 25 Jan 2023 16:46:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EFFAC433D2;
+        Wed, 25 Jan 2023 16:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674665195;
+        bh=xfla28zJBRsWQXlBseFrkXF56zvwRirAY/10+O6Gusg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Dlm6sDlROFpggiDg+SA67d6opXGecZCzhdxg7YeK/ToJXgpYMtPrjPZnPNswbiNQO
+         RU3i9whhAz/orOrH/Z4Xhfgiu7svabkuoqJJVe1CZPd/YtzbF3Sf3JwH5fz+1Lprny
+         IECDs6KubJB6cjehtcbUdoveg5kLh++iTN88G+VafS9z9QzecwVqV/O9lIbT71yZ/O
+         1W2efdb1/nLx8hsKhQWusZmyC+4ymleM7BeWWBXD0PKd5r6CvzX6tK34fPYZWJfhoM
+         HNHspSWjR/GPEKJ/iHfjDgV3Eji7kG6zPNztQO9g2YsyMR8LOqzu+gNxwDKD3FLm5I
+         YmOW1D8PfpcDg==
+Received: by mail-vs1-f51.google.com with SMTP id k6so20378731vsk.1;
+        Wed, 25 Jan 2023 08:46:35 -0800 (PST)
+X-Gm-Message-State: AFqh2kr7Q33XUvaQamy8B7FHagWBB5ubhPrA7gOSgCnGwyKQS906V1W3
+        AzeKVVn80aQaeDTmJbjg89ZPvCQiIOAvFYsjQA==
+X-Google-Smtp-Source: AMrXdXukkClxVJmORCFGUtNIYT840ix5e1Pd5Glna3rS2gUNazjUpgsHwDnIQtt7qoedMPCgyP02fjS7IrIEoFB0Z1Y=
+X-Received: by 2002:a67:f506:0:b0:3d3:c767:4570 with SMTP id
+ u6-20020a67f506000000b003d3c7674570mr4933608vsn.85.1674665194514; Wed, 25 Jan
+ 2023 08:46:34 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH 01/10] dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
-        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <shawnguo@kernel.org>, <arnd@arndb.de>,
-        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
-        <nfraprado@collabora.com>, <broonie@kernel.org>,
-        <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
-        <bhupesh.sharma@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20230125104520.89684-1-quic_kathirav@quicinc.com>
- <20230125104520.89684-2-quic_kathirav@quicinc.com>
- <50ec54ba-3468-3448-3fab-f28e97549ad2@linaro.org>
- <0b28f4a3-c445-7473-501b-39cbcfdb9889@quicinc.com>
- <d6512673-a232-c8e5-45f7-e903fc1a01a7@linaro.org>
-Content-Language: en-US
-From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <d6512673-a232-c8e5-45f7-e903fc1a01a7@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: iFOss_yTPbpiDPY2u0W_fozjyZmtcGv3
-X-Proofpoint-GUID: iFOss_yTPbpiDPY2u0W_fozjyZmtcGv3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-25_10,2023-01-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=827 clxscore=1015
- lowpriorityscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301250147
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <cb62dfc0-cb3d-beba-6d0b-8db18583dda0@gmail.com>
+ <06289641-18b1-320d-6162-7ae176452f31@gmail.com> <167452325371.3118653.16373677195744392136.robh@kernel.org>
+ <d8f0a5a9-5a16-1f63-8444-86434ff52e34@gmail.com>
+In-Reply-To: <d8f0a5a9-5a16-1f63-8444-86434ff52e34@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 25 Jan 2023 10:46:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKgo65fiE8+dzMHNRu3XJ8eBm43w8MoQdCwwm2zvxJeFA@mail.gmail.com>
+Message-ID: <CAL_JsqKgo65fiE8+dzMHNRu3XJ8eBm43w8MoQdCwwm2zvxJeFA@mail.gmail.com>
+Subject: Re: [PATCH 7/8] dt-bindings: interrupt-controller: Add Amlogic Meson
+ GPIO interrupt controller binding
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-rtc@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Marc Zyngier <maz@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-
-On 1/25/2023 9:50 PM, Krzysztof Kozlowski wrote:
-> On 25/01/2023 16:49, Kathiravan Thirumoorthy wrote:
->>>> @@ -0,0 +1,134 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq5332-pinctrl.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: Qualcomm IPQ5332 TLMM pin controller
->>>> +
->>>> +maintainers:
->>>> +  - Bjorn Andersson <andersson@kernel.org>
->>>> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> +
->>>> +description: |
->>>> +  Top Level Mode Multiplexer pin controller in Qualcomm IPQ5332 SoC.
->>>> +
->>>> +allOf:
->>>> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: qcom,ipq5332-tlmm
->>>> +
->>>> +  reg:
->>>> +    maxItems: 1
->>>> +
->>>> +  interrupts: true
->>> missing maxItems
->>>
->>> Rebase your patches on latest next and use the latest bindings and
->>> drivers as starting point.
->>
->> Changes are based on v6.2-rc1.  I see the maxItems changes in
->> linux-next. Will update this in V2.
-> Your patches cannot be based on v6.2-rc1. They won't even apply. You
-> miss entire development of last month.
-
-
-Hmmm, Will use linux-next/master as base hereafter.
-
-
->>
->>>> +  interrupt-controller: true
->>>> +  "#interrupt-cells": true
->>>> +  gpio-controller: true
->>>> +  "#gpio-cells": true
->>>> +  gpio-ranges: true
->>>> +  wakeup-parent: true
->>>> +
->>>> +  gpio-reserved-ranges:
->>>> +    minItems: 1
->>>> +    maxItems: 27
->>>> +
->>>> +  gpio-line-names:
->>>> +    maxItems: 53
->>> You have 54 GPIOs.
->>
->> Sorry, GPIO ranges are from 0-52, will update it in all places in V2.
-> Ah, then the gpio pattern needs a fix.
-
-
-Yup, will take care of that as well in V2.
-
-
+On Tue, Jan 24, 2023 at 1:04 AM Heiner Kallweit <hkallweit1@gmail.com> wrote:
 >
+> On 24.01.2023 02:22, Rob Herring wrote:
+> >
+> > On Mon, 23 Jan 2023 22:30:08 +0100, Heiner Kallweit wrote:
+> >> Add Amlogic Meson GPIO interrupt controller binding.
+> >> Tested with make targets dt_binding_check and dtbs_check.
+> >>
+> >> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> >> ---
+> >>  .../amlogic,meson-gpio-intc.txt               | 38 ----------
+> >>  .../amlogic,meson-gpio-intc.yaml              | 72 +++++++++++++++++++
+> >>  2 files changed, 72 insertions(+), 38 deletions(-)
+> >>  delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.yaml
+> >>
+> >
+> > Running 'make dtbs_check' with the schema in this patch gives the
+> > following warnings. Consider if they are expected or the schema is
+> > incorrect. These may not be new warnings.
+> >
 >
-> Best regards,
-> Krzysztof
->
+> Patch 4 of the series fixes these warnings.
+
+Then you can ignore them.
+
+You did change the binding somewhat and that should be detailed in the
+commit message. Granted, the original details on 'compatible' seem to
+have a typo and are ambiguous on the order of entries.
+
+> Did you apply the full series?
+
+No, because patchwork doesn't get the full series nor do I see the
+full thread when reviewing these bot emails before sending them. If I
+see a conversion and warnings that look like the schema should be
+fixed rather than the dts files, then you get this email. Though on
+further review, dropping 'amlogic,meson-gpio-intc' seems fine given it
+is often in the wrong spot (it should be last as it is least
+specific).
+
+Rob
