@@ -2,232 +2,103 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6326667B12A
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 12:29:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBA9E67B15E
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 12:33:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234833AbjAYL2x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 06:28:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48478 "EHLO
+        id S234996AbjAYLdL (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 06:33:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235398AbjAYL2V (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 06:28:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3146272A1
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:27:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674646053;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xAXVbQ97ZxwjsentYq0CfzBjn+pygJ3o7IS0xpGSlI4=;
-        b=TPWIdjmZ6ysEgvfgoJ6W2Tsa28s4fZyJbS6Z95MN/Cvxt9jzn04UAp71a1iEzipf22U8Gs
-        GciVmvwo9n78AekXRKSD8B1p/sEs11KMaOOvQ4rAA2ocCpmGhB6IPAjcnYAXKxMdQhhKRj
-        12Z01g1ToDbQpPihxyTHJvTiI920aPI=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-526-JyVliLX1MwGx8dsOvMYIPA-1; Wed, 25 Jan 2023 06:27:32 -0500
-X-MC-Unique: JyVliLX1MwGx8dsOvMYIPA-1
-Received: by mail-ej1-f70.google.com with SMTP id gb18-20020a170907961200b008715e951f02so11882583ejc.11
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:27:32 -0800 (PST)
+        with ESMTP id S234798AbjAYLck (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 06:32:40 -0500
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBF9F27D5F
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:32:38 -0800 (PST)
+Received: by mail-qk1-x72b.google.com with SMTP id s19so9650984qkg.7
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 03:32:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=H1tUyAZghC32d1Vrhoqxd92As7orqq9kxo5S7taG+7I=;
+        b=PTKCsJzAIXDuUCY3Qp9AgWIcqFUFeAu2zuKTFnh3F1MBLKj5yhnc5zO8tRuMRi2MHa
+         m3KXqH2WLfuMeoOT/C9RyJrQnh57I70xBUkc5UjF/omJ32PNdMMfSFvKpLH4UPOutMOC
+         SaU75fW1C/vd+ZpFYqhaBx38c8+U1K1phWAXISRXnrLtRM7A5KM1siXJ2lnx+B6RcMUp
+         yEUxy/rwX8Nmzn3VCjtKlwIkI7MXPeoU4kPT/umr1Z1f2kUXaA5acHRh6BFdukJ9BtF2
+         TkYQz74AwnUTwZ3l3yVFZ4kLY4vYZZINaOeWU3xFNRxmQn8WSjFhoNj22wT5epKvyMj+
+         oRkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xAXVbQ97ZxwjsentYq0CfzBjn+pygJ3o7IS0xpGSlI4=;
-        b=AHrTRHRfWsQqYNqQP/9cZwRp+ixBdn9IYv/npodEkPVr8e+u7DbIhQyXlkw8n3EA+I
-         YXl4ZcwbTdAlV5db4TZaqOw+PQgiv7gyDypYZ5EMQR8f5nxMkAdqpZoeXbGn6qLzbh7/
-         GOlr+9Y9BcqV5uyJRIva42IS0ySSyiRyAREdVW9QRKmLLGu+OqFvkWZkN4Fxbak950uu
-         PbjwDvEiGfkZuMx5EySZtXrx8SAxC9Lqs9NWTdxs9DQ/2h2e2j9x89E1YwPTZmFY4lJr
-         8mbZPBgvPqHmPO5Zo76BvFcpk49K22CP2VuQqqZUr3dR0zKC7zHz/CLBcBD0J3tycgYN
-         Y1hQ==
-X-Gm-Message-State: AO0yUKU35uGbWw/Lq+Qs3hrkwKw+Snbg7EspTG/FzQH9OLJ/c/arm+vJ
-        ZePfzFtFUy0m/QISzxIUMdLrbvVfvknqmztM+BzmG2Sjhu3NL1KsYDa3RAN9H2TWI+nFhBumn+2
-        QDkvACXIc8hHj3AqoT6vPCA==
-X-Received: by 2002:a17:907:1c12:b0:7fd:eb9e:6fd5 with SMTP id nc18-20020a1709071c1200b007fdeb9e6fd5mr5140842ejc.45.1674646049763;
-        Wed, 25 Jan 2023 03:27:29 -0800 (PST)
-X-Google-Smtp-Source: AK7set+i/m/zbhzkMhjOpF3UYIL+peY5VlFUiGOTonIdZPJJVuHY5eVrK+0GVIb2M0z47QviYRtq1w==
-X-Received: by 2002:a17:907:1c12:b0:7fd:eb9e:6fd5 with SMTP id nc18-20020a1709071c1200b007fdeb9e6fd5mr5140822ejc.45.1674646049519;
-        Wed, 25 Jan 2023 03:27:29 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id q4-20020a1709064c8400b007c0d4d3a0c1sm2214916eju.32.2023.01.25.03.27.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jan 2023 03:27:28 -0800 (PST)
-Message-ID: <40a048b6-bcd3-4b13-8e48-45cb44246b80@redhat.com>
-Date:   Wed, 25 Jan 2023 12:27:28 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H1tUyAZghC32d1Vrhoqxd92As7orqq9kxo5S7taG+7I=;
+        b=7sawbmWUlCCqZkNcQAkAlwc0j9FkZVFz+OUCBnTpFy/Z6uYq4gc3N7qhaqDngsDrXI
+         vD8JpQ1w318UraE+KvcCzhU03dm68npLirDQ6Ks2V2a1w3KHaKHb6tF++CSOFRMpkBLJ
+         mk9tXVbposMBMk/jWyUTa1nOE6ThtIWfFjy5NDjKctpXiPCT1KIofk2WT0TZ5/ri7u6L
+         EG9RXtSPZYgncvkb7EIBG2dpRcP5Bn43f7VmYClWJMo7LYiRofb0MNKsvINoxQF+rSay
+         Hc86y1tJdbd0o2BRxempfKWIE2Y0Ry7HnmQFEJyz6Gst6MJ2/xYvfMo/KQTvYu2MFSOp
+         4T7A==
+X-Gm-Message-State: AFqh2kqEIJvNGDZoaHnIn+a1/9EIr75xP7F6PYodLwdN+Wi69J/QrOvD
+        UX/SLmd0NlmpgV3IcWzI0WlWNhYFSa9w1SxQpw0=
+X-Google-Smtp-Source: AMrXdXuYVJFTEJHJR3rcSr+pgsjyAfKHsfFzrCwfsk+MNiAS4LCGUJyvc4FRs8VMVgleVlYsgbvEaLFqz5nmD8xLmiA=
+X-Received: by 2002:a05:620a:e:b0:705:c63f:1fa8 with SMTP id
+ j14-20020a05620a000e00b00705c63f1fa8mr1917811qki.504.1674646357913; Wed, 25
+ Jan 2023 03:32:37 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [RFC 1/1] pinctrl: amd: Fix handling of
- PIN_CONFIG_BIAS_PULL_UP/_DOWN settings
-Content-Language: en-US, nl
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+References: <20230125110547.18093-1-hdegoede@redhat.com> <20230125110547.18093-2-hdegoede@redhat.com>
+ <CAHp75Vd22k70oiQ4ygmYrGiC_cdb6NrqtHzV+q2j=Yu3VXj00g@mail.gmail.com>
+In-Reply-To: <CAHp75Vd22k70oiQ4ygmYrGiC_cdb6NrqtHzV+q2j=Yu3VXj00g@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Jan 2023 13:32:02 +0200
+Message-ID: <CAHp75VeQxx_a6ss-ipsFbmrsg8Q+3VkJf6snqiz_QN5Mj7-j0g@mail.gmail.com>
+Subject: Re: [PATCH v2 resend 1/2] gpio: tps68470: Fix tps68470_gpio_get()
+ reading from the wrong register
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Mario Limonciello <Mario.Limonciello@amd.com>,
-        linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20230125103916.16772-1-hdegoede@redhat.com>
- <20230125103916.16772-2-hdegoede@redhat.com>
- <CAHp75VdKei2GtGuLZ4R=WxzciPFjVhDji+wO3xWU4Z893z0J8A@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAHp75VdKei2GtGuLZ4R=WxzciPFjVhDji+wO3xWU4Z893z0J8A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Daniel Scally <dan.scally@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Kate Hsuan <hpa@redhat.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-Hi,
+On Wed, Jan 25, 2023 at 1:23 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Jan 25, 2023 at 1:05 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> >
+> > For the regular GPIO pins the value should be read from TPS68470_REG_GPDI,
+> > so that the actual value of the pin is read, rather than the value the pin
+> > would output when put in output mode.
+>
+> It really depends. I think it's a wrong perception and brings nothing
+> to software. If we output, we know what we program, so reading back
+> returns us what we _assume_ should be on the pin under normal
+> circumstances. The difference is OD/OS/OE/OC cases where we output
+> only one possible value.
+>
+> > Fixes: 275b13a65547 ("gpio: Add support for TPS68470 GPIOs")
+>
+> Is it really fixing anything? Can we have more?
+>
+> P.S. Before doing this, I would have a clarification in the
+> documentation. Sorry that I have had no time to respond to my series
+> regarding that. But it seems we have a strong disagreement in the
+> area.
 
-On 1/25/23 12:14, Andy Shevchenko wrote:
-> On Wed, Jan 25, 2023 at 12:39 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> PIN_CONFIG_BIAS_PULL_UP is documented as follows:
->>
->> @PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
->> impedance to VDD). If the argument is != 0 pull-up is enabled,
->> if it is 0, pull-up is total, i.e. the pin is connected to VDD.
->>
->> This patch fixes 2 issues with how the AMD pinctrl code was handling this:
->>
->> 1. amd_pinconf_set() was setting the PULL_UP_ENABLE bit as follows:
->>     pin_reg &= ~BIT(PULL_UP_ENABLE_OFF);
->>     pin_reg |= ((arg>>1) & BIT(0)) << PULL_UP_ENABLE_OFF;
->>    When called from gpio_set_bias() for ACPI enumerated GPIOs arg == 1,
->>    so the pull-up enable bit would be cleared instead of being set.
->>    It seems unnecessary to say that this is BAD.
->>
->>    There is no real convention for the meaning of arg other then that
-> 
-> than
-> 
->>    a value != 0 means the pull-up should be enabled (which was being
->>    violated here). Looking at other drivers the Intel pinctrl drivers
->>    all treat 1 (as used by gpio_set_bias()) as indictating that the
-> 
-> indicating
-> 
->>    driver should pick the pull-up strength; and all other values are
->>    interpreted as the amount of ohm with which to pull-up, with non
->>    supported values being rejected with -EINVAL.
->>
->>    This patch changes the AMD pinctrl code to match this behavior so
->>    that the behavior of all x86 pinctrl drivers is consistent.
->>
->> 2. arg == 0 does not mean that the pull-up/-down is disabled as the
->>    old code was assuming. Rather it means that the "pull-up is total,
->>    i.e. the pin is connected to VDD". The correct way for
->>    amd_pinconf_get() to indicate that the pull-up/-down is not enabled
->>    is to return -EINVAL. I've checked a whole bunch of pinctrl drivers
->>    and they all behave this way. This patch brings the AMD pinctrl driver
->>    in line with this.
->>
->> Fixes: dbad75dd1f25 ("pinctrl: add AMD GPIO driver support.")
->> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212379
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  drivers/pinctrl/pinctrl-amd.c | 37 +++++++++++++++++++++++++++--------
->>  1 file changed, 29 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
->> index 9bc6e3922e78..88174195b5c8 100644
->> --- a/drivers/pinctrl/pinctrl-amd.c
->> +++ b/drivers/pinctrl/pinctrl-amd.c
->> @@ -744,11 +744,19 @@ static int amd_pinconf_get(struct pinctrl_dev *pctldev,
->>                 break;
->>
->>         case PIN_CONFIG_BIAS_PULL_DOWN:
->> -               arg = (pin_reg >> PULL_DOWN_ENABLE_OFF) & BIT(0);
->> +               if (!(pin_reg & BIT(PULL_DOWN_ENABLE_OFF)))
->> +                       return -EINVAL;
->> +               arg = 1;
->>                 break;
->>
->>         case PIN_CONFIG_BIAS_PULL_UP:
->> -               arg = (pin_reg >> PULL_UP_SEL_OFF) & (BIT(0) | BIT(1));
->> +               if (!(pin_reg & BIT(PULL_UP_ENABLE_OFF)))
->> +                       return -EINVAL;
->> +
->> +               if (pin_reg & BIT(PULL_UP_SEL_OFF))
->> +                       arg = 8000;
->> +               else
->> +                       arg = 4000;
->>                 break;
-> 
-> Do I understand correctly that there is only one bias value possible
-> for Pdown (4k?) and two for Pup (4k & 8k)?
+Just realized that what we are missing is BIDI settings for the
+direction. That would solve a lot of these kinds of grey areas. Linus?
+Bart?
 
-Yes I believe so, it has been a while ago and I don't know
-where I got the 8k and 4k values from anymore (oops) ...
 
-> Also I have stumbled over _OFF. Does it actually mean "offset"? Can we
-> rename to avoid (my) confusion with OFF as something being "off"?
-> (Maybe a separate patch?)
-
-Yes it means offset, I actually stumbled over this while re-reading
-the patch myself too. So definitely something to fix.
-
-> 
->>         case PIN_CONFIG_DRIVE_STRENGTH:
->> @@ -790,15 +798,28 @@ static int amd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
->>                         break;
->>
->>                 case PIN_CONFIG_BIAS_PULL_DOWN:
->> -                       pin_reg &= ~BIT(PULL_DOWN_ENABLE_OFF);
->> -                       pin_reg |= (arg & BIT(0)) << PULL_DOWN_ENABLE_OFF;
->> +                       pin_reg |= BIT(PULL_DOWN_ENABLE_OFF);
->>                         break;
->>
->>                 case PIN_CONFIG_BIAS_PULL_UP:
->> -                       pin_reg &= ~BIT(PULL_UP_SEL_OFF);
->> -                       pin_reg |= (arg & BIT(0)) << PULL_UP_SEL_OFF;
->> -                       pin_reg &= ~BIT(PULL_UP_ENABLE_OFF);
->> -                       pin_reg |= ((arg>>1) & BIT(0)) << PULL_UP_ENABLE_OFF;
->> +                       /* Set default ohm value in case none is given */
->> +                       if (arg == 1)
->> +                               arg = 4000;
->> +
->> +                       switch (arg) {
->> +                       case 4000:
->> +                               pin_reg &= ~BIT(PULL_UP_SEL_OFF);
->> +                               pin_reg |= BIT(PULL_UP_ENABLE_OFF);
->> +                               break;
->> +                       case 8000:
->> +                               pin_reg |= BIT(PULL_UP_SEL_OFF);
->> +                               pin_reg |= BIT(PULL_UP_ENABLE_OFF);
->> +                               break;
->> +                       default:
->> +                               dev_err(&gpio_dev->pdev->dev,
->> +                                       "Invalid pull-up arg %u\n", arg);
->> +                               ret = -EINVAL;
->> +                       }
-> 
-> Can Pup and Pdown be enabled simultaneously?
-
-I believe so, so I think that we also need to clear the other
-enable bit (e.g. clear down when enabling up) when enabling
-the pull up / down. I'll do this for v2 (after waiting for other
-comments first).
-
->>                         break;
->>
->>                 case PIN_CONFIG_DRIVE_STRENGTH:
-> 
-> After your answers I might come with some comments, but FWIW the
-> code-wise this seems correct approach.
-
-Thank you for taking a look.
-
-Regards,
-
-Hans
-
+-- 
+With Best Regards,
+Andy Shevchenko
