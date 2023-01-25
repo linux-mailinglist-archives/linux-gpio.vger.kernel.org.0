@@ -2,168 +2,138 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8DC67AFD6
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 11:40:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8786C67AFF2
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 11:46:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235174AbjAYKkQ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 05:40:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42076 "EHLO
+        id S234805AbjAYKqC (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 05:46:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235627AbjAYKkL (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 05:40:11 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D4612F34
-        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 02:39:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674643163;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8vmfRH30ciZxy2uxjKYT/zXoIw0CUhTXt10e0YrMu5k=;
-        b=PQzEAxxbOC8L5sSwgJEZyFIRztqnJVF3F4kmytVNIm9kIN6oo0idLGjqcuucyw28lKQnR4
-        ZAo6mYb9TQ7Nil1fUSvy97SMqJPf7mAkLSQTsmop3UVuYwccO/YoCqbkD8t7fyrIfYbV9L
-        8vTteNFKkDtEdMUnwk4aIHdTPK8ujIY=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-46-sAc5AI51OvW6cI-ceAK00w-1; Wed, 25 Jan 2023 05:39:20 -0500
-X-MC-Unique: sAc5AI51OvW6cI-ceAK00w-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F0B44280482A;
-        Wed, 25 Jan 2023 10:39:19 +0000 (UTC)
-Received: from shalem.redhat.com (unknown [10.39.193.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D7DBE492C18;
-        Wed, 25 Jan 2023 10:39:18 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andy@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mario Limonciello <Mario.Limonciello@amd.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-gpio@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [RFC 1/1] pinctrl: amd: Fix handling of PIN_CONFIG_BIAS_PULL_UP/_DOWN settings
-Date:   Wed, 25 Jan 2023 11:39:16 +0100
-Message-Id: <20230125103916.16772-2-hdegoede@redhat.com>
-In-Reply-To: <20230125103916.16772-1-hdegoede@redhat.com>
-References: <20230125103916.16772-1-hdegoede@redhat.com>
+        with ESMTP id S232999AbjAYKqB (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 05:46:01 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07E032D56;
+        Wed, 25 Jan 2023 02:46:00 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30P7U2Ma007077;
+        Wed, 25 Jan 2023 10:45:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=/rE7plyDah/nBJmzuMFXucz4lzFGzHs4vSiVS7Yw+7Q=;
+ b=UXwi27jp13YLSmhUWkt1BGSdTz2wC3pssRAZCSpfwFjgvEF5IvELRoejYJR9Y1IKh9jg
+ PcoOC2wr4t/bFAVSlsFN1c4RqH6c/9jTvqZkpRaT880+NiL9i0wEjFidNn2jezGhClln
+ e6p2ka+68m9/HPNpGblulTsPHodXFWWPQZVIgl8PewXRBqctqDh9ROpADimj+vAi8AnP
+ ty/WW9Q/q9iJX3QY2gHD1s+1dR7Fp8dXBMnHH7zvLwBnAWsFhor2K8deE+8DityLIeBs
+ vpf8a2NsDtkL9SPGf3OTqn7UG77zi9JTkAAfaMn/RlF5WmDwaG9W6cqAfa4L5M6IMIyK Lw== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nag309xwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 10:45:43 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30PAjg5k000913
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 10:45:42 GMT
+Received: from win-platform-upstream01.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Wed, 25 Jan 2023 02:45:34 -0800
+From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
+        <bhupesh.sharma@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Kathiravan T <quic_kathirav@quicinc.com>
+Subject: [PATCH 00/10] Add minimal boot support for IPQ5332
+Date:   Wed, 25 Jan 2023 16:15:10 +0530
+Message-ID: <20230125104520.89684-1-quic_kathirav@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 0y2CuRzgWXyyYHKpRuNV58BgtErF3Mjg
+X-Proofpoint-GUID: 0y2CuRzgWXyyYHKpRuNV58BgtErF3Mjg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-25_05,2023-01-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
+ suspectscore=0 bulkscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
+ mlxlogscore=579 clxscore=1015 priorityscore=1501 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301250098
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-PIN_CONFIG_BIAS_PULL_UP is documented as follows:
+From: Kathiravan T <quic_kathirav@quicinc.com>
 
-@PIN_CONFIG_BIAS_PULL_UP: the pin will be pulled up (usually with high
-impedance to VDD). If the argument is != 0 pull-up is enabled,
-if it is 0, pull-up is total, i.e. the pin is connected to VDD.
+The IPQ5332 is Qualcomm's 802.11ax SoC for Routers, Gateways and
+Access Points.
 
-This patch fixes 2 issues with how the AMD pinctrl code was handling this:
+This series adds minimal board boot support for ipq5332-mi01.2 board.
 
-1. amd_pinconf_set() was setting the PULL_UP_ENABLE bit as follows:
-    pin_reg &= ~BIT(PULL_UP_ENABLE_OFF);
-    pin_reg |= ((arg>>1) & BIT(0)) << PULL_UP_ENABLE_OFF;
-   When called from gpio_set_bias() for ACPI enumerated GPIOs arg == 1,
-   so the pull-up enable bit would be cleared instead of being set.
-   It seems unnecessary to say that this is BAD.
+Also, this series depends on the below patch
+https://lore.kernel.org/linux-arm-msm/20230120082631.22053-1-quic_kathirav@quicinc.com/
 
-   There is no real convention for the meaning of arg other then that
-   a value != 0 means the pull-up should be enabled (which was being
-   violated here). Looking at other drivers the Intel pinctrl drivers
-   all treat 1 (as used by gpio_set_bias()) as indictating that the
-   driver should pick the pull-up strength; and all other values are
-   interpreted as the amount of ohm with which to pull-up, with non
-   supported values being rejected with -EINVAL.
+Kathiravan T (10):
+  dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
+  pinctrl: qcom: Introduce IPQ5332 TLMM driver
+  clk: qcom: Add STROMER PLUS PLL type for IPQ5332
+  dt-bindings: clock: Add Qualcomm IPQ5332 GCC
+  clk: qcom: add Global Clock controller (GCC) driver for IPQ5332 SoC
+  dt-bindings: qcom: add ipq5332 boards
+  dt-bindings: firmware: document IPQ5332 SCM
+  dt-bindings: mmc: sdhci-msm: add IPQ5332 compatible
+  arm64: dts: qcom: add IPQ5332 SoC and MI01.2 board support
+  arm64: defconfig: Enable IPQ5332 SoC base configs
 
-   This patch changes the AMD pinctrl code to match this behavior so
-   that the behavior of all x86 pinctrl drivers is consistent.
+ .../devicetree/bindings/arm/qcom.yaml         |    7 +
+ .../bindings/clock/qcom,ipq5332-gcc.yaml      |   55 +
+ .../bindings/firmware/qcom,scm.yaml           |    1 +
+ .../devicetree/bindings/mmc/sdhci-msm.yaml    |    1 +
+ .../pinctrl/qcom,ipq5332-pinctrl.yaml         |  134 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/ipq5332-mi01.2.dts   |   71 +
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi         |  273 ++
+ arch/arm64/configs/defconfig                  |    2 +
+ drivers/clk/qcom/Kconfig                      |    7 +
+ drivers/clk/qcom/Makefile                     |    1 +
+ drivers/clk/qcom/clk-alpha-pll.c              |   11 +
+ drivers/clk/qcom/clk-alpha-pll.h              |    1 +
+ drivers/clk/qcom/gcc-ipq5332.c                | 3954 +++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                  |   10 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq5332.c        | 1008 +++++
+ include/dt-bindings/clock/qcom,gcc-ipq5332.h  |  359 ++
+ 18 files changed, 5897 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,ipq5332-gcc.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-pinctrl.yaml
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5332-mi01.2.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq5332.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq5332.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq5332.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq5332.h
 
-2. arg == 0 does not mean that the pull-up/-down is disabled as the
-   old code was assuming. Rather it means that the "pull-up is total,
-   i.e. the pin is connected to VDD". The correct way for
-   amd_pinconf_get() to indicate that the pull-up/-down is not enabled
-   is to return -EINVAL. I've checked a whole bunch of pinctrl drivers
-   and they all behave this way. This patch brings the AMD pinctrl driver
-   in line with this.
-
-Fixes: dbad75dd1f25 ("pinctrl: add AMD GPIO driver support.")
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=212379
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- drivers/pinctrl/pinctrl-amd.c | 37 +++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
-index 9bc6e3922e78..88174195b5c8 100644
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -744,11 +744,19 @@ static int amd_pinconf_get(struct pinctrl_dev *pctldev,
- 		break;
- 
- 	case PIN_CONFIG_BIAS_PULL_DOWN:
--		arg = (pin_reg >> PULL_DOWN_ENABLE_OFF) & BIT(0);
-+		if (!(pin_reg & BIT(PULL_DOWN_ENABLE_OFF)))
-+			return -EINVAL;
-+		arg = 1;
- 		break;
- 
- 	case PIN_CONFIG_BIAS_PULL_UP:
--		arg = (pin_reg >> PULL_UP_SEL_OFF) & (BIT(0) | BIT(1));
-+		if (!(pin_reg & BIT(PULL_UP_ENABLE_OFF)))
-+			return -EINVAL;
-+
-+		if (pin_reg & BIT(PULL_UP_SEL_OFF))
-+			arg = 8000;
-+		else
-+			arg = 4000;
- 		break;
- 
- 	case PIN_CONFIG_DRIVE_STRENGTH:
-@@ -790,15 +798,28 @@ static int amd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
- 			break;
- 
- 		case PIN_CONFIG_BIAS_PULL_DOWN:
--			pin_reg &= ~BIT(PULL_DOWN_ENABLE_OFF);
--			pin_reg |= (arg & BIT(0)) << PULL_DOWN_ENABLE_OFF;
-+			pin_reg |= BIT(PULL_DOWN_ENABLE_OFF);
- 			break;
- 
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			pin_reg &= ~BIT(PULL_UP_SEL_OFF);
--			pin_reg |= (arg & BIT(0)) << PULL_UP_SEL_OFF;
--			pin_reg &= ~BIT(PULL_UP_ENABLE_OFF);
--			pin_reg |= ((arg>>1) & BIT(0)) << PULL_UP_ENABLE_OFF;
-+			/* Set default ohm value in case none is given */
-+			if (arg == 1)
-+				arg = 4000;
-+
-+			switch (arg) {
-+			case 4000:
-+				pin_reg &= ~BIT(PULL_UP_SEL_OFF);
-+				pin_reg |= BIT(PULL_UP_ENABLE_OFF);
-+				break;
-+			case 8000:
-+				pin_reg |= BIT(PULL_UP_SEL_OFF);
-+				pin_reg |= BIT(PULL_UP_ENABLE_OFF);
-+				break;
-+			default:
-+				dev_err(&gpio_dev->pdev->dev,
-+					"Invalid pull-up arg %u\n", arg);
-+				ret = -EINVAL;
-+			}
- 			break;
- 
- 		case PIN_CONFIG_DRIVE_STRENGTH:
 -- 
-2.39.0
+2.34.1
 
