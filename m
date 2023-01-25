@@ -2,48 +2,49 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC32167B64C
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 16:53:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C13467B643
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 16:52:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235466AbjAYPxF (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 10:53:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36258 "EHLO
+        id S235743AbjAYPv7 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 10:51:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235248AbjAYPxE (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 10:53:04 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899E9212F;
-        Wed, 25 Jan 2023 07:53:03 -0800 (PST)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PErW9V014743;
-        Wed, 25 Jan 2023 15:52:44 GMT
+        with ESMTP id S234770AbjAYPv6 (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 10:51:58 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF9B5975A;
+        Wed, 25 Jan 2023 07:51:53 -0800 (PST)
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PEP7B4030492;
+        Wed, 25 Jan 2023 15:51:04 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=6eEpNVI0rNe3xJIlW8P6xrZ8Jv6Y1y+7RCqksyUlwbQ=;
- b=eD+CKS3pgqypHvg52j739dRv+nbE/8JCU93kbN6v0EZ4WrOsFaSXUU45k/Z+wsKayq7a
- zPd2+ByxhZG7A8vin3ahTXR8fqSbOCbdivpC+3+s1Oy8kjmMnjAkRi4LnRk/pZEAoUMw
- 3heWIiImLUrkACp5KUTPtoXD8mHdhyfhdix7xBftWTLc70g/FRSRU7DIRE7pmkWdSwOn
- 5n0KIwU2fm2FzJSvTkrkHWKAyom+lSldfy6RjCp5WdBvtjs7luwZnx3WUBeOpnkfPl/w
- QWeRa+rmQUXN0Zv78KgMbF9xRYjWdylQoOLBZc4KXLYn2F0t71R9MDRZCSsQeB58TgQ4 xg== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nb6jc83um-1
+ bh=Ot3thYC/XF960Hm4CCL8hZjS2AUE9XkW1K+tW89TnXg=;
+ b=j3XjAWjmmitofe6f7v7wRCAN+q81GZLuePym9+Bn5377FTG/XGTIWIUwM7bMGaxbbTNe
+ vUoX9oc6N6ylVzNtYtVgVr9f9gNFIOfSp3C3sOQPwX5+fEd1dSuS9S9bLnf3EcVMnx+0
+ mbJIfNWC73UX5XqRq8IlWYw8LkdxaiG3o7mA3ABA9Nz8UGFU4VMwrE4Kqa4vodPOV6xC
+ RqRnkNQJvbDg7JhidIrFRv66RwtM6UMv5uPaPn6R8DppB/tUoZqsx+9wxUmVjEg0kwvb
+ zX9m5I9ePSQv8POPCUuUyh6ehikdnUcmYhzz3Eeq0Mv+sorwKZ+Z/gsxpU3oWcYqWoeU CQ== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3napvhhgdb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 15:52:43 +0000
+        Wed, 25 Jan 2023 15:51:03 +0000
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30PFnjHj004361
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30PFp1La011821
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Jan 2023 15:49:45 GMT
+        Wed, 25 Jan 2023 15:51:01 GMT
 Received: from [10.50.43.172] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 25 Jan
- 2023 07:49:36 -0800
-Message-ID: <0b28f4a3-c445-7473-501b-39cbcfdb9889@quicinc.com>
-Date:   Wed, 25 Jan 2023 21:19:33 +0530
+ 2023 07:50:52 -0800
+Message-ID: <bbd084bf-b670-6121-5173-373e3c91b955@quicinc.com>
+Date:   Wed, 25 Jan 2023 21:20:49 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.0
-Subject: Re: [PATCH 01/10] dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
+Subject: Re: [PATCH 04/10] dt-bindings: clock: Add Qualcomm IPQ5332 GCC
+Content-Language: en-US
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         <agross@kernel.org>, <andersson@kernel.org>,
         <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
@@ -60,31 +61,30 @@ To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
         <linux-gpio@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>
 References: <20230125104520.89684-1-quic_kathirav@quicinc.com>
- <20230125104520.89684-2-quic_kathirav@quicinc.com>
- <50ec54ba-3468-3448-3fab-f28e97549ad2@linaro.org>
-Content-Language: en-US
+ <20230125104520.89684-5-quic_kathirav@quicinc.com>
+ <ccddc46f-b007-4e0c-9c1f-df2c13d459eb@linaro.org>
 From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
-In-Reply-To: <50ec54ba-3468-3448-3fab-f28e97549ad2@linaro.org>
+In-Reply-To: <ccddc46f-b007-4e0c-9c1f-df2c13d459eb@linaro.org>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: yhun6mfdqR7DHk1Zl3e9Yppvn_YUKEsV
-X-Proofpoint-GUID: yhun6mfdqR7DHk1Zl3e9Yppvn_YUKEsV
+X-Proofpoint-GUID: eGeuIrkmqau1Mo9Fudal6J6rV-ngOgyJ
+X-Proofpoint-ORIG-GUID: eGeuIrkmqau1Mo9Fudal6J6rV-ngOgyJ
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-25_09,2023-01-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 impostorscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ definitions=2023-01-25_10,2023-01-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999 phishscore=0
+ adultscore=0 impostorscore=0 mlxscore=0 spamscore=0 suspectscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2212070000 definitions=main-2301250141
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -92,124 +92,65 @@ List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
 
-On 1/25/2023 4:40 PM, Krzysztof Kozlowski wrote:
+On 1/25/2023 4:43 PM, Krzysztof Kozlowski wrote:
 > On 25/01/2023 11:45, Kathiravan Thirumoorthy wrote:
 >> From: Kathiravan T <quic_kathirav@quicinc.com>
 >>
->> Add device tree bindings for IPQ5332 TLMM block.
+>> Add binding for the Qualcomm IPQ5332 Global Clock Controller.
 >>
 >> Signed-off-by: Kathiravan T <quic_kathirav@quicinc.com>
 >> ---
->>   .../pinctrl/qcom,ipq5332-pinctrl.yaml         | 134 ++++++++++++++++++
->>   1 file changed, 134 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-pinctrl.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-pinctrl.yaml
+> Thank you for your patch. There is something to discuss/improve.
+
+
+Thanks for taking time to review the patch.
+
+
+>
+>> +  clocks:
+>> +    items:
+>> +      - description: Board XO clock source
+>> +      - description: Sleep clock source
+>> +      - description: PCIE 2lane PHY pipe clock source
+>> +      - description: PCIE 2lane x1 PHY pipe clock source (For second lane)
+>> +      - description: USB PCIE wrapper pipe clock source
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: xo
+>> +      - const: sleep_clk
+>> +      - const: pcie_2lane_phy_pipe_clk
+>> +      - const: pcie_2lane_phy_pipe_clk_x1
+>> +      - const: usb_pcie_wrapper_pipe_clk
+>> +
+>> +required:
+>> +  - compatible
+> clocks are required
+
+
+Ack.
+
+
+>
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    clock-controller@1800000 {
+>> +      compatible = "qcom,ipq5332-gcc";
+>> +      reg = <0x01800000 0x80000>;
+>> +      #clock-cells = <1>;
+>> +      #power-domain-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +    };
+>> +...
+>> diff --git a/include/dt-bindings/clock/qcom,gcc-ipq5332.h b/include/dt-bindings/clock/qcom,gcc-ipq5332.h
 >> new file mode 100644
->> index 000000000000..d101ee04b8b7
+>> index 000000000000..a305c648b724
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq5332-pinctrl.yaml
-> Name matching compatible, please.
-
-
-Sure, will rename it accordingly.
-
-
->
->> @@ -0,0 +1,134 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq5332-pinctrl.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm IPQ5332 TLMM pin controller
->> +
->> +maintainers:
->> +  - Bjorn Andersson <andersson@kernel.org>
->> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> +
->> +description: |
->> +  Top Level Mode Multiplexer pin controller in Qualcomm IPQ5332 SoC.
->> +
->> +allOf:
->> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    const: qcom,ipq5332-tlmm
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupts: true
-> missing maxItems
->
-> Rebase your patches on latest next and use the latest bindings and
-> drivers as starting point.
-
-
-Changes are based on v6.2-rc1.  I see the maxItems changes in 
-linux-next. Will update this in V2.
-
-
->> +  interrupt-controller: true
->> +  "#interrupt-cells": true
->> +  gpio-controller: true
->> +  "#gpio-cells": true
->> +  gpio-ranges: true
->> +  wakeup-parent: true
->> +
->> +  gpio-reserved-ranges:
->> +    minItems: 1
->> +    maxItems: 27
->> +
->> +  gpio-line-names:
->> +    maxItems: 53
-> You have 54 GPIOs.
-
-
-Sorry, GPIO ranges are from 0-52, will update it in all places in V2.
-
-
->
->> +
->> +patternProperties:
->> +  "-state$":
->> +    oneOf:
->> +      - $ref: "#/$defs/qcom-ipq5332-tlmm-state"
->> +      - patternProperties:
->> +          "-pins$":
->> +            $ref: "#/$defs/qcom-ipq5332-tlmm-state"
->> +        additionalProperties: false
->> +
->> +$defs:
->> +  qcom-ipq5332-tlmm-state:
->> +    type: object
->> +    description:
->> +      Pinctrl node's client devices use subnodes for desired pin configuration.
->> +      Client device subnodes use below standard properties.
->> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
->> +
->> +    properties:
->> +      pins:
->> +        description:
->> +          List of gpio pins affected by the properties specified in this
->> +          subnode.
->> +        items:
->> +          pattern: "^gpio([0-9]|[1-4][0-9]|5[0-3])$"
->> +        minItems: 1
->> +        maxItems: 36
->> +
->> +      function:
->> +        description:
->> +          Specify the alternative function to be configured for the specified
->> +          pins.
->> +
->> +        enum: [ PTA_0, PTA_2, PTA_1, atest_char, atest_char0, atest_char1,
-> 1. lowercase only
->
-> 2. order all these by name
+>> +++ b/include/dt-bindings/clock/qcom,gcc-ipq5332.h
+> Filename should match bindings/compatible.
 
 
 Ack.
@@ -217,14 +158,6 @@ Ack.
 
 >
 >
->> +                atest_char2, atest_char3, atest_tic, audio_pri, audio_pri0,
->> +                audio_pri1, audio_sec, audio_sec0, audio_sec1, blsp0_i2c,
->> +                blsp0_spi, blsp0_uart0, blsp0_uart1, blsp1_i2c0, blsp1_i2c1,
->> +                blsp1_spi0, blsp1_spi1, blsp1_uart0, blsp1_uart1, blsp1_uart2,
->> +                blsp2_i2c0, blsp2_i2c1, blsp2_spi, blsp2_spi0, blsp2_spi1,
->> +                core_voltage, cri_trng0, cri_trng1, cri_trng2, cri_trng3,
->> +                cxc_clk, cxc_data, dbg_out, gcc_plltest, gcc_tlmm, gpio,
->> +                lock_det, mac0, mac1, mdc0, mdc1, mdio0, mdio1, pc, pcie0_clk,
 > Best regards,
 > Krzysztof
 
