@@ -2,105 +2,166 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA29E67B6E5
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 17:26:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0768067B705
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 17:39:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235020AbjAYQ0x (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 11:26:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58790 "EHLO
+        id S235263AbjAYQjJ (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 11:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234844AbjAYQ0x (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 11:26:53 -0500
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0BC1BF3;
-        Wed, 25 Jan 2023 08:26:48 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id w11so7049981edv.0;
-        Wed, 25 Jan 2023 08:26:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ilN6S2DYFu/DESx5TOWbGLPHlfDmzvINI2SI+/X/LA=;
-        b=o4j8nJomybIx4kE59DRw52ujqDVZ1WQewtiJ58C37pZX/5DWWR3us5SruXAAGyfGBc
-         0oxAeGxQTdIDM++/ONptAOL1nO0F6K6FiZC1F/r6Qme1XRV2lBzY485x0B9dWJnV3W0W
-         TnQMulrN7yyZXGHFTiOyWDC1wY59f/tjlS5vjPAnXkbmCVxXIc2maTfx3FlJemGXPbEd
-         oIhFRB2EHA0oTv8BIEwV/oq0Vp9kY4A8qUg2UpNdvj82VIuPM+pGvvRPDGd+iKkdN0iE
-         fMhuNZyuRhr5wQD9uKjHTu0/dBcgt18B09bb5lO3wvYzPbjdtZ4zCb8IaUuWGDUTVpmZ
-         9R4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1ilN6S2DYFu/DESx5TOWbGLPHlfDmzvINI2SI+/X/LA=;
-        b=5ZfFRpnn9Eay7xwuP6gMu+s3NAAsN8lM5nYsZrS6M3Z+k9qGfFlmtzVOSecXs5kpHm
-         4pDF7WpB/Pnf5ADu5LznRG7U7cYDh5roKMCl6b00sAGV0VLzoROddbfN2VwXtdhystFt
-         PQwqE3kUCtn2LoV0Gw676JM/SKi/JO50qB//RE7pJmXTSmU/e9kxpGw15ROosz1EpoQr
-         J8B0uyG5od6G6u8wMIgK1smVV/OTVMXbAYAVeXNsRya+X+k+EzZFXsxG2dxCeQUb8KyO
-         c419wfdWhfy+DgD1qPtUV6SJ7tcp0L2AA5A/3I+Ty+jmrite5Y6xkSTm/6fHFNQfkxJn
-         b0rQ==
-X-Gm-Message-State: AO0yUKW1+W0Gi/vqzSD17cFIUGlgHEvIbnoyjyTi8KPi+IhO0U/FLkWl
-        1j4qK4pg3cPiH7oA+UfeNbRvI2vlBfSe05CRqhM=
-X-Google-Smtp-Source: AK7set8Ywx0iAQrGoEEkgv3qLgP8YXwI3+TvqWY8ReSLX18XMQnjssyGUpWN7izePXDq8V+lj0t2lykY83BEM5yxFts=
-X-Received: by 2002:a05:6402:d59:b0:4a0:90da:4653 with SMTP id
- ec25-20020a0564020d5900b004a090da4653mr814683edb.153.1674664006555; Wed, 25
- Jan 2023 08:26:46 -0800 (PST)
+        with ESMTP id S235045AbjAYQjI (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 11:39:08 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65D5D61A5;
+        Wed, 25 Jan 2023 08:39:07 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PEtdYr004745;
+        Wed, 25 Jan 2023 16:38:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=0ChATrYgcfVnq2ClzhGONhr89tnKCzl70FzK8Pg20BM=;
+ b=e0/79e0jA8L10hDoEVKfMt8gkwQhGNNSw/Ye/tuim4XbbMJ/9Ggl4/Q308n2ckwTDq8q
+ PSMBpBJ+2hTtm4vtYMUnHj6aXgKpL+H9rhohozT0FocDYnsI8UdSJil1IdNZHAGkQDHO
+ n/06XcjiLQx3W2zyR0uLzeKORS2GzyhXQGurEe9bqk7pnz1S0MMhzxVgO6bpzSLsBTEi
+ 3wV6wFHydqr2f1T5b12bb+5wV5bxXbV/fxRl3Hh/fSFXJ9OeTDfe/K6iP5wH/lyAmTCB
+ r5QDMTKKomX9rb9AQtr8J/NQanJjanI2sZkbaPdMyTuewLgtRTu1FX2fm55ba8JSqe3v /A== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3najkha952-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 16:38:52 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30PGcpVQ002212
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 16:38:51 GMT
+Received: from [10.50.40.254] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 25 Jan
+ 2023 08:38:42 -0800
+Message-ID: <d9b3390a-f207-4c5c-8613-0566c2435f6c@quicinc.com>
+Date:   Wed, 25 Jan 2023 22:08:39 +0530
 MIME-Version: 1.0
-References: <20230124230048.371144-1-robh@kernel.org>
-In-Reply-To: <20230124230048.371144-1-robh@kernel.org>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 25 Jan 2023 10:26:35 -0600
-Message-ID: <CABb+yY3FwCwEsNYuNP8MBi+2TUra5O7+-GWMzWr06x1g4MJUyg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add missing (unevaluated|additional)Properties
- on child node schemas
-To:     Rob Herring <robh@kernel.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        David Airlie <airlied@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Lee Jones <lee@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
-        linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
-        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH 01/10] dt-bindings: pinctrl: qcom: add IPQ5332 pinctrl
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <ulf.hansson@linaro.org>,
+        <linus.walleij@linaro.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <shawnguo@kernel.org>, <arnd@arndb.de>,
+        <marcel.ziswiler@toradex.com>, <dmitry.baryshkov@linaro.org>,
+        <nfraprado@collabora.com>, <broonie@kernel.org>,
+        <robimarko@gmail.com>, <quic_gurus@quicinc.com>,
+        <bhupesh.sharma@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20230125104520.89684-1-quic_kathirav@quicinc.com>
+ <20230125104520.89684-2-quic_kathirav@quicinc.com>
+ <50ec54ba-3468-3448-3fab-f28e97549ad2@linaro.org>
+ <0b28f4a3-c445-7473-501b-39cbcfdb9889@quicinc.com>
+ <d6512673-a232-c8e5-45f7-e903fc1a01a7@linaro.org>
+Content-Language: en-US
+From:   Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+In-Reply-To: <d6512673-a232-c8e5-45f7-e903fc1a01a7@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: iFOss_yTPbpiDPY2u0W_fozjyZmtcGv3
+X-Proofpoint-GUID: iFOss_yTPbpiDPY2u0W_fozjyZmtcGv3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-25_10,2023-01-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ adultscore=0 spamscore=0 suspectscore=0 mlxlogscore=827 clxscore=1015
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 priorityscore=1501
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301250147
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 5:00 PM Rob Herring <robh@kernel.org> wrote:
+
+On 1/25/2023 9:50 PM, Krzysztof Kozlowski wrote:
+> On 25/01/2023 16:49, Kathiravan Thirumoorthy wrote:
+>>>> @@ -0,0 +1,134 @@
+>>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>>> +%YAML 1.2
+>>>> +---
+>>>> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq5332-pinctrl.yaml#
+>>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>>> +
+>>>> +title: Qualcomm IPQ5332 TLMM pin controller
+>>>> +
+>>>> +maintainers:
+>>>> +  - Bjorn Andersson <andersson@kernel.org>
+>>>> +  - Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>> +
+>>>> +description: |
+>>>> +  Top Level Mode Multiplexer pin controller in Qualcomm IPQ5332 SoC.
+>>>> +
+>>>> +allOf:
+>>>> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
+>>>> +
+>>>> +properties:
+>>>> +  compatible:
+>>>> +    const: qcom,ipq5332-tlmm
+>>>> +
+>>>> +  reg:
+>>>> +    maxItems: 1
+>>>> +
+>>>> +  interrupts: true
+>>> missing maxItems
+>>>
+>>> Rebase your patches on latest next and use the latest bindings and
+>>> drivers as starting point.
+>>
+>> Changes are based on v6.2-rc1.  I see the maxItems changes in
+>> linux-next. Will update this in V2.
+> Your patches cannot be based on v6.2-rc1. They won't even apply. You
+> miss entire development of last month.
+
+
+Hmmm, Will use linux-next/master as base hereafter.
+
+
+>>
+>>>> +  interrupt-controller: true
+>>>> +  "#interrupt-cells": true
+>>>> +  gpio-controller: true
+>>>> +  "#gpio-cells": true
+>>>> +  gpio-ranges: true
+>>>> +  wakeup-parent: true
+>>>> +
+>>>> +  gpio-reserved-ranges:
+>>>> +    minItems: 1
+>>>> +    maxItems: 27
+>>>> +
+>>>> +  gpio-line-names:
+>>>> +    maxItems: 53
+>>> You have 54 GPIOs.
+>>
+>> Sorry, GPIO ranges are from 0-52, will update it in all places in V2.
+> Ah, then the gpio pattern needs a fix.
+
+
+Yup, will take care of that as well in V2.
+
+
 >
-> Just as unevaluatedProperties or additionalProperties are required at
-> the top level of schemas, they should (and will) also be required for
-> child node schemas. That ensures only documented properties are
-> present.
 >
-> Add unevaluatedProperties or additionalProperties as appropriate, and
-> then add any missing properties flagged by the addition.
+> Best regards,
+> Krzysztof
 >
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-For the mailbox change,
-   Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
