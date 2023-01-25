@@ -2,121 +2,117 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83DBC67AE3B
-	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 10:40:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2155367AF57
+	for <lists+linux-gpio@lfdr.de>; Wed, 25 Jan 2023 11:10:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbjAYJkV (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Wed, 25 Jan 2023 04:40:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53972 "EHLO
+        id S234540AbjAYKKo (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Wed, 25 Jan 2023 05:10:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbjAYJkV (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 04:40:21 -0500
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270A02716;
-        Wed, 25 Jan 2023 01:40:20 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 035163200951;
-        Wed, 25 Jan 2023 04:40:16 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 25 Jan 2023 04:40:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1674639616; x=1674726016; bh=mVnLaWhnWq
-        piceQjqtY4G7r56a9ztAu8ycJAfseC+RE=; b=FHaO0ny/uYgy9ZYtBeUQgaDfx4
-        two+K4Ff6AL1mh1RKLm2/rHiqlGB4pmEGee8spf4yBIrqWRYjb0seYmIHkF1C5sQ
-        aO+Ym65d5j4I/IS4bWocAa1YttMW7x+XGe0ISfFIh9PT2LAM/21JQgQZD1Z0x+Zr
-        T5Hq9xOq+w2noZUizKuu1ldi0gOI/YrCmxGYdSpql0axhznmiJchgM7T9xtVeUol
-        M6c3vWmrdTlJyvMShro3Wd/AmpG1bt1v3/SSlK2rK/nOJvsRPHQ8QaffmiveaQ75
-        PpTAn3q7ETCnJCOKGTWUKNXsesjoUPPviG/WPiWT8+pNqMXhaLFFjy09PaLg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1674639616; x=1674726016; bh=mVnLaWhnWqpiceQjqtY4G7r56a9z
-        tAu8ycJAfseC+RE=; b=TXXMEY0yaBKp6nhpJbq127eJSwDhHPUCt8tNJx7LCII9
-        a7i/lQzlfd0mYCnbSADEYIXPWtHXEi1ySj1RjyUzDRRih6zd1vYDgWPfO6lvEnA7
-        8F7K+Sn0Df+8Zk98KO9z+q/KNL7o/JN3tw9ojTElr7SmP55xh9daQU2ZuEEnwAAk
-        AXbIXX0wutgd7BhoWY2XepGWT12Dk+pC+Koyi5SERIutCqAQOoiR/zNFtAvQNFaa
-        sWB2k9hrDSLZbsfe7QzbgzbI44uCnSaccHM/WnA0AKZGB9FKkmpBTk5/EwhPBPzY
-        5LXIBkEWrN2eO62S1iJ+aJVFDS6ncvc4n9hY03Ee9g==
-X-ME-Sender: <xms:__jQYwKzyy64Q46l2fp-gaSFVtLPE9iPIUgEugqYnqsVVjDvik6oMw>
-    <xme:__jQYwIgXfkuUwDrwubzQvgGUSNpf-ltT1GIzSt46LeX6J44m8LuWem4tZTDJcFO1
-    5gI0e9X0TsEMw2ceU4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvvddgtdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:__jQYwvFoAxXo2ZJX4M7RvVBcblxiy-2uS1iGJ8qbHaeJ06QMLDymQ>
-    <xmx:__jQY9Yzg0autAV8v_lTIqaomz3TCkukojyKNQueRuVbHMGod73wYA>
-    <xmx:__jQY3Ya-3_W-EPE7LQHCG7YoLx9-oMgV40AlgjPCf6-4GuOLKBmCw>
-    <xmx:APnQY76uNj4ajFm7QU_WjE09raXk2uoQVpUyTxfBjo1msXG7zO9yqg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id BB115B60089; Wed, 25 Jan 2023 04:40:15 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
-Mime-Version: 1.0
-Message-Id: <918952b8-6687-42ab-82af-b64c8db7e191@app.fastmail.com>
-In-Reply-To: <20230125083026.5399-2-nikita.shubin@maquefel.me>
-References: <20230117100845.16708-1-nikita.shubin@maquefel.me>
- <20230125083026.5399-1-nikita.shubin@maquefel.me>
- <20230125083026.5399-2-nikita.shubin@maquefel.me>
-Date:   Wed, 25 Jan 2023 10:39:57 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Nikita Shubin" <nikita.shubin@maquefel.me>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Cc:     "Hartley Sweeten" <hsweeten@visionengravers.com>,
-        "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
-        "Russell King" <linux@armlinux.org.uk>,
-        "Lukasz Majewski" <lukma@denx.de>,
-        "Linus Walleij" <linus.walleij@linaro.org>,
-        "Bartosz Golaszewski" <brgl@bgdev.pl>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/3] gpio: ep93xx: Fix port F hwirq numbers in handler
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229886AbjAYKKn (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Wed, 25 Jan 2023 05:10:43 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F585EC7E
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 02:10:42 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id r2so16482243wrv.7
+        for <linux-gpio@vger.kernel.org>; Wed, 25 Jan 2023 02:10:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=+YbmCODXrWbUn0nWKxLJPq1L6PfEga2OS1d1Yrw45IU=;
+        b=EWZ+hu4S4a62p8gA2V9ZYPkv1qLN+s8IMtIROJN7y8CarZG2svVmLvXgd+cIXCTqYK
+         NmDzRiCF06lhNIqcgTEj1tarMHcDsKa7kHDQPaG8pOtIq/W5AbCQB6RvTcD1myTpCzRp
+         TRVPIsNn/MVN84z/l/E40mM1M3YZ9xN3d/JOW4gawseKTBi9l/HQ5vDPs0OzNhZfxYZO
+         aDNpO0Ibc/PEQId4AU9aFKgNJhl4vADNywb3qlpc3BO7gpS9YHIB2cwG5XYpu1Xj9faD
+         FC0dRFpKpviOy+GKJ1IlFSq1v3ihdct8DCv97iaxXiys1mUD8mQh4tZ+cpBZvSJ/9qt+
+         sssw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+YbmCODXrWbUn0nWKxLJPq1L6PfEga2OS1d1Yrw45IU=;
+        b=rJGQWFpL9d1vjrJLJ/pLSUasInQwFzmkK002iENgyMbcZECSugNUsXmwlPz9GVVjo5
+         Udip8ezvn9OTMjb0ZZqZyIULZ29DjAv56BA4jjGGM1I6ITs2nc0V9b7VTiQui32DalcQ
+         S9npVEgQiyGOt3M5boP0fjQXOHvpZlXRu+60nXoqfcr481qY3us3jCgPYiOcb10ANj5m
+         Vxr7FngLMf6oyjSCsUFyrvvoe0JNbwdZxZwlYNv9zh5QIMeLDCIIpQ4RzzhA+pXxmSsX
+         XtTefYGgAAas8N537cMV5XQWlN/I0rpmNulxS+vCLQ48XspC5b/A8nXQc4yw8E7d88wj
+         5NMQ==
+X-Gm-Message-State: AO0yUKW/Qo7pqBP90Sh2hq8rYdiNhl57whv4ukt2V0TymUszOi18505q
+        FuuIYyPlc3d/Xgm346eEEtdd3Q==
+X-Google-Smtp-Source: AK7set8k1yyqihkL7lEDeuIamGfJrPidQaf3VL7shCTdtPbifYjaUj0j3ZCA+tCz22qbl5k7/4CR7Q==
+X-Received: by 2002:adf:facb:0:b0:2bf:b746:6224 with SMTP id a11-20020adffacb000000b002bfb7466224mr2062674wrs.0.1674641440862;
+        Wed, 25 Jan 2023 02:10:40 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id s8-20020a5d69c8000000b002755e301eeasm4024686wrw.100.2023.01.25.02.10.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jan 2023 02:10:40 -0800 (PST)
+Message-ID: <859715d1-a442-7f64-2345-60d0fe28bdb5@linaro.org>
+Date:   Wed, 25 Jan 2023 11:10:35 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH] dt-bindings: Add missing
+ (unevaluated|additional)Properties on child node schemas
+To:     Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Lee Jones <lee@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org,
+        linux-hwmon@vger.kernel.org, linux-media@vger.kernel.org,
+        openbmc@lists.ozlabs.org, linux-mmc@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-pm@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-spi@vger.kernel.org,
+        linux-usb@vger.kernel.org
+References: <20230124230228.372305-1-robh@kernel.org>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230124230228.372305-1-robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
-On Wed, Jan 25, 2023, at 09:30, Nikita Shubin wrote:
-> Fix wrong translation of irq numbers in port F handler, as ep93xx hwirqs
-> increased by 1, we should simply decrease them by 1 in translation.
->
-> Fixes: 482c27273f52 ("ARM: ep93xx: renumber interrupts")
-> Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-
-Cc: stable@vger.kernel.org # v5.19+
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-
-> ---
->  drivers/gpio/gpio-ep93xx.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-> index 2e1779709113..7edcdc575080 100644
-> --- a/drivers/gpio/gpio-ep93xx.c
-> +++ b/drivers/gpio/gpio-ep93xx.c
-> @@ -148,7 +148,7 @@ static void ep93xx_gpio_f_irq_handler(struct irq_desc *desc)
->  	 */
->  	struct irq_chip *irqchip = irq_desc_get_chip(desc);
->  	unsigned int irq = irq_desc_get_irq(desc);
-> -	int port_f_idx = ((irq + 1) & 7) ^ 4; /* {19..22,47..50} -> {0..7} */
-> +	int port_f_idx = (irq & 7) ^ 4; /* {20..23,48..51} -> {0..7} */
->  	int gpio_irq = EP93XX_GPIO_F_IRQ_BASE + port_f_idx;
+On 25/01/2023 00:02, Rob Herring wrote:
+> Just as unevaluatedProperties or additionalProperties are required at
+> the top level of schemas, they should (and will) also be required for
+> child node schemas. That ensures only documented properties are
+> present.
 > 
->  	chained_irq_enter(irqchip, desc);
-> -- 
-> 2.37.4
+> Add unevaluatedProperties or additionalProperties as appropriate, and
+> then add any missing properties flagged by the addition.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
+
