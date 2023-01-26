@@ -2,188 +2,145 @@ Return-Path: <linux-gpio-owner@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDDDA67CB0E
-	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 13:45:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4907A67CB69
+	for <lists+linux-gpio@lfdr.de>; Thu, 26 Jan 2023 13:57:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbjAZMpz (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
-        Thu, 26 Jan 2023 07:45:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55484 "EHLO
+        id S236314AbjAZM46 (ORCPT <rfc822;lists+linux-gpio@lfdr.de>);
+        Thu, 26 Jan 2023 07:56:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjAZMpx (ORCPT
-        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 07:45:53 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87CA53C29E;
-        Thu, 26 Jan 2023 04:45:49 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id me3so4698969ejb.7;
-        Thu, 26 Jan 2023 04:45:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+FCFYtWUQP7YZSD2bSYpnKSDHJhXLIcuGKjaBrblv/o=;
-        b=HwOb5ekyj/73Vrq1+CmBjw79letwxYvL1tvjqzYGgtzCXgt+GZSCMtv6TWci31lTpi
-         TCOQt/8T0ur+bEZvcsJSWMLLvwhnNV9gDRcB9YOZczFmnQh01K2gqjQvYv69fNErsYzk
-         hW+3Zqpv9yYGBkagqp0OmYlXQ4zjgalEubTy9kxJThNU7zjzukiZ4ivAT8VaHSBDArV7
-         5jVqZwRZuhLplSZdJDoGGLXeeR+95v9cylD8iX+g0m1H653FBhmgs5bSC/0PZLP+8sN2
-         u6mqNhJgKQgnQOdHQoYwoBe32enp0ZGOlaDr42bhyxBzbDNFakaTy5UNXsJNEWJLlYQ+
-         6HDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+FCFYtWUQP7YZSD2bSYpnKSDHJhXLIcuGKjaBrblv/o=;
-        b=WrRnf09WHFQ9wsIybU2vHi919/M4LeALWcvzbhxdCDtUEW4CqG07rczu615whWDQ6g
-         7thspNoF+w9dFYy7rcbeLes530OP69TU4q4A99bdaC12UKGjdc39jzFWVNvepGReBmSU
-         kWjhwMlPbqJa+TxcyXhhq8dFYirZtcNant2ab5cqDP5USNMPIKGPkyHAbWVXE+M1TPVN
-         MJCLinilw92P4Uk9SIf0Noi1hD1bqjxNXQ1wP9X8ckSm+ZL9OJfxQiO5zVa4QV2tiYoB
-         qOT82PsBGgS74UwdyhPs/rASOZHqTzR4P3V5hAkxOgiBnyna6cIMOPUvJJ3ocLuQfR3R
-         BYmA==
-X-Gm-Message-State: AO0yUKU036bn0KSrs071NKgVCz+5mBQOwNJuRpd/agkKUgwqdy1wCWx7
-        edLxQ5UwpOYGeziu2475P61Aceuinzs=
-X-Google-Smtp-Source: AK7set9rnQmxqteLXa/LHEOon567larfBCk2A34cacOe8q4briCydO6nBpdandlx7Lg6SELaY2rdVw==
-X-Received: by 2002:a17:906:d0c2:b0:878:5fdc:3850 with SMTP id bq2-20020a170906d0c200b008785fdc3850mr2119869ejb.48.1674737147805;
-        Thu, 26 Jan 2023 04:45:47 -0800 (PST)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id gn19-20020a1709070d1300b0087862f45a29sm545286ejc.174.2023.01.26.04.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 04:45:47 -0800 (PST)
-Date:   Thu, 26 Jan 2023 13:45:45 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     linus.walleij@linaro.org, brgl@bgdev.pl, jonathanh@nvidia.com,
-        linux-gpio@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: tegra186: remove unneeded loop in
- tegra186_gpio_init_route_mapping()
-Message-ID: <Y9J1+fEErNzaN0fq@orome>
-References: <20230125212631.749094-1-trix@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hpFkZqyqoVYLb6Bp"
-Content-Disposition: inline
-In-Reply-To: <20230125212631.749094-1-trix@redhat.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S236001AbjAZM4y (ORCPT
+        <rfc822;linux-gpio@vger.kernel.org>); Thu, 26 Jan 2023 07:56:54 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 197254C2B;
+        Thu, 26 Jan 2023 04:56:47 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id D6B4B320055E;
+        Thu, 26 Jan 2023 07:56:45 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 26 Jan 2023 07:56:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1674737805; x=
+        1674824205; bh=mrN9AP1x+KQ6HQiktOIDZMEyE5DQCiPIxxOHlND0nYQ=; b=K
+        Uiws7OYeDGsTb5d+zzWZkNiBAS9Y5l1RixhynOEHXxGKPn+L/YZ5rigXKjOuNGx2
+        YPu5RR4JbIxPO2ybBXnV3+B7PV58yjvpoDk26uOwSJgJ4VQlomdJE3d/t1rIOBVK
+        ovJwYqFekGKAz0ubGQj+jkAazL3EHkQ/ppr8J2mpSXZ4tEvIZN+bFXcxt9Pf4Ptl
+        mDCmZRKe0+6jcxMX/xsQxn0XR5u41p92+CH/6x5e3dQ9VztMW99EzsXUUCjs3hlr
+        ee9Y4hytoKbay6KjgUadEhZhmqwEr2rBN3LKvS7ztavkKFdoItNOVg6ITI9l6n9S
+        KMTqDx5DloE5dNj7mVJZw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1674737805; x=
+        1674824205; bh=mrN9AP1x+KQ6HQiktOIDZMEyE5DQCiPIxxOHlND0nYQ=; b=A
+        Cpa6gHV6+muZ0G6UI9xQufkiIGJ3o9dm7ChBHF83nMBkVsyxT1ZKVYpQ8kW+reDA
+        bNHY1fz0RG+1/z8G2ZWItZEZXDg9qB61apbg2wj/M924dz6SNdImIzxUD6J2JaO9
+        D8VpTS9Im0mct7J59Lat6uuWNAEZq0L/doIeFJt7s+O6NMlRUwsIRUc2mTAavDgq
+        F6bS0kGrh8bDAY2+oNX20hLqZ7JsSfMms/89JRJBrdgfYiScswR+8/gddcrhxwji
+        lC5TbTQYLHvl70ZeISPL3bF0qvxdyBeOrQHCVZ4nbN1rKzNP6ZUdMbfkq29c+GVt
+        DLlbv8jQ68GE1CqxvQivg==
+X-ME-Sender: <xms:jHjSYxJFJ2TYxpRbh7cqixsL9N900bxuxtZ_znmc6-M1elJSjLZr1A>
+    <xme:jHjSY9KwVH1Vj08rIQvHs-oKr7m1dj4L0CNa2M3q_j0ytNt_DoErdY6ZMBNtDhrqe
+    PjOae8RlfhOXFe5his>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedruddvgedggeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
+    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:jHjSY5tN5IiSmuyXHT3-n2dWC9_ByDx9V8gqkc_tJM23FfWFDN2WXA>
+    <xmx:jHjSYya5taBJMNhNYf4N15E9OOd764aT9OLt-LlP-diEIemrK3y8rg>
+    <xmx:jHjSY4a9A5H-RQZtMpLADCuGU1INNIZqIFDwW5N_VKduk15zZ2xDcg>
+    <xmx:jXjSY-PSfQwF-F3iXCz5zZ2LaGaXPVsnNYDg9l481uxBXx39KGAR9g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id B956CB60086; Thu, 26 Jan 2023 07:56:44 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-85-gd6d859e0cf-fm-20230116.001-gd6d859e0
+Mime-Version: 1.0
+Message-Id: <a9ec7f46-dd07-40e7-ae48-a1e48d2101c5@app.fastmail.com>
+In-Reply-To: <7b7df1f7-4f47-d19a-02ff-91984b25ba98@csgroup.eu>
+References: <20230125201020.10948-1-andriy.shevchenko@linux.intel.com>
+ <20230125201020.10948-2-andriy.shevchenko@linux.intel.com>
+ <ca399c86-5bfc-057b-6f9f-50614b91a9b9@csgroup.eu>
+ <Y9JTo1RkxT2jORPE@smile.fi.intel.com>
+ <7b7df1f7-4f47-d19a-02ff-91984b25ba98@csgroup.eu>
+Date:   Thu, 26 Jan 2023 13:56:26 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+        "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
+Cc:     "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Bartosz Golaszewski" <brgl@bgdev.pl>,
+        "Pierluigi Passaro" <pierluigi.p@variscite.com>,
+        "kernel test robot" <lkp@intel.com>
+Subject: Re: [PATCH v1 1/5] gpiolib: fix linker errors when GPIOLIB is disabled
+Content-Type: text/plain;charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-gpio.vger.kernel.org>
 X-Mailing-List: linux-gpio@vger.kernel.org
 
+On Thu, Jan 26, 2023, at 13:44, Christophe Leroy wrote:
+> Le 26/01/2023 =C3=A0 11:19, Andy Shevchenko a =C3=A9crit=C2=A0:
+>> On Thu, Jan 26, 2023 at 08:14:49AM +0000, Christophe Leroy wrote:
+>>> Le 25/01/2023 =C3=A0 21:10, Andy Shevchenko a =C3=A9crit=C2=A0:
+>>>> From: Pierluigi Passaro <pierluigi.p@variscite.com>
+>>>>
+>>>> Both the functions gpiochip_request_own_desc and
+>>>> gpiochip_free_own_desc are exported from
+>>>>       drivers/gpio/gpiolib.c
+>>>> but this file is compiled only when CONFIG_GPIOLIB is enabled.
+>>>> Move the prototypes under "#ifdef CONFIG_GPIOLIB" and provide
+>>>> reasonable definitions and includes in the "#else" branch.
+>>>
+>>> Can you give more details on when and why link fails ?
+>>>
+>>> You are adding a WARN(), I understand it mean the function should ne=
+ver
+>>> ever be called. Shouldn't it be dropped completely by the compiler ?=
+ In
+>>> that case, no call to gpiochip_request_own_desc() should be emitted =
+and
+>>> so link should be ok.
+>>>
+>>> If link fails, it means we still have unexpected calls to
+>>> gpiochip_request_own_desc() or gpiochip_free_own_desc(), and we shou=
+ld
+>>> fix the root cause instead of hiding it with a WARN().
+>>=20
+>> I agree, but what do you suggest exactly? I think the calls to that f=
+unctions
+>> shouldn't be in the some drivers as it's layering violation (they are=
+ not a
+>> GPIO chips to begin with). Simply adding a dependency not better than=
+ this one.
+>>=20
+>
+> My suggestion is to go step by step. First step is to explicitely list=20
+> drivers that call those functions without selecting GPIOLIB.
 
---hpFkZqyqoVYLb6Bp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I tried that and sent the list of the drivers that call these functions,
+but as I wrote, all of them already require GPIOLIB to be set.
 
-On Wed, Jan 25, 2023 at 01:26:31PM -0800, Tom Rix wrote:
-> Reviewing the j loop over num_irqs_per_bank, in the code previous
-> to the fixes: commit, every j was used. now only when j =3D=3D 0.
-> If only j =3D=3D 0 is used, there is no need for the loop.
->=20
-> Fixes: 210386804745 ("gpio: tegra186: Support multiple interrupts per ban=
-k")
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/gpio/gpio-tegra186.c | 40 ++++++++++++++++--------------------
->  1 file changed, 18 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-tegra186.c b/drivers/gpio/gpio-tegra186.c
-> index 9941f35af823..14c872b6ad05 100644
-> --- a/drivers/gpio/gpio-tegra186.c
-> +++ b/drivers/gpio/gpio-tegra186.c
-> @@ -677,7 +677,7 @@ static const struct of_device_id tegra186_pmc_of_matc=
-h[] =3D {
->  static void tegra186_gpio_init_route_mapping(struct tegra_gpio *gpio)
->  {
->  	struct device *dev =3D gpio->gpio.parent;
-> -	unsigned int i, j;
-> +	unsigned int i;
->  	u32 value;
-> =20
->  	for (i =3D 0; i < gpio->soc->num_ports; i++) {
-> @@ -699,27 +699,23 @@ static void tegra186_gpio_init_route_mapping(struct=
- tegra_gpio *gpio)
->  			 * On Tegra194 and later, each pin can be routed to one or more
->  			 * interrupts.
->  			 */
-> -			for (j =3D 0; j < gpio->num_irqs_per_bank; j++) {
-> -				dev_dbg(dev, "programming default interrupt routing for port %s\n",
-> -					port->name);
-> -
-> -				offset =3D TEGRA186_GPIO_INT_ROUTE_MAPPING(p, j);
-> -
-> -				/*
-> -				 * By default we only want to route GPIO pins to IRQ 0. This works
-> -				 * only under the assumption that we're running as the host kernel
-> -				 * and hence all GPIO pins are owned by Linux.
-> -				 *
-> -				 * For cases where Linux is the guest OS, the hypervisor will have
-> -				 * to configure the interrupt routing and pass only the valid
-> -				 * interrupts via device tree.
-> -				 */
-> -				if (j =3D=3D 0) {
-> -					value =3D readl(base + offset);
-> -					value =3D BIT(port->pins) - 1;
-> -					writel(value, base + offset);
-> -				}
-> -			}
-> +			dev_dbg(dev, "programming default interrupt routing for port %s\n",
-> +				port->name);
-> +
-> +			offset =3D TEGRA186_GPIO_INT_ROUTE_MAPPING(p, 0);
-> +
-> +			/*
-> +			 * By default we only want to route GPIO pins to IRQ 0. This works
-> +			 * only under the assumption that we're running as the host kernel
-> +			 * and hence all GPIO pins are owned by Linux.
-> +			 *
-> +			 * For cases where Linux is the guest OS, the hypervisor will have
-> +			 * to configure the interrupt routing and pass only the valid
-> +			 * interrupts via device tree.
-> +			 */
-> +			value =3D readl(base + offset);
-> +			value =3D BIT(port->pins) - 1;
-> +			writel(value, base + offset);
+This means either I made a mistake in my search, or the problem
+has already been fixed. Either way, I think Andy should provide
+the exact build failure he observed so we know what caller caused
+the issue.
 
-This was supposed to be a placeholder so that a more complex routing
-could be added later on. Maybe adding "j" to the debug message would
-have made that a bit clearer.
-
-Anyway, no complex routing has been needed so far, so I don't have a
-strong objection to this. We can always add it back if we ever need it.
-
-On the other hand, we don't do much in the loop, so leaving it as-is
-wouldn't be harmful either.
-
-I'll leave it up to Linus and Bartosz to decide. If they want to pick it
-up:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---hpFkZqyqoVYLb6Bp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPSdfYACgkQ3SOs138+
-s6GpZw/+Kc64MG4sQ0jny86UO9mDaWC1dXVlfbAZNtpjFUPZyD4bGTjl59O5cuO+
-qvo7GDjGKLEZVNstArWRbhcscIdorCaHAzH5tnfHdx2DLUJxOeXcFsxKt3/gDpao
-00Xi0TSipXG9I4Vd7LkejT/21IU60s+DU01y5nzFZ1CVziz2R3C9/sDWmCs+jU7O
-8WHKU6dmxYz0ahG0x9v+7D5ol3Ha/0fF8h15jnjGquYeq0poZQXk7d0gBi+xjWvY
-xEp9HiOt+PDvdxEuNwSecC8hqQHtpU87WDCFm18dC7vzsmgNc4DNi4X+f+G7kg0z
-GoS6+xOdb+vtbAdX00v/kIpsqRsYCx1qBVNB3F2qrpEz7mplV+DUcn5apXcQ/yCh
-9wO9rAPrla9m/xDRsz/RScMtnihbR3ZMIw5nk7lXSIuZ8L3siBMCAfZa4FnSK6Gq
-c/wopq6HF1Y8ZS1BMBTjtDS9n9Vyb797nNhTUH+SAcpj8xfbwiMpGtzfPs390gWF
-MDeW11BFnPOsJVaO4BN9jus7Km7UJr4D3lIkuL8tFg7eFO9zUMHnz0gAMlQndOWL
-FK9eOuRhRf1NDlE7AlUboCAt1AspD9P8ReIWXv8h9FZcKu+NkLfmKJl3lo4E1iwP
-MSmkTNSO8cRq5wZ/L72Utoe0POzUruc33/LXeXWslWkzZRw1+hY=
-=Azhb
------END PGP SIGNATURE-----
-
---hpFkZqyqoVYLb6Bp--
+     Arnd
